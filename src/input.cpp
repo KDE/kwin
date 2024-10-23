@@ -228,22 +228,22 @@ bool InputEventFilter::tabletToolEvent(TabletEvent *event)
     return false;
 }
 
-bool InputEventFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletId, std::chrono::microseconds time)
+bool InputEventFilter::tabletToolButtonEvent(TabletToolButtonEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool InputEventFilter::tabletPadButtonEvent(TabletPadButtonEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool InputEventFilter::tabletPadStripEvent(TabletPadStripEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool InputEventFilter::tabletPadRingEvent(TabletPadRingEvent *event)
 {
     return false;
 }
@@ -572,33 +572,33 @@ public:
         }
         return effects->tabletToolEvent(event);
     }
-    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time) override
+    bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->tabletToolButtonEvent(button, pressed, tabletToolId, time);
+        return effects->tabletToolButtonEvent(event->button, event->pressed, event->tabletToolId, event->time);
     }
-    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    bool tabletPadButtonEvent(TabletPadButtonEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->tabletPadButtonEvent(button, pressed, tabletPadId, time);
+        return effects->tabletPadButtonEvent(event->button, event->pressed, event->tabletPadId, event->time);
     }
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    bool tabletPadStripEvent(TabletPadStripEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->tabletPadStripEvent(number, position, isFinger, tabletPadId, time);
+        return effects->tabletPadStripEvent(event->number, event->position, event->isFinger, event->tabletPadId, event->time);
     }
-    bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    bool tabletPadRingEvent(TabletPadRingEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->tabletPadRingEvent(number, position, isFinger, tabletPadId, time);
+        return effects->tabletPadRingEvent(event->number, event->position, event->isFinger, event->tabletPadId, event->time);
     }
 };
 
@@ -2130,13 +2130,13 @@ public:
         return true;
     }
 
-    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time) override
+    bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
     {
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(tabletToolId);
+        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tabletToolId);
         if (!tool->isClientSupported()) {
             return false;
         }
-        tool->sendButton(button, pressed);
+        tool->sendButton(event->button, event->pressed);
         return true;
     }
 
@@ -2164,45 +2164,45 @@ public:
         return pad;
     }
 
-    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    bool tabletPadButtonEvent(TabletPadButtonEvent *event) override
     {
-        auto pad = findAndAdoptPad(tabletPadId);
+        auto pad = findAndAdoptPad(event->tabletPadId);
         if (!pad) {
             return false;
         }
-        pad->sendButton(time, button, pressed);
+        pad->sendButton(event->time, event->button, event->pressed);
         return true;
     }
 
-    bool tabletPadRingEvent(int number, int angle, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    bool tabletPadRingEvent(TabletPadRingEvent *event) override
     {
-        auto pad = findAndAdoptPad(tabletPadId);
+        auto pad = findAndAdoptPad(event->tabletPadId);
         if (!pad) {
             return false;
         }
-        auto ring = pad->ring(number);
+        auto ring = pad->ring(event->number);
 
-        ring->sendAngle(angle);
-        if (isFinger) {
+        ring->sendAngle(event->position);
+        if (event->isFinger) {
             ring->sendSource(TabletPadRingV2Interface::SourceFinger);
         }
-        ring->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+        ring->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->time).count());
         return true;
     }
 
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    bool tabletPadStripEvent(TabletPadStripEvent *event) override
     {
-        auto pad = findAndAdoptPad(tabletPadId);
+        auto pad = findAndAdoptPad(event->tabletPadId);
         if (!pad) {
             return false;
         }
-        auto strip = pad->strip(number);
+        auto strip = pad->strip(event->number);
 
-        strip->sendPosition(position);
-        if (isFinger) {
+        strip->sendPosition(event->position);
+        if (event->isFinger) {
             strip->sendSource(TabletPadStripV2Interface::SourceFinger);
         }
-        strip->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+        strip->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->time).count());
         return true;
     }
 };
@@ -2626,17 +2626,17 @@ public:
         update();
     }
 
-    void tabletPadButtonEvent(uint, bool pressed, const TabletPadId &, std::chrono::microseconds time) override
+    void tabletPadButtonEvent(TabletPadButtonEvent *event) override
     {
-        if (!pressed) {
+        if (!event->pressed) {
             return;
         }
         update();
     }
 
-    void tabletToolButtonEvent(uint, bool pressed, const TabletToolId &, std::chrono::microseconds time) override
+    void tabletToolButtonEvent(TabletToolButtonEvent *event) override
     {
-        if (!pressed) {
+        if (!event->pressed) {
             return;
         }
         update();
@@ -2746,19 +2746,19 @@ public:
     {
         notifyActivity();
     }
-    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time) override
+    void tabletToolButtonEvent(TabletToolButtonEvent *event) override
     {
         notifyActivity();
     }
-    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    void tabletPadButtonEvent(TabletPadButtonEvent *event) override
     {
         notifyActivity();
     }
-    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    void tabletPadStripEvent(TabletPadStripEvent *event) override
     {
         notifyActivity();
     }
-    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override
+    void tabletPadRingEvent(TabletPadRingEvent *event) override
     {
         notifyActivity();
     }

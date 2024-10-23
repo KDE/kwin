@@ -99,19 +99,19 @@ void InputEventSpy::tabletToolEvent(TabletEvent *event)
 {
 }
 
-void InputEventSpy::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
+void InputEventSpy::tabletToolButtonEvent(TabletToolButtonEvent *event)
 {
 }
 
-void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void InputEventSpy::tabletPadButtonEvent(TabletPadButtonEvent *event)
 {
 }
 
-void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void InputEventSpy::tabletPadStripEvent(TabletPadStripEvent *event)
 {
 }
 
-void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void InputEventSpy::tabletPadRingEvent(TabletPadRingEvent *event)
 {
 }
 }

@@ -48,6 +48,10 @@ class TabletPadId;
 class MouseEvent;
 class WheelEvent;
 class KeyEvent;
+struct TabletToolButtonEvent;
+struct TabletPadButtonEvent;
+struct TabletPadStripEvent;
+struct TabletPadRingEvent;
 
 namespace Decoration
 {
@@ -478,10 +482,10 @@ public:
     virtual bool switchEvent(SwitchEvent *event);
 
     virtual bool tabletToolEvent(TabletEvent *event);
-    virtual bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time);
-    virtual bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time);
-    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
-    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
+    virtual bool tabletToolButtonEvent(TabletToolButtonEvent *event);
+    virtual bool tabletPadButtonEvent(TabletPadButtonEvent *event);
+    virtual bool tabletPadStripEvent(TabletPadStripEvent *event);
+    virtual bool tabletPadRingEvent(TabletPadRingEvent *event);
 
 protected:
     bool passToInputMethod(QKeyEvent *event);

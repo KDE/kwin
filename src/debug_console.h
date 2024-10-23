@@ -138,10 +138,10 @@ public:
     void switchEvent(SwitchEvent *event) override;
 
     void tabletToolEvent(TabletEvent *event) override;
-    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time) override;
-    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time) override;
-    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override;
-    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override;
+    void tabletToolButtonEvent(TabletToolButtonEvent *event) override;
+    void tabletPadButtonEvent(TabletPadButtonEvent *event) override;
+    void tabletPadStripEvent(TabletPadStripEvent *event) override;
+    void tabletPadRingEvent(TabletPadRingEvent *event) override;
 
 private:
     QTextEdit *m_textEdit;

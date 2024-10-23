@@ -121,29 +121,29 @@ bool DpmsInputEventFilter::tabletToolEvent(TabletEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
+bool DpmsInputEventFilter::tabletToolButtonEvent(TabletToolButtonEvent *event)
 {
-    if (pressed) {
+    if (event->pressed) {
         notify();
     }
     return true;
 }
 
-bool DpmsInputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool DpmsInputEventFilter::tabletPadButtonEvent(TabletPadButtonEvent *event)
 {
-    if (pressed) {
+    if (event->pressed) {
         notify();
     }
     return true;
 }
 
-bool DpmsInputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool DpmsInputEventFilter::tabletPadStripEvent(TabletPadStripEvent *event)
 {
     notify();
     return true;
 }
 
-bool DpmsInputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool DpmsInputEventFilter::tabletPadRingEvent(TabletPadRingEvent *event)
 {
     notify();
     return true;

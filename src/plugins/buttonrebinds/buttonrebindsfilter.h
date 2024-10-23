@@ -77,8 +77,8 @@ public:
     ~ButtonRebindsFilter() override;
     bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override;
     bool tabletToolEvent(KWin::TabletEvent *event) override;
-    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time) override;
-    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time) override;
+    bool tabletPadButtonEvent(KWin::TabletPadButtonEvent *event) override;
+    bool tabletToolButtonEvent(KWin::TabletToolButtonEvent *event) override;
 
 private:
     void loadConfig(const KConfigGroup &group);

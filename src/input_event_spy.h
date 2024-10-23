@@ -24,6 +24,10 @@ class SwitchEvent;
 class TabletEvent;
 class TabletToolId;
 class TabletPadId;
+struct TabletToolButtonEvent;
+struct TabletPadButtonEvent;
+struct TabletPadStripEvent;
+struct TabletPadRingEvent;
 
 /**
  * Base class for spying on input events inside InputRedirection.
@@ -80,10 +84,10 @@ public:
     virtual void switchEvent(SwitchEvent *event);
 
     virtual void tabletToolEvent(TabletEvent *event);
-    virtual void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time);
-    virtual void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time);
-    virtual void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
-    virtual void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
+    virtual void tabletToolButtonEvent(TabletToolButtonEvent *event);
+    virtual void tabletPadButtonEvent(TabletPadButtonEvent *event);
+    virtual void tabletPadStripEvent(TabletPadStripEvent *event);
+    virtual void tabletPadRingEvent(TabletPadRingEvent *event);
 };
 
 } // namespace KWin

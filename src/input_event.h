@@ -230,4 +230,38 @@ private:
     const TabletToolId m_id;
 };
 
-}
+struct TabletToolButtonEvent
+{
+    uint button;
+    bool pressed;
+    TabletToolId tabletToolId;
+    std::chrono::microseconds time;
+};
+
+struct TabletPadButtonEvent
+{
+    uint button;
+    bool pressed;
+    TabletPadId tabletPadId;
+    std::chrono::microseconds time;
+};
+
+struct TabletPadStripEvent
+{
+    int number;
+    int position;
+    bool isFinger;
+    TabletPadId tabletPadId;
+    std::chrono::microseconds time;
+};
+
+struct TabletPadRingEvent
+{
+    int number;
+    int position;
+    bool isFinger;
+    TabletPadId tabletPadId;
+    std::chrono::microseconds time;
+};
+
+} // namespace KWin
