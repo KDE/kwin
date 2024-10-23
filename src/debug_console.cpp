@@ -511,55 +511,55 @@ void DebugConsoleFilter::tabletToolEvent(TabletEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
+void DebugConsoleFilter::tabletToolButtonEvent(TabletToolButtonEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
-        + tableRow(i18n("Button"), button)
-        + tableRow(i18n("Pressed"), pressed)
-        + tableRow(i18n("Tablet"), qHash(tabletToolId.m_deviceGroupData))
-        + timestampRow(time)
+        + tableRow(i18n("Button"), event->button)
+        + tableRow(i18n("Pressed"), event->pressed)
+        + tableRow(i18n("Tablet"), qHash(event->tabletToolId.m_deviceGroupData))
+        + timestampRow(event->time)
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void DebugConsoleFilter::tabletPadButtonEvent(TabletPadButtonEvent *event)
 {
     QString text = s_hr + s_tableStart
         + tableHeaderRow(i18n("Tablet Pad Button"))
-        + tableRow(i18n("Button"), button)
-        + tableRow(i18n("Pressed"), pressed)
-        + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
-        + timestampRow(time)
+        + tableRow(i18n("Button"), event->button)
+        + tableRow(i18n("Pressed"), event->pressed)
+        + tableRow(i18n("Tablet"), qHash(event->tabletPadId.data))
+        + timestampRow(event->time)
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void DebugConsoleFilter::tabletPadStripEvent(TabletPadStripEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Strip"))
-        + tableRow(i18n("Number"), number)
-        + tableRow(i18n("Position"), position)
-        + tableRow(i18n("isFinger"), isFinger)
-        + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
-        + timestampRow(time)
+        + tableRow(i18n("Number"), event->number)
+        + tableRow(i18n("Position"), event->position)
+        + tableRow(i18n("isFinger"), event->isFinger)
+        + tableRow(i18n("Tablet"), qHash(event->tabletPadId.data))
+        + timestampRow(event->time)
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void DebugConsoleFilter::tabletPadRingEvent(TabletPadRingEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Ring"))
-        + tableRow(i18n("Number"), number)
-        + tableRow(i18n("Position"), position)
-        + tableRow(i18n("isFinger"), isFinger)
-        + tableRow(i18n("Tablet"), qHash(tabletPadId.data))
-        + timestampRow(time)
+        + tableRow(i18n("Number"), event->number)
+        + tableRow(i18n("Position"), event->position)
+        + tableRow(i18n("isFinger"), event->isFinger)
+        + tableRow(i18n("Tablet"), qHash(event->tabletPadId.data))
+        + timestampRow(event->time)
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);

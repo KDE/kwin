@@ -223,21 +223,21 @@ bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)
     return false;
 }
 
-bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool ButtonRebindsFilter::tabletPadButtonEvent(KWin::TabletPadButtonEvent *event)
 {
     if (RebindScope::isRebinding()) {
         return false;
     }
-    return send(TabletPad, {tabletPadId.name, button}, pressed, time);
+    return send(TabletPad, {event->tabletPadId.name, event->button}, event->pressed, event->time);
 }
 
-bool ButtonRebindsFilter::tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time)
+bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *event)
 {
     if (RebindScope::isRebinding()) {
         return false;
     }
-    m_tabletTool = tabletToolId;
-    return send(TabletToolButtonType, {tabletToolId.m_name, button}, pressed, time);
+    m_tabletTool = event->tabletToolId;
+    return send(TabletToolButtonType, {event->tabletToolId.m_name, event->button}, event->pressed, event->time);
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
