@@ -864,15 +864,15 @@ TabletSeatV2Interface::addTablet(uint32_t vendorId, uint32_t productId, const QS
     return iface;
 }
 
-TabletPadV2Interface *TabletSeatV2Interface::addTabletPad(const QString &sysname,
-                                                          const QString &name,
-                                                          const QStringList &paths,
-                                                          quint32 buttons,
-                                                          quint32 rings,
-                                                          quint32 strips,
-                                                          quint32 modes,
-                                                          quint32 currentMode,
-                                                          TabletV2Interface *tablet)
+TabletPadV2Interface *TabletSeatV2Interface::addPad(const QString &sysname,
+                                                    const QString &name,
+                                                    const QStringList &paths,
+                                                    quint32 buttons,
+                                                    quint32 rings,
+                                                    quint32 strips,
+                                                    quint32 modes,
+                                                    quint32 currentMode,
+                                                    TabletV2Interface *tablet)
 {
     auto iface = new TabletPadV2Interface(paths.at(0), buttons, rings, strips, modes, currentMode, d->m_display, this);
     iface->d->m_seat = this;

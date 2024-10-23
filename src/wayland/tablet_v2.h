@@ -276,15 +276,15 @@ public:
     virtual ~TabletSeatV2Interface();
 
     TabletV2Interface *addTablet(quint32 vendorId, quint32 productId, const QString &sysname, const QString &name, const QStringList &paths);
-    TabletPadV2Interface *addTabletPad(const QString &sysname,
-                                       const QString &name,
-                                       const QStringList &paths,
-                                       quint32 buttons,
-                                       quint32 rings,
-                                       quint32 strips,
-                                       quint32 modes,
-                                       quint32 currentMode,
-                                       TabletV2Interface *tablet);
+    TabletPadV2Interface *addPad(const QString &sysname,
+                                 const QString &name,
+                                 const QStringList &paths,
+                                 quint32 buttons,
+                                 quint32 rings,
+                                 quint32 strips,
+                                 quint32 modes,
+                                 quint32 currentMode,
+                                 TabletV2Interface *tablet);
     TabletToolV2Interface *
     addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QList<TabletToolV2Interface::Capability> &capabilities, const QString &deviceSysName);
 
