@@ -300,6 +300,7 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .internal = info.internal,
             .physicalSizeInMM = info.physicalSizeInMM,
             .modes = info.modes,
+            .panelOrientation = info.panelOrientation,
         };
     });
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
