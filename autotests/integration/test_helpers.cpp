@@ -1738,19 +1738,13 @@ void touchUp(qint32 id, quint32 time)
 void tabletPadButtonPressed(quint32 button, quint32 time)
 {
     auto virtualTabletPad = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletPad();
-    TabletPadId padId{
-        .name = virtualTabletPad->name(),
-    };
-    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, true, padId, std::chrono::milliseconds(time), virtualTabletPad);
+    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, true, std::chrono::milliseconds(time), virtualTabletPad);
 }
 
 void tabletPadButtonReleased(quint32 button, quint32 time)
 {
     auto virtualTabletPad = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletPad();
-    TabletPadId padId{
-        .name = virtualTabletPad->name(),
-    };
-    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, false, padId, std::chrono::milliseconds(time), virtualTabletPad);
+    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, false, std::chrono::milliseconds(time), virtualTabletPad);
 }
 
 void tabletToolButtonPressed(quint32 button, quint32 time)

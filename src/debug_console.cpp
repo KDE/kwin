@@ -530,7 +530,7 @@ void DebugConsoleFilter::tabletPadButtonEvent(TabletPadButtonEvent *event)
         + tableHeaderRow(i18n("Tablet Pad Button"))
         + tableRow(i18n("Button"), event->button)
         + tableRow(i18n("Pressed"), event->pressed)
-        + tableRow(i18n("Tablet"), qHash(event->tabletPadId.data))
+        + tableRow(i18n("Tablet"), event->device->sysName())
         + timestampRow(event->time)
         + s_tableEnd;
 
@@ -544,7 +544,7 @@ void DebugConsoleFilter::tabletPadStripEvent(TabletPadStripEvent *event)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Position"), event->position)
         + tableRow(i18n("isFinger"), event->isFinger)
-        + tableRow(i18n("Tablet"), qHash(event->tabletPadId.data))
+        + tableRow(i18n("Tablet"), event->device->sysName())
         + timestampRow(event->time)
         + s_tableEnd;
 
@@ -558,7 +558,7 @@ void DebugConsoleFilter::tabletPadRingEvent(TabletPadRingEvent *event)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Position"), event->position)
         + tableRow(i18n("isFinger"), event->isFinger)
-        + tableRow(i18n("Tablet"), qHash(event->tabletPadId.data))
+        + tableRow(i18n("Tablet"), event->device->sysName())
         + timestampRow(event->time)
         + s_tableEnd;
 

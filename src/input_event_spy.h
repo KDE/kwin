@@ -23,7 +23,6 @@ class WheelEvent;
 class SwitchEvent;
 class TabletEvent;
 class TabletToolId;
-class TabletPadId;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;

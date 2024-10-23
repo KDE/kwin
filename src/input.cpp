@@ -584,21 +584,21 @@ public:
         if (!effects) {
             return false;
         }
-        return effects->tabletPadButtonEvent(event->button, event->pressed, event->tabletPadId, event->time);
+        return effects->tabletPadButtonEvent(event->button, event->pressed, event->time, event->device);
     }
     bool tabletPadStripEvent(TabletPadStripEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->tabletPadStripEvent(event->number, event->position, event->isFinger, event->tabletPadId, event->time);
+        return effects->tabletPadStripEvent(event->number, event->position, event->isFinger, event->time, event->device);
     }
     bool tabletPadRingEvent(TabletPadRingEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->tabletPadRingEvent(event->number, event->position, event->isFinger, event->tabletPadId, event->time);
+        return effects->tabletPadRingEvent(event->number, event->position, event->isFinger, event->time, event->device);
     }
 };
 
@@ -2140,7 +2140,7 @@ public:
         return true;
     }
 
-    TabletPadV2Interface *findAndAdoptPad(const TabletPadId &tabletPadId) const
+    TabletPadV2Interface *findAndAdoptPad(InputDevice *device) const
     {
         Window *window = workspace()->activeWindow();
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
@@ -2150,7 +2150,11 @@ public:
 
         // NOTE: tablet may be nullptr when the device is removed (see ::removeDevice) but events from the tool
         // may still happen.
-        auto tablet = static_cast<TabletV2Interface *>(tabletPadId.data);
+        TabletV2Interface *tablet = nullptr;
+        if (auto libinputDevice = qobject_cast<LibInput::Device *>(device)) {
+            auto deviceGroup = libinput_device_get_device_group(libinputDevice->device());
+            tablet = static_cast<TabletV2Interface *>(libinput_device_group_get_user_data(deviceGroup));
+        }
         if (!tablet) {
             return nullptr;
         }
@@ -2166,7 +2170,7 @@ public:
 
     bool tabletPadButtonEvent(TabletPadButtonEvent *event) override
     {
-        auto pad = findAndAdoptPad(event->tabletPadId);
+        auto pad = findAndAdoptPad(event->device);
         if (!pad) {
             return false;
         }
@@ -2176,7 +2180,7 @@ public:
 
     bool tabletPadRingEvent(TabletPadRingEvent *event) override
     {
-        auto pad = findAndAdoptPad(event->tabletPadId);
+        auto pad = findAndAdoptPad(event->device);
         if (!pad) {
             return false;
         }
@@ -2192,7 +2196,7 @@ public:
 
     bool tabletPadStripEvent(TabletPadStripEvent *event) override
     {
-        auto pad = findAndAdoptPad(event->tabletPadId);
+        auto pad = findAndAdoptPad(event->device);
         if (!pad) {
             return false;
         }

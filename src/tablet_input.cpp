@@ -337,13 +337,12 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device)
+void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadButtonEvent event{
         .device = device,
         .button = button,
         .pressed = isPressed,
-        .tabletPadId = tabletPadId,
         .time = time,
     };
     input()->processSpies(std::bind(&InputEventSpy::tabletPadButtonEvent, std::placeholders::_1, &event));
@@ -351,14 +350,13 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device)
+void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadStripEvent event{
         .device = device,
         .number = number,
         .position = position,
         .isFinger = isFinger,
-        .tabletPadId = tabletPadId,
         .time = time,
     };
 
@@ -367,14 +365,13 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position,
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device)
+void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadRingEvent event{
         .device = device,
         .number = number,
         .position = position,
         .isFinger = isFinger,
-        .tabletPadId = tabletPadId,
         .time = time,
     };
 

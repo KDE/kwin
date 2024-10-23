@@ -44,7 +44,6 @@ class WindowSelectorFilter;
 class SwitchEvent;
 class TabletEvent;
 class TabletToolId;
-class TabletPadId;
 class MouseEvent;
 class WheelEvent;
 class KeyEvent;

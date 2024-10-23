@@ -206,13 +206,6 @@ public:
     QString m_name;
 };
 
-class TabletPadId
-{
-public:
-    const QString name;
-    void *data;
-};
-
 class TabletEvent : public QTabletEvent
 {
 public:
@@ -250,7 +243,6 @@ struct TabletPadButtonEvent
     InputDevice *device;
     uint button;
     bool pressed;
-    TabletPadId tabletPadId;
     std::chrono::microseconds time;
 };
 
@@ -260,7 +252,6 @@ struct TabletPadStripEvent
     int number;
     int position;
     bool isFinger;
-    TabletPadId tabletPadId;
     std::chrono::microseconds time;
 };
 
@@ -270,7 +261,6 @@ struct TabletPadRingEvent
     int number;
     int position;
     bool isFinger;
-    TabletPadId tabletPadId;
     std::chrono::microseconds time;
 };
 

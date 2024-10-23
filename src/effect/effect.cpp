@@ -491,17 +491,17 @@ bool Effect::tabletToolButtonEvent(uint button, bool pressed, quint64 tabletTool
     return false;
 }
 
-bool Effect::tabletPadButtonEvent(uint button, bool pressed, void *tabletPadId)
+bool Effect::tabletPadButtonEvent(uint button, bool pressed, void *device)
 {
     return false;
 }
 
-bool Effect::tabletPadStripEvent(int number, int position, bool isFinger, void *tabletPadId)
+bool Effect::tabletPadStripEvent(int number, int position, bool isFinger, void *device)
 {
     return false;
 }
 
-bool Effect::tabletPadRingEvent(int number, int position, bool isFinger, void *tabletPadId)
+bool Effect::tabletPadRingEvent(int number, int position, bool isFinger, void *device)
 {
     return false;
 }
