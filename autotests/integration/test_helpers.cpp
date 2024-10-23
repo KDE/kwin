@@ -1741,7 +1741,7 @@ void tabletPadButtonPressed(quint32 button, quint32 time)
     TabletPadId padId{
         .name = virtualTabletPad->name(),
     };
-    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, true, padId, std::chrono::milliseconds(time));
+    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, true, padId, std::chrono::milliseconds(time), virtualTabletPad);
 }
 
 void tabletPadButtonReleased(quint32 button, quint32 time)
@@ -1750,7 +1750,7 @@ void tabletPadButtonReleased(quint32 button, quint32 time)
     TabletPadId padId{
         .name = virtualTabletPad->name(),
     };
-    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, false, padId, std::chrono::milliseconds(time));
+    Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, false, padId, std::chrono::milliseconds(time), virtualTabletPad);
 }
 
 void tabletToolButtonPressed(quint32 button, quint32 time)
@@ -1759,7 +1759,7 @@ void tabletToolButtonPressed(quint32 button, quint32 time)
     TabletToolId toolId{
         .m_name = virtualTabletTool->name(),
     };
-    Q_EMIT virtualTabletTool->tabletToolButtonEvent(button, true, toolId, std::chrono::milliseconds(time));
+    Q_EMIT virtualTabletTool->tabletToolButtonEvent(button, true, toolId, std::chrono::milliseconds(time), virtualTabletTool);
 }
 
 void tabletToolButtonReleased(quint32 button, quint32 time)
@@ -1768,7 +1768,7 @@ void tabletToolButtonReleased(quint32 button, quint32 time)
     TabletToolId toolId{
         .m_name = virtualTabletTool->name(),
     };
-    Q_EMIT virtualTabletTool->tabletToolButtonEvent(button, false, toolId, std::chrono::milliseconds(time));
+    Q_EMIT virtualTabletTool->tabletToolButtonEvent(button, false, toolId, std::chrono::milliseconds(time), virtualTabletTool);
 }
 
 void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
@@ -1779,7 +1779,7 @@ void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
     TabletToolId toolId{
         .m_name = virtualTabletTool->name(),
     };
-    Q_EMIT virtualTabletTool->tabletToolEvent(type, pos, pressure, xTilt, yTilt, rotation, tipDown, tipNear, toolId, std::chrono::milliseconds(time));
+    Q_EMIT virtualTabletTool->tabletToolEvent(type, pos, pressure, xTilt, yTilt, rotation, tipDown, tipNear, toolId, std::chrono::milliseconds(time), virtualTabletTool);
 }
 }
 }
