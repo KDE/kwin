@@ -541,7 +541,7 @@ void Connection::processEvents()
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
                                                         globalPos, pressure,
                                                         tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), tte->time());
+                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), tte->time(), tte->device());
             }
             break;
         }
@@ -549,14 +549,14 @@ void Connection::processEvents()
             auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.get());
             Q_EMIT event->device()->tabletToolButtonEvent(tabletEvent->buttonId(),
                                                           tabletEvent->isButtonPressed(),
-                                                          createTabletId(tabletEvent->tool(), event->device()), tabletEvent->time());
+                                                          createTabletId(tabletEvent->tool(), event->device()), tabletEvent->time(), tabletEvent->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
             auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.get());
             Q_EMIT event->device()->tabletPadButtonEvent(tabletEvent->buttonId(),
                                                          tabletEvent->isButtonPressed(),
-                                                         createTabletPadId(event->device()), tabletEvent->time());
+                                                         createTabletPadId(event->device()), tabletEvent->time(), tabletEvent->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_RING: {
@@ -565,7 +565,7 @@ void Connection::processEvents()
             Q_EMIT event->device()->tabletPadRingEvent(tabletEvent->number(),
                                                        tabletEvent->position(),
                                                        tabletEvent->source() == LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,
-                                                       createTabletPadId(event->device()), tabletEvent->time());
+                                                       createTabletPadId(event->device()), tabletEvent->time(), tabletEvent->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
@@ -573,7 +573,7 @@ void Connection::processEvents()
             Q_EMIT event->device()->tabletPadStripEvent(tabletEvent->number(),
                                                         tabletEvent->position(),
                                                         tabletEvent->source() == LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,
-                                                        createTabletPadId(event->device()), tabletEvent->time());
+                                                        createTabletPadId(event->device()), tabletEvent->time(), tabletEvent->device());
             break;
         }
         default:

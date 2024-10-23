@@ -266,7 +266,8 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletTool
 void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                                              qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                                              bool tipNear, const TabletToolId &tabletToolId,
-                                             std::chrono::microseconds time)
+                                             std::chrono::microseconds time,
+                                             InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -310,7 +311,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
                    0, // tangentialPressure
                    rotation,
                    0, // z
-                   Qt::NoModifier, button, button, tabletToolId);
+                   Qt::NoModifier, button, button, tabletToolId, device);
 
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
@@ -321,10 +322,10 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     m_tipNear = tipNear;
 }
 
-void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed,
-                                                         const TabletToolId &tabletToolId, std::chrono::microseconds time)
+void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId, std::chrono::microseconds time, InputDevice *device)
 {
     TabletToolButtonEvent event{
+        .device = device,
         .button = button,
         .pressed = isPressed,
         .tabletToolId = tabletToolId,
@@ -336,10 +337,10 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed,
-                                                        const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadButtonEvent event{
+        .device = device,
         .button = button,
         .pressed = isPressed,
         .tabletPadId = tabletPadId,
@@ -350,10 +351,10 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger,
-                                                       const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadStripEvent event{
+        .device = device,
         .number = number,
         .position = position,
         .isFinger = isFinger,
@@ -366,10 +367,10 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position,
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger,
-                                                      const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadRingEvent event{
+        .device = device,
         .number = number,
         .position = position,
         .isFinger = isFinger,

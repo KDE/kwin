@@ -219,7 +219,12 @@ public:
     TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
                 qreal pressure, float xTilt, float yTilt,
                 float tangentialPressure, qreal rotation, float z,
-                Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId);
+                Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId, InputDevice *device);
+
+    InputDevice *device() const
+    {
+        return m_device;
+    }
 
     const TabletToolId &tabletId() const
     {
@@ -228,10 +233,12 @@ public:
 
 private:
     const TabletToolId m_id;
+    InputDevice *m_device;
 };
 
 struct TabletToolButtonEvent
 {
+    InputDevice *device;
     uint button;
     bool pressed;
     TabletToolId tabletToolId;
@@ -240,6 +247,7 @@ struct TabletToolButtonEvent
 
 struct TabletPadButtonEvent
 {
+    InputDevice *device;
     uint button;
     bool pressed;
     TabletPadId tabletPadId;
@@ -248,6 +256,7 @@ struct TabletPadButtonEvent
 
 struct TabletPadStripEvent
 {
+    InputDevice *device;
     int number;
     int position;
     bool isFinger;
@@ -257,6 +266,7 @@ struct TabletPadStripEvent
 
 struct TabletPadRingEvent
 {
+    InputDevice *device;
     int number;
     int position;
     bool isFinger;

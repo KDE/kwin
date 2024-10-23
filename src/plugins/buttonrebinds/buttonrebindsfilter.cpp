@@ -450,7 +450,7 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, std
         return false;
     }
     RebindScope scope;
-    Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, *m_tabletTool, time);
+    Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, *m_tabletTool, time, &m_inputDevice);
     return true;
 }
 
