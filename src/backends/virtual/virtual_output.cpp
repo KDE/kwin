@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM)
+VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation)
     : Output(parent)
     , m_backend(parent)
     , m_renderLoop(std::make_unique<RenderLoop>(this))
@@ -32,6 +32,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize 
     setInformation(Information{
         .name = QStringLiteral("Virtual-%1").arg(identifier),
         .physicalSize = physicalSizeInMM,
+        .panelOrientation = panelOrientation,
         .internal = internal,
     });
 }

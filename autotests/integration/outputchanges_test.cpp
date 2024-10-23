@@ -18,6 +18,7 @@
 #include "x11window.h"
 
 #include <KWayland/Client/surface.h>
+#include <QOrientationSensor>
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
 
@@ -62,6 +63,8 @@ private Q_SLOTS:
     void testLaptopLidClosed();
     void testGenerateConfigs_data();
     void testGenerateConfigs();
+    void testAutorotate_data();
+    void testAutorotate();
 };
 
 void OutputChangesTest::initTestCase()
@@ -1288,6 +1291,65 @@ void OutputChangesTest::testGenerateConfigs()
     QFETCH(double, defaultScale);
     QVERIFY(outputConfig->scale);
     QCOMPARE(*outputConfig->scale, defaultScale);
+}
+
+void OutputChangesTest::testAutorotate_data()
+{
+    QTest::addColumn<OutputTransform::Kind>("panelOrientation");
+    QTest::addColumn<QOrientationReading::Orientation>("orientation");
+    QTest::addColumn<OutputTransform::Kind>("expectedRotation");
+
+    QTest::addRow("panel orientation normal, no rotation") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation normal, rotated 90° right") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation normal, rotated 180°") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation normal, rotated 90° left") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Rotate270;
+
+    QTest::addRow("panel orientation left up, no rotation") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation left up, rotated 90° right") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation left up, rotated 180°") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Rotate270;
+    QTest::addRow("panel orientation left up, rotated 90° left") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Normal;
+
+    QTest::addRow("panel orientation upside down, no rotation") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation upside down, rotated 90° right") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Rotate270;
+    QTest::addRow("panel orientation upside down, rotated 180°") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation upside down, rotated 90° left") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Rotate90;
+
+    QTest::addRow("panel orientation right up, no rotation") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Rotate270;
+    QTest::addRow("panel orientation right up, rotated 90° right") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation right up, rotated 180°") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation right up, rotated 90° left") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Rotate180;
+}
+
+void OutputChangesTest::testAutorotate()
+{
+    // delete the previous config to avoid clashes between test runs
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
+    QFETCH(OutputTransform::Kind, panelOrientation);
+    Test::setOutputConfig({Test::OutputInfo{
+        .geometry = QRect(0, 0, 1280, 1024),
+        .internal = true,
+        .physicalSizeInMM = QSize(598, 336),
+        .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
+        .panelOrientation = panelOrientation,
+    }});
+
+    QFETCH(QOrientationReading::Orientation, orientation);
+    QOrientationReading sensorReading;
+    sensorReading.setOrientation(orientation);
+
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    OutputConfigurationStore configs;
+    auto cfg = configs.queryConfig(outputs, false, &sensorReading, true);
+    QVERIFY(cfg.has_value());
+    const auto [config, order, type] = *cfg;
+    const auto outputConfig = config.constChangeSet(outputs.front());
+
+    QCOMPARE(outputConfig->autoRotationPolicy, Output::AutoRotationPolicy::InTabletMode);
+
+    QFETCH(OutputTransform::Kind, expectedRotation);
+    QVERIFY(outputConfig->transform.has_value());
+    QCOMPARE(outputConfig->transform->kind(), expectedRotation);
 }
 
 } // namespace KWin
