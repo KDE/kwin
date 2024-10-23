@@ -129,17 +129,20 @@ void TabletInputRedirection::integrateDevice(InputDevice *inputDevice)
         qCCritical(KWIN_CORE) << "Could not find tablet seat";
         return;
     }
-    struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
-    const char *devnode = udev_device_get_syspath(udev_device);
 
-    auto deviceGroup = libinput_device_get_device_group(device->device());
-    auto tablet = static_cast<TabletV2Interface *>(libinput_device_group_get_user_data(deviceGroup));
-    if (!tablet) {
-        tablet = tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
+    if (device->isTabletTool()) {
+        struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
+        const char *devnode = udev_device_get_syspath(udev_device);
+
+        TabletV2Interface *tablet = tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
+
+        auto deviceGroup = libinput_device_get_device_group(device->device());
         libinput_device_group_set_user_data(deviceGroup, tablet);
     }
 
     if (device->isTabletPad()) {
+        struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
+        const char *devnode = udev_device_get_syspath(udev_device);
         const int buttonsCount = libinput_device_tablet_pad_get_num_buttons(device->device());
         const int ringsCount = libinput_device_tablet_pad_get_num_rings(device->device());
         const int stripsCount = libinput_device_tablet_pad_get_num_strips(device->device());
@@ -154,8 +157,10 @@ void TabletInputRedirection::removeDevice(InputDevice *inputDevice)
 {
     auto device = qobject_cast<LibInput::Device *>(inputDevice);
     if (device) {
-        auto deviceGroup = libinput_device_get_device_group(device->device());
-        libinput_device_group_set_user_data(deviceGroup, nullptr);
+        if (inputDevice->isTabletTool()) {
+            auto deviceGroup = libinput_device_get_device_group(device->device());
+            libinput_device_group_set_user_data(deviceGroup, nullptr);
+        }
 
         TabletSeatV2Interface *tabletSeat = findTabletSeat();
         if (tabletSeat) {
