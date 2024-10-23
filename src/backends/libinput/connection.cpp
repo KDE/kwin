@@ -245,7 +245,7 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, Device *dev)
     if (libinput_tablet_tool_has_wheel(tool)) {
         capabilities << InputRedirection::Wheel;
     }
-    return {dev->sysName(), toolType, capabilities, serial, toolId, dev->groupUserData(), dev->name()};
+    return {dev->sysName(), toolType, capabilities, serial, toolId, dev->name()};
 }
 
 void Connection::processEvents()

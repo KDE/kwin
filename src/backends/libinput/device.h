@@ -632,8 +632,6 @@ public:
     int stripsCount() const;
     int ringsCount() const;
 
-    void *groupUserData() const;
-
     Output *output() const;
     void setOutput(Output *output);
 

@@ -918,6 +918,12 @@ TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareSerial(quint64 hardw
     return nullptr;
 }
 
+TabletV2Interface *TabletSeatV2Interface::tabletByName(const QString &name) const
+{
+    Q_ASSERT(d->m_tablets.contains(name));
+    return d->m_tablets.value(name);
+}
+
 TabletPadV2Interface *TabletSeatV2Interface::padByName(const QString &name) const
 {
     Q_ASSERT(d->m_pads.contains(name));

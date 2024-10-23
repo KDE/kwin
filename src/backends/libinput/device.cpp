@@ -542,12 +542,6 @@ int Device::ringsCount() const
     return libinput_device_tablet_pad_get_num_rings(m_device);
 }
 
-void *Device::groupUserData() const
-{
-    auto deviceGroup = libinput_device_get_device_group(m_device);
-    return libinput_device_group_get_user_data(deviceGroup);
-}
-
 #define CONFIG(method, condition, function, variable, key)                                        \
     void Device::method(bool set)                                                                 \
     {                                                                                             \

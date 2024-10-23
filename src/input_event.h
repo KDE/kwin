@@ -202,7 +202,6 @@ public:
     QList<InputRedirection::Capability> m_capabilities;
     quint64 m_serialId;
     quint64 m_uniqueId;
-    void *m_deviceGroupData;
     QString m_name;
 };
 
