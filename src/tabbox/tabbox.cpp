@@ -422,12 +422,10 @@ void TabBox::reset(bool partial_reset)
 {
     m_tabBox->createModel(partial_reset);
     if (!partial_reset) {
-        if (Workspace::self()->activeWindow()) {
-            setCurrentClient(Workspace::self()->activeWindow());
-        }
-        // it's possible that the active client is not part of the model
-        // in that case the index is invalid
-        if (!m_tabBox->currentIndex().isValid()) {
+        const QModelIndex activeIndex = m_tabBox->index(workspace()->activeWindow());
+        if (activeIndex.isValid()) {
+            setCurrentIndex(activeIndex);
+        } else {
             setCurrentIndex(m_tabBox->first());
         }
     } else {
