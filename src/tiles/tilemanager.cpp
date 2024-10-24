@@ -101,7 +101,7 @@ TileManager::TileManager(Output *parent)
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
             this, [this](VirtualDesktop *oldDesk, VirtualDesktop *newDesk) {
         for (auto *w : Workspace::self()->windows()) {
-            w->setTile(windowOwner(w));
+            w->requestTile(windowOwner(w));
         }
     });
     // readSettings(); FIXME
