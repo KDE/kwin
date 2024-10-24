@@ -90,12 +90,18 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                     bool timeout = true;
                     while (std::chrono::steady_clock::now() < cursorTarget && timeout && m_commits.front()->isCursorOnly()) {
                         timeout = m_commitPending.wait_for(lock, 50us) == std::cv_status::timeout;
+                        if (m_commits.empty()) {
+                            break;
+                        }
                         optimizeCommits(cursorTarget);
                     }
                     if (!timeout) {
                         // some new commit was added, process that
                         continue;
                     }
+                }
+                if (m_commits.empty()) {
+                    continue;
                 }
             }
             submit();
