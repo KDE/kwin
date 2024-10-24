@@ -447,12 +447,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     setState(next);
 
-    if (m_brightnessDevice) {
-        if (m_state.highDynamicRange) {
-            m_brightnessDevice->setBrightness(1);
-        } else {
-            m_brightnessDevice->setBrightness(m_state.brightness);
-        }
+    if (m_brightnessDevice && !m_state.highDynamicRange) {
+        m_brightnessDevice->setBrightness(m_state.brightness);
     }
 
     // allowSdrSoftwareBrightness might change our capabilities
@@ -475,12 +471,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
 void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 {
     Output::setBrightnessDevice(device);
-    if (device) {
-        if (m_state.highDynamicRange) {
-            device->setBrightness(1);
-        } else {
-            device->setBrightness(m_state.brightness);
-        }
+    if (device && !m_state.highDynamicRange) {
+        device->setBrightness(m_state.brightness);
         // reset the brightness factors
         tryKmsColorOffloading();
     }
