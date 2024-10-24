@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-23 00:42+0000\n"
+"POT-Creation-Date: 2024-10-24 00:41+0000\n"
 "PO-Revision-Date: 2024-10-05 22:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1221,7 +1221,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Mazgo pavadinimas: %1"
 
-#: input.cpp:3039
+#: input.cpp:3027
 #, kde-format
 msgid "Touchpad"
 msgstr "Jutiklinis kilimėlis"
