@@ -36,7 +36,7 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
     setQuickTileMode(QuickTileFlag::Custom);
     m_geometryLock = true;
 
-    connect(m_quickLayout.get(), &QuickTileLayout::windowAssociated, this, [this](Window *win) {
+    connect(m_quickLayout, &QuickTileLayout::windowAssociated, this, [this](Window *win) {
         m_windows.removeAll(win);
     });
 }

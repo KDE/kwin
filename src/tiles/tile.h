@@ -163,7 +163,7 @@ protected:
 
     QList<Tile *> m_children;
     Tile *m_parentTile;
-    std::shared_ptr<QuickTileLayout> m_quickLayout;
+    QuickTileLayout *m_quickLayout;
 
     VirtualDesktop *m_desktop = nullptr;
     TileManager *m_tiling;
