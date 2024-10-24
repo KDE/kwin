@@ -172,7 +172,8 @@ X11WindowedBackend::~X11WindowedBackend()
 bool X11WindowedBackend::initialize()
 {
     m_connection = xcb_connect(m_options.display.toLatin1(), &m_screenNumber);
-    if (!m_connection) {
+    if (xcb_connection_has_error(m_connection)) {
+        xcb_disconnect(m_connection);
         return false;
     }
 

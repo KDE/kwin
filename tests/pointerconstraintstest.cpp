@@ -240,8 +240,10 @@ void XBackend::init(QQuickView *view)
 {
     Backend::init(view);
     m_xcbConn = xcb_connect(nullptr, nullptr);
-    if (!m_xcbConn) {
-        qDebug() << "Could not open XCB connection.";
+
+    if (xcb_connection_has_error(m_xcbConn)) {
+        xcb_disconnect(m_xcbConn);
+        qFatal() << "Could not open XCB connection.";
     }
 }
 
