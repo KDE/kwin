@@ -8,6 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/outputbackend.h"
 #include "input.h"
 #include "pointer_input.h"
 #include "tabbox/tabbox.h"
@@ -38,6 +39,7 @@ private Q_SLOTS:
     void testMoveBackward();
     void testCapsLock();
     void testKeyboardFocus();
+    void testActiveClientOutsideModel();
 };
 
 void TabBoxTest::initTestCase()
@@ -287,6 +289,128 @@ void TabBoxTest::testKeyboardFocus()
 
     // the surface should regain keyboard focus after the tabbox is dismissed
     QVERIFY(enteredSpy.wait());
+}
+
+void TabBoxTest::testActiveClientOutsideModel()
+{
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
+    // This test verifies behaviour when the active client is outside the
+    // client list model:
+    //
+    // 1) reset() should correctly set the index to 0 if the active window is
+    //    not part of the client list.
+    // 2) the selection should not be advanced initially if the active window
+    //    is not part of the client list.
+
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+
+    // Initially, set up MultiScreenMode such that alt+tab will only switch
+    // within windows on the same screen.
+    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("TabBox"));
+    group.writeEntry("MultiScreenMode", "1");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // Create a window on the left output
+    std::unique_ptr<KWayland::Client::Surface> leftSurface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> leftShellSurface1(Test::createXdgToplevelSurface(leftSurface1.get()));
+    auto l1 = Test::renderAndWaitForShown(leftSurface1.get(), QSize(100, 50), Qt::blue);
+    l1->move(QPointF(50, 100));
+    QVERIFY(l1);
+    QVERIFY(l1->isActive());
+    QCOMPARE(l1->output(), outputs[0]);
+
+    // Create three windows on the right output
+    std::unique_ptr<KWayland::Client::Surface> rightSurface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> rightShellSurface1(Test::createXdgToplevelSurface(rightSurface1.get()));
+    auto r1 = Test::renderAndWaitForShown(rightSurface1.get(), QSize(100, 50), Qt::blue);
+    r1->move(QPointF(1280 + 50, 100));
+    QVERIFY(r1);
+    QVERIFY(r1->isActive());
+    QCOMPARE(r1->output(), outputs[1]);
+    std::unique_ptr<KWayland::Client::Surface> rightSurface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> rightShellSurface2(Test::createXdgToplevelSurface(rightSurface2.get()));
+    auto r2 = Test::renderAndWaitForShown(rightSurface2.get(), QSize(100, 50), Qt::red);
+    r2->move(QPointF(1280 + 50, 100));
+    QVERIFY(r2);
+    QVERIFY(r2->isActive());
+    QCOMPARE(r2->output(), outputs[1]);
+    std::unique_ptr<KWayland::Client::Surface> rightSurface3(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> rightShellSurface3(Test::createXdgToplevelSurface(rightSurface3.get()));
+    auto r3 = Test::renderAndWaitForShown(rightSurface3.get(), QSize(100, 50), Qt::red);
+    r3->move(QPointF(1280 + 50, 100));
+    QVERIFY(r3);
+    QVERIFY(r3->isActive());
+    QCOMPARE(r3->output(), outputs[1]);
+
+    // Focus r3 such that we're on the right output
+    input()->pointer()->warp(r3->frameGeometry().center());
+    QCOMPARE(workspace()->activeOutput(), outputs[1]);
+
+    // Setup tabbox signal spies
+    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+
+    // Press Alt+Tab, this will only show clients on the same output
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+
+    QVERIFY(tabboxAddedSpy.wait());
+    QVERIFY(workspace()->tabbox()->isGrabbed());
+
+    // Release Alt+Tab. This will have moved our index to 1 and focused r2 (the
+    // previously created window)
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QCOMPARE(tabboxClosedSpy.count(), 1);
+    QCOMPARE(workspace()->tabbox()->isGrabbed(), false);
+    QCOMPARE(workspace()->activeWindow(), r2);
+
+    // Now reconfigure MultiScreenMode such that alt+tab will only switch
+    // between windows on the other screen
+    group.writeEntry("MultiScreenMode", 2);
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // Activate and focus l1 to switch to the left output
+    workspace()->activateWindow(l1);
+    QCOMPARE(workspace()->activeWindow(), l1);
+    input()->pointer()->warp(l1->frameGeometry().center());
+    QCOMPARE(workspace()->activeOutput(), outputs[0]);
+
+    // Press Alt+Tab, this will show only clients on the other output. Our old
+    // index from the last invocation of tabbox should be reset to 0 since the
+    // active window (l1) cannot be located in the current client list
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+
+    QVERIFY(tabboxAddedSpy.wait());
+    QVERIFY(workspace()->tabbox()->isGrabbed());
+
+    // Release Alt. With a correctly reset index we should start from the
+    // beginning, skip advancing one window and focus r2 - the last window in
+    // focus on the other output
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QCOMPARE(tabboxClosedSpy.count(), 2);
+    QCOMPARE(workspace()->tabbox()->isGrabbed(), false);
+    QCOMPARE(workspace()->activeWindow(), r2);
+
+    rightSurface3.reset();
+    QVERIFY(Test::waitForWindowClosed(r3));
+    rightSurface2.reset();
+    QVERIFY(Test::waitForWindowClosed(r2));
+    rightSurface1.reset();
+    QVERIFY(Test::waitForWindowClosed(r1));
+    leftSurface1.reset();
+    QVERIFY(Test::waitForWindowClosed(l1));
 }
 
 WAYLANDTEST_MAIN(TabBoxTest)
