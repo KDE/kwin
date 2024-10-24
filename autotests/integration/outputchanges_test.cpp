@@ -485,7 +485,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     // kwin will send a configure event with the actived state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Move the window to the right monitor and tile it to the right.
@@ -526,7 +526,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280 / 2, 1024), Qt::blue);
-    QVERIFY(quickTileChangedSpy.wait());
+    QVERIFY(tileChangedSpy.wait());
 
     // The window will be moved back to the right monitor, and put in the correct tile
     QCOMPARE(window->frameGeometry(), rightQuickTileGeom);
