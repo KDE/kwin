@@ -488,14 +488,10 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 
 void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom)
 {
-    if (m_brightnessDevice) {
-        if (m_state.highDynamicRange) {
-            m_brightnessDevice->setBrightness(1);
-        } else {
-            constexpr double minLuminance = 0.04;
-            const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
-            m_brightnessDevice->setBrightness(effectiveBrightness);
-        }
+    if (m_brightnessDevice && !m_state.highDynamicRange) {
+        constexpr double minLuminance = 0.04;
+        const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
+        m_brightnessDevice->setBrightness(effectiveBrightness);
     }
     State next = m_state;
     next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>(), newBrightness);
