@@ -34,6 +34,11 @@ int main(int, char **)
     int screenNumber;
     xcb_connection_t *c = xcb_connect(nullptr, &screenNumber);
 
+    if (xcb_connection_has_error(c)) {
+        xcb_disconnect(c);
+        return 1;
+    }
+
     auto getScreen = [=]() {
         const xcb_setup_t *setup = xcb_get_setup(c);
         auto it = xcb_setup_roots_iterator(setup);
