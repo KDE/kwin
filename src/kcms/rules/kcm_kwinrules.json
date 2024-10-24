@@ -104,6 +104,7 @@
     "X-KDE-Keywords[pl]": "rozmiar,pozycja,stan,zachowanie okna,okna,specyficzne,obejścia,zapamiętaj,zasady,zasady okien,appki,aplikacje",
     "X-KDE-Keywords[sl]": "velikost,položaj,stanje,vedenje oken,okna,specifično,rešitve,zapomni si,pravila,pravila oken,aplikacije,programi",
     "X-KDE-Keywords[sv]": "storlek,position,tillstånd,fönsterbeteende,fönster,specifik,lösningar,komma ihåg,regler,fönsterregler,program,applikationer",
+    "X-KDE-Keywords[uk]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила,правила вікон,програми",
     "X-KDE-Keywords[x-test]": "xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx,xxwindow rulesxx,xxappsxx,xxapplicationsxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",

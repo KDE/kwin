@@ -97,6 +97,7 @@
     "X-KDE-Keywords[pl]": "kwin,okno,menadżer,efekt,krawędź,obramowanie,działanie,przełącz,pulpit,krawędzie pulpitu,krawędzie ekranu,strona ekranu,zachowanie ekranu,ekran dotykowy",
     "X-KDE-Keywords[sl]": "kwin,okno,upravljalnik,učinek,rob,obroba,dejanje,stikalo,namizje,robovi namizja,robovi zaslona,stran zaslona,vedenje zaslona,zaslon na dotik",
     "X-KDE-Keywords[sv]": "kwin,fönster,hanterare,effekt,kant,kant,åtgärd,byta,skrivbord,skrivbordskanter,skärmkanter,sidan av skärmen,skärmbeteende,pekskärm",
+    "X-KDE-Keywords[uk]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen,вікно,керування,край,кут,межа,сторона,бік,дія,перемикання,стільниця,плитка,край екрана,поведінка екрана,перемикання стільниць,віртуальна стільниця,сенсорна панель",
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxdesktop edgesxx,xxscreen edgesxx,xxside of screenxx,xxscreen behaviorxx,xxtouch screenxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",

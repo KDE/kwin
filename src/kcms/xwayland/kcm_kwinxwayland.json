@@ -92,6 +92,7 @@
     "X-KDE-Keywords[pl]": "xwayland,globalne,klawisze,przekierowywanie",
     "X-KDE-Keywords[sl]": "xwayland,globalno,tipke,naprej",
     "X-KDE-Keywords[sv]": "xwayland,global,tangenter,vidarebefordra",
+    "X-KDE-Keywords[uk]": "xwayland,global,keys,forward,іксвейленд,загальне,клавіші,переспрямування,вперед",
     "X-KDE-Keywords[x-test]": "xxxwaylandxx,xxglobalxx,xxkeysxx,xxforwardxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"

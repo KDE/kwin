@@ -100,6 +100,7 @@
     "X-KDE-Keywords[pl]": "klawiatura programowa,klawiatura wirtualna,klawiatura dotykowa,klawiatura ekranowa,sposoby wprowadzania",
     "X-KDE-Keywords[sl]": "programska tipkovnica,virtualna tipkovnica,tipkovnica na dotik,zaslonska tipkovnica,načini vnosa",
     "X-KDE-Keywords[sv]": "programvarutangentbord,virtuellt tangentbord,pektangentbord,skärmtangentbord,inmatningsmetoder",
+    "X-KDE-Keywords[uk]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,програмна клавіатура,віртуальна клавіатура,сенсорна клавіатура,екранна клавіатура,способи введення",
     "X-KDE-Keywords[x-test]": "xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"

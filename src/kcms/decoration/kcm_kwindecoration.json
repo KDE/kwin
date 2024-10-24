@@ -106,6 +106,7 @@
     "X-KDE-Keywords[pl]": "kwin,okno,menadżer,obramowanie,styl,motyw,wygląd,odczucie,układ,przycisk, uchwyt,krawędź,kwm,ozdoba,ozdoby okien,pasek tytułu,przyciski okna,obramowanie okna,skóra,cień",
     "X-KDE-Keywords[sl]": "kwin,okno,upravljalnik,meja,slog,tema,videz,občutek,postaviten,gumb,ročka,rob,kwm,dekoracija,okenske dekoracije,naslovna vrstica,okenski gumbi,meje oken,preobleka,senca",
     "X-KDE-Keywords[sv]": "kwin,fönster,hanterare,kant,stil,tema,utseende,känsla,layout,knapp,grepp,kant,kwm,dekoration,fönsterdekorationer,namnlist,fönsterknappar,fönsterkant,skal,skugga",
+    "X-KDE-Keywords[uk]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення,смужка заголовка,кнопки,рамка,оформлення,тінь",
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxborderxx,xxstylexx,xxthemexx,xxlookxx,xxfeelxx,xxlayoutxx,xxbuttonxx,xxhandlexx,xxedgexx,xxkwmxx,xxdecorationxx,xxwindow decorationsxx,xxtitlebarxx,xxwindow buttonsxx,xxwindow borderxx,xxskinxx,xxshadowxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "appearance",
