@@ -29,6 +29,7 @@
 #include <QRandomGenerator>
 #include <QScopeGuard>
 #include <QSocketNotifier>
+#include <QThread>
 #include <QTimer>
 
 // system
@@ -186,20 +187,6 @@ bool XwaylandLauncher::start()
     arguments << QStringLiteral("-enable-ei-portal");
 #endif
 
-    m_xwaylandProcess = new QProcess(this);
-    m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-    m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
-    if (qEnvironmentVariableIntValue("KWIN_XWAYLAND_DEBUG") == 1) {
-        env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
-    }
-    m_xwaylandProcess->setProcessEnvironment(env);
-    m_xwaylandProcess->setArguments(arguments);
-    connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &XwaylandLauncher::handleXwaylandError);
-    connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this, &XwaylandLauncher::handleXwaylandFinished);
-
     // When Xwayland starts writing the display name to displayfd, it is ready. Alternatively,
     // the Xwayland can send us the SIGUSR1 signal, but it's already reserved for VT hand-off.
     m_readyNotifier = new QSocketNotifier(pipeFds[0], QSocketNotifier::Read, this);
@@ -208,7 +195,29 @@ bool XwaylandLauncher::start()
         Q_EMIT started();
     });
 
-    m_xwaylandProcess->start();
+    m_xwaylandThread = new QThread();
+    m_xwaylandThread->setObjectName(QLatin1String("XWayland reaper"));
+    m_xwaylandThread->start();
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
+    if (qEnvironmentVariableIntValue("KWIN_XWAYLAND_DEBUG") == 1) {
+        env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
+    }
+
+    m_xwaylandProcess = new QProcess();
+    m_xwaylandProcess->moveToThread(m_xwaylandThread);
+
+    connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &XwaylandLauncher::handleXwaylandError);
+    connect(m_xwaylandProcess, &QProcess::finished, this, &XwaylandLauncher::handleXwaylandFinished);
+
+    QMetaObject::invokeMethod(m_xwaylandProcess, [=]() {
+        m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+        m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
+        m_xwaylandProcess->setProcessEnvironment(env);
+        m_xwaylandProcess->setArguments(arguments);
+        m_xwaylandProcess->start();
+    }, Qt::BlockingQueuedConnection);
 
     return true;
 }
@@ -246,13 +255,25 @@ void XwaylandLauncher::stop()
     // When the Xwayland process is finally terminated, the finished() signal will be emitted,
     // however we don't actually want to process it anymore. Furthermore, we also don't really
     // want to handle any errors that may occur during the teardown.
-    if (m_xwaylandProcess->state() != QProcess::NotRunning) {
-        disconnect(m_xwaylandProcess, nullptr, this, nullptr);
-        m_xwaylandProcess->terminate();
-        m_xwaylandProcess->waitForFinished(5000);
-    }
+    disconnect(m_xwaylandProcess, nullptr, this, nullptr);
+
+    QMetaObject::invokeMethod(m_xwaylandProcess, [this]() {
+        if (m_xwaylandProcess->state() != QProcess::NotRunning) {
+            m_xwaylandProcess->terminate();
+            if (!m_xwaylandProcess->waitForFinished(5000)) {
+                m_xwaylandProcess->kill();
+            }
+        }
+    }, Qt::BlockingQueuedConnection);
+
+    m_xwaylandThread->quit();
+    m_xwaylandThread->wait();
+
     delete m_xwaylandProcess;
     m_xwaylandProcess = nullptr;
+
+    delete m_xwaylandThread;
+    m_xwaylandThread = nullptr;
 }
 
 void XwaylandLauncher::maybeDestroyReadyNotifier()

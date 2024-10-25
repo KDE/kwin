@@ -93,7 +93,7 @@ private Q_SLOTS:
 private:
     void maybeDestroyReadyNotifier();
 
-
+    QThread *m_xwaylandThread = nullptr;
     QProcess *m_xwaylandProcess = nullptr;
     QSocketNotifier *m_readyNotifier = nullptr;
     QTimer *m_resetCrashCountTimer = nullptr;
