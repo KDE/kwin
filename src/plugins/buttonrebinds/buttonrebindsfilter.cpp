@@ -154,6 +154,20 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
+    const auto deviceSpecificGroups = mouseGroup.groupList();
+    for (const QString &deviceSpecificGroupKey : deviceSpecificGroups) {
+        const auto deviceSpecificGroup = mouseGroup.group(deviceSpecificGroupKey);
+        const auto deviceKeys = deviceSpecificGroup.keyList();
+        for (const QString &configKey : deviceKeys) {
+            const int mappedButton = mouseButtonEnum.keyToValue(configKey.toLatin1());
+            if (mappedButton != -1) {
+                const auto action = deviceSpecificGroup.readEntry(configKey, QStringList());
+                insert(Pointer, {deviceSpecificGroupKey, static_cast<uint>(mappedButton)}, action);
+                foundActions = true;
+            }
+        }
+    }
+
     const auto tabletsGroup = group.group(QStringLiteral("Tablet"));
     const auto tablets = tabletsGroup.groupList();
     for (const auto &tabletName : tablets) {
@@ -200,7 +214,9 @@ bool ButtonRebindsFilter::pointerButton(KWin::PointerButtonEvent *event)
         return false;
     }
 
-    return send(Pointer, {{}, event->button}, event->state == KWin::PointerButtonState::Pressed, event->timestamp);
+    const QString deviceName = event->device ? event->device->name() : QString();
+
+    return send(Pointer, {deviceName, event->button}, event->state == KWin::PointerButtonState::Pressed, event->timestamp);
 }
 
 bool ButtonRebindsFilter::tabletToolProximityEvent(KWin::TabletToolProximityEvent *event)
@@ -309,7 +325,15 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
         return false;
     }
 
-    const auto &action = typeActions[trigger];
+    const auto action = [&]() {
+        if (typeActions.contains(trigger)) {
+            return typeActions[trigger];
+        } else {
+            const Trigger genericDeviceTrigger{{}, trigger.button};
+            return typeActions[genericDeviceTrigger];
+        }
+    }();
+
     if (const QKeySequence *seq = std::get_if<QKeySequence>(&action)) {
         return sendKeySequence(*seq, pressed, timestamp);
     }
