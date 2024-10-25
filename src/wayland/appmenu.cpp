@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-static const quint32 s_version = 1;
+static const quint32 s_version = 2;
 
 class AppMenuManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_appmenu_manager
 {
@@ -25,8 +25,14 @@ public:
     AppMenuManagerInterface *q;
 
 protected:
+    void org_kde_kwin_appmenu_manager_release(Resource *resource) override;
     void org_kde_kwin_appmenu_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
 };
+
+void AppMenuManagerInterfacePrivate::org_kde_kwin_appmenu_manager_release(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
 
 void AppMenuManagerInterfacePrivate::org_kde_kwin_appmenu_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
 {
