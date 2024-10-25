@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-11 00:41+0000\n"
+"POT-Creation-Date: 2024-10-25 00:41+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -28,23 +28,23 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "பணிமேடை 1"
 
-#: main.cpp:73
+#: main.cpp:72
 #, kde-format
 msgid "Main"
 msgstr "முதன்மையானது"
 
-#: main.cpp:74
+#: main.cpp:73
 #, kde-format
 msgid "Alternative"
 msgstr "இன்னொன்று"
 
-#: main.cpp:76
+#: main.cpp:75
 #, fuzzy, kde-format
 #| msgid "Get New Task Switchers..."
 msgid "Get New Task Switcher Styles…"
 msgstr "புதிய சாளர மாற்றிகளை பெறுங்கள்…"
 
-#: main.cpp:94
+#: main.cpp:93
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

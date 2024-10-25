@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-24 00:41+0000\n"
+"POT-Creation-Date: 2024-10-25 00:41+0000\n"
 "PO-Revision-Date: 2024-10-05 22:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -57,17 +57,17 @@ msgstr "– Išvedimas išjungtas"
 msgid "- Output dimmed"
 msgstr "– Išvedimas pritemdytas"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:511
+#: backends/x11/windowed/x11_windowed_backend.cpp:512
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Paspauskite dešinįjį valdymo klavišą norėdami paleisti įvestį"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:511
+#: backends/x11/windowed/x11_windowed_backend.cpp:512
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Paspauskite dešinįjį valdymo klavišą norėdami pagriebti įvestį"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:513
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland kompozitorius"

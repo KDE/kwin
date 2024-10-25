@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-11 00:41+0000\n"
+"POT-Creation-Date: 2024-10-25 00:41+0000\n"
 "PO-Revision-Date: 2024-08-20 00:23+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -28,23 +28,23 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "바탕 화면 1"
 
-#: main.cpp:73
+#: main.cpp:72
 #, kde-format
 msgid "Main"
 msgstr "주"
 
-#: main.cpp:74
+#: main.cpp:73
 #, kde-format
 msgid "Alternative"
 msgstr "보조"
 
-#: main.cpp:76
+#: main.cpp:75
 #, fuzzy, kde-format
 #| msgid "Get New Task Switchers…"
 msgid "Get New Task Switcher Styles…"
 msgstr "새 창 전환기 레이아웃 가져오기…"
 
-#: main.cpp:94
+#: main.cpp:93
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
