@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-10-26 00:41+0000\n"
 "PO-Revision-Date: 2024-09-20 11:48+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1253,7 +1253,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Имя хоста: %1"
 
-#: input.cpp:3027
+#: input.cpp:3053
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорная панель"
@@ -4302,7 +4302,7 @@ msgstr "Переключиться на один рабочий стол вни�
 msgid "Switch to Desktop %1"
 msgstr "Переключиться на рабочий стол %1"
 
-#: window.cpp:3111
+#: window.cpp:3144
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

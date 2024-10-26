@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-10-26 00:41+0000\n"
 "PO-Revision-Date: 2024-10-20 14:28+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1222,7 +1222,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "புரவன் பெயர்: %1"
 
-#: input.cpp:3027
+#: input.cpp:3053
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"
@@ -4245,7 +4245,7 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
-#: window.cpp:3111
+#: window.cpp:3144
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

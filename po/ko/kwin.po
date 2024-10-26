@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-10-26 00:41+0000\n"
 "PO-Revision-Date: 2024-08-21 00:34+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1220,7 +1220,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "호스트 이름: %1"
 
-#: input.cpp:3027
+#: input.cpp:3053
 #, kde-format
 msgid "Touchpad"
 msgstr "터치패드"
@@ -4238,7 +4238,7 @@ msgstr "아래쪽 바탕 화면으로 전환"
 msgid "Switch to Desktop %1"
 msgstr "바탕 화면 %1(으)로 전환"
 
-#: window.cpp:3111
+#: window.cpp:3144
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

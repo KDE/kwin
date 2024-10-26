@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-11 00:41+0000\n"
+"POT-Creation-Date: 2024-10-26 00:41+0000\n"
 "PO-Revision-Date: 2024-01-22 18:56+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -47,9 +47,16 @@ msgstr ""
 "ietvara)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#: actions.ui:46
+#, fuzzy, kde-format
+#| msgid "Activate and raise"
+msgid "Activate, pass click and raise on release"
+msgstr "Aktivizēt un pacelt"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:46 actions.ui:86 actions.ui:126
+#: actions.ui:51 actions.ui:91 actions.ui:131
 #, kde-format
 msgid "Activate, raise and pass click"
 msgstr "Aktivizē, paceļ un padod klikšķi"
@@ -57,7 +64,7 @@ msgstr "Aktivizē, paceļ un padod klikšķi"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:51 actions.ui:91 actions.ui:131
+#: actions.ui:56 actions.ui:96 actions.ui:136
 #, kde-format
 msgid "Activate and pass click"
 msgstr "Aktivizē un padod klikšķi"
@@ -68,7 +75,7 @@ msgstr "Aktivizē un padod klikšķi"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:56 actions.ui:96 actions.ui:136 mouse.ui:299 mouse.ui:414
+#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:299 mouse.ui:414
 #: mouse.ui:529
 #, kde-format
 msgid "Activate"
@@ -80,7 +87,7 @@ msgstr "Aktivizēt"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:289 mouse.ui:404
+#: actions.ui:66 actions.ui:106 actions.ui:146 mouse.ui:289 mouse.ui:404
 #: mouse.ui:519
 #, kde-format
 msgid "Activate and raise"
@@ -88,13 +95,13 @@ msgstr "Aktivizēt un pacelt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:69 mouse.ui:206
+#: actions.ui:74 mouse.ui:206
 #, kde-format
 msgid "&Middle click:"
 msgstr "&Vidējais klikšķis:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:82
+#: actions.ui:87
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into an "
@@ -105,13 +112,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:109 mouse.ui:219
+#: actions.ui:114 mouse.ui:219
 #, kde-format
 msgid "&Right click:"
 msgstr "&Labais klikšķis:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:122
+#: actions.ui:127
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into an "
@@ -123,13 +130,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:149 mouse.ui:91
+#: actions.ui:154 mouse.ui:91
 #, kde-format
 msgid "Mouse &wheel:"
 msgstr "Peles &ritenis:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:162
+#: actions.ui:167
 #, kde-format
 msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
@@ -139,37 +146,37 @@ msgstr ""
 "iekšējā logā („iekšējais“ nozīmē: ne uz virsrakstjoslas vai ietvara)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:166
+#: actions.ui:171
 #, kde-format
 msgid "Scroll"
 msgstr "Ritināt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:171
+#: actions.ui:176
 #, kde-format
 msgid "Activate and scroll"
 msgstr "Aktivizēt un ritināt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:176
+#: actions.ui:181
 #, kde-format
 msgid "Activate, raise and scroll"
 msgstr "Aktivizēt, pacelt un ritināt"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:190
+#: actions.ui:195
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
 msgstr "Iekšējā loga, virsrakstjoslas un ietvara darbības"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:201
+#: actions.ui:206
 #, kde-format
 msgid "Mo&difier key:"
 msgstr "&Modifikatora taustiņš:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:211
+#: actions.ui:216
 #, kde-format
 msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
@@ -179,32 +186,32 @@ msgstr ""
 "veikt sekojošas darbības."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:215
+#: actions.ui:220
 #, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:220
+#: actions.ui:225
 #, kde-format
 msgid "Alt"
 msgstr "Alt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:242
+#: actions.ui:247
 #, kde-format
 msgid "  + "
 msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:254 mouse.ui:610
+#: actions.ui:259 mouse.ui:610
 #, kde-format
 msgid "L&eft click:"
 msgstr "&Kreisais klikšķis:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:267
+#: actions.ui:272
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into the "
@@ -216,7 +223,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:271 actions.ui:341 actions.ui:411
+#: actions.ui:276 actions.ui:346 actions.ui:416
 #, kde-format
 msgid "Move"
 msgstr "Pārvietot"
@@ -224,7 +231,7 @@ msgstr "Pārvietot"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:276 actions.ui:346 actions.ui:416
+#: actions.ui:281 actions.ui:351 actions.ui:421
 #, kde-format
 msgid "Activate, raise and move"
 msgstr "Aktivizēt, pacelt un pārvietot"
@@ -238,7 +245,7 @@ msgstr "Aktivizēt, pacelt un pārvietot"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:281 actions.ui:351 actions.ui:421 mouse.ui:252 mouse.ui:314
+#: actions.ui:286 actions.ui:356 actions.ui:426 mouse.ui:252 mouse.ui:314
 #: mouse.ui:367 mouse.ui:429 mouse.ui:482 mouse.ui:544
 #, kde-format
 msgid "Toggle raise and lower"
@@ -247,7 +254,7 @@ msgstr "Pārslēgt pacelšanu/nolaišanu"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:286 actions.ui:356 actions.ui:426
+#: actions.ui:291 actions.ui:361 actions.ui:431
 #, kde-format
 msgid "Resize"
 msgstr "Mainīt izmēru"
@@ -261,7 +268,7 @@ msgstr "Mainīt izmēru"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:291 actions.ui:361 actions.ui:431 mouse.ui:242 mouse.ui:304
+#: actions.ui:296 actions.ui:366 actions.ui:436 mouse.ui:242 mouse.ui:304
 #: mouse.ui:357 mouse.ui:419 mouse.ui:472 mouse.ui:534
 #, kde-format
 msgid "Raise"
@@ -278,7 +285,7 @@ msgstr "Pacelt"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:296 actions.ui:366 actions.ui:436 mouse.ui:68 mouse.ui:247
+#: actions.ui:301 actions.ui:371 actions.ui:441 mouse.ui:68 mouse.ui:247
 #: mouse.ui:309 mouse.ui:362 mouse.ui:424 mouse.ui:477 mouse.ui:539
 #, kde-format
 msgid "Lower"
@@ -295,7 +302,7 @@ msgstr "Nolaist"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:301 actions.ui:371 actions.ui:441 mouse.ui:58 mouse.ui:257
+#: actions.ui:306 actions.ui:376 actions.ui:446 mouse.ui:58 mouse.ui:257
 #: mouse.ui:319 mouse.ui:372 mouse.ui:434 mouse.ui:487 mouse.ui:549
 #, kde-format
 msgid "Minimize"
@@ -304,7 +311,7 @@ msgstr "Minimizēt"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:306 actions.ui:376 actions.ui:446
+#: actions.ui:311 actions.ui:381 actions.ui:451
 #, kde-format
 msgid "Decrease opacity"
 msgstr "Samazināt necaurspīdīgumu"
@@ -312,7 +319,7 @@ msgstr "Samazināt necaurspīdīgumu"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:311 actions.ui:381 actions.ui:451
+#: actions.ui:316 actions.ui:386 actions.ui:456
 #, kde-format
 msgid "Increase opacity"
 msgstr "Palielināt necaurspīdīgumu"
@@ -331,7 +338,7 @@ msgstr "Palielināt necaurspīdīgumu"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:316 actions.ui:386 actions.ui:456 actions.ui:511 advanced.ui:154
+#: actions.ui:321 actions.ui:391 actions.ui:461 actions.ui:516 advanced.ui:154
 #: mouse.ui:83 mouse.ui:135 mouse.ui:277 mouse.ui:339 mouse.ui:392 mouse.ui:454
 #: mouse.ui:507 mouse.ui:569
 #, kde-format
@@ -339,13 +346,13 @@ msgid "Do nothing"
 msgstr "Nedarīt neko"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:324
+#: actions.ui:329
 #, kde-format
 msgid "Middle &click:"
 msgstr "Vidējais &klikšķis:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:337
+#: actions.ui:342
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
@@ -356,13 +363,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:394 mouse.ui:680
+#: actions.ui:399 mouse.ui:680
 #, kde-format
 msgid "Right clic&k:"
 msgstr "Labais &klikšķis:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:407
+#: actions.ui:412
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
@@ -372,13 +379,13 @@ msgstr ""
 "virsrakstjoslā vai ietvarā."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:464
+#: actions.ui:469
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "&Peles ritenis:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:477
+#: actions.ui:482
 #, kde-format
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
@@ -389,42 +396,42 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:481 mouse.ui:105
+#: actions.ui:486 mouse.ui:105
 #, kde-format
 msgid "Raise/lower"
 msgstr "Pacelt/nolaist"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:486 mouse.ui:110
+#: actions.ui:491 mouse.ui:110
 #, kde-format
 msgid "Shade/unshade"
 msgstr "Saritināt/atritināt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:491 mouse.ui:115
+#: actions.ui:496 mouse.ui:115
 #, kde-format
 msgid "Maximize/restore"
 msgstr "Maksimizēt/atjaunot"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:496 mouse.ui:120
+#: actions.ui:501 mouse.ui:120
 #, kde-format
 msgid "Keep above/below"
 msgstr "Paturēt virs/zem citiem"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:501 mouse.ui:125
+#: actions.ui:506 mouse.ui:125
 #, kde-format
 msgid "Move to previous/next desktop"
 msgstr "Pārvietot uz iepriekšējo/nākamo darbvirsmu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:506 mouse.ui:130
+#: actions.ui:511 mouse.ui:130
 #, kde-format
 msgid "Change opacity"
 msgstr "Mainīt necaurspīdīgumu"
