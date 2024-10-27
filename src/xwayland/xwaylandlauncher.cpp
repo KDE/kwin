@@ -145,6 +145,9 @@ bool XwaylandLauncher::start()
         qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
         Q_EMIT errorOccurred();
         return false;
+    } else {
+        fdsToClose << fd;
+        fdsToClose << sx[1];
     }
 
     const int waylandSocket = waylandServer()->createXWaylandConnection();
@@ -158,6 +161,9 @@ bool XwaylandLauncher::start()
         qCWarning(KWIN_XWL, "Failed to open socket for Xwayland server: %s", strerror(errno));
         Q_EMIT errorOccurred();
         return false;
+    } else {
+        fdsToClose << wlfd;
+        fdsToClose << waylandSocket;
     }
 
     m_xcbConnectionFd = sx[0];
