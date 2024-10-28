@@ -15,7 +15,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
     ${private_code_option}
     FILES
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
-        ${CMAKE_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v4.xml
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/color-management-v1.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
         ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
         ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml

@@ -27,6 +27,7 @@
 #include "wayland/alphamodifier_v1.h"
 #include "wayland/appmenu.h"
 #include "wayland/clientconnection.h"
+#include "wayland/colormanagement_v1.h"
 #include "wayland/compositor.h"
 #include "wayland/contenttype_v1.h"
 #include "wayland/cursorshape_v1.h"
@@ -80,7 +81,6 @@
 #include "wayland/xdgshell.h"
 #include "wayland/xdgtopleveldrag_v1.h"
 #include "wayland/xdgtoplevelicon_v1.h"
-#include "wayland/xx_colormanagement_v4.h"
 #include "workspace.h"
 #include "xdgactivationv1.h"
 #include "xdgshellintegration.h"
@@ -497,7 +497,7 @@ bool WaylandServer::init()
 
     new FrogColorManagementV1(m_display, m_display);
     new PresentationTime(m_display, m_display);
-    m_xxColorManager = new XXColorManagerV4(m_display, m_display);
+    m_colorManager = new ColorManagerV1(m_display, m_display);
     m_xdgDialogWm = new KWin::XdgDialogWmV1Interface(m_display, m_display);
     connect(m_xdgDialogWm, &KWin::XdgDialogWmV1Interface::dialogCreated, this, [this](KWin::XdgDialogV1Interface *dialog) {
         if (auto window = findXdgToplevelWindow(dialog->toplevel()->surface())) {
