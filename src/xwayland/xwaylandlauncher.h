@@ -75,6 +75,10 @@ Q_SIGNALS:
      */
     void ready();
     /**
+     * This signal is emitted when the Xwayland server is started.
+     */
+    void started();
+    /**
      * This signal is emitted when the Xwayland server quits or crashes
      */
     void finished();

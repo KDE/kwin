@@ -91,12 +91,8 @@ void XwaylandLauncher::enable()
 
     for (int socket : std::as_const(m_listenFds)) {
         QSocketNotifier *notifier = new QSocketNotifier(socket, QSocketNotifier::Read, this);
-        connect(notifier, &QSocketNotifier::activated, this, [this]() {
-            if (!m_xwaylandProcess) {
-                start();
-            }
-        });
-        connect(this, &XwaylandLauncher::ready, notifier, [notifier]() {
+        connect(notifier, &QSocketNotifier::activated, this, &XwaylandLauncher::start);
+        connect(this, &XwaylandLauncher::started, notifier, [notifier]() {
             notifier->setEnabled(false);
         });
         connect(this, &XwaylandLauncher::finished, notifier, [this, notifier]() {
@@ -217,6 +213,7 @@ bool XwaylandLauncher::start()
 
     m_xwaylandProcess->start();
 
+    Q_EMIT started();
     return true;
 }
 
