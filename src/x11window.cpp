@@ -3039,8 +3039,12 @@ void X11Window::ackSync()
     m_syncRequest.acked = true;
     m_syncRequest.timeout->stop();
 
+    // Xwayland may still commit the wl_surface even though _XWAYLAND_ALLOW_COMMITS is set to 0.
+    // See https://gitlab.freedesktop.org/xorg/xserver/-/issues/1764 for more details.
+    static bool xwaylandPerfectResizing = qEnvironmentVariableIntValue("KWIN_XWAYLAND_PERFECT_RESIZING");
+
     // With Xwayland, the sync request will be completed after the wl_surface is committed.
-    if (!waylandServer()) {
+    if (!(waylandServer() && xwaylandPerfectResizing)) {
         finishSync();
     }
     setAllowCommits(true);
