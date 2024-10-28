@@ -319,7 +319,7 @@ static struct
     FakeInput *fakeInput = nullptr;
     SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
     XdgWmDialogV1 *xdgWmDialogV1;
-    std::unique_ptr<XXColorManagerV4> colorManager;
+    std::unique_ptr<ColorManagerV1> colorManager;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -542,8 +542,8 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             }
         }
         if (flags & AdditionalWaylandInterface::ColorManagement) {
-            if (interface == xx_color_manager_v4_interface.name) {
-                s_waylandConnection.colorManager = std::make_unique<XXColorManagerV4>(*registry, name, version);
+            if (interface == wp_color_manager_v1_interface.name) {
+                s_waylandConnection.colorManager = std::make_unique<ColorManagerV1>(*registry, name, version);
             }
         }
     });
@@ -790,7 +790,7 @@ SecurityContextManagerV1 *waylandSecurityContextManagerV1()
     return s_waylandConnection.securityContextManagerV1;
 }
 
-XXColorManagerV4 *colorManager()
+ColorManagerV1 *colorManager()
 {
     return s_waylandConnection.colorManager.get();
 }
@@ -1756,14 +1756,14 @@ bool VirtualInputDevice::isLidSwitch() const
     return m_lidSwitch;
 }
 
-XXColorManagerV4::XXColorManagerV4(::wl_registry *registry, uint32_t id, int version)
-    : QtWayland::xx_color_manager_v4(registry, id, version)
+ColorManagerV1::ColorManagerV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_color_manager_v1(registry, id, version)
 {
 }
 
-XXColorManagerV4::~XXColorManagerV4()
+ColorManagerV1::~ColorManagerV1()
 {
-    xx_color_manager_v4_destroy(object());
+    wp_color_manager_v1_destroy(object());
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)

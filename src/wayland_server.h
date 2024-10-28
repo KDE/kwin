@@ -61,7 +61,7 @@ class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
 class PresentationTime;
-class XXColorManagerV4;
+class ColorManagerV1;
 class LinuxDrmSyncObjV1Interface;
 class RenderBackend;
 class AlphaModifierManagerV1;
@@ -290,7 +290,7 @@ private:
     QHash<Output *, OutputDeviceV2Interface *> m_waylandOutputDevices;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
-    XXColorManagerV4 *m_xxColorManager = nullptr;
+    ColorManagerV1 *m_colorManager = nullptr;
     XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
     ExternalBrightnessV1 *m_externalBrightness = nullptr;
     AlphaModifierManagerV1 *m_alphaModifierManager = nullptr;

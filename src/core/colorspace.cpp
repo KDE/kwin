@@ -43,6 +43,17 @@ QVector2D xy::asVector() const
     return QVector2D(x, y);
 }
 
+bool xy::operator==(const xy &other) const
+{
+    return qFuzzyCompare(x, other.x)
+        && qFuzzyCompare(y, other.y);
+}
+
+bool xy::operator!=(const xy &other) const
+{
+    return !(*this == other);
+}
+
 XYZ xyY::toXYZ() const
 {
     if (y == 0) {
@@ -53,6 +64,18 @@ XYZ xyY::toXYZ() const
         .Y = Y,
         .Z = Y * (1 - x - y) / y,
     };
+}
+
+bool xyY::operator==(const xyY &other) const
+{
+    return qFuzzyCompare(x, other.x)
+        && qFuzzyCompare(y, other.y)
+        && qFuzzyCompare(Y, other.Y);
+}
+
+bool xyY::operator!=(const xyY &other) const
+{
+    return !(*this == other);
 }
 
 xyY XYZ::toxyY() const
@@ -128,6 +151,18 @@ XYZ XYZ::fromVector(const QVector3D &vector)
         .Y = vector.y(),
         .Z = vector.z(),
     };
+}
+
+bool XYZ::operator==(const XYZ &other) const
+{
+    return qFuzzyCompare(X, other.X)
+        && qFuzzyCompare(Y, other.Y)
+        && qFuzzyCompare(Z, other.Z);
+}
+
+bool XYZ::operator!=(const XYZ &other) const
+{
+    return !(*this == other);
 }
 
 QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(XYZ sourceWhitepoint, XYZ destinationWhitepoint)
@@ -631,9 +666,8 @@ double TransferFunction::defaultMinLuminanceFor(Type type)
     switch (type) {
     case Type::sRGB:
     case Type::gamma22:
-        return 0.02;
     case Type::linear:
-        return 0;
+        return 0.2;
     case Type::PerceptualQuantizer:
         return 0.005;
     }
@@ -645,7 +679,6 @@ double TransferFunction::defaultMaxLuminanceFor(Type type)
     switch (type) {
     case Type::sRGB:
     case Type::gamma22:
-        return 80;
     case Type::linear:
         return 80;
     case Type::PerceptualQuantizer:
@@ -660,7 +693,6 @@ double TransferFunction::defaultReferenceLuminanceFor(Type type)
     case Type::PerceptualQuantizer:
         return 203;
     case Type::linear:
-        return 80;
     case Type::sRGB:
     case Type::gamma22:
         return 80;

@@ -55,7 +55,8 @@ struct KWIN_EXPORT xy
 
     XYZ toXYZ() const;
     QVector2D asVector() const;
-    auto operator<=>(const xy &) const = default;
+    bool operator==(const xy &other) const;
+    bool operator!=(const xy &other) const;
 };
 struct KWIN_EXPORT xyY
 {
@@ -64,7 +65,8 @@ struct KWIN_EXPORT xyY
     double Y;
 
     XYZ toXYZ() const;
-    auto operator<=>(const xyY &) const = default;
+    bool operator==(const xyY &other) const;
+    bool operator!=(const xyY &other) const;
 };
 struct KWIN_EXPORT XYZ
 {
@@ -78,7 +80,8 @@ struct KWIN_EXPORT XYZ
     XYZ operator*(double factor) const;
     XYZ operator/(double factor) const;
     XYZ operator+(const XYZ &other) const;
-    auto operator<=>(const XYZ &) const = default;
+    bool operator==(const XYZ &other) const;
+    bool operator!=(const XYZ &other) const;
 
     static XYZ fromVector(const QVector3D &vector);
 };

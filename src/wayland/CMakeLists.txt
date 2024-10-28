@@ -279,8 +279,8 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
-    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v4.xml
-    BASENAME xx-color-management-v4
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/color-management-v1.xml
+    BASENAME color-management-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
@@ -321,6 +321,7 @@ target_sources(kwin PRIVATE
     appmenu.cpp
     blur.cpp
     clientconnection.cpp
+    colormanagement_v1.cpp
     compositor.cpp
     contenttype_v1.cpp
     contrast.cpp
@@ -401,7 +402,6 @@ target_sources(kwin PRIVATE
     xdgtoplevelicon_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
-    xx_colormanagement_v4.cpp
 )
 
 install(FILES
@@ -409,6 +409,7 @@ install(FILES
     appmenu.h
     blur.h
     clientconnection.h
+    colormanagement_v1.h
     compositor.h
     contenttype_v1.h
     contrast.h
@@ -481,21 +482,20 @@ install(FILES
     xdgtoplevelicon_v1.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
-    xx_colormanagement_v4.h
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-alpha-modifier-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-management-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-external-brightness-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
-    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v4.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-external-brightness-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
-    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v4-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

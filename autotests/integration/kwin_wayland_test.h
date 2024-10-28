@@ -20,6 +20,7 @@
 #include <KWayland/Client/surface.h>
 #include <optional>
 
+#include "qwayland-color-management-v1.h"
 #include "qwayland-cursor-shape-v1.h"
 #include "qwayland-fake-input.h"
 #include "qwayland-fractional-scale-v1.h"
@@ -34,7 +35,6 @@
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-dialog-v1.h"
 #include "qwayland-xdg-shell.h"
-#include "qwayland-xx-color-management-v4.h"
 #include "qwayland-zkde-screencast-unstable-v1.h"
 
 namespace KWayland
@@ -674,11 +674,11 @@ private:
     bool m_tabletTool = false;
 };
 
-class XXColorManagerV4 : public QtWayland::xx_color_manager_v4
+class ColorManagerV1 : public QtWayland::wp_color_manager_v1
 {
 public:
-    explicit XXColorManagerV4(::wl_registry *registry, uint32_t id, int version);
-    ~XXColorManagerV4() override;
+    explicit ColorManagerV1(::wl_registry *registry, uint32_t id, int version);
+    ~ColorManagerV1() override;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -739,7 +739,7 @@ ScreencastingV1 *screencasting();
 QList<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 FakeInput *waylandFakeInput();
 SecurityContextManagerV1 *waylandSecurityContextManagerV1();
-XXColorManagerV4 *colorManager();
+ColorManagerV1 *colorManager();
 
 bool waitForWaylandSurface(Window *window);
 

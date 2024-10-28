@@ -22,7 +22,7 @@
 #include <KWayland/Client/surface.h>
 #include <format>
 
-#include "qwayland-xx-color-management-v4.h"
+#include "qwayland-color-management-v1.h"
 
 using namespace std::chrono_literals;
 
@@ -31,26 +31,26 @@ namespace KWin
 
 static const QString s_socketName = QStringLiteral("wayland_test_color_management-0");
 
-class ImageDescription : public QObject, public QtWayland::xx_image_description_v4
+class ImageDescription : public QObject, public QtWayland::wp_image_description_v1
 {
     Q_OBJECT
 public:
-    explicit ImageDescription(::xx_image_description_v4 *descr)
-        : QtWayland::xx_image_description_v4(descr)
+    explicit ImageDescription(::wp_image_description_v1 *descr)
+        : QtWayland::wp_image_description_v1(descr)
     {
     }
 
     ~ImageDescription() override
     {
-        xx_image_description_v4_destroy(object());
+        wp_image_description_v1_destroy(object());
     }
 
-    void xx_image_description_v4_ready(uint32_t identity) override
+    void wp_image_description_v1_ready(uint32_t identity) override
     {
         Q_EMIT ready();
     }
 
-    void xx_image_description_v4_failed(uint32_t cause, const QString &msg) override
+    void wp_image_description_v1_failed(uint32_t cause, const QString &msg) override
     {
         Q_EMIT failed();
     }
@@ -60,18 +60,18 @@ Q_SIGNALS:
     void failed();
 };
 
-class ColorManagementSurface : public QObject, public QtWayland::xx_color_management_surface_v4
+class ColorManagementSurface : public QObject, public QtWayland::wp_color_management_surface_v1
 {
     Q_OBJECT
 public:
-    explicit ColorManagementSurface(::xx_color_management_surface_v4 *obj)
-        : QtWayland::xx_color_management_surface_v4(obj)
+    explicit ColorManagementSurface(::wp_color_management_surface_v1 *obj)
+        : QtWayland::wp_color_management_surface_v1(obj)
     {
     }
 
     ~ColorManagementSurface() override
     {
-        xx_color_management_surface_v4_destroy(object());
+        wp_color_management_surface_v1_destroy(object());
     }
 };
 
@@ -89,7 +89,6 @@ private Q_SLOTS:
     void testUnsupportedPrimaries();
     void testNoPrimaries();
     void testNoTf();
-    void testNonsensePrimaries();
 };
 
 void ColorManagementTest::initTestCase()
@@ -131,15 +130,44 @@ void ColorManagementTest::testSetImageDescription_data()
     QTest::addColumn<ColorDescription>("input");
     QTest::addColumn<bool>("protocolError");
     QTest::addColumn<bool>("shouldSucceed");
+    QTest::addColumn<std::optional<ColorDescription>>("expectedResult");
 
-    QTest::addRow("sRGB") << ColorDescription::sRGB << false << true;
-    QTest::addRow("rec.2020 PQ") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << true;
-    QTest::addRow("scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80) << false << true;
-    QTest::addRow("custom") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400) << false << true;
-    QTest::addRow("invalid tf") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400) << true << false;
-    // TODO this should fail with the wp protocol version
-    QTest::addRow("invalid HDR metadata") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400) << false << true;
-    QTest::addRow("rec.2020 PQ with out of bounds white point") << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
+    QTest::addRow("sRGB")
+        << ColorDescription::sRGB
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("rec.2020 PQ")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("scRGB")
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80)
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("custom")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400)
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("invalid tf")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400)
+        << true << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("invalid HDR metadata")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400)
+        << true << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("rec.2020 PQ with out of bounds white point")
+        << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << false << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("nonsense primaries")
+        << ColorDescription(Colorimetry(xy{0, 0}, xy{0, 0}, xy{0, 0}, xy{0, 0}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << false << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("custom PQ luminances are ignored")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 100), 203, 0, 400, 400)
+        << false << true
+        << std::make_optional<ColorDescription>(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 10'010), 203, 0, 400, 400);
 }
 
 void ColorManagementTest::testSetImageDescription()
@@ -151,40 +179,38 @@ void ColorManagementTest::testSetImageDescription()
 
     auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*surface));
 
-    QtWayland::xx_image_description_creator_params_v4 creator(Test::colorManager()->new_parametric_creator());
+    QtWayland::wp_image_description_creator_params_v1 creator(Test::colorManager()->create_parametric_creator());
 
     QFETCH(ColorDescription, input);
 
-    creator.set_primaries(std::round(10'000 * input.containerColorimetry().red().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().red().toxyY().y),
-                          std::round(10'000 * input.containerColorimetry().green().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().green().toxyY().y),
-                          std::round(10'000 * input.containerColorimetry().blue().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().blue().toxyY().y),
-                          std::round(10'000 * input.containerColorimetry().white().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().white().toxyY().y));
+    creator.set_primaries(std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().y),
+                          std::round(1'000'000.0 * input.containerColorimetry().green().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().green().toxyY().y),
+                          std::round(1'000'000.0 * input.containerColorimetry().blue().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().blue().toxyY().y),
+                          std::round(1'000'000.0 * input.containerColorimetry().white().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().white().toxyY().y));
     switch (input.transferFunction().type) {
     case TransferFunction::sRGB:
-        creator.set_tf_named(XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_SRGB);
-        creator.set_luminances(std::round(input.transferFunction().minLuminance * 10'000), std::round(input.transferFunction().maxLuminance), std::round(input.referenceLuminance()));
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB);
         break;
     case TransferFunction::gamma22:
-        creator.set_tf_named(XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_GAMMA22);
-        creator.set_luminances(std::round(input.transferFunction().minLuminance * 10'000), std::round(input.transferFunction().maxLuminance), std::round(input.referenceLuminance()));
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22);
         break;
     case TransferFunction::linear:
-        creator.set_tf_named(XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_LINEAR);
-        creator.set_luminances(std::round(input.transferFunction().minLuminance * 10'000), std::round(input.transferFunction().maxLuminance), std::round(input.referenceLuminance()));
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR);
         break;
     case TransferFunction::PerceptualQuantizer:
-        creator.set_tf_named(XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_ST2084_PQ);
-        creator.set_max_fall(std::round(input.maxAverageLuminance().value_or(0)));
-        creator.set_max_cll(std::round(input.maxHdrLuminance().value_or(0)));
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ);
         break;
     }
+    creator.set_luminances(std::round(input.transferFunction().minLuminance * 10'000), std::round(input.transferFunction().maxLuminance), std::round(input.referenceLuminance()));
+    creator.set_max_fall(std::round(input.maxAverageLuminance().value_or(0)));
+    creator.set_max_cll(std::round(input.maxHdrLuminance().value_or(0)));
     creator.set_mastering_luminance(std::round(input.minLuminance() * 10'000), std::round(input.maxHdrLuminance().value_or(0)));
 
-    ImageDescription imageDescr(xx_image_description_creator_params_v4_create(creator.object()));
+    ImageDescription imageDescr(wp_image_description_creator_params_v1_create(creator.object()));
 
     QFETCH(bool, protocolError);
     if (protocolError) {
@@ -194,60 +220,52 @@ void ColorManagementTest::testSetImageDescription()
     }
 
     QFETCH(bool, shouldSucceed);
+    QFETCH(std::optional<ColorDescription>, expectedResult);
     if (shouldSucceed) {
         QSignalSpy ready(&imageDescr, &ImageDescription::ready);
         QVERIFY(ready.wait(50ms));
 
-        cmSurf->set_image_description(imageDescr.object(), XX_COLOR_MANAGER_V4_RENDER_INTENT_PERCEPTUAL);
+        cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
         QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
         QVERIFY(colorChange.wait());
 
-        QCOMPARE(window->surface()->colorDescription(), input);
+        QCOMPARE(window->surface()->colorDescription(), expectedResult.value_or(input));
     } else {
         QSignalSpy fail(&imageDescr, &ImageDescription::failed);
         QVERIFY(fail.wait(50ms));
 
         // trying to use a failed image description should cause an error
         QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-        cmSurf->set_image_description(imageDescr.object(), XX_COLOR_MANAGER_V4_RENDER_INTENT_PERCEPTUAL);
+        cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
         QVERIFY(error.wait(50ms));
     }
 }
 
 void ColorManagementTest::testUnsupportedPrimaries()
 {
-    QtWayland::xx_image_description_creator_params_v4 creator = QtWayland::xx_image_description_creator_params_v4(Test::colorManager()->new_parametric_creator());
+    QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
     creator.set_primaries_named(-1);
-    xx_image_description_creator_params_v4_create(creator.object());
+    wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
 }
 
 void ColorManagementTest::testNoPrimaries()
 {
-    QtWayland::xx_image_description_creator_params_v4 creator = QtWayland::xx_image_description_creator_params_v4(Test::colorManager()->new_parametric_creator());
-    creator.set_tf_named(XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_LINEAR);
-    xx_image_description_creator_params_v4_create(creator.object());
+    QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
+    creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR);
+    wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
 }
 
 void ColorManagementTest::testNoTf()
 {
-    QtWayland::xx_image_description_creator_params_v4 creator = QtWayland::xx_image_description_creator_params_v4(Test::colorManager()->new_parametric_creator());
-    creator.set_primaries_named(XX_COLOR_MANAGER_V4_PRIMARIES_CIE1931_XYZ);
-    xx_image_description_creator_params_v4_create(creator.object());
-    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-    QVERIFY(error.wait(50ms));
-}
-
-void ColorManagementTest::testNonsensePrimaries()
-{
-    QtWayland::xx_image_description_creator_params_v4 creator = QtWayland::xx_image_description_creator_params_v4(Test::colorManager()->new_parametric_creator());
-    creator.set_primaries(0, 0, 0, 0, 0, 0, 0, 0);
-    xx_image_description_creator_params_v4_create(creator.object());
+    QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
+    creator.set_primaries_named(WP_COLOR_MANAGER_V1_PRIMARIES_CIE1931_XYZ);
+    wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
 }
