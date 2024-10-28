@@ -180,16 +180,17 @@ bool XwaylandLauncher::start()
     arguments << QStringLiteral("-enable-ei-portal");
 #endif
 
-    m_xwaylandProcess = new QProcess(this);
-    m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-    m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("WAYLAND_SOCKET", QByteArray::number(waylandSocket));
     if (qEnvironmentVariableIntValue("KWIN_XWAYLAND_DEBUG") == 1) {
         env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
     }
-    m_xwaylandProcess->setProcessEnvironment(env);
+
+    m_xwaylandProcess = new QProcess(this);
+    m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
     m_xwaylandProcess->setArguments(arguments);
+    m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+    m_xwaylandProcess->setProcessEnvironment(env);
     m_xwaylandProcess->setChildProcessModifier([this, fdsToPass]() {
         for (const int &fd : fdsToPass) {
             const int originalFlags = fcntl(fd, F_GETFD);
