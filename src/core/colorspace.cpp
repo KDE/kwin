@@ -631,11 +631,10 @@ double TransferFunction::defaultMinLuminanceFor(Type type)
     switch (type) {
     case Type::sRGB:
     case Type::gamma22:
-        return 0.02;
     case Type::linear:
-        return 0;
+        return 0.2;
     case Type::PerceptualQuantizer:
-        return 0.005;
+        return 0;
     }
     Q_UNREACHABLE();
 }
@@ -645,7 +644,6 @@ double TransferFunction::defaultMaxLuminanceFor(Type type)
     switch (type) {
     case Type::sRGB:
     case Type::gamma22:
-        return 80;
     case Type::linear:
         return 80;
     case Type::PerceptualQuantizer:
@@ -660,7 +658,6 @@ double TransferFunction::defaultReferenceLuminanceFor(Type type)
     case Type::PerceptualQuantizer:
         return 203;
     case Type::linear:
-        return 80;
     case Type::sRGB:
     case Type::gamma22:
         return 80;

@@ -7,6 +7,7 @@
 #include "surface.h"
 #include "blur.h"
 #include "clientconnection.h"
+#include "colormanagement_v1.h"
 #include "compositor.h"
 #include "contrast.h"
 #include "display.h"
@@ -25,7 +26,6 @@
 #include "surface_p.h"
 #include "transaction.h"
 #include "utils/resource.h"
-#include "xx_colormanagement_v4.h"
 
 #include <wayland-server.h>
 // std
@@ -1126,7 +1126,7 @@ void SurfaceInterface::setPreferredColorDescription(const ColorDescription &desc
     if (d->frogColorManagement) {
         d->frogColorManagement->setPreferredColorDescription(descr);
     }
-    for (const auto feedbackSurface : std::as_const(d->xxColorFeedbacks)) {
+    for (const auto feedbackSurface : std::as_const(d->colorFeedbackSurfaces)) {
         feedbackSurface->setPreferredColorDescription(descr);
     }
     for (auto child : std::as_const(d->current->subsurface.below)) {
