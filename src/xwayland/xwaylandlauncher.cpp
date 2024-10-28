@@ -187,7 +187,7 @@ bool XwaylandLauncher::start()
     }
 
     m_xwaylandProcess = new QProcess(this);
-    m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
+    m_xwaylandProcess->setProgram(QStandardPaths::findExecutable("Xwayland"));
     m_xwaylandProcess->setArguments(arguments);
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_xwaylandProcess->setProcessEnvironment(env);
