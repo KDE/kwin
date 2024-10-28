@@ -394,9 +394,7 @@ XXImageDescriptionV4::XXImageDescriptionV4(wl_client *client, uint32_t id, uint3
     : QtWaylandServer::xx_image_description_v4(client, id, version)
     , m_description(color)
 {
-    // there's no need to track image description identities, as our descriptions are very lightweight
-    static uint32_t s_identity = 1;
-    send_ready(resource()->handle, s_identity++);
+    send_ready(resource()->handle, 0);
 }
 
 void XXImageDescriptionV4::xx_image_description_v4_destroy_resource(Resource *resource)
