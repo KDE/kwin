@@ -486,8 +486,8 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
         display->m_presentationTime = reinterpret_cast<wp_presentation *>(wl_registry_bind(registry, name, &wp_presentation_interface, std::min(version, 2u)));
     } else if (strcmp(interface, wp_tearing_control_v1_interface.name) == 0) {
         display->m_tearingControl = reinterpret_cast<wp_tearing_control_manager_v1 *>(wl_registry_bind(registry, name, &wp_tearing_control_v1_interface, 1));
-    } else if (strcmp(interface, xx_color_manager_v4_interface.name) == 0) {
-        const auto global = reinterpret_cast<xx_color_manager_v4 *>(wl_registry_bind(registry, name, &xx_color_manager_v4_interface, 1));
+    } else if (strcmp(interface, wp_color_manager_v1_interface.name) == 0) {
+        const auto global = reinterpret_cast<wp_color_manager_v1 *>(wl_registry_bind(registry, name, &wp_color_manager_v1_interface, 1));
         display->m_colorManager = std::make_unique<ColorManager>(global);
     }
 }

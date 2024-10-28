@@ -29,7 +29,7 @@ class XdgDecoration;
 struct wl_buffer;
 struct wp_presentation_feedback;
 struct wp_tearing_control_v1;
-struct xx_color_management_surface_v4;
+struct wp_color_management_surface_v1;
 
 namespace KWin
 {
@@ -115,7 +115,7 @@ private:
     QTimer m_configureThrottleTimer;
     wp_presentation_feedback *m_presentationFeedback = nullptr;
     wp_tearing_control_v1 *m_tearingControl = nullptr;
-    xx_color_management_surface_v4 *m_colorSurface = nullptr;
+    wp_color_management_surface_v1 *m_colorSurface = nullptr;
     uint32_t m_refreshRate = 60'000;
 };
 

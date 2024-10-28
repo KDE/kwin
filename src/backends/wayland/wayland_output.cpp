@@ -116,14 +116,14 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         m_tearingControl = wp_tearing_control_manager_v1_get_tearing_control(manager, *m_surface);
     }
     if (auto manager = backend->display()->colorManager()) {
-        const bool supportsHDR = manager->supportsFeature(XX_COLOR_MANAGER_V4_FEATURE_PARAMETRIC)
-            && manager->supportsFeature(XX_COLOR_MANAGER_V4_FEATURE_SET_LUMINANCES)
-            && manager->supportsPrimaries(XX_COLOR_MANAGER_V4_PRIMARIES_BT2020)
-            && manager->supportsTransferFunction(XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_GAMMA22);
+        const bool supportsHDR = manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_PARAMETRIC)
+            && manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_LUMINANCES)
+            && manager->supportsPrimaries(WP_COLOR_MANAGER_V1_PRIMARIES_BT2020)
+            && manager->supportsTransferFunction(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22);
         if (supportsHDR) {
             caps |= Capability::HighDynamicRange;
             caps |= Capability::WideColorGamut;
-            m_colorSurface = xx_color_manager_v4_get_surface(manager->object(), *m_surface);
+            m_colorSurface = wp_color_manager_v1_get_surface(manager->object(), *m_surface);
         }
     }
     setInformation(Information{
@@ -168,7 +168,7 @@ WaylandOutput::~WaylandOutput()
         m_tearingControl = nullptr;
     }
     if (m_colorSurface) {
-        xx_color_management_surface_v4_destroy(m_colorSurface);
+        wp_color_management_surface_v1_destroy(m_colorSurface);
         m_colorSurface = nullptr;
     }
     m_xdgDecoration.reset();
@@ -301,8 +301,8 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
 
     if (m_colorSurface) {
         const auto imageDescription = m_backend->display()->colorManager()->createImageDescription(next.colorDescription);
-        xx_color_management_surface_v4_set_image_description(m_colorSurface, imageDescription, XX_COLOR_MANAGER_V4_RENDER_INTENT_PERCEPTUAL);
-        xx_image_description_v4_destroy(imageDescription);
+        wp_color_management_surface_v1_set_image_description(m_colorSurface, imageDescription, WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
+        wp_image_description_v1_destroy(imageDescription);
     }
 }
 
