@@ -44,7 +44,7 @@ msgstr ""
 #: actions.ui:46
 #, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr ""
+msgstr "激活，提升，传递点击 (松开时)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)

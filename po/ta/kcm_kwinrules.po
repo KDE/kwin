@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-18 00:41+0000\n"
-"PO-Revision-Date: 2024-08-04 17:48+0530\n"
+"PO-Revision-Date: 2024-10-27 12:38+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -408,7 +408,7 @@ msgstr "தோற்றமும் திருத்தங்களும்"
 #: rulesmodel.cpp:607
 #, kde-format
 msgid "Titlebar color scheme"
-msgstr "தலைப்புப்பட்டயின் நிறத்திட்டம்"
+msgstr "தலைப்புப்பட்டையின் நிறத்திட்டம்"
 
 #: rulesmodel.cpp:613
 #, kde-format
