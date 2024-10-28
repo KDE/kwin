@@ -27,8 +27,8 @@ class TearingControlV1Interface;
 class FractionalScaleV1Interface;
 class FrogColorManagementSurfaceV1;
 class PresentationTimeFeedback;
-class XXColorSurfaceV4;
-class XXColorFeedbackSurfaceV4;
+class ColorSurfaceV1;
+class ColorFeedbackSurfaceV1;
 class LinuxDrmSyncObjSurfaceV1;
 class AlphaModifierSurfaceV1;
 
@@ -181,8 +181,8 @@ public:
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
     FrogColorManagementSurfaceV1 *frogColorManagement = nullptr;
-    XXColorSurfaceV4 *xxColorSurface = nullptr;
-    QList<XXColorFeedbackSurfaceV4 *> xxColorFeedbacks;
+    ColorSurfaceV1 *colorSurface = nullptr;
+    QList<ColorFeedbackSurfaceV1 *> colorFeedbackSurfaces;
     LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
 
