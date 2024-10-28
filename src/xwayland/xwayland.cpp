@@ -678,7 +678,7 @@ void Xwayland::updatePrimary()
 
 bool Xwayland::createX11Connection()
 {
-    xcb_connection_t *connection = xcb_connect_to_fd(m_launcher->xcbConnectionFd(), nullptr);
+    xcb_connection_t *connection = xcb_connect_to_fd(m_launcher->takeXcbConnectionFd().take(), nullptr);
 
     const int errorCode = xcb_connection_has_error(connection);
     if (errorCode) {

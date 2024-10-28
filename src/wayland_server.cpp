@@ -681,11 +681,11 @@ int WaylandServer::createScreenLockerConnection()
 }
 
 #if KWIN_BUILD_X11
-int WaylandServer::createXWaylandConnection()
+FileDescriptor WaylandServer::createXWaylandConnection()
 {
     const auto socket = createConnection();
     if (!socket.connection) {
-        return -1;
+        return FileDescriptor();
     }
     m_xwaylandConnection = socket.connection;
 
@@ -694,7 +694,7 @@ int WaylandServer::createXWaylandConnection()
         m_xwaylandConnection->setScaleOverride(kwinApp()->xwaylandScale());
     });
 
-    return socket.fd;
+    return FileDescriptor(socket.fd);
 }
 
 void WaylandServer::destroyXWaylandConnection()

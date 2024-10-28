@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "utils/filedescriptor.h"
+
 #include <QList>
 #include <QObject>
 #include <QProcess>
@@ -63,7 +65,7 @@ public:
 
     QString displayName() const;
     QString xauthority() const;
-    int xcbConnectionFd() const;
+    FileDescriptor takeXcbConnectionFd();
 
     /**
      * @internal
@@ -95,9 +97,8 @@ private Q_SLOTS:
 private:
     void maybeDestroyReadyNotifier();
 
-
     QProcess *m_xwaylandProcess = nullptr;
-    QSocketNotifier *m_readyNotifier = nullptr;
+    std::unique_ptr<QSocketNotifier> m_readyNotifier;
     QTimer *m_resetCrashCountTimer = nullptr;
     // this is only used when kwin is run without kwin_wayland_wrapper
     std::unique_ptr<XwaylandSocket> m_socket;
@@ -107,7 +108,8 @@ private:
 
     bool m_enabled = false;
     int m_crashCount = 0;
-    int m_xcbConnectionFd = -1;
+    FileDescriptor m_readyFd;
+    FileDescriptor m_xcbConnectionFd;
 };
 
 }

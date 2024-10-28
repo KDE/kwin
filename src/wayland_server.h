@@ -22,6 +22,7 @@ class ClientConnection;
 class CompositorInterface;
 class Display;
 class DataDeviceInterface;
+class FileDescriptor;
 class IdleInterface;
 class InputMethodV1Interface;
 class SeatInterface;
@@ -163,7 +164,7 @@ public:
     /**
      * @returns file descriptor for Xwayland to connect to.
      */
-    int createXWaylandConnection();
+    FileDescriptor createXWaylandConnection();
     void destroyXWaylandConnection();
 #endif
 
