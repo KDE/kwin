@@ -96,7 +96,7 @@ void XwaylandLauncher::enable()
                 start();
             }
         });
-        connect(this, &XwaylandLauncher::started, notifier, [notifier]() {
+        connect(this, &XwaylandLauncher::ready, notifier, [notifier]() {
             notifier->setEnabled(false);
         });
         connect(this, &XwaylandLauncher::finished, notifier, [this, notifier]() {
@@ -212,7 +212,7 @@ bool XwaylandLauncher::start()
     m_readyNotifier = new QSocketNotifier(displayfd[0], QSocketNotifier::Read, this);
     connect(m_readyNotifier, &QSocketNotifier::activated, this, [this]() {
         maybeDestroyReadyNotifier();
-        Q_EMIT started();
+        Q_EMIT ready();
     });
 
     m_xwaylandProcess->start();

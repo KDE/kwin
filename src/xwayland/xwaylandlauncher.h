@@ -71,11 +71,9 @@ public:
     QProcess *process() const;
 Q_SIGNALS:
     /**
-     * This signal is emitted when the Xwayland server has been started successfully and it is
-     * ready to accept and manage X11 clients.
-     * For restarts it may be emitted multiple times
+     * This signal is emitted when the Xwayland server is ready to accept connections.
      */
-    void started();
+    void ready();
     /**
      * This signal is emitted when the Xwayland server quits or crashes
      */

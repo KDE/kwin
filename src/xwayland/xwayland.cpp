@@ -485,7 +485,7 @@ Xwayland::Xwayland(Application *app)
     : m_app(app)
     , m_launcher(new XwaylandLauncher(this))
 {
-    connect(m_launcher, &XwaylandLauncher::started, this, &Xwayland::handleXwaylandReady);
+    connect(m_launcher, &XwaylandLauncher::ready, this, &Xwayland::handleXwaylandReady);
     connect(m_launcher, &XwaylandLauncher::finished, this, &Xwayland::handleXwaylandFinished);
     connect(m_launcher, &XwaylandLauncher::errorOccurred, this, &Xwayland::errorOccurred);
 }
