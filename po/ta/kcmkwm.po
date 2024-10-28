@@ -5,13 +5,13 @@
 #
 # Vasee Vaseeharan <vasee@ieee.org>, 2004.
 # root <root@localhost.localdomain>, 2004.
-# Kishore G <kishore96@gmail.com>, 2022.
+# SPDX-FileCopyrightText: 2022, 2024 Kishore G <kishore96@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-24 02:49+0000\n"
-"PO-Revision-Date: 2022-12-06 21:42+0530\n"
+"PO-Revision-Date: 2024-10-27 11:25+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -399,7 +399,7 @@ msgstr "முன்கொணரும்/பின்னனுப்பும�
 #: actions.ui:486 mouse.ui:110
 #, kde-format
 msgid "Shade/unshade"
-msgstr ""
+msgstr "நிழலிடு/நிழல்நீக்கு"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -431,9 +431,9 @@ msgstr "ஒளிபுகாமையை மாற்றும்"
 
 #. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
 #: advanced.ui:20
-#, fuzzy, kde-format
+#, kde-format
 msgid "Window &unshading:"
-msgstr "சாளர நிழல்நீக்கம்"
+msgstr "&சாளர நிழல்நீக்கம்:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
@@ -883,7 +883,7 @@ msgstr "&திரையை பொறுத்த குவியம்"
 #: focus.ui:222
 #, kde-format
 msgid "Window activation policy description"
-msgstr ""
+msgstr "சாளரங்களை செயல்படுத்தும் கொள்கையின் விவரணம்"
 
 #: main.cpp:80
 #, kde-format

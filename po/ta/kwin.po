@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-25 02:33+0000\n"
-"PO-Revision-Date: 2024-10-20 14:28+0530\n"
+"PO-Revision-Date: 2024-10-27 12:38+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -3418,7 +3418,7 @@ msgstr "தலைப்புப்பட்டையை மறைக்கு�
 #: rulesettings.kcfg:304
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr "தலைப்புப்பட்டயின் நிறமும் தோற்றத்திட்டமும்"
+msgstr "தலைப்புப்பட்டையின் நிறமும் தோற்றத்திட்டமும்"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:307
