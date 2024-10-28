@@ -111,7 +111,7 @@ void KeyNotificationPlugin::modifiersChanged()
 
 void KeyNotificationPlugin::sendNotification(const QString &eventId, const QString &text)
 {
-    KNotification *notification = new KNotification(QStringLiteral("modifierkey-locked"));
+    KNotification *notification = new KNotification(eventId);
     notification->setComponentName(QStringLiteral("kaccess"));
     notification->setText(text);
     notification->sendEvent();
