@@ -1175,6 +1175,7 @@ bool Window::startInteractiveMoveResize()
 
     setInteractiveMoveResize(true);
     workspace()->setMoveResizeWindow(this);
+    workspace()->raiseWindow(this);
 
     m_interactiveMoveResize.initialGeometry = moveResizeGeometry();
     m_interactiveMoveResize.startOutput = moveResizeOutput();
