@@ -1,2 +1,1 @@
-add_subdirectory(org.kde.kdecoration2)
-
+add_subdirectory(org.kde.kdecoration3)

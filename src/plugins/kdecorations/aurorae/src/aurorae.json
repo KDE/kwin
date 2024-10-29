@@ -1,5 +1,5 @@
 {
-    "org.kde.kdecoration2": {
+    "org.kde.kdecoration3": {
         "KNewStuff": "aurorae.knsrc",
         "defaultTheme": "kwin4_decoration_qml_plastik",
         "themeListKeyword": "themes",

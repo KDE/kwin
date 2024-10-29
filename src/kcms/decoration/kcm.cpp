@@ -28,20 +28,20 @@
 
 K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kcm_kwindecoration.json", registerPlugin<KCMKWinDecoration>(); registerPlugin<KWinDecorationData>();)
 
-Q_DECLARE_METATYPE(KDecoration2::BorderSize)
+Q_DECLARE_METATYPE(KDecoration3::BorderSize)
 
 namespace
 {
-const KDecoration2::BorderSize s_defaultRecommendedBorderSize = KDecoration2::BorderSize::Normal;
+const KDecoration3::BorderSize s_defaultRecommendedBorderSize = KDecoration3::BorderSize::Normal;
 }
 
 KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData)
     : KQuickManagedConfigModule(parent, metaData)
-    , m_themesModel(new KDecoration2::Configuration::DecorationsModel(this))
+    , m_themesModel(new KDecoration3::Configuration::DecorationsModel(this))
     , m_proxyThemesModel(new QSortFilterProxyModel(this))
-    , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
-    , m_rightButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
-    , m_availableButtonsModel(new KDecoration2::Preview::ButtonsModel(this))
+    , m_leftButtonsModel(new KDecoration3::Preview::ButtonsModel(DecorationButtonsList(), this))
+    , m_rightButtonsModel(new KDecoration3::Preview::ButtonsModel(DecorationButtonsList(), this))
+    , m_availableButtonsModel(new KDecoration3::Preview::ButtonsModel(this))
     , m_data(new KWinDecorationData(this))
 {
     setButtons(Apply | Default | Help);
@@ -87,7 +87,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &met
         .connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
                  this, SLOT(reloadKWinSettings()));
 
-    QMetaObject::invokeMethod(m_themesModel, &KDecoration2::Configuration::DecorationsModel::init, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_themesModel, &KDecoration3::Configuration::DecorationsModel::init, Qt::QueuedConnection);
 }
 
 KWinDecorationSettings *KCMKWinDecoration::settings() const
@@ -97,7 +97,7 @@ KWinDecorationSettings *KCMKWinDecoration::settings() const
 
 void KCMKWinDecoration::reloadKWinSettings()
 {
-    QMetaObject::invokeMethod(m_themesModel, &KDecoration2::Configuration::DecorationsModel::init, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_themesModel, &KDecoration3::Configuration::DecorationsModel::init, Qt::QueuedConnection);
 }
 
 void KCMKWinDecoration::load()
@@ -197,7 +197,7 @@ int KCMKWinDecoration::borderSize() const
 
 int KCMKWinDecoration::recommendedBorderSize() const
 {
-    typedef KDecoration2::Configuration::DecorationsModel::DecorationRole DecoRole;
+    typedef KDecoration3::Configuration::DecorationsModel::DecorationRole DecoRole;
     const QModelIndex proxyIndex = m_proxyThemesModel->index(theme(), 0);
     if (proxyIndex.isValid()) {
         const QModelIndex index = m_proxyThemesModel->mapToSource(proxyIndex);
@@ -222,7 +222,7 @@ void KCMKWinDecoration::setBorderSize(int index)
     }
 }
 
-void KCMKWinDecoration::setBorderSize(KDecoration2::BorderSize size)
+void KCMKWinDecoration::setBorderSize(KDecoration3::BorderSize size)
 {
     settings()->setBorderSize(Utils::borderSizeToString(size));
 }
@@ -231,8 +231,8 @@ void KCMKWinDecoration::setTheme(int index)
 {
     QModelIndex dataIndex = m_proxyThemesModel->index(index, 0);
     if (dataIndex.isValid()) {
-        settings()->setTheme(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString());
-        settings()->setPluginName(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::PluginNameRole).toString());
+        settings()->setTheme(m_proxyThemesModel->data(dataIndex, KDecoration3::Configuration::DecorationsModel::ThemeNameRole).toString());
+        settings()->setPluginName(m_proxyThemesModel->data(dataIndex, KDecoration3::Configuration::DecorationsModel::PluginNameRole).toString());
         Q_EMIT themeChanged();
     }
 }

@@ -56,8 +56,8 @@
 #include "screenlockerwatcher.h"
 #endif
 
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/Decoration>
+#include <KDecoration3/DecorationSettings>
 
 #include <QFontMetrics>
 #include <QMatrix4x4>
@@ -1335,7 +1335,7 @@ QVariant EffectsHandler::kwinOption(KWinOption kwopt)
     case CloseButtonCorner: {
         // TODO: this could become per window and be derived from the actual position in the deco
         const auto settings = Workspace::self()->decorationBridge()->settings();
-        return settings && settings->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::Close) ? Qt::TopLeftCorner : Qt::TopRightCorner;
+        return settings && settings->decorationButtonsLeft().contains(KDecoration3::DecorationButtonType::Close) ? Qt::TopLeftCorner : Qt::TopRightCorner;
     }
     case SwitchDesktopOnScreenEdge:
         return workspace()->screenEdges()->isDesktopSwitching();

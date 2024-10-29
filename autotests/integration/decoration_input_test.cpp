@@ -29,8 +29,8 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/Decoration>
+#include <KDecoration3/DecorationSettings>
 
 #include <QSignalSpy>
 
@@ -318,7 +318,7 @@ void DecorationInputTest::testHover()
     //
     // TODO: Test input position with different border sizes.
     // TODO: We should test with the fake decoration to have a fixed test environment.
-    const bool hasBorders = Workspace::self()->decorationBridge()->settings()->borderSize() != KDecoration2::BorderSize::None;
+    const bool hasBorders = Workspace::self()->decorationBridge()->settings()->borderSize() != KDecoration3::BorderSize::None;
     auto deviation = [hasBorders] {
         return hasBorders ? -1 : 0;
     };

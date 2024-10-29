@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 
 #include <QColor>
 #include <QFont>
@@ -139,7 +139,7 @@ class DecorationOptions : public QObject
      *
      * Best pass the decoration object available as a context property to this property.
      */
-    Q_PROPERTY(KDecoration2::Decoration *deco READ decoration WRITE setDecoration NOTIFY decorationChanged)
+    Q_PROPERTY(KDecoration3::Decoration *deco READ decoration WRITE setDecoration NOTIFY decorationChanged)
     /**
      * The color for the titlebar depending on the decoration's active state.
      */
@@ -231,8 +231,8 @@ public:
     QFont titleFont() const;
     QList<int> titleButtonsLeft() const;
     QList<int> titleButtonsRight() const;
-    KDecoration2::Decoration *decoration() const;
-    void setDecoration(KDecoration2::Decoration *decoration);
+    KDecoration3::Decoration *decoration() const;
+    void setDecoration(KDecoration3::Decoration *decoration);
 
     int mousePressAndHoldInterval() const;
 
@@ -247,7 +247,7 @@ private Q_SLOTS:
 
 private:
     bool m_active;
-    KDecoration2::Decoration *m_decoration;
+    KDecoration3::Decoration *m_decoration;
     ColorSettings m_colors;
     QMetaObject::Connection m_paletteConnection;
 };

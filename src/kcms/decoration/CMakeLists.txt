@@ -23,7 +23,7 @@ kconfig_add_kcfg_files(kcmkwindecoration_SRCS kwindecorationsettings.kcfgc GENER
 kcmutils_add_qml_kcm(kcm_kwindecoration SOURCES ${kcmkwindecoration_SRCS})
 
 target_link_libraries(kcm_kwindecoration PRIVATE
-    KDecoration2::KDecoration
+    KDecoration3::KDecoration
     KF6::I18n
     KF6::KCMUtils
     KF6::KCMUtilsQuick
@@ -41,7 +41,7 @@ kconfig_add_kcfg_files(kwin-applywindowdecoration_SRCS kwindecorationsettings.kc
 add_executable(kwin-applywindowdecoration ${kwin-applywindowdecoration_SRCS})
 
 target_link_libraries(kwin-applywindowdecoration
-    KDecoration2::KDecoration
+    KDecoration3::KDecoration
     Qt::DBus
     KF6::I18n
     KF6::KCMUtils

@@ -103,7 +103,7 @@ private:
 class XdgToplevelConfigure final : public XdgSurfaceConfigure
 {
 public:
-    std::shared_ptr<KDecoration2::Decoration> decoration;
+    std::shared_ptr<KDecoration3::Decoration> decoration;
     XdgToplevelInterface::States states;
     QPointer<Tile> tile = nullptr;
 };
@@ -238,7 +238,7 @@ private:
     bool m_userNoBorder = false;
     bool m_isTransient = false;
     QPointer<Output> m_fullScreenRequestedOutput;
-    std::shared_ptr<KDecoration2::Decoration> m_nextDecoration;
+    std::shared_ptr<KDecoration3::Decoration> m_nextDecoration;
     std::unique_ptr<KillPrompt> m_killPrompt;
 };
 

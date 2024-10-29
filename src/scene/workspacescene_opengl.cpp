@@ -111,7 +111,7 @@ private:
         std::shared_ptr<GLTexture> texture;
         QList<ShadowTextureProvider *> providers;
     };
-    QHash<KDecoration2::DecorationShadow *, Data> m_cache;
+    QHash<KDecoration3::DecorationShadow *, Data> m_cache;
 };
 
 DecorationShadowTextureCache &DecorationShadowTextureCache::instance()

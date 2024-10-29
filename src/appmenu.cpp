@@ -17,7 +17,7 @@
 #include <QDBusServiceWatcher>
 
 #include "decorations/decorationbridge.h"
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/DecorationSettings>
 
 namespace KWin
 {
@@ -66,8 +66,8 @@ void ApplicationMenu::slotShowRequest(const QString &serviceName, const QDBusObj
 {
     // Ignore show request when user has not configured the application menu title bar button
     auto decorationSettings = Workspace::self()->decorationBridge()->settings();
-    if (decorationSettings && !decorationSettings->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::ApplicationMenu)
-        && !decorationSettings->decorationButtonsRight().contains(KDecoration2::DecorationButtonType::ApplicationMenu)) {
+    if (decorationSettings && !decorationSettings->decorationButtonsLeft().contains(KDecoration3::DecorationButtonType::ApplicationMenu)
+        && !decorationSettings->decorationButtonsRight().contains(KDecoration3::DecorationButtonType::ApplicationMenu)) {
         return;
     }
 

@@ -35,8 +35,8 @@
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
+#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/Decoration>
 // KDE
 #include <KApplicationTrader>
 #include <KLocalizedString>
@@ -1363,19 +1363,19 @@ void X11Window::invalidateDecoration()
 
 void X11Window::createDecoration()
 {
-    std::shared_ptr<KDecoration2::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
+    std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
-        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, [this]() {
+        connect(decoration.get(), &KDecoration3::Decoration::resizeOnlyBordersChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();
             }
         });
-        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (!isDeleted()) {
                 updateFrameExtents();
             }
         });
-        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (isDeleted()) {
                 return;
             }
@@ -1384,7 +1384,7 @@ void X11Window::createDecoration()
                 checkWorkspacePosition(oldGeometry);
             }
         });
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, [this]() {
+        connect(decoratedClient()->decoratedClient(), &KDecoration3::DecoratedClient::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();
             }

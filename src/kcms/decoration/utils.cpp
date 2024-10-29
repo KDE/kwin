@@ -11,39 +11,39 @@
 
 namespace
 {
-const QMap<QString, KDecoration2::BorderSize> s_borderSizes{
-    {QStringLiteral("None"), KDecoration2::BorderSize::None},
-    {QStringLiteral("NoSides"), KDecoration2::BorderSize::NoSides},
-    {QStringLiteral("Tiny"), KDecoration2::BorderSize::Tiny},
-    {QStringLiteral("Normal"), KDecoration2::BorderSize::Normal},
-    {QStringLiteral("Large"), KDecoration2::BorderSize::Large},
-    {QStringLiteral("VeryLarge"), KDecoration2::BorderSize::VeryLarge},
-    {QStringLiteral("Huge"), KDecoration2::BorderSize::Huge},
-    {QStringLiteral("VeryHuge"), KDecoration2::BorderSize::VeryHuge},
-    {QStringLiteral("Oversized"), KDecoration2::BorderSize::Oversized}};
-const QMap<KDecoration2::BorderSize, QString> s_borderSizeNames{
-    {KDecoration2::BorderSize::None, i18n("No window borders")},
-    {KDecoration2::BorderSize::NoSides, i18n("No side window borders")},
-    {KDecoration2::BorderSize::Tiny, i18n("Tiny window borders")},
-    {KDecoration2::BorderSize::Normal, i18n("Normal window borders")},
-    {KDecoration2::BorderSize::Large, i18n("Large window borders")},
-    {KDecoration2::BorderSize::VeryLarge, i18n("Very large window borders")},
-    {KDecoration2::BorderSize::Huge, i18n("Huge window borders")},
-    {KDecoration2::BorderSize::VeryHuge, i18n("Very huge window borders")},
-    {KDecoration2::BorderSize::Oversized, i18n("Oversized window borders")}};
+const QMap<QString, KDecoration3::BorderSize> s_borderSizes{
+    {QStringLiteral("None"), KDecoration3::BorderSize::None},
+    {QStringLiteral("NoSides"), KDecoration3::BorderSize::NoSides},
+    {QStringLiteral("Tiny"), KDecoration3::BorderSize::Tiny},
+    {QStringLiteral("Normal"), KDecoration3::BorderSize::Normal},
+    {QStringLiteral("Large"), KDecoration3::BorderSize::Large},
+    {QStringLiteral("VeryLarge"), KDecoration3::BorderSize::VeryLarge},
+    {QStringLiteral("Huge"), KDecoration3::BorderSize::Huge},
+    {QStringLiteral("VeryHuge"), KDecoration3::BorderSize::VeryHuge},
+    {QStringLiteral("Oversized"), KDecoration3::BorderSize::Oversized}};
+const QMap<KDecoration3::BorderSize, QString> s_borderSizeNames{
+    {KDecoration3::BorderSize::None, i18n("No window borders")},
+    {KDecoration3::BorderSize::NoSides, i18n("No side window borders")},
+    {KDecoration3::BorderSize::Tiny, i18n("Tiny window borders")},
+    {KDecoration3::BorderSize::Normal, i18n("Normal window borders")},
+    {KDecoration3::BorderSize::Large, i18n("Large window borders")},
+    {KDecoration3::BorderSize::VeryLarge, i18n("Very large window borders")},
+    {KDecoration3::BorderSize::Huge, i18n("Huge window borders")},
+    {KDecoration3::BorderSize::VeryHuge, i18n("Very huge window borders")},
+    {KDecoration3::BorderSize::Oversized, i18n("Oversized window borders")}};
 
-const QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames{
-    {KDecoration2::DecorationButtonType::Menu, QChar('M')},
-    {KDecoration2::DecorationButtonType::ApplicationMenu, QChar('N')},
-    {KDecoration2::DecorationButtonType::OnAllDesktops, QChar('S')},
-    {KDecoration2::DecorationButtonType::ContextHelp, QChar('H')},
-    {KDecoration2::DecorationButtonType::Minimize, QChar('I')},
-    {KDecoration2::DecorationButtonType::Maximize, QChar('A')},
-    {KDecoration2::DecorationButtonType::Close, QChar('X')},
-    {KDecoration2::DecorationButtonType::KeepAbove, QChar('F')},
-    {KDecoration2::DecorationButtonType::KeepBelow, QChar('B')},
-    {KDecoration2::DecorationButtonType::Shade, QChar('L')},
-    {KDecoration2::DecorationButtonType::Spacer, QChar('_')},
+const QHash<KDecoration3::DecorationButtonType, QChar> s_buttonNames{
+    {KDecoration3::DecorationButtonType::Menu, QChar('M')},
+    {KDecoration3::DecorationButtonType::ApplicationMenu, QChar('N')},
+    {KDecoration3::DecorationButtonType::OnAllDesktops, QChar('S')},
+    {KDecoration3::DecorationButtonType::ContextHelp, QChar('H')},
+    {KDecoration3::DecorationButtonType::Minimize, QChar('I')},
+    {KDecoration3::DecorationButtonType::Maximize, QChar('A')},
+    {KDecoration3::DecorationButtonType::Close, QChar('X')},
+    {KDecoration3::DecorationButtonType::KeepAbove, QChar('F')},
+    {KDecoration3::DecorationButtonType::KeepBelow, QChar('B')},
+    {KDecoration3::DecorationButtonType::Shade, QChar('L')},
+    {KDecoration3::DecorationButtonType::Spacer, QChar('_')},
 };
 }
 
@@ -52,7 +52,7 @@ namespace Utils
 
 QString buttonsToString(const DecorationButtonsList &buttons)
 {
-    auto buttonToString = [](KDecoration2::DecorationButtonType button) -> QChar {
+    auto buttonToString = [](KDecoration3::DecorationButtonType button) -> QChar {
         const auto it = s_buttonNames.constFind(button);
         if (it != s_buttonNames.constEnd()) {
             return it.value();
@@ -84,22 +84,22 @@ DecorationButtonsList readDecorationButtons(const KConfigGroup &config, const QS
     return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
 }
 
-KDecoration2::BorderSize stringToBorderSize(const QString &name)
+KDecoration3::BorderSize stringToBorderSize(const QString &name)
 {
     auto it = s_borderSizes.constFind(name);
     if (it == s_borderSizes.constEnd()) {
         // non sense values are interpreted just like normal
-        return KDecoration2::BorderSize::Normal;
+        return KDecoration3::BorderSize::Normal;
     }
     return it.value();
 }
 
-QString borderSizeToString(KDecoration2::BorderSize size)
+QString borderSizeToString(KDecoration3::BorderSize size)
 {
     return s_borderSizes.key(size);
 }
 
-const QMap<KDecoration2::BorderSize, QString> &getBorderSizeNames()
+const QMap<KDecoration3::BorderSize, QString> &getBorderSizeNames()
 {
     return s_borderSizeNames;
 }

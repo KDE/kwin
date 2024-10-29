@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include <KDecoration2/Private/DecorationSettingsPrivate>
+#include <KDecoration3/Private/DecorationSettingsPrivate>
 
 #include <QObject>
 
@@ -19,24 +19,24 @@ namespace KWin
 namespace Decoration
 {
 
-class SettingsImpl : public QObject, public KDecoration2::DecorationSettingsPrivate
+class SettingsImpl : public QObject, public KDecoration3::DecorationSettingsPrivate
 {
     Q_OBJECT
 public:
-    explicit SettingsImpl(KDecoration2::DecorationSettings *parent);
+    explicit SettingsImpl(KDecoration3::DecorationSettings *parent);
     ~SettingsImpl() override;
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
     bool isCloseOnDoubleClickOnMenu() const override;
-    KDecoration2::BorderSize borderSize() const override
+    KDecoration3::BorderSize borderSize() const override
     {
         return m_borderSize;
     }
-    QList<KDecoration2::DecorationButtonType> decorationButtonsLeft() const override
+    QList<KDecoration3::DecorationButtonType> decorationButtonsLeft() const override
     {
         return m_leftButtons;
     }
-    QList<KDecoration2::DecorationButtonType> decorationButtonsRight() const override
+    QList<KDecoration3::DecorationButtonType> decorationButtonsRight() const override
     {
         return m_rightButtons;
     }
@@ -47,12 +47,12 @@ public:
 
 private:
     void readSettings();
-    QList<KDecoration2::DecorationButtonType> readDecorationButtons(const KConfigGroup &config,
+    QList<KDecoration3::DecorationButtonType> readDecorationButtons(const KConfigGroup &config,
                                                                     const char *key,
-                                                                    const QList<KDecoration2::DecorationButtonType> &defaultValue) const;
-    QList<KDecoration2::DecorationButtonType> m_leftButtons;
-    QList<KDecoration2::DecorationButtonType> m_rightButtons;
-    KDecoration2::BorderSize m_borderSize;
+                                                                    const QList<KDecoration3::DecorationButtonType> &defaultValue) const;
+    QList<KDecoration3::DecorationButtonType> m_leftButtons;
+    QList<KDecoration3::DecorationButtonType> m_rightButtons;
+    KDecoration3::BorderSize m_borderSize;
     bool m_autoBorderSize = true;
     bool m_closeDoubleClickMenu = false;
     QFont m_font;

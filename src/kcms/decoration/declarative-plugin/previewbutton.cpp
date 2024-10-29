@@ -8,11 +8,11 @@
 #include "previewclient.h"
 #include "previewsettings.h"
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 
 #include <QPainter>
 
-namespace KDecoration2
+namespace KDecoration3
 {
 
 namespace Preview
@@ -27,10 +27,10 @@ PreviewButtonItem::~PreviewButtonItem() = default;
 
 void PreviewButtonItem::setType(int type)
 {
-    setType(KDecoration2::DecorationButtonType(type));
+    setType(KDecoration3::DecorationButtonType(type));
 }
 
-void PreviewButtonItem::setType(KDecoration2::DecorationButtonType type)
+void PreviewButtonItem::setType(KDecoration3::DecorationButtonType type)
 {
     if (m_type == type) {
         return;
@@ -39,7 +39,7 @@ void PreviewButtonItem::setType(KDecoration2::DecorationButtonType type)
     Q_EMIT typeChanged();
 }
 
-KDecoration2::DecorationButtonType PreviewButtonItem::type() const
+KDecoration3::DecorationButtonType PreviewButtonItem::type() const
 {
     return m_type;
 }
@@ -85,7 +85,7 @@ void PreviewButtonItem::componentComplete()
 
 void PreviewButtonItem::createButton()
 {
-    if (m_type == KDecoration2::DecorationButtonType::Custom || m_decoration || !m_settings || !m_bridge) {
+    if (m_type == KDecoration3::DecorationButtonType::Custom || m_decoration || !m_settings || !m_bridge) {
         return;
     }
     m_decoration = m_bridge->createDecoration(this);
@@ -120,7 +120,7 @@ void PreviewButtonItem::paint(QPainter *painter)
     }
 
     const QRect rect(0, 0, width(), height());
-    if (type() == KDecoration2::DecorationButtonType::Spacer) {
+    if (type() == KDecoration3::DecorationButtonType::Spacer) {
         static const QIcon icon = QIcon::fromTheme(QStringLiteral("distribute-horizontal"));
         icon.paint(painter, rect);
     } else {

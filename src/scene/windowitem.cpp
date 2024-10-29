@@ -20,7 +20,7 @@
 #include "x11window.h"
 #endif
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 
 namespace KWin
 {
@@ -270,7 +270,7 @@ void WindowItem::updateDecorationItem()
         } else if (m_surfaceItem) {
             m_decorationItem->stackBefore(m_surfaceItem.get());
         }
-        connect(m_window->decoration(), &KDecoration2::Decoration::damaged, this, &WindowItem::markDamaged);
+        connect(m_window->decoration(), &KDecoration3::Decoration::damaged, this, &WindowItem::markDamaged);
         markDamaged();
     } else {
         m_decorationItem.reset();

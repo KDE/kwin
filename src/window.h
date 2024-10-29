@@ -32,7 +32,7 @@
 
 class QMouseEvent;
 
-namespace KDecoration2
+namespace KDecoration3
 {
 class Decoration;
 }
@@ -1174,11 +1174,11 @@ public:
     // decoration related
     Qt::Edge titlebarPosition() const;
     bool titlebarPositionUnderMouse() const;
-    KDecoration2::Decoration *decoration()
+    KDecoration3::Decoration *decoration()
     {
         return m_decoration.decoration.get();
     }
-    const KDecoration2::Decoration *decoration() const
+    const KDecoration3::Decoration *decoration() const
     {
         return m_decoration.decoration.get();
     }
@@ -1720,7 +1720,7 @@ protected:
      */
     Gravity mouseGravity() const;
 
-    void setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration);
+    void setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration);
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
     void updateDecorationInputShape();
@@ -1853,7 +1853,7 @@ protected:
 
     struct
     {
-        std::shared_ptr<KDecoration2::Decoration> decoration;
+        std::shared_ptr<KDecoration3::Decoration> decoration;
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;

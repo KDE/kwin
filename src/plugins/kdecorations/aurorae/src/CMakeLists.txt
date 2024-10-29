@@ -14,7 +14,7 @@ set(kwin5_aurorae_PART_SRCS
 
 add_library(kwin5_aurorae MODULE ${kwin5_aurorae_PART_SRCS})
 set_target_properties(kwin5_aurorae PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kdecoration2/"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kdecoration3/"
     LIBRARY_OUTPUT_NAME "org.kde.kwin.aurorae"
 )
 
@@ -23,7 +23,7 @@ target_compile_definitions(kwin5_aurorae PRIVATE
 )
 
 target_link_libraries(kwin5_aurorae
-    KDecoration2::KDecoration
+    KDecoration3::KDecoration
     kwin
     KF6::I18n
     KF6::Package
@@ -32,7 +32,7 @@ target_link_libraries(kwin5_aurorae
     Qt::Quick
 )
 
-install(TARGETS kwin5_aurorae DESTINATION ${KDE_INSTALL_PLUGINDIR}/org.kde.kdecoration2)
+install(TARGETS kwin5_aurorae DESTINATION ${KDE_INSTALL_PLUGINDIR}/org.kde.kdecoration3)
 
 set(decoration_plugin_SRCS
     colorhelper.cpp
@@ -46,7 +46,7 @@ target_compile_definitions(decorationplugin PRIVATE
     -DTRANSLATION_DOMAIN=\"kwin\"
 )
 target_link_libraries(decorationplugin
-    KDecoration2::KDecoration
+    KDecoration3::KDecoration
     KF6::ColorScheme
     Qt::Quick
 )

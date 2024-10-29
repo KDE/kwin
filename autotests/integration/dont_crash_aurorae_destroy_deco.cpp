@@ -14,7 +14,7 @@
 #include "workspace.h"
 #include "x11window.h"
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 
 #include <QQuickItem>
 

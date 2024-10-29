@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     parser->addOption(QCommandLineOption(QStringLiteral("list-themes"), i18n("Show all the themes available on the system (and which is the current theme)")));
     parser->process(app);
 
-    KDecoration2::Configuration::DecorationsModel *model = new KDecoration2::Configuration::DecorationsModel(&app);
+    KDecoration3::Configuration::DecorationsModel *model = new KDecoration3::Configuration::DecorationsModel(&app);
     model->init();
     KWinDecorationSettings *settings = new KWinDecorationSettings(&app);
     QTextStream ts(stdout);
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
             int index{-1};
             QStringList availableThemes;
             for (int i = 0; i < model->rowCount(); ++i) {
-                const QString themeName = model->data(model->index(i), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString();
+                const QString themeName = model->data(model->index(i), KDecoration3::Configuration::DecorationsModel::ThemeNameRole).toString();
                 if (requestedTheme == themeName) {
                     index = i;
                     break;
@@ -88,8 +88,8 @@ int main(int argc, char **argv)
                 availableThemes << themeName;
             }
             if (index > -1) {
-                settings->setTheme(model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString());
-                settings->setPluginName(model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::PluginNameRole).toString());
+                settings->setTheme(model->data(model->index(index), KDecoration3::Configuration::DecorationsModel::ThemeNameRole).toString());
+                settings->setPluginName(model->data(model->index(index), KDecoration3::Configuration::DecorationsModel::PluginNameRole).toString());
                 if (settings->save()) {
                     // Send a signal to all kwin instances
                     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
                                                                       QStringLiteral("reloadConfig"));
                     QDBusConnection::sessionBus().send(message);
                     ts << i18n("Successfully applied the cursor theme %1 to your current Plasma session",
-                               model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString())
+                               model->data(model->index(index), KDecoration3::Configuration::DecorationsModel::ThemeNameRole).toString())
                        << Qt::endl;
                 } else {
                     ts << i18n("Failed to save your theme settings - the reason is unknown, but this is an unrecoverable error. You may find that simply trying again will work.");
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
         ts << i18n("You have the following KWin window decoration themes on your system:") << Qt::endl;
         for (int i = 0; i < model->rowCount(); ++i) {
             const QString displayName = model->data(model->index(i), Qt::DisplayRole).toString();
-            const QString themeName = model->data(model->index(i), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString();
+            const QString themeName = model->data(model->index(i), KDecoration3::Configuration::DecorationsModel::ThemeNameRole).toString();
             if (settings->theme() == themeName) {
                 ts << QStringLiteral(" * %1 (theme name: %2 - current theme for this Plasma session)").arg(displayName, themeName) << Qt::endl;
             } else {

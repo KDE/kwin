@@ -13,8 +13,8 @@ target_sources(kdecorationprivatedeclarative PRIVATE
 )
 
 target_link_libraries(kdecorationprivatedeclarative PRIVATE
-    KDecoration2::KDecoration
-    KDecoration2::KDecoration2Private
+    KDecoration3::KDecoration
+    KDecoration3::KDecoration3Private
     Qt::DBus
     Qt::Quick
     KF6::CoreAddons

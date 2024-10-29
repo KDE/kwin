@@ -5,14 +5,14 @@
 */
 #pragma once
 
-#include <KDecoration2/DecorationSettings>
-#include <KDecoration2/Private/DecorationSettingsPrivate>
+#include <KDecoration3/DecorationSettings>
+#include <KDecoration3/Private/DecorationSettingsPrivate>
 #include <QAbstractListModel>
 #include <QObject>
 #include <QPointer>
 #include <QQmlEngine>
 
-namespace KDecoration2
+namespace KDecoration3
 {
 
 namespace Preview
@@ -118,8 +118,8 @@ class Settings : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(KDecoration2::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
-    Q_PROPERTY(KDecoration2::DecorationSettings *settings READ settingsPointer NOTIFY settingsChanged)
+    Q_PROPERTY(KDecoration3::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
+    Q_PROPERTY(KDecoration3::DecorationSettings *settings READ settingsPointer NOTIFY settingsChanged)
     Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)
 public:
     explicit Settings(QObject *parent = nullptr);
@@ -144,7 +144,7 @@ Q_SIGNALS:
 private:
     void createSettings();
     QPointer<PreviewBridge> m_bridge;
-    std::shared_ptr<KDecoration2::DecorationSettings> m_settings;
+    std::shared_ptr<KDecoration3::DecorationSettings> m_settings;
     PreviewSettings *m_previewSettings = nullptr;
     int m_borderSize = 3;
 };

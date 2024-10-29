@@ -4,15 +4,15 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "previewclient.h"
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
+#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/Decoration>
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QEvent>
 #include <QModelIndex>
 
-namespace KDecoration2
+namespace KDecoration3
 {
 namespace Preview
 {
@@ -426,6 +426,6 @@ SETTER2(setProvidesContextHelp, providesContextHelp)
 #undef SETTER
 
 } // namespace Preview
-} // namespace KDecoration2
+} // namespace KDecoration3
 
 #include "moc_previewclient.cpp"

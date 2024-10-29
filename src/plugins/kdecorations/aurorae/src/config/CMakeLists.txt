@@ -3,7 +3,7 @@ target_link_libraries(kcm_auroraedecoration
     KF6::ConfigGui
     KF6::KCMUtils
     KF6::I18n
-    KDecoration2::KDecoration
+    KDecoration3::KDecoration
     Qt::DBus
     Qt::UiTools
     Qt::Widgets

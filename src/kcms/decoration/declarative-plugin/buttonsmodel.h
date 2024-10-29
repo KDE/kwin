@@ -5,12 +5,12 @@
 */
 #pragma once
 
-#include <KDecoration2/DecorationButton>
+#include <KDecoration3/DecorationButton>
 #include <QAbstractListModel>
 
 #include <QQmlEngine>
 
-namespace KDecoration2
+namespace KDecoration3
 {
 
 namespace Preview

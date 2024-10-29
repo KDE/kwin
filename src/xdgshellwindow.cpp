@@ -37,8 +37,8 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
+#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/Decoration>
 
 namespace KWin
 {
@@ -733,7 +733,7 @@ void XdgToplevelWindow::handleRolePrecommit()
     auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
     if (configureEvent && decoration() != configureEvent->decoration.get()) {
         if (configureEvent->decoration) {
-            connect(configureEvent->decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            connect(configureEvent->decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
                 if (!isDeleted()) {
                     scheduleConfigure();
                 }

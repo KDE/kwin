@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include <KDecoration2/DecorationButton>
+#include <KDecoration3/DecorationButton>
 #include <KSharedConfig>
 
 #include <QList>
 
-using DecorationButtonsList = QList<KDecoration2::DecorationButtonType>;
+using DecorationButtonsList = QList<KDecoration3::DecorationButtonType>;
 
 namespace Utils
 {
@@ -20,9 +20,8 @@ QString buttonsToString(const DecorationButtonsList &buttons);
 DecorationButtonsList buttonsFromString(const QString &buttons);
 DecorationButtonsList readDecorationButtons(const KConfigGroup &config, const QString &key, const DecorationButtonsList &defaultValue);
 
-KDecoration2::BorderSize stringToBorderSize(const QString &name);
-QString borderSizeToString(KDecoration2::BorderSize size);
+KDecoration3::BorderSize stringToBorderSize(const QString &name);
+QString borderSizeToString(KDecoration3::BorderSize size);
 
-const QMap<KDecoration2::BorderSize, QString> &getBorderSizeNames();
-
+const QMap<KDecoration3::BorderSize, QString> &getBorderSizeNames();
 }

@@ -19,7 +19,7 @@
 
 class QWindow;
 
-namespace KDecoration2
+namespace KDecoration3
 {
 class Decoration;
 }
@@ -434,7 +434,7 @@ public:
      * Returns the decoration
      * @since 5.25
      */
-    KDecoration2::Decoration *decoration() const;
+    KDecoration3::Decoration *decoration() const;
     QByteArray readProperty(long atom, long type, int format) const;
     void deleteProperty(long atom) const;
 

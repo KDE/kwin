@@ -32,7 +32,7 @@
 #include "window.h"
 #include "workspace.h"
 // KDecoration
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>

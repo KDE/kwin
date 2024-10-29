@@ -9,7 +9,7 @@
 #pragma once
 #include "options.h"
 
-#include <KDecoration2/Private/DecoratedClientPrivate>
+#include <KDecoration3/Private/DecoratedClientPrivate>
 
 #include <QDeadlineTimer>
 #include <QObject>
@@ -23,11 +23,11 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedClientImpl : public QObject, public KDecoration2::ApplicationMenuEnabledDecoratedClientPrivate
+class DecoratedClientImpl : public QObject, public KDecoration3::ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
 public:
-    explicit DecoratedClientImpl(Window *window, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration);
+    explicit DecoratedClientImpl(Window *window, KDecoration3::DecoratedClient *decoratedClient, KDecoration3::Decoration *decoration);
     ~DecoratedClientImpl() override;
     QString caption() const override;
     WId decorationId() const override;
@@ -49,7 +49,7 @@ public:
     bool isShadeable() const override;
     bool isShaded() const override;
     QPalette palette() const override;
-    QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const override;
+    QColor color(KDecoration3::ColorGroup group, KDecoration3::ColorRole role) const override;
     bool providesContextHelp() const override;
     QSize size() const override;
     int width() const override;
@@ -80,9 +80,9 @@ public:
     {
         return m_window;
     }
-    KDecoration2::DecoratedClient *decoratedClient()
+    KDecoration3::DecoratedClient *decoratedClient()
     {
-        return KDecoration2::DecoratedClientPrivate::client();
+        return KDecoration3::DecoratedClientPrivate::client();
     }
 
     void signalShadeChange();

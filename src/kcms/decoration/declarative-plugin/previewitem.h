@@ -8,7 +8,7 @@
 #include <QPointer>
 #include <QQuickPaintedItem>
 
-namespace KDecoration2
+namespace KDecoration3
 {
 class Decoration;
 class DecorationShadow;
@@ -24,11 +24,11 @@ class PreviewItem : public QQuickPaintedItem
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(Decoration)
-    Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration NOTIFY decorationChanged)
-    Q_PROPERTY(KDecoration2::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
-    Q_PROPERTY(KDecoration2::Preview::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
-    Q_PROPERTY(KDecoration2::Preview::PreviewClient *client READ client)
-    Q_PROPERTY(KDecoration2::DecorationShadow *shadow READ shadow NOTIFY shadowChanged)
+    Q_PROPERTY(KDecoration3::Decoration *decoration READ decoration NOTIFY decorationChanged)
+    Q_PROPERTY(KDecoration3::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
+    Q_PROPERTY(KDecoration3::Preview::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
+    Q_PROPERTY(KDecoration3::Preview::PreviewClient *client READ client)
+    Q_PROPERTY(KDecoration3::DecorationShadow *shadow READ shadow NOTIFY shadowChanged)
     Q_PROPERTY(QColor windowColor READ windowColor WRITE setWindowColor NOTIFY windowColorChanged)
     Q_PROPERTY(bool drawBackground READ isDrawingBackground WRITE setDrawingBackground NOTIFY drawingBackgroundChanged)
 public:
@@ -36,8 +36,8 @@ public:
     ~PreviewItem() override;
     void paint(QPainter *painter) override;
 
-    KDecoration2::Decoration *decoration() const;
-    void setDecoration(KDecoration2::Decoration *deco);
+    KDecoration3::Decoration *decoration() const;
+    void setDecoration(KDecoration3::Decoration *deco);
 
     QColor windowColor() const;
     void setWindowColor(const QColor &color);
@@ -55,7 +55,7 @@ public:
     DecorationShadow *shadow() const;
 
 Q_SIGNALS:
-    void decorationChanged(KDecoration2::Decoration *deco);
+    void decorationChanged(KDecoration3::Decoration *deco);
     void windowColorChanged(const QColor &color);
     void drawingBackgroundChanged(bool);
     void bridgeChanged();
@@ -81,10 +81,10 @@ private:
     Decoration *m_decoration;
     QColor m_windowColor;
     bool m_drawBackground = true;
-    QPointer<KDecoration2::Preview::PreviewBridge> m_bridge;
-    QPointer<KDecoration2::Preview::Settings> m_settings;
-    QPointer<KDecoration2::Preview::PreviewClient> m_client;
+    QPointer<KDecoration3::Preview::PreviewBridge> m_bridge;
+    QPointer<KDecoration3::Preview::Settings> m_settings;
+    QPointer<KDecoration3::Preview::PreviewClient> m_client;
 };
 
 } // Preview
-} // KDecoration2
+} // KDecoration3

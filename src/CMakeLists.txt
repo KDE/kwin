@@ -250,8 +250,8 @@ target_link_libraries(kwin
         KF6::Package
         KF6::Service
 
-        KDecoration2::KDecoration
-        KDecoration2::KDecoration2Private
+        KDecoration3::KDecoration
+        KDecoration3::KDecoration3Private
 
         UDev::UDev
         XKB::XKB

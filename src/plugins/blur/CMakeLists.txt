@@ -17,7 +17,7 @@ target_link_libraries(blur PRIVATE
 
     KF6::ConfigGui
 
-    KDecoration2::KDecoration
+    KDecoration3::KDecoration
 )
 
 #######################################

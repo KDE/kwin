@@ -20,8 +20,8 @@
 #include "x11window.h"
 #endif
 
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecorationShadow>
+#include <KDecoration3/Decoration>
+#include <KDecoration3/DecorationShadow>
 
 #include <QWindow>
 
@@ -187,22 +187,22 @@ bool Shadow::init(const QList<uint32_t> &data)
     return true;
 }
 
-bool Shadow::init(KDecoration2::Decoration *decoration)
+bool Shadow::init(KDecoration3::Decoration *decoration)
 {
     if (m_decorationShadow) {
         // disconnect previous connections
-        disconnect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
-        disconnect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
-        disconnect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
+        disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
+        disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
+        disconnect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
     }
     m_decorationShadow = decoration->shadow();
     if (!m_decorationShadow) {
         return false;
     }
     // setup connections - all just mapped to recreate
-    connect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
-    connect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
-    connect(m_decorationShadow.get(), &KDecoration2::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
+    connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::innerShadowRectChanged, m_window, &Window::updateShadow);
+    connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::shadowChanged, m_window, &Window::updateShadow);
+    connect(m_decorationShadow.get(), &KDecoration3::DecorationShadow::paddingChanged, m_window, &Window::updateShadow);
 
     m_offset = m_decorationShadow->padding();
     Q_EMIT offsetChanged();

@@ -36,7 +36,7 @@
 #include "tabbox/tabbox.h"
 #endif
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 
 #include <QApplication>
 #include <QDebug>

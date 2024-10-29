@@ -7,19 +7,19 @@
 
 #include <QQmlEngine>
 
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecorationShadow>
+#include <KDecoration3/Decoration>
+#include <KDecoration3/DecorationShadow>
 
 struct DecorationForeign
 {
     Q_GADGET
     QML_ANONYMOUS
-    QML_FOREIGN(KDecoration2::Decoration)
+    QML_FOREIGN(KDecoration3::Decoration)
 };
 
 struct DecorationShadowForeign
 {
     Q_GADGET
     QML_ANONYMOUS
-    QML_FOREIGN(KDecoration2::DecorationShadow)
+    QML_FOREIGN(KDecoration3::DecorationShadow)
 };

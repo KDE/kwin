@@ -13,7 +13,7 @@
 #include "workspace.h"
 #include "x11window.h"
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 
 #include <QSignalSpy>
 
@@ -59,7 +59,7 @@ void DontCrashGlxgearsTest::testGlxgears()
     Window *glxgearsWindow = workspace()->windows().first();
     QVERIFY(glxgearsWindow->isDecorated());
     QSignalSpy closedSpy(glxgearsWindow, &X11Window::closed);
-    KDecoration2::Decoration *decoration = glxgearsWindow->decoration();
+    KDecoration3::Decoration *decoration = glxgearsWindow->decoration();
     QVERIFY(decoration);
 
     // send a mouse event to the position of the close button

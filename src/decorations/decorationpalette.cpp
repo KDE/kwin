@@ -42,10 +42,10 @@ bool DecorationPalette::isValid() const
     return true;
 }
 
-QColor DecorationPalette::color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const
+QColor DecorationPalette::color(KDecoration3::ColorGroup group, KDecoration3::ColorRole role) const
 {
-    using KDecoration2::ColorGroup;
-    using KDecoration2::ColorRole;
+    using KDecoration3::ColorGroup;
+    using KDecoration3::ColorRole;
 
     if (m_legacyColors.has_value()) {
         switch (role) {

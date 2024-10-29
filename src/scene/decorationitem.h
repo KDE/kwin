@@ -8,7 +8,7 @@
 
 #include "scene/item.h"
 
-namespace KDecoration2
+namespace KDecoration3
 {
 class Decoration;
 }
@@ -77,7 +77,7 @@ class KWIN_EXPORT DecorationItem : public Item
     Q_OBJECT
 
 public:
-    explicit DecorationItem(KDecoration2::Decoration *decoration, Window *window, Item *parent = nullptr);
+    explicit DecorationItem(KDecoration3::Decoration *decoration, Window *window, Item *parent = nullptr);
 
     DecorationRenderer *renderer() const;
     Window *window() const;
@@ -97,7 +97,7 @@ protected:
 private:
     Window *m_window;
     QPointer<Output> m_output;
-    QPointer<KDecoration2::Decoration> m_decoration;
+    QPointer<KDecoration3::Decoration> m_decoration;
     std::unique_ptr<DecorationRenderer> m_renderer;
 };
 

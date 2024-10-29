@@ -348,7 +348,7 @@ QSizeF EffectWindow::basicUnit() const
     return QSize(1, 1);
 }
 
-KDecoration2::Decoration *EffectWindow::decoration() const
+KDecoration3::Decoration *EffectWindow::decoration() const
 {
     return d->m_window->decoration();
 }

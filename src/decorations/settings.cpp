@@ -16,7 +16,7 @@
 #include "workspace.h"
 
 #include <KConfigGroup>
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/DecorationSettings>
 
 #include <QFontDatabase>
 
@@ -24,15 +24,15 @@ namespace KWin
 {
 namespace Decoration
 {
-SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
+SettingsImpl::SettingsImpl(KDecoration3::DecorationSettings *parent)
     : QObject()
     , DecorationSettingsPrivate(parent)
-    , m_borderSize(KDecoration2::BorderSize::Normal)
+    , m_borderSize(KDecoration3::BorderSize::Normal)
 {
     readSettings();
 
     auto c = connect(Compositor::self(), &Compositor::compositingToggled,
-                     parent, &KDecoration2::DecorationSettings::alphaChannelSupportedChanged);
+                     parent, &KDecoration3::DecorationSettings::alphaChannelSupportedChanged);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, [parent](uint previous, uint current) {
         if (previous != 1 && current != 1) {
             return;
@@ -64,28 +64,28 @@ bool SettingsImpl::isCloseOnDoubleClickOnMenu() const
     return m_closeDoubleClickMenu;
 }
 
-static QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames;
+static QHash<KDecoration3::DecorationButtonType, QChar> s_buttonNames;
 static void initButtons()
 {
     if (!s_buttonNames.isEmpty()) {
         return;
     }
-    s_buttonNames[KDecoration2::DecorationButtonType::Menu] = QChar('M');
-    s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = QChar('N');
-    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops] = QChar('S');
-    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp] = QChar('H');
-    s_buttonNames[KDecoration2::DecorationButtonType::Minimize] = QChar('I');
-    s_buttonNames[KDecoration2::DecorationButtonType::Maximize] = QChar('A');
-    s_buttonNames[KDecoration2::DecorationButtonType::Close] = QChar('X');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove] = QChar('F');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow] = QChar('B');
-    s_buttonNames[KDecoration2::DecorationButtonType::Shade] = QChar('L');
-    s_buttonNames[KDecoration2::DecorationButtonType::Spacer] = QChar('_');
+    s_buttonNames[KDecoration3::DecorationButtonType::Menu] = QChar('M');
+    s_buttonNames[KDecoration3::DecorationButtonType::ApplicationMenu] = QChar('N');
+    s_buttonNames[KDecoration3::DecorationButtonType::OnAllDesktops] = QChar('S');
+    s_buttonNames[KDecoration3::DecorationButtonType::ContextHelp] = QChar('H');
+    s_buttonNames[KDecoration3::DecorationButtonType::Minimize] = QChar('I');
+    s_buttonNames[KDecoration3::DecorationButtonType::Maximize] = QChar('A');
+    s_buttonNames[KDecoration3::DecorationButtonType::Close] = QChar('X');
+    s_buttonNames[KDecoration3::DecorationButtonType::KeepAbove] = QChar('F');
+    s_buttonNames[KDecoration3::DecorationButtonType::KeepBelow] = QChar('B');
+    s_buttonNames[KDecoration3::DecorationButtonType::Shade] = QChar('L');
+    s_buttonNames[KDecoration3::DecorationButtonType::Spacer] = QChar('_');
 }
 
-static QString buttonsToString(const QList<KDecoration2::DecorationButtonType> &buttons)
+static QString buttonsToString(const QList<KDecoration3::DecorationButtonType> &buttons)
 {
-    auto buttonToString = [](KDecoration2::DecorationButtonType button) -> QChar {
+    auto buttonToString = [](KDecoration3::DecorationButtonType button) -> QChar {
         const auto it = s_buttonNames.constFind(button);
         if (it != s_buttonNames.constEnd()) {
             return it.value();
@@ -99,13 +99,13 @@ static QString buttonsToString(const QList<KDecoration2::DecorationButtonType> &
     return ret;
 }
 
-QList<KDecoration2::DecorationButtonType> SettingsImpl::readDecorationButtons(const KConfigGroup &config,
+QList<KDecoration3::DecorationButtonType> SettingsImpl::readDecorationButtons(const KConfigGroup &config,
                                                                               const char *key,
-                                                                              const QList<KDecoration2::DecorationButtonType> &defaultValue) const
+                                                                              const QList<KDecoration3::DecorationButtonType> &defaultValue) const
 {
     initButtons();
-    auto buttonsFromString = [](const QString &buttons) -> QList<KDecoration2::DecorationButtonType> {
-        QList<KDecoration2::DecorationButtonType> ret;
+    auto buttonsFromString = [](const QString &buttons) -> QList<KDecoration3::DecorationButtonType> {
+        QList<KDecoration3::DecorationButtonType> ret;
         for (auto it = buttons.begin(); it != buttons.end(); ++it) {
             for (auto it2 = s_buttonNames.constBegin(); it2 != s_buttonNames.constEnd(); ++it2) {
                 if (it2.value() == (*it)) {
@@ -118,21 +118,21 @@ QList<KDecoration2::DecorationButtonType> SettingsImpl::readDecorationButtons(co
     return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
 }
 
-static KDecoration2::BorderSize stringToSize(const QString &name)
+static KDecoration3::BorderSize stringToSize(const QString &name)
 {
-    static const QMap<QString, KDecoration2::BorderSize> s_sizes = QMap<QString, KDecoration2::BorderSize>({{QStringLiteral("None"), KDecoration2::BorderSize::None},
-                                                                                                            {QStringLiteral("NoSides"), KDecoration2::BorderSize::NoSides},
-                                                                                                            {QStringLiteral("Tiny"), KDecoration2::BorderSize::Tiny},
-                                                                                                            {QStringLiteral("Normal"), KDecoration2::BorderSize::Normal},
-                                                                                                            {QStringLiteral("Large"), KDecoration2::BorderSize::Large},
-                                                                                                            {QStringLiteral("VeryLarge"), KDecoration2::BorderSize::VeryLarge},
-                                                                                                            {QStringLiteral("Huge"), KDecoration2::BorderSize::Huge},
-                                                                                                            {QStringLiteral("VeryHuge"), KDecoration2::BorderSize::VeryHuge},
-                                                                                                            {QStringLiteral("Oversized"), KDecoration2::BorderSize::Oversized}});
+    static const QMap<QString, KDecoration3::BorderSize> s_sizes = QMap<QString, KDecoration3::BorderSize>({{QStringLiteral("None"), KDecoration3::BorderSize::None},
+                                                                                                            {QStringLiteral("NoSides"), KDecoration3::BorderSize::NoSides},
+                                                                                                            {QStringLiteral("Tiny"), KDecoration3::BorderSize::Tiny},
+                                                                                                            {QStringLiteral("Normal"), KDecoration3::BorderSize::Normal},
+                                                                                                            {QStringLiteral("Large"), KDecoration3::BorderSize::Large},
+                                                                                                            {QStringLiteral("VeryLarge"), KDecoration3::BorderSize::VeryLarge},
+                                                                                                            {QStringLiteral("Huge"), KDecoration3::BorderSize::Huge},
+                                                                                                            {QStringLiteral("VeryHuge"), KDecoration3::BorderSize::VeryHuge},
+                                                                                                            {QStringLiteral("Oversized"), KDecoration3::BorderSize::Oversized}});
     auto it = s_sizes.constFind(name);
     if (it == s_sizes.constEnd()) {
         // non sense values are interpreted just like normal
-        return KDecoration2::BorderSize::Normal;
+        return KDecoration3::BorderSize::Normal;
     }
     return it.value();
 }
@@ -140,17 +140,17 @@ static KDecoration2::BorderSize stringToSize(const QString &name)
 void SettingsImpl::readSettings()
 {
     KConfigGroup config = kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2"));
-    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QList<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::Menu, KDecoration2::DecorationButtonType::OnAllDesktops}));
+    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QList<KDecoration3::DecorationButtonType>({KDecoration3::DecorationButtonType::Menu, KDecoration3::DecorationButtonType::OnAllDesktops}));
     if (left != m_leftButtons) {
         m_leftButtons = left;
         Q_EMIT decorationSettings()->decorationButtonsLeftChanged(m_leftButtons);
     }
-    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QList<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::ContextHelp, KDecoration2::DecorationButtonType::Minimize, KDecoration2::DecorationButtonType::Maximize, KDecoration2::DecorationButtonType::Close}));
+    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QList<KDecoration3::DecorationButtonType>({KDecoration3::DecorationButtonType::ContextHelp, KDecoration3::DecorationButtonType::Minimize, KDecoration3::DecorationButtonType::Maximize, KDecoration3::DecorationButtonType::Close}));
     if (right != m_rightButtons) {
         m_rightButtons = right;
         Q_EMIT decorationSettings()->decorationButtonsRightChanged(m_rightButtons);
     }
-    Workspace::self()->applicationMenu()->setViewEnabled(left.contains(KDecoration2::DecorationButtonType::ApplicationMenu) || right.contains(KDecoration2::DecorationButtonType::ApplicationMenu));
+    Workspace::self()->applicationMenu()->setViewEnabled(left.contains(KDecoration3::DecorationButtonType::ApplicationMenu) || right.contains(KDecoration3::DecorationButtonType::ApplicationMenu));
     const bool close = config.readEntry("CloseOnDoubleClickOnMenu", false);
     if (close != m_closeDoubleClickMenu) {
         m_closeDoubleClickMenu = close;

@@ -9,7 +9,7 @@
 
 #include <QFontDatabase>
 
-namespace KDecoration2
+namespace KDecoration3
 {
 
 namespace Preview
@@ -141,7 +141,7 @@ void ButtonsModel::add(DecorationButtonType type)
 void ButtonsModel::add(int index, int type)
 {
     beginInsertRows(QModelIndex(), index, index);
-    m_buttons.insert(index, KDecoration2::DecorationButtonType(type));
+    m_buttons.insert(index, KDecoration3::DecorationButtonType(type));
     endInsertRows();
 }
 

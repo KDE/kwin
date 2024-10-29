@@ -21,9 +21,9 @@
 #include "workspace.h"
 #include "x11window.h"
 
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/Decoration>
+#include <KDecoration3/DecorationSettings>
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -464,7 +464,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
 
     // When there are no borders, there is no change to them when quick-tiling.
     // TODO: we should test both cases with fixed fake decoration for autotests.
-    const bool hasBorders = Workspace::self()->decorationBridge()->settings()->borderSize() != KDecoration2::BorderSize::None;
+    const bool hasBorders = Workspace::self()->decorationBridge()->settings()->borderSize() != KDecoration3::BorderSize::None;
 
     QTEST(window->requestedQuickTileMode(), "expectedMode");
     QVERIFY(surfaceConfigureRequestedSpy.wait());

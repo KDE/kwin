@@ -21,9 +21,9 @@
 #include "window.h"
 #include "workspace.h"
 
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/Decoration>
+#include <KDecoration3/DecorationSettings>
 
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>

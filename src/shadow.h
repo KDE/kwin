@@ -17,7 +17,7 @@
 
 #include <xcb/xcb.h>
 
-namespace KDecoration2
+namespace KDecoration3
 {
 class Decoration;
 class DecorationShadow;
@@ -82,7 +82,7 @@ public:
     }
     QImage decorationShadowImage() const;
 
-    std::weak_ptr<KDecoration2::DecorationShadow> decorationShadow() const
+    std::weak_ptr<KDecoration3::DecorationShadow> decorationShadow() const
     {
         return m_decorationShadow;
     }
@@ -128,7 +128,7 @@ private:
     static std::unique_ptr<Shadow> createShadowFromInternalWindow(Window *window);
     static QList<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QList<uint32_t> &data);
-    bool init(KDecoration2::Decoration *decoration);
+    bool init(KDecoration3::Decoration *decoration);
     bool init(const QPointer<ShadowInterface> &shadow);
     bool init(const QWindow *window);
     Window *m_window;
@@ -139,7 +139,7 @@ private:
     // caches
     QSizeF m_cachedSize;
     // Decoration based shadows
-    std::shared_ptr<KDecoration2::DecorationShadow> m_decorationShadow;
+    std::shared_ptr<KDecoration3::DecorationShadow> m_decorationShadow;
 };
 
 }

@@ -50,7 +50,7 @@ class QQmlEngine;
  */
 Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS)
 
-namespace KDecoration2
+namespace KDecoration3
 {
 class Decoration;
 }

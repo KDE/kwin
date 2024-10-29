@@ -34,16 +34,16 @@ public:
     Aurorae::ThemeConfig themeConfig;
     QHash<AuroraeButtonType, QString> pathes;
     bool activeCompositing;
-    KDecoration2::BorderSize borderSize;
-    KDecoration2::BorderSize buttonSize;
+    KDecoration3::BorderSize borderSize;
+    KDecoration3::BorderSize buttonSize;
     QString dragMimeType;
     QString decorationPath;
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
     : activeCompositing(true)
-    , borderSize(KDecoration2::BorderSize::Normal)
-    , buttonSize(KDecoration2::BorderSize::Normal)
+    , borderSize(KDecoration3::BorderSize::Normal)
+    , buttonSize(KDecoration3::BorderSize::Normal)
 {
 }
 
@@ -197,32 +197,32 @@ void AuroraeTheme::borders(int &left, int &top, int &right, int &bottom, bool ma
         int minMargin;
         int maxMargin;
         switch (d->borderSize) {
-        case KDecoration2::BorderSize::NoSides:
-        case KDecoration2::BorderSize::Tiny:
+        case KDecoration3::BorderSize::NoSides:
+        case KDecoration3::BorderSize::Tiny:
             minMargin = 1;
             maxMargin = 4;
             break;
-        case KDecoration2::BorderSize::Normal:
+        case KDecoration3::BorderSize::Normal:
             minMargin = 4;
             maxMargin = 6;
             break;
-        case KDecoration2::BorderSize::Large:
+        case KDecoration3::BorderSize::Large:
             minMargin = 6;
             maxMargin = 8;
             break;
-        case KDecoration2::BorderSize::VeryLarge:
+        case KDecoration3::BorderSize::VeryLarge:
             minMargin = 8;
             maxMargin = 12;
             break;
-        case KDecoration2::BorderSize::Huge:
+        case KDecoration3::BorderSize::Huge:
             minMargin = 12;
             maxMargin = 20;
             break;
-        case KDecoration2::BorderSize::VeryHuge:
+        case KDecoration3::BorderSize::VeryHuge:
             minMargin = 23;
             maxMargin = 30;
             break;
-        case KDecoration2::BorderSize::Oversized:
+        case KDecoration3::BorderSize::Oversized:
             minMargin = 36;
             maxMargin = 48;
             break;
@@ -235,11 +235,11 @@ void AuroraeTheme::borders(int &left, int &top, int &right, int &bottom, bool ma
         right = std::clamp(d->themeConfig.borderRight(), minMargin, maxMargin);
         bottom = std::clamp(d->themeConfig.borderBottom(), minMargin, maxMargin);
 
-        if (d->borderSize == KDecoration2::BorderSize::None) {
+        if (d->borderSize == KDecoration3::BorderSize::None) {
             left = 0;
             right = 0;
             bottom = 0;
-        } else if (d->borderSize == KDecoration2::BorderSize::NoSides) {
+        } else if (d->borderSize == KDecoration3::BorderSize::NoSides) {
             left = 0;
             right = 0;
         }
@@ -441,7 +441,7 @@ void AuroraeTheme::setCompositingActive(bool active)
     d->activeCompositing = active;
 }
 
-void AuroraeTheme::setBorderSize(KDecoration2::BorderSize size)
+void AuroraeTheme::setBorderSize(KDecoration3::BorderSize size)
 {
     if (d->borderSize == size) {
         return;
@@ -450,7 +450,7 @@ void AuroraeTheme::setBorderSize(KDecoration2::BorderSize size)
     Q_EMIT borderSizesChanged();
 }
 
-void AuroraeTheme::setButtonSize(KDecoration2::BorderSize size)
+void AuroraeTheme::setButtonSize(KDecoration3::BorderSize size)
 {
     if (d->buttonSize == size) {
         return;
@@ -472,19 +472,19 @@ const QString &AuroraeTheme::tabDragMimeType() const
 qreal AuroraeTheme::buttonSizeFactor() const
 {
     switch (d->buttonSize) {
-    case KDecoration2::BorderSize::Tiny:
+    case KDecoration3::BorderSize::Tiny:
         return 0.8;
-    case KDecoration2::BorderSize::Large:
+    case KDecoration3::BorderSize::Large:
         return 1.2;
-    case KDecoration2::BorderSize::VeryLarge:
+    case KDecoration3::BorderSize::VeryLarge:
         return 1.4;
-    case KDecoration2::BorderSize::Huge:
+    case KDecoration3::BorderSize::Huge:
         return 1.6;
-    case KDecoration2::BorderSize::VeryHuge:
+    case KDecoration3::BorderSize::VeryHuge:
         return 1.8;
-    case KDecoration2::BorderSize::Oversized:
+    case KDecoration3::BorderSize::Oversized:
         return 2.0;
-    case KDecoration2::BorderSize::Normal: // fall through
+    case KDecoration3::BorderSize::Normal: // fall through
     default:
         return 1.0;
     }

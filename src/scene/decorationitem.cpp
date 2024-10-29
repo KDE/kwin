@@ -14,8 +14,8 @@
 
 #include <cmath>
 
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
+#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/Decoration>
 
 namespace KWin
 {
@@ -24,12 +24,12 @@ DecorationRenderer::DecorationRenderer(Decoration::DecoratedClientImpl *client)
     : m_client(client)
     , m_imageSizesDirty(true)
 {
-    connect(client->decoration(), &KDecoration2::Decoration::damaged,
+    connect(client->decoration(), &KDecoration3::Decoration::damaged,
             this, &DecorationRenderer::addDamage);
 
-    connect(client->decoration(), &KDecoration2::Decoration::bordersChanged,
+    connect(client->decoration(), &KDecoration3::Decoration::bordersChanged,
             this, &DecorationRenderer::invalidate);
-    connect(client->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
+    connect(client->decoratedClient(), &KDecoration3::DecoratedClient::sizeChanged,
             this, &DecorationRenderer::invalidate);
 
     invalidate();
@@ -88,7 +88,7 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
     client()->decoration()->paint(painter, rect);
 }
 
-DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, Item *parent)
+DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *window, Item *parent)
     : Item(parent)
     , m_window(window)
     , m_decoration(decoration)
@@ -98,9 +98,9 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
     connect(window, &Window::outputChanged,
             this, &DecorationItem::handleOutputChanged);
 
-    connect(decoration->client(), &KDecoration2::DecoratedClient::sizeChanged,
+    connect(decoration->client(), &KDecoration3::DecoratedClient::sizeChanged,
             this, &DecorationItem::handleDecorationGeometryChanged);
-    connect(decoration, &KDecoration2::Decoration::bordersChanged,
+    connect(decoration, &KDecoration3::Decoration::bordersChanged,
             this, &DecorationItem::handleDecorationGeometryChanged);
 
     connect(renderer(), &DecorationRenderer::damaged,

@@ -40,8 +40,8 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
+#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/Decoration>
 #include <KDesktopFile>
 
 #include <QDebug>
@@ -2671,29 +2671,29 @@ void Window::cancelInteractiveMoveResize()
     updateCursor();
 }
 
-void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
+void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
 {
     if (m_decoration.decoration == decoration) {
         return;
     }
     if (decoration) {
-        QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
-        connect(decoration.get(), &KDecoration2::Decoration::shadowChanged, this, [this]() {
+        QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration3::Decoration::update), Qt::QueuedConnection);
+        connect(decoration.get(), &KDecoration3::Decoration::shadowChanged, this, [this]() {
             if (!isDeleted()) {
                 updateShadow();
             }
         });
-        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (!isDeleted()) {
                 updateDecorationInputShape();
             }
         });
-        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, [this]() {
+        connect(decoration.get(), &KDecoration3::Decoration::resizeOnlyBordersChanged, this, [this]() {
             if (!isDeleted()) {
                 updateDecorationInputShape();
             }
         });
-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, [this]() {
+        connect(decoratedClient()->decoratedClient(), &KDecoration3::DecoratedClient::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateDecorationInputShape();
             }

@@ -7,14 +7,14 @@
 
 #include "../../../decorations/decorationpalette.h"
 
-#include <KDecoration2/Private/DecoratedClientPrivate>
+#include <KDecoration3/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
 #include <QQmlEngine>
 
 class QAbstractItemModel;
 
-namespace KDecoration2
+namespace KDecoration3
 {
 namespace Preview
 {
@@ -22,7 +22,7 @@ class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedClie
 {
     Q_OBJECT
     QML_ANONYMOUS
-    Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration CONSTANT)
+    Q_PROPERTY(KDecoration3::Decoration *decoration READ decoration CONSTANT)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
     Q_PROPERTY(QIcon icon READ icon WRITE setIcon NOTIFY iconChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
@@ -194,4 +194,4 @@ private:
 };
 
 } // namespace Preview
-} // namespace KDecoration2
+} // namespace KDecoration3
