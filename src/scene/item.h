@@ -121,7 +121,9 @@ public:
     void setVisible(bool visible);
 
     void scheduleRepaint(const QRectF &region);
+    void scheduleSceneRepaint(const QRectF &region);
     void scheduleRepaint(const QRegion &region);
+    void scheduleSceneRepaint(const QRegion &region);
     void scheduleRepaint(SceneDelegate *delegate, const QRegion &region);
     void scheduleFrame();
     QRegion repaints(SceneDelegate *delegate) const;

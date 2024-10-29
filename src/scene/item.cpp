@@ -82,7 +82,7 @@ void Item::setZ(int z)
     if (m_parentItem) {
         m_parentItem->markSortedChildItemsDirty();
     }
-    scheduleRepaint(boundingRect());
+    scheduleSceneRepaint(boundingRect());
 }
 
 Item *Item::parentItem() const
@@ -316,8 +316,8 @@ void Item::stackBefore(Item *sibling)
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex : siblingIndex - 1);
     m_parentItem->markSortedChildItemsDirty();
 
-    scheduleRepaint(boundingRect());
-    sibling->scheduleRepaint(sibling->boundingRect());
+    scheduleSceneRepaint(boundingRect());
+    sibling->scheduleSceneRepaint(sibling->boundingRect());
 }
 
 void Item::stackAfter(Item *sibling)
@@ -344,8 +344,8 @@ void Item::stackAfter(Item *sibling)
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex + 1 : siblingIndex);
     m_parentItem->markSortedChildItemsDirty();
 
-    scheduleRepaint(boundingRect());
-    sibling->scheduleRepaint(sibling->boundingRect());
+    scheduleSceneRepaint(boundingRect());
+    sibling->scheduleSceneRepaint(sibling->boundingRect());
 }
 
 void Item::scheduleRepaint(const QRegion &region)
@@ -466,6 +466,21 @@ void Item::setVisible(bool visible)
 void Item::scheduleRepaint(const QRectF &region)
 {
     scheduleRepaint(QRegion(region.toAlignedRect()));
+}
+
+void Item::scheduleSceneRepaint(const QRectF &region)
+{
+    scheduleSceneRepaint(QRegion(region.toAlignedRect()));
+}
+
+void Item::scheduleSceneRepaint(const QRegion &region)
+{
+    if (!m_scene) {
+        return;
+    }
+    if (isVisible()) {
+        m_scene->addRepaint(mapToScene(region));
+    }
 }
 
 bool Item::computeEffectiveVisibility() const
