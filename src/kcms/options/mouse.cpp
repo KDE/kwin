@@ -7,6 +7,7 @@
 #include "mouse.h"
 #include "kwinoptions_settings.h"
 
+#include <KWindowSystem>
 #include <QDBusConnection>
 #include <QDBusMessage>
 
@@ -64,6 +65,7 @@ void KWindowActionsConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
     addConfig(m_settings, widget());
+    m_ui->info_1->setVisible(KWindowSystem::isPlatformX11());
 }
 
 void KWindowActionsConfig::save()
