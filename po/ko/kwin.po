@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-26 00:41+0000\n"
+"POT-Creation-Date: 2024-10-29 00:41+0000\n"
 "PO-Revision-Date: 2024-08-21 00:34+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -4267,7 +4267,7 @@ msgstr ""
 "이 메시지 아래에 있는 지원 정보를 글에 바로 붙여넣기보다는\n"
 "https://paste.kde.org 등 외부 사이트에 링크하는 것을 권장합니다.\n"
 
-#: xwayland/xwaylandlauncher.cpp:273
+#: xwayland/xwaylandlauncher.cpp:277
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland가 충돌함"
