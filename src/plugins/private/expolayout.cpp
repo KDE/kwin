@@ -100,7 +100,13 @@ void ExpoCell::setContentItem(QQuickItem *item)
         return;
     }
 
+    if (m_contentItem) {
+        disconnect(m_contentItem, &QQuickItem::parentChanged, this, &ExpoCell::updateContentItemGeometry);
+    }
+
     m_contentItem = item;
+
+    connect(m_contentItem, &QQuickItem::parentChanged, this, &ExpoCell::updateContentItemGeometry);
 
     if (m_contentItem) {
         m_contentItem->setVisible(isVisible());
