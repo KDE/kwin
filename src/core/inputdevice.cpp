@@ -14,6 +14,26 @@ InputDevice::InputDevice(QObject *parent)
 {
 }
 
+QString InputDevice::sysPath() const
+{
+    return QString();
+}
+
+quint32 InputDevice::vendor() const
+{
+    return 0;
+}
+
+quint32 InputDevice::product() const
+{
+    return 0;
+}
+
+void *InputDevice::group() const
+{
+    return nullptr;
+}
+
 QString InputDevice::outputName() const
 {
     return {};
@@ -26,6 +46,31 @@ void InputDevice::setOutputName(const QString &outputName)
 bool InputDevice::isNaturalScroll() const
 {
     return false;
+}
+
+int InputDevice::tabletPadButtonCount() const
+{
+    return 0;
+}
+
+int InputDevice::tabletPadRingCount() const
+{
+    return 0;
+}
+
+int InputDevice::tabletPadStripCount() const
+{
+    return 0;
+}
+
+int InputDevice::tabletPadModeCount() const
+{
+    return 0;
+}
+
+int InputDevice::tabletPadMode() const
+{
+    return 0;
 }
 
 } // namespace KWin

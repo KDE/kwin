@@ -200,6 +200,10 @@ public:
     {
         return m_sysName;
     }
+    QString sysPath() const override
+    {
+        return m_sysPath;
+    }
     QString outputName() const override
     {
         return m_outputName;
@@ -208,14 +212,15 @@ public:
     {
         return m_size;
     }
-    quint32 product() const
+    quint32 product() const override
     {
         return m_product;
     }
-    quint32 vendor() const
+    quint32 vendor() const override
     {
         return m_vendor;
     }
+    void *group() const override;
     Qt::MouseButtons supportedButtons() const
     {
         return m_supportedButtons;
@@ -629,8 +634,11 @@ public:
         return m_tabletSwitch;
     }
 
-    int stripsCount() const;
-    int ringsCount() const;
+    int tabletPadButtonCount() const override;
+    int tabletPadRingCount() const override;
+    int tabletPadStripCount() const override;
+    int tabletPadModeCount() const override;
+    int tabletPadMode() const override;
 
     Output *output() const;
     void setOutput(Output *output);
@@ -715,6 +723,7 @@ private:
     bool m_tabletSwitch = false;
     QString m_name;
     QString m_sysName;
+    QString m_sysPath;
     QString m_outputName;
     QSizeF m_size;
     quint32 m_product;

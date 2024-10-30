@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "tablet_input.h"
-#include "backends/libinput/device.h"
+#include "core/inputdevice.h"
 #include "cursorsource.h"
 #include "decorations/decoratedclient.h"
 #include "input_event.h"
@@ -117,13 +117,8 @@ static TabletSeatV2Interface *findTabletSeat()
     return manager->seat(waylandServer()->seat());
 }
 
-void TabletInputRedirection::integrateDevice(InputDevice *inputDevice)
+void TabletInputRedirection::integrateDevice(InputDevice *device)
 {
-    auto device = qobject_cast<LibInput::Device *>(inputDevice);
-    if (!device || (!device->isTabletTool() && !device->isTabletPad())) {
-        return;
-    }
-
     TabletSeatV2Interface *tabletSeat = findTabletSeat();
     if (!tabletSeat) {
         qCCritical(KWIN_CORE) << "Could not find tablet seat";
@@ -131,35 +126,21 @@ void TabletInputRedirection::integrateDevice(InputDevice *inputDevice)
     }
 
     if (device->isTabletTool()) {
-        struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
-        const char *devnode = udev_device_get_syspath(udev_device);
-
-        tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
+        tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {device->sysPath()});
     }
 
     if (device->isTabletPad()) {
-        struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
-        const char *devnode = udev_device_get_syspath(udev_device);
-        const int buttonsCount = libinput_device_tablet_pad_get_num_buttons(device->device());
-        const int ringsCount = libinput_device_tablet_pad_get_num_rings(device->device());
-        const int stripsCount = libinput_device_tablet_pad_get_num_strips(device->device());
-        const int modes = libinput_device_tablet_pad_get_num_mode_groups(device->device());
-
-        auto firstGroup = libinput_device_tablet_pad_get_mode_group(device->device(), 0);
-        tabletSeat->addPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup));
+        tabletSeat->addPad(device->sysName(), device->name(), {device->sysPath()}, device->tabletPadButtonCount(), device->tabletPadRingCount(), device->tabletPadStripCount(), device->tabletPadModeCount(), device->tabletPadMode());
     }
 }
 
-void TabletInputRedirection::removeDevice(InputDevice *inputDevice)
+void TabletInputRedirection::removeDevice(InputDevice *device)
 {
-    auto device = qobject_cast<LibInput::Device *>(inputDevice);
-    if (device) {
-        TabletSeatV2Interface *tabletSeat = findTabletSeat();
-        if (tabletSeat) {
-            tabletSeat->removeDevice(device->sysName());
-        } else {
-            qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->sysName();
-        }
+    TabletSeatV2Interface *tabletSeat = findTabletSeat();
+    if (tabletSeat) {
+        tabletSeat->removeDevice(device->sysName());
+    } else {
+        qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->sysName();
     }
 }
 
@@ -262,20 +243,13 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletTool
 
 TabletV2Interface *TabletInputRedirection::tabletForPad(InputDevice *device) const
 {
-    auto pad = qobject_cast<LibInput::Device *>(device);
-    if (!pad) {
-        return nullptr;
-    }
-
     const auto candidates = input()->devices();
     for (InputDevice *candidate : candidates) {
         if (!candidate->isTabletTool()) {
             continue;
         }
-        if (auto libinputDevice = qobject_cast<LibInput::Device *>(candidate)) {
-            if (libinput_device_get_device_group(pad->device()) == libinput_device_get_device_group(libinputDevice->device())) {
-                return findTabletSeat()->tabletByName(libinputDevice->sysName());
-            }
+        if (device->group() == candidate->group()) {
+            return findTabletSeat()->tabletByName(candidate->sysName());
         }
     }
 

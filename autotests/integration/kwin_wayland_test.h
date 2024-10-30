@@ -616,9 +616,11 @@ public:
     void setTabletPad(bool set);
     void setTabletTool(bool set);
     void setName(const QString &name);
+    void setGroup(uintptr_t group);
 
     QString sysName() const override;
     QString name() const override;
+    void *group() const override;
 
     bool isEnabled() const override;
     void setEnabled(bool enabled) override;
@@ -637,6 +639,7 @@ public:
 
 private:
     QString m_name;
+    void *m_group = nullptr;
     bool m_pointer = false;
     bool m_keyboard = false;
     bool m_touch = false;

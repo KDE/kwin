@@ -1589,6 +1589,11 @@ void VirtualInputDevice::setName(const QString &name)
     m_name = name;
 }
 
+void VirtualInputDevice::setGroup(uintptr_t group)
+{
+    m_group = reinterpret_cast<void *>(group);
+}
+
 QString VirtualInputDevice::sysName() const
 {
     return QString();
@@ -1597,6 +1602,11 @@ QString VirtualInputDevice::sysName() const
 QString VirtualInputDevice::name() const
 {
     return m_name;
+}
+
+void *VirtualInputDevice::group() const
+{
+    return m_group;
 }
 
 bool VirtualInputDevice::isEnabled() const

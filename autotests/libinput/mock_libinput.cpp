@@ -922,6 +922,23 @@ int libinput_device_tablet_pad_get_num_buttons(struct libinput_device *device)
     return device->buttonCount;
 }
 
+int libinput_device_tablet_pad_get_num_mode_groups(struct libinput_device *device)
+{
+    return 0;
+}
+
+struct libinput_tablet_pad_mode_group *
+libinput_device_tablet_pad_get_mode_group(struct libinput_device *device, unsigned int index)
+{
+    return nullptr;
+}
+
+unsigned int
+libinput_tablet_pad_mode_group_get_mode(struct libinput_tablet_pad_mode_group *group)
+{
+    return 0;
+}
+
 struct libinput_device_group *
 libinput_device_get_device_group(struct libinput_device *device)
 {
@@ -950,6 +967,11 @@ libinput_device_get_user_data(struct libinput_device *device)
     return device->userData;
 }
 
+udev_device *libinput_device_get_udev_device(struct libinput_device *device)
+{
+    return nullptr;
+}
+
 double
 libinput_event_tablet_tool_get_x_transformed(struct libinput_event_tablet_tool *event,
                                              uint32_t width)
@@ -963,4 +985,9 @@ libinput_event_tablet_tool_get_y_transformed(struct libinput_event_tablet_tool *
                                              uint32_t height)
 {
     return 4;
+}
+
+const char *udev_device_get_syspath(struct udev_device *device)
+{
+    return "";
 }

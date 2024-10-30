@@ -284,6 +284,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_tabletSwitch(m_switch ? libinput_device_switch_has_switch(m_device, LIBINPUT_SWITCH_TABLET_MODE) : false)
     , m_name(QString::fromLocal8Bit(libinput_device_get_name(m_device)))
     , m_sysName(QString::fromLocal8Bit(libinput_device_get_sysname(m_device)))
+    , m_sysPath(QString::fromLocal8Bit(udev_device_get_syspath(libinput_device_get_udev_device(m_device))))
     , m_outputName(QString::fromLocal8Bit(libinput_device_get_output_name(m_device)))
     , m_product(libinput_device_get_id_product(m_device))
     , m_vendor(libinput_device_get_id_vendor(m_device))
@@ -532,14 +533,34 @@ void Device::setLmrTapButtonMap(bool set)
     }
 }
 
-int Device::stripsCount() const
+void *Device::group() const
+{
+    return libinput_device_get_device_group(m_device);
+}
+
+int Device::tabletPadButtonCount() const
+{
+    return libinput_device_tablet_pad_get_num_buttons(m_device);
+}
+
+int Device::tabletPadRingCount() const
+{
+    return libinput_device_tablet_pad_get_num_rings(m_device);
+}
+
+int Device::tabletPadStripCount() const
 {
     return libinput_device_tablet_pad_get_num_strips(m_device);
 }
 
-int Device::ringsCount() const
+int Device::tabletPadModeCount() const
 {
-    return libinput_device_tablet_pad_get_num_rings(m_device);
+    return libinput_device_tablet_pad_get_num_mode_groups(m_device);
+}
+
+int Device::tabletPadMode() const
+{
+    return libinput_tablet_pad_mode_group_get_mode(libinput_device_tablet_pad_get_mode_group(m_device, 0));
 }
 
 #define CONFIG(method, condition, function, variable, key)                                        \

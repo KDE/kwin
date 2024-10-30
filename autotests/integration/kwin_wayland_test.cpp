@@ -136,10 +136,12 @@ void WaylandTestApplication::createVirtualInputDevices()
     m_virtualTabletPad = std::make_unique<Test::VirtualInputDevice>();
     m_virtualTabletPad->setName(QStringLiteral("Virtual Tablet Pad 1"));
     m_virtualTabletPad->setTabletPad(true);
+    m_virtualTabletPad->setGroup(0xdeadbeef);
 
     m_virtualTabletTool = std::make_unique<Test::VirtualInputDevice>();
     m_virtualTabletTool->setName(QStringLiteral("Virtual Tablet Tool 1"));
     m_virtualTabletTool->setTabletTool(true);
+    m_virtualTabletTool->setGroup(0xdeadbeef);
 
     input()->addInputDevice(m_virtualPointer.get());
     input()->addInputDevice(m_virtualTouch.get());

@@ -26,7 +26,12 @@ public:
     explicit InputDevice(QObject *parent = nullptr);
 
     virtual QString sysName() const = 0;
+    virtual QString sysPath() const;
     virtual QString name() const = 0;
+    virtual quint32 vendor() const;
+    virtual quint32 product() const;
+
+    virtual void *group() const;
 
     virtual bool isEnabled() const = 0;
     virtual void setEnabled(bool enabled) = 0;
@@ -47,6 +52,12 @@ public:
     virtual void setOutputName(const QString &outputName);
 
     virtual bool isNaturalScroll() const;
+
+    virtual int tabletPadButtonCount() const;
+    virtual int tabletPadRingCount() const;
+    virtual int tabletPadStripCount() const;
+    virtual int tabletPadModeCount() const;
+    virtual int tabletPadMode() const;
 
 Q_SIGNALS:
     void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);

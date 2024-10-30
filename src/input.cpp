@@ -11,9 +11,8 @@
 #include "input.h"
 
 #include "backends/fakeinput/fakeinputbackend.h"
-#include "backends/libinput/connection.h"
-#include "backends/libinput/device.h"
 #include "core/inputbackend.h"
+#include "core/inputdevice.h"
 #include "core/session.h"
 #include "effect/effecthandler.h"
 #include "gestures.h"
