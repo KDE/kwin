@@ -714,8 +714,8 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
     for (const KPluginMetaData &service : offers) {
         const QString value = pluginStates.value(service.pluginId() + QLatin1String("Enabled"), QString());
         const bool enabled = value.isNull() ? service.isEnabledByDefault() : QVariant(value).toBool();
-        const bool javaScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1String("javascript");
-        const bool declarativeScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1String("declarativescript");
+        const bool javaScript = service.value(u"X-Plasma-API") == QLatin1String("javascript");
+        const bool declarativeScript = service.value(u"X-Plasma-API") == QLatin1String("declarativescript");
         if (!javaScript && !declarativeScript) {
             continue;
         }

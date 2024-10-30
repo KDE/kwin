@@ -93,7 +93,7 @@ void ConfigurationModule::initQml()
 
     KLocalizedTranslator *translator = new KLocalizedTranslator(this);
     QCoreApplication::instance()->installTranslator(translator);
-    const QString translationDomain = metaData.value("X-KWin-Config-TranslationDomain");
+    const QString translationDomain = metaData.value(u"X-KWin-Config-TranslationDomain");
     if (!translationDomain.isEmpty()) {
         translator->setTranslationDomain(translationDomain);
     }

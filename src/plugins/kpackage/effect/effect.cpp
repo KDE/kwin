@@ -34,7 +34,7 @@ public:
             return;
         }
 
-        const QString api = package->metadata().value(QStringLiteral("X-Plasma-API"));
+        const QString api = package->metadata().value(u"X-Plasma-API");
         if (api == QLatin1StringView("javascript")) {
             package->addFileDefinition("mainscript", QStringLiteral("code/main.js"));
             package->setRequired("mainscript", true);

@@ -127,7 +127,7 @@ bool ScriptedEffectLoader::loadEffect(const KPluginMetaData &effect, LoadEffectF
         return false;
     }
 
-    const QString api = effect.value(QStringLiteral("X-Plasma-API"));
+    const QString api = effect.value(u"X-Plasma-API");
     if (api == QLatin1String("javascript")) {
         return loadJavascriptEffect(effect);
     } else if (api == QLatin1String("declarativescript")) {

@@ -241,7 +241,7 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
         effect.supported = true;
         effect.enabledByDefaultFunction = false;
         effect.internal = false;
-        effect.configModule = metaData.value(QStringLiteral("X-KDE-ConfigModule"));
+        effect.configModule = metaData.value(u"X-KDE-ConfigModule");
         effect.website = QUrl(metaData.website());
 
         if (metaData.rawData().contains("org.kde.kwin.effect")) {
@@ -292,13 +292,13 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         effect.originalStatus = effect.status;
         effect.enabledByDefault = plugin.isEnabledByDefault();
         effect.enabledByDefaultFunction = false;
-        effect.video = QUrl(plugin.value(QStringLiteral("X-KWin-Video-Url")));
+        effect.video = QUrl(plugin.value(u"X-KWin-Video-Url"));
         effect.website = QUrl(plugin.website());
         effect.supported = true;
-        effect.exclusiveGroup = plugin.value(QStringLiteral("X-KWin-Exclusive-Category"));
-        effect.internal = plugin.value(QStringLiteral("X-KWin-Internal"), false);
+        effect.exclusiveGroup = plugin.value(u"X-KWin-Exclusive-Category");
+        effect.internal = plugin.value(u"X-KWin-Internal", false);
 
-        if (const QString configModule = plugin.value(QStringLiteral("X-KDE-ConfigModule")); !configModule.isEmpty()) {
+        if (const QString configModule = plugin.value(u"X-KDE-ConfigModule"); !configModule.isEmpty()) {
             if (configModule == QLatin1StringView("kcm_kwin4_genericscripted")) {
                 const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
                 const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
@@ -337,7 +337,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
         effect.supported = true;
         effect.enabledByDefaultFunction = false;
         effect.internal = false;
-        effect.configModule = pluginEffect.value(QStringLiteral("X-KDE-ConfigModule"));
+        effect.configModule = pluginEffect.value(u"X-KDE-ConfigModule");
 
         for (int i = 0; i < pluginEffect.authors().count(); ++i) {
             effect.authorName.append(pluginEffect.authors().at(i).name());

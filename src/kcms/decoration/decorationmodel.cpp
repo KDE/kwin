@@ -142,7 +142,7 @@ void DecorationsModel::init()
             qWarning() << "The use of 'kcmodule' is deprecated in favor of 'kcmoduleName', please update" << info.name();
         }
 
-        data.setConfigurationName(info.value("X-KDE-ConfigModule"));
+        data.setConfigurationName(info.value(u"X-KDE-ConfigModule"));
         data.setBorderSize(recommendedBorderSize(decoSettingsMap));
         data.setVisibleName(info.name().isEmpty() ? info.pluginId() : info.name());
         data.setPluginId(info.pluginId());

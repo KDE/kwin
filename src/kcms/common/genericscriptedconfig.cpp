@@ -92,7 +92,7 @@ void GenericScriptedConfig::createUi()
 
     const QString localePath = packageRoot + QLatin1String("/contents/locale");
     if (QFileInfo::exists(localePath)) {
-        KLocalizedString::addDomainLocaleDir(metaData.value("X-KWin-Config-TranslationDomain").toUtf8(), localePath);
+        KLocalizedString::addDomainLocaleDir(metaData.value(u"X-KWin-Config-TranslationDomain").toUtf8(), localePath);
     }
 
     QFile xmlFile(kconfigXTFile);
@@ -102,7 +102,7 @@ void GenericScriptedConfig::createUi()
     QUiLoader *loader = new QUiLoader(this);
     loader->setLanguageChangeEnabled(true);
     QFile uiFile(uiPath);
-    m_translator->setTranslationDomain(metaData.value("X-KWin-Config-TranslationDomain"));
+    m_translator->setTranslationDomain(metaData.value(u"X-KWin-Config-TranslationDomain"));
 
     uiFile.open(QFile::ReadOnly);
     QWidget *customConfigForm = loader->load(&uiFile, widget());
