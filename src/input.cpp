@@ -2038,22 +2038,19 @@ public:
             return false;
         }
 
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->toolId());
-
-        // NOTE: tablet will be nullptr as the device is removed (see ::removeDevice) but events from the tool
-        // may still happen (e.g. Release or ProximityOut events)
-        TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
-        auto tablet = seat->tabletByName(event->device()->sysName());
-
         Window *window = input()->findToplevel(event->globalPosF());
         if (!window || !window->surface()) {
             return false;
         }
 
+        TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
+        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->toolId());
+        TabletV2Interface *tablet = seat->tabletByName(event->device()->sysName());
+
         SurfaceInterface *surface = window->surface();
         tool->setCurrentSurface(surface);
 
-        if (!tool->isClientSupported() || (tablet && !tablet->isSurfaceSupported(surface))) {
+        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
             return emulateTabletEvent(event);
         }
 
