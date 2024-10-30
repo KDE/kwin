@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 00:41+0000\n"
+"POT-Creation-Date: 2024-10-30 00:41+0000\n"
 "PO-Revision-Date: 2024-09-26 14:15+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -80,7 +80,7 @@ msgstr "Ýttu á hægri stjórnlykil til að grípa inntak"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland myndsmiður"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:457
+#: compositor_wayland.cpp:312 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Skjáborðsbrellur voru endurræstar vegna endurstillingar á myndvinnslu"
@@ -4260,7 +4260,7 @@ msgstr "Eitt skjáborð niður"
 msgid "Switch to Desktop %1"
 msgstr "Skipta á skjáborð %1"
 
-#: window.cpp:3144
+#: window.cpp:3145
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4289,7 +4289,7 @@ msgstr ""
 "Settu upplýsingarnar fyrir neðan þennan inngangstexta í afritunarsíðu \n"
 "eins og https://paste.kde.org í stað þess að líma þær inn í aðstoðarbeiðni.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland hrundi"

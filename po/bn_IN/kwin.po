@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 00:41+0000\n"
+"POT-Creation-Date: 2024-10-30 00:41+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:457
+#: compositor_wayland.cpp:312 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4396,7 +4396,7 @@ msgstr "নীচের ডেস্কটপে পরিবর্তন কর
 msgid "Switch to Desktop %1"
 msgstr "ডেস্কটপ ১-এ পরিবর্তন করুন"
 
-#: window.cpp:3144
+#: window.cpp:3145
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4417,7 +4417,7 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""

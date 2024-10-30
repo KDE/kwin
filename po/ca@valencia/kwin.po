@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 00:41+0000\n"
+"POT-Creation-Date: 2024-10-30 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 10:02+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -76,7 +76,7 @@ msgstr "Premeu la tecla de control dret per a agafar l'entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor de Wayland de KDE"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:457
+#: compositor_wayland.cpp:312 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4285,7 +4285,7 @@ msgstr "Canvia un escriptori avall"
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: window.cpp:3144
+#: window.cpp:3145
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4315,7 +4315,7 @@ msgstr ""
 "en un servei d'apegades\n"
 "com https://paste.kde.org en lloc d'apegar-ho en els fils d'ajuda.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"

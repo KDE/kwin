@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 00:41+0000\n"
+"POT-Creation-Date: 2024-10-30 00:41+0000\n"
 "PO-Revision-Date: 2024-09-26 15:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -70,7 +70,7 @@ msgstr "Nyomja meg a jobb Controlt a bemenet elkapásához"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland kompozitor"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:457
+#: compositor_wayland.cpp:312 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4258,7 +4258,7 @@ msgstr "Váltás a lefelé eső asztalra"
 msgid "Switch to Desktop %1"
 msgstr "Váltás a(z) %1. asztalra"
 
-#: window.cpp:3144
+#: window.cpp:3145
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4286,7 +4286,7 @@ msgstr ""
 "Kérjük töltse fel az alábbi információkat egy szövegmegosztó oldalra, "
 "például a https://paste.kde.org-ra ahelyett, hogy a fórumba illesztené be.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Az Xwayland összeomlott"

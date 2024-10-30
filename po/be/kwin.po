@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 00:41+0000\n"
+"POT-Creation-Date: 2024-10-30 00:41+0000\n"
 "PO-Revision-Date: 2024-06-11 08:11\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -76,7 +76,7 @@ msgstr "Каб захапіць увод, націсніце правую кла
 msgid "KDE Wayland Compositor"
 msgstr "Сродак кампазітынгу KDE Wayland"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:457
+#: compositor_wayland.cpp:312 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Эфекты працоўнага стала перазапушчаныя праз скід графікі"
@@ -4272,7 +4272,7 @@ msgstr "Пераключыцца на працоўны стол ніжэй"
 msgid "Switch to Desktop %1"
 msgstr "Пераключыцца на працоўны стол \"%1\""
 
-#: window.cpp:3144
+#: window.cpp:3145
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4301,7 +4301,7 @@ msgstr ""
 "ўстаўляння\n"
 "накшталт https://paste.kde.org, а не ў паведамленне запыту.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Адбыўся збой Xwayland"

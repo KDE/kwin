@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 00:41+0000\n"
+"POT-Creation-Date: 2024-10-30 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 09:06+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -76,7 +76,7 @@ msgstr "Натисніть праву клавішу Ctrl для захопле�
 msgid "KDE Wayland Compositor"
 msgstr "Засіб композиції KDE для Wayland"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:457
+#: compositor_wayland.cpp:312 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4275,7 +4275,7 @@ msgstr "Однією стільницею вниз"
 msgid "Switch to Desktop %1"
 msgstr "Перемкнутися до стільниці %1"
 
-#: window.cpp:3144
+#: window.cpp:3145
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4306,7 +4306,7 @@ msgstr ""
 "текстових фрагментів, подібної до https://paste.kde.org, замість додавання "
 "безпосередньо до тексту повідомлення.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland завершив роботу в аварійному режимі"

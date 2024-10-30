@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 00:41+0000\n"
+"POT-Creation-Date: 2024-10-30 00:41+0000\n"
 "PO-Revision-Date: 2024-10-27 12:38+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -73,7 +73,7 @@ msgstr "உள்ளீட்டை கைபற்ற வலது Ctrl வி�
 msgid "KDE Wayland Compositor"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல்"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:457
+#: compositor_wayland.cpp:312 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "வரைகலை முறிவடைந்து மீட்டமைக்கப்பட்டதால் பணிமேடை அசைவூட்டங்கள் மீள்துவக்கப்பட்டன"
@@ -4245,7 +4245,7 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
-#: window.cpp:3144
+#: window.cpp:3145
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4275,7 +4275,7 @@ msgstr ""
 "போன்ற\n"
 "ஒட்டுபலகை (pastebin) சேவையை பயன்படுத்தி ஒட்டியதற்கான இணைப்பை வழங்கலாம்.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
