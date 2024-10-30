@@ -1051,3 +1051,9 @@ int libinput_tablet_tool_has_wheel(struct libinput_tablet_tool *tool)
 {
     return 0;
 }
+
+const char *udev_device_get_property_value(struct udev_device *udev_device,
+                                           const char *key)
+{
+    return "";
+}

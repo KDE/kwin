@@ -190,12 +190,10 @@ public:
     }
     bool isTouchpad() const override
     {
-        return m_pointer &&
+        return m_touchpad &&
             // ignore all combined devices. E.g. a touchpad on a keyboard we don't want to toggle
             // as that would result in the keyboard going off as well
-            !(m_keyboard || m_touch || m_tabletPad || m_tabletTool) &&
-            // is this a touch pad? We don't really know, let's do some assumptions
-            (m_tapFingerCount > 0 || m_supportsDisableWhileTyping || m_supportsDisableEventsOnExternalMouse);
+            !(m_keyboard || m_touch || m_tabletPad || m_tabletTool);
     }
     bool isTouch() const override
     {
@@ -742,6 +740,7 @@ private:
     bool m_switch = false;
     bool m_lidSwitch = false;
     bool m_tabletSwitch = false;
+    bool m_touchpad = false;
     QString m_name;
     QString m_sysName;
     QString m_sysPath;
