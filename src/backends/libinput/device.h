@@ -31,6 +31,26 @@ namespace LibInput
 {
 enum class ConfigKey;
 
+class TabletTool : public InputDeviceTabletTool
+{
+    Q_OBJECT
+
+public:
+    explicit TabletTool(libinput_tablet_tool *handle);
+    ~TabletTool() override;
+
+    libinput_tablet_tool *handle() const;
+
+    quint64 serialId() const override;
+    quint64 uniqueId() const override;
+
+    Type type() const override;
+    QList<Capability> capabilities() const override;
+
+private:
+    libinput_tablet_tool *const m_handle;
+};
+
 class KWIN_EXPORT Device : public InputDevice
 {
     Q_OBJECT

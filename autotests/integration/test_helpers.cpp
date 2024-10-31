@@ -1549,6 +1549,51 @@ uint32_t WaylandOutputDeviceV2::rgbRange() const
     return m_rgbRange;
 }
 
+VirtualInputDeviceTabletTool::VirtualInputDeviceTabletTool(QObject *parent)
+    : InputDeviceTabletTool(parent)
+{
+}
+
+void VirtualInputDeviceTabletTool::setSerialId(quint64 serialId)
+{
+    m_serialId = serialId;
+}
+
+void VirtualInputDeviceTabletTool::setUniqueId(quint64 uniqueId)
+{
+    m_uniqueId = uniqueId;
+}
+
+void VirtualInputDeviceTabletTool::setType(Type type)
+{
+    m_type = type;
+}
+
+void VirtualInputDeviceTabletTool::setCapabilities(const QList<Capability> &capabilities)
+{
+    m_capabilities = capabilities;
+}
+
+quint64 VirtualInputDeviceTabletTool::serialId() const
+{
+    return m_serialId;
+}
+
+quint64 VirtualInputDeviceTabletTool::uniqueId() const
+{
+    return m_uniqueId;
+}
+
+VirtualInputDeviceTabletTool::Type VirtualInputDeviceTabletTool::type() const
+{
+    return m_type;
+}
+
+QList<VirtualInputDeviceTabletTool::Capability> VirtualInputDeviceTabletTool::capabilities() const
+{
+    return m_capabilities;
+}
+
 VirtualInputDevice::VirtualInputDevice(QObject *parent)
     : InputDevice(parent)
 {
@@ -1759,31 +1804,25 @@ void tabletPadButtonReleased(quint32 button, quint32 time)
 
 void tabletToolButtonPressed(quint32 button, quint32 time)
 {
-    auto virtualTabletTool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
-    TabletToolId toolId{
-        .m_name = virtualTabletTool->name(),
-    };
-    Q_EMIT virtualTabletTool->tabletToolButtonEvent(button, true, toolId, std::chrono::milliseconds(time), virtualTabletTool);
+    auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
+    auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    Q_EMIT tablet->tabletToolButtonEvent(button, true, tool, std::chrono::milliseconds(time), tablet);
 }
 
 void tabletToolButtonReleased(quint32 button, quint32 time)
 {
-    auto virtualTabletTool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
-    TabletToolId toolId{
-        .m_name = virtualTabletTool->name(),
-    };
-    Q_EMIT virtualTabletTool->tabletToolButtonEvent(button, false, toolId, std::chrono::milliseconds(time), virtualTabletTool);
+    auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
+    auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    Q_EMIT tablet->tabletToolButtonEvent(button, false, tool, std::chrono::milliseconds(time), tablet);
 }
 
 void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
                      qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                      bool tipNear, quint32 time)
 {
-    auto virtualTabletTool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
-    TabletToolId toolId{
-        .m_name = virtualTabletTool->name(),
-    };
-    Q_EMIT virtualTabletTool->tabletToolEvent(type, pos, pressure, xTilt, yTilt, rotation, tipDown, tipNear, toolId, std::chrono::milliseconds(time), virtualTabletTool);
+    auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
+    auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    Q_EMIT tablet->tabletToolEvent(type, pos, pressure, xTilt, yTilt, rotation, tipDown, tipNear, tool, std::chrono::milliseconds(time), tablet);
 }
 }
 }

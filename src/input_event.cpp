@@ -69,9 +69,9 @@ SwitchEvent::SwitchEvent(State state, std::chrono::microseconds timestamp, Input
 TabletEvent::TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
                          qreal pressure, float xTilt, float yTilt,
                          float tangentialPressure, qreal rotation, float z,
-                         Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId, InputDevice *device)
+                         Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, InputDeviceTabletTool *tool, InputDevice *device)
     : QTabletEvent(t, dev, pos, globalPos, pressure, xTilt, yTilt, tangentialPressure, rotation, z, keyState, button, buttons)
-    , m_id(tabletId)
+    , m_tool(tool)
     , m_device(device)
 {
 }

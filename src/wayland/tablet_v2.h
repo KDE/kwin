@@ -17,6 +17,7 @@ namespace KWin
 {
 class ClientConnection;
 class Display;
+class InputDeviceTabletTool;
 class SeatInterface;
 class SurfaceInterface;
 class TabletSurfaceCursorV2;
@@ -282,11 +283,9 @@ public:
                                  quint32 strips,
                                  quint32 modes,
                                  quint32 currentMode);
-    TabletToolV2Interface *
-    addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QList<TabletToolV2Interface::Capability> &capabilities, const QString &deviceSysName);
+    TabletToolV2Interface *addTool(InputDeviceTabletTool *device);
 
-    TabletToolV2Interface *toolByHardwareId(quint64 hardwareId) const;
-    TabletToolV2Interface *toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const;
+    TabletToolV2Interface *tool(InputDeviceTabletTool *device) const;
     TabletV2Interface *tabletByName(const QString &sysname) const;
     TabletPadV2Interface *padByName(const QString &sysname) const;
 

@@ -138,16 +138,22 @@ void WaylandTestApplication::createVirtualInputDevices()
     m_virtualTabletPad->setTabletPad(true);
     m_virtualTabletPad->setGroup(0xdeadbeef);
 
-    m_virtualTabletTool = std::make_unique<Test::VirtualInputDevice>();
-    m_virtualTabletTool->setName(QStringLiteral("Virtual Tablet Tool 1"));
-    m_virtualTabletTool->setTabletTool(true);
-    m_virtualTabletTool->setGroup(0xdeadbeef);
+    m_virtualTablet = std::make_unique<Test::VirtualInputDevice>();
+    m_virtualTablet->setName(QStringLiteral("Virtual Tablet Tool 1"));
+    m_virtualTablet->setTabletTool(true);
+    m_virtualTablet->setGroup(0xdeadbeef);
+
+    m_virtualTabletTool = std::make_unique<Test::VirtualInputDeviceTabletTool>();
+    m_virtualTabletTool->setSerialId(42);
+    m_virtualTabletTool->setUniqueId(42);
+    m_virtualTabletTool->setType(InputDeviceTabletTool::Pen);
+    m_virtualTabletTool->setCapabilities({});
 
     input()->addInputDevice(m_virtualPointer.get());
     input()->addInputDevice(m_virtualTouch.get());
     input()->addInputDevice(m_virtualKeyboard.get());
     input()->addInputDevice(m_virtualTabletPad.get());
-    input()->addInputDevice(m_virtualTabletTool.get());
+    input()->addInputDevice(m_virtualTablet.get());
 }
 
 void WaylandTestApplication::destroyVirtualInputDevices()
@@ -165,7 +171,7 @@ void WaylandTestApplication::destroyVirtualInputDevices()
         input()->removeInputDevice(m_virtualTabletPad.get());
     }
     if (m_virtualTabletTool) {
-        input()->removeInputDevice(m_virtualTabletTool.get());
+        input()->removeInputDevice(m_virtualTablet.get());
     }
 }
 
@@ -231,7 +237,12 @@ Test::VirtualInputDevice *WaylandTestApplication::virtualTabletPad() const
     return m_virtualTabletPad.get();
 }
 
-Test::VirtualInputDevice *WaylandTestApplication::virtualTabletTool() const
+Test::VirtualInputDevice *WaylandTestApplication::virtualTablet() const
+{
+    return m_virtualTablet.get();
+}
+
+Test::VirtualInputDeviceTabletTool *WaylandTestApplication::virtualTabletTool() const
 {
     return m_virtualTabletTool.get();
 }

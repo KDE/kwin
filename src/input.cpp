@@ -576,7 +576,7 @@ public:
         if (!effects) {
             return false;
         }
-        return effects->tabletToolButtonEvent(event->button, event->pressed, event->toolId, event->time);
+        return effects->tabletToolButtonEvent(event->button, event->pressed, event->tool, event->time);
     }
     bool tabletPadButtonEvent(TabletPadButtonEvent *event) override
     {
@@ -1335,22 +1335,22 @@ public:
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
         const QPointF globalPos = event->globalPosition();
         const QPointF localPos = globalPos - internal->position();
-        const TabletToolId toolId = event->toolId();
+        const InputDeviceTabletTool *tool = event->tool();
 
         const int deviceType = int(QPointingDevice::DeviceType::Stylus);
         const int pointerType = int(QPointingDevice::PointerType::Pen);
 
         switch (event->type()) {
         case QEvent::TabletEnterProximity:
-            QWindowSystemInterface::handleTabletEnterProximityEvent(deviceType, pointerType, toolId.m_serialId);
+            QWindowSystemInterface::handleTabletEnterProximityEvent(deviceType, pointerType, tool->serialId());
             break;
         case QEvent::TabletLeaveProximity:
-            QWindowSystemInterface::handleTabletLeaveProximityEvent(deviceType, pointerType, toolId.m_serialId);
+            QWindowSystemInterface::handleTabletLeaveProximityEvent(deviceType, pointerType, tool->serialId());
             break;
         case QEvent::TabletPress:
         case QEvent::TabletRelease:
         case QEvent::TabletMove:
-            QWindowSystemInterface::handleTabletEvent(internal, event->timestamp(), localPos, globalPos, deviceType, pointerType, event->buttons(), event->pressure(), event->xTilt(), event->yTilt(), event->tangentialPressure(), event->rotation(), event->z(), toolId.m_serialId, input()->keyboardModifiers());
+            QWindowSystemInterface::handleTabletEvent(internal, event->timestamp(), localPos, globalPos, deviceType, pointerType, event->buttons(), event->pressure(), event->xTilt(), event->yTilt(), event->tangentialPressure(), event->rotation(), event->z(), tool->serialId(), input()->keyboardModifiers());
             break;
         default:
             break;
@@ -2044,7 +2044,7 @@ public:
         }
 
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->toolId());
+        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tool());
         TabletV2Interface *tablet = seat->tabletByName(event->device()->sysName());
 
         SurfaceInterface *surface = window->surface();
@@ -2129,7 +2129,7 @@ public:
 
     bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
     {
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->toolId);
+        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tool);
         if (!tool->isClientSupported()) {
             return false;
         }

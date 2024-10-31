@@ -991,3 +991,63 @@ const char *udev_device_get_syspath(struct udev_device *device)
 {
     return "";
 }
+
+struct libinput_tablet_tool *
+libinput_tablet_tool_ref(struct libinput_tablet_tool *tool)
+{
+    return tool;
+}
+
+struct libinput_tablet_tool *
+libinput_tablet_tool_unref(struct libinput_tablet_tool *tool)
+{
+    return tool;
+}
+
+uint64_t
+libinput_tablet_tool_get_serial(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}
+
+uint64_t
+libinput_tablet_tool_get_tool_id(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}
+
+enum libinput_tablet_tool_type
+libinput_tablet_tool_get_type(struct libinput_tablet_tool *tool)
+{
+    return LIBINPUT_TABLET_TOOL_TYPE_PEN;
+}
+
+int libinput_tablet_tool_has_pressure(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}
+
+int libinput_tablet_tool_has_distance(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}
+
+int libinput_tablet_tool_has_tilt(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}
+
+int libinput_tablet_tool_has_rotation(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}
+
+int libinput_tablet_tool_has_slider(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}
+
+int libinput_tablet_tool_has_wheel(struct libinput_tablet_tool *tool)
+{
+    return 0;
+}

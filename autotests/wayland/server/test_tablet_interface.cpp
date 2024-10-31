@@ -9,6 +9,7 @@
 #include <QTest>
 #include <QThread>
 // WaylandServer
+#include "core/inputdevice.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"
@@ -135,6 +136,63 @@ Q_SIGNALS:
     void tabletAdded();
 };
 
+class DummyInputDeviceTabletTool : public InputDeviceTabletTool
+{
+    Q_OBJECT
+
+public:
+    explicit DummyInputDeviceTabletTool(QObject *parent = nullptr)
+        : InputDeviceTabletTool(parent)
+    {
+    }
+
+    void setSerialId(quint64 serialId)
+    {
+        m_serialId = serialId;
+    }
+
+    void setUniqueId(quint64 uniqueId)
+    {
+        m_uniqueId = uniqueId;
+    }
+
+    void setType(Type type)
+    {
+        m_type = type;
+    }
+
+    void setCapabilities(const QList<Capability> &capabilities)
+    {
+        m_capabilities = capabilities;
+    }
+
+    quint64 serialId() const override
+    {
+        return m_serialId;
+    }
+
+    quint64 uniqueId() const override
+    {
+        return m_uniqueId;
+    }
+
+    Type type() const override
+    {
+        return m_type;
+    }
+
+    QList<Capability> capabilities() const override
+    {
+        return m_capabilities;
+    }
+
+private:
+    quint64 m_serialId = 0;
+    quint64 m_uniqueId = 0;
+    Type m_type = Type::Pen;
+    QList<Capability> m_capabilities;
+};
+
 class TestTabletInterface : public QObject
 {
     Q_OBJECT
@@ -172,7 +230,8 @@ private:
 
     TabletV2Interface *m_tablet;
     TabletPadV2Interface *m_tabletPad = nullptr;
-    TabletToolV2Interface *m_tool;
+    DummyInputDeviceTabletTool *m_toolDevice = nullptr;
+    TabletToolV2Interface *m_tool = nullptr;
 
     QList<SurfaceInterface *> m_surfaces;
 };
@@ -274,7 +333,12 @@ void TestTabletInterface::testAdd()
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
 
     QSignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
-    m_tool = seatInterface->addTool(KWin::TabletToolV2Interface::Pen, 0, 0, {TabletToolV2Interface::Tilt, TabletToolV2Interface::Pressure}, "my tablet");
+    m_toolDevice = new DummyInputDeviceTabletTool();
+    m_toolDevice->setSerialId(0);
+    m_toolDevice->setUniqueId(0);
+    m_toolDevice->setType(InputDeviceTabletTool::Pen);
+    m_toolDevice->setCapabilities({InputDeviceTabletTool::Tilt, InputDeviceTabletTool::Pressure});
+    m_tool = seatInterface->addTool(m_toolDevice);
     QVERIFY(m_tool);
     QVERIFY(toolSpy.wait() || toolSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tools.count(), 1);

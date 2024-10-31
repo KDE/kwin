@@ -236,8 +236,8 @@ bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *eve
     if (RebindScope::isRebinding()) {
         return false;
     }
-    m_tabletTool = event->toolId;
-    return send(TabletToolButtonType, {event->toolId.m_name, event->button}, event->pressed, event->time);
+    m_tabletTool = event->tool;
+    return send(TabletToolButtonType, {event->device->name(), event->button}, event->pressed, event->time);
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
@@ -450,7 +450,7 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, std
         return false;
     }
     RebindScope scope;
-    Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, *m_tabletTool, time, &m_inputDevice);
+    Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, m_tabletTool, time, &m_inputDevice);
     return true;
 }
 

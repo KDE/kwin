@@ -43,7 +43,6 @@ class TouchInputRedirection;
 class WindowSelectorFilter;
 class SwitchEvent;
 class TabletEvent;
-class TabletToolId;
 class MouseEvent;
 class WheelEvent;
 class KeyEvent;
@@ -96,25 +95,6 @@ public:
         Axis,
         Proximity,
         Tip
-    };
-    enum TabletToolType {
-        Pen,
-        Eraser,
-        Brush,
-        Pencil,
-        Airbrush,
-        Finger,
-        Mouse,
-        Lens,
-        Totem,
-    };
-    enum Capability {
-        Tilt,
-        Pressure,
-        Distance,
-        Rotation,
-        Slider,
-        Wheel,
     };
 
     ~InputRedirection() override;

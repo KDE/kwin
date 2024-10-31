@@ -9,6 +9,11 @@
 namespace KWin
 {
 
+InputDeviceTabletTool::InputDeviceTabletTool(QObject *parent)
+    : QObject(parent)
+{
+}
+
 InputDevice::InputDevice(QObject *parent)
     : QObject(parent)
 {

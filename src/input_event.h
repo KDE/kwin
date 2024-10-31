@@ -17,6 +17,7 @@ namespace KWin
 {
 
 class InputDevice;
+class InputDeviceTabletTool;
 
 class MouseEvent : public QMouseEvent
 {
@@ -194,37 +195,26 @@ private:
     InputDevice *m_device;
 };
 
-class TabletToolId
-{
-public:
-    QString deviceSysName;
-    InputRedirection::TabletToolType m_toolType;
-    QList<InputRedirection::Capability> m_capabilities;
-    quint64 m_serialId;
-    quint64 m_uniqueId;
-    QString m_name;
-};
-
 class TabletEvent : public QTabletEvent
 {
 public:
     TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
                 qreal pressure, float xTilt, float yTilt,
                 float tangentialPressure, qreal rotation, float z,
-                Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId, InputDevice *device);
+                Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, InputDeviceTabletTool *tool, InputDevice *device);
 
     InputDevice *device() const
     {
         return m_device;
     }
 
-    const TabletToolId &toolId() const
+    InputDeviceTabletTool *tool() const
     {
-        return m_id;
+        return m_tool;
     }
 
 private:
-    const TabletToolId m_id;
+    InputDeviceTabletTool *m_tool;
     InputDevice *m_device;
 };
 
@@ -233,7 +223,7 @@ struct TabletToolButtonEvent
     InputDevice *device;
     uint button;
     bool pressed;
-    TabletToolId toolId;
+    InputDeviceTabletTool *tool;
     std::chrono::microseconds time;
 };
 

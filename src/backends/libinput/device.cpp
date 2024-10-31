@@ -55,6 +55,79 @@ namespace KWin
 namespace LibInput
 {
 
+TabletTool::TabletTool(libinput_tablet_tool *handle)
+    : m_handle(libinput_tablet_tool_ref(handle))
+{
+}
+
+TabletTool::~TabletTool()
+{
+    libinput_tablet_tool_unref(m_handle);
+}
+
+libinput_tablet_tool *TabletTool::handle() const
+{
+    return m_handle;
+}
+
+quint64 TabletTool::serialId() const
+{
+    return libinput_tablet_tool_get_serial(m_handle);
+}
+
+quint64 TabletTool::uniqueId() const
+{
+    return libinput_tablet_tool_get_tool_id(m_handle);
+}
+
+TabletTool::Type TabletTool::type() const
+{
+    switch (libinput_tablet_tool_get_type(m_handle)) {
+    case LIBINPUT_TABLET_TOOL_TYPE_PEN:
+        return Type::Pen;
+    case LIBINPUT_TABLET_TOOL_TYPE_ERASER:
+        return Type::Eraser;
+    case LIBINPUT_TABLET_TOOL_TYPE_BRUSH:
+        return Type::Brush;
+    case LIBINPUT_TABLET_TOOL_TYPE_PENCIL:
+        return Type::Pencil;
+    case LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH:
+        return Type::Airbrush;
+    case LIBINPUT_TABLET_TOOL_TYPE_MOUSE:
+        return Type::Mouse;
+    case LIBINPUT_TABLET_TOOL_TYPE_LENS:
+        return Type::Lens;
+    case LIBINPUT_TABLET_TOOL_TYPE_TOTEM:
+        return Type::Totem;
+    default:
+        return Type();
+    }
+}
+
+QList<TabletTool::Capability> TabletTool::capabilities() const
+{
+    QList<Capability> capabilities;
+    if (libinput_tablet_tool_has_pressure(m_handle)) {
+        capabilities << Capability::Pressure;
+    }
+    if (libinput_tablet_tool_has_distance(m_handle)) {
+        capabilities << Capability::Distance;
+    }
+    if (libinput_tablet_tool_has_rotation(m_handle)) {
+        capabilities << Capability::Rotation;
+    }
+    if (libinput_tablet_tool_has_tilt(m_handle)) {
+        capabilities << Capability::Tilt;
+    }
+    if (libinput_tablet_tool_has_slider(m_handle)) {
+        capabilities << Capability::Slider;
+    }
+    if (libinput_tablet_tool_has_wheel(m_handle)) {
+        capabilities << Capability::Wheel;
+    }
+    return capabilities;
+}
+
 static bool checkAlphaNumericKeyboard(libinput_device *device)
 {
     for (uint i = KEY_1; i <= KEY_0; i++) {

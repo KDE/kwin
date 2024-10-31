@@ -82,6 +82,7 @@ class Xwayland;
 namespace Test
 {
 class VirtualInputDevice;
+class VirtualInputDeviceTabletTool;
 }
 
 class WaylandTestApplication : public Application
@@ -100,7 +101,9 @@ public:
     Test::VirtualInputDevice *virtualKeyboard() const;
     Test::VirtualInputDevice *virtualTouch() const;
     Test::VirtualInputDevice *virtualTabletPad() const;
-    Test::VirtualInputDevice *virtualTabletTool() const;
+    Test::VirtualInputDevice *virtualTablet() const;
+    Test::VirtualInputDeviceTabletTool *virtualTabletTool() const;
+
 #if KWIN_BUILD_X11
     XwaylandInterface *xwayland() const override;
 #endif
@@ -124,7 +127,8 @@ private:
     std::unique_ptr<Test::VirtualInputDevice> m_virtualKeyboard;
     std::unique_ptr<Test::VirtualInputDevice> m_virtualTouch;
     std::unique_ptr<Test::VirtualInputDevice> m_virtualTabletPad;
-    std::unique_ptr<Test::VirtualInputDevice> m_virtualTabletTool;
+    std::unique_ptr<Test::VirtualInputDevice> m_virtualTablet;
+    std::unique_ptr<Test::VirtualInputDeviceTabletTool> m_virtualTabletTool;
 };
 
 namespace Test
@@ -601,6 +605,30 @@ enum class AdditionalWaylandInterface {
     XdgDialogV1 = 1 << 21,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
+
+class VirtualInputDeviceTabletTool : public InputDeviceTabletTool
+{
+    Q_OBJECT
+
+public:
+    explicit VirtualInputDeviceTabletTool(QObject *parent = nullptr);
+
+    void setSerialId(quint64 serialId);
+    void setUniqueId(quint64 uniqueId);
+    void setType(Type type);
+    void setCapabilities(const QList<Capability> &capabilities);
+
+    quint64 serialId() const override;
+    quint64 uniqueId() const override;
+    Type type() const override;
+    QList<Capability> capabilities() const override;
+
+private:
+    quint64 m_serialId = 0;
+    quint64 m_uniqueId = 0;
+    Type m_type = Type::Pen;
+    QList<Capability> m_capabilities;
+};
 
 class VirtualInputDevice : public InputDevice
 {

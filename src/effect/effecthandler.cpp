@@ -14,6 +14,7 @@
 #include "config-kwin.h"
 
 #include "compositor.h"
+#include "core/inputdevice.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
 #include "core/rendertarget.h"
@@ -571,11 +572,11 @@ bool EffectsHandler::tabletToolEvent(TabletEvent *event)
     return false;
 }
 
-bool EffectsHandler::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &toolId, std::chrono::microseconds time)
+bool EffectsHandler::tabletToolButtonEvent(uint button, bool pressed, InputDeviceTabletTool *tool, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
-        if (it->second->tabletToolButtonEvent(button, pressed, toolId.m_uniqueId)) {
+        if (it->second->tabletToolButtonEvent(button, pressed, tool->uniqueId())) {
             return true;
         }
     }

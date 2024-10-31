@@ -18,10 +18,10 @@
 namespace KWin
 {
 class Cursor;
-class Window;
-class TabletToolId;
+class InputDeviceTabletTool;
 class TabletToolV2Interface;
 class TabletV2Interface;
+class Window;
 
 namespace Decoration
 {
@@ -45,10 +45,10 @@ public:
 
     void tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                         bool tipNear, const TabletToolId &toolId,
+                         bool tipNear, InputDeviceTabletTool *tool,
                          std::chrono::microseconds time,
                          InputDevice *device);
-    void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &toolId, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device);
     void tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
     void tabletPadRingEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
@@ -64,7 +64,7 @@ public:
         return m_lastPosition;
     }
 
-    TabletToolV2Interface *ensureTabletTool(const TabletToolId &id);
+    TabletToolV2Interface *ensureTabletTool(InputDeviceTabletTool *tool);
     TabletV2Interface *tabletForPad(InputDevice *device) const;
 
 private:
@@ -81,7 +81,7 @@ private:
     QPointF m_lastPosition;
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
-    QHash<TabletToolV2Interface *, Cursor *> m_cursorByTool;
+    QHash<InputDeviceTabletTool *, Cursor *> m_cursorByTool;
 };
 
 }

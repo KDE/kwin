@@ -110,7 +110,10 @@ Connection::Connection(std::unique_ptr<Context> &&input)
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int, int)));
 }
 
-Connection::~Connection() = default;
+Connection::~Connection()
+{
+    qDeleteAll(m_tools);
+}
 
 void Connection::setup()
 {
@@ -194,58 +197,19 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *outp
 }
 #endif
 
-KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, Device *dev)
+TabletTool *Connection::getOrCreateTool(libinput_tablet_tool *handle)
 {
-    auto serial = libinput_tablet_tool_get_serial(tool);
-    auto toolId = libinput_tablet_tool_get_tool_id(tool);
-    auto type = libinput_tablet_tool_get_type(tool);
-    InputRedirection::TabletToolType toolType;
-    switch (type) {
-    case LIBINPUT_TABLET_TOOL_TYPE_PEN:
-        toolType = InputRedirection::Pen;
-        break;
-    case LIBINPUT_TABLET_TOOL_TYPE_ERASER:
-        toolType = InputRedirection::Eraser;
-        break;
-    case LIBINPUT_TABLET_TOOL_TYPE_BRUSH:
-        toolType = InputRedirection::Brush;
-        break;
-    case LIBINPUT_TABLET_TOOL_TYPE_PENCIL:
-        toolType = InputRedirection::Pencil;
-        break;
-    case LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH:
-        toolType = InputRedirection::Airbrush;
-        break;
-    case LIBINPUT_TABLET_TOOL_TYPE_MOUSE:
-        toolType = InputRedirection::Mouse;
-        break;
-    case LIBINPUT_TABLET_TOOL_TYPE_LENS:
-        toolType = InputRedirection::Lens;
-        break;
-    case LIBINPUT_TABLET_TOOL_TYPE_TOTEM:
-        toolType = InputRedirection::Totem;
-        break;
+    for (TabletTool *tool : std::as_const(m_tools)) {
+        if (tool->handle() == handle) {
+            return tool;
+        }
     }
-    QList<InputRedirection::Capability> capabilities;
-    if (libinput_tablet_tool_has_pressure(tool)) {
-        capabilities << InputRedirection::Pressure;
-    }
-    if (libinput_tablet_tool_has_distance(tool)) {
-        capabilities << InputRedirection::Distance;
-    }
-    if (libinput_tablet_tool_has_rotation(tool)) {
-        capabilities << InputRedirection::Rotation;
-    }
-    if (libinput_tablet_tool_has_tilt(tool)) {
-        capabilities << InputRedirection::Tilt;
-    }
-    if (libinput_tablet_tool_has_slider(tool)) {
-        capabilities << InputRedirection::Slider;
-    }
-    if (libinput_tablet_tool_has_wheel(tool)) {
-        capabilities << InputRedirection::Wheel;
-    }
-    return {dev->sysName(), toolType, capabilities, serial, toolId, dev->name()};
+
+    auto tool = new TabletTool(handle);
+    tool->moveToThread(thread());
+    m_tools.append(tool);
+
+    return tool;
 }
 
 void Connection::processEvents()
@@ -529,7 +493,7 @@ void Connection::processEvents()
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
                                                         globalPos, pressure,
                                                         tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), tte->time(), tte->device());
+                                                        tte->isTipDown(), tte->isNearby(), getOrCreateTool(tte->tool()), tte->time(), tte->device());
             }
             break;
         }
@@ -537,7 +501,7 @@ void Connection::processEvents()
             auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.get());
             Q_EMIT event->device()->tabletToolButtonEvent(tabletEvent->buttonId(),
                                                           tabletEvent->isButtonPressed(),
-                                                          createTabletId(tabletEvent->tool(), event->device()), tabletEvent->time(), tabletEvent->device());
+                                                          getOrCreateTool(tabletEvent->tool()), tabletEvent->time(), tabletEvent->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {

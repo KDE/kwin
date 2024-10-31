@@ -15,6 +15,41 @@
 namespace KWin
 {
 
+class KWIN_EXPORT InputDeviceTabletTool : public QObject
+{
+    Q_OBJECT
+
+public:
+    enum Type {
+        Pen,
+        Eraser,
+        Brush,
+        Pencil,
+        Airbrush,
+        Finger,
+        Mouse,
+        Lens,
+        Totem,
+    };
+
+    enum Capability {
+        Tilt,
+        Pressure,
+        Distance,
+        Rotation,
+        Slider,
+        Wheel,
+    };
+
+    explicit InputDeviceTabletTool(QObject *parent = nullptr);
+
+    virtual quint64 serialId() const = 0;
+    virtual quint64 uniqueId() const = 0;
+
+    virtual Type type() const = 0;
+    virtual QList<Capability> capabilities() const = 0;
+};
+
 /**
  * The InputDevice class represents an input device, e.g. a mouse, or a keyboard, etc.
  */
@@ -88,8 +123,8 @@ Q_SIGNALS:
 
     void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                         bool tipNear, const TabletToolId &toolId, std::chrono::microseconds time, InputDevice *device);
-    void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &toolId, std::chrono::microseconds time, InputDevice *device);
+                         bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device);
     void tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
     void tabletPadRingEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);

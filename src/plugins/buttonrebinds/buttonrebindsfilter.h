@@ -93,6 +93,6 @@ private:
     InputDevice m_inputDevice;
     std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton, DisabledButton>>, LastType> m_actions;
     KConfigWatcher::Ptr m_configWatcher;
-    std::optional<KWin::TabletToolId> m_tabletTool;
+    QPointer<KWin::InputDeviceTabletTool> m_tabletTool;
     QPointF m_cursorPos, m_tabletCursorPos;
 };

@@ -23,6 +23,8 @@
 class QSocketNotifier;
 class QThread;
 
+struct libinput_tablet_tool;
+
 namespace KWin
 {
 
@@ -36,6 +38,7 @@ class Event;
 class Device;
 class Context;
 class ConnectionAdaptor;
+class TabletTool;
 
 class KWIN_EXPORT Connection : public QObject
 {
@@ -73,10 +76,13 @@ private:
     void applyDeviceConfig(Device *device);
     void applyScreenToDevice(Device *device);
     void doSetup();
+    TabletTool *getOrCreateTool(libinput_tablet_tool *tool);
+
     std::unique_ptr<QSocketNotifier> m_notifier;
     QRecursiveMutex m_mutex;
     std::deque<std::unique_ptr<Event>> m_eventQueue;
     QList<Device *> m_devices;
+    QList<TabletTool *> m_tools;
     KSharedConfigPtr m_config;
     std::unique_ptr<ConnectionAdaptor> m_connectionAdaptor;
     std::unique_ptr<Context> m_input;
