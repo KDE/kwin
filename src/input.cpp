@@ -1220,18 +1220,16 @@ public:
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
-        if (!internal) {
-            // the handle can be nullptr if the tooltip gets closed while focus updates are blocked
-            return false;
+        // the handle can be nullptr if the tooltip gets closed while focus updates are blocked
+        if (QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle()) {
+            QWindowSystemInterface::handleMouseEvent(internal,
+                                                     event->position() - internal->position(),
+                                                     event->globalPosition(),
+                                                     event->buttons(),
+                                                     event->button(),
+                                                     event->type(),
+                                                     event->modifiers());
         }
-        QWindowSystemInterface::handleMouseEvent(internal,
-                                                 event->position() - internal->position(),
-                                                 event->globalPosition(),
-                                                 event->buttons(),
-                                                 event->button(),
-                                                 event->type(),
-                                                 event->modifiers());
         return true;
     }
     bool wheelEvent(WheelEvent *event) override
