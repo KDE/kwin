@@ -120,6 +120,7 @@ private:
     ::Window window;
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
+    xcb_colormap_t m_colormap;
     std::shared_ptr<GlxContext> m_context;
     QHash<xcb_visualid_t, FBConfigInfo> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
