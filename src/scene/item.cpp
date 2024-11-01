@@ -430,9 +430,12 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
-QRegion Item::repaints(SceneDelegate *delegate) const
+QRegion Item::takeRepaints(SceneDelegate *delegate)
 {
-    return m_repaints.value(delegate);
+    auto &repaints = m_repaints[delegate];
+    QRegion reg;
+    std::swap(reg, repaints);
+    return reg;
 }
 
 void Item::resetRepaints(SceneDelegate *delegate)

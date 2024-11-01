@@ -343,8 +343,7 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
 
 static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints)
 {
-    *repaints += item->repaints(delegate);
-    item->resetRepaints(delegate);
+    *repaints += item->takeRepaints(delegate);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {

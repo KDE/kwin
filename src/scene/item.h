@@ -126,7 +126,7 @@ public:
     void scheduleSceneRepaint(const QRegion &region);
     void scheduleRepaint(SceneDelegate *delegate, const QRegion &region);
     void scheduleFrame();
-    QRegion repaints(SceneDelegate *delegate) const;
+    QRegion takeRepaints(SceneDelegate *delegate);
     void resetRepaints(SceneDelegate *delegate);
 
     WindowQuadList quads() const;
