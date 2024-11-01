@@ -169,14 +169,6 @@ void WaylandTestApplication::destroyVirtualInputDevices()
 
 void WaylandTestApplication::performStartup()
 {
-    if (!m_inputMethodServerToStart.isEmpty()) {
-        createInputMethod();
-        if (m_inputMethodServerToStart != QStringLiteral("internal")) {
-            inputMethod()->setInputMethodCommand(m_inputMethodServerToStart);
-            inputMethod()->setEnabled(true);
-        }
-    }
-
     // first load options - done internally by a different thread
     createOptions();
     if (!outputBackend()->initialize()) {
@@ -192,6 +184,15 @@ void WaylandTestApplication::performStartup()
     createWorkspace();
     createColorManager();
     createPlugins();
+
+
+    if (!m_inputMethodServerToStart.isEmpty()) {
+        createInputMethod();
+        if (m_inputMethodServerToStart != QStringLiteral("internal")) {
+            inputMethod()->setInputMethodCommand(m_inputMethodServerToStart);
+            inputMethod()->setEnabled(true);
+        }
+    }
 
     compositor->start();
 
