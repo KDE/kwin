@@ -1239,18 +1239,19 @@ public:
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
-        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp());
-        QWindowSystemInterface::handleWheelEvent(internal,
-                                                 timestamp.count(),
-                                                 event->globalPosition() - internal->position(),
-                                                 event->globalPosition(),
-                                                 QPoint(),
-                                                 event->angleDelta() * -1,
-                                                 event->modifiers(),
-                                                 Qt::NoScrollPhase,
-                                                 Qt::MouseEventNotSynthesized,
-                                                 event->inverted());
+        if (QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle()) {
+            const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp());
+            QWindowSystemInterface::handleWheelEvent(internal,
+                                                     timestamp.count(),
+                                                     event->globalPosition() - internal->position(),
+                                                     event->globalPosition(),
+                                                     QPoint(),
+                                                     event->angleDelta() * -1,
+                                                     event->modifiers(),
+                                                     Qt::NoScrollPhase,
+                                                     Qt::MouseEventNotSynthesized,
+                                                     event->inverted());
+        }
         return true;
     }
 
