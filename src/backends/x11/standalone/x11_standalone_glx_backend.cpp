@@ -130,6 +130,7 @@ GlxBackend::GlxBackend(::Display *display, X11StandaloneBackend *backend)
     , window(None)
     , fbconfig(nullptr)
     , glxWindow(None)
+    , m_colormap(XCB_COLORMAP_NONE)
     , m_bufferAge(0)
     , m_x11Display(display)
     , m_backend(backend)
@@ -156,6 +157,12 @@ GlxBackend::~GlxBackend()
     }
 
     m_context.reset();
+
+    if (m_colormap != XCB_COLORMAP_NONE) {
+        xcb_free_colormap(connection(), m_colormap);
+        m_colormap = XCB_COLORMAP_NONE;
+    }
+
     if (glxWindow) {
         glXDestroyWindow(display(), glxWindow);
     }
@@ -326,15 +333,15 @@ bool GlxBackend::initBuffer()
             return false;
         }
 
-        xcb_colormap_t colormap = xcb_generate_id(c);
-        xcb_create_colormap(c, false, colormap, rootWindow(), visual);
+        m_colormap = xcb_generate_id(c);
+        xcb_create_colormap(c, false, m_colormap, rootWindow(), visual);
 
         const QSize size = workspace()->geometry().size();
 
         window = xcb_generate_id(c);
         xcb_create_window(c, visualDepth(visual), window, overlayWindow()->window(),
                           0, 0, size.width(), size.height(), 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
-                          visual, XCB_CW_COLORMAP, &colormap);
+                          visual, XCB_CW_COLORMAP, &m_colormap);
 
         glxWindow = glXCreateWindow(display(), fbconfig, window, nullptr);
         overlayWindow()->setup(window);
