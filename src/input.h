@@ -11,7 +11,7 @@
 #pragma once
 #include "config-kwin.h"
 
-#include "effect/globals.h"
+#include "core/inputdevice.h"
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
@@ -71,32 +71,6 @@ class KWIN_EXPORT InputRedirection : public QObject
 {
     Q_OBJECT
 public:
-    enum PointerButtonState {
-        PointerButtonReleased,
-        PointerButtonPressed
-    };
-    enum PointerAxis {
-        PointerAxisVertical,
-        PointerAxisHorizontal
-    };
-    enum PointerAxisSource {
-        PointerAxisSourceUnknown,
-        PointerAxisSourceWheel,
-        PointerAxisSourceFinger,
-        PointerAxisSourceContinuous,
-        PointerAxisSourceWheelTilt
-    };
-    enum KeyboardKeyState {
-        KeyboardKeyReleased,
-        KeyboardKeyPressed,
-        KeyboardKeyAutoRepeat
-    };
-    enum TabletEventType {
-        Axis,
-        Proximity,
-        Tip
-    };
-
     ~InputRedirection() override;
     void init();
 
@@ -247,14 +221,14 @@ Q_SIGNALS:
      * @param button The button which changed
      * @param state The new button state
      */
-    void pointerButtonStateChanged(uint32_t button, InputRedirection::PointerButtonState state);
+    void pointerButtonStateChanged(uint32_t button, InputDevice::PointerButtonState state);
     /**
      * @brief Emitted when a pointer axis changed
      *
      * @param axis The axis on which the even occurred
      * @param delta The delta of the event.
      */
-    void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta);
+    void pointerAxisChanged(InputDevice::PointerAxis axis, qreal delta);
     /**
      * @brief Emitted when the modifiers changes.
      *
@@ -271,7 +245,7 @@ Q_SIGNALS:
      * @param keyCode The keycode of the key which changed
      * @param state The new key state
      */
-    void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
+    void keyStateChanged(quint32 keyCode, InputDevice::KeyboardKeyState state);
 
     void hasKeyboardChanged(bool set);
     void hasAlphaNumericKeyboardChanged(bool set);
@@ -574,8 +548,3 @@ inline QList<InputDevice *> InputRedirection::devices() const
 }
 
 } // namespace KWin
-
-Q_DECLARE_METATYPE(KWin::InputRedirection::KeyboardKeyState)
-Q_DECLARE_METATYPE(KWin::InputRedirection::PointerButtonState)
-Q_DECLARE_METATYPE(KWin::InputRedirection::PointerAxis)
-Q_DECLARE_METATYPE(KWin::InputRedirection::PointerAxisSource)

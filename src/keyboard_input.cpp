@@ -90,7 +90,7 @@ public:
         if (event->isAutoRepeat()) {
             return;
         }
-        Q_EMIT m_input->keyStateChanged(event->nativeScanCode(), event->type() == QEvent::KeyPress ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased);
+        Q_EMIT m_input->keyStateChanged(event->nativeScanCode(), event->type() == QEvent::KeyPress ? InputDevice::KeyboardKeyPressed : InputDevice::KeyboardKeyReleased);
     }
 
 private:
@@ -147,7 +147,7 @@ void KeyboardInputRedirection::init()
 
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
-            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
+            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputDevice::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
     m_input->installInputEventSpy(keyRepeatSpy);
 
     connect(workspace(), &QObject::destroyed, this, [this] {
@@ -247,7 +247,7 @@ void KeyboardInputRedirection::update()
     }
 }
 
-void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
+void KeyboardInputRedirection::processKey(uint32_t key, InputDevice::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!m_inited) {
@@ -257,13 +257,13 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     QEvent::Type type;
     bool autoRepeat = false;
     switch (state) {
-    case InputRedirection::KeyboardKeyAutoRepeat:
+    case InputDevice::KeyboardKeyAutoRepeat:
         autoRepeat = true;
         // fall through
-    case InputRedirection::KeyboardKeyPressed:
+    case InputDevice::KeyboardKeyPressed:
         type = QEvent::KeyPress;
         break;
-    case InputRedirection::KeyboardKeyReleased:
+    case InputDevice::KeyboardKeyReleased:
         type = QEvent::KeyRelease;
         break;
     default:

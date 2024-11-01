@@ -83,18 +83,18 @@ using namespace std::literals;
 namespace KWin
 {
 
-static PointerAxisSource kwinAxisSourceToKWaylandAxisSource(InputRedirection::PointerAxisSource source)
+static PointerAxisSource kwinAxisSourceToKWaylandAxisSource(InputDevice::PointerAxisSource source)
 {
     switch (source) {
-    case InputRedirection::PointerAxisSourceWheel:
+    case InputDevice::PointerAxisSourceWheel:
         return PointerAxisSource::Wheel;
-    case InputRedirection::PointerAxisSourceFinger:
+    case InputDevice::PointerAxisSourceFinger:
         return PointerAxisSource::Finger;
-    case InputRedirection::PointerAxisSourceContinuous:
+    case InputDevice::PointerAxisSourceContinuous:
         return PointerAxisSource::Continuous;
-    case InputRedirection::PointerAxisSourceWheelTilt:
+    case InputDevice::PointerAxisSourceWheelTilt:
         return PointerAxisSource::WheelTilt;
-    case InputRedirection::PointerAxisSourceUnknown:
+    case InputDevice::PointerAxisSourceUnknown:
     default:
         return PointerAxisSource::Unknown;
     }
@@ -2116,11 +2116,11 @@ public:
             break;
         case QEvent::TabletPress:
             input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
-                                              InputRedirection::PointerButtonPressed, std::chrono::milliseconds(event->timestamp()));
+                                              InputDevice::PointerButtonPressed, std::chrono::milliseconds(event->timestamp()));
             break;
         case QEvent::TabletRelease:
             input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
-                                              InputRedirection::PointerButtonReleased, std::chrono::milliseconds(event->timestamp()));
+                                              InputDevice::PointerButtonReleased, std::chrono::milliseconds(event->timestamp()));
             break;
         case QEvent::TabletLeaveProximity:
             break;
@@ -2521,9 +2521,6 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_shortcuts(new GlobalShortcutsManager(this))
 #endif
 {
-    qRegisterMetaType<InputRedirection::KeyboardKeyState>();
-    qRegisterMetaType<InputRedirection::PointerButtonState>();
-    qRegisterMetaType<InputRedirection::PointerAxis>();
     setupInputBackends();
 
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);

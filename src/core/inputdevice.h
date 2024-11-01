@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "input.h"
+#include "effect/globals.h"
 #include "kwin_export.h"
 
 #include <QObject>
@@ -58,6 +58,36 @@ class KWIN_EXPORT InputDevice : public QObject
     Q_OBJECT
 
 public:
+    enum PointerButtonState {
+        PointerButtonReleased,
+        PointerButtonPressed
+    };
+
+    enum PointerAxis {
+        PointerAxisVertical,
+        PointerAxisHorizontal
+    };
+
+    enum PointerAxisSource {
+        PointerAxisSourceUnknown,
+        PointerAxisSourceWheel,
+        PointerAxisSourceFinger,
+        PointerAxisSourceContinuous,
+        PointerAxisSourceWheelTilt
+    };
+
+    enum KeyboardKeyState {
+        KeyboardKeyReleased,
+        KeyboardKeyPressed,
+        KeyboardKeyAutoRepeat
+    };
+
+    enum TabletEventType {
+        Axis,
+        Proximity,
+        Tip
+    };
+
     explicit InputDevice(QObject *parent = nullptr);
 
     virtual QString sysName() const = 0;
@@ -95,12 +125,12 @@ public:
     virtual int tabletPadMode() const;
 
 Q_SIGNALS:
-    void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);
-    void pointerButtonChanged(quint32 button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device);
+    void keyChanged(quint32 key, KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);
+    void pointerButtonChanged(quint32 button, PointerButtonState state, std::chrono::microseconds time, InputDevice *device);
     void pointerMotionAbsolute(const QPointF &position, std::chrono::microseconds time, InputDevice *device);
     void pointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
-    void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120,
-                            InputRedirection::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device);
+    void pointerAxisChanged(PointerAxis axis, qreal delta, qint32 deltaV120,
+                            PointerAxisSource source, std::chrono::microseconds time, InputDevice *device);
     void pointerFrame(InputDevice *device);
     void touchFrame(InputDevice *device);
     void touchCanceled(InputDevice *device);
@@ -121,7 +151,7 @@ Q_SIGNALS:
     void switchToggledOn(std::chrono::microseconds time, InputDevice *device);
     void switchToggledOff(std::chrono::microseconds time, InputDevice *device);
 
-    void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
+    void tabletToolEvent(TabletEventType type, const QPointF &pos,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                          bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);

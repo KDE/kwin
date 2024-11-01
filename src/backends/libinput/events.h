@@ -55,7 +55,7 @@ public:
     ~KeyEvent() override;
 
     uint32_t key() const;
-    InputRedirection::KeyboardKeyState state() const;
+    InputDevice::KeyboardKeyState state() const;
     std::chrono::microseconds time() const;
 
     operator libinput_event_keyboard *()
@@ -82,11 +82,11 @@ public:
     QPointF delta() const;
     QPointF deltaUnaccelerated() const;
     uint32_t button() const;
-    InputRedirection::PointerButtonState buttonState() const;
+    InputDevice::PointerButtonState buttonState() const;
     std::chrono::microseconds time() const;
-    QList<InputRedirection::PointerAxis> axis() const;
-    qreal scrollValue(InputRedirection::PointerAxis a) const;
-    qint32 scrollValueV120(InputRedirection::PointerAxis axis) const;
+    QList<InputDevice::PointerAxis> axis() const;
+    qreal scrollValue(InputDevice::PointerAxis a) const;
+    qint32 scrollValueV120(InputDevice::PointerAxis axis) const;
 
     operator libinput_event_pointer *()
     {

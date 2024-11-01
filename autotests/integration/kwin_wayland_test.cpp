@@ -12,6 +12,7 @@
 #include "compositor_wayland.h"
 #include "core/session.h"
 #include "effect/effecthandler.h"
+#include "input.h"
 #include "inputmethod.h"
 #include "placement.h"
 #include "pluginmanager.h"

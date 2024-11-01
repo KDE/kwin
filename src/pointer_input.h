@@ -91,11 +91,11 @@ public:
     /**
      * @internal
      */
-    void processButton(uint32_t button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device = nullptr);
+    void processButton(uint32_t button, InputDevice::PointerButtonState state, std::chrono::microseconds time, InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120, InputRedirection::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device = nullptr);
+    void processAxis(InputDevice::PointerAxis axis, qreal delta, qint32 deltaV120, InputDevice::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device = nullptr);
     /**
      * @internal
      */
@@ -169,7 +169,7 @@ private:
     void updateOnStartMoveResize();
     void updateToReset();
     void updatePosition(const QPointF &pos, std::chrono::microseconds time);
-    void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
+    void updateButton(uint32_t button, InputDevice::PointerButtonState state);
     QPointF applyEdgeBarrier(const QPointF &pos, const Output *currentOutput, std::chrono::microseconds time);
     EdgeBarrierType edgeBarrierType(const QPointF &pos, const QRectF &lastOutputGeometry) const;
     qreal edgeBarrier(EdgeBarrierType type) const;
@@ -180,7 +180,7 @@ private:
     void breakPointerConstraints(SurfaceInterface *surface);
     CursorImage *m_cursor;
     QPointF m_pos;
-    QHash<uint32_t, InputRedirection::PointerButtonState> m_buttons;
+    QHash<uint32_t, InputDevice::PointerButtonState> m_buttons;
     Qt::MouseButtons m_qtButtons;
     QMetaObject::Connection m_focusGeometryConnection;
     QMetaObject::Connection m_constraintsConnection;

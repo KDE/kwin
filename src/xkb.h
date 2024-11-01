@@ -59,7 +59,7 @@ public:
     void setNumLockConfig(const KSharedConfigPtr &config);
 
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
-    void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
+    void updateKey(uint32_t key, InputDevice::KeyboardKeyState state);
     xkb_keysym_t toKeysym(uint32_t key);
     xkb_keysym_t currentKeysym() const
     {

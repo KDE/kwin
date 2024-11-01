@@ -266,11 +266,11 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL: {
             const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
             const auto axes = pointerEvent->axis();
-            for (const InputRedirection::PointerAxis &axis : axes) {
+            for (const InputDevice::PointerAxis &axis : axes) {
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   pointerEvent->scrollValueV120(axis),
-                                                                  InputRedirection::PointerAxisSourceWheel,
+                                                                  InputDevice::PointerAxisSourceWheel,
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
@@ -280,11 +280,11 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_POINTER_SCROLL_FINGER: {
             const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
             const auto axes = pointerEvent->axis();
-            for (const InputRedirection::PointerAxis &axis : axes) {
+            for (const InputDevice::PointerAxis &axis : axes) {
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
-                                                                  InputRedirection::PointerAxisSourceFinger,
+                                                                  InputDevice::PointerAxisSourceFinger,
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
@@ -294,11 +294,11 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS: {
             const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
             const auto axes = pointerEvent->axis();
-            for (const InputRedirection::PointerAxis &axis : axes) {
+            for (const InputDevice::PointerAxis &axis : axes) {
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
-                                                                  InputRedirection::PointerAxisSourceContinuous,
+                                                                  InputDevice::PointerAxisSourceContinuous,
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
@@ -459,17 +459,17 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_TABLET_TOOL_TIP: {
             auto *tte = static_cast<TabletToolEvent *>(event.get());
 
-            KWin::InputRedirection::TabletEventType tabletEventType;
+            KWin::InputDevice::TabletEventType tabletEventType;
             switch (event->type()) {
             case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
-                tabletEventType = KWin::InputRedirection::Axis;
+                tabletEventType = KWin::InputDevice::Axis;
                 break;
             case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
-                tabletEventType = KWin::InputRedirection::Proximity;
+                tabletEventType = KWin::InputDevice::Proximity;
                 break;
             case LIBINPUT_EVENT_TABLET_TOOL_TIP:
             default:
-                tabletEventType = KWin::InputRedirection::Tip;
+                tabletEventType = KWin::InputDevice::Tip;
                 break;
             }
 

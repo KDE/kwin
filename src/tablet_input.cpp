@@ -209,7 +209,7 @@ TabletV2Interface *TabletInputRedirection::tabletForPad(InputDevice *device) con
     return nullptr;
 }
 
-void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
+void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType type, const QPointF &pos,
                                              qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                                              bool tipNear, InputDeviceTabletTool *tool,
                                              std::chrono::microseconds time,
@@ -223,13 +223,13 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
 
     QEvent::Type t;
     switch (type) {
-    case InputRedirection::Axis:
+    case InputDevice::Axis:
         t = QEvent::TabletMove;
         break;
-    case InputRedirection::Tip:
+    case InputDevice::Tip:
         t = tipDown ? QEvent::TabletPress : QEvent::TabletRelease;
         break;
-    case InputRedirection::Proximity:
+    case InputDevice::Proximity:
         t = tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity;
         break;
     }

@@ -71,10 +71,10 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy_resource(Resource 
 
     const auto [r, device] = std::move(*it);
     for (const auto button : device->pressedButtons) {
-        Q_EMIT device->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, currentTime(), device.get());
+        Q_EMIT device->pointerButtonChanged(button, InputDevice::PointerButtonReleased, currentTime(), device.get());
     }
     for (const auto key : device->pressedKeys) {
-        Q_EMIT device->keyChanged(key, InputRedirection::KeyboardKeyReleased, currentTime(), device.get());
+        Q_EMIT device->keyChanged(key, InputDevice::KeyboardKeyReleased, currentTime(), device.get());
     }
     if (!device->activeTouches.empty()) {
         Q_EMIT device->touchCanceled(device.get());
@@ -121,17 +121,17 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_button(Resource *resource,
         return;
     }
 
-    InputRedirection::PointerButtonState nativeState;
+    InputDevice::PointerButtonState nativeState;
     switch (state) {
     case WL_POINTER_BUTTON_STATE_PRESSED:
-        nativeState = InputRedirection::PointerButtonPressed;
+        nativeState = InputDevice::PointerButtonPressed;
         if (device->pressedButtons.contains(button)) {
             return;
         }
         device->pressedButtons.insert(button);
         break;
     case WL_POINTER_BUTTON_STATE_RELEASED:
-        nativeState = InputRedirection::PointerButtonReleased;
+        nativeState = InputDevice::PointerButtonReleased;
         if (!device->pressedButtons.remove(button)) {
             return;
         }
@@ -151,21 +151,21 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_axis(Resource *resource, u
         return;
     }
 
-    InputRedirection::PointerAxis nativeAxis;
+    InputDevice::PointerAxis nativeAxis;
     switch (axis) {
     case WL_POINTER_AXIS_HORIZONTAL_SCROLL:
-        nativeAxis = InputRedirection::PointerAxisHorizontal;
+        nativeAxis = InputDevice::PointerAxisHorizontal;
         break;
 
     case WL_POINTER_AXIS_VERTICAL_SCROLL:
-        nativeAxis = InputRedirection::PointerAxisVertical;
+        nativeAxis = InputDevice::PointerAxisVertical;
         break;
 
     default:
         return;
     }
 
-    Q_EMIT device->pointerAxisChanged(nativeAxis, wl_fixed_to_double(value), 0, InputRedirection::PointerAxisSourceUnknown, currentTime(), device);
+    Q_EMIT device->pointerAxisChanged(nativeAxis, wl_fixed_to_double(value), 0, InputDevice::PointerAxisSourceUnknown, currentTime(), device);
     Q_EMIT device->pointerFrame(device);
 }
 
@@ -242,10 +242,10 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
         return;
     }
 
-    InputRedirection::KeyboardKeyState nativeState;
+    InputDevice::KeyboardKeyState nativeState;
     switch (state) {
     case WL_KEYBOARD_KEY_STATE_PRESSED:
-        nativeState = InputRedirection::KeyboardKeyPressed;
+        nativeState = InputDevice::KeyboardKeyPressed;
         if (device->pressedKeys.contains(key)) {
             return;
         }
@@ -256,7 +256,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
         if (!device->pressedKeys.remove(key)) {
             return;
         }
-        nativeState = InputRedirection::KeyboardKeyReleased;
+        nativeState = InputDevice::KeyboardKeyReleased;
         break;
 
     default:

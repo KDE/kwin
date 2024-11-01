@@ -681,11 +681,11 @@ void keyboardKeyReleased(quint32 key, quint32 time);
 void pointerAxisHorizontal(qreal delta,
                            quint32 time,
                            qint32 discreteDelta = 0,
-                           InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+                           InputDevice::PointerAxisSource source = InputDevice::PointerAxisSourceUnknown);
 void pointerAxisVertical(qreal delta,
                          quint32 time,
                          qint32 discreteDelta = 0,
-                         InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+                         InputDevice::PointerAxisSource source = InputDevice::PointerAxisSourceUnknown);
 void pointerButtonPressed(quint32 button, quint32 time);
 void pointerButtonReleased(quint32 button, quint32 time);
 void pointerMotion(const QPointF &position, quint32 time);
@@ -698,7 +698,7 @@ void tabletPadButtonPressed(quint32 button, quint32 time);
 void tabletPadButtonReleased(quint32 button, quint32 time);
 void tabletToolButtonPressed(quint32 button, quint32 time);
 void tabletToolButtonReleased(quint32 button, quint32 time);
-void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
+void tabletToolEvent(InputDevice::TabletEventType type, const QPointF &pos,
                      qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                      bool tipNear, quint32 time);
 

@@ -86,7 +86,7 @@ class WheelEvent : public QWheelEvent
 {
 public:
     explicit WheelEvent(const QPointF &pos, qreal delta, qint32 deltaV120, Qt::Orientation orientation,
-                        Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputRedirection::PointerAxisSource source,
+                        Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputDevice::PointerAxisSource source,
                         std::chrono::microseconds timestamp, InputDevice *device);
 
     Qt::Orientation orientation() const
@@ -104,7 +104,7 @@ public:
         return m_deltaV120;
     }
 
-    InputRedirection::PointerAxisSource axisSource() const
+    InputDevice::PointerAxisSource axisSource() const
     {
         return m_source;
     }
@@ -131,7 +131,7 @@ private:
     Qt::Orientation m_orientation;
     qreal m_delta;
     qint32 m_deltaV120;
-    InputRedirection::PointerAxisSource m_source;
+    InputDevice::PointerAxisSource m_source;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
     const std::chrono::microseconds m_timestamp;
 };
