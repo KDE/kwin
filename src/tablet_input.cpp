@@ -178,11 +178,11 @@ void TabletInputRedirection::trackNextOutput()
     OSD::show(message, QStringLiteral("input-tablet"), 5000);
 }
 
-TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
+void TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
 {
     TabletSeatV2Interface *tabletSeat = findTabletSeat();
-    if (auto tool = tabletSeat->tool(device)) {
-        return tool;
+    if (tabletSeat->tool(device)) {
+        return;
     }
 
     TabletToolV2Interface *tool = tabletSeat->addTool(device);
@@ -190,8 +190,6 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(InputDeviceTable
     const auto cursor = new SurfaceCursor(tool);
     Cursors::self()->addCursor(cursor);
     m_cursorByTool[device] = cursor;
-
-    return tool;
 }
 
 void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType type, const QPointF &pos,

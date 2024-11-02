@@ -2048,7 +2048,7 @@ public:
         }
 
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tool());
+        TabletToolV2Interface *tool = seat->tool(event->tool());
         TabletV2Interface *tablet = seat->tablet(event->device());
 
         SurfaceInterface *surface = window->surface();
@@ -2133,7 +2133,7 @@ public:
 
     bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
     {
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tool);
+        TabletToolV2Interface *tool = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat())->tool(event->tool);
         if (!tool->isClientSupported()) {
             return false;
         }

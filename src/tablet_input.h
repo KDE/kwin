@@ -64,8 +64,6 @@ public:
         return m_lastPosition;
     }
 
-    TabletToolV2Interface *ensureTabletTool(InputDeviceTabletTool *tool);
-
 private:
     void cleanupDecoration(Decoration::DecoratedClientImpl *old,
                            Decoration::DecoratedClientImpl *now) override;
@@ -73,6 +71,7 @@ private:
     void integrateDevice(InputDevice *device);
     void removeDevice(InputDevice *device);
     void trackNextOutput();
+    void ensureTabletTool(InputDeviceTabletTool *tool);
 
     bool m_tipDown = false;
     bool m_tipNear = false;
