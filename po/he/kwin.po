@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-31 00:41+0000\n"
+"POT-Creation-Date: 2024-11-02 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 21:12+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1227,7 +1227,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "שם מארח: %1"
 
-#: input.cpp:3053
+#: input.cpp:3049
 #, kde-format
 msgid "Touchpad"
 msgstr "משטח מגע"
@@ -3686,12 +3686,12 @@ msgstr ""
 msgid "Move the tablet to the next output"
 msgstr "העברת מחשב הלוח לפלט הבא"
 
-#: tablet_input.cpp:196
+#: tablet_input.cpp:177
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "מחשב הלוח הועבר אל %1"
 
-#: tablet_input.cpp:196
+#: tablet_input.cpp:177
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "מחשבי הלוח החליפו אמצעי פלט"
