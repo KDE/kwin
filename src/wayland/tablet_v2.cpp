@@ -807,8 +807,8 @@ public:
 
     TabletSeatV2Interface *const q;
     QHash<InputDeviceTabletTool *, TabletToolV2Interface *> m_tools;
-    QHash<QString, TabletV2Interface *> m_tablets;
-    QHash<QString, TabletPadV2Interface *> m_pads;
+    QHash<InputDevice *, TabletV2Interface *> m_tablets;
+    QHash<InputDevice *, TabletPadV2Interface *> m_pads;
     Display *const m_display;
 };
 
@@ -897,43 +897,36 @@ TabletToolV2Interface *TabletSeatV2Interface::addTool(InputDeviceTabletTool *dev
 }
 
 TabletV2Interface *
-TabletSeatV2Interface::addTablet(uint32_t vendorId, uint32_t productId, const QString &sysname, const QString &name, const QStringList &paths)
+TabletSeatV2Interface::addTablet(InputDevice *device)
 {
-    Q_ASSERT(!d->m_tablets.contains(sysname));
+    Q_ASSERT(!d->m_tablets.contains(device));
 
-    auto iface = new TabletV2Interface(vendorId, productId, name, paths, this);
+    auto iface = new TabletV2Interface(device->vendor(), device->vendor(), device->name(), {device->sysPath()}, this);
 
     for (QtWaylandServer::zwp_tablet_seat_v2::Resource *r : d->resourceMap()) {
         d->sendTabletAdded(r, iface);
     }
 
-    d->m_tablets[sysname] = iface;
+    d->m_tablets[device] = iface;
     return iface;
 }
 
-TabletPadV2Interface *TabletSeatV2Interface::addPad(const QString &sysname,
-                                                    const QString &name,
-                                                    const QStringList &paths,
-                                                    quint32 buttons,
-                                                    quint32 rings,
-                                                    quint32 strips,
-                                                    quint32 modes,
-                                                    quint32 currentMode)
+TabletPadV2Interface *TabletSeatV2Interface::addPad(InputDevice *device)
 {
-    auto iface = new TabletPadV2Interface(paths.at(0), buttons, rings, strips, modes, currentMode, d->m_display, this);
+    auto iface = new TabletPadV2Interface(device->sysPath(), device->tabletPadButtonCount(), device->tabletPadRingCount(), device->tabletPadStripCount(), device->tabletPadModeCount(), device->tabletPadMode(), d->m_display, this);
     iface->d->m_seat = this;
     for (auto r : d->resourceMap()) {
         d->sendPadAdded(r, iface);
     }
 
-    d->m_pads[sysname] = iface;
+    d->m_pads[device] = iface;
     return iface;
 }
 
-void TabletSeatV2Interface::removeDevice(const QString &sysname)
+void TabletSeatV2Interface::remove(InputDevice *device)
 {
-    delete d->m_tablets.take(sysname);
-    delete d->m_pads.take(sysname);
+    delete d->m_tablets.take(device);
+    delete d->m_pads.take(device);
 }
 
 TabletToolV2Interface *TabletSeatV2Interface::tool(InputDeviceTabletTool *device) const
@@ -941,14 +934,30 @@ TabletToolV2Interface *TabletSeatV2Interface::tool(InputDeviceTabletTool *device
     return d->m_tools.value(device);
 }
 
-TabletV2Interface *TabletSeatV2Interface::tabletByName(const QString &name) const
+TabletV2Interface *TabletSeatV2Interface::tablet(InputDevice *device) const
 {
-    return d->m_tablets.value(name);
+    return d->m_tablets.value(device);
 }
 
-TabletPadV2Interface *TabletSeatV2Interface::padByName(const QString &name) const
+TabletPadV2Interface *TabletSeatV2Interface::pad(InputDevice *device) const
 {
-    return d->m_pads.value(name);
+    return d->m_pads.value(device);
+}
+
+TabletV2Interface *TabletSeatV2Interface::matchingTablet(TabletPadV2Interface *pad) const
+{
+    InputDevice *padDevice = d->m_pads.key(pad);
+    if (!padDevice) {
+        return nullptr;
+    }
+
+    for (auto it = d->m_tablets.constBegin(); it != d->m_tablets.constEnd(); ++it) {
+        if (padDevice->group() == it.key()->group()) {
+            return it.value();
+        }
+    }
+
+    return nullptr;
 }
 
 class TabletManagerV2InterfacePrivate : public QtWaylandServer::zwp_tablet_manager_v2

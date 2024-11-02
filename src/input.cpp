@@ -2049,7 +2049,7 @@ public:
 
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
         TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tool());
-        TabletV2Interface *tablet = seat->tabletByName(event->device()->sysName());
+        TabletV2Interface *tablet = seat->tablet(event->device());
 
         SurfaceInterface *surface = window->surface();
         tool->setCurrentSurface(surface);
@@ -2149,17 +2149,16 @@ public:
             return nullptr;
         }
 
-        // NOTE: tablet may be nullptr when the device is removed (see ::removeDevice) but events from the tool
-        // may still happen.
-        TabletV2Interface *tablet = input()->tablet()->tabletForPad(device);
+        TabletPadV2Interface *pad = seat->pad(device);
+        if (!pad) {
+            return nullptr;
+        }
+
+        TabletV2Interface *tablet = seat->matchingTablet(pad);
         if (!tablet) {
             return nullptr;
         }
 
-        auto pad = seat->padByName(device->sysName());
-        if (!pad) {
-            return nullptr;
-        }
         pad->setCurrentSurface(window->surface(), tablet);
         return pad;
     }

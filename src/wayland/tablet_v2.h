@@ -17,6 +17,7 @@ namespace KWin
 {
 class ClientConnection;
 class Display;
+class InputDevice;
 class InputDeviceTabletTool;
 class SeatInterface;
 class SurfaceInterface;
@@ -274,22 +275,15 @@ class KWIN_EXPORT TabletSeatV2Interface : public QObject
 public:
     virtual ~TabletSeatV2Interface();
 
-    TabletV2Interface *addTablet(quint32 vendorId, quint32 productId, const QString &sysname, const QString &name, const QStringList &paths);
-    TabletPadV2Interface *addPad(const QString &sysname,
-                                 const QString &name,
-                                 const QStringList &paths,
-                                 quint32 buttons,
-                                 quint32 rings,
-                                 quint32 strips,
-                                 quint32 modes,
-                                 quint32 currentMode);
+    TabletV2Interface *addTablet(InputDevice *device);
+    TabletPadV2Interface *addPad(InputDevice *device);
     TabletToolV2Interface *addTool(InputDeviceTabletTool *device);
+    void remove(InputDevice *device);
 
     TabletToolV2Interface *tool(InputDeviceTabletTool *device) const;
-    TabletV2Interface *tabletByName(const QString &sysname) const;
-    TabletPadV2Interface *padByName(const QString &sysname) const;
-
-    void removeDevice(const QString &sysname);
+    TabletV2Interface *tablet(InputDevice *device) const;
+    TabletPadV2Interface *pad(InputDevice *device) const;
+    TabletV2Interface *matchingTablet(TabletPadV2Interface *pad) const;
 
     bool isClientSupported(ClientConnection *client) const;
 

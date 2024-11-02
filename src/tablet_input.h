@@ -65,7 +65,6 @@ public:
     }
 
     TabletToolV2Interface *ensureTabletTool(InputDeviceTabletTool *tool);
-    TabletV2Interface *tabletForPad(InputDevice *device) const;
 
 private:
     void cleanupDecoration(Decoration::DecoratedClientImpl *old,

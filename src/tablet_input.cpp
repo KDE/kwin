@@ -126,11 +126,11 @@ void TabletInputRedirection::integrateDevice(InputDevice *device)
     }
 
     if (device->isTabletTool()) {
-        tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {device->sysPath()});
+        tabletSeat->addTablet(device);
     }
 
     if (device->isTabletPad()) {
-        tabletSeat->addPad(device->sysName(), device->name(), {device->sysPath()}, device->tabletPadButtonCount(), device->tabletPadRingCount(), device->tabletPadStripCount(), device->tabletPadModeCount(), device->tabletPadMode());
+        tabletSeat->addPad(device);
     }
 }
 
@@ -138,7 +138,7 @@ void TabletInputRedirection::removeDevice(InputDevice *device)
 {
     TabletSeatV2Interface *tabletSeat = findTabletSeat();
     if (tabletSeat) {
-        tabletSeat->removeDevice(device->sysName());
+        tabletSeat->remove(device);
     } else {
         qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->sysName();
     }
@@ -192,21 +192,6 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(InputDeviceTable
     m_cursorByTool[device] = cursor;
 
     return tool;
-}
-
-TabletV2Interface *TabletInputRedirection::tabletForPad(InputDevice *device) const
-{
-    const auto candidates = input()->devices();
-    for (InputDevice *candidate : candidates) {
-        if (!candidate->isTabletTool()) {
-            continue;
-        }
-        if (device->group() == candidate->group()) {
-            return findTabletSeat()->tabletByName(candidate->sysName());
-        }
-    }
-
-    return nullptr;
 }
 
 void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType type, const QPointF &pos,

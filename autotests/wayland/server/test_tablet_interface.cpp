@@ -136,6 +136,193 @@ Q_SIGNALS:
     void tabletAdded();
 };
 
+class DummyInputDevice : public InputDevice
+{
+    Q_OBJECT
+
+public:
+    explicit DummyInputDevice(QObject *parent = nullptr)
+        : InputDevice(parent)
+    {
+    }
+
+    QString name() const override
+    {
+        return m_name;
+    }
+
+    QString sysName() const override
+    {
+        return QString();
+    }
+
+    QString sysPath() const override
+    {
+        return m_sysPath;
+    }
+
+    quint32 vendor() const override
+    {
+        return m_vendorId;
+    }
+
+    quint32 product() const override
+    {
+        return m_productId;
+    }
+
+    bool isEnabled() const override
+    {
+        return true;
+    }
+
+    void setEnabled(bool enabled) override
+    {
+    }
+
+    LEDs leds() const override
+    {
+        return LEDs();
+    }
+
+    void setLeds(LEDs leds) override
+    {
+    }
+
+    bool isKeyboard() const override
+    {
+        return false;
+    }
+
+    bool isPointer() const override
+    {
+        return false;
+    }
+
+    bool isTouchpad() const override
+    {
+        return false;
+    }
+
+    bool isTouch() const override
+    {
+        return false;
+    }
+
+    bool isTabletTool() const override
+    {
+        return m_tabletTool;
+    }
+
+    bool isTabletPad() const override
+    {
+        return m_tabletPad;
+    }
+
+    bool isTabletModeSwitch() const override
+    {
+        return false;
+    }
+
+    bool isLidSwitch() const override
+    {
+        return false;
+    }
+
+    int tabletPadButtonCount() const override
+    {
+        return m_tabletPadButtonCount;
+    }
+
+    int tabletPadRingCount() const override
+    {
+        return m_tabletPadRingCount;
+    }
+
+    int tabletPadStripCount() const override
+    {
+        return m_tabletPadStripCount;
+    }
+
+    int tabletPadModeCount() const override
+    {
+        return m_tabletPadModeCount;
+    }
+
+    int tabletPadMode() const override
+    {
+        return m_tabletPadMode;
+    }
+
+    void setName(const QString &name)
+    {
+        m_name = name;
+    }
+
+    void setSysPath(const QString &path)
+    {
+        m_sysPath = path;
+    }
+
+    void setVendor(quint32 vendor)
+    {
+        m_vendorId = vendor;
+    }
+
+    void setProduct(quint32 product)
+    {
+        m_productId = product;
+    }
+
+    void setTabletTool(bool tool)
+    {
+        m_tabletTool = tool;
+    }
+
+    void setTabletPad(bool pad)
+    {
+        m_tabletPad = pad;
+    }
+
+    void setTabletPadButtonCount(int count)
+    {
+        m_tabletPadButtonCount = count;
+    }
+
+    void setTabletPadRingCount(int count)
+    {
+        m_tabletPadRingCount = count;
+    }
+
+    void setTabletPadStripCount(int count)
+    {
+        m_tabletPadStripCount = count;
+    }
+
+    void setTabletPadModeCount(int count)
+    {
+        m_tabletPadModeCount = count;
+    }
+
+    void setTabletPadMode(int mode)
+    {
+        m_tabletPadMode = mode;
+    }
+
+private:
+    QString m_name;
+    QString m_sysPath;
+    quint32 m_vendorId = 0;
+    quint32 m_productId = 0;
+    int m_tabletPadButtonCount = 0;
+    int m_tabletPadRingCount = 0;
+    int m_tabletPadStripCount = 0;
+    int m_tabletPadModeCount = 0;
+    int m_tabletPadMode = 0;
+    bool m_tabletTool = false;
+    bool m_tabletPad = false;
+};
+
 class DummyInputDeviceTabletTool : public InputDeviceTabletTool
 {
     Q_OBJECT
@@ -228,7 +415,9 @@ private:
     TabletManagerV2Interface *m_tabletManager;
     QList<KWayland::Client::Surface *> m_surfacesClient;
 
+    DummyInputDevice *m_tabletDevice = nullptr;
     TabletV2Interface *m_tablet;
+    DummyInputDevice *m_tabletPadDevice = nullptr;
     TabletPadV2Interface *m_tabletPad = nullptr;
     DummyInputDeviceTabletTool *m_toolDevice = nullptr;
     TabletToolV2Interface *m_tool = nullptr;
@@ -327,7 +516,13 @@ void TestTabletInterface::testAdd()
     QVERIFY(seatInterface);
 
     QSignalSpy tabletSpy(m_tabletSeatClient, &TabletSeat::tabletAdded);
-    m_tablet = seatInterface->addTablet(1, 2, QStringLiteral("event33"), QStringLiteral("my tablet"), {QStringLiteral("/test/event33")});
+    m_tabletDevice = new DummyInputDevice();
+    m_tabletDevice->setTabletTool(true);
+    m_tabletDevice->setVendor(1);
+    m_tabletDevice->setProduct(2);
+    m_tabletDevice->setName(QStringLiteral("my tablet"));
+    m_tabletDevice->setSysPath(QStringLiteral("/test/event33"));
+    m_tablet = seatInterface->addTablet(m_tabletDevice);
     QVERIFY(m_tablet);
     QVERIFY(tabletSpy.wait() || tabletSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
@@ -360,7 +555,16 @@ void TestTabletInterface::testAddPad()
     QVERIFY(seatInterface);
 
     QSignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);
-    m_tabletPad = seatInterface->addPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0);
+    m_tabletPadDevice = new DummyInputDevice();
+    m_tabletPadDevice->setTabletPad(true);
+    m_tabletPadDevice->setName(QStringLiteral("tabletpad"));
+    m_tabletPadDevice->setSysPath(QStringLiteral("/test/event33"));
+    m_tabletPadDevice->setTabletPadButtonCount(1);
+    m_tabletPadDevice->setTabletPadRingCount(1);
+    m_tabletPadDevice->setTabletPadStripCount(1);
+    m_tabletPadDevice->setTabletPadModeCount(1);
+    m_tabletPadDevice->setTabletPadMode(0);
+    m_tabletPad = seatInterface->addPad(m_tabletPadDevice);
     QVERIFY(m_tabletPad);
     QVERIFY(tabletPadSpy.wait() || tabletPadSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_pads.count(), 1);
