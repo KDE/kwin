@@ -20,7 +20,6 @@ class KWIN_EXPORT FakeInputDevice : public InputDevice
 public:
     explicit FakeInputDevice(QObject *parent = nullptr);
 
-    QString sysName() const override;
     QString name() const override;
 
     bool isEnabled() const override;

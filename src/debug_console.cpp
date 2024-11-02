@@ -151,7 +151,7 @@ static QString deviceRow(InputDevice *device)
     if (!device) {
         return tableRow(i18n("Input Device"), i18nc("The input device of the event is not known", "Unknown"));
     }
-    return tableRow(i18n("Input Device"), QStringLiteral("%1 (%2)").arg(device->name(), device->sysName()));
+    return tableRow(i18n("Input Device"), QStringLiteral("%1 (%2)").arg(device->name(), device->sysPath()));
 }
 
 static QString buttonsToString(Qt::MouseButtons buttons)
@@ -516,7 +516,7 @@ void DebugConsoleFilter::tabletToolButtonEvent(TabletToolButtonEvent *event)
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
         + tableRow(i18n("Button"), event->button)
         + tableRow(i18n("Pressed"), event->pressed)
-        + tableRow(i18n("Tablet"), event->device->sysName())
+        + tableRow(i18n("Tablet"), event->device->name())
         + timestampRow(event->time)
         + s_tableEnd;
 
@@ -530,7 +530,7 @@ void DebugConsoleFilter::tabletPadButtonEvent(TabletPadButtonEvent *event)
         + tableHeaderRow(i18n("Tablet Pad Button"))
         + tableRow(i18n("Button"), event->button)
         + tableRow(i18n("Pressed"), event->pressed)
-        + tableRow(i18n("Tablet"), event->device->sysName())
+        + tableRow(i18n("Tablet"), event->device->name())
         + timestampRow(event->time)
         + s_tableEnd;
 
@@ -544,7 +544,7 @@ void DebugConsoleFilter::tabletPadStripEvent(TabletPadStripEvent *event)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Position"), event->position)
         + tableRow(i18n("isFinger"), event->isFinger)
-        + tableRow(i18n("Tablet"), event->device->sysName())
+        + tableRow(i18n("Tablet"), event->device->name())
         + timestampRow(event->time)
         + s_tableEnd;
 
@@ -558,7 +558,7 @@ void DebugConsoleFilter::tabletPadRingEvent(TabletPadRingEvent *event)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Position"), event->position)
         + tableRow(i18n("isFinger"), event->isFinger)
-        + tableRow(i18n("Tablet"), event->device->sysName())
+        + tableRow(i18n("Tablet"), event->device->name())
         + timestampRow(event->time)
         + s_tableEnd;
 

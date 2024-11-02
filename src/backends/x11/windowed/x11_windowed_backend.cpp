@@ -61,11 +61,6 @@ void X11WindowedInputDevice::setName(const QString &name)
     m_name = name;
 }
 
-QString X11WindowedInputDevice::sysName() const
-{
-    return QString();
-}
-
 QString X11WindowedInputDevice::name() const
 {
     return m_name;

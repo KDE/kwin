@@ -67,7 +67,6 @@ public:
     WaylandInputDevice(KWayland::Client::Pointer *pointer, WaylandSeat *seat);
     ~WaylandInputDevice() override;
 
-    QString sysName() const override;
     QString name() const override;
 
     bool isEnabled() const override;

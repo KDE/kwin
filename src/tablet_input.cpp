@@ -140,7 +140,7 @@ void TabletInputRedirection::removeDevice(InputDevice *device)
     if (tabletSeat) {
         tabletSeat->remove(device);
     } else {
-        qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->sysName();
+        qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->name();
     }
 }
 

@@ -1639,11 +1639,6 @@ void VirtualInputDevice::setGroup(uintptr_t group)
     m_group = reinterpret_cast<void *>(group);
 }
 
-QString VirtualInputDevice::sysName() const
-{
-    return QString();
-}
-
 QString VirtualInputDevice::name() const
 {
     return m_name;

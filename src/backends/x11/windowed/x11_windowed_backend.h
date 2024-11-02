@@ -43,7 +43,6 @@ public:
     void setTouch(bool set);
     void setName(const QString &name);
 
-    QString sysName() const override;
     QString name() const override;
 
     bool isEnabled() const override;

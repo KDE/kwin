@@ -52,11 +52,6 @@ void EisDevice::changeDevice(eis_device *device)
     }
 }
 
-QString EisDevice::sysName() const
-{
-    return QString();
-}
-
 QString EisDevice::name() const
 {
     return QString::fromUtf8(eis_device_get_name(m_device));

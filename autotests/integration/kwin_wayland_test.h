@@ -646,7 +646,6 @@ public:
     void setName(const QString &name);
     void setGroup(uintptr_t group);
 
-    QString sysName() const override;
     QString name() const override;
     void *group() const override;
 

@@ -215,11 +215,6 @@ WaylandInputDevice::~WaylandInputDevice()
 {
 }
 
-QString WaylandInputDevice::sysName() const
-{
-    return QString();
-}
-
 QString WaylandInputDevice::name() const
 {
     return QString();

@@ -216,7 +216,7 @@ public:
     {
         return m_name;
     }
-    QString sysName() const override
+    QString sysName() const
     {
         return m_sysName;
     }

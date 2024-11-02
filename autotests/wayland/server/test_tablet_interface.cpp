@@ -151,11 +151,6 @@ public:
         return m_name;
     }
 
-    QString sysName() const override
-    {
-        return QString();
-    }
-
     QString sysPath() const override
     {
         return m_sysPath;

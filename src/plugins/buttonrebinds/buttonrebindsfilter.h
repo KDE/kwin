@@ -20,7 +20,6 @@
 
 class InputDevice : public KWin::InputDevice
 {
-    QString sysName() const override;
     QString name() const override;
 
     bool isEnabled() const override;

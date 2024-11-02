@@ -90,7 +90,6 @@ public:
 
     explicit InputDevice(QObject *parent = nullptr);
 
-    virtual QString sysName() const = 0;
     virtual QString sysPath() const;
     virtual QString name() const = 0;
     virtual quint32 vendor() const;
