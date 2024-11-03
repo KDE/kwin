@@ -1239,6 +1239,10 @@ public:
             return false;
         }
         QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
+        if (!internal) {
+            // the handle can be nullptr if the tooltip gets closed while focus updates are blocked
+            return false;
+        }
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp());
         QWindowSystemInterface::handleWheelEvent(internal,
                                                  timestamp.count(),
