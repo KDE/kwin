@@ -79,6 +79,7 @@ private:
     void updateSdrGamutWideness();
     void updateColorProfileSource();
     void updateBrightness();
+    void updateColorPowerTradeoff();
 
     void scheduleDone();
 

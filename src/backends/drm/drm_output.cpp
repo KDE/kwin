@@ -473,6 +473,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
+    next.colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
     setState(next);
 
     // allowSdrSoftwareBrightness might change our capabilities
@@ -542,12 +543,15 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 
 void DrmOutput::tryKmsColorOffloading()
 {
-    if (m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile) {
-        // offloading color operations doesn't make sense when we have to apply the icc shader anyways
+    // offloading color operations doesn't make sense when we have to apply the icc shader anyways
+    const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !m_state.highDynamicRange && !m_state.wideColorGamut;
+    const bool disallowOffloading = colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy
+        || (usesICC && (colorPowerTradeoff() != ColorPowerTradeoff::PreferLowPower || !m_state.iccProfile->inverseEOTF()));
+    if (disallowOffloading) {
         setScanoutColorDescription(colorDescription());
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
-        m_channelFactorsNeedShaderFallback = true;
+        m_needsShadowBuffer = true;
         return;
     }
     if (!m_pipeline->activePending() || !primaryLayer()) {
@@ -559,21 +563,28 @@ void DrmOutput::tryKmsColorOffloading()
     const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
     const ColorDescription optimal = colorDescription().transferFunction().type == TransferFunction::gamma22 ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(TransferFunction::gamma22, 0, maxLuminance));
     ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
+    if (m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile) {
+        colorPipeline.addTransferFunction(colorDescription().transferFunction());
+        colorPipeline.add1DLUT(m_state.iccProfile->inverseEOTF());
+        if (m_state.iccProfile->vcgt()) {
+            colorPipeline.add1DLUT(m_state.iccProfile->vcgt());
+        }
+    }
     colorPipeline.addTransferFunction(colorDescription().transferFunction());
-    colorPipeline.addMultiplier(channelFactors);
+    colorPipeline.addRgbMultiplier(channelFactors);
     colorPipeline.addInverseTransferFunction(colorDescription().transferFunction());
     m_pipeline->setCrtcColorPipeline(colorPipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
         setScanoutColorDescription(optimal);
-        m_channelFactorsNeedShaderFallback = false;
+        m_needsShadowBuffer = false;
     } else {
         // fall back to using a shadow buffer for doing blending in gamma 2.2 and the channel factors
         m_pipeline->revertPendingChanges();
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
         setScanoutColorDescription(colorDescription());
-        m_channelFactorsNeedShaderFallback = (channelFactors - QVector3D(1, 1, 1)).lengthSquared() > 0.0001;
+        m_needsShadowBuffer = (channelFactors - QVector3D(1, 1, 1)).lengthSquared() > 0.0001 || usesICC;
     }
 }
 
@@ -590,9 +601,9 @@ void DrmOutput::setScanoutColorDescription(const ColorDescription &description)
     }
 }
 
-bool DrmOutput::needsChannelFactorFallback() const
+bool DrmOutput::needsShadowBuffer() const
 {
-    return m_channelFactorsNeedShaderFallback;
+    return m_needsShadowBuffer;
 }
 
 QVector3D DrmOutput::adaptedChannelFactors() const

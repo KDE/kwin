@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpipeline.h"
+#include "iccprofile.h"
 
 #include <numbers>
 
@@ -22,6 +23,53 @@ ValueRange ValueRange::operator*(double mult) const
 }
 
 static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
+
+ColorPipeline ColorPipeline::create(const ColorDescription &from, IccProfile *to, RenderingIntent intent)
+{
+    auto tag = to->BToATag(intent);
+    if (!tag) {
+        // falling back to perceptual is less bad than matrix shaper
+        tag = to->BToATag(RenderingIntent::Perceptual);
+    }
+    if (tag) {
+        ColorPipeline ret;
+        switch (intent) {
+        case RenderingIntent::RelativeColorimetric:
+            // only need to transform to the ICC connection space (XYZ D50)
+            ret = create(from, IccProfile::s_connectionSpace, RenderingIntent::RelativeColorimetric);
+            break;
+        case RenderingIntent::AbsoluteColorimetric: {
+            // there's no tag for absolute colorimetric
+            // as the relative colorimetric tag goes from XYZ D50 to the destination whitepoint though,
+            // we can first do the transform to the destination whitepoint in absolute colorimetric mode
+            ColorDescription linearizedProfile(to->colorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
+            ret = create(from, linearizedProfile, RenderingIntent::AbsoluteColorimetric);
+            // then add destination whitepoint -> XYZ D50, which will get cancelled out by the tag
+            ret.add(create(linearizedProfile, IccProfile::s_connectionSpace, RenderingIntent::RelativeColorimetric));
+        } break;
+        case RenderingIntent::Perceptual:
+        case RenderingIntent::RelativeColorimetricWithBPC: {
+            // apply BPC
+            const double min = to->minBrightness().value_or(0);
+            const double max = to->maxBrightness().value_or(1);
+            const ColorDescription adjustedConnectionSpace(NamedColorimetry::CIEXYZD50, TransferFunction(TransferFunction::linear, 0, max), max, min, max, max);
+            ret = create(from, adjustedConnectionSpace, RenderingIntent::RelativeColorimetricWithBPC);
+        } break;
+        }
+        // while the above converts to XYZ D50, the encoding the ICC profile wants is CIEXYZ
+        // so we add the (absolute colorimetric) transform to that colorspace before the tag
+        ret.addMatrix(IccProfile::s_connectionSpace.containerColorimetry().toXYZ(), ret.currentOutputRange());
+        ret.add(*tag);
+        return ret;
+    } else {
+        const double min = to->minBrightness().value_or(0);
+        const double max = to->maxBrightness().value_or(1);
+        ColorDescription linearizedProfile(to->colorimetry(), TransferFunction(TransferFunction::linear, min, max), max, min, max, max);
+        ColorPipeline ret = create(from, linearizedProfile, intent);
+        ret.add1DLUT(to->inverseEOTF());
+        return ret;
+    }
+}
 
 ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
 {
@@ -62,14 +110,19 @@ const ValueRange &ColorPipeline::currentOutputRange() const
     return ops.empty() ? inputRange : ops.back().output;
 }
 
-void ColorPipeline::addMultiplier(double factor)
+void ColorPipeline::addRgbMultiplier(double factor)
 {
-    addMultiplier(QVector3D(factor, factor, factor));
+    addMultiplier(QVector4D(factor, factor, factor, 1));
 }
 
-void ColorPipeline::addMultiplier(const QVector3D &factors)
+void ColorPipeline::addRgbMultiplier(const QVector3D &factors)
 {
-    if (factors == QVector3D(1, 1, 1)) {
+    addMultiplier(QVector4D(factors, 1));
+}
+
+void ColorPipeline::addMultiplier(const QVector4D &factors)
+{
+    if (factors == QVector4D(1, 1, 1, 1)) {
         return;
     }
     const ValueRange output{
@@ -78,16 +131,16 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
     };
     if (!ops.empty()) {
         auto *lastOp = &ops.back().operation;
-        if (const auto mat = std::get_if<ColorMatrix>(lastOp)) {
+        if (const auto mat = std::get_if<ColorMatrix>(lastOp); mat && factors.w() == 1) {
             QMatrix4x4 newMat;
-            newMat.scale(factors);
+            newMat.scale(factors.toVector3D());
             newMat *= mat->mat;
             ops.erase(ops.end() - 1);
             addMatrix(newMat, output);
             return;
         } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
             mult->factors *= factors;
-            if ((mult->factors - QVector3D(1, 1, 1)).lengthSquared() < s_maxResolution * s_maxResolution) {
+            if ((mult->factors - QVector4D(1, 1, 1, 1)).lengthSquared() < s_maxResolution * s_maxResolution) {
                 ops.erase(ops.end() - 1);
             } else {
                 ops.back().output = output;
@@ -214,9 +267,9 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
             ops.erase(ops.end() - 1);
             addMatrix(newMat, output);
             return;
-        } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
+        } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp); mult && mult->factors.w() == 1) {
             QMatrix4x4 scaled = mat;
-            scaled.scale(mult->factors);
+            scaled.scale(mult->factors.toVector3D());
             ops.erase(ops.end() - 1);
             addMatrix(scaled, output);
             return;
@@ -224,7 +277,7 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
     }
     if (isFuzzyScalingOnly(mat)) {
         // pure scaling, this can be simplified
-        addMultiplier(QVector3D(mat(0, 0), mat(1, 1), mat(2, 2)));
+        addMultiplier(QVector4D(mat(0, 0), mat(1, 1), mat(2, 2), 1));
         return;
     }
     ops.push_back(ColorOp{
@@ -243,12 +296,9 @@ static const QMatrix4x4 s_fromICtCp = s_toICtCp.inverted();
 
 void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
 {
-    // convert from rgb to ICtCp
-    addMatrix(containerColorimetry.toLMS(), currentOutputRange());
-    const TransferFunction PQ(TransferFunction::PerceptualQuantizer, 0, 10'000);
-    addInverseTransferFunction(PQ);
-    addMatrix(s_toICtCp, currentOutputRange());
-    // apply the tone mapping to the intensity component
+    addRgbToICtCp(containerColorimetry);
+    const auto PQ = TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000);
+    // apply tone mapping to the intensity component
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
         .operation = ColorTonemapper(referenceLuminance, maxInputLuminance, maxOutputLuminance),
@@ -257,10 +307,48 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
             .max = PQ.nitsToEncoded(maxOutputLuminance),
         },
     });
-    // convert back to rgb
+    addICtCpToRgb(containerColorimetry);
+}
+
+void ColorPipeline::addRgbToICtCp(const Colorimetry &containerColorimetry)
+{
+    addMatrix(containerColorimetry.toLMS(), currentOutputRange());
+    addInverseTransferFunction(TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000));
+    addMatrix(s_toICtCp, currentOutputRange());
+}
+
+void ColorPipeline::addICtCpToRgb(const Colorimetry &containerColorimetry)
+{
     addMatrix(s_fromICtCp, currentOutputRange());
-    addTransferFunction(PQ);
+    addTransferFunction(TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000));
     addMatrix(containerColorimetry.fromLMS(), currentOutputRange());
+}
+
+void ColorPipeline::addModulation(const ColorDescription &colorDescription, double saturation, double opacity, double brightness)
+{
+    if (saturation != 1.0 || brightness != 1.0) {
+        addTransferFunction(colorDescription.transferFunction());
+        addRgbToICtCp(colorDescription.containerColorimetry());
+        addMultiplier(QVector4D(brightness, saturation, saturation, opacity));
+        addICtCpToRgb(colorDescription.containerColorimetry());
+        addInverseTransferFunction(colorDescription.transferFunction());
+    } else if (opacity != 1.0) {
+        addMultiplier(QVector4D(1, 1, 1, opacity));
+    }
+}
+
+void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform)
+{
+    const auto min = transform->transform(QVector3D(currentOutputRange().min, currentOutputRange().min, currentOutputRange().min));
+    const auto max = transform->transform(QVector3D(currentOutputRange().max, currentOutputRange().max, currentOutputRange().max));
+    ops.push_back(ColorOp{
+        .input = currentOutputRange(),
+        .operation = transform,
+        .output = ValueRange{
+            .min = std::min({min.x(), min.y(), min.z()}),
+            .max = std::max({max.x(), max.y(), max.z()}),
+        },
+    });
 }
 
 bool ColorPipeline::isIdentity() const
@@ -283,6 +371,13 @@ void ColorPipeline::add(const ColorOp &op)
     }
 }
 
+void ColorPipeline::add(const ColorPipeline &pipeline)
+{
+    for (const auto &op : pipeline.ops) {
+        add(op);
+    }
+}
+
 ColorPipeline ColorPipeline::merged(const ColorPipeline &onTop) const
 {
     ColorPipeline ret{inputRange};
@@ -295,7 +390,12 @@ ColorPipeline ColorPipeline::merged(const ColorPipeline &onTop) const
 
 QVector3D ColorPipeline::evaluate(const QVector3D &input) const
 {
-    QVector3D ret = input;
+    return evaluate(QVector4D(input, 1)).toVector3D();
+}
+
+QVector4D ColorPipeline::evaluate(const QVector4D &input) const
+{
+    QVector4D ret = input;
     for (const auto &op : ops) {
         if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
             ret = mat->mat * ret;
@@ -307,6 +407,16 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
             ret = tf->tf.nitsToEncoded(ret);
         } else if (const auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
             ret.setX(tonemap->map(ret.x()));
+        } else if (const auto transform1D = std::get_if<std::shared_ptr<ColorTransformation>>(&op.operation)) {
+            const auto rgb = (*transform1D)->transform(ret.toVector3D());
+            ret.setX(rgb.x());
+            ret.setY(rgb.y());
+            ret.setZ(rgb.z());
+        } else if (const auto transform3D = std::get_if<std::shared_ptr<ColorLUT3D>>(&op.operation)) {
+            const auto rgb = (*transform3D)->sample(ret.toVector3D());
+            ret.setX(rgb.x());
+            ret.setY(rgb.y());
+            ret.setZ(rgb.z());
         }
     }
     return ret;
@@ -327,13 +437,13 @@ ColorMatrix::ColorMatrix(const QMatrix4x4 &mat)
 {
 }
 
-ColorMultiplier::ColorMultiplier(const QVector3D &factors)
+ColorMultiplier::ColorMultiplier(const QVector4D &factors)
     : factors(factors)
 {
 }
 
 ColorMultiplier::ColorMultiplier(double factor)
-    : factors(factor, factor, factor)
+    : factors(factor, factor, factor, 1.0f)
 {
 }
 
@@ -346,7 +456,7 @@ ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLumin
     const double outputRange = maxOutputLuminance / referenceLuminance;
     // how much range we need to at least decently present the content
     // 50% HDR headroom should be enough for the tone mapper to do a good enough job, without dimming the image too much
-    const double minDecentRange = std::clamp(m_inputRange, 1.0, 1.5);
+    const double minDecentRange = std::min(m_inputRange, 1.5);
     // if the output doesn't provide enough HDR headroom for the tone mapper to do a good job, dim the image to create some
     m_referenceDimming = 1.0 / std::clamp(minDecentRange / outputRange, 1.0, minDecentRange);
     m_outputReferenceLuminance = referenceLuminance * m_referenceDimming;
@@ -378,6 +488,10 @@ QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
             debug << mult->factors;
         } else if (auto tonemap = std::get_if<KWin::ColorTonemapper>(&op.operation)) {
             debug << "tonemapper(" << tonemap->m_inputReferenceLuminance << tonemap->m_maxInputLuminance << tonemap->m_maxOutputLuminance << ")";
+        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorTransformation>>(op.operation)) {
+            debug << "lut1d";
+        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorLUT3D>>(op.operation)) {
+            debug << "lut3d";
         }
     }
     debug << ")";

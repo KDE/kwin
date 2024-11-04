@@ -16,19 +16,13 @@
 namespace KWin
 {
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
-    : m_handle(handle)
-    , m_colorimetry(colorimetry)
-    , m_bToATag(std::move(bToATag))
-    , m_vcgt(vcgt)
-    , m_minBrightness(minBrightness)
-    , m_maxBrightness(maxBrightness)
-{
-}
+const ColorDescription IccProfile::s_connectionSpace = ColorDescription(Colorimetry::fromName(NamedColorimetry::CIEXYZD50), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
+    , m_bToA0Tag(std::move(bToA0Tag))
+    , m_bToA1Tag(std::move(bToA1Tag))
     , m_inverseEOTF(inverseEOTF)
     , m_vcgt(vcgt)
     , m_minBrightness(minBrightness)
@@ -66,9 +60,19 @@ std::shared_ptr<ColorTransformation> IccProfile::vcgt() const
     return m_vcgt;
 }
 
-const IccProfile::BToATagData *IccProfile::BtToATag() const
+const ColorPipeline *IccProfile::BToATag(RenderingIntent intent) const
 {
-    return m_bToATag ? &m_bToATag.value() : nullptr;
+    switch (intent) {
+    case RenderingIntent::Perceptual:
+        return m_bToA0Tag ? &*m_bToA0Tag : nullptr;
+    case RenderingIntent::RelativeColorimetric:
+        // these two are different from relative colorimetric
+        // but that has to be handled before the tag is applied
+    case RenderingIntent::RelativeColorimetricWithBPC:
+    case RenderingIntent::AbsoluteColorimetric:
+        return m_bToA1Tag ? &*m_bToA1Tag : nullptr;
+    }
+    Q_UNREACHABLE();
 }
 
 static std::vector<uint8_t> readTagRaw(cmsHPROFILE profile, cmsTagSignature tag)
@@ -120,32 +124,34 @@ static std::optional<QMatrix4x4> parseMatrix(std::span<const uint8_t> data, bool
     for (size_t i = 0; i < matrixSize; i++) {
         floats.push_back(readS15Fixed16(data, i * 4));
     }
-    constexpr double xyzEncodingFactor = 65536.0 / (2 * 65535.0);
     QMatrix4x4 ret;
-    ret(0, 0) = floats[0] * xyzEncodingFactor;
-    ret(0, 1) = floats[1] * xyzEncodingFactor;
-    ret(0, 2) = floats[2] * xyzEncodingFactor;
-    ret(1, 0) = floats[3] * xyzEncodingFactor;
-    ret(1, 1) = floats[4] * xyzEncodingFactor;
-    ret(1, 2) = floats[5] * xyzEncodingFactor;
-    ret(2, 0) = floats[6] * xyzEncodingFactor;
-    ret(2, 1) = floats[7] * xyzEncodingFactor;
-    ret(2, 2) = floats[8] * xyzEncodingFactor;
+    ret(0, 0) = floats[0];
+    ret(0, 1) = floats[1];
+    ret(0, 2) = floats[2];
+    ret(1, 0) = floats[3];
+    ret(1, 1) = floats[4];
+    ret(1, 2) = floats[5];
+    ret(2, 0) = floats[6];
+    ret(2, 1) = floats[7];
+    ret(2, 2) = floats[8];
     if (hasOffset) {
-        ret(0, 3) = floats[9] * xyzEncodingFactor;
-        ret(1, 3) = floats[10] * xyzEncodingFactor;
-        ret(2, 3) = floats[11] * xyzEncodingFactor;
+        ret(0, 3) = floats[9];
+        ret(1, 3) = floats[10];
+        ret(2, 3) = floats[11];
     }
     return ret;
 }
 
-static std::optional<IccProfile::BToATagData> parseBToATag(cmsHPROFILE profile, cmsTagSignature tag)
+static std::optional<ColorPipeline> parseBToATag(cmsHPROFILE profile, cmsTagSignature tag)
 {
     cmsPipeline *bToAPipeline = static_cast<cmsPipeline *>(cmsReadTag(profile, tag));
     if (!bToAPipeline) {
         return std::nullopt;
     }
-    IccProfile::BToATagData ret;
+    ColorPipeline ret;
+    // ICC profiles assume you're working in their encoding of XYZ
+    // this multiplier converts from our [0, 1] encoding to the ICC one
+    ret.addRgbMultiplier(65536.0 / (2 * 65535.0));
     auto data = readTagRaw(profile, tag);
     const uint32_t tagType = read<uint32_t>(data, 0);
     switch (tagType) {
@@ -173,19 +179,12 @@ static std::optional<IccProfile::BToATagData> parseBToATag(cmsHPROFILE profile, 
             // of using LUTs for more accuracy
             std::vector<std::unique_ptr<ColorPipelineStage>> stages;
             stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageDup(stage)));
-            auto transformation = std::make_unique<ColorTransformation>(std::move(stages));
-            // the order of operations is fixed, so just sort the LUTs into the appropriate places
-            // depending on the stages that have already been added
-            if (!ret.matrix) {
-                ret.B = std::move(transformation);
-            } else if (!ret.CLut) {
-                ret.M = std::move(transformation);
-            } else if (!ret.A) {
-                ret.A = std::move(transformation);
-            } else {
-                qCWarning(KWIN_CORE, "unexpected amount of curve elements in BToA tag");
-                return std::nullopt;
-            }
+            auto transformation = std::make_shared<ColorTransformation>(std::move(stages));
+            ret.add(ColorOp{
+                .input = ValueRange(),
+                .operation = transformation,
+                .output = ValueRange(),
+            });
         } break;
         case cmsStageSignature::cmsSigMatrixElemType: {
             const bool isLutTag = tagType == cmsSigLut8Type || tagType == cmsSigLut16Type;
@@ -199,7 +198,11 @@ static std::optional<IccProfile::BToATagData> parseBToATag(cmsHPROFILE profile, 
             if (!mat) {
                 return std::nullopt;
             }
-            ret.matrix = mat;
+            ret.add(ColorOp{
+                .input = ValueRange{},
+                .operation = ColorMatrix(*mat),
+                .output = ValueRange{},
+            });
         }; break;
         case cmsStageSignature::cmsSigCLutElemType: {
             const auto size = parseBToACLUTSize(data);
@@ -209,7 +212,11 @@ static std::optional<IccProfile::BToATagData> parseBToATag(cmsHPROFILE profile, 
             const auto [x, y, z] = *size;
             std::vector<std::unique_ptr<ColorPipelineStage>> stages;
             stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageDup(stage)));
-            ret.CLut = std::make_unique<ColorLUT3D>(std::make_unique<ColorTransformation>(std::move(stages)), x, y, z);
+            ret.add(ColorOp{
+                .input = ValueRange{},
+                .operation = std::make_shared<ColorLUT3D>(std::make_unique<ColorTransformation>(std::move(stages)), x, y, z),
+                .output = ValueRange{},
+            });
         } break;
         default:
             qCWarning(KWIN_CORE, "unknown stage type %u", stageType);
@@ -340,33 +347,18 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         }
     }
 
-    BToATagData lutData;
     if (cmsIsTag(handle, cmsSigBToD1Tag) && !cmsIsTag(handle, cmsSigBToA1Tag) && !cmsIsTag(handle, cmsSigBToA0Tag)) {
         qCWarning(KWIN_CORE, "Profiles with only BToD tags aren't supported yet");
         return nullptr;
     }
-    if (cmsIsTag(handle, cmsSigBToA1Tag)) {
-        // lut based profile, with relative colorimetric intent supported
-        auto data = parseBToATag(handle, cmsSigBToA1Tag);
-        if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, minBrightness, maxBrightness);
-        } else {
-            qCWarning(KWIN_CORE, "Parsing BToA1 tag failed");
-            return nullptr;
-        }
-    }
+    std::optional<ColorPipeline> bToA0;
+    std::optional<ColorPipeline> bToA1;
     if (cmsIsTag(handle, cmsSigBToA0Tag)) {
-        // lut based profile, with perceptual intent. The ICC docs say to use this as a fallback
-        auto data = parseBToATag(handle, cmsSigBToA0Tag);
-        if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, minBrightness, maxBrightness);
-        } else {
-            qCWarning(KWIN_CORE, "Parsing BToA0 tag failed");
-            return nullptr;
-        }
+        bToA0 = parseBToATag(handle, cmsSigBToA0Tag);
     }
-    // matrix based profile. The matrix is already read out for the colorimetry above
-    // All that's missing is the EOTF, which is stored in the rTRC, gTRC and bTRC tags
+    if (cmsIsTag(handle, cmsSigBToA1Tag)) {
+        bToA1 = parseBToATag(handle, cmsSigBToA1Tag);
+    }
     cmsToneCurve *r = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigRedTRCTag));
     cmsToneCurve *g = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigGreenTRCTag));
     cmsToneCurve *b = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigBlueTRCTag));
@@ -382,7 +374,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
     stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves)));
     const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), inverseEOTF, vcgt, minBrightness, maxBrightness);
+    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, vcgt, minBrightness, maxBrightness);
 }
 
 }

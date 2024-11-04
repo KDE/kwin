@@ -29,6 +29,7 @@ public:
     size_t ySize() const;
     size_t zSize() const;
 
+    QVector3D sample(const QVector3D &rgb);
     QVector3D sample(size_t x, size_t y, size_t z);
 
 private:

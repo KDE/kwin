@@ -641,6 +641,9 @@ void Output::setState(const State &state)
     if (oldState.brightnessSetting != state.brightnessSetting) {
         Q_EMIT brightnessChanged();
     }
+    if (oldState.colorPowerTradeoff != state.colorPowerTradeoff) {
+        Q_EMIT colorPowerTradeoffChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -816,6 +819,11 @@ void Output::setBrightnessDevice(BrightnessDevice *device)
 bool Output::allowSdrSoftwareBrightness() const
 {
     return m_state.allowSdrSoftwareBrightness;
+}
+
+Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
+{
+    return m_state.colorPowerTradeoff;
 }
 } // namespace KWin
 

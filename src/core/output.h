@@ -194,6 +194,12 @@ public:
         ICC,
         EDID,
     };
+    enum class ColorPowerTradeoff {
+        PreferLowPower = 0,
+        Balanced,
+        PreferAccuracy,
+    };
+    Q_ENUM(ColorPowerTradeoff);
 
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
@@ -375,6 +381,8 @@ public:
     virtual void setBrightnessDevice(BrightnessDevice *device);
     bool allowSdrSoftwareBrightness() const;
 
+    ColorPowerTradeoff colorPowerTradeoff() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -439,6 +447,7 @@ Q_SIGNALS:
     void colorDescriptionChanged();
     void colorProfileSourceChanged();
     void brightnessChanged();
+    void colorPowerTradeoffChanged();
 
 protected:
     struct Information
@@ -497,6 +506,7 @@ protected:
         bool allowSdrSoftwareBrightness = true;
         /// how much HDR headroom is created by increasing the backlight beyond the user setting
         double artificialHdrHeadroom = 1.0;
+        ColorPowerTradeoff colorPowerTradeoff = ColorPowerTradeoff::Balanced;
     };
 
     void setInformation(const Information &information);

@@ -7,11 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "colorlut3d.h"
 #include "colorspace.h"
+#include "colortransformation.h"
 #include "kwin_export.h"
 
 namespace KWin
 {
+
+class IccProfile;
 
 class KWIN_EXPORT ValueRange
 {
@@ -57,11 +61,11 @@ class KWIN_EXPORT ColorMultiplier
 {
 public:
     explicit ColorMultiplier(double factor);
-    explicit ColorMultiplier(const QVector3D &factors);
+    explicit ColorMultiplier(const QVector4D &factors);
 
     bool operator==(const ColorMultiplier &) const = default;
 
-    QVector3D factors;
+    QVector4D factors;
 };
 
 class KWIN_EXPORT ColorTonemapper
@@ -75,7 +79,6 @@ public:
     double m_inputReferenceLuminance;
     double m_maxInputLuminance;
     double m_maxOutputLuminance;
-private:
     double m_inputRange;
     double m_referenceDimming;
     double m_outputReferenceLuminance;
@@ -85,7 +88,7 @@ class KWIN_EXPORT ColorOp
 {
 public:
     ValueRange input;
-    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper> operation;
+    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper, std::shared_ptr<ColorTransformation>, std::shared_ptr<ColorLUT3D>> operation;
     ValueRange output;
 
     bool operator==(const ColorOp &) const = default;
@@ -104,6 +107,7 @@ public:
     explicit ColorPipeline();
     explicit ColorPipeline(const ValueRange &inputRange);
 
+    static ColorPipeline create(const ColorDescription &from, IccProfile *to, RenderingIntent intent);
     static ColorPipeline create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent);
 
     ColorPipeline merged(const ColorPipeline &onTop) const;
@@ -112,14 +116,21 @@ public:
     bool operator==(const ColorPipeline &other) const = default;
     const ValueRange &currentOutputRange() const;
     QVector3D evaluate(const QVector3D &input) const;
+    QVector4D evaluate(const QVector4D &input) const;
 
-    void addMultiplier(double factor);
-    void addMultiplier(const QVector3D &factors);
+    void addRgbMultiplier(double factor);
+    void addRgbMultiplier(const QVector3D &factors);
+    void addMultiplier(const QVector4D &factors);
     void addTransferFunction(TransferFunction tf);
     void addInverseTransferFunction(TransferFunction tf);
     void addMatrix(const QMatrix4x4 &mat, const ValueRange &output);
     void addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance);
     void add(const ColorOp &op);
+    void add(const ColorPipeline &pipeline);
+    void addRgbToICtCp(const Colorimetry &containerColorimetry);
+    void addICtCpToRgb(const Colorimetry &containerColorimetry);
+    void addModulation(const ColorDescription &colorDescription, double saturation, double opacity, double brightness);
+    void add1DLUT(const std::shared_ptr<ColorTransformation> &transform);
 
     ValueRange inputRange;
     std::vector<ColorOp> ops;

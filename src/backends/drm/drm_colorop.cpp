@@ -149,7 +149,7 @@ void DrmLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> op
             } else if (auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
                 output = tf->tf.nitsToEncoded(output);
             } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
-                output *= mult->factors;
+                output *= mult->factors.toVector3D();
             } else if (auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
                 output.setX(tonemap->map(output.x()));
             } else {
