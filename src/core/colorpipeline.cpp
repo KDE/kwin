@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpipeline.h"
+#include "iccprofile.h"
 
 #include <numbers>
 
@@ -263,6 +264,20 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
     addMatrix(containerColorimetry.fromLMS(), currentOutputRange());
 }
 
+void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform)
+{
+    const auto min = transform->transform(QVector3D(currentOutputRange().min, currentOutputRange().min, currentOutputRange().min));
+    const auto max = transform->transform(QVector3D(currentOutputRange().max, currentOutputRange().max, currentOutputRange().max));
+    ops.push_back(ColorOp{
+        .input = currentOutputRange(),
+        .operation = transform,
+        .output = ValueRange{
+            .min = std::min({min.x(), min.y(), min.z()}),
+            .max = std::max({max.x(), max.y(), max.z()}),
+        },
+    });
+}
+
 bool ColorPipeline::isIdentity() const
 {
     return ops.empty();
@@ -280,6 +295,13 @@ void ColorPipeline::add(const ColorOp &op)
         addInverseTransferFunction(tf->tf);
     } else {
         ops.push_back(op);
+    }
+}
+
+void ColorPipeline::add(const ColorPipeline &pipeline)
+{
+    for (const auto &op : pipeline.ops) {
+        add(op);
     }
 }
 
@@ -307,6 +329,10 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
             ret = tf->tf.nitsToEncoded(ret);
         } else if (const auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
             ret.setX(tonemap->map(ret.x()));
+        } else if (const auto transform1D = std::get_if<std::shared_ptr<ColorTransformation>>(&op.operation)) {
+            ret = (*transform1D)->transform(ret);
+        } else if (const auto transform3D = std::get_if<std::shared_ptr<ColorLUT3D>>(&op.operation)) {
+            ret = (*transform3D)->sample(ret);
         }
     }
     return ret;
@@ -378,6 +404,10 @@ QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
             debug << mult->factors;
         } else if (auto tonemap = std::get_if<KWin::ColorTonemapper>(&op.operation)) {
             debug << "tonemapper(" << tonemap->m_inputReferenceLuminance << tonemap->m_maxInputLuminance << tonemap->m_maxOutputLuminance << ")";
+        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorTransformation>>(op.operation)) {
+            debug << "lut1d";
+        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorLUT3D>>(op.operation)) {
+            debug << "lut3d";
         }
     }
     debug << ")";

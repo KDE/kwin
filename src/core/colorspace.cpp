@@ -328,6 +328,12 @@ static const Colorimetry CIEXYZ = Colorimetry{
     XYZ{0.0, 0.0, 1.0},
     xy{1.0 / 3.0, 1.0 / 3.0}.toXYZ(),
 };
+static const Colorimetry CIEXYZD50 = Colorimetry{
+    XYZ{1.0, 0.0, 0.0},
+    XYZ{0.0, 1.0, 0.0},
+    XYZ{0.0, 0.0, 1.0},
+    XYZ(0.9642, 1.0, 0.8249),
+};
 static const Colorimetry DCIP3 = Colorimetry{
     xy{0.680, 0.320},
     xy{0.265, 0.690},
@@ -364,6 +370,8 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
         return BT2020;
     case NamedColorimetry::CIEXYZ:
         return CIEXYZ;
+    case NamedColorimetry::CIEXYZD50:
+        return CIEXYZD50;
     case NamedColorimetry::DCIP3:
         return DCIP3;
     case NamedColorimetry::DisplayP3:
@@ -625,6 +633,11 @@ QVector3D TransferFunction::encodedToNits(const QVector3D &encoded) const
     return QVector3D(encodedToNits(encoded.x()), encodedToNits(encoded.y()), encodedToNits(encoded.z()));
 }
 
+QVector4D TransferFunction::encodedToNits(const QVector4D &encoded) const
+{
+    return QVector4D(encodedToNits(encoded.x()), encodedToNits(encoded.y()), encodedToNits(encoded.z()), encoded.w());
+}
+
 double TransferFunction::nitsToEncoded(double nits) const
 {
     const double normalized = (nits - minLuminance) / (maxLuminance - minLuminance);
@@ -660,6 +673,11 @@ QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits) const
     return QVector3D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()));
 }
 
+QVector4D TransferFunction::nitsToEncoded(const QVector4D &nits) const
+{
+    return QVector4D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()), nits.w());
+}
+
 bool TransferFunction::isRelative() const
 {
     switch (type) {
@@ -692,6 +710,12 @@ QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)
 QDebug operator<<(QDebug debug, const KWin::XYZ &xyz)
 {
     debug << "XYZ(" << xyz.X << xyz.Y << xyz.Z << ")";
+    return debug;
+}
+
+QDebug operator<<(QDebug debug, const KWin::xyY &xyY)
+{
+    debug << "xyY(" << xyY.x << xyY.y << xyY.Y << ")";
     return debug;
 }
 

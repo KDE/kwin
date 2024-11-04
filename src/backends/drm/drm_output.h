@@ -72,7 +72,7 @@ public:
     /**
      * @returns whether or not the renderer should apply channel factors
      */
-    bool needsChannelFactorFallback() const;
+    bool needsShadowBuffer() const;
 
 private:
     bool setDrmDpmsMode(DpmsMode mode);
@@ -95,7 +95,7 @@ private:
     DrmLease *m_lease = nullptr;
 
     QVector3D m_channelFactors = {1, 1, 1};
-    bool m_channelFactorsNeedShaderFallback = false;
+    bool m_needsShadowBuffer = false;
     ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
 };

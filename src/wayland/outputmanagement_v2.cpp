@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 9;
+static const quint32 s_version = 10;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -68,6 +68,7 @@ protected:
     void kde_output_configuration_v2_set_sdr_gamut_wideness(Resource *resource, wl_resource *outputdevice, uint32_t gamut_wideness) override;
     void kde_output_configuration_v2_set_color_profile_source(Resource *resource, wl_resource *outputdevice, uint32_t source) override;
     void kde_output_configuration_v2_set_brightness(Resource *resource, wl_resource *outputdevice, uint32_t brightness) override;
+    void kde_output_configuration_v2_set_color_power_tradeoff(Resource *resource, wl_resource *outputdevice, uint32_t preference) override;
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -358,6 +359,28 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_brightness(
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->brightness = brightness / 10'000.0;
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_color_power_tradeoff(Resource *resource, wl_resource *outputdevice, uint32_t preference)
+{
+    if (invalid) {
+        return;
+    }
+    const auto tradeoff = [preference]() -> std::optional<Output::ColorPowerTradeoff> {
+        switch (preference) {
+        case color_power_tradeoff_efficiency:
+            return Output::ColorPowerTradeoff::PreferEfficiency;
+        case color_power_tradeoff_accuracy:
+            return Output::ColorPowerTradeoff::PreferAccuracy;
+        }
+        return std::nullopt;
+    }();
+    if (!tradeoff) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->colorPowerTradeoff = *tradeoff;
     }
 }
 
