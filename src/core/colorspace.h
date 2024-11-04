@@ -38,6 +38,7 @@ enum class NamedColorimetry {
     GenericFilm,
     BT2020,
     CIEXYZ,
+    CIEXYZD50,
     DCIP3,
     DisplayP3,
     AdobeRGB
@@ -166,6 +167,8 @@ public:
     double nitsToEncoded(double nits) const;
     QVector3D encodedToNits(const QVector3D &encoded) const;
     QVector3D nitsToEncoded(const QVector3D &nits) const;
+    QVector4D encodedToNits(const QVector4D &encoded) const;
+    QVector4D nitsToEncoded(const QVector4D &nits) const;
 
     Type type;
     /**
@@ -255,5 +258,6 @@ private:
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::XYZ &xyz);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::xyY &xyY);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::Colorimetry &color);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorDescription &color);

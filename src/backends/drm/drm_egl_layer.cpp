@@ -56,8 +56,14 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 
     m_scanoutBuffer.reset();
     m_colorPipeline = ColorPipeline{};
-    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->output()->scanoutColorDescription(),
-                                    m_pipeline->output()->needsChannelFactorFallback() ? m_pipeline->output()->adaptedChannelFactors() : QVector3D(1, 1, 1), m_pipeline->iccProfile(), m_pipeline->output()->scale());
+    return m_surface.startRendering(targetRect().size(),
+                                    m_pipeline->output()->transform().combine(OutputTransform::FlipY),
+                                    m_pipeline->formats(m_type),
+                                    m_pipeline->output()->scanoutColorDescription(),
+                                    m_pipeline->output()->needsShadowBuffer() ? m_pipeline->output()->adaptedChannelFactors() : QVector3D(1, 1, 1),
+                                    m_pipeline->output()->needsShadowBuffer() ? m_pipeline->iccProfile() : nullptr,
+                                    m_pipeline->output()->scale(),
+                                    m_pipeline->output()->colorPowerTradeoff());
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
@@ -103,7 +109,7 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         return false;
     }
     ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
-    if (m_pipeline->output()->needsChannelFactorFallback()) {
+    if (m_pipeline->output()->needsShadowBuffer()) {
         pipeline.addTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
         pipeline.addMultiplier(m_pipeline->output()->adaptedChannelFactors());
         pipeline.addInverseTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());

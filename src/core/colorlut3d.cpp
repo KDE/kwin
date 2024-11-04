@@ -37,6 +37,11 @@ size_t ColorLUT3D::zSize() const
     return m_zSize;
 }
 
+QVector3D ColorLUT3D::sample(const QVector3D &rgb)
+{
+    return m_transformation->transform(rgb);
+}
+
 QVector3D ColorLUT3D::sample(size_t x, size_t y, size_t z)
 {
     return m_transformation->transform(QVector3D(x / double(m_xSize - 1), y / double(m_ySize - 1), z / double(m_zSize - 1)));

@@ -7,11 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "colorlut3d.h"
 #include "colorspace.h"
+#include "colortransformation.h"
 #include "kwin_export.h"
 
 namespace KWin
 {
+
+class IccProfile;
 
 class KWIN_EXPORT ValueRange
 {
@@ -75,7 +79,6 @@ public:
     double m_inputReferenceLuminance;
     double m_maxInputLuminance;
     double m_maxOutputLuminance;
-private:
     double m_inputRange;
     double m_referenceDimming;
     double m_outputReferenceLuminance;
@@ -85,7 +88,7 @@ class KWIN_EXPORT ColorOp
 {
 public:
     ValueRange input;
-    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper> operation;
+    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper, std::shared_ptr<ColorTransformation>, std::shared_ptr<ColorLUT3D>> operation;
     ValueRange output;
 
     bool operator==(const ColorOp &) const = default;
@@ -120,6 +123,8 @@ public:
     void addMatrix(const QMatrix4x4 &mat, const ValueRange &output);
     void addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance);
     void add(const ColorOp &op);
+    void add(const ColorPipeline &pipeline);
+    void add1DLUT(const std::shared_ptr<ColorTransformation> &transform);
 
     ValueRange inputRange;
     std::vector<ColorOp> ops;

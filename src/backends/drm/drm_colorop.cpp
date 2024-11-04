@@ -127,7 +127,7 @@ DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32
 bool DrmLutColorOp::canBeUsedFor(const ColorOp &op)
 {
     if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
-        || std::holds_alternative<ColorTonemapper>(op.operation)) {
+        || std::holds_alternative<ColorTonemapper>(op.operation) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op.operation)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
         return m_maxSize >= 1024;
@@ -152,6 +152,8 @@ void DrmLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> op
                 output *= mult->factors;
             } else if (auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
                 output.setX(tonemap->map(output.x()));
+            } else if (auto lut1d = std::get_if<std::shared_ptr<ColorTransformation>>(&op.operation)) {
+                output = (*lut1d)->transform(output);
             } else {
                 Q_UNREACHABLE();
             }

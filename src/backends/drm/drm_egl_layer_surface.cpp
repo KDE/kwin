@@ -74,7 +74,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, double scale)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -124,13 +124,11 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     m_surface->compositingTimeQuery = std::make_unique<GLRenderTimeQuery>(m_surface->context);
     m_surface->compositingTimeQuery->begin();
     if (m_surface->needsShadowBuffer) {
-        if (!m_surface->shadowSwapchain || m_surface->shadowSwapchain->size() != m_surface->gbmSwapchain->size()) {
+        if (!m_surface->shadowSwapchain || m_surface->shadowSwapchain->size() != m_surface->gbmSwapchain->size() || m_surface->tradeoff != tradeoff) {
             const auto formats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
-            const auto createSwapchain = [&formats, this](bool requireAlpha) {
+            const auto createSwapchain = [&formats, this, tradeoff](bool requireAlpha) {
                 std::array options = {10, 16, 8};
-                if (m_surface->iccProfile) {
-                    // assumption: if you've got an ICC profile set, you care more about color than about power usage
-                    // TODO add a setting for this sort of preference instead
+                if (tradeoff == Output::ColorPowerTradeoff::PreferAccuracy) {
                     std::swap(options[0], options[1]);
                 }
                 for (const uint32_t bitsPerColor : options) {
@@ -161,6 +159,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             if (!m_surface->shadowSwapchain && m_formatOption != FormatOption::RequireAlpha) {
                 createSwapchain(false);
             }
+            m_surface->tradeoff = tradeoff;
         }
         if (!m_surface->shadowSwapchain) {
             qCCritical(KWIN_DRM) << "Failed to create shadow swapchain!";

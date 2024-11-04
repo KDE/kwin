@@ -5,6 +5,7 @@
 */
 #pragma once
 
+#include "core/colorpipeline.h"
 #include "core/colorspace.h"
 #include "kwin_export.h"
 
@@ -24,28 +25,19 @@ class ColorLUT3D;
 class KWIN_EXPORT IccProfile
 {
 public:
-    struct BToATagData
-    {
-        std::unique_ptr<ColorTransformation> B;
-        std::optional<QMatrix4x4> matrix;
-        std::unique_ptr<ColorTransformation> M;
-        std::unique_ptr<ColorLUT3D> CLut;
-        std::unique_ptr<ColorTransformation> A;
-    };
-
-    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness);
-    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness);
+    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness);
     ~IccProfile();
 
     /**
      * the BToA tag describes a transformation from XYZ with D50 whitepoint
      * to the display color space. May be nullptr!
      */
-    const BToATagData *BtToATag() const;
+    const ColorPipeline *BToATag(RenderingIntent intent) const;
     /**
-     * Contains the inverse of the TRC tags. May be nullptr!
+     * NOTE that this inverse transfer function is an estimation
+     * and not necessarily exact!
      */
-    std::shared_ptr<ColorTransformation> inverseEOTF() const;
+    std::shared_ptr<ColorTransformation> inverseTransferFunction() const;
     /**
      * The VCGT is a non-standard tag that needs to be applied before
      * pixels are sent to the display. May be nullptr!
@@ -56,11 +48,13 @@ public:
     std::optional<double> maxBrightness() const;
 
     static std::unique_ptr<IccProfile> load(const QString &path);
+    static const ColorDescription s_connectionSpace;
 
 private:
     cmsHPROFILE const m_handle;
     const Colorimetry m_colorimetry;
-    const std::optional<BToATagData> m_bToATag;
+    const std::optional<ColorPipeline> m_bToA0Tag;
+    const std::optional<ColorPipeline> m_bToA1Tag;
     const std::shared_ptr<ColorTransformation> m_inverseEOTF;
     const std::shared_ptr<ColorTransformation> m_vcgt;
     const std::optional<double> m_minBrightness;

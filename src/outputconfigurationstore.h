@@ -83,6 +83,7 @@ private:
         std::optional<double> sdrGamutWideness;
         std::optional<double> brightness;
         std::optional<bool> allowSdrSoftwareBrightness;
+        std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
     };
     struct SetupState
     {

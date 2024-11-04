@@ -236,6 +236,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .sdrGamutWideness = changeSet->sdrGamutWideness.value_or(output->sdrGamutWideness()),
                 .brightness = changeSet->brightness.value_or(output->brightnessSetting()),
                 .allowSdrSoftwareBrightness = changeSet->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness()),
+                .colorPowerTradeoff = changeSet->colorPowerTradeoff.value_or(output->colorPowerTradeoff()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -279,6 +280,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .sdrGamutWideness = output->sdrGamutWideness(),
                 .brightness = output->brightnessSetting(),
                 .allowSdrSoftwareBrightness = output->allowSdrSoftwareBrightness(),
+                .colorPowerTradeoff = output->colorPowerTradeoff(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -335,6 +337,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .colorProfileSource = state.colorProfileSource,
             .brightness = state.brightness,
             .allowSdrSoftwareBrightness = state.allowSdrSoftwareBrightness,
+            .colorPowerTradeoff = state.colorPowerTradeoff,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -460,6 +463,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
             .brightness = existingData.brightness.value_or(1.0),
             .allowSdrSoftwareBrightness = existingData.allowSdrSoftwareBrightness.value_or(output->brightnessDevice() == nullptr),
+            .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(Output::ColorPowerTradeoff::PreferEfficiency),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -788,6 +792,14 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("allowSdrSoftwareBrightness"); it != data.end() && it->isBool()) {
             state.allowSdrSoftwareBrightness = it->toBool();
         }
+        if (const auto it = data.find("colorPowerTradeoff"); it != data.end()) {
+            const auto str = it->toString();
+            if (str == "PreferEfficiency") {
+                state.colorPowerTradeoff = Output::ColorPowerTradeoff::PreferEfficiency;
+            } else if (str == "PreferAccuracy") {
+                state.colorPowerTradeoff = Output::ColorPowerTradeoff::PreferAccuracy;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1022,6 +1034,16 @@ void OutputConfigurationStore::save()
         }
         if (output.allowSdrSoftwareBrightness) {
             o["allowSdrSoftwareBrightness"] = *output.allowSdrSoftwareBrightness;
+        }
+        if (output.colorPowerTradeoff) {
+            switch (*output.colorPowerTradeoff) {
+            case Output::ColorPowerTradeoff::PreferEfficiency:
+                o["colorPowerTradeoff"] = "PreferEfficiency";
+                break;
+            case Output::ColorPowerTradeoff::PreferAccuracy:
+                o["colorPowerTradeoff"] = "PreferAccuracy";
+                break;
+            }
         }
         outputsData.append(o);
     }
