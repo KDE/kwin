@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 02:31+0000\n"
+"POT-Creation-Date: 2024-11-04 02:27+0000\n"
 "PO-Revision-Date: 2024-08-25 23:01+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1221,22 +1221,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Mazgo pavadinimas: %1"
 
-#: input.cpp:2122
+#: input.cpp:2126
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Perkelti planšetę į kitą išvedimą"
 
-#: input.cpp:2201
+#: input.cpp:2205
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Planšetė perkelta į %1"
 
-#: input.cpp:2201
+#: input.cpp:2205
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Planšetės pakeitė išvedimus"
 
-#: input.cpp:3322
+#: input.cpp:3326
 #, kde-format
 msgid "Touchpad"
 msgstr "Jutiklinis kilimėlis"

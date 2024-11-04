@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-29 02:31+0000\n"
+"POT-Creation-Date: 2024-11-04 02:27+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -1230,22 +1230,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "tên-máy"
 
-#: input.cpp:2122
+#: input.cpp:2126
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Chuyển máy tính bảng sang đầu ra tiếp theo"
 
-#: input.cpp:2201
+#: input.cpp:2205
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Máy tính bảng đã chuyển sang %1"
 
-#: input.cpp:2201
+#: input.cpp:2205
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Máy tính bảng đã đổi đầu ra"
 
-#: input.cpp:3322
+#: input.cpp:3326
 #, kde-format
 msgid "Touchpad"
 msgstr "Bàn cảm ứng"
