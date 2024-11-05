@@ -549,7 +549,7 @@ double TransferFunction::defaultMaxLuminanceFor(Type type)
     case Type::gamma22:
         return 80;
     case Type::linear:
-        return 1;
+        return 80;
     case Type::PerceptualQuantizer:
         return 10'000;
     }
