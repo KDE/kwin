@@ -40,12 +40,9 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
             this, &WaylandWindow::updateShadow);
     connect(this, &WaylandWindow::frameGeometryChanged,
             this, &WaylandWindow::updateClientOutputs);
-    connect(this, &WaylandWindow::desktopFileNameChanged,
-            this, &WaylandWindow::updateIcon);
     connect(workspace(), &Workspace::outputsChanged, this, &WaylandWindow::updateClientOutputs);
 
     updateResourceName();
-    updateIcon();
     updateShadow();
 }
 
@@ -159,17 +156,6 @@ void WaylandWindow::updateClientOutputs()
 
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(rect),
                           waylandServer()->display()->largestIntersectingOutput(rect));
-}
-
-void WaylandWindow::updateIcon()
-{
-    const QString waylandIconName = QStringLiteral("wayland");
-    const QString dfIconName = iconFromDesktopFile();
-    const QString iconName = dfIconName.isEmpty() ? waylandIconName : dfIconName;
-    if (iconName == icon().name()) {
-        return;
-    }
-    setIcon(QIcon::fromTheme(iconName));
 }
 
 void WaylandWindow::updateResourceName()

@@ -45,7 +45,6 @@ protected:
     void markAsMapped();
 
 private:
-    void updateIcon();
     void updateResourceName();
 
     QString m_captionNormal;

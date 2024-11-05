@@ -215,6 +215,7 @@ private:
     void configureServerDecoration(DecorationMode decorationMode);
     void clearDecoration();
     void updateCapabilities();
+    void updateIcon();
 
     QPointer<AppMenuInterface> m_appMenuInterface;
     QPointer<ServerSideDecorationPaletteInterface> m_paletteInterface;

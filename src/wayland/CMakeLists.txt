@@ -308,6 +308,12 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME xdg-system-bell-v1
 )
 
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-toplevel-icon/xdg-toplevel-icon-v1.xml
+    BASENAME xdg-toplevel-icon-v1
+)
+
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
@@ -391,6 +397,7 @@ target_sources(kwin PRIVATE
     xdgshell.cpp
     xdgsystembell_v1.cpp
     xdgtopleveldrag_v1.cpp
+    xdgtoplevelicon_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
     xx_colormanagement_v4.cpp
@@ -470,6 +477,7 @@ install(FILES
     xdgoutput_v1.h
     xdgshell.h
     xdgsystembell_v1.h
+    xdgtoplevelicon_v1.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
     xx_colormanagement_v4.h
