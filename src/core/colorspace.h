@@ -255,3 +255,5 @@ private:
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::XYZ &xyz);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::Colorimetry &color);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorDescription &color);

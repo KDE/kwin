@@ -694,3 +694,15 @@ QDebug operator<<(QDebug debug, const KWin::XYZ &xyz)
     debug << "XYZ(" << xyz.X << xyz.Y << xyz.Z << ")";
     return debug;
 }
+
+QDebug operator<<(QDebug debug, const KWin::Colorimetry &color)
+{
+    debug << "Colorimetry(" << color.red() << color.green() << color.blue() << color.white() << ")";
+    return debug;
+}
+
+QDebug operator<<(QDebug debug, const KWin::ColorDescription &color)
+{
+    debug << "ColorDescription(" << color.containerColorimetry() << color.transferFunction() << "ref" << color.referenceLuminance() << "min" << color.minLuminance() << "max. avg" << color.maxAverageLuminance() << "max" << color.maxHdrLuminance() << ")";
+    return debug;
+}
