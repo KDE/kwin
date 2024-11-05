@@ -10,7 +10,7 @@
         "Description[ca]": "Seleccioneu les tecles que seran disponibles globalment a les aplicacions X11 antigues",
         "Description[cs]": "Vyberte, které klávesy budou globálně dostupné pro staré aplikace X11",
         "Description[da]": "Vælg hvilke taster, der vil være globalt tilgængelige for ældre X11-apps",
-        "Description[de]": "Wählen Sie die klassischen X11-Anwendungen zur Verfügung stehenden Tasten",
+        "Description[de]": "Wählen Sie, welche Tasten für alte X11-Anwendungen global zur Verfügung stehen",
         "Description[en_GB]": "Select which keys will be globally available to legacy X11 apps",
         "Description[eo]": "Elektu kiuj ŝlosiloj estos ĉie haveblaj al heredaj X11-aplikoj",
         "Description[es]": "Seleccionar las teclas que estarán disponibles globalmente para las aplicaciones X11 heredadas",
