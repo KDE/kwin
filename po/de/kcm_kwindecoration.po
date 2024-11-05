@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2024 R. Arp <rarp@7bps.de>
 # Thomas Diehl <thd@kde.org>, 2002, 2003, 2004.
 # Stephan Johach <hunsum@gmx.de>, 2005, 2006.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2006, 2007, 2008, 2009.
@@ -10,15 +11,15 @@ msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2023-06-15 13:56+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2024-11-04 13:45+0100\n"
+"Last-Translator: R. Arp <rarp@7bps.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.07.70\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -119,6 +120,9 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Der Name des Designs für Fensterdekoration, das Sie für KWin einrichten "
+"möchten. Bei Angabe eines vollständigen Pfads wird versucht, ein Design in "
+"diesem Ordner zu finden und es anzuwenden."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
@@ -134,6 +138,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"%1 wurde als KWin-Aurorae-Design „%2“ erkannt. Es wird versucht, dieses als "
+"das aktuelle Design einzurichten."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -141,12 +147,16 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Im angegebenen Dateipfad kann kein Design gefunden werden, daher wird der "
+"Vorgang abgebrochen."
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
+"Das angeforderte Design „%1“ ist bereits als Design für Fensterdekoration "
+"eingerichtet."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
@@ -161,6 +171,9 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Speichern der Einstellungen für das Design fehlgeschlagen – die Ursache ist "
+"unbekannt, aber es handelt sich um einen nicht behebbaren Fehler. Womöglich "
+"kann ein weiterer Versuch Abhilfe schaffen."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -213,7 +226,7 @@ msgstr "Titelleistenknöpfe"
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "Rahmenbreite des Fensters:"
+msgstr "Größe der Fensterumrandung:"
 
 #: package/contents/ui/main.qml:110
 #, kde-format
@@ -259,7 +272,7 @@ msgstr "Keine Seitenumrandungen"
 #: utils.cpp:27
 #, kde-format
 msgid "Tiny"
-msgstr "Sehr klein"
+msgstr "Sehr schmal"
 
 #: utils.cpp:28
 #, kde-format
@@ -284,7 +297,7 @@ msgstr "Riesig"
 #: utils.cpp:32
 #, kde-format
 msgid "Very Huge"
-msgstr "Noch riesiger"
+msgstr "Gigantisch"
 
 #: utils.cpp:33
 #, kde-format
