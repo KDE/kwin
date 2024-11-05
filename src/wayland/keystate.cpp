@@ -40,18 +40,23 @@ public:
                 send_stateChanged(resource->handle, k, state_locked);
             } else if (input()->keyboard()->xkb()->latchedModifiers().testFlag(mod)) {
                 send_stateChanged(resource->handle, k, state_latched);
-            } else if (input()->keyboard()->xkb()->depressedModifiers().testFlag(mod)) {
+            } else if (input()->keyboard()->xkb()->depressedModifiers().testFlag(mod) && resource->version() >= ORG_KDE_KWIN_KEYSTATE_STATE_PRESSED_SINCE_VERSION) {
                 send_stateChanged(resource->handle, k, state_pressed);
             } else {
                 send_stateChanged(resource->handle, k, state_unlocked);
             }
         };
 
-        sendModifier(key_alt, Xkb::Mod1);
-        sendModifier(key_shift, Xkb::Shift);
-        sendModifier(key_control, Xkb::Control);
-        sendModifier(key_meta, Xkb::Mod4);
-        sendModifier(key_altgr, Xkb::Mod5);
+        static constexpr int modifierSinceVersion = ORG_KDE_KWIN_KEYSTATE_KEY_ALT_SINCE_VERSION;
+
+        if (resource->version() >= modifierSinceVersion) {
+            sendModifier(key_alt, Xkb::Mod1);
+            sendModifier(key_shift, Xkb::Shift);
+            sendModifier(key_control, Xkb::Control);
+            sendModifier(key_meta, Xkb::Mod4);
+            sendModifier(key_altgr, Xkb::Mod5);
+        }
+
         sendModifier(key_capslock, Xkb::Lock);
         sendModifier(key_numlock, Xkb::Num);
     }
