@@ -191,12 +191,10 @@ Window *TabBoxHandlerImpl::clientToAddToList(Window *client) const
         Window *modal = client->findModal();
         if (modal == nullptr || modal == client) {
             ret = client;
+        } else if (!clientList().contains(modal)) {
+            ret = modal;
         } else {
-            if (clientList().contains(modal)) {
-                ret = modal;
-            } else {
-                // nothing
-            }
+            // nothing
         }
     }
     return ret;
