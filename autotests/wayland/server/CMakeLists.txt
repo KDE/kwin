@@ -52,7 +52,7 @@ add_executable(testDataControlInterface test_datacontrol_interface.cpp ${DATACON
 qt6_generate_wayland_protocol_client_sources(testDataControlInterface
     ${private_code_option}
     FILES
-        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-data-control-unstable-v1.xml
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/ext-data-control-v1.xml
 )
 target_sources(testDataControlInterface PRIVATE test_datacontrol_interface.cpp ${DATACONTROL_SRCS})
 target_link_libraries( testDataControlInterface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)

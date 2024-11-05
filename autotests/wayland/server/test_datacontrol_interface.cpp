@@ -25,21 +25,21 @@
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 
-#include "qwayland-wlr-data-control-unstable-v1.h"
+#include "qwayland-ext-data-control-v1.h"
 
 using namespace KWin;
 
 // Faux-client API for tests
 
-Q_DECLARE_OPAQUE_POINTER(::zwlr_data_control_offer_v1 *)
-Q_DECLARE_METATYPE(::zwlr_data_control_offer_v1 *)
+Q_DECLARE_OPAQUE_POINTER(::ext_data_control_offer_v1 *)
+Q_DECLARE_METATYPE(::ext_data_control_offer_v1 *)
 
-class DataControlDeviceManager : public QObject, public QtWayland::zwlr_data_control_manager_v1
+class DataControlDeviceManager : public QObject, public QtWayland::ext_data_control_manager_v1
 {
     Q_OBJECT
 };
 
-class DataControlOffer : public QObject, public QtWayland::zwlr_data_control_offer_v1
+class DataControlOffer : public QObject, public QtWayland::ext_data_control_offer_v1
 {
     Q_OBJECT
 public:
@@ -53,7 +53,7 @@ public:
     }
 
 protected:
-    virtual void zwlr_data_control_offer_v1_offer(const QString &mime_type) override
+    virtual void ext_data_control_offer_v1_offer(const QString &mime_type) override
     {
         m_receivedOffers << mime_type;
     }
@@ -62,7 +62,7 @@ private:
     QStringList m_receivedOffers;
 };
 
-class DataControlDevice : public QObject, public QtWayland::zwlr_data_control_device_v1
+class DataControlDevice : public QObject, public QtWayland::ext_data_control_device_v1
 {
     Q_OBJECT
 public:
@@ -72,29 +72,29 @@ public:
     }
 Q_SIGNALS:
     void dataControlOffer(DataControlOffer *offer); // our event receives a new ID, so we make a new object
-    void selection(struct ::zwlr_data_control_offer_v1 *id);
-    void primary_selection(struct ::zwlr_data_control_offer_v1 *id);
+    void selection(struct ::ext_data_control_offer_v1 *id);
+    void primary_selection(struct ::ext_data_control_offer_v1 *id);
 
 protected:
-    void zwlr_data_control_device_v1_data_offer(struct ::zwlr_data_control_offer_v1 *id) override
+    void ext_data_control_device_v1_data_offer(struct ::ext_data_control_offer_v1 *id) override
     {
         auto offer = new DataControlOffer;
         offer->init(id);
         Q_EMIT dataControlOffer(offer);
     }
 
-    void zwlr_data_control_device_v1_selection(struct ::zwlr_data_control_offer_v1 *id) override
+    void ext_data_control_device_v1_selection(struct ::ext_data_control_offer_v1 *id) override
     {
         Q_EMIT selection(id);
     }
 
-    void zwlr_data_control_device_v1_primary_selection(struct ::zwlr_data_control_offer_v1 *id) override
+    void ext_data_control_device_v1_primary_selection(struct ::ext_data_control_offer_v1 *id) override
     {
         Q_EMIT primary_selection(id);
     }
 };
 
-class DataControlSource : public QObject, public QtWayland::zwlr_data_control_source_v1
+class DataControlSource : public QObject, public QtWayland::ext_data_control_source_v1
 {
     Q_OBJECT
 public:
@@ -194,7 +194,7 @@ void DataControlInterfaceTest::init()
 
     KWayland::Client::Registry registry;
     connect(&registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, &registry](const QByteArray &interface, quint32 name, quint32 version) {
-        if (interface == "zwlr_data_control_manager_v1") {
+        if (interface == "ext_data_control_manager_v1") {
             m_dataControlDeviceManager = new DataControlDeviceManager;
             m_dataControlDeviceManager->init(registry.registry(), name, version);
         }
@@ -264,7 +264,7 @@ void DataControlInterfaceTest::testCopyToControl()
 
     QCOMPARE(newOfferSpy.count(), 1);
     std::unique_ptr<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
-    QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
+    QCOMPARE(selectionSpy.first().first().value<struct ::ext_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
     QCOMPARE(offer->receivedOffers()[0], "text/test1");
@@ -290,7 +290,7 @@ void DataControlInterfaceTest::testCopyToControlPrimarySelection()
 
     QCOMPARE(newOfferSpy.count(), 1);
     std::unique_ptr<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
-    QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
+    QCOMPARE(selectionSpy.first().first().value<struct ::ext_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
     QCOMPARE(offer->receivedOffers()[0], "text/test1");

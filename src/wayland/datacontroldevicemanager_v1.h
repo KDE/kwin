@@ -21,7 +21,7 @@ class DataControlDeviceV1Interface;
  * The DataControlDeviceManagerV1Interface provides a way for privileged clients such as clipboard
  * managers to manage the current selection.
  *
- * DataControlDeviceManagerV1Interface corresponds to the Wayland interface @c zwlr_data_control_manager_v1.
+ * DataControlDeviceManagerV1Interface corresponds to the Wayland interface @c ext_data_control_manager_v1.
  */
 class KWIN_EXPORT DataControlDeviceManagerV1Interface : public QObject
 {
