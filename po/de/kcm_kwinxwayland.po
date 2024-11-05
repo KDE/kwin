@@ -4,6 +4,7 @@
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 # Frederik Schwarzer <schwarzer@kde.org>, 2023.
 # SPDX-FileCopyrightText: 2023 Johannes Obermayr <johannesobermayr@gmx.de>
+# SPDX-FileCopyrightText: 2024 Flori G <renner03@protonmail.com>
 #
 # Automatically generated, 2022.
 msgid ""
@@ -11,24 +12,18 @@ msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-22 00:42+0000\n"
-"PO-Revision-Date: 2023-12-21 17:47+0100\n"
-"Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
+"PO-Revision-Date: 2024-10-27 20:09+0100\n"
+"Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #: ui/main.qml:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can choose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
 "apps for certain features, such as handling global keyboard shortcuts. This "
@@ -37,19 +32,19 @@ msgid ""
 "need to use such apps, you can choose your preferred balance of security and "
 "functionality here."
 msgstr ""
-"Klassische X11-Anwendungen benötigen Zugriff auf Tastendrücke, die in "
-"anderen Anwendungen getippt werden. um Funktionen zu aktivieren, die über "
-"globale Kurzbefehle ausgelöst werden. Daher ist es standardmäßig aus "
-"Sicherheitsgründen ausgeschaltet. Wenn Sie solche Anwendungen verwenden, "
-"können Sie hier Ihren eigenen Kompromiss aus Sicherheit und Funktionalität "
-"wählen."
+"Manche alten X11-Anwendungen benötigen für bestimmte Funktionen, wie das "
+"Aulösen globaler Tastaturkurzbefehle, Zugriff auf Tastendrücke, die in "
+"anderen Anwendungen getippt werden. Dies ist standardmäßig erlaubt. Bei "
+"anderen Funktionen jedoch, könnte es erforderlich sein alle Tasten lesen zu "
+"können, dies ist aus Sicherheitsgründen standardmäßig ausgeschaltet. Wenn "
+"Sie solche Anwendungen verwenden müssen, können Sie hier Ihren bevorzugten "
+"Kompromiss aus Sicherheit und Funktionalität auswählen."
 
 #: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
-"Klassischen X11-Anwendungen Zugriff auf Tastendrücke in allen Anwendungen "
-"gewähren:"
+"Alten X11-Anwendungen Zugriff auf Tastendrücke in allen Anwendungen gewähren:"
 
 #: ui/main.qml:49
 #, kde-format
@@ -57,10 +52,9 @@ msgid "Never"
 msgstr "Niemals"
 
 #: ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt, and Shift keys"
+#, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr "Nur die Tasten Meta, Strg, Alt und Umschalt"
+msgstr "Nur die Meta-, Steuerung-, Alt- und Umschalttasten"
 
 #: ui/main.qml:71
 #, kde-format
@@ -77,7 +71,7 @@ msgstr "Immer"
 #: ui/main.qml:98
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Maustasten auch erfassen"
 
 #: ui/main.qml:114
 #, kde-format
