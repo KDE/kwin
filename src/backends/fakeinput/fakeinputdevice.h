@@ -25,9 +25,6 @@ public:
     bool isEnabled() const override;
     void setEnabled(bool enabled) override;
 
-    LEDs leds() const override;
-    void setLeds(LEDs leds) override;
-
     bool isKeyboard() const override;
     bool isPointer() const override;
     bool isTouchpad() const override;

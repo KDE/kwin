@@ -56,15 +56,6 @@ QString InputDevice::name() const
     return QStringLiteral("Button rebinding device");
 }
 
-KWin::LEDs InputDevice::leds() const
-{
-    return {};
-}
-
-void InputDevice::setLeds(KWin::LEDs leds)
-{
-}
-
 void InputDevice::setEnabled(bool enabled)
 {
 }

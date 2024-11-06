@@ -40,15 +40,6 @@ void FakeInputDevice::setEnabled(bool enabled)
 {
 }
 
-LEDs FakeInputDevice::leds() const
-{
-    return LEDs();
-}
-
-void FakeInputDevice::setLeds(LEDs leds)
-{
-}
-
 bool FakeInputDevice::isKeyboard() const
 {
     return true;

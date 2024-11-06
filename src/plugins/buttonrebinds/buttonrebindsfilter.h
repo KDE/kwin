@@ -25,9 +25,6 @@ class InputDevice : public KWin::InputDevice
     bool isEnabled() const override;
     void setEnabled(bool enabled) override;
 
-    void setLeds(KWin::LEDs leds) override;
-    KWin::LEDs leds() const override;
-
     bool isKeyboard() const override;
     bool isPointer() const override;
     bool isTouchpad() const override;

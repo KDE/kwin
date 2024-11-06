@@ -175,15 +175,6 @@ public:
     {
     }
 
-    LEDs leds() const override
-    {
-        return LEDs();
-    }
-
-    void setLeds(LEDs leds) override
-    {
-    }
-
     bool isKeyboard() const override
     {
         return false;

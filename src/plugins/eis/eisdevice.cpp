@@ -68,15 +68,6 @@ void EisDevice::setEnabled(bool enabled)
     enabled ? eis_device_resume(m_device) : eis_device_pause(m_device);
 }
 
-LEDs EisDevice::leds() const
-{
-    return LEDs();
-}
-
-void EisDevice::setLeds(LEDs leds)
-{
-}
-
 bool EisDevice::isKeyboard() const
 {
     return eis_device_has_capability(m_device, EIS_DEVICE_CAP_KEYBOARD);

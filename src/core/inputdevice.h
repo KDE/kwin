@@ -100,8 +100,8 @@ public:
     virtual bool isEnabled() const = 0;
     virtual void setEnabled(bool enabled) = 0;
 
-    virtual LEDs leds() const = 0;
-    virtual void setLeds(LEDs leds) = 0;
+    virtual LEDs leds() const;
+    virtual void setLeds(LEDs leds);
 
     virtual bool isKeyboard() const = 0;
     virtual bool isPointer() const = 0;

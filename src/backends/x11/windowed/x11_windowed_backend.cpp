@@ -75,15 +75,6 @@ void X11WindowedInputDevice::setEnabled(bool enabled)
 {
 }
 
-LEDs X11WindowedInputDevice::leds() const
-{
-    return LEDs();
-}
-
-void X11WindowedInputDevice::setLeds(LEDs leds)
-{
-}
-
 bool X11WindowedInputDevice::isKeyboard() const
 {
     return m_keyboard;

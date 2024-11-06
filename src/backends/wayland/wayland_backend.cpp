@@ -229,15 +229,6 @@ void WaylandInputDevice::setEnabled(bool enabled)
 {
 }
 
-LEDs WaylandInputDevice::leds() const
-{
-    return LEDs();
-}
-
-void WaylandInputDevice::setLeds(LEDs leds)
-{
-}
-
 bool WaylandInputDevice::isKeyboard() const
 {
     return m_keyboard != nullptr;

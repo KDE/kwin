@@ -1658,15 +1658,6 @@ void VirtualInputDevice::setEnabled(bool enabled)
 {
 }
 
-LEDs VirtualInputDevice::leds() const
-{
-    return LEDs();
-}
-
-void VirtualInputDevice::setLeds(LEDs leds)
-{
-}
-
 bool VirtualInputDevice::isKeyboard() const
 {
     return m_keyboard;

@@ -39,6 +39,15 @@ void *InputDevice::group() const
     return nullptr;
 }
 
+LEDs InputDevice::leds() const
+{
+    return LEDs();
+}
+
+void InputDevice::setLeds(LEDs leds)
+{
+}
+
 QString InputDevice::outputName() const
 {
     return {};
