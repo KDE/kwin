@@ -19,7 +19,7 @@ namespace KWin
 {
 class KeyEvent;
 class MouseEvent;
-class WheelEvent;
+struct WheelEvent;
 struct SwitchEvent;
 class TabletEvent;
 struct TabletToolButtonEvent;

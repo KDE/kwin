@@ -61,22 +61,22 @@ bool EisInputCaptureFilter::wheelEvent(WheelEvent *event)
         return false;
     }
     if (const auto pointer = m_manager->activeCapture()->pointer()) {
-        if (event->delta()) {
-            if (event->deltaV120()) {
-                if (event->orientation() == Qt::Horizontal) {
-                    eis_device_scroll_discrete(pointer, event->deltaV120(), 0);
+        if (event->delta) {
+            if (event->deltaV120) {
+                if (event->orientation == Qt::Horizontal) {
+                    eis_device_scroll_discrete(pointer, event->deltaV120, 0);
                 } else {
-                    eis_device_scroll_discrete(pointer, 0, event->deltaV120());
+                    eis_device_scroll_discrete(pointer, 0, event->deltaV120);
                 }
             } else {
-                if (event->orientation() == Qt::Horizontal) {
-                    eis_device_scroll_delta(pointer, event->delta(), 0);
+                if (event->orientation == Qt::Horizontal) {
+                    eis_device_scroll_delta(pointer, event->delta, 0);
                 } else {
-                    eis_device_scroll_delta(pointer, 0, event->delta());
+                    eis_device_scroll_delta(pointer, 0, event->delta);
                 }
             }
         } else {
-            if (event->orientation() == Qt::Horizontal) {
+            if (event->orientation == Qt::Horizontal) {
                 eis_device_scroll_stop(pointer, true, false);
             } else {
                 eis_device_scroll_stop(pointer, false, true);

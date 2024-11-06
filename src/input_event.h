@@ -81,59 +81,19 @@ private:
     bool m_warp = false;
 };
 
-// TODO: Don't derive from QWheelEvent, this event is quite domain specific.
-class WheelEvent : public QWheelEvent
+struct WheelEvent
 {
-public:
-    explicit WheelEvent(const QPointF &pos, qreal delta, qint32 deltaV120, Qt::Orientation orientation,
-                        Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputDevice::PointerAxisSource source,
-                        bool inverted, std::chrono::microseconds timestamp, InputDevice *device);
-
-    Qt::Orientation orientation() const
-    {
-        return m_orientation;
-    }
-
-    qreal delta() const
-    {
-        return m_delta;
-    }
-
-    qint32 deltaV120() const
-    {
-        return m_deltaV120;
-    }
-
-    InputDevice::PointerAxisSource axisSource() const
-    {
-        return m_source;
-    }
-
-    InputDevice *device() const
-    {
-        return m_device;
-    }
-
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const
-    {
-        return m_modifiersRelevantForShortcuts;
-    }
-
-    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods)
-    {
-        m_modifiersRelevantForShortcuts = mods;
-    }
-
-    std::chrono::microseconds timestamp() const;
-
-private:
-    InputDevice *m_device;
-    Qt::Orientation m_orientation;
-    qreal m_delta;
-    qint32 m_deltaV120;
-    InputDevice::PointerAxisSource m_source;
-    Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
-    const std::chrono::microseconds m_timestamp;
+    InputDevice *device;
+    QPointF position;
+    qreal delta;
+    qint32 deltaV120;
+    Qt::Orientation orientation;
+    InputDevice::PointerAxisSource source;
+    Qt::MouseButtons buttons;
+    Qt::KeyboardModifiers modifiers;
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts;
+    bool inverted;
+    std::chrono::microseconds timestamp;
 };
 
 class KWIN_EXPORT KeyEvent : public QKeyEvent

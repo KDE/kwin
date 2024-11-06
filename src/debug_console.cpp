@@ -231,14 +231,12 @@ void DebugConsoleFilter::wheelEvent(WheelEvent *event)
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A mouse pointer axis (wheel) event", "Pointer Axis")));
-    text.append(deviceRow(event->device()));
-    text.append(timestampRow(event->timestamp()));
-    const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
+    text.append(deviceRow(event->device));
+    text.append(timestampRow(event->timestamp));
     text.append(tableRow(i18nc("The orientation of a pointer axis event", "Orientation"),
-                         orientation == Qt::Horizontal ? i18nc("An orientation of a pointer axis event", "Horizontal")
-                                                       : i18nc("An orientation of a pointer axis event", "Vertical")));
-    text.append(tableRow(i18nc("The angle delta of a pointer axis event", "Delta"),
-                         orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y()));
+                         event->orientation == Qt::Horizontal ? i18nc("An orientation of a pointer axis event", "Horizontal")
+                                                              : i18nc("An orientation of a pointer axis event", "Vertical")));
+    text.append(tableRow(i18nc("The angle delta of a pointer axis event", "Delta"), event->delta));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);

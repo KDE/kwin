@@ -25,25 +25,6 @@ MouseEvent::MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton bu
     setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
 }
 
-WheelEvent::WheelEvent(const QPointF &pos, qreal delta, qint32 deltaV120, Qt::Orientation orientation,
-                       Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputDevice::PointerAxisSource source,
-                       bool inverted, std::chrono::microseconds timestamp, InputDevice *device)
-    : QWheelEvent(pos, pos, QPoint(), (orientation == Qt::Horizontal) ? QPoint(delta, 0) : QPoint(0, delta), buttons, modifiers, Qt::NoScrollPhase, inverted)
-    , m_device(device)
-    , m_orientation(orientation)
-    , m_delta(delta)
-    , m_deltaV120(deltaV120)
-    , m_source(source)
-    , m_timestamp(timestamp)
-{
-    setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
-}
-
-std::chrono::microseconds WheelEvent::timestamp() const
-{
-    return m_timestamp;
-}
-
 KeyEvent::KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
                    const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device)
     : QKeyEvent(type, key, modifiers, code, keysym, 0, text, autorepeat)

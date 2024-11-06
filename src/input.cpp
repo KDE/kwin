@@ -348,11 +348,11 @@ public:
 
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
-            seat->setTimestamp(event->timestamp());
-            seat->notifyPointerAxis(event->orientation(), event->delta(),
-                                    event->deltaV120(),
-                                    kwinAxisSourceToKWaylandAxisSource(event->axisSource()),
-                                    event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
+            seat->setTimestamp(event->timestamp);
+            seat->notifyPointerAxis(event->orientation, event->delta,
+                                    event->deltaV120,
+                                    kwinAxisSourceToKWaylandAxisSource(event->source),
+                                    event->inverted ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         }
         return true;
     }
@@ -532,7 +532,16 @@ public:
         if (!effects) {
             return false;
         }
-        return effects->checkInputWindowEvent(event);
+        QWheelEvent wheelEvent(event->position,
+                               event->position,
+                               QPoint(),
+                               (event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta),
+                               event->buttons,
+                               event->modifiers,
+                               Qt::NoScrollPhase,
+                               event->inverted);
+        wheelEvent.setAccepted(false);
+        return effects->checkInputWindowEvent(&wheelEvent);
     }
     bool keyEvent(KeyEvent *event) override
     {
@@ -904,20 +913,25 @@ public:
     }
     bool wheelEvent(WheelEvent *event) override
     {
-        if (event->modifiers() == Qt::NoModifier) {
+        if (event->modifiers == Qt::NoModifier) {
             return false;
         }
         PointerAxisDirection direction = PointerAxisUp;
-        if (event->angleDelta().x() < 0) {
-            direction = PointerAxisRight;
-        } else if (event->angleDelta().x() > 0) {
-            direction = PointerAxisLeft;
-        } else if (event->angleDelta().y() < 0) {
-            direction = PointerAxisDown;
-        } else if (event->angleDelta().y() > 0) {
-            direction = PointerAxisUp;
+        if (event->orientation == Qt::Horizontal) {
+            if (event->delta < 0) {
+                direction = PointerAxisRight;
+            } else if (event->delta > 0) {
+                direction = PointerAxisLeft;
+            }
+        } else {
+            if (event->delta < 0) {
+                direction = PointerAxisDown;
+            } else if (event->delta > 0) {
+                direction = PointerAxisUp;
+            }
         }
-        return input()->shortcuts()->processAxis(event->modifiers(), direction);
+
+        return input()->shortcuts()->processAxis(event->modifiers, direction);
     }
     bool keyEvent(KeyEvent *event) override
     {
@@ -1179,13 +1193,16 @@ std::optional<bool> performWindowMouseAction(MouseEvent *event, Window *window)
  */
 std::optional<bool> performModifierWindowWheelAction(WheelEvent *event, Window *window)
 {
-    if (event->modifiersRelevantForGlobalShortcuts() != options->commandAllModifier()) {
+    if (event->orientation != Qt::Vertical) {
+        return std::nullopt;
+    }
+    if (event->modifiersRelevantForGlobalShortcuts != options->commandAllModifier()) {
         return std::nullopt;
     }
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    return !window->performMousePressCommand(options->operationWindowMouseWheel(-1 * event->angleDelta().y()), event->globalPosition());
+    return !window->performMousePressCommand(options->operationWindowMouseWheel(-1 * event->delta), event->position);
 }
 /**
  * @returns if a command was performed, whether or not the event should be filtered out
@@ -1196,7 +1213,7 @@ std::optional<bool> performWindowWheelAction(WheelEvent *event, Window *window)
     if (const auto globalAction = performModifierWindowWheelAction(event, window)) {
         return globalAction;
     } else if (const auto command = window->getWheelCommand(Qt::Vertical)) {
-        return !window->performMousePressCommand(*command, event->globalPosition());
+        return !window->performMousePressCommand(*command, event->position);
     } else {
         return std::nullopt;
     }
@@ -1243,17 +1260,17 @@ public:
             // the handle can be nullptr if the tooltip gets closed while focus updates are blocked
             return false;
         }
-        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp());
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
         QWindowSystemInterface::handleWheelEvent(internal,
                                                  timestamp.count(),
-                                                 event->globalPosition() - internal->position(),
-                                                 event->globalPosition(),
+                                                 event->position - internal->position(),
+                                                 event->position,
                                                  QPoint(),
-                                                 event->angleDelta() * -1,
-                                                 event->modifiers(),
+                                                 ((event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta)) * -1,
+                                                 event->modifiers,
                                                  Qt::NoScrollPhase,
                                                  Qt::MouseEventNotSynthesized,
-                                                 event->inverted());
+                                                 event->inverted);
         return true;
     }
 
@@ -1372,9 +1389,9 @@ class MouseWheelAccumulator
 public:
     float accumulate(WheelEvent *event)
     {
-        m_scrollV120 += event->deltaV120();
-        m_scrollDistance += event->delta();
-        if (std::abs(m_scrollV120) >= 120 || (!event->deltaV120() && std::abs(m_scrollDistance) >= 15)) {
+        m_scrollV120 += event->deltaV120;
+        m_scrollDistance += event->delta;
+        if (std::abs(m_scrollV120) >= 120 || (!event->deltaV120 && std::abs(m_scrollDistance) >= 15)) {
             float ret = m_scrollDistance;
             m_scrollV120 = 0;
             m_scrollDistance = 0;
@@ -1440,19 +1457,18 @@ public:
         if (!decoration) {
             return false;
         }
-        if (event->angleDelta().y() != 0) {
+        if (event->orientation == Qt::Vertical) {
             // client window action only on vertical scrolling
             const auto actionResult = performModifierWindowWheelAction(event, decoration->window());
             if (actionResult) {
                 return *actionResult;
             }
         }
-        const QPointF localPos = event->globalPosition() - decoration->window()->pos();
-        const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
-        QWheelEvent e(localPos, event->globalPosition(), QPoint(),
-                      event->angleDelta(),
-                      event->buttons(),
-                      event->modifiers(),
+        const QPointF localPos = event->position - decoration->window()->pos();
+        QWheelEvent e(localPos, event->position, QPoint(),
+                      (event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta),
+                      event->buttons,
+                      event->modifiers,
                       Qt::NoScrollPhase,
                       false);
         e.setAccepted(false);
@@ -1460,10 +1476,10 @@ public:
         if (e.isAccepted()) {
             return true;
         }
-        if ((orientation == Qt::Vertical) && decoration->window()->titlebarPositionUnderMouse()) {
+        if ((event->orientation == Qt::Vertical) && decoration->window()->titlebarPositionUnderMouse()) {
             if (float delta = m_accumulator.accumulate(event)) {
                 decoration->window()->performMousePressCommand(options->operationTitlebarMouseWheel(delta * -1),
-                                                               event->globalPosition());
+                                                               event->position);
             }
         }
         return true;
@@ -1640,7 +1656,16 @@ public:
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        return workspace()->tabbox()->handleWheelEvent(event);
+        QWheelEvent wheelEvent(event->position,
+                               event->position,
+                               QPoint(),
+                               (event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta),
+                               event->buttons,
+                               event->modifiers,
+                               Qt::NoScrollPhase,
+                               event->inverted);
+        wheelEvent.setAccepted(false);
+        return workspace()->tabbox()->handleWheelEvent(&wheelEvent);
     }
 };
 #endif
@@ -1735,7 +1760,7 @@ public:
     }
     bool wheelEvent(WheelEvent *event) override
     {
-        if (event->angleDelta().y() == 0) {
+        if (event->orientation != Qt::Vertical) {
             // only actions on vertical scroll
             return false;
         }
@@ -1887,10 +1912,10 @@ public:
     bool wheelEvent(WheelEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
-        seat->notifyPointerAxis(event->orientation(), event->delta(), event->deltaV120(),
-                                kwinAxisSourceToKWaylandAxisSource(event->axisSource()),
-                                event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
+        seat->setTimestamp(event->timestamp);
+        seat->notifyPointerAxis(event->orientation, event->delta, event->deltaV120,
+                                kwinAxisSourceToKWaylandAxisSource(event->source),
+                                event->inverted ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         return true;
     }
     bool keyEvent(KeyEvent *event) override

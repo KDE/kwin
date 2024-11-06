@@ -311,13 +311,22 @@ void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal d
 
     Q_EMIT input()->pointerAxisChanged(axis, delta);
 
-    WheelEvent wheelEvent(m_pos, delta, deltaV120,
-                          (axis == InputDevice::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
-                          m_qtButtons, input()->keyboardModifiers(), source, inverted, time, device);
-    wheelEvent.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
+    WheelEvent event{
+        .device = device,
+        .position = m_pos,
+        .delta = delta,
+        .deltaV120 = deltaV120,
+        .orientation = (axis == InputDevice::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
+        .source = source,
+        .buttons = m_qtButtons,
+        .modifiers = input()->keyboardModifiers(),
+        .modifiersRelevantForGlobalShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
+        .inverted = inverted,
+        .timestamp = time,
+    };
 
-    input()->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &wheelEvent));
-    input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
+    input()->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &event));
+    input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &event));
 }
 
 void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)

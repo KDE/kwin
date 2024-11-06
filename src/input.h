@@ -44,7 +44,7 @@ class WindowSelectorFilter;
 struct SwitchEvent;
 class TabletEvent;
 class MouseEvent;
-class WheelEvent;
+struct WheelEvent;
 class KeyEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
