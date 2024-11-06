@@ -2897,7 +2897,11 @@ void InputRedirection::addInputDevice(InputDevice *device)
     connect(device, &InputDevice::touchFrame, m_touch, &TouchInputRedirection::frame);
 
     auto handleSwitchEvent = [this](SwitchEvent::State state, std::chrono::microseconds time, InputDevice *device) {
-        SwitchEvent event(state, time, device);
+        SwitchEvent event{
+            .device = device,
+            .state = state,
+            .timestamp = time,
+        };
         processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
         processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
     };

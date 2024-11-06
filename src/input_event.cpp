@@ -58,14 +58,6 @@ std::chrono::microseconds KeyEvent::timestamp() const
     return m_timestamp;
 }
 
-SwitchEvent::SwitchEvent(State state, std::chrono::microseconds timestamp, InputDevice *device)
-    : QEvent(QEvent::User)
-    , m_state(state)
-    , m_timestamp(timestamp)
-    , m_device(device)
-{
-}
-
 TabletEvent::TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
                          qreal pressure, float xTilt, float yTilt,
                          float tangentialPressure, qreal rotation, float z,

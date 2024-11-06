@@ -459,18 +459,18 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A hardware switch (e.g. notebook lid) got toggled", "Switch toggled")));
-    text.append(timestampRow(event->timestamp()));
-    text.append(timestampRowUsec(event->timestamp()));
-    text.append(deviceRow(event->device()));
+    text.append(timestampRow(event->timestamp));
+    text.append(timestampRowUsec(event->timestamp));
+    text.append(deviceRow(event->device));
     QString switchName;
-    if (event->device()->isLidSwitch()) {
+    if (event->device->isLidSwitch()) {
         switchName = i18nc("Name of a hardware switch", "Notebook lid");
-    } else if (event->device()->isTabletModeSwitch()) {
+    } else if (event->device->isTabletModeSwitch()) {
         switchName = i18nc("Name of a hardware switch", "Tablet mode");
     }
     text.append(tableRow(i18nc("A hardware switch", "Switch"), switchName));
     QString switchState;
-    switch (event->state()) {
+    switch (event->state) {
     case SwitchEvent::State::Off:
         switchState = i18nc("The hardware switch got turned off", "Off");
         break;

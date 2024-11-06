@@ -164,11 +164,15 @@ void InputEventsTest::testInitSwitchEvent()
 
     QFETCH(SwitchEvent::State, state);
     QFETCH(quint64, timestamp);
-    SwitchEvent event(state, std::chrono::microseconds(timestamp), &d);
+    SwitchEvent event{
+        .device = &d,
+        .state = state,
+        .timestamp = std::chrono::microseconds(timestamp),
+    };
 
-    QCOMPARE(event.state(), state);
-    QCOMPARE(event.timestamp(), std::chrono::microseconds(timestamp));
-    QCOMPARE(event.device(), &d);
+    QCOMPARE(event.state, state);
+    QCOMPARE(event.timestamp, std::chrono::microseconds(timestamp));
+    QCOMPARE(event.device, &d);
 }
 
 QTEST_GUILESS_MAIN(InputEventsTest)

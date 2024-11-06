@@ -165,34 +165,16 @@ private:
     const std::chrono::microseconds m_timestamp;
 };
 
-class SwitchEvent : public QEvent
+struct SwitchEvent
 {
-public:
     enum class State {
         Off,
         On
     };
-    explicit SwitchEvent(State state, std::chrono::microseconds timestamp, InputDevice *device);
 
-    State state() const
-    {
-        return m_state;
-    }
-
-    std::chrono::microseconds timestamp() const
-    {
-        return m_timestamp;
-    }
-
-    InputDevice *device() const
-    {
-        return m_device;
-    }
-
-private:
-    State m_state;
-    std::chrono::microseconds m_timestamp;
-    InputDevice *m_device;
+    InputDevice *device;
+    State state;
+    std::chrono::microseconds timestamp;
 };
 
 class TabletEvent : public QTabletEvent

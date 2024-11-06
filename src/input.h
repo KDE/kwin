@@ -41,7 +41,7 @@ class PointerInputRedirection;
 class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
-class SwitchEvent;
+struct SwitchEvent;
 class TabletEvent;
 class MouseEvent;
 class WheelEvent;

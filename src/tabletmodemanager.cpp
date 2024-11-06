@@ -52,11 +52,11 @@ public:
 
     void switchEvent(SwitchEvent *event) override
     {
-        if (!event->device()->isTabletModeSwitch()) {
+        if (!event->device->isTabletModeSwitch()) {
             return;
         }
 
-        switch (event->state()) {
+        switch (event->state) {
         case SwitchEvent::State::Off:
             m_parent->setIsTablet(false);
             break;
