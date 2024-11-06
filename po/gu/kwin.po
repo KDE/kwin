@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin-gu\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 02:27+0000\n"
+"POT-Creation-Date: 2024-11-06 02:32+0000\n"
 "PO-Revision-Date: 2009-01-04 13:06+0530\n"
 "Last-Translator: Kartik Mistry <kartik.mistry@gmail.com>\n"
 "Language-Team: Gujarati <kde-i18n-doc@kde.org>\n"
@@ -3766,41 +3766,41 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "વિન્ડોઝ"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "વિન્ડોસમાં મુલાકાત લો"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "વિન્ડોસમાંથી પસાર થાવ (ઉલ્ટું)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows Alternative"
 msgstr "વિન્ડોસ વૈકલ્પિકમાંથી પસાર થાવ"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "વિન્ડોસ વૈકલ્પિકમાંથી પસાર થાવ (ઉલ્ટું)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "વિન્ડોસ વૈકલ્પિકમાંથી પસાર થાવ"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "વિન્ડોસ વૈકલ્પિકમાંથી પસાર થાવ (ઉલ્ટું)"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "વિન્ડોસ વૈકલ્પિકમાંથી પસાર થાવ"
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"

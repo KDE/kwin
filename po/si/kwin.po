@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 02:27+0000\n"
+"POT-Creation-Date: 2024-11-06 02:32+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -3774,41 +3774,41 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "කවුළු"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "කවුළු අතරින් ගමන් කරන්න"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "කවුළු අතරින් ගමන් කරන්න (ආපසු)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows Alternative"
 msgstr "අමතර කවුළු අතරින් ගමන් කරන්න "
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "අමතර කවුළු අතරින් ගමන් කරන්න (ආපසු)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "අමතර කවුළු අතරින් ගමන් කරන්න "
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "අමතර කවුළු අතරින් ගමන් කරන්න (ආපසු)"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "අමතර කවුළු අතරින් ගමන් කරන්න "
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
