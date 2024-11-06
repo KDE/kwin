@@ -74,7 +74,7 @@ public:
 
     explicit ButtonRebindsFilter();
     ~ButtonRebindsFilter() override;
-    bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override;
+    bool pointerEvent(KWin::MouseEvent *event) override;
     bool tabletToolEvent(KWin::TabletEvent *event) override;
     bool tabletPadButtonEvent(KWin::TabletPadButtonEvent *event) override;
     bool tabletToolButtonEvent(KWin::TabletToolButtonEvent *event) override;

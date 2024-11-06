@@ -23,7 +23,7 @@ public:
 
     void clearTouches();
 
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override;
+    bool pointerEvent(MouseEvent *event) override;
     bool pointerFrame() override;
     bool wheelEvent(WheelEvent *event) override;
 

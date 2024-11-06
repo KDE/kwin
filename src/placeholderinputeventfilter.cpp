@@ -19,7 +19,7 @@ PlaceholderInputEventFilter::PlaceholderInputEventFilter()
 {
 }
 
-bool PlaceholderInputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
+bool PlaceholderInputEventFilter::pointerEvent(MouseEvent *event)
 {
     return true;
 }

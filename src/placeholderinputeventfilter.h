@@ -17,7 +17,7 @@ class PlaceholderInputEventFilter : public InputEventFilter
 {
 public:
     PlaceholderInputEventFilter();
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override;
+    bool pointerEvent(MouseEvent *event) override;
     bool wheelEvent(WheelEvent *event) override;
     bool keyEvent(KeyEvent *event) override;
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;

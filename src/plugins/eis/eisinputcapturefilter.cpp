@@ -29,7 +29,7 @@ void EisInputCaptureFilter::clearTouches()
     m_touches.clear();
 }
 
-bool EisInputCaptureFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
+bool EisInputCaptureFilter::pointerEvent(MouseEvent *event)
 {
     if (!m_manager->activeCapture()) {
         return false;
@@ -38,7 +38,7 @@ bool EisInputCaptureFilter::pointerEvent(MouseEvent *event, quint32 nativeButton
         if (event->type() == QMouseEvent::MouseMove) {
             eis_device_pointer_motion(pointer, event->delta().x(), event->delta().y());
         } else if (event->type() == QMouseEvent::MouseButtonPress || event->type() == QMouseEvent::MouseButtonRelease) {
-            eis_device_button_button(pointer, nativeButton, event->type() == QMouseEvent::MouseButtonPress);
+            eis_device_button_button(pointer, event->nativeButton(), event->type() == QMouseEvent::MouseButtonPress);
         }
     }
     return true;

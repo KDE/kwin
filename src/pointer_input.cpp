@@ -260,7 +260,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
 
     update();
     input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0));
+    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event));
 }
 
 void PointerInputRedirection::processButton(uint32_t button, InputDevice::PointerButtonState state, std::chrono::microseconds time, InputDevice *device)
@@ -292,7 +292,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputDevice::Pointe
     event.setNativeButton(button);
 
     input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
+    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event));
 
     if (state == InputDevice::PointerButtonReleased) {
         update();

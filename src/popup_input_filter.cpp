@@ -48,7 +48,7 @@ void PopupInputFilter::handleWindowAdded(Window *window)
     }
 }
 
-bool PopupInputFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
+bool PopupInputFilter::pointerEvent(MouseEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

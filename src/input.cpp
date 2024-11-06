@@ -117,7 +117,7 @@ int InputEventFilter::weight() const
     return m_weight;
 }
 
-bool InputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
+bool InputEventFilter::pointerEvent(MouseEvent *event)
 {
     return false;
 }
@@ -294,7 +294,7 @@ public:
         : InputEventFilter(InputFilterOrder::LockScreen)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -322,7 +322,7 @@ public:
                     ? PointerButtonState::Pressed
                     : PointerButtonState::Released;
                 seat->setTimestamp(event->timestamp());
-                seat->notifyPointerButton(nativeButton, state);
+                seat->notifyPointerButton(event->nativeButton(), state);
             }
         }
         return true;
@@ -520,7 +520,7 @@ public:
         : InputEventFilter(InputFilterOrder::Effects)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         if (!effects) {
             return false;
@@ -608,7 +608,7 @@ public:
         : InputEventFilter(InputFilterOrder::InteractiveMoveResize)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
@@ -721,7 +721,7 @@ public:
         : InputEventFilter(InputFilterOrder::WindowSelector)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         if (!m_active) {
             return false;
@@ -893,7 +893,7 @@ public:
         m_powerDown.setInterval(1000);
     }
 
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         if (event->type() == QEvent::MouseButtonPress) {
             if (input()->shortcuts()->processPointerPressed(event->modifiers(), event->buttons())) {
@@ -1214,7 +1214,7 @@ public:
                                                           10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
         QWindowSystemInterface::registerInputDevice(m_touchDevice.get());
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
@@ -1396,7 +1396,7 @@ public:
         : InputEventFilter(InputFilterOrder::Decoration)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
@@ -1614,7 +1614,7 @@ public:
         : InputEventFilter(InputFilterOrder::TabBox)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 button) override
+    bool pointerEvent(MouseEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
@@ -1652,7 +1652,7 @@ public:
         : InputEventFilter(InputFilterOrder::ScreenEdge)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         workspace()->screenEdges()->isEntered(event);
         // always forward
@@ -1712,7 +1712,7 @@ public:
         : InputEventFilter(InputFilterOrder::WindowAction)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         if (event->type() == QEvent::MouseButtonPress) {
             Window *window = input()->pointer()->focus();
@@ -1802,7 +1802,7 @@ public:
     {
     }
 
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         auto inputMethod = kwinApp()->inputMethod();
         if (!inputMethod) {
@@ -1851,7 +1851,7 @@ public:
         : InputEventFilter(InputFilterOrder::Forward)
     {
     }
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
@@ -1868,10 +1868,10 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Pressed);
+            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Pressed);
             break;
         case QEvent::MouseButtonRelease:
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Released);
+            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Released);
             break;
         default:
             break;
@@ -2257,7 +2257,7 @@ public:
         });
     }
 
-    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event) override
     {
         auto seat = waylandServer()->seat();
         if (!seat->isDragPointer()) {
@@ -2313,12 +2313,12 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Pressed);
+            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Pressed);
             break;
         case QEvent::MouseButtonRelease:
             raiseDragTarget();
             m_dragTarget = nullptr;
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Released);
+            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Released);
             break;
         default:
             break;

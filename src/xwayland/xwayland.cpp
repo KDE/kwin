@@ -426,7 +426,7 @@ public:
         return false;
     }
 
-    bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(KWin::MouseEvent *event) override
     {
 
         ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
