@@ -48,7 +48,7 @@ bool X11Output::setChannelFactors(const QVector3D &rgb)
     }
     ColorPipeline pipeline;
     pipeline.addTransferFunction(TransferFunction(TransferFunction::gamma22));
-    pipeline.addMultiplier(rgb);
+    pipeline.addRgbMultiplier(rgb);
     pipeline.addInverseTransferFunction(TransferFunction(TransferFunction::gamma22));
     std::vector<uint16_t> red(m_gammaRampSize);
     std::vector<uint16_t> green(m_gammaRampSize);

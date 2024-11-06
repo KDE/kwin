@@ -105,7 +105,7 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
     ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
     if (m_pipeline->output()->needsChannelFactorFallback()) {
         pipeline.addTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
-        pipeline.addMultiplier(m_pipeline->output()->adaptedChannelFactors());
+        pipeline.addRgbMultiplier(m_pipeline->output()->adaptedChannelFactors());
         pipeline.addInverseTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
     }
     m_colorPipeline = pipeline;

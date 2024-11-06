@@ -267,7 +267,7 @@ bool OpenGlContext::checkSupported() const
     }
     // some old hardware only supports very limited shaders. To prevent the shaders KWin uses later on from not working,
     // test a reasonably complex one here and bail out early if it doesn't work
-    auto shader = m_shaderManager->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate);
+    auto shader = m_shaderManager->shader(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
     return shader->isValid();
 }
 

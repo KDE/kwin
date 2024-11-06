@@ -62,14 +62,19 @@ const ValueRange &ColorPipeline::currentOutputRange() const
     return ops.empty() ? inputRange : ops.back().output;
 }
 
-void ColorPipeline::addMultiplier(double factor)
+void ColorPipeline::addRgbMultiplier(double factor)
 {
-    addMultiplier(QVector3D(factor, factor, factor));
+    addMultiplier(QVector4D(factor, factor, factor, 1));
 }
 
-void ColorPipeline::addMultiplier(const QVector3D &factors)
+void ColorPipeline::addRgbMultiplier(const QVector3D &factors)
 {
-    if (factors == QVector3D(1, 1, 1)) {
+    addMultiplier(QVector4D(factors, 1));
+}
+
+void ColorPipeline::addMultiplier(const QVector4D &factors)
+{
+    if (factors == QVector4D(1, 1, 1, 1)) {
         return;
     }
     const ValueRange output{
@@ -78,16 +83,16 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
     };
     if (!ops.empty()) {
         auto *lastOp = &ops.back().operation;
-        if (const auto mat = std::get_if<ColorMatrix>(lastOp)) {
+        if (const auto mat = std::get_if<ColorMatrix>(lastOp); mat && factors.w() == 1) {
             QMatrix4x4 newMat;
-            newMat.scale(factors);
+            newMat.scale(factors.toVector3D());
             newMat *= mat->mat;
             ops.erase(ops.end() - 1);
             addMatrix(newMat, output);
             return;
         } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
             mult->factors *= factors;
-            if ((mult->factors - QVector3D(1, 1, 1)).lengthSquared() < s_maxResolution * s_maxResolution) {
+            if ((mult->factors - QVector4D(1, 1, 1, 1)).lengthSquared() < s_maxResolution * s_maxResolution) {
                 ops.erase(ops.end() - 1);
             } else {
                 ops.back().output = output;
@@ -214,9 +219,9 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
             ops.erase(ops.end() - 1);
             addMatrix(newMat, output);
             return;
-        } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
+        } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp); mult && mult->factors.w() == 1) {
             QMatrix4x4 scaled = mat;
-            scaled.scale(mult->factors);
+            scaled.scale(mult->factors.toVector3D());
             ops.erase(ops.end() - 1);
             addMatrix(scaled, output);
             return;
@@ -224,7 +229,7 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
     }
     if (isFuzzyScalingOnly(mat)) {
         // pure scaling, this can be simplified
-        addMultiplier(QVector3D(mat(0, 0), mat(1, 1), mat(2, 2)));
+        addMultiplier(QVector4D(mat(0, 0), mat(1, 1), mat(2, 2), 1));
         return;
     }
     ops.push_back(ColorOp{
@@ -243,12 +248,9 @@ static const QMatrix4x4 s_fromICtCp = s_toICtCp.inverted();
 
 void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
 {
-    // convert from rgb to ICtCp
-    addMatrix(containerColorimetry.toLMS(), currentOutputRange());
-    const TransferFunction PQ(TransferFunction::PerceptualQuantizer, 0, 10'000);
-    addInverseTransferFunction(PQ);
-    addMatrix(s_toICtCp, currentOutputRange());
-    // apply the tone mapping to the intensity component
+    addRgbToICtCp(containerColorimetry);
+    const auto PQ = TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000);
+    // apply tone mapping to the intensity component
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
         .operation = ColorTonemapper(referenceLuminance, maxInputLuminance, maxOutputLuminance),
@@ -257,10 +259,36 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
             .max = PQ.nitsToEncoded(maxOutputLuminance),
         },
     });
-    // convert back to rgb
+    addICtCpToRgb(containerColorimetry);
+}
+
+void ColorPipeline::addRgbToICtCp(const Colorimetry &containerColorimetry)
+{
+    addMatrix(containerColorimetry.toLMS(), currentOutputRange());
+    addInverseTransferFunction(TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000));
+    addMatrix(s_toICtCp, currentOutputRange());
+}
+
+void ColorPipeline::addICtCpToRgb(const Colorimetry &containerColorimetry)
+{
     addMatrix(s_fromICtCp, currentOutputRange());
-    addTransferFunction(PQ);
+    addTransferFunction(TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000));
     addMatrix(containerColorimetry.fromLMS(), currentOutputRange());
+}
+
+void ColorPipeline::addModulation(const ColorDescription &colorDescription, double saturation, double opacity, double brightness)
+{
+    if (saturation != 1.0 || brightness != 1.0) {
+        addTransferFunction(colorDescription.transferFunction());
+        addRgbToICtCp(colorDescription.containerColorimetry());
+        addMultiplier(QVector4D(brightness, saturation, saturation, opacity));
+        addICtCpToRgb(colorDescription.containerColorimetry());
+        addInverseTransferFunction(colorDescription.transferFunction());
+    } else if (opacity != 1.0) {
+        addTransferFunction(colorDescription.transferFunction());
+        addMultiplier(QVector4D(1, 1, 1, opacity));
+        addInverseTransferFunction(colorDescription.transferFunction());
+    }
 }
 
 bool ColorPipeline::isIdentity() const
@@ -295,7 +323,12 @@ ColorPipeline ColorPipeline::merged(const ColorPipeline &onTop) const
 
 QVector3D ColorPipeline::evaluate(const QVector3D &input) const
 {
-    QVector3D ret = input;
+    return evaluate(QVector4D(input, 1)).toVector3D();
+}
+
+QVector4D ColorPipeline::evaluate(const QVector4D &input) const
+{
+    QVector4D ret = input;
     for (const auto &op : ops) {
         if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
             ret = mat->mat * ret;
@@ -327,13 +360,13 @@ ColorMatrix::ColorMatrix(const QMatrix4x4 &mat)
 {
 }
 
-ColorMultiplier::ColorMultiplier(const QVector3D &factors)
+ColorMultiplier::ColorMultiplier(const QVector4D &factors)
     : factors(factors)
 {
 }
 
 ColorMultiplier::ColorMultiplier(double factor)
-    : factors(factor, factor, factor)
+    : factors(factor, factor, factor, 1.0f)
 {
 }
 

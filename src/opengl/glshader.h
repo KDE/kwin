@@ -9,6 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/colorpipeline.h"
 #include "core/colorspace.h"
 
 #include <QColor>
@@ -141,7 +142,10 @@ public:
     bool setUniform(ColorUniform uniform, const QVector4D &value);
     bool setUniform(ColorUniform uniform, const QColor &value);
 
-    void setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent);
+    bool setColorPipelineUniforms(const ColorPipeline &pipeline);
+    bool setColorPipelineUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent);
+
+    void setLegacyColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent);
 
 protected:
     GLShader(unsigned int flags = NoFlags);
@@ -166,6 +170,26 @@ private:
     QHash<FloatUniform, int> m_floatLocations;
     QHash<IntUniform, int> m_intLocations;
     QHash<ColorUniform, int> m_colorLocations;
+
+    void ensureColorPipelineUniforms();
+    struct ColorPipelineUniforms
+    {
+        int operationCount;
+        std::array<int, 20> operationTypes;
+        std::array<int, 20> operationIndices;
+        std::array<int, 10> transferFunctionTypes;
+        std::array<int, 10> transferFunctionMinLum;
+        std::array<int, 10> transferFunctionMaxMinusMinLum;
+        std::array<int, 10> matrices;
+        struct
+        {
+            int maxDestinationLuminance;
+            int inputRange;
+            int referenceDimming;
+            int outputReferenceLuminance;
+        } tonemapper;
+    };
+    std::optional<ColorPipelineUniforms> m_colorPipelineUniforms;
 
     friend class ShaderManager;
 };

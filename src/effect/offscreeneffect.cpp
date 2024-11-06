@@ -163,7 +163,7 @@ void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mod
 void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &region,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
-    GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
+    GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
     ShaderBinder binder(shader);
 
     const double scale = viewport.scale();
@@ -188,20 +188,25 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
 
     vbo->bindArrays();
 
-    const qreal rgb = data.brightness() * data.opacity();
-    const qreal a = data.opacity();
-
     QMatrix4x4 mvp = viewport.projectionMatrix();
     mvp.translate(std::round(window->x() * scale), std::round(window->y() * scale));
 
-    const auto toXYZ = renderTarget.colorDescription().containerColorimetry().toXYZ();
     shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp * data.toMatrix(scale));
-    shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-    shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
-    shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
+    if (m_shader) {
+        // for backwards compatibility, this sets the old uniforms
+        shader->setLegacyColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+        const auto toXYZ = renderTarget.colorDescription().containerColorimetry().toXYZ();
+        const qreal rgb = data.brightness() * data.opacity();
+        shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, data.opacity()));
+        shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
+        shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
+    } else {
+        ColorPipeline colorTransform = ColorPipeline::create(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+        colorTransform.addModulation(renderTarget.colorDescription(), data.saturation(), data.opacity(), data.brightness());
+        shader->setColorPipelineUniforms(colorTransform);
+    }
     shader->setUniform(GLShader::IntUniform::TextureWidth, m_texture->width());
     shader->setUniform(GLShader::IntUniform::TextureHeight, m_texture->height());
-    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
     const bool clipping = region != infiniteRegion();
     const QRegion clipRegion = clipping ? viewport.mapToRenderTarget(region) : infiniteRegion();

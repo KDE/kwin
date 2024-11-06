@@ -25,10 +25,8 @@ class GLShader;
 enum class ShaderTrait {
     MapTexture = (1 << 0),
     UniformColor = (1 << 1),
-    Modulate = (1 << 2),
-    AdjustSaturation = (1 << 3),
-    TransformColorspace = (1 << 4),
-    MapExternalTexture = (1 << 5),
+    ApplyColorPipeline = (1 << 2),
+    MapExternalTexture = (1 << 3),
 };
 
 Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)

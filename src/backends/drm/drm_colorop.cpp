@@ -131,8 +131,8 @@ bool DrmLutColorOp::canBeUsedFor(const ColorOp &op)
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
         return m_maxSize >= 1024;
-    } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
+    } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+        return mult->factors.x() <= 1.0 && mult->factors.y() <= 1.0 && mult->factors.z() <= 1.0 && mult->factors.w() == 1.0;
     }
     return false;
 }
@@ -149,7 +149,7 @@ void DrmLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> op
             } else if (auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
                 output = tf->tf.nitsToEncoded(output);
             } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
-                output *= mult->factors;
+                output *= mult->factors.toVector3D();
             } else if (auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
                 output.setX(tonemap->map(output.x()));
             } else {
@@ -188,8 +188,8 @@ bool LegacyMatrixColorOp::canBeUsedFor(const ColorOp &op)
             && matrix->mat(0, 3) == 0
             && matrix->mat(1, 3) == 0
             && matrix->mat(2, 3) == 0;
-    } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
+    } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+        return mult->factors.w() == 1.0;
     }
     return false;
 }

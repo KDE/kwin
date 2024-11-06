@@ -560,7 +560,7 @@ void DrmOutput::tryKmsColorOffloading()
     const ColorDescription optimal = colorDescription().transferFunction().type == TransferFunction::gamma22 ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(TransferFunction::gamma22, 0, maxLuminance));
     ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
     colorPipeline.addTransferFunction(colorDescription().transferFunction());
-    colorPipeline.addMultiplier(channelFactors);
+    colorPipeline.addRgbMultiplier(channelFactors);
     colorPipeline.addInverseTransferFunction(colorDescription().transferFunction());
     m_pipeline->setCrtcColorPipeline(colorPipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {

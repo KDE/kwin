@@ -166,6 +166,8 @@ public:
     double nitsToEncoded(double nits) const;
     QVector3D encodedToNits(const QVector3D &encoded) const;
     QVector3D nitsToEncoded(const QVector3D &nits) const;
+    QVector4D encodedToNits(const QVector4D &encoded) const;
+    QVector4D nitsToEncoded(const QVector4D &nits) const;
 
     Type type;
     /**

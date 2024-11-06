@@ -259,16 +259,15 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
 
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
         GLFramebuffer::pushFramebuffer(fbo);
-        ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
         if (m_surface->iccShader) {
             m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription, m_surface->channelFactors);
         } else {
-            binder.shader()->setColorspaceUniforms(m_surface->intermediaryColorDescription, m_surface->targetColorDescription, RenderingIntent::RelativeColorimetric);
-            QMatrix4x4 ctm;
-            ctm(0, 0) = m_surface->channelFactors.x();
-            ctm(1, 1) = m_surface->channelFactors.y();
-            ctm(2, 2) = m_surface->channelFactors.z();
-            binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
+            ColorPipeline transform = ColorPipeline::create(m_surface->intermediaryColorDescription, m_surface->targetColorDescription, RenderingIntent::RelativeColorimetric);
+            transform.addTransferFunction(m_surface->targetColorDescription.transferFunction());
+            transform.addRgbMultiplier(m_surface->channelFactors);
+            transform.addInverseTransferFunction(m_surface->targetColorDescription.transferFunction());
+            binder.shader()->setColorPipelineUniforms(transform);
         }
         QMatrix4x4 mat;
         mat.scale(1, -1);

@@ -240,6 +240,7 @@ void GLShader::resolveLocations()
     m_intLocations[IntUniform::TextureHeight] = uniformLocation("textureHeight");
     m_intLocations[IntUniform::Sampler] = uniformLocation("sampler");
     m_intLocations[IntUniform::Sampler1] = uniformLocation("sampler1");
+
     m_intLocations[IntUniform::SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
     m_intLocations[IntUniform::DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
 
@@ -472,10 +473,127 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     }
 }
 
+void GLShader::ensureColorPipelineUniforms()
+{
+    if (m_colorPipelineUniforms) {
+        return;
+    }
+    ColorPipelineUniforms uniforms;
+    uniforms.operationCount = uniformLocation("pipelineOperationCount");
+    for (uint32_t i = 0; i < uniforms.operationTypes.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineOperations[") + QByteArray::number(i) + QByteArrayLiteral("].type");
+        uniforms.operationTypes[i] = uniformLocation(varName.data());
+    }
+    for (uint32_t i = 0; i < uniforms.operationTypes.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineOperations[") + QByteArray::number(i) + QByteArrayLiteral("].typeIndex");
+        uniforms.operationIndices[i] = uniformLocation(varName.data());
+    }
+    for (uint32_t i = 0; i < uniforms.transferFunctionTypes.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineTransferFunctions[") + QByteArray::number(i) + QByteArrayLiteral("].type");
+        uniforms.transferFunctionTypes[i] = uniformLocation(varName.data());
+    }
+    for (uint32_t i = 0; i < uniforms.transferFunctionMinLum.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineTransferFunctions[") + QByteArray::number(i) + QByteArrayLiteral("].minLuminance");
+        uniforms.transferFunctionMinLum[i] = uniformLocation(varName.data());
+    }
+    for (uint32_t i = 0; i < uniforms.transferFunctionMaxMinusMinLum.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineTransferFunctions[") + QByteArray::number(i) + QByteArrayLiteral("].maxMinusMinLuminance");
+        uniforms.transferFunctionMaxMinusMinLum[i] = uniformLocation(varName.data());
+    }
+    for (uint32_t i = 0; i < uniforms.transferFunctionMaxMinusMinLum.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineMatrices[") + QByteArray::number(i) + QByteArrayLiteral("]");
+        uniforms.matrices[i] = uniformLocation(varName.data());
+    }
+    uniforms.tonemapper = {
+        .maxDestinationLuminance = uniformLocation("pipelineToneMapper.maxDestinationLuminance"),
+        .inputRange = uniformLocation("pipelineToneMapper.inputRange"),
+        .referenceDimming = uniformLocation("pipelineToneMapper.referenceDimming"),
+        .outputReferenceLuminance = uniformLocation("pipelineToneMapper.outputReferenceLuminance"),
+    };
+    m_colorPipelineUniforms = uniforms;
+}
+
+bool GLShader::setColorPipelineUniforms(const ColorPipeline &pipeline)
+{
+    ensureColorPipelineUniforms();
+    if (pipeline.ops.size() > m_colorPipelineUniforms->operationTypes.size()) {
+        return false;
+    }
+    uint32_t tfIndex = 0;
+    uint32_t matrixIndex = 0;
+    bool toneMapperSet = false;
+    for (uint32_t opIndex = 0; opIndex < pipeline.ops.size(); opIndex++) {
+        const auto &op = pipeline.ops[opIndex];
+        if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
+            if (matrixIndex >= m_colorPipelineUniforms->matrices.size()) {
+                qCWarning(KWIN_OPENGL, "Color pipeline has too many matrices / multipliers");
+                return false;
+            }
+            setUniform(m_colorPipelineUniforms->operationTypes[opIndex], 2);
+            setUniform(m_colorPipelineUniforms->operationIndices[opIndex], int(matrixIndex));
+            setUniform(m_colorPipelineUniforms->matrices[matrixIndex], mat->mat);
+            matrixIndex++;
+        } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+            if (matrixIndex >= m_colorPipelineUniforms->matrices.size()) {
+                qCWarning(KWIN_OPENGL, "Color pipeline has too many matrices / multipliers");
+                return false;
+            }
+            QMatrix4x4 mat;
+            mat.scale(mult->factors.toVector3D());
+            mat(3, 3) = mult->factors.w();
+            setUniform(m_colorPipelineUniforms->operationTypes[opIndex], 2);
+            setUniform(m_colorPipelineUniforms->operationIndices[opIndex], int(matrixIndex));
+            setUniform(m_colorPipelineUniforms->matrices[matrixIndex], mat);
+            matrixIndex++;
+        } else if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
+            if (tfIndex >= m_colorPipelineUniforms->transferFunctionTypes.size()) {
+                qCWarning(KWIN_OPENGL, "Color pipeline has too many transfer functions");
+                return false;
+            }
+            setUniform(m_colorPipelineUniforms->operationTypes[opIndex], 0);
+            setUniform(m_colorPipelineUniforms->operationIndices[opIndex], int(tfIndex));
+            setUniform(m_colorPipelineUniforms->transferFunctionTypes[tfIndex], tf->tf.type);
+            setUniform(m_colorPipelineUniforms->transferFunctionMinLum[tfIndex], tf->tf.minLuminance);
+            setUniform(m_colorPipelineUniforms->transferFunctionMaxMinusMinLum[tfIndex], tf->tf.maxLuminance - tf->tf.minLuminance);
+            tfIndex++;
+        } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
+            if (tfIndex >= m_colorPipelineUniforms->transferFunctionTypes.size()) {
+                qCWarning(KWIN_OPENGL, "Color pipeline has too many transfer functions");
+                return false;
+            }
+            setUniform(m_colorPipelineUniforms->operationTypes[opIndex], 1);
+            setUniform(m_colorPipelineUniforms->operationIndices[opIndex], int(tfIndex));
+            setUniform(m_colorPipelineUniforms->transferFunctionTypes[tfIndex], tf->tf.type);
+            setUniform(m_colorPipelineUniforms->transferFunctionMinLum[tfIndex], tf->tf.minLuminance);
+            setUniform(m_colorPipelineUniforms->transferFunctionMaxMinusMinLum[tfIndex], tf->tf.maxLuminance - tf->tf.minLuminance);
+            tfIndex++;
+        } else if (const auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
+            if (toneMapperSet) {
+                qCWarning(KWIN_OPENGL, "Color pipeline has too many tone mappers");
+                return false;
+            }
+            setUniform(m_colorPipelineUniforms->operationTypes[opIndex], 3);
+            setUniform(m_colorPipelineUniforms->tonemapper.inputRange, tonemap->m_inputRange);
+            setUniform(m_colorPipelineUniforms->tonemapper.maxDestinationLuminance, tonemap->m_maxOutputLuminance);
+            setUniform(m_colorPipelineUniforms->tonemapper.outputReferenceLuminance, tonemap->m_outputReferenceLuminance);
+            setUniform(m_colorPipelineUniforms->tonemapper.referenceDimming, tonemap->m_referenceDimming);
+            toneMapperSet = true;
+        }
+    }
+    setUniform(m_colorPipelineUniforms->operationCount, int(pipeline.ops.size()));
+    return true;
+}
+
+bool GLShader::setColorPipelineUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
+{
+    return setColorPipelineUniforms(ColorPipeline::create(src, dst, intent));
+}
+
 static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
 
-void GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
+void GLShader::setLegacyColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
 {
+    resolveLocations();
     setUniform(Mat4Uniform::ColorimetryTransformation, src.toOther(dst, intent));
     setUniform(IntUniform::SourceNamedTransferFunction, src.transferFunction().type);
     setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance));

@@ -100,14 +100,14 @@ void RegionScreenCastSource::blit(Output *output)
 
         GLFramebuffer::pushFramebuffer(m_target.get());
 
-        ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
         QMatrix4x4 projectionMatrix;
         projectionMatrix.scale(1, -1);
         projectionMatrix.ortho(m_region);
         projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
 
         shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-        shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
+        shaderBinder.shader()->setColorPipelineUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
 
         outputTexture->render(outputGeometry.size());
         GLFramebuffer::popFramebuffer();

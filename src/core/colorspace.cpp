@@ -625,6 +625,11 @@ QVector3D TransferFunction::encodedToNits(const QVector3D &encoded) const
     return QVector3D(encodedToNits(encoded.x()), encodedToNits(encoded.y()), encodedToNits(encoded.z()));
 }
 
+QVector4D TransferFunction::encodedToNits(const QVector4D &encoded) const
+{
+    return QVector4D(encodedToNits(encoded.x()), encodedToNits(encoded.y()), encodedToNits(encoded.z()), encoded.w());
+}
+
 double TransferFunction::nitsToEncoded(double nits) const
 {
     const double normalized = (nits - minLuminance) / (maxLuminance - minLuminance);
@@ -658,6 +663,11 @@ double TransferFunction::nitsToEncoded(double nits) const
 QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits) const
 {
     return QVector3D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()));
+}
+
+QVector4D TransferFunction::nitsToEncoded(const QVector4D &nits) const
+{
+    return QVector4D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()), nits.w());
 }
 
 bool TransferFunction::isRelative() const

@@ -57,11 +57,11 @@ class KWIN_EXPORT ColorMultiplier
 {
 public:
     explicit ColorMultiplier(double factor);
-    explicit ColorMultiplier(const QVector3D &factors);
+    explicit ColorMultiplier(const QVector4D &factors);
 
     bool operator==(const ColorMultiplier &) const = default;
 
-    QVector3D factors;
+    QVector4D factors;
 };
 
 class KWIN_EXPORT ColorTonemapper
@@ -75,7 +75,6 @@ public:
     double m_inputReferenceLuminance;
     double m_maxInputLuminance;
     double m_maxOutputLuminance;
-private:
     double m_inputRange;
     double m_referenceDimming;
     double m_outputReferenceLuminance;
@@ -112,14 +111,19 @@ public:
     bool operator==(const ColorPipeline &other) const = default;
     const ValueRange &currentOutputRange() const;
     QVector3D evaluate(const QVector3D &input) const;
+    QVector4D evaluate(const QVector4D &input) const;
 
-    void addMultiplier(double factor);
-    void addMultiplier(const QVector3D &factors);
+    void addRgbMultiplier(double factor);
+    void addRgbMultiplier(const QVector3D &factors);
+    void addMultiplier(const QVector4D &factors);
     void addTransferFunction(TransferFunction tf);
     void addInverseTransferFunction(TransferFunction tf);
     void addMatrix(const QMatrix4x4 &mat, const ValueRange &output);
     void addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance);
     void add(const ColorOp &op);
+    void addRgbToICtCp(const Colorimetry &containerColorimetry);
+    void addICtCpToRgb(const Colorimetry &containerColorimetry);
+    void addModulation(const ColorDescription &colorDescription, double saturation, double opacity, double brightness);
 
     ValueRange inputRange;
     std::vector<ColorOp> ops;

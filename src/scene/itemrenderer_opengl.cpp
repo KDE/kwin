@@ -275,14 +275,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    ShaderTraits baseShaderTraits = ShaderTrait::MapTexture;
-    if (data.brightness() != 1.0) {
-        baseShaderTraits |= ShaderTrait::Modulate;
-    }
-    if (data.saturation() != 1.0) {
-        baseShaderTraits |= ShaderTrait::AdjustSaturation;
-    }
-
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
@@ -341,37 +333,28 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
-        ShaderTraits traits = baseShaderTraits;
-        if (renderNode.opacity != 1.0) {
-            traits |= ShaderTrait::Modulate;
-        }
-        const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), item->renderingIntent());
+        ShaderTraits traits = ShaderTrait::MapTexture;
+
+        ColorPipeline colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), item->renderingIntent());
+        colorTransformation.addModulation(renderTarget.colorDescription(), data.saturation(), renderNode.opacity, data.brightness());
         if (!colorTransformation.isIdentity()) {
-            traits |= ShaderTrait::TransformColorspace;
+            traits |= ShaderTrait::ApplyColorPipeline;
         }
+
         if (!shader || traits != lastTraits) {
             lastTraits = traits;
             if (shader) {
                 ShaderManager::instance()->popShader();
             }
             shader = ShaderManager::instance()->pushShader(traits);
-            if (traits & ShaderTrait::AdjustSaturation) {
-                const auto toXYZ = renderTarget.colorDescription().containerColorimetry().toXYZ();
-                shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
-                shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-            }
-
             if (traits & ShaderTrait::MapTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
                 shader->setUniform(GLShader::IntUniform::Sampler1, 1);
             }
         }
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
-        if (traits & ShaderTrait::Modulate) {
-            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
-        }
-        if (traits & ShaderTrait::TransformColorspace) {
-            shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
+        if (traits & ShaderTrait::ApplyColorPipeline) {
+            shader->setColorPipelineUniforms(colorTransformation);
         }
 
         if (std::holds_alternative<GLTexture *>(renderNode.texture)) {

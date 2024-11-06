@@ -1495,10 +1495,11 @@ void EffectsHandler::renderOffscreenQuickView(const RenderTarget &renderTarget, 
             return;
         }
 
-        ShaderTraits traits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
-        const qreal a = w->opacity();
-        if (a != 1.0) {
-            traits |= ShaderTrait::Modulate;
+        ShaderTraits traits = ShaderTrait::MapTexture;
+        ColorPipeline colorTransform = ColorPipeline::create(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+        colorTransform.addModulation(renderTarget.colorDescription(), 1, w->opacity(), 1);
+        if (!colorTransform.isIdentity()) {
+            traits |= ShaderTrait::ApplyColorPipeline;
         }
 
         GLShader *shader = ShaderManager::instance()->pushShader(traits);
@@ -1508,12 +1509,11 @@ void EffectsHandler::renderOffscreenQuickView(const RenderTarget &renderTarget, 
         mvp.translate(rect.x(), rect.y());
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
 
-        if (a != 1.0) {
-            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(a, a, a, a));
+        if (!colorTransform.isIdentity()) {
+            shader->setColorPipelineUniforms(colorTransform);
         }
-        shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
-        const bool alphaBlending = w->hasAlphaChannel() || (a != 1.0);
+        const bool alphaBlending = w->hasAlphaChannel() || (w->opacity() != 1.0);
         if (alphaBlending) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

@@ -230,9 +230,9 @@ void TouchPointsEffect::drawCircleQPainter(const QColor &color, float cx, float 
 
 void TouchPointsEffect::paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix)
 {
-    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor);
+    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor | ShaderTrait::ApplyColorPipeline);
     shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+    shader->setColorPipelineUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);

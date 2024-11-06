@@ -133,14 +133,8 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "uniform vec4 geometryColor;\n";
     }
-    if (traits & ShaderTrait::Modulate) {
-        stream << "uniform vec4 modulation;\n";
-    }
-    if (traits & ShaderTrait::AdjustSaturation) {
-        stream << "#include \"saturation.glsl\"\n";
-    }
-    if (traits & ShaderTrait::TransformColorspace) {
-        stream << "#include \"colormanagement.glsl\"\n";
+    if (traits & ShaderTrait::ApplyColorPipeline) {
+        stream << "#include \"colorpipeline.glsl\"\n";
     }
 
     if (output != QByteArrayLiteral("gl_FragColor")) {
@@ -175,17 +169,8 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "    result = geometryColor;\n";
     }
-    if (traits & ShaderTrait::TransformColorspace) {
-        stream << "    result = sourceEncodingToNitsInDestinationColorspace(result);\n";
-    }
-    if (traits & ShaderTrait::AdjustSaturation) {
-        stream << "    result = adjustSaturation(result);\n";
-    }
-    if (traits & ShaderTrait::Modulate) {
-        stream << "    result *= modulation;\n";
-    }
-    if (traits & ShaderTrait::TransformColorspace) {
-        stream << "    result = nitsToDestinationEncoding(result);\n";
+    if (traits & ShaderTrait::ApplyColorPipeline) {
+        stream << "    result = applyColorPipeline(result);\n";
     }
 
     stream << "    " << output << " = result;\n";

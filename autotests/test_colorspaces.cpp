@@ -256,11 +256,11 @@ void TestColorspaces::testOpenglShader()
 
     QImage openGlResult;
     {
-        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
-        binder.shader()->setColorspaceUniforms(src, dst, intent);
+        binder.shader()->setColorPipelineUniforms(src, dst, intent);
         const auto target = GLTexture::allocate(GL_RGBA8, input.size());
         GLFramebuffer buffer(target.get());
         context->pushFramebuffer(&buffer);
