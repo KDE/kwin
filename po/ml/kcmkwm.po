@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-26 00:41+0000\n"
+"POT-Creation-Date: 2024-11-06 00:41+0000\n"
 "PO-Revision-Date: 2019-12-12 22:45+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
@@ -34,7 +34,7 @@ msgid "&Left click:"
 msgstr "&തലപ്പട്ട ഇരട്ടക്ലിക്ക്:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:42
+#: actions.ui:44
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into an "
@@ -44,7 +44,7 @@ msgstr ""
 "ഇഷ്ടമുള്ളരീതിയിലാക്കാം ('ഉള്ളില്‍' എന്നാല്‍: തലപ്പട്ടയിലോ ഫ്രെയിമിലോ അല്ല)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:46
+#: actions.ui:48
 #, fuzzy, kde-format
 #| msgid "Activate & Raise"
 msgid "Activate, pass click and raise on release"
@@ -53,7 +53,7 @@ msgstr "സജീവമാക്കി ഉയര്‍ത്തുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:51 actions.ui:91 actions.ui:131
+#: actions.ui:53 actions.ui:102 actions.ui:142
 #, fuzzy, kde-format
 #| msgid "Activate, Raise & Pass Click"
 msgid "Activate, raise and pass click"
@@ -62,7 +62,7 @@ msgstr "സജീവമാക്കുക, ഉയര്‍ത്തുക, പ�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:56 actions.ui:96 actions.ui:136
+#: actions.ui:58 actions.ui:107 actions.ui:147
 #, fuzzy, kde-format
 #| msgid "Activate & Pass Click"
 msgid "Activate and pass click"
@@ -74,7 +74,7 @@ msgstr "സജീവമാക്കുക, പാസ് ക്ലിക്ക്
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:299 mouse.ui:414
+#: actions.ui:63 actions.ui:112 actions.ui:152 mouse.ui:299 mouse.ui:414
 #: mouse.ui:529
 #, kde-format
 msgid "Activate"
@@ -86,22 +86,30 @@ msgstr "സജീവമാക്കുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:66 actions.ui:106 actions.ui:146 mouse.ui:289 mouse.ui:404
+#: actions.ui:68 actions.ui:117 actions.ui:157 mouse.ui:289 mouse.ui:404
 #: mouse.ui:519
 #, fuzzy, kde-format
 #| msgid "Activate & Raise"
 msgid "Activate and raise"
 msgstr "സജീവമാക്കി ഉയര്‍ത്തുക"
 
+#. i18n: ectx: property (contextualHelpText), widget (KContextualHelpButton, info_1)
+#: actions.ui:76
+#, kde-format
+msgid ""
+"Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
+"and falls back to \"Activate, raise and pass click\" instead"
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:74 mouse.ui:206
+#: actions.ui:85 mouse.ui:206
 #, fuzzy, kde-format
 msgid "&Middle click:"
 msgstr "&തലപ്പട്ട ഇരട്ടക്ലിക്ക്:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:87
+#: actions.ui:98
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into an "
@@ -112,13 +120,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:114 mouse.ui:219
+#: actions.ui:125 mouse.ui:219
 #, kde-format
 msgid "&Right click:"
 msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:127
+#: actions.ui:138
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into an "
@@ -129,13 +137,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:154 mouse.ui:91
+#: actions.ui:165 mouse.ui:91
 #, fuzzy, kde-format
 msgid "Mouse &wheel:"
 msgstr "മോഡിഫയര്‍ കീ + മൌസ് വീല്‍:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:167
+#: actions.ui:178
 #, fuzzy, kde-format
 msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
@@ -145,37 +153,37 @@ msgstr ""
 "ഇഷ്ടമുള്ളരീതിയിലാക്കാം ('ഉള്ളില്‍' എന്നാല്‍: തലപ്പട്ടയിലോ ഫ്രെയിമിലോ അല്ല)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:171
+#: actions.ui:182
 #, kde-format
 msgid "Scroll"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:176
+#: actions.ui:187
 #, fuzzy, kde-format
 msgid "Activate and scroll"
 msgstr "സജീവമാക്കി താഴ്ത്തുക"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:181
+#: actions.ui:192
 #, fuzzy, kde-format
 msgid "Activate, raise and scroll"
 msgstr "സജീവമാക്കുക, ഉയര്‍ത്തുക, നീക്കുക"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:195
+#: actions.ui:206
 #, fuzzy, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
 msgstr "ഉള്‍ജാലകം, തലപ്പട്ട && ഫ്രെയിം"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:206
+#: actions.ui:217
 #, fuzzy, kde-format
 msgid "Mo&difier key:"
 msgstr "മോഡിഫയര്‍ കീ:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:216
+#: actions.ui:227
 #, kde-format
 msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
@@ -183,32 +191,32 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:220
+#: actions.ui:231
 #, kde-format
 msgid "Meta"
 msgstr "മെറ്റാ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:225
+#: actions.ui:236
 #, kde-format
 msgid "Alt"
 msgstr "Alt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:247
+#: actions.ui:258
 #, kde-format
 msgid "  + "
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:259 mouse.ui:610
+#: actions.ui:270 mouse.ui:610
 #, fuzzy, kde-format
 msgid "L&eft click:"
 msgstr "&തലപ്പട്ട ഇരട്ടക്ലിക്ക്:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:272
+#: actions.ui:283
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into the "
@@ -220,7 +228,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:276 actions.ui:346 actions.ui:416
+#: actions.ui:287 actions.ui:357 actions.ui:427
 #, kde-format
 msgid "Move"
 msgstr "നീക്കുക"
@@ -228,7 +236,7 @@ msgstr "നീക്കുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:281 actions.ui:351 actions.ui:421
+#: actions.ui:292 actions.ui:362 actions.ui:432
 #, fuzzy, kde-format
 msgid "Activate, raise and move"
 msgstr "സജീവമാക്കുക, ഉയര്‍ത്തുക, നീക്കുക"
@@ -242,7 +250,7 @@ msgstr "സജീവമാക്കുക, ഉയര്‍ത്തുക, ന�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:286 actions.ui:356 actions.ui:426 mouse.ui:252 mouse.ui:314
+#: actions.ui:297 actions.ui:367 actions.ui:437 mouse.ui:252 mouse.ui:314
 #: mouse.ui:367 mouse.ui:429 mouse.ui:482 mouse.ui:544
 #, fuzzy, kde-format
 #| msgid "Toggle Raise & Lower"
@@ -252,7 +260,7 @@ msgstr "ഉയര്‍ത്തലും താഴ്ത്തലും മാ�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:291 actions.ui:361 actions.ui:431
+#: actions.ui:302 actions.ui:372 actions.ui:442
 #, kde-format
 msgid "Resize"
 msgstr "വലിപ്പം മാറ്റുക"
@@ -266,7 +274,7 @@ msgstr "വലിപ്പം മാറ്റുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:296 actions.ui:366 actions.ui:436 mouse.ui:242 mouse.ui:304
+#: actions.ui:307 actions.ui:377 actions.ui:447 mouse.ui:242 mouse.ui:304
 #: mouse.ui:357 mouse.ui:419 mouse.ui:472 mouse.ui:534
 #, kde-format
 msgid "Raise"
@@ -283,7 +291,7 @@ msgstr "ഉയര്‍ത്തുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:301 actions.ui:371 actions.ui:441 mouse.ui:68 mouse.ui:247
+#: actions.ui:312 actions.ui:382 actions.ui:452 mouse.ui:68 mouse.ui:247
 #: mouse.ui:309 mouse.ui:362 mouse.ui:424 mouse.ui:477 mouse.ui:539
 #, kde-format
 msgid "Lower"
@@ -300,7 +308,7 @@ msgstr "ഉയരം കുറയ്ക്കുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:306 actions.ui:376 actions.ui:446 mouse.ui:58 mouse.ui:257
+#: actions.ui:317 actions.ui:387 actions.ui:457 mouse.ui:58 mouse.ui:257
 #: mouse.ui:319 mouse.ui:372 mouse.ui:434 mouse.ui:487 mouse.ui:549
 #, kde-format
 msgid "Minimize"
@@ -309,7 +317,7 @@ msgstr "ചെറുതാക്കുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:311 actions.ui:381 actions.ui:451
+#: actions.ui:322 actions.ui:392 actions.ui:462
 #, fuzzy, kde-format
 msgid "Decrease opacity"
 msgstr "തെളിച്ചം മാറ്റുക"
@@ -317,7 +325,7 @@ msgstr "തെളിച്ചം മാറ്റുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:316 actions.ui:386 actions.ui:456
+#: actions.ui:327 actions.ui:397 actions.ui:467
 #, fuzzy, kde-format
 msgid "Increase opacity"
 msgstr "തെളിച്ചം മാറ്റുക"
@@ -336,7 +344,7 @@ msgstr "തെളിച്ചം മാറ്റുക"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:321 actions.ui:391 actions.ui:461 actions.ui:516 advanced.ui:154
+#: actions.ui:332 actions.ui:402 actions.ui:472 actions.ui:527 advanced.ui:154
 #: mouse.ui:83 mouse.ui:135 mouse.ui:277 mouse.ui:339 mouse.ui:392 mouse.ui:454
 #: mouse.ui:507 mouse.ui:569
 #, fuzzy, kde-format
@@ -345,13 +353,13 @@ msgid "Do nothing"
 msgstr "ഒന്നുമില്ല"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:329
+#: actions.ui:340
 #, fuzzy, kde-format
 msgid "Middle &click:"
 msgstr "മധ്യത്തിലുള്ള ബട്ടണ്‍: "
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:342
+#: actions.ui:353
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
@@ -362,13 +370,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:399 mouse.ui:680
+#: actions.ui:410 mouse.ui:680
 #, kde-format
 msgid "Right clic&k:"
 msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:412
+#: actions.ui:423
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
@@ -378,13 +386,13 @@ msgstr ""
 "ക്ക് ഇഷ്ടമുള്ളരീതിയിലാക്കാം."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:469
+#: actions.ui:480
 #, fuzzy, kde-format
 msgid "Mo&use wheel:"
 msgstr "മോഡിഫയര്‍ കീ + മൌസ് വീല്‍:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:482
+#: actions.ui:493
 #, fuzzy, kde-format
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
@@ -395,7 +403,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:486 mouse.ui:105
+#: actions.ui:497 mouse.ui:105
 #, fuzzy, kde-format
 #| msgid "Raise/Lower"
 msgid "Raise/lower"
@@ -403,7 +411,7 @@ msgstr "ഉയരം കൂട്ടുക/കുറയ്ക്കുക"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:491 mouse.ui:110
+#: actions.ui:502 mouse.ui:110
 #, fuzzy, kde-format
 #| msgid "Shade/Unshade"
 msgid "Shade/unshade"
@@ -411,7 +419,7 @@ msgstr "നിഴല്‍ വീഴ്ത്തുക/മങ്ങുക"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:496 mouse.ui:115
+#: actions.ui:507 mouse.ui:115
 #, fuzzy, kde-format
 #| msgid "Maximize/Restore"
 msgid "Maximize/restore"
@@ -419,7 +427,7 @@ msgstr "വലുതാക്കുക/വീണ്ടെടുക്കുക"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:501 mouse.ui:120
+#: actions.ui:512 mouse.ui:120
 #, fuzzy, kde-format
 #| msgid "Keep Above/Below"
 msgid "Keep above/below"
@@ -427,7 +435,7 @@ msgstr "മുകളില്‍/താഴെയാക്കുക"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:506 mouse.ui:125
+#: actions.ui:517 mouse.ui:125
 #, fuzzy, kde-format
 #| msgid "Move to Previous/Next Desktop"
 msgid "Move to previous/next desktop"
@@ -435,7 +443,7 @@ msgstr "മുമ്പുള്ള/അടുത്ത ഡസ്ക്ടോപ�
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:511 mouse.ui:130
+#: actions.ui:522 mouse.ui:130
 #, fuzzy, kde-format
 #| msgid "Change Opacity"
 msgid "Change opacity"

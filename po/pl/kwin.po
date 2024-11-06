@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1694263 $
+# Version: $Revision: 1694387 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 00:41+0000\n"
+"POT-Creation-Date: 2024-11-06 00:41+0000\n"
 "PO-Revision-Date: 2024-09-21 12:08+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1230,7 +1230,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nazwa gospodarza: %1"
 
-#: input.cpp:3053
+#: input.cpp:3050
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"
@@ -3667,35 +3667,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Nie otwarto żadnego okna"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "Przełącz okno"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "Przełącz okno (w drugą stronę)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows Alternative"
 msgstr "Przełącz okno w drugi sposób"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Przełącz okno w drugi sposób (w drugą stronę)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows of Current Application"
 msgstr "Przełącz okno bieżącego programu"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Przełącz okno bieżącego programu (w drugą stronę)"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Przełącz okno bieżącego programu w drugi sposób"
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Przełącz okno bieżącego programu w drugi sposób (w drugą stronę)"
 
@@ -4276,7 +4276,7 @@ msgstr "Przełącz jeden pulpit niżej"
 msgid "Switch to Desktop %1"
 msgstr "Przełącz na pulpit %1"
 
-#: window.cpp:3145
+#: window.cpp:3157
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

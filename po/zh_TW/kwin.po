@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 00:41+0000\n"
+"POT-Creation-Date: 2024-11-06 00:41+0000\n"
 "PO-Revision-Date: 2024-09-23 20:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -1228,7 +1228,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主機名稱：%1"
 
-#: input.cpp:3053
+#: input.cpp:3050
 #, kde-format
 msgid "Touchpad"
 msgstr "觸控板"
@@ -3627,35 +3627,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "沒有已開啟視窗"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "瀏覽已開啟視窗"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "瀏覽已開啟視窗 (反向)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows Alternative"
 msgstr "瀏覽已開啟視窗（替代按鍵）"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "瀏覽已開啟視窗（替代按鍵/反向）"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows of Current Application"
 msgstr "瀏覽目前應用程式的視窗"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "瀏覽目前應用程式的視窗（反向）"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "瀏覽目前應用程式視窗（替代按鍵）"
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "瀏覽目前應用程式視窗（替代按鍵/反向）"
 
@@ -4235,7 +4235,7 @@ msgstr "切換到下面的桌面"
 msgid "Switch to Desktop %1"
 msgstr "切換到桌面 %1"
 
-#: window.cpp:3145
+#: window.cpp:3157
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 00:41+0000\n"
+"POT-Creation-Date: 2024-11-06 00:41+0000\n"
 "PO-Revision-Date: 2024-10-01 18:42+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1231,7 +1231,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ostalari-izena: %1"
 
-#: input.cpp:3053
+#: input.cpp:3050
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"
@@ -3664,36 +3664,36 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Ez dago irekitako leihorik"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "Ibili leihoetan zehar"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "Ibili leihoetan zehar (atzerantz)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows Alternative"
 msgstr "Ibili leihoetan zehar beste modu batean"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Ibili leihoetan zehar beste modu batean (alderantziz)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows of Current Application"
 msgstr "Pasatu une honetako aplikazioko leiho batetik bestera"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Pasatu une honetako aplikazioko leiho batetik bestera (alderantziz)"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr ""
 "Pasatu une honetako aplikazioko leiho batetik bestera beste modu batean"
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Pasatu une honetako aplikazioko leiho batetik bestera beste modu batean "
@@ -4277,7 +4277,7 @@ msgstr "Aldatu beheko mahaigainera"
 msgid "Switch to Desktop %1"
 msgstr "Aldatu %1 mahaigainera"
 
-#: window.cpp:3145
+#: window.cpp:3157
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

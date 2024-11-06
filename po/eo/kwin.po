@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 00:41+0000\n"
+"POT-Creation-Date: 2024-11-06 00:41+0000\n"
 "PO-Revision-Date: 2024-09-21 10:41+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -1226,7 +1226,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Gastigantnomo: %1"
 
-#: input.cpp:3053
+#: input.cpp:3050
 #, kde-format
 msgid "Touchpad"
 msgstr "Tuŝplato"
@@ -3652,35 +3652,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Neniuj malfermitaj fenestroj"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "Iro tra la fenestroj"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "Reiro tra la fenestroj"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows Alternative"
 msgstr "Iri Tra Fenestroj Alternativo"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Iri Tra Fenestroj Alternativo (Inversa)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows of Current Application"
 msgstr "Iri Tra Fenestroj de Nuna Apliko"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Iri Tra Fenestroj de Nuna Apliko (Inversa)"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Iri Tra Fenestroj de Nuna Aplika Alternativo"
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Iri Tra Fenestroj de Nuna Aplika Alternativo (Inversa)"
 
@@ -4261,7 +4261,7 @@ msgstr "Iri al suba labortablo"
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
 
-#: window.cpp:3145
+#: window.cpp:3157
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 00:41+0000\n"
+"POT-Creation-Date: 2024-11-06 00:41+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -1215,7 +1215,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3053
+#: input.cpp:3050
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -3692,45 +3692,45 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Prenester"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "Mont-dont e-mesk ar prenester"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
@@ -4357,7 +4357,7 @@ msgstr "Gwintañ d'ur burev izeloc'h"
 msgid "Switch to Desktop %1"
 msgstr "Gwintañ da Burev 1"
 
-#: window.cpp:3145
+#: window.cpp:3157
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

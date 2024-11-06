@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-04 00:41+0000\n"
+"POT-Creation-Date: 2024-11-06 00:41+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -1229,7 +1229,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3053
+#: input.cpp:3050
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -3747,41 +3747,41 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "ಕಿಟಕಿಗಳು"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
 msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ."
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:359
 msgid "Walk Through Windows (Reverse)"
 msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ ( ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:362
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:363
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: tabbox/tabbox.cpp:366
+#: tabbox/tabbox.cpp:364
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: tabbox/tabbox.cpp:367
+#: tabbox/tabbox.cpp:365
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
@@ -4404,7 +4404,7 @@ msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಕ್ಕೆ ಬದಲಾಯ
 msgid "Switch to Desktop %1"
 msgstr "%1ನೇ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
 
-#: window.cpp:3145
+#: window.cpp:3157
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
