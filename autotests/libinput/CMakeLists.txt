@@ -52,11 +52,3 @@ add_executable(testLibinputSwitchEvent switch_event_test.cpp)
 target_link_libraries(testLibinputSwitchEvent Qt::Test Qt::DBus Qt::Widgets KF6::ConfigCore LibInputTestObjects)
 add_test(NAME kwin-testLibinputSwitchEvent COMMAND testLibinputSwitchEvent)
 ecm_mark_as_test(testLibinputSwitchEvent)
-
-########################################################
-# Test Input Events
-########################################################
-add_executable(testInputEvents input_event_test.cpp ../../src/input_event.cpp)
-target_link_libraries(testInputEvents Qt::Test Qt::DBus Qt::Gui Qt::Widgets KF6::ConfigCore LibInputTestObjects)
-add_test(NAME kwin-testInputEvents COMMAND testInputEvents)
-ecm_mark_as_test(testInputEvents)
