@@ -115,8 +115,6 @@ public:
     virtual QString outputName() const;
     virtual void setOutputName(const QString &outputName);
 
-    virtual bool isNaturalScroll() const;
-
     virtual int tabletPadButtonCount() const;
     virtual int tabletPadRingCount() const;
     virtual int tabletPadStripCount() const;
@@ -129,7 +127,7 @@ Q_SIGNALS:
     void pointerMotionAbsolute(const QPointF &position, std::chrono::microseconds time, InputDevice *device);
     void pointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
     void pointerAxisChanged(PointerAxis axis, qreal delta, qint32 deltaV120,
-                            PointerAxisSource source, std::chrono::microseconds time, InputDevice *device);
+                            PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device);
     void pointerFrame(InputDevice *device);
     void touchFrame(InputDevice *device);
     void touchCanceled(InputDevice *device);

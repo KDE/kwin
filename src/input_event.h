@@ -87,7 +87,7 @@ class WheelEvent : public QWheelEvent
 public:
     explicit WheelEvent(const QPointF &pos, qreal delta, qint32 deltaV120, Qt::Orientation orientation,
                         Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputDevice::PointerAxisSource source,
-                        std::chrono::microseconds timestamp, InputDevice *device);
+                        bool inverted, std::chrono::microseconds timestamp, InputDevice *device);
 
     Qt::Orientation orientation() const
     {

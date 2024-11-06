@@ -1713,14 +1713,14 @@ void keyboardKeyReleased(quint32 key, quint32 time)
 void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, InputDevice::PointerAxisSource source)
 {
     auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerAxisChanged(InputDevice::PointerAxis::PointerAxisHorizontal, delta, discreteDelta, source, std::chrono::milliseconds(time), virtualPointer);
+    Q_EMIT virtualPointer->pointerAxisChanged(InputDevice::PointerAxis::PointerAxisHorizontal, delta, discreteDelta, source, false, std::chrono::milliseconds(time), virtualPointer);
     Q_EMIT virtualPointer->pointerFrame(virtualPointer);
 }
 
 void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, InputDevice::PointerAxisSource source)
 {
     auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerAxisChanged(InputDevice::PointerAxis::PointerAxisVertical, delta, discreteDelta, source, std::chrono::milliseconds(time), virtualPointer);
+    Q_EMIT virtualPointer->pointerAxisChanged(InputDevice::PointerAxis::PointerAxisVertical, delta, discreteDelta, source, false, std::chrono::milliseconds(time), virtualPointer);
     Q_EMIT virtualPointer->pointerFrame(virtualPointer);
 }
 

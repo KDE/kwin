@@ -57,11 +57,6 @@ void InputDevice::setOutputName(const QString &outputName)
 {
 }
 
-bool InputDevice::isNaturalScroll() const
-{
-    return false;
-}
-
 int InputDevice::tabletPadButtonCount() const
 {
     return 0;

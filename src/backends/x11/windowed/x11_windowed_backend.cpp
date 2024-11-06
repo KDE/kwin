@@ -555,6 +555,7 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
                                                    delta * s_defaultAxisStepDistance,
                                                    delta,
                                                    InputDevice::PointerAxisSourceUnknown,
+                                                   false,
                                                    std::chrono::milliseconds(event->time),
                                                    m_pointerDevice.get());
         Q_EMIT m_pointerDevice->pointerFrame(m_pointerDevice.get());

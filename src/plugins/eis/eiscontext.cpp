@@ -249,10 +249,10 @@ void EisContext::handleEvents()
             const auto y = eis_event_scroll_get_dy(event);
             qCDebug(KWIN_EIS) << device->name() << "scroll" << x << y;
             if (x != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisHorizontal, x, 0, InputDevice::PointerAxisSourceUnknown, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisHorizontal, x, 0, InputDevice::PointerAxisSourceUnknown, false, currentTime(), device);
             }
             if (y != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisVertical, y, 0, InputDevice::PointerAxisSourceUnknown, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisVertical, y, 0, InputDevice::PointerAxisSourceUnknown, false, currentTime(), device);
             }
             break;
         }
@@ -261,11 +261,11 @@ void EisContext::handleEvents()
             auto device = eventDevice(event);
             if (eis_event_scroll_get_stop_x(event)) {
                 qCDebug(KWIN_EIS) << device->name() << "scroll x" << (eis_event_get_type(event) == EIS_EVENT_SCROLL_STOP ? "stop" : "cancel");
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisHorizontal, 0, 0, InputDevice::PointerAxisSourceUnknown, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisHorizontal, 0, 0, InputDevice::PointerAxisSourceUnknown, false, currentTime(), device);
             }
             if (eis_event_scroll_get_stop_y(event)) {
                 qCDebug(KWIN_EIS) << device->name() << "scroll y" << (eis_event_get_type(event) == EIS_EVENT_SCROLL_STOP ? "stop" : "cancel");
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisVertical, 0, 0, InputDevice::PointerAxisSourceUnknown, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisVertical, 0, 0, InputDevice::PointerAxisSourceUnknown, false, currentTime(), device);
             }
             break;
         }
@@ -277,10 +277,10 @@ void EisContext::handleEvents()
             // otherwise no scroll event
             constexpr auto anglePer120Step = 15 / 120.0;
             if (x != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisHorizontal, x * anglePer120Step, x, InputDevice::PointerAxisSourceUnknown, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisHorizontal, x * anglePer120Step, x, InputDevice::PointerAxisSourceUnknown, false, currentTime(), device);
             }
             if (y != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisVertical, y * anglePer120Step, y, InputDevice::PointerAxisSourceUnknown, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxisVertical, y * anglePer120Step, y, InputDevice::PointerAxisSourceUnknown, false, currentTime(), device);
             }
             break;
         }

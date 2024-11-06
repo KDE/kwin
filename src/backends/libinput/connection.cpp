@@ -271,6 +271,7 @@ void Connection::processEvents()
                                                                   pointerEvent->scrollValue(axis),
                                                                   pointerEvent->scrollValueV120(axis),
                                                                   InputDevice::PointerAxisSourceWheel,
+                                                                  pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
@@ -285,6 +286,7 @@ void Connection::processEvents()
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
                                                                   InputDevice::PointerAxisSourceFinger,
+                                                                  pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }
@@ -299,6 +301,7 @@ void Connection::processEvents()
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
                                                                   InputDevice::PointerAxisSourceContinuous,
+                                                                  pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
             }

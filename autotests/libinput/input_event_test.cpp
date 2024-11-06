@@ -130,7 +130,7 @@ void InputEventsTest::testInitWheelEvent()
     QFETCH(qreal, delta);
     QFETCH(qint32, deltaV120);
     WheelEvent event(QPointF(100, 200), delta, deltaV120, orientation, Qt::LeftButton | Qt::RightButton,
-                     Qt::ShiftModifier | Qt::ControlModifier, InputDevice::PointerAxisSourceWheel, 300ms, &d);
+                     Qt::ShiftModifier | Qt::ControlModifier, InputDevice::PointerAxisSourceWheel, false, 300ms, &d);
     // compare QWheelEvent contract
     QCOMPARE(event.type(), QEvent::Wheel);
     QCOMPARE(event.position(), QPointF(100, 200));

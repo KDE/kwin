@@ -300,7 +300,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputDevice::Pointe
 }
 
 void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal delta, qint32 deltaV120,
-                                          InputDevice::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device)
+                                          InputDevice::PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -313,7 +313,7 @@ void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal d
 
     WheelEvent wheelEvent(m_pos, delta, deltaV120,
                           (axis == InputDevice::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
-                          m_qtButtons, input()->keyboardModifiers(), source, time, device);
+                          m_qtButtons, input()->keyboardModifiers(), source, inverted, time, device);
     wheelEvent.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
 
     input()->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &wheelEvent));

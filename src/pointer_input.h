@@ -95,7 +95,7 @@ public:
     /**
      * @internal
      */
-    void processAxis(InputDevice::PointerAxis axis, qreal delta, qint32 deltaV120, InputDevice::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device = nullptr);
+    void processAxis(InputDevice::PointerAxis axis, qreal delta, qint32 deltaV120, InputDevice::PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device = nullptr);
     /**
      * @internal
      */
