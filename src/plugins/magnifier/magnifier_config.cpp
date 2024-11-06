@@ -48,17 +48,17 @@ MagnifierEffectConfig::MagnifierEffectConfig(QObject *parent, const KPluginMetaD
     m_actionCollection->setConfigGlobal(true);
 
     QAction *a;
-    a = m_actionCollection->addAction(KStandardAction::ZoomIn);
+    a = m_actionCollection->addAction(KStandardActions::ZoomIn);
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
 
-    a = m_actionCollection->addAction(KStandardAction::ZoomOut);
+    a = m_actionCollection->addAction(KStandardActions::ZoomOut);
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
 
-    a = m_actionCollection->addAction(KStandardAction::ActualSize);
+    a = m_actionCollection->addAction(KStandardActions::ActualSize);
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
