@@ -155,7 +155,16 @@ ExpoCell {
                 y = newGlobalRect.y;
                 width = newGlobalRect.width;
                 height = newGlobalRect.height;
+
                 returnAnimation.restart();
+
+                // If we dropped on another desktop, don't make the window fly off  the screen
+                if (newGlobalRect.x < thumb.windowHeap.x ||
+                    newGlobalRect.y < thumb.windowHeap.y ||
+                    thumb.windowHeap.x + thumb.windowHeap.width < newGlobalRect.x + newGlobalRect.width ||
+                    thumb.windowHeap.y + thumb.windowHeap.height < newGlobalRect.y + newGlobalRect.height) {
+                    returnAnimation.complete();
+                }
             }
             function deleteDND() {
                 thumb.windowHeap.deleteDND(thumb.window.internalId);
