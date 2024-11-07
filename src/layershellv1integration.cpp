@@ -31,11 +31,15 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
 
 void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface)
 {
-    Output *output = shellSurface->output() ? shellSurface->output()->handle() : workspace()->activeOutput();
-    if (!output) {
-        qCWarning(KWIN_CORE) << "Could not find any suitable output for a layer surface";
-        shellSurface->sendClosed();
-        return;
+    Output *output;
+    if (OutputInterface *preferredOutput = shellSurface->output()) {
+        if (preferredOutput->isRemoved()) {
+            shellSurface->sendClosed();
+            return;
+        }
+        output = preferredOutput->handle();
+    } else {
+        output = workspace()->activeOutput();
     }
 
     Q_EMIT windowCreated(new LayerShellV1Window(shellSurface, output, this));
