@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-24 02:49+0000\n"
-"PO-Revision-Date: 2024-07-05 15:58+0200\n"
+"PO-Revision-Date: 2024-11-06 23:19+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 24.11.70\n"
 
 #: module.cpp:52
 #, kde-format
@@ -41,7 +41,7 @@ msgstr ""
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr "Скриптът \"%1\" беше импортиран успешно."
+msgstr "Скриптът „%1“ беше импортиран успешно."
 
 #: module.cpp:131
 #, kde-format

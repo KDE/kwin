@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-29 00:40+0000\n"
-"PO-Revision-Date: 2024-09-19 19:39+0200\n"
+"PO-Revision-Date: 2024-11-06 23:19+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.07.70\n"
+"X-Generator: Lokalize 24.11.70\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
@@ -114,8 +114,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
-"%1 се насочи към KWin Aurorae тема \"%2\" и ще опита да я настрои като "
-"текуща тема."
+"%1 се насочи към KWin Aurorae тема „%2“ и ще опита да я настрои като текуща "
+"тема."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -131,7 +131,7 @@ msgstr ""
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
-"Заявената тема \"%1\" вече е зададена като тема за декорация на прозорци."
+"Заявената тема „%1“ вече е зададена като тема за декорация на прозорци."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
@@ -154,7 +154,7 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
-"Не може да се намери тема \"%1\". Темата трябва да има следните опции: %2"
+"Не може да се намери тема „%1“. Темата трябва да има следните опции: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format

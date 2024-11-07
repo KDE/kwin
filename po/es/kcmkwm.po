@@ -5,23 +5,23 @@
 # Copyright (C) 2001-2002.
 #
 # Pablo de Vicente <vicente@oan.es>,2001-2002.
-# Jaime Robles <jaime@kde.org>, 2003, 2007, 2008.
-# Miguel Revilla Rodríguez <yo@miguelrevilla.com>, 2003, 2004.
-# Pablo de Vicente <vicnte@oan.es>, 2003.
-# Pablo de Vicente <p.devicente@wanadoo.es>, 2004.
-# Juan Manuel Garcia Molina <juanma@superiodico.net>, 2005.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2005, 2006, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, %Y.
-# Pablo de Vicente <pablo.devicente@gmail.com>, 2006.
-# Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007.
-# Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010.
-# Javier Vinal <fjvinal@gmail.com>, 2011, 2012.
-# Rocío Gallego <traducciones@rociogallego.com>, 2013.
+# SPDX-FileCopyrightText: 2003, 2007, 2008 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2003, 2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2003 Pablo de Vicente <vicnte@oan.es>
+# SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
+# SPDX-FileCopyrightText: 2005 Juan Manuel Garcia Molina <juanma@superiodico.net>
+# SPDX-FileCopyrightText: 2005, 2006, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, 2024 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2006 Pablo de Vicente <pablo.devicente@gmail.com>
+# SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
+# SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2011, 2012 Javier Vinal <fjvinal@gmail.com>
+# SPDX-FileCopyrightText: 2013 Rocío Gallego <traducciones@rociogallego.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-24 02:49+0000\n"
-"PO-Revision-Date: 2022-12-03 12:06+0100\n"
+"PO-Revision-Date: 2024-11-07 02:13+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 22.11.90\n"
+"X-Generator: Lokalize 24.08.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -62,7 +62,7 @@ msgstr ""
 #: actions.ui:46 actions.ui:86 actions.ui:126
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Activar, pasar al frente y pasar el clic"
+msgstr "Activar, poner al frente y pasar el clic"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
