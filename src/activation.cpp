@@ -298,7 +298,7 @@ void Workspace::activateWindow(Window *window, bool force)
         setActiveWindow(nullptr);
         return;
     }
-    if (!window->isClient() || window->isDeleted()) {
+    if (!window->isClient() || window->isDeleted() || !window->wantsInput()) {
         return;
     }
     if (window->isHiddenByShowDesktop()) {
