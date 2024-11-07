@@ -3,10 +3,10 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
+# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Josep M. Ferrer <txemaq@gmail.com>
 # Sebastià Pla i Sanz <sps@sastia.com>, 1998, 1999, 2000, 2001, 2002, 2004, 2005, 2006.
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2003, 2011, 2013, 2015, 2020, 2021, 2022.
 # Albert Astals Cid <aacid@kde.org>, 2005.
-# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Josep M. Ferrer <txemaq@gmail.com>
 # Manuel Tortosa Moreno <manutortosa@chakra-project.org>, 2009.
 # Empar Montoro Martín <montoro_mde@gva.es>, 2019.
 msgid ""
@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2024-10-26 11:21+0200\n"
+"PO-Revision-Date: 2024-11-06 10:00+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -53,7 +53,7 @@ msgstr ""
 #: actions.ui:48
 #, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "Activa, para el clic i eleva en alliberar"
+msgstr "Activa, passa el clic i eleva en alliberar"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -102,6 +102,8 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"Tingueu en compte que «Activa, passa el clic i eleva en alliberar» no "
+"funciona a l'X11, i fa «Activa, eleva i passa el clic» en el seu lloc"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1298,34 +1300,3 @@ msgstr ""
 "pestanyes («Alt+Tab»)</em> entren en contradicció amb la política i no "
 "funcionaran. En el seu lloc, segurament voldreu usar el <em>Focus segueix el "
 "ratolí (prioritat al ratolí)</em>."
-
-#~ msgid "&Special windows:"
-#~ msgstr "Finestres e&specials:"
-
-#~ msgid ""
-#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
-#~ "inactive applications will be hidden and will be shown only when the "
-#~ "application becomes active. Note that applications have to mark the "
-#~ "windows with the proper window type for this feature to work."
-#~ msgstr ""
-#~ "Quan està activat, les finestres d'utilitat (finestres d'eines, menús "
-#~ "escapçats...) de les aplicacions inactives s'ocultaran i només es "
-#~ "mostraran quan l'aplicació esdevingui activa. Cal tenir present que les "
-#~ "aplicacions han de marcar les finestres amb el tipus de finestra correcte "
-#~ "perquè funcioni aquesta característica."
-
-#~ msgid "Hide utility windows for inactive applications"
-#~ msgstr "Oculta les finestres d'utilitat per a les aplicacions inactives"
-
-#~ msgid ""
-#~ "When this option is enabled, the active screen (where new windows appear, "
-#~ "for example) is the screen containing the mouse pointer. When disabled, "
-#~ "the active screen is the screen containing the focused window."
-#~ msgstr ""
-#~ "Quan aquesta opció està activada, la pantalla activa (p. ex. a on "
-#~ "apareixen les noves finestres) és la pantalla amb el punter del ratolí. "
-#~ "Quan està desactivada, la pantalla activa és la pantalla amb la finestra "
-#~ "enfocada."
-
-#~ msgid "Active screen follows &mouse"
-#~ msgstr "La finestra activa segueix el &ratolí"

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2024-10-26 18:55+0200\n"
+"PO-Revision-Date: 2024-11-06 15:22+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -46,7 +46,7 @@ msgstr ""
 #: actions.ui:48
 #, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "Активиране, предаване на кликването и повдигане при освобождаване"
+msgstr "Активиране предаване на кликването и повдигане при освобождаване"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -95,6 +95,9 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"Обърнете внимание, че „Активиране предаване на кликването и повдигане при "
+"освобождаване“ не работи на X11. Вместо това се използва „Активиране, "
+"повдигане и предаване на кликването“."
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)

@@ -104,6 +104,9 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"“Etkinleştir, tıklamayı geçir ve bırakınca yükselt” özelliğinin X11 üzerinde "
+"çalışmadığını ve yerine “Etkinleştir, yükselt ve tıklamayı geçir” "
+"kullanıldığını not edin."
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
