@@ -97,6 +97,9 @@ Options::Options(QObject *parent)
         if (group.name() == QLatin1String("KDE") && names.contains(QByteArrayLiteral("AnimationDurationFactor"))) {
             m_settings->load();
             Q_EMIT animationSpeedChanged();
+        } else if (group.name() == QLatin1String("Windows") && names.contains(QByteArrayLiteral("InteractiveWindowMoveEnabled"))) {
+            m_settings->load();
+            setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
         } else if (group.name() == QLatin1String("Xwayland")) {
             workspace()->reconfigure();
         }
