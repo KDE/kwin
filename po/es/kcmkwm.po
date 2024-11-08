@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2024-10-26 20:25+0200\n"
+"PO-Revision-Date: 2024-11-07 02:13+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -68,7 +68,7 @@ msgstr "Activar, pasar clic y poner al frente al soltar"
 #: actions.ui:53 actions.ui:102 actions.ui:142
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Activar, pasar al frente y pasar el clic"
+msgstr "Activar, poner al frente y pasar el clic"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -109,6 +109,9 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"Tenga en cuenta que «Activar, pasar clic y poner al frente al soltar», no "
+"funciona en X11, por lo que actuará como «Activar, poner al frente y pasar "
+"clic»."
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)

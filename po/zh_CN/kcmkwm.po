@@ -93,6 +93,8 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"请注意：“激活，提升，传递点击 (松开时)”在 X11 环境中不起作用，它将退而执行“激"
+"活，提升，传递点击”"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
