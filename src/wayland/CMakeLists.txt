@@ -37,10 +37,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-window-management.xml
     BASENAME plasma-window-management
 )
-ecm_add_wayland_server_protocol(WaylandProtocols_xml
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/surface-extension.xml
-    BASENAME qt-surface-extension
-)
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/idle.xml
