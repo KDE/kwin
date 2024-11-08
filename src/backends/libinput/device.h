@@ -167,6 +167,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(QString deviceGroupId READ deviceGroupId CONSTANT)
     Q_PROPERTY(QString defaultPressureCurve READ defaultPressureCurve CONSTANT)
     Q_PROPERTY(QString pressureCurve READ serializedPressureCurve WRITE setPressureCurve NOTIFY pressureCurveChanged)
+    Q_PROPERTY(quint32 tabletPadButtonCount READ tabletPadButtonCount CONSTANT)
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
