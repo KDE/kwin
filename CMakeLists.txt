@@ -493,6 +493,10 @@ add_subdirectory(kconf_update)
 add_subdirectory(src)
 
 if (BUILD_TESTING)
+    if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
+        find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+    endif()
+
     add_subdirectory(autotests)
     add_subdirectory(tests)
 endif()
