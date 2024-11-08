@@ -4281,6 +4281,9 @@ bool X11Window::isMovable() const
     if (rules()->checkPosition(invalidPoint) != invalidPoint) { // forced position
         return false;
     }
+    if (!options->interactiveWindowMoveEnabled()) {
+        return false;
+    }
     return true;
 }
 
@@ -4296,6 +4299,9 @@ bool X11Window::isMovableAcrossScreens() const
         return false;
     }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) { // forced position
+        return false;
+    }
+    if (!options->interactiveWindowMoveEnabled()) {
         return false;
     }
     return true;

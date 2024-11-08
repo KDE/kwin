@@ -640,6 +640,19 @@ void Options::setAllowTearing(bool allow)
     }
 }
 
+bool Options::interactiveWindowMoveEnabled() const
+{
+    return m_interactiveWindowMoveEnabled;
+}
+
+void Options::setInteractiveWindowMoveEnabled(bool set)
+{
+    if (set != m_interactiveWindowMoveEnabled) {
+        m_interactiveWindowMoveEnabled = set;
+        Q_EMIT interactiveWindowMoveEnabledChanged();
+    }
+}
+
 void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
 {
     // check environment variable
@@ -845,6 +858,7 @@ void Options::syncFromKcfgc()
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
     setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
     setAllowTearing(m_settings->allowTearing());
+    setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
 }
 
 // restricted should be true for operations that the user may not be able to repeat

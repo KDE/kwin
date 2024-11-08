@@ -186,6 +186,9 @@ bool InternalWindow::isCloseable() const
 
 bool InternalWindow::isMovable() const
 {
+    if (!options->interactiveWindowMoveEnabled()) {
+        return false;
+    }
     return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
 }
 

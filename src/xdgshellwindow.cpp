@@ -554,6 +554,9 @@ bool XdgToplevelWindow::isMovable() const
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
         return false;
     }
+    if (!options->interactiveWindowMoveEnabled()) {
+        return false;
+    }
     return true;
 }
 
@@ -563,6 +566,9 @@ bool XdgToplevelWindow::isMovableAcrossScreens() const
         return false;
     }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
+        return false;
+    }
+    if (!options->interactiveWindowMoveEnabled()) {
         return false;
     }
     return true;

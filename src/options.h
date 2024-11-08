@@ -201,6 +201,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(KWin::OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
     Q_PROPERTY(bool allowTearing READ allowTearing WRITE setAllowTearing NOTIFY allowTearingChanged)
+    Q_PROPERTY(bool interactiveWindowMoveEnabled READ interactiveWindowMoveEnabled WRITE setInteractiveWindowMoveEnabled NOTIFY interactiveWindowMoveEnabledChanged)
 public:
     explicit Options(QObject *parent = nullptr);
     ~Options() override;
@@ -696,6 +697,7 @@ public:
     }
 
     bool allowTearing() const;
+    bool interactiveWindowMoveEnabled() const;
 
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
@@ -755,6 +757,7 @@ public:
     void setGlPlatformInterface(OpenGLPlatformInterface interface);
     void setWindowsBlockCompositing(bool set);
     void setAllowTearing(bool allow);
+    void setInteractiveWindowMoveEnabled(bool set);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick()
@@ -958,6 +961,7 @@ Q_SIGNALS:
     void animationSpeedChanged();
     void configChanged();
     void allowTearingChanged();
+    void interactiveWindowMoveEnabledChanged();
 
 private:
     void setElectricBorders(int borders);
@@ -1031,6 +1035,7 @@ private:
     bool condensed_title;
 
     bool m_allowTearing = true;
+    bool m_interactiveWindowMoveEnabled = true;
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
 };
