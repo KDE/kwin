@@ -298,10 +298,12 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME kde-external-brightness-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
     BASENAME alpha-modifier-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-system-bell/xdg-system-bell-v1.xml
     BASENAME xdg-system-bell-v1
 )
