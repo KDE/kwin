@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-08 00:41+0000\n"
+"POT-Creation-Date: 2024-11-09 00:41+0000\n"
 "PO-Revision-Date: 2024-09-23 20:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -66,17 +66,17 @@ msgstr "- 輸出已停用"
 msgid "- Output dimmed"
 msgstr "- 輸出已暗化"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "按下右側 Ctrl 來取消抓取輸入"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "按下右側 Ctrl 鍵來抓取輸入"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:513
+#: backends/x11/windowed/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 合成器"
@@ -1228,7 +1228,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主機名稱：%1"
 
-#: input.cpp:3054
+#: input.cpp:3053
 #, kde-format
 msgid "Touchpad"
 msgstr "觸控板"

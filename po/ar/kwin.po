@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-08 00:41+0000\n"
+"POT-Creation-Date: 2024-11-09 00:41+0000\n"
 "PO-Revision-Date: 2024-09-26 10:00+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -53,17 +53,17 @@ msgstr "- الخرج معطّل"
 msgid "- Output dimmed"
 msgstr "- الخرج معتم"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "اضغط على مفتاح التحكم الأيمن لترك الإدخال"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "اضغط على مفتاح التحكم الأيمن للحصول على الإدخال"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:513
+#: backends/x11/windowed/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "مراكب ويلاند كيدي"
@@ -1216,7 +1216,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "اسم المضيف: %1"
 
-#: input.cpp:3054
+#: input.cpp:3053
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"

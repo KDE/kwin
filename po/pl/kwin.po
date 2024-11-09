@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1694510 $
+# Version: $Revision: 1694587 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-08 00:41+0000\n"
+"POT-Creation-Date: 2024-11-09 00:41+0000\n"
 "PO-Revision-Date: 2024-09-21 12:08+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -65,17 +65,17 @@ msgstr "- Wyjście wyłączone"
 msgid "- Output dimmed"
 msgstr "- Wyjście przyciemnione"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Naciśnij prawy przycisk Ctrl, aby zwolnić wprowadzanie"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wprowadzanie"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:513
+#: backends/x11/windowed/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Kompozytor KDE Wayland"
@@ -1230,7 +1230,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nazwa gospodarza: %1"
 
-#: input.cpp:3054
+#: input.cpp:3053
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"

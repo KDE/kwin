@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-08 00:41+0000\n"
+"POT-Creation-Date: 2024-11-09 00:41+0000\n"
 "PO-Revision-Date: 2024-10-21 13:14+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -55,17 +55,17 @@ msgstr "- Output slået fra"
 msgid "- Output dimmed"
 msgstr "- Output dæmpet"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Tryk på højre kontrol for at frigøre input"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:512
+#: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Tryk på højre kontrol for at gribe input"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:513
+#: backends/x11/windowed/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland-kompositør"
@@ -1219,7 +1219,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Vværtsnavn: %1"
 
-#: input.cpp:3054
+#: input.cpp:3053
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
