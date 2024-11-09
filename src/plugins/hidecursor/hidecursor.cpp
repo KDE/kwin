@@ -73,24 +73,13 @@ void HideCursorEffect::tabletToolEvent(TabletEvent *event)
 
 void HideCursorEffect::keyEvent(KeyEvent *event)
 {
-    if (m_hideOnTyping && event->type() == QEvent::KeyPress) {
-        auto key = event->key();
-        switch (key) {
-        case Qt::Key_Shift:
-        case Qt::Key_Control:
-        case Qt::Key_Meta:
-        case Qt::Key_Alt:
-        case Qt::Key_AltGr:
-        case Qt::Key_Super_L:
-        case Qt::Key_Super_R:
-        case Qt::Key_Hyper_L:
-        case Qt::Key_Hyper_R:
-        case Qt::Key_Escape:
-            break;
-
-        default:
-            hideCursor();
-        }
+    // All functional keys have a Qt key code greater than 0x01000000
+    // https://doc.qt.io/qt-6/qt.html#Key-enum
+    // We don't want to hide the cursor when the user presses a functional key, since they are
+    // usually interleaved with mouse movements.
+    if (m_hideOnTyping && !m_cursorHidden && event->type() == QEvent::KeyPress && event->key() < 0x01000000
+        && (event->modifiers() == Qt::NoModifier || event->modifiers() == Qt::ShiftModifier)) {
+        hideCursor();
     }
 }
 
