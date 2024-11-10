@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-09 00:41+0000\n"
-"PO-Revision-Date: 2024-09-23 15:15+0200\n"
+"PO-Revision-Date: 2024-11-09 20:04+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.07.70\n"
+"X-Generator: Lokalize 24.08.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1180,7 +1180,7 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
-"<para>\"%1\" на <application>%2</application> не реагира. Искате ли да "
+"<para>„%1“ на <application>%2</application> не реагира. Искате ли да "
 "прекратите това приложение?</para>"
 
 #: helpers/killer/killer.cpp:214
@@ -3716,7 +3716,7 @@ msgstr ""
 "\n"
 "Рамката на прозореца не може да бъде включена с мишката. Ако искате да "
 "включите рамката на прозореца, използвайте системното меню на прозореца, "
-"което се вика с клавишната комбинация \"%1\"."
+"което се вика с клавишната комбинация „%1“."
 
 #: useractions.cpp:169
 #, kde-format
@@ -3730,7 +3730,7 @@ msgstr ""
 "\n"
 "Програмата не може да се върне отново в прозорец с помощта на мишката. Ако "
 "искате да изключите режима на цял екран, използвайте системното меню на "
-"прозореца, което се вика с клавишната комбинация \"%1\"."
+"прозореца, което се вика с клавишната комбинация „%1“."
 
 #: useractions.cpp:216
 #, kde-format

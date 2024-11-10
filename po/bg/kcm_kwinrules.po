@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-18 00:41+0000\n"
-"PO-Revision-Date: 2024-09-13 21:25+0200\n"
+"PO-Revision-Date: 2024-11-09 20:04+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.07.70\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -178,7 +178,7 @@ msgid ""
 msgstr ""
 "Някои приложения определят собствената си геометрия след стартиране, "
 "пренебрегвайки първоначалното им настройване за размер и позиция. За да "
-"наложите тези настройки, задайте свойство \"%1\" на \"да\"."
+"наложите тези настройки, задайте свойство „%1“ на \"да\"."
 
 #: rulesmodel.cpp:257
 #, kde-format
@@ -972,7 +972,7 @@ msgstr "Няма свойства, които да бъдат добавени"
 #, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Няма свойства, които отговарят на \"%1\""
+msgstr "Няма свойства, които отговарят на „%1“"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
