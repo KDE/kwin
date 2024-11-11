@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2024-10-26 22:14+0200\n"
+"PO-Revision-Date: 2024-11-10 19:12+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 24.08.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -101,6 +101,8 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"Kontuan izan \"Aktibatu, klika pasatu eta goratu askatzean\" ez dabilela "
+"X11rekin, eta horren ordez \"Aktibatu, goratu eta pasatu klika\" egiten duela"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
