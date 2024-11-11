@@ -143,6 +143,7 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
 {
     if (mode == DpmsMode::Off) {
         if (!m_turnOffTimer.isActive()) {
+            updateDpmsMode(DpmsMode::AboutToTurnOff);
             Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
             m_turnOffTimer.start();
         }
@@ -159,8 +160,8 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
     if (!isEnabled()) {
         return false;
     }
-    bool active = mode == DpmsMode::On;
-    bool isActive = dpmsMode() == DpmsMode::On;
+    bool active = mode == DpmsMode::On || mode == DpmsMode::AboutToTurnOff;
+    bool isActive = dpmsMode() == DpmsMode::On || dpmsMode() == DpmsMode::AboutToTurnOff;
     if (active == isActive) {
         updateDpmsMode(mode);
         return true;

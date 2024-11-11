@@ -148,6 +148,7 @@ public:
         Standby,
         Suspend,
         Off,
+        AboutToTurnOff,
     };
     Q_ENUM(DpmsMode)
 

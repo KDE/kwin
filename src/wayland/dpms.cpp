@@ -148,6 +148,7 @@ void DpmsInterface::sendMode()
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
     case Output::DpmsMode::On:
+    case Output::DpmsMode::AboutToTurnOff:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_ON;
         break;
     case Output::DpmsMode::Standby:
