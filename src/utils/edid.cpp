@@ -23,6 +23,7 @@
 
 extern "C" {
 #include <libdisplay-info/cta.h>
+#include <libdisplay-info/displayid.h>
 #include <libdisplay-info/edid.h>
 #include <libdisplay-info/info.h>
 }
@@ -169,12 +170,16 @@ Edid::Edid(const void *data, uint32_t size)
     }
 
     const di_edid_cta *cta = nullptr;
+    const di_displayid *displayid = nullptr;
     const di_edid_ext *const *exts = di_edid_get_extensions(edid);
     const di_cta_hdr_static_metadata_block *hdr_static_metadata = nullptr;
     const di_cta_colorimetry_block *colorimetry = nullptr;
     for (; *exts != nullptr; exts++) {
-        if ((cta = di_edid_ext_get_cta(*exts))) {
-            break;
+        if (!cta && (cta = di_edid_ext_get_cta(*exts))) {
+            continue;
+        }
+        if (!displayid && (displayid = di_edid_ext_get_displayid(*exts))) {
+            continue;
         }
     }
     if (cta) {
@@ -197,9 +202,57 @@ Edid::Edid(const void *data, uint32_t size)
             };
         }
     }
+    if (displayid) {
+        const di_displayid_display_params *params = nullptr;
+        const di_displayid_type_i_ii_vii_timing *const *type1Timings = nullptr;
+        const di_displayid_type_i_ii_vii_timing *const *type2Timings = nullptr;
+        for (auto block = di_displayid_get_data_blocks(displayid); *block != nullptr; block++) {
+            if (!params && (params = di_displayid_data_block_get_display_params(*block))) {
+                continue;
+            }
+            if (!type1Timings && (type1Timings = di_displayid_data_block_get_type_i_timings(*block))) {
+                continue;
+            }
+            if (!type2Timings && (type2Timings = di_displayid_data_block_get_type_ii_timings(*block))) {
+                continue;
+            }
+        }
+        if (params && params->horiz_pixels != 0 && params->vert_pixels != 0) {
+            m_nativeResolution = QSize(params->horiz_pixels, params->vert_pixels);
+        }
+        if (type1Timings && !m_nativeResolution) {
+            for (auto timing = type1Timings; *timing != nullptr; timing++) {
+                if ((*timing)->preferred && (!m_nativeResolution || m_nativeResolution->width() < (*timing)->horiz_active || m_nativeResolution->height() < (*timing)->vert_active)) {
+                    m_nativeResolution = QSize((*timing)->horiz_active, (*timing)->vert_active);
+                }
+            }
+        }
+        if (type2Timings && !m_nativeResolution) {
+            for (auto timing = type2Timings; *timing != nullptr; timing++) {
+                if ((*timing)->preferred && (!m_nativeResolution || m_nativeResolution->width() < (*timing)->horiz_active || m_nativeResolution->height() < (*timing)->vert_active)) {
+                    m_nativeResolution = QSize((*timing)->horiz_active, (*timing)->vert_active);
+                }
+            }
+        }
+    }
+    // EDID often contains misleading information for backwards compatibility
+    // so only use it if we don't have the same info from DisplayID
+    if (const auto misc = di_edid_get_misc_features(edid); misc && !m_nativeResolution) {
+        if (misc->preferred_timing_is_native) {
+            const auto timing = di_edid_get_detailed_timing_defs(edid);
+            if (*timing != nullptr) {
+                m_nativeResolution = QSize((*timing)->horiz_video, (*timing)->vert_video);
+            }
+        }
+    }
 
     m_isValid = true;
     di_info_destroy(info);
+}
+
+std::optional<QSize> Edid::likelyNativeResolution() const
+{
+    return m_nativeResolution;
 }
 
 bool Edid::isValid() const

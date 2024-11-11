@@ -93,6 +93,14 @@ public:
      */
     QByteArray identifier() const;
 
+    /**
+     * @returns the resolution that's most likely native. This is unreliable, because
+     * - some displays provide the wrong information
+     * - libdisplay-info doesn't parse all the DisplayID things yet
+     * so it should only be used as a fallback, when the kernel doesn't provide a preferred mode
+     */
+    std::optional<QSize> likelyNativeResolution() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;
@@ -110,6 +118,7 @@ private:
         bool supportsBT2020;
     };
     std::optional<HDRMetadata> m_hdrMetadata;
+    std::optional<QSize> m_nativeResolution;
 
     QByteArray m_identifier;
 

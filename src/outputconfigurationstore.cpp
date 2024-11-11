@@ -517,8 +517,9 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
         return (mode->flags() & OutputMode::Flag::Preferred);
     });
     const auto nativeSize = std::ranges::max_element(preferredOnly, findBiggestFastest);
-    if (nativeSize != preferredOnly.end()) {
-        auto correctSize = notPotentiallyBroken | std::ranges::views::filter([size = (*nativeSize)->size()](const auto &mode) {
+    if (nativeSize != preferredOnly.end() || output->edid().likelyNativeResolution()) {
+        const auto size = nativeSize != preferredOnly.end() ? (*nativeSize)->size() : *output->edid().likelyNativeResolution();
+        auto correctSize = notPotentiallyBroken | std::ranges::views::filter([size](const auto &mode) {
             return mode->size() == size;
         });
         // some high refresh rate displays advertise a 60Hz mode as preferred for compatibility reasons
