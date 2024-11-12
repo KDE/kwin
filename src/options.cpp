@@ -100,6 +100,7 @@ Options::Options(QObject *parent)
         } else if (group.name() == QLatin1String("Windows") && names.contains(QByteArrayLiteral("InteractiveWindowMoveEnabled"))) {
             m_settings->load();
             setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
+            workspace()->reconfigure();
         } else if (group.name() == QLatin1String("Xwayland")) {
             workspace()->reconfigure();
         }
