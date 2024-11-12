@@ -55,6 +55,7 @@ public:
     bool m_automaticRepaint = true;
 
     QList<QEventPoint> touchPoints;
+    QSet<uint32_t> acceptedTouchPoints;
     QPointingDevice *touchDevice;
 
     ulong lastMousePressTime = 0;
@@ -344,12 +345,20 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, std::ch
     event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
-    return event.isAccepted();
+    const bool ret = event.isAccepted();
+    if (ret) {
+        d->acceptedTouchPoints.insert(id);
+    }
+    return ret;
 }
 
 bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     d->updateTouchState(Qt::TouchPointMoved, id, pos);
+
+    if (!d->acceptedTouchPoints.contains(id)) {
+        return false;
+    }
 
     QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
@@ -363,10 +372,16 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, std::chrono::microseconds tim
 {
     d->updateTouchState(Qt::TouchPointReleased, id, QPointF{});
 
+    if (!d->acceptedTouchPoints.contains(id)) {
+        return false;
+    }
+
     QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
+
+    d->acceptedTouchPoints.remove(id);
 
     return event.isAccepted();
 }
