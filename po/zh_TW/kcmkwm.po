@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2024-09-10 02:35+0900\n"
+"PO-Revision-Date: 2024-11-11 16:01+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 24.08.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -47,12 +47,14 @@ msgstr ""
 "在這一列您可以自訂當左鍵在非作用中的內部視窗按下的行為（「內部」表示：非標題"
 "列、非邊框）。"
 
+# https://invent.kde.org/plasma/kwin/-/merge_requests/6555
+# activate (passing clicks), then on release, raise. The "on release" isn't for "activate".
+# --Kisaragi
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:48
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "作用及移到上層"
+msgstr "作用及點選，並在放開時移到上層"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -101,6 +103,8 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"請注意，「作用及點選，並在放開時移到上層」選項不支援 X11，而會退回使用「作"
+"用、移到上層及點選」行為"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
