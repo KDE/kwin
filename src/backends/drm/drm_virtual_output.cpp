@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, const QSize &size, qreal scale)
+DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, const QString &description, const QSize &size, qreal scale)
     : m_backend(backend)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
@@ -30,6 +30,7 @@ DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, con
 
     setInformation(Information{
         .name = QStringLiteral("Virtual-") + name,
+        .model = description,
         .physicalSize = size,
     });
 

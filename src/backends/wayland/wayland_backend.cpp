@@ -562,7 +562,7 @@ Outputs WaylandBackend::outputs() const
     return m_outputs;
 }
 
-Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *WaylandBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
     return createOutput(name, size * scale, scale);
 }

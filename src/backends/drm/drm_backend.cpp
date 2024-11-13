@@ -328,9 +328,9 @@ QString DrmBackend::supportInformation() const
     return supportInfo;
 }
 
-Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *DrmBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
-    const auto ret = new DrmVirtualOutput(this, name, size, scale);
+    const auto ret = new DrmVirtualOutput(this, name, description, size, scale);
     m_virtualOutputs.push_back(ret);
     addOutput(ret);
     Q_EMIT outputsQueried();

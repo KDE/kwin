@@ -232,7 +232,7 @@ public:
         return m_outputs;
     }
 
-    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    Output *createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale) override;
     void removeVirtualOutput(Output *output) override;
 
     wl_buffer *importBuffer(GraphicsBuffer *graphicsBuffer);

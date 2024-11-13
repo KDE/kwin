@@ -86,7 +86,7 @@ public:
      */
     virtual QString supportInformation() const;
 
-    virtual Output *createVirtualOutput(const QString &name, const QSize &size, qreal scale);
+    virtual Output *createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale);
     virtual void removeVirtualOutput(Output *output);
 
     /**

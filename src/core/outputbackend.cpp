@@ -77,7 +77,7 @@ Output *OutputBackend::findOutput(const QString &name) const
     return nullptr;
 }
 
-Output *OutputBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *OutputBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
     return nullptr;
 }
