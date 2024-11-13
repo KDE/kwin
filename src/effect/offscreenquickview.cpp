@@ -386,6 +386,16 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, std::chrono::microseconds tim
     return event.isAccepted();
 }
 
+void OffscreenQuickView::forwardTouchCancel()
+{
+    d->acceptedTouchPoints.clear();
+    d->touchPoints.clear();
+    QTouchEvent event(QEvent::TouchCancel, d->touchDevice, Qt::NoModifier, d->touchPoints);
+    event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    event.setAccepted(false);
+    QCoreApplication::sendEvent(d->m_view.get(), &event);
+}
+
 QRect OffscreenQuickView::geometry() const
 {
     return d->m_view->geometry();

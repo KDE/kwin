@@ -573,6 +573,11 @@ public:
         }
         return effects->touchUp(id, time);
     }
+    bool touchCancel() override
+    {
+        effects->touchCancel();
+        return false;
+    }
     bool tabletToolEvent(TabletEvent *event) override
     {
         if (!effects) {

@@ -561,6 +561,13 @@ bool EffectsHandler::touchUp(qint32 id, std::chrono::microseconds time)
     return false;
 }
 
+void EffectsHandler::touchCancel()
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->touchCancel();
+    }
+}
+
 bool EffectsHandler::tabletToolEvent(TabletEvent *event)
 {
     // TODO: reverse call order?

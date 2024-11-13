@@ -790,6 +790,11 @@ public:
      * @since 5.8
      */
     virtual bool touchUp(qint32 id, std::chrono::microseconds time);
+    /**
+     * All touch points were canceled
+     * @since 6.3
+     */
+    virtual void touchCancel();
 
     /**
      * There has been an event from a drawing tablet tool

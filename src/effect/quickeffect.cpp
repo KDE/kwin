@@ -619,6 +619,13 @@ bool QuickSceneEffect::touchUp(qint32 id, std::chrono::microseconds time)
     return false;
 }
 
+void QuickSceneEffect::touchCancel()
+{
+    for (const auto &[screen, screenView] : d->views) {
+        screenView->forwardTouchCancel();
+    }
+}
+
 } // namespace KWin
 
 #include "moc_quickeffect.cpp"

@@ -476,6 +476,10 @@ bool Effect::touchUp(qint32 id, std::chrono::microseconds time)
     return false;
 }
 
+void Effect::touchCancel()
+{
+}
+
 bool Effect::perform(Feature feature, const QVariantList &arguments)
 {
     return false;

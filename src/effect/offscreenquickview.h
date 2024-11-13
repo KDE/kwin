@@ -132,6 +132,7 @@ public:
     bool forwardTouchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool forwardTouchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool forwardTouchUp(qint32 id, std::chrono::microseconds time);
+    void forwardTouchCancel();
 
 Q_SIGNALS:
     /**

@@ -744,6 +744,7 @@ public:
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool touchUp(qint32 id, std::chrono::microseconds time);
+    void touchCancel();
 
     bool tabletToolEvent(KWin::TabletEvent *event);
     bool tabletToolButtonEvent(uint button, bool pressed, InputDeviceTabletTool *tool, std::chrono::microseconds time);
