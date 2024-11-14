@@ -188,9 +188,11 @@ bool CustomTile::supportsResizeGravity(KWin::Gravity gravity)
     return Tile::supportsResizeGravity(gravity);
 }
 
-void CustomTile::split(KWin::Tile::LayoutDirection newDirection)
+QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
 {
     auto *parentT = static_cast<CustomTile *>(parentTile());
+
+    QList<CustomTile *> splitTiles;
 
     // If we are m_rootLayoutTile always create childrens, not siblings
     if (parentT && (parentT->childCount() < 2 || parentT->layoutDirection() == newDirection)) {
@@ -215,7 +217,8 @@ void CustomTile::split(KWin::Tile::LayoutDirection newDirection)
             newGeo.moveTop(newGeo.y() + newGeo.height());
         }
 
-        parentT->createChildAt(newGeo, layoutDirection(), row() + 1);
+        splitTiles << this;
+        splitTiles << parentT->createChildAt(newGeo, layoutDirection(), row() + 1);
     } else {
         // Do a new layout and put tiles inside
         setLayoutDirection(newDirection);
@@ -231,21 +234,23 @@ void CustomTile::split(KWin::Tile::LayoutDirection newDirection)
             newGeo.setTop(std::max(newGeo.top(), relativeGeometry().top()));
             newGeo.setRight(std::min(newGeo.right(), relativeGeometry().right()));
             newGeo.setBottom(std::min(newGeo.bottom(), relativeGeometry().bottom()));
-            createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt(newGeo, newDirection, childCount());
         } else if (newDirection == LayoutDirection::Horizontal) {
             // Do a new layout with 2 cells inside this one
             newGeo.setWidth(relativeGeometry().width() / 2);
-            createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt(newGeo, newDirection, childCount());
             newGeo.moveLeft(newGeo.x() + newGeo.width());
-            createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt(newGeo, newDirection, childCount());
         } else if (newDirection == LayoutDirection::Vertical) {
             // Do a new layout with 2 cells inside this one
             newGeo.setHeight(relativeGeometry().height() / 2);
-            createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt(newGeo, newDirection, childCount());
             newGeo.moveTop(newGeo.y() + newGeo.height());
-            createChildAt(newGeo, newDirection, childCount());
+            splitTiles << createChildAt(newGeo, newDirection, childCount());
         }
     }
+
+    return splitTiles;
 }
 
 void CustomTile::moveByPixels(const QPointF &delta)
