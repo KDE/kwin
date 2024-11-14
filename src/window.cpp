@@ -2622,6 +2622,17 @@ void Window::endInteractiveMoveResize()
     updateCursor();
 }
 
+void Window::cancelInteractiveMoveResize()
+{
+    setInteractiveMoveResizePointerButtonDown(false);
+    stopDelayedInteractiveMoveResize();
+    if (isInteractiveMoveResize()) {
+        finishInteractiveMoveResize(true);
+        setInteractiveMoveResizeGravity(mouseGravity());
+    }
+    updateCursor();
+}
+
 void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
 {
     if (m_decoration.decoration == decoration) {
