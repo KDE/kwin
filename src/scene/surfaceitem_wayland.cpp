@@ -252,15 +252,30 @@ SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Item *parent)
     : SurfaceItemWayland(window->surface(), parent)
     , m_window(window)
 {
+    connect(window, &X11Window::shapeChanged, this, &SurfaceItemXwayland::discardQuads);
+}
+
+QList<QRectF> SurfaceItemXwayland::shape() const
+{
+    QList<QRectF> shape = m_window->shapeRegion();
+    for (QRectF &shapePart : shape) {
+        shapePart = shapePart.intersected(rect());
+    }
+    return shape;
 }
 
 QRegion SurfaceItemXwayland::opaque() const
 {
-    if (!m_window->hasAlpha()) {
-        return rect().toRect();
-    } else {
-        return m_window->opaqueRegion() & rect().toRect();
+    QRegion shapeRegion;
+    for (const QRectF &shapePart : shape()) {
+        shapeRegion += shapePart.toRect();
     }
+    if (!m_window->hasAlpha()) {
+        return shapeRegion;
+    } else {
+        return m_window->opaqueRegion() & shapeRegion;
+    }
+    return QRegion();
 }
 #endif
 } // namespace KWin
