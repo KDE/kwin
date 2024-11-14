@@ -3695,6 +3695,10 @@ Tile *Window::requestedTile() const
 
 void Window::requestTile(Tile *tile)
 {
+    // Forbid tiling unmanaged windows
+    if (!isClient()) {
+        return;
+    }
     if (m_requestedTile == tile) {
         return;
     }

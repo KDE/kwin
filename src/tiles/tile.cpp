@@ -304,6 +304,9 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 void Tile::addWindow(Window *window)
 {
+    if (!window->isClient()) {
+        return;
+    }
     if (!m_windows.contains(window)) {
         // Don't resize the window here, it was already resized in the configureEvent
         m_windows.append(window);
