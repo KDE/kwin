@@ -12,6 +12,11 @@
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
+#include "window.h"
+
+#if KWIN_BUILD_X11
+#include "x11window.h"
+#endif
 
 namespace KWin
 {
@@ -242,6 +247,22 @@ bool SurfacePixmapWayland::isValid() const
     return m_bufferRef;
 }
 
+#if KWIN_BUILD_X11
+SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Item *parent)
+    : SurfaceItemWayland(window->surface(), parent)
+    , m_window(window)
+{
+}
+
+QRegion SurfaceItemXwayland::opaque() const
+{
+    if (!m_window->hasAlpha()) {
+        return rect().toRect();
+    } else {
+        return m_window->opaqueRegion() & rect().toRect();
+    }
+}
+#endif
 } // namespace KWin
 
 #include "moc_surfaceitem_wayland.cpp"
