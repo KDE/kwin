@@ -11,6 +11,7 @@
 #include "core/drmdevice.h"
 #include "drm_pipeline.h"
 #include "utils/filedescriptor.h"
+#include "utils/version.h"
 
 #include <QList>
 #include <QPointer>
@@ -87,6 +88,7 @@ public:
     bool isAmdgpu() const;
     bool isVmwgfx() const;
     bool isVirtualMachine() const;
+    std::optional<Version> nvidiaDriverVersion() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
@@ -150,6 +152,7 @@ private:
     clockid_t m_presentationClock;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;
+    std::optional<Version> m_nvidiaDriverVersion;
 
     std::vector<std::unique_ptr<DrmPlane>> m_planes;
     std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;

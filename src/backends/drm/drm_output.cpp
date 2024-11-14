@@ -259,7 +259,7 @@ Output::Capabilities DrmOutput::computeCapabilities() const
         if (m_gpu->isI915()) {
             allowColorspace &= s_allowColorspaceIntel || linuxKernelVersion() >= Version(6, 11);
         } else if (m_gpu->isNVidia()) {
-            allowColorspace &= s_allowColorspaceNVidia;
+            allowColorspace &= s_allowColorspaceNVidia || m_gpu->nvidiaDriverVersion() >= Version(565, 57, 1);
         }
         if (allowColorspace) {
             capabilities |= Capability::WideColorGamut;
