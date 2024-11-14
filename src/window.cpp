@@ -3649,6 +3649,11 @@ QuickTileMode Window::requestedQuickTileMode() const
 
 void Window::setTile(Tile *tile)
 {
+    // Forbid tiling unmanaged windows
+    if (!isClient()) {
+        return;
+    }
+
     if (m_tile == tile) {
         return;
     }

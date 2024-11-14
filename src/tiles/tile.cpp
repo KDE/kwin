@@ -285,6 +285,9 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 void Tile::addWindow(Window *window)
 {
+    if (!window->isClient()) {
+        return;
+    }
     if (!m_windows.contains(window)) {
         window->moveResize(windowGeometry());
         m_windows.append(window);
