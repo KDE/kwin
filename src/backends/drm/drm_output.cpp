@@ -22,6 +22,7 @@
 #include "core/renderloop_p.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
+#include "utils/kernel.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
@@ -256,7 +257,7 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->colorspace.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC)) && m_connector->edid()->supportsBT2020()) {
         bool allowColorspace = true;
         if (m_gpu->isI915()) {
-            allowColorspace &= s_allowColorspaceIntel;
+            allowColorspace &= s_allowColorspaceIntel || linuxKernelVersion() >= Version(6, 11);
         } else if (m_gpu->isNVidia()) {
             allowColorspace &= s_allowColorspaceNVidia;
         }
