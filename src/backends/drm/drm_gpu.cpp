@@ -751,9 +751,11 @@ bool DrmGpu::isActive() const
 
 bool DrmGpu::needsModeset() const
 {
-    return std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
-        return pipeline->needsModeset();
-    }) || m_forceModeset || !m_pendingModesetFrames.empty();
+    return m_forceModeset
+        || !m_pendingModesetFrames.empty()
+        || std::ranges::any_of(m_pipelines, [](DrmPipeline *pipeline) {
+        return !pipeline->output()->lease() && pipeline->needsModeset();
+    });
 }
 
 bool DrmGpu::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
