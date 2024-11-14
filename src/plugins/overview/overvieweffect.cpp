@@ -23,27 +23,16 @@ namespace KWin
 
 OverviewEffect::OverviewEffect()
     // manages the transition between inactive -> overview
-    : m_overviewState(new EffectTogglableState(this))
+    : m_overviewState(new EffectTogglableState(this, "overview", "Triggers the overview"))
     // manages the transition between overview -> grid
-    , m_transitionState(new EffectTogglableState(this))
-    // manages the transition betwee inactive -> overview
-    , m_gridState(new EffectTogglableState(this))
+    , m_transitionState(new EffectTogglableState(this, "overview <-> desktop grid", "Switches between overview and desktop grid"))
+    // manages the transition between inactive -> overview
+    , m_gridState(new EffectTogglableState(this, "desktop grid", "Triggers the desktop grid"))
     , m_border(new EffectTogglableTouchBorder(m_overviewState))
     , m_gridBorder(new EffectTogglableTouchBorder(m_gridState))
     , m_shutdownTimer(new QTimer(this))
 {
-    auto gesture = new EffectTogglableGesture(m_overviewState);
-    gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    gesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
-
-    auto transitionGesture = new EffectTogglableGesture(m_transitionState);
-    transitionGesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    transitionGesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
     m_transitionState->stop();
-
-    auto gridGesture = new EffectTogglableGesture(m_gridState);
-    gridGesture->addTouchpadSwipeGesture(SwipeDirection::Down, 4);
-    gridGesture->addTouchscreenSwipeGesture(SwipeDirection::Down, 3);
 
     connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
     connect(m_overviewState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::overviewPartialActivationFactorChanged);

@@ -10,12 +10,16 @@
 namespace KWin
 {
 
-EffectTogglableState::EffectTogglableState(Effect *effect)
+EffectTogglableState::EffectTogglableState(Effect *effect, const QString &name, const QString &description)
     : QObject(effect)
+    , m_name(name)
     , m_deactivateAction(std::make_unique<QAction>())
     , m_activateAction(std::make_unique<QAction>())
     , m_toggleAction(std::make_unique<QAction>())
 {
+    effects->registerTouchGesture(name, description, m_activateAction.get(), [this](double progress) {
+        setProgress(progress);
+    });
     connect(m_activateAction.get(), &QAction::triggered, this, [this]() {
         if (m_status == Status::Activating) {
             if (m_partialActivationFactor > 0.5) {
@@ -39,6 +43,11 @@ EffectTogglableState::EffectTogglableState(Effect *effect)
         }
     });
     connect(m_toggleAction.get(), &QAction::triggered, this, &EffectTogglableState::toggle);
+}
+
+EffectTogglableState::~EffectTogglableState()
+{
+    effects->unregisterTouchGesture(m_name);
 }
 
 void EffectTogglableState::activate()
@@ -154,12 +163,6 @@ void EffectTogglableState::setRegress(qreal regress)
     }
 }
 
-EffectTogglableGesture::EffectTogglableGesture(EffectTogglableState *state)
-    : QObject(state)
-    , m_state(state)
-{
-}
-
 static PinchDirection opposite(PinchDirection direction)
 {
     switch (direction) {
@@ -200,24 +203,6 @@ std::function<void(qreal progress)> EffectTogglableState::regressCallback()
     return [this](qreal progress) {
         setRegress(progress);
     };
-}
-
-void EffectTogglableGesture::addTouchpadPinchGesture(PinchDirection direction, uint fingerCount)
-{
-    effects->registerTouchpadPinchShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());
-    effects->registerTouchpadPinchShortcut(opposite(direction), fingerCount, m_state->deactivateAction(), m_state->regressCallback());
-}
-
-void EffectTogglableGesture::addTouchpadSwipeGesture(SwipeDirection direction, uint fingerCount)
-{
-    effects->registerTouchpadSwipeShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());
-    effects->registerTouchpadSwipeShortcut(opposite(direction), fingerCount, m_state->deactivateAction(), m_state->regressCallback());
-}
-
-void EffectTogglableGesture::addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount)
-{
-    effects->registerTouchscreenSwipeShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());
-    effects->registerTouchscreenSwipeShortcut(opposite(direction), fingerCount, m_state->deactivateAction(), m_state->regressCallback());
 }
 
 EffectTogglableTouchBorder::EffectTogglableTouchBorder(EffectTogglableState *state)

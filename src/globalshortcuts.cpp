@@ -28,6 +28,7 @@
 
 namespace KWin
 {
+
 GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
     : m_shortcut(sc)
     , m_action(action)
@@ -147,48 +148,59 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
     add(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
 }
 
-void GlobalShortcutsManager::registerTouchpadSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
+void GlobalShortcutsManager::registerTouchGesture(const QString &name, const QString &description, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, direction, progressCallback, fingerCount}, action), DeviceType::Touchpad);
-}
-
-void GlobalShortcutsManager::registerTouchpadSwipe(SwipeGesture *swipeGesture)
-{
-    m_touchpadGestureRecognizer->registerSwipeGesture(swipeGesture);
-}
-
-void GlobalShortcutsManager::registerTouchpadPinch(PinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-    add(GlobalShortcut(RealtimeFeedbackPinchShortcut{direction, progressCallback, fingerCount}, action), DeviceType::Touchpad);
-}
-
-void GlobalShortcutsManager::registerTouchpadPinch(PinchGesture *pinchGesture)
-{
-    m_touchpadGestureRecognizer->registerPinchGesture(pinchGesture);
-}
-
-void GlobalShortcutsManager::registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-    add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchscreen, direction, progressCallback, fingerCount}, action), DeviceType::Touchscreen);
-}
-
-void GlobalShortcutsManager::registerTouchscreenSwipe(SwipeGesture *swipeGesture)
-{
-    m_touchscreenGestureRecognizer->registerSwipeGesture(swipeGesture);
-}
-
-void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-    GlobalShortcut shortcut{RealtimeFeedbackSwipeShortcut{DeviceType::Touchscreen, direction, progressCallback, fingerCount}, action};
-    const auto it = std::find_if(m_shortcuts.begin(), m_shortcuts.end(), [&shortcut](const auto &s) {
-        return shortcut.shortcut() == s.shortcut();
+    m_gestures.push_back(GestureDefinition{
+        .name = name,
+        .description = description,
+        .action = action,
+        .progressCallback = progressCallback,
     });
-    if (it != m_shortcuts.end()) {
-        m_shortcuts.erase(it);
+    reloadConfig();
+}
+
+void GlobalShortcutsManager::unregisterTouchGesture(const QString &name)
+{
+    std::erase_if(m_gestures, [name](const GestureDefinition &def) {
+        return def.name == name;
+    });
+    reloadConfig();
+}
+
+void GlobalShortcutsManager::reloadConfig()
+{
+    // first, remove all previous gestures
+    for (auto it = m_shortcuts.begin(); it != m_shortcuts.end();) {
+        const auto shortcut = *it;
+        if (std::holds_alternative<RealtimeFeedbackSwipeShortcut>(shortcut.shortcut())) {
+            m_touchpadGestureRecognizer->unregisterSwipeGesture(shortcut.swipeGesture());
+            m_touchscreenGestureRecognizer->unregisterSwipeGesture(shortcut.swipeGesture());
+            it = m_shortcuts.erase(it);
+        } else if (std::holds_alternative<RealtimeFeedbackPinchShortcut>(shortcut.shortcut())) {
+            m_touchpadGestureRecognizer->unregisterPinchGesture(shortcut.pinchGesture());
+            m_touchscreenGestureRecognizer->unregisterPinchGesture(shortcut.pinchGesture());
+            it = m_shortcuts.erase(it);
+        } else {
+            it++;
+        }
     }
-    m_touchscreenGestureRecognizer->registerSwipeGesture(shortcut.swipeGesture());
-    connect(shortcut.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
-    m_shortcuts.push_back(std::move(shortcut));
+
+    // now, reassign the ones we really want
+    // there's no actual config yet, but this at least centralizes the defaults
+    const auto findGesture = [this](const QString &name) {
+        const auto it = std::ranges::find_if(m_gestures, [name](const GestureDefinition &gesture) {
+            return gesture.name == name;
+        });
+        return it == m_gestures.end() ? nullptr : &*it;
+    };
+    if (auto g = findGesture("overview")) {
+        add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, SwipeDirection::Up, g->progressCallback, 4}, g->action), DeviceType::Touchpad);
+        add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, SwipeDirection::Up, g->progressCallback, 3}, g->action), DeviceType::Touchscreen);
+    }
+    if (auto g = findGesture("desktop grid")) {
+        add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, SwipeDirection::Down, g->progressCallback, 4}, g->action), DeviceType::Touchpad);
+        add(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, SwipeDirection::Down, g->progressCallback, 3}, g->action), DeviceType::Touchscreen);
+    }
 }
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)

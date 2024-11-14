@@ -65,15 +65,13 @@ public:
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void registerTouchpadSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
-    void registerTouchpadSwipe(SwipeGesture *swipeGesture);
-    void registerTouchpadPinch(PinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
-    void registerTouchpadPinch(PinchGesture *pinchGesture);
-    void registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
-    void registerTouchscreenSwipe(SwipeGesture *swipeGesture);
-    void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
-
     /**
+     * Registers a global touchscreen and touchpad gesture
+     */
+    void registerTouchGesture(const QString &name, const QString &description, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void unregisterTouchGesture(const QString &name);
+
+    /**GlobalShortcut
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
      *
      * If a shortcut triggered this method returns @c true to indicate to the caller that the event
@@ -120,6 +118,7 @@ public:
 private:
     void objectDeleted(QObject *object);
     bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
+    void reloadConfig();
 
     QList<GlobalShortcut> m_shortcuts;
 
@@ -129,6 +128,15 @@ private:
 #endif
     std::unique_ptr<GestureRecognizer> m_touchpadGestureRecognizer;
     std::unique_ptr<GestureRecognizer> m_touchscreenGestureRecognizer;
+
+    struct GestureDefinition
+    {
+        QString name;
+        QString description;
+        QAction *action;
+        std::function<void(qreal)> progressCallback;
+    };
+    std::vector<GestureDefinition> m_gestures;
 };
 
 struct KeyboardShortcut

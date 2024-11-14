@@ -37,14 +37,14 @@ void SwipeGestureHandler::componentComplete()
     connect(m_gesture.get(), &SwipeGesture::cancelled, this, &SwipeGestureHandler::cancelled);
     connect(m_gesture.get(), &SwipeGesture::progress, this, &SwipeGestureHandler::setProgress);
 
-    switch (m_deviceType) {
-    case Device::Touchpad:
-        input()->shortcuts()->registerTouchpadSwipe(m_gesture.get());
-        break;
-    case Device::Touchscreen:
-        input()->shortcuts()->registerTouchscreenSwipe(m_gesture.get());
-        break;
-    }
+    // switch (m_deviceType) {
+    // case Device::Touchpad:
+    //     input()->shortcuts()->registerTouchpadSwipe(m_gesture.get());
+    //     break;
+    // case Device::Touchscreen:
+    //     input()->shortcuts()->registerTouchscreenSwipe(m_gesture.get());
+    //     break;
+    // }
 }
 
 SwipeGestureHandler::Direction SwipeGestureHandler::direction() const
@@ -125,7 +125,7 @@ void PinchGestureHandler::componentComplete()
 
     switch (m_deviceType) {
     case Device::Touchpad:
-        input()->shortcuts()->registerTouchpadPinch(m_gesture.get());
+        // input()->shortcuts()->registerTouchpadPinch(m_gesture.get());
         break;
     }
 }

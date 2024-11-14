@@ -207,7 +207,6 @@ private:
     QList<PinchGesture *> m_pinchGestures;
     QList<SwipeGesture *> m_activeSwipeGestures;
     QList<PinchGesture *> m_activePinchGestures;
-    QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
 
     QPointF m_currentDelta = QPointF(0, 0);
     qreal m_currentScale = 1; // For Pinch Gesture recognition

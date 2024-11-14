@@ -234,24 +234,13 @@ public:
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
 
     /**
-     * @brief Registers a global touchpad swipe gesture shortcut with the provided @p action.
+     * Registers a global touchpad or touchscreen gesture shortcut with the provided @p action and progress callback
      *
-     * @param direction The direction for the swipe
-     * @param action The action which gets triggered when the gesture triggers
-     * @since 5.10
+     * @since 6.3
      */
-    void registerTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
-
-    void registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
-
-    /**
-     * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.
-     *
-     * @param direction The direction for the swipe
-     * @param action The action which gets triggered when the gesture triggers
-     * @since 5.25
-     */
-    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
+    void registerTouchGesture(const QString &name, const QString &description, QAction *onUp, std::function<void(qreal)> progressCallback);
+    // TODO remove this by returning a RAII obj from registerTouchGesture?
+    void unregisterTouchGesture(const QString &name);
 
     void reserveElectricBorder(ElectricBorder border, Effect *effect);
     void unreserveElectricBorder(ElectricBorder border, Effect *effect);

@@ -3226,17 +3226,17 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
 #endif
 }
 
-void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
+void InputRedirection::registerTouchGesture(const QString &name, const QString &description, QAction *action, std::function<void(qreal)> cb)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    m_shortcuts->registerTouchpadSwipe(direction, fingerCount, action, cb);
+    m_shortcuts->registerTouchGesture(name, description, action, cb);
 #endif
 }
 
-void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void InputRedirection::unregisterTouchGesture(const QString &name)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    m_shortcuts->registerTouchpadPinch(direction, fingerCount, onUp, progressCallback);
+    m_shortcuts->unregisterTouchGesture(name);
 #endif
 }
 
@@ -3244,20 +3244,6 @@ void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->setKGlobalAccelInterface(interface);
-#endif
-}
-
-void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-#if KWIN_BUILD_GLOBALSHORTCUTS
-    m_shortcuts->registerTouchscreenSwipe(direction, fingerCount, action, progressCallback);
-#endif
-}
-
-void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-#if KWIN_BUILD_GLOBALSHORTCUTS
-    m_shortcuts->forceRegisterTouchscreenSwipe(direction, fingerCount, action, progressCallback);
 #endif
 }
 

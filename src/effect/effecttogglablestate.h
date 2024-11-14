@@ -35,7 +35,8 @@ public:
     Q_ENUM(Status)
 
     /** Constructs the object, passes the effect as the parent. */
-    EffectTogglableState(Effect *parent);
+    explicit EffectTogglableState(Effect *parent, const QString &name, const QString &description);
+    ~EffectTogglableState();
 
     bool inProgress() const;
     void setInProgress(bool gesture);
@@ -88,6 +89,7 @@ private:
     void partialActivate(qreal factor);
     void partialDeactivate(qreal factor);
 
+    const QString m_name;
     std::unique_ptr<QAction> m_deactivateAction;
     std::unique_ptr<QAction> m_activateAction;
     std::unique_ptr<QAction> m_toggleAction;
@@ -97,26 +99,6 @@ private:
 
     friend class EffectTogglableGesture;
     friend class EffectTogglableTouchBorder;
-};
-
-class KWIN_EXPORT EffectTogglableGesture : public QObject
-{
-public:
-    /**
-     * Allows specifying which gestures toggle the state.
-     *
-     * The gesture will activate it and once enabled the opposite will disable it back.
-     *
-     * @param state the state we care about. This state will become the parent object and will take care to clean it up.
-     */
-    EffectTogglableGesture(EffectTogglableState *state);
-
-    void addTouchpadPinchGesture(PinchDirection dir, uint fingerCount);
-    void addTouchpadSwipeGesture(SwipeDirection dir, uint fingerCount);
-    void addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount);
-
-private:
-    EffectTogglableState *const m_state;
 };
 
 class KWIN_EXPORT EffectTogglableTouchBorder : public QObject

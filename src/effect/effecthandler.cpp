@@ -626,19 +626,14 @@ void EffectsHandler::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Point
     input()->registerAxisShortcut(modifiers, axis, action);
 }
 
-void EffectsHandler::registerTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void EffectsHandler::registerTouchGesture(const QString &name, const QString &description, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
-    input()->registerTouchpadSwipeShortcut(dir, fingerCount, onUp, progressCallback);
+    input()->registerTouchGesture(name, description, onUp, progressCallback);
 }
 
-void EffectsHandler::registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void EffectsHandler::unregisterTouchGesture(const QString &name)
 {
-    input()->registerTouchpadPinchShortcut(dir, fingerCount, onUp, progressCallback);
-}
-
-void EffectsHandler::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-    input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
+    input()->unregisterTouchGesture(name);
 }
 
 bool EffectsHandler::hasKeyboardGrab() const
