@@ -1153,6 +1153,7 @@ public:
      * Ends move resize when all pointer buttons are up again.
      */
     void endInteractiveMoveResize();
+    void cancelInteractiveMoveResize();
 
     virtual StrutRect strutRect(StrutArea area) const;
     StrutRects strutRects() const;
