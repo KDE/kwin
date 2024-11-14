@@ -43,7 +43,7 @@ public:
     void add(const QRegion &region)
     {
         while (m_log.size() >= m_capacity) {
-            m_log.takeLast();
+            m_log.removeLast();
         }
         m_log.prepend(region);
     }
