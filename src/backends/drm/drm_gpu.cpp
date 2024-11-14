@@ -496,6 +496,13 @@ void DrmGpu::waitIdle()
     m_socketNotifier->setEnabled(true);
 }
 
+bool DrmGpu::isIdle() const
+{
+    return std::ranges::none_of(m_pipelines, [](DrmPipeline *pipeline) {
+        return pipeline->commitThread()->pageflipsPending();
+    });
+}
+
 static std::chrono::nanoseconds convertTimestamp(const timespec &timestamp)
 {
     return std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec);
@@ -742,7 +749,10 @@ bool DrmGpu::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
         return true;
     }
     // make sure there's no pending pageflips
-    waitIdle();
+    // note that this must not time out, as that would crash KWin!
+    while (!isIdle()) {
+        waitIdle();
+    }
     const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
