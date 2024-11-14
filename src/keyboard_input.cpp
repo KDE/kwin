@@ -209,6 +209,7 @@ Window *KeyboardInputRedirection::pickFocus() const
                 return t;
             } while (it != stacking.begin());
         }
+        return nullptr;
     }
 
     if (input()->isSelectingWindow()) {
