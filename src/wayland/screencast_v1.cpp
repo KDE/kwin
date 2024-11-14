@@ -15,7 +15,7 @@
 
 namespace KWin
 {
-static int s_version = 3;
+static int s_version = 4;
 
 class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screencast_stream_unstable_v1
 {
@@ -105,6 +105,17 @@ public:
     {
         Q_EMIT q->virtualOutputScreencastRequested(createStream(resource, streamid),
                                                    name,
+                                                   QString(),
+                                                   {width, height},
+                                                   wl_fixed_to_double(scale),
+                                                   ScreencastV1Interface::CursorMode(pointer));
+    }
+
+    void zkde_screencast_unstable_v1_stream_virtual_output_with_description(Resource *resource, uint32_t streamid, const QString &name, const QString &description, int32_t width, int32_t height, wl_fixed_t scale, uint32_t pointer) override
+    {
+        Q_EMIT q->virtualOutputScreencastRequested(createStream(resource, streamid),
+                                                   name,
+                                                   description,
                                                    {width, height},
                                                    wl_fixed_to_double(scale),
                                                    ScreencastV1Interface::CursorMode(pointer));

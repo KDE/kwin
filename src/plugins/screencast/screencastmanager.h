@@ -36,6 +36,7 @@ private:
     streamOutput(ScreencastStreamV1Interface *stream, Output *output, ScreencastV1Interface::CursorMode mode);
     void streamVirtualOutput(ScreencastStreamV1Interface *stream,
                              const QString &name,
+                             const QString &description,
                              const QSize &size,
                              double scale,
                              ScreencastV1Interface::CursorMode mode);

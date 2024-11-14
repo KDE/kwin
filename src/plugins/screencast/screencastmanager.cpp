@@ -55,11 +55,12 @@ void ScreencastManager::streamWindow(ScreencastStreamV1Interface *waylandStream,
 
 void ScreencastManager::streamVirtualOutput(ScreencastStreamV1Interface *stream,
                                             const QString &name,
+                                            const QString &description,
                                             const QSize &size,
                                             double scale,
                                             ScreencastV1Interface::CursorMode mode)
 {
-    auto output = kwinApp()->outputBackend()->createVirtualOutput(name, name, size, scale);
+    auto output = kwinApp()->outputBackend()->createVirtualOutput(name, description, size, scale);
     streamOutput(stream, output, mode);
     connect(stream, &ScreencastStreamV1Interface::finished, output, [output] {
         kwinApp()->outputBackend()->removeVirtualOutput(output);
