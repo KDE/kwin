@@ -16,6 +16,10 @@
       <label>Delete this rule (for use in imports)</label>
       <default>false</default>
     </entry>
+    <entry name="enabled" key="Enabled" type="Bool">
+      <label>This rule is enabled</label>
+      <default>true</default>
+    </entry>
     <entry name="wmclass" type="String">
       <label>Window class (application)</label>
     </entry>

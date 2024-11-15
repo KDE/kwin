@@ -214,6 +214,7 @@ private:
     enum Layer layer;
     ForceRule layerrule;
     QString m_id;
+    bool m_enabled = true;
     QString description;
     QString wmclass;
     StringMatch wmclassmatch;

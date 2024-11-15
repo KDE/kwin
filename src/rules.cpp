@@ -100,6 +100,7 @@ Rules::Rules(const RuleSettings *settings)
 void Rules::readFromSettings(const RuleSettings *settings)
 {
     m_id = settings->currentGroup();
+    m_enabled = settings->enabled();
     description = settings->description();
     if (description.isEmpty()) {
         description = settings->descriptionLegacy();
@@ -196,6 +197,7 @@ void Rules::write(RuleSettings *settings) const
 {
     settings->setDefaults();
 
+    settings->setEnabled(m_enabled);
     settings->setDescription(description);
     // always write wmclass
     WRITE_MATCH_STRING(wmclass, Wmclass, true);
@@ -443,6 +445,9 @@ bool Rules::matchClientMachine(const QString &match_machine, bool local) const
 #ifndef KCMRULES
 bool Rules::match(const Window *c) const
 {
+    if (!m_enabled) {
+        return false;
+    }
     if (!matchType(c->windowType())) {
         return false;
     }

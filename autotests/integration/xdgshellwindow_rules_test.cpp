@@ -160,6 +160,7 @@ private Q_SLOTS:
     void testCloseableForceTemporarily();
 
     void testMatchAfterNameChange();
+    void testNotEnabled();
 
 private:
     void createTestWindow(ClientFlags flags = None);
@@ -2988,6 +2989,21 @@ void TestXdgShellWindowRules::testMatchAfterNameChange()
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     QVERIFY(desktopFileNameSpy.wait());
     QCOMPARE(window->keepAbove(), true);
+}
+
+void TestXdgShellWindowRules::testNotEnabled()
+{
+    setWindowRule("above", true, int(Rules::Force));
+    setWindowRule("Enabled", false, int(Rules::Unused));
+
+    createTestWindow();
+
+    // The rule should not be applied as it is not enabled
+    QCOMPARE(m_window->keepAbove(), false);
+
+    // Now enable it and check again
+    setWindowRule("Enabled", true, int(Rules::Unused));
+    QCOMPARE(m_window->keepAbove(), true);
 }
 
 void TestXdgShellWindowRules::testLayerDontAffect()

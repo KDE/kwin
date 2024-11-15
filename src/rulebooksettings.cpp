@@ -34,8 +34,10 @@ QList<Rules *> RuleBookSettings::rules() const
 {
     QList<Rules *> result;
     result.reserve(m_list.count());
-    for (const auto &settings : std::as_const(m_list)) {
-        result.append(new Rules(settings));
+    for (const RuleSettings *settings : std::as_const(m_list)) {
+        if (settings->enabled()) {
+            result.append(new Rules(settings));
+        }
     }
     return result;
 }
