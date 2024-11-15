@@ -311,7 +311,7 @@ void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal d
 
     Q_EMIT input()->pointerAxisChanged(axis, delta);
 
-    WheelEvent event{
+    PointerAxisEvent event{
         .device = device,
         .position = m_pos,
         .delta = delta,
@@ -325,8 +325,8 @@ void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal d
         .timestamp = time,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &event));
+    input()->processSpies(std::bind(&InputEventSpy::pointerAxis, std::placeholders::_1, &event));
+    input()->processFilters(std::bind(&InputEventFilter::pointerAxis, std::placeholders::_1, &event));
 }
 
 void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)

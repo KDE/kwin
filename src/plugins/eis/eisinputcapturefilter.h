@@ -26,7 +26,7 @@ public:
     bool pointerMotion(MouseEvent *event) override;
     bool pointerButton(MouseEvent *event) override;
     bool pointerFrame() override;
-    bool wheelEvent(WheelEvent *event) override;
+    bool pointerAxis(PointerAxisEvent *event) override;
 
     bool keyEvent(KeyEvent *event) override;
 

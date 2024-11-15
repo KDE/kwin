@@ -24,7 +24,7 @@ void HideCursorSpy::pointerButton(MouseEvent *event)
     showCursor();
 }
 
-void HideCursorSpy::wheelEvent(KWin::WheelEvent *event)
+void HideCursorSpy::pointerAxis(KWin::PointerAxisEvent *event)
 {
     showCursor();
 }

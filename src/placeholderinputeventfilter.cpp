@@ -29,7 +29,7 @@ bool PlaceholderInputEventFilter::pointerButton(MouseEvent *event)
     return true;
 }
 
-bool PlaceholderInputEventFilter::wheelEvent(WheelEvent *event)
+bool PlaceholderInputEventFilter::pointerAxis(PointerAxisEvent *event)
 {
     return true;
 }

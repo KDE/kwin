@@ -132,7 +132,7 @@ bool InputEventFilter::pointerFrame()
     return false;
 }
 
-bool InputEventFilter::wheelEvent(WheelEvent *event)
+bool InputEventFilter::pointerAxis(PointerAxisEvent *event)
 {
     return false;
 }
@@ -356,7 +356,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -552,7 +552,7 @@ public:
         }
         return effects->checkInputWindowEvent(event);
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         if (!effects) {
             return false;
@@ -669,7 +669,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         // filter out while moving a window
         return workspace()->moveResizeWindow() != nullptr;
@@ -782,7 +782,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         // filter out while selecting a window
         return m_active;
@@ -943,7 +943,7 @@ public:
         }
         return false;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         if (event->modifiers == Qt::NoModifier) {
             return false;
@@ -1223,7 +1223,7 @@ std::optional<bool> performWindowMouseAction(MouseEvent *event, Window *window)
  * @returns if a command was performed, whether or not the event should be filtered out
  *          if no command was performed, std::nullopt
  */
-std::optional<bool> performModifierWindowWheelAction(WheelEvent *event, Window *window)
+std::optional<bool> performModifierWindowWheelAction(PointerAxisEvent *event, Window *window)
 {
     if (event->orientation != Qt::Vertical) {
         return std::nullopt;
@@ -1240,7 +1240,7 @@ std::optional<bool> performModifierWindowWheelAction(WheelEvent *event, Window *
  * @returns if a command was performed, whether or not the event should be filtered out
  *          if no command was performed, std::nullopt
  */
-std::optional<bool> performWindowWheelAction(WheelEvent *event, Window *window)
+std::optional<bool> performWindowWheelAction(PointerAxisEvent *event, Window *window)
 {
     if (const auto globalAction = performModifierWindowWheelAction(event, window)) {
         return globalAction;
@@ -1301,7 +1301,7 @@ public:
                                                  event->modifiers());
         return true;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
@@ -1438,7 +1438,7 @@ private:
 class MouseWheelAccumulator
 {
 public:
-    float accumulate(WheelEvent *event)
+    float accumulate(PointerAxisEvent *event)
     {
         m_scrollV120 += event->deltaV120;
         m_scrollDistance += event->delta;
@@ -1500,7 +1500,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
@@ -1707,7 +1707,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
@@ -1814,7 +1814,7 @@ public:
         }
         return false;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         if (event->orientation != Qt::Vertical) {
             // only actions on vertical scroll
@@ -1963,7 +1963,7 @@ public:
         seat->notifyPointerFrame();
         return true;
     }
-    bool wheelEvent(WheelEvent *event) override
+    bool pointerAxis(PointerAxisEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
@@ -2757,7 +2757,7 @@ public:
     {
         notifyActivity();
     }
-    void wheelEvent(WheelEvent *event) override
+    void pointerAxis(PointerAxisEvent *event) override
     {
         notifyActivity();
     }

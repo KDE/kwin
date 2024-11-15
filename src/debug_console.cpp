@@ -230,7 +230,7 @@ void DebugConsoleFilter::pointerButton(MouseEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::wheelEvent(WheelEvent *event)
+void DebugConsoleFilter::pointerAxis(PointerAxisEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);

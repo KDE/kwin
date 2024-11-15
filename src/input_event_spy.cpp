@@ -31,7 +31,7 @@ void InputEventSpy::pointerButton(MouseEvent *event)
 {
 }
 
-void InputEventSpy::wheelEvent(WheelEvent *event)
+void InputEventSpy::pointerAxis(PointerAxisEvent *event)
 {
 }
 

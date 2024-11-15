@@ -19,7 +19,7 @@ namespace KWin
 {
 class KeyEvent;
 class MouseEvent;
-struct WheelEvent;
+struct PointerAxisEvent;
 struct SwitchEvent;
 class TabletEvent;
 struct TabletToolButtonEvent;
@@ -50,7 +50,7 @@ public:
      *
      * @param event The event information about the axis event
      */
-    virtual void wheelEvent(WheelEvent *event);
+    virtual void pointerAxis(PointerAxisEvent *event);
     /**
      * Event spy for keyboard events.
      *

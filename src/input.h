@@ -44,7 +44,7 @@ class WindowSelectorFilter;
 struct SwitchEvent;
 class TabletEvent;
 class MouseEvent;
-struct WheelEvent;
+struct PointerAxisEvent;
 class KeyEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
@@ -394,7 +394,7 @@ public:
      * @param event The event information about the axis event
      * @return @c true to stop further event processing, @c false to pass to next filter
      */
-    virtual bool wheelEvent(WheelEvent *event);
+    virtual bool pointerAxis(PointerAxisEvent *event);
     /**
      * Event filter for keyboard events.
      *

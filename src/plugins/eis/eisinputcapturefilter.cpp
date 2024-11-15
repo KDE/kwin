@@ -62,7 +62,7 @@ bool EisInputCaptureFilter::pointerFrame()
     return true;
 }
 
-bool EisInputCaptureFilter::wheelEvent(WheelEvent *event)
+bool EisInputCaptureFilter::pointerAxis(PointerAxisEvent *event)
 {
     if (!m_manager->activeCapture()) {
         return false;

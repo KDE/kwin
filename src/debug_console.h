@@ -120,7 +120,7 @@ public:
 
     void pointerMotion(MouseEvent *event) override;
     void pointerButton(MouseEvent *event) override;
-    void wheelEvent(WheelEvent *event) override;
+    void pointerAxis(PointerAxisEvent *event) override;
     void keyEvent(KeyEvent *event) override;
     void touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
     void touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;

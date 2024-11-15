@@ -52,7 +52,7 @@ bool DpmsInputEventFilter::pointerButton(MouseEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::wheelEvent(WheelEvent *event)
+bool DpmsInputEventFilter::pointerAxis(PointerAxisEvent *event)
 {
     notify();
     return true;

@@ -81,7 +81,7 @@ private:
     bool m_warp = false;
 };
 
-struct WheelEvent
+struct PointerAxisEvent
 {
     InputDevice *device;
     QPointF position;
