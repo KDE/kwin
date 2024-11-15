@@ -16,15 +16,13 @@
 namespace KWin
 {
 
-Gesture::Gesture(QObject *parent)
-    : QObject(parent)
+Gesture::Gesture()
 {
 }
 
 Gesture::~Gesture() = default;
 
-SwipeGesture::SwipeGesture(QObject *parent)
-    : Gesture(parent)
+SwipeGesture::SwipeGesture()
 {
 }
 
@@ -64,8 +62,7 @@ bool SwipeGesture::minimumDeltaReached(const QPointF &delta) const
     return deltaToProgress(delta) >= 1.0;
 }
 
-PinchGesture::PinchGesture(QObject *parent)
-    : Gesture(parent)
+PinchGesture::PinchGesture()
 {
 }
 

@@ -31,7 +31,7 @@ public:
     ~Gesture() override;
 
 protected:
-    explicit Gesture(QObject *parent);
+    explicit Gesture();
 
 Q_SIGNALS:
     /**
@@ -54,7 +54,7 @@ class SwipeGesture : public Gesture
 {
     Q_OBJECT
 public:
-    explicit SwipeGesture(QObject *parent = nullptr);
+    explicit SwipeGesture();
     ~SwipeGesture() override;
 
     bool minimumFingerCountIsRelevant() const;
@@ -124,7 +124,7 @@ class PinchGesture : public Gesture
 {
     Q_OBJECT
 public:
-    explicit PinchGesture(QObject *parent = nullptr);
+    explicit PinchGesture();
     ~PinchGesture() override;
 
     bool minimumFingerCountIsRelevant() const;
