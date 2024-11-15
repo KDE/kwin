@@ -16,6 +16,8 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+#include <QJSEngine>
+
 namespace KWin
 {
 
@@ -337,6 +339,7 @@ QMatrix4x4 OutputTransform::toMatrix() const
 Output::Output(QObject *parent)
     : QObject(parent)
 {
+    QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
 }
 
 Output::~Output()
