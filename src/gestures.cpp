@@ -22,7 +22,8 @@ Gesture::Gesture()
 
 Gesture::~Gesture() = default;
 
-SwipeGesture::SwipeGesture()
+SwipeGesture::SwipeGesture(uint32_t fingerCount)
+    : m_fingerCount(fingerCount)
 {
 }
 
@@ -62,7 +63,8 @@ bool SwipeGesture::minimumDeltaReached(const QPointF &delta) const
     return deltaToProgress(delta) >= 1.0;
 }
 
-PinchGesture::PinchGesture()
+PinchGesture::PinchGesture(uint32_t fingerCount)
+    : m_fingerCount(fingerCount)
 {
 }
 
@@ -114,15 +116,8 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
     }
     int count = 0;
     for (SwipeGesture *gesture : std::as_const(m_swipeGestures)) {
-        if (gesture->minimumFingerCountIsRelevant()) {
-            if (gesture->minimumFingerCount() > fingerCount) {
-                continue;
-            }
-        }
-        if (gesture->maximumFingerCountIsRelevant()) {
-            if (gesture->maximumFingerCount() < fingerCount) {
-                continue;
-            }
+        if (gesture->fingerCount() != fingerCount) {
+            continue;
         }
         if (startPosBehavior == StartPositionBehavior::Relevant) {
             if (gesture->minimumXIsRelevant()) {
@@ -286,15 +281,8 @@ int GestureRecognizer::startPinchGesture(uint fingerCount)
         return 0;
     }
     for (PinchGesture *gesture : std::as_const(m_pinchGestures)) {
-        if (gesture->minimumFingerCountIsRelevant()) {
-            if (gesture->minimumFingerCount() > fingerCount) {
-                continue;
-            }
-        }
-        if (gesture->maximumFingerCountIsRelevant()) {
-            if (gesture->maximumFingerCount() < fingerCount) {
-                continue;
-            }
+        if (gesture->fingerCount() != fingerCount) {
+            continue;
         }
 
         // direction doesn't matter yet
@@ -364,36 +352,9 @@ void GestureRecognizer::endPinchGesture() // because fingers up
     m_currentSwipeAxis = Axis::None;
 }
 
-bool SwipeGesture::maximumFingerCountIsRelevant() const
+uint32_t SwipeGesture::fingerCount() const
 {
-    return m_maximumFingerCountRelevant;
-}
-
-uint SwipeGesture::minimumFingerCount() const
-{
-    return m_minimumFingerCount;
-}
-
-void SwipeGesture::setMinimumFingerCount(uint count)
-{
-    m_minimumFingerCount = count;
-    m_minimumFingerCountRelevant = true;
-}
-
-bool SwipeGesture::minimumFingerCountIsRelevant() const
-{
-    return m_minimumFingerCountRelevant;
-}
-
-void SwipeGesture::setMaximumFingerCount(uint count)
-{
-    m_maximumFingerCount = count;
-    m_maximumFingerCountRelevant = true;
-}
-
-uint SwipeGesture::maximumFingerCount() const
-{
-    return m_maximumFingerCount;
+    return m_fingerCount;
 }
 
 SwipeDirection SwipeGesture::direction() const
@@ -486,36 +447,9 @@ bool SwipeGesture::isMinimumDeltaRelevant() const
     return m_minimumDeltaRelevant;
 }
 
-bool PinchGesture::minimumFingerCountIsRelevant() const
+uint32_t PinchGesture::fingerCount() const
 {
-    return m_minimumFingerCountRelevant;
-}
-
-void PinchGesture::setMinimumFingerCount(uint count)
-{
-    m_minimumFingerCount = count;
-    m_minimumFingerCountRelevant = true;
-}
-
-uint PinchGesture::minimumFingerCount() const
-{
-    return m_minimumFingerCount;
-}
-
-bool PinchGesture::maximumFingerCountIsRelevant() const
-{
-    return m_maximumFingerCountRelevant;
-}
-
-void PinchGesture::setMaximumFingerCount(uint count)
-{
-    m_maximumFingerCount = count;
-    m_maximumFingerCountRelevant = true;
-}
-
-uint PinchGesture::maximumFingerCount() const
-{
-    return m_maximumFingerCount;
+    return m_fingerCount;
 }
 
 PinchDirection PinchGesture::direction() const
