@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-06 02:32+0000\n"
+"POT-Creation-Date: 2024-11-15 02:32+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -4448,13 +4448,13 @@ msgstr "Төмен жақтағы үстелге ауысу"
 msgid "Switch to Desktop %1"
 msgstr "%1-үстелге ауысу"
 
-#: window.cpp:3119
+#: window.cpp:3130
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1633
+#: workspace.cpp:1637
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
