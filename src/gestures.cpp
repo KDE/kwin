@@ -81,28 +81,14 @@ bool PinchGesture::minimumScaleDeltaReached(const qreal &scaleDelta) const
     return scaleDeltaToProgress(scaleDelta) >= 1.0;
 }
 
-GestureRecognizer::GestureRecognizer(QObject *parent)
-    : QObject(parent)
-{
-}
-
-GestureRecognizer::~GestureRecognizer() = default;
-
 void GestureRecognizer::registerSwipeGesture(KWin::SwipeGesture *gesture)
 {
     Q_ASSERT(!m_swipeGestures.contains(gesture));
-    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureRecognizer::unregisterSwipeGesture, this, gesture));
-    m_destroyConnections.insert(gesture, connection);
     m_swipeGestures << gesture;
 }
 
 void GestureRecognizer::unregisterSwipeGesture(KWin::SwipeGesture *gesture)
 {
-    auto it = m_destroyConnections.find(gesture);
-    if (it != m_destroyConnections.end()) {
-        disconnect(it.value());
-        m_destroyConnections.erase(it);
-    }
     m_swipeGestures.removeAll(gesture);
     if (m_activeSwipeGestures.removeOne(gesture)) {
         Q_EMIT gesture->cancelled();
@@ -112,18 +98,11 @@ void GestureRecognizer::unregisterSwipeGesture(KWin::SwipeGesture *gesture)
 void GestureRecognizer::registerPinchGesture(KWin::PinchGesture *gesture)
 {
     Q_ASSERT(!m_pinchGestures.contains(gesture));
-    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureRecognizer::unregisterPinchGesture, this, gesture));
-    m_destroyConnections.insert(gesture, connection);
     m_pinchGestures << gesture;
 }
 
 void GestureRecognizer::unregisterPinchGesture(KWin::PinchGesture *gesture)
 {
-    auto it = m_destroyConnections.find(gesture);
-    if (it != m_destroyConnections.end()) {
-        disconnect(it.value());
-        m_destroyConnections.erase(it);
-    }
     m_pinchGestures.removeAll(gesture);
     if (m_activePinchGestures.removeOne(gesture)) {
         Q_EMIT gesture->cancelled();

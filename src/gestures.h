@@ -167,13 +167,9 @@ private:
     qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
 };
 
-class KWIN_EXPORT GestureRecognizer : public QObject
+class KWIN_EXPORT GestureRecognizer
 {
-    Q_OBJECT
 public:
-    GestureRecognizer(QObject *parent = nullptr);
-    ~GestureRecognizer() override;
-
     void registerSwipeGesture(SwipeGesture *gesture);
     void unregisterSwipeGesture(SwipeGesture *gesture);
     void registerPinchGesture(PinchGesture *gesture);
@@ -207,12 +203,10 @@ private:
     QList<PinchGesture *> m_pinchGestures;
     QList<SwipeGesture *> m_activeSwipeGestures;
     QList<PinchGesture *> m_activePinchGestures;
-    QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
 
     QPointF m_currentDelta = QPointF(0, 0);
     qreal m_currentScale = 1; // For Pinch Gesture recognition
     uint m_currentFingerCount = 0;
     Axis m_currentSwipeAxis = Axis::None;
 };
-
 }

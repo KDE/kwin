@@ -213,6 +213,8 @@ class KWIN_EXPORT ScreenEdges : public QObject
     Q_PROPERTY(int actionLeft READ actionLeft)
 public:
     explicit ScreenEdges();
+    ~ScreenEdges() override;
+
     /**
      * @internal
      */
@@ -321,10 +323,7 @@ public:
 
     ElectricBorderAction actionForTouchBorder(ElectricBorder border) const;
 
-    GestureRecognizer *gestureRecognizer() const
-    {
-        return m_gestureRecognizer;
-    }
+    GestureRecognizer *gestureRecognizer() const;
 
     bool remainActiveOnFullscreen() const;
     const std::vector<std::unique_ptr<Edge>> &edges() const;
@@ -389,7 +388,7 @@ private:
     ElectricBorderAction m_actionLeft;
     QMap<ElectricBorder, ElectricBorderAction> m_touchCallbacks;
     int m_cornerOffset;
-    GestureRecognizer *m_gestureRecognizer;
+    std::unique_ptr<GestureRecognizer> m_gestureRecognizer;
     bool m_remainActiveOnFullscreen = false;
 };
 

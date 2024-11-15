@@ -150,6 +150,7 @@ Edge::Edge(ScreenEdges *parent)
 
 Edge::~Edge()
 {
+    m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture.get());
     stopApproaching();
 }
 
@@ -766,10 +767,14 @@ ScreenEdges::ScreenEdges()
     , m_actionBottom(ElectricActionNone)
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
-    , m_gestureRecognizer(new GestureRecognizer(this))
+    , m_gestureRecognizer(std::make_unique<GestureRecognizer>())
 {
     const int gridUnit = QFontMetrics(QFontDatabase::systemFont(QFontDatabase::GeneralFont)).boundingRect(QLatin1Char('M')).height();
     m_cornerOffset = 4 * gridUnit;
+}
+
+ScreenEdges::~ScreenEdges()
+{
 }
 
 void ScreenEdges::init()
@@ -1238,6 +1243,11 @@ ElectricBorderAction ScreenEdges::actionForTouchEdge(Edge *edge) const
 ElectricBorderAction ScreenEdges::actionForTouchBorder(ElectricBorder border) const
 {
     return m_touchCallbacks.value(border);
+}
+
+GestureRecognizer *ScreenEdges::gestureRecognizer() const
+{
+    return m_gestureRecognizer.get();
 }
 
 void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
