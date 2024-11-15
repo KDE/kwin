@@ -27,11 +27,9 @@ void SwipeGestureHandler::classBegin()
 
 void SwipeGestureHandler::componentComplete()
 {
-    m_gesture = std::make_unique<SwipeGesture>();
+    m_gesture = std::make_unique<SwipeGesture>(m_fingerCount);
     m_gesture->setDirection(SwipeDirection(m_direction));
     m_gesture->setMinimumDelta(QPointF(200, 200));
-    m_gesture->setMaximumFingerCount(m_fingerCount);
-    m_gesture->setMinimumFingerCount(m_fingerCount);
 
     connect(m_gesture.get(), &SwipeGesture::triggered, this, &SwipeGestureHandler::activated);
     connect(m_gesture.get(), &SwipeGesture::cancelled, this, &SwipeGestureHandler::cancelled);
@@ -114,10 +112,8 @@ void PinchGestureHandler::classBegin()
 
 void PinchGestureHandler::componentComplete()
 {
-    m_gesture = std::make_unique<PinchGesture>();
+    m_gesture = std::make_unique<PinchGesture>(m_fingerCount);
     m_gesture->setDirection(PinchDirection(m_direction));
-    m_gesture->setMaximumFingerCount(m_fingerCount);
-    m_gesture->setMinimumFingerCount(m_fingerCount);
 
     connect(m_gesture.get(), &PinchGesture::triggered, this, &PinchGestureHandler::activated);
     connect(m_gesture.get(), &PinchGesture::cancelled, this, &PinchGestureHandler::cancelled);

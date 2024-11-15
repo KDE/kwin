@@ -54,16 +54,10 @@ class SwipeGesture : public Gesture
 {
     Q_OBJECT
 public:
-    explicit SwipeGesture();
+    explicit SwipeGesture(uint32_t fingerCount);
     ~SwipeGesture() override;
 
-    bool minimumFingerCountIsRelevant() const;
-    void setMinimumFingerCount(uint count);
-    uint minimumFingerCount() const;
-
-    bool maximumFingerCountIsRelevant() const;
-    void setMaximumFingerCount(uint count);
-    uint maximumFingerCount() const;
+    uint32_t fingerCount() const;
 
     SwipeDirection direction() const;
     void setDirection(SwipeDirection direction);
@@ -103,10 +97,7 @@ Q_SIGNALS:
     void deltaProgress(const QPointF &delta);
 
 private:
-    bool m_minimumFingerCountRelevant = false;
-    uint m_minimumFingerCount = 0;
-    bool m_maximumFingerCountRelevant = false;
-    uint m_maximumFingerCount = 0;
+    const uint32_t m_fingerCount;
     SwipeDirection m_direction = SwipeDirection::Down;
     bool m_minimumXRelevant = false;
     int m_minimumX = 0;
@@ -124,16 +115,10 @@ class PinchGesture : public Gesture
 {
     Q_OBJECT
 public:
-    explicit PinchGesture();
+    explicit PinchGesture(uint32_t fingerCount);
     ~PinchGesture() override;
 
-    bool minimumFingerCountIsRelevant() const;
-    void setMinimumFingerCount(uint count);
-    uint minimumFingerCount() const;
-
-    bool maximumFingerCountIsRelevant() const;
-    void setMaximumFingerCount(uint count);
-    uint maximumFingerCount() const;
+    uint32_t fingerCount() const;
 
     PinchDirection direction() const;
     void setDirection(PinchDirection direction);
@@ -158,10 +143,7 @@ Q_SIGNALS:
     void progress(qreal);
 
 private:
-    bool m_minimumFingerCountRelevant = false;
-    uint m_minimumFingerCount = 0;
-    bool m_maximumFingerCountRelevant = false;
-    uint m_maximumFingerCount = 0;
+    const uint32_t m_fingerCount;
     PinchDirection m_direction = PinchDirection::Expanding;
     bool m_minimumScaleDeltaRelevant = false;
     qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;

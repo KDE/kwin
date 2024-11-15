@@ -96,10 +96,8 @@ Edge::Edge(ScreenEdges *parent)
     , m_pushBackBlocked(false)
     , m_client(nullptr)
     , m_output(nullptr)
-    , m_gesture(std::make_unique<SwipeGesture>())
+    , m_gesture(std::make_unique<SwipeGesture>(1))
 {
-    m_gesture->setMinimumFingerCount(1);
-    m_gesture->setMaximumFingerCount(1);
     connect(
         m_gesture.get(), &Gesture::triggered, this, [this]() {
             stopApproaching();
