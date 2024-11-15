@@ -149,6 +149,9 @@ ExpoCell {
             }
             function restoreDND(oldGlobalRect: rect) {
                 const newGlobalRect = mapFromItem(null, oldGlobalRect);
+                // We need proper mapping for the heap geometry becuase they are positioned with
+                // translation transformations
+                const heapRect = thumb.windowHeap.mapToItem(null, Qt.size(thumb.windowHeap.width, thumb.windowHeap.height));
                 // Disable bindings
                 returnAnimation.active = true;
                 x = newGlobalRect.x;
@@ -159,10 +162,10 @@ ExpoCell {
                 returnAnimation.restart();
 
                 // If we dropped on another desktop, don't make the window fly off  the screen
-                if (newGlobalRect.x < thumb.windowHeap.x ||
-                    newGlobalRect.y < thumb.windowHeap.y ||
-                    thumb.windowHeap.x + thumb.windowHeap.width < newGlobalRect.x + newGlobalRect.width ||
-                    thumb.windowHeap.y + thumb.windowHeap.height < newGlobalRect.y + newGlobalRect.height) {
+                if (oldGlobalRect.x < heapRect.x ||
+                    oldGlobalRect.y < heapRect.y ||
+                    heapRect.x + heapRect.width < oldGlobalRect.x + oldGlobalRect.width ||
+                    heapRect.y + heapRect.height < oldGlobalRect.y + oldGlobalRect.height) {
                     returnAnimation.complete();
                 }
             }
