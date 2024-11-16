@@ -216,7 +216,7 @@ void WaylandCompositor::start()
             QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
             break;
         case VulkanCompositing:
-            QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+            QQuickWindow::setGraphicsApi(QSGRendererInterface::Vulkan);
             break;
         case QPainterCompositing:
             QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
