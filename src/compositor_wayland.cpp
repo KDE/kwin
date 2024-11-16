@@ -118,8 +118,6 @@ bool WaylandCompositor::attemptVulkanCompositing()
     if (!backend || !backend->init()) {
         return false;
     }
-    m_scene = std::make_unique<WorkspaceSceneVulkan>();
-    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererVulkan>());
     m_backend = std::move(backend);
     qCDebug(KWIN_CORE) << "Vulkan compositing has been successfully initialized";
     return true;
@@ -169,7 +167,10 @@ void WaylandCompositor::createRenderer()
 
 void WaylandCompositor::createScene()
 {
-    if (const auto openglBackend = qobject_cast<OpenGLBackend *>(m_backend.get())) {
+    if (const auto vulkanBackend = qobject_cast<VulkanBackend *>(m_backend.get())) {
+        m_scene = std::make_unique<WorkspaceSceneVulkan>();
+        m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererVulkan>());
+    } else if (const auto openglBackend = qobject_cast<OpenGLBackend *>(m_backend.get())) {
         m_scene = std::make_unique<WorkspaceSceneOpenGL>(openglBackend);
         m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(openglBackend->eglDisplayObject()));
     } else {
