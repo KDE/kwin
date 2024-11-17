@@ -1719,7 +1719,7 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();
     auto printProperty = [](const QVariant &variant) {
-        if (variant.type() == QVariant::Size) {
+        if (variant.typeId() == QMetaType::QSize) {
             const QSize &s = variant.toSize();
             return QStringLiteral("%1x%2").arg(s.width()).arg(s.height());
         }

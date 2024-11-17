@@ -133,8 +133,8 @@ void TestVirtualDesktops::count()
     if (!spy.isEmpty()) {
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.count(), 2);
-        QCOMPARE(arguments.at(0).type(), QVariant::UInt);
-        QCOMPARE(arguments.at(1).type(), QVariant::UInt);
+        QCOMPARE(arguments.at(0).typeId(), QMetaType::UInt);
+        QCOMPARE(arguments.at(1).typeId(), QMetaType::UInt);
         QCOMPARE(arguments.at(0).toUInt(), s_countInitValue);
         QCOMPARE(arguments.at(1).toUInt(), result);
     }
