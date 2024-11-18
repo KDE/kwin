@@ -18,7 +18,7 @@
 #include "client_machine.h"
 #include "compositor.h"
 #include "core/output.h"
-#include "decorations/decoratedclient.h"
+#include "decorations/decoratedwindow.h"
 #include "decorations/decorationpalette.h"
 #include "focuschain.h"
 #include "input.h"
@@ -40,7 +40,7 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 #include <KDesktopFile>
 
@@ -2693,7 +2693,7 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
                 updateDecorationInputShape();
             }
         });
-        connect(decoratedClient()->decoratedClient(), &KDecoration3::DecoratedClient::sizeChanged, this, [this]() {
+        connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateDecorationInputShape();
             }
@@ -2714,7 +2714,7 @@ void Window::updateDecorationInputShape()
     const QMargins borders = decoration()->borders();
     const QMargins resizeBorders = decoration()->resizeOnlyBorders();
 
-    const QRectF innerRect = QRectF(QPointF(borderLeft(), borderTop()), decoratedClient()->size());
+    const QRectF innerRect = QRectF(QPointF(borderLeft(), borderTop()), decoratedWindow()->size());
     const QRectF outerRect = innerRect + borders + resizeBorders;
 
     m_decoration.inputRegion = QRegion(outerRect.toAlignedRect()) - innerRect.toAlignedRect();
@@ -2887,12 +2887,12 @@ void Window::showContextHelp()
 {
 }
 
-Decoration::DecoratedClientImpl *Window::decoratedClient() const
+Decoration::DecoratedWindowImpl *Window::decoratedWindow() const
 {
     return m_decoration.client;
 }
 
-void Window::setDecoratedClient(Decoration::DecoratedClientImpl *client)
+void Window::setDecoratedWindow(Decoration::DecoratedWindowImpl *client)
 {
     m_decoration.client = client;
 }

@@ -18,7 +18,7 @@
 #include "client_machine.h"
 #include "compositor.h"
 #include "cursor.h"
-#include "decorations/decoratedclient.h"
+#include "decorations/decoratedwindow.h"
 #include "decorations/decorationbridge.h"
 #include "effect/effecthandler.h"
 #include "focuschain.h"
@@ -35,7 +35,7 @@
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 // KDE
 #include <KApplicationTrader>
@@ -167,7 +167,7 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask
     | NET::OnScreenDisplayMask
     | NET::CriticalNotificationMask;
 
-X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedClientImpl *client)
+X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedWindowImpl *client)
     : DecorationRenderer(client)
     , m_scheduleTimer(new QTimer(this))
     , m_gc(XCB_NONE)
@@ -1384,7 +1384,7 @@ void X11Window::createDecoration()
                 checkWorkspacePosition(oldGeometry);
             }
         });
-        connect(decoratedClient()->decoratedClient(), &KDecoration3::DecoratedClient::sizeChanged, this, [this]() {
+        connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();
             }
@@ -1412,8 +1412,8 @@ void X11Window::maybeCreateX11DecorationRenderer()
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         return;
     }
-    if (!Compositor::compositing() && decoratedClient()) {
-        m_decorationRenderer = std::make_unique<X11DecorationRenderer>(decoratedClient());
+    if (!Compositor::compositing() && decoratedWindow()) {
+        m_decorationRenderer = std::make_unique<X11DecorationRenderer>(decoratedWindow());
         decoration()->update();
     }
 }
@@ -1773,8 +1773,8 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
         }
     } else {
         shade_geometry_change = true;
-        if (decoratedClient()) {
-            decoratedClient()->signalShadeChange();
+        if (decoratedWindow()) {
+            decoratedWindow()->signalShadeChange();
         }
         QSizeF s(implicitSize());
         shade_geometry_change = false;
@@ -4561,9 +4561,9 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
     }
 
     // call into decoration update borders
-    if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
+    if (isDecorated() && decoration()->window() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = decoration()->client();
+        const auto c = decoration()->window();
         if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
             Q_EMIT c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
         }

@@ -20,7 +20,7 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 #include <KDecoration3/DecorationSettings>
 
@@ -115,7 +115,7 @@ void TestMaximized::testMaximizedPassedToDeco()
 
     // now maximize
     QSignalSpy bordersChangedSpy(decoration, &KDecoration3::Decoration::bordersChanged);
-    QSignalSpy maximizedChangedSpy(decoration->client(), &KDecoration3::DecoratedClient::maximizedChanged);
+    QSignalSpy maximizedChangedSpy(decoration->window(), &KDecoration3::DecoratedWindow::maximizedChanged);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     workspace()->slotWindowMaximize();

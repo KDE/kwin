@@ -9,7 +9,7 @@
 #include "tablet_input.h"
 #include "core/inputdevice.h"
 #include "cursorsource.h"
-#include "decorations/decoratedclient.h"
+#include "decorations/decoratedwindow.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "osd.h"
@@ -316,8 +316,8 @@ bool TabletInputRedirection::focusUpdatesBlocked()
     return input()->isSelectingWindow();
 }
 
-void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old,
-                                               Decoration::DecoratedClientImpl *now)
+void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *old,
+                                               Decoration::DecoratedWindowImpl *now)
 {
     disconnect(m_decorationGeometryConnection);
     m_decorationGeometryConnection = QMetaObject::Connection();

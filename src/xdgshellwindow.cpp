@@ -37,7 +37,7 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 
 namespace KWin
@@ -1562,7 +1562,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
     // call into decoration update borders
     if (m_nextDecoration && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = m_nextDecoration->client();
+        const auto c = m_nextDecoration->window();
         if ((m_requestedMaximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
             Q_EMIT c->maximizedVerticallyChanged(m_requestedMaximizeMode & MaximizeVertical);
         }

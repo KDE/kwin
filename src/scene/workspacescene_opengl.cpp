@@ -17,7 +17,7 @@
 
 #include "compositor.h"
 #include "core/output.h"
-#include "decorations/decoratedclient.h"
+#include "decorations/decoratedwindow.h"
 #include "scene/itemrenderer_opengl.h"
 #include "shadow.h"
 #include "window.h"
@@ -70,7 +70,7 @@ OpenGlContext *WorkspaceSceneOpenGL::openglContext() const
     return m_backend->openglContext();
 }
 
-std::unique_ptr<DecorationRenderer> WorkspaceSceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+std::unique_ptr<DecorationRenderer> WorkspaceSceneOpenGL::createDecorationRenderer(Decoration::DecoratedWindowImpl *impl)
 {
     return std::make_unique<SceneOpenGLDecorationRenderer>(impl);
 }
@@ -271,7 +271,7 @@ void OpenGLShadowTextureProvider::update()
     }
 }
 
-SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client)
+SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedWindowImpl *client)
     : DecorationRenderer(client)
     , m_texture()
 {

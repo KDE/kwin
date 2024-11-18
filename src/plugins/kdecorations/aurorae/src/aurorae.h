@@ -31,7 +31,8 @@ namespace Aurorae
 class Decoration : public KDecoration3::Decoration
 {
     Q_OBJECT
-    Q_PROPERTY(KDecoration3::DecoratedClient *client READ client CONSTANT)
+    // TODO Plasma 7, maybe? Rename this to "window"
+    Q_PROPERTY(KDecoration3::DecoratedWindow *client READ window CONSTANT)
     Q_PROPERTY(QQuickItem *item READ item)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());

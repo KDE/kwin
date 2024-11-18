@@ -7,7 +7,7 @@
 #include "previewbridge.h"
 #include "previewclient.h"
 #include "previewsettings.h"
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 #include <KDecoration3/DecorationSettings>
 #include <KDecoration3/DecorationShadow>

@@ -9,7 +9,7 @@
 #pragma once
 #include "options.h"
 
-#include <KDecoration3/Private/DecoratedClientPrivate>
+#include <KDecoration3/Private/DecoratedWindowPrivate>
 
 #include <QDeadlineTimer>
 #include <QObject>
@@ -23,12 +23,12 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedClientImpl : public QObject, public KDecoration3::ApplicationMenuEnabledDecoratedClientPrivate
+class DecoratedWindowImpl : public QObject, public KDecoration3::ApplicationMenuEnabledDecoratedWindowPrivate
 {
     Q_OBJECT
 public:
-    explicit DecoratedClientImpl(Window *window, KDecoration3::DecoratedClient *decoratedClient, KDecoration3::Decoration *decoration);
-    ~DecoratedClientImpl() override;
+    explicit DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration);
+    ~DecoratedWindowImpl() override;
     QString caption() const override;
     int height() const override;
     QIcon icon() const override;
@@ -78,9 +78,9 @@ public:
     {
         return m_window;
     }
-    KDecoration3::DecoratedClient *decoratedClient()
+    KDecoration3::DecoratedWindow *decoratedWindow()
     {
-        return KDecoration3::DecoratedClientPrivate::client();
+        return KDecoration3::DecoratedWindowPrivate::window();
     }
 
     void signalShadeChange();

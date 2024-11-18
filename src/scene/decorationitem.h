@@ -21,7 +21,7 @@ class Output;
 
 namespace Decoration
 {
-class DecoratedClientImpl;
+class DecoratedWindowImpl;
 }
 
 class KWIN_EXPORT DecorationRenderer : public QObject
@@ -48,9 +48,9 @@ Q_SIGNALS:
     void damaged(const QRegion &region);
 
 protected:
-    explicit DecorationRenderer(Decoration::DecoratedClientImpl *client);
+    explicit DecorationRenderer(Decoration::DecoratedWindowImpl *client);
 
-    Decoration::DecoratedClientImpl *client() const;
+    Decoration::DecoratedWindowImpl *client() const;
 
     bool areImageSizesDirty() const
     {
@@ -63,7 +63,7 @@ protected:
     void renderToPainter(QPainter *painter, const QRect &rect);
 
 private:
-    QPointer<Decoration::DecoratedClientImpl> m_client;
+    QPointer<Decoration::DecoratedWindowImpl> m_client;
     QRegion m_damage;
     qreal m_devicePixelRatio = 1;
     bool m_imageSizesDirty;

@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "previewclient.h"
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 
 #include <QCoreApplication>
@@ -17,9 +17,9 @@ namespace KDecoration3
 namespace Preview
 {
 
-PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
+PreviewClient::PreviewClient(DecoratedWindow *c, Decoration *decoration)
     : QObject(decoration)
-    , ApplicationMenuEnabledDecoratedClientPrivate(c, decoration)
+    , ApplicationMenuEnabledDecoratedWindowPrivate(c, decoration)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
     , m_iconName(m_icon.name())
     , m_palette(QStringLiteral("kdeglobals"))
@@ -45,26 +45,26 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     , m_bordersRightEdge(false)
     , m_bordersBottomEdge(false)
 {
-    connect(this, &PreviewClient::captionChanged, c, &DecoratedClient::captionChanged);
-    connect(this, &PreviewClient::activeChanged, c, &DecoratedClient::activeChanged);
-    connect(this, &PreviewClient::closeableChanged, c, &DecoratedClient::closeableChanged);
-    connect(this, &PreviewClient::keepAboveChanged, c, &DecoratedClient::keepAboveChanged);
-    connect(this, &PreviewClient::keepBelowChanged, c, &DecoratedClient::keepBelowChanged);
-    connect(this, &PreviewClient::maximizableChanged, c, &DecoratedClient::maximizeableChanged);
-    connect(this, &PreviewClient::maximizedChanged, c, &DecoratedClient::maximizedChanged);
-    connect(this, &PreviewClient::maximizedVerticallyChanged, c, &DecoratedClient::maximizedVerticallyChanged);
-    connect(this, &PreviewClient::maximizedHorizontallyChanged, c, &DecoratedClient::maximizedHorizontallyChanged);
-    connect(this, &PreviewClient::minimizableChanged, c, &DecoratedClient::minimizeableChanged);
-    connect(this, &PreviewClient::movableChanged, c, &DecoratedClient::moveableChanged);
-    connect(this, &PreviewClient::onAllDesktopsChanged, c, &DecoratedClient::onAllDesktopsChanged);
-    connect(this, &PreviewClient::resizableChanged, c, &DecoratedClient::resizeableChanged);
-    connect(this, &PreviewClient::shadeableChanged, c, &DecoratedClient::shadeableChanged);
-    connect(this, &PreviewClient::shadedChanged, c, &DecoratedClient::shadedChanged);
-    connect(this, &PreviewClient::providesContextHelpChanged, c, &DecoratedClient::providesContextHelpChanged);
-    connect(this, &PreviewClient::widthChanged, c, &DecoratedClient::widthChanged);
-    connect(this, &PreviewClient::heightChanged, c, &DecoratedClient::heightChanged);
-    connect(this, &PreviewClient::iconChanged, c, &DecoratedClient::iconChanged);
-    connect(this, &PreviewClient::paletteChanged, c, &DecoratedClient::paletteChanged);
+    connect(this, &PreviewClient::captionChanged, c, &DecoratedWindow::captionChanged);
+    connect(this, &PreviewClient::activeChanged, c, &DecoratedWindow::activeChanged);
+    connect(this, &PreviewClient::closeableChanged, c, &DecoratedWindow::closeableChanged);
+    connect(this, &PreviewClient::keepAboveChanged, c, &DecoratedWindow::keepAboveChanged);
+    connect(this, &PreviewClient::keepBelowChanged, c, &DecoratedWindow::keepBelowChanged);
+    connect(this, &PreviewClient::maximizableChanged, c, &DecoratedWindow::maximizeableChanged);
+    connect(this, &PreviewClient::maximizedChanged, c, &DecoratedWindow::maximizedChanged);
+    connect(this, &PreviewClient::maximizedVerticallyChanged, c, &DecoratedWindow::maximizedVerticallyChanged);
+    connect(this, &PreviewClient::maximizedHorizontallyChanged, c, &DecoratedWindow::maximizedHorizontallyChanged);
+    connect(this, &PreviewClient::minimizableChanged, c, &DecoratedWindow::minimizeableChanged);
+    connect(this, &PreviewClient::movableChanged, c, &DecoratedWindow::moveableChanged);
+    connect(this, &PreviewClient::onAllDesktopsChanged, c, &DecoratedWindow::onAllDesktopsChanged);
+    connect(this, &PreviewClient::resizableChanged, c, &DecoratedWindow::resizeableChanged);
+    connect(this, &PreviewClient::shadeableChanged, c, &DecoratedWindow::shadeableChanged);
+    connect(this, &PreviewClient::shadedChanged, c, &DecoratedWindow::shadedChanged);
+    connect(this, &PreviewClient::providesContextHelpChanged, c, &DecoratedWindow::providesContextHelpChanged);
+    connect(this, &PreviewClient::widthChanged, c, &DecoratedWindow::widthChanged);
+    connect(this, &PreviewClient::heightChanged, c, &DecoratedWindow::heightChanged);
+    connect(this, &PreviewClient::iconChanged, c, &DecoratedWindow::iconChanged);
+    connect(this, &PreviewClient::paletteChanged, c, &DecoratedWindow::paletteChanged);
     connect(this, &PreviewClient::maximizedVerticallyChanged, this, [this]() {
         Q_EMIT maximizedChanged(isMaximized());
     });

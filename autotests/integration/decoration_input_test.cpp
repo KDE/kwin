@@ -17,7 +17,7 @@
 #include "window.h"
 #include "workspace.h"
 
-#include "decorations/decoratedclient.h"
+#include "decorations/decoratedwindow.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
 
@@ -750,7 +750,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(keyEvent.isValid());
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    window->decoratedClient()->requestShowToolTip(QStringLiteral("test"));
+    window->decoratedWindow()->requestShowToolTip(QStringLiteral("test"));
     // now we should get an internal window
     QVERIFY(windowAddedSpy.wait());
     InternalWindow *internal = windowAddedSpy.first().first().value<InternalWindow *>();
@@ -764,7 +764,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     Test::keyboardKeyReleased(KEY_A, timestamp++);
     QVERIFY(keyEvent.wait());
 
-    window->decoratedClient()->requestHideToolTip();
+    window->decoratedWindow()->requestHideToolTip();
     Test::waitForWindowClosed(internal);
 }
 

@@ -10,7 +10,7 @@
 
 #include "config-kwin.h"
 
-#include "decoratedclient.h"
+#include "decoratedwindow.h"
 #include "decorations_logging.h"
 #include "settings.h"
 // KWin core
@@ -20,7 +20,7 @@
 #include "workspace.h"
 
 // KDecoration
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 #include <KDecoration3/DecorationSettings>
 
@@ -218,9 +218,9 @@ void DecorationBridge::findTheme(const QVariantMap &map)
     m_theme = readTheme();
 }
 
-std::unique_ptr<KDecoration3::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration3::DecoratedClient *client, KDecoration3::Decoration *decoration)
+std::unique_ptr<KDecoration3::DecoratedWindowPrivate> DecorationBridge::createClient(KDecoration3::DecoratedWindow *client, KDecoration3::Decoration *decoration)
 {
-    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<Window *>(decoration->parent()), client, decoration));
+    return std::unique_ptr<DecoratedWindowImpl>(new DecoratedWindowImpl(static_cast<Window *>(decoration->parent()), client, decoration));
 }
 
 std::unique_ptr<KDecoration3::DecorationSettingsPrivate> DecorationBridge::settings(KDecoration3::DecorationSettings *parent)

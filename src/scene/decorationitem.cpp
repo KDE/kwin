@@ -8,19 +8,19 @@
 #include "scene/decorationitem.h"
 #include "compositor.h"
 #include "core/output.h"
-#include "decorations/decoratedclient.h"
+#include "decorations/decoratedwindow.h"
 #include "scene/workspacescene.h"
 #include "window.h"
 
 #include <cmath>
 
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
 
 namespace KWin
 {
 
-DecorationRenderer::DecorationRenderer(Decoration::DecoratedClientImpl *client)
+DecorationRenderer::DecorationRenderer(Decoration::DecoratedWindowImpl *client)
     : m_client(client)
     , m_imageSizesDirty(true)
 {
@@ -29,13 +29,13 @@ DecorationRenderer::DecorationRenderer(Decoration::DecoratedClientImpl *client)
 
     connect(client->decoration(), &KDecoration3::Decoration::bordersChanged,
             this, &DecorationRenderer::invalidate);
-    connect(client->decoratedClient(), &KDecoration3::DecoratedClient::sizeChanged,
+    connect(client->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged,
             this, &DecorationRenderer::invalidate);
 
     invalidate();
 }
 
-Decoration::DecoratedClientImpl *DecorationRenderer::client() const
+Decoration::DecoratedWindowImpl *DecorationRenderer::client() const
 {
     return m_client;
 }
@@ -93,12 +93,12 @@ DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *win
     , m_window(window)
     , m_decoration(decoration)
 {
-    m_renderer = Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient());
+    m_renderer = Compositor::self()->scene()->createDecorationRenderer(window->decoratedWindow());
 
     connect(window, &Window::outputChanged,
             this, &DecorationItem::handleOutputChanged);
 
-    connect(decoration->client(), &KDecoration3::DecoratedClient::sizeChanged,
+    connect(decoration->window(), &KDecoration3::DecoratedWindow::sizeChanged,
             this, &DecorationItem::handleDecorationGeometryChanged);
     connect(decoration, &KDecoration3::Decoration::bordersChanged,
             this, &DecorationItem::handleDecorationGeometryChanged);

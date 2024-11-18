@@ -13,7 +13,7 @@
 // qml imports
 #include "decorationoptions.h"
 // KDecoration3
-#include <KDecoration3/DecoratedClient>
+#include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/DecorationSettings>
 #include <KDecoration3/DecorationShadow>
 // KDE
@@ -212,7 +212,7 @@ void Helper::init()
     qmlRegisterType<KWin::Borders>("org.kde.kwin.decoration", 0, 1, "Borders");
 
     qmlRegisterAnonymousType<KDecoration3::Decoration>("org.kde.kwin.decoration", 0);
-    qmlRegisterAnonymousType<KDecoration3::DecoratedClient>("org.kde.kwin.decoration", 0);
+    qmlRegisterAnonymousType<KDecoration3::DecoratedWindow>("org.kde.kwin.decoration", 0);
     qRegisterMetaType<KDecoration3::BorderSize>();
 }
 
@@ -322,24 +322,23 @@ bool Decoration::init()
         connect(m_extendedBorders, &KWin::Borders::bottomChanged, this, &Decoration::updateExtendedBorders);
     }
 
-    auto decorationClient = client();
-    connect(decorationClient, &KDecoration3::DecoratedClient::maximizedChanged, this, &Decoration::updateBorders);
-    connect(decorationClient, &KDecoration3::DecoratedClient::shadedChanged, this, &Decoration::updateBorders);
+    connect(window(), &KDecoration3::DecoratedWindow::maximizedChanged, this, &Decoration::updateBorders);
+    connect(window(), &KDecoration3::DecoratedWindow::shadedChanged, this, &Decoration::updateBorders);
     updateBorders();
     if (m_view) {
         auto resizeWindow = [this] {
             QRect rect(QPoint(0, 0), size());
-            if (m_padding && !client()->isMaximized()) {
+            if (m_padding && !window()->isMaximized()) {
                 rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
             }
             m_view->setGeometry(rect);
             updateBlur();
         };
         connect(this, &Decoration::bordersChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedClient::widthChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedClient::heightChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedClient::maximizedChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedClient::shadedChanged, this, resizeWindow);
+        connect(window(), &KDecoration3::DecoratedWindow::widthChanged, this, resizeWindow);
+        connect(window(), &KDecoration3::DecoratedWindow::heightChanged, this, resizeWindow);
+        connect(window(), &KDecoration3::DecoratedWindow::maximizedChanged, this, resizeWindow);
+        connect(window(), &KDecoration3::DecoratedWindow::shadedChanged, this, resizeWindow);
         resizeWindow();
         updateBuffer();
     } else {
@@ -371,7 +370,7 @@ void Decoration::setupBorders(QQuickItem *item)
 void Decoration::updateBorders()
 {
     KWin::Borders *b = m_borders;
-    if (client()->isMaximized() && m_maximizedBorders) {
+    if (window()->isMaximized() && m_maximizedBorders) {
         b = m_maximizedBorders;
     }
     if (!b) {
@@ -404,7 +403,7 @@ void Decoration::updateShadow()
     }
     bool updateShadow = false;
     const auto oldShadow = shadow();
-    if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !client()->isMaximized()) {
+    if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !window()->isMaximized()) {
         if (!oldShadow) {
             updateShadow = true;
         } else {
@@ -530,15 +529,15 @@ void Decoration::updateExtendedBorders()
     int extBottom = m_extendedBorders->bottom();
 
     if (settings()->borderSize() == KDecoration3::BorderSize::None) {
-        if (!client()->isMaximizedHorizontally()) {
+        if (!window()->isMaximizedHorizontally()) {
             extLeft = std::max(m_extendedBorders->left(), extSize);
             extRight = std::max(m_extendedBorders->right(), extSize);
         }
-        if (!client()->isMaximizedVertically()) {
+        if (!window()->isMaximizedVertically()) {
             extBottom = std::max(m_extendedBorders->bottom(), extSize);
         }
 
-    } else if (settings()->borderSize() == KDecoration3::BorderSize::NoSides && !client()->isMaximizedHorizontally()) {
+    } else if (settings()->borderSize() == KDecoration3::BorderSize::NoSides && !window()->isMaximizedHorizontally()) {
         extLeft = std::max(m_extendedBorders->left(), extSize);
         extRight = std::max(m_extendedBorders->right(), extSize);
     }
@@ -554,7 +553,7 @@ void Decoration::updateBlur()
 
     QRegion mask;
 
-    if (client() && client()->isMaximized()) {
+    if (window() && window()->isMaximized()) {
         mask = QRect(0, 0, m_item->width(), m_item->height());
     } else {
         const QVariant maskProperty = m_item->property("decorationMask");
@@ -581,7 +580,7 @@ void Decoration::updateBuffer()
         return;
     }
     m_contentRect = QRect(QPoint(0, 0), m_view->contentItem()->size().toSize());
-    if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !client()->isMaximized()) {
+    if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !window()->isMaximized()) {
         m_contentRect = m_contentRect.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
     }
     updateShadow();

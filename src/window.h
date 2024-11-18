@@ -53,7 +53,7 @@ class WindowItem;
 
 namespace Decoration
 {
-class DecoratedClientImpl;
+class DecoratedWindowImpl;
 class DecorationPalette;
 }
 
@@ -1186,8 +1186,8 @@ public:
     {
         return m_decoration.decoration != nullptr;
     }
-    Decoration::DecoratedClientImpl *decoratedClient() const;
-    void setDecoratedClient(Decoration::DecoratedClientImpl *client);
+    Decoration::DecoratedWindowImpl *decoratedWindow() const;
+    void setDecoratedWindow(Decoration::DecoratedWindowImpl *client);
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
     void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const;
@@ -1854,7 +1854,7 @@ protected:
     struct
     {
         std::shared_ptr<KDecoration3::Decoration> decoration;
-        QPointer<Decoration::DecoratedClientImpl> client;
+        QPointer<Decoration::DecoratedWindowImpl> client;
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;
     } m_decoration;

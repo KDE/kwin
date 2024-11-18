@@ -34,7 +34,7 @@ public:
     void doneOpenGLContextCurrent() override;
     bool supportsNativeFence() const override;
     OpenGlContext *openglContext() const override;
-    std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
+    std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *impl) override;
     std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) override;
     bool animationsSupported() const override;
 
@@ -84,7 +84,7 @@ public:
         Bottom,
         Count
     };
-    explicit SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client);
+    explicit SceneOpenGLDecorationRenderer(Decoration::DecoratedWindowImpl *client);
     ~SceneOpenGLDecorationRenderer() override;
 
     void render(const QRegion &region) override;

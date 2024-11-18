@@ -78,7 +78,7 @@ target_sources(kwin PRIVATE
     cursorsource.cpp
     dbusinterface.cpp
     debug_console.cpp
-    decorations/decoratedclient.cpp
+    decorations/decoratedwindow.cpp
     decorations/decorationbridge.cpp
     decorations/decorationpalette.cpp
     decorations/decorations_logging.cpp

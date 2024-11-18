@@ -54,7 +54,7 @@ struct TabletPadRingEvent;
 
 namespace Decoration
 {
-class DecoratedClientImpl;
+class DecoratedWindowImpl;
 }
 
 class InputBackend;
@@ -468,12 +468,12 @@ public:
      * @brief The Decoration currently receiving events.
      * @return decoration with pointer focus.
      */
-    Decoration::DecoratedClientImpl *decoration() const;
+    Decoration::DecoratedWindowImpl *decoration() const;
 
     virtual QPointF position() const = 0;
 
     void setFocus(Window *window);
-    void setDecoration(Decoration::DecoratedClientImpl *decoration);
+    void setDecoration(Decoration::DecoratedWindowImpl *decoration);
 
 Q_SIGNALS:
     void decorationChanged();
@@ -481,7 +481,7 @@ Q_SIGNALS:
 protected:
     explicit InputDeviceHandler(InputRedirection *parent);
 
-    virtual void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) = 0;
+    virtual void cleanupDecoration(Decoration::DecoratedWindowImpl *old, Decoration::DecoratedWindowImpl *now) = 0;
 
     virtual void focusUpdate(Window *old, Window *now) = 0;
 
@@ -522,7 +522,7 @@ private:
     struct
     {
         QPointer<Window> window;
-        QPointer<Decoration::DecoratedClientImpl> decoration;
+        QPointer<Decoration::DecoratedWindowImpl> decoration;
     } m_focus;
 
     bool m_inited = false;
