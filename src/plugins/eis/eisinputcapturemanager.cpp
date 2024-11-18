@@ -36,7 +36,7 @@ public:
         : manager(manager)
     {
     }
-    void pointerMotion(KWin::MouseEvent *event) override
+    void pointerMotion(KWin::PointerMotionEvent *event) override
     {
         if (manager->activeCapture()) {
             return;
@@ -45,16 +45,16 @@ public:
             for (const auto &barrier : capture->barriers()) {
                 // Detect the user trying to move out of the workArea and across the barrier:
                 // Both current and previous positions are on the barrier but there was an orthogonal delta
-                if (barrier.hitTest(event->pos()) && barrier.hitTest(previousPos) && ((barrier.orientation == Qt::Vertical && event->delta().x() != 0) || (barrier.orientation == Qt::Horizontal && event->delta().y() != 0))) {
+                if (barrier.hitTest(event->position) && barrier.hitTest(previousPos) && ((barrier.orientation == Qt::Vertical && event->delta.x() != 0) || (barrier.orientation == Qt::Horizontal && event->delta.y() != 0))) {
                     qCDebug(KWIN_INPUTCAPTURE) << "Activating input capture, crossing"
                                                << "barrier(" << barrier.orientation << barrier.position << "[" << barrier.start << "," << barrier.end << "])"
-                                               << "at" << event->pos() << "with" << event->delta();
-                    manager->barrierHit(capture.get(), event->pos() + event->delta());
+                                               << "at" << event->position << "with" << event->delta;
+                    manager->barrierHit(capture.get(), event->position + event->delta);
                     break;
                 }
             }
         }
-        previousPos = event->pos();
+        previousPos = event->position;
     }
     void keyEvent(KWin::KeyEvent *event) override
     {
@@ -72,10 +72,10 @@ public:
 private:
     QKeyCombination currentCombination;
     EisInputCaptureManager *manager;
-    QPoint previousPos;
+    QPointF previousPos;
 };
 
-bool EisInputCaptureBarrier::hitTest(const QPoint &point) const
+bool EisInputCaptureBarrier::hitTest(const QPointF &point) const
 {
     if (orientation == Qt::Vertical) {
         return point.x() == position && start <= point.y() && point.y() <= end;

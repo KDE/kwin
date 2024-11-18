@@ -188,13 +188,13 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     }
 }
 
-bool ButtonRebindsFilter::pointerButton(KWin::MouseEvent *event)
+bool ButtonRebindsFilter::pointerButton(KWin::PointerButtonEvent *event)
 {
     if (RebindScope::isRebinding()) {
         return false;
     }
 
-    return send(Pointer, {{}, event->button()}, event->type() == QEvent::MouseButtonPress, event->timestamp());
+    return send(Pointer, {{}, event->button}, event->state == InputDevice::PointerButtonPressed, event->timestamp);
 }
 
 bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)

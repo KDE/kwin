@@ -253,10 +253,18 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
 
     PositionUpdateBlocker blocker(this);
     updatePosition(pos, time);
-    MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
-                     input()->keyboardModifiers(), time,
-                     delta, deltaNonAccelerated, device, type == MotionType::Warp);
-    event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
+
+    PointerMotionEvent event{
+        .device = device,
+        .position = m_pos,
+        .delta = delta,
+        .deltaUnaccelerated = deltaNonAccelerated,
+        .warp = type == MotionType::Warp,
+        .buttons = m_qtButtons,
+        .modifiers = input()->keyboardModifiers(),
+        .modifiersRelevantForShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
+        .timestamp = time,
+    };
 
     update();
     input()->processSpies(std::bind(&InputEventSpy::pointerMotion, std::placeholders::_1, &event));
@@ -270,26 +278,23 @@ void PointerInputRedirection::processButton(uint32_t button, InputDevice::Pointe
         return;
     }
 
-    QEvent::Type type;
-    switch (state) {
-    case InputDevice::PointerButtonReleased:
-        type = QEvent::MouseButtonRelease;
-        break;
-    case InputDevice::PointerButtonPressed:
-        type = QEvent::MouseButtonPress;
+    if (state == InputDevice::PointerButtonPressed) {
         update();
-        break;
-    default:
-        Q_UNREACHABLE();
-        return;
     }
 
     updateButton(button, state);
 
-    MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
-                     input()->keyboardModifiers(), time, QPointF(), QPointF(), device, false);
-    event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
-    event.setNativeButton(button);
+    PointerButtonEvent event{
+        .device = device,
+        .position = m_pos,
+        .state = state,
+        .button = buttonToQtMouseButton(button),
+        .nativeButton = button,
+        .buttons = m_qtButtons,
+        .modifiers = input()->keyboardModifiers(),
+        .modifiersRelevantForShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
+        .timestamp = time,
+    };
 
     input()->processSpies(std::bind(&InputEventSpy::pointerButton, std::placeholders::_1, &event));
     input()->processFilters(std::bind(&InputEventFilter::pointerButton, std::placeholders::_1, &event));

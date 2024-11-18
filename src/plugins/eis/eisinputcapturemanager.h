@@ -29,7 +29,7 @@ struct EisInputCaptureBarrier
     const int position;
     const int start;
     const int end;
-    bool hitTest(const QPoint &point) const;
+    bool hitTest(const QPointF &point) const;
 };
 
 class EisInputCaptureManager : public QObject, public QDBusContext

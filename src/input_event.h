@@ -19,66 +19,30 @@ namespace KWin
 class InputDevice;
 class InputDeviceTabletTool;
 
-class MouseEvent : public QMouseEvent
+struct PointerMotionEvent
 {
-public:
-    explicit MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button, Qt::MouseButtons buttons,
-                        Qt::KeyboardModifiers modifiers, std::chrono::microseconds timestamp,
-                        const QPointF &delta, const QPointF &deltaNonAccelerated, InputDevice *device, bool warp);
+    InputDevice *device;
+    QPointF position;
+    QPointF delta;
+    QPointF deltaUnaccelerated;
+    bool warp;
+    Qt::MouseButtons buttons;
+    Qt::KeyboardModifiers modifiers;
+    Qt::KeyboardModifiers modifiersRelevantForShortcuts;
+    std::chrono::microseconds timestamp;
+};
 
-    QPointF delta() const
-    {
-        return m_delta;
-    }
-
-    QPointF deltaUnaccelerated() const
-    {
-        return m_deltaUnccelerated;
-    }
-
-    std::chrono::microseconds timestamp() const
-    {
-        return m_timestamp;
-    }
-
-    InputDevice *device() const
-    {
-        return m_device;
-    }
-
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const
-    {
-        return m_modifiersRelevantForShortcuts;
-    }
-
-    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods)
-    {
-        m_modifiersRelevantForShortcuts = mods;
-    }
-
-    quint32 nativeButton() const
-    {
-        return m_nativeButton;
-    }
-
-    void setNativeButton(quint32 button)
-    {
-        m_nativeButton = button;
-    }
-
-    bool isWarp() const
-    {
-        return m_warp;
-    }
-
-private:
-    QPointF m_delta;
-    QPointF m_deltaUnccelerated;
-    std::chrono::microseconds m_timestamp;
-    InputDevice *m_device;
-    Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
-    quint32 m_nativeButton = 0;
-    bool m_warp = false;
+struct PointerButtonEvent
+{
+    InputDevice *device;
+    QPointF position;
+    InputDevice::PointerButtonState state;
+    Qt::MouseButton button;
+    quint32 nativeButton;
+    Qt::MouseButtons buttons;
+    Qt::KeyboardModifiers modifiers;
+    Qt::KeyboardModifiers modifiersRelevantForShortcuts;
+    std::chrono::microseconds timestamp;
 };
 
 struct PointerAxisEvent

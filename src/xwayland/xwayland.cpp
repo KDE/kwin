@@ -426,7 +426,7 @@ public:
         return false;
     }
 
-    bool pointerButton(KWin::MouseEvent *event) override
+    bool pointerButton(KWin::PointerButtonEvent *event) override
     {
         ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
         if (!xwaylandClient) {
@@ -446,8 +446,8 @@ public:
             }
         }
 
-        PointerButtonState state{event->type() == QEvent::MouseButtonPress};
-        pointer->sendButton(event->nativeButton(), state, xwaylandClient);
+        PointerButtonState state{event->state == InputDevice::PointerButtonPressed};
+        pointer->sendButton(event->nativeButton, state, xwaylandClient);
         return false;
     }
 

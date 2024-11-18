@@ -14,12 +14,12 @@
 namespace KWin
 {
 
-void HideCursorSpy::pointerMotion(MouseEvent *event)
+void HideCursorSpy::pointerMotion(PointerMotionEvent *event)
 {
     showCursor();
 }
 
-void HideCursorSpy::pointerButton(MouseEvent *event)
+void HideCursorSpy::pointerButton(PointerButtonEvent *event)
 {
     showCursor();
 }

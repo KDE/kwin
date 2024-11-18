@@ -23,8 +23,8 @@ public:
 
     void clearTouches();
 
-    bool pointerMotion(MouseEvent *event) override;
-    bool pointerButton(MouseEvent *event) override;
+    bool pointerMotion(PointerMotionEvent *event) override;
+    bool pointerButton(PointerButtonEvent *event) override;
     bool pointerFrame() override;
     bool pointerAxis(PointerAxisEvent *event) override;
 

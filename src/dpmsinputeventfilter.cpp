@@ -36,9 +36,9 @@ DpmsInputEventFilter::~DpmsInputEventFilter()
 {
 }
 
-bool DpmsInputEventFilter::pointerMotion(MouseEvent *event)
+bool DpmsInputEventFilter::pointerMotion(PointerMotionEvent *event)
 {
-    if (!event->isWarp()) {
+    if (!event->warp) {
         // The intention is to wake the screen on user interactions
         // warp events aren't user interactions, so ignore them.
         notify();
@@ -46,7 +46,7 @@ bool DpmsInputEventFilter::pointerMotion(MouseEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::pointerButton(MouseEvent *event)
+bool DpmsInputEventFilter::pointerButton(PointerButtonEvent *event)
 {
     notify();
     return true;

@@ -18,8 +18,9 @@ class QTabletEvent;
 namespace KWin
 {
 class KeyEvent;
-class MouseEvent;
 struct PointerAxisEvent;
+struct PointerButtonEvent;
+struct PointerMotionEvent;
 struct SwitchEvent;
 class TabletEvent;
 struct TabletToolButtonEvent;
@@ -43,8 +44,8 @@ public:
     InputEventSpy();
     virtual ~InputEventSpy();
 
-    virtual void pointerMotion(MouseEvent *event);
-    virtual void pointerButton(MouseEvent *event);
+    virtual void pointerMotion(PointerMotionEvent *event);
+    virtual void pointerButton(PointerButtonEvent *event);
     /**
      * Event spy for pointer axis events.
      *

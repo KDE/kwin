@@ -178,51 +178,51 @@ DebugConsoleFilter::DebugConsoleFilter(QTextEdit *textEdit)
 
 DebugConsoleFilter::~DebugConsoleFilter() = default;
 
-void DebugConsoleFilter::pointerMotion(MouseEvent *event)
+void DebugConsoleFilter::pointerMotion(PointerMotionEvent *event)
 {
     QString text = s_hr;
-    const QString timestamp = timestampRow(event->timestamp());
+    const QString timestamp = timestampRow(event->timestamp);
 
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
-    text.append(deviceRow(event->device()));
+    text.append(deviceRow(event->device));
     text.append(timestamp);
-    text.append(timestampRowUsec(event->timestamp()));
-    if (!event->delta().isNull()) {
+    text.append(timestampRowUsec(event->timestamp));
+    if (!event->delta.isNull()) {
         text.append(tableRow(i18nc("The relative mouse movement", "Delta"),
-                             QStringLiteral("%1/%2").arg(event->delta().x()).arg(event->delta().y())));
+                             QStringLiteral("%1/%2").arg(event->delta.x()).arg(event->delta.y())));
     }
-    if (!event->deltaUnaccelerated().isNull()) {
+    if (!event->deltaUnaccelerated.isNull()) {
         text.append(tableRow(i18nc("The relative mouse movement", "Delta (not accelerated)"),
-                             QStringLiteral("%1/%2").arg(event->deltaUnaccelerated().x()).arg(event->deltaUnaccelerated().y())));
+                             QStringLiteral("%1/%2").arg(event->deltaUnaccelerated.x()).arg(event->deltaUnaccelerated.y())));
     }
-    text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
+    text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->position.x()).arg(event->position.y())));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pointerButton(MouseEvent *event)
+void DebugConsoleFilter::pointerButton(PointerButtonEvent *event)
 {
     QString text = s_hr;
-    const QString timestamp = timestampRow(event->timestamp());
+    const QString timestamp = timestampRow(event->timestamp);
 
     text.append(s_tableStart);
-    if (event->type() == QEvent::MouseButtonPress) {
+    if (event->state == InputDevice::PointerButtonPressed) {
         text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
-        text.append(deviceRow(event->device()));
+        text.append(deviceRow(event->device));
         text.append(timestamp);
-        text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
-        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton()));
-        text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button)));
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton));
+        text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons)));
     } else {
         text.append(tableHeaderRow(i18nc("A mouse pointer button release event", "Pointer Button Release")));
-        text.append(deviceRow(event->device()));
+        text.append(deviceRow(event->device));
         text.append(timestamp);
-        text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
-        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton()));
-        text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button)));
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton));
+        text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons)));
     }
     text.append(s_tableEnd);
 

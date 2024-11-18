@@ -43,8 +43,9 @@ class TouchInputRedirection;
 class WindowSelectorFilter;
 struct SwitchEvent;
 class TabletEvent;
-class MouseEvent;
 struct PointerAxisEvent;
+struct PointerButtonEvent;
+struct PointerMotionEvent;
 class KeyEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
@@ -385,8 +386,8 @@ public:
      */
     int weight() const;
 
-    virtual bool pointerMotion(MouseEvent *event);
-    virtual bool pointerButton(MouseEvent *event);
+    virtual bool pointerMotion(PointerMotionEvent *event);
+    virtual bool pointerButton(PointerButtonEvent *event);
     virtual bool pointerFrame();
     /**
      * Event filter for pointer axis events.

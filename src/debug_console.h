@@ -118,8 +118,8 @@ public:
     explicit DebugConsoleFilter(QTextEdit *textEdit);
     ~DebugConsoleFilter() override;
 
-    void pointerMotion(MouseEvent *event) override;
-    void pointerButton(MouseEvent *event) override;
+    void pointerMotion(PointerMotionEvent *event) override;
+    void pointerButton(PointerButtonEvent *event) override;
     void pointerAxis(PointerAxisEvent *event) override;
     void keyEvent(KeyEvent *event) override;
     void touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;

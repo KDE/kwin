@@ -5,8 +5,12 @@
 */
 
 #include "shakedetector.h"
+#include "input_event.h"
 
 #include <cmath>
+
+namespace KWin
+{
 
 ShakeDetector::ShakeDetector()
 {
@@ -14,12 +18,12 @@ ShakeDetector::ShakeDetector()
 
 quint64 ShakeDetector::interval() const
 {
-    return m_interval;
+    return m_interval.count();
 }
 
 void ShakeDetector::setInterval(quint64 interval)
 {
-    m_interval = interval;
+    m_interval = std::chrono::milliseconds(interval);
 }
 
 qreal ShakeDetector::sensitivity() const
@@ -44,12 +48,12 @@ void ShakeDetector::reset()
     m_history.clear();
 }
 
-bool ShakeDetector::update(QMouseEvent *event)
+bool ShakeDetector::update(PointerMotionEvent *event)
 {
     // Prune the old entries in the history.
     auto it = m_history.begin();
     for (; it != m_history.end(); ++it) {
-        if (event->timestamp() - it->timestamp < m_interval) {
+        if (event->timestamp - it->timestamp < m_interval) {
             break;
         }
     }
@@ -60,18 +64,18 @@ bool ShakeDetector::update(QMouseEvent *event)
     if (m_history.size() >= 2) {
         HistoryItem &last = m_history[m_history.size() - 1];
         const HistoryItem &prev = m_history[m_history.size() - 2];
-        if (sameSign(last.position.x() - prev.position.x(), event->position().x() - last.position.x()) && sameSign(last.position.y() - prev.position.y(), event->position().y() - last.position.y())) {
+        if (sameSign(last.position.x() - prev.position.x(), event->position.x() - last.position.x()) && sameSign(last.position.y() - prev.position.y(), event->position.y() - last.position.y())) {
             last = HistoryItem{
-                .position = event->position(),
-                .timestamp = event->timestamp(),
+                .position = event->position,
+                .timestamp = event->timestamp,
             };
             return false;
         }
     }
 
     m_history.emplace_back(HistoryItem{
-        .position = event->position(),
-        .timestamp = event->timestamp(),
+        .position = event->position,
+        .timestamp = event->timestamp,
     });
 
     qreal left = m_history[0].position.x();
@@ -108,3 +112,5 @@ bool ShakeDetector::update(QMouseEvent *event)
 
     return false;
 }
+
+} // namespace KWin

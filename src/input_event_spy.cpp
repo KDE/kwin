@@ -23,11 +23,11 @@ InputEventSpy::~InputEventSpy()
     }
 }
 
-void InputEventSpy::pointerMotion(MouseEvent *event)
+void InputEventSpy::pointerMotion(PointerMotionEvent *event)
 {
 }
 
-void InputEventSpy::pointerButton(MouseEvent *event)
+void InputEventSpy::pointerButton(PointerButtonEvent *event)
 {
 }
 

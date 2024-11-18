@@ -48,13 +48,13 @@ void PopupInputFilter::handleWindowAdded(Window *window)
     }
 }
 
-bool PopupInputFilter::pointerButton(MouseEvent *event)
+bool PopupInputFilter::pointerButton(PointerButtonEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;
     }
-    if (event->type() == QMouseEvent::MouseButtonPress) {
-        auto pointerFocus = input()->findToplevel(event->globalPosition());
+    if (event->state == InputDevice::PointerButtonPressed) {
+        auto pointerFocus = input()->findToplevel(event->position);
         if (!pointerFocus || !Window::belongToSameApplication(pointerFocus, m_popupWindows.constLast())) {
             // a press on a window (or no window) not belonging to the popup window
             cancelPopups();
@@ -63,7 +63,7 @@ bool PopupInputFilter::pointerButton(MouseEvent *event)
         }
         if (pointerFocus && pointerFocus->isDecorated()) {
             // test whether it is on the decoration
-            if (!exclusiveContains(pointerFocus->clientGeometry(), event->globalPosition())) {
+            if (!exclusiveContains(pointerFocus->clientGeometry(), event->position)) {
                 cancelPopups();
                 return true;
             }

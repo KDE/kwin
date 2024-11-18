@@ -117,12 +117,12 @@ int InputEventFilter::weight() const
     return m_weight;
 }
 
-bool InputEventFilter::pointerMotion(MouseEvent *event)
+bool InputEventFilter::pointerMotion(PointerMotionEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::pointerButton(MouseEvent *event)
+bool InputEventFilter::pointerButton(PointerButtonEvent *event)
 {
     return false;
 }
@@ -299,7 +299,7 @@ public:
         : InputEventFilter(InputFilterOrder::LockScreen)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -307,7 +307,7 @@ public:
 
         ScreenLocker::KSldApp::self()->userActivity();
 
-        auto window = input()->findToplevel(event->globalPosition());
+        auto window = input()->findToplevel(event->position);
         if (window && window->isClient() && window->isLockScreen()) {
             workspace()->activateWindow(window);
         }
@@ -315,12 +315,12 @@ public:
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
             // TODO: should the pointer position always stay in sync, i.e. not do the check?
-            seat->setTimestamp(event->timestamp());
-            seat->notifyPointerMotion(event->globalPosition());
+            seat->setTimestamp(event->timestamp);
+            seat->notifyPointerMotion(event->position);
         }
         return true;
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -328,7 +328,7 @@ public:
 
         ScreenLocker::KSldApp::self()->userActivity();
 
-        auto window = input()->findToplevel(event->globalPosition());
+        auto window = input()->findToplevel(event->position);
         if (window && window->isClient() && window->isLockScreen()) {
             workspace()->activateWindow(window);
         }
@@ -337,11 +337,11 @@ public:
         if (pointerSurfaceAllowed()) {
             // TODO: can we leak presses/releases here when we move the mouse in between from an allowed surface to
             //       disallowed one or vice versa?
-            const auto state = event->type() == QEvent::MouseButtonPress
+            const auto state = event->state == InputDevice::PointerButtonPressed
                 ? PointerButtonState::Pressed
                 : PointerButtonState::Released;
-            seat->setTimestamp(event->timestamp());
-            seat->notifyPointerButton(event->nativeButton(), state);
+            seat->setTimestamp(event->timestamp);
+            seat->notifyPointerButton(event->nativeButton, state);
         }
         return true;
     }
@@ -538,19 +538,35 @@ public:
         : InputEventFilter(InputFilterOrder::Effects)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->checkInputWindowEvent(event);
+        QMouseEvent mouseEvent(QEvent::MouseMove,
+                               event->position,
+                               event->position,
+                               Qt::NoButton,
+                               event->buttons,
+                               event->modifiers);
+        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+        mouseEvent.setAccepted(false);
+        return effects->checkInputWindowEvent(&mouseEvent);
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        return effects->checkInputWindowEvent(event);
+        QMouseEvent mouseEvent(event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                               event->position,
+                               event->position,
+                               event->button,
+                               event->buttons,
+                               event->modifiers);
+        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+        mouseEvent.setAccepted(false);
+        return effects->checkInputWindowEvent(&mouseEvent);
     }
     bool pointerAxis(PointerAxisEvent *event) override
     {
@@ -647,23 +663,23 @@ public:
         : InputEventFilter(InputFilterOrder::InteractiveMoveResize)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
         }
-        window->updateInteractiveMoveResize(event->globalPosition(), input()->keyboardModifiers());
+        window->updateInteractiveMoveResize(event->position, event->modifiers);
         return true;
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
         }
-        if (event->type() == QEvent::MouseButtonRelease) {
-            if (event->buttons() == Qt::NoButton) {
+        if (event->state == InputDevice::PointerButtonReleased) {
+            if (event->buttons == Qt::NoButton) {
                 window->endInteractiveMoveResize();
             }
         }
@@ -762,21 +778,21 @@ public:
         : InputEventFilter(InputFilterOrder::WindowSelector)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         return m_active;
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         if (!m_active) {
             return false;
         }
-        if (event->type() == QEvent::MouseButtonRelease) {
-            if (event->buttons() == Qt::NoButton) {
-                if (event->button() == Qt::RightButton) {
+        if (event->state == InputDevice::PointerButtonReleased) {
+            if (event->buttons == Qt::NoButton) {
+                if (event->button == Qt::RightButton) {
                     cancel();
                 } else {
-                    accept(event->globalPosition());
+                    accept(event->position);
                 }
             }
         }
@@ -934,10 +950,10 @@ public:
         m_powerDown.setInterval(1000);
     }
 
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
-        if (event->type() == QEvent::MouseButtonPress) {
-            if (input()->shortcuts()->processPointerPressed(event->modifiers(), event->buttons())) {
+        if (event->state == InputDevice::PointerButtonPressed) {
+            if (input()->shortcuts()->processPointerPressed(event->modifiers, event->buttons)) {
                 return true;
             }
         }
@@ -1185,21 +1201,21 @@ namespace
  * @returns if a command was performed, whether or not the event should be filtered out
  *          if no command was performed, std::nullopt
  */
-std::optional<bool> performModifierWindowMouseAction(MouseEvent *event, Window *window)
+std::optional<bool> performModifierWindowMouseAction(PointerButtonEvent *event, Window *window)
 {
-    if (event->modifiersRelevantForGlobalShortcuts() != options->commandAllModifier()) {
+    if (event->modifiersRelevantForShortcuts != options->commandAllModifier()) {
         return std::nullopt;
     }
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    switch (event->button()) {
+    switch (event->button) {
     case Qt::LeftButton:
-        return !window->performMousePressCommand(options->commandAll1(), event->globalPosition());
+        return !window->performMousePressCommand(options->commandAll1(), event->position);
     case Qt::MiddleButton:
-        return !window->performMousePressCommand(options->commandAll2(), event->globalPosition());
+        return !window->performMousePressCommand(options->commandAll2(), event->position);
     case Qt::RightButton:
-        return !window->performMousePressCommand(options->commandAll3(), event->globalPosition());
+        return !window->performMousePressCommand(options->commandAll3(), event->position);
     default:
         return std::nullopt;
     }
@@ -1208,12 +1224,12 @@ std::optional<bool> performModifierWindowMouseAction(MouseEvent *event, Window *
  * @returns if a command was performed, whether or not the event should be filtered out
  *          if no command was performed, std::nullopt
  */
-std::optional<bool> performWindowMouseAction(MouseEvent *event, Window *window)
+std::optional<bool> performWindowMouseAction(PointerButtonEvent *event, Window *window)
 {
     if (const auto globalAction = performModifierWindowMouseAction(event, window)) {
         return globalAction;
-    } else if (const auto command = window->getMousePressCommand(event->button())) {
-        return !window->performMousePressCommand(*command, event->globalPosition());
+    } else if (const auto command = window->getMousePressCommand(event->button)) {
+        return !window->performMousePressCommand(*command, event->position);
     } else {
         return std::nullopt;
     }
@@ -1263,7 +1279,7 @@ public:
                                                           10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
         QWindowSystemInterface::registerInputDevice(m_touchDevice.get());
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
@@ -1274,15 +1290,15 @@ public:
             return false;
         }
         QWindowSystemInterface::handleMouseEvent(internal,
-                                                 event->position() - internal->position(),
-                                                 event->globalPosition(),
-                                                 event->buttons(),
-                                                 event->button(),
-                                                 event->type(),
-                                                 event->modifiers());
+                                                 event->position - internal->position(),
+                                                 event->position,
+                                                 event->buttons,
+                                                 Qt::NoButton,
+                                                 QEvent::MouseMove,
+                                                 event->modifiers);
         return true;
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
@@ -1293,12 +1309,12 @@ public:
             return false;
         }
         QWindowSystemInterface::handleMouseEvent(internal,
-                                                 event->position() - internal->position(),
-                                                 event->globalPosition(),
-                                                 event->buttons(),
-                                                 event->button(),
-                                                 event->type(),
-                                                 event->modifiers());
+                                                 event->position - internal->position(),
+                                                 event->position,
+                                                 event->buttons,
+                                                 event->button,
+                                                 event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                                                 event->modifiers);
         return true;
     }
     bool pointerAxis(PointerAxisEvent *event) override
@@ -1464,39 +1480,39 @@ public:
         : InputEventFilter(InputFilterOrder::Decoration)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
             return false;
         }
-        const QPointF p = event->globalPosition() - decoration->window()->pos();
+        const QPointF p = event->position - decoration->window()->pos();
         QHoverEvent e(QEvent::HoverMove, p, p);
         QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-        decoration->window()->processDecorationMove(p, event->globalPosition());
+        decoration->window()->processDecorationMove(p, event->position);
         return true;
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
             return false;
         }
-        const QPointF globalPos = event->globalPosition();
-        const QPointF p = event->globalPosition() - decoration->window()->pos();
+        const QPointF globalPos = event->position;
+        const QPointF p = event->position - decoration->window()->pos();
         const auto actionResult = performModifierWindowMouseAction(event, decoration->window());
         if (actionResult) {
             return *actionResult;
         }
-        QMouseEvent e(event->type(), p, event->globalPosition(), event->button(), event->buttons(), event->modifiers());
-        e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp()).count());
+        QMouseEvent e(event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease, p, event->position, event->button, event->buttons, event->modifiers);
+        e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration->decoration(), &e);
-        if (!e.isAccepted() && event->type() == QEvent::MouseButtonPress) {
-            decoration->window()->processDecorationButtonPress(p, globalPos, event->button());
+        if (!e.isAccepted() && event->state == InputDevice::PointerButtonPressed) {
+            decoration->window()->processDecorationButtonPress(p, globalPos, event->button);
         }
-        if (event->type() == QEvent::MouseButtonRelease) {
-            decoration->window()->processDecorationButtonRelease(event->button());
+        if (event->state == InputDevice::PointerButtonReleased) {
+            decoration->window()->processDecorationButtonRelease(event->button);
         }
         return true;
     }
@@ -1679,19 +1695,35 @@ public:
         : InputEventFilter(InputFilterOrder::TabBox)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        return workspace()->tabbox()->handleMouseEvent(event);
+        QMouseEvent mouseEvent(QEvent::MouseMove,
+                               event->position,
+                               event->position,
+                               Qt::NoButton,
+                               event->buttons,
+                               event->modifiers);
+        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+        mouseEvent.setAccepted(false);
+        return workspace()->tabbox()->handleMouseEvent(&mouseEvent);
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        return workspace()->tabbox()->handleMouseEvent(event);
+        QMouseEvent mouseEvent(event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                               event->position,
+                               event->position,
+                               event->button,
+                               event->buttons,
+                               event->modifiers);
+        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+        mouseEvent.setAccepted(false);
+        return workspace()->tabbox()->handleMouseEvent(&mouseEvent);
     }
     bool keyEvent(KeyEvent *event) override
     {
@@ -1733,9 +1765,9 @@ public:
         : InputEventFilter(InputFilterOrder::ScreenEdge)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
-        workspace()->screenEdges()->isEntered(event->globalPosition(), event->timestamp());
+        workspace()->screenEdges()->isEntered(event->position, event->timestamp);
         // always forward
         return false;
     }
@@ -1793,9 +1825,9 @@ public:
         : InputEventFilter(InputFilterOrder::WindowAction)
     {
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
-        if (event->type() == QEvent::MouseButtonPress) {
+        if (event->state == InputDevice::PointerButtonPressed) {
             Window *window = input()->pointer()->focus();
             if (!window || !window->isClient()) {
                 return false;
@@ -1808,8 +1840,8 @@ public:
             if (!window || !window->isClient()) {
                 return false;
             }
-            if (const auto command = window->getMouseReleaseCommand(event->button())) {
-                return !window->performMouseReleaseCommand(*command, event->globalPosition());
+            if (const auto command = window->getMouseReleaseCommand(event->button)) {
+                return !window->performMouseReleaseCommand(*command, event->position);
             }
         }
         return false;
@@ -1883,13 +1915,13 @@ public:
     {
     }
 
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         auto inputMethod = kwinApp()->inputMethod();
         if (!inputMethod) {
             return false;
         }
-        if (event->type() != QEvent::MouseButtonPress) {
+        if (event->state != InputDevice::PointerButtonPressed) {
             return false;
         }
 
@@ -1932,28 +1964,28 @@ public:
         : InputEventFilter(InputFilterOrder::Forward)
     {
     }
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
-        seat->notifyPointerMotion(event->globalPosition());
+        seat->setTimestamp(event->timestamp);
+        seat->notifyPointerMotion(event->position);
         // absolute motion events confuse games and Wayland doesn't have a warp event yet
         // -> send a relative motion event with a zero delta to signal the warp instead
-        if (event->isWarp()) {
-            seat->relativePointerMotion(QPointF(0, 0), QPointF(0, 0), event->timestamp());
-        } else if (!event->delta().isNull()) {
-            seat->relativePointerMotion(event->delta(), event->deltaUnaccelerated(), event->timestamp());
+        if (event->warp) {
+            seat->relativePointerMotion(QPointF(0, 0), QPointF(0, 0), event->timestamp);
+        } else if (!event->delta.isNull()) {
+            seat->relativePointerMotion(event->delta, event->deltaUnaccelerated, event->timestamp);
         }
         return true;
     }
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
-        if (event->type() == QEvent::MouseButtonPress) {
-            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Pressed);
+        seat->setTimestamp(event->timestamp);
+        if (event->state == InputDevice::PointerButtonPressed) {
+            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Pressed);
         } else {
-            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Released);
+            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Released);
         }
         return true;
     }
@@ -2336,7 +2368,7 @@ public:
         });
     }
 
-    bool pointerMotion(MouseEvent *event) override
+    bool pointerMotion(PointerMotionEvent *event) override
     {
         auto seat = waylandServer()->seat();
         if (!seat->isDragPointer()) {
@@ -2345,7 +2377,7 @@ public:
         if (seat->isDragTouch()) {
             return true;
         }
-        seat->setTimestamp(event->timestamp());
+        seat->setTimestamp(event->timestamp);
         const auto pos = input()->globalPointer();
 
         if (seat->xdgTopleveldrag()) {
@@ -2391,7 +2423,7 @@ public:
         return true;
     }
 
-    bool pointerButton(MouseEvent *event) override
+    bool pointerButton(PointerButtonEvent *event) override
     {
         auto seat = waylandServer()->seat();
         if (!seat->isDragPointer()) {
@@ -2400,13 +2432,13 @@ public:
         if (seat->isDragTouch()) {
             return true;
         }
-        seat->setTimestamp(event->timestamp());
-        if (event->type() == QEvent::MouseButtonPress) {
-            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Pressed);
+        seat->setTimestamp(event->timestamp);
+        if (event->state == InputDevice::PointerButtonPressed) {
+            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Pressed);
         } else {
             raiseDragTarget();
             m_dragTarget = nullptr;
-            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Released);
+            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Released);
         }
         // TODO: should we pass through effects?
         return true;
@@ -2699,9 +2731,9 @@ public:
         update();
     }
 
-    void pointerButton(MouseEvent *event) override
+    void pointerButton(PointerButtonEvent *event) override
     {
-        if (event->type() != QEvent::MouseButtonPress) {
+        if (event->state != InputDevice::PointerButtonPressed) {
             return;
         }
         update();
@@ -2749,11 +2781,11 @@ public:
 class UserActivitySpy : public InputEventSpy
 {
 public:
-    void pointerMotion(MouseEvent *event) override
+    void pointerMotion(PointerMotionEvent *event) override
     {
         notifyActivity();
     }
-    void pointerButton(MouseEvent *event) override
+    void pointerButton(PointerButtonEvent *event) override
     {
         notifyActivity();
     }

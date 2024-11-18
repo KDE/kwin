@@ -12,19 +12,6 @@
 namespace KWin
 {
 
-MouseEvent::MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button,
-                       Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, std::chrono::microseconds timestamp,
-                       const QPointF &delta, const QPointF &deltaNonAccelerated, InputDevice *device, bool warp)
-    : QMouseEvent(type, pos, pos, button, buttons, modifiers)
-    , m_delta(delta)
-    , m_deltaUnccelerated(deltaNonAccelerated)
-    , m_timestamp(timestamp)
-    , m_device(device)
-    , m_warp(warp)
-{
-    setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
-}
-
 KeyEvent::KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
                    const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device)
     : QKeyEvent(type, key, modifiers, code, keysym, 0, text, autorepeat)
