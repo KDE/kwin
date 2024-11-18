@@ -237,7 +237,7 @@
 >Principal</guilabel
 > perquè s'invoqui amb la combinació de tecles <keycombo
 >&Alt;&Tab;</keycombo
->, per a mostrar les finestres obertes en un carrusel, per a només mostrar una finestra per aplicació i per a només llistar les finestres que es troben a l'escriptori actual i a la pantalla actualment activa. Això pot proporcionar un canvi de finestra molt ràpid sensible al context si teniu escriptoris virtuals de «feina» i «casa», i després manteniu tots els vostres fulls de càlcul per al treball i la llar en el mateix monitor.</para>
+>, per a mostrar les finestres obertes en un carrusel, per a només mostrar una finestra per aplicació i per a només llistar les finestres que es troben a l'escriptori actual i a la pantalla actualment activa. Això pot proporcionar un canvi de finestra molt ràpid dependent del context si teniu escriptoris virtuals de «feina» i «casa», i després manteniu tots els vostres fulls de càlcul per al treball i la llar en el mateix monitor.</para>
 
 <para
 >La disponibilitat de la configuració del Commutador de tasques ofereix una segona forma de filtrar i navegar amb facilitat per les llistes de finestres. Amb vuit combinacions de tecla disponibles en les dues configuracions del Commutador de tasques, hauria de ser possible navegar fàcilment i ràpidament a través d'un gran nombre de finestres.</para>
