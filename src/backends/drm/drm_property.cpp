@@ -28,12 +28,16 @@ bool DrmProperty::setPropertyLegacy(uint64_t value)
 {
     if (m_current == value) {
         return true;
-    } else if (drmModeObjectSetProperty(m_obj->gpu()->fd(), m_obj->id(), m_obj->type(), m_propId, value) == 0) {
+    }
+
+    const int ret = drmModeObjectSetProperty(m_obj->gpu()->fd(), m_obj->id(), m_obj->type(), m_propId, value);
+    if (ret == 0) {
         m_current = value;
         return true;
-    } else {
-        return false;
     }
+
+    qCWarning(KWIN_DRM) << "Failed to set property:" << m_propName << "for object ID:" << m_obj->id() << "to value:" << value << "error:" << strerror(-ret);
+    return false;
 }
 
 void DrmProperty::update(DrmPropertyList &propertyList)
