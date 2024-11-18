@@ -30,7 +30,6 @@ public:
     explicit DecoratedClientImpl(Window *window, KDecoration3::DecoratedClient *decoratedClient, KDecoration3::Decoration *decoration);
     ~DecoratedClientImpl() override;
     QString caption() const override;
-    WId decorationId() const override;
     int height() const override;
     QIcon icon() const override;
     bool isActive() const override;
@@ -54,7 +53,6 @@ public:
     QSize size() const override;
     int width() const override;
     QString windowClass() const override;
-    WId windowId() const override;
 
     Qt::Edges adjacentScreenEdges() const override;
 

@@ -53,8 +53,6 @@ public:
     ~PreviewClient() override;
 
     QString caption() const override;
-    WId decorationId() const override;
-    WId windowId() const override;
     QIcon icon() const override;
     bool isActive() const override;
     bool isCloseable() const override;

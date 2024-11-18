@@ -122,11 +122,6 @@ QString PreviewClient::caption() const
     return m_caption;
 }
 
-WId PreviewClient::decorationId() const
-{
-    return 0;
-}
-
 QIcon PreviewClient::icon() const
 {
     return m_icon;
@@ -215,11 +210,6 @@ bool PreviewClient::isShaded() const
 bool PreviewClient::providesContextHelp() const
 {
     return m_providesContextHelp;
-}
-
-WId PreviewClient::windowId() const
-{
-    return 0;
 }
 
 QPalette PreviewClient::palette() const
