@@ -19,7 +19,12 @@ PlaceholderInputEventFilter::PlaceholderInputEventFilter()
 {
 }
 
-bool PlaceholderInputEventFilter::pointerEvent(MouseEvent *event)
+bool PlaceholderInputEventFilter::pointerMotion(MouseEvent *event)
+{
+    return true;
+}
+
+bool PlaceholderInputEventFilter::pointerButton(MouseEvent *event)
 {
     return true;
 }

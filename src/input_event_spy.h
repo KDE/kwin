@@ -43,12 +43,8 @@ public:
     InputEventSpy();
     virtual ~InputEventSpy();
 
-    /**
-     * Event spy for pointer events which can be described by a MouseEvent.
-     *
-     * @param event The event information about the move or button press/release
-     */
-    virtual void pointerEvent(MouseEvent *event);
+    virtual void pointerMotion(MouseEvent *event);
+    virtual void pointerButton(MouseEvent *event);
     /**
      * Event spy for pointer axis events.
      *

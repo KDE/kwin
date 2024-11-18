@@ -384,13 +384,9 @@ public:
      * The position in the input chain, lower values come first.
      */
     int weight() const;
-    /**
-     * Event filter for pointer events which can be described by a QMouseEvent.
-     *
-     * @param event The event information about the move or button press/release
-     * @return @c true to stop further event processing, @c false to pass to next filter
-     */
-    virtual bool pointerEvent(MouseEvent *event);
+
+    virtual bool pointerMotion(MouseEvent *event);
+    virtual bool pointerButton(MouseEvent *event);
     virtual bool pointerFrame();
     /**
      * Event filter for pointer axis events.

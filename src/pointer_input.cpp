@@ -259,8 +259,8 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
 
     update();
-    input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event));
+    input()->processSpies(std::bind(&InputEventSpy::pointerMotion, std::placeholders::_1, &event));
+    input()->processFilters(std::bind(&InputEventFilter::pointerMotion, std::placeholders::_1, &event));
 }
 
 void PointerInputRedirection::processButton(uint32_t button, InputDevice::PointerButtonState state, std::chrono::microseconds time, InputDevice *device)
@@ -291,8 +291,8 @@ void PointerInputRedirection::processButton(uint32_t button, InputDevice::Pointe
     event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
     event.setNativeButton(button);
 
-    input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event));
+    input()->processSpies(std::bind(&InputEventSpy::pointerButton, std::placeholders::_1, &event));
+    input()->processFilters(std::bind(&InputEventFilter::pointerButton, std::placeholders::_1, &event));
 
     if (state == InputDevice::PointerButtonReleased) {
         update();

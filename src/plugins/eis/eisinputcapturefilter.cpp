@@ -29,17 +29,24 @@ void EisInputCaptureFilter::clearTouches()
     m_touches.clear();
 }
 
-bool EisInputCaptureFilter::pointerEvent(MouseEvent *event)
+bool EisInputCaptureFilter::pointerMotion(MouseEvent *event)
 {
     if (!m_manager->activeCapture()) {
         return false;
     }
     if (const auto pointer = m_manager->activeCapture()->pointer()) {
-        if (event->type() == QMouseEvent::MouseMove) {
-            eis_device_pointer_motion(pointer, event->delta().x(), event->delta().y());
-        } else if (event->type() == QMouseEvent::MouseButtonPress || event->type() == QMouseEvent::MouseButtonRelease) {
-            eis_device_button_button(pointer, event->nativeButton(), event->type() == QMouseEvent::MouseButtonPress);
-        }
+        eis_device_pointer_motion(pointer, event->delta().x(), event->delta().y());
+    }
+    return true;
+}
+
+bool EisInputCaptureFilter::pointerButton(MouseEvent *event)
+{
+    if (!m_manager->activeCapture()) {
+        return false;
+    }
+    if (const auto pointer = m_manager->activeCapture()->pointer()) {
+        eis_device_button_button(pointer, event->nativeButton(), event->type() == QMouseEvent::MouseButtonPress);
     }
     return true;
 }

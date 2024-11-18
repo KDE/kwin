@@ -26,7 +26,8 @@ public:
     DpmsInputEventFilter();
     ~DpmsInputEventFilter() override;
 
-    bool pointerEvent(MouseEvent *event) override;
+    bool pointerMotion(MouseEvent *event) override;
+    bool pointerButton(MouseEvent *event) override;
     bool wheelEvent(WheelEvent *event) override;
     bool keyEvent(KeyEvent *event) override;
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;

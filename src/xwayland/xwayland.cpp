@@ -426,17 +426,13 @@ public:
         return false;
     }
 
-    bool pointerEvent(KWin::MouseEvent *event) override
+    bool pointerButton(KWin::MouseEvent *event) override
     {
-
         ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
         if (!xwaylandClient) {
             return false;
         }
         if (!m_filterMouse) {
-            return false;
-        }
-        if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
             return false;
         }
 

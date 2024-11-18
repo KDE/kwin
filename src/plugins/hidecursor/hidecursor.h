@@ -29,7 +29,8 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 
-    void pointerEvent(MouseEvent *event) override;
+    void pointerMotion(MouseEvent *event) override;
+    void pointerButton(MouseEvent *event) override;
     void keyEvent(KeyEvent *event) override;
     void tabletToolEvent(TabletEvent *event) override;
 

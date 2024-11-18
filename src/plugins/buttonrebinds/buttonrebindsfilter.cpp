@@ -188,11 +188,8 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     }
 }
 
-bool ButtonRebindsFilter::pointerEvent(KWin::MouseEvent *event)
+bool ButtonRebindsFilter::pointerButton(KWin::MouseEvent *event)
 {
-    if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
-        return false;
-    }
     if (RebindScope::isRebinding()) {
         return false;
     }

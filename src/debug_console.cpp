@@ -178,47 +178,51 @@ DebugConsoleFilter::DebugConsoleFilter(QTextEdit *textEdit)
 
 DebugConsoleFilter::~DebugConsoleFilter() = default;
 
-void DebugConsoleFilter::pointerEvent(MouseEvent *event)
+void DebugConsoleFilter::pointerMotion(MouseEvent *event)
 {
     QString text = s_hr;
     const QString timestamp = timestampRow(event->timestamp());
 
     text.append(s_tableStart);
-    switch (event->type()) {
-    case QEvent::MouseMove: {
-        text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
-        text.append(deviceRow(event->device()));
-        text.append(timestamp);
-        text.append(timestampRowUsec(event->timestamp()));
-        if (!event->delta().isNull()) {
-            text.append(tableRow(i18nc("The relative mouse movement", "Delta"),
-                                 QStringLiteral("%1/%2").arg(event->delta().x()).arg(event->delta().y())));
-        }
-        if (!event->deltaUnaccelerated().isNull()) {
-            text.append(tableRow(i18nc("The relative mouse movement", "Delta (not accelerated)"),
-                                 QStringLiteral("%1/%2").arg(event->deltaUnaccelerated().x()).arg(event->deltaUnaccelerated().y())));
-        }
-        text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
-        break;
+    text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
+    text.append(deviceRow(event->device()));
+    text.append(timestamp);
+    text.append(timestampRowUsec(event->timestamp()));
+    if (!event->delta().isNull()) {
+        text.append(tableRow(i18nc("The relative mouse movement", "Delta"),
+                             QStringLiteral("%1/%2").arg(event->delta().x()).arg(event->delta().y())));
     }
-    case QEvent::MouseButtonPress:
+    if (!event->deltaUnaccelerated().isNull()) {
+        text.append(tableRow(i18nc("The relative mouse movement", "Delta (not accelerated)"),
+                             QStringLiteral("%1/%2").arg(event->deltaUnaccelerated().x()).arg(event->deltaUnaccelerated().y())));
+    }
+    text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::pointerButton(MouseEvent *event)
+{
+    QString text = s_hr;
+    const QString timestamp = timestampRow(event->timestamp());
+
+    text.append(s_tableStart);
+    if (event->type() == QEvent::MouseButtonPress) {
         text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
         text.append(deviceRow(event->device()));
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton()));
         text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
-        break;
-    case QEvent::MouseButtonRelease:
+    } else {
         text.append(tableHeaderRow(i18nc("A mouse pointer button release event", "Pointer Button Release")));
         text.append(deviceRow(event->device()));
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton()));
         text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
-        break;
-    default:
-        break;
     }
     text.append(s_tableEnd);
 

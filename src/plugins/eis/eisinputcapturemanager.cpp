@@ -36,7 +36,7 @@ public:
         : manager(manager)
     {
     }
-    void pointerEvent(KWin::MouseEvent *event) override
+    void pointerMotion(KWin::MouseEvent *event) override
     {
         if (manager->activeCapture()) {
             return;

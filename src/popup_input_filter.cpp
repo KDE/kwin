@@ -48,7 +48,7 @@ void PopupInputFilter::handleWindowAdded(Window *window)
     }
 }
 
-bool PopupInputFilter::pointerEvent(MouseEvent *event)
+bool PopupInputFilter::pointerButton(MouseEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

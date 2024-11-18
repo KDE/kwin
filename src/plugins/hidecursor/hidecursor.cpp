@@ -55,7 +55,15 @@ bool HideCursorEffect::isActive() const
     return false;
 }
 
-void HideCursorEffect::pointerEvent(MouseEvent *event)
+void HideCursorEffect::pointerMotion(MouseEvent *event)
+{
+    showCursor();
+    if (m_inactivityDuration > 0) {
+        m_inactivityTimer.start(m_inactivityDuration);
+    }
+}
+
+void HideCursorEffect::pointerButton(MouseEvent *event)
 {
     showCursor();
     if (m_inactivityDuration > 0) {

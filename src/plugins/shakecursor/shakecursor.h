@@ -48,7 +48,7 @@ public:
 
     bool isActive() const override;
     void reconfigure(ReconfigureFlags flags) override;
-    void pointerEvent(MouseEvent *event) override;
+    void pointerMotion(MouseEvent *event) override;
 
 private:
     void magnify(qreal magnification);
