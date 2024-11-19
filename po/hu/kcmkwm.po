@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2024-01-12 11:50+0100\n"
+"PO-Revision-Date: 2024-11-18 20:58+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.01.85\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -48,10 +48,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:48
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "Aktiválás és felemelés"
+msgstr "Aktiválás, kattintás és felemelés elengedéskor"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -100,6 +99,8 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"Az „Aktiválás, kattintás és felemelés elengedéskor” nem működik X11-en, az "
+"„Aktiválás, felemelés és kattintás átadása” helyettesíti"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
