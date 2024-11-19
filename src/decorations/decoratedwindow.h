@@ -23,7 +23,7 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedWindowImpl : public QObject, public KDecoration3::ApplicationMenuEnabledDecoratedWindowPrivate
+class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivate
 {
     Q_OBJECT
 public:

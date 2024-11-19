@@ -27,7 +27,7 @@ namespace Decoration
 
 DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration)
     : QObject()
-    , ApplicationMenuEnabledDecoratedWindowPrivate(decoratedClient, decoration)
+    , DecoratedWindowPrivate(decoratedClient, decoration)
     , m_window(window)
     , m_clientSize(window->clientSize().toSize())
 {

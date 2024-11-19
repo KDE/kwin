@@ -18,7 +18,7 @@ namespace KDecoration3
 {
 namespace Preview
 {
-class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedWindowPrivate
+class PreviewClient : public QObject, public DecoratedWindowPrivate
 {
     Q_OBJECT
     QML_ANONYMOUS
