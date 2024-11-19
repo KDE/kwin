@@ -48,7 +48,6 @@
 #include <QDBusPendingCall>
 #include <QFontDatabase>
 #include <QFontMetrics>
-#include <QMouseEvent>
 #include <QTextStream>
 #include <QTimer>
 #include <QWidget>
@@ -1460,11 +1459,8 @@ bool ScreenEdges::inApproachGeometry(const QPoint &pos) const
     return false;
 }
 
-bool ScreenEdges::isEntered(QMouseEvent *event)
+bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timestamp)
 {
-    if (event->type() != QEvent::MouseMove) {
-        return false;
-    }
     bool activated = false;
     bool activatedForClient = false;
     for (const auto &edge : m_edges) {
@@ -1483,11 +1479,11 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
             }
             continue;
         }
-        if (edge->approachGeometry().contains(event->globalPosition().toPoint())) {
+        if (edge->approachGeometry().contains(pos.toPoint())) {
             if (!edge->isApproaching()) {
                 edge->startApproaching();
             } else {
-                edge->updateApproaching(event->globalPosition());
+                edge->updateApproaching(pos);
             }
         } else {
             if (edge->isApproaching()) {
@@ -1495,7 +1491,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
             }
         }
         // always send event to all edges so that they can update their state
-        if (edge->check(event->globalPosition().toPoint(), std::chrono::milliseconds(event->timestamp()))) {
+        if (edge->check(pos.toPoint(), timestamp)) {
             if (edge->client()) {
                 activatedForClient = true;
             }
@@ -1504,7 +1500,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
     if (activatedForClient) {
         for (const auto &edge : m_edges) {
             if (edge->client()) {
-                edge->markAsTriggered(event->globalPosition().toPoint(), std::chrono::milliseconds(event->timestamp()));
+                edge->markAsTriggered(pos.toPoint(), timestamp);
             }
         }
     }
