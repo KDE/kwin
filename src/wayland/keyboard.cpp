@@ -107,16 +107,16 @@ void KeyboardInterfacePrivate::sendModifiers(SurfaceInterface *surface, quint32 
     }
 }
 
-bool KeyboardInterfacePrivate::updateKey(quint32 key, KeyboardKeyState state)
+bool KeyboardInterfacePrivate::updateKey(quint32 key, InputDevice::KeyboardKeyState state)
 {
     switch (state) {
-    case KeyboardKeyState::Pressed:
+    case InputDevice::KeyboardKeyPressed:
         if (pressedKeys.contains(key)) {
             return false;
         }
         pressedKeys.append(key);
         return true;
-    case KeyboardKeyState::Released:
+    case InputDevice::KeyboardKeyReleased:
         return pressedKeys.removeOne(key);
     default:
         Q_UNREACHABLE();
@@ -173,16 +173,28 @@ void KeyboardInterface::setModifierFocusSurface(SurfaceInterface *surface)
     }
 }
 
-void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client)
+void KeyboardInterface::sendKey(quint32 key, InputDevice::KeyboardKeyState state, ClientConnection *client)
 {
+    quint32 waylandState;
+    switch (state) {
+    case InputDevice::KeyboardKeyPressed:
+        waylandState = WL_KEYBOARD_KEY_STATE_PRESSED;
+        break;
+    case InputDevice::KeyboardKeyReleased:
+        waylandState = WL_KEYBOARD_KEY_STATE_RELEASED;
+        break;
+    case InputDevice::KeyboardKeyAutoRepeat:
+        Q_UNREACHABLE();
+    }
+
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
     const quint32 serial = d->seat->display()->nextSerial();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
-        d->send_key(keyboardResource->handle, serial, d->seat->timestamp().count(), key, quint32(state));
+        d->send_key(keyboardResource->handle, serial, d->seat->timestamp().count(), key, waylandState);
     }
 }
 
-void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
+void KeyboardInterface::sendKey(quint32 key, InputDevice::KeyboardKeyState state)
 {
     if (!d->focusedSurface) {
         return;

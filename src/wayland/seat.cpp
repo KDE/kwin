@@ -664,7 +664,7 @@ bool SeatInterface::isPointerButtonPressed(quint32 button) const
     return it.value() == SeatInterfacePrivate::Pointer::State::Pressed;
 }
 
-void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction)
+void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, InputDevice::PointerAxisSource source, bool inverted)
 {
     if (!d->pointer) {
         return;
@@ -673,10 +673,10 @@ void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, 
         // ignore
         return;
     }
-    d->pointer->sendAxis(orientation, delta, deltaV120, source, direction);
+    d->pointer->sendAxis(orientation, delta, deltaV120, source, inverted);
 }
 
-void SeatInterface::notifyPointerButton(Qt::MouseButton button, PointerButtonState state)
+void SeatInterface::notifyPointerButton(Qt::MouseButton button, InputDevice::PointerButtonState state)
 {
     const quint32 nativeButton = qtToWaylandButton(button);
     if (nativeButton == 0) {
@@ -685,14 +685,14 @@ void SeatInterface::notifyPointerButton(Qt::MouseButton button, PointerButtonSta
     notifyPointerButton(nativeButton, state);
 }
 
-void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state)
+void SeatInterface::notifyPointerButton(quint32 button, InputDevice::PointerButtonState state)
 {
     if (!d->pointer) {
         return;
     }
     const quint32 serial = d->display->nextSerial();
 
-    if (state == PointerButtonState::Pressed) {
+    if (state == InputDevice::PointerButtonPressed) {
         d->updatePointerButtonSerial(button, serial);
         d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Pressed);
         if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
@@ -949,7 +949,7 @@ KeyboardInterface *SeatInterface::keyboard() const
     return d->keyboard.get();
 }
 
-void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state)
+void SeatInterface::notifyKeyboardKey(quint32 keyCode, InputDevice::KeyboardKeyState state)
 {
     if (!d->keyboard) {
         return;

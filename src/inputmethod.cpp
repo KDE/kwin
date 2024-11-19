@@ -557,11 +557,11 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
         return;
     }
 
-    KeyboardKeyState state;
+    InputDevice::KeyboardKeyState state;
     if (pressed) {
-        state = KeyboardKeyState::Pressed;
+        state = InputDevice::KeyboardKeyPressed;
     } else {
-        state = KeyboardKeyState::Released;
+        state = InputDevice::KeyboardKeyReleased;
     }
     waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
 }
@@ -595,7 +595,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const auto &key : keys) {
-            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed);
+            waylandServer()->seat()->notifyKeyboardKey(key, InputDevice::KeyboardKeyPressed);
         }
 
         // Then, send key release for those keys in reverse.
@@ -606,9 +606,8 @@ void InputMethod::commitString(qint32 serial, const QString &text)
             auto key = *itr;
             QMetaObject::invokeMethod(
                 this, [key]() {
-                    waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released);
-                },
-                Qt::QueuedConnection);
+                waylandServer()->seat()->notifyKeyboardKey(key, InputDevice::KeyboardKeyReleased);
+            }, Qt::QueuedConnection);
         }
     }
 }
@@ -765,7 +764,7 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
 void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
 {
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
+                                               pressed ? InputDevice::KeyboardKeyPressed : InputDevice::KeyboardKeyReleased);
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)

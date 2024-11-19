@@ -83,23 +83,6 @@ using namespace std::literals;
 namespace KWin
 {
 
-static PointerAxisSource kwinAxisSourceToKWaylandAxisSource(InputDevice::PointerAxisSource source)
-{
-    switch (source) {
-    case InputDevice::PointerAxisSourceWheel:
-        return PointerAxisSource::Wheel;
-    case InputDevice::PointerAxisSourceFinger:
-        return PointerAxisSource::Finger;
-    case InputDevice::PointerAxisSourceContinuous:
-        return PointerAxisSource::Continuous;
-    case InputDevice::PointerAxisSourceWheelTilt:
-        return PointerAxisSource::WheelTilt;
-    case InputDevice::PointerAxisSourceUnknown:
-    default:
-        return PointerAxisSource::Unknown;
-    }
-}
-
 InputEventFilter::InputEventFilter(InputFilterOrder::Order weight)
     : m_weight(weight)
 {
@@ -261,9 +244,8 @@ bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
         if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
             return true;
         }
-        auto newState = event->state == InputDevice::KeyboardKeyPressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released;
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
-        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), timestamp.count(), event->nativeScanCode, newState);
+        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), timestamp.count(), event->nativeScanCode, event->state);
         return true;
     } else {
         kwinApp()->inputMethod()->commitPendingText();
@@ -338,11 +320,8 @@ public:
         if (pointerSurfaceAllowed()) {
             // TODO: can we leak presses/releases here when we move the mouse in between from an allowed surface to
             //       disallowed one or vice versa?
-            const auto state = event->state == InputDevice::PointerButtonPressed
-                ? PointerButtonState::Pressed
-                : PointerButtonState::Released;
             seat->setTimestamp(event->timestamp);
-            seat->notifyPointerButton(event->nativeButton, state);
+            seat->notifyPointerButton(event->nativeButton, event->state);
         }
         return true;
     }
@@ -368,10 +347,7 @@ public:
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
             seat->setTimestamp(event->timestamp);
-            seat->notifyPointerAxis(event->orientation, event->delta,
-                                    event->deltaV120,
-                                    kwinAxisSourceToKWaylandAxisSource(event->source),
-                                    event->inverted ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
+            seat->notifyPointerAxis(event->orientation, event->delta, event->deltaV120, event->source, event->inverted);
         }
         return true;
     }
@@ -412,16 +388,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        switch (event->state) {
-        case InputDevice::KeyboardKeyPressed:
-            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Pressed);
-            break;
-        case InputDevice::KeyboardKeyReleased:
-            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Released);
-            break;
-        default:
-            break;
-        }
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
@@ -2000,11 +1967,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        if (event->state == InputDevice::PointerButtonPressed) {
-            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Pressed);
-        } else {
-            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Released);
-        }
+        seat->notifyPointerButton(event->nativeButton, event->state);
         return true;
     }
     bool pointerFrame() override
@@ -2017,9 +1980,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyPointerAxis(event->orientation, event->delta, event->deltaV120,
-                                kwinAxisSourceToKWaylandAxisSource(event->source),
-                                event->inverted ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
+        seat->notifyPointerAxis(event->orientation, event->delta, event->deltaV120, event->source, event->inverted);
         return true;
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
@@ -2031,16 +1992,7 @@ public:
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        switch (event->state) {
-        case InputDevice::KeyboardKeyPressed:
-            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Pressed);
-            break;
-        case InputDevice::KeyboardKeyReleased:
-            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Released);
-            break;
-        default:
-            break;
-        }
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
@@ -2452,11 +2404,11 @@ public:
         }
         seat->setTimestamp(event->timestamp);
         if (event->state == InputDevice::PointerButtonPressed) {
-            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Pressed);
+            seat->notifyPointerButton(event->nativeButton, event->state);
         } else {
             raiseDragTarget();
             m_dragTarget = nullptr;
-            seat->notifyPointerButton(event->nativeButton, PointerButtonState::Released);
+            seat->notifyPointerButton(event->nativeButton, event->state);
         }
         // TODO: should we pass through effects?
         return true;

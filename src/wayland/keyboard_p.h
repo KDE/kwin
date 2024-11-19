@@ -59,7 +59,7 @@ public:
     };
     Modifiers modifiers;
 
-    bool updateKey(quint32 key, KeyboardKeyState state);
+    bool updateKey(quint32 key, InputDevice::KeyboardKeyState state);
 
 protected:
     void keyboard_release(Resource *resource) override;

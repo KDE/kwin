@@ -100,8 +100,8 @@ public:
                 // This loop makes sure all key press events are reset before we switch back to the
                 // Xwayland client and the state is correctly restored.
                 for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
-                    if (it.value() == KeyboardKeyState::Pressed) {
-                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
+                    if (it.value() == InputDevice::KeyboardKeyPressed) {
+                        keyboard->sendKey(it.key(), InputDevice::KeyboardKeyReleased, waylandServer()->xWaylandConnection());
                     }
                 }
                 m_modifiers = {};
@@ -388,14 +388,13 @@ public:
             }
         }
 
-        KeyboardKeyState state{event->state == InputDevice::KeyboardKeyPressed};
-        if (!updateKey(event->nativeScanCode, state)) {
+        if (!updateKey(event->nativeScanCode, event->state)) {
             return false;
         }
 
         auto xkb = input()->keyboard()->xkb();
 
-        keyboard->sendKey(event->nativeScanCode, state, xwaylandClient);
+        keyboard->sendKey(event->nativeScanCode, event->state, xwaylandClient);
 
         bool changed = false;
         if (m_modifiers.depressed != xkb->modifierState().depressed) {
@@ -446,12 +445,11 @@ public:
             }
         }
 
-        PointerButtonState state{event->state == InputDevice::PointerButtonPressed};
-        pointer->sendButton(event->nativeButton, state, xwaylandClient);
+        pointer->sendButton(event->nativeButton, event->state, xwaylandClient);
         return false;
     }
 
-    bool updateKey(quint32 key, KeyboardKeyState state)
+    bool updateKey(quint32 key, InputDevice::KeyboardKeyState state)
     {
         auto it = m_states.find(key);
         if (it == m_states.end()) {
@@ -465,7 +463,7 @@ public:
         return true;
     }
 
-    QHash<quint32, KeyboardKeyState> m_states;
+    QHash<quint32, InputDevice::KeyboardKeyState> m_states;
     struct Modifiers
     {
         quint32 depressed = 0;

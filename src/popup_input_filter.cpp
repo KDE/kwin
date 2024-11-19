@@ -98,16 +98,7 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
             }
 
             waylandServer()->seat()->setTimestamp(event->timestamp);
-            switch (event->state) {
-            case InputDevice::KeyboardKeyPressed:
-                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Pressed);
-                break;
-            case InputDevice::KeyboardKeyReleased:
-                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Released);
-                break;
-            default:
-                break;
-            }
+            waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state);
         }
     }
 

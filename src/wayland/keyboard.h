@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include "kwin_export.h"
+#include "core/inputdevice.h"
 
 #include <QObject>
 
@@ -15,8 +15,6 @@ class ClientConnection;
 class SeatInterface;
 class SurfaceInterface;
 class KeyboardInterfacePrivate;
-
-enum class KeyboardKeyState : quint32;
 
 /**
  * @brief Resource for the wl_keyboard interface.
@@ -54,8 +52,8 @@ public:
      */
     void setRepeatInfo(qint32 charactersPerSecond, qint32 delay);
 
-    void sendKey(quint32 key, KeyboardKeyState state);
-    void sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client);
+    void sendKey(quint32 key, InputDevice::KeyboardKeyState state);
+    void sendKey(quint32 key, InputDevice::KeyboardKeyState state, ClientConnection *client);
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client);
 

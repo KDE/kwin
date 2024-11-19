@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "core/inputdevice.h"
 
 #include <QList>
 #include <QObject>
@@ -30,8 +30,6 @@ class InputPanelV1InterfacePrivate;
 class InputPanelSurfaceV1InterfacePrivate;
 class InputMethodGrabV1;
 class InputKeyboardV1InterfacePrivate;
-
-enum class KeyboardKeyState : quint32;
 
 // This file's classes implment input_method_unstable_v1
 
@@ -160,7 +158,7 @@ public:
     ~InputMethodGrabV1() override;
 
     void sendKeymap(const QByteArray &content);
-    void sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state);
+    void sendKey(quint32 serial, quint32 timestamp, quint32 key, InputDevice::KeyboardKeyState state);
     void sendModifiers(quint32 serial, quint32 depressed, quint32 latched, quint32 locked, quint32 group);
 
 private:

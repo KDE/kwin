@@ -727,8 +727,8 @@ void InputMethodTest::testFakeEventFallback()
 
     // Special keys are not sent through commit_string but instead use keysym.
     auto enter = input()->keyboard()->xkb()->toKeysym(KEY_ENTER);
-    zwp_input_method_context_v1_keysym(context, 0, 0, enter, uint32_t(KeyboardKeyState::Pressed), 0);
-    zwp_input_method_context_v1_keysym(context, 0, 1, enter, uint32_t(KeyboardKeyState::Released), 0);
+    zwp_input_method_context_v1_keysym(context, 0, 0, enter, uint32_t(WL_KEYBOARD_KEY_STATE_PRESSED), 0);
+    zwp_input_method_context_v1_keysym(context, 0, 1, enter, uint32_t(WL_KEYBOARD_KEY_STATE_RELEASED), 0);
 
     keySpy.wait();
     QVERIFY(keySpy.count() == 2);

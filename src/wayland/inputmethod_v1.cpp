@@ -54,11 +54,23 @@ void InputMethodGrabV1::sendKeymap(const QByteArray &keymap)
     }
 }
 
-void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state)
+void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, InputDevice::KeyboardKeyState state)
 {
+    quint32 waylandState;
+    switch (state) {
+    case InputDevice::KeyboardKeyPressed:
+        waylandState = WL_KEYBOARD_KEY_STATE_PRESSED;
+        break;
+    case InputDevice::KeyboardKeyReleased:
+        waylandState = WL_KEYBOARD_KEY_STATE_RELEASED;
+        break;
+    case InputDevice::KeyboardKeyAutoRepeat:
+        Q_UNREACHABLE();
+    }
+
     const auto resources = d->resourceMap();
     for (auto r : resources) {
-        d->send_key(r->handle, serial, timestamp, key, quint32(state));
+        d->send_key(r->handle, serial, timestamp, key, waylandState);
     }
 }
 
