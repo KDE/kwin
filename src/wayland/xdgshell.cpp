@@ -722,10 +722,7 @@ void XdgPopupInterfacePrivate::apply(XdgPopupCommit *commit)
 
     xdgSurfacePrivate->apply(commit);
 
-    if (!xdgSurfacePrivate->isInitialized) {
-        Q_EMIT q->initializeRequested();
-        xdgSurfacePrivate->isInitialized = true;
-    }
+    checkInitialized();
 }
 
 void XdgPopupInterfacePrivate::reset()
@@ -1108,6 +1105,15 @@ static QPointF popupOffset(const QRectF &anchorRect, const Qt::Edges anchorEdge,
     }
 
     return anchorPoint + popupPosAdjust;
+}
+
+void XdgPopupInterfacePrivate::checkInitialized()
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+    if (!xdgSurfacePrivate->isInitialized && parentSurface) {
+        Q_EMIT q->initializeRequested();
+        xdgSurfacePrivate->isInitialized = true;
+    }
 }
 
 QRectF XdgPositioner::placement(const QRectF &bounds) const

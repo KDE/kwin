@@ -1797,7 +1797,9 @@ void XdgPopupWindow::handleGrabRequested(SeatInterface *seat, quint32 serial)
 
 void XdgPopupWindow::initialize()
 {
+    Q_ASSERT(m_shellSurface->parentSurface());
     Window *parent = waylandServer()->findWindow(m_shellSurface->parentSurface());
+    Q_ASSERT(parent);
     parent->addTransient(this);
     setTransientFor(parent);
     setDesktops(parent->desktops());

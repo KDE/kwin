@@ -181,6 +181,7 @@ public:
 
     void apply(XdgPopupCommit *commit) override;
     void reset();
+    void checkInitialized();
 
     XdgPopupInterface *q;
     SurfaceInterface *parentSurface = nullptr;
