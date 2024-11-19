@@ -252,17 +252,18 @@ bool InputEventFilter::tabletPadRingEvent(TabletPadRingEvent *event)
     return false;
 }
 
-bool InputEventFilter::passToInputMethod(QKeyEvent *event)
+bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
 {
     if (!kwinApp()->inputMethod()) {
         return false;
     }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
-        if (event->isAutoRepeat()) {
+        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
             return true;
         }
-        auto newState = event->type() == QEvent::KeyPress ? KeyboardKeyState::Pressed : KeyboardKeyState::Released;
-        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
+        auto newState = event->state == InputDevice::KeyboardKeyPressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released;
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
+        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), timestamp.count(), event->nativeScanCode, newState);
         return true;
     } else {
         kwinApp()->inputMethod()->commitPendingText();
@@ -280,8 +281,8 @@ public:
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
         // really on press and not on release? X11 switches on press.
-        if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
-            const xkb_keysym_t keysym = event->nativeVirtualKey();
+        if (event->state == InputDevice::KeyboardKeyPressed) {
+            const xkb_keysym_t keysym = event->nativeVirtualKey;
             if (keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12) {
                 kwinApp()->session()->switchTo(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
                 return true;
@@ -379,7 +380,7 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
-        if (event->isAutoRepeat()) {
+        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
             // wayland client takes care of it
             return true;
         }
@@ -389,9 +390,17 @@ public:
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
         // in that case we filter it out and don't process it further
-        event->setAccepted(false);
-        QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), event);
-        if (event->isAccepted()) {
+        QKeyEvent keyEvent(event->state == InputDevice::KeyboardKeyReleased ? QEvent::KeyRelease : QEvent::KeyPress,
+                           event->key,
+                           event->modifiers,
+                           event->nativeScanCode,
+                           event->nativeVirtualKey,
+                           0,
+                           event->text,
+                           event->state == InputDevice::KeyboardKeyAutoRepeat);
+        keyEvent.setAccepted(false);
+        QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), &keyEvent);
+        if (keyEvent.isAccepted()) {
             return true;
         }
 
@@ -402,13 +411,13 @@ public:
             return true;
         }
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
-        switch (event->type()) {
-        case QEvent::KeyPress:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+        seat->setTimestamp(event->timestamp);
+        switch (event->state) {
+        case InputDevice::KeyboardKeyPressed:
+            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Pressed);
             break;
-        case QEvent::KeyRelease:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+        case InputDevice::KeyboardKeyReleased:
+            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Released);
             break;
         default:
             break;
@@ -590,7 +599,16 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-        effects->grabbedKeyboardEvent(event);
+        QKeyEvent keyEvent(event->state == InputDevice::KeyboardKeyReleased ? QEvent::KeyRelease : QEvent::KeyPress,
+                           event->key,
+                           event->modifiers,
+                           event->nativeScanCode,
+                           event->nativeVirtualKey,
+                           0,
+                           event->text,
+                           event->state == InputDevice::KeyboardKeyAutoRepeat);
+        keyEvent.setAccepted(false);
+        effects->grabbedKeyboardEvent(&keyEvent);
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
@@ -696,8 +714,8 @@ public:
         if (!window) {
             return false;
         }
-        if (event->type() == QEvent::KeyPress) {
-            window->keyPressEvent(event->key() | event->modifiers());
+        if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
+            window->keyPressEvent(event->key | event->modifiers);
         }
         if (window->isInteractiveMove() || window->isInteractiveResize()) {
             // only update if mode didn't end
@@ -810,29 +828,29 @@ public:
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
 
-        if (event->type() == QEvent::KeyPress) {
+        if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
             // x11 variant does this on key press, so do the same
-            if (event->key() == Qt::Key_Escape) {
+            if (event->key == Qt::Key_Escape) {
                 cancel();
-            } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == Qt::Key_Space) {
+            } else if (event->key == Qt::Key_Enter || event->key == Qt::Key_Return || event->key == Qt::Key_Space) {
                 accept(input()->globalPointer());
             }
             if (input()->supportsPointerWarping()) {
                 int mx = 0;
                 int my = 0;
-                if (event->key() == Qt::Key_Left) {
+                if (event->key == Qt::Key_Left) {
                     mx = -10;
                 }
-                if (event->key() == Qt::Key_Right) {
+                if (event->key == Qt::Key_Right) {
                     mx = 10;
                 }
-                if (event->key() == Qt::Key_Up) {
+                if (event->key == Qt::Key_Up) {
                     my = -10;
                 }
-                if (event->key() == Qt::Key_Down) {
+                if (event->key == Qt::Key_Down) {
                     my = 10;
                 }
-                if (event->modifiers() & Qt::ControlModifier) {
+                if (event->modifiers & Qt::ControlModifier) {
                     mx /= 10;
                     my /= 10;
                 }
@@ -983,27 +1001,27 @@ public:
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->key() == Qt::Key_PowerOff) {
-            const auto modifiers = event->modifiersRelevantForGlobalShortcuts();
-            if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
+        if (event->key == Qt::Key_PowerOff) {
+            const auto modifiers = event->modifiersRelevantForGlobalShortcuts;
+            if (event->state == InputDevice::KeyboardKeyPressed) {
                 auto passToShortcuts = [modifiers] {
                     input()->shortcuts()->processKey(modifiers, Qt::Key_PowerDown);
                 };
                 QObject::connect(&m_powerDown, &QTimer::timeout, input()->shortcuts(), passToShortcuts, Qt::SingleShotConnection);
                 m_powerDown.start();
                 return true;
-            } else if (event->type() == QEvent::KeyRelease) {
-                const bool ret = !m_powerDown.isActive() || input()->shortcuts()->processKey(modifiers, event->key());
+            } else if (event->state == InputDevice::KeyboardKeyReleased) {
+                const bool ret = !m_powerDown.isActive() || input()->shortcuts()->processKey(modifiers, event->key);
                 m_powerDown.stop();
                 return ret;
             }
-        } else if (event->type() == QEvent::KeyPress) {
+        } else if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts(), event->key());
+                return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key);
             }
-        } else if (event->type() == QEvent::KeyRelease) {
+        } else if (event->state == InputDevice::KeyboardKeyReleased) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKeyRelease(event->modifiersRelevantForGlobalShortcuts(), event->key());
+                return input()->shortcuts()->processKeyRelease(event->modifiersRelevantForGlobalShortcuts, event->key);
             }
         }
         return false;
@@ -1731,9 +1749,9 @@ public:
             return false;
         }
 
-        if (event->type() == QEvent::KeyPress) {
-            workspace()->tabbox()->keyPress(event->modifiers() | event->key());
-        } else if (event->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
+        if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
+            workspace()->tabbox()->keyPress(event->modifiers | event->key);
+        } else if (event->modifiersRelevantForGlobalShortcuts == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
             return false;
         }
@@ -2006,19 +2024,19 @@ public:
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->isAutoRepeat()) {
+        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
             // handled by Wayland client
             return false;
         }
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
-        switch (event->type()) {
-        case QEvent::KeyPress:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+        seat->setTimestamp(event->timestamp);
+        switch (event->state) {
+        case InputDevice::KeyboardKeyPressed:
+            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Pressed);
             break;
-        case QEvent::KeyRelease:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+        case InputDevice::KeyboardKeyReleased:
+            seat->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Released);
             break;
         default:
             break;
@@ -2539,7 +2557,7 @@ public:
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->key() != Qt::Key_Escape) {
+        if (event->key != Qt::Key_Escape) {
             return false;
         }
 
@@ -2725,7 +2743,7 @@ class WindowInteractedSpy : public InputEventSpy
 public:
     void keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->isAutoRepeat() || event->type() != QEvent::KeyPress) {
+        if (event->state != InputDevice::KeyboardKeyPressed) {
             return;
         }
         update();

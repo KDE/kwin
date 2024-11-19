@@ -36,7 +36,7 @@ bool PlaceholderInputEventFilter::pointerAxis(PointerAxisEvent *event)
 
 bool PlaceholderInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
 {
-    return !isMediaKey(event->key());
+    return !isMediaKey(event->key);
 }
 
 bool PlaceholderInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)

@@ -41,19 +41,19 @@ void KeyboardRepeat::handleKeyRepeat()
 
 void KeyboardRepeat::keyboardKey(KeyboardKeyEvent *event)
 {
-    if (event->isAutoRepeat()) {
+    if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
         return;
     }
-    const quint32 key = event->nativeScanCode();
-    if (event->type() == QEvent::KeyPress) {
+    const quint32 key = event->nativeScanCode;
+    if (event->state == InputDevice::KeyboardKeyPressed) {
         // TODO: don't get these values from WaylandServer
         if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyboard()->keyRepeatDelay() != 0) {
             m_timer->setInterval(waylandServer()->seat()->keyboard()->keyRepeatDelay());
             m_key = key;
-            m_time = event->timestamp();
+            m_time = event->timestamp;
             m_timer->start();
         }
-    } else if (event->type() == QEvent::KeyRelease) {
+    } else if (event->state == InputDevice::KeyboardKeyReleased) {
         if (key == m_key) {
             m_timer->stop();
         }

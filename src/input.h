@@ -46,7 +46,7 @@ class TabletEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
-class KeyboardKeyEvent;
+struct KeyboardKeyEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
@@ -432,7 +432,7 @@ public:
     virtual bool tabletPadRingEvent(TabletPadRingEvent *event);
 
 protected:
-    bool passToInputMethod(QKeyEvent *event);
+    bool passToInputMethod(KeyboardKeyEvent *event);
 
 private:
     int m_weight = 0;

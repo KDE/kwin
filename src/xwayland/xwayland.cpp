@@ -370,11 +370,11 @@ public:
         if (!xwaylandClient) {
             return false;
         }
-        if (event->isAutoRepeat()) {
+        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
             return false;
         }
 
-        if (!m_filterKey || !m_filterKey(event->key(), event->modifiers())) {
+        if (!m_filterKey || !m_filterKey(event->key, event->modifiers)) {
             return false;
         }
 
@@ -388,14 +388,14 @@ public:
             }
         }
 
-        KeyboardKeyState state{event->type() == QEvent::KeyPress};
-        if (!updateKey(event->nativeScanCode(), state)) {
+        KeyboardKeyState state{event->state == InputDevice::KeyboardKeyPressed};
+        if (!updateKey(event->nativeScanCode, state)) {
             return false;
         }
 
         auto xkb = input()->keyboard()->xkb();
 
-        keyboard->sendKey(event->nativeScanCode(), state, xwaylandClient);
+        keyboard->sendKey(event->nativeScanCode, state, xwaylandClient);
 
         bool changed = false;
         if (m_modifiers.depressed != xkb->modifierState().depressed) {

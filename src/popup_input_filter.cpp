@@ -83,27 +83,27 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
 
     if (auto internalWindow = qobject_cast<InternalWindow *>(last)) {
         QWindowSystemInterface::handleExtendedKeyEvent(internalWindow->handle(),
-                                                       event->type(),
-                                                       event->key(),
-                                                       event->modifiers(),
-                                                       event->nativeScanCode(),
-                                                       event->nativeVirtualKey(),
-                                                       event->nativeModifiers(),
-                                                       event->text(),
-                                                       event->isAutoRepeat());
+                                                       event->state != InputDevice::KeyboardKeyReleased ? QEvent::KeyPress : QEvent::KeyRelease,
+                                                       event->key,
+                                                       event->modifiers,
+                                                       event->nativeScanCode,
+                                                       event->nativeVirtualKey,
+                                                       0,
+                                                       event->text,
+                                                       event->state == InputDevice::KeyboardKeyAutoRepeat);
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
-            if (event->isAutoRepeat()) {
+            if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
                 return true;
             }
 
-            waylandServer()->seat()->setTimestamp(event->timestamp());
-            switch (event->type()) {
-            case QEvent::KeyPress:
-                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+            waylandServer()->seat()->setTimestamp(event->timestamp);
+            switch (event->state) {
+            case InputDevice::KeyboardKeyPressed:
+                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Pressed);
                 break;
-            case QEvent::KeyRelease:
-                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+            case InputDevice::KeyboardKeyReleased:
+                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, KeyboardKeyState::Released);
                 break;
             default:
                 break;

@@ -12,20 +12,6 @@
 namespace KWin
 {
 
-KeyboardKeyEvent::KeyboardKeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
-                                   const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device)
-    : QKeyEvent(type, key, modifiers, code, keysym, 0, text, autorepeat)
-    , m_device(device)
-    , m_timestamp(timestamp)
-{
-    setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
-}
-
-std::chrono::microseconds KeyboardKeyEvent::timestamp() const
-{
-    return m_timestamp;
-}
-
 TabletEvent::TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
                          qreal pressure, float xTilt, float yTilt,
                          float tangentialPressure, qreal rotation, float z,

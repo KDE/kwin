@@ -99,8 +99,8 @@ bool EisInputCaptureFilter::keyboardKey(KeyboardKeyEvent *event)
         return false;
     }
     if (const auto keyboard = m_manager->activeCapture()->keyboard()) {
-        eis_device_keyboard_key(keyboard, event->nativeScanCode(), event->type() == QKeyEvent::KeyPress);
-        eis_device_frame(keyboard, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp()).count());
+        eis_device_keyboard_key(keyboard, event->nativeScanCode, event->state != InputDevice::KeyboardKeyReleased);
+        eis_device_frame(keyboard, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
     }
     return true;
 }

@@ -60,33 +60,17 @@ struct PointerAxisEvent
     std::chrono::microseconds timestamp;
 };
 
-class KWIN_EXPORT KeyboardKeyEvent : public QKeyEvent
+struct KeyboardKeyEvent
 {
-public:
-    explicit KeyboardKeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
-                              const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device);
-
-    InputDevice *device() const
-    {
-        return m_device;
-    }
-
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const
-    {
-        return m_modifiersRelevantForShortcuts;
-    }
-
-    void setModifiersRelevantForGlobalShortcuts(const Qt::KeyboardModifiers &mods)
-    {
-        m_modifiersRelevantForShortcuts = mods;
-    }
-
-    std::chrono::microseconds timestamp() const;
-
-private:
-    InputDevice *m_device;
-    Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
-    const std::chrono::microseconds m_timestamp;
+    InputDevice *device;
+    InputDevice::KeyboardKeyState state;
+    Qt::Key key;
+    quint32 nativeScanCode;
+    quint32 nativeVirtualKey;
+    QString text;
+    Qt::KeyboardModifiers modifiers;
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts;
+    std::chrono::microseconds timestamp;
 };
 
 struct SwitchEvent

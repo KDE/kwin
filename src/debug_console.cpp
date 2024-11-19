@@ -252,55 +252,55 @@ void DebugConsoleFilter::keyboardKey(KeyboardKeyEvent *event)
     QString text = s_hr;
     text.append(s_tableStart);
 
-    switch (event->type()) {
-    case QEvent::KeyPress:
+    switch (event->state) {
+    case InputDevice::KeyboardKeyAutoRepeat:
+    case InputDevice::KeyboardKeyPressed:
         text.append(tableHeaderRow(i18nc("A key press event", "Key Press")));
         break;
-    case QEvent::KeyRelease:
+    case InputDevice::KeyboardKeyReleased:
         text.append(tableHeaderRow(i18nc("A key release event", "Key Release")));
         break;
     default:
         break;
     }
-    text.append(deviceRow(event->device()));
+    text.append(deviceRow(event->device));
     auto modifiersToString = [event] {
         QString ret;
-        if (event->modifiers().testFlag(Qt::ShiftModifier)) {
+        if (event->modifiers.testFlag(Qt::ShiftModifier)) {
             ret.append(i18nc("A keyboard modifier", "Shift"));
             ret.append(QStringLiteral(" "));
         }
-        if (event->modifiers().testFlag(Qt::ControlModifier)) {
+        if (event->modifiers.testFlag(Qt::ControlModifier)) {
             ret.append(i18nc("A keyboard modifier", "Control"));
             ret.append(QStringLiteral(" "));
         }
-        if (event->modifiers().testFlag(Qt::AltModifier)) {
+        if (event->modifiers.testFlag(Qt::AltModifier)) {
             ret.append(i18nc("A keyboard modifier", "Alt"));
             ret.append(QStringLiteral(" "));
         }
-        if (event->modifiers().testFlag(Qt::MetaModifier)) {
+        if (event->modifiers.testFlag(Qt::MetaModifier)) {
             ret.append(i18nc("A keyboard modifier", "Meta"));
             ret.append(QStringLiteral(" "));
         }
-        if (event->modifiers().testFlag(Qt::KeypadModifier)) {
+        if (event->modifiers.testFlag(Qt::KeypadModifier)) {
             ret.append(i18nc("A keyboard modifier", "Keypad"));
             ret.append(QStringLiteral(" "));
         }
-        if (event->modifiers().testFlag(Qt::GroupSwitchModifier)) {
+        if (event->modifiers.testFlag(Qt::GroupSwitchModifier)) {
             ret.append(i18nc("A keyboard modifier", "Group-switch"));
             ret.append(QStringLiteral(" "));
         }
         return ret;
     };
-    text.append(timestampRow(event->timestamp()));
-    text.append(tableRow(i18nc("Whether the event is an automatic key repeat", "Repeat"), event->isAutoRepeat()));
+    text.append(timestampRow(event->timestamp));
+    text.append(tableRow(i18nc("Whether the event is an automatic key repeat", "Repeat"), event->state == InputDevice::KeyboardKeyAutoRepeat));
 
     const auto keyMetaObject = Qt::qt_getEnumMetaObject(Qt::Key());
     const auto enumerator = keyMetaObject->enumerator(keyMetaObject->indexOfEnumerator("Key"));
-    text.append(tableRow(i18nc("The code reported by the kernel", "Keycode"), event->nativeScanCode()));
-    text.append(tableRow(i18nc("Key according to Qt", "Qt::Key code"),
-                         enumerator.valueToKey(event->key())));
-    text.append(tableRow(i18nc("The translated code to an Xkb symbol", "Xkb symbol"), event->nativeVirtualKey()));
-    text.append(tableRow(i18nc("The translated code interpreted as text", "Utf8"), event->text()));
+    text.append(tableRow(i18nc("The code reported by the kernel", "Keycode"), event->nativeScanCode));
+    text.append(tableRow(i18nc("Key according to Qt", "Qt::Key code"), enumerator.valueToKey(event->key)));
+    text.append(tableRow(i18nc("The translated code to an Xkb symbol", "Xkb symbol"), event->nativeVirtualKey));
+    text.append(tableRow(i18nc("The translated code interpreted as text", "Utf8"), event->text));
     text.append(tableRow(i18nc("The currently active modifiers", "Modifiers"), modifiersToString()));
 
     text.append(s_tableEnd);

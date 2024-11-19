@@ -60,13 +60,13 @@ bool DpmsInputEventFilter::pointerAxis(PointerAxisEvent *event)
 
 bool DpmsInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
 {
-    if (isMediaKey(event->key())) {
+    if (isMediaKey(event->key)) {
         // don't wake up the screens for media or volume keys
         return false;
     }
-    if (event->type() == QKeyEvent::KeyPress) {
+    if (event->state == InputDevice::KeyboardKeyPressed) {
         notify();
-    } else if (event->type() == QKeyEvent::KeyRelease) {
+    } else if (event->state == InputDevice::KeyboardKeyReleased) {
         return false;
     }
     return true;
