@@ -17,7 +17,7 @@ class BounceKeysFilter : public KWin::Plugin, public KWin::InputEventFilter
 public:
     explicit BounceKeysFilter();
 
-    bool keyEvent(KWin::KeyEvent *event) override;
+    bool keyboardKey(KWin::KeyboardKeyEvent *event) override;
 
 private:
     void loadConfig(const KConfigGroup &group);

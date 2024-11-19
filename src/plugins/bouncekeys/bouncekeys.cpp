@@ -33,9 +33,9 @@ void BounceKeysFilter::loadConfig(const KConfigGroup &group)
     }
 }
 
-bool BounceKeysFilter::keyEvent(KWin::KeyEvent *event)
+bool BounceKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 {
-    if (event->type() != KWin::KeyEvent::KeyPress) {
+    if (event->type() != KWin::KeyboardKeyEvent::KeyPress) {
         return false;
     }
 

@@ -137,7 +137,7 @@ bool InputEventFilter::pointerAxis(PointerAxisEvent *event)
     return false;
 }
 
-bool InputEventFilter::keyEvent(KeyEvent *event)
+bool InputEventFilter::keyboardKey(KeyboardKeyEvent *event)
 {
     return false;
 }
@@ -277,7 +277,7 @@ public:
         : InputEventFilter(InputFilterOrder::VirtualTerminal)
     {
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         // really on press and not on release? X11 switches on press.
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
@@ -374,7 +374,7 @@ public:
         }
         return true;
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -584,7 +584,7 @@ public:
         wheelEvent.setAccepted(false);
         return effects->checkInputWindowEvent(&wheelEvent);
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         if (!effects || !effects->hasKeyboardGrab()) {
             return false;
@@ -690,7 +690,7 @@ public:
         // filter out while moving a window
         return workspace()->moveResizeWindow() != nullptr;
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
@@ -803,7 +803,7 @@ public:
         // filter out while selecting a window
         return m_active;
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         if (!m_active) {
             return false;
@@ -981,7 +981,7 @@ public:
 
         return input()->shortcuts()->processAxis(event->modifiers, direction);
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         if (event->key() == Qt::Key_PowerOff) {
             const auto modifiers = event->modifiersRelevantForGlobalShortcuts();
@@ -1725,7 +1725,7 @@ public:
         mouseEvent.setAccepted(false);
         return workspace()->tabbox()->handleMouseEvent(&mouseEvent);
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
@@ -1948,7 +1948,7 @@ public:
         return false;
     }
 
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         return passToInputMethod(event);
     }
@@ -2004,7 +2004,7 @@ public:
                                 event->inverted ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         return true;
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         if (event->isAutoRepeat()) {
             // handled by Wayland client
@@ -2537,7 +2537,7 @@ public:
         }
         return true;
     }
-    bool keyEvent(KeyEvent *event) override
+    bool keyboardKey(KeyboardKeyEvent *event) override
     {
         if (event->key() != Qt::Key_Escape) {
             return false;
@@ -2723,7 +2723,7 @@ void InputRedirection::setLastInputHandler(QObject *device)
 class WindowInteractedSpy : public InputEventSpy
 {
 public:
-    void keyEvent(KeyEvent *event) override
+    void keyboardKey(KeyboardKeyEvent *event) override
     {
         if (event->isAutoRepeat() || event->type() != QEvent::KeyPress) {
             return;
@@ -2794,7 +2794,7 @@ public:
         notifyActivity();
     }
 
-    void keyEvent(KeyEvent *event) override
+    void keyboardKey(KeyboardKeyEvent *event) override
     {
         notifyActivity();
     }

@@ -31,7 +31,7 @@ public:
 
     void pointerMotion(PointerMotionEvent *event) override;
     void pointerButton(PointerButtonEvent *event) override;
-    void keyEvent(KeyEvent *event) override;
+    void keyboardKey(KeyboardKeyEvent *event) override;
     void tabletToolEvent(TabletEvent *event) override;
 
 private:

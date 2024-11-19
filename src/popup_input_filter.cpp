@@ -72,7 +72,7 @@ bool PopupInputFilter::pointerButton(PointerButtonEvent *event)
     return false;
 }
 
-bool PopupInputFilter::keyEvent(KeyEvent *event)
+bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

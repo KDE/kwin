@@ -58,7 +58,7 @@ bool DpmsInputEventFilter::pointerAxis(PointerAxisEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::keyEvent(KeyEvent *event)
+bool DpmsInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
 {
     if (isMediaKey(event->key())) {
         // don't wake up the screens for media or volume keys

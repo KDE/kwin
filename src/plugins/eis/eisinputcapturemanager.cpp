@@ -56,7 +56,7 @@ public:
         }
         previousPos = event->position;
     }
-    void keyEvent(KWin::KeyEvent *event) override
+    void keyboardKey(KWin::KeyboardKeyEvent *event) override
     {
         if (!manager->activeCapture()) {
             return;

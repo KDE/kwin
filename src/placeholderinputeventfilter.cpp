@@ -34,7 +34,7 @@ bool PlaceholderInputEventFilter::pointerAxis(PointerAxisEvent *event)
     return true;
 }
 
-bool PlaceholderInputEventFilter::keyEvent(KeyEvent *event)
+bool PlaceholderInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
 {
     return !isMediaKey(event->key());
 }

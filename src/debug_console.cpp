@@ -247,7 +247,7 @@ void DebugConsoleFilter::pointerAxis(PointerAxisEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::keyEvent(KeyEvent *event)
+void DebugConsoleFilter::keyboardKey(KeyboardKeyEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);

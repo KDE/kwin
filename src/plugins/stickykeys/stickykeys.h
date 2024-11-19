@@ -17,7 +17,7 @@ class StickyKeysFilter : public KWin::Plugin, public KWin::InputEventFilter
 public:
     explicit StickyKeysFilter();
 
-    bool keyEvent(KWin::KeyEvent *event) override;
+    bool keyboardKey(KWin::KeyboardKeyEvent *event) override;
 
     enum KeyState {
         None,

@@ -12,8 +12,8 @@
 namespace KWin
 {
 
-KeyEvent::KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
-                   const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device)
+KeyboardKeyEvent::KeyboardKeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
+                                   const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device)
     : QKeyEvent(type, key, modifiers, code, keysym, 0, text, autorepeat)
     , m_device(device)
     , m_timestamp(timestamp)
@@ -21,7 +21,7 @@ KeyEvent::KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifie
     setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
 }
 
-std::chrono::microseconds KeyEvent::timestamp() const
+std::chrono::microseconds KeyboardKeyEvent::timestamp() const
 {
     return m_timestamp;
 }

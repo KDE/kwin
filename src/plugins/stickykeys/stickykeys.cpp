@@ -96,7 +96,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
     }
 }
 
-bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
+bool StickyKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 {
     if (m_modifiers.contains(event->key())) {
 

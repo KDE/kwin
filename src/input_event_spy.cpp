@@ -35,7 +35,7 @@ void InputEventSpy::pointerAxis(PointerAxisEvent *event)
 {
 }
 
-void InputEventSpy::keyEvent(KeyEvent *event)
+void InputEventSpy::keyboardKey(KeyboardKeyEvent *event)
 {
 }
 

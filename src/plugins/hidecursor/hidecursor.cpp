@@ -79,7 +79,7 @@ void HideCursorEffect::tabletToolEvent(TabletEvent *event)
     }
 }
 
-void HideCursorEffect::keyEvent(KeyEvent *event)
+void HideCursorEffect::keyboardKey(KeyboardKeyEvent *event)
 {
     // All functional keys have a Qt key code greater than 0x01000000
     // https://doc.qt.io/qt-6/qt.html#Key-enum

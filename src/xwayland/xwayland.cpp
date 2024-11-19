@@ -364,7 +364,7 @@ public:
         }
     }
 
-    bool keyEvent(KWin::KeyEvent *event) override
+    bool keyboardKey(KWin::KeyboardKeyEvent *event) override
     {
         ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
         if (!xwaylandClient) {

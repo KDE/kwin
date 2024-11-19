@@ -85,7 +85,7 @@ public:
     {
     }
 
-    void keyEvent(KeyEvent *event) override
+    void keyboardKey(KeyboardKeyEvent *event) override
     {
         if (event->isAutoRepeat()) {
             return;
@@ -106,7 +106,7 @@ public:
     {
     }
 
-    void keyEvent(KeyEvent *event) override
+    void keyboardKey(KeyboardKeyEvent *event) override
     {
         if (event->isAutoRepeat()) {
             return;
@@ -288,20 +288,20 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputDevice::KeyboardKey
 
     const xkb_keysym_t keySym = m_xkb->toKeysym(key);
     const Qt::KeyboardModifiers globalShortcutsModifiers = m_xkb->modifiersRelevantForGlobalShortcuts(key);
-    KeyEvent event(type,
-                   m_xkb->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
-                   m_xkb->modifiers(),
-                   key,
-                   keySym,
-                   m_xkb->toString(m_xkb->currentKeysym()),
-                   autoRepeat,
-                   time,
-                   device);
+    KeyboardKeyEvent event(type,
+                           m_xkb->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
+                           m_xkb->modifiers(),
+                           key,
+                           keySym,
+                           m_xkb->toString(m_xkb->currentKeysym()),
+                           autoRepeat,
+                           time,
+                           device);
     event.setAccepted(false);
     event.setModifiersRelevantForGlobalShortcuts(globalShortcutsModifiers);
 
-    m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
-    m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
+    m_input->processSpies(std::bind(&InputEventSpy::keyboardKey, std::placeholders::_1, &event));
+    m_input->processFilters(std::bind(&InputEventFilter::keyboardKey, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
     if (auto *inputmethod = kwinApp()->inputMethod()) {

@@ -21,7 +21,7 @@ class PopupInputFilter : public QObject, public InputEventFilter
 public:
     explicit PopupInputFilter();
     bool pointerButton(PointerButtonEvent *event) override;
-    bool keyEvent(KeyEvent *event) override;
+    bool keyboardKey(KeyboardKeyEvent *event) override;
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
     bool tabletToolEvent(TabletEvent *event) override;
 

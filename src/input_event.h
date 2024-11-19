@@ -60,11 +60,11 @@ struct PointerAxisEvent
     std::chrono::microseconds timestamp;
 };
 
-class KWIN_EXPORT KeyEvent : public QKeyEvent
+class KWIN_EXPORT KeyboardKeyEvent : public QKeyEvent
 {
 public:
-    explicit KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
-                      const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device);
+    explicit KeyboardKeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
+                              const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device);
 
     InputDevice *device() const
     {

@@ -93,7 +93,7 @@ bool EisInputCaptureFilter::pointerAxis(PointerAxisEvent *event)
     return true;
 }
 
-bool EisInputCaptureFilter::keyEvent(KeyEvent *event)
+bool EisInputCaptureFilter::keyboardKey(KeyboardKeyEvent *event)
 {
     if (!m_manager->activeCapture()) {
         return false;

@@ -46,7 +46,7 @@ class TabletEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
-class KeyEvent;
+class KeyboardKeyEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
@@ -402,7 +402,7 @@ public:
      * @param event The event information about the key event
      * @return @c true to stop further event processing, @c false to pass to next filter.
      */
-    virtual bool keyEvent(KeyEvent *event);
+    virtual bool keyboardKey(KeyboardKeyEvent *event);
     virtual bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     virtual bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     virtual bool touchUp(qint32 id, std::chrono::microseconds time);

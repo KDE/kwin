@@ -25,7 +25,7 @@ public:
     explicit KeyboardRepeat(Xkb *xkb);
     ~KeyboardRepeat() override;
 
-    void keyEvent(KeyEvent *event) override;
+    void keyboardKey(KeyboardKeyEvent *event) override;
 
 Q_SIGNALS:
     void keyRepeat(quint32 key, std::chrono::microseconds time);

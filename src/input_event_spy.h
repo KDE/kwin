@@ -17,7 +17,7 @@ class QTabletEvent;
 
 namespace KWin
 {
-class KeyEvent;
+class KeyboardKeyEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
@@ -57,7 +57,7 @@ public:
      *
      * @param event The event information about the key event
      */
-    virtual void keyEvent(KeyEvent *event);
+    virtual void keyboardKey(KeyboardKeyEvent *event);
     virtual void touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     virtual void touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     virtual void touchUp(qint32 id, std::chrono::microseconds time);

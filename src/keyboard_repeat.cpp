@@ -39,7 +39,7 @@ void KeyboardRepeat::handleKeyRepeat()
     Q_EMIT keyRepeat(m_key, m_time);
 }
 
-void KeyboardRepeat::keyEvent(KeyEvent *event)
+void KeyboardRepeat::keyboardKey(KeyboardKeyEvent *event)
 {
     if (event->isAutoRepeat()) {
         return;
