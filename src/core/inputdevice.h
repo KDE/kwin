@@ -149,7 +149,7 @@ Q_SIGNALS:
     void switchToggledOff(std::chrono::microseconds time, InputDevice *device);
 
     void tabletToolEvent(TabletEventType type, const QPointF &pos,
-                         qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
+                         qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
                          bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device);

@@ -2224,6 +2224,9 @@ public:
         if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
             tool->sendRotation(event->rotation());
         }
+        if (tool->hasCapability(TabletToolV2Interface::Distance)) {
+            tool->sendDistance(event->z());
+        }
 
         tool->sendFrame(event->timestamp());
         return true;

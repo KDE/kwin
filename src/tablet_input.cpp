@@ -193,7 +193,7 @@ void TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
 }
 
 void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType type, const QPointF &pos,
-                                             qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
+                                             qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
                                              bool tipNear, InputDeviceTabletTool *tool,
                                              std::chrono::microseconds time,
                                              InputDevice *device)
@@ -239,7 +239,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType 
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,
-                   0, // z
+                   distance,
                    Qt::NoModifier, button, button, tool, device);
 
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
