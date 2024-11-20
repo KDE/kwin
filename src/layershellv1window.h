@@ -11,6 +11,12 @@
 namespace KWin
 {
 
+struct LayerShellV1ConfigureEvent
+{
+    quint32 serial;
+    QSize size;
+};
+
 class AutoHideScreenEdgeV1Interface;
 class LayerSurfaceV1Interface;
 class Output;
@@ -55,6 +61,7 @@ protected:
     void doSetPreferredColorDescription() override;
 
 private:
+    void handleConfigureAcknowledged(quint32 serial);
     void handleSizeChanged();
     void handleUnmapped();
     void handleCommitted();
@@ -72,6 +79,7 @@ private:
     QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;
     bool m_screenEdgeActive = false;
     WindowType m_windowType;
+    QList<LayerShellV1ConfigureEvent> m_configureEvents;
 };
 
 } // namespace KWin

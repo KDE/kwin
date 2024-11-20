@@ -76,6 +76,8 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
             this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::acceptsFocusChanged,
             this, &LayerShellV1Window::handleAcceptsFocusChanged);
+    connect(shellSurface, &LayerSurfaceV1Interface::configureAcknowledged,
+            this, &LayerShellV1Window::handleConfigureAcknowledged);
 }
 
 LayerSurfaceV1Interface *LayerShellV1Window::shellSurface() const
@@ -239,9 +241,17 @@ bool LayerShellV1Window::acceptsFocus() const
 
 void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
-    if (requestedClientSize != clientSize()) {
-        m_shellSurface->sendConfigure(rect.size().toSize());
+    const QSize requestedClientSize = frameSizeToClientSize(rect.size()).toSize();
+
+    if (!m_configureEvents.isEmpty()) {
+        const LayerShellV1ConfigureEvent &lastLayerShellV1ConfigureEvent = m_configureEvents.constLast();
+        if (lastLayerShellV1ConfigureEvent.size != requestedClientSize) {
+            const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize);
+            m_configureEvents.append({serial, requestedClientSize});
+        }
+    } else if (requestedClientSize != clientSize()) {
+        const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize);
+        m_configureEvents.append({serial, requestedClientSize});
     } else {
         updateGeometry(rect);
         return;
@@ -275,6 +285,16 @@ void LayerShellV1Window::doSetPreferredColorDescription()
         return;
     }
     surface()->setPreferredColorDescription(preferredColorDescription());
+}
+
+void LayerShellV1Window::handleConfigureAcknowledged(quint32 serial)
+{
+    while (!m_configureEvents.isEmpty()) {
+        const LayerShellV1ConfigureEvent head = m_configureEvents.takeFirst();
+        if (head.serial == serial) {
+            break;
+        }
+    }
 }
 
 void LayerShellV1Window::handleSizeChanged()
