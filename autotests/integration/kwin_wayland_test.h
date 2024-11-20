@@ -677,11 +677,11 @@ void keyboardKeyReleased(quint32 key, quint32 time);
 void pointerAxisHorizontal(qreal delta,
                            quint32 time,
                            qint32 discreteDelta = 0,
-                           InputDevice::PointerAxisSource source = InputDevice::PointerAxisSourceUnknown);
+                           InputDevice::PointerAxisSource source = InputDevice::PointerAxisSource::Unknown);
 void pointerAxisVertical(qreal delta,
                          quint32 time,
                          qint32 discreteDelta = 0,
-                         InputDevice::PointerAxisSource source = InputDevice::PointerAxisSourceUnknown);
+                         InputDevice::PointerAxisSource source = InputDevice::PointerAxisSource::Unknown);
 void pointerButtonPressed(quint32 button, quint32 time);
 void pointerButtonReleased(quint32 button, quint32 time);
 void pointerMotion(const QPointF &position, quint32 time);

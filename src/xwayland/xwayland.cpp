@@ -100,8 +100,8 @@ public:
                 // This loop makes sure all key press events are reset before we switch back to the
                 // Xwayland client and the state is correctly restored.
                 for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
-                    if (it.value() == InputDevice::KeyboardKeyPressed) {
-                        keyboard->sendKey(it.key(), InputDevice::KeyboardKeyReleased, waylandServer()->xWaylandConnection());
+                    if (it.value() == InputDevice::KeyboardKeyState::Pressed) {
+                        keyboard->sendKey(it.key(), InputDevice::KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
                     }
                 }
                 m_modifiers = {};
@@ -370,7 +370,7 @@ public:
         if (!xwaylandClient) {
             return false;
         }
-        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
+        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
             return false;
         }
 

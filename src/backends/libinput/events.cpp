@@ -115,9 +115,9 @@ InputDevice::KeyboardKeyState KeyEvent::state() const
 {
     switch (libinput_event_keyboard_get_key_state(m_keyboardEvent)) {
     case LIBINPUT_KEY_STATE_PRESSED:
-        return InputDevice::KeyboardKeyPressed;
+        return InputDevice::KeyboardKeyState::Pressed;
     case LIBINPUT_KEY_STATE_RELEASED:
-        return InputDevice::KeyboardKeyReleased;
+        return InputDevice::KeyboardKeyState::Released;
     default:
         Q_UNREACHABLE();
     }
@@ -178,9 +178,9 @@ InputDevice::PointerButtonState PointerEvent::buttonState() const
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_BUTTON);
     switch (libinput_event_pointer_get_button_state(m_pointerEvent)) {
     case LIBINPUT_BUTTON_STATE_PRESSED:
-        return InputDevice::PointerButtonPressed;
+        return InputDevice::PointerButtonState::Pressed;
     case LIBINPUT_BUTTON_STATE_RELEASED:
-        return InputDevice::PointerButtonReleased;
+        return InputDevice::PointerButtonState::Released;
     default:
         Q_UNREACHABLE();
     }
@@ -190,17 +190,17 @@ QList<InputDevice::PointerAxis> PointerEvent::axis() const
 {
     QList<InputDevice::PointerAxis> a;
     if (libinput_event_pointer_has_axis(m_pointerEvent, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL)) {
-        a << InputDevice::PointerAxisHorizontal;
+        a << InputDevice::PointerAxis::Horizontal;
     }
     if (libinput_event_pointer_has_axis(m_pointerEvent, LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL)) {
-        a << InputDevice::PointerAxisVertical;
+        a << InputDevice::PointerAxis::Vertical;
     }
     return a;
 }
 
 qreal PointerEvent::scrollValue(InputDevice::PointerAxis axis) const
 {
-    const libinput_pointer_axis a = axis == InputDevice::PointerAxisHorizontal
+    const libinput_pointer_axis a = axis == InputDevice::PointerAxis::Horizontal
         ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
         : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
     return libinput_event_pointer_get_scroll_value(m_pointerEvent, a) * device()->scrollFactor();
@@ -208,7 +208,7 @@ qreal PointerEvent::scrollValue(InputDevice::PointerAxis axis) const
 
 qint32 PointerEvent::scrollValueV120(InputDevice::PointerAxis axis) const
 {
-    const libinput_pointer_axis a = (axis == InputDevice::PointerAxisHorizontal)
+    const libinput_pointer_axis a = (axis == InputDevice::PointerAxis::Horizontal)
         ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
         : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
     return libinput_event_pointer_get_scroll_value_v120(m_pointerEvent, a) * device()->scrollFactor();

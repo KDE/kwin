@@ -58,13 +58,13 @@ void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, 
 {
     quint32 waylandState;
     switch (state) {
-    case InputDevice::KeyboardKeyPressed:
+    case InputDevice::KeyboardKeyState::Pressed:
         waylandState = WL_KEYBOARD_KEY_STATE_PRESSED;
         break;
-    case InputDevice::KeyboardKeyReleased:
+    case InputDevice::KeyboardKeyState::Released:
         waylandState = WL_KEYBOARD_KEY_STATE_RELEASED;
         break;
-    case InputDevice::KeyboardKeyAutoRepeat:
+    case InputDevice::KeyboardKeyState::AutoRepeat:
         Q_UNREACHABLE();
     }
 

@@ -27,10 +27,10 @@ EisDevice::EisDevice(eis_device *device, QObject *parent)
 EisDevice::~EisDevice()
 {
     for (const auto button : pressedButtons) {
-        Q_EMIT pointerButtonChanged(button, InputDevice::PointerButtonReleased, currentTime(), this);
+        Q_EMIT pointerButtonChanged(button, InputDevice::PointerButtonState::Released, currentTime(), this);
     }
     for (const auto key : pressedKeys) {
-        Q_EMIT keyChanged(key, InputDevice::KeyboardKeyReleased, currentTime(), this);
+        Q_EMIT keyChanged(key, InputDevice::KeyboardKeyState::Released, currentTime(), this);
     }
     if (!activeTouches.empty()) {
         Q_EMIT touchCanceled(this);

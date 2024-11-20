@@ -559,9 +559,9 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
 
     InputDevice::KeyboardKeyState state;
     if (pressed) {
-        state = InputDevice::KeyboardKeyPressed;
+        state = InputDevice::KeyboardKeyState::Pressed;
     } else {
-        state = InputDevice::KeyboardKeyReleased;
+        state = InputDevice::KeyboardKeyState::Released;
     }
     waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
 }
@@ -595,7 +595,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const auto &key : keys) {
-            waylandServer()->seat()->notifyKeyboardKey(key, InputDevice::KeyboardKeyPressed);
+            waylandServer()->seat()->notifyKeyboardKey(key, InputDevice::KeyboardKeyState::Pressed);
         }
 
         // Then, send key release for those keys in reverse.
@@ -606,7 +606,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
             auto key = *itr;
             QMetaObject::invokeMethod(
                 this, [key]() {
-                waylandServer()->seat()->notifyKeyboardKey(key, InputDevice::KeyboardKeyReleased);
+                waylandServer()->seat()->notifyKeyboardKey(key, InputDevice::KeyboardKeyState::Released);
             }, Qt::QueuedConnection);
         }
     }
@@ -764,7 +764,7 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
 void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
 {
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? InputDevice::KeyboardKeyPressed : InputDevice::KeyboardKeyReleased);
+                                               pressed ? InputDevice::KeyboardKeyState::Pressed : InputDevice::KeyboardKeyState::Released);
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)

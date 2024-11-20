@@ -58,28 +58,28 @@ class KWIN_EXPORT InputDevice : public QObject
     Q_OBJECT
 
 public:
-    enum PointerButtonState {
-        PointerButtonReleased,
-        PointerButtonPressed
+    enum class PointerButtonState {
+        Released,
+        Pressed,
     };
 
-    enum PointerAxis {
-        PointerAxisVertical,
-        PointerAxisHorizontal
+    enum class PointerAxis {
+        Vertical,
+        Horizontal,
     };
 
-    enum PointerAxisSource {
-        PointerAxisSourceUnknown,
-        PointerAxisSourceWheel,
-        PointerAxisSourceFinger,
-        PointerAxisSourceContinuous,
-        PointerAxisSourceWheelTilt
+    enum class PointerAxisSource {
+        Unknown,
+        Wheel,
+        Finger,
+        Continuous,
+        WheelTilt,
     };
 
-    enum KeyboardKeyState {
-        KeyboardKeyReleased,
-        KeyboardKeyPressed,
-        KeyboardKeyAutoRepeat
+    enum class KeyboardKeyState {
+        Released,
+        Pressed,
+        AutoRepeat,
     };
 
     enum TabletEventType {

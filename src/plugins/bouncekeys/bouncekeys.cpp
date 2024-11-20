@@ -36,8 +36,8 @@ void BounceKeysFilter::loadConfig(const KConfigGroup &group)
 bool BounceKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 {
     switch (event->state) {
-    case KWin::InputDevice::KeyboardKeyAutoRepeat:
-    case KWin::InputDevice::KeyboardKeyPressed:
+    case KWin::InputDevice::KeyboardKeyState::AutoRepeat:
+    case KWin::InputDevice::KeyboardKeyState::Pressed:
         if (auto it = m_lastEvent.find(event->key); it == m_lastEvent.end()) {
             // first time is always good
             m_lastEvent[event->key] = event->timestamp;
@@ -48,7 +48,7 @@ bool BounceKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 
             return event->timestamp - last < m_delay;
         }
-    case KWin::InputDevice::KeyboardKeyReleased:
+    case KWin::InputDevice::KeyboardKeyState::Released:
         return false;
     }
 

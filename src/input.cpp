@@ -241,7 +241,7 @@ bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
         return false;
     }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
-        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
+        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
             return true;
         }
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
@@ -263,7 +263,7 @@ public:
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
         // really on press and not on release? X11 switches on press.
-        if (event->state == InputDevice::KeyboardKeyPressed) {
+        if (event->state == InputDevice::KeyboardKeyState::Pressed) {
             const xkb_keysym_t keysym = event->nativeVirtualKey;
             if (keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12) {
                 kwinApp()->session()->switchTo(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
@@ -356,7 +356,7 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
-        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
+        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
             // wayland client takes care of it
             return true;
         }
@@ -366,14 +366,14 @@ public:
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
         // in that case we filter it out and don't process it further
-        QKeyEvent keyEvent(event->state == InputDevice::KeyboardKeyReleased ? QEvent::KeyRelease : QEvent::KeyPress,
+        QKeyEvent keyEvent(event->state == InputDevice::KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
                            event->key,
                            event->modifiers,
                            event->nativeScanCode,
                            event->nativeVirtualKey,
                            0,
                            event->text,
-                           event->state == InputDevice::KeyboardKeyAutoRepeat);
+                           event->state == InputDevice::KeyboardKeyState::AutoRepeat);
         keyEvent.setAccepted(false);
         QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), &keyEvent);
         if (keyEvent.isAccepted()) {
@@ -534,7 +534,7 @@ public:
         if (!effects) {
             return false;
         }
-        QMouseEvent mouseEvent(event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+        QMouseEvent mouseEvent(event->state == InputDevice::PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
                                event->position,
                                event->position,
                                event->button,
@@ -566,14 +566,14 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-        QKeyEvent keyEvent(event->state == InputDevice::KeyboardKeyReleased ? QEvent::KeyRelease : QEvent::KeyPress,
+        QKeyEvent keyEvent(event->state == InputDevice::KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
                            event->key,
                            event->modifiers,
                            event->nativeScanCode,
                            event->nativeVirtualKey,
                            0,
                            event->text,
-                           event->state == InputDevice::KeyboardKeyAutoRepeat);
+                           event->state == InputDevice::KeyboardKeyState::AutoRepeat);
         keyEvent.setAccepted(false);
         effects->grabbedKeyboardEvent(&keyEvent);
         return true;
@@ -663,7 +663,7 @@ public:
         if (!window) {
             return false;
         }
-        if (event->state == InputDevice::PointerButtonReleased) {
+        if (event->state == InputDevice::PointerButtonState::Released) {
             if (event->buttons == Qt::NoButton) {
                 window->endInteractiveMoveResize();
             }
@@ -681,7 +681,7 @@ public:
         if (!window) {
             return false;
         }
-        if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
+        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat || event->state == InputDevice::KeyboardKeyState::Pressed) {
             window->keyPressEvent(event->key | event->modifiers);
         }
         if (window->isInteractiveMove() || window->isInteractiveResize()) {
@@ -772,7 +772,7 @@ public:
         if (!m_active) {
             return false;
         }
-        if (event->state == InputDevice::PointerButtonReleased) {
+        if (event->state == InputDevice::PointerButtonState::Released) {
             if (event->buttons == Qt::NoButton) {
                 if (event->button == Qt::RightButton) {
                     cancel();
@@ -795,7 +795,7 @@ public:
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
 
-        if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
+        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat || event->state == InputDevice::KeyboardKeyState::Pressed) {
             // x11 variant does this on key press, so do the same
             if (event->key == Qt::Key_Escape) {
                 cancel();
@@ -937,7 +937,7 @@ public:
 
     bool pointerButton(PointerButtonEvent *event) override
     {
-        if (event->state == InputDevice::PointerButtonPressed) {
+        if (event->state == InputDevice::PointerButtonState::Pressed) {
             if (input()->shortcuts()->processPointerPressed(event->modifiers, event->buttons)) {
                 return true;
             }
@@ -970,23 +970,23 @@ public:
     {
         if (event->key == Qt::Key_PowerOff) {
             const auto modifiers = event->modifiersRelevantForGlobalShortcuts;
-            if (event->state == InputDevice::KeyboardKeyPressed) {
+            if (event->state == InputDevice::KeyboardKeyState::Pressed) {
                 auto passToShortcuts = [modifiers] {
                     input()->shortcuts()->processKey(modifiers, Qt::Key_PowerDown);
                 };
                 QObject::connect(&m_powerDown, &QTimer::timeout, input()->shortcuts(), passToShortcuts, Qt::SingleShotConnection);
                 m_powerDown.start();
                 return true;
-            } else if (event->state == InputDevice::KeyboardKeyReleased) {
+            } else if (event->state == InputDevice::KeyboardKeyState::Released) {
                 const bool ret = !m_powerDown.isActive() || input()->shortcuts()->processKey(modifiers, event->key);
                 m_powerDown.stop();
                 return ret;
             }
-        } else if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
+        } else if (event->state == InputDevice::KeyboardKeyState::AutoRepeat || event->state == InputDevice::KeyboardKeyState::Pressed) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
                 return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key);
             }
-        } else if (event->state == InputDevice::KeyboardKeyReleased) {
+        } else if (event->state == InputDevice::KeyboardKeyState::Released) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
                 return input()->shortcuts()->processKeyRelease(event->modifiersRelevantForGlobalShortcuts, event->key);
             }
@@ -1298,7 +1298,7 @@ public:
                                                  event->position,
                                                  event->buttons,
                                                  event->button,
-                                                 event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                                                 event->state == InputDevice::PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
                                                  event->modifiers);
         return true;
     }
@@ -1489,14 +1489,14 @@ public:
         if (actionResult) {
             return *actionResult;
         }
-        QMouseEvent e(event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease, p, event->position, event->button, event->buttons, event->modifiers);
+        QMouseEvent e(event->state == InputDevice::PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease, p, event->position, event->button, event->buttons, event->modifiers);
         e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration->decoration(), &e);
-        if (!e.isAccepted() && event->state == InputDevice::PointerButtonPressed) {
+        if (!e.isAccepted() && event->state == InputDevice::PointerButtonState::Pressed) {
             decoration->window()->processDecorationButtonPress(p, globalPos, event->button);
         }
-        if (event->state == InputDevice::PointerButtonReleased) {
+        if (event->state == InputDevice::PointerButtonState::Released) {
             decoration->window()->processDecorationButtonRelease(event->button);
         }
         return true;
@@ -1700,7 +1700,7 @@ public:
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        QMouseEvent mouseEvent(event->state == InputDevice::PointerButtonPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+        QMouseEvent mouseEvent(event->state == InputDevice::PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
                                event->position,
                                event->position,
                                event->button,
@@ -1716,7 +1716,7 @@ public:
             return false;
         }
 
-        if (event->state == InputDevice::KeyboardKeyAutoRepeat || event->state == InputDevice::KeyboardKeyPressed) {
+        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat || event->state == InputDevice::KeyboardKeyState::Pressed) {
             workspace()->tabbox()->keyPress(event->modifiers | event->key);
         } else if (event->modifiersRelevantForGlobalShortcuts == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
@@ -1812,7 +1812,7 @@ public:
     }
     bool pointerButton(PointerButtonEvent *event) override
     {
-        if (event->state == InputDevice::PointerButtonPressed) {
+        if (event->state == InputDevice::PointerButtonState::Pressed) {
             Window *window = input()->pointer()->focus();
             if (!window || !window->isClient()) {
                 return false;
@@ -1906,7 +1906,7 @@ public:
         if (!inputMethod) {
             return false;
         }
-        if (event->state != InputDevice::PointerButtonPressed) {
+        if (event->state != InputDevice::PointerButtonState::Pressed) {
             return false;
         }
 
@@ -1985,7 +1985,7 @@ public:
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->state == InputDevice::KeyboardKeyAutoRepeat) {
+        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
             // handled by Wayland client
             return false;
         }
@@ -2197,11 +2197,11 @@ public:
             break;
         case QEvent::TabletPress:
             input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
-                                              InputDevice::PointerButtonPressed, std::chrono::milliseconds(event->timestamp()));
+                                              InputDevice::PointerButtonState::Pressed, std::chrono::milliseconds(event->timestamp()));
             break;
         case QEvent::TabletRelease:
             input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
-                                              InputDevice::PointerButtonReleased, std::chrono::milliseconds(event->timestamp()));
+                                              InputDevice::PointerButtonState::Released, std::chrono::milliseconds(event->timestamp()));
             break;
         case QEvent::TabletLeaveProximity:
             break;
@@ -2403,7 +2403,7 @@ public:
             return true;
         }
         seat->setTimestamp(event->timestamp);
-        if (event->state == InputDevice::PointerButtonPressed) {
+        if (event->state == InputDevice::PointerButtonState::Pressed) {
             seat->notifyPointerButton(event->nativeButton, event->state);
         } else {
             raiseDragTarget();
@@ -2695,7 +2695,7 @@ class WindowInteractedSpy : public InputEventSpy
 public:
     void keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->state != InputDevice::KeyboardKeyPressed) {
+        if (event->state != InputDevice::KeyboardKeyState::Pressed) {
             return;
         }
         update();
@@ -2703,7 +2703,7 @@ public:
 
     void pointerButton(PointerButtonEvent *event) override
     {
-        if (event->state != InputDevice::PointerButtonPressed) {
+        if (event->state != InputDevice::PointerButtonState::Pressed) {
             return;
         }
         update();

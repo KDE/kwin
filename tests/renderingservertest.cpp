@@ -171,7 +171,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
         updateFocus();
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::InputDevice::KeyboardKeyPressed);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::InputDevice::KeyboardKeyState::Pressed);
 }
 
 void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
@@ -181,7 +181,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::InputDevice::KeyboardKeyReleased);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::InputDevice::KeyboardKeyState::Released);
 }
 
 void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
@@ -204,7 +204,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
         }
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWin::InputDevice::PointerButtonPressed);
+    m_seat->notifyPointerButton(event->button(), KWin::InputDevice::PointerButtonState::Pressed);
     m_seat->notifyPointerFrame();
 }
 
@@ -212,7 +212,7 @@ void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWin::InputDevice::PointerButtonReleased);
+    m_seat->notifyPointerButton(event->button(), KWin::InputDevice::PointerButtonState::Released);
     m_seat->notifyPointerFrame();
 }
 
@@ -222,10 +222,10 @@ void CompositorWindow::wheelEvent(QWheelEvent *event)
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     const QPoint &angle = event->angleDelta() / (8 * 15);
     if (angle.x() != 0) {
-        m_seat->notifyPointerAxis(Qt::Horizontal, angle.x(), 1, KWin::InputDevice::PointerAxisSourceWheel);
+        m_seat->notifyPointerAxis(Qt::Horizontal, angle.x(), 1, KWin::InputDevice::PointerAxisSource::Wheel);
     }
     if (angle.y() != 0) {
-        m_seat->notifyPointerAxis(Qt::Vertical, angle.y(), 1, KWin::InputDevice::PointerAxisSourceWheel);
+        m_seat->notifyPointerAxis(Qt::Vertical, angle.y(), 1, KWin::InputDevice::PointerAxisSource::Wheel);
     }
     m_seat->notifyPointerFrame();
 }

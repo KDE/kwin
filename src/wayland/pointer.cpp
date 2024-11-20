@@ -213,9 +213,9 @@ void PointerInterface::sendLeave(quint32 serial)
 static quint32 pointerButtonStateToWaylandState(InputDevice::PointerButtonState state)
 {
     switch (state) {
-    case InputDevice::PointerButtonPressed:
+    case InputDevice::PointerButtonState::Pressed:
         return WL_POINTER_BUTTON_STATE_PRESSED;
-    case InputDevice::PointerButtonReleased:
+    case InputDevice::PointerButtonState::Released:
         return WL_POINTER_BUTTON_STATE_RELEASED;
     }
 
@@ -304,19 +304,19 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
             continue;
         }
 
-        if (source != InputDevice::PointerAxisSourceUnknown && version >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION) {
+        if (source != InputDevice::PointerAxisSource::Unknown && version >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION) {
             PointerInterfacePrivate::axis_source wlSource;
             switch (source) {
-            case InputDevice::PointerAxisSourceWheel:
+            case InputDevice::PointerAxisSource::Wheel:
                 wlSource = PointerInterfacePrivate::axis_source_wheel;
                 break;
-            case InputDevice::PointerAxisSourceFinger:
+            case InputDevice::PointerAxisSource::Finger:
                 wlSource = PointerInterfacePrivate::axis_source_finger;
                 break;
-            case InputDevice::PointerAxisSourceContinuous:
+            case InputDevice::PointerAxisSource::Continuous:
                 wlSource = PointerInterfacePrivate::axis_source_continuous;
                 break;
-            case InputDevice::PointerAxisSourceWheelTilt:
+            case InputDevice::PointerAxisSource::WheelTilt:
                 wlSource = PointerInterfacePrivate::axis_source_wheel_tilt;
                 break;
             default:

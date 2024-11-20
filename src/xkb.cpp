@@ -759,7 +759,7 @@ void Xkb::updateKey(uint32_t key, InputDevice::KeyboardKeyState state)
     const auto sym = toKeysym(key);
     xkb_state_update_key(m_state, key + EVDEV_OFFSET, static_cast<xkb_key_direction>(state));
     if (m_compose.state) {
-        if (state == InputDevice::KeyboardKeyPressed) {
+        if (state == InputDevice::KeyboardKeyState::Pressed) {
             xkb_compose_state_feed(m_compose.state, sym);
         }
         switch (xkb_compose_state_get_status(m_compose.state)) {

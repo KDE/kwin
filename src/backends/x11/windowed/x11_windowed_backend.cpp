@@ -412,12 +412,12 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
                 grabKeyboard(event->time);
             }
             Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
-                                                InputDevice::KeyboardKeyPressed,
+                                                InputDevice::KeyboardKeyState::Pressed,
                                                 std::chrono::milliseconds(event->time),
                                                 m_keyboardDevice.get());
         } else {
             Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
-                                                InputDevice::KeyboardKeyReleased,
+                                                InputDevice::KeyboardKeyState::Released,
                                                 std::chrono::milliseconds(event->time),
                                                 m_keyboardDevice.get());
         }
@@ -547,14 +547,14 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         static const qreal s_defaultAxisStepDistance = 10.0;
         InputDevice::PointerAxis axis;
         if (event->detail > 5) {
-            axis = InputDevice::PointerAxisHorizontal;
+            axis = InputDevice::PointerAxis::Horizontal;
         } else {
-            axis = InputDevice::PointerAxisVertical;
+            axis = InputDevice::PointerAxis::Vertical;
         }
         Q_EMIT m_pointerDevice->pointerAxisChanged(axis,
                                                    delta * s_defaultAxisStepDistance,
                                                    delta,
-                                                   InputDevice::PointerAxisSourceUnknown,
+                                                   InputDevice::PointerAxisSource::Unknown,
                                                    false,
                                                    std::chrono::milliseconds(event->time),
                                                    m_pointerDevice.get());
@@ -581,9 +581,9 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
     Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, std::chrono::milliseconds(event->time), m_pointerDevice.get());
 
     if (pressed) {
-        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputDevice::PointerButtonPressed, std::chrono::milliseconds(event->time), m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputDevice::PointerButtonState::Pressed, std::chrono::milliseconds(event->time), m_pointerDevice.get());
     } else {
-        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputDevice::PointerButtonReleased, std::chrono::milliseconds(event->time), m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputDevice::PointerButtonState::Released, std::chrono::milliseconds(event->time), m_pointerDevice.get());
     }
     Q_EMIT m_pointerDevice->pointerFrame(m_pointerDevice.get());
 }

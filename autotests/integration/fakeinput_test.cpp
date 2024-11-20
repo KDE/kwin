@@ -135,13 +135,13 @@ void FakeInputTest::testPointerButton()
     fakeInput->button(linuxButton, WL_POINTER_BUTTON_STATE_PRESSED);
     QVERIFY(pointerButtonSpy.wait());
     QCOMPARE(pointerButtonSpy.last().at(0).value<quint32>(), linuxButton);
-    QCOMPARE(pointerButtonSpy.last().at(1).value<InputDevice::PointerButtonState>(), InputDevice::PointerButtonPressed);
+    QCOMPARE(pointerButtonSpy.last().at(1).value<InputDevice::PointerButtonState>(), InputDevice::PointerButtonState::Pressed);
 
     // and release
     fakeInput->button(linuxButton, WL_POINTER_BUTTON_STATE_RELEASED);
     QVERIFY(pointerButtonSpy.wait());
     QCOMPARE(pointerButtonSpy.last().at(0).value<quint32>(), linuxButton);
-    QCOMPARE(pointerButtonSpy.last().at(1).value<InputDevice::PointerButtonState>(), InputDevice::PointerButtonReleased);
+    QCOMPARE(pointerButtonSpy.last().at(1).value<InputDevice::PointerButtonState>(), InputDevice::PointerButtonState::Released);
 }
 
 void FakeInputTest::testPointerVerticalAxis()
@@ -158,7 +158,7 @@ void FakeInputTest::testPointerVerticalAxis()
     fakeInput->authenticate(QStringLiteral("org.kde.foobar"), QStringLiteral("foobar"));
     fakeInput->axis(WL_POINTER_AXIS_VERTICAL_SCROLL, wl_fixed_from_double(15));
     QVERIFY(pointerAxisSpy.wait());
-    QCOMPARE(pointerAxisSpy.last().at(0).value<InputDevice::PointerAxis>(), InputDevice::PointerAxisVertical);
+    QCOMPARE(pointerAxisSpy.last().at(0).value<InputDevice::PointerAxis>(), InputDevice::PointerAxis::Vertical);
     QCOMPARE(pointerAxisSpy.last().at(1).value<qreal>(), 15);
 }
 
@@ -176,7 +176,7 @@ void FakeInputTest::testPointerHorizontalAxis()
     fakeInput->authenticate(QStringLiteral("org.kde.foobar"), QStringLiteral("foobar"));
     fakeInput->axis(WL_POINTER_AXIS_HORIZONTAL_SCROLL, wl_fixed_from_double(15));
     QVERIFY(pointerAxisSpy.wait());
-    QCOMPARE(pointerAxisSpy.last().at(0).value<InputDevice::PointerAxis>(), InputDevice::PointerAxisHorizontal);
+    QCOMPARE(pointerAxisSpy.last().at(0).value<InputDevice::PointerAxis>(), InputDevice::PointerAxis::Horizontal);
     QCOMPARE(pointerAxisSpy.last().at(1).value<qreal>(), 15);
 }
 
@@ -289,13 +289,13 @@ void FakeInputTest::testKeyboardKey()
     fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_PRESSED);
     QVERIFY(keyboardKeySpy.wait());
     QCOMPARE(keyboardKeySpy.last().at(0).value<quint32>(), linuxKey);
-    QCOMPARE(keyboardKeySpy.last().at(1).value<InputDevice::KeyboardKeyState>(), InputDevice::KeyboardKeyPressed);
+    QCOMPARE(keyboardKeySpy.last().at(1).value<InputDevice::KeyboardKeyState>(), InputDevice::KeyboardKeyState::Pressed);
 
     // and release
     fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_RELEASED);
     QVERIFY(keyboardKeySpy.wait());
     QCOMPARE(keyboardKeySpy.last().at(0).value<quint32>(), linuxKey);
-    QCOMPARE(keyboardKeySpy.last().at(1).value<InputDevice::KeyboardKeyState>(), InputDevice::KeyboardKeyReleased);
+    QCOMPARE(keyboardKeySpy.last().at(1).value<InputDevice::KeyboardKeyState>(), InputDevice::KeyboardKeyState::Released);
 }
 
 } // namespace KWin

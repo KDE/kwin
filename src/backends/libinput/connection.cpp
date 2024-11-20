@@ -270,7 +270,7 @@ void Connection::processEvents()
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   pointerEvent->scrollValueV120(axis),
-                                                                  InputDevice::PointerAxisSourceWheel,
+                                                                  InputDevice::PointerAxisSource::Wheel,
                                                                   pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
@@ -285,7 +285,7 @@ void Connection::processEvents()
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
-                                                                  InputDevice::PointerAxisSourceFinger,
+                                                                  InputDevice::PointerAxisSource::Finger,
                                                                   pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
@@ -300,7 +300,7 @@ void Connection::processEvents()
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
-                                                                  InputDevice::PointerAxisSourceContinuous,
+                                                                  InputDevice::PointerAxisSource::Continuous,
                                                                   pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());

@@ -428,12 +428,12 @@ void TestWaylandSeat::testPointer()
 
     // test axis
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 10, 120, InputDevice::PointerAxisSourceWheel);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 10, 120, InputDevice::PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(axisSpy.wait());
     QCOMPARE(frameSpy.count(), 6);
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 20, 240, InputDevice::PointerAxisSourceWheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 20, 240, InputDevice::PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(axisSpy.wait());
     QCOMPARE(frameSpy.count(), 7);
@@ -447,25 +447,25 @@ void TestWaylandSeat::testPointer()
 
     // test button
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, InputDevice::PointerButtonPressed);
+    m_seatInterface->notifyPointerButton(1, InputDevice::PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 8);
     QCOMPARE(buttonSpy.at(0).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(2, InputDevice::PointerButtonPressed);
+    m_seatInterface->notifyPointerButton(2, InputDevice::PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 9);
     QCOMPARE(buttonSpy.at(1).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(2, InputDevice::PointerButtonReleased);
+    m_seatInterface->notifyPointerButton(2, InputDevice::PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 10);
     QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, InputDevice::PointerButtonReleased);
+    m_seatInterface->notifyPointerButton(1, InputDevice::PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 11);
@@ -685,7 +685,7 @@ void TestWaylandSeat::testPointerButton()
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
     m_seatInterface->setTimestamp(timestamp);
-    m_seatInterface->notifyPointerButton(qtButton, InputDevice::PointerButtonPressed);
+    m_seatInterface->notifyPointerButton(qtButton, InputDevice::PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), true);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), true);
@@ -698,7 +698,7 @@ void TestWaylandSeat::testPointerButton()
     QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Pressed);
     timestamp++;
     m_seatInterface->setTimestamp(timestamp);
-    m_seatInterface->notifyPointerButton(qtButton, InputDevice::PointerButtonReleased);
+    m_seatInterface->notifyPointerButton(qtButton, InputDevice::PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
@@ -1210,7 +1210,7 @@ void TestWaylandSeat::testPointerAxis()
 
     std::chrono::milliseconds timestamp(1);
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 10, 120, InputDevice::PointerAxisSourceWheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 10, 120, InputDevice::PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 2);
@@ -1227,7 +1227,7 @@ void TestWaylandSeat::testPointerAxis()
 
     // let's scroll using fingers
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 0, InputDevice::PointerAxisSourceFinger);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 0, InputDevice::PointerAxisSource::Finger);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 3);
@@ -1242,7 +1242,7 @@ void TestWaylandSeat::testPointerAxis()
 
     // lift the fingers off the device
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 0, 0, InputDevice::PointerAxisSourceFinger);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 0, 0, InputDevice::PointerAxisSource::Finger);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 4);
@@ -1256,7 +1256,7 @@ void TestWaylandSeat::testPointerAxis()
 
     // if the device is unknown, no axis_source event should be sent
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 120, InputDevice::PointerAxisSourceUnknown);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 120, InputDevice::PointerAxisSource::Unknown);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 5);
@@ -1407,19 +1407,19 @@ void TestWaylandSeat::testKeyboard()
 
     std::chrono::milliseconds time(1);
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_E, InputDevice::KeyboardKeyReleased);
+    m_seatInterface->notifyKeyboardKey(KEY_E, InputDevice::KeyboardKeyState::Released);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_D, InputDevice::KeyboardKeyReleased);
+    m_seatInterface->notifyKeyboardKey(KEY_D, InputDevice::KeyboardKeyState::Released);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_K, InputDevice::KeyboardKeyReleased);
+    m_seatInterface->notifyKeyboardKey(KEY_K, InputDevice::KeyboardKeyState::Released);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyPressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyState::Pressed);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyReleased);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyState::Released);
     QVERIFY(keyChangedSpy.wait());
 
     QCOMPARE(keyChangedSpy.count(), 5);
@@ -1440,19 +1440,19 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyChangedSpy.at(4).at(2).value<quint32>(), quint32(5));
 
     // releasing a key which is already released should not set a key changed
-    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyReleased);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyState::Released);
     QVERIFY(sync());
     QCOMPARE(keyChangedSpy.count(), 5);
     // let's press it again
-    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyPressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyState::Pressed);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 6);
     // press again should be ignored
-    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyPressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyState::Pressed);
     QVERIFY(sync());
     QCOMPARE(keyChangedSpy.count(), 6);
     // and release
-    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyReleased);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, InputDevice::KeyboardKeyState::Released);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 7);
 

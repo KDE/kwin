@@ -278,7 +278,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputDevice::Pointe
         return;
     }
 
-    if (state == InputDevice::PointerButtonPressed) {
+    if (state == InputDevice::PointerButtonState::Pressed) {
         update();
     }
 
@@ -299,7 +299,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputDevice::Pointe
     input()->processSpies(std::bind(&InputEventSpy::pointerButton, std::placeholders::_1, &event));
     input()->processFilters(std::bind(&InputEventFilter::pointerButton, std::placeholders::_1, &event));
 
-    if (state == InputDevice::PointerButtonReleased) {
+    if (state == InputDevice::PointerButtonState::Released) {
         update();
     }
 }
@@ -321,7 +321,7 @@ void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal d
         .position = m_pos,
         .delta = delta,
         .deltaV120 = deltaV120,
-        .orientation = (axis == InputDevice::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
+        .orientation = (axis == InputDevice::PointerAxis::Horizontal) ? Qt::Horizontal : Qt::Vertical,
         .source = source,
         .buttons = m_qtButtons,
         .modifiers = input()->keyboardModifiers(),
@@ -474,7 +474,7 @@ void PointerInputRedirection::processFrame(KWin::InputDevice *device)
 bool PointerInputRedirection::areButtonsPressed() const
 {
     for (auto state : m_buttons) {
-        if (state == InputDevice::PointerButtonPressed) {
+        if (state == InputDevice::PointerButtonState::Pressed) {
             return true;
         }
     }
@@ -877,7 +877,7 @@ void PointerInputRedirection::updateButton(uint32_t button, InputDevice::Pointer
     // update Qt buttons
     m_qtButtons = Qt::NoButton;
     for (auto it = m_buttons.constBegin(); it != m_buttons.constEnd(); ++it) {
-        if (it.value() == InputDevice::PointerButtonReleased) {
+        if (it.value() == InputDevice::PointerButtonState::Released) {
             continue;
         }
         m_qtButtons |= buttonToQtMouseButton(it.key());

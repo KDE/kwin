@@ -692,7 +692,7 @@ void SeatInterface::notifyPointerButton(quint32 button, InputDevice::PointerButt
     }
     const quint32 serial = d->display->nextSerial();
 
-    if (state == InputDevice::PointerButtonPressed) {
+    if (state == InputDevice::PointerButtonState::Pressed) {
         d->updatePointerButtonSerial(button, serial);
         d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Pressed);
         if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {

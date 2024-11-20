@@ -53,7 +53,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
 {
     connect(keyboard, &Keyboard::left, this, [this](quint32 time) {
         for (quint32 key : std::as_const(m_pressedKeys)) {
-            Q_EMIT keyChanged(key, InputDevice::KeyboardKeyReleased, std::chrono::milliseconds(time), this);
+            Q_EMIT keyChanged(key, InputDevice::KeyboardKeyState::Released, std::chrono::milliseconds(time), this);
         }
         m_pressedKeys.clear();
     });
@@ -64,12 +64,12 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
             if (key == KEY_RIGHTCTRL) {
                 m_seat->backend()->togglePointerLock();
             }
-            state = InputDevice::KeyboardKeyPressed;
+            state = InputDevice::KeyboardKeyState::Pressed;
             m_pressedKeys.insert(key);
             break;
         case Keyboard::KeyState::Released:
             m_pressedKeys.remove(key);
-            state = InputDevice::KeyboardKeyReleased;
+            state = InputDevice::KeyboardKeyState::Released;
             break;
         default:
             Q_UNREACHABLE();
@@ -107,10 +107,10 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         InputDevice::PointerButtonState state;
         switch (nativeState) {
         case Pointer::ButtonState::Pressed:
-            state = InputDevice::PointerButtonPressed;
+            state = InputDevice::PointerButtonState::Pressed;
             break;
         case Pointer::ButtonState::Released:
-            state = InputDevice::PointerButtonReleased;
+            state = InputDevice::PointerButtonState::Released;
             break;
         default:
             Q_UNREACHABLE();
@@ -122,15 +122,15 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         InputDevice::PointerAxis axis;
         switch (nativeAxis) {
         case Pointer::Axis::Horizontal:
-            axis = InputDevice::PointerAxisHorizontal;
+            axis = InputDevice::PointerAxis::Horizontal;
             break;
         case Pointer::Axis::Vertical:
-            axis = InputDevice::PointerAxisVertical;
+            axis = InputDevice::PointerAxis::Vertical;
             break;
         default:
             Q_UNREACHABLE();
         }
-        Q_EMIT pointerAxisChanged(axis, delta, 0, InputDevice::PointerAxisSourceUnknown, false, std::chrono::milliseconds(time), this);
+        Q_EMIT pointerAxisChanged(axis, delta, 0, InputDevice::PointerAxisSource::Unknown, false, std::chrono::milliseconds(time), this);
     });
 
     connect(pointer, &Pointer::frame, this, [this]() {

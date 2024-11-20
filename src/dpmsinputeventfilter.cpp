@@ -64,9 +64,9 @@ bool DpmsInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
         // don't wake up the screens for media or volume keys
         return false;
     }
-    if (event->state == InputDevice::KeyboardKeyPressed) {
+    if (event->state == InputDevice::KeyboardKeyState::Pressed) {
         notify();
-    } else if (event->state == InputDevice::KeyboardKeyReleased) {
+    } else if (event->state == InputDevice::KeyboardKeyState::Released) {
         return false;
     }
     return true;
