@@ -476,6 +476,14 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool maximizable READ isMaximizable)
 
     /**
+     * Whether the window is maximized horizontally, vertically or fully.
+     * This is read only, in order to maximize from a script use
+     * the setMaximize function
+     * @see setMaximize
+     */
+    Q_PROPERTY(KWin::MaximizeMode maximizeMode READ maximizeMode NOTIFY maximizedChanged)
+
+    /**
      * Whether the Window is moveable. Even if it is not moveable, it might be possible to move
      * it to another screen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
