@@ -222,14 +222,14 @@ Q_SIGNALS:
      * @param button The button which changed
      * @param state The new button state
      */
-    void pointerButtonStateChanged(uint32_t button, InputDevice::PointerButtonState state);
+    void pointerButtonStateChanged(uint32_t button, PointerButtonState state);
     /**
      * @brief Emitted when a pointer axis changed
      *
      * @param axis The axis on which the even occurred
      * @param delta The delta of the event.
      */
-    void pointerAxisChanged(InputDevice::PointerAxis axis, qreal delta);
+    void pointerAxisChanged(PointerAxis axis, qreal delta);
     /**
      * @brief Emitted when the modifiers changes.
      *
@@ -246,7 +246,7 @@ Q_SIGNALS:
      * @param keyCode The keycode of the key which changed
      * @param state The new key state
      */
-    void keyStateChanged(quint32 keyCode, InputDevice::KeyboardKeyState state);
+    void keyStateChanged(quint32 keyCode, KeyboardKeyState state);
 
     void hasKeyboardChanged(bool set);
     void hasAlphaNumericKeyboardChanged(bool set);

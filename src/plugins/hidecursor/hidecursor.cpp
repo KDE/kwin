@@ -85,7 +85,7 @@ void HideCursorEffect::keyboardKey(KeyboardKeyEvent *event)
     // https://doc.qt.io/qt-6/qt.html#Key-enum
     // We don't want to hide the cursor when the user presses a functional key, since they are
     // usually interleaved with mouse movements.
-    if (m_hideOnTyping && !m_cursorHidden && event->state == InputDevice::KeyboardKeyState::Pressed && event->key < 0x01000000
+    if (m_hideOnTyping && !m_cursorHidden && event->state == KeyboardKeyState::Pressed && event->key < 0x01000000
         && (event->modifiers == Qt::NoModifier || event->modifiers == Qt::ShiftModifier)) {
         hideCursor();
     }

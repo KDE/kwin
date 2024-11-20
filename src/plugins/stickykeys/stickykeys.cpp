@@ -98,7 +98,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
 
 bool StickyKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 {
-    const bool pressed = event->state == KWin::InputDevice::KeyboardKeyState::AutoRepeat || event->state == KWin::InputDevice::KeyboardKeyState::Pressed;
+    const bool pressed = event->state == KWin::KeyboardKeyState::AutoRepeat || event->state == KWin::KeyboardKeyState::Pressed;
 
     if (m_modifiers.contains(event->key)) {
         if (pressed) {

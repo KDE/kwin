@@ -616,8 +616,8 @@ void TestInputMethodInterface::testKeyboardGrab()
     QVERIFY(keyboardGrabSpy.count() || keyboardGrabSpy.wait());
 
     QSignalSpy keyboardSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
-    m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, InputDevice::KeyboardKeyState::Pressed);
-    m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, InputDevice::KeyboardKeyState::Released);
+    m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Pressed);
+    m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Released);
     keyboardSpy.wait();
     QCOMPARE(keyboardSpy.count(), 2);
 

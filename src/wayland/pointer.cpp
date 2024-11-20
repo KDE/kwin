@@ -210,19 +210,19 @@ void PointerInterface::sendLeave(quint32 serial)
     Q_EMIT focusedSurfaceChanged();
 }
 
-static quint32 pointerButtonStateToWaylandState(InputDevice::PointerButtonState state)
+static quint32 pointerButtonStateToWaylandState(PointerButtonState state)
 {
     switch (state) {
-    case InputDevice::PointerButtonState::Pressed:
+    case PointerButtonState::Pressed:
         return WL_POINTER_BUTTON_STATE_PRESSED;
-    case InputDevice::PointerButtonState::Released:
+    case PointerButtonState::Released:
         return WL_POINTER_BUTTON_STATE_RELEASED;
     }
 
     Q_UNREACHABLE();
 }
 
-void PointerInterface::sendButton(quint32 button, InputDevice::PointerButtonState state, quint32 serial)
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, quint32 serial)
 {
     if (!d->focusedSurface) {
         return;
@@ -235,7 +235,7 @@ void PointerInterface::sendButton(quint32 button, InputDevice::PointerButtonStat
     }
 }
 
-void PointerInterface::sendButton(quint32 button, InputDevice::PointerButtonState state, ClientConnection *client)
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, ClientConnection *client)
 {
     const auto pointerResources = d->pointersForClient(client);
     const quint32 waylandState = pointerButtonStateToWaylandState(state);
@@ -278,7 +278,7 @@ static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 
     }
 }
 
-void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, InputDevice::PointerAxisSource source, bool inverted)
+void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted)
 {
     if (!d->focusedSurface) {
         return;
@@ -304,19 +304,19 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
             continue;
         }
 
-        if (source != InputDevice::PointerAxisSource::Unknown && version >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION) {
+        if (source != PointerAxisSource::Unknown && version >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION) {
             PointerInterfacePrivate::axis_source wlSource;
             switch (source) {
-            case InputDevice::PointerAxisSource::Wheel:
+            case PointerAxisSource::Wheel:
                 wlSource = PointerInterfacePrivate::axis_source_wheel;
                 break;
-            case InputDevice::PointerAxisSource::Finger:
+            case PointerAxisSource::Finger:
                 wlSource = PointerInterfacePrivate::axis_source_finger;
                 break;
-            case InputDevice::PointerAxisSource::Continuous:
+            case PointerAxisSource::Continuous:
                 wlSource = PointerInterfacePrivate::axis_source_continuous;
                 break;
-            case InputDevice::PointerAxisSource::WheelTilt:
+            case PointerAxisSource::WheelTilt:
                 wlSource = PointerInterfacePrivate::axis_source_wheel_tilt;
                 break;
             default:

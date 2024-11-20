@@ -240,7 +240,7 @@ void EisContext::handleEvents()
                     continue;
                 }
             }
-            Q_EMIT device->pointerButtonChanged(button, press ? InputDevice::PointerButtonState::Pressed : InputDevice::PointerButtonState::Released, currentTime(), device);
+            Q_EMIT device->pointerButtonChanged(button, press ? PointerButtonState::Pressed : PointerButtonState::Released, currentTime(), device);
             break;
         }
         case EIS_EVENT_SCROLL_DELTA: {
@@ -249,10 +249,10 @@ void EisContext::handleEvents()
             const auto y = eis_event_scroll_get_dy(event);
             qCDebug(KWIN_EIS) << device->name() << "scroll" << x << y;
             if (x != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxis::Horizontal, x, 0, InputDevice::PointerAxisSource::Unknown, false, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(PointerAxis::Horizontal, x, 0, PointerAxisSource::Unknown, false, currentTime(), device);
             }
             if (y != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxis::Vertical, y, 0, InputDevice::PointerAxisSource::Unknown, false, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(PointerAxis::Vertical, y, 0, PointerAxisSource::Unknown, false, currentTime(), device);
             }
             break;
         }
@@ -261,11 +261,11 @@ void EisContext::handleEvents()
             auto device = eventDevice(event);
             if (eis_event_scroll_get_stop_x(event)) {
                 qCDebug(KWIN_EIS) << device->name() << "scroll x" << (eis_event_get_type(event) == EIS_EVENT_SCROLL_STOP ? "stop" : "cancel");
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxis::Horizontal, 0, 0, InputDevice::PointerAxisSource::Unknown, false, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(PointerAxis::Horizontal, 0, 0, PointerAxisSource::Unknown, false, currentTime(), device);
             }
             if (eis_event_scroll_get_stop_y(event)) {
                 qCDebug(KWIN_EIS) << device->name() << "scroll y" << (eis_event_get_type(event) == EIS_EVENT_SCROLL_STOP ? "stop" : "cancel");
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxis::Vertical, 0, 0, InputDevice::PointerAxisSource::Unknown, false, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(PointerAxis::Vertical, 0, 0, PointerAxisSource::Unknown, false, currentTime(), device);
             }
             break;
         }
@@ -277,10 +277,10 @@ void EisContext::handleEvents()
             // otherwise no scroll event
             constexpr auto anglePer120Step = 15 / 120.0;
             if (x != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxis::Horizontal, x * anglePer120Step, x, InputDevice::PointerAxisSource::Unknown, false, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(PointerAxis::Horizontal, x * anglePer120Step, x, PointerAxisSource::Unknown, false, currentTime(), device);
             }
             if (y != 0) {
-                Q_EMIT device->pointerAxisChanged(InputDevice::PointerAxis::Vertical, y * anglePer120Step, y, InputDevice::PointerAxisSource::Unknown, false, currentTime(), device);
+                Q_EMIT device->pointerAxisChanged(PointerAxis::Vertical, y * anglePer120Step, y, PointerAxisSource::Unknown, false, currentTime(), device);
             }
             break;
         }
@@ -299,7 +299,7 @@ void EisContext::handleEvents()
                     continue;
                 }
             }
-            Q_EMIT device->keyChanged(key, press ? InputDevice::KeyboardKeyState::Pressed : InputDevice::KeyboardKeyState::Released, currentTime(), device);
+            Q_EMIT device->keyChanged(key, press ? KeyboardKeyState::Pressed : KeyboardKeyState::Released, currentTime(), device);
             break;
         }
         case EIS_EVENT_TOUCH_DOWN: {

@@ -36,7 +36,7 @@ struct PointerButtonEvent
 {
     InputDevice *device;
     QPointF position;
-    InputDevice::PointerButtonState state;
+    PointerButtonState state;
     Qt::MouseButton button;
     quint32 nativeButton;
     Qt::MouseButtons buttons;
@@ -52,7 +52,7 @@ struct PointerAxisEvent
     qreal delta;
     qint32 deltaV120;
     Qt::Orientation orientation;
-    InputDevice::PointerAxisSource source;
+    PointerAxisSource source;
     Qt::MouseButtons buttons;
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts;
@@ -63,7 +63,7 @@ struct PointerAxisEvent
 struct KeyboardKeyEvent
 {
     InputDevice *device;
-    InputDevice::KeyboardKeyState state;
+    KeyboardKeyState state;
     Qt::Key key;
     quint32 nativeScanCode;
     quint32 nativeVirtualKey;

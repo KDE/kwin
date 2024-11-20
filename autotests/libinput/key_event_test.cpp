@@ -74,12 +74,12 @@ void TestLibinputKeyEvent::testCreate()
 void TestLibinputKeyEvent::testEvent_data()
 {
     QTest::addColumn<libinput_key_state>("keyState");
-    QTest::addColumn<KWin::InputDevice::KeyboardKeyState>("expectedKeyState");
+    QTest::addColumn<KWin::KeyboardKeyState>("expectedKeyState");
     QTest::addColumn<quint32>("key");
     QTest::addColumn<quint32>("time");
 
-    QTest::newRow("pressed") << LIBINPUT_KEY_STATE_PRESSED << KWin::InputDevice::KeyboardKeyState::Pressed << quint32(KEY_A) << 100u;
-    QTest::newRow("released") << LIBINPUT_KEY_STATE_RELEASED << KWin::InputDevice::KeyboardKeyState::Released << quint32(KEY_B) << 200u;
+    QTest::newRow("pressed") << LIBINPUT_KEY_STATE_PRESSED << KWin::KeyboardKeyState::Pressed << quint32(KEY_A) << 100u;
+    QTest::newRow("released") << LIBINPUT_KEY_STATE_RELEASED << KWin::KeyboardKeyState::Released << quint32(KEY_B) << 200u;
 }
 
 void TestLibinputKeyEvent::testEvent()

@@ -209,7 +209,7 @@ void DebugConsoleFilter::pointerButton(PointerButtonEvent *event)
     const QString timestamp = timestampRow(event->timestamp);
 
     text.append(s_tableStart);
-    if (event->state == InputDevice::PointerButtonState::Pressed) {
+    if (event->state == PointerButtonState::Pressed) {
         text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
         text.append(deviceRow(event->device));
         text.append(timestamp);
@@ -253,11 +253,11 @@ void DebugConsoleFilter::keyboardKey(KeyboardKeyEvent *event)
     text.append(s_tableStart);
 
     switch (event->state) {
-    case InputDevice::KeyboardKeyState::AutoRepeat:
-    case InputDevice::KeyboardKeyState::Pressed:
+    case KeyboardKeyState::AutoRepeat:
+    case KeyboardKeyState::Pressed:
         text.append(tableHeaderRow(i18nc("A key press event", "Key Press")));
         break;
-    case InputDevice::KeyboardKeyState::Released:
+    case KeyboardKeyState::Released:
         text.append(tableHeaderRow(i18nc("A key release event", "Key Release")));
         break;
     default:
@@ -293,7 +293,7 @@ void DebugConsoleFilter::keyboardKey(KeyboardKeyEvent *event)
         return ret;
     };
     text.append(timestampRow(event->timestamp));
-    text.append(tableRow(i18nc("Whether the event is an automatic key repeat", "Repeat"), event->state == InputDevice::KeyboardKeyState::AutoRepeat));
+    text.append(tableRow(i18nc("Whether the event is an automatic key repeat", "Repeat"), event->state == KeyboardKeyState::AutoRepeat));
 
     const auto keyMetaObject = Qt::qt_getEnumMetaObject(Qt::Key());
     const auto enumerator = keyMetaObject->enumerator(keyMetaObject->indexOfEnumerator("Key"));

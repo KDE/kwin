@@ -89,7 +89,7 @@ void TestWaylandServerSeat::testPointerButton()
     QCOMPARE(seat->pointerButtonSerial(1), quint32(0));
 
     // mark the button as pressed
-    seat->notifyPointerButton(0, InputDevice::PointerButtonState::Pressed);
+    seat->notifyPointerButton(0, PointerButtonState::Pressed);
     seat->notifyPointerFrame();
     QVERIFY(seat->isPointerButtonPressed(0));
     QCOMPARE(seat->pointerButtonSerial(0), display.serial());
@@ -99,7 +99,7 @@ void TestWaylandServerSeat::testPointerButton()
     QCOMPARE(seat->pointerButtonSerial(1), quint32(0));
 
     // release it again
-    seat->notifyPointerButton(0, InputDevice::PointerButtonState::Released);
+    seat->notifyPointerButton(0, PointerButtonState::Released);
     seat->notifyPointerFrame();
     QVERIFY(!seat->isPointerButtonPressed(0));
     QCOMPARE(seat->pointerButtonSerial(0), display.serial());

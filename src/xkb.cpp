@@ -751,7 +751,7 @@ void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t
     forwardModifiers();
 }
 
-void Xkb::updateKey(uint32_t key, InputDevice::KeyboardKeyState state)
+void Xkb::updateKey(uint32_t key, KeyboardKeyState state)
 {
     if (!m_keymap || !m_state) {
         return;
@@ -759,7 +759,7 @@ void Xkb::updateKey(uint32_t key, InputDevice::KeyboardKeyState state)
     const auto sym = toKeysym(key);
     xkb_state_update_key(m_state, key + EVDEV_OFFSET, static_cast<xkb_key_direction>(state));
     if (m_compose.state) {
-        if (state == InputDevice::KeyboardKeyState::Pressed) {
+        if (state == KeyboardKeyState::Pressed) {
             xkb_compose_state_feed(m_compose.state, sym);
         }
         switch (xkb_compose_state_get_status(m_compose.state)) {

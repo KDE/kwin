@@ -56,9 +56,9 @@ public:
 
     void sendEnter(SurfaceInterface *surface, const QPointF &position, quint32 serial);
     void sendLeave(quint32 serial);
-    void sendButton(quint32 button, InputDevice::PointerButtonState state, quint32 serial);
-    void sendButton(quint32 button, InputDevice::PointerButtonState state, ClientConnection *client);
-    void sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, InputDevice::PointerAxisSource source, bool inverted);
+    void sendButton(quint32 button, PointerButtonState state, quint32 serial);
+    void sendButton(quint32 button, PointerButtonState state, ClientConnection *client);
+    void sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted);
     void sendMotion(const QPointF &position);
     void sendFrame();
 

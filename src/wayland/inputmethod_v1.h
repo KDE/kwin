@@ -158,7 +158,7 @@ public:
     ~InputMethodGrabV1() override;
 
     void sendKeymap(const QByteArray &content);
-    void sendKey(quint32 serial, quint32 timestamp, quint32 key, InputDevice::KeyboardKeyState state);
+    void sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state);
     void sendModifiers(quint32 serial, quint32 depressed, quint32 latched, quint32 locked, quint32 group);
 
 private:

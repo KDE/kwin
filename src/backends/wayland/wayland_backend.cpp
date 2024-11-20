@@ -53,23 +53,23 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
 {
     connect(keyboard, &Keyboard::left, this, [this](quint32 time) {
         for (quint32 key : std::as_const(m_pressedKeys)) {
-            Q_EMIT keyChanged(key, InputDevice::KeyboardKeyState::Released, std::chrono::milliseconds(time), this);
+            Q_EMIT keyChanged(key, KeyboardKeyState::Released, std::chrono::milliseconds(time), this);
         }
         m_pressedKeys.clear();
     });
     connect(keyboard, &Keyboard::keyChanged, this, [this](quint32 key, Keyboard::KeyState nativeState, quint32 time) {
-        InputDevice::KeyboardKeyState state;
+        KeyboardKeyState state;
         switch (nativeState) {
         case Keyboard::KeyState::Pressed:
             if (key == KEY_RIGHTCTRL) {
                 m_seat->backend()->togglePointerLock();
             }
-            state = InputDevice::KeyboardKeyState::Pressed;
+            state = KeyboardKeyState::Pressed;
             m_pressedKeys.insert(key);
             break;
         case Keyboard::KeyState::Released:
             m_pressedKeys.remove(key);
-            state = InputDevice::KeyboardKeyState::Released;
+            state = KeyboardKeyState::Released;
             break;
         default:
             Q_UNREACHABLE();
@@ -104,13 +104,13 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         Q_EMIT pointerMotionAbsolute(absolutePos, std::chrono::milliseconds(time), this);
     });
     connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
-        InputDevice::PointerButtonState state;
+        PointerButtonState state;
         switch (nativeState) {
         case Pointer::ButtonState::Pressed:
-            state = InputDevice::PointerButtonState::Pressed;
+            state = PointerButtonState::Pressed;
             break;
         case Pointer::ButtonState::Released:
-            state = InputDevice::PointerButtonState::Released;
+            state = PointerButtonState::Released;
             break;
         default:
             Q_UNREACHABLE();
@@ -119,18 +119,18 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     });
     // TODO: Send discreteDelta and source as well.
     connect(pointer, &Pointer::axisChanged, this, [this](quint32 time, Pointer::Axis nativeAxis, qreal delta) {
-        InputDevice::PointerAxis axis;
+        PointerAxis axis;
         switch (nativeAxis) {
         case Pointer::Axis::Horizontal:
-            axis = InputDevice::PointerAxis::Horizontal;
+            axis = PointerAxis::Horizontal;
             break;
         case Pointer::Axis::Vertical:
-            axis = InputDevice::PointerAxis::Vertical;
+            axis = PointerAxis::Vertical;
             break;
         default:
             Q_UNREACHABLE();
         }
-        Q_EMIT pointerAxisChanged(axis, delta, 0, InputDevice::PointerAxisSource::Unknown, false, std::chrono::milliseconds(time), this);
+        Q_EMIT pointerAxisChanged(axis, delta, 0, PointerAxisSource::Unknown, false, std::chrono::milliseconds(time), this);
     });
 
     connect(pointer, &Pointer::frame, this, [this]() {

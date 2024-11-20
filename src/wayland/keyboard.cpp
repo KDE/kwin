@@ -107,16 +107,16 @@ void KeyboardInterfacePrivate::sendModifiers(SurfaceInterface *surface, quint32 
     }
 }
 
-bool KeyboardInterfacePrivate::updateKey(quint32 key, InputDevice::KeyboardKeyState state)
+bool KeyboardInterfacePrivate::updateKey(quint32 key, KeyboardKeyState state)
 {
     switch (state) {
-    case InputDevice::KeyboardKeyState::Pressed:
+    case KeyboardKeyState::Pressed:
         if (pressedKeys.contains(key)) {
             return false;
         }
         pressedKeys.append(key);
         return true;
-    case InputDevice::KeyboardKeyState::Released:
+    case KeyboardKeyState::Released:
         return pressedKeys.removeOne(key);
     default:
         Q_UNREACHABLE();
@@ -173,17 +173,17 @@ void KeyboardInterface::setModifierFocusSurface(SurfaceInterface *surface)
     }
 }
 
-void KeyboardInterface::sendKey(quint32 key, InputDevice::KeyboardKeyState state, ClientConnection *client)
+void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client)
 {
     quint32 waylandState;
     switch (state) {
-    case InputDevice::KeyboardKeyState::Pressed:
+    case KeyboardKeyState::Pressed:
         waylandState = WL_KEYBOARD_KEY_STATE_PRESSED;
         break;
-    case InputDevice::KeyboardKeyState::Released:
+    case KeyboardKeyState::Released:
         waylandState = WL_KEYBOARD_KEY_STATE_RELEASED;
         break;
-    case InputDevice::KeyboardKeyState::AutoRepeat:
+    case KeyboardKeyState::AutoRepeat:
         Q_UNREACHABLE();
     }
 
@@ -194,7 +194,7 @@ void KeyboardInterface::sendKey(quint32 key, InputDevice::KeyboardKeyState state
     }
 }
 
-void KeyboardInterface::sendKey(quint32 key, InputDevice::KeyboardKeyState state)
+void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 {
     if (!d->focusedSurface) {
         return;

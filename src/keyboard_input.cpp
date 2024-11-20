@@ -87,7 +87,7 @@ public:
 
     void keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
+        if (event->state == KeyboardKeyState::AutoRepeat) {
             return;
         }
         Q_EMIT m_input->keyStateChanged(event->nativeScanCode, event->state);
@@ -108,7 +108,7 @@ public:
 
     void keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
+        if (event->state == KeyboardKeyState::AutoRepeat) {
             return;
         }
 
@@ -144,7 +144,7 @@ void KeyboardInputRedirection::init()
 
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
-            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputDevice::KeyboardKeyState::AutoRepeat, std::placeholders::_2, nullptr));
+            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::AutoRepeat, std::placeholders::_2, nullptr));
     m_input->installInputEventSpy(keyRepeatSpy);
 
     connect(workspace(), &QObject::destroyed, this, [this] {
@@ -245,23 +245,23 @@ void KeyboardInputRedirection::update()
     }
 }
 
-void KeyboardInputRedirection::processKey(uint32_t key, InputDevice::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
+void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!m_inited) {
         return;
     }
 
-    if (state == InputDevice::KeyboardKeyState::Pressed) {
+    if (state == KeyboardKeyState::Pressed) {
         if (!m_pressedKeys.contains(key)) {
             m_pressedKeys.append(key);
         }
-    } else if (state == InputDevice::KeyboardKeyState::Released) {
+    } else if (state == KeyboardKeyState::Released) {
         m_pressedKeys.removeOne(key);
     }
 
     const quint32 previousLayout = m_xkb->currentLayout();
-    if (state != InputDevice::KeyboardKeyState::AutoRepeat) {
+    if (state != KeyboardKeyState::AutoRepeat) {
         m_xkb->updateKey(key, state);
     }
 
@@ -288,7 +288,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputDevice::KeyboardKey
         inputmethod->forwardModifiers(InputMethod::NoForce);
     }
 
-    if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != InputDevice::KeyboardKeyState::Released) {
+    if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
     }
 }

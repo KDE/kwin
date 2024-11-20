@@ -1701,40 +1701,40 @@ bool VirtualInputDevice::isLidSwitch() const
 void keyboardKeyPressed(quint32 key, quint32 time)
 {
     auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();
-    Q_EMIT virtualKeyboard->keyChanged(key, InputDevice::KeyboardKeyState::Pressed, std::chrono::milliseconds(time), virtualKeyboard);
+    Q_EMIT virtualKeyboard->keyChanged(key, KeyboardKeyState::Pressed, std::chrono::milliseconds(time), virtualKeyboard);
 }
 
 void keyboardKeyReleased(quint32 key, quint32 time)
 {
     auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();
-    Q_EMIT virtualKeyboard->keyChanged(key, InputDevice::KeyboardKeyState::Released, std::chrono::milliseconds(time), virtualKeyboard);
+    Q_EMIT virtualKeyboard->keyChanged(key, KeyboardKeyState::Released, std::chrono::milliseconds(time), virtualKeyboard);
 }
 
-void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, InputDevice::PointerAxisSource source)
+void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, PointerAxisSource source)
 {
     auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerAxisChanged(InputDevice::PointerAxis::Horizontal, delta, discreteDelta, source, false, std::chrono::milliseconds(time), virtualPointer);
+    Q_EMIT virtualPointer->pointerAxisChanged(PointerAxis::Horizontal, delta, discreteDelta, source, false, std::chrono::milliseconds(time), virtualPointer);
     Q_EMIT virtualPointer->pointerFrame(virtualPointer);
 }
 
-void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, InputDevice::PointerAxisSource source)
+void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, PointerAxisSource source)
 {
     auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerAxisChanged(InputDevice::PointerAxis::Vertical, delta, discreteDelta, source, false, std::chrono::milliseconds(time), virtualPointer);
+    Q_EMIT virtualPointer->pointerAxisChanged(PointerAxis::Vertical, delta, discreteDelta, source, false, std::chrono::milliseconds(time), virtualPointer);
     Q_EMIT virtualPointer->pointerFrame(virtualPointer);
 }
 
 void pointerButtonPressed(quint32 button, quint32 time)
 {
     auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerButtonChanged(button, InputDevice::PointerButtonState::Pressed, std::chrono::milliseconds(time), virtualPointer);
+    Q_EMIT virtualPointer->pointerButtonChanged(button, PointerButtonState::Pressed, std::chrono::milliseconds(time), virtualPointer);
     Q_EMIT virtualPointer->pointerFrame(virtualPointer);
 }
 
 void pointerButtonReleased(quint32 button, quint32 time)
 {
     auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerButtonChanged(button, InputDevice::PointerButtonState::Released, std::chrono::milliseconds(time), virtualPointer);
+    Q_EMIT virtualPointer->pointerButtonChanged(button, PointerButtonState::Released, std::chrono::milliseconds(time), virtualPointer);
     Q_EMIT virtualPointer->pointerFrame(virtualPointer);
 }
 

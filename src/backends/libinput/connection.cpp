@@ -266,11 +266,11 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL: {
             const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
             const auto axes = pointerEvent->axis();
-            for (const InputDevice::PointerAxis &axis : axes) {
+            for (const PointerAxis &axis : axes) {
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   pointerEvent->scrollValueV120(axis),
-                                                                  InputDevice::PointerAxisSource::Wheel,
+                                                                  PointerAxisSource::Wheel,
                                                                   pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
@@ -281,11 +281,11 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_POINTER_SCROLL_FINGER: {
             const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
             const auto axes = pointerEvent->axis();
-            for (const InputDevice::PointerAxis &axis : axes) {
+            for (const PointerAxis &axis : axes) {
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
-                                                                  InputDevice::PointerAxisSource::Finger,
+                                                                  PointerAxisSource::Finger,
                                                                   pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());
@@ -296,11 +296,11 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS: {
             const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
             const auto axes = pointerEvent->axis();
-            for (const InputDevice::PointerAxis &axis : axes) {
+            for (const PointerAxis &axis : axes) {
                 Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
                                                                   pointerEvent->scrollValue(axis),
                                                                   0,
-                                                                  InputDevice::PointerAxisSource::Continuous,
+                                                                  PointerAxisSource::Continuous,
                                                                   pointerEvent->device()->isNaturalScroll(),
                                                                   pointerEvent->time(),
                                                                   pointerEvent->device());

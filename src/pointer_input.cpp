@@ -271,14 +271,14 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     input()->processFilters(std::bind(&InputEventFilter::pointerMotion, std::placeholders::_1, &event));
 }
 
-void PointerInputRedirection::processButton(uint32_t button, InputDevice::PointerButtonState state, std::chrono::microseconds time, InputDevice *device)
+void PointerInputRedirection::processButton(uint32_t button, PointerButtonState state, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
         return;
     }
 
-    if (state == InputDevice::PointerButtonState::Pressed) {
+    if (state == PointerButtonState::Pressed) {
         update();
     }
 
@@ -299,13 +299,13 @@ void PointerInputRedirection::processButton(uint32_t button, InputDevice::Pointe
     input()->processSpies(std::bind(&InputEventSpy::pointerButton, std::placeholders::_1, &event));
     input()->processFilters(std::bind(&InputEventFilter::pointerButton, std::placeholders::_1, &event));
 
-    if (state == InputDevice::PointerButtonState::Released) {
+    if (state == PointerButtonState::Released) {
         update();
     }
 }
 
-void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal delta, qint32 deltaV120,
-                                          InputDevice::PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device)
+void PointerInputRedirection::processAxis(PointerAxis axis, qreal delta, qint32 deltaV120,
+                                          PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -321,7 +321,7 @@ void PointerInputRedirection::processAxis(InputDevice::PointerAxis axis, qreal d
         .position = m_pos,
         .delta = delta,
         .deltaV120 = deltaV120,
-        .orientation = (axis == InputDevice::PointerAxis::Horizontal) ? Qt::Horizontal : Qt::Vertical,
+        .orientation = (axis == PointerAxis::Horizontal) ? Qt::Horizontal : Qt::Vertical,
         .source = source,
         .buttons = m_qtButtons,
         .modifiers = input()->keyboardModifiers(),
@@ -474,7 +474,7 @@ void PointerInputRedirection::processFrame(KWin::InputDevice *device)
 bool PointerInputRedirection::areButtonsPressed() const
 {
     for (auto state : m_buttons) {
-        if (state == InputDevice::PointerButtonState::Pressed) {
+        if (state == PointerButtonState::Pressed) {
             return true;
         }
     }
@@ -870,14 +870,14 @@ void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::mi
     Q_EMIT input()->globalPointerChanged(m_pos);
 }
 
-void PointerInputRedirection::updateButton(uint32_t button, InputDevice::PointerButtonState state)
+void PointerInputRedirection::updateButton(uint32_t button, PointerButtonState state)
 {
     m_buttons[button] = state;
 
     // update Qt buttons
     m_qtButtons = Qt::NoButton;
     for (auto it = m_buttons.constBegin(); it != m_buttons.constEnd(); ++it) {
-        if (it.value() == InputDevice::PointerButtonState::Released) {
+        if (it.value() == PointerButtonState::Released) {
             continue;
         }
         m_qtButtons |= buttonToQtMouseButton(it.key());

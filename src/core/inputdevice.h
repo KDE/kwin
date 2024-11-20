@@ -15,6 +15,30 @@
 namespace KWin
 {
 
+enum class PointerButtonState {
+    Released,
+    Pressed,
+};
+
+enum class PointerAxis {
+    Vertical,
+    Horizontal,
+};
+
+enum class PointerAxisSource {
+    Unknown,
+    Wheel,
+    Finger,
+    Continuous,
+    WheelTilt,
+};
+
+enum class KeyboardKeyState {
+    Released,
+    Pressed,
+    AutoRepeat,
+};
+
 class KWIN_EXPORT InputDeviceTabletTool : public QObject
 {
     Q_OBJECT
@@ -58,30 +82,6 @@ class KWIN_EXPORT InputDevice : public QObject
     Q_OBJECT
 
 public:
-    enum class PointerButtonState {
-        Released,
-        Pressed,
-    };
-
-    enum class PointerAxis {
-        Vertical,
-        Horizontal,
-    };
-
-    enum class PointerAxisSource {
-        Unknown,
-        Wheel,
-        Finger,
-        Continuous,
-        WheelTilt,
-    };
-
-    enum class KeyboardKeyState {
-        Released,
-        Pressed,
-        AutoRepeat,
-    };
-
     enum TabletEventType {
         Axis,
         Proximity,

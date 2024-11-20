@@ -297,11 +297,11 @@ public:
     /**
      * Marks the specified @a button as pressed or released based on @a state.
      */
-    void notifyPointerButton(quint32 button, InputDevice::PointerButtonState state);
+    void notifyPointerButton(quint32 button, PointerButtonState state);
     /**
      * @overload
      */
-    void notifyPointerButton(Qt::MouseButton button, InputDevice::PointerButtonState state);
+    void notifyPointerButton(Qt::MouseButton button, PointerButtonState state);
     void notifyPointerFrame();
     /**
      * @returns whether the @p button is pressed
@@ -327,7 +327,7 @@ public:
      * @param deltaV120 The high-resolution scrolling axis value.
      * @param source Describes how the axis event was physically generated.
      */
-    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, InputDevice::PointerAxisSource source, bool inverted = false);
+    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted = false);
     /**
      * @returns true if there is a pressed button with the given @p serial
      */
@@ -518,7 +518,7 @@ public:
     void setFocusedKeyboardSurface(SurfaceInterface *surface, const QList<quint32> &keys = {});
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *keyboard() const;
-    void notifyKeyboardKey(quint32 keyCode, InputDevice::KeyboardKeyState state);
+    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state);
     void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
     ///@}
 

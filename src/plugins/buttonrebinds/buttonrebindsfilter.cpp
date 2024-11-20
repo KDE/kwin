@@ -194,7 +194,7 @@ bool ButtonRebindsFilter::pointerButton(KWin::PointerButtonEvent *event)
         return false;
     }
 
-    return send(Pointer, {{}, event->button}, event->state == InputDevice::PointerButtonState::Pressed, event->timestamp);
+    return send(Pointer, {{}, event->button}, event->state == KWin::PointerButtonState::Pressed, event->timestamp);
 }
 
 bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)
@@ -321,7 +321,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
 
     const auto &key = keys[0];
     auto sendKey = [this, pressed, time](xkb_keycode_t key) {
-        auto state = pressed ? KWin::InputDevice::KeyboardKeyState::Pressed : KWin::InputDevice::KeyboardKeyState::Released;
+        auto state = pressed ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
         Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
     };
 
@@ -393,7 +393,7 @@ bool ButtonRebindsFilter::sendKeyModifiers(const Qt::KeyboardModifiers &modifier
     }
 
     auto sendKey = [this, pressed, time](xkb_keycode_t key) {
-        auto state = pressed ? KWin::InputDevice::KeyboardKeyState::Pressed : KWin::InputDevice::KeyboardKeyState::Released;
+        auto state = pressed ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
         Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
     };
 
@@ -416,7 +416,7 @@ bool ButtonRebindsFilter::sendKeyModifiers(const Qt::KeyboardModifiers &modifier
 bool ButtonRebindsFilter::sendMouseButton(quint32 button, bool pressed, std::chrono::microseconds time)
 {
     RebindScope scope;
-    Q_EMIT m_inputDevice.pointerButtonChanged(button, KWin::InputDevice::PointerButtonState(pressed), time, &m_inputDevice);
+    Q_EMIT m_inputDevice.pointerButtonChanged(button, KWin::PointerButtonState(pressed), time, &m_inputDevice);
     return true;
 }
 

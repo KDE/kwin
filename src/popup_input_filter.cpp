@@ -53,7 +53,7 @@ bool PopupInputFilter::pointerButton(PointerButtonEvent *event)
     if (m_popupWindows.isEmpty()) {
         return false;
     }
-    if (event->state == InputDevice::PointerButtonState::Pressed) {
+    if (event->state == PointerButtonState::Pressed) {
         auto pointerFocus = input()->findToplevel(event->position);
         if (!pointerFocus || !Window::belongToSameApplication(pointerFocus, m_popupWindows.constLast())) {
             // a press on a window (or no window) not belonging to the popup window
@@ -83,17 +83,17 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
 
     if (auto internalWindow = qobject_cast<InternalWindow *>(last)) {
         QWindowSystemInterface::handleExtendedKeyEvent(internalWindow->handle(),
-                                                       event->state != InputDevice::KeyboardKeyState::Released ? QEvent::KeyPress : QEvent::KeyRelease,
+                                                       event->state != KeyboardKeyState::Released ? QEvent::KeyPress : QEvent::KeyRelease,
                                                        event->key,
                                                        event->modifiers,
                                                        event->nativeScanCode,
                                                        event->nativeVirtualKey,
                                                        0,
                                                        event->text,
-                                                       event->state == InputDevice::KeyboardKeyState::AutoRepeat);
+                                                       event->state == KeyboardKeyState::AutoRepeat);
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
-            if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
+            if (event->state == KeyboardKeyState::AutoRepeat) {
                 return true;
             }
 

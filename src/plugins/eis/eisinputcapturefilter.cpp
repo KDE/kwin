@@ -46,7 +46,7 @@ bool EisInputCaptureFilter::pointerButton(PointerButtonEvent *event)
         return false;
     }
     if (const auto pointer = m_manager->activeCapture()->pointer()) {
-        eis_device_button_button(pointer, event->nativeButton, event->state == InputDevice::PointerButtonState::Pressed);
+        eis_device_button_button(pointer, event->nativeButton, event->state == PointerButtonState::Pressed);
     }
     return true;
 }
@@ -99,7 +99,7 @@ bool EisInputCaptureFilter::keyboardKey(KeyboardKeyEvent *event)
         return false;
     }
     if (const auto keyboard = m_manager->activeCapture()->keyboard()) {
-        eis_device_keyboard_key(keyboard, event->nativeScanCode, event->state != InputDevice::KeyboardKeyState::Released);
+        eis_device_keyboard_key(keyboard, event->nativeScanCode, event->state != KeyboardKeyState::Released);
         eis_device_frame(keyboard, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
     }
     return true;

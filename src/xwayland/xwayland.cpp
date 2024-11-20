@@ -100,8 +100,8 @@ public:
                 // This loop makes sure all key press events are reset before we switch back to the
                 // Xwayland client and the state is correctly restored.
                 for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
-                    if (it.value() == InputDevice::KeyboardKeyState::Pressed) {
-                        keyboard->sendKey(it.key(), InputDevice::KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
+                    if (it.value() == KeyboardKeyState::Pressed) {
+                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
                     }
                 }
                 m_modifiers = {};
@@ -370,7 +370,7 @@ public:
         if (!xwaylandClient) {
             return false;
         }
-        if (event->state == InputDevice::KeyboardKeyState::AutoRepeat) {
+        if (event->state == KeyboardKeyState::AutoRepeat) {
             return false;
         }
 
@@ -449,7 +449,7 @@ public:
         return false;
     }
 
-    bool updateKey(quint32 key, InputDevice::KeyboardKeyState state)
+    bool updateKey(quint32 key, KeyboardKeyState state)
     {
         auto it = m_states.find(key);
         if (it == m_states.end()) {
@@ -463,7 +463,7 @@ public:
         return true;
     }
 
-    QHash<quint32, InputDevice::KeyboardKeyState> m_states;
+    QHash<quint32, KeyboardKeyState> m_states;
     struct Modifiers
     {
         quint32 depressed = 0;

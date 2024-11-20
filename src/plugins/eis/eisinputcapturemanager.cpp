@@ -61,7 +61,7 @@ public:
         if (!manager->activeCapture()) {
             return;
         }
-        if (event->state != InputDevice::KeyboardKeyState::Pressed) {
+        if (event->state != KeyboardKeyState::Pressed) {
             return;
         }
         if (event->key == Qt::Key_Escape && event->modifiers == (Qt::ControlModifier | Qt::ShiftModifier)) {

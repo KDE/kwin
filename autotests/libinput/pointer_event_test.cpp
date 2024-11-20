@@ -97,12 +97,12 @@ void TestLibinputPointerEvent::testType()
 void TestLibinputPointerEvent::testButton_data()
 {
     QTest::addColumn<libinput_button_state>("buttonState");
-    QTest::addColumn<KWin::InputDevice::PointerButtonState>("expectedButtonState");
+    QTest::addColumn<KWin::PointerButtonState>("expectedButtonState");
     QTest::addColumn<quint32>("button");
     QTest::addColumn<quint32>("time");
 
-    QTest::newRow("pressed") << LIBINPUT_BUTTON_STATE_RELEASED << KWin::InputDevice::PointerButtonState::Released << quint32(BTN_RIGHT) << 100u;
-    QTest::newRow("released") << LIBINPUT_BUTTON_STATE_PRESSED << KWin::InputDevice::PointerButtonState::Pressed << quint32(BTN_LEFT) << 200u;
+    QTest::newRow("pressed") << LIBINPUT_BUTTON_STATE_RELEASED << KWin::PointerButtonState::Released << quint32(BTN_RIGHT) << 100u;
+    QTest::newRow("released") << LIBINPUT_BUTTON_STATE_PRESSED << KWin::PointerButtonState::Pressed << quint32(BTN_LEFT) << 200u;
 }
 
 void TestLibinputPointerEvent::testButton()
@@ -163,12 +163,12 @@ void TestLibinputPointerEvent::testScrollWheel()
     auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_SCROLL_WHEEL);
-    QCOMPARE(pe->axis().contains(KWin::InputDevice::PointerAxis::Horizontal), horizontal);
-    QCOMPARE(pe->axis().contains(KWin::InputDevice::PointerAxis::Vertical), vertical);
-    QCOMPARE(pe->scrollValue(KWin::InputDevice::PointerAxis::Horizontal), value.x());
-    QCOMPARE(pe->scrollValue(KWin::InputDevice::PointerAxis::Vertical), value.y());
-    QCOMPARE(pe->scrollValueV120(KWin::InputDevice::PointerAxis::Horizontal), valueV120.x());
-    QCOMPARE(pe->scrollValueV120(KWin::InputDevice::PointerAxis::Vertical), valueV120.y());
+    QCOMPARE(pe->axis().contains(KWin::PointerAxis::Horizontal), horizontal);
+    QCOMPARE(pe->axis().contains(KWin::PointerAxis::Vertical), vertical);
+    QCOMPARE(pe->scrollValue(KWin::PointerAxis::Horizontal), value.x());
+    QCOMPARE(pe->scrollValue(KWin::PointerAxis::Vertical), value.y());
+    QCOMPARE(pe->scrollValueV120(KWin::PointerAxis::Horizontal), valueV120.x());
+    QCOMPARE(pe->scrollValueV120(KWin::PointerAxis::Vertical), valueV120.y());
     QCOMPARE(pe->time(), pointerEvent->time);
 }
 
@@ -207,10 +207,10 @@ void TestLibinputPointerEvent::testScrollFinger()
     auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_SCROLL_FINGER);
-    QCOMPARE(pe->axis().contains(KWin::InputDevice::PointerAxis::Horizontal), horizontal);
-    QCOMPARE(pe->axis().contains(KWin::InputDevice::PointerAxis::Vertical), vertical);
-    QCOMPARE(pe->scrollValue(KWin::InputDevice::PointerAxis::Horizontal), value.x());
-    QCOMPARE(pe->scrollValue(KWin::InputDevice::PointerAxis::Vertical), value.y());
+    QCOMPARE(pe->axis().contains(KWin::PointerAxis::Horizontal), horizontal);
+    QCOMPARE(pe->axis().contains(KWin::PointerAxis::Vertical), vertical);
+    QCOMPARE(pe->scrollValue(KWin::PointerAxis::Horizontal), value.x());
+    QCOMPARE(pe->scrollValue(KWin::PointerAxis::Vertical), value.y());
     QCOMPARE(pe->time(), pointerEvent->time);
 }
 
@@ -246,10 +246,10 @@ void TestLibinputPointerEvent::testScrollContinuous()
     auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS);
-    QCOMPARE(pe->axis().contains(KWin::InputDevice::PointerAxis::Horizontal), horizontal);
-    QCOMPARE(pe->axis().contains(KWin::InputDevice::PointerAxis::Vertical), vertical);
-    QCOMPARE(pe->scrollValue(KWin::InputDevice::PointerAxis::Horizontal), value.x());
-    QCOMPARE(pe->scrollValue(KWin::InputDevice::PointerAxis::Vertical), value.y());
+    QCOMPARE(pe->axis().contains(KWin::PointerAxis::Horizontal), horizontal);
+    QCOMPARE(pe->axis().contains(KWin::PointerAxis::Vertical), vertical);
+    QCOMPARE(pe->scrollValue(KWin::PointerAxis::Horizontal), value.x());
+    QCOMPARE(pe->scrollValue(KWin::PointerAxis::Vertical), value.y());
     QCOMPARE(pe->time(), pointerEvent->time);
 }
 
