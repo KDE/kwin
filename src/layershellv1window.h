@@ -55,6 +55,7 @@ protected:
     void doSetPreferredColorDescription() override;
 
 private:
+    void handleConfigureAcknowledged(quint32 serial);
     void handleSizeChanged();
     void handleUnmapped();
     void handleCommitted();
@@ -72,6 +73,7 @@ private:
     QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;
     bool m_screenEdgeActive = false;
     WindowType m_windowType;
+    QList<quint32> m_configureEvents;
 };
 
 } // namespace KWin
