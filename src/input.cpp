@@ -2166,10 +2166,9 @@ public:
             qCWarning(KWIN_CORE) << "Unexpected tablet event type" << event;
             break;
         }
-        const quint32 MAX_VAL = 65535;
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
-            tool->sendPressure(MAX_VAL * event->pressure());
+            tool->sendPressure(event->pressure());
         }
         if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
             tool->sendTilt(event->xTilt(), event->yTilt());

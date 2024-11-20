@@ -128,7 +128,7 @@ public:
     void sendProximityOut();
     void sendUp();
     void sendDown();
-    void sendPressure(quint32 pressure);
+    void sendPressure(qreal pressure);
     void sendDistance(quint32 distance);
     void sendTilt(qreal degreesX, qreal degreesY);
     void sendRotation(qreal degrees);
