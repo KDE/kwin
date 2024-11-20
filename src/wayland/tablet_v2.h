@@ -129,7 +129,7 @@ public:
     void sendUp();
     void sendDown();
     void sendPressure(qreal pressure);
-    void sendDistance(quint32 distance);
+    void sendDistance(qreal distance);
     void sendTilt(qreal degreesX, qreal degreesY);
     void sendRotation(qreal degrees);
     void sendSlider(qint32 position);

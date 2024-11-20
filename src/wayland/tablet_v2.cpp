@@ -320,10 +320,10 @@ void TabletToolV2Interface::sendMotion(const QPointF &pos)
     }
 }
 
-void TabletToolV2Interface::sendDistance(uint32_t distance)
+void TabletToolV2Interface::sendDistance(qreal distance)
 {
     for (auto *resource : d->targetResources()) {
-        d->send_distance(resource->handle, distance);
+        d->send_distance(resource->handle, 65535 * distance);
     }
 }
 

@@ -486,7 +486,7 @@ void Connection::processEvents()
 
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
                                                         globalPos, pressure,
-                                                        tte->xTilt(), tte->yTilt(), tte->rotation(),
+                                                        tte->xTilt(), tte->yTilt(), tte->rotation(), tte->distance(),
                                                         tte->isTipDown(), tte->isNearby(), getOrCreateTool(tte->tool()), tte->time(), tte->device());
             }
             break;

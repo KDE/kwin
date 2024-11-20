@@ -695,7 +695,7 @@ void tabletPadButtonReleased(quint32 button, quint32 time);
 void tabletToolButtonPressed(quint32 button, quint32 time);
 void tabletToolButtonReleased(quint32 button, quint32 time);
 void tabletToolEvent(InputDevice::TabletEventType type, const QPointF &pos,
-                     qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
+                     qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
                      bool tipNear, quint32 time);
 
 /**

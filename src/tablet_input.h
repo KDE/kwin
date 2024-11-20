@@ -44,7 +44,7 @@ public:
     bool focusUpdatesBlocked() override;
 
     void tabletToolEvent(KWin::InputDevice::TabletEventType type, const QPointF &pos,
-                         qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
+                         qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
                          bool tipNear, InputDeviceTabletTool *tool,
                          std::chrono::microseconds time,
                          InputDevice *device);
