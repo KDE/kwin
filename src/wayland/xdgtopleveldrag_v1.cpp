@@ -46,7 +46,7 @@ private:
         toplevel = XdgToplevelInterface::get(toplevelResource);
         QObject::connect(toplevel, &XdgToplevelInterface::resetOccurred, q, [this] {
             toplevel = nullptr;
-        });
+        }, Qt::SingleShotConnection);
         pos = QPoint(x_offset, y_offset);
         Q_EMIT q->toplevelChanged();
     }
