@@ -2191,6 +2191,18 @@ public:
         case QEvent::TabletMove: {
             const auto pos = window->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
+            if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
+                tool->sendPressure(event->pressure());
+            }
+            if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
+                tool->sendTilt(event->xTilt(), event->yTilt());
+            }
+            if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
+                tool->sendRotation(event->rotation());
+            }
+            if (tool->hasCapability(TabletToolV2Interface::Distance)) {
+                tool->sendDistance(event->z());
+            }
             break;
         }
         case QEvent::TabletEnterProximity: {
@@ -2213,19 +2225,6 @@ public:
         default:
             qCWarning(KWIN_CORE) << "Unexpected tablet event type" << event;
             break;
-        }
-
-        if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
-            tool->sendPressure(event->pressure());
-        }
-        if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
-            tool->sendTilt(event->xTilt(), event->yTilt());
-        }
-        if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
-            tool->sendRotation(event->rotation());
-        }
-        if (tool->hasCapability(TabletToolV2Interface::Distance)) {
-            tool->sendDistance(event->z());
         }
 
         tool->sendFrame(event->timestamp());
