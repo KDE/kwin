@@ -340,10 +340,10 @@ void TabletToolV2Interface::sendFrame(uint32_t time)
     }
 }
 
-void TabletToolV2Interface::sendPressure(uint32_t pressure)
+void TabletToolV2Interface::sendPressure(qreal pressure)
 {
     for (auto *resource : d->targetResources()) {
-        d->send_pressure(resource->handle, pressure);
+        d->send_pressure(resource->handle, 65535 * pressure);
     }
 }
 
