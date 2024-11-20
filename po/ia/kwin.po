@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-19 00:42+0000\n"
+"POT-Creation-Date: 2024-11-20 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 11:32+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -373,67 +373,67 @@ msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
 msgstr "Delta"
 
-#: debug_console.cpp:257
+#: debug_console.cpp:258
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
 msgstr "Preme clave"
 
-#: debug_console.cpp:260
+#: debug_console.cpp:261
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
 msgstr "Abandona clave"
 
-#: debug_console.cpp:269
+#: debug_console.cpp:270
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
 msgstr "Shift"
 
-#: debug_console.cpp:273
+#: debug_console.cpp:274
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
 msgstr "Ctrl"
 
-#: debug_console.cpp:277
+#: debug_console.cpp:278
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
 msgstr "Alt"
 
-#: debug_console.cpp:281
+#: debug_console.cpp:282
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
 msgstr "Meta"
 
-#: debug_console.cpp:285
+#: debug_console.cpp:286
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
 msgstr "Keypad (Claviero numeric)"
 
-#: debug_console.cpp:289
+#: debug_console.cpp:290
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
 msgstr "Commuta de gruppo"
 
-#: debug_console.cpp:295
+#: debug_console.cpp:296
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
 msgstr "Repete"
 
-#: debug_console.cpp:299
+#: debug_console.cpp:300
 #, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
 msgstr "Keycode"
 
-#: debug_console.cpp:300
+#: debug_console.cpp:301
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
@@ -1222,7 +1222,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nomine de hospite: %1"
 
-#: input.cpp:3142
+#: input.cpp:3192
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -2423,12 +2423,12 @@ msgstr "Falleva a connecter contexto de PipeWire"
 msgid "Could not find window id %1"
 msgstr "Claude le fenestra executante sur %1"
 
-#: plugins/screencast/screencastmanager.cpp:81
+#: plugins/screencast/screencastmanager.cpp:82
 #, kde-format
 msgid "Could not find output"
 msgstr "Non poteva trovar sortita"
 
-#: plugins/screencast/screencastmanager.cpp:100
+#: plugins/screencast/screencastmanager.cpp:101
 #, kde-format
 msgid "Invalid region"
 msgstr "Region invalide"

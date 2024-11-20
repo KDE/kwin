@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1695503 2024-11-19 01:16:54Z scripty $
+# $Id: kwin.po 1695577 2024-11-20 01:16:41Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-19 00:42+0000\n"
+"POT-Creation-Date: 2024-11-20 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 07:31+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -388,67 +388,67 @@ msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
 msgstr "Delta"
 
-#: debug_console.cpp:257
+#: debug_console.cpp:258
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
 msgstr "Pritisk na tipko"
 
-#: debug_console.cpp:260
+#: debug_console.cpp:261
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
 msgstr "Spust tipke"
 
-#: debug_console.cpp:269
+#: debug_console.cpp:270
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
 msgstr "Shift"
 
-#: debug_console.cpp:273
+#: debug_console.cpp:274
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
 msgstr "Control"
 
-#: debug_console.cpp:277
+#: debug_console.cpp:278
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
 msgstr "Alt"
 
-#: debug_console.cpp:281
+#: debug_console.cpp:282
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
 msgstr "Meta"
 
-#: debug_console.cpp:285
+#: debug_console.cpp:286
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
 msgstr "Številčnica"
 
-#: debug_console.cpp:289
+#: debug_console.cpp:290
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
 msgstr "Preklop skupine"
 
-#: debug_console.cpp:295
+#: debug_console.cpp:296
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
 msgstr "Ponovitev"
 
-#: debug_console.cpp:299
+#: debug_console.cpp:300
 #, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
 msgstr "Koda tipke"
 
-#: debug_console.cpp:300
+#: debug_console.cpp:301
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
@@ -1236,7 +1236,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ime gostitelja: %1"
 
-#: input.cpp:3142
+#: input.cpp:3192
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -2436,12 +2436,12 @@ msgstr "Priklop na kontekst PipeWire ni uspel"
 msgid "Could not find window id %1"
 msgstr "Ni bilo mogoče najti okna id %1"
 
-#: plugins/screencast/screencastmanager.cpp:81
+#: plugins/screencast/screencastmanager.cpp:82
 #, kde-format
 msgid "Could not find output"
 msgstr "Ni bilo mogoče najti outputa"
 
-#: plugins/screencast/screencastmanager.cpp:100
+#: plugins/screencast/screencastmanager.cpp:101
 #, kde-format
 msgid "Invalid region"
 msgstr "Neveljavna regija"
