@@ -36,7 +36,7 @@ void BounceKeysFilter::loadConfig(const KConfigGroup &group)
 bool BounceKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 {
     switch (event->state) {
-    case KWin::KeyboardKeyState::AutoRepeat:
+    case KWin::KeyboardKeyState::Repeated:
     case KWin::KeyboardKeyState::Pressed:
         if (auto it = m_lastEvent.find(event->key); it == m_lastEvent.end()) {
             // first time is always good

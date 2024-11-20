@@ -90,10 +90,10 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
                                                        event->nativeVirtualKey,
                                                        0,
                                                        event->text,
-                                                       event->state == KeyboardKeyState::AutoRepeat);
+                                                       event->state == KeyboardKeyState::Repeated);
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
-            if (event->state == KeyboardKeyState::AutoRepeat) {
+            if (event->state == KeyboardKeyState::Repeated) {
                 return true;
             }
 

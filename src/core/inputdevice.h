@@ -36,7 +36,7 @@ enum class PointerAxisSource {
 enum class KeyboardKeyState {
     Released,
     Pressed,
-    AutoRepeat,
+    Repeated,
 };
 
 class KWIN_EXPORT InputDeviceTabletTool : public QObject

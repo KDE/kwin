@@ -241,7 +241,7 @@ bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
         return false;
     }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
-        if (event->state == KeyboardKeyState::AutoRepeat) {
+        if (event->state == KeyboardKeyState::Repeated) {
             return true;
         }
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
@@ -356,7 +356,7 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
-        if (event->state == KeyboardKeyState::AutoRepeat) {
+        if (event->state == KeyboardKeyState::Repeated) {
             // wayland client takes care of it
             return true;
         }
@@ -373,7 +373,7 @@ public:
                            event->nativeVirtualKey,
                            0,
                            event->text,
-                           event->state == KeyboardKeyState::AutoRepeat);
+                           event->state == KeyboardKeyState::Repeated);
         keyEvent.setAccepted(false);
         QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), &keyEvent);
         if (keyEvent.isAccepted()) {
@@ -573,7 +573,7 @@ public:
                            event->nativeVirtualKey,
                            0,
                            event->text,
-                           event->state == KeyboardKeyState::AutoRepeat);
+                           event->state == KeyboardKeyState::Repeated);
         keyEvent.setAccepted(false);
         effects->grabbedKeyboardEvent(&keyEvent);
         return true;
@@ -681,7 +681,7 @@ public:
         if (!window) {
             return false;
         }
-        if (event->state == KeyboardKeyState::AutoRepeat || event->state == KeyboardKeyState::Pressed) {
+        if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             window->keyPressEvent(event->key | event->modifiers);
         }
         if (window->isInteractiveMove() || window->isInteractiveResize()) {
@@ -795,7 +795,7 @@ public:
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
 
-        if (event->state == KeyboardKeyState::AutoRepeat || event->state == KeyboardKeyState::Pressed) {
+        if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             // x11 variant does this on key press, so do the same
             if (event->key == Qt::Key_Escape) {
                 cancel();
@@ -982,7 +982,7 @@ public:
                 m_powerDown.stop();
                 return ret;
             }
-        } else if (event->state == KeyboardKeyState::AutoRepeat || event->state == KeyboardKeyState::Pressed) {
+        } else if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
                 return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key);
             }
@@ -1716,7 +1716,7 @@ public:
             return false;
         }
 
-        if (event->state == KeyboardKeyState::AutoRepeat || event->state == KeyboardKeyState::Pressed) {
+        if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             workspace()->tabbox()->keyPress(event->modifiers | event->key);
         } else if (event->modifiersRelevantForGlobalShortcuts == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
@@ -1985,7 +1985,7 @@ public:
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->state == KeyboardKeyState::AutoRepeat) {
+        if (event->state == KeyboardKeyState::Repeated) {
             // handled by Wayland client
             return false;
         }

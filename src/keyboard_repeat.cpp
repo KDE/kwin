@@ -41,7 +41,7 @@ void KeyboardRepeat::handleKeyRepeat()
 
 void KeyboardRepeat::keyboardKey(KeyboardKeyEvent *event)
 {
-    if (event->state == KeyboardKeyState::AutoRepeat) {
+    if (event->state == KeyboardKeyState::Repeated) {
         return;
     }
     const quint32 key = event->nativeScanCode;

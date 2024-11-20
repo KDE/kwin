@@ -183,7 +183,7 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConne
     case KeyboardKeyState::Released:
         waylandState = WL_KEYBOARD_KEY_STATE_RELEASED;
         break;
-    case KeyboardKeyState::AutoRepeat:
+    case KeyboardKeyState::Repeated:
         Q_UNREACHABLE();
     }
 

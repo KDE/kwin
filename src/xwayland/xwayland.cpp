@@ -370,7 +370,7 @@ public:
         if (!xwaylandClient) {
             return false;
         }
-        if (event->state == KeyboardKeyState::AutoRepeat) {
+        if (event->state == KeyboardKeyState::Repeated) {
             return false;
         }
 

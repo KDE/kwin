@@ -253,7 +253,7 @@ void DebugConsoleFilter::keyboardKey(KeyboardKeyEvent *event)
     text.append(s_tableStart);
 
     switch (event->state) {
-    case KeyboardKeyState::AutoRepeat:
+    case KeyboardKeyState::Repeated:
     case KeyboardKeyState::Pressed:
         text.append(tableHeaderRow(i18nc("A key press event", "Key Press")));
         break;
@@ -293,7 +293,7 @@ void DebugConsoleFilter::keyboardKey(KeyboardKeyEvent *event)
         return ret;
     };
     text.append(timestampRow(event->timestamp));
-    text.append(tableRow(i18nc("Whether the event is an automatic key repeat", "Repeat"), event->state == KeyboardKeyState::AutoRepeat));
+    text.append(tableRow(i18nc("Whether the event is an automatic key repeat", "Repeat"), event->state == KeyboardKeyState::Repeated));
 
     const auto keyMetaObject = Qt::qt_getEnumMetaObject(Qt::Key());
     const auto enumerator = keyMetaObject->enumerator(keyMetaObject->indexOfEnumerator("Key"));
