@@ -680,6 +680,9 @@ void Workspace::updateXStackingOrder()
 {
     // we use our stacking order for managed windows, but X's for override-redirect windows
     Xcb::Tree tree(kwinApp()->x11RootWindow());
+    if (tree.isNull()) {
+        return;
+    }
     xcb_window_t *windows = tree.children();
 
     const auto count = tree.data()->children_len;
