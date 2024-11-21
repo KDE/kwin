@@ -171,7 +171,7 @@ void Item::setPosition(const QPointF &point)
 {
     if (m_position != point) {
         scheduleRepaint(boundingRect());
-        m_position = point;
+        m_position = point.toPoint();
         updateItemToSceneTransform();
         if (m_parentItem) {
             m_parentItem->updateBoundingRect();
