@@ -435,7 +435,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
                 && mode->size() == existingData.mode->size
                 && mode->refreshRate() == existingData.mode->refreshRate;
         });
-        const auto mode = modeIt == modes.end() ? kscreenChangeSet.mode.value_or(output->currentMode()).lock() : *modeIt;
+        const auto mode = modeIt == modes.end() ? kscreenChangeSet.mode.value_or(chooseMode(output)).lock() : *modeIt;
 
         const auto changeset = ret.changeSet(output);
         *changeset = {
