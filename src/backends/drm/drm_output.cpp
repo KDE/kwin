@@ -142,6 +142,9 @@ QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
 
 void DrmOutput::setDpmsMode(DpmsMode mode)
 {
+    if (mode == dpmsMode()) {
+        return;
+    }
     if (mode == DpmsMode::Off) {
         if (!m_turnOffTimer.isActive()) {
             updateDpmsMode(DpmsMode::AboutToTurnOff);
