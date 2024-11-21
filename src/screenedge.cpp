@@ -26,12 +26,13 @@
 #include "gestures.h"
 #include "main.h"
 #include "pointer_input.h"
+#include "screenedgegestures.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
-#include <window.h>
-#include <workspace.h>
+#include "window.h"
+#include "workspace.h"
 // DBus generated
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlocker_interface.h"
@@ -54,9 +55,6 @@ static const int DISTANCE_RESET = 30;
 
 // How large the touch target of the area recognizing touch gestures is
 static const int TOUCH_TARGET = 8;
-
-// How far the user needs to swipe before triggering an action.
-static const int MINIMUM_DELTA = 44;
 
 TouchCallback::TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback)
     : m_touchUpAction(touchUpAction)
@@ -96,45 +94,42 @@ Edge::Edge(ScreenEdges *parent)
     , m_pushBackBlocked(false)
     , m_client(nullptr)
     , m_output(nullptr)
-    , m_gesture(std::make_unique<SwipeGesture>(1))
+    , m_gesture(std::make_unique<ScreenEdgeGesture>(m_edges->gestureRecognizer(), SwipeDirection::Up, QRectF()))
 {
     connect(
-        m_gesture.get(), &Gesture::triggered, this, [this]() {
-            stopApproaching();
-            if (m_client) {
-                m_client->showOnScreenEdge();
-                unreserve();
-                return;
-            }
-            handleTouchAction();
-            handleTouchCallback();
-        },
-        Qt::QueuedConnection);
-    connect(m_gesture.get(), &SwipeGesture::started, this, &Edge::startApproaching);
-    connect(m_gesture.get(), &SwipeGesture::cancelled, this, &Edge::stopApproaching);
-    connect(m_gesture.get(), &SwipeGesture::cancelled, this, [this]() {
+        m_gesture.get(), &ScreenEdgeGesture::triggered, this, [this]() {
+        stopApproaching();
+        if (m_client) {
+            m_client->showOnScreenEdge();
+            unreserve();
+            return;
+        }
+        handleTouchAction();
+        handleTouchCallback();
+    }, Qt::QueuedConnection);
+    connect(m_gesture.get(), &ScreenEdgeGesture::started, this, &Edge::startApproaching);
+    connect(m_gesture.get(), &ScreenEdgeGesture::cancelled, this, &Edge::stopApproaching);
+    connect(m_gesture.get(), &ScreenEdgeGesture::cancelled, this, [this]() {
         if (!m_touchCallbacks.isEmpty() && m_touchCallbacks.constFirst().hasProgressCallback()) {
             handleTouchCallback();
         }
     });
-    connect(m_gesture.get(), &SwipeGesture::progress, this, [this](qreal progress) {
+    connect(m_gesture.get(), &ScreenEdgeGesture::progress, this, [this](const QPointF &delta, qreal progress) {
         int factor = progress * 256.0f;
         if (m_lastApproachingFactor != factor) {
             m_lastApproachingFactor = factor;
             Q_EMIT approaching(border(), m_lastApproachingFactor / 256.0f, m_approachGeometry);
         }
-    });
-    connect(m_gesture.get(), &SwipeGesture::deltaProgress, this, [this](const QPointF &progressDelta) {
         if (!m_touchCallbacks.isEmpty()) {
-            m_touchCallbacks.constFirst().progressCallback(border(), progressDelta, m_output);
+            m_touchCallbacks.constFirst().progressCallback(border(), delta, m_output);
         }
     });
     connect(this, &Edge::activatesForTouchGestureChanged, this, [this]() {
         if (isReserved()) {
             if (activatesForTouchGesture()) {
-                m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture.get());
+                m_edges->gestureRecognizer()->addGesture(m_gesture.get());
             } else {
-                m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture.get());
+                m_edges->gestureRecognizer()->removeGesture(m_gesture.get());
             }
         }
     });
@@ -589,9 +584,7 @@ void Edge::setGeometry(const QRect &geometry)
     m_approachGeometry = QRect(x, y, width, height);
 
     if (isScreenEdge()) {
-        const Output *output = workspace()->outputAt(m_geometry.center());
-        m_gesture->setStartGeometry(m_geometry);
-        m_gesture->setMinimumDelta(QPointF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
+        m_gesture->setGeometry(m_geometry);
     }
 }
 
@@ -615,13 +608,13 @@ void Edge::checkBlocking()
 void Edge::activate()
 {
     if (activatesForTouchGesture()) {
-        m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture.get());
+        m_edges->gestureRecognizer()->addGesture(m_gesture.get());
     }
 }
 
 void Edge::deactivate()
 {
-    m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture.get());
+    m_edges->gestureRecognizer()->removeGesture(m_gesture.get());
 }
 
 void Edge::startApproaching()
@@ -759,7 +752,11 @@ ScreenEdges::ScreenEdges()
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
     , m_cornerOffset(40)
-    , m_gestureRecognizer(new GestureRecognizer(this))
+    , m_gestureRecognizer(std::make_unique<ScreenEdgeGestureRecognizer>())
+{
+}
+
+ScreenEdges::~ScreenEdges()
 {
 }
 
@@ -1229,6 +1226,11 @@ ElectricBorderAction ScreenEdges::actionForTouchEdge(Edge *edge) const
 ElectricBorderAction ScreenEdges::actionForTouchBorder(ElectricBorder border) const
 {
     return m_touchCallbacks.value(border);
+}
+
+ScreenEdgeGestureRecognizer *ScreenEdges::gestureRecognizer() const
+{
+    return m_gestureRecognizer.get();
 }
 
 void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)

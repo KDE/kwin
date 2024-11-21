@@ -33,8 +33,6 @@ private Q_SLOTS:
     void testMinimumDeltaReached_data();
     void testMinimumDeltaReached();
     void testNotEmitCallbacksBeforeDirectionDecided();
-    void testSwipeGeometryStart_data();
-    void testSwipeGeometryStart();
 };
 
 void GestureTest::testMinimumDeltaReached_data()
@@ -309,38 +307,6 @@ void GestureTest::testNotEmitCallbacksBeforeDirectionDecided()
     recognizer.updatePinchGesture(1.5, 0, QPointF(0, 0));
     QCOMPARE(expandSpy.count(), 1);
     QCOMPARE(contractSpy.count(), 1);
-}
-
-void GestureTest::testSwipeGeometryStart_data()
-{
-    QTest::addColumn<QRect>("geometry");
-    QTest::addColumn<QPointF>("startPos");
-    QTest::addColumn<bool>("started");
-
-    QTest::newRow("top left") << QRect(0, 0, 10, 20) << QPointF(0, 0) << true;
-    QTest::newRow("top right") << QRect(0, 0, 10, 20) << QPointF(10, 0) << true;
-    QTest::newRow("bottom left") << QRect(0, 0, 10, 20) << QPointF(0, 20) << true;
-    QTest::newRow("bottom right") << QRect(0, 0, 10, 20) << QPointF(10, 20) << true;
-    QTest::newRow("x too small") << QRect(10, 20, 30, 40) << QPointF(9, 25) << false;
-    QTest::newRow("y too small") << QRect(10, 20, 30, 40) << QPointF(25, 19) << false;
-    QTest::newRow("x too large") << QRect(10, 20, 30, 40) << QPointF(41, 25) << false;
-    QTest::newRow("y too large") << QRect(10, 20, 30, 40) << QPointF(25, 61) << false;
-    QTest::newRow("inside") << QRect(10, 20, 30, 40) << QPointF(25, 25) << true;
-}
-
-void GestureTest::testSwipeGeometryStart()
-{
-    GestureRecognizer recognizer;
-    SwipeGesture gesture(1);
-    QFETCH(QRect, geometry);
-    gesture.setStartGeometry(geometry);
-
-    QSignalSpy startedSpy(&gesture, &SwipeGesture::started);
-
-    recognizer.registerSwipeGesture(&gesture);
-    QFETCH(QPointF, startPos);
-    recognizer.startSwipeGesture(startPos);
-    QTEST(!startedSpy.isEmpty(), "started");
 }
 
 QTEST_MAIN(GestureTest)

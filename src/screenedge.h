@@ -36,9 +36,9 @@ namespace KWin
 
 class Window;
 class Output;
-class GestureRecognizer;
+class ScreenEdgeGestureRecognizer;
 class ScreenEdges;
-class SwipeGesture;
+class ScreenEdgeGesture;
 
 class TouchCallback
 {
@@ -150,7 +150,7 @@ private:
     bool m_pushBackBlocked;
     Window *m_client;
     Output *m_output;
-    std::unique_ptr<SwipeGesture> m_gesture;
+    std::unique_ptr<ScreenEdgeGesture> m_gesture;
     QList<TouchCallback> m_touchCallbacks;
     friend class ScreenEdges;
 };
@@ -213,6 +213,7 @@ class KWIN_EXPORT ScreenEdges : public QObject
     Q_PROPERTY(int actionLeft READ actionLeft)
 public:
     explicit ScreenEdges();
+    ~ScreenEdges() override;
     /**
      * @internal
      */
@@ -321,10 +322,7 @@ public:
 
     ElectricBorderAction actionForTouchBorder(ElectricBorder border) const;
 
-    GestureRecognizer *gestureRecognizer() const
-    {
-        return m_gestureRecognizer;
-    }
+    ScreenEdgeGestureRecognizer *gestureRecognizer() const;
 
     bool remainActiveOnFullscreen() const;
     const std::vector<std::unique_ptr<Edge>> &edges() const;
@@ -389,7 +387,7 @@ private:
     ElectricBorderAction m_actionLeft;
     QMap<ElectricBorder, ElectricBorderAction> m_touchCallbacks;
     const int m_cornerOffset;
-    GestureRecognizer *m_gestureRecognizer;
+    std::unique_ptr<ScreenEdgeGestureRecognizer> m_gestureRecognizer;
     bool m_remainActiveOnFullscreen = false;
 };
 

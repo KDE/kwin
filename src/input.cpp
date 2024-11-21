@@ -43,6 +43,7 @@
 #include "internalwindow.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"
+#include "screenedgegestures.h"
 #include "virtualdesktops.h"
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1.h"
@@ -1873,45 +1874,21 @@ public:
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
-        // TODO: better check whether a touch sequence is in progress
-        if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
-            // cancel existing touch
-            workspace()->screenEdges()->gestureRecognizer()->cancelSwipeGesture();
-            m_touchInProgress = false;
-            m_id = 0;
-            return false;
-        }
-        if (workspace()->screenEdges()->gestureRecognizer()->startSwipeGesture(pos) > 0) {
-            m_touchInProgress = true;
-            m_id = id;
-            m_lastPos = pos;
-            return true;
-        }
-        return false;
+        return workspace()->screenEdges()->gestureRecognizer()->touchDown(id, pos);
     }
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
-        if (m_touchInProgress && m_id == id) {
-            workspace()->screenEdges()->gestureRecognizer()->updateSwipeGesture(pos - m_lastPos);
-            m_lastPos = pos;
-            return true;
-        }
-        return false;
+        return workspace()->screenEdges()->gestureRecognizer()->touchMotion(id, pos);
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override
     {
-        if (m_touchInProgress && m_id == id) {
-            workspace()->screenEdges()->gestureRecognizer()->endSwipeGesture();
-            m_touchInProgress = false;
-            return true;
-        }
+        return workspace()->screenEdges()->gestureRecognizer()->touchUp(id);
+    }
+    bool touchCancel() override
+    {
+        workspace()->screenEdges()->gestureRecognizer()->touchCancel();
         return false;
     }
-
-private:
-    bool m_touchInProgress = false;
-    qint32 m_id = 0;
-    QPointF m_lastPos;
 };
 
 /**

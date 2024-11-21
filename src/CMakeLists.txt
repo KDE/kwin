@@ -173,6 +173,7 @@ target_sources(kwin PRIVATE
     scene/windowitem.cpp
     scene/workspacescene.cpp
     screenedge.cpp
+    screenedgegestures.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
     scripting/gesturehandler.cpp
@@ -453,11 +454,11 @@ install(FILES
     gestures.h
     globalshortcuts.h
     group.h
-    idledetector.h
     idle_inhibition.h
+    idledetector.h
+    input.h
     input_event.h
     input_event_spy.h
-    input.h
     inputmethod.h
     inputpanelv1integration.h
     inputpanelv1window.h
@@ -488,6 +489,7 @@ install(FILES
     rulebooksettings.h
     rules.h
     screenedge.h
+    screenedgegestures.h
     screenlockerwatcher.h
     shadow.h
     sm.h
@@ -495,8 +497,8 @@ install(FILES
     tabletmodemanager.h
     touch_input.h
     useractions.h
-    virtualdesktopsdbustypes.h
     virtualdesktops.h
+    virtualdesktopsdbustypes.h
     virtualkeyboard_dbus.h
     wayland_server.h
     waylandshellintegration.h
