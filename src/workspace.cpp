@@ -1271,11 +1271,10 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
                             m_outputOrder.end());
     }
 
-    const QSet<Output *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
-    const QSet<Output *> outputsSet(m_outputs.constBegin(), m_outputs.constEnd());
-
-    const auto added = outputsSet - oldOutputsSet;
-    for (Output *output : added) {
+    for (Output *output : m_outputs) {
+        if (oldOutputs.contains(output)) {
+            continue;
+        }
         output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
@@ -1289,8 +1288,10 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 
     m_placementTracker->inhibit();
 
-    const auto removed = oldOutputsSet - outputsSet;
-    for (Output *output : removed) {
+    for (Output *output : oldOutputs) {
+        if (m_outputs.contains(output)) {
+            continue;
+        }
         Q_EMIT outputRemoved(output);
         auto tileManager = std::move(m_tileManagers[output]);
         m_tileManagers.erase(output);
@@ -1336,8 +1337,10 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     m_placementTracker->uninhibit();
     m_placementTracker->restore(getPlacementTrackerHash());
 
-    for (Output *output : removed) {
-        output->unref();
+    for (Output *output : oldOutputs) {
+        if (!m_outputs.contains(output)) {
+            output->unref();
+        }
     }
 
     Q_EMIT outputsChanged();
