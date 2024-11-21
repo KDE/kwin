@@ -62,21 +62,6 @@ public:
     SwipeDirection direction() const;
     void setDirection(SwipeDirection direction);
 
-    void setMinimumX(int x);
-    int minimumX() const;
-    bool minimumXIsRelevant() const;
-    void setMinimumY(int y);
-    int minimumY() const;
-    bool minimumYIsRelevant() const;
-
-    void setMaximumX(int x);
-    int maximumX() const;
-    bool maximumXIsRelevant() const;
-    void setMaximumY(int y);
-    int maximumY() const;
-    bool maximumYIsRelevant() const;
-    void setStartGeometry(const QRect &geometry);
-
     QPointF minimumDelta() const;
     void setMinimumDelta(const QPointF &delta);
     bool isMinimumDeltaRelevant() const;
@@ -158,8 +143,6 @@ public:
     void unregisterPinchGesture(PinchGesture *gesture);
 
     int startSwipeGesture(uint fingerCount);
-    int startSwipeGesture(const QPointF &startPos);
-
     void updateSwipeGesture(const QPointF &delta);
     void cancelSwipeGesture();
     void endSwipeGesture();
@@ -171,16 +154,12 @@ public:
 
 private:
     void cancelActiveGestures();
-    enum class StartPositionBehavior {
-        Relevant,
-        Irrelevant,
-    };
     enum class Axis {
         Horizontal,
         Vertical,
         None,
     };
-    int startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior);
+    int startSwipeGesture(uint fingerCount, const QPointF &startPos);
     QList<SwipeGesture *> m_swipeGestures;
     QList<PinchGesture *> m_pinchGestures;
     QList<SwipeGesture *> m_activeSwipeGestures;
