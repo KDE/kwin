@@ -217,6 +217,22 @@ void ConsoleKitSession::switchTo(uint terminal)
     QDBusConnection::systemBus().asyncCall(message);
 }
 
+FileDescriptor ConsoleKitSession::delaySleep(const QString &reason)
+{
+    QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_seatPath,
+                                                          s_seatInterface,
+                                                          QStringLiteral("Inhibit"));
+    message.setArguments({QStringLiteral("sleep"), QStringLiteral("compositor"), reason, QStringLiteral("delay")});
+
+    const QDBusMessage reply = QDBusConnection::systemBus().call(message);
+    if (reply.type() == QDBusMessage::ErrorMessage) {
+        qCWarning(KWIN_CORE, "Failed to delay sleep: %s", qPrintable(reply.errorMessage()));
+        return FileDescriptor{};
+    }
+    const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
+    return FileDescriptor{descriptor.fileDescriptor()};
+}
+
 ConsoleKitSession::ConsoleKitSession(const QString &sessionPath)
     : m_sessionPath(sessionPath)
 {
@@ -343,7 +359,9 @@ void ConsoleKitSession::handlePropertiesChanged(const QString &interfaceName, co
 
 void ConsoleKitSession::handlePrepareForSleep(bool sleep)
 {
-    if (!sleep) {
+    if (sleep) {
+        Q_EMIT aboutToSleep();
+    } else {
         Q_EMIT awoke();
     }
 }

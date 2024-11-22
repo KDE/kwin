@@ -11,6 +11,7 @@
 #include "drm_abstract_output.h"
 #include "drm_object.h"
 #include "drm_plane.h"
+#include "utils/filedescriptor.h"
 
 #include <QList>
 #include <QObject>
@@ -92,6 +93,7 @@ private:
     const std::shared_ptr<DrmConnector> m_connector;
 
     QTimer m_turnOffTimer;
+    FileDescriptor m_sleepInhibitor;
     DrmLease *m_lease = nullptr;
 
     QVector3D m_channelFactors = {1, 1, 1};

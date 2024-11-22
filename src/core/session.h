@@ -7,6 +7,7 @@
 #pragma once
 
 #include "effect/globals.h"
+#include "utils/filedescriptor.h"
 
 #include <QObject>
 #include <QString>
@@ -86,11 +87,17 @@ public:
      */
     virtual void switchTo(uint terminal) = 0;
 
+    virtual FileDescriptor delaySleep(const QString &reason) = 0;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the session is resuming from suspend.
      */
     void awoke();
+    /**
+     * This signal is emitted before the session goes to suspend
+     */
+    void aboutToSleep();
     /**
      * This signal is emitted when the active state of the session has changed.
      */
