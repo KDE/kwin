@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -1225,7 +1225,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -4350,7 +4350,7 @@ msgstr "উইন্ডো কিল করুন"
 msgid "Activate Window (%1)"
 msgstr "উইন্ডো সক্রিয় করুন (%1)"
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr ""

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2019-09-23 21:11+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -1207,7 +1207,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -4246,7 +4246,7 @@ msgstr ""
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr "номаълум"

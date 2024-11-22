@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-23 15:20+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1229,7 +1229,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Makine adı: %1"
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr "Dokunmatik Yüzey"
@@ -4217,7 +4217,7 @@ msgstr "Pencereyi Öldür"
 msgid "Activate Window (%1)"
 msgstr "Pencereyi Etkinleştir (%1)"
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr "bilinmiyor"

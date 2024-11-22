@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-26 10:00+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1216,7 +1216,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "اسم المضيف: %1"
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"
@@ -4195,7 +4195,7 @@ msgstr "اقتل النّافذة"
 msgid "Activate Window (%1)"
 msgstr "فعّل النّافذة (%1)"
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr "مجهول"

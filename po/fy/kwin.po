@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2010-07-20 13:46+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -1223,7 +1223,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -4380,7 +4380,7 @@ msgstr "Finster ôfbrekke"
 msgid "Activate Window (%1)"
 msgstr "Aktivearje finster (%1)"
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr ""

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 10:35+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -1234,7 +1234,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Hostnaam: %1"
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -4235,7 +4235,7 @@ msgstr "Venster geforceerd sluiten"
 msgid "Activate Window (%1)"
 msgstr "Venster (%1) activeren"
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr "onbekend"

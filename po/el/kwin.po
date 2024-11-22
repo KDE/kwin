@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1233,7 +1233,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Όνομα υπολογιστή: %1"
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr "Επιφάνεια αφής"
@@ -4309,7 +4309,7 @@ msgstr "Σκότωμα παραθύρου"
 msgid "Activate Window (%1)"
 msgstr "Ενεργοποίηση παραθύρου (%1)"
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr "άγνωστη"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-20 00:41+0000\n"
+"POT-Creation-Date: 2024-11-22 00:41+0000\n"
 "PO-Revision-Date: 2024-10-27 12:38+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1222,7 +1222,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "புரவன் பெயர்: %1"
 
-#: input.cpp:3192
+#: input.cpp:3144
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"
@@ -4200,7 +4200,7 @@ msgstr "சாளரத்தை கட்டாயமாக மூடு"
 msgid "Activate Window (%1)"
 msgstr "சாளரத்தை செயல்படுத்து (%1)"
 
-#: utils/edid.cpp:263
+#: utils/edid.cpp:316
 #, kde-format
 msgid "unknown"
 msgstr "தெரியாதது"
