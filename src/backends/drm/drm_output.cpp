@@ -117,12 +117,17 @@ DrmLease *DrmOutput::lease() const
     return m_lease;
 }
 
+bool DrmOutput::shouldDisableCursorPlane() const
+{
+    // The kernel rejects async commits that change anything but the primary plane FB_ID
+    // This disables the hardware cursor, so it doesn't interfere with that
+    return m_desiredPresentationMode == PresentationMode::Async || m_desiredPresentationMode == PresentationMode::AdaptiveAsync
+        || m_pipeline->amdgpuVrrWorkaroundActive();
+}
+
 bool DrmOutput::updateCursorLayer()
 {
-    const bool tearingDesired = m_desiredPresentationMode == PresentationMode::Async || m_desiredPresentationMode == PresentationMode::AdaptiveAsync;
-    if (m_pipeline->gpu()->atomicModeSetting() && tearingDesired && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
-        // The kernel rejects async commits that change anything but the primary plane FB_ID
-        // This disables the hardware cursor, so it doesn't interfere with that
+    if (m_pipeline->gpu()->atomicModeSetting() && shouldDisableCursorPlane() && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
         return false;
     }
     return m_pipeline->updateCursor();

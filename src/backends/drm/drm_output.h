@@ -50,6 +50,7 @@ public:
     void revertQueuedChanges();
     void updateDpmsMode(DpmsMode dpmsMode);
 
+    bool shouldDisableCursorPlane() const;
     bool updateCursorLayer() override;
 
     DrmLease *lease() const;
