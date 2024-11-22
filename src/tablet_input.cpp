@@ -231,7 +231,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType 
     update();
     workspace()->setActiveOutput(pos);
 
-    const auto button = m_tipDown ? Qt::LeftButton : Qt::NoButton;
+    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
 
     // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
     const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
@@ -246,9 +246,6 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
     input()->processFilters(
         std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
-
-    m_tipDown = tipDown;
-    m_tipNear = tipNear;
 }
 
 void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)

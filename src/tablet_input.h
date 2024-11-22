@@ -73,9 +73,6 @@ private:
     void trackNextOutput();
     void ensureTabletTool(InputDeviceTabletTool *tool);
 
-    bool m_tipDown = false;
-    bool m_tipNear = false;
-
     QPointF m_lastPosition;
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
