@@ -47,7 +47,7 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPl
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 {
-    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->amdgpuVrrWorkaroundActive()) {
+    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->output()->shouldDisableCursorPlane()) {
         return std::nullopt;
     }
     // note that this allows blending to happen in sRGB or PQ encoding with the cursor plane.
