@@ -90,6 +90,17 @@ Outputs DrmBackend::outputs() const
 
 bool DrmBackend::initialize()
 {
+    connect(m_session, &Session::aboutToSleep, this, [this]() {
+        for (auto output : std::as_const(m_outputs)) {
+            output->setDpmsMode(Output::DpmsMode::Off);
+        }
+    });
+    connect(m_session, &Session::awoke, this, [this]() {
+        // TODO make powerdevil do this instead
+        for (auto output : std::as_const(m_outputs)) {
+            output->setDpmsMode(Output::DpmsMode::On);
+        }
+    });
     connect(m_session, &Session::devicePaused, this, [this](dev_t deviceId) {
         if (const auto gpu = findGpu(deviceId)) {
             gpu->setActive(false);
