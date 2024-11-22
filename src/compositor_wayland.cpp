@@ -480,13 +480,16 @@ void WaylandCompositor::addOutput(Output *output)
             outputLayer->setEnabled(true);
             return output->updateCursorLayer();
         };
+        const bool wasHardwareCursor = outputLayer && outputLayer->isEnabled();
         if (renderHardwareCursor()) {
             cursorLayer->setVisible(false);
             return true;
         } else {
-            if (outputLayer && outputLayer->isEnabled()) {
+            if (outputLayer) {
                 outputLayer->setEnabled(false);
-                output->updateCursorLayer();
+                if (wasHardwareCursor) {
+                    output->updateCursorLayer();
+                }
             }
             cursorLayer->setVisible(cursor->isOnOutput(output));
             cursorLayer->setGeometry(outputLocalRect);
