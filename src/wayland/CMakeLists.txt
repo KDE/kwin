@@ -37,6 +37,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/drm.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-color-management-v1.xml
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-data-control-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
 

@@ -49,7 +49,7 @@ Q_SIGNALS:
 
 private:
     friend class DataControlDeviceManagerV1InterfacePrivate;
-    explicit DataControlDeviceV1Interface(SeatInterface *seat, wl_resource *resource);
+    explicit DataControlDeviceV1Interface(SeatInterface *seat, wl_resource *resource, bool supportPrimarySelection = true);
 
     std::unique_ptr<DataControlDeviceV1InterfacePrivate> d;
 };

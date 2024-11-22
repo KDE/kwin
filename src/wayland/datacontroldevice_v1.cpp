@@ -26,6 +26,7 @@ public:
     DataControlOfferV1Interface *createDataOffer(AbstractDataSource *source);
 
     DataControlDeviceV1Interface *q;
+    bool supportsPrimarySelection;
     QPointer<SeatInterface> seat;
     QPointer<DataControlSourceV1Interface> selection;
     QPointer<DataControlSourceV1Interface> primarySelection;
@@ -110,10 +111,11 @@ void DataControlDeviceV1InterfacePrivate::ext_data_control_device_v1_destroy_res
     delete q;
 }
 
-DataControlDeviceV1Interface::DataControlDeviceV1Interface(SeatInterface *seat, wl_resource *resource)
+DataControlDeviceV1Interface::DataControlDeviceV1Interface(SeatInterface *seat, wl_resource *resource, bool supportPrimarySelection)
     : QObject()
     , d(new DataControlDeviceV1InterfacePrivate(this, seat, resource))
 {
+    d->supportsPrimarySelection = supportPrimarySelection;
     SeatInterfacePrivate *seatPrivate = SeatInterfacePrivate::get(seat);
     seatPrivate->registerDataControlDevice(this);
 }
@@ -143,8 +145,10 @@ void DataControlDeviceV1Interface::sendSelection(AbstractDataSource *other)
 
 void DataControlDeviceV1Interface::sendPrimarySelection(AbstractDataSource *other)
 {
-    DataControlOfferV1Interface *offer = d->createDataOffer(other);
-    d->send_primary_selection(offer ? offer->resource() : nullptr);
+    if (d->supportsPrimarySelection) {
+        DataControlOfferV1Interface *offer = d->createDataOffer(other);
+        d->send_primary_selection(offer ? offer->resource() : nullptr);
+    }
 }
 }
 
