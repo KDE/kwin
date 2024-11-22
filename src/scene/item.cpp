@@ -5,6 +5,7 @@
 */
 
 #include "scene/item.h"
+#include "core/pixelgrid.h"
 #include "core/renderlayer.h"
 #include "scene/scene.h"
 #include "utils/common.h"
@@ -143,9 +144,11 @@ void Item::setScene(Scene *scene)
         return;
     }
     if (m_scene) {
-        for (const auto &dirty : std::as_const(m_repaints)) {
+        for (auto it = m_repaints.constBegin(); it != m_repaints.constEnd(); ++it) {
+            SceneDelegate *delegate = it.key();
+            const QRegion &dirty = it.value();
             if (!dirty.isEmpty()) {
-                m_scene->addRepaint(dirty);
+                m_scene->addRepaint(delegate, dirty);
             }
         }
         m_repaints.clear();
@@ -292,6 +295,49 @@ QRectF Item::mapFromScene(const QRectF &rect) const
     return m_sceneToItemTransform.mapRect(rect);
 }
 
+QRect Item::paintedArea(SceneDelegate *delegate, const QRectF &rect) const
+{
+    const qreal scale = delegate->scale();
+
+    QRectF snapped = snapToPixelGridF(scaledRect(rect, scale));
+    for (const Item *item = this; item; item = item->parentItem()) {
+        snapped = item->transform()
+                      .mapRect(snapped)
+                      .translated(snapToPixelGridF(item->position() * scale));
+    }
+
+    return scaledRect(snapped, 1.0 / scale).toAlignedRect();
+}
+
+QRegion Item::paintedArea(SceneDelegate *delegate, const QRegion &region) const
+{
+    if (region.isEmpty()) {
+        return QRegion();
+    }
+
+    const qreal scale = delegate->scale();
+
+    QList<QRectF> parts;
+    parts.reserve(region.rectCount());
+    for (const QRect &rect : region) {
+        parts.append(snapToPixelGridF(scaledRect(rect, scale)));
+    }
+
+    for (const Item *item = this; item; item = item->parentItem()) {
+        for (QRectF &part : parts) {
+            part = item->transform()
+                       .mapRect(part)
+                       .translated(snapToPixelGridF(item->position() * scale));
+        }
+    }
+
+    QRegion ret;
+    for (const QRectF &part : parts) {
+        ret |= scaledRect(part, 1.0 / scale).toAlignedRect();
+    }
+    return ret;
+}
+
 void Item::stackBefore(Item *sibling)
 {
     if (Q_UNLIKELY(!sibling)) {
@@ -367,10 +413,9 @@ void Item::scheduleRepaintInternal(const QRegion &region)
     if (Q_UNLIKELY(!m_scene)) {
         return;
     }
-    const QRegion globalRegion = mapToScene(region);
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
-        const QRegion dirtyRegion = globalRegion & delegate->viewport();
+        const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
         if (!dirtyRegion.isEmpty()) {
             m_repaints[delegate] += dirtyRegion;
             delegate->layer()->scheduleRepaint(this);
@@ -383,8 +428,7 @@ void Item::scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &regio
     if (Q_UNLIKELY(!m_scene)) {
         return;
     }
-    const QRegion globalRegion = mapToScene(region);
-    const QRegion dirtyRegion = globalRegion & delegate->viewport();
+    const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
     if (!dirtyRegion.isEmpty()) {
         m_repaints[delegate] += dirtyRegion;
         delegate->layer()->scheduleRepaint(this);
@@ -399,11 +443,25 @@ void Item::scheduleFrame()
     if (Q_UNLIKELY(!m_scene)) {
         return;
     }
-    const QRect geometry = mapToScene(rect()).toRect();
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
+        const QRect geometry = paintedArea(delegate, rect());
         if (delegate->viewport().intersects(geometry)) {
             delegate->layer()->scheduleRepaint(this);
+        }
+    }
+}
+
+void Item::scheduleSceneRepaintInternal(const QRegion &region)
+{
+    if (Q_UNLIKELY(!m_scene)) {
+        return;
+    }
+    const QList<SceneDelegate *> delegates = m_scene->delegates();
+    for (SceneDelegate *delegate : delegates) {
+        const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
+        if (!dirtyRegion.isEmpty()) {
+            m_scene->addRepaint(delegate, dirtyRegion);
         }
     }
 }
@@ -478,11 +536,8 @@ void Item::scheduleSceneRepaint(const QRectF &region)
 
 void Item::scheduleSceneRepaint(const QRegion &region)
 {
-    if (!m_scene) {
-        return;
-    }
     if (isVisible()) {
-        m_scene->addRepaint(mapToScene(region));
+        scheduleSceneRepaintInternal(region);
     }
 }
 
@@ -500,9 +555,7 @@ void Item::updateEffectiveVisibility()
 
     m_effectiveVisible = effectiveVisible;
     if (!m_effectiveVisible) {
-        if (m_scene) {
-            m_scene->addRepaint(mapToScene(boundingRect()).toAlignedRect());
-        }
+        scheduleSceneRepaintInternal(boundingRect().toAlignedRect());
     } else {
         scheduleRepaintInternal(boundingRect().toAlignedRect());
     }

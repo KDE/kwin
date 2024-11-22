@@ -71,6 +71,7 @@ public:
     ItemRenderer *renderer() const;
 
     void addRepaint(const QRegion &region);
+    void addRepaint(SceneDelegate *delegate, const QRegion &region);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     virtual QRegion damage() const;

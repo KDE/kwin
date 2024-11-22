@@ -105,6 +105,11 @@ void Scene::addRepaint(const QRegion &region)
     }
 }
 
+void Scene::addRepaint(SceneDelegate *delegate, const QRegion &region)
+{
+    delegate->layer()->addRepaint(region.translated(-delegate->viewport().topLeft()));
+}
+
 QRegion Scene::damage() const
 {
     return QRegion();
