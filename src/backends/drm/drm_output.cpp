@@ -20,6 +20,7 @@
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "core/renderloop_p.h"
+#include "core/session.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "utils/kernel.h"
@@ -78,6 +79,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
             // in case of failure, undo aboutToTurnOff() from setDpmsMode()
             Q_EMIT wakeUp();
         }
+        m_sleepInhibitor.reset();
     });
 }
 
@@ -155,12 +157,14 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
             updateDpmsMode(DpmsMode::AboutToTurnOff);
             Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
             m_turnOffTimer.start();
+            m_sleepInhibitor = m_gpu->platform()->session()->delaySleep("dpms animation");
         }
     } else {
         if (m_turnOffTimer.isActive() || (mode != dpmsMode() && setDrmDpmsMode(mode))) {
             Q_EMIT wakeUp();
         }
         m_turnOffTimer.stop();
+        m_sleepInhibitor.reset();
     }
 }
 

@@ -51,6 +51,11 @@ void NoopSession::switchTo(uint terminal)
 {
 }
 
+FileDescriptor NoopSession::delaySleep(const QString &reason)
+{
+    return FileDescriptor{};
+}
+
 } // namespace KWin
 
 #include "moc_session_noop.cpp"
