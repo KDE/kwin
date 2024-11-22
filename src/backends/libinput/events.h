@@ -181,11 +181,7 @@ public:
     SwitchEvent(libinput_event *event, libinput_event_type type);
     ~SwitchEvent() override;
 
-    enum class State {
-        Off,
-        On
-    };
-    State state() const;
+    SwitchState state() const;
 
     std::chrono::microseconds time() const;
 

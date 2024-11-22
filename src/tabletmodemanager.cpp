@@ -57,10 +57,10 @@ public:
         }
 
         switch (event->state) {
-        case SwitchEvent::State::Off:
+        case SwitchState::Off:
             m_parent->setIsTablet(false);
             break;
-        case SwitchEvent::State::On:
+        case SwitchState::On:
             m_parent->setIsTablet(true);
             break;
         default:

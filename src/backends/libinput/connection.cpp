@@ -445,16 +445,7 @@ void Connection::processEvents()
         }
         case LIBINPUT_EVENT_SWITCH_TOGGLE: {
             SwitchEvent *se = static_cast<SwitchEvent *>(event.get());
-            switch (se->state()) {
-            case SwitchEvent::State::Off:
-                Q_EMIT se->device()->switchToggledOff(se->time(), se->device());
-                break;
-            case SwitchEvent::State::On:
-                Q_EMIT se->device()->switchToggledOn(se->time(), se->device());
-                break;
-            default:
-                Q_UNREACHABLE();
-            }
+            Q_EMIT se->device()->switchToggle(se->state(), se->time(), se->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_TOOL_AXIS:

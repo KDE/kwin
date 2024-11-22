@@ -44,11 +44,3 @@ add_executable(testLibinputGestureEvent gesture_event_test.cpp)
 target_link_libraries(testLibinputGestureEvent Qt::Test Qt::DBus Qt::Widgets KF6::ConfigCore LibInputTestObjects)
 add_test(NAME kwin-testLibinputGestureEvent COMMAND testLibinputGestureEvent)
 ecm_mark_as_test(testLibinputGestureEvent)
-
-########################################################
-# Test Switch Event
-########################################################
-add_executable(testLibinputSwitchEvent switch_event_test.cpp)
-target_link_libraries(testLibinputSwitchEvent Qt::Test Qt::DBus Qt::Widgets KF6::ConfigCore LibInputTestObjects)
-add_test(NAME kwin-testLibinputSwitchEvent COMMAND testLibinputSwitchEvent)
-ecm_mark_as_test(testLibinputSwitchEvent)

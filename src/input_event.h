@@ -75,13 +75,8 @@ struct KeyboardKeyEvent
 
 struct SwitchEvent
 {
-    enum class State {
-        Off,
-        On
-    };
-
     InputDevice *device;
-    State state;
+    SwitchState state;
     std::chrono::microseconds timestamp;
 };
 

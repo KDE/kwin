@@ -26,7 +26,7 @@ bool LidSwitchTracker::isLidClosed() const
 void LidSwitchTracker::switchEvent(KWin::SwitchEvent *event)
 {
     if (event->device->isLidSwitch()) {
-        const bool state = event->state == SwitchEvent::State::On;
+        const bool state = event->state == SwitchState::On;
         if (state != m_isLidClosed) {
             m_isLidClosed = state;
             Q_EMIT lidStateChanged();

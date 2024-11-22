@@ -473,10 +473,10 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
     text.append(tableRow(i18nc("A hardware switch", "Switch"), switchName));
     QString switchState;
     switch (event->state) {
-    case SwitchEvent::State::Off:
+    case SwitchState::Off:
         switchState = i18nc("The hardware switch got turned off", "Off");
         break;
-    case SwitchEvent::State::On:
+    case SwitchState::On:
         switchState = i18nc("The hardware switch got turned on", "On");
         break;
     default:

@@ -2985,7 +2985,7 @@ void InputRedirection::addInputDevice(InputDevice *device)
     connect(device, &InputDevice::touchCanceled, m_touch, &TouchInputRedirection::cancel);
     connect(device, &InputDevice::touchFrame, m_touch, &TouchInputRedirection::frame);
 
-    auto handleSwitchEvent = [this](SwitchEvent::State state, std::chrono::microseconds time, InputDevice *device) {
+    connect(device, &InputDevice::switchToggle, this, [this](SwitchState state, std::chrono::microseconds time, InputDevice *device) {
         SwitchEvent event{
             .device = device,
             .state = state,
@@ -2993,11 +2993,7 @@ void InputRedirection::addInputDevice(InputDevice *device)
         };
         processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
         processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
-    };
-    connect(device, &InputDevice::switchToggledOn, this,
-            std::bind(handleSwitchEvent, SwitchEvent::State::On, std::placeholders::_1, std::placeholders::_2));
-    connect(device, &InputDevice::switchToggledOff, this,
-            std::bind(handleSwitchEvent, SwitchEvent::State::Off, std::placeholders::_1, std::placeholders::_2));
+    });
 
     connect(device, &InputDevice::tabletToolEvent,
             m_tablet, &TabletInputRedirection::tabletToolEvent);

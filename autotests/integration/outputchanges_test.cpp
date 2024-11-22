@@ -1098,15 +1098,15 @@ void OutputChangesTest::testLaptopLidClosed()
     input()->addInputDevice(lidSwitch.get());
 
     auto timestamp = 1ms;
-    Q_EMIT lidSwitch->switchToggledOff(timestamp++, lidSwitch.get());
+    Q_EMIT lidSwitch->switchToggle(SwitchState::Off, timestamp++, lidSwitch.get());
     QVERIFY(internal->isEnabled());
     QVERIFY(external->isEnabled());
 
-    Q_EMIT lidSwitch->switchToggledOn(timestamp++, lidSwitch.get());
+    Q_EMIT lidSwitch->switchToggle(SwitchState::On, timestamp++, lidSwitch.get());
     QVERIFY(!internal->isEnabled());
     QVERIFY(external->isEnabled());
 
-    Q_EMIT lidSwitch->switchToggledOff(timestamp++, lidSwitch.get());
+    Q_EMIT lidSwitch->switchToggle(SwitchState::Off, timestamp++, lidSwitch.get());
     QVERIFY(internal->isEnabled());
     QVERIFY(external->isEnabled());
 

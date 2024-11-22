@@ -316,17 +316,17 @@ SwitchEvent::SwitchEvent(libinput_event *event, libinput_event_type type)
 
 SwitchEvent::~SwitchEvent() = default;
 
-SwitchEvent::State SwitchEvent::state() const
+SwitchState SwitchEvent::state() const
 {
     switch (libinput_event_switch_get_switch_state(m_switchEvent)) {
     case LIBINPUT_SWITCH_STATE_OFF:
-        return State::Off;
+        return SwitchState::Off;
     case LIBINPUT_SWITCH_STATE_ON:
-        return State::On;
+        return SwitchState::On;
     default:
         Q_UNREACHABLE();
     }
-    return State::Off;
+    return SwitchState::Off;
 }
 
 std::chrono::microseconds SwitchEvent::time() const

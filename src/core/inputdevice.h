@@ -39,6 +39,11 @@ enum class KeyboardKeyState {
     Repeated,
 };
 
+enum class SwitchState {
+    Off,
+    On,
+};
+
 class KWIN_EXPORT InputDeviceTabletTool : public QObject
 {
     Q_OBJECT
@@ -145,8 +150,7 @@ Q_SIGNALS:
     void holdGestureBegin(int fingerCount, std::chrono::microseconds time, InputDevice *device);
     void holdGestureEnd(std::chrono::microseconds time, InputDevice *device);
     void holdGestureCancelled(std::chrono::microseconds time, InputDevice *device);
-    void switchToggledOn(std::chrono::microseconds time, InputDevice *device);
-    void switchToggledOff(std::chrono::microseconds time, InputDevice *device);
+    void switchToggle(SwitchState state, std::chrono::microseconds time, InputDevice *device);
 
     void tabletToolEvent(TabletEventType type, const QPointF &pos,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
