@@ -156,6 +156,12 @@ KCM.ScrollViewKCM {
                     }
                 }
 
+                QQC2.CheckBox {
+                    visible: !exportInfo.visible
+                    checked: model?.isEnabled ?? true
+                    onToggled: model.isEnabled = checked
+                }
+
                 QQC2.TextField {
                     id: descriptionField
                     Layout.minimumWidth: Kirigami.Units.gridUnit * 2

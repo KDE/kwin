@@ -23,6 +23,7 @@ QHash<int, QByteArray> RuleBookModel::roleNames() const
 {
     auto roles = QAbstractListModel::roleNames();
     roles.insert(DescriptionRole, QByteArray("display"));
+    roles.insert(EnabledRole, QByteArray("isEnabled"));
     return roles;
 }
 
@@ -46,6 +47,8 @@ QVariant RuleBookModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case RuleBookModel::DescriptionRole:
         return settings->description();
+    case RuleBookModel::EnabledRole:
+        return settings->enabled();
     }
 
     return QVariant();
@@ -65,6 +68,12 @@ bool RuleBookModel::setData(const QModelIndex &index, const QVariant &value, int
             return true;
         }
         settings->setDescription(value.toString());
+        break;
+    case RuleBookModel::EnabledRole:
+        if (settings->enabled() == value.toBool()) {
+            return true;
+        }
+        settings->setEnabled(value.toBool());
         break;
     default:
         return false;

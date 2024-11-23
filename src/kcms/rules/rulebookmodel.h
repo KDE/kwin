@@ -21,6 +21,7 @@ class RuleBookModel : public QAbstractListModel
 public:
     enum {
         DescriptionRole = Qt::DisplayRole,
+        EnabledRole = Qt::UserRole,
     };
 
     explicit RuleBookModel(QObject *parent = nullptr);
