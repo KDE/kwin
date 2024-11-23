@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-22 00:41+0000\n"
+"POT-Creation-Date: 2024-11-23 00:41+0000\n"
 "PO-Revision-Date: 2024-10-31 16:24+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -1225,7 +1225,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Resursdatora nosaukums: %1"
 
-#: input.cpp:3144
+#: input.cpp:3142
 #, kde-format
 msgid "Touchpad"
 msgstr "Skārienpaliktnis"
