@@ -500,7 +500,7 @@ void DebugConsoleFilter::tabletToolEvent(TabletEvent *event)
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool"))
         + tableRow(i18n("EventType"), typeString)
         + tableRow(i18n("Position"),
-                   QStringLiteral("%1,%2").arg(event->pos().x()).arg(event->pos().y()))
+                   QStringLiteral("%1,%2").arg(QString::number(event->position().x()), QString::number(event->position().y())))
         + tableRow(i18n("Tilt"),
                    QStringLiteral("%1,%2").arg(event->xTilt()).arg(event->yTilt()))
         + tableRow(i18n("Rotation"), QString::number(event->rotation()))
