@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpipeline.h"
+#include "iccprofile.h"
 
 #include <numbers>
 
@@ -22,6 +23,59 @@ ValueRange ValueRange::operator*(double mult) const
 }
 
 static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
+
+ColorPipeline ColorPipeline::create(const ColorDescription &from, IccProfile *to, RenderingIntent intent)
+{
+    auto tag = to->BToATag(intent);
+    if (!tag) {
+        // falling back to perceptual is less bad than matrix shaper
+        tag = to->BToATag(RenderingIntent::Perceptual);
+    }
+    if (tag) {
+        ColorPipeline ret;
+        switch (intent) {
+        case RenderingIntent::RelativeColorimetric:
+            // only need to transform to the ICC connection space (XYZ D50)
+            ret = create(from, IccProfile::s_connectionSpace, RenderingIntent::RelativeColorimetric);
+            break;
+        case RenderingIntent::AbsoluteColorimetric: {
+            // there's no tag for absolute colorimetric
+            // as the relative colorimetric tag goes from XYZ D50 to the destination whitepoint though,
+            // we can first do the transform to the destination whitepoint in absolute colorimetric mode
+            ColorDescription linearizedProfile(to->colorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
+            ret = create(from, linearizedProfile, RenderingIntent::AbsoluteColorimetric);
+            // then add destination whitepoint -> XYZ D50, which will get cancelled out by the tag
+            ret.add(create(linearizedProfile, IccProfile::s_connectionSpace, RenderingIntent::RelativeColorimetric));
+        } break;
+        case RenderingIntent::Perceptual:
+        case RenderingIntent::RelativeColorimetricWithBPC: {
+            // apply BPC
+            const double min = to->minBrightness().value_or(0);
+            const double max = to->maxBrightness().value_or(1);
+            const ColorDescription adjustedConnectionSpace(NamedColorimetry::CIEXYZD50, TransferFunction(TransferFunction::linear, 0, max), max, min, max, max);
+            ret = create(from, adjustedConnectionSpace, RenderingIntent::RelativeColorimetricWithBPC);
+        } break;
+        }
+        // while the above converts to XYZ D50, the encoding the ICC profile wants is CIEXYZ
+        // so we add the (absolute colorimetric) transform to that colorspace before the tag
+        ret.addMatrix(IccProfile::s_connectionSpace.containerColorimetry().toXYZ(), ret.currentOutputRange());
+        ret.add(*tag);
+        if (to->vcgt()) {
+            ret.add1DLUT(to->vcgt());
+        }
+        return ret;
+    } else {
+        const double min = to->minBrightness().value_or(0);
+        const double max = to->maxBrightness().value_or(1);
+        ColorDescription linearizedProfile(to->colorimetry(), TransferFunction(TransferFunction::linear, min, max), max, min, max, max);
+        ColorPipeline ret = create(from, linearizedProfile, intent);
+        ret.add1DLUT(to->inverseEOTF());
+        if (to->vcgt()) {
+            ret.add1DLUT(to->vcgt());
+        }
+        return ret;
+    }
+}
 
 ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
 {
@@ -291,6 +345,20 @@ void ColorPipeline::addModulation(const ColorDescription &colorDescription, doub
     }
 }
 
+void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform)
+{
+    const auto min = transform->transform(QVector3D(currentOutputRange().min, currentOutputRange().min, currentOutputRange().min));
+    const auto max = transform->transform(QVector3D(currentOutputRange().max, currentOutputRange().max, currentOutputRange().max));
+    ops.push_back(ColorOp{
+        .input = currentOutputRange(),
+        .operation = transform,
+        .output = ValueRange{
+            .min = std::min({min.x(), min.y(), min.z()}),
+            .max = std::max({max.x(), max.y(), max.z()}),
+        },
+    });
+}
+
 bool ColorPipeline::isIdentity() const
 {
     return ops.empty();
@@ -308,6 +376,13 @@ void ColorPipeline::add(const ColorOp &op)
         addInverseTransferFunction(tf->tf);
     } else {
         ops.push_back(op);
+    }
+}
+
+void ColorPipeline::add(const ColorPipeline &pipeline)
+{
+    for (const auto &op : pipeline.ops) {
+        add(op);
     }
 }
 
@@ -340,6 +415,16 @@ QVector4D ColorPipeline::evaluate(const QVector4D &input) const
             ret = tf->tf.nitsToEncoded(ret);
         } else if (const auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
             ret.setX(tonemap->map(ret.x()));
+        } else if (const auto transform1D = std::get_if<std::shared_ptr<ColorTransformation>>(&op.operation)) {
+            const auto rgb = (*transform1D)->transform(ret.toVector3D());
+            ret.setX(rgb.x());
+            ret.setY(rgb.y());
+            ret.setZ(rgb.z());
+        } else if (const auto transform3D = std::get_if<std::shared_ptr<ColorLUT3D>>(&op.operation)) {
+            const auto rgb = (*transform3D)->sample(ret.toVector3D());
+            ret.setX(rgb.x());
+            ret.setY(rgb.y());
+            ret.setZ(rgb.z());
         }
     }
     return ret;
@@ -411,6 +496,10 @@ QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
             debug << mult->factors;
         } else if (auto tonemap = std::get_if<KWin::ColorTonemapper>(&op.operation)) {
             debug << "tonemapper(" << tonemap->m_inputReferenceLuminance << tonemap->m_maxInputLuminance << tonemap->m_maxOutputLuminance << ")";
+        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorTransformation>>(op.operation)) {
+            debug << "lut1d";
+        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorLUT3D>>(op.operation)) {
+            debug << "lut3d";
         }
     }
     debug << ")";

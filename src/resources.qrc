@@ -3,8 +3,6 @@
   <file>opengl/colormanagement.glsl</file>
   <file>opengl/colormanagement_helpers.glsl</file>
   <file>opengl/colorpipeline.glsl</file>
-  <file>opengl/icc.frag</file>
-  <file>opengl/icc_core.frag</file>
   <file>opengl/saturation.glsl</file>
   <file>scene/shaders/debug_fractional.frag</file>
   <file>scene/shaders/debug_fractional.vert</file>

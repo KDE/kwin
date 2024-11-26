@@ -20,7 +20,6 @@
 #include "opengl/eglswapchain.h"
 #include "opengl/gllut.h"
 #include "opengl/glrendertimequery.h"
-#include "opengl/icc_shader.h"
 #include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
 
@@ -103,13 +102,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
         m_surface->iccProfile = iccProfile;
-        if (iccProfile) {
-            if (!m_surface->iccShader) {
-                m_surface->iccShader = std::make_unique<IccShader>();
-            }
-        } else {
-            m_surface->iccShader.reset();
-        }
         if (m_surface->needsShadowBuffer) {
             const double maxLuminance = colorDescription.maxHdrLuminance().value_or(colorDescription.referenceLuminance());
             m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxLuminance),
@@ -259,9 +251,15 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
 
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
         GLFramebuffer::pushFramebuffer(fbo);
-        ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
-        if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription, m_surface->channelFactors);
+        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
+        if (m_surface->iccProfile) {
+            ColorPipeline transform;
+            transform.addTransferFunction(m_surface->intermediaryColorDescription.transferFunction());
+            transform.addRgbMultiplier(m_surface->channelFactors);
+            transform.addInverseTransferFunction(m_surface->intermediaryColorDescription.transferFunction());
+            // if bpc or absolute colorimetric transforms should be used, those were already applied in the renderer
+            transform.add(ColorPipeline::create(m_surface->intermediaryColorDescription, m_surface->iccProfile.get(), RenderingIntent::RelativeColorimetric));
+            binder.shader()->setColorPipelineUniforms(transform);
         } else {
             ColorPipeline transform = ColorPipeline::create(m_surface->intermediaryColorDescription, m_surface->targetColorDescription, RenderingIntent::RelativeColorimetric);
             transform.addTransferFunction(m_surface->targetColorDescription.transferFunction());

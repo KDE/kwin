@@ -23,6 +23,9 @@
 namespace KWin
 {
 
+class GlLookUpTable;
+class GlLookUpTable3D;
+
 class KWIN_EXPORT GLShader
 {
 public:
@@ -188,8 +191,19 @@ private:
             int referenceDimming;
             int outputReferenceLuminance;
         } tonemapper;
+        std::array<int, 4> lut1DSamplers;
+        std::array<int, 4> lut1DSamplerSizes;
+        struct
+        {
+            int sampler;
+            int size;
+        } lut3d;
     };
     std::optional<ColorPipelineUniforms> m_colorPipelineUniforms;
+
+    std::optional<ColorPipeline> m_currentPipeline;
+    std::vector<std::shared_ptr<GlLookUpTable>> m_dumbestCache;
+    std::shared_ptr<GlLookUpTable3D> m_dumbestCache2;
 
     friend class ShaderManager;
 };

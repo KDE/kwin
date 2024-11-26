@@ -9,6 +9,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glshader.h"
+#include "gllut.h"
+#include "gllut3D.h"
 #include "glplatform.h"
 #include "glutils.h"
 #include "utils/common.h"
@@ -510,6 +512,18 @@ void GLShader::ensureColorPipelineUniforms()
         .referenceDimming = uniformLocation("pipelineToneMapper.referenceDimming"),
         .outputReferenceLuminance = uniformLocation("pipelineToneMapper.outputReferenceLuminance"),
     };
+    for (uint32_t i = 0; i < uniforms.lut1DSamplers.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineLut1Ds[") + QByteArray::number(i) + QByteArrayLiteral("].sampler");
+        uniforms.lut1DSamplers[i] = uniformLocation(varName.data());
+    }
+    for (uint32_t i = 0; i < uniforms.lut1DSamplerSizes.size(); i++) {
+        const QByteArray varName = QByteArrayLiteral("pipelineLut1Ds[") + QByteArray::number(i) + QByteArrayLiteral("].size");
+        uniforms.lut1DSamplerSizes[i] = uniformLocation(varName.data());
+    }
+    uniforms.lut3d = {
+        .sampler = uniformLocation("pipelineLut3D.sampler"),
+        .size = uniformLocation("pipelineLut3D.size"),
+    };
     m_colorPipelineUniforms = uniforms;
 }
 
@@ -517,11 +531,17 @@ bool GLShader::setColorPipelineUniforms(const ColorPipeline &pipeline)
 {
     ensureColorPipelineUniforms();
     if (pipeline.ops.size() > m_colorPipelineUniforms->operationTypes.size()) {
+        qWarning() << "too many operations!" << pipeline.ops.size();
         return false;
     }
+    m_dumbestCache.clear();
+    m_dumbestCache2.reset();
     uint32_t tfIndex = 0;
     uint32_t matrixIndex = 0;
     bool toneMapperSet = false;
+    uint32_t lut1DIndex = 0;
+    bool lut3DSet = false;
+    int textureIndex = 2;
     for (uint32_t opIndex = 0; opIndex < pipeline.ops.size(); opIndex++) {
         const auto &op = pipeline.ops[opIndex];
         if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
@@ -578,9 +598,60 @@ bool GLShader::setColorPipelineUniforms(const ColorPipeline &pipeline)
             setUniform(m_colorPipelineUniforms->tonemapper.outputReferenceLuminance, tonemap->m_outputReferenceLuminance);
             setUniform(m_colorPipelineUniforms->tonemapper.referenceDimming, tonemap->m_referenceDimming);
             toneMapperSet = true;
+        } else if (const auto lut1d = std::get_if<std::shared_ptr<ColorTransformation>>(&op.operation)) {
+            if (lut1DIndex >= m_colorPipelineUniforms->lut1DSamplers.size()) {
+                qCWarning(KWIN_OPENGL, "Color pipeline has too many 1D LUTs");
+                return false;
+            }
+            setUniform(m_colorPipelineUniforms->operationTypes[opIndex], 4);
+            // TODO read the actual texture size from the ICC profile, and reduce this size significantly
+            auto tex = GlLookUpTable::create([lut = *lut1d](size_t index) {
+                const double relative = index / 4095.0;
+                return lut->transform(QVector3D(relative, relative, relative));
+            }, 4096);
+            glActiveTexture(GL_TEXTURE0 + textureIndex);
+            tex->bind();
+            setUniform(m_colorPipelineUniforms->operationIndices[opIndex], int(lut1DIndex));
+            setUniform(m_colorPipelineUniforms->lut1DSamplers[lut1DIndex], textureIndex);
+            setUniform(m_colorPipelineUniforms->lut1DSamplerSizes[lut1DIndex], 4096);
+            textureIndex++;
+            lut1DIndex++;
+            m_dumbestCache.push_back(std::move(tex));
+        } else if (const auto lut3d = std::get_if<std::shared_ptr<ColorLUT3D>>(&op.operation)) {
+            if (lut3DSet) {
+                qCWarning(KWIN_OPENGL, "Color pipeline has too many 3D LUTs");
+                return false;
+            }
+            setUniform(m_colorPipelineUniforms->operationTypes[opIndex], 5);
+            auto tex = GlLookUpTable3D::create([lut = *lut3d](size_t x, size_t y, size_t z) {
+                return lut->sample(x, y, z);
+            }, (*lut3d)->xSize(), (*lut3d)->ySize(), (*lut3d)->zSize());
+            glActiveTexture(GL_TEXTURE0 + textureIndex);
+            tex->bind();
+            setUniform(m_colorPipelineUniforms->lut3d.sampler, textureIndex);
+            setUniform(m_colorPipelineUniforms->lut3d.size, (*lut3d)->xSize(), (*lut3d)->ySize(), (*lut3d)->zSize());
+            textureIndex++;
+            lut3DSet = true;
+            m_dumbestCache2 = std::move(tex);
         }
     }
+    for (uint32_t unused1d = lut1DIndex; unused1d < m_colorPipelineUniforms->lut1DSamplers.size(); unused1d++) {
+        glActiveTexture(GL_TEXTURE0 + textureIndex);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        setUniform(m_colorPipelineUniforms->lut1DSamplers[unused1d], textureIndex);
+        setUniform(m_colorPipelineUniforms->lut1DSamplerSizes[unused1d], 4096);
+        textureIndex++;
+    }
+    if (!lut3DSet) {
+        glActiveTexture(GL_TEXTURE0 + textureIndex);
+        glBindTexture(GL_TEXTURE_3D, 0);
+        setUniform(m_colorPipelineUniforms->lut3d.sampler, textureIndex);
+        setUniform(m_colorPipelineUniforms->lut3d.size, 32, 32, 32);
+        textureIndex++;
+    }
     setUniform(m_colorPipelineUniforms->operationCount, int(pipeline.ops.size()));
+    glActiveTexture(GL_TEXTURE0);
+    m_currentPipeline = pipeline;
     return true;
 }
 

@@ -15,7 +15,6 @@
 #include "opengl/glframebuffer.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
-#include "opengl/icc_shader.h"
 
 #include <lcms2.h>
 
@@ -39,7 +38,7 @@ private Q_SLOTS:
     void testXYZ();
     void testOpenglShader_data();
     void testOpenglShader();
-    void testIccShader();
+    void testIccProfile();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -297,7 +296,7 @@ void TestColorspaces::testOpenglShader()
     }
 }
 
-void TestColorspaces::testIccShader()
+void TestColorspaces::testIccProfile()
 {
     const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY));
     const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
@@ -308,10 +307,11 @@ void TestColorspaces::testIccShader()
             input.setPixel(x, y, qRgba(x, y, (x + y) / 2, 255));
         }
     }
+    const ColorDescription inputColor(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22, 0, 1), 1, 0, 1, 1);
 
     const QString path = QFINDTESTDATA("data/Framework 13.icc");
 
-    QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
+    QImage lcmsResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
     {
         const auto toCmsxyY = [](const xyY &primary) {
             return cmsCIExyY{
@@ -320,11 +320,11 @@ void TestColorspaces::testIccShader()
                 .Y = primary.Y,
             };
         };
-        const cmsCIExyY sRGBWhite = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).white().toxyY());
+        const cmsCIExyY sRGBWhite = toCmsxyY(xyY{0.3127, 0.3290, 1});
         const cmsCIExyYTRIPLE sRGBPrimaries{
-            .Red = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).red().toxyY()),
-            .Green = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).green().toxyY()),
-            .Blue = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).blue().toxyY()),
+            .Red = toCmsxyY(xyY{0.64, 0.33, 0.2126}),
+            .Green = toCmsxyY(xyY{0.30, 0.60, 0.7152}),
+            .Blue = toCmsxyY(xyY{0.15, 0.06, 0.0722}),
         };
         const std::array<double, 10> params = {2.2};
         const std::array toneCurves = {
@@ -339,7 +339,7 @@ void TestColorspaces::testIccShader()
         cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
         QVERIFY(handle);
 
-        const auto transform = cmsCreateTransform(sRGBHandle, TYPE_RGB_8, handle, TYPE_RGB_8, INTENT_RELATIVE_COLORIMETRIC, cmsFLAGS_NOOPTIMIZE);
+        const auto transform = cmsCreateTransform(sRGBHandle, TYPE_RGB_8, handle, TYPE_RGB_8, INTENT_RELATIVE_COLORIMETRIC, cmsFLAGS_NOOPTIMIZE | cmsFLAGS_BLACKPOINTCOMPENSATION);
         QVERIFY(transform);
 
         for (int x = 0; x < input.width(); x++) {
@@ -352,7 +352,7 @@ void TestColorspaces::testIccShader()
                 };
                 std::array<uint8_t, 3> out = {0, 0, 0};
                 cmsDoTransform(transform, in.data(), out.data(), 1);
-                pipelineResult.setPixel(x, y, qRgba(out[0], out[1], out[2], 255));
+                lcmsResult.setPixel(x, y, qRgba(out[0], out[1], out[2], 255));
             }
         }
         cmsDeleteTransform(transform);
@@ -365,13 +365,13 @@ void TestColorspaces::testIccShader()
 
     QImage openGlResult;
     {
-        IccShader shader;
-        ShaderBinder binder{shader.shader()};
-        shader.setUniforms(profile, ColorDescription::sRGB, QVector3D(1, 1, 1));
+        const auto pipeline = ColorPipeline::create(inputColor, profile.get(), RenderingIntent::RelativeColorimetricWithBPC);
 
+        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::ApplyColorPipeline);
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
+        binder.shader()->setColorPipelineUniforms(pipeline);
         const auto target = GLTexture::allocate(GL_RGBA8, input.size());
         GLFramebuffer buffer(target.get());
         context->pushFramebuffer(&buffer);
@@ -384,19 +384,47 @@ void TestColorspaces::testIccShader()
         openGlResult.mirror();
     }
 
-    for (int x = 0; x < input.width(); x++) {
-        for (int y = 0; y < input.height(); y++) {
-            const auto glPixel = openGlResult.pixel(x, y);
-            const QVector3D glColors = QVector3D(qRed(glPixel), qGreen(glPixel), qBlue(glPixel));
-            const auto pipePixel = pipelineResult.pixel(x, y);
-            const QVector3D pipeColors = QVector3D(qRed(pipePixel), qGreen(pipePixel), qBlue(pipePixel));
-            const QVector3D difference = (glColors - pipeColors);
+    QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
+    {
+        const auto pipeline = ColorPipeline::create(inputColor, profile.get(), RenderingIntent::RelativeColorimetricWithBPC);
 
-            // TODO get this difference down!
-            // Can most likely be achieved with tetrahedal interpolation for the 3D LUT
-            QCOMPARE_LE(difference.length(), 6);
+        for (int x = 0; x < input.width(); x++) {
+            for (int y = 0; y < input.height(); y++) {
+                const auto pixel = input.pixel(x, y);
+                const QVector3D colors = QVector3D(qRed(pixel), qGreen(pixel), qBlue(pixel)) / 255;
+                const QVector3D output = pipeline.evaluate(colors) * 255;
+                pipelineResult.setPixel(x, y, qRgba(std::round(output.x()), std::round(output.y()), std::round(output.z()), 255));
+            }
         }
     }
+
+    float maxDifferenceOpengl = 0;
+    float maxDifferencePipeline = 0;
+    for (int x = 0; x < input.width(); x++) {
+        for (int y = 0; y < input.height(); y++) {
+            // LCMS doesn't handle alpha values, so it makes no sense to compare
+            if (qAlpha(input.pixel(x, y)) != 255) {
+                continue;
+            }
+            const auto glPixel = openGlResult.pixel(x, y);
+            const QVector3D glColors = QVector3D(qRed(glPixel), qGreen(glPixel), qBlue(glPixel));
+
+            const auto lcmsPixel = lcmsResult.pixel(x, y);
+            const QVector3D lcmsColors = QVector3D(qRed(lcmsPixel), qGreen(lcmsPixel), qBlue(lcmsPixel));
+            const QVector3D openglDifference = (glColors - lcmsColors);
+            maxDifferenceOpengl = std::max(openglDifference.length(), maxDifferenceOpengl);
+
+            const auto pipePixel = pipelineResult.pixel(x, y);
+            const QVector3D pipeColors = QVector3D(qRed(pipePixel), qGreen(pipePixel), qBlue(pipePixel));
+            const QVector3D pipeDifference = (pipeColors - lcmsColors);
+            maxDifferencePipeline = std::max(pipeDifference.length(), maxDifferencePipeline);
+        }
+    }
+
+    qWarning() << "max differences: OpenGL" << maxDifferenceOpengl << "Pipeline" << maxDifferencePipeline;
+    QCOMPARE_LE(maxDifferencePipeline, 1);
+    // TODO get this difference down! Can likely be done with tetrahedal interpolation
+    QCOMPARE_LE(maxDifferenceOpengl, 4.5);
 }
 
 QTEST_MAIN(TestColorspaces)

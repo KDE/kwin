@@ -7,11 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "colorlut3d.h"
 #include "colorspace.h"
+#include "colortransformation.h"
 #include "kwin_export.h"
 
 namespace KWin
 {
+
+class IccProfile;
 
 class KWIN_EXPORT ValueRange
 {
@@ -84,7 +88,7 @@ class KWIN_EXPORT ColorOp
 {
 public:
     ValueRange input;
-    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper> operation;
+    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper, std::shared_ptr<ColorTransformation>, std::shared_ptr<ColorLUT3D>> operation;
     ValueRange output;
 
     bool operator==(const ColorOp &) const = default;
@@ -103,6 +107,7 @@ public:
     explicit ColorPipeline();
     explicit ColorPipeline(const ValueRange &inputRange);
 
+    static ColorPipeline create(const ColorDescription &from, IccProfile *to, RenderingIntent intent);
     static ColorPipeline create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent);
 
     ColorPipeline merged(const ColorPipeline &onTop) const;
@@ -121,9 +126,11 @@ public:
     void addMatrix(const QMatrix4x4 &mat, const ValueRange &output);
     void addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance);
     void add(const ColorOp &op);
+    void add(const ColorPipeline &pipeline);
     void addRgbToICtCp(const Colorimetry &containerColorimetry);
     void addICtCpToRgb(const Colorimetry &containerColorimetry);
     void addModulation(const ColorDescription &colorDescription, double saturation, double opacity, double brightness);
+    void add1DLUT(const std::shared_ptr<ColorTransformation> &transform);
 
     ValueRange inputRange;
     std::vector<ColorOp> ops;

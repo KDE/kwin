@@ -38,6 +38,7 @@ enum class NamedColorimetry {
     GenericFilm,
     BT2020,
     CIEXYZ,
+    CIEXYZD50,
     DCIP3,
     DisplayP3,
     AdobeRGB
@@ -257,5 +258,6 @@ private:
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::XYZ &xyz);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::xyY &xyY);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::Colorimetry &color);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorDescription &color);

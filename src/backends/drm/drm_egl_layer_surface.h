@@ -38,7 +38,6 @@ class GLRenderTimeQuery;
 class ColorTransformation;
 class GlLookUpTable;
 class IccProfile;
-class IccShader;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -104,7 +103,6 @@ private:
         ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
         QVector3D channelFactors = {1, 1, 1};
         double brightness = 1.0;
-        std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
         DamageJournal shadowDamageJournal;
 
