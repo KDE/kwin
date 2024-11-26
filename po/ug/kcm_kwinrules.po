@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-18 00:41+0000\n"
+"POT-Creation-Date: 2024-11-26 00:41+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -845,27 +845,27 @@ msgstr ""
 msgid "Save Rules"
 msgstr ""
 
-#: ui/main.qml:195
+#: ui/main.qml:201
 #, kde-format
 msgid "Edit"
 msgstr "تەھرىرلەش"
 
-#: ui/main.qml:201
+#: ui/main.qml:207
 #, kde-format
 msgid "Duplicate"
 msgstr ""
 
-#: ui/main.qml:207
+#: ui/main.qml:213
 #, kde-format
 msgid "Delete"
 msgstr "ئۆچۈر"
 
-#: ui/main.qml:239
+#: ui/main.qml:245
 #, kde-format
 msgid "Import Rules"
 msgstr "تۈزۈملەرنى ئىمپورت قىلىش"
 
-#: ui/main.qml:251
+#: ui/main.qml:257
 #, fuzzy, kde-format
 #| msgid "Export Rule"
 msgid "Export Rules"

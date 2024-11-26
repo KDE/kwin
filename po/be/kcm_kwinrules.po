@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-18 00:41+0000\n"
+"POT-Creation-Date: 2024-11-26 00:41+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -869,27 +869,27 @@ msgstr "Абраць усё"
 msgid "Save Rules"
 msgstr "Захаваць правілы"
 
-#: ui/main.qml:195
+#: ui/main.qml:201
 #, kde-format
 msgid "Edit"
 msgstr "Рэдагаваць"
 
-#: ui/main.qml:201
+#: ui/main.qml:207
 #, kde-format
 msgid "Duplicate"
 msgstr "Дубляваць"
 
-#: ui/main.qml:207
+#: ui/main.qml:213
 #, kde-format
 msgid "Delete"
 msgstr "Выдаліць"
 
-#: ui/main.qml:239
+#: ui/main.qml:245
 #, kde-format
 msgid "Import Rules"
 msgstr "Імпартаваць правілы"
 
-#: ui/main.qml:251
+#: ui/main.qml:257
 #, kde-format
 msgid "Export Rules"
 msgstr "Экспартаваць правілы"

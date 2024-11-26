@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-18 00:41+0000\n"
+"POT-Creation-Date: 2024-11-26 00:41+0000\n"
 "PO-Revision-Date: 2004-07-03 17:42+0100\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -815,27 +815,27 @@ msgstr ""
 msgid "Save Rules"
 msgstr ""
 
-#: ui/main.qml:195
+#: ui/main.qml:201
 #, fuzzy, kde-format
 msgid "Edit"
 msgstr "Golygu..."
 
-#: ui/main.qml:201
+#: ui/main.qml:207
 #, kde-format
 msgid "Duplicate"
 msgstr ""
 
-#: ui/main.qml:207
+#: ui/main.qml:213
 #, fuzzy, kde-format
 msgid "Delete"
 msgstr "&Darganfod"
 
-#: ui/main.qml:239
+#: ui/main.qml:245
 #, kde-format
 msgid "Import Rules"
 msgstr ""
 
-#: ui/main.qml:251
+#: ui/main.qml:257
 #, kde-format
 msgid "Export Rules"
 msgstr ""

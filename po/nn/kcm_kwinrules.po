@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-18 00:41+0000\n"
+"POT-Creation-Date: 2024-11-26 00:41+0000\n"
 "PO-Revision-Date: 2024-09-22 16:17+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -871,27 +871,27 @@ msgstr "Merk alle"
 msgid "Save Rules"
 msgstr "Lagra reglar"
 
-#: ui/main.qml:195
+#: ui/main.qml:201
 #, kde-format
 msgid "Edit"
 msgstr "Rediger"
 
-#: ui/main.qml:201
+#: ui/main.qml:207
 #, kde-format
 msgid "Duplicate"
 msgstr "Lag kopi"
 
-#: ui/main.qml:207
+#: ui/main.qml:213
 #, kde-format
 msgid "Delete"
 msgstr "Slett"
 
-#: ui/main.qml:239
+#: ui/main.qml:245
 #, kde-format
 msgid "Import Rules"
 msgstr "Importer reglar"
 
-#: ui/main.qml:251
+#: ui/main.qml:257
 #, kde-format
 msgid "Export Rules"
 msgstr "Eksporter reglar"

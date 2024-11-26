@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-18 00:41+0000\n"
+"POT-Creation-Date: 2024-11-26 00:41+0000\n"
 "PO-Revision-Date: 2024-08-30 12:05+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -866,27 +866,27 @@ msgstr "Tümünü Seç"
 msgid "Save Rules"
 msgstr "Kuralları Kaydet"
 
-#: ui/main.qml:195
+#: ui/main.qml:201
 #, kde-format
 msgid "Edit"
 msgstr "Düzenle"
 
-#: ui/main.qml:201
+#: ui/main.qml:207
 #, kde-format
 msgid "Duplicate"
 msgstr "Çoğalt"
 
-#: ui/main.qml:207
+#: ui/main.qml:213
 #, kde-format
 msgid "Delete"
 msgstr "Sil"
 
-#: ui/main.qml:239
+#: ui/main.qml:245
 #, kde-format
 msgid "Import Rules"
 msgstr "Kurallar İçe Aktar"
 
-#: ui/main.qml:251
+#: ui/main.qml:257
 #, kde-format
 msgid "Export Rules"
 msgstr "Kuralları Dışa Aktar"
