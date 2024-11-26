@@ -80,6 +80,8 @@ private:
     void updateColorProfileSource();
     void updateBrightness();
 
+    void scheduleDone();
+
     std::unique_ptr<OutputDeviceV2InterfacePrivate> d;
 };
 

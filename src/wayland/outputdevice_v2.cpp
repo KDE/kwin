@@ -16,6 +16,7 @@
 #include <QDebug>
 #include <QPointer>
 #include <QString>
+#include <QTimer>
 
 #include "qwayland-server-kde-output-device-v2.h"
 
@@ -147,6 +148,7 @@ public:
     std::optional<double> m_minBrightnessOverride;
     color_profile_source m_colorProfile = color_profile_source::color_profile_source_sRGB;
     double m_brightness = 1.0;
+    QTimer m_doneTimer;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -265,6 +267,16 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::sdrGamutWidenessChanged, this, &OutputDeviceV2Interface::updateSdrGamutWideness);
     connect(handle, &Output::colorProfileSourceChanged, this, &OutputDeviceV2Interface::updateColorProfileSource);
     connect(handle, &Output::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
+
+    // Delay the done event to batch property updates.
+    d->m_doneTimer.setSingleShot(true);
+    d->m_doneTimer.setInterval(0);
+    connect(&d->m_doneTimer, &QTimer::timeout, this, [this]() {
+        const auto resources = d->resourceMap();
+        for (const auto &resource : resources) {
+            d->sendDone(resource);
+        }
+    });
 }
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
@@ -278,12 +290,19 @@ void OutputDeviceV2Interface::remove()
         return;
     }
 
+    d->m_doneTimer.stop();
+
     if (d->m_display) {
         DisplayPrivate *displayPrivate = DisplayPrivate::get(d->m_display);
         displayPrivate->outputdevicesV2.removeOne(this);
     }
 
     d->globalRemove();
+}
+
+void OutputDeviceV2Interface::scheduleDone()
+{
+    d->m_doneTimer.start();
 }
 
 Output *OutputDeviceV2Interface::handle() const
@@ -497,8 +516,8 @@ void OutputDeviceV2Interface::updateGeometry()
     const auto clientResources = d->resourceMap();
     for (const auto &resource : clientResources) {
         d->sendGeometry(resource);
-        d->sendDone(resource);
     }
+    scheduleDone();
 }
 
 void OutputDeviceV2Interface::updatePhysicalSize()
@@ -569,8 +588,8 @@ void OutputDeviceV2Interface::updateScale()
     const auto clientResources = d->resourceMap();
     for (const auto &resource : clientResources) {
         d->sendScale(resource);
-        d->sendDone(resource);
     }
+    scheduleDone();
 }
 
 void OutputDeviceV2Interface::updateModes()
@@ -601,9 +620,7 @@ void OutputDeviceV2Interface::updateModes()
 
     qDeleteAll(oldModes.crbegin(), oldModes.crend());
 
-    for (auto resource : clientResources) {
-        d->sendDone(resource);
-    }
+    scheduleDone();
 }
 
 void OutputDeviceV2Interface::updateCurrentMode()
@@ -615,7 +632,6 @@ void OutputDeviceV2Interface::updateCurrentMode()
                 const auto clientResources = d->resourceMap();
                 for (auto resource : clientResources) {
                     d->sendCurrentMode(resource);
-                    d->sendDone(resource);
                 }
                 updateGeometry();
             }
@@ -630,8 +646,8 @@ void OutputDeviceV2Interface::updateEdid()
     const auto clientResources = d->resourceMap();
     for (const auto &resource : clientResources) {
         d->sendEdid(resource);
-        d->sendDone(resource);
     }
+    scheduleDone();
 }
 
 void OutputDeviceV2Interface::updateEnabled()
@@ -642,8 +658,8 @@ void OutputDeviceV2Interface::updateEnabled()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendEnabled(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -655,8 +671,8 @@ void OutputDeviceV2Interface::updateUuid()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendUuid(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -668,8 +684,8 @@ void OutputDeviceV2Interface::updateCapabilities()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendCapabilities(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -681,8 +697,8 @@ void OutputDeviceV2Interface::updateOverscan()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendOverscan(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -694,8 +710,8 @@ void OutputDeviceV2Interface::updateVrrPolicy()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendVrrPolicy(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -707,8 +723,8 @@ void OutputDeviceV2Interface::updateRgbRange()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendRgbRange(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -719,8 +735,8 @@ void OutputDeviceV2Interface::updateHighDynamicRange()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendHighDynamicRange(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -731,8 +747,8 @@ void OutputDeviceV2Interface::updateSdrBrightness()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendSdrBrightness(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -743,8 +759,8 @@ void OutputDeviceV2Interface::updateWideColorGamut()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendWideColorGamut(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -756,8 +772,8 @@ void OutputDeviceV2Interface::updateAutoRotate()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendAutoRotationPolicy(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -768,8 +784,8 @@ void OutputDeviceV2Interface::updateIccProfilePath()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendIccProfilePath(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -782,8 +798,8 @@ void OutputDeviceV2Interface::updateBrightnessMetadata()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendBrightnessMetadata(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -796,8 +812,8 @@ void OutputDeviceV2Interface::updateBrightnessOverrides()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendBrightnessOverrides(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -808,8 +824,8 @@ void OutputDeviceV2Interface::updateSdrGamutWideness()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendSdrGamutWideness(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -831,8 +847,8 @@ void OutputDeviceV2Interface::updateColorProfileSource()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendColorProfileSource(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -844,8 +860,8 @@ void OutputDeviceV2Interface::updateBrightness()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendBrightness(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
