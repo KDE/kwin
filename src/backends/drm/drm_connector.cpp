@@ -382,15 +382,28 @@ static const QList<QSize> s_commonModes = {
     QSize(1280, 720),
 };
 
+static constexpr std::array s_commonRefreshRates = {
+    60000ull,
+    90000ull,
+    120000ull,
+    144000ull,
+    165000ull,
+    240000ull,
+};
+
 QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
 {
     QList<std::shared_ptr<DrmConnectorMode>> ret;
     QSize maxSize;
     uint64_t maxSizeRefreshRate = 0;
+    uint64_t maxRefreshRate = 60000;
     for (const auto &mode : std::as_const(m_driverModes)) {
         if (mode->size().width() >= maxSize.width() && mode->size().height() >= maxSize.height() && mode->refreshRate() >= maxSizeRefreshRate) {
             maxSize = mode->size();
             maxSizeRefreshRate = mode->refreshRate();
+        }
+        if (mode->refreshRate() >= maxRefreshRate) {
+            maxRefreshRate = mode->refreshRate();
         }
     }
     const uint64_t maxBandwidthEstimation = maxSize.width() * maxSize.height() * maxSizeRefreshRate;
@@ -398,8 +411,12 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
     if (maxSizeRefreshRate > 60000ul) {
         refreshRates.push_back(maxSizeRefreshRate);
     }
-    for (const auto size : s_commonModes) {
-        for (uint64_t refreshRate : refreshRates) {
+    for (uint64_t refreshRate : s_commonRefreshRates) {
+
+        if (refreshRate > maxRefreshRate) {
+            continue;
+        }
+        for (const auto &size : s_commonModes) {
             const uint64_t bandwidthEstimation = size.width() * size.height() * refreshRate;
             if (size.width() > maxSize.width() || size.height() > maxSize.height() || bandwidthEstimation > maxBandwidthEstimation) {
                 continue;
@@ -415,6 +432,7 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
             ret.push_back(generatedMode);
         }
     }
+
     return ret;
 }
 
@@ -428,6 +446,7 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
         .hsync_start = modeInfo->hsync_start,
         .hsync_end = modeInfo->hsync_end,
         .htotal = modeInfo->htotal,
+        .hskew = 0,
         .vdisplay = uint16_t(modeInfo->vdisplay),
         .vsync_start = modeInfo->vsync_start,
         .vsync_end = modeInfo->vsync_end,
@@ -436,6 +455,7 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
         .vrefresh = uint32_t(modeInfo->vrefresh),
         .flags = modeInfo->mode_flags,
         .type = DRM_MODE_TYPE_USERDEF,
+        .name = NULL,
     };
 
     sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
