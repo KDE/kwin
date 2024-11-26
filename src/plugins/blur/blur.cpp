@@ -61,6 +61,18 @@ BlurEffect::BlurEffect()
     BlurConfig::instance(effects->config());
     ensureResources();
 
+    m_contrastPass.shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture,
+                                                                              QStringLiteral(":/effects/blur/shaders/vertex.vert"),
+                                                                              QStringLiteral(":/effects/blur/shaders/contrast.frag"));
+    if (!m_contrastPass.shader) {
+        qCWarning(KWIN_BLUR) << "Failed to load contrast pass shader";
+        return;
+    } else {
+        m_contrastPass.mvpMatrixLocation = m_contrastPass.shader->uniformLocation("modelViewProjectionMatrix");
+        m_contrastPass.colorMatrixLocation = m_contrastPass.shader->uniformLocation("colorMatrix");
+        m_contrastPass.opacityLocation = m_contrastPass.shader->uniformLocation("opacity");
+    }
+
     m_downsamplePass.shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture,
                                                                                 QStringLiteral(":/effects/blur/shaders/vertex.vert"),
                                                                                 QStringLiteral(":/effects/blur/shaders/downsample.frag"));
@@ -202,6 +214,45 @@ void BlurEffect::initBlurStrengthValues()
             blurStrengthValues.append({i + 1, blurOffsets[i].minOffset + (offsetDifference / iterationNumber) * j});
         }
     }
+}
+
+QMatrix4x4 BlurEffect::colorMatrix(qreal contrast, qreal brightness, qreal saturation)
+{
+    QMatrix4x4 satMatrix; // saturation
+    QMatrix4x4 intMatrix; // brightness
+    QMatrix4x4 contMatrix; // contrast
+
+    // Saturation matrix
+    if (!qFuzzyCompare(saturation, 1.0)) {
+        const qreal rval = (1.0 - saturation) * .2126;
+        const qreal gval = (1.0 - saturation) * .7152;
+        const qreal bval = (1.0 - saturation) * .0722;
+
+        satMatrix = QMatrix4x4(rval + saturation, rval, rval, 0.0,
+                               gval, gval + saturation, gval, 0.0,
+                               bval, bval, bval + saturation, 0.0,
+                               0, 0, 0, 1.0);
+    }
+
+    // Brightness Matrix
+    if (!qFuzzyCompare(brightness, 1.0)) {
+        intMatrix.scale(brightness, brightness, brightness);
+    }
+
+    // Contrast Matrix
+    if (!qFuzzyCompare(contrast, 1.0)) {
+        const float transl = (1.0 - contrast) / 2.0;
+
+        contMatrix = QMatrix4x4(contrast, 0, 0, 0.0,
+                                0, contrast, 0, 0.0,
+                                0, 0, contrast, 0.0,
+                                transl, transl, transl, 1.0);
+    }
+
+    QMatrix4x4 colorMatrix = contMatrix * satMatrix * intMatrix;
+    // colorMatrix = colorMatrix.transposed();
+
+    return colorMatrix;
 }
 
 void BlurEffect::reconfigure(ReconfigureFlags flags)
@@ -736,6 +787,32 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     vbo->bindArrays();
+
+    // The contrast pass: we adjust contrast, brightness and saturation of the image before the other passes
+    {
+        ShaderManager::instance()->pushShader(m_contrastPass.shader.get());
+        QMatrix4x4 projectionMatrix;
+        projectionMatrix.ortho(QRectF(0.0, 0.0, backgroundRect.width(), backgroundRect.height()));
+        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrastPass.contrast, m_contrastPass.brightness, m_contrastPass.saturation);
+
+        m_contrastPass.shader->setUniform(m_contrastPass.mvpMatrixLocation, projectionMatrix);
+
+        m_contrastPass.shader->setUniform(m_contrastPass.colorMatrixLocation, colorMatrix);
+        m_contrastPass.shader->setUniform(m_contrastPass.opacityLocation, m_contrastPass.opacity);
+
+        for (size_t i = 1; i < renderInfo.framebuffers.size(); ++i) {
+            const auto &read = renderInfo.framebuffers[i - 1];
+            const auto &draw = renderInfo.framebuffers[i];
+
+            read->colorAttachment()->bind();
+
+            GLFramebuffer::pushFramebuffer(draw.get());
+
+            vbo->draw(GL_TRIANGLES, 0, 6);
+        }
+
+        ShaderManager::instance()->popShader();
+    }
 
     // The downsample pass of the dual Kawase algorithm: the background will be scaled down 50% every iteration.
     {
