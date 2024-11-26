@@ -162,10 +162,8 @@ ExpoCell {
                 returnAnimation.restart();
 
                 // If we dropped on another desktop, don't make the window fly off  the screen
-                if (oldGlobalRect.x < heapRect.x ||
-                    oldGlobalRect.y < heapRect.y ||
-                    heapRect.x + heapRect.width < oldGlobalRect.x + oldGlobalRect.width ||
-                    heapRect.y + heapRect.height < oldGlobalRect.y + oldGlobalRect.height) {
+                if ((oldGlobalRect.x < heapRect.x && heapRect.x + heapRect.width < oldGlobalRect.x + oldGlobalRect.width) ||
+                    (oldGlobalRect.y < heapRect.y && heapRect.y + heapRect.height < oldGlobalRect.y + oldGlobalRect.height)) {
                     returnAnimation.complete();
                 }
             }
