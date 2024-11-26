@@ -11,5 +11,8 @@
         <entry name="NoiseStrength" type="Int">
             <default>5</default>
         </entry>
+        <entry name="UseContrastEffects" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

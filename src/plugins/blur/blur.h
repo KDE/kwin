@@ -81,6 +81,7 @@ public Q_SLOTS:
 
 private:
     void initBlurStrengthValues();
+    QMatrix4x4 colorMatrix(qreal contrast, qreal saturation);
     QRegion blurRegion(EffectWindow *w) const;
     QRegion decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
@@ -90,6 +91,17 @@ private:
     GLTexture *ensureNoiseTexture();
 
 private:
+    struct
+    {
+        std::unique_ptr<GLShader> shader;
+        int mvpMatrixLocation;
+        int colorMatrixLocation;
+        int offsetLocation;
+        int halfpixelLocation;
+        qreal contrast = 0.2;
+        qreal saturation = 10;
+    } m_contrastPass;
+
     struct
     {
         std::unique_ptr<GLShader> shader;
@@ -130,6 +142,7 @@ private:
     int m_offset;
     int m_expandSize;
     int m_noiseStrength;
+    bool m_useContrastEffects = true;
 
     struct OffsetStruct
     {
