@@ -197,6 +197,23 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *outp
 }
 #endif
 
+static QPointF tabletToolPosition(TabletToolEvent *event)
+{
+#ifndef KWIN_BUILD_TESTING
+    if (event->device()->isMapToWorkspace()) {
+        return workspace()->geometry().topLeft() + event->transformedPosition(workspace()->geometry().size());
+    } else {
+        Output *output = event->device()->output();
+        if (!output) {
+            output = workspace()->activeOutput();
+        }
+        return devicePointToGlobalPosition(event->transformedPosition(output->modeSize()), output);
+    }
+#else
+    return QPointF();
+#endif
+}
+
 TabletTool *Connection::getOrCreateTool(libinput_tablet_tool *handle)
 {
     for (TabletTool *tool : std::as_const(m_tools)) {
@@ -448,52 +465,61 @@ void Connection::processEvents()
             Q_EMIT se->device()->switchToggle(se->state(), se->time(), se->device());
             break;
         }
-        case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
-        case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
+        case LIBINPUT_EVENT_TABLET_TOOL_AXIS: {
+            auto *tte = static_cast<TabletToolEvent *>(event.get());
+            if (libinput_tablet_tool_config_pressure_range_is_available(tte->tool())) {
+                tte->device()->setSupportsPressureRange(true);
+                libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
+            }
+            Q_EMIT event->device()->tabletToolAxisEvent(tabletToolPosition(tte),
+                                                        tte->device()->pressureCurve().valueForProgress(tte->pressure()),
+                                                        tte->xTilt(),
+                                                        tte->yTilt(),
+                                                        tte->rotation(),
+                                                        tte->distance(),
+                                                        tte->isTipDown(),
+                                                        tte->isNearby(),
+                                                        getOrCreateTool(tte->tool()),
+                                                        tte->time(),
+                                                        tte->device());
+            break;
+        }
+        case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY: {
+            auto *tte = static_cast<TabletToolEvent *>(event.get());
+            if (libinput_tablet_tool_config_pressure_range_is_available(tte->tool())) {
+                tte->device()->setSupportsPressureRange(true);
+                libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
+            }
+            Q_EMIT event->device()->tabletToolProximityEvent(tabletToolPosition(tte),
+                                                             tte->device()->pressureCurve().valueForProgress(tte->pressure()),
+                                                             tte->xTilt(),
+                                                             tte->yTilt(),
+                                                             tte->rotation(),
+                                                             tte->distance(),
+                                                             tte->isTipDown(),
+                                                             tte->isNearby(),
+                                                             getOrCreateTool(tte->tool()),
+                                                             tte->time(),
+                                                             tte->device());
+            break;
+        }
         case LIBINPUT_EVENT_TABLET_TOOL_TIP: {
             auto *tte = static_cast<TabletToolEvent *>(event.get());
-
-            KWin::InputDevice::TabletEventType tabletEventType;
-            switch (event->type()) {
-            case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
-                tabletEventType = KWin::InputDevice::Axis;
-                break;
-            case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
-                tabletEventType = KWin::InputDevice::Proximity;
-                break;
-            case LIBINPUT_EVENT_TABLET_TOOL_TIP:
-            default:
-                tabletEventType = KWin::InputDevice::Tip;
-                break;
+            if (libinput_tablet_tool_config_pressure_range_is_available(tte->tool())) {
+                tte->device()->setSupportsPressureRange(true);
+                libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
             }
-
-            if (workspace()) {
-#ifndef KWIN_BUILD_TESTING
-                QPointF globalPos;
-                if (tte->device()->isMapToWorkspace()) {
-                    globalPos = workspace()->geometry().topLeft() + tte->transformedPosition(workspace()->geometry().size());
-                } else {
-                    Output *output = tte->device()->output();
-                    if (!output) {
-                        output = workspace()->activeOutput();
-                    }
-                    globalPos = devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()), output);
-                }
-#else
-                const QPointF globalPos;
-#endif
-                const qreal pressure = event->device()->pressureCurve().valueForProgress(tte->pressure());
-
-                if (libinput_tablet_tool_config_pressure_range_is_available(tte->tool())) {
-                    tte->device()->setSupportsPressureRange(true);
-                    libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
-                }
-
-                Q_EMIT event->device()->tabletToolEvent(tabletEventType,
-                                                        globalPos, pressure,
-                                                        tte->xTilt(), tte->yTilt(), tte->rotation(), tte->distance(),
-                                                        tte->isTipDown(), tte->isNearby(), getOrCreateTool(tte->tool()), tte->time(), tte->device());
-            }
+            Q_EMIT event->device()->tabletToolTipEvent(tabletToolPosition(tte),
+                                                       tte->device()->pressureCurve().valueForProgress(tte->pressure()),
+                                                       tte->xTilt(),
+                                                       tte->yTilt(),
+                                                       tte->rotation(),
+                                                       tte->distance(),
+                                                       tte->isTipDown(),
+                                                       tte->isNearby(),
+                                                       getOrCreateTool(tte->tool()),
+                                                       tte->time(),
+                                                       tte->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {

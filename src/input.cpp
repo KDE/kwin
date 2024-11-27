@@ -2998,8 +2998,12 @@ void InputRedirection::addInputDevice(InputDevice *device)
         processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
     });
 
-    connect(device, &InputDevice::tabletToolEvent,
-            m_tablet, &TabletInputRedirection::tabletToolEvent);
+    connect(device, &InputDevice::tabletToolAxisEvent,
+            m_tablet, &TabletInputRedirection::tabletToolAxisEvent);
+    connect(device, &InputDevice::tabletToolProximityEvent,
+            m_tablet, &TabletInputRedirection::tabletToolProximityEvent);
+    connect(device, &InputDevice::tabletToolTipEvent,
+            m_tablet, &TabletInputRedirection::tabletToolTipEvent);
     connect(device, &InputDevice::tabletToolButtonEvent,
             m_tablet, &TabletInputRedirection::tabletToolButtonEvent);
     connect(device, &InputDevice::tabletPadButtonEvent,

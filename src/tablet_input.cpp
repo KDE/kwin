@@ -192,60 +192,98 @@ void TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
     m_cursorByTool[device] = cursor;
 }
 
-void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType type, const QPointF &pos,
-                                             qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
-                                             bool tipNear, InputDeviceTabletTool *tool,
-                                             std::chrono::microseconds time,
-                                             InputDevice *device)
+void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
     }
-    input()->setLastInputHandler(this);
-    m_lastPosition = pos;
-
-    QEvent::Type t;
-    switch (type) {
-    case InputDevice::Axis:
-        t = QEvent::TabletMove;
-        break;
-    case InputDevice::Tip:
-        t = tipDown ? QEvent::TabletPress : QEvent::TabletRelease;
-        break;
-    case InputDevice::Proximity:
-        t = tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity;
-        break;
-    }
 
     ensureTabletTool(tool);
-    switch (t) {
-    case QEvent::TabletEnterProximity:
-    case QEvent::TabletPress:
-    case QEvent::TabletMove:
-        m_cursorByTool[tool]->setPos(pos);
-        break;
-    default:
-        break;
-    }
+
+    m_lastPosition = pos;
+    m_cursorByTool[tool]->setPos(pos);
 
     update();
     workspace()->setActiveOutput(pos);
 
-    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
-
     // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
     const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
-    TabletEvent ev(t, dev, pos, pos, pressure,
+    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
+    TabletEvent ev(QEvent::TabletMove, dev, pos, pos, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,
                    distance,
                    Qt::NoModifier, button, button, tool, device);
-
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
-    input()->processFilters(
-        std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->processFilters(std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->setLastInputHandler(this);
+}
+
+void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+{
+    if (!inited()) {
+        return;
+    }
+
+    ensureTabletTool(tool);
+
+    m_lastPosition = pos;
+    if (tipNear) {
+        m_cursorByTool[tool]->setPos(pos);
+    }
+
+    update();
+    workspace()->setActiveOutput(pos);
+
+    // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
+    const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
+    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
+    TabletEvent ev(tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity, dev, pos, pos, pressure,
+                   xTilt, yTilt,
+                   0, // tangentialPressure
+                   rotation,
+                   distance,
+                   Qt::NoModifier, button, button, tool, device);
+    ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->processFilters(std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->setLastInputHandler(this);
+}
+
+void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+{
+    if (!inited()) {
+        return;
+    }
+
+    ensureTabletTool(tool);
+
+    m_lastPosition = pos;
+    if (tipDown) {
+        m_cursorByTool[tool]->setPos(pos);
+    }
+
+    update();
+    workspace()->setActiveOutput(pos);
+
+    // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
+    const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
+    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
+    TabletEvent ev(tipDown ? QEvent::TabletPress : QEvent::TabletRelease, dev, pos, pos, pressure,
+                   xTilt, yTilt,
+                   0, // tangentialPressure
+                   rotation,
+                   distance,
+                   Qt::NoModifier, button, button, tool, device);
+    ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->processFilters(std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->setLastInputHandler(this);
 }
 
 void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
