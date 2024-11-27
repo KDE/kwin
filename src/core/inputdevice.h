@@ -87,12 +87,6 @@ class KWIN_EXPORT InputDevice : public QObject
     Q_OBJECT
 
 public:
-    enum TabletEventType {
-        Axis,
-        Proximity,
-        Tip
-    };
-
     explicit InputDevice(QObject *parent = nullptr);
 
     virtual QString sysPath() const;
@@ -150,7 +144,9 @@ Q_SIGNALS:
     void holdGestureEnd(std::chrono::microseconds time, InputDevice *device);
     void holdGestureCancelled(std::chrono::microseconds time, InputDevice *device);
     void switchToggle(SwitchState state, std::chrono::microseconds time, InputDevice *device);
-    void tabletToolEvent(TabletEventType type, const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolAxisEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolProximityEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolTipEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device);
     void tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
