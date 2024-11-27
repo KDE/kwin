@@ -68,11 +68,11 @@ void WindowMotionManager::manage(EffectWindow *w)
         return;
     }
 
-    double strength = 0.08;
+    double strength = 0.12;
     double smoothness = 4.0;
     if (m_useGlobalAnimationModifier && effects->animationTimeFactor()) {
         // If the factor is == 0 then we just skip the calculation completely
-        strength = 0.08 / effects->animationTimeFactor();
+        strength = 0.12 / effects->animationTimeFactor();
         smoothness = effects->animationTimeFactor() * 4.0;
     }
 
