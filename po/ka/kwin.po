@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:41+0000\n"
-"PO-Revision-Date: 2024-09-19 06:10+0200\n"
+"POT-Creation-Date: 2024-11-27 00:41+0000\n"
+"PO-Revision-Date: 2024-11-26 05:28+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2367,12 +2367,12 @@ msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "შესაბამისი ფანჯრების გარეშე"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:231
+#: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "დასახურად ჩამოათრიეთ"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:375
+#: plugins/private/qml/WindowHeapDelegate.qml:373
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -3086,7 +3086,7 @@ msgstr "ამ წესის წაშლა (შემოტანებშ�
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "ეს წესი ჩართულია"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24

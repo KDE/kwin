@@ -11,15 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:41+0000\n"
-"PO-Revision-Date: 2024-09-19 21:22+0200\n"
+"POT-Creation-Date: 2024-11-27 00:41+0000\n"
+"PO-Revision-Date: 2024-11-26 16:20+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2372,12 +2372,12 @@ msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Inga motsvarande fönster"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:231
+#: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Dra ner för att stänga"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:375
+#: plugins/private/qml/WindowHeapDelegate.qml:373
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -3088,10 +3088,9 @@ msgstr "Ta bort regeln (för användning i importer)"
 
 #. i18n: ectx: label, entry (enabled), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
-#, fuzzy, kde-format
-#| msgid "Tiling Enabled"
+#, kde-format
 msgid "This rule is enabled"
-msgstr "Sida vid sida aktiverad"
+msgstr "Regeln är aktiverad"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24

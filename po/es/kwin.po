@@ -1,26 +1,22 @@
-# Translation of kwin.po to Spanish
 # Translation of kwin to Spanish
-# traducción de kwin.po a Español
-# translation of kwin.po to Spanish
-# Translation to spanish
-# Copyright (C) 1999-2002.
+# Copyright (C) 1999-2024.
 #
-# Boris Wesslowski <Boris@Wesslowski.com>, 1999-2000.
-# Pablo de Vicente <vicente@oan.es>, 2001-2002,2003.
-# Jaime Robles <jaime@kde.org>, 2003, 2005, 2007, 2008, 2009.
-# Miguel Revilla Rodríguez <yo@miguelrevilla.com>, 2003, 2004.
-# Pablo de Vicente <p.devicente@wanadoo.es>, 2004.
-# Santiago Fernandez Sancho <santi@kde-es.org>, 2005.
-# Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007, 2008.
+# SPDX-FileCopyrightText: 1999-2000 Boris Wesslowski <Boris@Wesslowski.com>
+# SPDX-FileCopyrightText: 2001-2002, 2003 Pablo de Vicente <vicente@oan.es>
+# SPDX-FileCopyrightText: 2003, 2005, 2007, 2008, 2009 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2003, 2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
+# SPDX-FileCopyrightText: 2005 Santiago Fernandez Sancho <santi@kde-es.org>
+# SPDX-FileCopyrightText: 2007, 2008 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
 # SPDX-FileCopyrightText: 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Eloy Cuadra <ecuadra@eloihr.net>
-# Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010.
-# Javier Vinal <fjvinal@gmail.com>, 2011, 2012.
+# SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2011, 2012 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:41+0000\n"
-"PO-Revision-Date: 2024-09-20 02:05+0200\n"
+"POT-Creation-Date: 2024-11-27 00:41+0000\n"
+"PO-Revision-Date: 2024-11-26 19:41+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -28,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 24.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2398,12 +2394,12 @@ msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "No hay ventanas coincidentes"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:231
+#: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Arrastre hacia abajo para cerrar"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:375
+#: plugins/private/qml/WindowHeapDelegate.qml:373
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -3120,7 +3116,7 @@ msgstr "Borrar esta regla (para usar en importaciones)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Esta regla está activada"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
