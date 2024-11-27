@@ -70,7 +70,6 @@ BlurEffect::BlurEffect()
     } else {
         m_contrastPass.mvpMatrixLocation = m_contrastPass.shader->uniformLocation("modelViewProjectionMatrix");
         m_contrastPass.colorMatrixLocation = m_contrastPass.shader->uniformLocation("colorMatrix");
-        m_contrastPass.opacityLocation = m_contrastPass.shader->uniformLocation("opacity");
     }
 
     m_downsamplePass.shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture,
@@ -791,25 +790,27 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     // The contrast pass: we adjust contrast, brightness and saturation of the image before the other passes
     {
         ShaderManager::instance()->pushShader(m_contrastPass.shader.get());
-        QMatrix4x4 projectionMatrix;
-        projectionMatrix.ortho(QRectF(0.0, 0.0, backgroundRect.width(), backgroundRect.height()));
+
+        QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
+        projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
+
         QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrastPass.contrast, m_contrastPass.brightness, m_contrastPass.saturation);
 
         m_contrastPass.shader->setUniform(m_contrastPass.mvpMatrixLocation, projectionMatrix);
 
         m_contrastPass.shader->setUniform(m_contrastPass.colorMatrixLocation, colorMatrix);
-        m_contrastPass.shader->setUniform(m_contrastPass.opacityLocation, m_contrastPass.opacity);
 
-        for (size_t i = 1; i < renderInfo.framebuffers.size(); ++i) {
-            const auto &read = renderInfo.framebuffers[i - 1];
-            const auto &draw = renderInfo.framebuffers[i];
+        const auto &read = renderInfo.framebuffers[0];
+        const auto &draw = renderInfo.framebuffers[1];
 
-            read->colorAttachment()->bind();
+        read->colorAttachment()->bind();
 
-            GLFramebuffer::pushFramebuffer(draw.get());
+        GLFramebuffer::pushFramebuffer(draw.get());
 
-            vbo->draw(GL_TRIANGLES, 0, 6);
-        }
+        vbo->draw(GL_TRIANGLES, 0, 6);
+
+        renderInfo.framebuffers[0]->blitFromFramebuffer();
+        GLFramebuffer::popFramebuffer();
 
         ShaderManager::instance()->popShader();
     }
