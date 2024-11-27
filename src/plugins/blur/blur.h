@@ -96,11 +96,9 @@ private:
         std::unique_ptr<GLShader> shader;
         int mvpMatrixLocation;
         int colorMatrixLocation;
-        int opacityLocation;
         qreal contrast = 0.2;
         qreal brightness = 1.4; // FIXME: Plasma uses 1.4 wit hlight themes and 0.6 on dark themes
         qreal saturation = 10;
-        qreal opacity = 1.0;
     } m_contrastPass;
 
     struct
