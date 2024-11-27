@@ -131,8 +131,7 @@ Q_SIGNALS:
     void pointerButtonChanged(quint32 button, PointerButtonState state, std::chrono::microseconds time, InputDevice *device);
     void pointerMotionAbsolute(const QPointF &position, std::chrono::microseconds time, InputDevice *device);
     void pointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
-    void pointerAxisChanged(PointerAxis axis, qreal delta, qint32 deltaV120,
-                            PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device);
+    void pointerAxisChanged(PointerAxis axis, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted, std::chrono::microseconds time, InputDevice *device);
     void pointerFrame(InputDevice *device);
     void touchFrame(InputDevice *device);
     void touchCanceled(InputDevice *device);
@@ -151,10 +150,7 @@ Q_SIGNALS:
     void holdGestureEnd(std::chrono::microseconds time, InputDevice *device);
     void holdGestureCancelled(std::chrono::microseconds time, InputDevice *device);
     void switchToggle(SwitchState state, std::chrono::microseconds time, InputDevice *device);
-
-    void tabletToolEvent(TabletEventType type, const QPointF &pos,
-                         qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
-                         bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolEvent(TabletEventType type, const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device);
     void tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
