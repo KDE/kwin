@@ -3037,7 +3037,9 @@ void X11Window::ackSync()
     }
 
     m_syncRequest.acked = true;
-    m_syncRequest.timeout->stop();
+    if (m_syncRequest.timeout) {
+        m_syncRequest.timeout->stop();
+    }
 
     // With Xwayland, the sync request will be completed after the wl_surface is committed.
     if (!waylandServer()) {
