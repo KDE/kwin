@@ -64,9 +64,14 @@ bool EGLNativeFence::waitSync() const
 EGLNativeFence EGLNativeFence::importFence(EglDisplay *display, FileDescriptor &&fd)
 {
     EGLint attributes[] = {
-        EGL_SYNC_NATIVE_FENCE_FD_ANDROID, fd.take(),
+        EGL_SYNC_NATIVE_FENCE_FD_ANDROID, fd.get(),
         EGL_NONE};
-    return EGLNativeFence(display, eglCreateSyncKHR(display->handle(), EGL_SYNC_NATIVE_FENCE_ANDROID, attributes));
+    auto ret = eglCreateSyncKHR(display->handle(), EGL_SYNC_NATIVE_FENCE_ANDROID, attributes);
+    if (ret != EGL_NO_SYNC_KHR) {
+        // eglCreateSyncKHR takes ownership only on success
+        fd.take();
+    }
+    return EGLNativeFence(display, ret);
 }
 
 } // namespace KWin
