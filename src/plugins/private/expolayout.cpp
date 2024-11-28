@@ -7,6 +7,7 @@
 
 #include "expolayout.h"
 
+#include <QQmlProperty>
 #include <cmath>
 #include <deque>
 #include <tuple>
@@ -41,6 +42,12 @@ ExpoCell::~ExpoCell()
 void ExpoCell::componentComplete()
 {
     QQuickItem::componentComplete();
+
+    QQmlProperty xProperty(this, "Kirigami.ScenePosition.x", qmlContext(this));
+    xProperty.connectNotifySignal(this, SLOT(updateContentItemGeometry()));
+    QQmlProperty yProperty(this, "Kirigami.ScenePosition.y", qmlContext(this));
+    yProperty.connectNotifySignal(this, SLOT(updateContentItemGeometry()));
+
     updateContentItemGeometry();
 }
 
