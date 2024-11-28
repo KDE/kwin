@@ -325,18 +325,20 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_prim
     };
 }
 
+constexpr double s_minLuminanceUnit = 1.0 / 10'000.0;
+
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_luminances(Resource *resource, uint32_t min_lum, uint32_t max_lum, uint32_t reference_lum)
 {
-    if (max_lum < min_lum) {
+    if (max_lum < min_lum * s_minLuminanceUnit) {
         wl_resource_post_error(resource->handle, error::error_invalid_luminance, "max. luminance is lower than the min. luminance");
         return;
     }
-    if (reference_lum < min_lum) {
+    if (reference_lum < min_lum * s_minLuminanceUnit) {
         wl_resource_post_error(resource->handle, error::error_invalid_luminance, "reference luminance is lower than the min. luminance");
         return;
     }
     m_transferFunctionLuminances = Luminances{
-        .min = min_lum / 10'000.0,
+        .min = min_lum * s_minLuminanceUnit,
         .max = double(max_lum),
         .reference = double(reference_lum),
     };
@@ -362,7 +364,7 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_mast
         wl_resource_post_error(resource->handle, error::error_already_set, "mastering luminance is already set");
         return;
     }
-    m_minMasteringLuminance = min_lum / 10'000.0;
+    m_minMasteringLuminance = min_lum * s_minLuminanceUnit;
     if (max_lum > 0) {
         m_maxMasteringLuminance = max_lum;
     }
