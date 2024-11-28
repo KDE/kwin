@@ -28,49 +28,54 @@ XwlDropHandler::XwlDropHandler(Dnd *dnd)
 
 void XwlDropHandler::drop()
 {
-    if (m_xvisit) {
-        m_xvisit->drop();
+    if (m_currentVisit) {
+        m_currentVisit->drop();
     }
 }
 
 bool XwlDropHandler::handleClientMessage(xcb_client_message_event_t *event)
 {
-    for (auto visit : m_previousVisits) {
+    for (auto visit : m_visits) {
         if (visit->handleClientMessage(event)) {
             return true;
         }
     }
 
-    if (m_xvisit && m_xvisit->handleClientMessage(event)) {
-        return true;
-    }
     return false;
 }
 
 void XwlDropHandler::updateDragTarget(SurfaceInterface *surface, quint32 serial)
 {
-    auto client = workspace()->findClient([surface](const X11Window *c) {
+    auto window = workspace()->findClient([surface](const X11Window *c) {
         return c->surface() == surface;
     });
-    if (m_xvisit && client == m_xvisit->target()) {
+    if (m_currentVisit && m_currentVisit->target() == window) {
         return;
     }
-    // leave current target
-    if (m_xvisit) {
-        m_xvisit->leave();
-        if (!m_xvisit->finished()) {
-            connect(m_xvisit, &Xvisit::finish, this, [this](Xvisit *visit) {
-                m_previousVisits.removeOne(visit);
-                delete visit;
-            });
-            m_previousVisits.push_back(m_xvisit);
-        } else {
-            delete m_xvisit;
-        }
-        m_xvisit = nullptr;
+
+    if (m_currentVisit) {
+        m_currentVisit->leave();
+        m_currentVisit = nullptr;
     }
-    if (client) {
-        m_xvisit = new Xvisit(client, waylandServer()->seat()->dragSource(), m_dnd, this);
+
+    if (window) {
+        auto visit = new Xvisit(window, waylandServer()->seat()->dragSource(), m_dnd, this);
+        if (visit->finished()) {
+            delete visit;
+            return;
+        }
+
+        connect(visit, &Xvisit::finish, this, [this, visit]() {
+            m_visits.removeOne(visit);
+            if (m_currentVisit == visit) {
+                m_currentVisit = nullptr;
+            }
+
+            delete visit;
+        });
+
+        m_currentVisit = visit;
+        m_visits.append(visit);
     }
 }
 }

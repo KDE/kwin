@@ -33,9 +33,10 @@ public:
 
 private:
     void drop() override;
-    Xvisit *m_xvisit = nullptr;
+
     Dnd *const m_dnd;
-    QList<Xvisit *> m_previousVisits;
+    QList<Xvisit *> m_visits;
+    Xvisit *m_currentVisit = nullptr;
 };
 }
 }
