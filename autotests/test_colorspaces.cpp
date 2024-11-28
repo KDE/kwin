@@ -40,6 +40,7 @@ private Q_SLOTS:
     void testOpenglShader_data();
     void testOpenglShader();
     void testIccShader();
+    void dontCrashWithWeirdHdrMetadata();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -397,6 +398,16 @@ void TestColorspaces::testIccShader()
             QCOMPARE_LE(difference.length(), 6);
         }
     }
+}
+
+void TestColorspaces::dontCrashWithWeirdHdrMetadata()
+{
+    // verify that weird display metadata with max. luminance < reference luminance
+    // doesn't crash KWin
+    ColorDescription in(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 60, 60);
+    ColorDescription out(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 40, 40);
+    const auto pipeline = ColorPipeline::create(in, out, RenderingIntent::Perceptual);
+    QCOMPARE(pipeline.evaluate(QVector3D()), QVector3D());
 }
 
 QTEST_MAIN(TestColorspaces)
