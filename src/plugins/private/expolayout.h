@@ -264,8 +264,10 @@ Q_SIGNALS:
     void persistentKeyChanged();
     void bottomMarginChanged();
 
-private:
+private Q_SLOTS:
     void updateContentItemGeometry();
+
+private:
     void updateLayout();
 
     QString m_persistentKey;
