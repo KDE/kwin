@@ -1007,34 +1007,29 @@ QPointF SeatInterface::firstTouchPointPosition(SurfaceInterface *surface) const
     return it->second->firstTouchPos;
 }
 
-void TouchPoint::setSurfacePosition(const QPointF &surfacePosition)
+TouchPoint *SeatInterface::touchPointByImplicitGrabSerial(quint32 serial) const
 {
-    auto interaction = seat->d->globalTouch.focus.find(surface);
-    Q_ASSERT(interaction != seat->d->globalTouch.focus.end());
-    interaction->second->offset = surfacePosition;
-    interaction->second->transformation = QMatrix4x4();
-    interaction->second->transformation.translate(-surfacePosition.x(), -surfacePosition.y());
-}
-
-void SeatInterface::discardSurfaceTouches(SurfaceInterface *surface)
-{
-    if (!surface) {
-        return;
-    }
-    auto it = d->globalTouch.focus.find(surface);
-    if (it == d->globalTouch.focus.end()) {
-        return;
-    }
-
-    for (auto itId = d->globalTouch.ids.begin(); itId != d->globalTouch.ids.end();) {
-        if (itId->second->surface == surface) {
-            itId = d->globalTouch.ids.erase(itId);
-        } else {
-            ++itId;
+    for (const auto &[id, touchPoint] : d->globalTouch.ids) {
+        if (touchPoint->serial == serial) {
+            return touchPoint.get();
         }
     }
-    d->touch->sendCancel(surface);
-    d->globalTouch.focus.erase(it);
+    return nullptr;
+}
+
+TouchPoint::TouchPoint(quint32 serial, SurfaceInterface *surface, SeatInterface *seat)
+    : serial(serial)
+    , client(surface->client())
+    , surface(surface)
+    , seat(seat)
+{
+}
+
+void TouchPoint::setSurfacePosition(const QPointF &surfacePosition)
+{
+    offset = surfacePosition;
+    transformation = QMatrix4x4();
+    transformation.translate(-surfacePosition.x(), -surfacePosition.y());
 }
 
 TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition)
@@ -1051,20 +1046,20 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
 
         it->second->firstTouchPos = globalPosition;
         it->second->destroyConnection = QObject::connect(surface, &SurfaceInterface::aboutToBeDestroyed, this, [this, surface]() {
-            discardSurfaceTouches(surface);
+            d->globalTouch.focus.erase(surface);
         });
     }
     it->second->refs++;
-    it->second->offset = surfacePosition;
-    it->second->transformation = QMatrix4x4();
-    it->second->transformation.translate(-surfacePosition.x(), -surfacePosition.y());
 
-    auto pos = globalPosition - it->second->offset;
+    auto pos = globalPosition - surfacePosition;
     SurfaceInterface *effectiveTouchedSurface = mapToSurfaceInPosition(surface, pos);
     const quint32 serial = display()->nextSerial();
     d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
 
     auto tp = std::make_unique<TouchPoint>(serial, surface, this);
+    tp->offset = surfacePosition;
+    tp->transformation = QMatrix4x4();
+    tp->transformation.translate(-surfacePosition.x(), -surfacePosition.y());
     auto r = tp.get();
     d->globalTouch.ids[id] = std::move(tp);
     return r;
@@ -1081,25 +1076,23 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
         qCWarning(KWIN_CORE) << "Detected a touch move that never has been down, discarding";
         return;
     }
-    Q_ASSERT(itTouch->second->surface);
 
     auto interaction = d->globalTouch.focus.find(itTouch->second->surface);
-    if (interaction == d->globalTouch.focus.end()) {
-        qCDebug(KWIN_CORE) << "Surface not there, discarding";
-        return;
-    }
-    auto pos = globalPosition - interaction->second->offset;
-    SurfaceInterface *effectiveTouchedSurface = mapToSurfaceInPosition(d->globalTouch.ids[id]->surface, pos);
+    if (interaction != d->globalTouch.focus.end()) {
+        auto pos = globalPosition - itTouch->second->offset;
+        SurfaceInterface *effectiveTouchedSurface = mapToSurfaceInPosition(d->globalTouch.ids[id]->surface, pos);
 
-    if (isDragTouch()) {
-        // handled by DataDevice
-    } else {
-        d->touch->sendMotion(effectiveTouchedSurface, id, pos);
+        if (isDragTouch()) {
+            // handled by DataDevice
+        } else {
+            d->touch->sendMotion(effectiveTouchedSurface, id, pos);
+        }
+
+        if (id == 0) {
+            interaction->second->firstTouchPos = globalPosition;
+        }
     }
 
-    if (id == 0) {
-        interaction->second->firstTouchPos = globalPosition;
-    }
     Q_EMIT touchMoved(id, itTouch->second->serial, globalPosition);
 }
 
@@ -1115,21 +1108,25 @@ void SeatInterface::notifyTouchUp(qint32 id)
         qCWarning(KWIN_CORE) << "Detected a touch that never started, discarding";
         return;
     }
-    const qint32 serial = d->display->nextSerial();
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.dragImplicitGrabSerial == itTouch->second->serial) {
+
+    TouchPoint *touchPoint = itTouch->second.get();
+    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.dragImplicitGrabSerial == touchPoint->serial) {
         // the implicitly grabbing touch point has been upped
         d->endDrag();
     }
 
-    auto client = itTouch->second->surface->client();
-    d->touch->sendUp(client, id, serial);
-
-    auto it = d->globalTouch.focus.find(itTouch->second->surface);
-    Q_ASSERT(it != d->globalTouch.focus.end());
-    it->second->refs--;
-    if (it->second->refs == 0) {
-        d->globalTouch.focus.erase(it);
+    if (touchPoint->client) {
+        d->touch->sendUp(touchPoint->client, id, d->display->nextSerial());
     }
+
+    auto it = d->globalTouch.focus.find(touchPoint->surface);
+    if (it != d->globalTouch.focus.end()) {
+        it->second->refs--;
+        if (it->second->refs == 0) {
+            d->globalTouch.focus.erase(it);
+        }
+    }
+
     d->globalTouch.ids.erase(itTouch);
 }
 
@@ -1326,10 +1323,9 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
     if (hasImplicitPointerGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
         d->drag.transformation = d->globalPointer.focus.transformation;
-    } else if (hasImplicitTouchGrab(dragSerial) && d->globalTouch.focus.contains(originSurface)) {
+    } else if (TouchPoint *touchPoint = touchPointByImplicitGrabSerial(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Touch;
-        // identify touch id
-        d->drag.transformation = d->globalTouch.focus[originSurface]->transformation;
+        d->drag.transformation = touchPoint->transformation;
     } else {
         // no implicit grab, abort drag
         return;

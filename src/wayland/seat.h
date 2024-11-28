@@ -11,6 +11,7 @@
 #include <QMatrix4x4>
 #include <QObject>
 #include <QPoint>
+#include <QPointer>
 
 struct wl_client;
 struct wl_resource;
@@ -19,6 +20,7 @@ namespace KWin
 {
 class AbstractDataSource;
 class AbstractDropHandler;
+class ClientConnection;
 class DragAndDropIcon;
 class DataDeviceInterface;
 class Display;
@@ -37,18 +39,16 @@ class TouchPoint : public QObject
 {
     Q_OBJECT
 public:
-    TouchPoint(quint32 serial, SurfaceInterface *surface, SeatInterface *seat)
-        : serial(serial)
-        , surface(surface)
-        , seat(seat)
-    {
-    }
+    TouchPoint(quint32 serial, SurfaceInterface *surface, SeatInterface *seat);
 
     void setSurfacePosition(const QPointF &offset);
 
     quint32 serial = 0;
-    SurfaceInterface *surface = nullptr;
+    QPointer<ClientConnection> client;
+    QPointer<SurfaceInterface> surface;
     SeatInterface *seat = nullptr;
+    QPointF offset;
+    QMatrix4x4 transformation;
 };
 
 /**
@@ -535,6 +535,7 @@ public:
     void notifyTouchCancel();
     bool isTouchSequence() const;
     QPointF firstTouchPointPosition(SurfaceInterface *surface) const;
+    TouchPoint *touchPointByImplicitGrabSerial(quint32 serial) const;
     /**
      * @returns true if there is a touch sequence going on associated with a touch
      * down of the given @p serial.
@@ -675,8 +676,6 @@ Q_SIGNALS:
     void focusedKeyboardSurfaceAboutToChange(SurfaceInterface *nextSurface);
 
 private:
-    void discardSurfaceTouches(SurfaceInterface *surface);
-
     std::unique_ptr<SeatInterfacePrivate> d;
     friend class SeatInterfacePrivate;
     friend class TouchPoint;

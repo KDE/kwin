@@ -130,8 +130,6 @@ public:
             SurfaceInterface *surface = nullptr;
             QMetaObject::Connection destroyConnection;
             QPointF firstTouchPos;
-            QPointF offset;
-            QMatrix4x4 transformation;
             uint refs = 0;
         };
         std::unordered_map<SurfaceInterface *, std::unique_ptr<Interaction>> focus;

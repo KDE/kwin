@@ -1873,6 +1873,40 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(pointRemovedSpy.count(), 3);
     QCOMPARE(touch->sequence().first()->position(), QPointF(0, 0));
+
+    // destroy touched surface
+    QSignalSpy serverSurfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 2, QPointF(10, 15));
+    m_seatInterface->notifyTouchFrame();
+    QVERIFY(frameEndedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 3);
+    QCOMPARE(sequenceEndedSpy.count(), 1);
+    QCOMPARE(sequenceCanceledSpy.count(), 1);
+    QCOMPARE(frameEndedSpy.count(), 8);
+    QCOMPARE(pointAddedSpy.count(), 2);
+    QCOMPARE(pointMovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.count(), 3);
+
+    delete s;
+    QVERIFY(serverSurfaceDestroyedSpy.wait());
+
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->notifyTouchMotion(2, QPointF(10, 20));
+    m_seatInterface->notifyTouchFrame();
+    QVERIFY(!frameEndedSpy.wait(10));
+
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->notifyTouchUp(2);
+    m_seatInterface->notifyTouchFrame();
+    QVERIFY(frameEndedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 3);
+    QCOMPARE(sequenceEndedSpy.count(), 2);
+    QCOMPARE(sequenceCanceledSpy.count(), 1);
+    QCOMPARE(frameEndedSpy.count(), 9);
+    QCOMPARE(pointAddedSpy.count(), 2);
+    QCOMPARE(pointMovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.count(), 4);
 }
 
 void TestWaylandSeat::testKeymap()
