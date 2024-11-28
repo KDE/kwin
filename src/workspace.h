@@ -542,6 +542,8 @@ public Q_SLOTS:
     void slotSetupWindowShortcut();
     void setupWindowShortcutDone(bool);
 
+    void slotEndInteractiveMoveResize();
+
 private Q_SLOTS:
     void desktopResized();
 #if KWIN_BUILD_X11

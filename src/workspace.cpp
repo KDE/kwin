@@ -69,6 +69,10 @@
 #include "x11window.h"
 #include <KStartupInfo>
 #endif
+// screenlocker
+#if KWIN_BUILD_SCREENLOCKER
+#include <KScreenLocker/KsldApp>
+#endif
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -262,6 +266,10 @@ void Workspace::init()
     if (waylandServer()) {
         connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::updateOutputConfiguration);
     }
+
+#if KWIN_BUILD_SCREENLOCKER
+    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked, this, &Workspace::slotEndInteractiveMoveResize);
+#endif
 }
 
 QString Workspace::getPlacementTrackerHash()
@@ -1434,6 +1442,14 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
     rearrange();
     m_placement->reinitCascading();
     m_focusChain->removeDesktop(desktop);
+}
+
+void Workspace::slotEndInteractiveMoveResize()
+{
+    auto moveResizeWindow = workspace()->moveResizeWindow();
+    if (moveResizeWindow) {
+        moveResizeWindow->endInteractiveMoveResize();
+    }
 }
 
 #if KWIN_BUILD_X11
