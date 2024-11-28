@@ -32,9 +32,10 @@
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
-#include "qwayland-xdg-shell.h"
-#include "qwayland-zkde-screencast-unstable-v1.h"
 #include "qwayland-xdg-dialog-v1.h"
+#include "qwayland-xdg-shell.h"
+#include "qwayland-xx-color-management-v4.h"
+#include "qwayland-zkde-screencast-unstable-v1.h"
 
 namespace KWayland
 {
@@ -600,6 +601,7 @@ enum class AdditionalWaylandInterface {
     FakeInput = 1 << 19,
     SecurityContextManagerV1 = 1 << 20,
     XdgDialogV1 = 1 << 21,
+    ColorManagement = 1 << 22,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -644,6 +646,13 @@ private:
     bool m_lidSwitch = false;
     bool m_tabletPad = false;
     bool m_tabletTool = false;
+};
+
+class XXColorManagerV4 : public QtWayland::xx_color_manager_v4
+{
+public:
+    explicit XXColorManagerV4(::wl_registry *registry, uint32_t id, int version);
+    ~XXColorManagerV4() override;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -706,6 +715,7 @@ ScreencastingV1 *screencasting();
 QList<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 FakeInput *waylandFakeInput();
 SecurityContextManagerV1 *waylandSecurityContextManagerV1();
+XXColorManagerV4 *colorManager();
 
 bool waitForWaylandSurface(Window *window);
 
