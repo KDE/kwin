@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-27 00:41+0000\n"
-"PO-Revision-Date: 2024-09-26 10:00+0400\n"
+"POT-Creation-Date: 2024-11-29 00:42+0000\n"
+"PO-Revision-Date: 2024-11-28 08:21+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -3074,7 +3074,7 @@ msgstr "إحذف هذه القاعدة (لتستخدم في الإستيراد)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "مكنت هذه القاعدة"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -4252,7 +4252,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1636
+#: workspace.cpp:1652
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
