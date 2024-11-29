@@ -73,7 +73,7 @@ public:
     }
     void drop();
 Q_SIGNALS:
-    void finish(Xvisit *self);
+    void finish();
 
 private:
     void sendEnter();
