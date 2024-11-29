@@ -18,6 +18,11 @@ namespace KWin
 static const quint32 s_version = 8;
 static QList<PlasmaShellSurfaceInterface *> s_shellSurfaces;
 
+struct PlasmaShellSurfaceCommit
+{
+    std::optional<QPoint> globalPosition;
+};
+
 class PlasmaShellInterfacePrivate : public QtWaylandServer::org_kde_plasma_shell
 {
 public:
@@ -34,17 +39,18 @@ PlasmaShellInterfacePrivate::PlasmaShellInterfacePrivate(PlasmaShellInterface *_
 {
 }
 
-class PlasmaShellSurfaceInterfacePrivate : public QtWaylandServer::org_kde_plasma_surface
+class PlasmaShellSurfaceInterfacePrivate : public SurfaceExtension<PlasmaShellSurfaceCommit>, public QtWaylandServer::org_kde_plasma_surface
 {
 public:
     PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *q, SurfaceInterface *surface, wl_resource *resource);
+    void apply(PlasmaShellSurfaceCommit *commit) override;
 
     QPointer<SurfaceInterface> surface;
     PlasmaShellSurfaceInterface *q;
-    QPoint m_globalPos;
+
+    std::optional<QPoint> m_globalPos;
     PlasmaShellSurfaceInterface::Role m_role = PlasmaShellSurfaceInterface::Role::Normal;
     PlasmaShellSurfaceInterface::PanelBehavior m_panelBehavior = PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
-    bool m_positionSet = false;
     bool m_skipTaskbar = false;
     bool m_skipSwitcher = false;
     bool m_panelTakesFocus = false;
@@ -104,10 +110,19 @@ void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServ
  * ShellSurfaceInterface
  *********************************/
 PlasmaShellSurfaceInterfacePrivate::PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *_q, SurfaceInterface *surface, wl_resource *resource)
-    : QtWaylandServer::org_kde_plasma_surface(resource)
+    : SurfaceExtension<PlasmaShellSurfaceCommit>(surface)
+    , QtWaylandServer::org_kde_plasma_surface(resource)
     , surface(surface)
     , q(_q)
 {
+}
+
+void PlasmaShellSurfaceInterfacePrivate::apply(PlasmaShellSurfaceCommit *commit)
+{
+    if (commit->globalPosition.has_value() && commit->globalPosition != m_globalPos) {
+        m_globalPos = commit->globalPosition;
+        Q_EMIT q->positionChanged();
+    }
 }
 
 PlasmaShellSurfaceInterface::PlasmaShellSurfaceInterface(SurfaceInterface *surface, wl_resource *resource)
@@ -139,13 +154,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_output(Resou
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_position(Resource *resource, int32_t x, int32_t y)
 {
-    QPoint globalPos(x, y);
-    if (m_globalPos == globalPos && m_positionSet) {
-        return;
-    }
-    m_positionSet = true;
-    m_globalPos = globalPos;
-    Q_EMIT q->positionChanged();
+    pending.globalPosition = QPoint(x, y);
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_open_under_cursor(Resource *resource)
@@ -261,7 +270,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_takes_
 
 QPoint PlasmaShellSurfaceInterface::position() const
 {
-    return d->m_globalPos;
+    return d->m_globalPos.value_or(QPoint());
 }
 
 PlasmaShellSurfaceInterface::Role PlasmaShellSurfaceInterface::role() const
@@ -271,7 +280,7 @@ PlasmaShellSurfaceInterface::Role PlasmaShellSurfaceInterface::role() const
 
 bool PlasmaShellSurfaceInterface::isPositionSet() const
 {
-    return d->m_positionSet;
+    return d->m_globalPos.has_value();
 }
 
 bool PlasmaShellSurfaceInterface::wantsOpenUnderCursor() const

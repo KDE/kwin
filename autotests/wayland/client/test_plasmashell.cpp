@@ -222,6 +222,7 @@ void TestPlasmaShell::testPosition()
     // now let's try to change the position
     QSignalSpy positionChangedSpy(sps, &PlasmaShellSurfaceInterface::positionChanged);
     ps->setPosition(QPoint(1, 2));
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(positionChangedSpy.wait());
     QCOMPARE(positionChangedSpy.count(), 1);
     QVERIFY(sps->isPositionSet());
@@ -229,9 +230,12 @@ void TestPlasmaShell::testPosition()
 
     // let's try to set same position, should not trigger an update
     ps->setPosition(QPoint(1, 2));
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(!positionChangedSpy.wait(100));
+
     // different point should work, though
     ps->setPosition(QPoint(3, 4));
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(positionChangedSpy.wait());
     QCOMPARE(positionChangedSpy.count(), 2);
     QCOMPARE(sps->position(), QPoint(3, 4));
