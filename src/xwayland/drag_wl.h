@@ -63,7 +63,7 @@ public:
     void sendPosition(const QPointF &globalPos);
     void leave();
 
-    bool finished() const
+    bool isFinished() const
     {
         return m_state.finished;
     }
@@ -72,8 +72,9 @@ public:
         return m_target;
     }
     void drop();
+
 Q_SIGNALS:
-    void finish();
+    void finished();
 
 private:
     void sendEnter();

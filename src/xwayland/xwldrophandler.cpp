@@ -60,12 +60,12 @@ void XwlDropHandler::updateDragTarget(SurfaceInterface *surface, quint32 serial)
 
     if (window) {
         auto visit = new Xvisit(window, waylandServer()->seat()->dragSource(), m_dnd, this);
-        if (visit->finished()) {
+        if (visit->isFinished()) {
             delete visit;
             return;
         }
 
-        connect(visit, &Xvisit::finish, this, [this, visit]() {
+        connect(visit, &Xvisit::finished, this, [this, visit]() {
             m_visits.removeOne(visit);
             if (m_currentVisit == visit) {
                 m_currentVisit = nullptr;

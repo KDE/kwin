@@ -371,7 +371,7 @@ void Xvisit::doFinish()
     m_state.finished = true;
     m_pos.cached = false;
     stopConnections();
-    Q_EMIT finish();
+    Q_EMIT finished();
 }
 
 void Xvisit::stopConnections()
