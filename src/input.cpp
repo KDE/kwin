@@ -1717,7 +1717,7 @@ public:
         }
 
         if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
-            workspace()->tabbox()->keyPress(event->modifiers | event->key);
+            workspace()->tabbox()->keyPress(*event);
         } else if (event->modifiersRelevantForGlobalShortcuts == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
             return false;

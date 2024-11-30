@@ -9,6 +9,7 @@
 #include "x11_filter.h"
 
 #include "effect/effecthandler.h"
+#include "input.h"
 #include "screenedge.h"
 #include "tabbox/tabbox.h"
 #include "utils/xcbutils.h"
@@ -100,7 +101,14 @@ void X11Filter::keyPress(xcb_generic_event_t *event)
     int keyQt;
     xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t *>(event);
     KKeyServer::xcbKeyPressEventToQt(keyEvent, &keyQt);
-    workspace()->tabbox()->keyPress(keyQt);
+
+    KeyboardKeyEvent keyKDE{
+        .key = Qt::Key(keyQt & ~Qt::KeyboardModifierMask),
+        .modifiers = Qt::KeyboardModifier(keyQt & Qt::KeyboardModifierMask),
+        .timestamp = std::chrono::milliseconds(keyEvent->time),
+    };
+
+    workspace()->tabbox()->keyPress(keyKDE);
 }
 
 void X11Filter::keyRelease(xcb_generic_event_t *event)

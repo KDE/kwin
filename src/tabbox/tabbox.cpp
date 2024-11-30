@@ -366,10 +366,10 @@ static constexpr const auto s_appAltRev = kli18n("Walk Through Windows of Curren
 
 void TabBox::initShortcuts()
 {
-    key(s_windows, &TabBox::slotWalkThroughWindows, Qt::ALT | Qt::Key_Tab);
-    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, Qt::ALT | Qt::SHIFT | Qt::Key_Tab);
-    key(s_app, &TabBox::slotWalkThroughCurrentAppWindows, Qt::ALT | Qt::Key_QuoteLeft);
-    key(s_appRev, &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::ALT | Qt::Key_AsciiTilde);
+    key(s_windows, &TabBox::slotWalkThroughWindows, Qt::AltModifier | Qt::Key_Tab);
+    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, Qt::AltModifier | Qt::ShiftModifier | Qt::Key_Tab);
+    key(s_app, &TabBox::slotWalkThroughCurrentAppWindows, Qt::AltModifier | Qt::Key_QuoteLeft);
+    key(s_appRev, &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::AltModifier | Qt::Key_AsciiTilde);
     key(s_windowsAlt, &TabBox::slotWalkThroughWindowsAlternative);
     key(s_windowsAltRev, &TabBox::slotWalkBackThroughWindowsAlternative);
     key(s_appAlt, &TabBox::slotWalkThroughCurrentAppWindowsAlternative);
@@ -737,21 +737,21 @@ static bool areModKeysDepressedX11(const QKeySequence &seq)
 {
     uint rgKeySyms[10];
     int nKeySyms = 0;
-    int mod = seq[seq.count() - 1] & Qt::KeyboardModifierMask;
+    Qt::KeyboardModifiers mod = seq[seq.count() - 1].keyboardModifiers();
 
-    if (mod & Qt::SHIFT) {
+    if (mod & Qt::ShiftModifier) {
         rgKeySyms[nKeySyms++] = XK_Shift_L;
         rgKeySyms[nKeySyms++] = XK_Shift_R;
     }
-    if (mod & Qt::CTRL) {
+    if (mod & Qt::ControlModifier) {
         rgKeySyms[nKeySyms++] = XK_Control_L;
         rgKeySyms[nKeySyms++] = XK_Control_R;
     }
-    if (mod & Qt::ALT) {
+    if (mod & Qt::AltModifier) {
         rgKeySyms[nKeySyms++] = XK_Alt_L;
         rgKeySyms[nKeySyms++] = XK_Alt_R;
     }
-    if (mod & Qt::META) {
+    if (mod & Qt::MetaModifier) {
         // It would take some code to determine whether the Win key
         // is associated with Super or Meta, so check for both.
         // See bug #140023 for details.
@@ -767,18 +767,19 @@ static bool areModKeysDepressedX11(const QKeySequence &seq)
 
 static bool areModKeysDepressedWayland(const QKeySequence &seq)
 {
-    const int mod = seq[seq.count() - 1] & Qt::KeyboardModifierMask;
+    const Qt::KeyboardModifiers mod = seq[seq.count() - 1].keyboardModifiers();
     const Qt::KeyboardModifiers mods = input()->modifiersRelevantForGlobalShortcuts();
-    if ((mod & Qt::SHIFT) && mods.testFlag(Qt::ShiftModifier)) {
+
+    if ((mod & Qt::ShiftModifier) && mods.testFlag(Qt::ShiftModifier)) {
         return true;
     }
-    if ((mod & Qt::CTRL) && mods.testFlag(Qt::ControlModifier)) {
+    if ((mod & Qt::ControlModifier) && mods.testFlag(Qt::ControlModifier)) {
         return true;
     }
-    if ((mod & Qt::ALT) && mods.testFlag(Qt::AltModifier)) {
+    if ((mod & Qt::AltModifier) && mods.testFlag(Qt::AltModifier)) {
         return true;
     }
-    if ((mod & Qt::META) && mods.testFlag(Qt::MetaModifier)) {
+    if ((mod & Qt::MetaModifier) && mods.testFlag(Qt::MetaModifier)) {
         return true;
     }
     return false;
@@ -997,7 +998,7 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
     }
 }
 
-void TabBox::keyPress(int keyQt)
+void TabBox::keyPress(const KeyboardKeyEvent &keyEvent)
 {
     enum Direction {
         Backward = -1,
@@ -1006,7 +1007,7 @@ void TabBox::keyPress(int keyQt)
     };
     Direction direction(Steady);
 
-    auto contains = [](const QKeySequence &shortcut, int key) -> bool {
+    auto contains = [](const QKeySequence &shortcut, const QKeyCombination key) -> bool {
         for (int i = 0; i < shortcut.count(); ++i) {
             if (shortcut[i] == key) {
                 return true;
@@ -1016,37 +1017,35 @@ void TabBox::keyPress(int keyQt)
     };
 
     // tests whether a shortcut matches and handles pitfalls on ShiftKey invocation
-    auto directionFor = [keyQt, contains](const QKeySequence &forward, const QKeySequence &backward) -> Direction {
-        if (contains(forward, keyQt)) {
+    auto directionFor = [keyEvent, contains](const QKeySequence &forward, const QKeySequence &backward) -> Direction {
+        if (contains(forward, keyEvent.modifiers | keyEvent.key)) {
             return Forward;
         }
-        if (contains(backward, keyQt)) {
+        if (contains(backward, keyEvent.modifiers | keyEvent.key)) {
             return Backward;
         }
-        if (!(keyQt & Qt::ShiftModifier)) {
+        if (!(keyEvent.modifiers & Qt::ShiftModifier)) {
             return Steady;
         }
 
         // Before testing the unshifted key (Ctrl+A vs. Ctrl+Shift+a etc.),
         // see whether this is +Shift+Tab/Backtab and test that against
         // +Shift+Backtab/Tab as well
-        Qt::KeyboardModifiers mods = Qt::ShiftModifier | Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier | Qt::KeypadModifier | Qt::GroupSwitchModifier;
-        mods &= keyQt;
-        if (((keyQt & ~mods) == Qt::Key_Tab) || ((keyQt & ~mods) == Qt::Key_Backtab)) {
-            if (contains(forward, mods | Qt::Key_Backtab) || contains(forward, mods | Qt::Key_Tab)) {
+        if (keyEvent.key == Qt::Key_Tab || keyEvent.key == Qt::Key_Backtab) {
+            if (contains(forward, keyEvent.modifiers | Qt::Key_Backtab) || contains(forward, keyEvent.modifiers | Qt::Key_Tab)) {
                 return Forward;
             }
-            if (contains(backward, mods | Qt::Key_Backtab) || contains(backward, mods | Qt::Key_Tab)) {
+            if (contains(backward, keyEvent.modifiers | Qt::Key_Backtab) || contains(backward, keyEvent.modifiers | Qt::Key_Tab)) {
                 return Backward;
             }
         }
 
-        // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
+        // if the shortcuts do not match, try matching again after filtering the shift key
         // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
-        if (contains(forward, keyQt & ~Qt::ShiftModifier)) {
+        if (contains(forward, (keyEvent.modifiers & ~Qt::ShiftModifier) | keyEvent.key)) {
             return Forward;
         }
-        if (contains(backward, keyQt & ~Qt::ShiftModifier)) {
+        if (contains(backward, (keyEvent.modifiers & ~Qt::ShiftModifier) | keyEvent.key)) {
             return Backward;
         }
 
@@ -1102,11 +1101,11 @@ void TabBox::keyPress(int keyQt)
     }
 
     if (m_tabGrab) {
-        if (((keyQt & ~Qt::KeyboardModifierMask) == Qt::Key_Escape) && direction == Steady) {
+        if ((keyEvent.key == Qt::Key_Escape) && direction == Steady) {
             // if Escape is part of the shortcut, don't cancel
             close(true);
         } else if (direction == Steady) {
-            QKeyEvent event(QEvent::KeyPress, keyQt & ~Qt::KeyboardModifierMask, Qt::NoModifier);
+            QKeyEvent event(QEvent::KeyPress, keyEvent.key, Qt::NoModifier);
             grabbedKeyEvent(&event);
         }
     }

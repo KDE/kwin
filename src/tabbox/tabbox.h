@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "input_event.h"
 #include "tabbox/tabboxhandler.h"
 #include "utils/common.h"
 #include <QKeySequence>
@@ -188,7 +189,7 @@ public:
 
     Window *nextClientStatic(Window *) const;
     Window *previousClientStatic(Window *) const;
-    void keyPress(int key);
+    void keyPress(const KeyboardKeyEvent &keyEvent);
     void modifiersReleased();
 
     bool forcedGlobalMouseGrab() const
