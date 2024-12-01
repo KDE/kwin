@@ -240,6 +240,7 @@ FocusScope {
         }
     }
     Keys.priority: Keys.AfterItem
+    Keys.forwardTo: [allDesktopHeaps.currentHeap, searchField, searchResults]
 
     Item {
         width: backgroundItem.width
@@ -321,8 +322,6 @@ FocusScope {
                 effect.searchText = ""
                 effect.searchTextChanged()
             }
-            Keys.priority: Keys.BeforeItem
-            Keys.forwardTo: text && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows) ? searchResults : allDesktopHeaps.currentHeap
             text: effect.searchText
             // not onTextEdited so that the UI always stays in sync
             onTextChanged: {
@@ -632,8 +631,6 @@ FocusScope {
                     animationEnabled:  (gridVal !== 0 || mainBackground.current) && organized
                     organized: container.state !== "initial"
                     dndManagerStore: desktopGrid.dndManagerStore
-                    Keys.priority: Keys.AfterItem
-                    Keys.forwardTo: [searchResults, searchField]
                     model: KWinComponents.WindowFilterModel {
                         activity: KWinComponents.Workspace.currentActivity
                         desktop: mainBackground.desktop
