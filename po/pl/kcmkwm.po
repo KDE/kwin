@@ -1,20 +1,20 @@
 # translation of kcmkwm.po to Polish
 # translation of kcmkwm.po to
-# Version: $Revision: 1694387 $
+# Version: $Revision: 1696289 $
+# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2019, 2021, 2022, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Previous translations Piotr Roszatycki <dexter@debian.org>
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003, 2004.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2004, 2005, 2008, 2009, 2010.
 # Krzysztof Lichota <lichota@mimuw.edu.pl>, 2005, 2006.
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2008, 2009, 2010, 2013.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2019, 2021, 2022.
 # Ignacy Kajdan <ignacy.kajdan@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2022-12-29 10:14+0100\n"
+"PO-Revision-Date: 2024-11-30 09:31+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -23,6 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -50,10 +51,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:48
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "Uaktywnia i przywołuje"
+msgstr "Uaktywnia, klika i przywołuje po zwolnieniu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -102,6 +102,8 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"Zwróć uwagę, że \"Uaktywnia, klika i przywołuje po zwolnieniu\" nie działa "
+"na X11 i wraca do \"Uaktywnia, przywołuje i klika\""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
