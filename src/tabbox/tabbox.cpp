@@ -998,15 +998,11 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
     }
 }
 
-void TabBox::keyPress(const KeyboardKeyEvent &keyEvent)
+// Tests whether a key event matches the shortcut for a given mode, either
+// forward or backward, returning the direction, or Steady for no match
+// Handles pitfalls with the Shift modifier
+TabBox::Direction TabBox::matchShortcuts(const KeyboardKeyEvent &keyEvent, const QKeySequence &forward, const QKeySequence &backward) const
 {
-    enum Direction {
-        Backward = -1,
-        Steady = 0,
-        Forward = 1,
-    };
-    Direction direction(Steady);
-
     auto contains = [](const QKeySequence &shortcut, const QKeyCombination key) -> bool {
         for (int i = 0; i < shortcut.count(); ++i) {
             if (shortcut[i] == key) {
@@ -1016,99 +1012,93 @@ void TabBox::keyPress(const KeyboardKeyEvent &keyEvent)
         return false;
     };
 
-    // tests whether a shortcut matches and handles pitfalls on ShiftKey invocation
-    auto directionFor = [keyEvent, contains](const QKeySequence &forward, const QKeySequence &backward) -> Direction {
-        if (contains(forward, keyEvent.modifiers | keyEvent.key)) {
-            return Forward;
-        }
-        if (contains(backward, keyEvent.modifiers | keyEvent.key)) {
-            return Backward;
-        }
-        if (!(keyEvent.modifiers & Qt::ShiftModifier)) {
-            return Steady;
-        }
-
-        // Before testing the unshifted key (Ctrl+A vs. Ctrl+Shift+a etc.),
-        // see whether this is +Shift+Tab/Backtab and test that against
-        // +Shift+Backtab/Tab as well
-        if (keyEvent.key == Qt::Key_Tab || keyEvent.key == Qt::Key_Backtab) {
-            if (contains(forward, keyEvent.modifiers | Qt::Key_Backtab) || contains(forward, keyEvent.modifiers | Qt::Key_Tab)) {
-                return Forward;
-            }
-            if (contains(backward, keyEvent.modifiers | Qt::Key_Backtab) || contains(backward, keyEvent.modifiers | Qt::Key_Tab)) {
-                return Backward;
-            }
-        }
-
-        // if the shortcuts do not match, try matching again after filtering the shift key
-        // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
-        if (contains(forward, (keyEvent.modifiers & ~Qt::ShiftModifier) | keyEvent.key)) {
-            return Forward;
-        }
-        if (contains(backward, (keyEvent.modifiers & ~Qt::ShiftModifier) | keyEvent.key)) {
-            return Backward;
-        }
-
+    if (contains(forward, keyEvent.modifiers | keyEvent.key)) {
+        return Forward;
+    }
+    if (contains(backward, keyEvent.modifiers | keyEvent.key)) {
+        return Backward;
+    }
+    if (!(keyEvent.modifiers & Qt::ShiftModifier)) {
         return Steady;
-    };
+    }
 
-    if (m_tabGrab) {
-        static const int ModeCount = 4;
-        static const TabBoxMode modes[ModeCount] = {
-            TabBoxWindowsMode, TabBoxWindowsAlternativeMode,
-            TabBoxCurrentAppWindowsMode, TabBoxCurrentAppWindowsAlternativeMode};
-        const QKeySequence cuts[2 * ModeCount] = {
-            // forward
-            m_cutWalkThroughWindows, m_cutWalkThroughWindowsAlternative,
-            m_cutWalkThroughCurrentAppWindows, m_cutWalkThroughCurrentAppWindowsAlternative,
-            // backward
-            m_cutWalkThroughWindowsReverse, m_cutWalkThroughWindowsAlternativeReverse,
-            m_cutWalkThroughCurrentAppWindowsReverse, m_cutWalkThroughCurrentAppWindowsAlternativeReverse};
-        bool testedCurrent = false; // in case of collision, prefer to stay in the current mode
-        int i = 0, j = 0;
-        while (true) {
-            if (!testedCurrent && modes[i] != mode()) {
-                ++j;
-                i = (i + 1) % ModeCount;
-                continue;
-            }
-            if (testedCurrent && modes[i] == mode()) {
-                break;
-            }
-            testedCurrent = true;
-            direction = directionFor(cuts[i], cuts[i + ModeCount]);
-            if (direction != Steady) {
-                if (modes[i] != mode()) {
-                    accept(false);
-                    setMode(modes[i]);
-                    auto replayWithChangedTabboxMode = [this, direction]() {
-                        reset();
-                        nextPrev(direction == Forward);
-                    };
-                    QTimer::singleShot(50, this, replayWithChangedTabboxMode);
-                }
-                break;
-            } else if (++j > 2 * ModeCount) { // guarding counter for invalid modes
-                qCDebug(KWIN_TABBOX) << "Invalid TabBoxMode";
-                return;
-            }
-            i = (i + 1) % ModeCount;
+    // Before testing the unshifted key (Ctrl+A vs. Ctrl+Shift+a etc.),
+    // see whether this is +Shift+Tab/Backtab and test that against
+    // +Shift+Backtab/Tab as well
+    if (keyEvent.key == Qt::Key_Tab || keyEvent.key == Qt::Key_Backtab) {
+        if (contains(forward, keyEvent.modifiers | Qt::Key_Backtab) || contains(forward, keyEvent.modifiers | Qt::Key_Tab)) {
+            return Forward;
         }
-        if (direction != Steady) {
-            qCDebug(KWIN_TABBOX) << "== " << cuts[i].toString() << " or " << cuts[i + ModeCount].toString();
-            KDEWalkThroughWindows(direction == Forward);
+        if (contains(backward, keyEvent.modifiers | Qt::Key_Backtab) || contains(backward, keyEvent.modifiers | Qt::Key_Tab)) {
+            return Backward;
         }
     }
 
-    if (m_tabGrab) {
-        if ((keyEvent.key == Qt::Key_Escape) && direction == Steady) {
-            // if Escape is part of the shortcut, don't cancel
+    // if the shortcuts do not match, try matching again after filtering the shift key
+    // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
+    if (contains(forward, (keyEvent.modifiers & ~Qt::ShiftModifier) | keyEvent.key)) {
+        return Forward;
+    }
+    if (contains(backward, (keyEvent.modifiers & ~Qt::ShiftModifier) | keyEvent.key)) {
+        return Backward;
+    }
+
+    return Steady;
+};
+
+void TabBox::keyPress(const KeyboardKeyEvent &keyEvent)
+{
+    if (!m_tabGrab) {
+        return;
+    }
+
+    Direction direction(Steady);
+
+    const std::array<std::pair<QKeySequence, QKeySequence>, TABBOX_MODE_COUNT> shortcuts = {{
+        {m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse},
+        {m_cutWalkThroughWindowsAlternative, m_cutWalkThroughWindowsAlternativeReverse},
+        {m_cutWalkThroughCurrentAppWindows, m_cutWalkThroughCurrentAppWindowsReverse},
+        {m_cutWalkThroughCurrentAppWindowsAlternative, m_cutWalkThroughCurrentAppWindowsAlternativeReverse},
+    }};
+
+    const int currentModeIdx = static_cast<int>(mode());
+    for (int i = 0; i < TABBOX_MODE_COUNT; ++i) {
+        // Start checking from the current mode so in case of collision we stay
+        const int idx = (i + currentModeIdx) % TABBOX_MODE_COUNT;
+        const TabBoxMode testedMode = static_cast<TabBoxMode>(idx);
+
+        direction = matchShortcuts(keyEvent, shortcuts[idx].first, shortcuts[idx].second);
+        if (direction == Steady) {
+            continue;
+        }
+
+        // Check if we need to switch modes
+        if (testedMode != mode()) {
+            accept(false);
+            setMode(testedMode);
+            auto replayWithChangedTabboxMode = [this, direction]() {
+                reset();
+                nextPrev(direction == Forward);
+            };
+            QTimer::singleShot(50, this, replayWithChangedTabboxMode);
+            return;
+        }
+
+        break;
+    }
+
+    if (direction == Steady) {
+        if (keyEvent.key == Qt::Key_Escape) {
             close(true);
-        } else if (direction == Steady) {
+        } else {
             QKeyEvent event(QEvent::KeyPress, keyEvent.key, Qt::NoModifier);
             grabbedKeyEvent(&event);
         }
+        return;
     }
+
+    // Finally apply the direction to iterate over the window list
+    KDEWalkThroughWindows(direction == Forward);
 }
 
 void TabBox::close(bool abort)

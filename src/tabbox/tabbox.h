@@ -31,10 +31,14 @@ namespace KWin
 class Workspace;
 class Window;
 class X11EventFilter;
+
 namespace TabBox
 {
 class TabBoxConfig;
 class TabBox;
+
+constexpr int TABBOX_MODE_COUNT = 4;
+
 class TabBoxHandlerImpl : public TabBoxHandler
 {
 public:
@@ -231,6 +235,13 @@ Q_SIGNALS:
     void tabBoxKeyEvent(QKeyEvent *);
 
 private:
+    enum Direction {
+        Backward = -1,
+        Steady = 0,
+        Forward = 1,
+    };
+
+private:
     explicit TabBox(QObject *parent);
     void loadConfig(const KConfigGroup &config, TabBoxConfig &tabBoxConfig);
 
@@ -243,6 +254,8 @@ private:
     void removeTabBoxGrab();
     template<typename Slot>
     void key(const KLazyLocalizedString &actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
+
+    Direction matchShortcuts(const KeyboardKeyEvent &keyEvent, const QKeySequence &forward, const QKeySequence &backward) const;
 
     void shadeActivate(Window *c);
 
