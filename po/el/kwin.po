@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-29 00:42+0000\n"
+"POT-Creation-Date: 2024-12-02 00:43+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2379,25 +2379,25 @@ msgstr "Αφαίρεση επιφάνεια εργασίας"
 msgid "Add Virtual Desktop"
 msgstr "Προσθήκη επιφάνειας εργασίας"
 
-#: plugins/overview/qml/main.qml:379
+#: plugins/overview/qml/main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Δεν υπάρχει άλλη επιφάνεια εργασίας για εμφάνιση"
 
-#: plugins/overview/qml/main.qml:385
+#: plugins/overview/qml/main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Προσθήκη επιφάνειας εργασίας"
 
-#: plugins/overview/qml/main.qml:392
+#: plugins/overview/qml/main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Διαμόρφωση επιφανειών εργασίας…"
 
-#: plugins/overview/qml/main.qml:745
+#: plugins/overview/qml/main.qml:742
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-29 00:42+0000\n"
+"POT-Creation-Date: 2024-12-02 00:43+0000\n"
 "PO-Revision-Date: 2024-09-21 10:41+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2353,25 +2353,25 @@ msgstr "Forigi Virtualan Labortablo"
 msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
-#: plugins/overview/qml/main.qml:379
+#: plugins/overview/qml/main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Neniu alia Virtuala Labortablo por montri"
 
-#: plugins/overview/qml/main.qml:385
+#: plugins/overview/qml/main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Aldoni Virtualan Labortablon"
 
-#: plugins/overview/qml/main.qml:392
+#: plugins/overview/qml/main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Agordgi Virtualajn Labortablojn…"
 
-#: plugins/overview/qml/main.qml:745
+#: plugins/overview/qml/main.qml:742
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"

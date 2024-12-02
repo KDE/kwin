@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-29 00:42+0000\n"
+"POT-Creation-Date: 2024-12-02 00:43+0000\n"
 "PO-Revision-Date: 2021-10-03 17:31-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -2461,14 +2461,14 @@ msgstr "デスクトップへ移動(&D)"
 msgid "Add Virtual Desktop"
 msgstr "新しいデスクトップ(&N)"
 
-#: plugins/overview/qml/main.qml:379
+#: plugins/overview/qml/main.qml:378
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "デスクトップへ移動(&D)"
 
-#: plugins/overview/qml/main.qml:385
+#: plugins/overview/qml/main.qml:384
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -2476,14 +2476,14 @@ msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "新しいデスクトップ(&N)"
 
-#: plugins/overview/qml/main.qml:392
+#: plugins/overview/qml/main.qml:391
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "デスクトップへ移動(&D)"
 
-#: plugins/overview/qml/main.qml:745
+#: plugins/overview/qml/main.qml:742
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"

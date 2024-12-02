@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-29 00:42+0000\n"
+"POT-Creation-Date: 2024-12-02 00:43+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -2408,28 +2408,28 @@ msgstr "වැඩතලයට (&D)"
 msgid "Add Virtual Desktop"
 msgstr "වැඩතලය පෙන්වන්න"
 
-#: plugins/overview/qml/main.qml:379
+#: plugins/overview/qml/main.qml:378
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "වැඩතලයට (&D)"
 
-#: plugins/overview/qml/main.qml:385
+#: plugins/overview/qml/main.qml:384
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "වැඩතලය පෙන්වන්න"
 
-#: plugins/overview/qml/main.qml:392
+#: plugins/overview/qml/main.qml:391
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "කවුළු හැසිරීම සැකසීම... (&e)"
 
-#: plugins/overview/qml/main.qml:745
+#: plugins/overview/qml/main.qml:742
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"

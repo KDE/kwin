@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-29 00:42+0000\n"
+"POT-Creation-Date: 2024-12-02 00:43+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -2351,28 +2351,28 @@ msgstr "Burèu %1"
 msgid "Add Virtual Desktop"
 msgstr "Burèu %1"
 
-#: plugins/overview/qml/main.qml:379
+#: plugins/overview/qml/main.qml:378
 #, fuzzy, kde-format
 #| msgid "Desktop %1"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Burèu %1"
 
-#: plugins/overview/qml/main.qml:385
+#: plugins/overview/qml/main.qml:384
 #, fuzzy, kde-format
 #| msgid "Desktop %1"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Burèu %1"
 
-#: plugins/overview/qml/main.qml:392
+#: plugins/overview/qml/main.qml:391
 #, fuzzy, kde-format
 #| msgid "Desktop %1"
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Burèu %1"
 
-#: plugins/overview/qml/main.qml:745
+#: plugins/overview/qml/main.qml:742
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:placeholder"

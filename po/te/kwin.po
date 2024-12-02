@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-29 00:42+0000\n"
+"POT-Creation-Date: 2024-12-02 00:43+0000\n"
 "PO-Revision-Date: 2009-01-16 22:16+0530\n"
 "Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
 "Language-Team: Telugu <en@li.org>\n"
@@ -2352,28 +2352,28 @@ msgstr "(&D) రంగస్థలానికి"
 msgid "Add Virtual Desktop"
 msgstr "(&D) రంగస్థలానికి"
 
-#: plugins/overview/qml/main.qml:379
+#: plugins/overview/qml/main.qml:378
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "(&D) రంగస్థలానికి"
 
-#: plugins/overview/qml/main.qml:385
+#: plugins/overview/qml/main.qml:384
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "(&D) రంగస్థలానికి"
 
-#: plugins/overview/qml/main.qml:392
+#: plugins/overview/qml/main.qml:391
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "(&D) రంగస్థలానికి"
 
-#: plugins/overview/qml/main.qml:745
+#: plugins/overview/qml/main.qml:742
 #, fuzzy, kde-format
 #| msgid "&Move"
 msgctxt "@info:placeholder"

@@ -2,20 +2,20 @@
 # KDE Finnish translation sprint participants:
 # Author: Artnay
 # Author: Lliehu
+# SPDX-FileCopyrightText: 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Tommi Nieminen <translator@legisign.org>
 # Kim Enkovaara <kim.enkovaara@iki.fi>, 2002, 2003, 2005.
 # Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2003, 2004, 2008.
 # Tapio Kautto <eleknader@phnet.fi>, 2004.
 # Ilpo Kantonen <ilpo@iki.fi>, 2005.
 # Mikko Piippo <piippo@cc.helsinki.fi>, 2007.
 # Teemu Rytilahti <teemu.rytilahti@d5k.net>, 2008.
-# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-29 00:42+0000\n"
-"PO-Revision-Date: 2024-03-12 10:48+0200\n"
+"POT-Creation-Date: 2024-12-02 00:43+0000\n"
+"PO-Revision-Date: 2024-10-16 21:19+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -23,8 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-POT-Import-Date: 2012-12-01 22:22:29+0000\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -443,12 +442,10 @@ msgid "Repeat"
 msgstr "Toisto"
 
 #: debug_console.cpp:300
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key-koodi"
+msgstr "Näppäinkoodi"
 
 #: debug_console.cpp:301
 #, kde-format
@@ -736,7 +733,7 @@ msgstr "Tabletin rengas"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Tehosteet"
 
 #: debug_console.cpp:798
 #, kde-format
@@ -947,13 +944,13 @@ msgstr "Sisäiset ikkunat"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Peru lataus"
 
 #: debug_console.cpp:1589 debug_console.cpp:1603
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Lataa"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1672,23 +1669,21 @@ msgstr "Ikkunan sulkemisanimointi"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Ei koskaan"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " millisekuntia"
-msgstr[1] " millisekuntia"
+msgstr[0] "%1 sekunti"
+msgstr[1] "%1 sekuntia"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "Piilota osoitin näppäiltäessä"
+msgstr "Piilota osoitin, kun passiivisena:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
@@ -1811,72 +1806,72 @@ msgstr "Animoi painikkeet"
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Vaihtolukkonäppäin on aktivoitu"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Vaihtolukkonäppäin on passiivinen"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Numerolukkonäppäin on aktivoitu"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Numerolukkonäppäin on passiivinen"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Vierityslukkonäppäin on aktivoitu"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Vierityslukkonäppäin on passiivinen"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Vaihtonäppäin on aktiivinen."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Vaihtonäppäin on passiivinen."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Ctrl-näppäin on aktiivinen."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Ctrl-näppäin on passiivinen."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Alt-näppäin on aktiivinen."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Alt-näppäin on passiivinen."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Meta-näppäin on aktiivinen."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Meta-näppäin on passiivinen."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2056,10 +2051,9 @@ msgstr "&Korkeus:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Ota hiiritehoste käyttöön tai poista se käytöstä"
+msgstr "Ota napsautusanimaatio käyttöön tai poista se käytöstä"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
@@ -2272,26 +2266,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "Nuolipiirron muuntonäppäimet:"
 
 #: plugins/nightlight/nightlightmanager.cpp:59
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Yöväri käytössä"
+msgstr "Yöväri keskeytetty"
 
 #: plugins/nightlight/nightlightmanager.cpp:60
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Yöväri käytössä"
+msgstr "Yöväriä jatkettu"
 
 #: plugins/nightlight/nightlightmanager.cpp:81
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Keskeytä tai jatka yöväriä"
 
 #: plugins/nightlight/nightlightmanager.cpp:411
 #, kde-format
@@ -2375,25 +2365,25 @@ msgstr "Poista virtuaalityöpöytä"
 msgid "Add Virtual Desktop"
 msgstr "Lisää virtuaalityöpöytä"
 
-#: plugins/overview/qml/main.qml:379
+#: plugins/overview/qml/main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Ei muita virtuaalityöpöytiä"
 
-#: plugins/overview/qml/main.qml:385
+#: plugins/overview/qml/main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Lisää virtuaalityöpöytä"
 
-#: plugins/overview/qml/main.qml:392
+#: plugins/overview/qml/main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Virtuaalityöpöytäasetukset…"
 
-#: plugins/overview/qml/main.qml:745
+#: plugins/overview/qml/main.qml:742
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2454,10 +2444,9 @@ msgid "Invalid region"
 msgstr "Virheellinen alue"
 
 #: plugins/screencast/screencaststream.cpp:375
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "OpenGL-koostimia ei ole käynnissä"
+msgstr "Näyttölähetys vaatii OpenGL-koostamista"
 
 #: plugins/screencast/screencaststream.cpp:383
 #, kde-format
@@ -2483,11 +2472,10 @@ msgstr ""
 "Peru hiiren oikealla painikkeella tai Esc-näppäimellä."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Estä koostaminen"
+msgstr "Koostaminen"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -2553,30 +2541,40 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Vaihtonäppäin on lukittu ja aktiivinen kaikille seuraaville "
+"näppäinpainalluksille."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Ctrl-näppäin on lukittu ja aktiivinen kaikille seuraaville "
+"näppäinpainalluksille."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Alt-näppäin on lukittu ja aktiivinen kaikille seuraaville "
+"näppäinpainalluksille."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Meta-näppäin on lukittu ja aktiivinen kaikille seuraaville "
+"näppäinpainalluksille."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"AltGr-näppäin on lukittu ja aktiivinen kaikille seuraaville "
+"näppäinpainalluksille."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -2640,12 +2638,12 @@ msgstr "Sulje"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Jaa vasempaan ja oikeaan osaan"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Jaa ylä- ja alaosaan"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -3619,17 +3617,15 @@ msgstr "Mukautuvan synkronointisäännön tyyppi"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "Salli kierto"
+msgstr "Salli pirstoutuminen"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:463
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Tasosäännön tyyppi"
+msgstr "Pirstoutumissäännön tyyppi"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
