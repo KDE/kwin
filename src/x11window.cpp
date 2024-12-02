@@ -4062,7 +4062,6 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
         updateQuickTileMode(QuickTileFlag::None);
-        max_mode = MaximizeRestore;
         Q_EMIT quickTileModeChanged();
     } else if (!app_noborder && quickTileMode() == QuickTileMode(QuickTileFlag::None) && (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
