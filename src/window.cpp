@@ -3518,6 +3518,56 @@ QRectF Window::quickTileGeometryRestore() const
     }
 }
 
+static QuickTileMode combineQuickTileMode(QuickTileMode mode, QuickTileMode other)
+{
+    const bool isHorizontal = (other & (QuickTileFlag::Left | QuickTileFlag::Right)) == QuickTileFlag::None;
+    const bool isVertical = (other & (QuickTileFlag::Top | QuickTileFlag::Bottom)) == QuickTileFlag::None;
+    if (isHorizontal != isVertical) {
+        if (mode == QuickTileFlag::Left) {
+            return (other & ~QuickTileFlag::Right) | QuickTileFlag::Left;
+        } else if (mode == QuickTileFlag::Right) {
+            return (other & ~QuickTileFlag::Left) | QuickTileFlag::Right;
+        } else if (mode == QuickTileFlag::Top) {
+            return (other & ~QuickTileFlag::Bottom) | QuickTileFlag::Top;
+        } else if (mode == QuickTileFlag::Bottom) {
+            return (other & ~QuickTileFlag::Top) | QuickTileFlag::Bottom;
+        }
+    }
+
+    QuickTileMode combined = other;
+
+    if (mode & QuickTileFlag::Left) {
+        if (other & QuickTileFlag::Right) {
+            combined &= ~QuickTileFlag::Right;
+        } else {
+            combined |= QuickTileFlag::Left;
+        }
+    }
+    if (mode & QuickTileFlag::Right) {
+        if (other & QuickTileFlag::Left) {
+            combined &= ~QuickTileFlag::Left;
+        } else {
+            combined |= QuickTileFlag::Right;
+        }
+    }
+    if (mode & QuickTileFlag::Top) {
+        if (other & QuickTileFlag::Bottom) {
+            combined &= ~QuickTileFlag::Bottom;
+        } else {
+            combined |= QuickTileFlag::Top;
+        }
+    }
+    if (mode & QuickTileFlag::Bottom) {
+        if (other & QuickTileFlag::Top) {
+            combined &= ~QuickTileFlag::Top;
+        } else {
+            combined |= QuickTileFlag::Bottom;
+        }
+    }
+
+    return combined;
+}
+
 void Window::handleQuickTileShortcut(QuickTileMode mode)
 {
     // Only allow quick tile on a regular window.
@@ -3532,42 +3582,9 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(quickTileGeometryRestore());
         } else {
-            QuickTileMode combined = oldMode;
-
-            if (mode & QuickTileFlag::Left) {
-                if (oldMode & QuickTileFlag::Right) {
-                    combined.setFlag(QuickTileFlag::Right, false);
-                } else {
-                    combined.setFlag(QuickTileFlag::Left);
-                }
-            }
-
-            if (mode & QuickTileFlag::Right) {
-                if (oldMode & QuickTileFlag::Left) {
-                    combined.setFlag(QuickTileFlag::Left, false);
-                } else {
-                    combined.setFlag(QuickTileFlag::Right);
-                }
-            }
-
-            if (mode & QuickTileFlag::Top) {
-                if (oldMode & QuickTileFlag::Bottom) {
-                    combined.setFlag(QuickTileFlag::Bottom, false);
-                } else {
-                    combined.setFlag(QuickTileFlag::Top);
-                }
-            }
-
-            if (mode & QuickTileFlag::Bottom) {
-                if (oldMode & QuickTileFlag::Top) {
-                    combined.setFlag(QuickTileFlag::Top, false);
-                } else {
-                    combined.setFlag(QuickTileFlag::Bottom);
-                }
-            }
-
             // If trying to tile to the side that the window is already tiled to move the window to the next
             // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
+            QuickTileMode combined = combineQuickTileMode(mode, oldMode);
             if (combined == oldMode) {
                 Output *currentOutput = moveResizeOutput();
                 Output *nextOutput = currentOutput;

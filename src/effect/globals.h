@@ -211,6 +211,11 @@ enum class QuickTileFlag {
 Q_ENUM_NS(QuickTileFlag)
 Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
 
+inline QuickTileMode operator~(QuickTileFlag flag)
+{
+    return QuickTileMode(~int(flag));
+}
+
 /**
  * Short wrapper for a cursor image provided by the Platform.
  * @since 5.9

@@ -650,10 +650,10 @@ void QuickTilingTest::testShortcut_data()
     // oldMode2     newMode1    newMode2    newMode3...
     const QuickTileMode quickTileTransition[][9] = {
         {N, L, R, T, B, TL, TR, BL, BR}, // transition from N
-        {L, L, N, TL, BL, TL, T, BL, B}, // transition from L
-        {R, N, R, TR, BR, T, TR, B, BR},
-        {T, TL, TR, T, N, TL, TR, L, R},
-        {B, BL, BR, N, B, L, R, BL, BR},
+        {L, L, R, TL, BL, TL, T, BL, B}, // transition from L
+        {R, L, R, TR, BR, T, TR, B, BR},
+        {T, TL, TR, T, B, TL, TR, L, R},
+        {B, BL, BR, T, B, L, R, BL, BR},
         {TL, TL, T, TL, L, TL, T, L, N},
         {TR, T, TR, TR, R, T, TR, N, R},
         {BL, BL, B, L, BL, L, N, BL, B},
