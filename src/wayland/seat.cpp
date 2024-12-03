@@ -529,7 +529,7 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
         surfaceInputTransformation.scale(surface->scaleOverride());
         d->drag.surface = surface;
         d->drag.transformation = surfaceInputTransformation;
-        if (d->dragInhibitsPointer(surface)) {
+        if (d->dragInhibitsPointer(d->globalPointer.focus.surface)) {
             notifyPointerLeave();
         }
         d->drag.target->updateDragTarget(surface, serial);
