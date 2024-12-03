@@ -1122,6 +1122,8 @@ public:
     QuickTileMode quickTileMode() const;
     QuickTileMode requestedQuickTileMode() const;
 
+    void handleCustomQuickTileShortcut(QuickTileMode mode);
+
     Layer layer() const;
     void updateLayer();
 

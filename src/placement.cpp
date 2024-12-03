@@ -898,6 +898,15 @@ void Workspace::quickTileWindow(QuickTileMode mode)
     m_activeWindow->handleQuickTileShortcut(mode);
 }
 
+void Workspace::customQuickTileWindow(QuickTileMode mode)
+{
+    if (!m_activeWindow) {
+        return;
+    }
+
+    m_activeWindow->handleCustomQuickTileShortcut(mode);
+}
+
 qreal Workspace::packPositionLeft(const Window *window, qreal oldX, bool leftEdge) const
 {
     qreal newX = clientArea(MaximizeArea, window).left();

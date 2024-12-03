@@ -340,7 +340,7 @@ CustomTile *CustomTile::nextTileAt(Qt::Edge edge) const
     auto *parentT = static_cast<CustomTile *>(parentTile());
 
     // TODO: implement geometry base searching for floating?
-    if (!parentT || parentT->layoutDirection() == LayoutDirection::Floating) {
+    if (!parentT) {
         return nullptr;
     }
 
@@ -394,6 +394,16 @@ CustomTile *CustomTile::nextTileAt(Qt::Edge edge) const
     } else {
         return parentT->nextTileAt(edge);
     }
+}
+
+CustomTile *CustomTile::nextNonLayoutTileAt(Qt::Edge edge) const
+{
+    auto tile = nextTileAt(edge);
+    // Loop through the tiles until we find a child tile that is not a layout
+    while (tile && tile->isLayout()) {
+        tile = qobject_cast<CustomTile *>(tile->childTiles().first());
+    }
+    return tile;
 }
 
 void CustomTile::setLayoutDirection(Tile::LayoutDirection dir)

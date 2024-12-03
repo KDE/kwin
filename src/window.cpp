@@ -3609,6 +3609,45 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
     setQuickTileMode(mode, tileAtPoint);
 }
 
+void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
+{
+    // Only allow quick tile on a regular window.
+    if (!isResizable() || isAppletPopup() || mode == QuickTileFlag::None) {
+        return;
+    }
+    // if window is not tiled already, set it to nearest one
+    const auto currentTile = workspace()->tileManager(workspace()->outputAt(moveResizeGeometry().center()))->bestTileForPosition(moveResizeGeometry().center());
+    if (!currentTile) {
+        return;
+    }
+    if (moveResizeGeometry() != currentTile->windowGeometry()) {
+        requestTile(currentTile);
+        return;
+    }
+    const auto customTile = qobject_cast<CustomTile *>(currentTile);
+    if (!customTile) {
+        return;
+    }
+    // Get the next tile that is not a layout tile from the edge
+    Qt::Edge edge;
+    if (mode & QuickTileFlag::Left) {
+        edge = Qt::LeftEdge;
+    }
+    if (mode & QuickTileFlag::Right) {
+        edge = Qt::RightEdge;
+    }
+    if (mode & QuickTileFlag::Top) {
+        edge = Qt::TopEdge;
+    }
+    if (mode & QuickTileFlag::Bottom) {
+        edge = Qt::BottomEdge;
+    }
+    CustomTile *next = customTile->nextNonLayoutTileAt(edge);
+    if (next) {
+        requestTile(next);
+    }
+}
+
 void Window::setQuickTileModeAtCurrentPosition(QuickTileMode mode)
 {
     setQuickTileMode(mode, m_moveResizeGeometry.center());

@@ -994,6 +994,15 @@ void Workspace::initShortcuts()
     initShortcut("Window On All Desktops", i18n("Keep Window on All Desktops"),
                  0, &Workspace::slotWindowOnAllDesktops);
 
+    initShortcut("Window Custom Quick Tile Left", i18n("Custom Quick Tile Window to the Left"),
+                 0, std::bind(&Workspace::customQuickTileWindow, this, QuickTileFlag::Left));
+    initShortcut("Window Custom Quick Tile Right", i18n("Custom Quick Tile Window to the Right"),
+                 0, std::bind(&Workspace::customQuickTileWindow, this, QuickTileFlag::Right));
+    initShortcut("Window Custom Quick Tile Top", i18n("Custom Quick Tile Window to the Top"),
+                 0, std::bind(&Workspace::customQuickTileWindow, this, QuickTileFlag::Top));
+    initShortcut("Window Custom Quick Tile Bottom", i18n("Custom Quick Tile Window to the Bottom"),
+                 0, std::bind(&Workspace::customQuickTileWindow, this, QuickTileFlag::Bottom));
+
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     for (uint i = 0; i < vds->maximum(); ++i) {
         auto handler = [this, i]() {

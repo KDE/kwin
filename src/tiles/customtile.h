@@ -46,6 +46,8 @@ public:
 
     CustomTile *nextTileAt(Qt::Edge edge) const;
 
+    CustomTile *nextNonLayoutTileAt(Qt::Edge edge) const;
+
 Q_SIGNALS:
     void layoutDirectionChanged(Tile::LayoutDirection direction);
     void layoutModified();

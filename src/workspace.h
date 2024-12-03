@@ -425,6 +425,7 @@ public:
     }
 
     void quickTileWindow(QuickTileMode mode);
+    void customQuickTileWindow(QuickTileMode mode);
     void switchWindow(Direction direction);
 
     ShortcutDialog *shortcutDialog() const
