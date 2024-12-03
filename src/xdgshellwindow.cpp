@@ -254,9 +254,10 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
     Q_EMIT frameGeometryAboutToChange();
 
     if (mode != MoveResizeMode::Move) {
-        const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
+        // xdg-shell doesn't support fractional sizes, so the requested client size is rounded.
+        const QSize requestedClientSize = frameSizeToClientSize(rect.size()).toSize();
         if (requestedClientSize == clientSize()) {
-            updateGeometry(rect);
+            updateGeometry(QRectF(rect.topLeft(), clientSizeToFrameSize(requestedClientSize)));
         } else {
             m_configureFlags |= XdgSurfaceConfigure::ConfigurePosition;
             scheduleConfigure();
