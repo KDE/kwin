@@ -485,7 +485,17 @@ bool Effect::perform(Feature feature, const QVariantList &arguments)
     return false;
 }
 
-bool Effect::tabletToolEvent(QTabletEvent *event)
+bool Effect::tabletToolProximity(TabletEvent *event)
+{
+    return false;
+}
+
+bool Effect::tabletToolAxis(TabletEvent *event)
+{
+    return false;
+}
+
+bool Effect::tabletToolTip(TabletEvent *event)
 {
     return false;
 }

@@ -11,9 +11,11 @@
 // KConfigSkeleton
 #include "mouseclickconfig.h"
 
+#include "core/inputdevice.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "input_event.h"
 
 #include <QAction>
 
@@ -314,44 +316,54 @@ void MouseClickEffect::paintScreenFinishGl()
     ShaderManager::instance()->popShader();
 }
 
-bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
+TabletToolEvent &MouseClickEffect::getOrCreateTabletPoint(InputDeviceTabletTool *tool)
 {
-    auto &tabletEvent = m_tabletTools[event->uniqueId()];
-    if (!tabletEvent.m_color.isValid()) {
-        switch (event->pointerType()) {
-        case QPointingDevice::PointerType::Unknown:
-        case QPointingDevice::PointerType::Generic:
-        case QPointingDevice::PointerType::Finger:
-        case QPointingDevice::PointerType::Pen:
-            tabletEvent.m_color = MouseClickConfig::color1();
+    auto &point = m_tabletTools[tool];
+    if (!point.m_color.isValid()) {
+        switch (tool->type()) {
+        case InputDeviceTabletTool::Type::Finger:
+        case InputDeviceTabletTool::Type::Pen:
+        case InputDeviceTabletTool::Pencil:
+        case InputDeviceTabletTool::Brush:
+        case InputDeviceTabletTool::Airbrush:
+        case InputDeviceTabletTool::Lens:
+        case InputDeviceTabletTool::Totem:
+            point.m_color = MouseClickConfig::color1();
             break;
-        case QPointingDevice::PointerType::Eraser:
-            tabletEvent.m_color = MouseClickConfig::color2();
+        case InputDeviceTabletTool::Type::Eraser:
+            point.m_color = MouseClickConfig::color2();
             break;
-        case QPointingDevice::PointerType::Cursor:
-            tabletEvent.m_color = MouseClickConfig::color3();
+        case KWin::InputDeviceTabletTool::Type::Mouse:
+            point.m_color = MouseClickConfig::color3();
             break;
-        case QPointingDevice::PointerType::AllPointerTypes:
-            Q_UNREACHABLE();
             break;
         }
     }
-    switch (event->type()) {
-    case QEvent::TabletPress:
-        tabletEvent.m_pressed = true;
-        break;
-    case QEvent::TabletRelease:
-        tabletEvent.m_pressed = false;
-        break;
-    case QEvent::TabletLeaveProximity:
-        m_tabletTools.remove(event->uniqueId());
-        return false;
-    default:
-        break;
-    }
-    tabletEvent.m_globalPosition = event->globalPosition();
-    tabletEvent.m_pressure = event->pressure();
+    return point;
+}
 
+bool MouseClickEffect::tabletToolProximity(TabletEvent *event)
+{
+    if (event->type() == QEvent::TabletLeaveProximity) {
+        m_tabletTools.remove(event->tool());
+    }
+    return false;
+}
+
+bool MouseClickEffect::tabletToolAxis(TabletEvent *event)
+{
+    auto &point = getOrCreateTabletPoint(event->tool());
+    point.m_globalPosition = event->globalPosition();
+    point.m_pressure = event->pressure();
+    return false;
+}
+
+bool MouseClickEffect::tabletToolTip(TabletEvent *event)
+{
+    auto &point = getOrCreateTabletPoint(event->tool());
+    point.m_pressed = event->type() == QEvent::TabletPress;
+    point.m_pressure = event->pressure();
+    point.m_globalPosition = event->globalPosition();
     return false;
 }
 

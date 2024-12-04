@@ -127,7 +127,7 @@ bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::mic
     return false;
 }
 
-bool PopupInputFilter::tabletToolEvent(TabletEvent *event)
+bool PopupInputFilter::tabletToolTipEvent(TabletEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;
