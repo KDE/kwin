@@ -34,6 +34,28 @@ var logoutEffect = {
             from: 0.0,
             to: 1.0
         });
+
+        for (let window of effects.stackingOrder) {
+            if (!window.visible) {
+                continue;
+            }
+
+            if (window.desktopWindow || logoutEffect.isLogoutWindow(window)) {
+                continue;
+            }
+
+            if (window.inAnimation) {
+                cancel(window.inAnimation);
+                window.inAnimation = undefined;
+            }
+
+            window.outAnimation = set({
+                window: window,
+                duration: animationTime(800),
+                type: Effect.Opacity,
+                to: 0.0
+            });
+        }
     },
     closed: function (window) {
         if (!logoutEffect.isLogoutWindow(window)) {
@@ -51,6 +73,29 @@ var logoutEffect = {
             from: 1.0,
             to: 0.0
         });
+
+        for (let window of effects.stackingOrder) {
+            if (window.desktopWindow || logoutEffect.isLogoutWindow(window)) {
+                continue;
+            }
+
+            if (window.outAnimation) {
+                cancel(window.outAnimation);
+                window.outAnimation = undefined;
+            }
+
+            if (!window.visible) {
+                continue;
+            }
+
+            window.inAnimation = animate({
+                window: window,
+                duration: animationTime(200),
+                type: Effect.Opacity,
+                from: 0.0,
+                to: 1.0
+            });
+        }
     },
     init: function () {
         effects.windowAdded.connect(logoutEffect.opened);
