@@ -217,7 +217,7 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
                    Qt::NoModifier, button, button, tool, device);
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
     input()->processFilters(std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
     input()->setLastInputHandler(this);
 }
@@ -249,7 +249,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
                    Qt::NoModifier, button, button, tool, device);
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolProximityEvent, std::placeholders::_1, &ev));
     input()->processFilters(std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
     input()->setLastInputHandler(this);
 }
@@ -281,7 +281,7 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
                    Qt::NoModifier, button, button, tool, device);
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolTipEvent, std::placeholders::_1, &ev));
     input()->processFilters(std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));
     input()->setLastInputHandler(this);
 }

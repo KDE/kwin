@@ -78,7 +78,9 @@ public:
 
     virtual void switchEvent(SwitchEvent *event);
 
-    virtual void tabletToolEvent(TabletEvent *event);
+    virtual void tabletToolProximityEvent(TabletEvent *event);
+    virtual void tabletToolAxisEvent(TabletEvent *event);
+    virtual void tabletToolTipEvent(TabletEvent *event);
     virtual void tabletToolButtonEvent(TabletToolButtonEvent *event);
     virtual void tabletPadButtonEvent(TabletPadButtonEvent *event);
     virtual void tabletPadStripEvent(TabletPadStripEvent *event);

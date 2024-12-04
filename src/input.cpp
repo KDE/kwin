@@ -2727,7 +2727,7 @@ public:
         update();
     }
 
-    void tabletToolEvent(TabletEvent *event) override
+    void tabletToolTipEvent(TabletEvent *event) override
     {
         if (event->type() != QEvent::TabletPress) {
             return;
@@ -2831,7 +2831,15 @@ public:
         notifyActivity();
     }
 
-    void tabletToolEvent(TabletEvent *event) override
+    void tabletToolProximityEvent(TabletEvent *event) override
+    {
+        notifyActivity();
+    }
+    void tabletToolAxisEvent(TabletEvent *event) override
+    {
+        notifyActivity();
+    }
+    void tabletToolTipEvent(TabletEvent *event) override
     {
         notifyActivity();
     }

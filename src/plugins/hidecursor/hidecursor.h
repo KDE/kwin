@@ -32,11 +32,15 @@ public:
     void pointerMotion(PointerMotionEvent *event) override;
     void pointerButton(PointerButtonEvent *event) override;
     void keyboardKey(KeyboardKeyEvent *event) override;
-    void tabletToolEvent(TabletEvent *event) override;
+    void tabletToolProximityEvent(TabletEvent *event) override;
+    void tabletToolAxisEvent(TabletEvent *event) override;
+    void tabletToolTipEvent(TabletEvent *event) override;
 
 private:
     void showCursor();
     void hideCursor();
+
+    void activity();
 
     int m_inactivityDuration;
     bool m_hideOnTyping;
