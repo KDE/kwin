@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 10;
+static const quint32 s_version = 11;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -112,6 +112,7 @@ public:
     void sendColorProfileSource(Resource *resource);
     void sendBrightness(Resource *resource);
     void sendColorPowerTradeoff(Resource *resource);
+    void sendDimming(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -151,6 +152,7 @@ public:
     double m_brightness = 1.0;
     color_power_tradeoff m_powerColorTradeoff = color_power_tradeoff_efficiency;
     QTimer m_doneTimer;
+    uint32_t m_dimming = 10'000;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -239,6 +241,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateColorProfileSource();
     updateBrightness();
     updateColorPowerTradeoff();
+    updateDimming();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -271,6 +274,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::colorProfileSourceChanged, this, &OutputDeviceV2Interface::updateColorProfileSource);
     connect(handle, &Output::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
     connect(handle, &Output::colorPowerTradeoffChanged, this, &OutputDeviceV2Interface::updateColorPowerTradeoff);
+    connect(handle, &Output::dimmingChanged, this, &OutputDeviceV2Interface::updateDimming);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -349,6 +353,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendColorProfileSource(resource);
     sendBrightness(resource);
     sendColorPowerTradeoff(resource);
+    sendDimming(resource);
     sendDone(resource);
 }
 
@@ -520,6 +525,13 @@ void OutputDeviceV2InterfacePrivate::sendColorPowerTradeoff(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_COLOR_POWER_TRADEOFF_SINCE_VERSION) {
         send_color_power_tradeoff(resource->handle, m_powerColorTradeoff);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendDimming(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_DIMMING_SINCE_VERSION) {
+        send_dimming(resource->handle, m_dimming);
     }
 }
 
@@ -895,6 +907,19 @@ void OutputDeviceV2Interface::updateColorPowerTradeoff()
             d->sendColorPowerTradeoff(resource);
             d->sendDone(resource);
         }
+    }
+}
+
+void OutputDeviceV2Interface::updateDimming()
+{
+    const uint32_t newDimming = std::round(d->m_handle->dimming() * 10'000);
+    if (d->m_dimming != newDimming) {
+        d->m_dimming = newDimming;
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendDimming(resource);
+        }
+        scheduleDone();
     }
 }
 

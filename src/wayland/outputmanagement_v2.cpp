@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 10;
+static const quint32 s_version = 11;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -69,6 +69,7 @@ protected:
     void kde_output_configuration_v2_set_color_profile_source(Resource *resource, wl_resource *outputdevice, uint32_t source) override;
     void kde_output_configuration_v2_set_brightness(Resource *resource, wl_resource *outputdevice, uint32_t brightness) override;
     void kde_output_configuration_v2_set_color_power_tradeoff(Resource *resource, wl_resource *outputdevice, uint32_t preference) override;
+    void kde_output_configuration_v2_set_dimming(Resource *resource, ::wl_resource *outputdevice, uint32_t multiplier) override;
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -381,6 +382,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_color_power
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->colorPowerTradeoff = *tradeoff;
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_dimming(Resource *resource, ::wl_resource *outputdevice, uint32_t multiplier)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->dimming = multiplier / 10'000.0;
     }
 }
 

@@ -334,13 +334,13 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     if (!output->currentBrightness().has_value()
         || (!output->highDynamicRange() && output->brightnessDevice() && !output->isInternal())
         || (!output->highDynamicRange() && output->brightnessDevice() && output->brightnessDevice()->brightnessSteps() < 5)) {
-        frame->setBrightness(output->brightnessSetting());
+        frame->setBrightness(output->brightnessSetting() * output->dimming());
     } else {
         constexpr double changePerSecond = 3;
         const double maxChangePerFrame = changePerSecond * 1'000.0 / renderLoop->refreshRate();
         // brightness perception is non-linear, gamma 2.2 encoding *roughly* represents that
         const double current = std::pow(*output->currentBrightness(), 1.0 / 2.2);
-        frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
+        frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting() * output->dimming(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
 
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {

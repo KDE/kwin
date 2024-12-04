@@ -373,6 +373,7 @@ public:
     double brightnessSetting() const;
     std::optional<double> currentBrightness() const;
     double artificialHdrHeadroom() const;
+    double dimming() const;
 
     const ColorDescription &colorDescription() const;
 
@@ -447,6 +448,7 @@ Q_SIGNALS:
     void colorProfileSourceChanged();
     void brightnessChanged();
     void colorPowerTradeoffChanged();
+    void dimmingChanged();
 
 protected:
     struct Information
@@ -506,6 +508,7 @@ protected:
         /// how much HDR headroom is created by increasing the backlight beyond the user setting
         double artificialHdrHeadroom = 1.0;
         ColorPowerTradeoff colorPowerTradeoff = ColorPowerTradeoff::PreferEfficiency;
+        double dimming = 1.0;
     };
 
     void setInformation(const Information &information);

@@ -80,6 +80,7 @@ private:
     void updateColorProfileSource();
     void updateBrightness();
     void updateColorPowerTradeoff();
+    void updateDimming();
 
     void scheduleDone();
 
