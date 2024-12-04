@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-02 00:43+0000\n"
+"POT-Creation-Date: 2024-12-04 00:41+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -3750,20 +3750,20 @@ msgstr "Dialoog"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:479
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
 
-#: sm.cpp:480
+#: sm.cpp:478
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:481
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
@@ -4235,133 +4235,157 @@ msgstr "Aktiivse akna läbipaistmatuse vähendamine 5 %"
 msgid "Keep Window on All Desktops"
 msgstr "Aken kõigil töölaudadel"
 
-#: useractions.cpp:1005
+#: useractions.cpp:997
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Left"
+msgid "Custom Quick Tile Window to the Left"
+msgstr "Akna kiire nihutamine vasakule"
+
+#: useractions.cpp:999
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Right"
+msgid "Custom Quick Tile Window to the Right"
+msgstr "Akna kiire nihutamine paremale"
+
+#: useractions.cpp:1001
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Top"
+msgid "Custom Quick Tile Window to the Top"
+msgstr "Akna kiire nihutamine üles"
+
+#: useractions.cpp:1003
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Bottom"
+msgid "Custom Quick Tile Window to the Bottom"
+msgstr "Akna kiire nihutamine alla"
+
+#: useractions.cpp:1014
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Aken töölauale %1"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1016
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Aken järgmisele töölauale"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1017
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Aken eelmisele töölauale"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1018
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Aken üks töölaud paremale"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1020
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Aken üks töölaud vasakule"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Aken üks töölaud üles"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Aken üks töölaud alla"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1028
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "Aken ekraanile %1"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1035
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Aken järgmisele ekraanile"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1037
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "Aken eelmisele ekraanile"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1039
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Aken üks töölaud paremale"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1041
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Aken üks töölaud vasakule"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1043
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Aken ekraanile 2"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1045
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Aken üks töölaud alla"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1049
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Lülitumine ekraanile %1"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Lülitumine järgmisele ekraanile"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Lülitumine eelmisele ekraanile"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1058
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Lülitumine parempoolsele aknale"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1060
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Lülitumine vasakpoolsele aknale"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1062
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Lülitumine ekraanile 0"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1064
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Lülitumine ekraanile 0"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1067
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Töölaua näitamine"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1070
 #, kde-format
 msgid "Kill Window"
 msgstr "Akna tapmine"
 
-#: useractions.cpp:1127
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Akna aktiveerimine (%1)"

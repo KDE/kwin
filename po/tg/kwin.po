@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-02 00:43+0000\n"
+"POT-Creation-Date: 2024-12-04 00:41+0000\n"
 "PO-Revision-Date: 2019-09-23 21:11+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -3644,20 +3644,20 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: sm.cpp:479
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
 
-#: sm.cpp:480
+#: sm.cpp:478
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:481
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
@@ -4120,134 +4120,156 @@ msgstr ""
 msgid "Keep Window on All Desktops"
 msgstr ""
 
-#: useractions.cpp:1005
+#: useractions.cpp:997
+#, fuzzy, kde-format
+#| msgid "Move window to group"
+msgid "Custom Quick Tile Window to the Left"
+msgstr "Переместить это окно на экран %s"
+
+#: useractions.cpp:999
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Custom Quick Tile Window to the Right"
+msgstr "Тиреза ба Мизи кории 2"
+
+#: useractions.cpp:1001
+#, kde-format
+msgid "Custom Quick Tile Window to the Top"
+msgstr ""
+
+#: useractions.cpp:1003
+#, kde-format
+msgid "Custom Quick Tile Window to the Bottom"
+msgstr ""
+
+#: useractions.cpp:1014
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr ""
 
-#: useractions.cpp:1007
+#: useractions.cpp:1016
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr ""
 
-#: useractions.cpp:1008
+#: useractions.cpp:1017
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr ""
 
-#: useractions.cpp:1009
+#: useractions.cpp:1018
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr ""
 
-#: useractions.cpp:1011
+#: useractions.cpp:1020
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr ""
 
-#: useractions.cpp:1013
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr ""
 
-#: useractions.cpp:1015
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr ""
 
-#: useractions.cpp:1019
+#: useractions.cpp:1028
 #, fuzzy, kde-format
 #| msgid "Window to Screen 3"
 msgid "Move Window to Screen %1"
 msgstr "Тиреза ба Мизи кории 3"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1035
 #, fuzzy, kde-format
 #| msgid "Move window to group"
 msgid "Move Window to Next Screen"
 msgstr "Переместить это окно на экран %s"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1037
 #, fuzzy, kde-format
 #| msgid "Move window to group"
 msgid "Move Window to Previous Screen"
 msgstr "Переместить это окно на экран %s"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1039
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen to the Right"
 msgstr "Тиреза ба Мизи кории 2"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1041
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen to the Left"
 msgstr "Тиреза ба Мизи кории 2"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1043
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Тиреза ба Мизи кории 2"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1045
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Down"
 msgstr "Тиреза ба Мизи кории 2"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1049
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr ""
 
-#: useractions.cpp:1047
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr ""
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr ""
 
-#: useractions.cpp:1049
+#: useractions.cpp:1058
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen to the Right"
 msgstr "Мубодила бо мизи кории 0"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1060
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen to the Left"
 msgstr "Мубодила бо мизи кории 0"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1062
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Мубодила бо мизи кории 0"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1064
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Мубодила бо мизи кории 0"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1067
 #, fuzzy, kde-format
 #| msgid "Window & Desktop"
 msgid "Peek at Desktop"
 msgstr "Тиреза ва Мизи корӣ"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1070
 #, kde-format
 msgid "Kill Window"
 msgstr ""
 
-#: useractions.cpp:1127
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-02 00:43+0000\n"
+"POT-Creation-Date: 2024-12-04 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -3705,20 +3705,20 @@ msgstr "Διάλογος"
 msgid "..."
 msgstr ""
 
-#: sm.cpp:479
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
 
-#: sm.cpp:480
+#: sm.cpp:478
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:481
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
@@ -4188,129 +4188,153 @@ msgstr "Μείωση της αδιαφάνειας του ενεργού παρ�
 msgid "Keep Window on All Desktops"
 msgstr "Διατήρηση παραθύρου σε όλες τις επιφάνειες εργασίας"
 
-#: useractions.cpp:1005
+#: useractions.cpp:997
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Left"
+msgid "Custom Quick Tile Window to the Left"
+msgstr "Γρήγορη στοίβαξη παραθύρου στα αριστερά"
+
+#: useractions.cpp:999
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Right"
+msgid "Custom Quick Tile Window to the Right"
+msgstr "Γρήγορη στοίβαξη παραθύρου στα δεξιά"
+
+#: useractions.cpp:1001
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Top"
+msgid "Custom Quick Tile Window to the Top"
+msgstr "Γρήγορη στοίβαξη παραθύρου στην κορυφή"
+
+#: useractions.cpp:1003
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Bottom"
+msgid "Custom Quick Tile Window to the Bottom"
+msgstr "Γρήγορη στοίβαξη παραθύρου κάτω"
+
+#: useractions.cpp:1014
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Παράθυρο στην Επιφάνεια εργασίας %1"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1016
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Παράθυρο στην επόμενη Επιφάνεια εργασίας"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1017
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Παράθυρο στην προηγούμενη Επιφάνεια εργασίας"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1018
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1020
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Μετάβαση μία επιφάνεια εργασίας πάνω"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1028
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Μετακίνηση παραθύρου στην οθόνη %1"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1035
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Μετακίνηση παραθύρου στην επόμενη οθόνη"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1037
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Μετακίνηση παραθύρου στην προηγούμενη οθόνη"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1039
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1041
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1043
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Παράθυρο στην οθόνη 2"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1045
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1049
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Εναλλαγή στην οθόνη %1"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Εναλλαγή στην επόμενη οθόνη"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Μετάβαση στην προηγούμενη οθόνη"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1058
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Εναλλαγή στο παράθυρο δεξιά"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1060
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Εναλλαγή στο παράθυρο αριστερά"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Εναλλαγή στην οθόνη από πάνω"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Εναλλαγή στην οθόνη από κάτω"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1067
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Στην επι&φάνεια εργασίας"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1070
 #, kde-format
 msgid "Kill Window"
 msgstr "Σκότωμα παραθύρου"
 
-#: useractions.cpp:1127
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Ενεργοποίηση παραθύρου (%1)"

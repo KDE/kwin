@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-02 00:43+0000\n"
+"POT-Creation-Date: 2024-12-04 00:41+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -3699,20 +3699,20 @@ msgstr "محاوره‌ها:"
 msgid "..."
 msgstr ""
 
-#: sm.cpp:479
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
 
-#: sm.cpp:480
+#: sm.cpp:478
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:481
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
@@ -4222,137 +4222,161 @@ msgstr ""
 msgid "Keep Window on All Desktops"
 msgstr "نگه داشتن پنجره روی تمام رومیزیها"
 
-#: useractions.cpp:1005
+#: useractions.cpp:997
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Custom Quick Tile Window to the Left"
+msgstr "فشردن پنجره به چپ"
+
+#: useractions.cpp:999
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Right"
+msgid "Custom Quick Tile Window to the Right"
+msgstr "فشردن پنجره به راست"
+
+#: useractions.cpp:1001
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Custom Quick Tile Window to the Top"
+msgstr "فشردن پنجره به چپ"
+
+#: useractions.cpp:1003
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Custom Quick Tile Window to the Bottom"
+msgstr "فشردن پنجره به چپ"
+
+#: useractions.cpp:1014
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "پنجره در رومیزی ۱"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1016
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "پنجره در رومیزی بعدی"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1017
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "پنجره در رومیزی قبلی"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1018
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "پنجره یک رومیزی به راست"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1020
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "پنجره یک رومیزی به چپ"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "پنجره یک رومیزی به بالا"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "پنجره یک رومیزی به پایین"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1028
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "پنجره در پرده ۱"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1035
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "پنجره در پرده بعدی"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1037
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "پنجره در رومیزی قبلی"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1039
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "پنجره یک رومیزی به راست"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1041
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "پنجره یک رومیزی به چپ"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1043
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "پنجره در پرده ۲"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1045
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "پنجره یک رومیزی به پایین"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1049
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "سودهی به پرده ۱"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "سودهی به پرده بعدی"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "سودهی به رومیزی قبلی"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1058
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "فشردن پنجره به راست"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1060
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "فشردن پنجره به چپ"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1062
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "سودهی به پرده ۰"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1064
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "سودهی به پرده ۰"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1067
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "به &رومیزی‌"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1070
 #, kde-format
 msgid "Kill Window"
 msgstr "کشتن پنجره"
 
-#: useractions.cpp:1127
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""

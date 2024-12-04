@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-02 00:43+0000\n"
+"POT-Creation-Date: 2024-12-04 00:41+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -3637,7 +3637,7 @@ msgstr "Дыялогавае акно"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:479
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3646,13 +3646,13 @@ msgstr ""
 "Наступныя праграмы не закрыліся:\n"
 " %1"
 
-#: sm.cpp:480
+#: sm.cpp:478
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Скасаваць выхад"
 
-#: sm.cpp:481
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
@@ -4115,122 +4115,146 @@ msgstr "Паменшыць непразрыстасць актыўнага ак�
 msgid "Keep Window on All Desktops"
 msgstr "Паказваць акно на ўсіх працоўных сталах"
 
-#: useractions.cpp:1005
+#: useractions.cpp:997
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Left"
+msgid "Custom Quick Tile Window to the Left"
+msgstr "Хуткае кампанаванне акна злева"
+
+#: useractions.cpp:999
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Right"
+msgid "Custom Quick Tile Window to the Right"
+msgstr "Хуткае кампанаванне акна справа"
+
+#: useractions.cpp:1001
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Top"
+msgid "Custom Quick Tile Window to the Top"
+msgstr "Хуткае кампанаванне акна ўверсе"
+
+#: useractions.cpp:1003
+#, fuzzy, kde-format
+#| msgid "Quick Tile Window to the Bottom"
+msgid "Custom Quick Tile Window to the Bottom"
+msgstr "Хуткае кампанаванне акна ўнізе"
+
+#: useractions.cpp:1014
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Акно на працоўны стол %1"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1016
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Акно на наступны працоўны стол"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1017
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Акно на папярэдні працоўны стол"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1018
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Акно на працоўны стол справа"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1020
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Акно на працоўны стол злева"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1022
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Акно на вышэйшы працоўны стол"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1024
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Акно на ніжэйшы працоўны стол"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1028
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Перамясціць акно на экран %1"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1035
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Перамясціць акно на наступны экран"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1037
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Перамясціць акно на папярэдні экран"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1039
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Перамясціць акно на адзін экран управа"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1041
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Перамясціць акно на адзін экран улева"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1043
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Перамясціць акно на адзін экран уверх"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1045
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Перамясціць акно на адзін экран уніз"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1049
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Пераключыцца на экран %1"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Пераключыцца на наступны экран"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Пераключыцца на папярэдні экран"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1058
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Пераключыцца на экран справа"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1060
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Пераключыцца на экран злева"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Пераключыцца на экран вышэй"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Пераключыцца на экран ніжэй"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1067
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Аглядзець працоўны стол"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1070
 #, kde-format
 msgid "Kill Window"
 msgstr "Забіць працэс акна"
 
-#: useractions.cpp:1127
+#: useractions.cpp:1136
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Актываваць акно (%1)"
