@@ -160,6 +160,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(MouseCommand commandAll2 READ commandAll2 WRITE setCommandAll2 NOTIFY commandAll2Changed)
     Q_PROPERTY(MouseCommand commandAll3 READ commandAll3 WRITE setCommandAll3 NOTIFY commandAll3Changed)
     Q_PROPERTY(uint keyCmdAllModKey READ keyCmdAllModKey WRITE setKeyCmdAllModKey NOTIFY keyCmdAllModKeyChanged)
+    Q_PROPERTY(bool doubleClickBorderToMaximize READ doubleClickBorderToMaximize WRITE setDoubleClickBorderToMaximize NOTIFY doubleClickBorderToMaximizeChanged)
     /**
      * Whether the visible name should be condensed.
      */
@@ -461,6 +462,11 @@ public:
     }
     WindowOperation operationMaxButtonClick(Qt::MouseButtons button) const;
 
+    bool doubleClickBorderToMaximize() const
+    {
+        return m_doubleClickBorderToMaximize;
+    }
+
     enum MouseCommand {
         MouseRaise,
         MouseLower,
@@ -741,6 +747,7 @@ public:
     void setCommandAll2(MouseCommand commandAll2);
     void setCommandAll3(MouseCommand commandAll3);
     void setKeyCmdAllModKey(uint keyCmdAllModKey);
+    void setDoubleClickBorderToMaximize(bool maximize);
     void setCondensedTitle(bool condensedTitle);
     void setElectricBorderMaximize(bool electricBorderMaximize);
     void setElectricBorderTiling(bool electricBorderTiling);
@@ -943,6 +950,7 @@ Q_SIGNALS:
     void commandAll2Changed();
     void commandAll3Changed();
     void keyCmdAllModKeyChanged();
+    void doubleClickBorderToMaximizeChanged();
     void condensedTitleChanged();
     void electricBorderMaximizeChanged();
     void electricBorderTilingChanged();
@@ -1036,6 +1044,7 @@ private:
 
     bool m_allowTearing = true;
     bool m_interactiveWindowMoveEnabled = true;
+    bool m_doubleClickBorderToMaximize = true;
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
 };
