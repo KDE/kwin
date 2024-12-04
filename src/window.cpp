@@ -2801,17 +2801,17 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
                     break;
                 case Qt::LeftSection:
                 case Qt::RightSection:
-                    operation = Options::HMaximizeOp;
+                    operation = options->doubleClickBorderToMaximize() ? Options::HMaximizeOp : Options::NoOp;
                     break;
                 case Qt::TopSection:
                 case Qt::BottomSection:
-                    operation = Options::VMaximizeOp;
+                    operation = options->doubleClickBorderToMaximize() ? Options::VMaximizeOp : Options::NoOp;
                     break;
                 case Qt::TopLeftSection:
                 case Qt::TopRightSection:
                 case Qt::BottomLeftSection:
                 case Qt::BottomRightSection:
-                    operation = Options::MaximizeOp;
+                    operation = options->doubleClickBorderToMaximize() ? Options::MaximizeOp : Options::NoOp;
                     break;
                 default:
                     operation = Options::NoOp;

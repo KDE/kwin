@@ -501,6 +501,15 @@ void Options::setKeyCmdAllModKey(uint keyCmdAllModKey)
     Q_EMIT keyCmdAllModKeyChanged();
 }
 
+void Options::setDoubleClickBorderToMaximize(bool maximize)
+{
+    if (m_doubleClickBorderToMaximize == maximize) {
+        return;
+    }
+    m_doubleClickBorderToMaximize = maximize;
+    Q_EMIT doubleClickBorderToMaximizeChanged();
+}
+
 void Options::setCondensedTitle(bool condensedTitle)
 {
     if (condensed_title == condensedTitle) {
@@ -859,6 +868,7 @@ void Options::syncFromKcfgc()
     setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
     setAllowTearing(m_settings->allowTearing());
     setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
+    setDoubleClickBorderToMaximize(m_settings->doubleClickBorderToMaximize());
 }
 
 // restricted should be true for operations that the user may not be able to repeat

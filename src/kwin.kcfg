@@ -54,6 +54,9 @@
         <entry name="CommandAll3" type="String">
             <default>Resize</default>
         </entry>
+        <entry name="DoubleClickBorderToMaximize" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
     <group name="ElectricBorders">
         <entry name="Top" type="String">
