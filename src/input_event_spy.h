@@ -22,7 +22,9 @@ struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
 struct SwitchEvent;
-class TabletEvent;
+struct TabletToolProximityEvent;
+struct TabletToolAxisEvent;
+struct TabletToolTipEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
@@ -78,9 +80,9 @@ public:
 
     virtual void switchEvent(SwitchEvent *event);
 
-    virtual void tabletToolProximityEvent(TabletEvent *event);
-    virtual void tabletToolAxisEvent(TabletEvent *event);
-    virtual void tabletToolTipEvent(TabletEvent *event);
+    virtual void tabletToolProximityEvent(TabletToolProximityEvent *event);
+    virtual void tabletToolAxisEvent(TabletToolAxisEvent *event);
+    virtual void tabletToolTipEvent(TabletToolTipEvent *event);
     virtual void tabletToolButtonEvent(TabletToolButtonEvent *event);
     virtual void tabletPadButtonEvent(TabletPadButtonEvent *event);
     virtual void tabletPadStripEvent(TabletPadStripEvent *event);

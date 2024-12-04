@@ -10,7 +10,6 @@
 
 #include "input.h"
 
-#include <QInputEvent>
 #include <chrono>
 
 namespace KWin
@@ -80,27 +79,49 @@ struct SwitchEvent
     std::chrono::microseconds timestamp;
 };
 
-class TabletEvent : public QTabletEvent
+struct TabletToolProximityEvent
 {
-public:
-    TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
-                qreal pressure, float xTilt, float yTilt,
-                float tangentialPressure, qreal rotation, float z,
-                Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, InputDeviceTabletTool *tool, InputDevice *device);
+    InputDevice *device;
+    QPointF position;
+    qreal pressure;
+    int xTilt;
+    int yTilt;
+    qreal rotation;
+    qreal distance;
+    bool tipDown;
+    bool tipNear;
+    InputDeviceTabletTool *tool;
+    std::chrono::microseconds time;
+};
 
-    InputDevice *device() const
-    {
-        return m_device;
-    }
+struct TabletToolAxisEvent
+{
+    InputDevice *device;
+    QPointF position;
+    qreal pressure;
+    int xTilt;
+    int yTilt;
+    qreal rotation;
+    qreal distance;
+    bool tipDown;
+    bool tipNear;
+    InputDeviceTabletTool *tool;
+    std::chrono::microseconds time;
+};
 
-    InputDeviceTabletTool *tool() const
-    {
-        return m_tool;
-    }
-
-private:
-    InputDeviceTabletTool *m_tool;
-    InputDevice *m_device;
+struct TabletToolTipEvent
+{
+    InputDevice *device;
+    QPointF position;
+    qreal pressure;
+    int xTilt;
+    int yTilt;
+    qreal rotation;
+    qreal distance;
+    bool tipDown;
+    bool tipNear;
+    InputDeviceTabletTool *tool;
+    std::chrono::microseconds time;
 };
 
 struct TabletToolButtonEvent
