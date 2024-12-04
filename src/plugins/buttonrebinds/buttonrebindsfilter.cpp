@@ -197,7 +197,25 @@ bool ButtonRebindsFilter::pointerButton(KWin::PointerButtonEvent *event)
     return send(Pointer, {{}, event->button}, event->state == KWin::PointerButtonState::Pressed, event->timestamp);
 }
 
-bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)
+bool ButtonRebindsFilter::tabletToolProximityEvent(KWin::TabletEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+    m_tabletCursorPos = event->position();
+    return false;
+}
+
+bool ButtonRebindsFilter::tabletToolAxisEvent(KWin::TabletEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+    m_tabletCursorPos = event->position();
+    return false;
+}
+
+bool ButtonRebindsFilter::tabletToolTipEvent(KWin::TabletEvent *event)
 {
     if (RebindScope::isRebinding()) {
         return false;

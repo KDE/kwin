@@ -569,11 +569,33 @@ void EffectsHandler::touchCancel()
     }
 }
 
-bool EffectsHandler::tabletToolEvent(TabletEvent *event)
+bool EffectsHandler::tabletToolProximityEvent(TabletEvent *event)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
-        if (it->second->tabletToolEvent(event)) {
+        if (it->second->tabletToolProximity(event)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandler::tabletToolAxisEvent(TabletEvent *event)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletToolAxis(event)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandler::tabletToolTipEvent(TabletEvent *event)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletToolTip(event)) {
             return true;
         }
     }

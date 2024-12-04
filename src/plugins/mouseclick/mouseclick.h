@@ -23,6 +23,7 @@ namespace KWin
 #define BUTTON_COUNT 3
 
 class EffectFrame;
+class InputDeviceTabletTool;
 
 class MouseClickMouseEvent
 {
@@ -116,7 +117,9 @@ public:
     QFont font() const;
     bool isEnabled() const;
 
-    bool tabletToolEvent(QTabletEvent *event) override;
+    bool tabletToolProximity(TabletEvent *event) override;
+    bool tabletToolAxis(TabletEvent *event) override;
+    bool tabletToolTip(TabletEvent *event) override;
 
 private Q_SLOTS:
     void toggleEnabled();
@@ -141,6 +144,8 @@ private:
     void paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix);
     void paintScreenFinishGl();
 
+    TabletToolEvent &getOrCreateTabletPoint(InputDeviceTabletTool *tool);
+
     QColor m_colors[BUTTON_COUNT];
     int m_ringCount;
     float m_lineWidth;
@@ -152,7 +157,7 @@ private:
 
     std::deque<std::unique_ptr<MouseClickMouseEvent>> m_clicks;
     std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
-    QHash<quint64, TabletToolEvent> m_tabletTools;
+    QHash<InputDeviceTabletTool *, TabletToolEvent> m_tabletTools;
 
     bool m_enabled;
 };

@@ -118,7 +118,17 @@ bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, std::chron
     return true;
 }
 
-bool DpmsInputEventFilter::tabletToolEvent(TabletEvent *event)
+bool DpmsInputEventFilter::tabletToolProximityEvent(TabletEvent *event)
+{
+    return true;
+}
+
+bool DpmsInputEventFilter::tabletToolAxisEvent(TabletEvent *event)
+{
+    return true;
+}
+
+bool DpmsInputEventFilter::tabletToolTipEvent(TabletEvent *event)
 {
     if (event->type() == QEvent::TabletPress) {
         // Only wake when the tool is actually pressed down not just hovered over the tablet

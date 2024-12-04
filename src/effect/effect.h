@@ -17,7 +17,6 @@
 #include <KSharedConfig>
 
 class QKeyEvent;
-class QTabletEvent;
 
 namespace KWin
 {
@@ -27,6 +26,7 @@ class Output;
 class PaintDataPrivate;
 class RenderTarget;
 class RenderViewport;
+class TabletEvent;
 class WindowPaintDataPrivate;
 
 /** @defgroup kwineffects KWin effects library
@@ -797,16 +797,19 @@ public:
     virtual void touchCancel();
 
     /**
-     * There has been an event from a drawing tablet tool
-     *
-     * i.e. a pen and the likes.
-     *
-     * @param event the event information
-     * @see QTabletEvent
-     *
-     * @since 5.25
+     * There has been a proximity tablet tool event.
      */
-    virtual bool tabletToolEvent(QTabletEvent *event);
+    virtual bool tabletToolProximity(TabletEvent *event);
+
+    /**
+     * There has been an axis tablet tool event.
+     */
+    virtual bool tabletToolAxis(TabletEvent *event);
+
+    /**
+     * There has been a tip tablet tool event.
+     */
+    virtual bool tabletToolTip(TabletEvent *event);
 
     /**
      * There has been an event from a button on a drawing tablet tool

@@ -425,7 +425,9 @@ public:
 
     virtual bool switchEvent(SwitchEvent *event);
 
-    virtual bool tabletToolEvent(TabletEvent *event);
+    virtual bool tabletToolProximityEvent(TabletEvent *event);
+    virtual bool tabletToolAxisEvent(TabletEvent *event);
+    virtual bool tabletToolTipEvent(TabletEvent *event);
     virtual bool tabletToolButtonEvent(TabletToolButtonEvent *event);
     virtual bool tabletPadButtonEvent(TabletPadButtonEvent *event);
     virtual bool tabletPadStripEvent(TabletPadStripEvent *event);
