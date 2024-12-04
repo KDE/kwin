@@ -598,6 +598,9 @@ DebugConsole::DebugConsole()
     setAttribute(Qt::WA_ShowWithoutActivating);
     m_ui->setupUi(this);
 
+    // Only on Wayland the window has a proper decoration with a close button.
+    m_ui->quitButton->setVisible(!kwinApp()->shouldUseWaylandForCompositing());
+
     auto windowsModel = new DebugConsoleModel(this);
     QSortFilterProxyModel *proxyWindowsModel = new QSortFilterProxyModel(this);
     proxyWindowsModel->setSourceModel(windowsModel);
