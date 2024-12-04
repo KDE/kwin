@@ -473,6 +473,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
+    next.dimmingMultiplier = props->dimmingMultiplier.value_or(m_state.dimmingMultiplier);
     setState(next);
 
     // allowSdrSoftwareBrightness might change our capabilities

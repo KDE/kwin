@@ -641,6 +641,9 @@ void Output::setState(const State &state)
     if (oldState.brightnessSetting != state.brightnessSetting) {
         Q_EMIT brightnessChanged();
     }
+    if (oldState.dimmingMultiplier != state.dimmingMultiplier) {
+        Q_EMIT dimmingMultiplierChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -791,6 +794,11 @@ Output::ColorProfileSource Output::colorProfileSource() const
 double Output::brightnessSetting() const
 {
     return m_state.brightnessSetting;
+}
+
+double Output::dimmingMultiplier() const
+{
+    return m_state.dimmingMultiplier;
 }
 
 std::optional<double> Output::currentBrightness() const

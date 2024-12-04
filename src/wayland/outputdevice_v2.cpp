@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 9;
+static const quint32 s_version = 10;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -111,6 +111,7 @@ public:
     void sendSdrGamutWideness(Resource *resource);
     void sendColorProfileSource(Resource *resource);
     void sendBrightness(Resource *resource);
+    void sendDimming(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -149,6 +150,7 @@ public:
     color_profile_source m_colorProfile = color_profile_source::color_profile_source_sRGB;
     double m_brightness = 1.0;
     QTimer m_doneTimer;
+    double m_dimming = 1.0;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -236,6 +238,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateSdrGamutWideness();
     updateColorProfileSource();
     updateBrightness();
+    updateDimming();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -267,6 +270,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::sdrGamutWidenessChanged, this, &OutputDeviceV2Interface::updateSdrGamutWideness);
     connect(handle, &Output::colorProfileSourceChanged, this, &OutputDeviceV2Interface::updateColorProfileSource);
     connect(handle, &Output::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
+    connect(handle, &Output::dimmingMultiplierChanged, this, &OutputDeviceV2Interface::updateDimming);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -344,6 +348,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendSdrGamutWideness(resource);
     sendColorProfileSource(resource);
     sendBrightness(resource);
+    sendDimming(resource);
     sendDone(resource);
 }
 
@@ -508,6 +513,13 @@ void OutputDeviceV2InterfacePrivate::sendBrightness(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_BRIGHTNESS_SINCE_VERSION) {
         send_brightness(resource->handle, m_brightness);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendDimming(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_DIMMING_MULTIPLIER_SINCE_VERSION) {
+        send_dimming_multiplier(resource->handle, m_dimming);
     }
 }
 
@@ -860,6 +872,19 @@ void OutputDeviceV2Interface::updateBrightness()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendBrightness(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateDimming()
+{
+    const uint32_t newDimming = std::round(d->m_handle->dimmingMultiplier() * 10'000);
+    if (d->m_dimming != newDimming) {
+        d->m_dimming = newDimming;
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendDimming(resource);
         }
         scheduleDone();
     }
