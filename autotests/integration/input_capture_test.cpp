@@ -87,6 +87,7 @@ private Q_SLOTS:
 
     void testInputCapture_data();
     void testInputCapture();
+    void disconnectingEiRemovesCapture();
 };
 
 void TestInputCapture::init()
@@ -313,6 +314,31 @@ void TestInputCapture::testInputCapture()
     QVERIFY2(removeReply.isValid(), QTest::toString(removeReply.error()));
 
     ei_unref(ei);
+}
+
+void TestInputCapture::disconnectingEiRemovesCapture()
+{
+    InputCapture capture;
+    if (!capture.setupSuccessfully()) {
+        return;
+    }
+
+    auto ei = ei_new_receiver(nullptr);
+    ei_setup_backend_fd(ei, capture.eifd);
+    QSocketNotifier eiNotifier(ei_get_fd(ei), QSocketNotifier::Read);
+    QSignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
+
+    while (eiReadableSpy.wait()) {
+        ei_dispatch(ei);
+        if (auto event = ei_get_event(ei)) {
+            QCOMPARE(ei_event_get_type(event), EI_EVENT_CONNECT);
+            break;
+        }
+    }
+
+    ei_unref(ei);
+
+    QTRY_COMPARE(QDBusConnection::sessionBus().objectRegisteredAt(capture.dbusPath), nullptr);
 }
 
 WAYLANDTEST_MAIN(TestInputCapture)

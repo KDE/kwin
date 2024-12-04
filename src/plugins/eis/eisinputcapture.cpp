@@ -270,7 +270,8 @@ void EisInputCapture::handleEvents()
             qCDebug(KWIN_INPUTCAPTURE) << "Client disconnected" << eis_client_get_name(client);
             eis_seat_unref(std::exchange(m_seat, nullptr));
             eis_client_unref(std::exchange(m_client, nullptr));
-            break;
+            m_manager->removeInputCapture(QDBusObjectPath(m_dbusPath));
+            return;
         }
         case EIS_EVENT_SEAT_BIND: {
             auto seat = eis_event_get_seat(event);
