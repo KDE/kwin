@@ -74,12 +74,10 @@ KWinCompositingKCM::KWinCompositingKCM(QObject *parent, const KPluginMetaData &d
 
     addConfig(m_settings, widget());
 
-    m_form.glCrashedWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     QAction *reenableGlAction = new QAction(i18n("Re-enable OpenGL detection"), this);
     connect(reenableGlAction, &QAction::triggered, this, &KWinCompositingKCM::reenableGl);
     connect(reenableGlAction, &QAction::triggered, m_form.glCrashedWarning, &KMessageWidget::animatedHide);
     m_form.glCrashedWarning->addAction(reenableGlAction);
-    m_form.windowThumbnailWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
 
     m_form.kcfg_Enabled->setVisible(!compositingRequired());
     m_form.kcfg_WindowsBlockCompositing->setVisible(!compositingRequired());

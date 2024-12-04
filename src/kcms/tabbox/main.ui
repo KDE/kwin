@@ -538,6 +538,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="icon">
+              <iconset theme="view-preview"/>
+             </property>
             </widget>
            </item>
           </layout>

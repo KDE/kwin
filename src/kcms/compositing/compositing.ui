@@ -33,6 +33,9 @@ you can reset this protection but be aware that this might result in an immediat
        <property name="wordWrap">
         <bool>true</bool>
        </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::DialogWarning"/>
+       </property>
       </widget>
      </item>
      <item>
@@ -45,6 +48,9 @@ you can reset this protection but be aware that this might result in an immediat
        </property>
        <property name="wordWrap">
         <bool>true</bool>
+       </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::DialogWarning"/>
        </property>
       </widget>
      </item>

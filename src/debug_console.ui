@@ -31,6 +31,9 @@
        <property name="text">
         <string>Quit Debug Console</string>
        </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
+       </property>
       </widget>
      </item>
     </layout>

@@ -610,7 +610,6 @@ DebugConsole::DebugConsole()
     m_ui->primaryContent->setModel(new DataSourceModel(this));
     m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
     m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
-    m_ui->quitButton->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
     m_ui->tabWidget->setTabIcon(0, QIcon::fromTheme(QStringLiteral("view-list-tree")));
 
     if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {

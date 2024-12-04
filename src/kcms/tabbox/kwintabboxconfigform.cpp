@@ -27,8 +27,6 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *conf
 {
     ui->setupUi(this);
 
-    ui->effectConfigButton->setIcon(QIcon::fromTheme(QStringLiteral("view-preview")));
-
     if (QApplication::screens().count() < 2) {
         ui->filterScreens->hide();
         ui->screenFilter->hide();
