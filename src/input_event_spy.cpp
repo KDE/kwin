@@ -99,7 +99,15 @@ void InputEventSpy::switchEvent(SwitchEvent *event)
 {
 }
 
-void InputEventSpy::tabletToolEvent(TabletEvent *event)
+void InputEventSpy::tabletToolProximityEvent(TabletEvent *event)
+{
+}
+
+void InputEventSpy::tabletToolAxisEvent(TabletEvent *event)
+{
+}
+
+void InputEventSpy::tabletToolTipEvent(TabletEvent *event)
 {
 }
 

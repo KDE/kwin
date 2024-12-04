@@ -55,28 +55,37 @@ bool HideCursorEffect::isActive() const
     return false;
 }
 
-void HideCursorEffect::pointerMotion(PointerMotionEvent *event)
+void HideCursorEffect::activity()
 {
     showCursor();
     if (m_inactivityDuration > 0) {
         m_inactivityTimer.start(m_inactivityDuration);
     }
+}
+
+void HideCursorEffect::pointerMotion(PointerMotionEvent *event)
+{
+    activity();
 }
 
 void HideCursorEffect::pointerButton(PointerButtonEvent *event)
 {
-    showCursor();
-    if (m_inactivityDuration > 0) {
-        m_inactivityTimer.start(m_inactivityDuration);
-    }
+    activity();
 }
 
-void HideCursorEffect::tabletToolEvent(TabletEvent *event)
+void HideCursorEffect::tabletToolProximityEvent(TabletEvent *event)
 {
-    showCursor();
-    if (m_inactivityDuration > 0) {
-        m_inactivityTimer.start(m_inactivityDuration);
-    }
+    activity();
+}
+
+void HideCursorEffect::tabletToolAxisEvent(TabletEvent *event)
+{
+    activity();
+}
+
+void HideCursorEffect::tabletToolTipEvent(TabletEvent *event)
+{
+    activity();
 }
 
 void HideCursorEffect::keyboardKey(KeyboardKeyEvent *event)
