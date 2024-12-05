@@ -104,6 +104,7 @@ target_sources(kwin PRIVATE
     hide_cursor_spy.cpp
     idle_inhibition.cpp
     idledetector.cpp
+    idleinhibitor.cpp
     input.cpp
     input_event.cpp
     input_event_spy.cpp

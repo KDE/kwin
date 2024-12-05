@@ -44,6 +44,7 @@
 #include "compositor.h"
 #include "decorations/decorationbridge.h"
 #include "dpmsinputeventfilter.h"
+#include "idleinhibitor.h"
 #include "lidswitchtracker.h"
 #include "main.h"
 #include "outputconfigurationstore.h"
@@ -1294,9 +1295,14 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         if (output->dpmsMode() != Output::DpmsMode::On) {
             createDpmsFilter();
         }
+        if (output->physicalSize() == QSize(0, 0) && !m_projectionIdleInhibitor) {
+            // most likely a projector, create the idle inhibitor for it
+            m_projectionIdleInhibitor = std::make_unique<IdleInhibitor>("A projector is connected");
+        }
         Q_EMIT outputAdded(output);
     }
     maybeDestroyDpmsFilter();
+    maybeDestroyPresentationFilter();
 
     m_placementTracker->inhibit();
 
@@ -1371,6 +1377,16 @@ void Workspace::maybeDestroyDpmsFilter()
     });
     if (allOn) {
         m_dpmsFilter.reset();
+    }
+}
+
+void Workspace::maybeDestroyPresentationFilter()
+{
+    const bool noProjectors = std::ranges::none_of(m_outputs, [](Output *output) {
+        return output->physicalSize() == QSize(0, 0);
+    });
+    if (noProjectors) {
+        m_projectionIdleInhibitor.reset();
     }
 }
 
