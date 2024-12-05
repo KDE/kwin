@@ -1371,11 +1371,6 @@ void X11Window::createDecoration()
             }
         });
         connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
-            if (!isDeleted()) {
-                updateFrameExtents();
-            }
-        });
-        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (isDeleted()) {
                 return;
             }
@@ -1383,10 +1378,18 @@ void X11Window::createDecoration()
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
+            updateFrameExtents();
         });
         connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();
+            }
+        });
+
+        decoration->apply(decoration->nextState()->clone());
+        connect(decoration.get(), &KDecoration3::Decoration::nextStateChanged, this, [this](auto state) {
+            if (!isDeleted()) {
+                m_decoration.decoration->apply(state->clone());
             }
         });
     }

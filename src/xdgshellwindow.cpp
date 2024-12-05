@@ -707,7 +707,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
 
     QSizeF framePadding(0, 0);
     if (m_nextDecoration) {
-        const auto borders = m_nextDecoration->bordersFor(nextTargetScale());
+        const auto borders = m_nextDecorationState->borders();
         framePadding.setWidth(borders.left() + borders.right());
         framePadding.setHeight(borders.top() + borders.bottom());
     }
@@ -731,6 +731,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
     configureEvent->bounds = moveResizeGeometry();
     configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
+    configureEvent->decorationState = m_nextDecorationState;
     configureEvent->serial = serial;
     configureEvent->tile = m_requestedTile;
 
@@ -739,18 +740,15 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
 
 void XdgToplevelWindow::handleRolePrecommit()
 {
-    auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
-    if (configureEvent && decoration() != configureEvent->decoration.get()) {
+    if (auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
         if (configureEvent->decoration) {
-            connect(configureEvent->decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
-                if (!isDeleted()) {
-                    scheduleConfigure();
-                }
-            });
+            configureEvent->decoration->apply(configureEvent->decorationState);
         }
 
-        setDecoration(configureEvent->decoration);
-        updateShadow();
+        if (decoration() != configureEvent->decoration.get()) {
+            setDecoration(configureEvent->decoration);
+            updateShadow();
+        }
     }
 }
 
@@ -1402,7 +1400,12 @@ XdgToplevelWindow::DecorationMode XdgToplevelWindow::preferredDecorationMode() c
 
 void XdgToplevelWindow::clearDecoration()
 {
+    if (m_nextDecoration) {
+        disconnect(m_nextDecoration.get(), &KDecoration3::Decoration::nextStateChanged, this, &XdgToplevelWindow::processDecorationState);
+    }
+
     m_nextDecoration = nullptr;
+    m_nextDecorationState = nullptr;
 }
 
 void XdgToplevelWindow::configureDecoration()
@@ -1416,6 +1419,10 @@ void XdgToplevelWindow::configureDecoration()
     case DecorationMode::Server:
         if (!m_nextDecoration) {
             m_nextDecoration.reset(Workspace::self()->decorationBridge()->createDecoration(this));
+            if (m_nextDecoration) {
+                connect(m_nextDecoration.get(), &KDecoration3::Decoration::nextStateChanged, this, &XdgToplevelWindow::processDecorationState);
+                m_nextDecorationState = m_nextDecoration->nextState()->clone();
+            }
         }
         break;
     }
@@ -1425,6 +1432,18 @@ void XdgToplevelWindow::configureDecoration()
         configureXdgDecoration(decorationMode);
     } else if (m_serverDecoration) {
         configureServerDecoration(decorationMode);
+    }
+}
+
+void XdgToplevelWindow::processDecorationState(std::shared_ptr<KDecoration3::DecorationState> state)
+{
+    if (isDeleted()) {
+        return;
+    }
+
+    m_nextDecorationState = state->clone();
+    if (m_shellSurface->isConfigured()) {
+        scheduleConfigure();
     }
 }
 
