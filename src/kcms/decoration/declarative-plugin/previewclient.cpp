@@ -250,6 +250,11 @@ double PreviewClient::scale() const
     return 1;
 }
 
+double PreviewClient::nextScale() const
+{
+    return 1;
+}
+
 bool PreviewClient::hasApplicationMenu() const
 {
     return true;
