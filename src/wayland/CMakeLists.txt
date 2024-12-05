@@ -339,6 +339,7 @@ target_sources(kwin PRIVATE
     drmlease_v1.cpp
     externalbrightness_v1.cpp
     filtered_display.cpp
+    fixes.cpp
     fractionalscale_v1.cpp
     frog_colormanagement_v1.cpp
     idle.cpp

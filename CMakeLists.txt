@@ -207,6 +207,11 @@ if (Wayland_VERSION VERSION_GREATER_EQUAL 1.23)
 else()
     set(HAVE_WL_DISPLAY_SET_DEFAULT_MAX_BUFFER_SIZE 0)
 endif()
+if (Wayland_VERSION VERSION_GREATER_EQUAL 1.23.90)
+    set(HAVE_WL_FIXES 1)
+else()
+    set(HAVE_WL_FIXES 0)
+endif()
 
 find_package(WaylandProtocols 1.38)
 set_package_properties(WaylandProtocols PROPERTIES
