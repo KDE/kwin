@@ -17,8 +17,6 @@
 #include <QPoint>
 #include <QRect>
 
-class QObject;
-
 namespace KWin
 {
 
