@@ -39,7 +39,6 @@ public:
     ~Decoration() override;
 
     void paint(QPainter *painter, const QRectF &repaintRegion) override;
-    QMarginsF bordersFor(double scale) const override;
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
