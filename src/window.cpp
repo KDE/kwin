@@ -4534,6 +4534,7 @@ void Window::setNextTargetScale(double scale)
 {
     if (m_nextTargetScale != scale) {
         m_nextTargetScale = scale;
+        Q_EMIT nextTargetScaleChanged(); // TODO vlad: reorder
         doSetPreferredBufferScale();
     }
 }

@@ -79,6 +79,7 @@ public:
     Qt::Edges adjacentScreenEdges() const override;
     QString windowClass() const override;
     double scale() const override;
+    double nextScale() const override;
 
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;

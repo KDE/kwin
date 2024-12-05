@@ -1481,6 +1481,7 @@ Q_SIGNALS:
     void fullscreenGeometryRestoreChanged();
     void offscreenRenderingChanged();
     void targetScaleChanged();
+    void nextTargetScaleChanged();
 
 protected:
     Window();

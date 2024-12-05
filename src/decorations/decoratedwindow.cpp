@@ -75,6 +75,7 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
     connect(window, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration3::DecoratedWindow::applicationMenuActiveChanged);
 
     connect(window, &Window::targetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::scaleChanged);
+    connect(window, &Window::nextTargetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::nextScaleChanged);
 
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {
@@ -328,6 +329,11 @@ QString DecoratedWindowImpl::windowClass() const
 qreal DecoratedWindowImpl::scale() const
 {
     return m_window->targetScale();
+}
+
+qreal DecoratedWindowImpl::nextScale() const
+{
+    return m_window->nextTargetScale();
 }
 }
 }
