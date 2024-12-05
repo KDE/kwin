@@ -491,7 +491,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     // kwin will send a configure event with the actived state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Move the window to the right monitor and tile it to the right.
@@ -503,9 +503,10 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280 / 2, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    const QRectF rightQuickTileGeom = QRectF(1280 + 1280 / 2, 0, 1280 / 2, 1024);
-    QCOMPARE(window->frameGeometry(), rightQuickTileGeom);
-    QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeom);
+    const QRectF rightQuickTileGeomScreen2 = QRectF(1280 + 1280 / 2, 0, 1280 / 2, 1024);
+    const QRectF rightQuickTileGeomScreen1 = QRectF(1280 / 2, 0, 1280 / 2, 1024);
+    QCOMPARE(window->frameGeometry(), rightQuickTileGeomScreen2);
+    QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeomScreen2);
     QCOMPARE(window->output(), outputs[1]);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
@@ -517,10 +518,20 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
         auto changeSet = config1.changeSet(outputs[1]);
         changeSet->enabled = false;
     }
+
     workspace()->applyOutputConfiguration(config1);
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280 / 2, 1024));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), QSize(1280 / 2, 1024), Qt::blue);
 
     // The window will be moved to the left monitor
     QCOMPARE(window->output(), outputs[0]);
+    QVERIFY(tileChangedSpy.wait());
+    qWarning() << window->requestedTile()->windowGeometry();
+    QCOMPARE(window->frameGeometry(), rightQuickTileGeomScreen1);
+    QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeomScreen1);
 
     // Enable the right monitor again
     OutputConfiguration config2;
@@ -532,11 +543,11 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280 / 2, 1024), Qt::blue);
-    QVERIFY(quickTileChangedSpy.wait());
+    QVERIFY(tileChangedSpy.wait());
 
     // The window will be moved back to the right monitor, and put in the correct tile
-    QCOMPARE(window->frameGeometry(), rightQuickTileGeom);
-    QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeom);
+    QCOMPARE(window->frameGeometry(), rightQuickTileGeomScreen2);
+    QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeomScreen2);
     QCOMPARE(window->output(), outputs[1]);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);

@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "tiles/customtile.h"
 #include "tiles/tile.h"
 #include <kwin_export.h>
 
@@ -39,7 +38,7 @@ public:
     enum Roles {
         TileRole = Qt::UserRole + 1
     };
-    explicit TileModel(TileManager *parent = nullptr);
+    explicit TileModel(Tile *parent = nullptr);
     ~TileModel() override;
 
     // QAbstractItemModel overrides
@@ -59,7 +58,7 @@ private:
     void endRemoveTile();
 
     // Not an uinique_pointer as the model is child of the manager so would cause a cyclic delete
-    TileManager *m_tileManager;
+    Tile *m_rootTile;
     friend class CustomTile;
 
     Q_DISABLE_COPY(TileModel)

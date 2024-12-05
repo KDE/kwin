@@ -10,6 +10,7 @@
 #pragma once
 
 #include "effect/globals.h"
+#include "virtualdesktops.h"
 #include <kwin_export.h>
 #include <utils/common.h>
 
@@ -20,6 +21,7 @@ namespace KWin
 {
 
 class TileManager;
+class VirtualDesktop;
 class Window;
 
 class KWIN_EXPORT Tile : public QObject
@@ -46,6 +48,9 @@ public:
 
     explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
     ~Tile();
+
+    VirtualDesktop *desktop() const;
+    bool isActive() const;
 
     void setGeometryFromWindow(const QRectF &geom);
     void setGeometryFromAbsolute(const QRectF &geom);
@@ -93,6 +98,8 @@ public:
     QuickTileMode quickTileMode() const;
     void setQuickTileMode(QuickTileMode mode);
 
+    Tile *rootTile() const;
+
     /**
      * All tiles directly children of this tile
      */
@@ -106,14 +113,14 @@ public:
     /**
      * Visit all tiles descendant of this tile, recursive
      */
-    void visitDescendants(std::function<void(const Tile *child)> callback) const;
+    void visitDescendants(std::function<void(Tile *child)> callback);
 
     void resizeFromGravity(Gravity gravity, int x_root, int y_root);
 
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
 
-    void addWindow(Window *window);
-    void removeWindow(Window *window);
+    Q_INVOKABLE bool addWindow(Window *window);
+    Q_INVOKABLE bool removeWindow(Window *window);
     QList<KWin::Window *> windows() const;
 
     int row() const;
@@ -141,6 +148,7 @@ public:
     }
 
 Q_SIGNALS:
+    void activeChanged(bool active);
     void relativeGeometryChanged();
     void absoluteGeometryChanged();
     void windowGeometryChanged();
@@ -160,6 +168,7 @@ protected:
     QList<Window *> m_windows;
     Tile *m_parentTile;
 
+    VirtualDesktop *m_desktop = nullptr;
     TileManager *m_tiling;
     QRectF m_relativeGeometry;
     static QSizeF s_minimumSize;

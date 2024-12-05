@@ -37,8 +37,8 @@ class TileModel;
 class KWIN_EXPORT TileManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(KWin::Tile *rootTile READ rootTile CONSTANT)
-    Q_PROPERTY(TileModel *model READ model CONSTANT)
+    Q_PROPERTY(KWin::Tile *rootTile READ rootTile NOTIFY rootTileChanged)
+    Q_PROPERTY(TileModel *model READ model NOTIFY modelChanged)
 
 public:
     explicit TileManager(Output *parent = nullptr);
@@ -50,16 +50,23 @@ public:
 
     KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
+    CustomTile *rootTile(VirtualDesktop *desktop) const;
     CustomTile *rootTile() const;
     KWin::Tile *quickTile(QuickTileMode mode) const;
 
     TileModel *model() const;
 
+    Tile *tileForWindow(Window *window, VirtualDesktop *desktop);
+    void forgetWindow(Window *window, VirtualDesktop *desktop);
+
 Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
+    void tileForWindowChanged(Window *window, Tile *owner);
+    void rootTileChanged(CustomTile *rootTile);
+    void modelChanged(TileModel *model);
 
 private:
-    void readSettings();
+    void readSettings(RootTile *rootTile);
     void saveSettings();
     QJsonObject tileToJSon(CustomTile *parentTile);
     CustomTile *parseTilingJSon(const QJsonValue &val, const QRectF &availableArea, CustomTile *parentTile);
@@ -68,9 +75,12 @@ private:
 
     Output *m_output = nullptr;
     std::unique_ptr<QTimer> m_saveTimer;
-    std::unique_ptr<CustomTile> m_rootTile = nullptr;
-    std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
-    std::unique_ptr<TileModel> m_tileModel = nullptr;
+    RootTile *m_rootTile = nullptr;
+    QuickRootTile *m_quickRootTile = nullptr;
+
+    QHash<VirtualDesktop *, RootTile *> m_rootTiles;
+    QHash<VirtualDesktop *, QuickRootTile *> m_quickRootTiles;
+
     bool m_tearingDown = false;
     friend class CustomTile;
 };

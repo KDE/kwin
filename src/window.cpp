@@ -3685,10 +3685,18 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
         mode &= ~QuickTileMode(QuickTileFlag::Vertical);
     }
 
+    Tile *tile = nullptr;
     if (mode == QuickTileMode(QuickTileFlag::Custom)) {
-        requestTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
+        tile = workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint);
     } else {
-        requestTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(mode));
+        tile = workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(mode);
+    }
+
+    if (!tile && m_requestedTile) {
+        m_requestedTile->removeWindow(this);
+    }
+    if (tile) {
+        tile->addWindow(this);
     }
 }
 
@@ -3716,19 +3724,9 @@ void Window::commitTile(Tile *tile)
         return;
     }
 
-    Tile *oldTile = m_tile;
     QuickTileMode oldTileMode = quickTileMode();
 
     m_tile = tile;
-
-    if (m_tile) {
-        Q_ASSERT(!isDeleted());
-        m_tile->addWindow(this);
-    }
-
-    if (oldTile) {
-        oldTile->removeWindow(this);
-    }
 
     Q_EMIT tileChanged(tile);
 
@@ -3786,6 +3784,21 @@ void Window::requestTile(Tile *tile)
         moveResize(geometry);
     }
     doSetQuickTileMode();
+}
+
+void Window::setTileCompatibility(Tile *tile)
+{
+    qCWarning(KWIN_CORE) << "Writing to the property window.tile is deprecated: use tile.addWindow() instead";
+
+    if (m_requestedTile == tile) {
+        return;
+    }
+
+    if (tile) {
+        tile->addWindow(this);
+    } else if (m_requestedTile) {
+        m_requestedTile->removeWindow(this);
+    }
 }
 
 void Window::doSetQuickTileMode()
@@ -3863,10 +3876,12 @@ void Window::sendToOutput(Output *newOutput)
     const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
     if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::Custom)) {
-        requestTile(nullptr);
+        workspace()->tileManager(moveResizeOutput())->forgetWindow(this, nullptr);
     } else {
         Tile *newTile = workspace()->tileManager(newOutput)->quickTile(requestedQuickTileMode());
-        requestTile(newTile);
+        if (newTile) {
+            newTile->addWindow(this);
+        }
     }
 
     QRectF newGeom = moveToArea(oldGeom, oldScreenArea, screenArea);
