@@ -1365,14 +1365,14 @@ void X11Window::createDecoration()
 {
     std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
+        connect(decoration.get(), &KDecoration3::Decoration::stateRequested, this, [this](auto state) {
+            if (!isDeleted()) {
+                m_decoration.decoration->apply(state->clone());
+            }
+        });
         connect(decoration.get(), &KDecoration3::Decoration::resizeOnlyBordersChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();
-            }
-        });
-        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
-            if (!isDeleted()) {
-                updateFrameExtents();
             }
         });
         connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
@@ -1383,12 +1383,15 @@ void X11Window::createDecoration()
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
+            updateFrameExtents();
         });
         connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();
             }
         });
+
+        decoration->apply(decoration->nextState()->clone());
     }
     setDecoration(decoration);
 

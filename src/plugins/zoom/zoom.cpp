@@ -285,7 +285,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
         if (!data.texture) {
             return nullptr;
         }
-        data.texture->setFilter(GL_LINEAR);
+        data.texture->setFilter(GL_NEAREST);
         data.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
     }

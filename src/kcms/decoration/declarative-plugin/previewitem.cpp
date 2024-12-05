@@ -55,6 +55,7 @@ void PreviewItem::componentComplete()
     createDecoration();
     if (m_decoration) {
         m_decoration->setSettings(m_settings->settings());
+        m_decoration->create();
         m_decoration->init();
         syncSize();
     }

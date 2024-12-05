@@ -281,7 +281,18 @@ void InternalWindow::setNoBorder(bool set)
 
 void InternalWindow::createDecoration(const QRectF &oldGeometry)
 {
-    setDecoration(std::shared_ptr<KDecoration3::Decoration>(Workspace::self()->decorationBridge()->createDecoration(this)));
+    std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
+    if (decoration) {
+        connect(decoration.get(), &KDecoration3::Decoration::stateRequested, this, [this](auto state) {
+            if (!isDeleted()) {
+                m_decoration.decoration->apply(state->clone());
+            }
+        });
+
+        decoration->apply(decoration->nextState()->clone());
+    }
+
+    setDecoration(decoration);
     moveResize(QRectF(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
 }
 
