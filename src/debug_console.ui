@@ -10,6 +10,12 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="windowTitle">
+   <string>Debug Console</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="kwin"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
