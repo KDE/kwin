@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 09:09+0100\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"PO-Revision-Date: 2024-12-04 09:44+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1231,7 +1231,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom de la màquina: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -4126,28 +4126,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Mantén la finestra a tots els escriptoris"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Situa la finestra en mosaic a l'esquerra"
+msgstr "Situa la finestra en mosaic personalitzat a l'esquerra"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Situa la finestra en mosaic a la dreta"
+msgstr "Situa la finestra en mosaic personalitzat a la dreta"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Situa la finestra en mosaic a la part superior"
+msgstr "Situa la finestra en mosaic personalitzat a la part superior"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Situa la finestra en mosaic a la part inferior"
+msgstr "Situa la finestra en mosaic personalitzat a la part inferior"
 
 #: useractions.cpp:1014
 #, kde-format

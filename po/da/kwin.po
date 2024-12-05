@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
 "PO-Revision-Date: 2024-10-21 13:14+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -1219,7 +1219,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Vværtsnavn: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"

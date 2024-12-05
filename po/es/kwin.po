@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 19:41+0100\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"PO-Revision-Date: 2024-12-04 03:19+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1234,7 +1234,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nombre de máquina: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "Panel táctil"
@@ -4128,28 +4128,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Mantener la ventana en todos los escritorios"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Situar la ventana en mosaico a la izquierda"
+msgstr "Situar ventana en mosaico personalizado a la izquierda"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Situar la ventana en mosaico a la derecha"
+msgstr "Situar ventana en mosaico personalizado a la derecha"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Situar la ventana en mosaico en la parte superior"
+msgstr "Situar ventana en mosaico personalizado en la parte superior"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Situar la ventana en mosaico en la parte inferior"
+msgstr "Situar ventana en mosaico personalizado en la parte inferior"
 
 #: useractions.cpp:1014
 #, kde-format

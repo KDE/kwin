@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1217,7 +1217,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主机名：%1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "触摸板"
@@ -4065,28 +4065,24 @@ msgid "Keep Window on All Desktops"
 msgstr "在所有桌面上显示窗口"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "快速铺放窗口到左侧"
+msgstr ""
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "快速铺放窗口到右侧"
+msgstr ""
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "快速铺放窗口到上方"
+msgstr ""
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "快速铺放窗口到下方"
+msgstr ""
 
 #: useractions.cpp:1014
 #, kde-format

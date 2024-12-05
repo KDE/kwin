@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
-"PO-Revision-Date: 2024-11-28 20:35+0100\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"PO-Revision-Date: 2024-12-04 07:06+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -1231,7 +1231,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ostalari-izena: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"
@@ -4119,28 +4119,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Mantendu leihoa mahaigain guztietan"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Jarri leihoa mosaikoan ezkerrean"
+msgstr "Jarri leihoa mosaikoan ezkerrean neurrira"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Jarri leihoa mosaikoan eskuinean"
+msgstr "Jarri leihoa mosaikoan eskuinean neurrira"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Jarri leihoa mosaikoan goian"
+msgstr "Jarri leihoa mosaikoan goian neurrira"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Jarri leihoa mosaikoan behean"
+msgstr "Jarri leihoa mosaikoan behean neurrira"
 
 #: useractions.cpp:1014
 #, kde-format

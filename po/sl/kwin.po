@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1696632 2024-12-04 01:16:58Z scripty $
+# $Id: kwin.po 1696709 2024-12-05 01:16:55Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 22:17+0100\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"PO-Revision-Date: 2024-12-04 07:19+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -1236,7 +1236,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ime gostitelja: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -4118,28 +4118,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Ohrani okno na vseh namizjih"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Hitro razpostavi okno na levi"
+msgstr "Po meri hitro razpostavi okno na levi"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Hitro razpostavi okno na desni"
+msgstr "Po meri hitro razpostavi okno na desni"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Hitro razpostavi okno na vrh"
+msgstr "Po meri hitro razpostavi okno na vrh"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Hitro razpostavi okno na dno"
+msgstr "Po meri hitro razpostavi okno na dno"
 
 #: useractions.cpp:1014
 #, kde-format

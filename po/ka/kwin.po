@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 05:28+0100\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"PO-Revision-Date: 2024-12-04 03:28+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1218,7 +1218,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "ჰოსტის სახელი: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "თაჩპედი"
@@ -4095,28 +4095,24 @@ msgid "Keep Window on All Desktops"
 msgstr "ფანჯრის ყველა სამუშაო მაგიდაზე ჩვენება"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "ფანჯრის ეკრანის მარცხენა მხარეს გაშლა"
+msgstr "მორგებული სწრაფი მოზაიკის ფანჯარა მარცხნივ"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "ფანჯრის ეკრანის მარჯვენა მხარეს გაშლა"
+msgstr "მორგებული სწრაფი მოზაიკის ფანჯარა მარჯვნივ"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "ფანჯრის ეკრანის ზედა მხარეს გაშლა"
+msgstr "მორგებული სწრაფი მოზაიკის ფანჯარა ზემოთ"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "ფანჯრის ეკრანის ქვედა მხარეს გაშლა"
+msgstr "მორგებული სწრაფი მოზაიკის ფანჯარა ქვემოთ"
 
 #: useractions.cpp:1014
 #, kde-format

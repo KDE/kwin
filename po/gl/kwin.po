@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
-"PO-Revision-Date: 2024-09-20 10:05+0200\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"PO-Revision-Date: 2024-12-04 20:39+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1236,7 +1236,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Servidor: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "Área táctil"
@@ -3104,7 +3104,7 @@ msgstr "Eliminar a regra (para usar en importacións)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "A regra está activada."
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -4113,28 +4113,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Manter a xanela en todos os escritorios"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Dispor rapidamente a xanela en mosaico cara á esquerda"
+msgstr "Dispor rapidamente a xanela en mosaico cara á esquerda (personalizada)"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Dispor rapidamente a xanela en mosaico cara á dereita"
+msgstr "Dispor rapidamente a xanela en mosaico cara á dereita (personalizada)"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Dispor rapidamente a xanela en mosaico cara arriba"
+msgstr "Dispor rapidamente a xanela en mosaico cara arriba (personalizada)"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Dispor rapidamente a xanela en mosaico cara abaixo"
+msgstr "Dispor rapidamente a xanela en mosaico cara abaixo (personalizada)"
 
 #: useractions.cpp:1014
 #, kde-format

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-04 00:41+0000\n"
-"PO-Revision-Date: 2024-11-27 16:04+0300\n"
+"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"PO-Revision-Date: 2024-12-04 18:12+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1229,7 +1229,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Makine adı: %1"
 
-#: input.cpp:3142
+#: input.cpp:3146
 #, kde-format
 msgid "Touchpad"
 msgstr "Dokunmatik Yüzey"
@@ -4104,28 +4104,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Pencere’yi Tüm Masaüstlerinde Bulundur"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Tez Pencereyi Sola Döşe"
+msgstr "Tez Pencereyi Sola Özel Döşe"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Tez Pencereyi Sağa Döşe"
+msgstr "Tez Pencereyi Sağa Özel Döşe"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Tez Pencereyi Üste Döşe"
+msgstr "Tez Pencereyi Üste Özel Döşe"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Tez Pencereyi Alta Döşe"
+msgstr "Tez Pencereyi Alta Özel Döşe"
 
 #: useractions.cpp:1014
 #, kde-format
