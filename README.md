@@ -17,6 +17,7 @@ Please refer to the [contributing document](CONTRIBUTING.md) for everything you 
 
  * mailing list: [kwin@kde.org](https://mail.kde.org/mailman/listinfo/kwin)
  * IRC: #kde-kwin on irc.libera.chat
+ * Matrix: [#kwin:kde.org](https://go.kde.org/matrix/#/#kwin:kde.org)
 
 # Support
 ## Application Developer
