@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-05 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-11-26 21:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -668,7 +668,7 @@ msgid "Buttons"
 msgstr "按鈕"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:509 debug_console.ui:346
+#: debug_console.cpp:509 debug_console.ui:355
 #, kde-format
 msgid "Modifiers"
 msgstr "修飾鍵"
@@ -719,376 +719,383 @@ msgstr "isFinger"
 msgid "Tablet Pad Ring"
 msgstr "繪圖板觸控環"
 
-#: debug_console.cpp:624
+#: debug_console.cpp:626
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "效果"
 
-#: debug_console.cpp:798
+#: debug_console.cpp:800
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "無滑鼠按鈕"
 
-#: debug_console.cpp:802
+#: debug_console.cpp:804
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "左"
 
-#: debug_console.cpp:805
+#: debug_console.cpp:807
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "右"
 
-#: debug_console.cpp:808
+#: debug_console.cpp:810
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "置中"
 
-#: debug_console.cpp:811
+#: debug_console.cpp:813
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "返回"
 
-#: debug_console.cpp:814
+#: debug_console.cpp:816
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "向前"
 
-#: debug_console.cpp:817
+#: debug_console.cpp:819
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "額外 1"
 
-#: debug_console.cpp:820
+#: debug_console.cpp:822
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "額外 2"
 
-#: debug_console.cpp:823
+#: debug_console.cpp:825
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "額外 3"
 
-#: debug_console.cpp:826
+#: debug_console.cpp:828
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "額外 4"
 
-#: debug_console.cpp:829
+#: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "額外 5"
 
-#: debug_console.cpp:832
+#: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "額外 6"
 
-#: debug_console.cpp:835
+#: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "額外 7"
 
-#: debug_console.cpp:838
+#: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "額外 8"
 
-#: debug_console.cpp:841
+#: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "額外 9"
 
-#: debug_console.cpp:844
+#: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "額外 10"
 
-#: debug_console.cpp:847
+#: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "額外 11"
 
-#: debug_console.cpp:850
+#: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "額外 12"
 
-#: debug_console.cpp:853
+#: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "額外 13"
 
-#: debug_console.cpp:856
+#: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "額外 14"
 
-#: debug_console.cpp:859
+#: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "額外 15"
 
-#: debug_console.cpp:862
+#: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "額外 16"
 
-#: debug_console.cpp:865
+#: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "額外 17"
 
-#: debug_console.cpp:868
+#: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "額外 18"
 
-#: debug_console.cpp:871
+#: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "額外 19"
 
-#: debug_console.cpp:874
+#: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "額外 20"
 
-#: debug_console.cpp:877
+#: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "額外 21"
 
-#: debug_console.cpp:880
+#: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "額外 22"
 
-#: debug_console.cpp:883
+#: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "額外 23"
 
-#: debug_console.cpp:886
+#: debug_console.cpp:888
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "額外 24"
 
-#: debug_console.cpp:889
+#: debug_console.cpp:891
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "工作"
 
-#: debug_console.cpp:1241
+#: debug_console.cpp:1243
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 視窗"
 
-#: debug_console.cpp:1243
+#: debug_console.cpp:1245
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 未管理視窗"
 
-#: debug_console.cpp:1245
+#: debug_console.cpp:1247
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland 視窗"
 
-#: debug_console.cpp:1247
+#: debug_console.cpp:1249
 #, kde-format
 msgid "Internal Windows"
 msgstr "內部視窗"
 
-#: debug_console.cpp:1587 debug_console.cpp:1601
+#: debug_console.cpp:1589 debug_console.cpp:1603
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "取消載入"
 
-#: debug_console.cpp:1589 debug_console.cpp:1603
+#: debug_console.cpp:1591 debug_console.cpp:1605
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
 msgstr "載入"
 
+#. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
+#: debug_console.ui:14
+#, fuzzy, kde-format
+#| msgid "Quit Debug Console"
+msgid "Debug Console"
+msgstr "退出偵錯控制台"
+
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
+#: debug_console.ui:38
 #, kde-format
 msgid "Quit Debug Console"
 msgstr "退出偵錯控制台"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
+#: debug_console.ui:54
 #, kde-format
 msgid "Windows"
 msgstr "視窗"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:59
+#: debug_console.ui:68
 #, kde-format
 msgid "Input Events"
 msgstr "輸入事件"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:76
+#: debug_console.ui:85
 #, kde-format
 msgid "Input Devices"
 msgstr "輸入裝置"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:86
+#: debug_console.ui:95
 #, kde-format
 msgid "OpenGL"
 msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:92
+#: debug_console.ui:101
 #, kde-format
 msgid "No OpenGL compositor running"
 msgstr "沒有執行中的 OpenGL 合成器"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:120
+#: debug_console.ui:129
 #, kde-format
 msgid "OpenGL (ES) driver information"
 msgstr "OpenGL (ES) 驅動資訊"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:126
+#: debug_console.ui:135
 #, kde-format
 msgid "Vendor:"
 msgstr "供應商："
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:133
+#: debug_console.ui:142
 #, kde-format
 msgid "Renderer:"
 msgstr "繪製器："
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:140
+#: debug_console.ui:149
 #, kde-format
 msgid "Version:"
 msgstr "版本："
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:147
+#: debug_console.ui:156
 #, kde-format
 msgid "Shading Language Version:"
 msgstr "著色器語言版本："
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:154
+#: debug_console.ui:163
 #, kde-format
 msgid "Driver:"
 msgstr "驅動："
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:161
+#: debug_console.ui:170
 #, kde-format
 msgid "GPU class:"
 msgstr "GPU 類別："
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:168
+#: debug_console.ui:177
 #, kde-format
 msgid "OpenGL Version:"
 msgstr "OpenGL 版本："
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:175
+#: debug_console.ui:184
 #, kde-format
 msgid "GLSL Version:"
 msgstr "GLSL 版本："
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:241
+#: debug_console.ui:250
 #, kde-format
 msgid "Platform Extensions"
 msgstr "平台延伸功能"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:257
+#: debug_console.ui:266
 #, kde-format
 msgid "OpenGL (ES) Extensions"
 msgstr "OpenGL (ES) 擴充功能"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:278
+#: debug_console.ui:287
 #, kde-format
 msgid "Keyboard"
 msgstr "鍵盤"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:305
+#: debug_console.ui:314
 #, kde-format
 msgid "Keymap Layouts"
 msgstr "鍵盤映射佈局"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:327
+#: debug_console.ui:336
 #, kde-format
 msgid "Current Layout:"
 msgstr "目前佈局："
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:362
+#: debug_console.ui:371
 #, kde-format
 msgid "Active Modifiers"
 msgstr "作用中修飾鍵"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:378
+#: debug_console.ui:387
 #, kde-format
 msgid "LEDs"
 msgstr "LED"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:394
+#: debug_console.ui:403
 #, kde-format
 msgid "Active LEDs"
 msgstr "作用中 LED"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: debug_console.ui:415 debug_console.ui:435
+#: debug_console.ui:424 debug_console.ui:444
 #, kde-format
 msgid "Clipboard"
 msgstr "剪貼簿"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#: debug_console.ui:481
+#: debug_console.ui:490
 #, kde-format
 msgid "Primary Selection"
 msgstr "主要選擇 (Primary Selection)"
@@ -4271,7 +4278,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1652
+#: workspace.cpp:1654
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

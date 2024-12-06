@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-09-10 11:29+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -219,7 +219,7 @@ msgstr ""
 "actief zijn."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:559
+#: main.ui:562
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -229,7 +229,7 @@ msgstr ""
 "andere vensters. deze optie vereist dat bureaubladeffecten actief is."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:565
 #, kde-format
 msgid "Show selected window"
 msgstr "Geselecteerd venster tonen"

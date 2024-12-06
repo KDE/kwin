@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-09-11 19:24+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -215,7 +215,7 @@ msgid "The effect to replace the list window when desktop effects are active."
 msgstr "Effekt att ersätta listfönstret med när skrivbordseffekter är aktiva."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:559
+#: main.ui:562
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -225,7 +225,7 @@ msgstr ""
 "tonas bort. Alternativet kräver skrivbordseffekter för att vara aktivt."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:565
 #, kde-format
 msgid "Show selected window"
 msgstr "Visa valt fönster"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-09-10 17:38+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -221,7 +221,7 @@ msgstr ""
 "efekt."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:559
+#: main.ui:562
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -231,7 +231,7 @@ msgstr ""
 "seçenek masaüstü efektlerinin etkin olması halinde kullanılabilir."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:565
 #, kde-format
 msgid "Show selected window"
 msgstr "Seçili pencereyi göster"

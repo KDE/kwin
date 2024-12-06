@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -215,7 +215,7 @@ msgid "The effect to replace the list window when desktop effects are active."
 msgstr "பணிமேடை அசைவூட்டங்கள் இயக்கப்பட்டிருக்கும்போது பயன்படுத்த வேண்டிய அசைவூட்டம்."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:559
+#: main.ui:562
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -225,7 +225,7 @@ msgstr ""
 "இத்தேர்வை பயன்படுத்த பணிமேடை அசைவூட்டங்களை இயக்க வேண்டும்."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:565
 #, kde-format
 msgid "Show selected window"
 msgstr "தேர்ந்தெடுத்த சாளரத்தை முன்னிலைப்படுத்து"

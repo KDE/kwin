@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-09-17 07:54+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -219,7 +219,7 @@ msgid "The effect to replace the list window when desktop effects are active."
 msgstr "啟動桌面效果時，取代列出視窗的效果"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:559
+#: main.ui:562
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -227,7 +227,7 @@ msgid ""
 msgstr "會用將其它視窗淡出的方式來突顯目前選取的視窗。此功能需要開啟桌面效果。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:565
 #, kde-format
 msgid "Show selected window"
 msgstr "顯示選取的視窗"

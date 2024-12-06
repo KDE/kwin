@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-09 01:39+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2023-01-13 20:04+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 "Като алтернатива, може вместо това да използвате бекенда на XRender!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:44
+#: compositing.ui:47
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -48,19 +48,19 @@ msgstr ""
 "минимизираните прозорци."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:56
+#: compositing.ui:62
 #, kde-format
 msgid "Compositing:"
 msgstr "Графични ефекти:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:63
+#: compositing.ui:69
 #, kde-format
 msgid "Enable on startup"
 msgstr "Активиране при начално стартиране"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:72
+#: compositing.ui:78
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -73,54 +73,54 @@ msgstr ""
 "Настройката може да бъде отменена от специфични за прозореца правила."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:75
+#: compositing.ui:81
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Разрешаване на приложенията да блокират графичните ефекти"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:82
+#: compositing.ui:88
 #, kde-format
 msgid "Animation speed:"
 msgstr "Скорост на анимация:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:119
+#: compositing.ui:125
 #, kde-format
 msgid "Very slow"
 msgstr "Много бавно"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:139
+#: compositing.ui:145
 #, kde-format
 msgid "Instant"
 msgstr "Моментално"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:151
+#: compositing.ui:157
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Запазване на миниатюри на прозорец:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:159
+#: compositing.ui:165
 #, kde-format
 msgid "Never"
 msgstr "Никога"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:164
+#: compositing.ui:170
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "Само за показани прозорци"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:169
+#: compositing.ui:175
 #, kde-format
 msgid "Always"
 msgstr "Винаги"
 
-#: main.cpp:78
+#: main.cpp:77
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Повторно активиране на откриване на OpenGL"

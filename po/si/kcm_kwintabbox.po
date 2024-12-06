@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2011-07-26 23:05+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <info@hanthana.org>\n"
@@ -228,7 +228,7 @@ msgid "The effect to replace the list window when desktop effects are active."
 msgstr "වැඩතල සැරසිලි සක්‍රීය විට කවුළු ලැයිස්තුව ප්‍රතිපිහිටුවීමට සැරසිල්ලක්."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:559
+#: main.ui:562
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -238,7 +238,7 @@ msgstr ""
 "සැරසිලි සක්‍රීය කිරීමට සිදුවේ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:565
 #, fuzzy, kde-format
 #| msgid "Show outline of selected window"
 msgid "Show selected window"

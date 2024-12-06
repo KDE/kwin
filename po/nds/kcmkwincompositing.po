@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-09 01:39+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2014-08-11 12:15+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 "Anners kannst Du ok XRender as Hülpprogramm bruken."
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:44
+#: compositing.ui:47
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -55,21 +55,21 @@ msgstr ""
 "wenn Du ehr minimeerst."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:56
+#: compositing.ui:62
 #, fuzzy, kde-format
 #| msgid "Compositing type:"
 msgid "Compositing:"
 msgstr "Tosamensettmetood:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:63
+#: compositing.ui:69
 #, fuzzy, kde-format
 #| msgid "Enable compositor on startup"
 msgid "Enable on startup"
 msgstr "Tosamensetten bi't Hoochfohren bruken"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:72
+#: compositing.ui:78
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -78,54 +78,54 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:75
+#: compositing.ui:81
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:82
+#: compositing.ui:88
 #, kde-format
 msgid "Animation speed:"
 msgstr "Animeergauigkeit:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:119
+#: compositing.ui:125
 #, kde-format
 msgid "Very slow"
 msgstr "Bannig langsam"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:139
+#: compositing.ui:145
 #, kde-format
 msgid "Instant"
 msgstr "Fuurts"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:151
+#: compositing.ui:157
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Finster-Vöransichten wohren:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:159
+#: compositing.ui:165
 #, kde-format
 msgid "Never"
 msgstr "Nienich"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:164
+#: compositing.ui:170
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "Bloots bi wiest Finstern"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:169
+#: compositing.ui:175
 #, kde-format
 msgid "Always"
 msgstr "Jümmers"
 
-#: main.cpp:78
+#: main.cpp:77
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "\"OpenGL-Opdecken\" wedder anmaken"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-09 01:39+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2017-10-30 23:08+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -45,7 +45,7 @@ msgstr ""
 "Уместо овога можете покушати и са позадином Икс‑рендер."
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:44
+#: compositing.ui:47
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -55,20 +55,20 @@ msgstr ""
 "Програми могу да не реагују на предвиђен начин када им је прозор минимизован."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:56
+#: compositing.ui:62
 #, kde-format
 msgid "Compositing:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:63
+#: compositing.ui:69
 #, fuzzy, kde-format
 #| msgid "Enable compositor on startup"
 msgid "Enable on startup"
 msgstr "Активирај слагач при покретању"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:72
+#: compositing.ui:78
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -81,57 +81,57 @@ msgstr ""
 "Поставка може да се потисне посебним правилима по прозору."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:75
+#: compositing.ui:81
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Програми могу да блокирају слагање"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:82
+#: compositing.ui:88
 #, kde-format
 msgid "Animation speed:"
 msgstr "Брзина анимације:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:119
+#: compositing.ui:125
 #, kde-format
 msgid "Very slow"
 msgstr "врло споро"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:139
+#: compositing.ui:145
 #, kde-format
 msgid "Instant"
 msgstr "тренутно"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:151
+#: compositing.ui:157
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Држи сличице прозора:"
 
 # >> @item:inlistbox Tearing Prevention (VSync)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:159
+#: compositing.ui:165
 #, kde-format
 msgid "Never"
 msgstr "никад"
 
 # >> @item:inlistbox Keep window thumbnails:
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:164
+#: compositing.ui:170
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "само за приказане прозоре"
 
 # >> @item:inlistbox Keep window thumbnails:
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:169
+#: compositing.ui:175
 #, kde-format
 msgid "Always"
 msgstr "увек"
 
-#: main.cpp:78
+#: main.cpp:77
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Поново активирај откривање опенГЛ‑а"

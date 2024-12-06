@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-25 00:41+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-01-28 17:59-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -216,7 +216,7 @@ msgid "The effect to replace the list window when desktop effects are active."
 msgstr "ਜਦੋਂ ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਸਰਗਰਮ ਹੋਵੇ ਤਾਂ ਲਿਸਟ ਵਿੰਡੋ ਨੂੰ ਬਦਲਣ ਵਾਲਾ ਪ੍ਰਭਾਵ।"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:559
+#: main.ui:562
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -224,7 +224,7 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:565
 #, kde-format
 msgid "Show selected window"
 msgstr "ਚੁਣੀ ਵਿੰਡੋ ਵੇਖਾਓ"

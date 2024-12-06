@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-09 01:39+0000\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
 "PO-Revision-Date: 2024-01-24 16:49+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -40,7 +40,7 @@ msgstr ""
 "gali nedelsiant sukelti strigtį!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:44
+#: compositing.ui:47
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -50,19 +50,19 @@ msgstr ""
 "gali sąlygoti, kad langai, juos sumažinus, nepristabdys savo darbo."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:56
+#: compositing.ui:62
 #, kde-format
 msgid "Compositing:"
 msgstr "Komponavimas:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:63
+#: compositing.ui:69
 #, kde-format
 msgid "Enable on startup"
 msgstr "Įjungti paleidimo metu"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:72
+#: compositing.ui:78
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -75,54 +75,54 @@ msgstr ""
 " Ši nuostata gali būti nustelbta tam tikromis langų taisyklėmis."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:75
+#: compositing.ui:81
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Leisti programoms blokuoti kompozicionavimą"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:82
+#: compositing.ui:88
 #, kde-format
 msgid "Animation speed:"
 msgstr "Animacijos greitis:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:119
+#: compositing.ui:125
 #, kde-format
 msgid "Very slow"
 msgstr "Labai lėtai"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:139
+#: compositing.ui:145
 #, kde-format
 msgid "Instant"
 msgstr "Akimirksniu"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:151
+#: compositing.ui:157
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Saugoti langų miniatiūras:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:159
+#: compositing.ui:165
 #, kde-format
 msgid "Never"
 msgstr "Niekada"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:164
+#: compositing.ui:170
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "Tik rodomiems langams"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:169
+#: compositing.ui:175
 #, kde-format
 msgid "Always"
 msgstr "Visada"
 
-#: main.cpp:78
+#: main.cpp:77
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Iš naujo įjungti OpenGL aptikimą"
