@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-06 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 09:09+0100\n"
+"PO-Revision-Date: 2024-12-06 10:02+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -947,10 +947,9 @@ msgstr "Carrega"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Ix de la consola de depuració"
+msgstr "Consola de depuració"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -4134,28 +4133,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Mantín la finestra a tots els escriptoris"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Situa la finestra en mosaic a l'esquerra"
+msgstr "Situa la finestra en mosaic personalitzat a l'esquerra"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Situa la finestra en mosaic a la dreta"
+msgstr "Situa la finestra en mosaic personalitzat a la dreta"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Situa la finestra en mosaic a la part superior"
+msgstr "Situa la finestra en mosaic personalitzat a la part superior"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Situa la finestra en mosaic a la part inferior"
+msgstr "Situa la finestra en mosaic personalitzat a la part inferior"
 
 #: useractions.cpp:1014
 #, kde-format

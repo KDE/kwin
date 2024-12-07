@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-06 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 11:45+0100\n"
+"PO-Revision-Date: 2024-12-06 11:34+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -949,10 +949,9 @@ msgstr "Laden"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Debugconsole verlaten"
+msgstr "Debug-console"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -4129,28 +4128,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Venster op alle bureaubladen"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Venster naar links snel in tegels ordenen"
+msgstr "Venster naar links aangepast snel in tegels ordenen"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Venster naar rechts snel in tegels ordenen"
+msgstr "Venster naar rechts aangepast snel in tegels ordenen"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Venster naar bovenaan snel in tegels ordenen"
+msgstr "Venster naar bovenaan aangepast snel in tegels ordenen"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Venster naar onderen snel in tegels ordenen"
+msgstr "Venster naar onderen aangepast snel in tegels ordenen"
 
 #: useractions.cpp:1014
 #, kde-format
