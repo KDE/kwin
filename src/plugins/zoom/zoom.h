@@ -94,7 +94,7 @@ private:
     {
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
-        QRect viewport;
+        QRectF viewport;
         ColorDescription color = ColorDescription::sRGB;
     };
 
