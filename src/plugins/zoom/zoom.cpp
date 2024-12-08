@@ -272,8 +272,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen)
 {
     const QRect rect = viewport.renderRect().toRect();
-    const qreal devicePixelRatio = viewport.scale();
-    const QSize nativeSize = (viewport.renderRect().size() * devicePixelRatio).toSize();
+    const QSize nativeSize = renderTarget.size();
 
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
     data.viewport = rect;
@@ -290,6 +289,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
     }
 
+    data.texture->setContentTransform(renderTarget.transform());
     return &data;
 }
 
