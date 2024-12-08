@@ -12,6 +12,7 @@
 
 #include <QDBusContext>
 #include <QDataStream>
+#include <QPointer>
 #include <QRect>
 #include <QStringList>
 #include <QTimer>
@@ -19,6 +20,8 @@
 #include <KConfigGroup>
 
 #include "effect/globals.h"
+
+class KNotification;
 
 namespace KWin
 {
@@ -74,6 +77,8 @@ private:
     void loadSessionInfo(const QString &sessionName);
     void addSessionInfo(KConfigGroup &cg);
 
+    void updateWaylandCancelNotification();
+
     SessionState m_sessionState = SessionState::Normal;
 
     int m_sessionActiveClient;
@@ -83,6 +88,7 @@ private:
     QList<XdgToplevelWindow *> m_pendingWindows;
     QTimer m_closeTimer;
     std::unique_ptr<QObject> m_closingWindowsGuard;
+    QPointer<KNotification> m_cancelNotification;
 };
 
 struct SessionInfo

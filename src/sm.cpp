@@ -445,9 +445,16 @@ bool SessionManager::closeWaylandWindows()
             connect(toplevelWindow, &XdgToplevelWindow::closed, m_closingWindowsGuard.get(), [this, toplevelWindow, dbusMessage] {
                 m_pendingWindows.removeOne(toplevelWindow);
                 if (m_pendingWindows.empty()) {
+#if KWIN_BUILD_NOTIFICATIONS
+                    if (m_cancelNotification) {
+                        m_cancelNotification->close();
+                    }
+#endif
                     m_closeTimer.stop();
                     m_closingWindowsGuard.reset();
                     QDBusConnection::sessionBus().send(dbusMessage.createReply(true));
+                } else {
+                    updateWaylandCancelNotification();
                 }
             });
             m_pendingWindows.push_back(toplevelWindow);
@@ -465,18 +472,10 @@ bool SessionManager::closeWaylandWindows()
     m_closeTimer.setSingleShot(true);
     connect(&m_closeTimer, &QTimer::timeout, m_closingWindowsGuard.get(), [this, dbusMessage] {
 #if KWIN_BUILD_NOTIFICATIONS
-        QStringList apps;
-        apps.reserve(m_pendingWindows.size());
-        std::transform(m_pendingWindows.cbegin(), m_pendingWindows.cend(), std::back_inserter(apps), [](const XdgToplevelWindow *window) -> QString {
-            const auto service = KService::serviceByDesktopName(window->desktopFileName());
-            return QChar(u'•') + (service ? service->name() : window->caption());
-        });
-        apps.removeDuplicates();
-        qCDebug(KWIN_CORE) << "Not closed windows" << apps;
-        auto notification = new KNotification("cancellogout", KNotification::DefaultEvent | KNotification::Persistent);
-        notification->setText(i18n("The following applications did not close:\n%1", apps.join('\n')));
-        auto cancel = notification->addAction(i18nc("@action:button", "Cancel Logout"));
-        auto quit = notification->addAction(i18nc("@action::button", "Log Out Anyway"));
+        m_cancelNotification = new KNotification("cancellogout", KNotification::DefaultEvent | KNotification::Persistent);
+        updateWaylandCancelNotification();
+        auto cancel = m_cancelNotification->addAction(i18nc("@action:button", "Cancel Logout"));
+        auto quit = m_cancelNotification->addAction(i18nc("@action::button", "Log Out Anyway"));
         connect(cancel, &KNotificationAction::activated, m_closingWindowsGuard.get(), [dbusMessage, this] {
             m_closingWindowsGuard.reset();
             QDBusConnection::sessionBus().send(dbusMessage.createReply(false));
@@ -485,17 +484,37 @@ bool SessionManager::closeWaylandWindows()
             m_closingWindowsGuard.reset();
             QDBusConnection::sessionBus().send(dbusMessage.createReply(true));
         });
-        connect(notification, &KNotification::closed, m_closingWindowsGuard.get(), [dbusMessage, this] {
+        connect(m_cancelNotification, &KNotification::closed, m_closingWindowsGuard.get(), [dbusMessage, this] {
             m_closingWindowsGuard.reset();
             QDBusConnection::sessionBus().send(dbusMessage.createReply(false));
         });
-        notification->sendEvent();
+        m_cancelNotification->sendEvent();
 #else
         m_closingWindowsGuard.reset();
         QDBusConnection::sessionBus().send(dbusMessage.createReply(false));
 #endif
     });
     return true;
+}
+
+void SessionManager::updateWaylandCancelNotification()
+{
+#if KWIN_BUILD_NOTIFICATIONS
+    if (!m_cancelNotification) {
+        return;
+    }
+
+    QStringList apps;
+    apps.reserve(m_pendingWindows.size());
+    std::transform(m_pendingWindows.cbegin(), m_pendingWindows.cend(), std::back_inserter(apps), [](const XdgToplevelWindow *window) -> QString {
+        const auto service = KService::serviceByDesktopName(window->desktopFileName());
+        return u"• "_s + (service ? service->name() : window->caption());
+    });
+    apps.removeDuplicates();
+
+    qCDebug(KWIN_CORE) << "Not closed windows" << apps;
+    m_cancelNotification->setText(i18n("The following applications did not close:\n%1", apps.join('\n')));
+#endif
 }
 
 void SessionManager::quit()
