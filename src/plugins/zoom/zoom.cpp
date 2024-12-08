@@ -271,11 +271,10 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
 ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen)
 {
-    const QRect rect = viewport.renderRect().toRect();
     const QSize nativeSize = renderTarget.size();
 
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
-    data.viewport = rect;
+    data.viewport = viewport.renderRect();
     data.color = renderTarget.colorDescription();
 
     const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
