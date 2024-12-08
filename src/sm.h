@@ -87,6 +87,7 @@ private:
     QList<SessionInfo *> session;
     QList<XdgToplevelWindow *> m_pendingWindows;
     QTimer m_closeTimer;
+    QTimer m_logoutAnywayTimer;
     std::unique_ptr<QObject> m_closingWindowsGuard;
     QPointer<KNotification> m_cancelNotification;
 };
