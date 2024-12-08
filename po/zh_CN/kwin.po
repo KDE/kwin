@@ -935,7 +935,7 @@ msgstr "加载"
 #: debug_console.ui:14
 #, kde-format
 msgid "Debug Console"
-msgstr ""
+msgstr "调试控制台"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38

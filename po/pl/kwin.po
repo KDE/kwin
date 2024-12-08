@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1696784 $
+# Version: $Revision: 1696930 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-06 00:41+0000\n"
-"PO-Revision-Date: 2024-11-30 09:32+0100\n"
+"PO-Revision-Date: 2024-12-07 12:25+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -944,16 +944,15 @@ msgstr "Wczytaj"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Zakończ konsolę diagnozowania"
+msgstr "Konsola diagnostyczna"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
 #, kde-format
 msgid "Quit Debug Console"
-msgstr "Zakończ konsolę diagnozowania"
+msgstr "Zamknij konsolę diagnostyczną"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:54
@@ -4125,28 +4124,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Na wszystkich pulpitach"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Kafelka z okna na lewej krawędzi"
+msgstr "Własna szybka kafelka z okna po lewo"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Kafelka z okna na prawej krawędzi"
+msgstr "Własna szybka kafelka z okna po prawo"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Kafelka z okna na górnej krawędzi"
+msgstr "Własna szybka kafelka z okna na górze"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Kafelka z okna na dolnej krawędzi"
+msgstr "Własna szybka kafelka z okna na dole"
 
 #: useractions.cpp:1014
 #, kde-format
