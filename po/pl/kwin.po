@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1696289 $
+# Version: $Revision: 1696930 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2024-01-07 13:00+0100\n"
+"PO-Revision-Date: 2024-12-07 12:25+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -890,7 +890,7 @@ msgstr "Wewnętrzne okna"
 #: debug_console.ui:32
 #, kde-format
 msgid "Quit Debug Console"
-msgstr "Zakończ konsolę diagnozowania"
+msgstr "Zamknij konsolę diagnostyczną"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:45
