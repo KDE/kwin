@@ -26,6 +26,7 @@ class ZoomAccessibilityIntegration;
 class GLFramebuffer;
 class GLTexture;
 class GLVertexBuffer;
+class GLShader;
 
 class ZoomEffect
     : public Effect
@@ -102,6 +103,8 @@ private:
     OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen);
     void markCursorTextureDirty();
 
+    GLShader *shaderForZoom(double scale);
+
 #if HAVE_ACCESSIBILITY
     ZoomAccessibilityIntegration *m_accessibilityIntegration = nullptr;
 #endif
@@ -136,6 +139,7 @@ private:
     double moveFactor;
     std::chrono::milliseconds lastPresentTime;
     std::map<Output *, OffscreenData> m_offscreenData;
+    std::unique_ptr<GLShader> m_pixelGridShader;
 };
 
 } // namespace
