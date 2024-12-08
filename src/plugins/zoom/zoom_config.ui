@@ -52,6 +52,19 @@
       </widget>
      </item>
      <item row="1" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Show pixel grid at zoom level:</string>
+       </property>
+       <property name="buddy">
+        <cstring>kcfg_PixelGridZoom</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="kcfg_PixelGridZoom"/>
+     </item>
+     <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Mouse pointer:</string>
@@ -61,7 +74,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="QComboBox" name="kcfg_MousePointer">
        <property name="whatsThis">
         <string>Visibility of the mouse-pointer.</string>
@@ -83,7 +96,7 @@
        </item>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Mouse tracking:</string>
@@ -93,7 +106,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <widget class="QComboBox" name="kcfg_MouseTracking">
        <property name="whatsThis">
         <string>Track moving of the mouse.</string>
@@ -120,7 +133,7 @@
        </item>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QCheckBox" name="kcfg_EnableFocusTracking">
        <property name="toolTip">
         <string/>
@@ -133,7 +146,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="1">
       <widget class="QCheckBox" name="kcfg_EnableTextCaretTracking">
        <property name="whatsThis">
         <string>Enable tracking of the text cursor. This needs QAccessible to be enabled per application (&quot;export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1&quot;).</string>

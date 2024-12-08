@@ -4,6 +4,7 @@
 set(zoom_SOURCES
     main.cpp
     zoom.cpp
+    zoom.qrc
 )
 
 if (HAVE_ACCESSIBILITY)
