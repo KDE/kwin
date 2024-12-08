@@ -188,8 +188,9 @@ void InputPanelV1Window::destroyWindow()
     disconnect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
 
     markAsDeleted();
-
     Q_EMIT closed();
+
+    m_rescalingTimer.stop();
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
 

@@ -207,8 +207,10 @@ void LayerShellV1Window::destroyWindow()
     m_desiredOutput->disconnect(this);
 
     markAsDeleted();
-    cleanTabBox();
     Q_EMIT closed();
+
+    m_rescalingTimer.stop();
+    cleanTabBox();
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
     waylandServer()->removeWindow(this);
