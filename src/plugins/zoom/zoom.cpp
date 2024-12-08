@@ -31,6 +31,12 @@
 
 using namespace std::chrono_literals;
 
+static void ensureResources()
+{
+    // Must initialize resources manually because the effect is a static lib.
+    Q_INIT_RESOURCE(zoom);
+}
+
 namespace KWin
 {
 
@@ -48,6 +54,8 @@ ZoomEffect::ZoomEffect()
     , moveFactor(20.0)
     , lastPresentTime(std::chrono::milliseconds::zero())
 {
+    ensureResources();
+
     ZoomConfig::instance(effects->config());
     QAction *a = nullptr;
     a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
@@ -292,6 +300,18 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
     return &data;
 }
 
+GLShader *ZoomEffect::shaderForZoom(double zoom)
+{
+    if (zoom < 10.0) {
+        return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+    } else {
+        if (!m_pixelGridShader) {
+            m_pixelGridShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/pixelgrid.frag"));
+        }
+        return m_pixelGridShader.get();
+    }
+}
+
 void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
@@ -390,7 +410,8 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+    GLShader *shader = shaderForZoom(zoom);
+    ShaderManager::instance()->pushShader(shader);
     for (auto &[screen, offscreen] : m_offscreenData) {
         QMatrix4x4 matrix;
         matrix.translate(xTranslation * scale, yTranslation * scale);
@@ -398,6 +419,8 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
 
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
+        shader->setUniform(GLShader::IntUniform::TextureWidth, offscreen.texture->width());
+        shader->setUniform(GLShader::IntUniform::TextureHeight, offscreen.texture->height());
         shader->setColorspaceUniforms(offscreen.color, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
         offscreen.texture->render(offscreen.viewport.size() * scale);
