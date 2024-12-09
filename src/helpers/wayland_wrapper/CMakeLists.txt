@@ -1,3 +1,9 @@
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+   if (CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 14.0.0)
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fhardened" )
+   endif()
+endif()
+
 add_executable(kwin_wayland_wrapper)
 target_sources(kwin_wayland_wrapper PRIVATE
     kwin_wrapper.cpp
@@ -20,5 +26,4 @@ if (KWIN_BUILD_X11)
     target_link_libraries(kwin_wayland_wrapper KWinXwaylandCommon)
 endif()
 set_property(TARGET kwin_wayland_wrapper PROPERTY C_STANDARD 11)
-set_property(TARGET kwin_wayland_wrapper PROPERTY POSITION_INDEPENDENT_CODE ON)
 install(TARGETS kwin_wayland_wrapper ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
