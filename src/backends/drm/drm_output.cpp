@@ -545,7 +545,7 @@ void DrmOutput::tryKmsColorOffloading()
 {
     // offloading color operations doesn't make sense when we have to apply the icc shader anyways
     const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !m_state.highDynamicRange && !m_state.wideColorGamut;
-    const bool disallowOffloading = usesICC && (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy || !m_state.iccProfile->inverseEOTF());
+    const bool disallowOffloading = usesICC && (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy || !m_state.iccProfile->inverseTransferFunction());
     if (disallowOffloading) {
         setScanoutColorDescription(colorDescription());
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
@@ -565,7 +565,7 @@ void DrmOutput::tryKmsColorOffloading()
     if (m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile) {
         colorPipeline.addTransferFunction(colorDescription().transferFunction());
         colorPipeline.addMultiplier(1.0 / colorDescription().referenceLuminance());
-        colorPipeline.add1DLUT(m_state.iccProfile->inverseEOTF());
+        colorPipeline.add1DLUT(m_state.iccProfile->inverseTransferFunction());
         if (m_state.iccProfile->vcgt()) {
             colorPipeline.add1DLUT(m_state.iccProfile->vcgt());
         }

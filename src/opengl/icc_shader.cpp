@@ -131,7 +131,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
                 return false;
             }
         } else {
-            const auto inverseEOTF = profile->inverseEOTF();
+            const auto inverseEOTF = profile->inverseTransferFunction();
             const auto sample = [inverseEOTF, vcgt](size_t x) {
                 const float relativeX = x / double(lutSize - 1);
                 QVector3D ret(relativeX, relativeX, relativeX);

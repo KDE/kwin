@@ -50,7 +50,7 @@ const Colorimetry &IccProfile::colorimetry() const
     return m_colorimetry;
 }
 
-std::shared_ptr<ColorTransformation> IccProfile::inverseEOTF() const
+std::shared_ptr<ColorTransformation> IccProfile::inverseTransferFunction() const
 {
     return m_inverseEOTF;
 }

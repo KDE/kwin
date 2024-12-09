@@ -36,7 +36,7 @@ public:
     /**
      * Contains the inverse of the TRC tags. May be nullptr!
      */
-    std::shared_ptr<ColorTransformation> inverseEOTF() const;
+    std::shared_ptr<ColorTransformation> inverseTransferFunction() const;
     /**
      * The VCGT is a non-standard tag that needs to be applied before
      * pixels are sent to the display. May be nullptr!
