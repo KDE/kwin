@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2024-08-20 16:23+0200\n"
+"PO-Revision-Date: 2024-12-08 12:56+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -1027,13 +1027,13 @@ msgstr "Modificadores activos"
 #: debug_console.ui:388
 #, kde-format
 msgid "LEDs"
-msgstr "LEDs"
+msgstr "LED"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
 #: debug_console.ui:404
 #, kde-format
 msgid "Active LEDs"
-msgstr "LEDs activos"
+msgstr "LED activos"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2573,7 +2573,7 @@ msgstr "Dispor rapidamente a xanela en mosaico cara arriba á esquerda"
 #: useractions.cpp:1047
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr "Dispor rapidamente a xanela en mosaico cara o fondo á esquerda"
+msgstr "Dispor rapidamente a xanela en mosaico cara ao fondo á esquerda"
 
 #: useractions.cpp:1049
 #, kde-format
@@ -2583,7 +2583,7 @@ msgstr "Dispor rapidamente a xanela en mosaico cara arriba á dereita"
 #: useractions.cpp:1051
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr "Dispor rapidamente a xanela en mosaico cara o fondo á dereita"
+msgstr "Dispor rapidamente a xanela en mosaico cara ao fondo á dereita"
 
 #: useractions.cpp:1053
 #, kde-format
