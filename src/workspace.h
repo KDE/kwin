@@ -604,6 +604,7 @@ private:
     bool switchWindow(Window *window, Direction direction, QPoint curPos, VirtualDesktop *desktop);
 
     QList<Window *> constrainedStackingOrder();
+    bool areConstrained(const Window *below, const Window *above) const;
     void raiseWindowWithinApplication(Window *window);
     void lowerWindowWithinApplication(Window *window);
     bool allowFullClientRaising(const Window *window, uint32_t timestamp);

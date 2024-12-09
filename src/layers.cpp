@@ -309,6 +309,25 @@ static Layer computeLayer(const Window *window)
     return window->layer();
 }
 
+bool Workspace::areConstrained(const Window *below, const Window *above) const
+{
+    for (const auto constraint : std::as_const(m_constraints)) {
+        if (constraint->below == below) {
+            if (constraint->above == above) {
+                return true;
+            } else {
+                for (const auto child : std::as_const(constraint->children)) {
+                    if (areConstrained(child->below, above)) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 void Workspace::raiseOrLowerWindow(Window *window)
 {
     if (!window->isOnCurrentDesktop()) {
@@ -319,7 +338,7 @@ void Workspace::raiseOrLowerWindow(Window *window)
     Output *output = options->isSeparateScreenFocus() ? window->output() : nullptr;
     Layer layer = computeLayer(window);
 
-    const Window *topmost = nullptr;
+    bool topmost = false;
     for (auto it = unconstrained_stacking_order.crbegin(); it != unconstrained_stacking_order.crend(); ++it) {
         if (layer != computeLayer(*it) || !(*it)->isClient() || (*it)->isDeleted()) {
             continue;
@@ -329,13 +348,19 @@ void Workspace::raiseOrLowerWindow(Window *window)
                 continue;
             }
             if ((*it)->wantsTabFocus() && !(*it)->isSpecialWindow()) {
-                topmost = *it;
-                break;
+                if (*it == window) {
+                    topmost = true;
+                    break;
+                } else if (areConstrained(window, *it)) {
+                    continue; // window `it' must be above us anyway, ignore it
+                } else {
+                    break;
+                }
             }
         }
     }
 
-    if (window == topmost) {
+    if (topmost) {
         lowerWindow(window);
     } else {
         raiseWindow(window);
