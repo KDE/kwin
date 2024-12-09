@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-27 02:33+0000\n"
-"PO-Revision-Date: 2024-10-27 12:38+0530\n"
+"PO-Revision-Date: 2024-12-08 14:18+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -81,7 +81,7 @@ msgstr "வரைகலை முறிவடைந்து மீட்டம�
 #: compositor_x11.cpp:103
 #, kde-format
 msgid "Suspend Compositing"
-msgstr "Compositing-ஐ முடக்கு"
+msgstr "சாளரவரைவை முடக்கு"
 
 #: compositor_x11.cpp:560
 #, kde-format
@@ -91,10 +91,11 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>OpenGL படவரைவு (இயல்பிருப்பானது) இதற்கு முன்பு கேவின்னை முறிவடைய செய்துள்ளது.</"
-"b><br>பெரும்பாலும், சாதனநிரல் (driver) பிழைகளால் இது நேரும்.<p>இடைக்காலத்தில் "
-"சாதனநிரலை நீங்கள் புதுப்பித்திருந்தால்,<br>இந்த பாதுகாப்பு அம்சத்தை மீட்டமைக்கலாம், "
-"ஆனால்<b>இது உடனடியான முறிவை உண்டாக்கலாம்</b> என்பதை நினைவில் கொள்ளவும்!</p>"
+"<b>OpenGL சாளரவரைவு (இயல்பிருப்பான compositing வகை) இதற்கு முன்பு கேவின்னை "
+"முறிவடைய செய்துள்ளது.</b><br>பெரும்பாலும், சாதனநிரல் (driver) பிழைகளால் இது நேரும்."
+"<p>இடைக்காலத்தில் சாதனநிரலை நீங்கள் புதுப்பித்திருந்தால்,<br>இந்த பாதுகாப்பு அம்சத்தை "
+"மீட்டமைக்கலாம், ஆனால்<b>இது உடனடியான முறிவை உண்டாக்கலாம்</b> என்பதை நினைவில் கொள்ளவும்!</"
+"p>"
 
 #: compositor_x11.cpp:567
 #, kde-format
@@ -716,7 +717,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "அசைவூட்டங்கள்"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -999,7 +1000,7 @@ msgstr "பதிப்பு:"
 #: debug_console.ui:147
 #, kde-format
 msgid "Shading Language Version:"
-msgstr ""
+msgstr "வரைவு நிரல்மொழி பதிப்பு:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:154
@@ -2441,7 +2442,7 @@ msgstr "செல்லுபடியாகாத பரப்பளவு"
 #: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "திரைப்பகிர்வுக்கு OpenGL compositing தேவை"
+msgstr "திரைப்பகிர்வுக்கு OpenGL சாளரவரைவு தேவை"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format
@@ -2470,7 +2471,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr ""
+msgstr "சாளரவரைவு"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -3430,7 +3431,7 @@ msgstr "தலைப்புப்பட்டையின் நிறத்�
 #: rulesettings.kcfg:312
 #, kde-format
 msgid "Block Compositing"
-msgstr "சாளரநிரலைத் தடு"
+msgstr "சாளரவரைவைத் தடு"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:316
