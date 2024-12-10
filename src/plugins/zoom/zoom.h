@@ -75,7 +75,7 @@ private Q_SLOTS:
     void moveMouseToCenter();
     void timelineFrameChanged(int frame);
     void moveFocus(const QPoint &point);
-    void slotMouseChanged(const QPointF &pos, const QPointF &old, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void slotMouseChanged(const QPointF &pos, const QPointF &old);
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDamaged();
     void slotScreenRemoved(Output *screen);
