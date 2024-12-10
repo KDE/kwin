@@ -25,8 +25,6 @@
 #include <KStandardAction>
 
 #include <QAction>
-#include <QStyle>
-#include <QVector2D>
 
 using namespace std::chrono_literals;
 
