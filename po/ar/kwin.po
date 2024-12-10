@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-06 00:41+0000\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
 "PO-Revision-Date: 2024-12-05 07:36+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -3611,26 +3611,30 @@ msgstr "حواريّ"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:477
-#, kde-format
-msgid ""
-"The following applications did not close:\n"
-"%1"
-msgstr ""
-"التطبيقات التالية لم تغلق:\n"
-"%1"
-
-#: sm.cpp:478
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "ألغ الخروج"
 
-#: sm.cpp:479
+#: sm.cpp:480
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "اخرج على أية حال"
+
+#: sm.cpp:526
+#, fuzzy, kde-format
+#| msgid ""
+#| "The following applications did not close:\n"
+#| "%1"
+msgid ""
+"The following applications did not close:\n"
+"%1\n"
+"Logging out anyway in 2 minutes."
+msgstr ""
+"التطبيقات التالية لم تغلق:\n"
+"%1"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

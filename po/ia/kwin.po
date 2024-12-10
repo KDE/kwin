@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-06 00:41+0000\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
 "PO-Revision-Date: 2024-11-26 17:34+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -3636,26 +3636,30 @@ msgstr "Dialogo"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:477
-#, kde-format
-msgid ""
-"The following applications did not close:\n"
-"%1"
-msgstr ""
-"Le sequente application non claudiva:\n"
-"%1"
-
-#: sm.cpp:478
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Cancella Clauder session"
 
-#: sm.cpp:479
+#: sm.cpp:480
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Claude session tamen"
+
+#: sm.cpp:526
+#, fuzzy, kde-format
+#| msgid ""
+#| "The following applications did not close:\n"
+#| "%1"
+msgid ""
+"The following applications did not close:\n"
+"%1\n"
+"Logging out anyway in 2 minutes."
+msgstr ""
+"Le sequente application non claudiva:\n"
+"%1"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

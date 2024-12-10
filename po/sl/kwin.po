@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1696893 2024-12-07 01:17:35Z scripty $
+# $Id: kwin.po 1697155 2024-12-10 01:17:30Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-06 00:41+0000\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
 "PO-Revision-Date: 2024-12-06 07:04+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3646,26 +3646,30 @@ msgstr "Dialog"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:477
-#, kde-format
-msgid ""
-"The following applications did not close:\n"
-"%1"
-msgstr ""
-"Naslednji programi se niso zaprli:\n"
-"%1"
-
-#: sm.cpp:478
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Prekliči odjavo"
 
-#: sm.cpp:479
+#: sm.cpp:480
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Kljub temu se odjavi"
+
+#: sm.cpp:526
+#, fuzzy, kde-format
+#| msgid ""
+#| "The following applications did not close:\n"
+#| "%1"
+msgid ""
+"The following applications did not close:\n"
+"%1\n"
+"Logging out anyway in 2 minutes."
+msgstr ""
+"Naslednji programi se niso zaprli:\n"
+"%1"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

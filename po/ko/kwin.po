@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-06 00:41+0000\n"
-"PO-Revision-Date: 2024-08-21 00:34+0200\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
+"PO-Revision-Date: 2024-12-10 01:17+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -2032,10 +2032,9 @@ msgstr "높이(&H):"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "마우스 클릭 효과 전환"
+msgstr "마우스 클릭 애니메이션 전환"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
@@ -3077,7 +3076,7 @@ msgstr "이 규칙 삭제(가져올 때 사용)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "이 규칙이 활성화되었음"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3585,17 +3584,15 @@ msgstr "적응형 동기화 규칙 형식"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "회전 허용"
+msgstr "티어링 허용"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:463
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "레이어 규칙 종류"
+msgstr "티어링 규칙 종류"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3609,26 +3606,30 @@ msgstr "대화 상자"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:477
-#, kde-format
-msgid ""
-"The following applications did not close:\n"
-"%1"
-msgstr ""
-"다음 앱이 종료되지 않았습니다:\n"
-"%1"
-
-#: sm.cpp:478
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "로그아웃 취소"
 
-#: sm.cpp:479
+#: sm.cpp:480
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "그래도 로그아웃"
+
+#: sm.cpp:526
+#, fuzzy, kde-format
+#| msgid ""
+#| "The following applications did not close:\n"
+#| "%1"
+msgid ""
+"The following applications did not close:\n"
+"%1\n"
+"Logging out anyway in 2 minutes."
+msgstr ""
+"다음 앱이 종료되지 않았습니다:\n"
+"%1"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-28 00:40+0000\n"
-"PO-Revision-Date: 2024-08-21 00:41+0200\n"
+"PO-Revision-Date: 2024-12-10 01:15+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -177,15 +177,13 @@ msgstr "사용 안 함"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
+#, kde-format
 msgid "Only when moving windows"
 msgstr "창을 이동할 때만"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
 msgstr "항상 사용함"
 

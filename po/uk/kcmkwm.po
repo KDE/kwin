@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-06 00:41+0000\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
 "PO-Revision-Date: 2024-11-06 18:37+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -215,7 +215,7 @@ msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:270 mouse.ui:610
+#: actions.ui:270 mouse.ui:617
 #, kde-format
 msgid "L&eft click:"
 msgstr "Клацання л&івою:"
@@ -373,7 +373,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:410 mouse.ui:680
+#: actions.ui:410 mouse.ui:687
 #, kde-format
 msgid "Right clic&k:"
 msgstr "Клацання п&равою:"
@@ -962,7 +962,7 @@ msgstr "Поведінка при <em>подвійному</em> клацанні
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:43 mouse.ui:624 mouse.ui:659 mouse.ui:694
+#: mouse.ui:43 mouse.ui:631 mouse.ui:666 mouse.ui:701
 #, kde-format
 msgid "Maximize"
 msgstr "Максимізувати"
@@ -972,7 +972,7 @@ msgstr "Максимізувати"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:48 mouse.ui:629 mouse.ui:664 mouse.ui:699
+#: mouse.ui:48 mouse.ui:636 mouse.ui:671 mouse.ui:706
 #, kde-format
 msgid "Vertically maximize"
 msgstr "Максимізувати вертикально"
@@ -982,7 +982,7 @@ msgstr "Максимізувати вертикально"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:53 mouse.ui:634 mouse.ui:669 mouse.ui:704
+#: mouse.ui:53 mouse.ui:641 mouse.ui:676 mouse.ui:711
 #, kde-format
 msgid "Horizontally maximize"
 msgstr "Максимізувати горизонтально"
@@ -1091,15 +1091,21 @@ msgstr ""
 msgid "Activate and lower"
 msgstr "Активізувати й опустити"
 
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DoubleClickBorderToMaximize)
+#: mouse.ui:577
+#, kde-format
+msgid "Maximize window by double clicking its frame"
+msgstr ""
+
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:595
+#: mouse.ui:602
 #, kde-format
 msgid "Maximize Button Actions"
 msgstr "Дії для кнопки максимізації"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:607 mouse.ui:620
+#: mouse.ui:614 mouse.ui:627
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
 msgstr ""
@@ -1107,7 +1113,7 @@ msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:642 mouse.ui:655
+#: mouse.ui:649 mouse.ui:662
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
 msgstr ""
@@ -1115,14 +1121,14 @@ msgstr ""
 "максимізації."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:645
+#: mouse.ui:652
 #, kde-format
 msgid "Middle c&lick:"
 msgstr "Клацання с&ередньою:"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:677 mouse.ui:690
+#: mouse.ui:684 mouse.ui:697
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
 msgstr ""

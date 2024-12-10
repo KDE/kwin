@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1696930 $
+# Version: $Revision: 1697155 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-06 00:41+0000\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
 "PO-Revision-Date: 2024-12-07 12:25+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -3646,26 +3646,30 @@ msgstr "Okno dialogowe"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:477
-#, kde-format
-msgid ""
-"The following applications did not close:\n"
-"%1"
-msgstr ""
-"Następująca aplikacja nie zamknęła się:\n"
-"%1"
-
-#: sm.cpp:478
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Nie wychodź"
 
-#: sm.cpp:479
+#: sm.cpp:480
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Wyjdź mimo tego"
+
+#: sm.cpp:526
+#, fuzzy, kde-format
+#| msgid ""
+#| "The following applications did not close:\n"
+#| "%1"
+msgid ""
+"The following applications did not close:\n"
+"%1\n"
+"Logging out anyway in 2 minutes."
+msgstr ""
+"Następująca aplikacja nie zamknęła się:\n"
+"%1"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

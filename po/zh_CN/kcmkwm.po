@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-06 00:41+0000\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -205,7 +205,7 @@ msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:270 mouse.ui:610
+#: actions.ui:270 mouse.ui:617
 #, kde-format
 msgid "L&eft click:"
 msgstr "左键点击(&E)："
@@ -359,7 +359,7 @@ msgstr "您可以在这一行自定义鼠标中键点击标题栏或者边框时
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:410 mouse.ui:680
+#: actions.ui:410 mouse.ui:687
 #, kde-format
 msgid "Right clic&k:"
 msgstr "右键点击(&K)："
@@ -916,7 +916,7 @@ msgstr "<em>双击</em>标题栏时的行为。"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:43 mouse.ui:624 mouse.ui:659 mouse.ui:694
+#: mouse.ui:43 mouse.ui:631 mouse.ui:666 mouse.ui:701
 #, kde-format
 msgid "Maximize"
 msgstr "最大化"
@@ -926,7 +926,7 @@ msgstr "最大化"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:48 mouse.ui:629 mouse.ui:664 mouse.ui:699
+#: mouse.ui:48 mouse.ui:636 mouse.ui:671 mouse.ui:706
 #, kde-format
 msgid "Vertically maximize"
 msgstr "垂直最大化"
@@ -936,7 +936,7 @@ msgstr "垂直最大化"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:53 mouse.ui:634 mouse.ui:669 mouse.ui:704
+#: mouse.ui:53 mouse.ui:641 mouse.ui:676 mouse.ui:711
 #, kde-format
 msgid "Horizontally maximize"
 msgstr "水平最大化"
@@ -1040,35 +1040,41 @@ msgstr "<em>左键</em>点击<em>非活动</em>窗口的标题栏或者边框时
 msgid "Activate and lower"
 msgstr "激活，降低"
 
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DoubleClickBorderToMaximize)
+#: mouse.ui:577
+#, kde-format
+msgid "Maximize window by double clicking its frame"
+msgstr ""
+
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:595
+#: mouse.ui:602
 #, kde-format
 msgid "Maximize Button Actions"
 msgstr "最大化按钮操作"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:607 mouse.ui:620
+#: mouse.ui:614 mouse.ui:627
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
 msgstr "<em>左键</em>点击最大化按钮时的行为。"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:642 mouse.ui:655
+#: mouse.ui:649 mouse.ui:662
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
 msgstr "<em>中键</em>点击最大化按钮时的行为。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:645
+#: mouse.ui:652
 #, kde-format
 msgid "Middle c&lick:"
 msgstr "中键点击(&L)："
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:677 mouse.ui:690
+#: mouse.ui:684 mouse.ui:697
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
 msgstr "<em>右键</em>点击最大化按钮时的行为。"

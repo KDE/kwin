@@ -1,14 +1,14 @@
 # Translation of kcmkwm to Korean.
 # Copyright (C) 1999, 2007 Free Software Foundation, Inc.
 # Linux Korea, Co. <kde@linuxkorea.co.kr>, 1999.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, 2023, 2024 Shinjo Park <kde@peremen.name>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-06 00:41+0000\n"
-"PO-Revision-Date: 2023-08-09 00:20+0200\n"
+"POT-Creation-Date: 2024-12-10 00:41+0000\n"
+"PO-Revision-Date: 2024-12-10 01:16+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -43,10 +43,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:48
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "활성화 및 올림"
+msgstr "활성화, 클릭 전달, 놓을 때 올림"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -95,6 +94,8 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"\"활성화, 클릭 전달, 놓을 때 올림\"은 X11에서는 작동하지 않으며 \"활성화, 올"
+"림 및 클릭 전달\"로 변경됩니다"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -206,7 +207,7 @@ msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:270 mouse.ui:610
+#: actions.ui:270 mouse.ui:617
 #, kde-format
 msgid "L&eft click:"
 msgstr "왼쪽 클릭(&E):"
@@ -364,7 +365,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:410 mouse.ui:680
+#: actions.ui:410 mouse.ui:687
 #, kde-format
 msgid "Right clic&k:"
 msgstr "오른쪽 단추 클릭(&K):"
@@ -931,7 +932,7 @@ msgstr "제목 표시줄을 <em>두 번</em> 클릭했을 때 행동입니다."
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:43 mouse.ui:624 mouse.ui:659 mouse.ui:694
+#: mouse.ui:43 mouse.ui:631 mouse.ui:666 mouse.ui:701
 #, kde-format
 msgid "Maximize"
 msgstr "최대화"
@@ -941,7 +942,7 @@ msgstr "최대화"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:48 mouse.ui:629 mouse.ui:664 mouse.ui:699
+#: mouse.ui:48 mouse.ui:636 mouse.ui:671 mouse.ui:706
 #, kde-format
 msgid "Vertically maximize"
 msgstr "수직 최대화"
@@ -951,7 +952,7 @@ msgstr "수직 최대화"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:53 mouse.ui:634 mouse.ui:669 mouse.ui:704
+#: mouse.ui:53 mouse.ui:641 mouse.ui:676 mouse.ui:711
 #, kde-format
 msgid "Horizontally maximize"
 msgstr "수평 최대화"
@@ -1059,35 +1060,41 @@ msgstr ""
 msgid "Activate and lower"
 msgstr "활성화 및 내림"
 
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DoubleClickBorderToMaximize)
+#: mouse.ui:577
+#, kde-format
+msgid "Maximize window by double clicking its frame"
+msgstr ""
+
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:595
+#: mouse.ui:602
 #, kde-format
 msgid "Maximize Button Actions"
 msgstr "최대화 단추 동작"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:607 mouse.ui:620
+#: mouse.ui:614 mouse.ui:627
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
 msgstr "최대화 단추를 <em>왼쪽</em> 단추로 클릭했을 때 행동입니다."
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:642 mouse.ui:655
+#: mouse.ui:649 mouse.ui:662
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
 msgstr "최대화 단추를 <em>가운데</em> 단추로 클릭했을 때 행동입니다."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:645
+#: mouse.ui:652
 #, kde-format
 msgid "Middle c&lick:"
 msgstr "가운데 단추 클릭(&L):"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:677 mouse.ui:690
+#: mouse.ui:684 mouse.ui:697
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
 msgstr "최대화 단추를 <em>오른쪽</em> 단추로 클릭했을 때 행동입니다."
