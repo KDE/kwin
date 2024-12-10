@@ -240,7 +240,7 @@ void DebugConsoleTest::testX11Unmanaged()
     QVERIFY(!model.index(0, 2, unmanagedTopLevelIndex).isValid());
     QVERIFY(!model.index(1, 0, unmanagedTopLevelIndex).isValid());
 
-    QCOMPARE(model.data(windowIndex, Qt::DisplayRole).toString(), QStringLiteral("0x%1").arg(window, 0, 16));
+    QCOMPARE(model.data(windowIndex, Qt::DisplayRole).toString(), QStringLiteral("0x%1").arg((WId)window, 0, 16));
 
     // the windowIndex has children and those are properties
     for (int i = 0; i < model.rowCount(windowIndex); i++) {
