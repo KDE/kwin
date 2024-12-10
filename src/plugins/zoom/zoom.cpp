@@ -585,7 +585,7 @@ void ZoomEffect::moveMouseToCenter()
     QCursor::setPos(r.x() + r.width() / 2, r.y() + r.height() / 2);
 }
 
-void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old, Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
+void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old)
 {
     if (m_zoom == 1.0) {
         return;
