@@ -64,7 +64,7 @@ public:
 
 private Q_SLOTS:
     void zoomIn();
-    void zoomIn(double to);
+    void zoomTo(double to);
     void zoomOut();
     void actualSize();
     void moveZoomLeft();
