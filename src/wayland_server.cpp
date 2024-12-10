@@ -878,6 +878,9 @@ void WaylandServer::setRenderBackend(RenderBackend *backend)
 #if KWIN_BUILD_SCREENLOCKER
 WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(WaylandServer *server)
 {
+    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this, [this] {
+        delete this;
+    });
     connect(server, &WaylandServer::windowAdded, this, [this](Window *window) {
         if (window->isLockScreen()) {
             // only signal lockScreenShown once all outputs have been presented at least once
