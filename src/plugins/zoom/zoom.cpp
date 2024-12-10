@@ -9,7 +9,10 @@
 */
 
 #include "zoom.h"
-// KConfigSkeleton
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "effect/effecthandler.h"
+#include "opengl/glutils.h"
 #include "zoomconfig.h"
 
 #if HAVE_ACCESSIBILITY
@@ -19,15 +22,11 @@
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KStandardAction>
+
 #include <QAction>
 #include <QStyle>
 #include <QVector2D>
-#include <kstandardaction.h>
-
-#include "core/rendertarget.h"
-#include "core/renderviewport.h"
-#include "effect/effecthandler.h"
-#include "opengl/glutils.h"
 
 using namespace std::chrono_literals;
 
@@ -471,6 +470,11 @@ void ZoomEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
+void ZoomEffect::zoomIn()
+{
+    zoomIn(-1.0);
+}
+
 void ZoomEffect::zoomIn(double to)
 {
     source_zoom = zoom;
@@ -581,8 +585,7 @@ void ZoomEffect::moveMouseToCenter()
     QCursor::setPos(r.x() + r.width() / 2, r.y() + r.height() / 2);
 }
 
-void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old, Qt::MouseButtons,
-                                  Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
+void ZoomEffect::slotMouseChanged(const QPointF &pos, const QPointF &old, Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (zoom == 1.0) {
         return;

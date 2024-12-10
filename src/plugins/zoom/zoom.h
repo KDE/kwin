@@ -13,6 +13,7 @@
 
 #include "core/colorspace.h"
 #include "effect/effect.h"
+
 #include <QTime>
 #include <QTimeLine>
 
@@ -28,8 +29,7 @@ class GLTexture;
 class GLVertexBuffer;
 class GLShader;
 
-class ZoomEffect
-    : public Effect
+class ZoomEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor)
@@ -40,15 +40,18 @@ class ZoomEffect
     Q_PROPERTY(int focusDelay READ configuredFocusDelay)
     Q_PROPERTY(qreal moveFactor READ configuredMoveFactor)
     Q_PROPERTY(qreal targetZoom READ targetZoom)
+
 public:
     ZoomEffect();
     ~ZoomEffect() override;
+
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
+
     // for properties
     qreal configuredZoomFactor() const;
     int configuredMousePointer() const;
@@ -59,13 +62,8 @@ public:
     qreal configuredMoveFactor() const;
     qreal targetZoom() const;
 
-private:
-    bool screenExistsAt(const QPoint &point) const;
 private Q_SLOTS:
-    inline void zoomIn()
-    {
-        zoomIn(-1.0);
-    };
+    void zoomIn();
     void zoomIn(double to);
     void zoomOut();
     void actualSize();
@@ -77,20 +75,26 @@ private Q_SLOTS:
     void moveMouseToCenter();
     void timelineFrameChanged(int frame);
     void moveFocus(const QPoint &point);
-    void slotMouseChanged(const QPointF &pos, const QPointF &old,
-                          Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                          Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void slotMouseChanged(const QPointF &pos, const QPointF &old, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDamaged();
     void slotScreenRemoved(Output *screen);
     void setTargetZoom(double value);
 
 private:
-    void showCursor();
-    void hideCursor();
-    void moveZoom(int x, int y);
+    enum MouseTrackingType {
+        MouseTrackingProportional = 0,
+        MouseTrackingCentered = 1,
+        MouseTrackingPush = 2,
+        MouseTrackingDisabled = 3,
+    };
 
-private:
+    enum MousePointerType {
+        MousePointerScale = 0,
+        MousePointerKeep = 1,
+        MousePointerHide = 2,
+    };
+
     struct OffscreenData
     {
         std::unique_ptr<GLTexture> texture;
@@ -99,6 +103,11 @@ private:
         ColorDescription color = ColorDescription::sRGB;
     };
 
+    void moveZoom(int x, int y);
+    bool screenExistsAt(const QPoint &point) const;
+
+    void showCursor();
+    void hideCursor();
     GLTexture *ensureCursorTexture();
     OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen);
     void markCursorTextureDirty();
@@ -112,18 +121,7 @@ private:
     double target_zoom;
     double source_zoom;
     double zoomFactor;
-    enum MouseTrackingType {
-        MouseTrackingProportional = 0,
-        MouseTrackingCentered = 1,
-        MouseTrackingPush = 2,
-        MouseTrackingDisabled = 3,
-    };
     MouseTrackingType mouseTracking;
-    enum MousePointerType {
-        MousePointerScale = 0,
-        MousePointerKeep = 1,
-        MousePointerHide = 2,
-    };
     MousePointerType mousePointer;
     int focusDelay;
     QPoint cursorPoint;
