@@ -243,7 +243,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
         source_zoom = 1.0;
         setTargetZoom(ZoomConfig::initialZoom());
         if (target_zoom > 1.0) {
-            zoomIn(target_zoom);
+            zoomTo(target_zoom);
         }
     } else {
         source_zoom = 1.0;
@@ -472,10 +472,10 @@ void ZoomEffect::postPaintScreen()
 
 void ZoomEffect::zoomIn()
 {
-    zoomIn(-1.0);
+    zoomTo(-1.0);
 }
 
-void ZoomEffect::zoomIn(double to)
+void ZoomEffect::zoomTo(double to)
 {
     source_zoom = zoom;
     if (to < 0.0) {
