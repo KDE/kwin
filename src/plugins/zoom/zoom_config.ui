@@ -6,159 +6,144 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>304</width>
-    <height>288</height>
+    <width>595</width>
+    <height>551</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QGroupBox" name="groupSize">
-     <property name="title">
-      <string/>
+    <layout class="QFormLayout" name="formLayout">
+     <property name="formAlignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="whatsThis">
-           <string>On zoom-in and zoom-out change the zoom by the defined zoom-factor.</string>
-          </property>
-          <property name="text">
-           <string>Zoom Factor:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>kcfg_ZoomFactor</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QDoubleSpinBox" name="kcfg_ZoomFactor">
-          <property name="whatsThis">
-           <string>On zoom-in and zoom-out change the zoom by the defined zoom-factor.</string>
-          </property>
-          <property name="suffix">
-           <string/>
-          </property>
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="maximum">
-           <double>9999.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.050000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.250000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="2">
-         <widget class="QCheckBox" name="kcfg_EnableFocusTracking">
-          <property name="toolTip">
-           <string/>
-          </property>
-          <property name="whatsThis">
-           <string>Enable tracking of the focused location. This needs QAccessible to be enabled per application (&quot;export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1&quot;).</string>
-          </property>
-          <property name="text">
-           <string>Enable Focus Tracking</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" colspan="2">
-         <widget class="QCheckBox" name="kcfg_EnableTextCaretTracking">
-          <property name="whatsThis">
-           <string>Enable tracking of the text cursor. This needs QAccessible to be enabled per application (&quot;export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1&quot;).</string>
-          </property>
-          <property name="text">
-           <string>Enable Text Cursor Tracking</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Mouse Pointer:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>kcfg_MousePointer</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="kcfg_MousePointer">
-          <property name="whatsThis">
-           <string>Visibility of the mouse-pointer.</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Scale</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Keep</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Hide</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QComboBox" name="kcfg_MouseTracking">
-          <property name="whatsThis">
-           <string>Track moving of the mouse.</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Proportional</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Centered</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Push</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Disabled</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Mouse Tracking:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>kcfg_MouseTracking</cstring>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="whatsThis">
+        <string>On zoom-in and zoom-out change the zoom by the defined zoom-factor.</string>
+       </property>
+       <property name="text">
+        <string>Zoom Factor:</string>
+       </property>
+       <property name="buddy">
+        <cstring>kcfg_ZoomFactor</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QDoubleSpinBox" name="kcfg_ZoomFactor">
+       <property name="whatsThis">
+        <string>On zoom-in and zoom-out change the zoom by the defined zoom-factor.</string>
+       </property>
+       <property name="suffix">
+        <string/>
+       </property>
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>9999.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.050000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.250000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Mouse Pointer:</string>
+       </property>
+       <property name="buddy">
+        <cstring>kcfg_MousePointer</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="kcfg_MousePointer">
+       <property name="whatsThis">
+        <string>Visibility of the mouse-pointer.</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Scale</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Keep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Hide</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Mouse Tracking:</string>
+       </property>
+       <property name="buddy">
+        <cstring>kcfg_MouseTracking</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="kcfg_MouseTracking">
+       <property name="whatsThis">
+        <string>Track moving of the mouse.</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Proportional</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Centered</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Push</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Disabled</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="kcfg_EnableFocusTracking">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>Enable tracking of the focused location. This needs QAccessible to be enabled per application (&quot;export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1&quot;).</string>
+       </property>
+       <property name="text">
+        <string>Enable Focus Tracking</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="kcfg_EnableTextCaretTracking">
+       <property name="whatsThis">
+        <string>Enable tracking of the text cursor. This needs QAccessible to be enabled per application (&quot;export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1&quot;).</string>
+       </property>
+       <property name="text">
+        <string>Enable Text Cursor Tracking</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="KShortcutsEditor" name="editor">
@@ -183,13 +168,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>kcfg_ZoomFactor</tabstop>
-  <tabstop>kcfg_MousePointer</tabstop>
-  <tabstop>kcfg_MouseTracking</tabstop>
-  <tabstop>kcfg_EnableFocusTracking</tabstop>
-  <tabstop>kcfg_EnableTextCaretTracking</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
