@@ -22,7 +22,7 @@
         <string>On zoom-in and zoom-out change the zoom by the defined zoom-factor.</string>
        </property>
        <property name="text">
-        <string>Zoom Factor:</string>
+        <string>Zoom factor:</string>
        </property>
        <property name="buddy">
         <cstring>kcfg_ZoomFactor</cstring>
@@ -54,7 +54,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Mouse Pointer:</string>
+        <string>Mouse pointer:</string>
        </property>
        <property name="buddy">
         <cstring>kcfg_MousePointer</cstring>
@@ -86,7 +86,7 @@
      <item row="2" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Mouse Tracking:</string>
+        <string>Mouse tracking:</string>
        </property>
        <property name="buddy">
         <cstring>kcfg_MouseTracking</cstring>
@@ -129,7 +129,7 @@
         <string>Enable tracking of the focused location. This needs QAccessible to be enabled per application (&quot;export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1&quot;).</string>
        </property>
        <property name="text">
-        <string>Enable Focus Tracking</string>
+        <string>Enable focus tracking</string>
        </property>
       </widget>
      </item>
@@ -139,7 +139,7 @@
         <string>Enable tracking of the text cursor. This needs QAccessible to be enabled per application (&quot;export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1&quot;).</string>
        </property>
        <property name="text">
-        <string>Enable Text Cursor Tracking</string>
+        <string>Enable text cursor tracking</string>
        </property>
       </widget>
      </item>
