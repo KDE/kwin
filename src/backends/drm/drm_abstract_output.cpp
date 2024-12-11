@@ -27,9 +27,8 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
 
 void DrmAbstractOutput::updateEnabled(bool enabled)
 {
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
+    m_nextState.enabled = enabled;
+    applyNextState();
 }
 }
 

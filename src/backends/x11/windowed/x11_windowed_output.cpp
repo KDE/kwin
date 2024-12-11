@@ -211,11 +211,10 @@ void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
 
     auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
 
-    State initialState;
-    initialState.modes = {mode};
-    initialState.currentMode = mode;
-    initialState.scale = scale;
-    setState(initialState);
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    m_nextState.scale = scale;
+    applyNextState();
 
     const uint32_t eventMask = XCB_EVENT_MASK_KEY_PRESS
         | XCB_EVENT_MASK_KEY_RELEASE
@@ -298,10 +297,9 @@ void X11WindowedOutput::resize(const QSize &pixelSize)
 {
     auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
 
-    State next = m_state;
-    next.modes = {mode};
-    next.currentMode = mode;
-    setState(next);
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    applyNextState();
 }
 
 void X11WindowedOutput::handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event)
@@ -355,9 +353,8 @@ bool X11WindowedOutput::updateCursorLayer()
 
 void X11WindowedOutput::updateEnabled(bool enabled)
 {
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
+    m_nextState.enabled = enabled;
+    applyNextState();
 }
 
 xcb_pixmap_t X11WindowedOutput::importDmaBufBuffer(const DmaBufAttributes *attributes)

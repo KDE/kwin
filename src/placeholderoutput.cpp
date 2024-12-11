@@ -17,12 +17,11 @@ PlaceholderOutput::PlaceholderOutput(const QSize &size, qreal scale)
     m_renderLoop->setRefreshRate(mode->refreshRate());
     m_renderLoop->inhibit();
 
-    setState(State{
-        .scale = scale,
-        .modes = {mode},
-        .currentMode = mode,
-        .enabled = true,
-    });
+    m_nextState.scale = scale;
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    m_nextState.enabled = true;
+    applyNextState();
 
     setInformation(Information{
         .name = QStringLiteral("Placeholder-1"),
@@ -32,9 +31,8 @@ PlaceholderOutput::PlaceholderOutput(const QSize &size, qreal scale)
 
 PlaceholderOutput::~PlaceholderOutput()
 {
-    State state = m_state;
-    state.enabled = false;
-    setState(state);
+    m_nextState.enabled = false;
+    applyNextState();
 }
 
 RenderLoop *PlaceholderOutput::renderLoop() const

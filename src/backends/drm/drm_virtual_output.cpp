@@ -34,11 +34,10 @@ DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, con
         .physicalSize = size,
     });
 
-    setState(State{
-        .scale = scale,
-        .modes = {mode},
-        .currentMode = mode,
-    });
+    m_nextState.scale = scale;
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    applyNextState();
 
     recreateSurface();
 }
@@ -65,9 +64,8 @@ void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 
 void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
 {
-    State next = m_state;
-    next.dpmsMode = mode;
-    setState(next);
+    m_nextState.dpmsMode = mode;
+    applyNextState();
 }
 
 DrmOutputLayer *DrmVirtualOutput::primaryLayer() const

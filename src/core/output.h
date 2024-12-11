@@ -512,9 +512,13 @@ protected:
     };
 
     void setInformation(const Information &information);
-    void setState(const State &state);
+    /**
+     * sets the current state to m_nextState and emits signals for changes
+     */
+    void applyNextState();
 
-    State m_state;
+    State m_nextState;
+    State m_currentState;
     Information m_information;
     QUuid m_uuid;
     int m_refCount = 1;

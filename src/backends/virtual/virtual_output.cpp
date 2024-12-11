@@ -66,12 +66,11 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, 
 
     m_renderLoop->setRefreshRate(modeList.front()->refreshRate());
     m_vsyncMonitor->setRefreshRate(modeList.front()->refreshRate());
-    setState(State{
-        .position = logicalPosition,
-        .scale = scale,
-        .modes = modeList,
-        .currentMode = modeList.front(),
-    });
+    m_nextState.position = logicalPosition;
+    m_nextState.scale = scale;
+    m_nextState.modes = modeList;
+    m_nextState.currentMode = modeList.front();
+    applyNextState();
 }
 
 void VirtualOutput::applyChanges(const OutputConfiguration &config)
@@ -82,29 +81,27 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     }
     Q_EMIT aboutToChange(props.get());
 
-    State next = m_state;
-    next.enabled = props->enabled.value_or(m_state.enabled);
-    next.transform = props->transform.value_or(m_state.transform);
-    next.position = props->pos.value_or(m_state.position);
-    next.scale = props->scale.value_or(m_state.scale);
-    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    next.currentMode = props->mode.value_or(m_state.currentMode).lock();
-    if (!next.currentMode) {
-        next.currentMode = next.modes.front();
+    m_nextState.enabled = props->enabled.value_or(m_nextState.enabled);
+    m_nextState.transform = props->transform.value_or(m_nextState.transform);
+    m_nextState.position = props->pos.value_or(m_nextState.position);
+    m_nextState.scale = props->scale.value_or(m_nextState.scale);
+    m_nextState.desiredModeSize = props->desiredModeSize.value_or(m_nextState.desiredModeSize);
+    m_nextState.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_nextState.desiredModeRefreshRate);
+    m_nextState.currentMode = props->mode.value_or(m_nextState.currentMode).lock();
+    if (!m_nextState.currentMode) {
+        m_nextState.currentMode = m_nextState.modes.front();
     }
-    setState(next);
-    m_renderLoop->setRefreshRate(next.currentMode->refreshRate());
-    m_vsyncMonitor->setRefreshRate(next.currentMode->refreshRate());
+    applyNextState();
+    m_renderLoop->setRefreshRate(m_nextState.currentMode->refreshRate());
+    m_vsyncMonitor->setRefreshRate(m_nextState.currentMode->refreshRate());
 
     Q_EMIT changed();
 }
 
 void VirtualOutput::updateEnabled(bool enabled)
 {
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
+    m_nextState.enabled = enabled;
+    applyNextState();
 }
 
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)

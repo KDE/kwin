@@ -27,10 +27,9 @@ X11PlaceholderOutput::X11PlaceholderOutput(X11StandaloneBackend *backend, QObjec
         .name = QStringLiteral("Placeholder-0"),
     });
 
-    setState(State{
-        .modes = {mode},
-        .currentMode = mode,
-    });
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    applyNextState();
 }
 
 RenderLoop *X11PlaceholderOutput::renderLoop() const
@@ -40,9 +39,8 @@ RenderLoop *X11PlaceholderOutput::renderLoop() const
 
 void X11PlaceholderOutput::updateEnabled(bool enabled)
 {
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
+    m_nextState.enabled = enabled;
+    applyNextState();
 }
 
 } // namespace KWin

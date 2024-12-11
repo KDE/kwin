@@ -192,11 +192,10 @@ void WaylandOutput::init(const QSize &pixelSize, qreal scale)
 
     auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
 
-    State initialState;
-    initialState.modes = {mode};
-    initialState.currentMode = mode;
-    initialState.scale = scale;
-    setState(initialState);
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    m_nextState.scale = scale;
+    applyNextState();
 
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
 }
@@ -205,10 +204,9 @@ void WaylandOutput::resize(const QSize &pixelSize)
 {
     auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
 
-    State next = m_state;
-    next.modes = {mode};
-    next.currentMode = mode;
-    setState(next);
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    applyNextState();
 
     Q_EMIT m_backend->outputsQueried();
 }
@@ -231,16 +229,14 @@ void WaylandOutput::setDpmsMode(DpmsMode mode)
 
 void WaylandOutput::updateDpmsMode(DpmsMode dpmsMode)
 {
-    State next = m_state;
-    next.dpmsMode = dpmsMode;
-    setState(next);
+    m_nextState.dpmsMode = dpmsMode;
+    applyNextState();
 }
 
 void WaylandOutput::updateEnabled(bool enabled)
 {
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
+    m_nextState.enabled = enabled;
+    applyNextState();
 }
 
 void WaylandOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
@@ -255,7 +251,7 @@ void WaylandOutput::handleConfigure(const QSize &size, XdgShellSurface::States s
         m_pendingConfigureSize = size;
 
         if (!m_configureThrottleTimer.isActive()) {
-            m_configureThrottleTimer.start(1000000 / m_state.currentMode->refreshRate());
+            m_configureThrottleTimer.start(1000000 / m_nextState.currentMode->refreshRate());
         }
     }
 }

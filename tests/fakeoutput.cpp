@@ -22,31 +22,27 @@ void FakeOutput::setMode(QSize size, uint32_t refreshRate)
 {
     auto mode = std::make_shared<KWin::OutputMode>(size, refreshRate);
 
-    State state = m_state;
-    state.modes = {mode};
-    state.currentMode = mode;
-    setState(state);
+    m_nextState.modes = {mode};
+    m_nextState.currentMode = mode;
+    applyNextState();
 }
 
 void FakeOutput::setTransform(KWin::OutputTransform transform)
 {
-    State state = m_state;
-    state.transform = transform;
-    setState(state);
+    m_nextState.transform = transform;
+    applyNextState();
 }
 
 void FakeOutput::moveTo(const QPoint &pos)
 {
-    State state = m_state;
-    state.position = pos;
-    setState(state);
+    m_nextState.position = pos;
+    applyNextState();
 }
 
 void FakeOutput::setScale(qreal scale)
 {
-    State state = m_state;
-    state.scale = scale;
-    setState(state);
+    m_nextState.scale = scale;
+    applyNextState();
 }
 
 void FakeOutput::setSubPixel(SubPixel subPixel)

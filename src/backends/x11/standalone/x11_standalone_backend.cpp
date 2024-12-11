@@ -378,13 +378,12 @@ void X11StandaloneBackend::doUpdateOutputs()
 
                     auto mode = std::make_shared<OutputMode>(geometry.size(), refreshRate * 1000);
 
-                    X11Output::State state = output->m_state;
-                    state.modes = {mode};
-                    state.currentMode = mode;
-                    state.position = geometry.topLeft();
-
                     output->setInformation(information);
-                    output->setState(state);
+
+                    output->m_nextState.modes = {mode};
+                    output->m_nextState.currentMode = mode;
+                    output->m_nextState.position = geometry.topLeft();
+                    output->applyNextState();
                     break;
                 }
             }

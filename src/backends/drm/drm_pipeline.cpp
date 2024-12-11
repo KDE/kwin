@@ -11,7 +11,6 @@
 
 #include <errno.h>
 
-#include "core/iccprofile.h"
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
@@ -573,11 +572,6 @@ DrmConnector::DrmContentType DrmPipeline::contentType() const
     return m_pending.contentType;
 }
 
-const std::shared_ptr<IccProfile> &DrmPipeline::iccProfile() const
-{
-    return m_pending.iccProfile;
-}
-
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     m_pending.crtc = crtc;
@@ -642,11 +636,6 @@ void DrmPipeline::setWideColorGamut(bool wcg)
 void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
 {
     m_pending.contentType = type;
-}
-
-void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
-{
-    m_pending.iccProfile = profile;
 }
 
 std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type transferFunction) const

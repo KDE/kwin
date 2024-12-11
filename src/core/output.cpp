@@ -380,12 +380,12 @@ QUuid Output::uuid() const
 
 OutputTransform Output::transform() const
 {
-    return m_state.transform;
+    return m_nextState.transform;
 }
 
 OutputTransform Output::manualTransform() const
 {
-    return m_state.manualTransform;
+    return m_nextState.manualTransform;
 }
 
 QString Output::eisaId() const
@@ -451,17 +451,17 @@ Output::Capabilities Output::capabilities() const
 
 qreal Output::scale() const
 {
-    return m_state.scale;
+    return m_nextState.scale;
 }
 
 QRect Output::geometry() const
 {
-    return QRect(m_state.position, pixelSize() / scale());
+    return QRect(m_nextState.position, pixelSize() / scale());
 }
 
 QRectF Output::geometryF() const
 {
-    return QRectF(m_state.position, QSizeF(pixelSize()) / scale());
+    return QRectF(m_nextState.position, QSizeF(pixelSize()) / scale());
 }
 
 QSize Output::physicalSize() const
@@ -471,12 +471,12 @@ QSize Output::physicalSize() const
 
 uint32_t Output::refreshRate() const
 {
-    return m_state.currentMode ? m_state.currentMode->refreshRate() : 0;
+    return m_nextState.currentMode ? m_nextState.currentMode->refreshRate() : 0;
 }
 
 QSize Output::modeSize() const
 {
-    return m_state.currentMode ? m_state.currentMode->size() : QSize();
+    return m_nextState.currentMode ? m_nextState.currentMode->size() : QSize();
 }
 
 QSize Output::pixelSize() const
@@ -491,22 +491,22 @@ const Edid &Output::edid() const
 
 QList<std::shared_ptr<OutputMode>> Output::modes() const
 {
-    return m_state.modes;
+    return m_nextState.modes;
 }
 
 std::shared_ptr<OutputMode> Output::currentMode() const
 {
-    return m_state.currentMode;
+    return m_nextState.currentMode;
 }
 
 QSize Output::desiredModeSize() const
 {
-    return m_state.desiredModeSize;
+    return m_nextState.desiredModeSize;
 }
 
 uint32_t Output::desiredModeRefreshRate() const
 {
-    return m_state.desiredModeRefreshRate;
+    return m_nextState.desiredModeRefreshRate;
 }
 
 Output::SubPixel Output::subPixel() const
@@ -522,29 +522,28 @@ void Output::applyChanges(const OutputConfiguration &config)
     }
     Q_EMIT aboutToChange(props.get());
 
-    State next = m_state;
-    next.enabled = props->enabled.value_or(m_state.enabled);
-    next.transform = props->transform.value_or(m_state.transform);
-    next.position = props->pos.value_or(m_state.position);
-    next.scale = props->scale.value_or(m_state.scale);
-    next.rgbRange = props->rgbRange.value_or(m_state.rgbRange);
-    next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
-    next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
+    m_nextState.enabled = props->enabled.value_or(m_nextState.enabled);
+    m_nextState.transform = props->transform.value_or(m_nextState.transform);
+    m_nextState.position = props->pos.value_or(m_nextState.position);
+    m_nextState.scale = props->scale.value_or(m_nextState.scale);
+    m_nextState.rgbRange = props->rgbRange.value_or(m_nextState.rgbRange);
+    m_nextState.autoRotatePolicy = props->autoRotationPolicy.value_or(m_nextState.autoRotatePolicy);
+    m_nextState.iccProfilePath = props->iccProfilePath.value_or(m_nextState.iccProfilePath);
     if (props->iccProfilePath) {
-        next.iccProfile = IccProfile::load(*props->iccProfilePath);
+        m_nextState.iccProfile = IccProfile::load(*props->iccProfilePath);
     }
-    next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
-    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    m_nextState.vrrPolicy = props->vrrPolicy.value_or(m_nextState.vrrPolicy);
+    m_nextState.desiredModeSize = props->desiredModeSize.value_or(m_nextState.desiredModeSize);
+    m_nextState.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_nextState.desiredModeRefreshRate);
 
-    setState(next);
+    applyNextState();
 
     Q_EMIT changed();
 }
 
 bool Output::isEnabled() const
 {
-    return m_state.enabled;
+    return m_nextState.enabled;
 }
 
 QString Output::description() const
@@ -572,89 +571,88 @@ void Output::setInformation(const Information &information)
     }
 }
 
-void Output::setState(const State &state)
+void Output::applyNextState()
 {
-    const QRect oldGeometry = geometry();
-    const State oldState = m_state;
-
-    m_state = state;
-
-    if (oldGeometry != geometry()) {
+    if (m_currentState.currentMode != m_nextState.currentMode
+        || m_currentState.scale != m_nextState.scale
+        || m_currentState.position != m_nextState.position
+        || m_currentState.transform != m_nextState.transform) {
         Q_EMIT geometryChanged();
     }
-    if (oldState.scale != state.scale) {
+    if (m_currentState.scale != m_nextState.scale) {
         Q_EMIT scaleChanged();
     }
-    if (oldState.modes != state.modes) {
+    if (m_currentState.modes != m_nextState.modes) {
         Q_EMIT modesChanged();
     }
-    if (oldState.currentMode != state.currentMode) {
+    if (m_currentState.currentMode != m_nextState.currentMode) {
         Q_EMIT currentModeChanged();
     }
-    if (oldState.transform != state.transform) {
+    if (m_currentState.transform != m_nextState.transform) {
         Q_EMIT transformChanged();
     }
-    if (oldState.overscan != state.overscan) {
+    if (m_currentState.overscan != m_nextState.overscan) {
         Q_EMIT overscanChanged();
     }
-    if (oldState.dpmsMode != state.dpmsMode) {
+    if (m_currentState.dpmsMode != m_nextState.dpmsMode) {
         Q_EMIT dpmsModeChanged();
     }
-    if (oldState.rgbRange != state.rgbRange) {
+    if (m_currentState.rgbRange != m_nextState.rgbRange) {
         Q_EMIT rgbRangeChanged();
     }
-    if (oldState.highDynamicRange != state.highDynamicRange) {
+    if (m_currentState.highDynamicRange != m_nextState.highDynamicRange) {
         Q_EMIT highDynamicRangeChanged();
     }
-    if (oldState.referenceLuminance != state.referenceLuminance) {
+    if (m_currentState.referenceLuminance != m_nextState.referenceLuminance) {
         Q_EMIT referenceLuminanceChanged();
     }
-    if (oldState.wideColorGamut != state.wideColorGamut) {
+    if (m_currentState.wideColorGamut != m_nextState.wideColorGamut) {
         Q_EMIT wideColorGamutChanged();
     }
-    if (oldState.autoRotatePolicy != state.autoRotatePolicy) {
+    if (m_currentState.autoRotatePolicy != m_nextState.autoRotatePolicy) {
         Q_EMIT autoRotationPolicyChanged();
     }
-    if (oldState.iccProfile != state.iccProfile) {
+    if (m_currentState.iccProfile != m_nextState.iccProfile) {
         Q_EMIT iccProfileChanged();
     }
-    if (oldState.iccProfilePath != state.iccProfilePath) {
+    if (m_currentState.iccProfilePath != m_nextState.iccProfilePath) {
         Q_EMIT iccProfilePathChanged();
     }
-    if (oldState.maxPeakBrightnessOverride != state.maxPeakBrightnessOverride
-        || oldState.maxAverageBrightnessOverride != state.maxAverageBrightnessOverride
-        || oldState.minBrightnessOverride != state.minBrightnessOverride) {
+    if (m_currentState.maxPeakBrightnessOverride != m_nextState.maxPeakBrightnessOverride
+        || m_currentState.maxAverageBrightnessOverride != m_nextState.maxAverageBrightnessOverride
+        || m_currentState.minBrightnessOverride != m_nextState.minBrightnessOverride) {
         Q_EMIT brightnessMetadataChanged();
     }
-    if (oldState.sdrGamutWideness != state.sdrGamutWideness) {
+    if (m_currentState.sdrGamutWideness != m_nextState.sdrGamutWideness) {
         Q_EMIT sdrGamutWidenessChanged();
     }
-    if (oldState.vrrPolicy != state.vrrPolicy) {
+    if (m_currentState.vrrPolicy != m_nextState.vrrPolicy) {
         Q_EMIT vrrPolicyChanged();
     }
-    if (oldState.colorDescription != state.colorDescription) {
+    if (m_currentState.colorDescription != m_nextState.colorDescription) {
         Q_EMIT colorDescriptionChanged();
     }
-    if (oldState.colorProfileSource != state.colorProfileSource) {
+    if (m_currentState.colorProfileSource != m_nextState.colorProfileSource) {
         Q_EMIT colorProfileSourceChanged();
     }
-    if (oldState.brightnessSetting != state.brightnessSetting) {
+    if (m_currentState.brightnessSetting != m_nextState.brightnessSetting) {
         Q_EMIT brightnessChanged();
     }
-    if (oldState.colorPowerTradeoff != state.colorPowerTradeoff) {
+    if (m_currentState.colorPowerTradeoff != m_nextState.colorPowerTradeoff) {
         Q_EMIT colorPowerTradeoffChanged();
     }
-    if (oldState.dimming != state.dimming) {
+    if (m_currentState.dimming != m_nextState.dimming) {
         Q_EMIT dimmingChanged();
     }
-    if (oldState.enabled != state.enabled) {
+    if (m_currentState.enabled != m_nextState.enabled) {
         Q_EMIT enabledChanged();
     }
+    m_currentState = m_nextState;
 }
 
 QSize Output::orientateSize(const QSize &size) const
 {
-    switch (m_state.transform.kind()) {
+    switch (m_nextState.transform.kind()) {
     case OutputTransform::Rotate90:
     case OutputTransform::Rotate270:
     case OutputTransform::FlipX90:
@@ -671,17 +669,17 @@ void Output::setDpmsMode(DpmsMode mode)
 
 Output::DpmsMode Output::dpmsMode() const
 {
-    return m_state.dpmsMode;
+    return m_nextState.dpmsMode;
 }
 
 uint32_t Output::overscan() const
 {
-    return m_state.overscan;
+    return m_nextState.overscan;
 }
 
 VrrPolicy Output::vrrPolicy() const
 {
-    return m_state.vrrPolicy;
+    return m_nextState.vrrPolicy;
 }
 
 bool Output::isPlaceholder() const
@@ -696,7 +694,7 @@ bool Output::isNonDesktop() const
 
 Output::RgbRange Output::rgbRange() const
 {
-    return m_state.rgbRange;
+    return m_nextState.rgbRange;
 }
 
 bool Output::setChannelFactors(const QVector3D &rgb)
@@ -711,32 +709,32 @@ OutputTransform Output::panelOrientation() const
 
 bool Output::wideColorGamut() const
 {
-    return m_state.wideColorGamut;
+    return m_nextState.wideColorGamut;
 }
 
 bool Output::highDynamicRange() const
 {
-    return m_state.highDynamicRange;
+    return m_nextState.highDynamicRange;
 }
 
 uint32_t Output::referenceLuminance() const
 {
-    return m_state.referenceLuminance;
+    return m_nextState.referenceLuminance;
 }
 
 Output::AutoRotationPolicy Output::autoRotationPolicy() const
 {
-    return m_state.autoRotatePolicy;
+    return m_nextState.autoRotatePolicy;
 }
 
 std::shared_ptr<IccProfile> Output::iccProfile() const
 {
-    return m_state.iccProfile;
+    return m_nextState.iccProfile;
 }
 
 QString Output::iccProfilePath() const
 {
-    return m_state.iccProfilePath;
+    return m_nextState.iccProfilePath;
 }
 
 QByteArray Output::mstPath() const
@@ -751,67 +749,67 @@ bool Output::updateCursorLayer()
 
 const ColorDescription &Output::colorDescription() const
 {
-    return m_state.colorDescription;
+    return m_nextState.colorDescription;
 }
 
 std::optional<double> Output::maxPeakBrightness() const
 {
-    return m_state.maxPeakBrightnessOverride ? m_state.maxPeakBrightnessOverride : m_information.maxPeakBrightness;
+    return m_nextState.maxPeakBrightnessOverride ? m_nextState.maxPeakBrightnessOverride : m_information.maxPeakBrightness;
 }
 
 std::optional<double> Output::maxAverageBrightness() const
 {
-    return m_state.maxAverageBrightnessOverride ? *m_state.maxAverageBrightnessOverride : m_information.maxAverageBrightness;
+    return m_nextState.maxAverageBrightnessOverride ? *m_nextState.maxAverageBrightnessOverride : m_information.maxAverageBrightness;
 }
 
 double Output::minBrightness() const
 {
-    return m_state.minBrightnessOverride.value_or(m_information.minBrightness);
+    return m_nextState.minBrightnessOverride.value_or(m_information.minBrightness);
 }
 
 std::optional<double> Output::maxPeakBrightnessOverride() const
 {
-    return m_state.maxPeakBrightnessOverride;
+    return m_nextState.maxPeakBrightnessOverride;
 }
 
 std::optional<double> Output::maxAverageBrightnessOverride() const
 {
-    return m_state.maxAverageBrightnessOverride;
+    return m_nextState.maxAverageBrightnessOverride;
 }
 
 std::optional<double> Output::minBrightnessOverride() const
 {
-    return m_state.minBrightnessOverride;
+    return m_nextState.minBrightnessOverride;
 }
 
 double Output::sdrGamutWideness() const
 {
-    return m_state.sdrGamutWideness;
+    return m_nextState.sdrGamutWideness;
 }
 
 Output::ColorProfileSource Output::colorProfileSource() const
 {
-    return m_state.colorProfileSource;
+    return m_nextState.colorProfileSource;
 }
 
 double Output::brightnessSetting() const
 {
-    return m_state.brightnessSetting;
+    return m_nextState.brightnessSetting;
 }
 
 double Output::dimming() const
 {
-    return m_state.dimming;
+    return m_nextState.dimming;
 }
 
 std::optional<double> Output::currentBrightness() const
 {
-    return m_state.currentBrightness;
+    return m_nextState.currentBrightness;
 }
 
 double Output::artificialHdrHeadroom() const
 {
-    return m_state.artificialHdrHeadroom;
+    return m_nextState.artificialHdrHeadroom;
 }
 
 BrightnessDevice *Output::brightnessDevice() const
@@ -826,12 +824,12 @@ void Output::setBrightnessDevice(BrightnessDevice *device)
 
 bool Output::allowSdrSoftwareBrightness() const
 {
-    return m_state.allowSdrSoftwareBrightness;
+    return m_nextState.allowSdrSoftwareBrightness;
 }
 
 Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
 {
-    return m_state.colorPowerTradeoff;
+    return m_nextState.colorPowerTradeoff;
 }
 } // namespace KWin
 

@@ -61,7 +61,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
                                     m_pipeline->formats(m_type),
                                     m_pipeline->output()->scanoutColorDescription(),
                                     m_pipeline->output()->needsShadowBuffer() ? m_pipeline->output()->adaptedChannelFactors() : QVector3D(1, 1, 1),
-                                    m_pipeline->output()->needsShadowBuffer() ? m_pipeline->iccProfile() : nullptr,
+                                    m_pipeline->output()->needsShadowBuffer() ? m_pipeline->output()->iccProfile() : nullptr,
                                     m_pipeline->output()->scale(),
                                     m_pipeline->output()->colorPowerTradeoff());
 }
@@ -104,17 +104,10 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         // the hardware to some buffer format we can't switch away from
         return false;
     }
-    if (m_pipeline->output()->colorProfileSource() == Output::ColorProfileSource::ICC && !m_pipeline->output()->highDynamicRange() && m_pipeline->iccProfile()) {
-        // TODO make the icc profile output a color pipeline too?
+    if (!m_pipeline->output()->needsShadowBuffer()) {
         return false;
     }
-    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
-    if (m_pipeline->output()->needsShadowBuffer()) {
-        pipeline.addTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
-        pipeline.addMultiplier(m_pipeline->output()->adaptedChannelFactors());
-        pipeline.addInverseTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
-    }
-    m_colorPipeline = pipeline;
+    m_colorPipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
     // so we need to make sure that doesn't cause a difference vs the composited result
