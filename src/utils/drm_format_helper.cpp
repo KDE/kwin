@@ -62,6 +62,26 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .openglFormat = GL_RGB10_A2,
             .floatingPoint = false,
         };
+    case DRM_FORMAT_XRGB16161616:
+    case DRM_FORMAT_XBGR16161616:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 16,
+            .alphaBits = 0,
+            .bitsPerPixel = 64,
+            .openglFormat = GL_RGBA16,
+            .floatingPoint = false,
+        };
+    case DRM_FORMAT_ARGB16161616:
+    case DRM_FORMAT_ABGR16161616:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 16,
+            .alphaBits = 16,
+            .bitsPerPixel = 64,
+            .openglFormat = GL_RGBA16,
+            .floatingPoint = false,
+        };
     case DRM_FORMAT_XRGB16161616F:
     case DRM_FORMAT_XBGR16161616F:
         return FormatInfo{
