@@ -198,6 +198,9 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
     }
     const QRectF boundingGeometry = surface()->boundingRect();
 
+    if (decoration())
+        qDebug() << decoration()->borders();
+
     // The effective window geometry is defined as the intersection of the window geometry
     // and the rectangle that bounds the main surface and all of its sub-surfaces. If the
     // client hasn't specified the window geometry, we must fallback to the bounding geometry.
