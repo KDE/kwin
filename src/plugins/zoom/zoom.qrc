@@ -1,5 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/effects/zoom/">
+  <file>shaders/lanczos.frag</file>
+  <file>shaders/lanczos_core.frag</file>
   <file>shaders/pixelgrid.frag</file>
   <file>shaders/pixelgrid_core.frag</file>
 </qresource>

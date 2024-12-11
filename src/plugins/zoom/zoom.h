@@ -137,6 +137,7 @@ private:
     double m_moveFactor;
     std::chrono::milliseconds m_lastPresentTime;
     std::map<Output *, OffscreenData> m_offscreenData;
+    std::unique_ptr<GLShader> m_lanczosShader;
     std::unique_ptr<GLShader> m_pixelGridShader;
     double m_pixelGridZoom;
 };
