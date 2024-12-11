@@ -73,7 +73,7 @@ bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damag
 
 bool EglGbmLayer::checkTestBuffer()
 {
-    return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type)) != nullptr;
+    return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff()) != nullptr;
 }
 
 std::shared_ptr<GLTexture> EglGbmLayer::texture() const
