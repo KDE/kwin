@@ -38,18 +38,6 @@ namespace KWin
 {
 
 ZoomEffect::ZoomEffect()
-    : Effect()
-    , m_zoom(1)
-    , m_targetZoom(1)
-    , m_zoomFactor(1.25)
-    , m_mouseTracking(MouseTrackingProportional)
-    , m_mousePointer(MousePointerScale)
-    , m_focusDelay(350) // in milliseconds
-    , m_isMouseHidden(false)
-    , m_xMove(0)
-    , m_yMove(0)
-    , m_moveFactor(20.0)
-    , m_lastPresentTime(std::chrono::milliseconds::zero())
 {
     ensureResources();
 
@@ -131,7 +119,6 @@ ZoomEffect::ZoomEffect()
         slotWindowAdded(w);
     }
 
-    m_sourceZoom = -1; // used to trigger initialZoom reading
     reconfigure(ReconfigureAll);
 }
 
