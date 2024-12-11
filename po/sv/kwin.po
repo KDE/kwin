@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-10 00:41+0000\n"
+"POT-Creation-Date: 2024-12-11 00:41+0000\n"
 "PO-Revision-Date: 2024-12-04 18:07+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -2901,32 +2901,32 @@ msgstr "Mindre"
 msgid "More"
 msgstr "Mer"
 
-#: plugins/zoom/zoom.cpp:69
+#: plugins/zoom/zoom.cpp:77
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Flytta zoomat område åt vänster"
 
-#: plugins/zoom/zoom.cpp:76
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Flytta zoomat område åt höger"
 
-#: plugins/zoom/zoom.cpp:83
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Flytta zoomat område uppåt"
 
-#: plugins/zoom/zoom.cpp:90
+#: plugins/zoom/zoom.cpp:98
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Flytta zoomat område neråt"
 
-#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Flytta musen till fokus"
 
-#: plugins/zoom/zoom.cpp:105 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:113 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Flytta musen till mitten"
@@ -2953,20 +2953,95 @@ msgstr "Flytta ner"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:25 plugins/zoom/zoom_config.ui:41
+#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
 #, kde-format
 msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
 msgstr ""
 "Vid in- och utzoomning ändra zoom med den definierade zoomningsfaktorn."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:28
-#, kde-format
-msgid "Zoom Factor:"
+#: plugins/zoom/zoom_config.ui:25
+#, fuzzy, kde-format
+#| msgid "Zoom Factor:"
+msgid "Zoom factor:"
 msgstr "Zoomningsfaktor:"
 
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: plugins/zoom/zoom_config.ui:57
+#, kde-format
+msgid "Show pixel grid at zoom level:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: plugins/zoom/zoom_config.ui:70
+#, fuzzy, kde-format
+#| msgid "Mouse Pointer:"
+msgid "Mouse pointer:"
+msgstr "Muspekare:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
+#: plugins/zoom/zoom_config.ui:80
+#, kde-format
+msgid "Visibility of the mouse-pointer."
+msgstr "Muspekarens synlighet."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: plugins/zoom/zoom_config.ui:84
+#, kde-format
+msgid "Scale"
+msgstr "Skala"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: plugins/zoom/zoom_config.ui:89
+#, kde-format
+msgid "Keep"
+msgstr "Behåll"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: plugins/zoom/zoom_config.ui:94
+#, kde-format
+msgid "Hide"
+msgstr "Dölj"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: plugins/zoom/zoom_config.ui:102
+#, fuzzy, kde-format
+#| msgid "Mouse Tracking:"
+msgid "Mouse tracking:"
+msgstr "Musföljning:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
+#: plugins/zoom/zoom_config.ui:112
+#, kde-format
+msgid "Track moving of the mouse."
+msgstr "Följ musens rörelser."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: plugins/zoom/zoom_config.ui:116
+#, kde-format
+msgid "Proportional"
+msgstr "Proportionell"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: plugins/zoom/zoom_config.ui:121
+#, kde-format
+msgid "Centered"
+msgstr "Centrerad"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: plugins/zoom/zoom_config.ui:126
+#, kde-format
+msgid "Push"
+msgstr "Skicka"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: plugins/zoom/zoom_config.ui:131
+#, kde-format
+msgid "Disabled"
+msgstr "Inaktiverad"
+
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:66
+#: plugins/zoom/zoom_config.ui:142
 #, kde-format
 msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
@@ -2976,13 +3051,14 @@ msgstr ""
 "aktiverat för varje program  (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:69
-#, kde-format
-msgid "Enable Focus Tracking"
+#: plugins/zoom/zoom_config.ui:145
+#, fuzzy, kde-format
+#| msgid "Enable Focus Tracking"
+msgid "Enable focus tracking"
 msgstr "Aktivera fokusföljning"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:76
+#: plugins/zoom/zoom_config.ui:152
 #, kde-format
 msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
@@ -2992,76 +3068,11 @@ msgstr ""
 "för varje program  (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:79
-#, kde-format
-msgid "Enable Text Cursor Tracking"
+#: plugins/zoom/zoom_config.ui:155
+#, fuzzy, kde-format
+#| msgid "Enable Text Cursor Tracking"
+msgid "Enable text cursor tracking"
 msgstr "Aktivera textmarkörföljning"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:86
-#, kde-format
-msgid "Mouse Pointer:"
-msgstr "Muspekare:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:99
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Muspekarens synlighet."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:103
-#, kde-format
-msgid "Scale"
-msgstr "Skala"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:108
-#, kde-format
-msgid "Keep"
-msgstr "Behåll"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:113
-#, kde-format
-msgid "Hide"
-msgstr "Dölj"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Följ musens rörelser."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:125
-#, kde-format
-msgid "Proportional"
-msgstr "Proportionell"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:130
-#, kde-format
-msgid "Centered"
-msgstr "Centrerad"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:135
-#, kde-format
-msgid "Push"
-msgstr "Skicka"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:140
-#, kde-format
-msgid "Disabled"
-msgstr "Inaktiverad"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:148
-#, kde-format
-msgid "Mouse Tracking:"
-msgstr "Musföljning:"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9

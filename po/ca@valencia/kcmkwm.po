@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-10 00:41+0000\n"
-"PO-Revision-Date: 2024-11-06 10:00+0100\n"
+"PO-Revision-Date: 2024-12-10 10:34+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1101,7 +1101,7 @@ msgstr "Activa i abaixa"
 #: mouse.ui:577
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Maximitza la finestra fent doble clic en el seu marc"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:602

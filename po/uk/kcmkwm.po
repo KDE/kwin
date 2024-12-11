@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-10 00:41+0000\n"
-"PO-Revision-Date: 2024-11-06 18:37+0200\n"
+"PO-Revision-Date: 2024-12-10 09:47+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -1095,7 +1095,7 @@ msgstr "Активізувати й опустити"
 #: mouse.ui:577
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Максимізувати вікно подвійним клацанням на його рамці"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:602

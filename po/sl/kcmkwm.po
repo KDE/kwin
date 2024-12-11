@@ -1,7 +1,7 @@
 # translation of kcmkwm.po to Slovenian
 # Translation of kcmkwm.po to Slovenian
 # KDEBASE translation to Slovenian language.
-# $Id: kcmkwm.po 1697155 2024-12-10 01:17:30Z scripty $
+# $Id: kcmkwm.po 1697237 2024-12-11 01:17:03Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-10 00:41+0000\n"
-"PO-Revision-Date: 2024-11-06 10:33+0100\n"
+"PO-Revision-Date: 2024-12-10 07:14+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -106,7 +106,7 @@ msgid ""
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
 "Upoštevajte, da »Aktiviraj, posreduj klik in dvigni ob sprostitvi« ne deluje "
-"na X11 in se namesto tega vrne na »Aktiviraj, dvigni in posreduj klik«."
+"na X11 in se namesto tega vrne na »Aktiviraj, dvigni in posreduj klik«"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1095,7 +1095,7 @@ msgstr "Aktiviraj in spusti"
 #: mouse.ui:577
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Razpni okno tako, da dvakrat kliknete njegov okvir"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:602
