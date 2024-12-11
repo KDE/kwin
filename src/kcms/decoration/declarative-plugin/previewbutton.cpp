@@ -98,7 +98,9 @@ void PreviewButtonItem::createButton()
     client->setActive(false);
     client->setProvidesContextHelp(true);
     m_decoration->setSettings(m_settings->settings());
+    m_decoration->create();
     m_decoration->init();
+    m_decoration->apply(m_decoration->nextState()->clone());
     m_button = m_bridge->createButton(m_decoration, m_type);
     connect(this, &PreviewButtonItem::widthChanged, this, &PreviewButtonItem::syncGeometry);
     connect(this, &PreviewButtonItem::heightChanged, this, &PreviewButtonItem::syncGeometry);
