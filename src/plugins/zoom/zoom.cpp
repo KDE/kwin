@@ -120,6 +120,11 @@ ZoomEffect::ZoomEffect()
     }
 
     reconfigure(ReconfigureAll);
+
+    const double initialZoom = ZoomConfig::initialZoom();
+    if (initialZoom > 1.0) {
+        zoomTo(initialZoom);
+    }
 }
 
 ZoomEffect::~ZoomEffect()
@@ -223,16 +228,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     m_focusDelay = std::max(uint(0), ZoomConfig::focusDelay());
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
     m_moveFactor = std::max(0.1, ZoomConfig::moveFactor());
-    if (m_sourceZoom < 0) {
-        // Load the saved zoom value.
-        m_sourceZoom = 1.0;
-        setTargetZoom(ZoomConfig::initialZoom());
-        if (m_targetZoom > 1.0) {
-            zoomTo(m_targetZoom);
-        }
-    } else {
-        m_sourceZoom = 1.0;
-    }
+    m_sourceZoom = 1.0;
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)

@@ -119,7 +119,7 @@ private:
 #endif
     double m_zoom = 1.0;
     double m_targetZoom = 1.0;
-    double m_sourceZoom = -1.0; // -1 to trigger initialZoom reading
+    double m_sourceZoom = 1.0;
     double m_zoomFactor = 1.25;
     MouseTrackingType m_mouseTracking = MouseTrackingProportional;
     MousePointerType m_mousePointer = MousePointerScale;
