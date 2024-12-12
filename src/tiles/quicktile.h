@@ -42,16 +42,16 @@ private:
 
     Tile *m_resizedTile = nullptr;
 
-    std::unique_ptr<Tile> m_leftVerticalTile;
-    std::unique_ptr<Tile> m_rightVerticalTile;
+    Tile *m_leftVerticalTile = nullptr;
+    Tile *m_rightVerticalTile = nullptr;
 
-    std::unique_ptr<Tile> m_topHorizontalTile;
-    std::unique_ptr<Tile> m_bottomHorizontalTile;
+    Tile *m_topHorizontalTile = nullptr;
+    Tile *m_bottomHorizontalTile = nullptr;
 
-    std::unique_ptr<Tile> m_topLeftTile;
-    std::unique_ptr<Tile> m_topRightTile;
-    std::unique_ptr<Tile> m_bottomLeftTile;
-    std::unique_ptr<Tile> m_bottomRightTile;
+    Tile *m_topLeftTile = nullptr;
+    Tile *m_topRightTile = nullptr;
+    Tile *m_bottomLeftTile = nullptr;
+    Tile *m_bottomRightTile = nullptr;
 };
 
 } // namespace KWin
