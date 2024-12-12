@@ -373,8 +373,20 @@ bool Tile::addWindow(Window *window)
 
     // There can be only one window owner per root tile, so make it forget
     // if anybody else had the association
-    for (Tile *tile : rootTile()->descendants()) {
-        tile->removeWindow(window);
+    const auto outputs = workspace()->outputs();
+    for (Output *output : outputs) {
+        if (TileManager *manager = workspace()->tileManager(output)) {
+            if (Tile *rootTile = manager->rootTile(m_desktop)) {
+                rootTile->visitDescendants([window](Tile *tile) {
+                    tile->removeWindow(window);
+                });
+            }
+            if (Tile *rootTile = manager->quickRootTile(m_desktop)) {
+                rootTile->visitDescendants([window](Tile *tile) {
+                    tile->removeWindow(window);
+                });
+            }
+        }
     }
 
     // Needs to be added before setAssociation to avoid double insertions

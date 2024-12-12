@@ -3756,11 +3756,12 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
         tile = workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(mode);
     }
 
-    if (!tile && m_requestedTile) {
-        m_requestedTile->removeWindow(this);
-    }
-    if (tile) {
-        tile->addWindow(this);
+    if (m_requestedTile != tile) {
+        if (tile) {
+            tile->addWindow(this);
+        } else if (m_requestedTile) {
+            m_requestedTile->removeWindow(this);
+        }
     }
 }
 

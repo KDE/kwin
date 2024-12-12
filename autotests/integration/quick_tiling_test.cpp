@@ -48,6 +48,32 @@ namespace KWin
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_quick_tiling-0");
 
+static X11Window *createWindow(xcb_connection_t *connection, const QRect &geometry)
+{
+    xcb_window_t windowId = xcb_generate_id(connection);
+    xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      geometry.x(),
+                      geometry.y(),
+                      geometry.width(),
+                      geometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, geometry.x(), geometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, geometry.width(), geometry.height());
+    xcb_icccm_set_wm_normal_hints(connection, windowId, &hints);
+
+    xcb_map_window(connection, windowId);
+    xcb_flush(connection);
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    if (!windowCreatedSpy.wait()) {
+        return nullptr;
+    }
+    return windowCreatedSpy.last().first().value<X11Window *>();
+}
+
 class QuickTilingTest : public QObject
 {
     Q_OBJECT
@@ -69,6 +95,8 @@ private Q_SLOTS:
     void testX11QuickTilingAfterVertMaximize();
     void testShortcut_data();
     void testShortcut();
+    void testMultiScreen();
+    void testMultiScreenX11();
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
@@ -797,6 +825,229 @@ void QuickTilingTest::testShortcut()
 
     QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
     QCOMPARE(window->frameGeometry(), expectedGeometry);
+}
+
+void QuickTilingTest::testMultiScreen()
+{
+    // This test verifies that a window can be moved between screens by continuously pressing Meta+arrow.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    TileManager *firstTileManager = workspace()->tileManager(workspace()->outputs().at(0));
+    TileManager *secondTileManager = workspace()->tileManager(workspace()->outputs().at(1));
+
+    const struct
+    {
+        QuickTileMode shortcut;
+        QuickTileMode previous;
+        Tile *previousTile;
+        QuickTileMode next;
+        Tile *nextTile;
+        QRectF geometry;
+    } steps[] = {
+        // Not tiled -> tiled on the left half of the first screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::None,
+            .previousTile = nullptr,
+            .next = QuickTileFlag::Left,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(0, 0, 640, 1024),
+        },
+        // Tiled on the left half of the first screen -> tiled on the right half of the first screen
+        {
+            .shortcut = QuickTileFlag::Right,
+            .previous = QuickTileFlag::Left,
+            .previousTile = firstTileManager->quickTile(QuickTileFlag::Left),
+            .next = QuickTileFlag::Right,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .geometry = QRectF(640, 0, 640, 1024),
+        },
+        // Tiled on the right half of the first screen -> tiled on the left half of the second screen
+        {
+            .shortcut = QuickTileFlag::Right,
+            .previous = QuickTileFlag::Right,
+            .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .next = QuickTileFlag::Left,
+            .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(1280, 0, 640, 1024),
+        },
+        // Tiled on the left half of the second screen -> tiled on the right half of the second screen
+        {
+            .shortcut = QuickTileFlag::Right,
+            .previous = QuickTileFlag::Left,
+            .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .next = QuickTileFlag::Right,
+            .nextTile = secondTileManager->quickTile(QuickTileFlag::Right),
+            .geometry = QRectF(1920, 0, 640, 1024),
+        },
+        // Tiled on the right half of the second screen -> tiled on the left half of the second screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::Right,
+            .previousTile = secondTileManager->quickTile(QuickTileFlag::Right),
+            .next = QuickTileFlag::Left,
+            .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(1280, 0, 640, 1024),
+        },
+        // Tiled on the left half of the second screen -> tiled on the right half of the first screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::Left,
+            .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .next = QuickTileFlag::Right,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .geometry = QRectF(640, 0, 640, 1024),
+        },
+        // Tiled on the right half of the first screen -> tiled on the left half of the first screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::Right,
+            .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .next = QuickTileFlag::Left,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(0, 0, 640, 1024),
+        },
+    };
+
+    for (const auto &step : steps) {
+        window->handleQuickTileShortcut(step.shortcut);
+
+        QCOMPARE(window->quickTileMode(), step.previous);
+        QCOMPARE(window->requestedQuickTileMode(), step.next);
+
+        QCOMPARE(window->tile(), step.previousTile);
+        QVERIFY(!step.previousTile || !step.previousTile->windows().contains(window));
+        QCOMPARE(window->requestedTile(), step.nextTile);
+        QVERIFY(step.nextTile->windows().contains(window));
+
+        QCOMPARE(window->moveResizeGeometry(), step.geometry);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->quickTileMode(), step.next);
+        QCOMPARE(window->requestedQuickTileMode(), step.next);
+        QCOMPARE(window->tile(), step.nextTile);
+        QCOMPARE(window->requestedTile(), step.nextTile);
+        QCOMPARE(window->frameGeometry(), step.geometry);
+        QCOMPARE(window->moveResizeGeometry(), step.geometry);
+    }
+}
+
+void QuickTilingTest::testMultiScreenX11()
+{
+    // This test verifies that an X11 window can be moved between screens by continuously pressing Meta+arrow.
+
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+
+    TileManager *firstTileManager = workspace()->tileManager(workspace()->outputs().at(0));
+    TileManager *secondTileManager = workspace()->tileManager(workspace()->outputs().at(1));
+
+    const struct
+    {
+        QuickTileMode shortcut;
+        QuickTileMode previous;
+        Tile *previousTile;
+        QuickTileMode next;
+        Tile *nextTile;
+        QRectF geometry;
+    } steps[] = {
+        // Not tiled -> tiled on the left half of the first screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::None,
+            .previousTile = nullptr,
+            .next = QuickTileFlag::Left,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(0, 0, 640, 1024),
+        },
+        // Tiled on the left half of the first screen -> tiled on the right half of the first screen
+        {
+            .shortcut = QuickTileFlag::Right,
+            .previous = QuickTileFlag::Left,
+            .previousTile = firstTileManager->quickTile(QuickTileFlag::Left),
+            .next = QuickTileFlag::Right,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .geometry = QRectF(640, 0, 640, 1024),
+        },
+        // Tiled on the right half of the first screen -> tiled on the left half of the second screen
+        {
+            .shortcut = QuickTileFlag::Right,
+            .previous = QuickTileFlag::Right,
+            .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .next = QuickTileFlag::Left,
+            .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(1280, 0, 640, 1024),
+        },
+        // Tiled on the left half of the second screen -> tiled on the right half of the second screen
+        {
+            .shortcut = QuickTileFlag::Right,
+            .previous = QuickTileFlag::Left,
+            .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .next = QuickTileFlag::Right,
+            .nextTile = secondTileManager->quickTile(QuickTileFlag::Right),
+            .geometry = QRectF(1920, 0, 640, 1024),
+        },
+        // Tiled on the right half of the second screen -> tiled on the left half of the second screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::Right,
+            .previousTile = secondTileManager->quickTile(QuickTileFlag::Right),
+            .next = QuickTileFlag::Left,
+            .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(1280, 0, 640, 1024),
+        },
+        // Tiled on the left half of the second screen -> tiled on the right half of the first screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::Left,
+            .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
+            .next = QuickTileFlag::Right,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .geometry = QRectF(640, 0, 640, 1024),
+        },
+        // Tiled on the right half of the first screen -> tiled on the left half of the first screen
+        {
+            .shortcut = QuickTileFlag::Left,
+            .previous = QuickTileFlag::Right,
+            .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
+            .next = QuickTileFlag::Left,
+            .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
+            .geometry = QRectF(0, 0, 640, 1024),
+        },
+    };
+
+    for (const auto &step : steps) {
+        QCOMPARE(window->quickTileMode(), step.previous);
+        QCOMPARE(window->requestedQuickTileMode(), step.previous);
+        QCOMPARE(window->tile(), step.previousTile);
+        QCOMPARE(window->requestedTile(), step.previousTile);
+
+        window->handleQuickTileShortcut(step.shortcut);
+
+        QVERIFY(!step.previousTile || !step.previousTile->windows().contains(window));
+        QVERIFY(step.nextTile->windows().contains(window));
+
+        QCOMPARE(window->moveResizeGeometry(), step.geometry);
+        QCOMPARE(window->quickTileMode(), step.next);
+        QCOMPARE(window->requestedQuickTileMode(), step.next);
+        QCOMPARE(window->tile(), step.nextTile);
+        QCOMPARE(window->requestedTile(), step.nextTile);
+        QCOMPARE(window->frameGeometry(), step.geometry);
+        QCOMPARE(window->moveResizeGeometry(), step.geometry);
+    }
 }
 
 void QuickTilingTest::testScript_data()
