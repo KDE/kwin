@@ -159,6 +159,11 @@ CustomTile *TileManager::rootTile() const
     return m_rootTile;
 }
 
+QuickRootTile *TileManager::quickRootTile(VirtualDesktop *desktop) const
+{
+    return m_quickRootTiles.value(desktop);
+}
+
 Tile *TileManager::quickTile(QuickTileMode mode) const
 {
     return m_quickRootTile->tileForMode(mode);
