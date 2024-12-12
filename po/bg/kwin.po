@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-11 00:41+0000\n"
-"PO-Revision-Date: 2024-12-09 22:23+0100\n"
+"POT-Creation-Date: 2024-12-12 00:42+0000\n"
+"PO-Revision-Date: 2024-12-11 18:56+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -2897,32 +2897,32 @@ msgstr "По-малко"
 msgid "More"
 msgstr "Повече"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Преместване на увеличената област наляво"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Преместване на увеличената област надясно"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Преместване на увеличената област нагоре"
 
-#: plugins/zoom/zoom.cpp:98
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Преместване на намалената зона надолу"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Преместване на мишката във фокуса"
 
-#: plugins/zoom/zoom.cpp:113 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Преместване на мишката в центъра"
@@ -2958,8 +2958,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Коефициент на мащабиране:"
 
@@ -2967,12 +2966,11 @@ msgstr "Коефициент на мащабиране:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Показване на пикселната мрежа при ниво на мащабиране:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Курсор на мишката:"
 
@@ -3002,8 +3000,7 @@ msgstr "Скриване"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Следене на мишката:"
 
@@ -3050,8 +3047,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Включване следене на фокуса"
 
@@ -3068,8 +3064,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "Активиране на проследяването на курсора на текст"
 
@@ -3650,17 +3645,15 @@ msgid "Log Out Anyway"
 msgstr "Излизане от системата независимо от това"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "Следните приложения не се затвориха:\n"
-"%1"
+"%1\n"
+"Въпреки това ще последва излизане от сесията след 2 минути."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

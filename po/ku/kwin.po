@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-11 00:41+0000\n"
+"POT-Creation-Date: 2024-12-12 00:42+0000\n"
 "PO-Revision-Date: 2009-01-06 03:15+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin at lists dot sourceforge dot "
@@ -2947,34 +2947,34 @@ msgstr "Kêmtir"
 msgid "More"
 msgstr "Zêdetir"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:74
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Paceyê bibe Sermase ya Çepê"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:81
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Paceyê bibe Sermase ya Rastê"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:98
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:113 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Mouse to Center"

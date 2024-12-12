@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-11 00:41+0000\n"
+"POT-Creation-Date: 2024-12-12 00:42+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -3008,35 +3008,35 @@ msgstr "Minn"
 msgid "More"
 msgstr "Mehr"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:74
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Finster en Schriefdisch na links"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:81
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Finster en Schriefdisch na rechts"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Grötter maakt Rebeet na baven verschuven"
 
-#: plugins/zoom/zoom.cpp:98
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Grötter maakt Rebeet na nerrn verschuven"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "Muus-Emuleren"
 
-#: plugins/zoom/zoom.cpp:113 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"

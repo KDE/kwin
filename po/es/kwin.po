@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-11 00:41+0000\n"
-"PO-Revision-Date: 2024-12-10 12:13+0100\n"
+"POT-Creation-Date: 2024-12-12 00:42+0000\n"
+"PO-Revision-Date: 2024-12-11 11:48+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -2924,32 +2924,32 @@ msgstr "Menos"
 msgid "More"
 msgstr "Más"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mover área ampliada a la izquierda"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mover área ampliada a la derecha"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Mover área ampliada hacia arriba"
 
-#: plugins/zoom/zoom.cpp:98
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Mover área ampliada hacia abajo"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mover ratón hasta el foco"
 
-#: plugins/zoom/zoom.cpp:113 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mover ratón al centro"
@@ -2985,8 +2985,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Factor de ampliación:"
 
@@ -2994,12 +2993,11 @@ msgstr "Factor de ampliación:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Mostrar cuadrícula de píxeles en el nivel de ampliación:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Puntero del ratón:"
 
@@ -3029,8 +3027,7 @@ msgstr "Ocultar"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Seguimiento del ratón:"
 
@@ -3077,8 +3074,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Activar seguimiento del foco"
 
@@ -3094,8 +3090,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "Activar seguimiento del cursor de texto"
 

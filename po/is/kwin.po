@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-11 00:41+0000\n"
+"POT-Creation-Date: 2024-12-12 00:42+0000\n"
 "PO-Revision-Date: 2024-09-26 14:15+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -2904,32 +2904,32 @@ msgstr "Minna"
 msgid "More"
 msgstr "Meira"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Færa stækkað svæði til vinstri"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Færa stækkað svæði til hægri"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Færa stækkað svæði upp á við"
 
-#: plugins/zoom/zoom.cpp:98
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Færa stækkað svæði niður á við"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Færa mús til að fá fókus"
 
-#: plugins/zoom/zoom.cpp:113 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Færa mús á miðju"
