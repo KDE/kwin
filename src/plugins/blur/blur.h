@@ -81,7 +81,7 @@ public Q_SLOTS:
 
 private:
     void initBlurStrengthValues();
-    QMatrix4x4 colorMatrix(qreal contrast, qreal brightness, qreal saturation);
+    QMatrix4x4 colorMatrix(qreal contrast, qreal saturation);
     QRegion blurRegion(EffectWindow *w) const;
     QRegion decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
@@ -97,7 +97,6 @@ private:
         int mvpMatrixLocation;
         int colorMatrixLocation;
         qreal contrast = 0.2;
-        qreal brightness = 1.4; // FIXME: Plasma uses 1.4 wit hlight themes and 0.6 on dark themes
         qreal saturation = 10;
     } m_contrastPass;
 
