@@ -109,6 +109,7 @@ public:
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
     void setHighDynamicRange(bool hdr);
     void setWideColorGamut(bool wcg);
+    void setMaxBpc(uint32_t max);
 
     /**
      * amdgpu drops cursor updates with adaptive sync: https://gitlab.freedesktop.org/drm/amd/-/issues/2186
@@ -169,6 +170,7 @@ private:
         std::shared_ptr<IccProfile> iccProfile;
         bool hdr = false;
         bool wcg = false;
+        uint32_t maxBpc = 10;
     };
     // the state that is to be tested next
     State m_pending;

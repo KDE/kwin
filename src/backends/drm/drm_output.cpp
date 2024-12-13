@@ -370,6 +370,17 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
     m_pipeline->setHighDynamicRange(hdr);
     m_pipeline->setWideColorGamut(bt2020);
+
+    // TODO migrate this env var to a proper setting
+    static bool preferreedColorDepthIsSet = false;
+    static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &preferreedColorDepthIsSet);
+    if (preferreedColorDepthIsSet) {
+        m_pipeline->setMaxBpc(preferred / 3);
+    } else if (props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff) == ColorPowerTradeoff::PreferAccuracy) {
+        m_pipeline->setMaxBpc(m_connector->mstPath().isEmpty() ? 16 : 8);
+    } else {
+        m_pipeline->setMaxBpc(m_connector->mstPath().isEmpty() ? 10 : 8);
+    }
     if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::ICC) {
         // ICC profiles don't support HDR (yet)
         m_pipeline->setIccProfile(nullptr);

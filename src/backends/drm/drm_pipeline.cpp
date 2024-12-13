@@ -277,16 +277,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addProperty(m_connector->underscanHBorder, hborder);
     }
     if (m_connector->maxBpc.isValid()) {
-        // TODO migrate this env var to a proper setting
-        static bool ok = false;
-        static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &ok);
-        // docks very often have problems with higher than 8 bits per color
-        // see https://gitlab.freedesktop.org/drm/amd/-/issues/2598 for example
-        uint32_t bpc = m_connector->mstPath().isEmpty() ? 10 : 8;
-        if (ok) {
-            bpc = preferred / 3;
-        }
-        commit->addProperty(m_connector->maxBpc, std::clamp<uint32_t>(bpc, m_connector->maxBpc.minValue(), m_connector->maxBpc.maxValue()));
+        commit->addProperty(m_connector->maxBpc, std::clamp<uint32_t>(m_pending.maxBpc, m_connector->maxBpc.minValue(), m_connector->maxBpc.maxValue()));
     }
     if (m_connector->hdrMetadata.isValid()) {
         commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22));
@@ -637,6 +628,11 @@ void DrmPipeline::setHighDynamicRange(bool hdr)
 void DrmPipeline::setWideColorGamut(bool wcg)
 {
     m_pending.wcg = wcg;
+}
+
+void DrmPipeline::setMaxBpc(uint32_t max)
+{
+    m_pending.maxBpc = max;
 }
 
 void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
