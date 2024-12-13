@@ -102,7 +102,7 @@ private:
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     std::unique_ptr<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     std::optional<quint32> m_lastAcknowledgedConfigureSerial;
-    QRectF m_windowGeometry;
+    QRect m_windowGeometry;
     bool m_haveNextWindowGeometry = false;
 };
 

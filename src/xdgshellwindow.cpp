@@ -196,7 +196,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         setTargetScale(configureEvent->scale);
     }
-    const QRectF boundingGeometry = surface()->boundingRect();
+    const QRect boundingGeometry = surface()->boundingRect().toRect();
 
     // The effective window geometry is defined as the intersection of the window geometry
     // and the rectangle that bounds the main surface and all of its sub-surfaces. If the
@@ -213,11 +213,9 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
 
     if (m_windowGeometry.isEmpty()) {
         qCWarning(KWIN_CORE) << "Committed empty window geometry, dealing with a buggy client!";
-    } else {
-        m_windowGeometry = snapToPixels(m_windowGeometry, targetScale());
     }
 
-    QRectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
+    QRectF frameGeometry(pos(), clientSizeToFrameSize(snapToPixels(m_windowGeometry.size(), targetScale())));
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
             frameGeometry = gravitateGeometry(frameGeometry, configureEvent->bounds, configureEvent->gravity);
@@ -262,8 +260,8 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
 
     if (mode != MoveResizeMode::Move) {
         // xdg-shell doesn't support fractional sizes, so the requested client size is rounded.
-        const QSize requestedClientSize = frameSizeToClientSize(rect.size()).toSize();
-        if (requestedClientSize == clientSize()) {
+        const QSizeF requestedClientSize = frameSizeToClientSize(snapToPixels(rect.size(), targetScale()));
+        if (m_windowGeometry.size() == requestedClientSize.toSize()) {
             updateGeometry(QRectF(rect.topLeft(), clientSizeToFrameSize(requestedClientSize)));
         } else {
             m_configureFlags |= XdgSurfaceConfigure::ConfigurePosition;
