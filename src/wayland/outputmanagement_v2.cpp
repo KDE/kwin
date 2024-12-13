@@ -17,13 +17,14 @@
 
 #include "qwayland-server-kde-output-management-v2.h"
 
+#include <KLocalizedString>
 #include <cmath>
 #include <optional>
 
 namespace KWin
 {
 
-static const quint32 s_version = 11;
+static const quint32 s_version = 12;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -44,6 +45,7 @@ public:
     bool invalid = false;
     OutputConfiguration config;
     QList<std::pair<uint32_t, OutputDeviceV2Interface *>> outputOrder;
+    QString failureReason;
 
 protected:
     void kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable) override;
@@ -70,6 +72,8 @@ protected:
     void kde_output_configuration_v2_set_brightness(Resource *resource, wl_resource *outputdevice, uint32_t brightness) override;
     void kde_output_configuration_v2_set_color_power_tradeoff(Resource *resource, wl_resource *outputdevice, uint32_t preference) override;
     void kde_output_configuration_v2_set_dimming(Resource *resource, ::wl_resource *outputdevice, uint32_t multiplier) override;
+
+    void sendFailure(Resource *resource, const QString &reason);
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -307,7 +311,11 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_icc_profile
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         const auto set = config.changeSet(output->handle());
         set->iccProfilePath = profile_path;
-        set->iccProfile = IccProfile::load(profile_path);
+        if (auto profile = IccProfile::load(profile_path)) {
+            set->iccProfile = std::move(profile.value());
+        } else {
+            failureReason = profile.error();
+        }
     }
 }
 
@@ -405,6 +413,14 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy_resourc
     delete this;
 }
 
+void OutputConfigurationV2Interface::sendFailure(Resource *resource, const QString &reason)
+{
+    if (resource->version() >= KDE_OUTPUT_CONFIGURATION_V2_FAILURE_REASON_SINCE_VERSION) {
+        send_failure_reason(reason);
+    }
+    send_failed();
+}
+
 void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource *resource)
 {
     if (applied) {
@@ -414,8 +430,11 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
     applied = true;
     if (invalid) {
-        qCWarning(KWIN_CORE) << "Rejecting configuration change because a request output is no longer available";
-        send_failed();
+        sendFailure(resource, i18n("One of the relevant outputs is no longer available"));
+        return;
+    }
+    if (!failureReason.isEmpty()) {
+        sendFailure(resource, failureReason);
         return;
     }
 
@@ -429,8 +448,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         }
     });
     if (allDisabled) {
-        qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";
-        send_failed();
+        sendFailure(resource, i18n("Disabling all outputs through configuration changes is not allowed"));
         return;
     }
 
@@ -440,8 +458,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
             return !output->isNonDesktop();
         });
         if (outputOrder.size() != desktopOutputs) {
-            qWarning(KWIN_CORE) << "Provided output order doesn't contain all outputs!";
-            send_failed();
+            sendFailure(resource, i18n("The provided output order doesn't contain all outputs"));
             return;
         }
         outputOrder.erase(std::remove_if(outputOrder.begin(), outputOrder.end(), [this](const auto &pair) {
@@ -459,8 +476,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         uint32_t i = 1;
         for (const auto &[index, name] : std::as_const(outputOrder)) {
             if (index != i) {
-                qCWarning(KWIN_CORE) << "Provided output order is invalid!";
-                send_failed();
+                sendFailure(resource, i18n("The provided output order is invalid"));
                 return;
             }
             i++;
@@ -474,8 +490,8 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
     if (workspace()->applyOutputConfiguration(config, sortedOrder)) {
         send_applied();
     } else {
-        qCDebug(KWIN_CORE) << "Applying config failed";
-        send_failed();
+        // TODO provide a more accurate error reason once the driver actually gives us anything
+        sendFailure(resource, i18n("The driver rejected the output configuration"));
     }
 }
 

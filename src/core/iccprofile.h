@@ -11,6 +11,7 @@
 
 #include <QMatrix4x4>
 #include <QString>
+#include <expected>
 #include <memory>
 #include <optional>
 
@@ -47,7 +48,7 @@ public:
     std::optional<double> minBrightness() const;
     std::optional<double> maxBrightness() const;
 
-    static std::unique_ptr<IccProfile> load(const QString &path);
+    static std::expected<std::unique_ptr<IccProfile>, QString> load(const QString &path);
     static const ColorDescription s_connectionSpace;
 
 private:

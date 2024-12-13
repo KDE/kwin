@@ -361,7 +361,7 @@ void TestColorspaces::testIccShader()
         cmsCloseProfile(handle);
     }
 
-    const std::shared_ptr<IccProfile> profile = IccProfile::load(path);
+    const std::shared_ptr<IccProfile> profile = IccProfile::load(path).value_or(nullptr);
     QVERIFY(profile);
 
     QImage openGlResult;

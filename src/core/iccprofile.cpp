@@ -9,6 +9,8 @@
 #include "colortransformation.h"
 #include "utils/common.h"
 
+#include <KLocalizedString>
+#include <filesystem>
 #include <lcms2.h>
 #include <span>
 #include <tuple>
@@ -232,34 +234,32 @@ static constexpr XYZ D50{
     .Z = 0.8249,
 };
 
-std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
+std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QString &path)
 {
     if (path.isEmpty()) {
         return nullptr;
     }
     cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
     if (!handle) {
-        qCWarning(KWIN_CORE) << "Failed to open color profile file:" << path;
-        return nullptr;
+        if (std::filesystem::exists(path.toStdString())) {
+            return std::unexpected(i18n("Failed to open ICC profile \"%1\"", path));
+        } else {
+            return std::unexpected(i18n("ICC profile \"%1\" doesn't exist", path));
+        }
     }
     if (cmsGetDeviceClass(handle) != cmsSigDisplayClass) {
-        qCWarning(KWIN_CORE) << "Only Display ICC profiles are supported";
-        return nullptr;
+        return std::unexpected(i18n("ICC profile \"%1\" is not usable for displays", path));
     }
     if (cmsGetPCS(handle) != cmsColorSpaceSignature::cmsSigXYZData) {
-        qCWarning(KWIN_CORE) << "Only ICC profiles with a XYZ connection space are supported";
-        return nullptr;
+        return std::unexpected(i18n("ICC profile \"%1\" has unsupported connection space, only XYZ is supported", path));
     }
     if (cmsGetColorSpace(handle) != cmsColorSpaceSignature::cmsSigRgbData) {
-        qCWarning(KWIN_CORE) << "Only ICC profiles with RGB color spaces are supported";
-        return nullptr;
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, input/output color space isn't RGB", path));
     }
 
     std::shared_ptr<ColorTransformation> vcgt;
     cmsToneCurve **vcgtTag = static_cast<cmsToneCurve **>(cmsReadTag(handle, cmsSigVcgtTag));
-    if (!vcgtTag || !vcgtTag[0]) {
-        qCDebug(KWIN_CORE) << "Profile" << path << "has no VCGT tag";
-    } else {
+    if (vcgtTag && vcgtTag[0]) {
         // Need to duplicate the VCGT tone curves as they are owned by the profile.
         cmsToneCurve *toneCurves[] = {
             cmsDupToneCurve(vcgtTag[0]),
@@ -273,12 +273,10 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
 
     const cmsCIEXYZ *whitepoint = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigMediaWhitePointTag));
     if (!whitepoint) {
-        qCWarning(KWIN_CORE, "profile is missing the wtpt tag");
-        return nullptr;
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, it has no whitepoint", path));
     }
     if (whitepoint->Y == 0) {
-        qCWarning(KWIN_CORE, "profile has a zero luminance whitepoint");
-        return nullptr;
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, its whitepoint is invalid", path));
     }
 
     XYZ red;
@@ -291,14 +289,12 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         const auto data = readTagRaw(handle, cmsSigChromaticAdaptationTag);
         const auto mat = parseMatrix(std::span(data).subspan(8), false);
         if (!mat) {
-            qCWarning(KWIN_CORE, "Parsing chromatic adaptation matrix failed");
-            return nullptr;
+            return std::unexpected(i18n("ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed", path));
         }
         bool invertable = false;
         chromaticAdaptationMatrix = mat->inverted(&invertable);
         if (!invertable) {
-            qCWarning(KWIN_CORE, "Inverting chromatic adaptation matrix failed");
-            return nullptr;
+            return std::unexpected(i18n("ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed", path));
         }
         white = XYZ::fromVector(*chromaticAdaptationMatrix * D50.asVector());
     }
@@ -311,8 +307,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         const cmsCIEXYZ *g = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigGreenColorantTag));
         const cmsCIEXYZ *b = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigBlueColorantTag));
         if (!r || !g || !b) {
-            qCWarning(KWIN_CORE, "rXYZ, gXYZ or bXYZ tag is missing");
-            return nullptr;
+            return std::unexpected(i18n("ICC profile \"%1\" is broken, it has no primaries", path));
         }
         if (chromaticAdaptationMatrix) {
             red = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z));
@@ -327,7 +322,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
             success &= cmsAdaptToIlluminant(&adaptedG, cmsD50_XYZ(), whitepoint, g);
             success &= cmsAdaptToIlluminant(&adaptedB, cmsD50_XYZ(), whitepoint, b);
             if (!success) {
-                return nullptr;
+                return std::unexpected(i18n("ICC profile \"%1\" is broken, couldn't calculate its primaries", path));
             }
             red = XYZ(adaptedR.X, adaptedR.Y, adaptedR.Z);
             green = XYZ(adaptedG.X, adaptedG.Y, adaptedG.Z);
@@ -336,8 +331,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
     }
 
     if (red.Y == 0 || green.Y == 0 || blue.Y == 0 || white.Y == 0) {
-        qCWarning(KWIN_CORE, "Profile has invalid primaries");
-        return nullptr;
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
     }
 
     std::optional<double> minBrightness;
@@ -353,8 +347,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
     }
 
     if (cmsIsTag(handle, cmsSigBToD1Tag) && !cmsIsTag(handle, cmsSigBToA1Tag) && !cmsIsTag(handle, cmsSigBToA0Tag)) {
-        qCWarning(KWIN_CORE, "Profiles with only BToD tags aren't supported yet");
-        return nullptr;
+        return std::unexpected(i18n("ICC profile \"%1\" with only BToD tags isn't supported", path));
     }
     std::optional<ColorPipeline> bToA0;
     std::optional<ColorPipeline> bToA1;
@@ -393,8 +386,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         cmsToneCurve *g = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigGreenTRCTag));
         cmsToneCurve *b = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigBlueTRCTag));
         if (!r || !g || !b) {
-            qCWarning(KWIN_CORE) << "ICC profile is missing at least one TRC tag";
-            return nullptr;
+            return std::unexpected(i18n("Color profile is missing TRC tags"));
         }
         toneCurves = {
             cmsReverseToneCurveEx(trcSize, r),

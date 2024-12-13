@@ -531,7 +531,7 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     if (props->iccProfilePath) {
-        next.iccProfile = IccProfile::load(*props->iccProfilePath);
+        next.iccProfile = IccProfile::load(*props->iccProfilePath).value_or(nullptr);
     }
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
