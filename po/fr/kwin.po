@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-12 00:42+0000\n"
-"PO-Revision-Date: 2024-12-11 08:55+0100\n"
+"PO-Revision-Date: 2024-12-12 09:01+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -3010,8 +3010,7 @@ msgstr "Sur le zoom avant et arrière, modifiez le zoom par le facteur donné."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Facteur de zoom :"
 
@@ -3019,12 +3018,11 @@ msgstr "Facteur de zoom :"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Afficher la grille de pixels au niveau du zoom :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Pointeur de souris :"
 
@@ -3054,8 +3052,7 @@ msgstr "Masquer"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Suivi de la souris :"
 
@@ -3102,8 +3099,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Activer le suivi de focus"
 
@@ -3120,8 +3116,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "Activer le suivi du curseur de texte"
 
