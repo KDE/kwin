@@ -111,6 +111,8 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
         return wp_color_manager_v1_transfer_function::WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ;
     case TransferFunction::gamma22:
         return wp_color_manager_v1_transfer_function::WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22;
+    case TransferFunction::BT1886:
+        return wp_color_manager_v1_transfer_function::WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886;
     }
     Q_UNREACHABLE();
 }
@@ -238,6 +240,9 @@ constexpr wp_image_description_info_v1_listener ImageDescriptionListener::s_list
             break;
         case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR:
             listener->m_transferFunctionType = TransferFunction::linear;
+            break;
+        case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886:
+            listener->m_transferFunctionType = TransferFunction::BT1886;
             break;
         }
     },

@@ -95,12 +95,12 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
             }
             return;
         } else if (std::abs(factors.x() - factors.y()) < s_maxResolution && std::abs(factors.x() - factors.z()) < s_maxResolution) {
-            if (const auto tf = std::get_if<ColorTransferFunction>(lastOp)) {
+            if (const auto tf = std::get_if<ColorTransferFunction>(lastOp); tf && tf->tf.hasLinearMinLuminance()) {
                 tf->tf.minLuminance *= factors.x();
                 tf->tf.maxLuminance *= factors.x();
                 ops.back().output = output;
                 return;
-            } else if (const auto tf = std::get_if<InverseColorTransferFunction>(lastOp)) {
+            } else if (const auto tf = std::get_if<InverseColorTransferFunction>(lastOp); tf && tf->tf.hasLinearMinLuminance()) {
                 tf->tf.minLuminance /= factors.x();
                 tf->tf.maxLuminance /= factors.x();
                 ops.back().output = output;
@@ -229,7 +229,7 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
             bool success = false;
             QMatrix4x4 inverse = mat.inverted(&success);
             if (success) {
-                if (const auto tf = std::get_if<ColorTransferFunction>(lastOp)) {
+                if (const auto tf = std::get_if<ColorTransferFunction>(lastOp); tf && tf->tf.hasLinearMinLuminance()) {
                     tf->tf.minLuminance -= inverse(0, 3);
                     tf->tf.maxLuminance -= inverse(0, 3);
                     QMatrix4x4 newMat = mat;
@@ -238,9 +238,9 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
                     newMat(2, 3) = 0;
                     addMatrix(newMat, output);
                     return;
-                } else if (const auto invTf = std::get_if<InverseColorTransferFunction>(lastOp)) {
+                } else if (const auto invTf = std::get_if<InverseColorTransferFunction>(lastOp); invTf && invTf->tf.hasLinearMinLuminance()) {
                     invTf->tf.minLuminance += inverse(0, 3);
-                    tf->tf.maxLuminance += inverse(0, 3);
+                    invTf->tf.maxLuminance += inverse(0, 3);
                     QMatrix4x4 newMat = mat;
                     newMat(0, 3) = 0;
                     newMat(1, 3) = 0;

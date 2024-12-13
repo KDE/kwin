@@ -43,6 +43,7 @@ void ColorManagerV1::wp_color_manager_v1_bind_resource(Resource *resource)
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_srgb);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_st2084_pq);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_ext_linear);
+    send_supported_tf_named(resource->handle, transfer_function::transfer_function_bt1886);
 
     send_supported_intent(resource->handle, render_intent::render_intent_perceptual);
     send_supported_intent(resource->handle, render_intent::render_intent_relative);
@@ -289,6 +290,9 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_tf_nam
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR:
         m_transferFunctionType = TransferFunction::linear;
         return;
+    case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886:
+        m_transferFunctionType = TransferFunction::BT1886;
+        return;
     default:
         // TODO add more transfer functions
         wl_resource_post_error(resource->handle, error::error_invalid_tf, "unsupported named transfer function");
@@ -472,6 +476,8 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ;
     case TransferFunction::gamma22:
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22;
+    case TransferFunction::BT1886:
+        return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886;
     }
     Q_UNREACHABLE();
 }

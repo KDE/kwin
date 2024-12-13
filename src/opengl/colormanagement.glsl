@@ -2,6 +2,7 @@ const int sRGB_EOTF = 0;
 const int linear_EOTF = 1;
 const int PQ_EOTF = 2;
 const int gamma22_EOTF = 3;
+const int BT1886_EOTF = 4;
 
 uniform mat4 colorimetryTransform;
 
@@ -146,6 +147,11 @@ vec4 encodingToNits(vec4 color, int sourceTransferFunction, float luminanceOffse
         color.rgb /= max(color.a, 0.001);
         color.rgb = pow(max(color.rgb, vec3(0.0)), vec3(2.2)) * luminanceScale + vec3(luminanceOffset);
         color.rgb *= color.a;
+    } else if (sourceTransferFunction == BT1886_EOTF) {
+        color.rgb /= max(color.a, 0.001);
+        // for bt1886, luminanceScale = a, luminanceOffset = b
+        color.rgb = luminanceScale * pow(max(color.rgb + vec3(luminanceOffset), vec3(0.0)), vec3(2.4));
+        color.rgb *= color.a;
     }
     return color;
 }
@@ -170,6 +176,11 @@ vec4 nitsToEncoding(vec4 color, int destinationTransferFunction, float luminance
     } else if (destinationTransferFunction == gamma22_EOTF) {
         color.rgb /= max(color.a, 0.001);
         color.rgb = pow(max((color.rgb - vec3(luminanceOffset)) / luminanceScale, vec3(0.0)), vec3(1.0 / 2.2));
+        color.rgb *= color.a;
+    } else if (destinationTransferFunction == BT1886_EOTF) {
+        color.rgb /= max(color.a, 0.001);
+        // for bt1886, luminanceScale = a, luminanceOffset = b
+        color.rgb = pow(color.rgb / luminanceScale, vec3(1.0 / 2.4)) - vec3(luminanceOffset);
         color.rgb *= color.a;
     }
     return color;

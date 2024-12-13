@@ -486,10 +486,18 @@ void GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
 {
     setUniform(Mat4Uniform::ColorimetryTransformation, src.toOther(dst, intent));
     setUniform(IntUniform::SourceNamedTransferFunction, src.transferFunction().type);
-    setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance));
+    if (src.transferFunction().type == TransferFunction::BT1886) {
+        setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().bt1886B(), src.transferFunction().bt1886A()));
+    } else {
+        setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance));
+    }
     setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance());
     setUniform(IntUniform::DestinationNamedTransferFunction, dst.transferFunction().type);
-    setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().minLuminance, dst.transferFunction().maxLuminance - dst.transferFunction().minLuminance));
+    if (dst.transferFunction().type == TransferFunction::BT1886) {
+        setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().bt1886B(), dst.transferFunction().bt1886A()));
+    } else {
+        setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().minLuminance, dst.transferFunction().maxLuminance - dst.transferFunction().minLuminance));
+    }
     setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance());
     setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
     if (!s_disableTonemapping && intent == RenderingIntent::Perceptual) {

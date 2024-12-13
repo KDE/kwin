@@ -56,6 +56,7 @@ static QtWaylandServer::frog_color_managed_surface::transfer_function kwinToFrog
     case TransferFunction::sRGB:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_srgb;
     case TransferFunction::gamma22:
+    case TransferFunction::BT1886:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_gamma_22;
     case TransferFunction::PerceptualQuantizer:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_st2084_pq;
