@@ -3635,8 +3635,8 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
     if (!currentTile) {
         return;
     }
-    if (moveResizeGeometry() != currentTile->windowGeometry()) {
-        requestTile(currentTile);
+    if (requestedTile() != currentTile) {
+        currentTile->addWindow(this);
         return;
     }
     const auto customTile = qobject_cast<CustomTile *>(currentTile);
@@ -3659,7 +3659,7 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
     }
     CustomTile *next = customTile->nextNonLayoutTileAt(edge);
     if (next) {
-        requestTile(next);
+        next->addWindow(this);
     }
 }
 
