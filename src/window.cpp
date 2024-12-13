@@ -3923,10 +3923,13 @@ void Window::setTileCompatibility(Tile *tile)
         return;
     }
 
+    Tile *previousTile = m_requestedTile;
     if (tile) {
         tile->addWindow(this);
-    } else if (m_requestedTile) {
-        m_requestedTile->removeWindow(this);
+    }
+
+    if (previousTile) {
+        previousTile->removeWindow(this);
     }
 }
 
