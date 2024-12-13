@@ -72,10 +72,6 @@ private Q_SLOTS:
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
-
-private:
-    KWayland::Client::ConnectionThread *m_connection = nullptr;
-    KWayland::Client::Compositor *m_compositor = nullptr;
 };
 
 void QuickTilingTest::initTestCase()
@@ -109,8 +105,6 @@ void QuickTilingTest::initTestCase()
 void QuickTilingTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDecorationV1));
-    m_connection = Test::waylandConnection();
-    m_compositor = Test::waylandCompositor();
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
