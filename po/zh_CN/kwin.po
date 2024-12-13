@@ -2928,21 +2928,19 @@ msgstr "此选项控制每级缩放的倍数。"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
-msgstr "每级缩放倍数："
+msgstr "缩放倍数："
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "显示网格的缩放级别："
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "鼠标光标："
 
@@ -2972,10 +2970,9 @@ msgstr "隐藏"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
-msgstr "鼠标定位："
+msgstr "鼠标跟踪："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:112
@@ -3019,8 +3016,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "启用焦点跟踪"
 
@@ -3036,8 +3032,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "启用文本光标跟踪"
 
@@ -3624,6 +3619,9 @@ msgid ""
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
+"以下应用程序没有关闭：\n"
+"%1\n"
+"仍将在 2 分钟内注销。"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-12 00:42+0000\n"
-"PO-Revision-Date: 2024-12-07 10:24+0100\n"
+"PO-Revision-Date: 2024-12-11 08:55+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -3702,17 +3702,15 @@ msgid "Log Out Anyway"
 msgstr "Se déconnecter quand même"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "Les applications suivantes n'ont pas été fermées :\n"
-"%1"
+"%1\n"
+"Voulez-vous vraiment vous déconnecter dans 2 minutes malgré tout ?"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
