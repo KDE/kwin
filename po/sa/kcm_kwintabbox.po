@@ -1,0 +1,269 @@
+# Sanskrit translations for kwin package.
+# Copyright (C) 2024 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# Kali <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2024-12-06 00:41+0000\n"
+"PO-Revision-Date: 2024-12-13 19:10+0530\n"
+"Last-Translator: Kali <EMAIL@ADDRESS>\n"
+"Language-Team: Sanskrit\n"
+"Language: sa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: layoutpreview.cpp:127
+#, kde-format
+msgid "Show Desktop"
+msgstr "डेस्कटॉप् दर्शयतु"
+
+#: layoutpreview.cpp:157
+#, kde-format
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr ""
+
+#: main.cpp:72
+#, kde-format
+msgid "Main"
+msgstr "मुख्यः"
+
+#: main.cpp:73
+#, kde-format
+msgid "Alternative"
+msgstr "वैकल्पिक"
+
+#: main.cpp:75
+#, kde-format
+msgid "Get New Task Switcher Styles…"
+msgstr "नवीन कार्य स्विचर शैल्याः प्राप्तुम्..."
+
+#: main.cpp:93
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr "फोकस नीतिसेटिंग्स् विण्डोस् मध्ये नेविगेट् इत्यस्य कार्यक्षमतां सीमितयन्ति ।"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr "विषयः"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, kde-format
+msgid "Include \"Show Desktop\" entry"
+msgstr "\"Show Desktop\" इति प्रविष्टिः समाविष्टा"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "अद्यतनं प्रयुक्तम्"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "स्तम्भनक्रमः"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr "प्रति अनुप्रयोगं केवलं एकं विण्डो"
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr "अन्यूनतमविण्डोजस्य अनन्तरं न्यूनतमविण्डोः आदेशयन्तु"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "क्रमाङ्कनम् : १."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, kde-format
+msgid "Filter windows by"
+msgstr "द्वारा विण्डोज फ़िल्टर"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, kde-format
+msgid "Virtual desktops"
+msgstr "आभासी डेस्कटॉप्स"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, kde-format
+msgid "Current desktop"
+msgstr "वर्तमान डेस्कटॉप"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, kde-format
+msgid "All other desktops"
+msgstr "अन्ये सर्वे डेस्कटॉप्"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr "गतिविधयः"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr "वर्तमान क्रियाकलाप"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr "अन्ये सर्वे कार्याणि"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr "पटलानि"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, kde-format
+msgid "Current screen"
+msgstr "वर्तमान पटल"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr "अन्ये सर्वे पटलाः"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, kde-format
+msgid "Minimization"
+msgstr "न्यूनतमीकरण"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, kde-format
+msgid "Visible windows"
+msgstr "दृश्यमानानि खिडकयः"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, kde-format
+msgid "Hidden windows"
+msgstr "गुप्तजालकाः"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr "शॉर्टकट"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr "अग्रतः"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, kde-format
+msgid "All windows"
+msgstr "सर्वाणि खिडकयः"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr "विपरीत"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, kde-format
+msgid "Current application"
+msgstr "वर्तमान आवेदन"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, kde-format
+msgid "Visualization"
+msgstr "दृश्यीकरणम्"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "यदा डेस्कटॉप् प्रभावः सक्रियः भवति तदा सूचीविण्डो प्रतिस्थापयितुं प्रभावः ।"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"सम्प्रति चयनितं विण्डो अन्येषां सर्वेषां विण्डोः क्षीणं कृत्वा प्रकाशितं भविष्यति । अस्मिन् "
+"विकल्पे डेस्कटॉप् प्रभावाः सक्रियः भवितुम् आवश्यकाः सन्ति ।"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:565
+#, kde-format
+msgid "Show selected window"
+msgstr "चयनितं विण्डो दर्शयतु"
+
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "विण्डोजद्वारा चलन्तु"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "विण्डोजद्वारा चलन्तु (विपरीतम्) ."
+
+#: shortcutsettings.cpp:134
+#, kde-format
+msgid "Walk Through Windows of Current Application"
+msgstr "वर्तमान अनुप्रयोगस्य विण्डोजद्वारा चलन्तु"
+
+#: shortcutsettings.cpp:135
+#, kde-format
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "वर्तमान अनुप्रयोगस्य विण्डोजद्वारा चलन्तु (विपरीतम्)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "Walk Through Windows विकल्पः"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Walk Through Windows विकल्पः (विपरीतः) २."
+
+#: shortcutsettings.cpp:139
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "वर्तमान अनुप्रयोग विकल्पस्य विण्डोजद्वारा चलन्तु"
+
+#: shortcutsettings.cpp:140
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "वर्तमान अनुप्रयोगस्य विकल्पस्य विण्डोजद्वारा चलन्तु (विपरीतम्)"
