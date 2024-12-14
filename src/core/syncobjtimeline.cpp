@@ -5,6 +5,7 @@
 */
 #include "syncobjtimeline.h"
 
+#include <cerrno>
 #include <sys/eventfd.h>
 #include <sys/ioctl.h>
 #include <xf86drm.h>
