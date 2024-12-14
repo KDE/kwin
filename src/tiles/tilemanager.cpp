@@ -96,11 +96,6 @@ TileManager::TileManager(Output *parent)
         m_quickRootTile = m_quickRootTiles[newDesk];
         Q_EMIT rootTileChanged(m_rootTile);
         Q_EMIT modelChanged(m_rootTile->model());
-
-        const QList<Window *> windows = Workspace::self()->windows();
-        for (auto *w : windows) {
-            w->requestTile(tileForWindow(w, newDesk));
-        }
     });
 }
 
