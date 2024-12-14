@@ -3820,7 +3820,7 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
     if (m_requestedTile != tile) {
         if (tile) {
             tile->addWindow(this);
-        } else if (m_requestedTile) {
+        } else if (m_requestedTile && m_requestedTile->isActive()) {
             m_requestedTile->removeWindow(this);
         }
     }
