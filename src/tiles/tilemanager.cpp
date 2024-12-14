@@ -99,7 +99,9 @@ TileManager::TileManager(Output *parent)
 
         const QList<Window *> windows = Workspace::self()->windows();
         for (auto *w : windows) {
-            w->requestTile(tileForWindow(w, newDesk));
+            if (Tile *tile = tileForWindow(w, newDesk)) {
+                w->requestTile(tile);
+            }
         }
     });
 }
