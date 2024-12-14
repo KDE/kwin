@@ -16,6 +16,7 @@
 #include "scripting/scripting.h"
 #include "tiles/tilemanager.h"
 #include "utils/common.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -71,6 +72,7 @@ private Q_SLOTS:
     void testShortcut();
     void testMultiScreen();
     void testQuickTileAndMaximize();
+    void testVirtualDesktop();
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
@@ -110,6 +112,7 @@ void QuickTilingTest::init()
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
+    VirtualDesktopManager::self()->setCount(2);
 }
 
 void QuickTilingTest::cleanup()
@@ -1015,6 +1018,70 @@ void QuickTilingTest::testQuickTileAndMaximize()
     maximize();
     quickTile();
     maximize();
+}
+
+void QuickTilingTest::testVirtualDesktop()
+{
+    // This test verifies that a window can be tiled differently depending on the virtual desktop.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(tileChangedSpy.wait());
+    };
+
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+
+    VirtualDesktopManager::self()->setCurrent(2);
+    window->setOnAllDesktops(true);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
 }
 
 void QuickTilingTest::testScript_data()
