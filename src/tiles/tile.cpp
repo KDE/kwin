@@ -33,24 +33,6 @@ Tile::Tile(TileManager *tiling, Tile *parent)
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
     connect(Workspace::self(), &Workspace::windowRemoved, this, &Tile::removeWindow);
-
-    connect(m_tiling, &TileManager::tileForWindowChanged, this,
-            [this](Window *window, Tile *owner) {
-        // We only care when the owner on another desktop changed
-        // And we only want to synchronize non-custom types of tiles
-        if (owner == this || m_quickTileMode == QuickTileFlag::Custom) {
-            return;
-        }
-
-        // There is a new owner: we want to copy it in this desktop
-        // to have the same quickTileMode
-        if (owner && owner->quickTileMode() == m_quickTileMode) {
-            addWindow(window);
-        } else {
-            // Lost the owner: the "global" QuickTileMode becomes null
-            removeWindow(window);
-        }
-    });
 }
 
 Tile::~Tile()
@@ -394,7 +376,6 @@ bool Tile::addWindow(Window *window)
 
     Q_EMIT windowAdded(window);
     Q_EMIT windowsChanged();
-    Q_EMIT m_tiling->tileForWindowChanged(window, this);
 
     // We can actually manage the window geometry if our desktop is current
     // or if our desktop is the only desktop the window is in
@@ -410,7 +391,6 @@ bool Tile::removeWindow(Window *window)
     if (m_windows.removeOne(window)) {
         Q_EMIT windowRemoved(window);
         Q_EMIT windowsChanged();
-        Q_EMIT m_tiling->tileForWindowChanged(window, nullptr);
 
         if (window->requestedTile() == this) {
             window->requestTile(nullptr);

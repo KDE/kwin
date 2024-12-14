@@ -62,7 +62,6 @@ public:
 
 Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
-    void tileForWindowChanged(Window *window, Tile *owner);
     void rootTileChanged(CustomTile *rootTile);
     void modelChanged(TileModel *model);
 

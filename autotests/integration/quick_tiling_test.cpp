@@ -16,6 +16,7 @@
 #include "scripting/scripting.h"
 #include "tiles/tilemanager.h"
 #include "utils/common.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -99,6 +100,8 @@ private Q_SLOTS:
     void testMultiScreenX11();
     void testQuickTileAndMaximize();
     void testQuickTileAndMaximizeX11();
+    void testPerDesktop();
+    void testPerDesktopX11();
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
@@ -138,6 +141,8 @@ void QuickTilingTest::init()
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
+    VirtualDesktopManager::self()->setCount(2);
+    VirtualDesktopManager::self()->setCurrent(1);
 }
 
 void QuickTilingTest::cleanup()
@@ -1235,6 +1240,190 @@ void QuickTilingTest::testQuickTileAndMaximizeX11()
     maximize();
     quickTile();
     maximize();
+}
+
+void QuickTilingTest::testPerDesktop()
+{
+    // This test verifies that a window can be tiled differently depending on the virtual desktop.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(tileChangedSpy.wait());
+    };
+
+    // tile the window in the left half of the screen on the first virtual desktop
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // switch to the second virtual desktop, the window will still remain tiled, although invisible
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+
+    // nothing will happen if the window is untiled on the second virtual desktop
+    VirtualDesktopManager::self()->setCurrent(2);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+
+    // tile the window in the right half of the screen on the second virtual desktop
+    window->setOnAllDesktops(true);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+
+    // when we return back to the first virtual desktop, the window will be tiled in the left half of the screen
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // and if we go back to the second virtual desktop, the window will be tiled in the right half of the screen
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+
+    // untile the window on the second virtual desktop
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+
+    // go back to the first virtual desktop, the window will be tiled
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // go to the second virtual desktop, the window will be untiled
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+}
+
+void QuickTilingTest::testPerDesktopX11()
+{
+    // This test verifies that an X11 window can be tiled differently depending on the virtual desktop.
+
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    const QRectF originalGeometry = window->frameGeometry();
+
+    // tile the window in the left half of the screen on the first virtual desktop
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
+    QCOMPARE(tileChangedSpy.count(), 1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // switch to the second virtual desktop, the window will still remain tiled, although invisible
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(tileChangedSpy.count(), 1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(tileChangedSpy.count(), 1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+
+    // nothing will happen if the window is untiled on the second virtual desktop
+    VirtualDesktopManager::self()->setCurrent(2);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+    QCOMPARE(tileChangedSpy.count(), 1);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+
+    // tile the window in the right half of the screen on the second virtual desktop
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    window->setOnAllDesktops(true);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
+    QCOMPARE(tileChangedSpy.count(), 2);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+
+    // when we return back to the first virtual desktop, the window will be tiled in the left half of the screen
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(tileChangedSpy.count(), 3);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // and if we go back to the second virtual desktop, the window will be tiled in the right half of the screen
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(tileChangedSpy.count(), 4);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+
+    // untile the window on the second virtual desktop
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+    QCOMPARE(tileChangedSpy.count(), 5);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    // go back to the first virtual desktop, the window will be tiled
+    VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(tileChangedSpy.count(), 6);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // go to the second virtual desktop, the window will be untiled
+    VirtualDesktopManager::self()->setCurrent(2);
+    QCOMPARE(tileChangedSpy.count(), 7);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
 }
 
 void QuickTilingTest::testScript_data()
