@@ -650,7 +650,7 @@ msgstr ""
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr ""
+msgstr "ध्यानं दातुं क्लिक् कुर्वन्तु"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41

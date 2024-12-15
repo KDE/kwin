@@ -33,12 +33,14 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
+"चयनितं स्क्रिप्ट् आयातयितुं न शक्यते ।\n"
+"%1"
 
 #: module.cpp:69
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr ""
+msgstr "\"%1\" इति स्क्रिप्ट् सफलतया आयातिता ।"
 
 #: module.cpp:131
 #, kde-format
@@ -54,10 +56,10 @@ msgstr "सञ्चिकातः संस्थापनं कुर्व�
 #, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr ""
+msgstr "Get New..."
 
 #: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr ""
+msgstr "लुप्…"

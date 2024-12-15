@@ -174,7 +174,7 @@ msgstr "&धारे डेस्कटॉपं स्विच कुर्�
 #, kde-format
 msgctxt "Switch desktop on edge"
 msgid "Disabled"
-msgstr ""
+msgstr "अक्षमित"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
@@ -250,7 +250,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "स्क्रीनकोणेषु कर्सरानाम् पारगमनं निवारयति ।"
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
@@ -278,7 +278,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
-msgstr ""
+msgstr "स्क्रीन एज्स् पारं कर्तुं अतिरिक्तं दूरी कर्सरं गन्तुं आवश्यकम् अस्ति ।"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306

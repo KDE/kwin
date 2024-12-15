@@ -20,20 +20,20 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "भवतः नामानि"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "भवतः ईमेलपत्राणि"
 
 #: desktopsmodel.cpp:191
 #, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "डेस्कटॉप %1"
+msgstr[1] "डेस्कटॉप %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format
@@ -54,31 +54,31 @@ msgstr "रचनाकारात् सूचनां याचने दो
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "पङ्क्तयः : १."
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr ""
+msgstr "डेस्कटॉप् योजयन्तु"
 
 #: ui/main.qml:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr ""
+msgstr "पुनर्नाम"
 
 #: ui/main.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
-msgstr ""
+msgstr "नूतनं नाम पुष्टयन्तु"
 
 #: ui/main.qml:143
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
-msgstr ""
+msgstr "अपाकरोति"
 
 #: ui/main.qml:176
 #, kde-format

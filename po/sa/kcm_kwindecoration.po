@@ -75,7 +75,7 @@ msgstr "स्पेसर"
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
-msgstr ""
+msgstr "विषयः पूर्वनिर्धारितः (%1) ."
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -177,37 +177,37 @@ msgstr "शीर्षकपट्टिका बटन"
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr ""
+msgstr "मेनू बटन् द्विवारं क्लिक् कृत्वा विण्डोज पिधातु"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr ""
+msgstr "मेनू दर्शयितुं मेनू बटन् नुत्वा धारयन्तु ।"
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr ""
+msgstr "शीर्षकपट्टिकाबटनसाधनसूचनानि दर्शयतु"
 
 #: ui/main.qml:29
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr ""
+msgstr "खिडकीसीमा आकारः : १."
 
 #: ui/main.qml:48
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr ""
+msgstr "शीर्षकपट्टिका बटनं विन्यस्तं कुर्वन्तु..."
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "नवीनं प्राप्तुम्..."
 
 #: ui/Themes.qml:93
 #, kde-format

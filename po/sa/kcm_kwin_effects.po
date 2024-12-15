@@ -29,19 +29,19 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
-msgstr ""
+msgstr "विडियो दर्शयतु/गोपयतु"
 
 #: ui/Effect.qml:136
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr ""
+msgstr "विन्यस्तं कुर्वन्तु..."
 
 #: ui/main.qml:25
 #, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr ""
+msgstr "नवीनं प्राप्तुम्..."
 
 #: ui/main.qml:54
 #, kde-format

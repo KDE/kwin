@@ -25,7 +25,7 @@ msgstr "डेस्कटॉप् दर्शयतु"
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
-msgstr ""
+msgstr "डेस्कटॉप 1"
 
 #: main.cpp:72
 #, kde-format
