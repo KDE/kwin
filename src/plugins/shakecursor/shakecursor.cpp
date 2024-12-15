@@ -115,7 +115,7 @@ void ShakeCursorEffect::animateTo(qreal magnification)
 
 void ShakeCursorEffect::pointerEvent(MouseEvent *event)
 {
-    if (event->buttons() != Qt::NoButton) {
+    if (event->buttons() != Qt::NoButton || event->isWarp()) {
         m_shakeDetector.reset();
         return;
     }
