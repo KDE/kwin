@@ -673,6 +673,11 @@ void XdgToplevelWindow::setNoBorder(bool set)
     updateWindowRules(Rules::NoBorder);
 }
 
+KDecoration3::Decoration *XdgToplevelWindow::nextDecoration() const
+{
+    return m_nextDecoration.get();
+}
+
 void XdgToplevelWindow::invalidateDecoration()
 {
     clearDecoration();

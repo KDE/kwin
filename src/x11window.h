@@ -96,9 +96,13 @@ public:
     QString wmCommand();
 
     QPointF framePosToClientPos(const QPointF &point) const override;
+    QPointF nextFramePosToClientPos(const QPointF &point) const override;
     QPointF clientPosToFramePos(const QPointF &point) const override;
+    QPointF nextClientPosToFramePos(const QPointF &point) const override;
     QSizeF frameSizeToClientSize(const QSizeF &size) const override;
+    QSizeF nextFrameSizeToClientSize(const QSizeF &size) const override;
     QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
+    QSizeF nextClientSizeToFrameSize(const QSizeF &size) const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const;
     QSizeF implicitSize() const;
 

@@ -644,10 +644,12 @@ public:
      * Calculates the matching client position for the given frame position @p point.
      */
     virtual QPointF framePosToClientPos(const QPointF &point) const;
+    virtual QPointF nextFramePosToClientPos(const QPointF &point) const;
     /**
      * Calculates the matching frame position for the given client position @p point.
      */
     virtual QPointF clientPosToFramePos(const QPointF &point) const;
+    virtual QPointF nextClientPosToFramePos(const QPointF &point) const;
     /**
      * Calculates the matching client size for the given frame size @p size.
      *
@@ -656,6 +658,7 @@ public:
      * Default implementation returns the frame size with frame margins being excluded.
      */
     virtual QSizeF frameSizeToClientSize(const QSizeF &size) const;
+    virtual QSizeF nextFrameSizeToClientSize(const QSizeF &size) const;
     /**
      * Calculates the matching frame size for the given client size @p size.
      *
@@ -664,18 +667,21 @@ public:
      * Default implementation returns the client size with frame margins being included.
      */
     virtual QSizeF clientSizeToFrameSize(const QSizeF &size) const;
+    virtual QSizeF nextClientSizeToFrameSize(const QSizeF &size) const;
     /**
      * Calculates the matching client rect for the given frame rect @p rect.
      *
      * Notice that size constraints won't be applied.
      */
     QRectF frameRectToClientRect(const QRectF &rect) const;
+    QRectF nextFrameRectToClientRect(const QRectF &rect) const;
     /**
      * Calculates the matching frame rect for the given client rect @p rect.
      *
      * Notice that size constraints won't be applied.
      */
     QRectF clientRectToFrameRect(const QRectF &rect) const;
+    QRectF nextClientRectToFrameRect(const QRectF &rect) const;
 
     /**
      * How to resize the window in order to obey constraints (mainly aspect ratios).
@@ -1185,14 +1191,11 @@ public:
     // decoration related
     Qt::Edge titlebarPosition() const;
     bool titlebarPositionUnderMouse() const;
-    KDecoration3::Decoration *decoration()
+    KDecoration3::Decoration *decoration() const
     {
         return m_decoration.decoration.get();
     }
-    const KDecoration3::Decoration *decoration() const
-    {
-        return m_decoration.decoration.get();
-    }
+    virtual KDecoration3::Decoration *nextDecoration() const;
     bool isDecorated() const
     {
         return m_decoration.decoration != nullptr;

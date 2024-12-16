@@ -154,6 +154,7 @@ public:
     bool userCanSetNoBorder() const override;
     bool noBorder() const override;
     void setNoBorder(bool set) override;
+    KDecoration3::Decoration *nextDecoration() const override;
     void invalidateDecoration() override;
     QString preferredColorScheme() const override;
     bool supportsWindowRules() const override;

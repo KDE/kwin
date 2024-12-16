@@ -2848,6 +2848,11 @@ QPointF X11Window::framePosToClientPos(const QPointF &point) const
     return QPointF(x, y);
 }
 
+QPointF X11Window::nextFramePosToClientPos(const QPointF &point) const
+{
+    return framePosToClientPos(point);
+}
+
 QPointF X11Window::clientPosToFramePos(const QPointF &point) const
 {
     qreal x = point.x();
@@ -2862,6 +2867,11 @@ QPointF X11Window::clientPosToFramePos(const QPointF &point) const
     }
 
     return QPointF(x, y);
+}
+
+QPointF X11Window::nextClientPosToFramePos(const QPointF &point) const
+{
+    return clientPosToFramePos(point);
 }
 
 QSizeF X11Window::frameSizeToClientSize(const QSizeF &size) const
@@ -2883,6 +2893,11 @@ QSizeF X11Window::frameSizeToClientSize(const QSizeF &size) const
     return QSizeF(width, height);
 }
 
+QSizeF X11Window::nextFrameSizeToClientSize(const QSizeF &size) const
+{
+    return frameSizeToClientSize(size);
+}
+
 QSizeF X11Window::clientSizeToFrameSize(const QSizeF &size) const
 {
     qreal width = size.width();
@@ -2900,6 +2915,11 @@ QSizeF X11Window::clientSizeToFrameSize(const QSizeF &size) const
     }
 
     return QSizeF(width, height);
+}
+
+QSizeF X11Window::nextClientSizeToFrameSize(const QSizeF &size) const
+{
+    return clientSizeToFrameSize(size);
 }
 
 QRectF X11Window::frameRectToBufferRect(const QRectF &rect) const
