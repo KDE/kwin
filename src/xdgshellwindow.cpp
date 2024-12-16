@@ -1631,6 +1631,10 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
         }
     }
 
+    if (m_requestedMaximizeMode != MaximizeRestore) {
+        exitQuickTileMode();
+    }
+
     QRectF geometry = oldGeometry;
 
     if (m_requestedMaximizeMode & MaximizeHorizontal) {
@@ -1668,8 +1672,6 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
             geometry.setHeight(0);
         }
     }
-
-    updateQuickTileMode(QuickTileFlag::None);
 
     moveResize(geometry);
 

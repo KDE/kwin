@@ -4088,8 +4088,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     // however, the user shall be able to force obedience despite and also disobedience in general
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
-        updateQuickTileMode(QuickTileFlag::None);
-        Q_EMIT quickTileModeChanged();
+        exitQuickTileMode();
     } else if (!app_noborder && requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None) && (requestedMaximizeMode() == MaximizeVertical || requestedMaximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
         // for partially maximized windows we want to allow configures in the other dimension.
@@ -4612,18 +4611,6 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
         changeMaximizeRecursion = false;
     }
 
-    // Conditional quick tiling exit points
-    if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        if (old_mode == MaximizeFull && !clientArea.contains(geometryRestore().center())) {
-            // Not restoring on the same screen
-            // TODO: The following doesn't work for some reason
-            // quick_tile_mode = QuickTileFlag::None; // And exit quick tile mode manually
-        } else if ((old_mode == MaximizeVertical && max_mode == MaximizeRestore) || (old_mode == MaximizeFull && max_mode == MaximizeHorizontal)) {
-            // Modifying geometry of a tiled window
-            updateQuickTileMode(QuickTileFlag::None); // Exit quick tile mode without restoring geometry
-        }
-    }
-
     switch (max_mode) {
 
     case MaximizeVertical: {
@@ -4640,6 +4627,7 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
         } else {
             moveResize(QRectF(x(), clientArea.top(), width(), clientArea.height()));
         }
+        exitQuickTileMode();
         info->setState(NET::MaxVert, NET::Max);
         break;
     }
@@ -4658,6 +4646,7 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
         } else {
             moveResize(QRectF(clientArea.left(), y(), clientArea.width(), height()));
         }
+        exitQuickTileMode();
         info->setState(NET::MaxHoriz, NET::Max);
         break;
     }
@@ -4704,15 +4693,13 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
         }
 
         moveResize(restore);
-
         info->setState(NET::States(), NET::Max);
-        updateQuickTileMode(QuickTileFlag::None);
         break;
     }
 
     case MaximizeFull: {
         moveResize(clientArea);
-        updateQuickTileMode(QuickTileFlag::None);
+        exitQuickTileMode();
         info->setState(NET::Max, NET::Max);
         break;
     }
