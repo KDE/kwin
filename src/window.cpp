@@ -3693,15 +3693,15 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
         return;
     }
     // if window is not tiled already, set it to nearest one
-    const auto currentTile = workspace()->tileManager(workspace()->outputAt(moveResizeGeometry().center()))->bestTileForPosition(moveResizeGeometry().center());
-    if (!currentTile) {
+    Tile *tileAtPoint = workspace()->tileManager(workspace()->outputAt(moveResizeGeometry().center()))->bestTileForPosition(moveResizeGeometry().center());
+    if (!tileAtPoint) {
         return;
     }
-    if (moveResizeGeometry() != currentTile->windowGeometry()) {
-        requestTile(currentTile);
+    if (tileAtPoint != m_requestedTile) {
+        tileAtPoint->addWindow(this);
         return;
     }
-    const auto customTile = qobject_cast<CustomTile *>(currentTile);
+    const auto customTile = qobject_cast<CustomTile *>(tileAtPoint);
     if (!customTile) {
         return;
     }
@@ -3721,7 +3721,7 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
     }
     CustomTile *next = customTile->nextNonLayoutTileAt(edge);
     if (next) {
-        requestTile(next);
+        next->addWindow(this);
     }
 }
 
