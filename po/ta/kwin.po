@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-12 00:42+0000\n"
-"PO-Revision-Date: 2024-12-08 14:18+0530\n"
+"PO-Revision-Date: 2024-12-15 16:58+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "tamilpc team,tamilpc team,tamilpc team,"
+msgstr "tamilpc team,tamilpc team,tamilpc team"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -2948,8 +2948,7 @@ msgstr "பெரிதாக்கும்போதோ சிறிதாக�
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "உருப்பெருக்க விகிதம்:"
 
@@ -2957,12 +2956,11 @@ msgstr "உருப்பெருக்க விகிதம்:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "இந்த உருப்பெருக்க விகிதத்திற்கு மேல் பிக்செல்களை கோடிட்டு குறி"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "சுட்டிக்குறி:"
 
@@ -2992,10 +2990,9 @@ msgstr "மறை"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
-msgstr "சுட்டியை பின்தொடர்தல்:"
+msgstr "சுட்டியை பின்தொடர்வது:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:112
@@ -3029,7 +3026,7 @@ msgstr "முடக்கு"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:142
-#, kde-format
+#, fuzzy, kde-format
 msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
@@ -3640,17 +3637,15 @@ msgid "Log Out Anyway"
 msgstr "இருப்பினும் வெளியேறு"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "பின்வரும் செயலிகள் மூடவில்லை:\n"
-"%1"
+"%1\n"
+"இரண்டு நிமிடங்களில் அவை கட்டாயமாக நிறுத்தப்படும்."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

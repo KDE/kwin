@@ -4,19 +4,20 @@
 #
 # Ravishankar Shrivastava <raviratlami@yahoo.com>, 2007.
 # Raghavendra Kamath <raghu@raghukamath.com>, 2021.
+# SPDX-FileCopyrightText: 2024 kali <skkalwar999@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-12 00:42+0000\n"
-"PO-Revision-Date: 2021-08-21 16:25+0530\n"
-"Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
-"Language-Team: kde-hindi\n"
+"PO-Revision-Date: 2024-12-15 19:31+0530\n"
+"Last-Translator: kali <skkalwar999@gmail.com>\n"
+"Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.08.0\n"
+"X-Generator: Lokalize 24.08.2\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #, kde-format
@@ -2446,7 +2447,7 @@ msgstr "डेस्कटॉप ग्रिड दिखाएँ"
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "विंडो बर्ताव कॉन्फ़िगर करें... (&e)"
+msgstr "विंडो बर्ताव कॉन्फ़िगर करें… (&e)"
 
 #: plugins/overview/qml/main.qml:742
 #, fuzzy, kde-format
@@ -3927,19 +3928,19 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
-msgstr "विंडो शॉर्टकट... (&S)"
+msgstr "विंडो शॉर्टकट… (&S)"
 
 #: useractions.cpp:264
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
-msgstr "विशिष्ट विंडो विन्यास...(&S)"
+msgstr "विशिष्ट विंडो विन्यास…(&S)"
 
 #: useractions.cpp:269
 #, fuzzy, kde-format
 #| msgid "&Special Application Settings..."
 msgid "Configure S&pecial Application Settings…"
-msgstr "विशिष्ट अनुप्रयोग विन्यास... (&S)"
+msgstr "विशिष्ट अनुप्रयोग विन्यास… (&S)"
 
 #: useractions.cpp:275
 #, kde-format
