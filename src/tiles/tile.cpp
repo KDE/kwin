@@ -420,6 +420,16 @@ bool Tile::removeWindow(Window *window)
     return false;
 }
 
+void Tile::forgetWindow(Window *window)
+{
+    if (m_windows.removeOne(window)) {
+        Q_EMIT windowRemoved(window);
+        Q_EMIT windowsChanged();
+
+        window->forgetTile(this);
+    }
+}
+
 QList<KWin::Window *> Tile::windows() const
 {
     return m_windows;
