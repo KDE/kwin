@@ -353,22 +353,10 @@ bool Tile::addWindow(Window *window)
         return false;
     }
 
-    // There can be only one window owner per root tile, so make it forget
-    // if anybody else had the association
-    const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        if (TileManager *manager = workspace()->tileManager(output)) {
-            if (Tile *rootTile = manager->rootTile(m_desktop)) {
-                rootTile->visitDescendants([window](Tile *tile) {
-                    tile->removeWindow(window);
-                });
-            }
-            if (Tile *rootTile = manager->quickRootTile(m_desktop)) {
-                rootTile->visitDescendants([window](Tile *tile) {
-                    tile->removeWindow(window);
-                });
-            }
-        }
+    if (Tile *oldTile = window->requestedTile(); oldTile && oldTile->desktop() == desktop()) {
+        // The new tile is on the same desktop compared to the old
+        // it will unassign even if the old tile did belong to another screen
+        oldTile->removeWindow(window);
     }
 
     // Needs to be added before setAssociation to avoid double insertions
