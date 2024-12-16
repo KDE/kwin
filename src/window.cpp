@@ -3852,6 +3852,16 @@ void Window::requestTile(Tile *tile)
     Q_EMIT requestedTileChanged();
 }
 
+void Window::forgetTile(Tile *tile)
+{
+    if (m_requestedTile != tile) {
+        return;
+    }
+
+    m_requestedTile = nullptr;
+    doSetQuickTileMode();
+}
+
 void Window::setTileCompatibility(Tile *tile)
 {
     qCWarning(KWIN_CORE) << "Writing to the property window.tile is deprecated: use tile.addWindow() instead";
