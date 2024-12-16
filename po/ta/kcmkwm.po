@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-24 02:49+0000\n"
-"PO-Revision-Date: 2024-10-27 11:25+0530\n"
+"PO-Revision-Date: 2024-12-15 17:10+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 24.12.0\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -194,7 +194,7 @@ msgstr ""
 #: actions.ui:242
 #, kde-format
 msgid "  + "
-msgstr ""
+msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -1204,6 +1204,8 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
+"<em>கிளிக் செய்தால் குவியப்படுத்து:</em> சாளரத்தில் கிளிக் செய்யும்போது அது குவியத்தைப் "
+"பெறும். மற்ற இயக்குதளங்களைப் பயன்படுத்திப் பழகியோர் இதை விரும்புவர்."
 
 #: windows.cpp:95
 #, kde-format
@@ -1214,6 +1216,10 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
+"<em>கிளிக் செய்தால் குவியப்படுத்து (சுட்டி முன்னிலை):</em> பெரும்பாலும் <em>கிளிக் "
+"செய்தால் குவியப்படுத்து</em> போன்று செயல்படும். குவியத்தைப் பெற வேண்டிய சாளரத்தை "
+"சாளரநிரல் தேர்ந்தெடுக்கும் தேவை இருந்தால் (எ.கா. செயலிலுள்ள சாளரத்தை மூடியபின்) "
+"சுட்டிக்குறிக்கு அடியிலுள்ள சாளரம் தேரந்தெடுக்கப்படும்."
 
 #: windows.cpp:98
 #, kde-format
@@ -1223,6 +1229,11 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
+"<em>குவியத்தை சுட்டி கட்டப்படுத்தும்:</em> சுட்டிக்குறியை ஓர் சாளரத்திற்குள் நகர்த்தினால், "
+"அச்சாளரம் குவியத்தைப் பெறும். மாறாக, சுட்டிக்குறிக்கு அடியில் புதிதாக தோன்றும் சாளரங்கள் "
+"குவியத்தைப் பெறாது. <em>குவியத்திருட்டு தடுப்பு</em> எப்போதும்போல நடைபெறும். "
+"<em>கிளிக் செய்தால் குவியப்படுத்து</em> கொள்கையைப் போல் செயல்படும், ஆனால் கிளிக் செய்ய "
+"மட்டும் அவசியமில்லை."
 
 #: windows.cpp:101
 #, kde-format
@@ -1232,6 +1243,11 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
+"<em>குவியத்தை சுட்டி கட்டுப்படுத்தும் (சுட்டி முன்னிலை):</em> பெரும்பாலும் இது "
+"<em>குவியத்தை சுட்டி கட்டப்படுத்தும்</em> எனும் கொள்கையைப் போல் செயல்படும். குவியத்தைப் "
+"பெற வேண்டிய சாளரத்தை சாளரநிரல் தேர்ந்தெடுக்கும் தேவை இருந்தால் (எ.கா. செயலிலுள்ள "
+"சாளரத்தை மூடியபின்) சுட்டிக்குறிக்கு அடியிலுள்ள சாளரம் தேரந்தெடுக்கப்படும். சுட்டியை "
+"மேல்வைப்பதன்மூலம் குவியத்தை கட்டுப்படுத்த வேண்டுமெனில் இதைத் தேர்ந்தெடுக்கலாம்."
 
 #: windows.cpp:104
 #, kde-format
@@ -1242,6 +1258,11 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
+"<em>குவியம் சுட்டிக்குறிக்கு அடியில்:</em> குவியம் எப்பொழுதும் சுட்டிக்குறிக்கு "
+"அடியிலுள்ள சாளரத்தில் இருக்கும்.<br/><strong>எச்சரிக்கை:</strong> <em>குவியத்திருட்டு "
+"தடுப்பு</em>ம் <em>'Alt+Tab'</em> கொண்டு சாளரங்களுக்கிடையே தாவுவதும் வேலை செய்யாது. "
+"பெரும்பாலானோர் <em>குவியத்தை சுட்டி கட்டுப்படுத்தும் (சுட்டி முன்னிலை)</em> எனும் "
+"கொள்கையை இதைவிட விரும்புவர்!"
 
 #: windows.cpp:107
 #, kde-format
@@ -1253,6 +1274,12 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+"<em>குவியம் கட்டாயமாக சுட்டிக்கு அடியில்:</em> குவியம் கட்டாயமாக சுட்டிக்குறிக்கு "
+"அடியிலுள்ள சாளரத்தில் இருக்கும். நிர்வகிக்கப்படா பழையவகை X11 பணிமேடை இவ்வாறு "
+"நடந்துகொள்ளும்.<br/><strong>எச்சரிக்கை:</strong> <em>குவியத்திருட்டு தடுப்பு</em>ம் "
+"<em>'Alt+Tab'</em> கொண்டு சாளரங்களுக்கிடையே தாவுவதும் வேலை செய்யாது.  "
+"பெரும்பாலானோர் <em>குவியத்தை சுட்டி கட்டுப்படுத்தும் (சுட்டி முன்னிலை)</em> எனும் "
+"கொள்கையை இதைவிட விரும்புவர்!"
 
 #~ msgid "&Special windows:"
 #~ msgstr "வே&றுவகையான சாளரங்கள்:"
