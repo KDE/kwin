@@ -32,6 +32,7 @@ private Q_SLOTS:
     void testWindowInteraction();
     void testAssignedTileDeletion();
     void resizeTileFromWindow();
+    void shortcuts();
 
 private:
     void createSampleLayout();
@@ -406,6 +407,84 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(bottomLeftTile->windowGeometry(), QRect(4, 526, 518, 494));
     QCOMPARE(leftTile->windowGeometry(), QRect(4, 4, 518, 1016));
     QCOMPARE(middleTile->windowGeometry(), QRect(526, 4, 432, 1016));
+}
+
+void TilesTest::shortcuts()
+{
+    // Our tile layout
+    // | | | |
+    // | |-| |
+    // | | | |
+    auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[0]);
+    auto centerTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]);
+    auto rightTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[2]);
+    auto topCenterTile = qobject_cast<CustomTile *>(centerTile->childTiles()[0]);
+    auto bottomCenterTile = qobject_cast<CustomTile *>(centerTile->childTiles()[1]);
+
+    // Create a window, don't tile yet
+    std::unique_ptr<KWayland::Client::Surface> rootSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.get()));
+
+    auto window = Test::renderAndWaitForShown(rootSurface.get(), QSize(100, 100), Qt::cyan);
+    QVERIFY(window);
+
+    // Trigger the shortcut, window should be tiled now
+    // |w| | |
+    // |w|-| |
+    // |w| | |
+    window->handleCustomQuickTileShortcut(QuickTileFlag::Left);
+    QCOMPARE(window->requestedTile(), leftTile);
+    QVERIFY(leftTile->windows().contains(window));
+
+    // Make the window move around the grid
+    // | |w| |
+    // | |-| |
+    // | | | |
+    window->handleCustomQuickTileShortcut(QuickTileFlag::Right);
+    QCOMPARE(window->requestedTile(), topCenterTile);
+    QVERIFY(!leftTile->windows().contains(window));
+    QVERIFY(topCenterTile->windows().contains(window));
+
+    // | | |w|
+    // | |-|w|
+    // | | |w|
+    window->handleCustomQuickTileShortcut(QuickTileFlag::Right);
+    QCOMPARE(window->requestedTile(), rightTile);
+    QVERIFY(!topCenterTile->windows().contains(window));
+    QVERIFY(rightTile->windows().contains(window));
+
+    // Right doesn't do anything now
+    // | | |w|
+    // | |-|w|
+    // | | |w|
+    window->handleCustomQuickTileShortcut(QuickTileFlag::Right);
+    QCOMPARE(window->requestedTile(), rightTile);
+    QVERIFY(!topCenterTile->windows().contains(window));
+    QVERIFY(rightTile->windows().contains(window));
+
+    // | |w| |
+    // | |-| |
+    // | | | |
+    window->handleCustomQuickTileShortcut(QuickTileFlag::Left);
+    QCOMPARE(window->requestedTile(), topCenterTile);
+    QVERIFY(!rightTile->windows().contains(window));
+    QVERIFY(topCenterTile->windows().contains(window));
+
+    // | | | |
+    // | |-| |
+    // | |w| |
+    window->handleCustomQuickTileShortcut(QuickTileFlag::Bottom);
+    QCOMPARE(window->requestedTile(), bottomCenterTile);
+    QVERIFY(!topCenterTile->windows().contains(window));
+    QVERIFY(bottomCenterTile->windows().contains(window));
+
+    // |w| | |
+    // |w|-| |
+    // |w| | |
+    window->handleCustomQuickTileShortcut(QuickTileFlag::Left);
+    QCOMPARE(window->requestedTile(), leftTile);
+    QVERIFY(!bottomCenterTile->windows().contains(window));
+    QVERIFY(leftTile->windows().contains(window));
 }
 }
 
