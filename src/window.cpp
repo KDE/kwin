@@ -3543,13 +3543,12 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
     return workspace()->clientArea(MaximizeArea, this, pos);
 }
 
-void Window::updateQuickTileMode(QuickTileMode newMode)
+void Window::exitQuickTileMode()
 {
-    if ((!m_requestedTile && newMode == QuickTileMode(QuickTileFlag::None)) || m_requestedTile->quickTileMode() == newMode) {
-        return;
+    const auto outputs = workspace()->outputs();
+    for (Output *output : outputs) {
+        workspace()->tileManager(output)->forgetWindow(this, nullptr);
     }
-    m_requestedTile = workspace()->tileManager(output())->quickTile(newMode);
-    doSetQuickTileMode();
 }
 
 void Window::updateElectricGeometryRestore()
