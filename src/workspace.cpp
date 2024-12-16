@@ -1304,42 +1304,46 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
         Q_EMIT outputRemoved(output);
+
         auto tileManager = std::move(m_tileManagers[output]);
         m_tileManagers.erase(output);
 
-        // Evacuate windows from the defunct custom tile tree.
-        tileManager->rootTile()->visitDescendants([](Tile *child) {
-            const QList<Window *> windows = child->windows();
-            for (Window *window : windows) {
-                child->removeWindow(window);
-            }
-        });
-
-        // Migrate windows from the defunct quick tile to a quick tile tree on another output.
-        static constexpr QuickTileMode quickTileModes[] = {
-            QuickTileFlag::Left,
-            QuickTileFlag::Right,
-            QuickTileFlag::Top,
-            QuickTileFlag::Bottom,
-            QuickTileFlag::Top | QuickTileFlag::Left,
-            QuickTileFlag::Top | QuickTileFlag::Right,
-            QuickTileFlag::Bottom | QuickTileFlag::Left,
-            QuickTileFlag::Bottom | QuickTileFlag::Right,
-        };
-
-        for (const QuickTileMode &quickTileMode : quickTileModes) {
-            Tile *quickTile = tileManager->quickTile(quickTileMode);
-            const QList<Window *> windows = quickTile->windows();
-            if (windows.isEmpty()) {
-                continue;
-            }
-
-            Output *bestOutput = outputAt(output->geometry().center());
-            Tile *bestTile = m_tileManagers[bestOutput]->quickTile(quickTileMode);
-
-            if (bestTile) {
+        const auto desktops = VirtualDesktopManager::self()->desktops();
+        for (VirtualDesktop *desktop : desktops) {
+            // Evacuate windows from the defunct custom tile tree.
+            tileManager->rootTile(desktop)->visitDescendants([](Tile *child) {
+                const QList<Window *> windows = child->windows();
                 for (Window *window : windows) {
-                    bestTile->addWindow(window);
+                    child->removeWindow(window);
+                }
+            });
+
+            // Migrate windows from the defunct quick tile to a quick tile tree on another output.
+            static constexpr QuickTileMode quickTileModes[] = {
+                QuickTileFlag::Left,
+                QuickTileFlag::Right,
+                QuickTileFlag::Top,
+                QuickTileFlag::Bottom,
+                QuickTileFlag::Top | QuickTileFlag::Left,
+                QuickTileFlag::Top | QuickTileFlag::Right,
+                QuickTileFlag::Bottom | QuickTileFlag::Left,
+                QuickTileFlag::Bottom | QuickTileFlag::Right,
+            };
+
+            for (const QuickTileMode &quickTileMode : quickTileModes) {
+                Tile *quickTile = tileManager->quickRootTile(desktop)->tileForMode(quickTileMode);
+                const QList<Window *> windows = quickTile->windows();
+                if (windows.isEmpty()) {
+                    continue;
+                }
+
+                Output *bestOutput = outputAt(output->geometry().center());
+                Tile *bestTile = m_tileManagers[bestOutput]->quickRootTile(desktop)->tileForMode(quickTileMode);
+
+                if (bestTile) {
+                    for (Window *window : windows) {
+                        bestTile->addWindow(window);
+                    }
                 }
             }
         }
