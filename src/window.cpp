@@ -3338,7 +3338,11 @@ Group *Window::group()
 
 QPointF Window::framePosToClientPos(const QPointF &point) const
 {
-    return point + QPointF(borderLeft(), borderTop());
+    QMarginsF borders;
+    if (decoration()) {
+        borders = decoration()->currentState()->borders();
+    }
+    return point + QPointF(borders.left(), borders.top());
 }
 
 QPointF Window::nextFramePosToClientPos(const QPointF &point) const
@@ -3352,7 +3356,11 @@ QPointF Window::nextFramePosToClientPos(const QPointF &point) const
 
 QPointF Window::clientPosToFramePos(const QPointF &point) const
 {
-    return point - QPointF(borderLeft(), borderTop());
+    QMarginsF borders;
+    if (decoration()) {
+        borders = decoration()->currentState()->borders();
+    }
+    return point - QPointF(borders.left(), borders.top());
 }
 
 QPointF Window::nextClientPosToFramePos(const QPointF &point) const
@@ -3366,9 +3374,11 @@ QPointF Window::nextClientPosToFramePos(const QPointF &point) const
 
 QSizeF Window::frameSizeToClientSize(const QSizeF &size) const
 {
-    const qreal width = size.width() - borderLeft() - borderRight();
-    const qreal height = size.height() - borderTop() - borderBottom();
-    return QSizeF(width, height);
+    QMarginsF borders;
+    if (decoration()) {
+        borders = decoration()->currentState()->borders();
+    }
+    return size.shrunkBy(borders);
 }
 
 QSizeF Window::nextFrameSizeToClientSize(const QSizeF &size) const
@@ -3382,9 +3392,11 @@ QSizeF Window::nextFrameSizeToClientSize(const QSizeF &size) const
 
 QSizeF Window::clientSizeToFrameSize(const QSizeF &size) const
 {
-    const qreal width = size.width() + borderLeft() + borderRight();
-    const qreal height = size.height() + borderTop() + borderBottom();
-    return QSizeF(width, height);
+    QMarginsF borders;
+    if (decoration()) {
+        borders = decoration()->currentState()->borders();
+    }
+    return size.grownBy(borders);
 }
 
 QSizeF Window::nextClientSizeToFrameSize(const QSizeF &size) const
@@ -3398,9 +3410,8 @@ QSizeF Window::nextClientSizeToFrameSize(const QSizeF &size) const
 
 QRectF Window::frameRectToClientRect(const QRectF &rect) const
 {
-    const QPointF position = framePosToClientPos(rect.topLeft());
-    const QSizeF size = frameSizeToClientSize(rect.size());
-    return QRectF(position, size);
+    return QRectF(framePosToClientPos(rect.topLeft()),
+                  frameSizeToClientSize(rect.size()));
 }
 
 QRectF Window::nextFrameRectToClientRect(const QRectF &rect) const
@@ -3411,9 +3422,8 @@ QRectF Window::nextFrameRectToClientRect(const QRectF &rect) const
 
 QRectF Window::clientRectToFrameRect(const QRectF &rect) const
 {
-    const QPointF position = clientPosToFramePos(rect.topLeft());
-    const QSizeF size = clientSizeToFrameSize(rect.size());
-    return QRectF(position, size);
+    return QRectF(clientPosToFramePos(rect.topLeft()),
+                  clientSizeToFrameSize(rect.size()));
 }
 
 QRectF Window::nextClientRectToFrameRect(const QRectF &rect) const
