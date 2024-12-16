@@ -1593,7 +1593,7 @@ protected:
     void updateElectricGeometryRestore();
     QRectF quickTileGeometryRestore() const;
     QRectF quickTileGeometry(QuickTileMode mode, const QPointF &pos) const;
-    void updateQuickTileMode(QuickTileMode newMode);
+    void exitQuickTileMode();
 
     // geometry handling
     void checkOffscreenPosition(QRectF *geom, const QRectF &screenArea);

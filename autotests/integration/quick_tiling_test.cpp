@@ -97,6 +97,8 @@ private Q_SLOTS:
     void testShortcut();
     void testMultiScreen();
     void testMultiScreenX11();
+    void testQuickTileAndMaximize();
+    void testQuickTileAndMaximizeX11();
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
@@ -1048,6 +1050,191 @@ void QuickTilingTest::testMultiScreenX11()
         QCOMPARE(window->frameGeometry(), step.geometry);
         QCOMPARE(window->moveResizeGeometry(), step.geometry);
     }
+}
+
+void QuickTilingTest::testQuickTileAndMaximize()
+{
+    // This test verifies that quick tile and maximize mode are mutually exclusive.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy maximizedChanged(window, &Window::maximizedChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    QuickTileMode previousQuickTileMode = QuickTileFlag::None;
+    MaximizeMode previousMaximizeMode = MaximizeRestore;
+
+    auto quickTile = [&]() {
+        window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
+        QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->quickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+        QCOMPARE(window->maximizeMode(), previousMaximizeMode);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+        QCOMPARE(window->maximizeMode(), MaximizeRestore);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+        QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+        QCOMPARE(window->moveResizeGeometry(), QRectF(640, 0, 640, 1024));
+
+        previousMaximizeMode = window->maximizeMode();
+        previousQuickTileMode = window->quickTileMode();
+    };
+
+    auto maximize = [&]() {
+        window->maximize(MaximizeFull);
+        QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->quickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->maximizeMode(), previousMaximizeMode);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(maximizedChanged.wait());
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->maximizeMode(), MaximizeFull);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+        QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+
+        previousMaximizeMode = window->maximizeMode();
+        previousQuickTileMode = window->quickTileMode();
+    };
+
+    auto restore = [&]() {
+        window->maximize(MaximizeRestore);
+        QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->quickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->maximizeMode(), previousMaximizeMode);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(maximizedChanged.wait());
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->maximizeMode(), MaximizeRestore);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 100, 100));
+
+        previousMaximizeMode = window->maximizeMode();
+        previousQuickTileMode = window->quickTileMode();
+    };
+
+    quickTile();
+    maximize();
+    restore();
+
+    quickTile();
+    maximize();
+    restore();
+
+    quickTile();
+    maximize();
+    quickTile();
+    maximize();
+}
+
+void QuickTilingTest::testQuickTileAndMaximizeX11()
+{
+    // This test verifies that quick tile and maximize mode are mutually exclusive.
+
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+
+    QuickTileMode previousQuickTileMode = QuickTileFlag::None;
+    MaximizeMode previousMaximizeMode = MaximizeRestore;
+    QRectF originalGeometry = window->frameGeometry();
+
+    auto quickTile = [&]() {
+        QCOMPARE(window->geometryRestore(), originalGeometry);
+        QCOMPARE(window->quickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->requestedQuickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->maximizeMode(), previousMaximizeMode);
+        QCOMPARE(window->requestedMaximizeMode(), previousMaximizeMode);
+
+        window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
+
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+        QCOMPARE(window->maximizeMode(), MaximizeRestore);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+        QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+        QCOMPARE(window->moveResizeGeometry(), QRectF(640, 0, 640, 1024));
+
+        previousMaximizeMode = window->maximizeMode();
+        previousQuickTileMode = window->quickTileMode();
+    };
+
+    auto maximize = [&]() {
+        QCOMPARE(window->geometryRestore(), originalGeometry);
+        QCOMPARE(window->quickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->requestedQuickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->maximizeMode(), previousMaximizeMode);
+        QCOMPARE(window->requestedMaximizeMode(), previousMaximizeMode);
+
+        window->maximize(MaximizeFull);
+
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->maximizeMode(), MaximizeFull);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+        QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+
+        previousMaximizeMode = window->maximizeMode();
+        previousQuickTileMode = window->quickTileMode();
+    };
+
+    auto restore = [&]() {
+        QCOMPARE(window->geometryRestore(), originalGeometry);
+        QCOMPARE(window->quickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->requestedQuickTileMode(), previousQuickTileMode);
+        QCOMPARE(window->maximizeMode(), previousMaximizeMode);
+        QCOMPARE(window->requestedMaximizeMode(), previousMaximizeMode);
+
+        window->maximize(MaximizeRestore);
+
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+        QCOMPARE(window->maximizeMode(), MaximizeRestore);
+        QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+        QCOMPARE(window->frameGeometry(), originalGeometry);
+        QCOMPARE(window->moveResizeGeometry(), originalGeometry);
+
+        previousMaximizeMode = window->maximizeMode();
+        previousQuickTileMode = window->quickTileMode();
+    };
+
+    quickTile();
+    maximize();
+    restore();
+
+    quickTile();
+    maximize();
+    restore();
+
+    quickTile();
+    maximize();
+    quickTile();
+    maximize();
 }
 
 void QuickTilingTest::testScript_data()
