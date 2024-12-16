@@ -264,7 +264,7 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
         // xdg-shell doesn't support fractional sizes, so the requested
         // and current client sizes have to be rounded to integers
         const QSizeF requestedFrameSize = snapToPixels(rect.size(), nextTargetScale());
-        const QSizeF requestedClientSize = frameSizeToClientSize(requestedFrameSize);
+        const QSizeF requestedClientSize = nextFrameSizeToClientSize(requestedFrameSize);
         if (requestedClientSize.toSize() == clientSize().toSize()) {
             updateGeometry(QRectF(rect.topLeft(), requestedFrameSize));
         } else {
@@ -1715,7 +1715,7 @@ void XdgPopupWindow::handleRepositionRequested(quint32 token)
 
 void XdgPopupWindow::updateRelativePlacement()
 {
-    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
+    const QPointF parentPosition = transientFor()->nextFramePosToClientPos(transientFor()->pos());
     const QRectF bounds = workspace()->clientArea(transientFor()->isFullScreen() ? FullScreenArea : PlacementArea, transientFor()).translated(-parentPosition);
     const XdgPositioner positioner = m_shellSurface->positioner();
 
@@ -1782,7 +1782,7 @@ bool XdgPopupWindow::hasTransientPlacementHint() const
 
 QRectF XdgPopupWindow::transientPlacement() const
 {
-    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
+    const QPointF parentPosition = transientFor()->nextFramePosToClientPos(transientFor()->pos());
     return m_relativePlacement.translated(parentPosition);
 }
 

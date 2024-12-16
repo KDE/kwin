@@ -2922,12 +2922,12 @@ QSizeF X11Window::nextClientSizeToFrameSize(const QSizeF &size) const
     return clientSizeToFrameSize(size);
 }
 
-QRectF X11Window::frameRectToBufferRect(const QRectF &rect) const
+QRectF X11Window::nextFrameRectToBufferRect(const QRectF &rect) const
 {
     if (!waylandServer() && isDecorated()) {
         return rect;
     }
-    return frameRectToClientRect(rect);
+    return nextFrameRectToClientRect(rect);
 }
 
 /**
@@ -4426,13 +4426,13 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         if (frameGeometry.height() == borderTop() + borderBottom()) {
             qCDebug(KWIN_CORE) << "Shaded geometry passed for size:";
         } else {
-            clientGeometry = frameRectToClientRect(frameGeometry);
+            clientGeometry = nextFrameRectToClientRect(frameGeometry);
             frameGeometry.setHeight(borderTop() + borderBottom());
         }
     } else {
-        clientGeometry = frameRectToClientRect(frameGeometry);
+        clientGeometry = nextFrameRectToClientRect(frameGeometry);
     }
-    const QRectF bufferGeometry = frameRectToBufferRect(frameGeometry);
+    const QRectF bufferGeometry = nextFrameRectToBufferRect(frameGeometry);
     const qreal bufferScale = kwinApp()->xwaylandScale();
 
     if (m_bufferGeometry == bufferGeometry && m_clientGeometry == clientGeometry && m_frameGeometry == frameGeometry && m_bufferScale == bufferScale) {
@@ -4879,8 +4879,8 @@ bool X11Window::isWaitingForInteractiveResizeSync() const
 void X11Window::doInteractiveResizeSync(const QRectF &rect)
 {
     const QRectF moveResizeFrameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
-    const QRectF moveResizeClientGeometry = frameRectToClientRect(moveResizeFrameGeometry);
-    const QRectF moveResizeBufferGeometry = frameRectToBufferRect(moveResizeFrameGeometry);
+    const QRectF moveResizeClientGeometry = nextFrameRectToClientRect(moveResizeFrameGeometry);
+    const QRectF moveResizeBufferGeometry = nextFrameRectToBufferRect(moveResizeFrameGeometry);
 
     const QRect nativeFrameGeometry = Xcb::toXNative(moveResizeBufferGeometry);
     const QRect nativeWrapperGeometry = Xcb::toXNative(moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft()));

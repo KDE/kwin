@@ -4203,9 +4203,9 @@ QSizeF Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
  */
 QSizeF Window::constrainFrameSize(const QSizeF &size, SizeMode mode) const
 {
-    const QSizeF unconstrainedClientSize = frameSizeToClientSize(size);
+    const QSizeF unconstrainedClientSize = nextFrameSizeToClientSize(size);
     const QSizeF constrainedClientSize = constrainClientSize(unconstrainedClientSize, mode);
-    return clientSizeToFrameSize(constrainedClientSize);
+    return nextClientSizeToFrameSize(constrainedClientSize);
 }
 
 QRectF Window::fullscreenGeometryRestore() const

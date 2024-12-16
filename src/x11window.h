@@ -103,7 +103,7 @@ public:
     QSizeF nextFrameSizeToClientSize(const QSizeF &size) const override;
     QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
     QSizeF nextClientSizeToFrameSize(const QSizeF &size) const override;
-    QRectF frameRectToBufferRect(const QRectF &rect) const;
+    QRectF nextFrameRectToBufferRect(const QRectF &rect) const;
     QSizeF implicitSize() const;
 
     void blockGeometryUpdates(bool block);

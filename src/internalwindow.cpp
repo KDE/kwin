@@ -254,7 +254,7 @@ QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &si
 
 void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
+    const QSizeF requestedClientSize = nextFrameSizeToClientSize(rect.size());
     if (clientSize() == requestedClientSize) {
         commitGeometry(rect);
     } else {
@@ -292,12 +292,12 @@ void InternalWindow::createDecoration(const QRectF &oldGeometry)
     }
 
     setDecoration(decoration);
-    moveResize(QRectF(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
+    moveResize(QRectF(oldGeometry.topLeft(), nextClientSizeToFrameSize(clientSize())));
 }
 
 void InternalWindow::destroyDecoration()
 {
-    const QSizeF clientSize = frameSizeToClientSize(moveResizeGeometry().size());
+    const QSizeF clientSize = nextFrameSizeToClientSize(moveResizeGeometry().size());
     setDecoration(nullptr);
     resize(clientSize);
 }
