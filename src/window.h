@@ -1120,6 +1120,7 @@ public:
     void commitTile(Tile *tile);
     Tile *requestedTile() const;
     void requestTile(Tile *tile);
+    void forgetTile(Tile *tile);
     void setTileCompatibility(Tile *tile);
 
     void handleQuickTileShortcut(QuickTileMode mode);
