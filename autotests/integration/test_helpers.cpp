@@ -522,6 +522,16 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->colorManager = std::make_unique<ColorManagerV1>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::FifoV1) {
+            if (interface == wp_fifo_manager_v1_interface.name) {
+                c->fifoManager = std::make_unique<FifoManagerV1>(*c->registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::PresentationTime) {
+            if (interface == wp_presentation_interface.name) {
+                c->presentationTime = std::make_unique<PresentationTime>(*c->registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -650,6 +660,8 @@ Connection::~Connection()
     delete xdgWmDialogV1;
     xdgWmDialogV1 = nullptr;
     colorManager.reset();
+    fifoManager.reset();
+    presentationTime.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -769,6 +781,16 @@ SecurityContextManagerV1 *waylandSecurityContextManagerV1()
 ColorManagerV1 *colorManager()
 {
     return s_waylandConnection->colorManager.get();
+}
+
+FifoManagerV1 *fifoManager()
+{
+    return s_waylandConnection->fifoManager.get();
+}
+
+PresentationTime *presentationTime()
+{
+    return s_waylandConnection->presentationTime.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -1740,6 +1762,26 @@ ColorManagerV1::ColorManagerV1(::wl_registry *registry, uint32_t id, int version
 ColorManagerV1::~ColorManagerV1()
 {
     wp_color_manager_v1_destroy(object());
+}
+
+FifoManagerV1::FifoManagerV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_fifo_manager_v1(registry, id, version)
+{
+}
+
+FifoManagerV1::~FifoManagerV1()
+{
+    wp_fifo_manager_v1_destroy(object());
+}
+
+PresentationTime::PresentationTime(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_presentation(registry, id, version)
+{
+}
+
+PresentationTime::~PresentationTime()
+{
+    wp_presentation_destroy(object());
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)
