@@ -282,7 +282,7 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
     }
 
     const QSize destinationSize = targetSize.toSize(); // TODO: toSize is not enough to snap to the pixel grid, fix render() users and drop this toSize
-    if (targetSize != d->m_cachedSize || d->m_cachedSource != source || d->m_cachedContentTransform != d->m_textureToBufferTransform) {
+    if (destinationSize != d->m_cachedSize || d->m_cachedSource != source || d->m_cachedContentTransform != d->m_textureToBufferTransform) {
         d->m_cachedSize = destinationSize;
         d->m_cachedSource = source;
         d->m_cachedContentTransform = d->m_textureToBufferTransform;
