@@ -1058,6 +1058,10 @@ void QuickTilingTest::testVirtualDesktop()
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
 
     VirtualDesktopManager::self()->setCurrent(2);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None); // window is tiled on desktop 1, nothing should happen
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+
     window->setOnAllDesktops(true);
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
