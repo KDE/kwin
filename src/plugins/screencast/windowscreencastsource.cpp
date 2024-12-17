@@ -49,12 +49,12 @@ quint32 WindowScreenCastSource::drmFormat() const
 
 QSize WindowScreenCastSource::textureSize() const
 {
-    return m_window->clientGeometry().size().toSize();
+    return (m_window->clientGeometry().size() * m_window->targetScale()).toSize();
 }
 
 qreal WindowScreenCastSource::devicePixelRatio() const
 {
-    return 1.0;
+    return m_window->targetScale();
 }
 
 void WindowScreenCastSource::render(QImage *target)
