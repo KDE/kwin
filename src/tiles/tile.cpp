@@ -210,7 +210,7 @@ Qt::Edges Tile::anchors() const
     if (!qFuzzyCompare(m_relativeGeometry.right(), 1)) {
         anchors &= ~Qt::RightEdge;
     }
-    if (!qFuzzyCompare(m_relativeGeometry.top(), 1)) {
+    if (!qFuzzyCompare(m_relativeGeometry.bottom(), 1)) {
         anchors &= ~Qt::BottomEdge;
     }
     return anchors;
