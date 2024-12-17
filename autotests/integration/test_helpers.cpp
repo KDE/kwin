@@ -320,6 +320,8 @@ static struct
     SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
     XdgWmDialogV1 *xdgWmDialogV1;
     std::unique_ptr<XXColorManagerV4> colorManager;
+    std::unique_ptr<FifoManagerV1> fifoManager;
+    std::unique_ptr<PresentationTime> presentationTime;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -546,6 +548,16 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 s_waylandConnection.colorManager = std::make_unique<XXColorManagerV4>(*registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::FifoV1) {
+            if (interface == wp_fifo_manager_v1_interface.name) {
+                s_waylandConnection.fifoManager = std::make_unique<FifoManagerV1>(*registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::PresentationTime) {
+            if (interface == wp_presentation_interface.name) {
+                s_waylandConnection.presentationTime = std::make_unique<PresentationTime>(*registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -674,6 +686,8 @@ void destroyWaylandConnection()
     delete s_waylandConnection.xdgWmDialogV1;
     s_waylandConnection.xdgWmDialogV1 = nullptr;
     s_waylandConnection.colorManager.reset();
+    s_waylandConnection.fifoManager.reset();
+    s_waylandConnection.presentationTime.reset();
 
     delete s_waylandConnection.queue; // Must be destroyed last
     s_waylandConnection.queue = nullptr;
@@ -793,6 +807,16 @@ SecurityContextManagerV1 *waylandSecurityContextManagerV1()
 XXColorManagerV4 *colorManager()
 {
     return s_waylandConnection.colorManager.get();
+}
+
+FifoManagerV1 *fifoManager()
+{
+    return s_waylandConnection.fifoManager.get();
+}
+
+PresentationTime *presentationTime()
+{
+    return s_waylandConnection.presentationTime.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -1718,6 +1742,26 @@ XXColorManagerV4::XXColorManagerV4(::wl_registry *registry, uint32_t id, int ver
 XXColorManagerV4::~XXColorManagerV4()
 {
     xx_color_manager_v4_destroy(object());
+}
+
+FifoManagerV1::FifoManagerV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_fifo_manager_v1(registry, id, version)
+{
+}
+
+FifoManagerV1::~FifoManagerV1()
+{
+    wp_fifo_manager_v1_destroy(object());
+}
+
+PresentationTime::PresentationTime(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_presentation(registry, id, version)
+{
+}
+
+PresentationTime::~PresentationTime()
+{
+    wp_presentation_destroy(object());
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)
