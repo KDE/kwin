@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-12 00:42+0000\n"
+"POT-Creation-Date: 2024-12-17 00:41+0000\n"
 "PO-Revision-Date: 2024-10-31 16:24+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -2903,32 +2903,32 @@ msgstr "Mazāk"
 msgid "More"
 msgstr "Vairāk"
 
-#: plugins/zoom/zoom.cpp:74
+#: plugins/zoom/zoom.cpp:62
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Pietuvināto zonu pārvietot pa kreisi"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:69
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Pietuvināto zonu pārvietot pa labi"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:76
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Pārvietot pietuvināto apgabalu augšup"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Pārvietot pietuvināto apgabalu lejup"
 
-#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:91 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Pārvietot peli uz fokusu"
 
-#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Pārvietot peli uz centru"
@@ -4313,7 +4313,7 @@ msgstr "Pārslēgties vienu darbvirsmu uz leju"
 msgid "Switch to Desktop %1"
 msgstr "Pārslēgties uz %1. darbvirsmu"
 
-#: window.cpp:3168
+#: window.cpp:3173
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-12 00:42+0000\n"
+"POT-Creation-Date: 2024-12-17 00:41+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -2931,35 +2931,35 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:74
+#: plugins/zoom/zoom.cpp:62
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Oyna chapdagi ish stoliga"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:69
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Oyna oʻngdagi ish stoliga"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:76
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:91 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "Sichqoncha emulyasiyasi"
 
-#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Mouse to Center"
@@ -4407,7 +4407,7 @@ msgstr "Pastdagi ish stoliga oʻtish"
 msgid "Switch to Desktop %1"
 msgstr "1 Ish stoliga oʻtish"
 
-#: window.cpp:3168
+#: window.cpp:3173
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

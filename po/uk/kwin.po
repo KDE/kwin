@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-12 00:42+0000\n"
+"POT-Creation-Date: 2024-12-17 00:41+0000\n"
 "PO-Revision-Date: 2024-12-11 11:00+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -2916,32 +2916,32 @@ msgstr "Менше"
 msgid "More"
 msgstr "Більше"
 
-#: plugins/zoom/zoom.cpp:74
+#: plugins/zoom/zoom.cpp:62
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Пересунути збільшену область ліворуч"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:69
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Пересунути збільшену область праворуч"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:76
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Пересунути збільшену область вгору"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Пересунути збільшену область вниз"
 
-#: plugins/zoom/zoom.cpp:103 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:91 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Пересунути мишу для фокусування"
 
-#: plugins/zoom/zoom.cpp:110 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Пересунути мишу у центр"
@@ -4315,7 +4315,7 @@ msgstr "Однією стільницею вниз"
 msgid "Switch to Desktop %1"
 msgstr "Перемкнутися до стільниці %1"
 
-#: window.cpp:3168
+#: window.cpp:3173
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
