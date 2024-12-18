@@ -125,45 +125,97 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Ou
 
 std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const QList<Output *> &allOutputs) const
 {
-    const bool uniqueEdid = !output->edid().identifier().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
-        return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier();
-    });
-    const bool uniqueEdidHash = !output->edid().hash().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
-        return otherOutput != output && otherOutput->edid().hash() == output->edid().hash();
-    });
-    const bool uniqueMst = !output->mstPath().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
-        return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier() && otherOutput->mstPath() == output->mstPath();
-    });
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
-        if (output->edid().isValid()) {
-            if (outputState.edidIdentifier != output->edid().identifier()) {
-                return false;
-            } else if (uniqueEdid) {
-                return true;
+    struct Properties
+    {
+        std::optional<QString> edidIdentifier;
+        std::optional<QString> edidHash;
+        std::optional<QString> mstPath;
+        std::optional<QString> connectorName;
+    };
+    const auto filterBy = [this](const Properties &props) {
+        std::vector<size_t> ret;
+        for (ssize_t i = 0; i < m_outputs.size(); i++) {
+            const auto &state = m_outputs[i];
+            if (props.edidIdentifier.has_value() && state.edidIdentifier != *props.edidIdentifier) {
+                continue;
             }
-        }
-        if (!output->edid().hash().isEmpty()) {
-            if (outputState.edidHash != output->edid().hash()) {
-                return false;
-            } else if (uniqueEdidHash) {
-                return true;
+            if (props.edidHash.has_value() && state.edidHash != *props.edidHash) {
+                continue;
             }
+            if (props.mstPath.has_value() && state.mstPath != *props.mstPath) {
+                continue;
+            }
+            if (props.connectorName.has_value() && state.connectorName != *props.connectorName) {
+                continue;
+            }
+            ret.push_back(i);
         }
-        if (outputState.mstPath != output->mstPath()) {
-            return false;
-        } else if (uniqueMst) {
-            return true;
-        }
-        return outputState.connectorName == output->name();
+        return ret;
+    };
+
+    const bool edidIdUniqueAmongOutputs = !output->edid().identifier().isEmpty() && std::ranges::count_if(allOutputs, [output](Output *otherOutput) {
+        return output->edid().identifier() == otherOutput->edid().identifier();
+    }) == 1;
+    const bool edidHashUniqueAmongOutputs = std::ranges::count_if(allOutputs, [output](Output *otherOutput) {
+        return output->edid().hash() == otherOutput->edid().hash();
+    }) == 1;
+    const bool mstPathUniqueAmongOutputs = !output->mstPath().isEmpty() && std::ranges::count_if(allOutputs, [output](Output *other) {
+        return output->edid().hash() == other->edid().hash()
+            && output->mstPath() == other->mstPath();
+    }) == 1;
+
+    QString edidId = output->edid().identifier();
+    auto matches = filterBy(Properties{
+        .edidIdentifier = edidId,
+        .edidHash = std::nullopt,
+        .mstPath = std::nullopt,
+        .connectorName = std::nullopt,
     });
-    if (it == m_outputs.end() && uniqueEdidHash) {
-        // handle the edge case of EDID parsing failing in the past but not failing anymore
-        it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
-            return outputState.edidHash == output->edid().hash();
-        });
+    if (matches.size() == 1 && edidIdUniqueAmongOutputs) {
+        // if have an EDID ID that's unique in both outputs and config,
+        // that's enough information to match the output on its own
+        return matches.front();
+    } else if (matches.empty()) {
+        // special case: if we failed to parse the EDID in the past,
+        // we would have no EDID ID but a matching hash
+        edidId = QString();
     }
-    if (it != m_outputs.end()) {
-        return std::distance(m_outputs.begin(), it);
+    // either the EDID ID is not unique, or it's missing entirely
+    if (edidHashUniqueAmongOutputs) {
+        // -> narrow down the search with the EDID ID
+        matches = filterBy(Properties{
+            .edidIdentifier = edidId,
+            .edidHash = output->edid().hash(),
+            .mstPath = std::nullopt,
+            .connectorName = std::nullopt,
+        });
+        if (matches.size() == 1) {
+            return matches.front();
+        }
+    }
+    if (mstPathUniqueAmongOutputs) {
+        // -> narrow down the search with the MST PATH
+        matches = filterBy(Properties{
+            .edidIdentifier = edidId,
+            .edidHash = output->edid().hash(),
+            .mstPath = output->mstPath(),
+            .connectorName = std::nullopt,
+        });
+        if (matches.size() == 1) {
+            return matches.front();
+        }
+    }
+    // narrow down the search with the connector name as well
+    matches = filterBy(Properties{
+        .edidIdentifier = edidId,
+        .edidHash = output->edid().hash(),
+        .mstPath = output->mstPath(),
+        .connectorName = output->name(),
+    });
+    if (!matches.empty()) {
+        // there should never multiple entries where all properties are the same
+        // so it's safe to just return the first one
+        return matches.front();
     } else {
         return std::nullopt;
     }
@@ -679,7 +731,7 @@ void OutputConfigurationStore::load()
                 && data->connectorName == state.connectorName;
         });
         if (hasDuplicate) {
-            qCWarning(KWIN_CORE) << "Duplicate output found in config for edidIdentifier:" << state.edidIdentifier.value_or("<empty>") << "; connectorName:" << state.connectorName.value_or("<empty>") << "; mstPath:" << state.mstPath;
+            qCWarning(KWIN_CORE) << "Duplicate output found in config for edidIdentifier:" << state.edidIdentifier << "; connectorName:" << state.connectorName << "; mstPath:" << state.mstPath;
             outputDatas.push_back(std::nullopt);
             continue;
         }
@@ -935,14 +987,14 @@ void OutputConfigurationStore::save()
     QJsonArray outputsData;
     for (const auto &output : m_outputs) {
         QJsonObject o;
-        if (output.edidIdentifier) {
-            o["edidIdentifier"] = *output.edidIdentifier;
+        if (!output.edidIdentifier.isEmpty()) {
+            o["edidIdentifier"] = output.edidIdentifier;
         }
         if (!output.edidHash.isEmpty()) {
             o["edidHash"] = output.edidHash;
         }
-        if (output.connectorName) {
-            o["connectorName"] = *output.connectorName;
+        if (!output.connectorName.isEmpty()) {
+            o["connectorName"] = output.connectorName;
         }
         if (!output.mstPath.isEmpty()) {
             o["mstPath"] = output.mstPath;

@@ -56,10 +56,9 @@ private:
     };
     struct OutputState
     {
-        // identification data
-        std::optional<QString> edidIdentifier;
-        std::optional<QString> connectorName;
-        // empty if invalid
+        // identification data. Empty if invalid
+        QString edidIdentifier;
+        QString connectorName;
         QString edidHash;
         QString mstPath;
         // actual state
