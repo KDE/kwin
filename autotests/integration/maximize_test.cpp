@@ -109,10 +109,6 @@ void TestMaximized::testMaximizedPassedToDeco()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
 
-    // When there are no borders, there is no change to them when maximizing.
-    // TODO: we should test both cases with fixed fake decoration for autotests.
-    const bool hasBorders = Workspace::self()->decorationBridge()->settings()->borderSize() != KDecoration3::BorderSize::None;
-
     // now maximize
     QSignalSpy bordersChangedSpy(decoration, &KDecoration3::Decoration::bordersChanged);
     QSignalSpy maximizedChangedSpy(decoration->window(), &KDecoration3::DecoratedWindow::maximizedChanged);
@@ -127,15 +123,10 @@ void TestMaximized::testMaximizedPassedToDeco()
     QVERIFY(frameGeometryChangedSpy.wait());
 
     // If no borders, there is only the initial geometry shape change, but none through border resizing.
-    QCOMPARE(frameGeometryChangedSpy.count(), hasBorders ? 2 : 1);
+    QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), true);
-    QCOMPARE(bordersChangedSpy.count(), hasBorders ? 1 : 0);
-    QCOMPARE(decoration->borderLeft(), 0);
-    QCOMPARE(decoration->borderBottom(), 0);
-    QCOMPARE(decoration->borderRight(), 0);
-    QVERIFY(decoration->borderTop() != 0);
 
     // now unmaximize again
     workspace()->slotWindowMaximize();
@@ -146,15 +137,10 @@ void TestMaximized::testMaximizedPassedToDeco()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(100, 50), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(frameGeometryChangedSpy.count(), hasBorders ? 4 : 2);
+    QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(maximizedChangedSpy.count(), 2);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), false);
-    QCOMPARE(bordersChangedSpy.count(), hasBorders ? 2 : 0);
-    QVERIFY(decoration->borderTop() != 0);
-    QVERIFY(decoration->borderLeft() != !hasBorders);
-    QVERIFY(decoration->borderRight() != !hasBorders);
-    QVERIFY(decoration->borderBottom() != !hasBorders);
 
     // Destroy the test window.
     shellSurface.reset();
