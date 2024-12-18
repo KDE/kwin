@@ -57,6 +57,7 @@ private:
     };
     struct OutputState
     {
+        size_t selfIndex;
         // identification data
         std::optional<QString> edidIdentifier;
         std::optional<QString> connectorName;

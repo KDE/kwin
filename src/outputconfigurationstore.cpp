@@ -125,24 +125,52 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Ou
 
 std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const QList<Output *> &allOutputs) const
 {
-    const bool uniqueEdid = !output->edid().identifier().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+    const bool hasEdidId = output->edid().isValid();
+    const bool uniqueEdid = hasEdidId && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier();
     });
-    const bool uniqueEdidHash = !output->edid().hash().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+    const bool hasEdidHash = !output->edid().hash().isEmpty();
+    const bool uniqueEdidHash = hasEdidHash && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().hash() == output->edid().hash();
     });
-    const bool uniqueMst = !output->mstPath().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+    const bool hasMST = !output->mstPath().isEmpty();
+    const bool uniqueMst = hasMST && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier() && otherOutput->mstPath() == output->mstPath();
     });
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
-        if (output->edid().isValid()) {
+
+    const auto findBestMatch = [&](const OutputState &state1, const OutputState &state2) {
+        if (uniqueEdid) {
+            const bool match1 = state1.edidHash == output->edid().hash();
+            const bool match2 = state2.edidHash == output->edid().hash();
+            if (match1 != match2) {
+                return match1;
+            }
+        }
+        if (hasMST) {
+            const bool match1 = state1.mstPath == output->mstPath();
+            const bool match2 = state2.mstPath == output->mstPath();
+            if (match1 != match2) {
+                return match1;
+            }
+        } else {
+            const bool match1 = state1.connectorName == output->name();
+            const bool match2 = state2.connectorName == output->name();
+            if (match1 != match2) {
+                return match1;
+            }
+        }
+        return false;
+    };
+
+    auto matches = m_outputs | std::views::filter([&](const OutputState &outputState) {
+        if (hasEdidId) {
             if (outputState.edidIdentifier != output->edid().identifier()) {
                 return false;
             } else if (uniqueEdid) {
                 return true;
             }
         }
-        if (!output->edid().hash().isEmpty()) {
+        if (hasEdidHash) {
             if (outputState.edidHash != output->edid().hash()) {
                 return false;
             } else if (uniqueEdidHash) {
@@ -156,17 +184,21 @@ std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const
         }
         return outputState.connectorName == output->name();
     });
-    if (it == m_outputs.end() && uniqueEdidHash) {
-        // handle the edge case of EDID parsing failing in the past but not failing anymore
-        it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
+    const auto bestMatch = std::ranges::min_element(matches, findBestMatch);
+    if (bestMatch != matches.end()) {
+        return bestMatch->selfIndex;
+    }
+    if (uniqueEdidHash) {
+        // handle the edge case of EDID parsing failing in the past (-> no EDID ID, but a valid EDID hash) and not failing anymore
+        auto matches = m_outputs | std::views::filter([&](const OutputState &outputState) {
             return outputState.edidHash == output->edid().hash();
         });
+        const auto match = std::ranges::min_element(matches, findBestMatch);
+        if (match != matches.end()) {
+            return match->selfIndex;
+        }
     }
-    if (it != m_outputs.end()) {
-        return std::distance(m_outputs.begin(), it);
-    } else {
-        return std::nullopt;
-    }
+    return std::nullopt;
 }
 
 void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<Output *> &outputOrder)
@@ -210,6 +242,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 refreshRate = output->currentMode()->refreshRate();
             }
             m_outputs[*outputIndex] = OutputState{
+                .selfIndex = *outputIndex,
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
                 .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
@@ -254,6 +287,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 refreshRate = output->currentMode()->refreshRate();
             }
             m_outputs[*outputIndex] = OutputState{
+                .selfIndex = *outputIndex,
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
                 .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
@@ -911,6 +945,7 @@ void OutputConfigurationStore::load()
     for (const auto &o : outputDatas) {
         Q_ASSERT(o);
         m_outputs.push_back(*o);
+        m_outputs.back().selfIndex = m_outputs.size() - 1;
     }
 }
 
