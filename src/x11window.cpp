@@ -4081,16 +4081,16 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
 
     // "maximized" is a user setting -> we do not allow the client to resize itself
     // away from this & against the users explicit wish
-    qCDebug(KWIN_CORE) << this << bool(value_mask & configureGeometryMask) << bool(maximizeMode() & MaximizeVertical) << bool(maximizeMode() & MaximizeHorizontal);
+    qCDebug(KWIN_CORE) << this << bool(value_mask & configureGeometryMask) << bool(requestedMaximizeMode() & MaximizeVertical) << bool(requestedMaximizeMode() & MaximizeHorizontal);
 
     // we want to (partially) ignore the request when the window is somehow maximized or quicktiled
-    bool ignore = !app_noborder && (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None) || maximizeMode() != MaximizeRestore);
+    bool ignore = !app_noborder && (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None) || requestedMaximizeMode() != MaximizeRestore);
     // however, the user shall be able to force obedience despite and also disobedience in general
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
         updateQuickTileMode(QuickTileFlag::None);
         Q_EMIT quickTileModeChanged();
-    } else if (!app_noborder && requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None) && (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
+    } else if (!app_noborder && requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None) && (requestedMaximizeMode() == MaximizeVertical || requestedMaximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
         // for partially maximized windows we want to allow configures in the other dimension.
         // so we've to ask the user again - to know whether we just ignored for the partial maximization.
@@ -4098,10 +4098,10 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         // we cannot distinguish that from passing "false" for partially maximized windows.
         ignore = rules()->checkIgnoreGeometry(false);
         if (!ignore) { // the user is not interested, so we fix up dimensions
-            if (maximizeMode() == MaximizeVertical) {
+            if (requestedMaximizeMode() == MaximizeVertical) {
                 value_mask &= ~(XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_HEIGHT);
             }
-            if (maximizeMode() == MaximizeHorizontal) {
+            if (requestedMaximizeMode() == MaximizeHorizontal) {
                 value_mask &= ~(XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_WIDTH);
             }
             if (!(value_mask & configureGeometryMask)) {
