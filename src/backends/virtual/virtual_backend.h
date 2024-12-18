@@ -41,6 +41,7 @@ public:
         QSize physicalSizeInMM;
         QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> modes;
         OutputTransform panelOrientation = OutputTransform::Kind::Normal;
+        QByteArray edid;
     };
     Output *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);
