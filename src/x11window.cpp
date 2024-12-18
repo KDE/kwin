@@ -4088,13 +4088,13 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     qCDebug(KWIN_CORE) << this << bool(value_mask & configureGeometryMask) << bool(maximizeMode() & MaximizeVertical) << bool(maximizeMode() & MaximizeHorizontal);
 
     // we want to (partially) ignore the request when the window is somehow maximized or quicktiled
-    bool ignore = !app_noborder && (quickTileMode() != QuickTileMode(QuickTileFlag::None) || maximizeMode() != MaximizeRestore);
+    bool ignore = !app_noborder && (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None) || maximizeMode() != MaximizeRestore);
     // however, the user shall be able to force obedience despite and also disobedience in general
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
         updateQuickTileMode(QuickTileFlag::None);
         Q_EMIT quickTileModeChanged();
-    } else if (!app_noborder && quickTileMode() == QuickTileMode(QuickTileFlag::None) && (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
+    } else if (!app_noborder && requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None) && (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
         // for partially maximized windows we want to allow configures in the other dimension.
         // so we've to ask the user again - to know whether we just ignored for the partial maximization.
@@ -4578,7 +4578,7 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
     if (!restore.isNull()) {
         setGeometryRestore(restore);
     } else {
-        if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+        if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None)) {
             QRectF savedGeometry = geometryRestore();
             if (!(old_mode & MaximizeVertical)) {
                 savedGeometry.setTop(y());

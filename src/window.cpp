@@ -1180,7 +1180,7 @@ bool Window::startInteractiveMoveResize()
     m_interactiveMoveResize.initialGeometry = moveResizeGeometry();
     m_interactiveMoveResize.startOutput = moveResizeOutput();
     m_interactiveMoveResize.initialMaximizeMode = requestedMaximizeMode();
-    m_interactiveMoveResize.initialQuickTileMode = quickTileMode();
+    m_interactiveMoveResize.initialQuickTileMode = requestedQuickTileMode();
     m_interactiveMoveResize.initialGeometryRestore = geometryRestore();
 
     updateElectricGeometryRestore();
@@ -3570,7 +3570,7 @@ void Window::updateElectricGeometryRestore()
 
 QRectF Window::quickTileGeometryRestore() const
 {
-    if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+    if (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None)) {
         // If the window is tiled, geometryRestore() already has a good value.
         return geometryRestore();
     }
@@ -3912,8 +3912,8 @@ QRectF Window::ensureSpecialStateGeometry(const QRectF &geometry)
             ret.setHeight(maximizeArea.height());
         }
         return keepInArea(ret, maximizeArea, false);
-    } else if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        return quickTileGeometry(quickTileMode(), geometry.center());
+    } else if (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+        return quickTileGeometry(requestedQuickTileMode(), geometry.center());
     } else {
         return geometry;
     }
@@ -4007,7 +4007,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center()).toRect();
     }
 
-    if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+    if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None)) {
         moveResize(ensureSpecialStateGeometry(newGeom));
         setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
         setGeometryRestore(moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea));
