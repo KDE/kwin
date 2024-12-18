@@ -55,6 +55,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
     connect(ws, &Workspace::outputsChanged, this, &WorkspaceWrapper::screensChanged);
+    connect(ws, &Workspace::outputOrderChanged, this, &WorkspaceWrapper::screenOrderChanged);
     connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
 }
 
@@ -379,6 +380,11 @@ Output *WorkspaceWrapper::activeScreen() const
 QList<Output *> WorkspaceWrapper::screens() const
 {
     return workspace()->outputs();
+}
+
+QList<Output *> WorkspaceWrapper::screenOrder() const
+{
+    return workspace()->outputOrder();
 }
 
 Output *WorkspaceWrapper::screenAt(const QPointF &pos) const

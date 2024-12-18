@@ -40,6 +40,7 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
     Q_PROPERTY(KWin::Output *activeScreen READ activeScreen)
     Q_PROPERTY(QList<KWin::Output *> screens READ screens NOTIFY screensChanged)
+    Q_PROPERTY(QList<KWin::Output *> screenOrder READ screenOrder NOTIFY screenOrderChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity WRITE setCurrentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(QStringList activities READ activityList NOTIFY activitiesChanged)
 
@@ -92,6 +93,11 @@ Q_SIGNALS:
      * Emitted when the output list changes, e.g. an output is connected or removed.
      */
     void screensChanged();
+
+    /**
+     * Emitted when the output order list changes, e.g. the primary output changes.
+     */
+    void screenOrderChanged();
 
     /**
      * Signal emitted whenever the current activity changed.
@@ -198,6 +204,7 @@ public:
     QSize workspaceSize() const;
     KWin::Output *activeScreen() const;
     QList<KWin::Output *> screens() const;
+    QList<KWin::Output *> screenOrder() const;
     QStringList activityList() const;
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
