@@ -234,27 +234,27 @@ static constexpr XYZ D50{
     .Z = 0.8249,
 };
 
-IccProfile::Expected IccProfile::load(const QString &path)
+std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QString &path)
 {
     if (path.isEmpty()) {
-        return std::unique_ptr<IccProfile>();
+        return nullptr;
     }
     cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
     if (!handle) {
         if (QFileInfo::exists(path)) {
-            return Expected(i18n("Failed to open ICC profile \"%1\"", path));
+            return std::unexpected(i18n("Failed to open ICC profile \"%1\"", path));
         } else {
-            return Expected(i18n("ICC profile \"%1\" doesn't exist", path));
+            return std::unexpected(i18n("ICC profile \"%1\" doesn't exist", path));
         }
     }
     if (cmsGetDeviceClass(handle) != cmsSigDisplayClass) {
-        return Expected(i18n("ICC profile \"%1\" is not usable for displays", path));
+        return std::unexpected(i18n("ICC profile \"%1\" is not usable for displays", path));
     }
     if (cmsGetPCS(handle) != cmsColorSpaceSignature::cmsSigXYZData) {
-        return Expected(i18n("ICC profile \"%1\" has unsupported connection space, only XYZ is supported", path));
+        return std::unexpected(i18n("ICC profile \"%1\" has unsupported connection space, only XYZ is supported", path));
     }
     if (cmsGetColorSpace(handle) != cmsColorSpaceSignature::cmsSigRgbData) {
-        return Expected(i18n("ICC profile \"%1\" is broken, input/output color space isn't RGB", path));
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, input/output color space isn't RGB", path));
     }
 
     std::shared_ptr<ColorTransformation> vcgt;
@@ -273,10 +273,10 @@ IccProfile::Expected IccProfile::load(const QString &path)
 
     const cmsCIEXYZ *whitepoint = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigMediaWhitePointTag));
     if (!whitepoint) {
-        return Expected(i18n("ICC profile \"%1\" is broken, it has no whitepoint", path));
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, it has no whitepoint", path));
     }
     if (whitepoint->Y == 0) {
-        return Expected(i18n("ICC profile \"%1\" is broken, its whitepoint is invalid", path));
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, its whitepoint is invalid", path));
     }
 
     XYZ red;
@@ -289,12 +289,12 @@ IccProfile::Expected IccProfile::load(const QString &path)
         const auto data = readTagRaw(handle, cmsSigChromaticAdaptationTag);
         const auto mat = parseMatrix(std::span(data).subspan(8), false);
         if (!mat) {
-            return Expected(i18n("ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed", path));
+            return std::unexpected(i18n("ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed", path));
         }
         bool invertable = false;
         chromaticAdaptationMatrix = mat->inverted(&invertable);
         if (!invertable) {
-            return Expected(i18n("ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed", path));
+            return std::unexpected(i18n("ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed", path));
         }
         white = XYZ::fromVector(*chromaticAdaptationMatrix * D50.asVector());
     }
@@ -307,7 +307,7 @@ IccProfile::Expected IccProfile::load(const QString &path)
         const cmsCIEXYZ *g = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigGreenColorantTag));
         const cmsCIEXYZ *b = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigBlueColorantTag));
         if (!r || !g || !b) {
-            return Expected(i18n("ICC profile \"%1\" is broken, it has no primaries", path));
+            return std::unexpected(i18n("ICC profile \"%1\" is broken, it has no primaries", path));
         }
         if (chromaticAdaptationMatrix) {
             red = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z));
@@ -322,7 +322,7 @@ IccProfile::Expected IccProfile::load(const QString &path)
             success &= cmsAdaptToIlluminant(&adaptedG, cmsD50_XYZ(), whitepoint, g);
             success &= cmsAdaptToIlluminant(&adaptedB, cmsD50_XYZ(), whitepoint, b);
             if (!success) {
-                return Expected(i18n("ICC profile \"%1\" is broken, couldn't calculate its primaries", path));
+                return std::unexpected(i18n("ICC profile \"%1\" is broken, couldn't calculate its primaries", path));
             }
             red = XYZ(adaptedR.X, adaptedR.Y, adaptedR.Z);
             green = XYZ(adaptedG.X, adaptedG.Y, adaptedG.Z);
@@ -331,7 +331,7 @@ IccProfile::Expected IccProfile::load(const QString &path)
     }
 
     if (red.Y == 0 || green.Y == 0 || blue.Y == 0 || white.Y == 0) {
-        return Expected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
+        return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
     }
 
     std::optional<double> minBrightness;
@@ -347,7 +347,7 @@ IccProfile::Expected IccProfile::load(const QString &path)
     }
 
     if (cmsIsTag(handle, cmsSigBToD1Tag) && !cmsIsTag(handle, cmsSigBToA1Tag) && !cmsIsTag(handle, cmsSigBToA0Tag)) {
-        return Expected(i18n("ICC profile \"%1\" with only BToD tags isn't supported", path));
+        return std::unexpected(i18n("ICC profile \"%1\" with only BToD tags isn't supported", path));
     }
     std::optional<ColorPipeline> bToA0;
     std::optional<ColorPipeline> bToA1;
@@ -386,7 +386,7 @@ IccProfile::Expected IccProfile::load(const QString &path)
         cmsToneCurve *g = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigGreenTRCTag));
         cmsToneCurve *b = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigBlueTRCTag));
         if (!r || !g || !b) {
-            return Expected(i18n("Color profile is missing TRC tags"));
+            return std::unexpected(i18n("Color profile is missing TRC tags"));
         }
         toneCurves = {
             cmsReverseToneCurveEx(trcSize, r),

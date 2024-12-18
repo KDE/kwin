@@ -333,7 +333,7 @@ void TestColorspaces::testIccShader()
     QFETCH(RenderingIntent, intent);
     QFETCH(uint32_t, lcmsIntent);
 
-    const std::shared_ptr<IccProfile> profile = IccProfile::load(iccProfilePath).profile.value_or(nullptr);
+    const std::shared_ptr<IccProfile> profile = IccProfile::load(iccProfilePath).value_or(nullptr);
     QVERIFY(profile);
 
     QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);

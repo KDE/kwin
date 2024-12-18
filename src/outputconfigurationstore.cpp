@@ -383,7 +383,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .wideColorGamut = state.wideColorGamut,
             .autoRotationPolicy = state.autoRotation,
             .iccProfilePath = state.iccProfilePath,
-            .iccProfile = state.iccProfilePath ? IccProfile::load(*state.iccProfilePath).profile.value_or(nullptr) : nullptr,
+            .iccProfile = state.iccProfilePath ? IccProfile::load(*state.iccProfilePath).value_or(nullptr) : nullptr,
             .maxPeakBrightnessOverride = state.maxPeakBrightnessOverride,
             .maxAverageBrightnessOverride = state.maxAverageBrightnessOverride,
             .minBrightnessOverride = state.minBrightnessOverride,

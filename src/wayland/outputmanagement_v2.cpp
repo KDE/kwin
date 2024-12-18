@@ -311,10 +311,10 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_icc_profile
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         const auto set = config.changeSet(output->handle());
         set->iccProfilePath = profile_path;
-        if (auto ret = IccProfile::load(profile_path); ret.profile.has_value()) {
-            set->iccProfile = std::move(ret.profile.value());
+        if (auto profile = IccProfile::load(profile_path)) {
+            set->iccProfile = std::move(profile.value());
         } else {
-            failureReason = ret.error;
+            failureReason = profile.error();
         }
     }
 }
