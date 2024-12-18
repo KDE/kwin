@@ -125,48 +125,91 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Ou
 
 std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const QList<Output *> &allOutputs) const
 {
-    const bool uniqueEdid = !output->edid().identifier().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
-        return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier();
+    const bool hasEdidId = output->edid().isValid();
+    const bool uniqueEdidId = hasEdidId && std::ranges::none_of(allOutputs, [output](Output *otherOutput) {
+        return otherOutput != output
+            && otherOutput->edid().identifier() == output->edid().identifier();
     });
-    const bool uniqueEdidHash = !output->edid().hash().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
-        return otherOutput != output && otherOutput->edid().hash() == output->edid().hash();
+    const bool hasEdidHash = !output->edid().hash().isEmpty();
+    const bool uniqueEdidHash = hasEdidHash && std::ranges::none_of(allOutputs, [output](Output *otherOutput) {
+        return otherOutput != output
+            && otherOutput->edid().hash() == output->edid().hash();
     });
-    const bool uniqueMst = !output->mstPath().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
-        return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier() && otherOutput->mstPath() == output->mstPath();
+    const bool hasMST = !output->mstPath().isEmpty();
+    const bool uniqueMst = hasMST && std::ranges::none_of(allOutputs, [output](Output *otherOutput) {
+        return otherOutput != output
+            && otherOutput->edid().identifier() == output->edid().identifier()
+            && otherOutput->mstPath() == output->mstPath();
     });
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
-        if (output->edid().isValid()) {
-            if (outputState.edidIdentifier != output->edid().identifier()) {
-                return false;
-            } else if (uniqueEdid) {
-                return true;
+
+    const auto bestMatch = std::ranges::min_element(m_outputs, [&](const OutputState &state1, const OutputState &state2) {
+        {
+            const bool match1 = state1.edidIdentifier == output->edid().identifier();
+            const bool match2 = state2.edidIdentifier == output->edid().identifier();
+            if (match1 != match2) {
+                return match1;
             }
         }
-        if (!output->edid().hash().isEmpty()) {
-            if (outputState.edidHash != output->edid().hash()) {
-                return false;
-            } else if (uniqueEdidHash) {
-                return true;
+        {
+            const bool match1 = state1.edidHash == output->edid().hash();
+            const bool match2 = state2.edidHash == output->edid().hash();
+            if (match1 != match2) {
+                return match1;
             }
         }
-        if (outputState.mstPath != output->mstPath()) {
-            return false;
-        } else if (uniqueMst) {
-            return true;
+        if (hasMST) {
+            const bool match1 = state1.mstPath == output->mstPath();
+            const bool match2 = state2.mstPath == output->mstPath();
+            if (match1 != match2) {
+                return match1;
+            }
         }
-        return outputState.connectorName == output->name();
+        {
+            const bool match1 = state1.connectorName == output->name();
+            const bool match2 = state2.connectorName == output->name();
+            if (match1 != match2) {
+                return match1;
+            }
+        }
+        return false;
     });
-    if (it == m_outputs.end() && uniqueEdidHash) {
-        // handle the edge case of EDID parsing failing in the past but not failing anymore
-        it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
-            return outputState.edidHash == output->edid().hash();
-        });
-    }
-    if (it != m_outputs.end()) {
-        return std::distance(m_outputs.begin(), it);
-    } else {
+    if (bestMatch == m_outputs.end()) {
         return std::nullopt;
     }
+    const size_t index = std::distance(m_outputs.begin(), bestMatch);
+
+    // if we have an EDID ID, use that
+    // special case: if EDID parsing failed in the past, the match may not have any EDID ID, but a matching EDID hash
+    // -> ignore the EDID ID in that case
+    const bool newEdidId = !bestMatch->edidIdentifier.has_value() && !bestMatch->edidHash.isEmpty();
+    if (hasEdidId && !newEdidId) {
+        if (bestMatch->edidIdentifier != output->edid().identifier()) {
+            return std::nullopt;
+        } else if (uniqueEdidId) {
+            return index;
+        }
+    }
+    // if the EDID ID is not unique, fall back to matching on the EDID hash
+    if (hasEdidHash) {
+        if (bestMatch->edidHash != output->edid().hash()) {
+            return std::nullopt;
+        } else if (uniqueEdidHash) {
+            return index;
+        }
+    }
+    // if the EDID hash is not unique either, fall back to the MST path
+    if (hasMST) {
+        if (bestMatch->mstPath != output->mstPath()) {
+            return std::nullopt;
+        } else if (uniqueMst) {
+            return index;
+        }
+    }
+    // if we have nothing else to go by, fall back to the connector name (which is guaranteed to be unique)
+    if (bestMatch->connectorName != output->name()) {
+        return std::nullopt;
+    }
+    return index;
 }
 
 void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<Output *> &outputOrder)
