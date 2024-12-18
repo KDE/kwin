@@ -191,6 +191,45 @@ static X11Window *createWindow(xcb_connection_t *connection, const QRect &geomet
     return windowCreatedSpy.last().first().value<X11Window *>();
 }
 
+enum {
+    MWM_HINTS_FUNCTIONS = (1L << 0),
+
+    MWM_FUNC_ALL = (1L << 0),
+    MWM_FUNC_RESIZE = (1L << 1),
+    MWM_FUNC_MOVE = (1L << 2),
+    MWM_FUNC_MINIMIZE = (1L << 3),
+    MWM_FUNC_MAXIMIZE = (1L << 4),
+    MWM_FUNC_CLOSE = (1L << 5),
+
+    MWM_HINTS_DECORATIONS = (1L << 1),
+
+    MWM_DECOR_ALL = (1L << 0),
+    MWM_DECOR_BORDER = (1L << 1),
+    MWM_DECOR_RESIZEH = (1L << 2),
+    MWM_DECOR_TITLE = (1L << 3),
+    MWM_DECOR_MENU = (1L << 4),
+    MWM_DECOR_MINIMIZE = (1L << 5),
+    MWM_DECOR_MAXIMIZE = (1L << 6),
+};
+
+struct MotifHints
+{
+    uint32_t flags = 0;
+    uint32_t functions = 0;
+    uint32_t decorations = 0;
+    int32_t input_mode = 0;
+    uint32_t status = 0;
+};
+
+static void applyMotifHints(xcb_connection_t *connection, xcb_window_t window, const MotifHints &hints)
+{
+    if (hints.flags) {
+        xcb_change_property(connection, XCB_PROP_MODE_REPLACE, window, atoms->motif_wm_hints, atoms->motif_wm_hints, 32, 5, &hints);
+    } else {
+        xcb_delete_property(connection, window, atoms->motif_wm_hints);
+    }
+}
+
 void X11WindowTest::testMaximizedFull()
 {
     // This test verifies that toggling maximized mode works as expected and state changes are propagated to the client.
@@ -479,7 +518,7 @@ void X11WindowTest::testInteractiveMoveUnmaximizeFull()
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+    QCOMPARE(window->frameGeometry(), Xcb::fromXNative(Xcb::toXNative(QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()))));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -525,7 +564,7 @@ void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyFull()
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+    QCOMPARE(window->frameGeometry(), Xcb::fromXNative(Xcb::toXNative(QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize))));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -573,7 +612,7 @@ void X11WindowTest::testInteractiveMoveUnmaximizeHorizontal()
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+    QCOMPARE(window->frameGeometry(), Xcb::fromXNative(Xcb::toXNative(QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()))));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -619,7 +658,7 @@ void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyHorizontal()
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+    QCOMPARE(window->frameGeometry(), Xcb::fromXNative(Xcb::toXNative(QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize))));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -667,7 +706,7 @@ void X11WindowTest::testInteractiveMoveUnmaximizeVertical()
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+    QCOMPARE(window->frameGeometry(), Xcb::fromXNative(Xcb::toXNative(QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()))));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -713,7 +752,7 @@ void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyVertical()
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+    QCOMPARE(window->frameGeometry(), Xcb::fromXNative(Xcb::toXNative(QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize))));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -3151,12 +3190,25 @@ void X11WindowTest::testStackTopIfFromApplication()
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window1->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
-    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
+    });
 
     // Restack window1 above window2, no change will occur because there's no overlap.
     root.restackRequest(window1->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
@@ -3185,9 +3237,24 @@ void X11WindowTest::testStackTopIfFromTool()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
-    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100));
-    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
+    });
 
     // Restack window1 above window2, no change will occur because there's no overlap.
     root.restackRequest(window1->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
@@ -3216,13 +3283,26 @@ void X11WindowTest::testStackBottomIfFromApplication()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
+    });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
     X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window2->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
 
     // Restack window3 below window2, no change will occur because there's no overlap.
@@ -3252,13 +3332,26 @@ void X11WindowTest::testStackBottomIfFromTool()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
+    });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
     X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window2->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
 
     // Restack window3 below window2, no change will occur because there's no overlap.
@@ -3290,12 +3383,25 @@ void X11WindowTest::testStackOppositeFromApplication()
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window1->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
     });
-    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        applyMotifHints(c.get(), windowId, MotifHints{
+                                               .flags = MWM_HINTS_DECORATIONS,
+                                               .decorations = 0,
+                                           });
+    });
 
     // window2 is above window1, so it will be lowered
     root.restackRequest(window2->window(), NET::FromApplication, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
