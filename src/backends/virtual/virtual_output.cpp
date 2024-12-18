@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid)
+VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, const std::optional<QString> &connectorName)
     : Output(parent)
     , m_backend(parent)
     , m_renderLoop(std::make_unique<RenderLoop>(this))
@@ -30,7 +30,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize 
     static int identifier = -1;
     m_identifier = ++identifier;
     setInformation(Information{
-        .name = QStringLiteral("Virtual-%1").arg(identifier),
+        .name = connectorName.value_or(QStringLiteral("Virtual-%1").arg(identifier)),
         .physicalSize = physicalSizeInMM,
         .edid = Edid(edid),
         .panelOrientation = panelOrientation,

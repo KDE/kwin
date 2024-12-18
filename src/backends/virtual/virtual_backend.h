@@ -42,6 +42,7 @@ public:
         QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> modes;
         OutputTransform panelOrientation = OutputTransform::Kind::Normal;
         QByteArray edid;
+        std::optional<QString> connectorName;
     };
     Output *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);
