@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-17 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 17:34+0100\n"
+"PO-Revision-Date: 2024-12-17 12:34+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -937,10 +937,9 @@ msgstr "Carga"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Abandona Console de Debug"
+msgstr "Console de Debug"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -2970,8 +2969,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Factor de zoom:"
 
@@ -2979,12 +2977,11 @@ msgstr "Factor de zoom:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Monstra grillia de pixel a nivello de zoom:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Punctator de mus:"
 
@@ -3014,10 +3011,9 @@ msgstr "Cela"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
-msgstr "Tracia le mus:"
+msgstr "Traciar de Mus:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:112
@@ -3061,8 +3057,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Activa tracia de foco"
 
@@ -3078,8 +3073,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "Activa tracia de cursor de texto"
 
@@ -3660,17 +3654,15 @@ msgid "Log Out Anyway"
 msgstr "Claude session tamen"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
-"Le sequente application non claudiva:\n"
-"%1"
+"Le sequente application non claudeva:\n"
+"%1\n"
+"Abandonar de omne modo in 2 minutas."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4132,28 +4124,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Mantene fenestra super omne scriptorios"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Fenestra de tegula rapide a sinistra"
+msgstr "Fenestra de tegula rapide personaliate a sinistra"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Fenestra de tegula rapide a dextera"
+msgstr "Fenestra de tegula rapide personalisate a dextera"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Fenestra de tegula rapide in alto"
+msgstr "Fenestra de tegula rapide personalisate  in alto"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Fenestra de tegula rapide a basso"
+msgstr "Fenestra de tegula rapide personalisate a basso"
 
 #: useractions.cpp:1014
 #, kde-format
