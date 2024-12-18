@@ -11,7 +11,6 @@
 
 #include <QMatrix4x4>
 #include <QString>
-#include <expected>
 #include <memory>
 #include <optional>
 
@@ -48,7 +47,22 @@ public:
     std::optional<double> minBrightness() const;
     std::optional<double> maxBrightness() const;
 
-    static std::expected<std::unique_ptr<IccProfile>, QString> load(const QString &path);
+    // TODO Plasma 6.4 port this back to std::expected
+    struct Expected
+    {
+        Expected(std::unique_ptr<IccProfile> &&profile)
+            : profile(std::move(profile))
+        {
+        }
+        Expected(const QString &error)
+            : error(error)
+        {
+        }
+
+        std::optional<std::unique_ptr<IccProfile>> profile;
+        QString error;
+    };
+    static Expected load(const QString &path);
     static const ColorDescription s_connectionSpace;
 
 private:
