@@ -128,7 +128,8 @@ private Q_SLOTS:
     void testGenerateConfigs();
     void testAutorotate_data();
     void testAutorotate();
-    void testSameIdentifier();
+    void testSettingRestoration_data();
+    void testSettingRestoration();
 };
 
 void OutputChangesTest::initTestCase()
@@ -1522,13 +1523,12 @@ void OutputChangesTest::testAutorotate()
     QCOMPARE(outputConfig->transform->kind(), expectedRotation);
 }
 
-void OutputChangesTest::testSameIdentifier()
+void OutputChangesTest::testSettingRestoration_data()
 {
-    // this test verifies that we don't overwrite or switch around configs
-    // when two screens have the same EDID identifier but different EDID hashes
-
-    // delete the previous config to avoid clashes between test runs
-    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+    QTest::addColumn<std::optional<QString>>("connectorName1");
+    QTest::addColumn<std::optional<QString>>("connectorName2");
+    QTest::addColumn<QByteArray>("edid1");
+    QTest::addColumn<QByteArray>("edid2");
 
     const auto readEdid = [](const QString &path) {
         QFile file(path);
@@ -1536,25 +1536,55 @@ void OutputChangesTest::testSameIdentifier()
         return file.readAll();
     };
 
+    QTest::addRow("Same EDID ID, different hash") << std::optional<QString>()
+                                                  << std::optional<QString>()
+                                                  << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                                                  << readEdid(QFINDTESTDATA("data/same serial number/edid2.bin"));
+    QTest::addRow("Same EDID") << std::make_optional(QStringLiteral("connector1"))
+                               << std::make_optional(QStringLiteral("connector2"))
+                               << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                               << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"));
+    QTest::addRow("No EDID") << std::make_optional(QStringLiteral("connector1"))
+                             << std::make_optional(QStringLiteral("connector2"))
+                             << QByteArray{}
+                             << QByteArray{};
+    QTest::addRow("One has EDID, the other doesn't") << std::make_optional(QStringLiteral("connector1"))
+                                                     << std::make_optional(QStringLiteral("connector2"))
+                                                     << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                                                     << QByteArray{};
+}
+
+void OutputChangesTest::testSettingRestoration()
+{
+    // this test verifies that we restore configs correctly,
+    // even if there's no unique EDID ID to match them with
+
+    // delete the previous config to avoid clashes between test runs
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
+    QFETCH(std::optional<QString>, connectorName1);
+    QFETCH(std::optional<QString>, connectorName2);
+    QFETCH(QByteArray, edid1);
+    QFETCH(QByteArray, edid2);
+
     Test::setOutputConfig({
         Test::OutputInfo{
             .geometry = QRect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .edid = edid1,
+            .connectorName = connectorName1,
         },
         Test::OutputInfo{
             .geometry = QRect(1280, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+            .edid = edid2,
+            .connectorName = connectorName2,
         },
     });
-
-    QCOMPARE(workspace()->outputs()[0]->edid().identifier(), workspace()->outputs()[1]->edid().identifier());
-    QCOMPARE_NE(workspace()->outputs()[0]->edid().hash(), workspace()->outputs()[1]->edid().hash());
 
     auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
@@ -1588,7 +1618,8 @@ void OutputChangesTest::testSameIdentifier()
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+            .edid = edid2,
+            .connectorName = connectorName2,
         },
     });
     outputs = kwinApp()->outputBackend()->outputs();
@@ -1605,14 +1636,16 @@ void OutputChangesTest::testSameIdentifier()
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+            .edid = edid2,
+            .connectorName = connectorName2,
         },
         Test::OutputInfo{
             .geometry = QRect(1280, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .edid = edid1,
+            .connectorName = connectorName1,
         },
     });
     outputs = kwinApp()->outputBackend()->outputs();

@@ -952,6 +952,7 @@ struct OutputInfo
     QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> modes;
     OutputTransform panelOrientation = OutputTransform::Kind::Normal;
     QByteArray edid;
+    std::optional<QString> connectorName;
 };
 void setOutputConfig(const QList<QRect> &geometries);
 void setOutputConfig(const QList<OutputInfo> &infos);
