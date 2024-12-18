@@ -127,23 +127,30 @@ Edid::Edid()
 }
 
 Edid::Edid(const void *data, uint32_t size)
+    : Edid(QByteArrayView(reinterpret_cast<const uint8_t *>(data), size))
 {
-    m_raw.resize(size);
-    memcpy(m_raw.data(), data, size);
+}
+
+Edid::Edid(QByteArrayView data)
+{
+    m_raw = QByteArray(data.data(), data.size());
+    if (m_raw.isEmpty()) {
+        return;
+    }
 
     QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(m_raw);
     m_hash = QString::fromLatin1(hash.result().toHex());
 
-    const uint8_t *bytes = static_cast<const uint8_t *>(data);
-
-    auto info = di_info_parse_edid(data, size);
+    auto info = di_info_parse_edid(data.data(), data.size());
     if (!info) {
         qCWarning(KWIN_CORE, "parsing edid failed");
         return;
     }
     const di_edid *edid = di_info_get_edid(info);
     const di_edid_vendor_product *productInfo = di_edid_get_vendor_product(edid);
+
+    const uint8_t *bytes = reinterpret_cast<const uint8_t *>(data.data());
 
     // basic output information
     m_physicalSize = determineScreenPhysicalSizeMm(edid);

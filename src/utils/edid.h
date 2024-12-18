@@ -30,6 +30,7 @@ class KWIN_EXPORT Edid
 public:
     Edid();
     Edid(const void *data, uint32_t size);
+    Edid(QByteArrayView data);
 
     /**
      * Whether this instance of EDID is valid.

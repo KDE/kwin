@@ -128,6 +128,7 @@ private Q_SLOTS:
     void testGenerateConfigs();
     void testAutorotate_data();
     void testAutorotate();
+    void testSameIdentifier();
 };
 
 void OutputChangesTest::initTestCase()
@@ -1519,6 +1520,110 @@ void OutputChangesTest::testAutorotate()
     QFETCH(OutputTransform::Kind, expectedRotation);
     QVERIFY(outputConfig->transform.has_value());
     QCOMPARE(outputConfig->transform->kind(), expectedRotation);
+}
+
+void OutputChangesTest::testSameIdentifier()
+{
+    // this test verifies that we don't overwrite or switch around configs
+    // when two screens have the same EDID identifier but different EDID hashes
+
+    // delete the previous config to avoid clashes between test runs
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
+    const auto readEdid = [](const QString &path) {
+        QFile file(path);
+        file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
+        return file.readAll();
+    };
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+        },
+        Test::OutputInfo{
+            .geometry = QRect(1280, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+        },
+    });
+
+    QCOMPARE(workspace()->outputs()[0]->edid().identifier(), workspace()->outputs()[1]->edid().identifier());
+    QCOMPARE_NE(workspace()->outputs()[0]->edid().hash(), workspace()->outputs()[1]->edid().hash());
+
+    auto outputs = kwinApp()->outputBackend()->outputs();
+    OutputConfigurationStore configs;
+
+    std::optional<QPoint> output0Pos;
+    std::optional<QPoint> output1Pos;
+    {
+        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        QVERIFY(cfg.has_value());
+        const auto [config, order, type] = *cfg;
+        outputs.front()->applyChanges(config);
+        outputs.back()->applyChanges(config);
+        output0Pos = config.constChangeSet(outputs[0])->pos;
+        output1Pos = config.constChangeSet(outputs[1])->pos;
+    }
+
+    // the positions must be independent of the order of outputs in the list
+    std::swap(outputs[0], outputs[1]);
+    {
+        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        QVERIFY(cfg.has_value());
+        const auto [config, order, type] = *cfg;
+        QCOMPARE(output0Pos, config.constChangeSet(outputs[1])->pos);
+        QCOMPARE(output1Pos, config.constChangeSet(outputs[0])->pos);
+    }
+
+    // this must work if one of the outputs is removed in between as well
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+        },
+    });
+    outputs = kwinApp()->outputBackend()->outputs();
+    {
+        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        const auto [config, order, type] = *cfg;
+        outputs.front()->applyChanges(config);
+    }
+
+    // and add it again, with the inverted order
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+        },
+        Test::OutputInfo{
+            .geometry = QRect(1280, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+        },
+    });
+    outputs = kwinApp()->outputBackend()->outputs();
+
+    {
+        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        QVERIFY(cfg.has_value());
+        const auto [config, order, type] = *cfg;
+        QCOMPARE(output0Pos, config.constChangeSet(outputs[1])->pos);
+        QCOMPARE(output1Pos, config.constChangeSet(outputs[0])->pos);
+    }
 }
 
 } // namespace KWin
