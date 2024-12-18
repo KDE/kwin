@@ -102,6 +102,10 @@ private Q_SLOTS:
     void testQuickTileAndMaximizeX11();
     void testPerDesktop();
     void testPerDesktopX11();
+    void testMoveBetweenQuickTileAndCustomTileSameDesktop();
+    void testMoveBetweenQuickTileAndCustomTileSameDesktopX11();
+    void testMoveBetweenQuickTileAndCustomTileCrossDesktops();
+    void testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11();
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
@@ -1424,6 +1428,477 @@ void QuickTilingTest::testPerDesktopX11()
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktop()
+{
+    // This test checks that a window can be moved between quick tiles and custom tiles on the same virtual desktop.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(tileChangedSpy.wait());
+    };
+
+    const QRectF originalGeometry = window->frameGeometry();
+    const auto outputs = workspace()->outputs();
+    for (Output *first : outputs) {
+        for (Output *second : outputs) {
+            const QPointF customPoint = first->geometry().center();
+            const QPointF quickPoint = second->geometry().center();
+            Tile *customTile = workspace()->tileManager(first)->bestTileForPosition(customPoint);
+            Tile *quickTile = workspace()->tileManager(second)->quickTile(QuickTileFlag::Left);
+
+            window->setQuickTileMode(QuickTileFlag::Left, quickPoint);
+            QCOMPARE(window->tile(), nullptr);
+            QVERIFY(!customTile->windows().contains(window));
+            QCOMPARE(window->requestedTile(), quickTile);
+            QVERIFY(quickTile->windows().contains(window));
+            ackConfigure();
+            QCOMPARE(window->tile(), quickTile);
+            QCOMPARE(window->requestedTile(), quickTile);
+            QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+
+            window->setQuickTileMode(QuickTileFlag::Custom, customPoint);
+            QCOMPARE(window->tile(), quickTile);
+            QVERIFY(!quickTile->windows().contains(window));
+            QCOMPARE(window->requestedTile(), customTile);
+            QVERIFY(customTile->windows().contains(window));
+            ackConfigure();
+            QCOMPARE(window->tile(), customTile);
+            QCOMPARE(window->requestedTile(), customTile);
+            QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+            window->setQuickTileMode(QuickTileFlag::Left, quickPoint);
+            QCOMPARE(window->tile(), customTile);
+            QVERIFY(!customTile->windows().contains(window));
+            QCOMPARE(window->requestedTile(), quickTile);
+            QVERIFY(quickTile->windows().contains(window));
+            ackConfigure();
+            QCOMPARE(window->tile(), quickTile);
+            QCOMPARE(window->requestedTile(), quickTile);
+            QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+
+            window->setQuickTileMode(QuickTileFlag::Custom, customPoint);
+            QCOMPARE(window->tile(), quickTile);
+            QVERIFY(!quickTile->windows().contains(window));
+            QCOMPARE(window->requestedTile(), customTile);
+            QVERIFY(customTile->windows().contains(window));
+            ackConfigure();
+            QCOMPARE(window->tile(), customTile);
+            QCOMPARE(window->requestedTile(), customTile);
+            QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+            window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+            QCOMPARE(window->tile(), customTile);
+            QVERIFY(!customTile->windows().contains(window));
+            QCOMPARE(window->requestedTile(), nullptr);
+            QVERIFY(!quickTile->windows().contains(window));
+            ackConfigure();
+            QCOMPARE(window->tile(), nullptr);
+            QCOMPARE(window->requestedTile(), nullptr);
+            QCOMPARE(window->frameGeometry(), originalGeometry);
+        }
+    }
+}
+
+void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktopX11()
+{
+    // This test checks that an X11 window can be moved between quick tiles and custom tiles on the same virtual desktop.
+
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    const QRectF originalGeometry = window->frameGeometry();
+
+    const auto outputs = workspace()->outputs();
+    for (Output *first : outputs) {
+        for (Output *second : outputs) {
+            const QPointF customPoint = first->geometry().center();
+            const QPointF quickPoint = second->geometry().center();
+            Tile *customTile = workspace()->tileManager(first)->bestTileForPosition(customPoint);
+            Tile *quickTile = workspace()->tileManager(second)->quickTile(QuickTileFlag::Left);
+
+            {
+                QCOMPARE(window->tile(), nullptr);
+                QCOMPARE(window->requestedTile(), nullptr);
+                QVERIFY(!customTile->windows().contains(window));
+                QVERIFY(!quickTile->windows().contains(window));
+
+                window->setQuickTileMode(QuickTileFlag::Left, quickPoint);
+
+                QCOMPARE(window->tile(), quickTile);
+                QCOMPARE(window->requestedTile(), quickTile);
+                QVERIFY(!customTile->windows().contains(window));
+                QVERIFY(quickTile->windows().contains(window));
+                QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+            }
+
+            {
+                QCOMPARE(window->tile(), quickTile);
+                QCOMPARE(window->requestedTile(), quickTile);
+                QVERIFY(!customTile->windows().contains(window));
+                QVERIFY(quickTile->windows().contains(window));
+
+                window->setQuickTileMode(QuickTileFlag::Custom, customPoint);
+
+                QCOMPARE(window->tile(), customTile);
+                QCOMPARE(window->requestedTile(), customTile);
+                QVERIFY(customTile->windows().contains(window));
+                QVERIFY(!quickTile->windows().contains(window));
+                QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+            }
+
+            {
+                QCOMPARE(window->tile(), customTile);
+                QCOMPARE(window->requestedTile(), customTile);
+                QVERIFY(customTile->windows().contains(window));
+                QVERIFY(!quickTile->windows().contains(window));
+
+                window->setQuickTileMode(QuickTileFlag::Left, quickPoint);
+
+                QCOMPARE(window->tile(), quickTile);
+                QCOMPARE(window->requestedTile(), quickTile);
+                QVERIFY(!customTile->windows().contains(window));
+                QVERIFY(quickTile->windows().contains(window));
+                QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+            }
+
+            {
+                QCOMPARE(window->tile(), quickTile);
+                QCOMPARE(window->requestedTile(), quickTile);
+                QVERIFY(!customTile->windows().contains(window));
+                QVERIFY(quickTile->windows().contains(window));
+
+                window->setQuickTileMode(QuickTileFlag::Custom, customPoint);
+
+                QCOMPARE(window->tile(), customTile);
+                QCOMPARE(window->requestedTile(), customTile);
+                QVERIFY(customTile->windows().contains(window));
+                QVERIFY(!quickTile->windows().contains(window));
+                QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+            }
+
+            {
+                QCOMPARE(window->tile(), customTile);
+                QCOMPARE(window->requestedTile(), customTile);
+                QVERIFY(customTile->windows().contains(window));
+                QVERIFY(!quickTile->windows().contains(window));
+
+                window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+
+                QCOMPARE(window->tile(), nullptr);
+                QCOMPARE(window->requestedTile(), nullptr);
+                QVERIFY(!customTile->windows().contains(window));
+                QVERIFY(!quickTile->windows().contains(window));
+                QCOMPARE(window->frameGeometry(), originalGeometry);
+            }
+        }
+    }
+}
+
+void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
+{
+    auto vds = VirtualDesktopManager::self();
+    const auto desktops = vds->desktops();
+    const auto outputs = workspace()->outputs();
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+    window->setOnAllDesktops(true);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(tileChangedSpy.wait());
+    };
+
+    auto applyTileLayout = [](CustomTile *tile, qreal left, qreal right) {
+        const auto previousKiddos = tile->childTiles();
+        for (Tile *kiddo : previousKiddos) {
+            tile->destroyChild(kiddo);
+        }
+
+        tile->split(Tile::LayoutDirection::Horizontal);
+        tile->childTiles().at(0)->setRelativeGeometry(QRectF(0, 0, left, 1.0));
+
+        QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), QRectF(0, 0, left, 1));
+        QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), QRectF(left, 0, right, 1));
+    };
+    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(0)), 0.4, 0.6);
+    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(1)), 0.35, 0.65);
+    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(0)), 0.3, 0.7);
+    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(1)), 0.25, 0.75);
+
+    const QRectF originalGeometry = window->frameGeometry();
+    for (VirtualDesktop *customTileDesktop : desktops) {
+        for (VirtualDesktop *quickTileDesktop : desktops) {
+            if (customTileDesktop == quickTileDesktop) {
+                continue;
+            }
+
+            for (Output *customTileOutput : outputs) {
+                for (Output *quickTileOutput : outputs) {
+                    Tile *quickTile = workspace()->tileManager(quickTileOutput)->quickRootTile(quickTileDesktop)->tileForMode(QuickTileFlag::Left);
+                    Tile *customTile = workspace()->tileManager(customTileOutput)->rootTile(customTileDesktop)->childTile(1);
+
+                    // put the window in a custom tile on the first virtual desktop
+                    vds->setCurrent(customTileDesktop);
+                    customTile->addWindow(window);
+                    QCOMPARE(window->tile(), nullptr);
+                    QCOMPARE(window->requestedTile(), customTile);
+                    QCOMPARE(window->frameGeometry(), originalGeometry);
+                    ackConfigure();
+                    QCOMPARE(window->tile(), customTile);
+                    QCOMPARE(window->requestedTile(), customTile);
+                    QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+                    // switch to the second virtual desktop, the window will be untiled
+                    vds->setCurrent(quickTileDesktop);
+                    QCOMPARE(window->tile(), customTile);
+                    QCOMPARE(window->requestedTile(), nullptr);
+                    QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+                    ackConfigure();
+                    QCOMPARE(window->tile(), nullptr);
+                    QCOMPARE(window->requestedTile(), nullptr);
+                    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+                    // put the window in a quick tile on the second virtual desktop
+                    quickTile->addWindow(window);
+                    QCOMPARE(window->tile(), nullptr);
+                    QCOMPARE(window->requestedTile(), quickTile);
+                    QCOMPARE(window->frameGeometry(), originalGeometry);
+                    ackConfigure();
+                    QCOMPARE(window->tile(), quickTile);
+                    QCOMPARE(window->requestedTile(), quickTile);
+                    QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+
+                    // switch to the first virtual desktop
+                    vds->setCurrent(customTileDesktop);
+                    QCOMPARE(window->tile(), quickTile);
+                    QCOMPARE(window->requestedTile(), customTile);
+                    QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+                    ackConfigure();
+                    QCOMPARE(window->tile(), customTile);
+                    QCOMPARE(window->requestedTile(), customTile);
+                    QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+                    // switch to the second virtual desktop
+                    vds->setCurrent(quickTileDesktop);
+                    QCOMPARE(window->tile(), customTile);
+                    QCOMPARE(window->requestedTile(), quickTile);
+                    QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+                    ackConfigure();
+                    QCOMPARE(window->tile(), quickTile);
+                    QCOMPARE(window->requestedTile(), quickTile);
+                    QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+
+                    // remove the window from the quick tile on the second virtual desktop
+                    quickTile->removeWindow(window);
+                    QCOMPARE(window->tile(), quickTile);
+                    QCOMPARE(window->requestedTile(), nullptr);
+                    QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+                    ackConfigure();
+                    QCOMPARE(window->tile(), nullptr);
+                    QCOMPARE(window->requestedTile(), nullptr);
+                    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+                    // switch to the first virtual desktop
+                    vds->setCurrent(customTileDesktop);
+                    QCOMPARE(window->tile(), nullptr);
+                    QCOMPARE(window->requestedTile(), customTile);
+                    QCOMPARE(window->frameGeometry(), originalGeometry);
+                    ackConfigure();
+                    QCOMPARE(window->tile(), customTile);
+                    QCOMPARE(window->requestedTile(), customTile);
+                    QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+                    // remove the window from the custom tile on the first virtual desktop
+                    customTile->removeWindow(window);
+                    QCOMPARE(window->tile(), customTile);
+                    QCOMPARE(window->requestedTile(), nullptr);
+                    QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+                    ackConfigure();
+                    QCOMPARE(window->tile(), nullptr);
+                    QCOMPARE(window->requestedTile(), nullptr);
+                    QCOMPARE(window->frameGeometry(), originalGeometry);
+                }
+            }
+        }
+    }
+}
+
+void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
+{
+    auto vds = VirtualDesktopManager::self();
+    const auto desktops = vds->desktops();
+    const auto outputs = workspace()->outputs();
+
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    window->setOnAllDesktops(true);
+
+    auto applyTileLayout = [](CustomTile *tile, qreal left, qreal right) {
+        const auto previousKiddos = tile->childTiles();
+        for (Tile *kiddo : previousKiddos) {
+            tile->destroyChild(kiddo);
+        }
+
+        tile->split(Tile::LayoutDirection::Horizontal);
+        tile->childTiles().at(0)->setRelativeGeometry(QRectF(0, 0, left, 1.0));
+
+        QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), QRectF(0, 0, left, 1));
+        QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), QRectF(left, 0, right, 1));
+    };
+    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(0)), 0.4, 0.6);
+    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(1)), 0.35, 0.65);
+    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(0)), 0.3, 0.7);
+    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(1)), 0.25, 0.75);
+
+    const QRectF originalGeometry = window->frameGeometry();
+    for (VirtualDesktop *customTileDesktop : desktops) {
+        for (VirtualDesktop *quickTileDesktop : desktops) {
+            if (customTileDesktop == quickTileDesktop) {
+                continue;
+            }
+
+            for (Output *customTileOutput : outputs) {
+                for (Output *quickTileOutput : outputs) {
+                    Tile *quickTile = workspace()->tileManager(quickTileOutput)->quickRootTile(quickTileDesktop)->tileForMode(QuickTileFlag::Left);
+                    Tile *customTile = workspace()->tileManager(customTileOutput)->rootTile(customTileDesktop)->childTile(1);
+
+                    // put the window in a custom tile on the first virtual desktop
+                    {
+                        vds->setCurrent(customTileDesktop);
+                        QCOMPARE(window->tile(), nullptr);
+                        QCOMPARE(window->requestedTile(), nullptr);
+                        QCOMPARE(window->frameGeometry(), originalGeometry);
+
+                        customTile->addWindow(window);
+
+                        QCOMPARE(window->tile(), customTile);
+                        QCOMPARE(window->requestedTile(), customTile);
+                        QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+                    }
+
+                    // switch to the second virtual desktop, the window will be untiled
+                    {
+                        QCOMPARE(window->tile(), customTile);
+                        QCOMPARE(window->requestedTile(), customTile);
+                        QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+                        vds->setCurrent(quickTileDesktop);
+
+                        QCOMPARE(window->tile(), nullptr);
+                        QCOMPARE(window->requestedTile(), nullptr);
+                        QCOMPARE(window->frameGeometry(), originalGeometry);
+                    }
+
+                    // put the window in a quick tile on the second virtual desktop
+                    {
+                        QCOMPARE(window->tile(), nullptr);
+                        QCOMPARE(window->requestedTile(), nullptr);
+                        QCOMPARE(window->frameGeometry(), originalGeometry);
+
+                        quickTile->addWindow(window);
+
+                        QCOMPARE(window->tile(), quickTile);
+                        QCOMPARE(window->requestedTile(), quickTile);
+                        QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+                    }
+
+                    // switch to the first virtual desktop
+                    {
+                        QCOMPARE(window->tile(), quickTile);
+                        QCOMPARE(window->requestedTile(), quickTile);
+                        QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+
+                        vds->setCurrent(customTileDesktop);
+
+                        QCOMPARE(window->tile(), customTile);
+                        QCOMPARE(window->requestedTile(), customTile);
+                        QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+                    }
+
+                    // switch to the second virtual desktop
+                    {
+                        QCOMPARE(window->tile(), customTile);
+                        QCOMPARE(window->requestedTile(), customTile);
+                        QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+                        vds->setCurrent(quickTileDesktop);
+
+                        QCOMPARE(window->tile(), quickTile);
+                        QCOMPARE(window->requestedTile(), quickTile);
+                        QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+                    }
+
+                    // remove the window from the quick tile on the second virtual desktop
+                    {
+                        QCOMPARE(window->tile(), quickTile);
+                        QCOMPARE(window->requestedTile(), quickTile);
+                        QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
+
+                        quickTile->removeWindow(window);
+
+                        QCOMPARE(window->tile(), nullptr);
+                        QCOMPARE(window->requestedTile(), nullptr);
+                        QCOMPARE(window->frameGeometry(), originalGeometry);
+                    }
+
+                    // switch to the first virtual desktop
+                    {
+                        QCOMPARE(window->tile(), nullptr);
+                        QCOMPARE(window->requestedTile(), nullptr);
+                        QCOMPARE(window->frameGeometry(), originalGeometry);
+
+                        vds->setCurrent(customTileDesktop);
+
+                        QCOMPARE(window->tile(), customTile);
+                        QCOMPARE(window->requestedTile(), customTile);
+                        QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+                    }
+
+                    // remove the window from the custom tile on the first virtual desktop
+                    {
+                        QCOMPARE(window->tile(), customTile);
+                        QCOMPARE(window->requestedTile(), customTile);
+                        QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
+
+                        customTile->removeWindow(window);
+
+                        QCOMPARE(window->tile(), nullptr);
+                        QCOMPARE(window->requestedTile(), nullptr);
+                        QCOMPARE(window->frameGeometry(), originalGeometry);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void QuickTilingTest::testScript_data()
