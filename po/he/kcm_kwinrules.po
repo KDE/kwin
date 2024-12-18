@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-27 02:37+0000\n"
-"PO-Revision-Date: 2024-08-30 09:03+0300\n"
+"PO-Revision-Date: 2024-12-17 22:08+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -652,7 +652,7 @@ msgstr "תצוגה על המסך"
 #: rulesmodel.cpp:831
 #, kde-format
 msgid "All desktops"
-msgstr "בכל השולחנות עבודה"
+msgstr "בכל שולחנות העבודה"
 
 #: rulesmodel.cpp:833
 #, kde-format
