@@ -191,6 +191,8 @@ std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const
         });
         if (matches.size() == 1) {
             return matches.front();
+        } else if (matches.empty()) {
+            return std::nullopt;
         }
     }
     if (mstPathUniqueAmongOutputs) {

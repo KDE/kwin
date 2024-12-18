@@ -993,6 +993,7 @@ struct OutputInfo
     QSize physicalSizeInMM;
     QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> modes;
     OutputTransform panelOrientation = OutputTransform::Kind::Normal;
+    QByteArray edid;
 };
 void setOutputConfig(const QList<QRect> &geometries);
 void setOutputConfig(const QList<OutputInfo> &infos);
