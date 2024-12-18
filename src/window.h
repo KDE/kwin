@@ -1435,6 +1435,7 @@ Q_SIGNALS:
      * This signal is emitted when associated tile has changed, including from and to none
      */
     void tileChanged(KWin::Tile *tile);
+    void requestedTileChanged();
 
     void fullScreenChanged();
     void skipTaskbarChanged();

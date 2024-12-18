@@ -3550,6 +3550,7 @@ void Window::updateQuickTileMode(QuickTileMode newMode)
     }
     m_requestedTile = workspace()->tileManager(output())->quickTile(newMode);
     doSetQuickTileMode();
+    Q_EMIT requestedTileChanged();
 }
 
 void Window::updateElectricGeometryRestore()
@@ -3847,6 +3848,7 @@ void Window::requestTile(Tile *tile)
         moveResize(geometry);
     }
     doSetQuickTileMode();
+    Q_EMIT requestedTileChanged();
 }
 
 void Window::setTileCompatibility(Tile *tile)

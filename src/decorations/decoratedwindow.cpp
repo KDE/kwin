@@ -10,6 +10,7 @@
 #include "cursor.h"
 #include "decorationbridge.h"
 #include "decorationpalette.h"
+#include "tiles/tile.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -61,7 +62,7 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
     connect(window, &Window::shadeChanged, this, &Decoration::DecoratedWindowImpl::signalShadeChange);
     connect(window, &Window::keepAboveChanged, decoratedClient, &KDecoration3::DecoratedWindow::keepAboveChanged);
     connect(window, &Window::keepBelowChanged, decoratedClient, &KDecoration3::DecoratedWindow::keepBelowChanged);
-    connect(window, &Window::quickTileModeChanged, decoratedClient, [this, decoratedClient]() {
+    connect(window, &Window::requestedTileChanged, decoratedClient, [this, decoratedClient]() {
         Q_EMIT decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
     });
     connect(window, &Window::closeableChanged, decoratedClient, &KDecoration3::DecoratedWindow::closeableChanged);
@@ -286,29 +287,10 @@ bool DecoratedWindowImpl::isMaximizedHorizontally() const
 
 Qt::Edges DecoratedWindowImpl::adjacentScreenEdges() const
 {
-    Qt::Edges edges;
-    const QuickTileMode mode = m_window->quickTileMode();
-    if (mode.testFlag(QuickTileFlag::Left)) {
-        edges |= Qt::LeftEdge;
-        if (!mode.testFlag(QuickTileFlag::Top) && !mode.testFlag(QuickTileFlag::Bottom)) {
-            // using complete side
-            edges |= Qt::TopEdge | Qt::BottomEdge;
-        }
+    if (Tile *tile = m_window->requestedTile()) {
+        return tile->anchors();
     }
-    if (mode.testFlag(QuickTileFlag::Top)) {
-        edges |= Qt::TopEdge;
-    }
-    if (mode.testFlag(QuickTileFlag::Right)) {
-        edges |= Qt::RightEdge;
-        if (!mode.testFlag(QuickTileFlag::Top) && !mode.testFlag(QuickTileFlag::Bottom)) {
-            // using complete side
-            edges |= Qt::TopEdge | Qt::BottomEdge;
-        }
-    }
-    if (mode.testFlag(QuickTileFlag::Bottom)) {
-        edges |= Qt::BottomEdge;
-    }
-    return edges;
+    return Qt::Edges();
 }
 
 bool DecoratedWindowImpl::hasApplicationMenu() const
