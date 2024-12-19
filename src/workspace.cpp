@@ -1326,7 +1326,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         const auto desktops = VirtualDesktopManager::self()->desktops();
         for (VirtualDesktop *desktop : desktops) {
             // Evacuate windows from the defunct custom tile tree.
-            tileManager->rootTile(desktop)->visitDescendants([](Tile *child) {
+            rootTile(output, desktop)->visitDescendants([](Tile *child) {
                 const QList<Window *> windows = child->windows();
                 for (Window *window : windows) {
                     child->removeWindow(window);
@@ -3114,13 +3114,26 @@ ScreenEdges *Workspace::screenEdges() const
     return m_screenEdges.get();
 }
 
-TileManager *Workspace::tileManager(Output *output)
+TileManager *Workspace::tileManager(Output *output) const
 {
     if (auto search = m_tileManagers.find(output); search != m_tileManagers.end()) {
         return search->second.get();
     } else {
         return nullptr;
     }
+}
+
+RootTile *Workspace::rootTile(Output *output) const
+{
+    return rootTile(output, VirtualDesktopManager::self()->currentDesktop());
+}
+
+RootTile *Workspace::rootTile(Output *output, VirtualDesktop *desktop) const
+{
+    if (auto manager = tileManager(output)) {
+        return manager->rootTile(desktop);
+    }
+    return nullptr;
 }
 
 #if KWIN_BUILD_TABBOX
