@@ -303,8 +303,8 @@ void TileManager::readSettings(RootTile *rootTile)
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     qreal padding = cg.readEntry("padding", 4);
     VirtualDesktop *desk = rootTile->desktop();
-    cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
     cg = KConfigGroup(&cg, desk->id());
+    cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
 
     Q_ASSERT(m_rootTiles.contains(desk));
 
@@ -398,7 +398,6 @@ void TileManager::saveSettings()
 {
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     cg.writeEntry("padding", m_rootTile->padding());
-    cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
 
     for (auto it = m_rootTiles.constBegin(); it != m_rootTiles.constEnd(); it++) {
         VirtualDesktop *desk = it.key();
@@ -406,6 +405,7 @@ void TileManager::saveSettings()
         auto obj = tileToJSon(rootTile);
         QJsonDocument doc(obj);
         KConfigGroup tileGroup(&cg, desk->id());
+        tileGroup = KConfigGroup(&tileGroup, m_output->uuid().toString(QUuid::WithoutBraces));
         tileGroup.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
     }
     cg.sync(); // FIXME: less frequent?
