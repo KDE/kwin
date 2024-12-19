@@ -50,8 +50,8 @@ public:
 
     KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
-    CustomTile *rootTile(VirtualDesktop *desktop) const;
-    CustomTile *rootTile() const;
+    RootTile *rootTile(VirtualDesktop *desktop) const;
+    RootTile *rootTile() const;
     QuickRootTile *quickRootTile(VirtualDesktop *desktop) const;
     KWin::Tile *quickTile(QuickTileMode mode) const;
 

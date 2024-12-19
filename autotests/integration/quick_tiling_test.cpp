@@ -1804,10 +1804,10 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
         QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), QRectF(0, 0, left, 1));
         QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), QRectF(left, 0, right, 1));
     };
-    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(0)), 0.4, 0.6);
-    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(1)), 0.35, 0.65);
-    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(0)), 0.3, 0.7);
-    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(1)), 0.25, 0.75);
+    applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(0)), 0.4, 0.6);
+    applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(1)), 0.35, 0.65);
+    applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(0)), 0.3, 0.7);
+    applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(1)), 0.25, 0.75);
 
     const QRectF originalGeometry = window->frameGeometry();
     for (VirtualDesktop *customTileDesktop : desktops) {
@@ -1819,7 +1819,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
             for (Output *customTileOutput : outputs) {
                 for (Output *quickTileOutput : outputs) {
                     Tile *quickTile = workspace()->tileManager(quickTileOutput)->quickRootTile(quickTileDesktop)->tileForMode(QuickTileFlag::Left);
-                    Tile *customTile = workspace()->tileManager(customTileOutput)->rootTile(customTileDesktop)->childTile(1);
+                    Tile *customTile = workspace()->rootTile(customTileOutput, customTileDesktop)->childTile(1);
 
                     // put the window in a custom tile on the first virtual desktop
                     vds->setCurrent(customTileDesktop);
@@ -1930,10 +1930,10 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
         QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), QRectF(0, 0, left, 1));
         QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), QRectF(left, 0, right, 1));
     };
-    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(0)), 0.4, 0.6);
-    applyTileLayout(workspace()->tileManager(outputs.at(0))->rootTile(desktops.at(1)), 0.35, 0.65);
-    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(0)), 0.3, 0.7);
-    applyTileLayout(workspace()->tileManager(outputs.at(1))->rootTile(desktops.at(1)), 0.25, 0.75);
+    applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(0)), 0.4, 0.6);
+    applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(1)), 0.35, 0.65);
+    applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(0)), 0.3, 0.7);
+    applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(1)), 0.25, 0.75);
 
     const QRectF originalGeometry = window->frameGeometry();
     for (VirtualDesktop *customTileDesktop : desktops) {
@@ -1945,7 +1945,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
             for (Output *customTileOutput : outputs) {
                 for (Output *quickTileOutput : outputs) {
                     Tile *quickTile = workspace()->tileManager(quickTileOutput)->quickRootTile(quickTileDesktop)->tileForMode(QuickTileFlag::Left);
-                    Tile *customTile = workspace()->tileManager(customTileOutput)->rootTile(customTileDesktop)->childTile(1);
+                    Tile *customTile = workspace()->rootTile(customTileOutput, customTileDesktop)->childTile(1);
 
                     // put the window in a custom tile on the first virtual desktop
                     {
