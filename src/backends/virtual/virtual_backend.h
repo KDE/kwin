@@ -43,6 +43,7 @@ public:
         OutputTransform panelOrientation = OutputTransform::Kind::Normal;
         QByteArray edid;
         std::optional<QString> connectorName;
+        std::optional<QByteArray> mstPath;
     };
     Output *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);
