@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-17 00:41+0000\n"
+"POT-Creation-Date: 2024-12-19 00:41+0000\n"
 "PO-Revision-Date: 2024-12-15 16:58+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -106,6 +106,81 @@ msgstr "தேவையான X நீட்டிப்புகள் (XCompos
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL கிடைக்கவில்லை."
+
+#: core/iccprofile.cpp:245
+#, kde-format
+msgid "Failed to open ICC profile \"%1\""
+msgstr ""
+
+#: core/iccprofile.cpp:247
+#, fuzzy, kde-format
+#| msgctxt "Required file does not exist"
+#| msgid "%1 does not exist"
+msgid "ICC profile \"%1\" doesn't exist"
+msgstr "%1 என்பது இல்லை"
+
+#: core/iccprofile.cpp:251
+#, kde-format
+msgid "ICC profile \"%1\" is not usable for displays"
+msgstr ""
+
+#: core/iccprofile.cpp:254
+#, kde-format
+msgid ""
+"ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
+msgstr ""
+
+#: core/iccprofile.cpp:257
+#, kde-format
+msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
+msgstr ""
+
+#: core/iccprofile.cpp:276
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no whitepoint"
+msgstr ""
+
+#: core/iccprofile.cpp:279
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
+msgstr ""
+
+#: core/iccprofile.cpp:292
+#, kde-format
+msgid ""
+"ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
+msgstr ""
+
+#: core/iccprofile.cpp:297
+#, kde-format
+msgid ""
+"ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
+msgstr ""
+
+#: core/iccprofile.cpp:310
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr ""
+
+#: core/iccprofile.cpp:325
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr ""
+
+#: core/iccprofile.cpp:334
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its primaries are invalid"
+msgstr ""
+
+#: core/iccprofile.cpp:350
+#, kde-format
+msgid "ICC profile \"%1\" with only BToD tags isn't supported"
+msgstr ""
+
+#: core/iccprofile.cpp:389
+#, kde-format
+msgid "Color profile is missing TRC tags"
+msgstr ""
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1248,7 +1323,7 @@ msgstr ""
 "இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
 
-#: main.cpp:190 plugins/invert/invert_config.cpp:35
+#: main.cpp:185 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1263,77 +1338,77 @@ msgstr ""
 msgid "KWin"
 msgstr "கேவின்"
 
-#: main.cpp:192 main.cpp:216
+#: main.cpp:187 main.cpp:211
 #, kde-format
 msgid "KDE window manager"
 msgstr "கேடியி சாளர மேலாளர்"
 
-#: main.cpp:194
+#: main.cpp:189
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2001, கே.டீ.யீ. நிரலாளர்கள்"
 
-#: main.cpp:196
+#: main.cpp:191
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "மத்தையாஸ் எட்ரிச்"
 
-#: main.cpp:197
+#: main.cpp:192
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "கிரிஸ்டியன் டிபிர்னா"
 
-#: main.cpp:198
+#: main.cpp:193
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "டேனியல் எம். டூலீ"
 
-#: main.cpp:199
+#: main.cpp:194
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "லுபோசு லுனாக்"
 
-#: main.cpp:200
+#: main.cpp:195
 #, kde-format
 msgid "Martin Flöser"
 msgstr "மார்ட்டின் ஃபலோசர்"
 
-#: main.cpp:201
+#: main.cpp:196
 #, kde-format
 msgid "David Edmundson"
 msgstr "டேவிட் எட்மண்டுஸன்"
 
-#: main.cpp:202
+#: main.cpp:197
 #, kde-format
 msgid "Roman Gilg"
 msgstr "ரோமன் கில்கு"
 
-#: main.cpp:203
+#: main.cpp:198
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "விலாட் ஜாஹொரிடுனி"
 
-#: main.cpp:204
+#: main.cpp:199
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "ஜாவர் ஹுகுல்"
 
-#: main.cpp:213
+#: main.cpp:208
 #, kde-format
 msgid "Disable configuration options"
 msgstr "விருப்பத்தேர்வுகளை முடக்கு"
 
-#: main.cpp:214
+#: main.cpp:209
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "சமீபத்தில் கேவின் n முறை முறிவடைந்துள்ளதென்பதை குறிக்கும்"
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:296
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "ரூட்டாக இயங்காத (rootless) Xwayland சேவையகத்தை துவக்கும்."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:299
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1341,38 +1416,38 @@ msgstr ""
 "கவனிக்க வேண்டிய Wayland சாக்கெட். அமைக்கப்படவில்லையெனில், \"wayland-0\" "
 "பயன்படுத்தப்படும்."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 இயக்குதளத்தில், சாளரப்பயன்முறையில் இருக்கும்போது பயன்படுத்தவேண்டிய X11 திரை."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Wayland இயக்குதளத்தில், சாளரப்பயன்முறையில் இருக்கும்போது பயன்படுத்தவேண்டிய Wayland திரை."
 
-#: main_wayland.cpp:313
+#: main_wayland.cpp:309
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr ""
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "சாளரப் பயன்முறைக்கான அகலம். இயல்பிருப்பு 1024 ஆகும்."
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "சாளரப் பயன்முறைக்கான உயரம். இயல்பிருப்பு 768 ஆகும்."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:320
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "சாளரப் பயன்முறைக்கான அளவுகோல். இயல்பிருப்பு 1 ஆகும்."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1380,78 +1455,78 @@ msgstr ""
 "சாளர பயன்முறையில் வெளியீடுகளாக திறக்க வேண்டிய சாளரங்களின் எண்ணிக்கை. இயல்பிருப்பு "
 "மதிப்பு 1 ஆகும்"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:330
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "ஏற்கனவே அமைக்கப்பட்டுள்ள xwayland திரையின் பெயர்"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority கோப்பின் பெயர்"
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "kwin_wayland_wrapper-ஐ பயன்படுத்தி மீள்துவக்க‍க்கூடிய வித‍த்தில் வெளியேறும்."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:348
 #, kde-format
 msgid "Render through drm node."
 msgstr ""
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:349
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "வட்டார அமைப்புகளை பயனரின் அமைப்புகளிலிருந்து கண்டறியாமல் locale1-இலிருந்து கண்டறி"
 
-#: main_wayland.cpp:379
+#: main_wayland.cpp:375
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "கேவின் துவக்கும் உள்ளீட்டு முறை."
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "அமர்வை பூட்டிய நிலையில் தொடங்கும்."
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "திரையை பூட்டும் ஆதரவில்லாமல் அமர்வை துவக்கும்."
 
-#: main_wayland.cpp:394
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "பொது சுருக்குவழிகளுக்கான ஆதரவில்லாமல் அமர்வை துவக்கும்."
 
-#: main_wayland.cpp:399 main_x11.cpp:438
+#: main_wayland.cpp:395 main_x11.cpp:438
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities ஒருங்கிணைப்பை முடக்கு."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "அமர்வு நிரல் (கேவின்னால் துவக்கப்படுவது) வெளியேறும்போது வெளியேறு."
 
-#: main_wayland.cpp:409
+#: main_wayland.cpp:405
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Wayland மற்றும் Xwayland சேவையகத்தை துவக்கிய பின் துவக்கப்பட வேண்டிய செயலிகள்"
@@ -4292,13 +4367,38 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
+#: wayland/outputmanagement_v2.cpp:433
+#, kde-format
+msgid "One of the relevant outputs is no longer available"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:451
+#, kde-format
+msgid "Disabling all outputs through configuration changes is not allowed"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:461
+#, kde-format
+msgid "The provided output order doesn't contain all outputs"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:479
+#, kde-format
+msgid "The provided output order is invalid"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:494
+#, kde-format
+msgid "The driver rejected the output configuration"
+msgstr ""
+
 #: window.cpp:3173
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1654
+#: workspace.cpp:1655
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4497,10 +4597,6 @@ msgstr "Xwayland முறிவடைந்துள்ளது"
 #~ msgctxt "Required file does not exist"
 #~ msgid "%1 does not contain a valid metadata.json file"
 #~ msgstr "%1 என்பதில் முறையான metadata.json கோப்பு இல்லை"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not exist"
-#~ msgstr "%1 என்பது இல்லை"
 
 #~ msgid "Walk Through Desktops"
 #~ msgstr "பணிமேடைகளின் பட்டியலில் முன்னே செல்"

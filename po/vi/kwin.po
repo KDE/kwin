@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-17 00:41+0000\n"
+"POT-Creation-Date: 2024-12-19 00:41+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -105,6 +105,81 @@ msgstr "Cần có các phần mở rộng X (XComposite và XDamage) nhưng hi�
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "Không có GLX/OpenGL."
+
+#: core/iccprofile.cpp:245
+#, kde-format
+msgid "Failed to open ICC profile \"%1\""
+msgstr ""
+
+#: core/iccprofile.cpp:247
+#, fuzzy, kde-format
+#| msgctxt "Required file does not exist"
+#| msgid "%1 does not exist"
+msgid "ICC profile \"%1\" doesn't exist"
+msgstr "%1 không tồn tại"
+
+#: core/iccprofile.cpp:251
+#, kde-format
+msgid "ICC profile \"%1\" is not usable for displays"
+msgstr ""
+
+#: core/iccprofile.cpp:254
+#, kde-format
+msgid ""
+"ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
+msgstr ""
+
+#: core/iccprofile.cpp:257
+#, kde-format
+msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
+msgstr ""
+
+#: core/iccprofile.cpp:276
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no whitepoint"
+msgstr ""
+
+#: core/iccprofile.cpp:279
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
+msgstr ""
+
+#: core/iccprofile.cpp:292
+#, kde-format
+msgid ""
+"ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
+msgstr ""
+
+#: core/iccprofile.cpp:297
+#, kde-format
+msgid ""
+"ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
+msgstr ""
+
+#: core/iccprofile.cpp:310
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr ""
+
+#: core/iccprofile.cpp:325
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr ""
+
+#: core/iccprofile.cpp:334
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its primaries are invalid"
+msgstr ""
+
+#: core/iccprofile.cpp:350
+#, kde-format
+msgid "ICC profile \"%1\" with only BToD tags isn't supported"
+msgstr ""
+
+#: core/iccprofile.cpp:389
+#, kde-format
+msgid "Color profile is missing TRC tags"
+msgstr ""
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1256,7 +1331,7 @@ msgstr ""
 "Bấm trái hoặc enter để chọn cửa sổ để ép đóng.\n"
 "Escape hoặc bấm phải để huỷ."
 
-#: main.cpp:190 plugins/invert/invert_config.cpp:35
+#: main.cpp:185 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1271,116 +1346,116 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:192 main.cpp:216
+#: main.cpp:187 main.cpp:211
 #, kde-format
 msgid "KDE window manager"
 msgstr "Trình quản lí cửa sổ KDE"
 
-#: main.cpp:194
+#: main.cpp:189
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Các nhà phát triển KDE"
 
-#: main.cpp:196
+#: main.cpp:191
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:197
+#: main.cpp:192
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:198
+#: main.cpp:193
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:199
+#: main.cpp:194
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:200
+#: main.cpp:195
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:201
+#: main.cpp:196
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:202
+#: main.cpp:197
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:203
+#: main.cpp:198
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:204
+#: main.cpp:199
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Button size:"
 #| msgid "Very Huge"
 msgid "Xaver Hugl"
 msgstr "Rất khổng lồ"
 
-#: main.cpp:213
+#: main.cpp:208
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Tắt các lựa chọn cấu hình"
 
-#: main.cpp:214
+#: main.cpp:209
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Cho biết gần đây KWin đã gặp sự cố n lần"
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:296
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Khởi động một trình chủ Xwayland không gốc."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:299
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr "Tên của ổ cắm Wayland dùng để nghe. Nếu không đặt, dùng \"wayland-0\"."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Bộ hiển thị X11 để dùng trong chế độ cửa sổ hoá trên nền tảng X11."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Bộ hiển thị Wayland để dùng trong chế độ cửa sổ hoá trên nền tảng Wayland."
 
-#: main_wayland.cpp:313
+#: main_wayland.cpp:309
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Kết xuất vào một framebuffer ảo."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Chiều rộng cho chế độ cửa sổ hoá. Chiều rộng mặc định là 1024."
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Chiều cao cho chế độ cửa sổ hoá. Chiều cao mặc định là 768."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:320
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Tỉ lệ cho chế độ cửa sổ hoá. Giá trị mặc định là 1."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1388,7 +1463,7 @@ msgstr ""
 "Số lượng cửa sổ để mở làm đầu ra trong chế độ cửa sổ hoá. Giá trị mặc định "
 "là 1"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:330
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1397,7 +1472,7 @@ msgstr ""
 "Ổ cắm Wayland để dùng cho các kết nối đến. Có thể kết hợp với --socket để "
 "đặt tên cho ổ cắm"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1406,28 +1481,28 @@ msgstr ""
 "Ổ cắm XWayland để dùng cho các kết nối đến của Xwayland. Có thể được đặt "
 "nhiều lần"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Tên của bộ hiển thị xwayland đã được cài đặt trước"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Tên tệp xauthority"
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Thoát hiện thể này để nó có thể được khởi động lại bởi kwin_wayland_wrapper."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:348
 #, kde-format
 msgid "Render through drm node."
 msgstr "Kết xuất qua nút drm."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:349
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
@@ -1435,37 +1510,37 @@ msgstr ""
 "Trích xuất thông tin thiết lập vùng từ locale1 thay vì cấu hình của người "
 "dùng"
 
-#: main_wayland.cpp:379
+#: main_wayland.cpp:375
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Phương thức nhập mà KWin khởi động."
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Khởi động phiên trong chế độ bị khoá."
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Khởi động phiên mà không có hỗ trợ màn hình khoá."
 
-#: main_wayland.cpp:394
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Khởi động phiên mà không có hỗ trợ phím tắt toàn cục."
 
-#: main_wayland.cpp:399 main_x11.cpp:438
+#: main_wayland.cpp:395 main_x11.cpp:438
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Tắt tích hợp KActivities."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Thoát sau khi ứng dụng phiên, được khởi động bởi KWin, đóng."
 
-#: main_wayland.cpp:409
+#: main_wayland.cpp:405
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Ứng dụng để khởi động khi trình chủ Wayland và Xwayland được khởi động"
@@ -4418,13 +4493,38 @@ msgstr "Chuyển sang bàn làm việc phía dưới"
 msgid "Switch to Desktop %1"
 msgstr "Chuyển sang bàn làm việc %1"
 
+#: wayland/outputmanagement_v2.cpp:433
+#, kde-format
+msgid "One of the relevant outputs is no longer available"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:451
+#, kde-format
+msgid "Disabling all outputs through configuration changes is not allowed"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:461
+#, kde-format
+msgid "The provided output order doesn't contain all outputs"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:479
+#, kde-format
+msgid "The provided output order is invalid"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:494
+#, kde-format
+msgid "The driver rejected the output configuration"
+msgstr ""
+
 #: window.cpp:3173
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Không hồi đáp)"
 
-#: workspace.cpp:1654
+#: workspace.cpp:1655
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -4630,10 +4730,6 @@ msgstr ""
 #~ msgctxt "Required file does not exist"
 #~ msgid "%1 does not contain a valid metadata.json file"
 #~ msgstr "%1 không chứa một tệp metadata.json hợp lệ"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not exist"
-#~ msgstr "%1 không tồn tại"
 
 #~ msgid "Walk Through Desktops"
 #~ msgstr "Đi qua các bàn làm việc"

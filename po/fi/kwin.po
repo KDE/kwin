@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-17 00:41+0000\n"
+"POT-Creation-Date: 2024-12-19 00:41+0000\n"
 "PO-Revision-Date: 2024-12-01 14:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -118,6 +118,81 @@ msgstr ""
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."
+
+#: core/iccprofile.cpp:245
+#, kde-format
+msgid "Failed to open ICC profile \"%1\""
+msgstr ""
+
+#: core/iccprofile.cpp:247
+#, fuzzy, kde-format
+#| msgctxt "Required file does not exist"
+#| msgid "%1 does not exist"
+msgid "ICC profile \"%1\" doesn't exist"
+msgstr "Tiedostoa %1 ei ole olemassa"
+
+#: core/iccprofile.cpp:251
+#, kde-format
+msgid "ICC profile \"%1\" is not usable for displays"
+msgstr ""
+
+#: core/iccprofile.cpp:254
+#, kde-format
+msgid ""
+"ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
+msgstr ""
+
+#: core/iccprofile.cpp:257
+#, kde-format
+msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
+msgstr ""
+
+#: core/iccprofile.cpp:276
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no whitepoint"
+msgstr ""
+
+#: core/iccprofile.cpp:279
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
+msgstr ""
+
+#: core/iccprofile.cpp:292
+#, kde-format
+msgid ""
+"ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
+msgstr ""
+
+#: core/iccprofile.cpp:297
+#, kde-format
+msgid ""
+"ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
+msgstr ""
+
+#: core/iccprofile.cpp:310
+#, kde-format
+msgid "ICC profile \"%1\" is broken, it has no primaries"
+msgstr ""
+
+#: core/iccprofile.cpp:325
+#, kde-format
+msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
+msgstr ""
+
+#: core/iccprofile.cpp:334
+#, kde-format
+msgid "ICC profile \"%1\" is broken, its primaries are invalid"
+msgstr ""
+
+#: core/iccprofile.cpp:350
+#, kde-format
+msgid "ICC profile \"%1\" with only BToD tags isn't supported"
+msgstr ""
+
+#: core/iccprofile.cpp:389
+#, kde-format
+msgid "Color profile is missing TRC tags"
+msgstr ""
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1265,7 +1340,7 @@ msgstr ""
 "Pakota ikkunan sulkeminen hiiripainikkeella tai Enterillä.\n"
 "Peru hiiren oikealla painikkeella tai Esc:llä."
 
-#: main.cpp:190 plugins/invert/invert_config.cpp:35
+#: main.cpp:185 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1280,115 +1355,115 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:192 main.cpp:216
+#: main.cpp:187 main.cpp:211
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE:n ikkunointiohjelma"
 
-#: main.cpp:194
+#: main.cpp:189
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "© 1999–2019 KDE-kehittäjät"
 
-#: main.cpp:196
+#: main.cpp:191
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:197
+#: main.cpp:192
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:198
+#: main.cpp:193
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:199
+#: main.cpp:194
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:200
+#: main.cpp:195
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:201
+#: main.cpp:196
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:202
+#: main.cpp:197
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:203
+#: main.cpp:198
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:204
+#: main.cpp:199
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:213
+#: main.cpp:208
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Poista asetukset käytöstä"
 
-#: main.cpp:214
+#: main.cpp:209
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Ilmoita, että KWin on kaatunut n kertaa"
 
-#: main_wayland.cpp:300
+#: main_wayland.cpp:296
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr ""
 "Käynnistä tavallisena käyttäjänä suoritettava (rootless) Xwayland-palvelin."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:299
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Kuunneltavan Wayland-pistokkeen nimi. Ellei aseteta, käytetään ”wayland-0”."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11-näyttö, jota käytetään ikkunoidussa tilassa X11-alustalla."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland-alustan ikkunoituun tilaan käytettävä Wayland-näyttö."
 
-#: main_wayland.cpp:313
+#: main_wayland.cpp:309
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Hahmonna virtuaalikehyspuskuriin."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Ikkunoidun tilan leveys. Oletusleveys on 1024."
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Ikkunoidun tilan korkeus. Oletuskorkeus on 768."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:320
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Ikkunoidun tilan mittakaava. Oletusarvo on 1."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1396,7 +1471,7 @@ msgstr ""
 "Ulostuloiksi avattavien ikkunoiden määrä ikkunoidussa tilassa. Oletusarvo on "
 "1."
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:330
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1405,7 +1480,7 @@ msgstr ""
 "Saapuviin yhteyksiin käytettävä Wayland-pistoke. Pistokkeelle voi antaa "
 "nimen --socket-valitsimella."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1413,65 +1488,65 @@ msgid ""
 msgstr ""
 "Saapuviin yhteyksiin käytettävä Wayland-pistoke. Tämän voi asettaa useammasti"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Esiasetetun XWayland-näytön nimi"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority-tiedoston nimi"
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Lopettaa tämän ilmentymän, jotta kwin_wayland_wrapper voi käynnistää sen "
 "uudelleen."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:348
 #, kde-format
 msgid "Render through drm node."
 msgstr "Hahmonna DRM-solmun kautta."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:349
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Selvitä maa-asetusto käyttäjäasetusten sijaan locale1:stä"
 
-#: main_wayland.cpp:379
+#: main_wayland.cpp:375
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Syötemenetelmä, jonka KWin käynnistää."
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Aloittaa istunnon lukittuna."
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Aloittaa istunnon ilman näytönlukitustukea."
 
-#: main_wayland.cpp:394
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Aloittaa istunnon ilman yleisten pikanäppäinten tukea."
 
-#: main_wayland.cpp:399 main_x11.cpp:438
+#: main_wayland.cpp:395 main_x11.cpp:438
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Poista KActivities-integraatio käytöstä."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Lopeta, kun KWinin käynnistämä istuntosovellus sulkeutuu."
 
-#: main_wayland.cpp:409
+#: main_wayland.cpp:405
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -4336,13 +4411,38 @@ msgstr "Vaihda työpöytää alas päin"
 msgid "Switch to Desktop %1"
 msgstr "Vaihda työpöydälle %1"
 
+#: wayland/outputmanagement_v2.cpp:433
+#, kde-format
+msgid "One of the relevant outputs is no longer available"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:451
+#, kde-format
+msgid "Disabling all outputs through configuration changes is not allowed"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:461
+#, kde-format
+msgid "The provided output order doesn't contain all outputs"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:479
+#, kde-format
+msgid "The provided output order is invalid"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:494
+#, kde-format
+msgid "The driver rejected the output configuration"
+msgstr ""
+
 #: window.cpp:3173
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ei vastaa)"
 
-#: workspace.cpp:1654
+#: workspace.cpp:1655
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4557,10 +4657,6 @@ msgstr "XWayland on kaatunut"
 #~ msgctxt "Required file does not exist"
 #~ msgid "%1 does not contain a valid metadata.json file"
 #~ msgstr "%1 ei sisällä kelvollista metadata.json-tiedostoa"
-
-#~ msgctxt "Required file does not exist"
-#~ msgid "%1 does not exist"
-#~ msgstr "Tiedostoa %1 ei ole olemassa"
 
 #~ msgid "Walk Through Desktops"
 #~ msgstr "Selaa työpöytiä"
