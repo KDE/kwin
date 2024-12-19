@@ -124,12 +124,12 @@ Tile *TileManager::bestTileForPosition(qreal x, qreal y)
     return bestTileForPosition({x, y});
 }
 
-CustomTile *TileManager::rootTile(VirtualDesktop *desktop) const
+RootTile *TileManager::rootTile(VirtualDesktop *desktop) const
 {
     return m_rootTiles.value(desktop);
 }
 
-CustomTile *TileManager::rootTile() const
+RootTile *TileManager::rootTile() const
 {
     return m_rootTile;
 }

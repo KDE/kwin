@@ -652,7 +652,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
 void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput_data()
 {
     const auto outputs = kwinApp()->outputBackend()->outputs();
-    const size_t tileCount = workspace()->tileManager(outputs[1])->rootTile()->childTiles().size();
+    const size_t tileCount = workspace()->rootTile(outputs[1])->childTiles().size();
 
     QTest::addColumn<size_t>("tileIndex");
     for (size_t i = 0; i < tileCount; i++) {
@@ -697,7 +697,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
     }
 
     QFETCH(size_t, tileIndex);
-    const QRectF customTileGeom = workspace()->tileManager(outputs[1])->rootTile()->childTiles()[tileIndex]->windowGeometry();
+    const QRectF customTileGeom = workspace()->rootTile(outputs[1])->childTiles()[tileIndex]->windowGeometry();
 
     // Move the window to the right monitor and put it in the middle tile.
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);

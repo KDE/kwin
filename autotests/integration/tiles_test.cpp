@@ -67,7 +67,7 @@ void TilesTest::init()
     input()->pointer()->warp(QPoint(640, 512));
     m_output = workspace()->activeOutput();
     m_tileManager = workspace()->tileManager(m_output);
-    m_rootTile = m_tileManager->rootTile();
+    m_rootTile = workspace()->rootTile(m_output);
     QAbstractItemModelTester(m_tileManager->model(), QAbstractItemModelTester::FailureReportingMode::QtTest);
     while (m_rootTile->childCount() > 0) {
         static_cast<CustomTile *>(m_rootTile->childTile(0))->remove();
