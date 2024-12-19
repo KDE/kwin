@@ -303,7 +303,7 @@ void TestInputCapture::testInputCapture()
     Test::keyboardKeyPressed(KEY_A, ++timestamp);
     Test::keyboardKeyReleased(KEY_A, ++timestamp);
     QVERIFY(motionSpy.wait());
-    QVERIFY(buttonSpy.count());
+    QVERIFY(buttonSpy.wait());
     QVERIFY(axisSpy.count());
     QVERIFY(keySpy.count());
     QVERIFY(eiReadableSpy.empty());

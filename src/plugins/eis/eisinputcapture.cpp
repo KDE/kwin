@@ -218,10 +218,10 @@ void EisInputCapture::release(const QPointF &cursorPosition, bool applyPosition)
     if (m_manager->activeCapture() != this) {
         return;
     }
+    deactivate();
     if (applyPosition) {
         Cursors::self()->mouse()->setPos(cursorPosition);
     }
-    deactivate();
 }
 
 QDBusUnixFileDescriptor EisInputCapture::connectToEIS()
