@@ -61,6 +61,8 @@ private:
 class RootTile : public CustomTile
 {
     Q_OBJECT
+    Q_PROPERTY(KWin::TileModel *model READ model CONSTANT)
+
 public:
     RootTile(TileManager *tiling, VirtualDesktop *desktop);
 
