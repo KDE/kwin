@@ -77,6 +77,7 @@ class PlaceholderInputEventFilter;
 class PlaceholderOutput;
 class Placement;
 class OutputConfiguration;
+class Tile;
 class TileManager;
 class OutputConfigurationStore;
 class LidSwitchTracker;
@@ -262,7 +263,17 @@ public:
     /**
      * @returns the TileManager associated to a given output
      */
-    TileManager *tileManager(Output *output);
+    TileManager *tileManager(Output *output) const;
+
+    /**
+     * Returns the root tile for the given @a output on the current virtual desktop.
+     */
+    Tile *rootTile(Output *output) const;
+
+    /**
+     * Returns the root tile for the given @a output and @a desktop.
+     */
+    Tile *rootTile(Output *output, VirtualDesktop *desktop) const;
 
 public:
     QPoint cascadeOffset(const QRectF &area) const;
