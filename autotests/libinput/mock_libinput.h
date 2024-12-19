@@ -76,6 +76,7 @@ struct libinput_device
     Qt::MouseButtons supportedButtons;
     QList<quint32> keys;
     bool enabled = true;
+    bool disableEventsOnExternalMouse = false;
     int setEnableModeReturnValue = 0;
     int setTapToClickReturnValue = 0;
     int setTapAndDragReturnValue = 0;

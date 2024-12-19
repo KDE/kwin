@@ -156,6 +156,7 @@ static bool checkAlphaNumericKeyboard(libinput_device *device)
 
 enum class ConfigKey {
     Enabled,
+    DisableEventsOnExternalMouse,
     LeftHanded,
     DisableWhileTyping,
     PointerAcceleration,
@@ -268,6 +269,7 @@ struct ConfigData<CalibrationMatrix> : public ConfigDataBase
 
 static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::Enabled, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("Enabled"), &Device::setEnabled, &Device::isEnabledByDefault)},
+    {ConfigKey::DisableEventsOnExternalMouse, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("DisableEventsOnExternalMouse"), &Device::setDisableEventsOnExternalMouse, &Device::disableEventsOnExternalMouseEnabledByDefault)},
     {ConfigKey::LeftHanded, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
     {ConfigKey::DisableWhileTyping, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
     {ConfigKey::PointerAcceleration, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
@@ -405,7 +407,9 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportedPointerAccelerationProfiles(libinput_device_config_accel_get_profiles(m_device))
     , m_defaultPointerAccelerationProfile(libinput_device_config_accel_get_default_profile(m_device))
     , m_pointerAccelerationProfile(libinput_device_config_accel_get_profile(m_device))
-    , m_enabled(m_supportsDisableEvents ? libinput_device_config_send_events_get_mode(m_device) == LIBINPUT_CONFIG_SEND_EVENTS_ENABLED : true)
+    , m_enabled(m_supportsDisableEvents ? (libinput_device_config_send_events_get_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED) == 0 : true)
+    , m_disableEventsOnExternalMouseEnabledByDefault(m_supportsDisableEventsOnExternalMouse && (libinput_device_config_send_events_get_default_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE))
+    , m_disableEventsOnExternalMouse(m_supportsDisableEventsOnExternalMouse && (libinput_device_config_send_events_get_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE))
     , m_config()
     , m_defaultCalibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_default_matrix))
     , m_calibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_matrix))
@@ -698,7 +702,6 @@ CONFIG(setNaturalScroll, !m_supportsNaturalScroll, scroll_set_natural_scroll_ena
         }                                                                                                                                                                \
     }
 
-CONFIG(setEnabled, !m_supportsDisableEvents, send_events_set_mode, SEND_EVENTS, enabled, Enabled)
 CONFIG(setDisableWhileTyping, !m_supportsDisableWhileTyping, dwt_set_enabled, DWT, disableWhileTyping, DisableWhileTyping)
 CONFIG(setTapToClick, m_tapFingerCount == 0, tap_set_enabled, TAP, tapToClick, TapToClick)
 CONFIG(setTapAndDrag, false, tap_set_drag_enabled, DRAG, tapAndDrag, TapAndDrag)
@@ -706,6 +709,39 @@ CONFIG(setTapDragLock, false, tap_set_drag_lock_enabled, DRAG_LOCK, tapDragLock,
 CONFIG(setMiddleEmulation, m_supportsMiddleEmulation == false, middle_emulation_set_enabled, MIDDLE_EMULATION, middleEmulation, MiddleButtonEmulation)
 
 #undef CONFIG
+
+void Device::setEnabled(bool set)
+{
+    if (!m_supportsDisableEvents) {
+        return;
+    }
+    const auto enabledMode = (m_supportsDisableEventsOnExternalMouse && m_disableEventsOnExternalMouse) ? LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE : LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
+    const auto mode = set ? enabledMode : LIBINPUT_CONFIG_SEND_EVENTS_DISABLED;
+
+    if (libinput_device_config_send_events_set_mode(m_device, mode) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_enabled != set) {
+            m_enabled = set;
+            writeEntry(ConfigKey::Enabled, m_enabled);
+            Q_EMIT enabledChanged();
+        }
+    }
+}
+
+void Device::setDisableEventsOnExternalMouse(bool set)
+{
+    if (!m_supportsDisableEventsOnExternalMouse) {
+        return;
+    }
+    const auto enabledMode = set ? LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE : LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
+
+    if (!m_enabled || libinput_device_config_send_events_set_mode(m_device, enabledMode) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_disableEventsOnExternalMouse != set) {
+            m_disableEventsOnExternalMouse = set;
+            writeEntry(ConfigKey::DisableEventsOnExternalMouse, m_disableEventsOnExternalMouse);
+            Q_EMIT disableEventsOnExternalMouseChanged();
+        }
+    }
+}
 
 void Device::setScrollFactor(qreal factor)
 {
