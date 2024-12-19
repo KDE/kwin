@@ -411,6 +411,8 @@ void WorkspaceWrapper::sendClientToScreen(Window *client, Output *output)
 
 KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) const
 {
+    qCWarning(KWIN_CORE) << "workspace.tilingForScreen() is deprecated: use workspace.rootTile() instead";
+
     Output *output = kwinApp()->outputBackend()->findOutput(screenName);
     if (output) {
         auto tileManager = workspace()->tileManager(output);
@@ -422,9 +424,16 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
 
 KWin::TileManager *WorkspaceWrapper::tilingForScreen(Output *output) const
 {
+    qCWarning(KWIN_CORE) << "workspace.tilingForScreen() is deprecated: use workspace.rootTile() instead";
+
     auto tileManager = workspace()->tileManager(output);
     QJSEngine::setObjectOwnership(tileManager, QJSEngine::CppOwnership);
     return tileManager;
+}
+
+Tile *WorkspaceWrapper::rootTile(Output *output, VirtualDesktop *desktop) const
+{
+    return workspace()->rootTile(output, desktop);
 }
 
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)

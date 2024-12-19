@@ -20,6 +20,7 @@
 namespace KWin
 {
 // forward declarations
+class Tile;
 class TileManager;
 class Window;
 class Output;
@@ -216,8 +217,20 @@ public:
 
     Q_INVOKABLE KWin::Output *screenAt(const QPointF &pos) const;
 
+    /**
+     * @deprecated since 6.3, use rootTile()
+     */
     Q_INVOKABLE KWin::TileManager *tilingForScreen(const QString &screenName) const;
+
+    /**
+     * @deprecated since 6.3, use rootTile()
+     */
     Q_INVOKABLE KWin::TileManager *tilingForScreen(KWin::Output *output) const;
+
+    /**
+     * Returns the root tile for the given @a output and @a desktop.
+     */
+    Q_INVOKABLE KWin::Tile *rootTile(KWin::Output *output, KWin::VirtualDesktop *desktop) const;
 
     /**
      * Returns the geometry a Client can use with the specified option.
