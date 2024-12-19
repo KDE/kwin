@@ -3925,8 +3925,8 @@ QRectF Window::ensureSpecialStateGeometry(const QRectF &geometry)
             ret.setHeight(maximizeArea.height());
         }
         return keepInArea(ret, maximizeArea, false);
-    } else if (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        return quickTileGeometry(requestedQuickTileMode(), geometry.center());
+    } else if (requestedTile()) {
+        return requestedTile()->windowGeometry();
     } else {
         return geometry;
     }
