@@ -88,6 +88,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
 
     Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
+    Q_PROPERTY(bool disableEventsOnExternalMouseEnabledByDefault READ disableEventsOnExternalMouseEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool disableEventsOnExternalMouse READ isDisableEventsOnExternalMouse WRITE setDisableEventsOnExternalMouse NOTIFY disableEventsOnExternalMouseChanged)
 
     Q_PROPERTY(bool supportsDisableWhileTyping READ supportsDisableWhileTyping CONSTANT)
     Q_PROPERTY(bool disableWhileTypingEnabledByDefault READ disableWhileTypingEnabledByDefault CONSTANT)
@@ -613,6 +615,15 @@ public:
     {
         return defaultValue("Enabled", true);
     }
+    bool disableEventsOnExternalMouseEnabledByDefault() const
+    {
+        return defaultValue("DisableEventsOnExternalMouse", m_disableEventsOnExternalMouseEnabledByDefault);
+    }
+    bool isDisableEventsOnExternalMouse() const
+    {
+        return m_disableEventsOnExternalMouse;
+    }
+    void setDisableEventsOnExternalMouse(bool set);
 
     libinput_device *device() const
     {
@@ -725,6 +736,7 @@ Q_SIGNALS:
     void pointerAccelerationChanged();
     void pointerAccelerationProfileChanged();
     void enabledChanged();
+    void disableEventsOnExternalMouseChanged();
     void tapToClickChanged();
     void tapAndDragChanged();
     void tapDragLockChanged();
@@ -815,6 +827,8 @@ private:
     enum libinput_config_accel_profile m_defaultPointerAccelerationProfile;
     enum libinput_config_accel_profile m_pointerAccelerationProfile;
     bool m_enabled;
+    bool m_disableEventsOnExternalMouseEnabledByDefault;
+    bool m_disableEventsOnExternalMouse;
 
     KConfigGroup m_config;
     KConfigGroup m_defaultConfig;
