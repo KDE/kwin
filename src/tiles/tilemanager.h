@@ -53,6 +53,7 @@ public:
     RootTile *rootTile(VirtualDesktop *desktop) const;
     RootTile *rootTile() const;
     QuickRootTile *quickRootTile(VirtualDesktop *desktop) const;
+    QuickRootTile *quickRootTile() const;
     KWin::Tile *quickTile(QuickTileMode mode) const;
 
     TileModel *model() const;
@@ -75,8 +76,6 @@ private:
 
     Output *m_output = nullptr;
     std::unique_ptr<QTimer> m_saveTimer;
-    RootTile *m_rootTile = nullptr;
-    QuickRootTile *m_quickRootTile = nullptr;
 
     QHash<VirtualDesktop *, RootTile *> m_rootTiles;
     QHash<VirtualDesktop *, QuickRootTile *> m_quickRootTiles;
