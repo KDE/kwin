@@ -197,23 +197,27 @@ QRectF Tile::maximizedWindowGeometry() const
     return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop));
 }
 
-Qt::Edges Tile::anchors() const
+Qt::Edges Tile::adjacentEdges() const
 {
-    Qt::Edges anchors = Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge;
+    if (m_padding != 0.0) {
+        return Qt::Edges();
+    }
+
+    Qt::Edges edges = Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge;
 
     if (!qFuzzyCompare(m_relativeGeometry.left(), 0)) {
-        anchors &= ~Qt::LeftEdge;
+        edges &= ~Qt::LeftEdge;
     }
     if (!qFuzzyCompare(m_relativeGeometry.top(), 0)) {
-        anchors &= ~Qt::TopEdge;
+        edges &= ~Qt::TopEdge;
     }
     if (!qFuzzyCompare(m_relativeGeometry.right(), 1)) {
-        anchors &= ~Qt::RightEdge;
+        edges &= ~Qt::RightEdge;
     }
     if (!qFuzzyCompare(m_relativeGeometry.bottom(), 1)) {
-        anchors &= ~Qt::BottomEdge;
+        edges &= ~Qt::BottomEdge;
     }
-    return anchors;
+    return edges;
 }
 
 bool Tile::isLayout() const

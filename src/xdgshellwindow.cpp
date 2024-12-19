@@ -826,27 +826,27 @@ void XdgToplevelWindow::doSetMaximized()
 
 void XdgToplevelWindow::doSetQuickTileMode()
 {
-    const Qt::Edges anchors = requestedTile() ? requestedTile()->anchors() : Qt::Edges();
+    const Qt::Edges edges = requestedTile() ? requestedTile()->adjacentEdges() : Qt::Edges();
 
-    if (anchors & Qt::LeftEdge) {
+    if (edges & Qt::LeftEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledLeft;
     } else {
         m_nextStates &= ~XdgToplevelInterface::State::TiledLeft;
     }
 
-    if (anchors & Qt::RightEdge) {
+    if (edges & Qt::RightEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledRight;
     } else {
         m_nextStates &= ~XdgToplevelInterface::State::TiledRight;
     }
 
-    if (anchors & Qt::TopEdge) {
+    if (edges & Qt::TopEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledTop;
     } else {
         m_nextStates &= ~XdgToplevelInterface::State::TiledTop;
     }
 
-    if (anchors & Qt::BottomEdge) {
+    if (edges & Qt::BottomEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledBottom;
     } else {
         m_nextStates &= ~XdgToplevelInterface::State::TiledBottom;
