@@ -3732,11 +3732,6 @@ void Window::setQuickTileModeAtCurrentPosition(QuickTileMode mode)
 
 void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
 {
-    // Only allow quick tile on a regular window.
-    if (!isResizable() || isAppletPopup()) {
-        return;
-    }
-
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
 
     // sanitize the mode, ie. simplify "invalid" combinations
