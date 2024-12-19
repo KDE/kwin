@@ -1529,6 +1529,8 @@ void OutputChangesTest::testSettingRestoration_data()
     QTest::addColumn<std::optional<QString>>("connectorName2");
     QTest::addColumn<QByteArray>("edid1");
     QTest::addColumn<QByteArray>("edid2");
+    QTest::addColumn<std::optional<QByteArray>>("mstPath1");
+    QTest::addColumn<std::optional<QByteArray>>("mstPath2");
 
     const auto readEdid = [](const QString &path) {
         QFile file(path);
@@ -1539,19 +1541,51 @@ void OutputChangesTest::testSettingRestoration_data()
     QTest::addRow("Same EDID ID, different hash") << std::optional<QString>()
                                                   << std::optional<QString>()
                                                   << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                  << readEdid(QFINDTESTDATA("data/same serial number/edid2.bin"));
+                                                  << readEdid(QFINDTESTDATA("data/same serial number/edid2.bin"))
+                                                  << std::optional<QByteArray>()
+                                                  << std::optional<QByteArray>();
     QTest::addRow("Same EDID") << std::make_optional(QStringLiteral("connector1"))
                                << std::make_optional(QStringLiteral("connector2"))
                                << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                               << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"));
+                               << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                               << std::optional<QByteArray>()
+                               << std::optional<QByteArray>();
     QTest::addRow("No EDID") << std::make_optional(QStringLiteral("connector1"))
                              << std::make_optional(QStringLiteral("connector2"))
                              << QByteArray{}
-                             << QByteArray{};
+                             << QByteArray{}
+                             << std::optional<QByteArray>()
+                             << std::optional<QByteArray>();
     QTest::addRow("One has EDID, the other doesn't") << std::make_optional(QStringLiteral("connector1"))
                                                      << std::make_optional(QStringLiteral("connector2"))
                                                      << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                     << QByteArray{};
+                                                     << QByteArray{}
+                                                     << std::optional<QByteArray>()
+                                                     << std::optional<QByteArray>();
+    QTest::addRow("Same EDID, no connector names, different MST paths") << std::optional<QString>()
+                                                                        << std::optional<QString>()
+                                                                        << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                                                                        << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                                                                        << std::make_optional(QByteArrayLiteral("MST-1-1"))
+                                                                        << std::make_optional(QByteArrayLiteral("MST-1-2"));
+    QTest::addRow("Same EDID ID, different hash, no connector names, different MST paths") << std::optional<QString>()
+                                                                                           << std::optional<QString>()
+                                                                                           << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                                                                                           << readEdid(QFINDTESTDATA("data/same serial number/edid2.bin"))
+                                                                                           << std::make_optional(QByteArrayLiteral("MST-1-1"))
+                                                                                           << std::make_optional(QByteArrayLiteral("MST-1-2"));
+    QTest::addRow("No EDID, no connector names, different MST paths") << std::optional<QString>()
+                                                                      << std::optional<QString>()
+                                                                      << QByteArray{}
+                                                                      << QByteArray{}
+                                                                      << std::make_optional(QByteArrayLiteral("MST-1-1"))
+                                                                      << std::make_optional(QByteArrayLiteral("MST-1-2"));
+    QTest::addRow("One EDID, the other not, no connector names, different MST paths") << std::optional<QString>()
+                                                                                      << std::optional<QString>()
+                                                                                      << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                                                                                      << QByteArray{}
+                                                                                      << std::make_optional(QByteArrayLiteral("MST-1-1"))
+                                                                                      << std::make_optional(QByteArrayLiteral("MST-1-2"));
 }
 
 void OutputChangesTest::testSettingRestoration()
@@ -1566,6 +1600,8 @@ void OutputChangesTest::testSettingRestoration()
     QFETCH(std::optional<QString>, connectorName2);
     QFETCH(QByteArray, edid1);
     QFETCH(QByteArray, edid2);
+    QFETCH(std::optional<QByteArray>, mstPath1);
+    QFETCH(std::optional<QByteArray>, mstPath2);
 
     Test::setOutputConfig({
         Test::OutputInfo{
@@ -1575,6 +1611,7 @@ void OutputChangesTest::testSettingRestoration()
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
             .edid = edid1,
             .connectorName = connectorName1,
+            .mstPath = mstPath1,
         },
         Test::OutputInfo{
             .geometry = QRect(1280, 0, 1280, 1024),
@@ -1583,6 +1620,7 @@ void OutputChangesTest::testSettingRestoration()
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
             .edid = edid2,
             .connectorName = connectorName2,
+            .mstPath = mstPath2,
         },
     });
 
@@ -1620,6 +1658,7 @@ void OutputChangesTest::testSettingRestoration()
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
             .edid = edid2,
             .connectorName = connectorName2,
+            .mstPath = mstPath2,
         },
     });
     outputs = kwinApp()->outputBackend()->outputs();
@@ -1638,6 +1677,7 @@ void OutputChangesTest::testSettingRestoration()
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
             .edid = edid2,
             .connectorName = connectorName2,
+            .mstPath = mstPath2,
         },
         Test::OutputInfo{
             .geometry = QRect(1280, 0, 1280, 1024),
@@ -1646,6 +1686,7 @@ void OutputChangesTest::testSettingRestoration()
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
             .edid = edid1,
             .connectorName = connectorName1,
+            .mstPath = mstPath1,
         },
     });
     outputs = kwinApp()->outputBackend()->outputs();

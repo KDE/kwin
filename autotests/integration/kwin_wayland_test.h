@@ -995,6 +995,7 @@ struct OutputInfo
     OutputTransform panelOrientation = OutputTransform::Kind::Normal;
     QByteArray edid;
     std::optional<QString> connectorName;
+    std::optional<QByteArray> mstPath;
 };
 void setOutputConfig(const QList<QRect> &geometries);
 void setOutputConfig(const QList<OutputInfo> &infos);

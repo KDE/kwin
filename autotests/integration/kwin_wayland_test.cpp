@@ -297,6 +297,7 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .panelOrientation = info.panelOrientation,
             .edid = info.edid,
             .connectorName = info.connectorName,
+            .mstPath = info.mstPath,
         };
     });
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
