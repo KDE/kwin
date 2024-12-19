@@ -456,6 +456,36 @@ TileModel *RootTile::model() const
     return m_tileModel.get();
 }
 
+Tile *RootTile::pick(const QPointF &point) const
+{
+    const auto tiles = descendants();
+    qreal minimumDistance = std::numeric_limits<qreal>::max();
+    Tile *ret = nullptr;
+
+    for (auto *t : tiles) {
+        if (!t->isLayout()) {
+            const auto r = t->absoluteGeometry();
+            // It's possible for tiles to overlap, so take the one which center is nearer to mouse pos
+            qreal distance = (r.center() - point).manhattanLength();
+            if (!exclusiveContains(r, point)) {
+                // This gives a strong preference for tiles that contain the point
+                // still base on distance though as floating tiles can overlap
+                distance += m_tiling->output()->geometryF().width();
+            }
+            if (distance < minimumDistance) {
+                minimumDistance = distance;
+                ret = t;
+            }
+        }
+    }
+    return ret;
+}
+
+Tile *RootTile::pick(qreal x, qreal y) const
+{
+    return pick(QPointF(x, y));
+}
+
 } // namespace KWin
 
 #include "moc_customtile.cpp"

@@ -116,27 +116,7 @@ Output *TileManager::output() const
 
 Tile *TileManager::bestTileForPosition(const QPointF &pos)
 {
-    const auto tiles = m_rootTile->descendants();
-    qreal minimumDistance = std::numeric_limits<qreal>::max();
-    Tile *ret = nullptr;
-
-    for (auto *t : tiles) {
-        if (!t->isLayout()) {
-            const auto r = t->absoluteGeometry();
-            // It's possible for tiles to overlap, so take the one which center is nearer to mouse pos
-            qreal distance = (r.center() - pos).manhattanLength();
-            if (!exclusiveContains(r, pos)) {
-                // This gives a strong preference for tiles that contain the point
-                // still base on distance though as floating tiles can overlap
-                distance += m_output->geometryF().width();
-            }
-            if (distance < minimumDistance) {
-                minimumDistance = distance;
-                ret = t;
-            }
-        }
-    }
-    return ret;
+    return m_rootTile->pick(pos);
 }
 
 Tile *TileManager::bestTileForPosition(qreal x, qreal y)
