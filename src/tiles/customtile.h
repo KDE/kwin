@@ -70,6 +70,9 @@ public:
 
     TileModel *model() const;
 
+    Q_INVOKABLE KWin::Tile *pick(const QPointF &point) const;
+    Q_INVOKABLE KWin::Tile *pick(qreal x, qreal y) const;
+
 private:
     std::unique_ptr<TileModel> m_tileModel = nullptr;
 };
