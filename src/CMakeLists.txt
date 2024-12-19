@@ -247,6 +247,7 @@ target_link_libraries(kwin
         KF6::Crash
         KF6::GlobalAccel
         KF6::I18n
+        KF6::I18nQml
         KF6::Package
         KF6::Service
 

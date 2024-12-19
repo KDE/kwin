@@ -43,6 +43,7 @@ include(ECMSetupQtPluginMacroNames)
 include(ECMSetupVersion)
 include(ECMQmlModule)
 include(ECMGenerateQmlTypes)
+include(ECMDeprecationSettings)
 
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
@@ -477,7 +478,6 @@ if (COMPILER_UNUSED_PARAMETER_SUPPORTED)
 endif()
 
 add_definitions(
-    -DQT_DISABLE_DEPRECATED_BEFORE=0x050000
     -DQT_NO_KEYWORDS
     -DQT_USE_QSTRINGBUILDER
     -DQT_NO_URL_CAST_FROM_STRING
@@ -488,6 +488,10 @@ add_definitions(
     -DMESA_EGL_NO_X11_HEADERS
     -DEGL_NO_X11
     -DEGL_NO_PLATFORM_SPECIFIC_TYPES
+)
+
+ecm_set_disabled_deprecation_versions(QT 5.15
+    KF 6.9.0
 )
 
 ecm_setup_qtplugin_macro_names(
