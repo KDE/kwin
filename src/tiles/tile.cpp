@@ -48,12 +48,18 @@ Tile::~Tile()
     if (m_tiling->tearingDown()) {
         return;
     }
+
+    // TODO: Look for alternative designs to evacuate windows from removed tiles.
     auto windows = m_windows;
     for (auto *w : windows) {
-        Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
-        removeWindow(w);
-        if (tile) {
-            tile->addWindow(w);
+        if (m_quickTileMode != QuickTileFlag::Custom) {
+            removeWindow(w);
+        } else {
+            Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
+            removeWindow(w);
+            if (tile) {
+                tile->addWindow(w);
+            }
         }
     }
 }
