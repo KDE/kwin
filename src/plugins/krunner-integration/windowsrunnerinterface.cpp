@@ -197,8 +197,12 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
 {
     // Split id to get actionId and realId. We don't use actionId because our actions list is not constant
     const QStringList parts = id.split(QLatin1Char('_'));
-    auto action = WindowsRunnerAction(parts[0].toInt());
-    auto objectId = parts[1];
+    if (parts.size() != 2) {
+        return;
+    }
+
+    const auto action = WindowsRunnerAction(parts[0].toInt());
+    const auto objectId = parts[1];
 
     if (action == ActivateDesktopAction) {
         QByteArray desktopId = objectId.toLocal8Bit();
