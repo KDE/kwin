@@ -75,8 +75,6 @@ private:
 
     Output *m_output = nullptr;
     std::unique_ptr<QTimer> m_saveTimer;
-    RootTile *m_rootTile = nullptr;
-    QuickRootTile *m_quickRootTile = nullptr;
 
     QHash<VirtualDesktop *, RootTile *> m_rootTiles;
     QHash<VirtualDesktop *, QuickRootTile *> m_quickRootTiles;

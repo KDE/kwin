@@ -79,9 +79,6 @@ TileManager::TileManager(Output *parent)
         addDesktop(desk);
     }
 
-    m_rootTile = m_rootTiles[VirtualDesktopManager::self()->currentDesktop()];
-    m_quickRootTile = m_quickRootTiles[VirtualDesktopManager::self()->currentDesktop()];
-
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopAdded, this, addDesktop);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopRemoved,
             this, [this](VirtualDesktop *desk) {
@@ -92,10 +89,8 @@ TileManager::TileManager(Output *parent)
     });
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
             this, [this](VirtualDesktop *oldDesk, VirtualDesktop *newDesk) {
-        m_rootTile = m_rootTiles[newDesk];
-        m_quickRootTile = m_quickRootTiles[newDesk];
-        Q_EMIT rootTileChanged(m_rootTile);
-        Q_EMIT modelChanged(m_rootTile->model());
+        Q_EMIT rootTileChanged(rootTile());
+        Q_EMIT modelChanged(model());
     });
 }
 
@@ -116,7 +111,7 @@ Output *TileManager::output() const
 
 Tile *TileManager::bestTileForPosition(const QPointF &pos)
 {
-    return m_rootTile->pick(pos);
+    return rootTile()->pick(pos);
 }
 
 Tile *TileManager::bestTileForPosition(qreal x, qreal y)
@@ -126,12 +121,23 @@ Tile *TileManager::bestTileForPosition(qreal x, qreal y)
 
 CustomTile *TileManager::rootTile(VirtualDesktop *desktop) const
 {
-    return m_rootTiles.value(desktop);
+    if (desktop) {
+        return m_rootTiles.value(desktop);
+    }
+    return m_rootTiles.value(VirtualDesktopManager::self()->currentDesktop());
 }
 
 CustomTile *TileManager::rootTile() const
 {
-    return m_rootTile;
+    return m_rootTiles.value(VirtualDesktopManager::self()->currentDesktop());
+}
+
+QuickRootTile *TileManager::quickRootTile(VirtualDesktop *desktop) const
+{
+    if (desktop) {
+        return m_quickRootTiles.value(desktop);
+    }
+    return m_quickRootTiles.value(VirtualDesktopManager::self()->currentDesktop());
 }
 
 QuickRootTile *TileManager::quickRootTile(VirtualDesktop *desktop) const
@@ -141,12 +147,12 @@ QuickRootTile *TileManager::quickRootTile(VirtualDesktop *desktop) const
 
 Tile *TileManager::quickTile(QuickTileMode mode) const
 {
-    return m_quickRootTile->tileForMode(mode);
+    return quickRootTile(nullptr)->tileForMode(mode);
 }
 
 TileModel *TileManager::model() const
 {
-    return m_rootTile->model();
+    return static_cast<RootTile *>(rootTile())->model();
 }
 
 Tile *TileManager::tileForWindow(Window *window, VirtualDesktop *desktop)
@@ -377,7 +383,7 @@ QJsonObject TileManager::tileToJSon(CustomTile *tile)
 void TileManager::saveSettings()
 {
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
-    cg.writeEntry("padding", m_rootTile->padding());
+    cg.writeEntry("padding", rootTile()->padding());
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
 
     for (auto it = m_rootTiles.constBegin(); it != m_rootTiles.constEnd(); it++) {
