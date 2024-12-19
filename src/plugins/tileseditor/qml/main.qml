@@ -39,6 +39,8 @@ FocusScope {
 
     property bool active: false
 
+    readonly property QtObject rootTile: KWinComponents.Workspace.rootTile(root.targetScreen, KWinComponents.Workspace.currentDesktop)
+
     Component.onCompleted: {
         root.active = true;
     }
@@ -101,7 +103,7 @@ FocusScope {
     }
 
     TileDelegate {
-        tile: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile
+        tile: rootTile
         visible: tilesRepeater.count === 0 || tile.layoutDirection === KWinComponents.Tile.Floating
     }
 
@@ -119,7 +121,7 @@ FocusScope {
         Repeater {
             id: tilesRepeater
             model: KitemModels.KDescendantsProxyModel {
-                model: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).model
+                model: rootTile.model
             }
             delegate: TileDelegate {}
         }
@@ -153,8 +155,8 @@ FocusScope {
             PlasmaComponents.SpinBox {
                 from: 0
                 to: Kirigami.Units.gridUnit * 2
-                value: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile.padding
-                onValueModified: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile.padding = value
+                value: rootTile.padding
+                onValueModified: rootTile.padding = value
             }
             PlasmaComponents.Button {
                 icon.name: "document-open"
@@ -228,7 +230,6 @@ FocusScope {
                     image: "2columns"
                     KeyNavigation.right: apply3Columns
                     onClicked: {
-                        const rootTile = KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile;
                         while (rootTile.tiles.length > 0) {
                             rootTile.tiles[0].remove();
                         }
@@ -242,7 +243,6 @@ FocusScope {
                     KeyNavigation.right: apply2ColumnsVerticalSplit
                     KeyNavigation.left: apply2Columns
                     onClicked: {
-                        const rootTile = KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile;
                         while (rootTile.tiles.length > 0) {
                             rootTile.tiles[0].remove();
                         }
@@ -256,7 +256,6 @@ FocusScope {
                     image: "2columnsVerticalSplit"
                     KeyNavigation.left: apply3Columns
                     onClicked: {
-                        const rootTile = KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile;
                         while (rootTile.tiles.length > 0) {
                             rootTile.tiles[0].remove();
                         }
