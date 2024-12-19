@@ -342,7 +342,7 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 bool Tile::addWindow(Window *window)
 {
-    if (!window->isClient()) {
+    if (!window->isResizable() || window->isAppletPopup()) {
         return false;
     }
 

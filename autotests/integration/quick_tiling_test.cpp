@@ -100,6 +100,8 @@ private Q_SLOTS:
     void testMultiScreenX11();
     void testQuickTileAndMaximize();
     void testQuickTileAndMaximizeX11();
+    void testQuickTileAndFullScreen();
+    void testQuickTileAndFullScreenX11();
     void testPerDesktop();
     void testPerDesktopX11();
     void testMoveBetweenQuickTileAndCustomTileSameDesktop();
@@ -1244,6 +1246,160 @@ void QuickTilingTest::testQuickTileAndMaximizeX11()
     maximize();
     quickTile();
     maximize();
+}
+
+void QuickTilingTest::testQuickTileAndFullScreen()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(frameGeometryChangedSpy.wait());
+    };
+
+    // tile the window in the left half of the screen on the first virtual desktop
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
+    QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // make the window fullscreen
+    window->setFullScreen(true);
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+
+    // leave fullscreen mode
+    window->setFullScreen(false);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    ackConfigure();
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // untile the window
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    ackConfigure();
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+
+    // make the window fullscreen
+    window->setFullScreen(true);
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    ackConfigure();
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+
+    // attempt to tile the window
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+}
+
+void QuickTilingTest::testQuickTileAndFullScreenX11()
+{
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+
+    const QRectF originalGeometry = window->frameGeometry();
+
+    // tile the window in the left half of the screen on the first virtual desktop
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
+    QCOMPARE(window->geometryRestore(), originalGeometry);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // make the window fullscreen
+    window->setFullScreen(true);
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+
+    // leave fullscreen mode
+    window->setFullScreen(false);
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+
+    // untile the window
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    // make the window fullscreen
+    window->setFullScreen(true);
+    QCOMPARE(window->fullscreenGeometryRestore(), originalGeometry);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+
+    // attempt to tile the window
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
 }
 
 void QuickTilingTest::testPerDesktop()
