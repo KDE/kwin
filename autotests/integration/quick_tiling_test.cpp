@@ -108,6 +108,8 @@ private Q_SLOTS:
     void testMoveBetweenQuickTileAndCustomTileSameDesktopX11();
     void testMoveBetweenQuickTileAndCustomTileCrossDesktops();
     void testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11();
+    void testEvacuateFromRemovedDesktop();
+    void testEvacuateFromRemovedDesktopX11();
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
@@ -2055,6 +2057,73 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
             }
         }
     }
+}
+
+void QuickTilingTest::testEvacuateFromRemovedDesktop()
+{
+    // This test verifies that a window is properly evacuated from a removed virtual desktop.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(frameGeometryChangedSpy.wait());
+    };
+
+    const QRectF originalGeometry = window->frameGeometry();
+
+    // tile the window in the right half of the screen
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
+    QCOMPARE(window->geometryRestore(), originalGeometry);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+
+    // remove the current virtual desktop
+    VirtualDesktopManager::self()->removeVirtualDesktop(VirtualDesktopManager::self()->currentDesktop());
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None); // technically, it should be "Right" but the tile object is gone
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    ackConfigure();
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void QuickTilingTest::testEvacuateFromRemovedDesktopX11()
+{
+    // This test verifies that an X11 window is properly evacuated from a removed virtual desktop.
+
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+
+    const QRectF originalGeometry = window->frameGeometry();
+
+    // tile the window in the right half of the screen
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
+    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+
+    // remove the current virtual desktop
+    VirtualDesktopManager::self()->removeVirtualDesktop(VirtualDesktopManager::self()->currentDesktop());
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
 }
 
 void QuickTilingTest::testScript_data()
