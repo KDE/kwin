@@ -55,7 +55,10 @@ Tile::~Tile()
         if (m_quickTileMode != QuickTileFlag::Custom) {
             removeWindow(w);
         } else {
-            Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
+            Tile *tile = nullptr;
+            if (RootTile *root = m_tiling->rootTile(m_desktop)) {
+                tile = root->pick(w->moveResizeGeometry().center());
+            }
             removeWindow(w);
             if (tile) {
                 tile->addWindow(w);

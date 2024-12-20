@@ -82,10 +82,8 @@ TileManager::TileManager(Output *parent)
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopAdded, this, addDesktop);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopRemoved,
             this, [this](VirtualDesktop *desk) {
-        delete m_rootTiles[desk];
-        delete m_quickRootTiles[desk];
-        m_rootTiles.remove(desk);
-        m_quickRootTiles.remove(desk);
+        delete m_rootTiles.take(desk);
+        delete m_quickRootTiles.take(desk);
     });
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
             this, [this](VirtualDesktop *oldDesk, VirtualDesktop *newDesk) {

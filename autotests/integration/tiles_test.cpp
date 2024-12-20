@@ -853,7 +853,7 @@ void TilesTest::evacuateFromRemovedDesktop()
     // Set current Desktop 2
     // Add the window to a tile in desktop 2 and desktop 3
     {
-        VirtualDesktopManager::self()->setCurrent(2);
+        VirtualDesktopManager::self()->setCurrent(desktops[1]);
         rightTileD2->addWindow(window);
         leftTileD3->addWindow(window);
         QCOMPARE(window->requestedTile(), rightTileD2);
@@ -864,7 +864,7 @@ void TilesTest::evacuateFromRemovedDesktop()
 
     // Set current Desktop 3
     {
-        VirtualDesktopManager::self()->setCurrent(3);
+        VirtualDesktopManager::self()->setCurrent(desktops[2]);
         // Tile becomes leftTileD3
         QCOMPARE(window->requestedTile(), leftTileD3);
         ackConfigure();
@@ -874,7 +874,7 @@ void TilesTest::evacuateFromRemovedDesktop()
 
     // Remove the current desktop 3, the window will be tiled again to rightTileD2
     {
-        VirtualDesktopManager::self()->setCount(2);
+        VirtualDesktopManager::self()->removeVirtualDesktop(desktops[2]);
         QCOMPARE(window->requestedTile(), rightTileD2);
         ackConfigure();
         QCOMPARE(window->tile(), rightTileD2);
@@ -883,7 +883,7 @@ void TilesTest::evacuateFromRemovedDesktop()
 
     // Remove the current desktop 2, the window is now untiles
     {
-        VirtualDesktopManager::self()->setCount(1);
+        VirtualDesktopManager::self()->removeVirtualDesktop(desktops[1]);
         QCOMPARE(window->requestedTile(), nullptr);
         ackConfigure();
         QCOMPARE(window->tile(), nullptr);
