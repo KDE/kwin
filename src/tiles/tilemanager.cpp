@@ -107,14 +107,9 @@ Output *TileManager::output() const
     return m_output;
 }
 
-Tile *TileManager::bestTileForPosition(const QPointF &pos)
-{
-    return rootTile()->pick(pos);
-}
-
 Tile *TileManager::bestTileForPosition(qreal x, qreal y)
 {
-    return bestTileForPosition({x, y});
+    return rootTile()->pick(QPointF(x, y));
 }
 
 RootTile *TileManager::rootTile(VirtualDesktop *desktop) const
