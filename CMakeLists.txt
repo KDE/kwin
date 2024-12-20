@@ -168,8 +168,8 @@ set_package_properties(Breeze PROPERTIES
     TYPE OPTIONAL
     PURPOSE "For setting the default window decoration plugin"
 )
-if (${Breeze_FOUND})
-    if (${BREEZE_WITH_KDECORATION})
+if (Breeze_FOUND)
+    if (BREEZE_WITH_KDECORATION)
         set(HAVE_BREEZE_DECO true)
     else()
         set(HAVE_BREEZE_DECO FALSE)
