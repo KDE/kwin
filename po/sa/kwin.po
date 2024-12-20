@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-19 00:41+0000\n"
-"PO-Revision-Date: 2024-12-14 01:12+0530\n"
+"POT-Creation-Date: 2024-12-20 00:42+0000\n"
+"PO-Revision-Date: 2024-12-19 22:24+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
@@ -107,75 +107,75 @@ msgstr "GLX/OpenGL उपलब्धं नास्ति ।"
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" उद्घाटयितुं असफलम् ।"
 
 #: core/iccprofile.cpp:247
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" नास्ति"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" प्रदर्शनानां कृते उपयोगी नास्ति"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" इत्यत्र असमर्थितं संयोजनस्थानं अस्ति, केवलं XYZ समर्थितम् अस्ति"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, निवेश/निर्गमवर्णस्थानं RGB नास्ति"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, तस्य श्वेतबिन्दुः नास्ति"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, तस्य श्वेतबिन्दुः अमान्यः अस्ति"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, वर्णात्मक अनुकूलनमात्रिकायाः ​​विश्लेषणं विफलम्"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, वर्णात्मक अनुकूलनमात्रिकायाः ​​उल्टावस्था विफलम्"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, तस्य प्राथमिकं नास्ति"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, तस्य प्राथमिकगणना कर्तुं न शक्तवान्"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC प्रोफाइल \"%1\" भग्नम् अस्ति, तस्य प्राथमिकं अमान्यम् अस्ति"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "केवलं BToD टैग् युक्तं ICC प्रोफाइल \"%1\" समर्थितं नास्ति"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "रङ्गप्रोफाइलं TRC टैग्स् गम्यते"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2013,47 +2013,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "डेस्कटॉप् इति"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "डेस्कटॉप %1 प्रति स्विच् कुर्वन्तु"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
 msgid "Close running window on %1"
 msgstr "%1 इत्यत्र चालितं विण्डो पिधाय"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "%1 इत्यत्र चालितं विण्डो (Un)minimize कुर्वन्तु"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "%1 इत्यत्र चालितं विण्डो अधिकतमं/पुनर्स्थापनं कुर्वन्तु"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "%1 इत्यत्र विण्डो चालयितुं पूर्णपर्दे टॉग्ल् कुर्वन्तु"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "%1 इत्यत्र चालितं विण्डो (Un)shade कुर्वन्तु"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "%1 इत्यत्र विण्डो चालयितुं उपरि keep toggle कुर्वन्तु"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "%1 इत्यत्र चालयन् विण्डो इत्यस्य अधः स्थापयन्तु इति टॉग्ल् कुर्वन्तु"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "%1 इत्यत्र चालितं विण्डो सक्रियं कुर्वन्तु"
@@ -4358,27 +4358,27 @@ msgstr "डेस्कटॉप %1 प्रति स्विच् कुर
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "प्रासंगिकनिर्गमानाम् एकं उत्पादनं अधुना उपलब्धं नास्ति"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "विन्यासपरिवर्तनद्वारा सर्वाणि निर्गमानाम् अक्षमीकरणं न अनुमतम्"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "प्रदत्तनिर्गमक्रमे सर्वाणि निर्गमाः न सन्ति"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "प्रदत्तः आउटपुट् क्रमः अमान्यः अस्ति"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "चालकः निर्गमविन्यासं अङ्गीकृतवान्"
 
 #: window.cpp:3173
 #, kde-format

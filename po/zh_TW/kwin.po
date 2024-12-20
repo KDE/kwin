@@ -16,15 +16,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-19 00:41+0000\n"
-"PO-Revision-Date: 2024-11-26 21:41+0900\n"
+"POT-Creation-Date: 2024-12-20 00:42+0000\n"
+"PO-Revision-Date: 2024-12-19 18:16+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -116,77 +116,75 @@ msgstr "GLX/OpenGL 無法使用。"
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "無法開啟 ICC 描述檔「%1」"
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 不存在"
+msgstr "ICC 描述檔「%1」不存在"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC 描述檔「%1」無法供顯示器使用"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "ICC 描述檔「%1」有不支援的相關空間，只支援 XYZ"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，輸入/輸出色彩空間不是 RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，它沒有白點"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，它的白點是無效的"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，剖析色彩適應矩陣時失敗"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，反轉色彩適應矩陣時失敗"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，它沒有主色"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，無法計算它的主色"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC 描述檔「%1」已毀損，它的主色是無效的"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC 描述檔「%1」不支援，因為它只有 BToD 標籤"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "色彩描述檔缺乏 TRC 標籤"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1019,10 +1017,9 @@ msgstr "載入"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "退出偵錯控制台"
+msgstr "偵錯控制台"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -2016,47 +2013,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "desktop"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "切換到桌面 %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
 msgid "Close running window on %1"
 msgstr "在 %1 關閉執行中視窗"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "在 %1 切換執行中視窗最小化"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "在 %1 切換執行中視窗最大化"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "在 %1 切換執行中視窗全螢幕"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "在 %1 切換執行中視窗收起與否"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "在 %1 切換執行中視窗置於最上層"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "在 %1 切換執行中視窗置於最下層"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "在 %1 啟用執行中視窗"
@@ -3016,8 +3013,7 @@ msgstr "縮放時用已定義的縮放係數來做變更。"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "縮放係數："
 
@@ -3025,12 +3021,11 @@ msgstr "縮放係數："
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "在此縮放層級顯示像素格線："
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "滑鼠指標："
 
@@ -3060,8 +3055,7 @@ msgstr "隱藏"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "滑鼠追蹤："
 
@@ -3107,10 +3101,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
-msgstr "開啟焦點追蹤"
+msgstr "啟用焦點追蹤"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:152
@@ -3124,10 +3117,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
-msgstr "開啟文字游標追蹤"
+msgstr "啟用文字游標追蹤"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -3706,17 +3698,15 @@ msgid "Log Out Anyway"
 msgstr "還是要登出"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "以下應用程式並未關閉：\n"
-"%1"
+"%1\n"
+"將在 2 分鐘後無視它們直接登出。"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4101,42 +4091,42 @@ msgstr "垂直收縮視窗"
 #: useractions.cpp:965
 #, kde-format
 msgid "Quick Tile Window to the Left"
-msgstr "視窗鋪排在左方"
+msgstr "往左方快速鋪排視窗"
 
 #: useractions.cpp:967
 #, kde-format
 msgid "Quick Tile Window to the Right"
-msgstr "視窗鋪排在右方"
+msgstr "往右方快速鋪排視窗"
 
 #: useractions.cpp:969
 #, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "視窗鋪排在上方"
+msgstr "往上方快速鋪排視窗"
 
 #: useractions.cpp:971
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "視窗鋪排在下方"
+msgstr "往下方快速鋪排視窗"
 
 #: useractions.cpp:973
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
-msgstr "視窗鋪排在左上方"
+msgstr "往左上方快速鋪排視窗"
 
 #: useractions.cpp:975
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr "視窗鋪排在左下方"
+msgstr "往左下方快速鋪排視窗"
 
 #: useractions.cpp:977
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
-msgstr "視窗鋪排在右上方"
+msgstr "往右上方快速鋪排視窗"
 
 #: useractions.cpp:979
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr "視窗鋪排在右下方"
+msgstr "往右下方快速鋪排視窗"
 
 #: useractions.cpp:981
 #, kde-format
@@ -4174,28 +4164,24 @@ msgid "Keep Window on All Desktops"
 msgstr "將視窗顯示在桌面"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "視窗鋪排在左方"
+msgstr "往左方進行自訂快速視窗鋪排"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "視窗鋪排在右方"
+msgstr "往右方進行自訂快速視窗鋪排"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "視窗鋪排在上方"
+msgstr "往上方進行自訂快速視窗鋪排"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "視窗鋪排在下方"
+msgstr "往下方進行自訂快速視窗鋪排"
 
 #: useractions.cpp:1014
 #, kde-format
@@ -4365,27 +4351,27 @@ msgstr "切換到桌面 %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "有關的一個輸出已不再可用"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "不允許透過設定值變更來停用所有輸出"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "提供的輸出順序沒有包含所有輸出"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "提供的輸出順序是無效的"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "驅動程式回絕了提供的輸出配置"
 
 #: window.cpp:3173
 #, kde-format

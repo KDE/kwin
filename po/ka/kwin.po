@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-19 00:41+0000\n"
-"PO-Revision-Date: 2024-12-11 05:25+0100\n"
+"POT-Creation-Date: 2024-12-20 00:42+0000\n"
+"PO-Revision-Date: 2024-12-19 05:08+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -106,77 +106,83 @@ msgstr "GLX/OpenGL ხელმიუწვდომელია."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "ვერ გავხსენი ICC პროფილი \"%1\""
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 არ არსებობს"
+msgstr "ICC პროფილი \"%1\" არ არსებობს"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC პროფილი \"%1\" ეკრანებისთვის გამოყენებადი არაა"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC პროფილს \"%1\" მხარდაუჭერელი დაკავშირების სივრცე აქვს. მხარდაჭერილია, "
+"მხოლოდ, XYX"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"ICC პროფილი \"%1\" გაფუჭებულია. შეყვანა/გამოტანის ფერების სივრცე RGB არაა"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას თეთრი წერტილი არ გააჩნია"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი თეთრი წერილი არასწორია"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის დამუშავება "
+"ჩავარდა"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის ინვერსია "
+"ჩავარდა"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას ძირითადები არ აქვს"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"ICC პროფილი \"%1\" გაფუჭებულია, რადგან მისი ძირითადების გამოთვლა შეუძლებელია"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი ძირითადები არასწორია"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC პროფილი \"%1\", მხოლოდ, BToD ჭდეებით მხარდაჭერილი არაა"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "ფერების პროფილს TRC ჭდეები აკლია"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2018,47 +2024,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "სამუშაო მაგიდა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "სამუშაო მაგიდის გადართვა %1-ზე"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
 msgid "Close running window on %1"
 msgstr "გაშვებულ ფანჯრის დახურვა %1-ზე"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ჩაკეცვა/აღდგენა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გადიდება/აღდგენა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გაშვების გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის დაჩრდილვის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ზემოთ ქონის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ქვემოთ ქონის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "გაშვებული ფანჯრის გააქტიურება %1-ზე"
@@ -4371,27 +4377,27 @@ msgstr "%1-ე სამუშაო მაგიდაზე გადართ
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "ერთ-ერთი შესაბამისი გამოტანა ხელმისაწვდომი აღარაა"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "ყველა გამოტანს გამორთვა კონფიგურაციის ცვლილებებით დაშვებული არაა"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "მითითებული გამოტანის მიმდევრობა ყველა გამოტანას არ შეიცავს"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "მითითებული გამოტანის მიმდევრობა არასწორია"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "დრაივერმა უარყო გამოტანის კონფიგურაცია"
 
 #: window.cpp:3173
 #, kde-format
