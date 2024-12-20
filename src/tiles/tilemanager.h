@@ -48,7 +48,6 @@ public:
 
     Output *output() const;
 
-    KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
     RootTile *rootTile(VirtualDesktop *desktop) const;
     RootTile *rootTile() const;
