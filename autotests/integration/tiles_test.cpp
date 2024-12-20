@@ -78,6 +78,7 @@ private Q_SLOTS:
     void sendToOutput();
     void sendToOutputX11();
     void tileAndMaximize();
+    void evacuateFromRemovedDesktop();
 
 private:
     void createSimpleLayout();
@@ -823,6 +824,69 @@ void TilesTest::tileAndMaximize()
         QCOMPARE(window->tile(), rightTileD2);
         QCOMPARE(window->maximizeMode(), MaximizeRestore);
         QCOMPARE(window->frameGeometry(), rightTileD2->windowGeometry());
+    }
+}
+
+void TilesTest::evacuateFromRemovedDesktop()
+{
+    const auto desktops = VirtualDesktopManager::self()->desktops();
+    auto rightTileD2 = m_tileManager->rootTile(desktops[1])->childTiles()[1];
+    auto leftTileD3 = m_tileManager->rootTile(desktops[2])->childTiles()[0];
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
+    window->setOnAllDesktops(true);
+
+    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+        QVERIFY(Test::waylandSync());
+    };
+
+    // Set current Desktop 2
+    // Add the window to a tile in desktop 2 and desktop 3
+    {
+        VirtualDesktopManager::self()->setCurrent(2);
+        rightTileD2->addWindow(window);
+        leftTileD3->addWindow(window);
+        QCOMPARE(window->requestedTile(), rightTileD2);
+        ackConfigure();
+        QCOMPARE(window->tile(), rightTileD2);
+        QCOMPARE(window->frameGeometry(), rightTileD2->windowGeometry());
+    }
+
+    // Set current Desktop 3
+    {
+        VirtualDesktopManager::self()->setCurrent(3);
+        // Tile becomes leftTileD3
+        QCOMPARE(window->requestedTile(), leftTileD3);
+        ackConfigure();
+        QCOMPARE(window->tile(), leftTileD3);
+        QCOMPARE(window->frameGeometry(), leftTileD3->windowGeometry());
+    }
+
+    // Remove the current desktop 3, the window will be tiled again to rightTileD2
+    {
+        VirtualDesktopManager::self()->setCount(2);
+        QCOMPARE(window->requestedTile(), rightTileD2);
+        ackConfigure();
+        QCOMPARE(window->tile(), rightTileD2);
+        QCOMPARE(window->frameGeometry(), rightTileD2->windowGeometry());
+    }
+
+    // Remove the current desktop 2, the window is now untiles
+    {
+        VirtualDesktopManager::self()->setCount(1);
+        QCOMPARE(window->requestedTile(), nullptr);
+        ackConfigure();
+        QCOMPARE(window->tile(), nullptr);
+        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
     }
 }
 }
