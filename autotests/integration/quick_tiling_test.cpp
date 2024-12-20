@@ -110,6 +110,8 @@ private Q_SLOTS:
     void testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11();
     void testEvacuateFromRemovedDesktop();
     void testEvacuateFromRemovedDesktopX11();
+    void testCloseTiledWindow();
+    void testCloseTiledWindowX11();
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
@@ -2124,6 +2126,72 @@ void QuickTilingTest::testEvacuateFromRemovedDesktopX11()
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void QuickTilingTest::testCloseTiledWindow()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+        QVERIFY(frameGeometryChangedSpy.wait());
+    };
+
+    Tile *tile = workspace()->tileManager(workspace()->activeOutput())->quickTile(QuickTileFlag::Right);
+
+    const QRectF originalGeometry = window->frameGeometry();
+    tile->addWindow(window);
+    QCOMPARE(window->geometryRestore(), originalGeometry);
+    QCOMPARE(window->tile(), nullptr);
+    QCOMPARE(window->requestedTile(), tile);
+    ackConfigure();
+    QCOMPARE(window->tile(), tile);
+    QCOMPARE(window->requestedTile(), tile);
+    QCOMPARE(window->frameGeometry(), tile->windowGeometry());
+
+    window->ref();
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+    QVERIFY(!tile->windows().contains(window));
+    QCOMPARE(window->tile(), tile);
+    QCOMPARE(window->requestedTile(), tile);
+    QCOMPARE(window->frameGeometry(), tile->windowGeometry());
+    window->unref();
+}
+
+void QuickTilingTest::testCloseTiledWindowX11()
+{
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(connection.get()));
+    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+
+    Tile *tile = workspace()->tileManager(workspace()->activeOutput())->quickTile(QuickTileFlag::Right);
+
+    tile->addWindow(window);
+    QCOMPARE(window->tile(), tile);
+    QCOMPARE(window->requestedTile(), tile);
+    QCOMPARE(window->frameGeometry(), tile->windowGeometry());
+
+    window->ref();
+    connection.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+    QVERIFY(!tile->windows().contains(window));
+    QCOMPARE(window->tile(), tile);
+    QCOMPARE(window->requestedTile(), tile);
+    QCOMPARE(window->frameGeometry(), tile->windowGeometry());
+    window->unref();
 }
 
 void QuickTilingTest::testScript_data()
