@@ -15,6 +15,12 @@
 #include "window.h"
 #include "workspace.h"
 
+#if KWIN_BUILD_X11
+#include "x11window.h"
+#include <netwm.h>
+#include <xcb/xcb_icccm.h>
+#endif
+
 #include <QAbstractItemModelTester>
 
 Q_DECLARE_METATYPE(KWin::QuickTileMode)
@@ -24,6 +30,38 @@ namespace KWin
 {
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_transient_placement-0");
+
+#if KWIN_BUILD_X11
+static X11Window *createWindow(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
+{
+    xcb_window_t windowId = xcb_generate_id(connection);
+    xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      geometry.x(),
+                      geometry.y(),
+                      geometry.width(),
+                      geometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, geometry.x(), geometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, geometry.width(), geometry.height());
+    xcb_icccm_set_wm_normal_hints(connection, windowId, &hints);
+
+    if (setup) {
+        setup(windowId);
+    }
+
+    xcb_map_window(connection, windowId);
+    xcb_flush(connection);
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    if (!windowCreatedSpy.wait()) {
+        return nullptr;
+    }
+    return windowCreatedSpy.last().first().value<X11Window *>();
+}
+#endif
 
 class TilesTest : public QObject
 {
@@ -37,6 +75,8 @@ private Q_SLOTS:
     void resizeTileFromWindow();
     void shortcuts();
     void testPerDesktopTiles();
+    void sendToOutput();
+    void sendToOutputX11();
 
 private:
     void createSimpleLayout();
@@ -597,6 +637,109 @@ void TilesTest::testPerDesktopTiles()
         QCOMPARE(window->tile(), leftTileD2);
         QCOMPARE(window->frameGeometry(), leftTileD2->windowGeometry());
     }
+}
+
+void TilesTest::sendToOutput()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
+    window->setOnAllDesktops(true);
+
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+    };
+
+    const auto desktops = VirtualDesktopManager::self()->desktops();
+    const auto outputs = workspace()->outputs();
+    Tile *firstTile = workspace()->rootTile(outputs[0], desktops[0])->childTiles()[0];
+    Tile *secondTile = workspace()->rootTile(outputs[0], desktops[1])->childTiles()[1];
+
+    // Tile window on desktop 1
+    {
+        VirtualDesktopManager::self()->setCurrent(desktops[0]);
+        firstTile->addWindow(window);
+        QCOMPARE(window->tile(), nullptr);
+        QCOMPARE(window->requestedTile(), firstTile);
+        ackConfigure();
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->tile(), firstTile);
+        QCOMPARE(window->requestedTile(), firstTile);
+        QCOMPARE(window->frameGeometry(), firstTile->windowGeometry());
+    }
+
+    // Tile window on desktop 2
+    {
+        VirtualDesktopManager::self()->setCurrent(desktops[1]);
+        secondTile->addWindow(window);
+        ackConfigure();
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->tile(), secondTile);
+        QCOMPARE(window->requestedTile(), secondTile);
+        QCOMPARE(window->frameGeometry(), secondTile->windowGeometry());
+    }
+
+    // Send window to the second output
+    {
+        window->sendToOutput(outputs[1]);
+        QVERIFY(!firstTile->windows().contains(window));
+        QVERIFY(!secondTile->windows().contains(window));
+        QCOMPARE(window->tile(), secondTile);
+        QCOMPARE(window->requestedTile(), nullptr);
+        ackConfigure();
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->tile(), nullptr);
+        QCOMPARE(window->requestedTile(), nullptr);
+    }
+}
+
+void TilesTest::sendToOutputX11()
+{
+#if KWIN_BUILD_X11
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+    window->setOnAllDesktops(true);
+
+    const auto desktops = VirtualDesktopManager::self()->desktops();
+    const auto outputs = workspace()->outputs();
+    Tile *firstTile = workspace()->rootTile(outputs[0], desktops[0])->childTiles()[0];
+    Tile *secondTile = workspace()->rootTile(outputs[0], desktops[1])->childTiles()[1];
+
+    // Tile window on desktop 1
+    {
+        VirtualDesktopManager::self()->setCurrent(desktops[0]);
+        firstTile->addWindow(window);
+        QCOMPARE(window->tile(), firstTile);
+        QCOMPARE(window->requestedTile(), firstTile);
+        QCOMPARE(window->frameGeometry(), firstTile->windowGeometry());
+    }
+
+    // Tile window on desktop 2
+    {
+        VirtualDesktopManager::self()->setCurrent(desktops[1]);
+        secondTile->addWindow(window);
+        QCOMPARE(window->tile(), secondTile);
+        QCOMPARE(window->requestedTile(), secondTile);
+        QCOMPARE(window->frameGeometry(), secondTile->windowGeometry());
+    }
+
+    // Send window to the second output
+    {
+        window->sendToOutput(outputs[1]);
+        QVERIFY(!firstTile->windows().contains(window));
+        QVERIFY(!secondTile->windows().contains(window));
+        QCOMPARE(window->tile(), nullptr);
+        QCOMPARE(window->requestedTile(), nullptr);
+    }
+#endif
 }
 }
 
