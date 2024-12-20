@@ -332,7 +332,7 @@ void CustomTile::remove()
 
     const auto windows = std::exchange(m_windows, {});
     for (Window *window : windows) {
-        Tile *tile = m_tiling->bestTileForPosition(window->moveResizeGeometry().center());
+        Tile *tile = m_tiling->rootTile(m_desktop)->pick(window->moveResizeGeometry().center());
         if (tile) {
             tile->addWindow(window);
         }

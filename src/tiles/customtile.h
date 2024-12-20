@@ -58,7 +58,7 @@ private:
     bool m_geometryLock = false;
 };
 
-class RootTile : public CustomTile
+class KWIN_EXPORT RootTile : public CustomTile
 {
     Q_OBJECT
     Q_PROPERTY(KWin::TileModel *model READ model CONSTANT)

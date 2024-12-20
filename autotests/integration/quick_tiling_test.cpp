@@ -1616,7 +1616,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktop()
         for (Output *second : outputs) {
             const QPointF customPoint = first->geometry().center();
             const QPointF quickPoint = second->geometry().center();
-            Tile *customTile = workspace()->tileManager(first)->bestTileForPosition(customPoint);
+            Tile *customTile = workspace()->rootTile(first)->pick(customPoint);
             Tile *quickTile = workspace()->tileManager(second)->quickTile(QuickTileFlag::Left);
 
             window->setQuickTileMode(QuickTileFlag::Left, quickPoint);
@@ -1688,7 +1688,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktopX11()
         for (Output *second : outputs) {
             const QPointF customPoint = first->geometry().center();
             const QPointF quickPoint = second->geometry().center();
-            Tile *customTile = workspace()->tileManager(first)->bestTileForPosition(customPoint);
+            Tile *customTile = workspace()->rootTile(first)->pick(customPoint);
             Tile *quickTile = workspace()->tileManager(second)->quickTile(QuickTileFlag::Left);
 
             {
