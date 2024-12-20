@@ -32,6 +32,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_output_changes-
 enum class DeviceType {
     Desktop,
     Laptop,
+    Phone,
 };
 
 class LidSwitch : public InputDevice
@@ -1387,6 +1388,37 @@ void OutputChangesTest::testGenerateConfigs_data()
                .modes = {ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred)},
            }
         << ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred) << 2.5;
+
+    QTest::addRow("SteamDeck OLED")
+        << DeviceType::Laptop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 800, 1280),
+               .internal = true,
+               .physicalSizeInMM = QSize(100, 160),
+               .modes = {ModeInfo(QSize(800, 1280), 90000, OutputMode::Flag::Preferred)},
+               .panelOrientation = OutputTransform::Kind::Rotate90,
+           }
+        << ModeInfo(QSize(800, 1280), 90000ul, OutputMode::Flag::Preferred) << 1.75;
+
+    QTest::addRow("Pixel 3a")
+        << DeviceType::Phone
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 1080, 2220),
+               .internal = true,
+               .physicalSizeInMM = QSize(62, 128),
+               .modes = {ModeInfo(QSize(1080, 2220), 60000, OutputMode::Flags{}), ModeInfo(QSize(1080, 2220), 120000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(1080, 2220), 120000ul, OutputMode::Flag::Preferred) << 3.0;
+
+    QTest::addRow("OnePlus 6")
+        << DeviceType::Phone
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 1080, 2280),
+               .internal = true,
+               .physicalSizeInMM = QSize(68, 145),
+               .modes = {ModeInfo(QSize(1080, 2280), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(1080, 2280), 60000ul, OutputMode::Flag::Preferred) << 2.75;
 }
 
 void OutputChangesTest::testGenerateConfigs()
