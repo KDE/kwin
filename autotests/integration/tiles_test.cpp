@@ -79,6 +79,7 @@ private Q_SLOTS:
     void sendToOutputX11();
     void tileAndMaximize();
     void evacuateFromRemovedDesktop();
+    void evacuateFromRemovedOutput();
 
 private:
     void createSimpleLayout();
@@ -888,6 +889,54 @@ void TilesTest::evacuateFromRemovedDesktop()
         QCOMPARE(window->tile(), nullptr);
         QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
     }
+}
+
+void TilesTest::evacuateFromRemovedOutput()
+{
+    const QList<Output *> outputs = workspace()->outputs();
+    auto rightTileD1O2 = workspace()->rootTile(outputs[1])->childTiles()[1];
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
+    window->setOnAllDesktops(true);
+
+    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+        QVERIFY(Test::waylandSync());
+    };
+
+    // tile a window in output 2
+    {
+        rightTileD1O2->addWindow(window);
+        QCOMPARE(window->requestedTile(), rightTileD1O2);
+        ackConfigure();
+        QCOMPARE(window->tile(), rightTileD1O2);
+        QCOMPARE(window->frameGeometry(), rightTileD1O2->windowGeometry());
+    }
+
+    // Remove output 2, the window should lose the tile
+    {
+        Test::setOutputConfig({
+            QRect(0, 0, 1280, 1024),
+        });
+
+        QCOMPARE(window->requestedTile(), nullptr);
+        ackConfigure();
+        QCOMPARE(window->tile(), nullptr);
+        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+    }
+
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 }
 }
 
