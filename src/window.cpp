@@ -103,7 +103,6 @@ Window::Window()
 
 Window::~Window()
 {
-    Q_ASSERT(!m_tile);
 }
 
 void Window::ref()
@@ -3805,6 +3804,10 @@ Tile *Window::requestedTile() const
 
 void Window::requestTile(Tile *tile)
 {
+    if (isDeleted()) {
+        return;
+    }
+
     // Forbid tiling unmanaged windows
     if (!isClient()) {
         return;
