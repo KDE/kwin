@@ -45,7 +45,7 @@ private:
     void applyOrientationReading(OutputConfiguration &config, const QList<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode);
     std::optional<std::pair<OutputConfiguration, QList<Output *>>> generateLidClosedConfig(const QList<Output *> &outputs);
     std::shared_ptr<OutputMode> chooseMode(Output *output) const;
-    double chooseScale(Output *output, OutputMode *mode) const;
+    double chooseScale(Output *output, const QSize &pixelSize) const;
     double targetDpi(Output *output) const;
     void load();
     void save();

@@ -441,6 +441,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
         });
         const auto mode = modeIt == modes.end() ? kscreenChangeSet.mode.value_or(chooseMode(output)).lock() : *modeIt;
 
+        const auto transform = existingData.transform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation()));
+
         const auto changeset = ret.changeSet(output);
         *changeset = {
             .mode = mode,
@@ -450,8 +452,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .pos = pos,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
             // and we don't know if it's from Xorg or the 5.27 Wayland session... so just ignore it
-            .scale = existingData.scale.value_or(chooseScale(output, mode.get())),
-            .transform = existingData.transform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
+            .scale = existingData.scale.value_or(chooseScale(output, transform.map(mode->size()))),
+            .transform = transform,
             .manualTransform = existingData.manualTransform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .overscan = existingData.overscan.value_or(kscreenChangeSet.overscan.value_or(0)),
             .rgbRange = existingData.rgbRange.value_or(kscreenChangeSet.rgbRange.value_or(Output::RgbRange::Automatic)),
@@ -550,17 +552,22 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
     }
 }
 
-double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) const
+double OutputConfigurationStore::chooseScale(Output *output, const QSize &pixelSize) const
 {
     if (output->physicalSize().height() < 3 || output->physicalSize().width() < 3) {
         // A screen less than 3mm wide or tall doesn't make any sense; these are
         // all caused by the screen mis-reporting its size.
         return 1.0;
     }
-    const double outputDpi = mode->size().height() / (output->physicalSize().height() / 25.4);
+    const double outputDpi = pixelSize.height() / (output->physicalSize().height() / 25.4);
     const double desiredScale = outputDpi / targetDpi(output);
+
+    constexpr double minLogicalHeight = 760;
+    const double maxScale = std::min(3.0, pixelSize.height() / minLogicalHeight);
+    const double scale = std::clamp(desiredScale, 1.0, maxScale);
+
     // round to 25% steps
-    return std::clamp(std::round(100.0 * desiredScale / 25.0) * 25.0 / 100.0, 1.0, 3.0);
+    return std::round(100.0 * scale / 25.0) * 25.0 / 100.0;
 }
 
 double OutputConfigurationStore::targetDpi(Output *output) const

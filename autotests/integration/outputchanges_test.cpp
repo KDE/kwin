@@ -1274,6 +1274,31 @@ void OutputChangesTest::testGenerateConfigs_data()
         .physicalSizeInMM = QSize(1400, 400),
         .modes = {ModeInfo(QSize(3840, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(7680, 2160), 120000, OutputMode::Flags{})},
     } << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.5;
+
+    QTest::addRow("Pixel 3a") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 1080, 2220),
+        .internal = true,
+        .physicalSizeInMM = QSize(62, 128),
+        .modes = {ModeInfo(QSize(1080, 2220), 60000, OutputMode::Flags{}), ModeInfo(QSize(1080, 2220), 120000, OutputMode::Flag::Preferred)},
+    } << ModeInfo(QSize(1080, 2220), 120000ul, OutputMode::Flag::Preferred)
+                              << 3.0;
+
+    QTest::addRow("OnePlus 6") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 1080, 2280),
+        .internal = true,
+        .physicalSizeInMM = QSize(68, 145),
+        .modes = {ModeInfo(QSize(1080, 2280), 60000, OutputMode::Flag::Preferred)},
+    } << ModeInfo(QSize(1080, 2280), 60000ul, OutputMode::Flag::Preferred)
+                               << 2.75;
+
+    QTest::addRow("SteamDeck OLED") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 800, 1280),
+        .internal = true,
+        .physicalSizeInMM = QSize(100, 160),
+        .modes = {ModeInfo(QSize(800, 1280), 90000, OutputMode::Flag::Preferred)},
+        .panelOrientation = OutputTransform::Kind::Rotate90,
+    } << ModeInfo(QSize(800, 1280), 90000ul, OutputMode::Flag::Preferred)
+                                    << 1.0;
 }
 
 void OutputChangesTest::testGenerateConfigs()
