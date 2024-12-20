@@ -3631,10 +3631,6 @@ static QuickTileMode combineQuickTileMode(QuickTileMode mode, QuickTileMode othe
 
 void Window::handleQuickTileShortcut(QuickTileMode mode)
 {
-    // Only allow quick tile on a regular window.
-    if (!isResizable() || isAppletPopup()) {
-        return;
-    }
     QPointF tileAtPoint = moveResizeGeometry().center();
     if (mode != QuickTileFlag::None) {
         const QuickTileMode oldMode = requestedQuickTileMode();
@@ -3687,8 +3683,7 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
 
 void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
 {
-    // Only allow quick tile on a regular window.
-    if (!isResizable() || isAppletPopup() || mode == QuickTileFlag::None) {
+    if (mode == QuickTileFlag::None) {
         return;
     }
     // if window is not tiled already, set it to nearest one
@@ -3808,10 +3803,6 @@ void Window::requestTile(Tile *tile)
         return;
     }
 
-    // Forbid tiling unmanaged windows
-    if (!isClient()) {
-        return;
-    }
     if (m_requestedTile == tile) {
         return;
     }
