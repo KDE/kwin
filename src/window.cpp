@@ -3530,7 +3530,7 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
     Output *output = workspace()->outputAt(pos);
 
     if (mode & QuickTileFlag::Custom) {
-        Tile *tile = workspace()->tileManager(output)->bestTileForPosition(pos);
+        Tile *tile = workspace()->rootTile(output)->pick(pos);
         if (tile) {
             return tile->windowGeometry();
         }
@@ -3693,7 +3693,7 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
         return;
     }
     // if window is not tiled already, set it to nearest one
-    Tile *tileAtPoint = workspace()->tileManager(workspace()->outputAt(moveResizeGeometry().center()))->bestTileForPosition(moveResizeGeometry().center());
+    Tile *tileAtPoint = workspace()->rootTile(workspace()->outputAt(moveResizeGeometry().center()))->pick(moveResizeGeometry().center());
     if (!tileAtPoint) {
         return;
     }
@@ -3744,7 +3744,7 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
 
     Tile *tile = nullptr;
     if (mode == QuickTileMode(QuickTileFlag::Custom)) {
-        tile = workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint);
+        tile = workspace()->rootTile(workspace()->outputAt(tileAtPoint))->pick(tileAtPoint);
     } else {
         tile = workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(mode);
     }

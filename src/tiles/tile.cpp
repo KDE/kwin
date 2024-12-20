@@ -433,7 +433,7 @@ void Tile::insertChild(int position, Tile *item)
         Q_EMIT isLayoutChanged(true);
         auto windows = m_windows;
         for (auto *w : windows) {
-            Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
+            Tile *tile = m_tiling->rootTile(m_desktop)->pick(w->moveResizeGeometry().center());
             removeWindow(w);
             if (tile) {
                 tile->addWindow(w);
