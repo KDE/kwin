@@ -77,6 +77,7 @@ private Q_SLOTS:
     void testPerDesktopTiles();
     void sendToOutput();
     void sendToOutputX11();
+    void tileAndMaximize();
 
 private:
     void createSimpleLayout();
@@ -740,6 +741,89 @@ void TilesTest::sendToOutputX11()
         QCOMPARE(window->requestedTile(), nullptr);
     }
 #endif
+}
+
+void TilesTest::tileAndMaximize()
+{
+    // This tests the interaction between the tiled and maximized states
+    auto rootTileD2 = m_tileManager->rootTile(VirtualDesktopManager::self()->desktops()[1]);
+    auto rightTileD2 = qobject_cast<CustomTile *>(rootTileD2->childTiles()[1]);
+
+    auto leftQuickTileD1 = m_tileManager->quickTile(QuickTileFlag::Left);
+
+    const QList<Output *> outputs = workspace()->outputs();
+    TileManager *out2TileMan = workspace()->tileManager(outputs[1]);
+    auto rootTileD3O2 = out2TileMan->rootTile(VirtualDesktopManager::self()->desktops()[2]);
+    auto leftTileD3O2 = qobject_cast<CustomTile *>(rootTileD3O2->childTiles()[0]);
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
+    window->setOnAllDesktops(true);
+
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    auto ackConfigure = [&]() {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+    };
+
+    // Add the window to a quick tile in desktop 1 and a cutom tile on desktop 2
+    {
+        leftQuickTileD1->addWindow(window);
+        rightTileD2->addWindow(window);
+        QCOMPARE(window->requestedTile(), leftQuickTileD1);
+        ackConfigure();
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->tile(), leftQuickTileD1);
+        QCOMPARE(window->frameGeometry(), leftQuickTileD1->windowGeometry());
+    }
+
+    // Set current Desktop 2
+    {
+        VirtualDesktopManager::self()->setCurrent(2);
+        // Tile becomes rightTileD2
+        QCOMPARE(window->requestedTile(), rightTileD2);
+        ackConfigure();
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->tile(), rightTileD2);
+        QCOMPARE(window->frameGeometry(), rightTileD2->windowGeometry());
+    }
+
+    // Add the window also on a tile of another output
+    leftTileD3O2->addWindow(window);
+
+    // Maximize the window, it should lose its tile
+    {
+        window->maximize(MaximizeFull);
+        // No requestedTile anymore
+        QCOMPARE(window->requestedTile(), nullptr);
+        ackConfigure();
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->tile(), nullptr);
+        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+
+        // Both tiles have an empty window list now
+        QVERIFY(leftQuickTileD1->windows().isEmpty());
+        QVERIFY(rightTileD2->windows().isEmpty());
+        // Also the tile on the other output llost the window
+        QVERIFY(leftTileD3O2->windows().isEmpty());
+    }
+
+    // Set a tile again, it should unmaximize
+    {
+        rightTileD2->addWindow(window);
+        QCOMPARE(window->requestedTile(), rightTileD2);
+        ackConfigure();
+        QVERIFY(tileChangedSpy.wait());
+        QCOMPARE(window->tile(), rightTileD2);
+        QCOMPARE(window->maximizeMode(), MaximizeRestore);
+        QCOMPARE(window->frameGeometry(), rightTileD2->windowGeometry());
+    }
 }
 }
 
