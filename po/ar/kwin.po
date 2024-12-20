@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-27 02:33+0000\n"
+"POT-Creation-Date: 2024-12-20 02:40+0000\n"
 "PO-Revision-Date: 2024-09-05 09:53+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1948,47 +1948,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "سطح المكتب"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "بدل إلى سطح المكتب %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
 msgid "Close running window on %1"
 msgstr "أغلق النافذة العاملة في %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "كبر/صغر النافذة العاملة في %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "كبّر/استعد النافذة العاملة في %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "بدّل ملء الشاشة للنافذة العاملة في %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "ظلّل/ألغ تظليل النّافذة العاملة في %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "بدّل حالة أبقها في الأعلى للنافذة العاملة في %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "بدّل حالة أبقها في الأسفل للنافذة العاملة في %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "نشط النّافذة العاملة في %1"

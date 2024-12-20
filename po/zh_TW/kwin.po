@@ -16,15 +16,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-27 02:33+0000\n"
-"PO-Revision-Date: 2024-08-25 02:09+0900\n"
+"POT-Creation-Date: 2024-12-20 02:40+0000\n"
+"PO-Revision-Date: 2024-12-19 18:14+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 24.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -1949,47 +1949,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "desktop"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "切換到桌面 %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
 msgid "Close running window on %1"
 msgstr "在 %1 關閉執行中視窗"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "在 %1 切換執行中視窗最小化"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "在 %1 切換執行中視窗最大化"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "在 %1 切換執行中視窗全螢幕"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "在 %1 切換執行中視窗收起與否"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "在 %1 切換執行中視窗置於最上層"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "在 %1 切換執行中視窗置於最下層"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "在 %1 啟用執行中視窗"
@@ -3998,42 +3998,42 @@ msgstr "垂直收縮視窗"
 #: useractions.cpp:965
 #, kde-format
 msgid "Quick Tile Window to the Left"
-msgstr "視窗鋪排在左方"
+msgstr "往左方快速鋪排視窗"
 
 #: useractions.cpp:967
 #, kde-format
 msgid "Quick Tile Window to the Right"
-msgstr "視窗鋪排在右方"
+msgstr "往右方快速鋪排視窗"
 
 #: useractions.cpp:969
 #, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "視窗鋪排在上方"
+msgstr "往上方快速鋪排視窗"
 
 #: useractions.cpp:971
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "視窗鋪排在下方"
+msgstr "往下方快速鋪排視窗"
 
 #: useractions.cpp:973
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
-msgstr "視窗鋪排在左上方"
+msgstr "往左上方快速鋪排視窗"
 
 #: useractions.cpp:975
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr "視窗鋪排在左下方"
+msgstr "往左下方快速鋪排視窗"
 
 #: useractions.cpp:977
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
-msgstr "視窗鋪排在右上方"
+msgstr "往右上方快速鋪排視窗"
 
 #: useractions.cpp:979
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr "視窗鋪排在右下方"
+msgstr "往右下方快速鋪排視窗"
 
 #: useractions.cpp:981
 #, kde-format

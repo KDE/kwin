@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-27 02:33+0000\n"
+"POT-Creation-Date: 2024-12-20 02:40+0000\n"
 "PO-Revision-Date: 2024-08-25 11:52+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -1997,51 +1997,51 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "bureau"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "Basculer vers le bureau %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
 msgid "Close running window on %1"
 msgstr "Fermer la fenêtre active sur %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "Agrandir la fenêtre active sur %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "Maximiser/restaurer la fenêtre active sur %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "Activer / Désactiver le mode plein écran pour la fenêtre active sur %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "Supprimer l'ombre / ombrer la fenêtre active sur %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr ""
 "Activer / Désactiver l'option « Conserver au-dessus » pour la fenêtre active "
 "sur %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr ""
 "Activer / Désactiver l'option « Conserver au-dessus » pour la fenêtre active "
 "sur %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "Activer la fenêtre active sur %1"
