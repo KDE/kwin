@@ -169,11 +169,10 @@ namespace
 template<typename T>
 T dbusProperty(const QString &name, const char *property)
 {
-    QDBusInterface interface {
+    QDBusInterface interface{
         QStringLiteral("org.kde.kwin.tests.libinputdevice"),
-            QStringLiteral("/org/kde/KWin/InputDevice/") + name,
-            QStringLiteral("org.kde.KWin.InputDevice")
-    };
+        QStringLiteral("/org/kde/KWin/InputDevice/") + name,
+        QStringLiteral("org.kde.KWin.InputDevice")};
     return interface.property(property).value<T>();
 }
 }
