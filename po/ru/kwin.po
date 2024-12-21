@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-20 02:40+0000\n"
+"POT-Creation-Date: 2024-12-21 02:55+0000\n"
 "PO-Revision-Date: 2024-09-17 14:30+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -1994,50 +1994,50 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "рабочий стол"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:260
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "Переключиться на рабочий стол %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "Close running window on %1"
 msgstr "Закрыть окно на рабочем столе %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "Свернуть или развернуть окно на рабочем столе %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "Распахнуть или восстановить окно на рабочем столе %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr ""
 "Включить или отключить полноэкранный режим для окна на рабочем столе %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "Развернуть или свернуть в заголовок окно на рабочем столе %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr ""
 "Включить или отключить поддерживание поверх других окна на рабочем столе %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr ""
 "Включить или отключить поддерживание на заднем плане окна на рабочем столе %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:321
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "Активировать окно на рабочем столе %1"

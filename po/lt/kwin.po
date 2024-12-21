@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-20 02:40+0000\n"
+"POT-Creation-Date: 2024-12-21 02:55+0000\n"
 "PO-Revision-Date: 2024-08-25 23:01+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1965,47 +1965,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "darbalaukis"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:260
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "Close running window on %1"
 msgstr "Užverti langą, veikiantį ties %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "Suskleisti (grąžinti iš suskleidimo) langą, veikianti ties %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "Išskleisti/atkurti langą, veikiantį ties %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "Perjungti viso ekrano veikseną langui, veikiančiam ties %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "(Atidengti) pridengti langą, veikiantį ties %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "Perjungti laikymo aukščiau veikseną langui, veikiančiam ties %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "Perjungti laikymo žemiau veikseną langui, veikiančiam ties %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:321
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "Aktyvuoti langą, veikiantį ties %1"
