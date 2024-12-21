@@ -697,7 +697,7 @@ void OutputConfigurationStore::load()
         }
         if (const auto it = data.find("scale"); it != data.end()) {
             const double scale = it->toDouble(0);
-            if (scale > 0 && scale <= 3) {
+            if (scale > 0 && scale <= 5) {
                 state.scale = scale;
             }
         }
