@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-26 00:41+0000\n"
-"PO-Revision-Date: 2024-12-14 01:12+0530\n"
+"PO-Revision-Date: 2024-12-20 22:01+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
@@ -195,7 +195,7 @@ msgstr "खिडकीमेलनम्"
 #: rulesmodel.cpp:392
 #, kde-format
 msgid "Window class (application)"
-msgstr "विण्डो क्लास (अनुप्रयोग) २."
+msgstr "विण्डो क्लास (अनुप्रयोग)"
 
 #: rulesmodel.cpp:400
 #, kde-format
@@ -225,7 +225,7 @@ msgstr "विण्डो शीर्षक"
 #: rulesmodel.cpp:432
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "यन्त्र (होस्टनाम) २."
+msgstr "यन्त्र (होस्टनाम)"
 
 #: rulesmodel.cpp:438
 #, kde-format
@@ -626,7 +626,7 @@ msgstr "उपयोगिता विण्डो"
 #: rulesmodel.cpp:814
 #, kde-format
 msgid "Dock (panel)"
-msgstr "गोदी (पैनल) ९."
+msgstr "गोदी (पैनल)"
 
 #: rulesmodel.cpp:815
 #, kde-format
@@ -967,13 +967,13 @@ msgstr "%1 % ."
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
-msgstr "(%1, %2) २."
+msgstr "(%1, %2)"
 
 #: ui/RulesEditor.qml:296
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
-msgstr "(%1, %2) २."
+msgstr "(%1, %2)"
 
 #: ui/ValueEditor.qml:203
 #, kde-format

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-20 00:42+0000\n"
-"PO-Revision-Date: 2024-12-11 09:26+0200\n"
+"POT-Creation-Date: 2024-12-21 00:42+0000\n"
+"PO-Revision-Date: 2024-12-19 22:24+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -118,75 +118,75 @@ msgstr "GLX/OpenGL לא זמין."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "פתיחת פרופיל ה־ICC ‏„%1” נכשלה"
 
 #: core/iccprofile.cpp:247
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "פרופיל ה־ICC ‏„%1” לא קיים"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "פרופיל ה־ICC ‏„%1” לא זמין לצגים"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "לפרופיל ה־ICC ‏„%1” יש מרחב חיבורים לא נתמך, יש תמיכה רק ב־XYZ"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, מרחב צבע קלט/פלט אינו RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, אין לו נקודה לבנה"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, הנקודה הלבנה שלו פגומה"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, פענוח מטריצת ההתאמה הכרומטית נכשל"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, היפוך מטריצת ההתאמה הכרומטית נכשל"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, אין לו צבעי יסוד"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, לא ניתן לחשב את צבעי היסוד שלו"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "פרופיל ה־ICC‏ „%1” פגום, צבעי היסוד שלו שגויים"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "אין תמיכה בפרופיל ICC‏ „%1” עם תגיות BToD בלבד"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "לפרופיל הצבע חסרות תגיות TRC (צבע אמיתי)"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -707,311 +707,353 @@ msgctxt "State of a hardware switch (on/off)"
 msgid "State"
 msgstr "מצב"
 
-#: debug_console.cpp:500
-#, kde-format
-msgid "Tablet Tool"
+#: debug_console.cpp:494
+#, fuzzy, kde-format
+#| msgid "Tablet Tool"
+msgid "Tablet Tool Proximity"
 msgstr "כלי מחשב לוח"
 
-#: debug_console.cpp:501
+#: debug_console.cpp:495
 #, kde-format
-msgid "EventType"
-msgstr "סוג אירוע"
+msgid "Proximity"
+msgstr ""
 
-#: debug_console.cpp:502 debug_console.cpp:547 debug_console.cpp:561
+#: debug_console.cpp:495
+#, kde-format
+msgid "In"
+msgstr ""
+
+#: debug_console.cpp:495
+#, kde-format
+msgid "Out"
+msgstr ""
+
+#: debug_console.cpp:496 debug_console.cpp:513 debug_console.cpp:531
+#: debug_console.cpp:576 debug_console.cpp:590
 #, kde-format
 msgid "Position"
 msgstr "מקום"
 
-#: debug_console.cpp:504
+#: debug_console.cpp:498 debug_console.cpp:515 debug_console.cpp:533
 #, kde-format
 msgid "Tilt"
 msgstr "שיפוע"
 
-#: debug_console.cpp:506
+#: debug_console.cpp:500 debug_console.cpp:517 debug_console.cpp:535
 #, kde-format
 msgid "Rotation"
 msgstr "סיבוב"
 
-#: debug_console.cpp:507
+#: debug_console.cpp:501 debug_console.cpp:518 debug_console.cpp:536
 #, kde-format
 msgid "Pressure"
 msgstr "לחץ"
 
-#: debug_console.cpp:508
+#: debug_console.cpp:502 debug_console.cpp:519 debug_console.cpp:537
 #, kde-format
 msgid "Buttons"
 msgstr "כפתורים"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:509 debug_console.ui:355
+#: debug_console.cpp:503 debug_console.cpp:520 debug_console.cpp:538
+#: debug_console.ui:355
 #, kde-format
 msgid "Modifiers"
 msgstr "מחליפים"
 
-#: debug_console.cpp:518
+#: debug_console.cpp:512
+#, fuzzy, kde-format
+#| msgid "Tablet Tool"
+msgid "Tablet Tool Axis"
+msgstr "כלי מחשב לוח"
+
+#: debug_console.cpp:529
+#, fuzzy, kde-format
+#| msgid "Tablet Tool"
+msgid "Tablet Tool Tip"
+msgstr "כלי מחשב לוח"
+
+#: debug_console.cpp:530
+#, fuzzy, kde-format
+#| msgid "Top"
+msgid "Tip"
+msgstr "למעלה"
+
+#: debug_console.cpp:530
+#, fuzzy, kde-format
+#| msgid "Move Down"
+msgid "Down"
+msgstr "העברה למטה"
+
+#: debug_console.cpp:530
+#, kde-format
+msgid "Up"
+msgstr ""
+
+#: debug_console.cpp:547
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr "כפתור כלי מחשב לוח"
 
-#: debug_console.cpp:519 debug_console.cpp:533
+#: debug_console.cpp:548 debug_console.cpp:562
 #, kde-format
 msgid "Button"
 msgstr "כפתור"
 
-#: debug_console.cpp:520 debug_console.cpp:534
+#: debug_console.cpp:549 debug_console.cpp:563
 #, kde-format
 msgid "Pressed"
 msgstr "נלחץ"
 
-#: debug_console.cpp:521 debug_console.cpp:535 debug_console.cpp:549
-#: debug_console.cpp:563
+#: debug_console.cpp:550 debug_console.cpp:564 debug_console.cpp:578
+#: debug_console.cpp:592
 #, kde-format
 msgid "Tablet"
 msgstr "מחשב לוח"
 
-#: debug_console.cpp:532
+#: debug_console.cpp:561
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr "כפתור משטח מחשב לוח"
 
-#: debug_console.cpp:545
+#: debug_console.cpp:574
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr "פס משטח מחשב לוח"
 
-#: debug_console.cpp:546 debug_console.cpp:560
+#: debug_console.cpp:575 debug_console.cpp:589
 #, kde-format
 msgid "Number"
 msgstr "מספר"
 
-#: debug_console.cpp:548 debug_console.cpp:562
+#: debug_console.cpp:577 debug_console.cpp:591
 #, kde-format
 msgid "isFinger"
 msgstr "האם_אצבע"
 
-#: debug_console.cpp:559
+#: debug_console.cpp:588
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr "טבעת משטח מחשב לוח"
 
-#: debug_console.cpp:626
+#: debug_console.cpp:655
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "אפקטים"
 
-#: debug_console.cpp:800
+#: debug_console.cpp:829
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "אין כפתורי עכבר"
 
-#: debug_console.cpp:804
+#: debug_console.cpp:833
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "שמאל"
 
-#: debug_console.cpp:807
+#: debug_console.cpp:836
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "ימין"
 
-#: debug_console.cpp:810
+#: debug_console.cpp:839
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "אמצע"
 
-#: debug_console.cpp:813
+#: debug_console.cpp:842
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "אחורה"
 
-#: debug_console.cpp:816
+#: debug_console.cpp:845
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "הקודם"
 
-#: debug_console.cpp:819
+#: debug_console.cpp:848
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "תוספת 1"
 
-#: debug_console.cpp:822
+#: debug_console.cpp:851
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "תוספת 2"
 
-#: debug_console.cpp:825
+#: debug_console.cpp:854
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "תוספת 3"
 
-#: debug_console.cpp:828
+#: debug_console.cpp:857
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "תוספת 4"
 
-#: debug_console.cpp:831
+#: debug_console.cpp:860
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "תוספת 5"
 
-#: debug_console.cpp:834
+#: debug_console.cpp:863
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "תוספת 6"
 
-#: debug_console.cpp:837
+#: debug_console.cpp:866
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "תוספת 7"
 
-#: debug_console.cpp:840
+#: debug_console.cpp:869
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "תוספת 8"
 
-#: debug_console.cpp:843
+#: debug_console.cpp:872
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "תוספת 9"
 
-#: debug_console.cpp:846
+#: debug_console.cpp:875
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "תוספת 10"
 
-#: debug_console.cpp:849
+#: debug_console.cpp:878
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "תוספת 11"
 
-#: debug_console.cpp:852
+#: debug_console.cpp:881
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "תוספת 12"
 
-#: debug_console.cpp:855
+#: debug_console.cpp:884
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "תוספת 13"
 
-#: debug_console.cpp:858
+#: debug_console.cpp:887
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "תוספת 14"
 
-#: debug_console.cpp:861
+#: debug_console.cpp:890
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "תוספת 15"
 
-#: debug_console.cpp:864
+#: debug_console.cpp:893
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "תוספת 16"
 
-#: debug_console.cpp:867
+#: debug_console.cpp:896
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "תוספת 17"
 
-#: debug_console.cpp:870
+#: debug_console.cpp:899
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "תוספת 18"
 
-#: debug_console.cpp:873
+#: debug_console.cpp:902
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "תוספת 19"
 
-#: debug_console.cpp:876
+#: debug_console.cpp:905
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "תוספת 20"
 
-#: debug_console.cpp:879
+#: debug_console.cpp:908
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "תוספת 21"
 
-#: debug_console.cpp:882
+#: debug_console.cpp:911
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "תוספת 22"
 
-#: debug_console.cpp:885
+#: debug_console.cpp:914
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "תוספת 23"
 
-#: debug_console.cpp:888
+#: debug_console.cpp:917
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "תוספת 24"
 
-#: debug_console.cpp:891
+#: debug_console.cpp:920
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "משימה"
 
-#: debug_console.cpp:1243
+#: debug_console.cpp:1272
 #, kde-format
 msgid "X11 Windows"
 msgstr "חלונות X11"
 
-#: debug_console.cpp:1245
+#: debug_console.cpp:1274
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "חלונות X11 לא מנוהלים"
 
-#: debug_console.cpp:1247
+#: debug_console.cpp:1276
 #, kde-format
 msgid "Wayland Windows"
 msgstr "חלונות Wayland"
 
-#: debug_console.cpp:1249
+#: debug_console.cpp:1278
 #, kde-format
 msgid "Internal Windows"
 msgstr "חלונות פנימיים"
 
-#: debug_console.cpp:1589 debug_console.cpp:1603
+#: debug_console.cpp:1618 debug_console.cpp:1632
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "פריקה"
 
-#: debug_console.cpp:1591 debug_console.cpp:1605
+#: debug_console.cpp:1620 debug_console.cpp:1634
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1306,7 +1348,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "שם מארח: %1"
 
-#: input.cpp:3146
+#: input.cpp:3287
 #, kde-format
 msgid "Touchpad"
 msgstr "משטח מגע"
@@ -2023,47 +2065,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "שולחן עבודה"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:260
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "מעבר לשולחן עבודה %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "Close running window on %1"
 msgstr "סגירת החלון הפעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "מזעור/שחזור חלון פעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "הגדלה/שחזור חלון פעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "החלפת מצב מסך מלא לחלון הפעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "הצללה/הבהרה של חלון פעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "החלפת מצב ‚ריחוף מעל’ לחלון הפעיל ב־%1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "החלפת מצב ‚שקיעה מתחת’ לחלון הפעיל ב־%1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:321
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "הפעלת החלון הפעיל על %1"
@@ -2113,25 +2155,25 @@ msgstr " פיקסלים"
 msgid "&Height:"
 msgstr "&גובה:"
 
-#: plugins/mouseclick/mouseclick.cpp:38
+#: plugins/mouseclick/mouseclick.cpp:40
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
 msgstr "החלפת מצב הנפשת לחיצת עכבר"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:47
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "שמאל"
 
-#: plugins/mouseclick/mouseclick.cpp:46
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "אמצע"
 
-#: plugins/mouseclick/mouseclick.cpp:47
+#: plugins/mouseclick/mouseclick.cpp:49
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -4364,27 +4406,27 @@ msgstr "מעבר לשולחן עבודה %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "אחד מצגי הפלט התואמים לא זמין עוד"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "השבתת כל צדי הפלט דרך שינויי הגדרות אסורה"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "סדר הפלט שסופק לא מכיל את כל צגי הפלט"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "סדר הפלט שסופק שגוי"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "מנהל ההתקן דחה את הגדרות הפלט"
 
 #: window.cpp:3173
 #, kde-format
@@ -4417,6 +4459,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland קרס"
+
+#~ msgid "EventType"
+#~ msgstr "סוג אירוע"
 
 #~ msgid "Red"
 #~ msgstr "אדום"

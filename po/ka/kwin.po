@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-20 00:42+0000\n"
+"POT-Creation-Date: 2024-12-21 00:42+0000\n"
 "PO-Revision-Date: 2024-12-19 05:08+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -703,311 +703,353 @@ msgctxt "State of a hardware switch (on/off)"
 msgid "State"
 msgstr "State"
 
-#: debug_console.cpp:500
-#, kde-format
-msgid "Tablet Tool"
+#: debug_console.cpp:494
+#, fuzzy, kde-format
+#| msgid "Tablet Tool"
+msgid "Tablet Tool Proximity"
 msgstr "ტაბლეტის პროგრამა"
 
-#: debug_console.cpp:501
+#: debug_console.cpp:495
 #, kde-format
-msgid "EventType"
-msgstr "მოვლენისტიპი"
+msgid "Proximity"
+msgstr ""
 
-#: debug_console.cpp:502 debug_console.cpp:547 debug_console.cpp:561
+#: debug_console.cpp:495
+#, kde-format
+msgid "In"
+msgstr ""
+
+#: debug_console.cpp:495
+#, kde-format
+msgid "Out"
+msgstr ""
+
+#: debug_console.cpp:496 debug_console.cpp:513 debug_console.cpp:531
+#: debug_console.cpp:576 debug_console.cpp:590
 #, kde-format
 msgid "Position"
 msgstr "თანამდებობა"
 
-#: debug_console.cpp:504
+#: debug_console.cpp:498 debug_console.cpp:515 debug_console.cpp:533
 #, kde-format
 msgid "Tilt"
 msgstr "მოხრა"
 
-#: debug_console.cpp:506
+#: debug_console.cpp:500 debug_console.cpp:517 debug_console.cpp:535
 #, kde-format
 msgid "Rotation"
 msgstr "შემობრუნება"
 
-#: debug_console.cpp:507
+#: debug_console.cpp:501 debug_console.cpp:518 debug_console.cpp:536
 #, kde-format
 msgid "Pressure"
 msgstr "წნევა"
 
-#: debug_console.cpp:508
+#: debug_console.cpp:502 debug_console.cpp:519 debug_console.cpp:537
 #, kde-format
 msgid "Buttons"
 msgstr "ღილაკები"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:509 debug_console.ui:355
+#: debug_console.cpp:503 debug_console.cpp:520 debug_console.cpp:538
+#: debug_console.ui:355
 #, kde-format
 msgid "Modifiers"
 msgstr "მოდიფიკატორები"
 
-#: debug_console.cpp:518
+#: debug_console.cpp:512
+#, fuzzy, kde-format
+#| msgid "Tablet Tool"
+msgid "Tablet Tool Axis"
+msgstr "ტაბლეტის პროგრამა"
+
+#: debug_console.cpp:529
+#, fuzzy, kde-format
+#| msgid "Tablet Tool"
+msgid "Tablet Tool Tip"
+msgstr "ტაბლეტის პროგრამა"
+
+#: debug_console.cpp:530
+#, fuzzy, kde-format
+#| msgid "Top"
+msgid "Tip"
+msgstr "ზედა"
+
+#: debug_console.cpp:530
+#, fuzzy, kde-format
+#| msgid "Move Down"
+msgid "Down"
+msgstr "ჩამოწევა"
+
+#: debug_console.cpp:530
+#, kde-format
+msgid "Up"
+msgstr ""
+
+#: debug_console.cpp:547
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr "ტაბლეტის ხელსაწყოს ღილაკი"
 
-#: debug_console.cpp:519 debug_console.cpp:533
+#: debug_console.cpp:548 debug_console.cpp:562
 #, kde-format
 msgid "Button"
 msgstr "ღილაკი"
 
-#: debug_console.cpp:520 debug_console.cpp:534
+#: debug_console.cpp:549 debug_console.cpp:563
 #, kde-format
 msgid "Pressed"
 msgstr "დაწოლილი"
 
-#: debug_console.cpp:521 debug_console.cpp:535 debug_console.cpp:549
-#: debug_console.cpp:563
+#: debug_console.cpp:550 debug_console.cpp:564 debug_console.cpp:578
+#: debug_console.cpp:592
 #, kde-format
 msgid "Tablet"
 msgstr "ტაბლეტი"
 
-#: debug_console.cpp:532
+#: debug_console.cpp:561
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr "ტაბლეტის ხელსაწყოს ღილაკი"
 
-#: debug_console.cpp:545
+#: debug_console.cpp:574
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr "ტაბლეტის ხელსაწყოს ზოლი"
 
-#: debug_console.cpp:546 debug_console.cpp:560
+#: debug_console.cpp:575 debug_console.cpp:589
 #, kde-format
 msgid "Number"
 msgstr "რიცხვი"
 
-#: debug_console.cpp:548 debug_console.cpp:562
+#: debug_console.cpp:577 debug_console.cpp:591
 #, kde-format
 msgid "isFinger"
 msgstr "თითია"
 
-#: debug_console.cpp:559
+#: debug_console.cpp:588
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr "ტაბლეტის ხელსაწყოს რგოლი"
 
-#: debug_console.cpp:626
+#: debug_console.cpp:655
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "ეფექტები"
 
-#: debug_console.cpp:800
+#: debug_console.cpp:829
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "თაგუნის ღილაკების გარეშე"
 
-#: debug_console.cpp:804
+#: debug_console.cpp:833
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "მარცხნივ"
 
-#: debug_console.cpp:807
+#: debug_console.cpp:836
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "მარჯვენა"
 
-#: debug_console.cpp:810
+#: debug_console.cpp:839
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "შუა"
 
-#: debug_console.cpp:813
+#: debug_console.cpp:842
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "უკან"
 
-#: debug_console.cpp:816
+#: debug_console.cpp:845
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "forward"
 
-#: debug_console.cpp:819
+#: debug_console.cpp:848
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "დამატებითი 1"
 
-#: debug_console.cpp:822
+#: debug_console.cpp:851
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "დამატებითი 2"
 
-#: debug_console.cpp:825
+#: debug_console.cpp:854
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "დამატებითი 3"
 
-#: debug_console.cpp:828
+#: debug_console.cpp:857
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "დამატებითი 4"
 
-#: debug_console.cpp:831
+#: debug_console.cpp:860
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "დამატებითი 5"
 
-#: debug_console.cpp:834
+#: debug_console.cpp:863
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "დამატებითი 6"
 
-#: debug_console.cpp:837
+#: debug_console.cpp:866
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "დამატებითი 7"
 
-#: debug_console.cpp:840
+#: debug_console.cpp:869
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "დამატებითი 8"
 
-#: debug_console.cpp:843
+#: debug_console.cpp:872
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "დამატებითი 9"
 
-#: debug_console.cpp:846
+#: debug_console.cpp:875
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "დამატებითი 10"
 
-#: debug_console.cpp:849
+#: debug_console.cpp:878
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "დამატებითი 11"
 
-#: debug_console.cpp:852
+#: debug_console.cpp:881
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "დამატებითი 12"
 
-#: debug_console.cpp:855
+#: debug_console.cpp:884
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "დამატებითი 13"
 
-#: debug_console.cpp:858
+#: debug_console.cpp:887
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "დამატებითი 14"
 
-#: debug_console.cpp:861
+#: debug_console.cpp:890
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "დამატებითი 15"
 
-#: debug_console.cpp:864
+#: debug_console.cpp:893
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "დამატებითი 16"
 
-#: debug_console.cpp:867
+#: debug_console.cpp:896
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "დამატებითი 17"
 
-#: debug_console.cpp:870
+#: debug_console.cpp:899
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "დამატებითი 18"
 
-#: debug_console.cpp:873
+#: debug_console.cpp:902
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "დამატებითი 19"
 
-#: debug_console.cpp:876
+#: debug_console.cpp:905
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "დამატებითი 20"
 
-#: debug_console.cpp:879
+#: debug_console.cpp:908
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "დამატებითი 21"
 
-#: debug_console.cpp:882
+#: debug_console.cpp:911
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "დამატებითი 22"
 
-#: debug_console.cpp:885
+#: debug_console.cpp:914
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "დამატებითი 23"
 
-#: debug_console.cpp:888
+#: debug_console.cpp:917
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "დამატებითი 24"
 
-#: debug_console.cpp:891
+#: debug_console.cpp:920
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "ამოცანა"
 
-#: debug_console.cpp:1243
+#: debug_console.cpp:1272
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 ფანჯრები"
 
-#: debug_console.cpp:1245
+#: debug_console.cpp:1274
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 უმართავი ფანჯრები"
 
-#: debug_console.cpp:1247
+#: debug_console.cpp:1276
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland -ის ფანჯრები"
 
-#: debug_console.cpp:1249
+#: debug_console.cpp:1278
 #, kde-format
 msgid "Internal Windows"
 msgstr "შიდა ფანჯრები"
 
-#: debug_console.cpp:1589 debug_console.cpp:1603
+#: debug_console.cpp:1618 debug_console.cpp:1632
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "გამოტვირთვა"
 
-#: debug_console.cpp:1591 debug_console.cpp:1605
+#: debug_console.cpp:1620 debug_console.cpp:1634
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1305,7 +1347,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "ჰოსტის სახელი: %1"
 
-#: input.cpp:3146
+#: input.cpp:3287
 #, kde-format
 msgid "Touchpad"
 msgstr "თაჩპედი"
@@ -2024,47 +2066,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "სამუშაო მაგიდა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:257
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:260
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "სამუშაო მაგიდის გადართვა %1-ზე"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:296
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "Close running window on %1"
 msgstr "გაშვებულ ფანჯრის დახურვა %1-ზე"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ჩაკეცვა/აღდგენა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გადიდება/აღდგენა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გაშვების გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის დაჩრდილვის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ზემოთ ქონის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ქვემოთ ქონის გადართვა"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:318
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:321
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "გაშვებული ფანჯრის გააქტიურება %1-ზე"
@@ -2114,25 +2156,25 @@ msgstr " px"
 msgid "&Height:"
 msgstr "&სიმაღლე:"
 
-#: plugins/mouseclick/mouseclick.cpp:38
+#: plugins/mouseclick/mouseclick.cpp:40
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
 msgstr "თაგუნას წკაპის ანიმაციის გადართვა"
 
-#: plugins/mouseclick/mouseclick.cpp:45
+#: plugins/mouseclick/mouseclick.cpp:47
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "მარცხენა"
 
-#: plugins/mouseclick/mouseclick.cpp:46
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "შუა"
 
-#: plugins/mouseclick/mouseclick.cpp:47
+#: plugins/mouseclick/mouseclick.cpp:49
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -4433,6 +4475,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ავარიულად დასრულდა"
+
+#~ msgid "EventType"
+#~ msgstr "მოვლენისტიპი"
 
 #~ msgid "Red"
 #~ msgstr "წითელი"

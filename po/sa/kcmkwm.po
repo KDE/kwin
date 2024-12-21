@@ -3,19 +3,21 @@
 # This file is distributed under the same license as the kwin package.
 # Kali <EMAIL@ADDRESS>, 2024.
 #
+# SPDX-FileCopyrightText: 2024 kali <skkalwar999@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-10 00:41+0000\n"
-"PO-Revision-Date: 2024-12-13 19:10+0530\n"
-"Last-Translator: Kali <EMAIL@ADDRESS>\n"
-"Language-Team: Sanskrit\n"
+"PO-Revision-Date: 2024-12-20 21:52+0530\n"
+"Last-Translator: kali <skkalwar999@gmail.com>\n"
+"Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n>2);\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -101,7 +103,7 @@ msgstr ""
 #: actions.ui:85 mouse.ui:206
 #, kde-format
 msgid "&Middle click:"
-msgstr "&मध्य क्लिक् : १."
+msgstr "&मध्य क्लिक् :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
 #: actions.ui:98
@@ -384,7 +386,7 @@ msgstr ""
 #: actions.ui:480
 #, kde-format
 msgid "Mo&use wheel:"
-msgstr "मो&उपयोगचक्रः : १."
+msgstr "मो&उपयोगचक्रः :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
 #: actions.ui:493
@@ -442,7 +444,7 @@ msgstr "अस्पष्टतां परिवर्तयन्तु"
 #: advanced.ui:20
 #, kde-format
 msgid "Window &unshading:"
-msgstr "विण्डो &अनशेडिंग्: १."
+msgstr "विण्डो &अनशेडिंग्:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
@@ -484,7 +486,7 @@ msgstr " ms"
 #: advanced.ui:66
 #, kde-format
 msgid "Window &placement:"
-msgstr "खिडकी &स्थापनम् : १."
+msgstr "खिडकी &स्थापनम् :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
@@ -594,7 +596,7 @@ msgstr "एप्स् स्वस्य विण्डोजस्य स्
 #: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr "वर्चुअल् डेस्कटॉप व्यवहारः : १."
+msgstr "वर्चुअल् डेस्कटॉप व्यवहारः :"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:133
@@ -637,7 +639,7 @@ msgstr "वर्तमान वर्चुअल् डेस्कटॉप�
 #: focus.ui:22
 #, kde-format
 msgid "Window &activation policy:"
-msgstr "विण्डो &सक्रियता नीतिः १."
+msgstr "विण्डो &सक्रियता नीतिः"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
 #: focus.ui:32
@@ -701,7 +703,7 @@ msgstr "एषः विलम्बः अस्ति यस्य अनन�
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "ध्यानं &चोरीनिवारणम् : १."
+msgstr "ध्यानं &चोरीनिवारणम् :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -810,7 +812,7 @@ msgstr "अति"
 #: focus.ui:146
 #, kde-format
 msgid "Raising windows:"
-msgstr "खिडकयः उत्थापनम् : १."
+msgstr "खिडकयः उत्थापनम् :"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:153
@@ -860,7 +862,7 @@ msgstr ""
 #: focus.ui:199
 #, kde-format
 msgid "Multiscreen behavior:"
-msgstr "बहुपर्दे व्यवहारः : १."
+msgstr "बहुपर्दे व्यवहारः :"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:206
@@ -1153,7 +1155,7 @@ msgstr ""
 #: moving.ui:84
 #, kde-format
 msgid "&Center snap zone:"
-msgstr "&केन्द्र स्नैप क्षेत्र : १."
+msgstr "&केन्द्र स्नैप क्षेत्र :"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:94
