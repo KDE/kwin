@@ -597,7 +597,7 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
     const double scaleY = std::clamp(dpiY / targetDpi, 1.0, maxScaleY);
 
     const double scale = std::min(scaleX, scaleY);
-    const double steps = 25;
+    const double steps = 5;
     return std::round(100.0 * scale / steps) * steps / 100.0;
 }
 
