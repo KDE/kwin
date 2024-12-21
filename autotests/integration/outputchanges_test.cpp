@@ -1220,7 +1220,7 @@ void OutputChangesTest::testGenerateConfigs_data()
         .physicalSizeInMM = QSize(598, 336),
         .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
     } << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred)
-                                << 1.75;
+                                << 1.70;
 
     QTest::addRow("2160p invalid size") << Test::OutputInfo{
         .geometry = QRect(0, 0, 3840, 2160),
@@ -1251,29 +1251,29 @@ void OutputChangesTest::testGenerateConfigs_data()
         .physicalSizeInMM = QSize(598, 336),
         .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flags{})},
     } << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{})
-                                                         << 1.25;
+                                                         << 1.15;
 
     QTest::addRow("2160p 27\" with 30Hz preferred and a generated 60Hz mode") << Test::OutputInfo{
         .geometry = QRect(0, 0, 3840, 2160),
         .internal = false,
         .physicalSizeInMM = QSize(598, 336),
         .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flag::Generated)},
-    } << ModeInfo(QSize(3840, 2160), 30000ul, OutputMode::Flag::Preferred) << 1.75;
+    } << ModeInfo(QSize(3840, 2160), 30000ul, OutputMode::Flag::Preferred) << 1.70;
 
     QTest::addRow("1440p 32:9 49\" with two preferred modes") << Test::OutputInfo{
         .geometry = QRect(0, 0, 5120, 1440),
         .internal = false,
-        .physicalSizeInMM = QSize(1190, 340),
+        .physicalSizeInMM = QSize(1194, 333),
         .modes = {ModeInfo(QSize(3840, 1080), 120000, OutputMode::Flag::Preferred), ModeInfo(QSize(5120, 1440), 120000, OutputMode::Flag::Preferred)},
     } << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred)
-                                                              << 1.0;
+                                                              << 1.15;
 
     QTest::addRow("2160p 32:9 57\" with non-native preferred mode") << Test::OutputInfo{
         .geometry = QRect(0, 0, 7680, 2160),
         .internal = false,
         .physicalSizeInMM = QSize(1400, 400),
         .modes = {ModeInfo(QSize(3840, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(7680, 2160), 120000, OutputMode::Flags{})},
-    } << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.5;
+    } << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.45;
 
     QTest::addRow("Pixel 3a") << Test::OutputInfo{
         .geometry = QRect(0, 0, 1080, 2220),
@@ -1281,7 +1281,7 @@ void OutputChangesTest::testGenerateConfigs_data()
         .physicalSizeInMM = QSize(62, 128),
         .modes = {ModeInfo(QSize(1080, 2220), 60000, OutputMode::Flags{}), ModeInfo(QSize(1080, 2220), 120000, OutputMode::Flag::Preferred)},
     } << ModeInfo(QSize(1080, 2220), 120000ul, OutputMode::Flag::Preferred)
-                              << 3.0;
+                              << 2.90;
 
     QTest::addRow("OnePlus 6") << Test::OutputInfo{
         .geometry = QRect(0, 0, 1080, 2280),
@@ -1289,7 +1289,7 @@ void OutputChangesTest::testGenerateConfigs_data()
         .physicalSizeInMM = QSize(68, 145),
         .modes = {ModeInfo(QSize(1080, 2280), 60000, OutputMode::Flag::Preferred)},
     } << ModeInfo(QSize(1080, 2280), 60000ul, OutputMode::Flag::Preferred)
-                               << 2.75;
+                               << 2.65;
 
     QTest::addRow("SteamDeck OLED") << Test::OutputInfo{
         .geometry = QRect(0, 0, 800, 1280),

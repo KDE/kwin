@@ -566,8 +566,8 @@ double OutputConfigurationStore::chooseScale(Output *output, const QSize &pixelS
     const double maxScale = std::min(3.0, pixelSize.height() / minLogicalHeight);
     const double scale = std::clamp(desiredScale, 1.0, maxScale);
 
-    // round to 25% steps
-    return std::round(100.0 * scale / 25.0) * 25.0 / 100.0;
+    // round to 5% steps
+    return std::round(100.0 * scale / 5.0) * 5.0 / 100.0;
 }
 
 double OutputConfigurationStore::targetDpi(Output *output) const
