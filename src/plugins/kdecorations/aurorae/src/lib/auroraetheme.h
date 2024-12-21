@@ -76,6 +76,7 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(int buttonWidthAppMenu READ buttonWidthAppMenu NOTIFY themeChanged)
     Q_PROPERTY(int buttonSpacing READ buttonSpacing NOTIFY themeChanged)
     Q_PROPERTY(int buttonMarginTop READ buttonMarginTop NOTIFY themeChanged)
+    Q_PROPERTY(int buttonMarginTopMaximized READ buttonMarginTopMaximized NOTIFY themeChanged)
     Q_PROPERTY(int explicitButtonSpacer READ explicitButtonSpacer NOTIFY themeChanged)
     Q_PROPERTY(qreal buttonSizeFactor READ buttonSizeFactor NOTIFY buttonSizesChanged)
     Q_PROPERTY(int animationTime READ animationTime NOTIFY themeChanged)
@@ -136,6 +137,7 @@ public:
     int buttonHeight() const;
     int buttonSpacing() const;
     int buttonMarginTop() const;
+    int buttonMarginTopMaximized() const;
     int explicitButtonSpacer() const;
     int animationTime() const;
     int titleEdgeLeft() const;

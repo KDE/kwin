@@ -62,6 +62,7 @@ ThemeConfig::ThemeConfig()
     , m_buttonHeight(defaultButtonHeight())
     , m_buttonSpacing(defaultButtonSpacing())
     , m_buttonMarginTop(defaultButtonMarginTop())
+    , m_buttonMarginTopMaximized(defaultButtonMarginTopMaximized())
     , m_explicitButtonSpacer(defaultExplicitButtonSpacer())
     // padding
     , m_paddingLeft(defaultPaddingLeft())
@@ -151,6 +152,7 @@ void ThemeConfig::load(const KConfig &conf)
     m_buttonHeight = qRound(scaleFactor * border.readEntry("ButtonHeight", defaultButtonHeight()));
     m_buttonSpacing = qRound(scaleFactor * border.readEntry("ButtonSpacing", defaultButtonSpacing()));
     m_buttonMarginTop = qRound(scaleFactor * border.readEntry("ButtonMarginTop", defaultButtonMarginTop()));
+    m_buttonMarginTopMaximized = qRound(scaleFactor * border.readEntry("ButtonMarginTopMaximized", defaultButtonMarginTopMaximized()));
     m_explicitButtonSpacer = qRound(scaleFactor * border.readEntry("ExplicitButtonSpacer", defaultExplicitButtonSpacer()));
 
     m_paddingLeft = qRound(scaleFactor * border.readEntry("PaddingLeft", defaultPaddingLeft()));

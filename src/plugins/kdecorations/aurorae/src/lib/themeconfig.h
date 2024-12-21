@@ -184,6 +184,10 @@ public:
     {
         return m_buttonMarginTop;
     }
+    int buttonMarginTopMaximized() const
+    {
+        return m_buttonMarginTopMaximized;
+    }
     int explicitButtonSpacer() const
     {
         return m_explicitButtonSpacer;
@@ -395,6 +399,10 @@ public:
     {
         return 0;
     }
+    static int defaultButtonMarginTopMaximized()
+    {
+        return 0;
+    }
     static int defaultExplicitButtonSpacer()
     {
         return 10;
@@ -479,6 +487,7 @@ private:
     int m_buttonHeight;
     int m_buttonSpacing;
     int m_buttonMarginTop;
+    int m_buttonMarginTopMaximized;
     int m_explicitButtonSpacer;
 
     // padding
