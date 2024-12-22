@@ -28,4 +28,4 @@ target_sources(eis PRIVATE
     eisinputcapturefilter.cpp
 )
 
-target_link_libraries(eis PRIVATE kwin Libeis::Libeis XKB::XKB)
+target_link_libraries(eis PRIVATE kwin KF6::I18n KF6::GlobalAccel Libeis::Libeis XKB::XKB)

@@ -19,6 +19,10 @@
 #include "workspace.h"
 #include "xkb.h"
 
+#include <KGlobalAccel>
+#include <KLocalizedString>
+
+#include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusMetaType>
@@ -28,6 +32,8 @@
 
 namespace KWin
 {
+
+constexpr QKeyCombination defaultDisableKeys{Qt::META | Qt::SHIFT, Qt::Key_Escape};
 
 class BarrierSpy : public InputEventSpy
 {
@@ -64,7 +70,9 @@ public:
         if (event->state != KeyboardKeyState::Pressed) {
             return;
         }
-        if (event->key == Qt::Key_Escape && event->modifiers == (Qt::MetaModifier | Qt::ShiftModifier)) {
+        // Even if the user removed all sequences for this, we use the default one to have an escape hatch
+        auto disableKeySequence = KGlobalAccel::self()->shortcut(manager->m_disableCaptureAction).value(0, defaultDisableKeys)[0];
+        if (event->key == disableKeySequence.key() && event->modifiers == disableKeySequence.keyboardModifiers()) {
             manager->activeCapture()->disable();
         }
     }
@@ -109,6 +117,12 @@ EisInputCaptureManager::EisInputCaptureManager()
         });
         m_serviceWatcher->removeWatchedService(service);
     });
+
+    m_disableCaptureAction = new QAction(this);
+    m_disableCaptureAction->setProperty("componentName", QStringLiteral("kwin"));
+    m_disableCaptureAction->setObjectName(QStringLiteral("disableInputCapture"));
+    m_disableCaptureAction->setText(i18nc("@action shortcut", "Disable Active Input Capture"));
+    KGlobalAccel::setGlobalShortcut(m_disableCaptureAction, QKeySequence(defaultDisableKeys));
 
     QDBusConnection::sessionBus().registerObject("/org/kde/KWin/EIS/InputCapture", "org.kde.KWin.EIS.InputCaptureManager", this, QDBusConnection::ExportAllInvokables | QDBusConnection::ExportAllSignals);
 }

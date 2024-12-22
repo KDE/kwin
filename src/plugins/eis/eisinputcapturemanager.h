@@ -15,6 +15,7 @@
 
 #include <memory>
 
+class QAction;
 class QDBusServiceWatcher;
 
 namespace KWin
@@ -55,6 +56,7 @@ private:
     std::unique_ptr<EisInputCaptureFilter> m_inputFilter;
     std::vector<std::unique_ptr<EisInputCapture>> m_inputCaptures;
     EisInputCapture *m_activeCapture = nullptr;
+    QAction *m_disableCaptureAction;
     friend class BarrierSpy;
 };
 }
