@@ -774,7 +774,9 @@ void Device::setCalibrationMatrix(const QMatrix4x4 &matrix)
 
 QString Device::defaultPressureCurve() const
 {
-    return QStringLiteral("0.0,0.0;1.0,1.0;");
+    QEasingCurve curve(QEasingCurve::Type::BezierSpline);
+    curve.addCubicBezierSegment(QPointF{0.0f, 0.0f}, QPointF{1.0f, 1.0f}, QPointF{1.0f, 1.0f});
+    return serializePressureCurve(curve);
 }
 
 QEasingCurve Device::pressureCurve() const
