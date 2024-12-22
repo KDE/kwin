@@ -78,8 +78,8 @@ class KWIN_EXPORT Device : public InputDevice
     // advanced
     Q_PROPERTY(int supportedButtons READ supportedButtons CONSTANT)
     Q_PROPERTY(bool supportsCalibrationMatrix READ supportsCalibrationMatrix CONSTANT)
-    Q_PROPERTY(QMatrix4x4 defaultCalibrationMatrix READ defaultCalibrationMatrix CONSTANT)
-    Q_PROPERTY(QMatrix4x4 calibrationMatrix READ calibrationMatrix WRITE setCalibrationMatrix NOTIFY calibrationMatrixChanged)
+    Q_PROPERTY(QString defaultCalibrationMatrix READ defaultCalibrationMatrix CONSTANT)
+    Q_PROPERTY(QString calibrationMatrix READ serializedCalibrationMatrix WRITE setCalibrationMatrix NOTIFY calibrationMatrixChanged)
     Q_PROPERTY(Qt::ScreenOrientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
     Q_PROPERTY(int orientationDBus READ orientation WRITE setOrientationDBus NOTIFY orientationChanged)
 
@@ -460,20 +460,27 @@ public:
      */
     void setLeftHanded(bool set);
 
-    QMatrix4x4 defaultCalibrationMatrix() const
+    QString defaultCalibrationMatrix() const
     {
         auto list = defaultValue("CalibrationMatrix", QList<float>{});
         if (list.size() == 16) {
-            return QMatrix4x4{list.constData()};
+            return serializeMatrix(QMatrix4x4{list.constData()});
         }
 
-        return m_defaultCalibrationMatrix;
+        return serializeMatrix(m_defaultCalibrationMatrix);
     }
     QMatrix4x4 calibrationMatrix() const
     {
         return m_calibrationMatrix;
     }
-    void setCalibrationMatrix(const QMatrix4x4 &matrix);
+    void setCalibrationMatrix(const QString &value);
+    QString serializedCalibrationMatrix() const
+    {
+        return serializeMatrix(m_calibrationMatrix);
+    }
+
+    static QString serializeMatrix(const QMatrix4x4 &matrix);
+    static QMatrix4x4 deserializeMatrix(const QString &matrix);
 
     QString defaultPressureCurve() const;
     QEasingCurve pressureCurve() const;
