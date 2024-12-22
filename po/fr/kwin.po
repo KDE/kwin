@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-21 00:42+0000\n"
-"PO-Revision-Date: 2024-12-12 09:01+0100\n"
+"PO-Revision-Date: 2024-12-20 09:43+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 24.11.90\n"
+"X-Generator: Lokalize 24.12.0\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -137,77 +137,89 @@ msgstr "L'extension « GLX / OpenGL » n'est pas disponible."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Impossible d'ouvrir le profil « ICC » « %1 »"
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 n'existe pas"
+msgstr "Le profil « ICC » %1 n'existe pas."
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "Le profil « ICC » « %1 » n'est pas utilisable pour des affichages."
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"Le profil « ICC » « %1 » possède un espace de connexion non pris en charge. "
+"Seul l'espace « XYZ » est pris en charge."
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"Le profil « ICC » « %1 » est endommagé. L'espace colorimétrique des "
+"entrées / sorties n'est pas « RGB »."
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr ""
+"Le profil « ICC » « %1 » est endommagé. Il ne possède aucun point blanc."
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
+"Le profil « ICC » « %1 » est endommagé. Son point blanc n'est pas valable."
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"Le profil « ICC » « %1 » est endommagé. L'analyse de la matrice d’adaptation "
+"chromatique a échouée."
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"Le profil « ICC » « %1 » est endommagé. L'inversion de la matrice "
+"d’adaptation chromatique a échouée."
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "Le profil « ICC » « %1 » est endommagé. Il ne possède aucun primaire."
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"Le profil « ICC » « %1 » est endommagé. Il ne peut calculer ses primaires."
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
+"Le profil « ICC » « %1 » est endommagé. Ses primaires ne sont pas valable."
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr ""
+"Le profil « ICC » « %1 » avec uniquement les balises « BToD » n'est pas pris "
+"en charge."
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Les étiquettes « TRC » sont absentes du profil de couleurs."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -4474,27 +4486,29 @@ msgstr "Passer au bureau %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "L'une des sorties pertinentes n'est plus disponible."
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"La désactivation de toutes les sorties grâce à des modifications de "
+"configuration n'est pas autorisée."
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "L'ordre de sortie fourni ne contient pas toutes les sorties."
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "L'ordre de sortie fourni n'est pas valable."
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Le pilote a rejeté la configuration de sortie."
 
 #: window.cpp:3173
 #, kde-format
