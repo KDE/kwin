@@ -24,32 +24,6 @@
 
 #include <linux/input.h>
 
-QDBusArgument &operator<<(QDBusArgument &argument, const QMatrix4x4 &matrix)
-{
-    argument.beginArray(qMetaTypeId<double>());
-    for (quint8 row = 0; row < 4; ++row) {
-        for (quint8 col = 0; col < 4; ++col) {
-            argument << matrix(row, col);
-        }
-    }
-    argument.endArray();
-    return argument;
-}
-
-const QDBusArgument &operator>>(const QDBusArgument &argument, QMatrix4x4 &matrix)
-{
-    argument.beginArray();
-    for (quint8 row = 0; row < 4; ++row) {
-        for (quint8 col = 0; col < 4; ++col) {
-            double val;
-            argument >> val;
-            matrix(row, col) = val;
-        }
-    }
-    argument.endArray();
-    return argument;
-}
-
 namespace KWin
 {
 namespace LibInput
@@ -255,15 +229,7 @@ struct ConfigData<CalibrationMatrix> : public ConfigDataBase
 
     void read(Device *device, const KConfigGroup &values) const override
     {
-        if (values.hasKey(key.constData())) {
-            auto list = values.readEntry(key.constData(), QList<float>());
-            if (list.size() == 16) {
-                device->setCalibrationMatrix(QMatrix4x4{list.constData()});
-                return;
-            }
-        }
-
-        device->setCalibrationMatrix(device->defaultCalibrationMatrix());
+        device->setCalibrationMatrix(values.readEntry(key.constData(), device->defaultCalibrationMatrix()));
     }
 };
 
@@ -471,8 +437,6 @@ Device::Device(libinput_device *device, QObject *parent)
 
     libinput_device_group *group = libinput_device_get_device_group(device);
     m_deviceGroupId = QCryptographicHash::hash(QString::asprintf("%p", group).toLatin1(), QCryptographicHash::Sha1).toBase64();
-
-    qDBusRegisterMetaType<QMatrix4x4>();
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice/") + m_sysName,
                                                  QStringLiteral("org.kde.KWin.InputDevice"),
@@ -752,8 +716,9 @@ void Device::setScrollFactor(qreal factor)
     }
 }
 
-void Device::setCalibrationMatrix(const QMatrix4x4 &matrix)
+void Device::setCalibrationMatrix(const QString &value)
 {
+    const auto matrix = deserializeMatrix(value);
     if (!m_supportsCalibrationMatrix || m_calibrationMatrix == matrix) {
         return;
     }
@@ -1038,6 +1003,34 @@ void Device::setInputArea(const QRectF &inputArea)
 QRectF Device::defaultInputArea() const
 {
     return s_identityRect;
+}
+
+QString Device::serializeMatrix(const QMatrix4x4 &matrix)
+{
+    QString result;
+    for (int i = 0; i < 16; i++) {
+        result.append(QString::number(matrix.constData()[i]));
+        if (i != 15) {
+            result.append(QLatin1Char(','));
+        }
+    }
+    return result;
+}
+
+QMatrix4x4 Device::deserializeMatrix(const QString &matrix)
+{
+    const auto items = QStringView(matrix).split(QLatin1Char(','));
+    if (items.size() == 16) {
+        QList<float> data;
+        data.reserve(16);
+        std::ranges::transform(std::as_const(items), std::back_inserter(data), [](const QStringView &item) {
+            return item.toFloat();
+        });
+
+        return QMatrix4x4{data.constData()};
+    }
+
+    return QMatrix4x4{};
 }
 }
 }
