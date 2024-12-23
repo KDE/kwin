@@ -45,6 +45,7 @@ if (KWIN_BUILD_KCMS)
         KF6::CoreAddons
         KF6::GlobalAccel
         KF6::I18n
+        KF6::WindowSystem
         KF6::XmlGui
         KWinEffectsInterface
     )
