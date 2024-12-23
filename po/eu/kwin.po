@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-21 00:42+0000\n"
-"PO-Revision-Date: 2024-12-12 19:34+0100\n"
+"PO-Revision-Date: 2024-12-22 17:42+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -119,77 +119,83 @@ msgstr "GLX/OpenGL ez dago erabilgarri."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "ICC profila, \"%1\", irekitzea huts egin du"
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 ez da existitzen"
+msgstr "ICC profila,\"%1\" , ez da existitzen"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC profila, \"%1\", ez da bistaratzaileekin erabilgarria"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC profilak, \"%1\", euskarririk gabeko konexio-eremua du, XYZ bakarrik da "
+"bateragarria"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"ICC profila, \"%1\",  hautsita dago, sarrera/irteera kolore-eremua ez da RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC profila, \"%1\", hautsita dago, ez dauka zuri-punturik"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC profila, \"%1\", hautsita dago, bere zuri-puntua baliogabea da"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"ICC profila, \"%1\", hautsita dago, egokitzapen kromatikorako matrizea "
+"prozesatzea huts egin du"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC profila, \"%1\", hautsita dago, egokitzapen kromatikorako matrizea "
+"alderantzikatzea huts egin du"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC profila, \"%1\", hautsita dago, ez du primariorik"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"ICC profila, \"%1\" hautsita dago, ezin izan ditu bere primarioak kalkulatu"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "\"%1\" ICC profila hondatuta dago, bere primarioak baliogabeak dira"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC profila, \"%1\", BToD etiketak bakarrik dituena ez da bateragarria"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Kolore-profilak TRC etiketak falta ditu"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -711,25 +717,24 @@ msgid "State"
 msgstr "Egoera"
 
 #: debug_console.cpp:494
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Tabletako tresna"
+msgstr "Tableta-tresnaren hurbiltasuna"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Hurbiltasuna"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Gerturatu"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Urrundu"
 
 #: debug_console.cpp:496 debug_console.cpp:513 debug_console.cpp:531
 #: debug_console.cpp:576 debug_console.cpp:590
@@ -765,33 +770,29 @@ msgid "Modifiers"
 msgstr "Aldatzaileak"
 
 #: debug_console.cpp:512
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Tabletako tresna"
+msgstr "Tableta-tresnaren ardatza"
 
 #: debug_console.cpp:529
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Tabletako tresna"
+msgstr "Tableta-tresnaren punta"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Goian"
+msgstr "Punta"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Mugitu behera"
+msgstr "Behera"
 
 #: debug_console.cpp:530
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Gora"
 
 #: debug_console.cpp:547
 #, kde-format
@@ -4437,27 +4438,27 @@ msgstr "Aldatu %1 mahaigainera"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Irteera esanguratsuetako bat jada ez dago erabilgarri"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "Konfigurazio aldaketen bidez irteera denak ezgaitzea ez da uzten"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "Emandako irteera-hurrenkerak ez ditu irteera denak"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "Emandako irteera-hurrenkera baliogabea da"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Gidariak irteera konfigurazioa errefusatu du"
 
 #: window.cpp:3173
 #, kde-format

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-21 00:42+0000\n"
-"PO-Revision-Date: 2024-12-20 02:35+0100\n"
+"PO-Revision-Date: 2024-12-21 19:42+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -720,25 +720,24 @@ msgid "State"
 msgstr "Estado"
 
 #: debug_console.cpp:494
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Herramienta de la tableta"
+msgstr "Herramienta de proximidad de la tableta"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Proximidad"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Dentro"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Fuera"
 
 #: debug_console.cpp:496 debug_console.cpp:513 debug_console.cpp:531
 #: debug_console.cpp:576 debug_console.cpp:590
@@ -774,33 +773,29 @@ msgid "Modifiers"
 msgstr "Modificadores"
 
 #: debug_console.cpp:512
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Herramienta de la tableta"
+msgstr "Herramienta de ejes de la tableta"
 
 #: debug_console.cpp:529
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Herramienta de la tableta"
+msgstr "Herramienta de punta de la tableta"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Arriba"
+msgstr "Punta"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Mover abajo"
+msgstr "Abajo"
 
 #: debug_console.cpp:530
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Arriba"
 
 #: debug_console.cpp:547
 #, kde-format

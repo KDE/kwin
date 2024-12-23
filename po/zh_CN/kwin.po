@@ -105,75 +105,75 @@ msgstr "GLX/OpenGL 不可用。"
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "打开 ICC 色彩特性文件“%1”失败"
 
 #: core/iccprofile.cpp:247
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”不存在"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”不能用于显示器"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含不支持的连接空间，系统只支持 XYZ 连接空间"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，它的输入/输出色彩空间不是 RGB 空间"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，它没有白点信息"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，它的白点信息无效"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，解析色度调整矩阵失败"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，反转色度调整矩阵失败"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，它没有原色信息"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，无法计算其原色信息"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”包含错误，它的原色信息无效"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC 色彩特性文件“%1”只包含 BToD 标签，系统不支持"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "ICC 色彩特性文件缺少 TRC 标签"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -695,25 +695,24 @@ msgid "State"
 msgstr "状态"
 
 #: debug_console.cpp:494
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "数位板工具"
+msgstr "数位板工具距离"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "距离"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "内部"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "外部"
 
 #: debug_console.cpp:496 debug_console.cpp:513 debug_console.cpp:531
 #: debug_console.cpp:576 debug_console.cpp:590
@@ -749,33 +748,29 @@ msgid "Modifiers"
 msgstr "修饰键"
 
 #: debug_console.cpp:512
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "数位板工具"
+msgstr "数位板工具轴"
 
 #: debug_console.cpp:529
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "数位板工具"
+msgstr "数位板工具笔尖"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "上"
+msgstr "笔尖"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "下移"
+msgstr "按下"
 
 #: debug_console.cpp:530
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "提起"
 
 #: debug_console.cpp:547
 #, kde-format
@@ -4381,27 +4376,27 @@ msgstr "切换到桌面 %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "其中一个相关的输出已不再可用"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "不允许通过配置更改禁用所有输出"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "提供的输出顺序不包含所有输出"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "提供的输出顺序无效"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "驱动程序拒绝了输出配置"
 
 #: window.cpp:3173
 #, kde-format
@@ -4434,6 +4429,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "EventType"
-#~ msgstr "事件类型"
