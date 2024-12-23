@@ -241,6 +241,7 @@ void DebugConsoleFilter::pointerAxis(PointerAxisEvent *event)
                          event->orientation == Qt::Horizontal ? i18nc("An orientation of a pointer axis event", "Horizontal")
                                                               : i18nc("An orientation of a pointer axis event", "Vertical")));
     text.append(tableRow(i18nc("The angle delta of a pointer axis event", "Delta"), event->delta));
+    text.append(tableRow(i18nc("The normalized V120 angle delta of a pointer axis event. V120 is a technical term and shouldn't be changed.", "Delta (V120)"), event->deltaV120));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
