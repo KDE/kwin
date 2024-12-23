@@ -901,7 +901,7 @@ TabletSeatV2Interface::addTablet(InputDevice *device)
 {
     Q_ASSERT(!d->m_tablets.contains(device));
 
-    auto iface = new TabletV2Interface(device->vendor(), device->vendor(), device->name(), {device->sysPath()}, this);
+    auto iface = new TabletV2Interface(device->vendor(), device->product(), device->name(), {device->sysPath()}, this);
 
     for (QtWaylandServer::zwp_tablet_seat_v2::Resource *r : d->resourceMap()) {
         d->sendTabletAdded(r, iface);
