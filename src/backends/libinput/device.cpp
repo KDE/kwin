@@ -135,6 +135,9 @@ enum class ConfigKey {
     DisableWhileTyping,
     PointerAcceleration,
     PointerAccelerationProfile,
+    PointerAccelerationCustomPointsFallback,
+    PointerAccelerationCustomPointsMotion,
+    PointerAccelerationCustomPointsScroll,
     TapToClick,
     LmrTapButtonMap,
     TapAndDrag,
@@ -240,6 +243,11 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::DisableWhileTyping, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
     {ConfigKey::PointerAcceleration, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
     {ConfigKey::PointerAccelerationProfile, std::make_shared<ConfigData<quint32>>(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
+    {ConfigKey::PointerAccelerationCustomPointsFallback, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PointerAccelerationCustomPointsFallback"), &Device::setPointerAccelerationCustomPointsFallback, &Device::defaultPointerAccelerationEmptyPoints)},
+    {ConfigKey::PointerAccelerationCustomPointsMotion,
+     std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PointerAccelerationCustomPointsMotion"), &Device::setPointerAccelerationCustomPointsMotion, &Device::defaultPointerAccelerationEmptyPoints)},
+    {ConfigKey::PointerAccelerationCustomPointsScroll,
+     std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PointerAccelerationCustomPointsScroll"), &Device::setPointerAccelerationCustomPointsScroll, &Device::defaultPointerAccelerationEmptyPoints)},
     {ConfigKey::TapToClick, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
     {ConfigKey::TapAndDrag, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
     {ConfigKey::TapDragLock, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
@@ -373,6 +381,26 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportedPointerAccelerationProfiles(libinput_device_config_accel_get_profiles(m_device))
     , m_defaultPointerAccelerationProfile(libinput_device_config_accel_get_default_profile(m_device))
     , m_pointerAccelerationProfile(libinput_device_config_accel_get_profile(m_device))
+    , m_pointerAccelerationCustomConfig({nullptr, nullptr})
+    , m_pointerAccelerationCustomProfileFallback({
+          .serialized = QString(),
+          .changedSignal = &Device::pointerAccelerationCustomPointsFallbackChanged,
+          .configKey = ConfigKey::PointerAccelerationCustomPointsFallback,
+          .type = LIBINPUT_ACCEL_TYPE_FALLBACK,
+      })
+    , m_pointerAccelerationCustomProfileMotion({
+          .serialized = QString(),
+          .changedSignal = &Device::pointerAccelerationCustomPointsMotionChanged,
+          .configKey = ConfigKey::PointerAccelerationCustomPointsMotion,
+          .type = LIBINPUT_ACCEL_TYPE_MOTION,
+      })
+    , m_pointerAccelerationCustomProfileScroll({
+          .serialized = QString(),
+          .changedSignal = &Device::pointerAccelerationCustomPointsScrollChanged,
+          .configKey = ConfigKey::PointerAccelerationCustomPointsScroll,
+          .type = LIBINPUT_ACCEL_TYPE_SCROLL,
+      })
+    , m_wantPointerAccelerationCustomProfile(m_pointerAccelerationProfile == LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM)
     , m_enabled(m_supportsDisableEvents ? (libinput_device_config_send_events_get_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED) == 0 : true)
     , m_disableEventsOnExternalMouseEnabledByDefault(m_supportsDisableEventsOnExternalMouse && (libinput_device_config_send_events_get_default_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE))
     , m_disableEventsOnExternalMouse(m_supportsDisableEventsOnExternalMouse && (libinput_device_config_send_events_get_mode(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE))
@@ -520,19 +548,124 @@ void Device::setPointerAccelerationProfile(bool set, enum libinput_config_accel_
         return;
     }
     if (!set) {
-        profile = (profile == LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT) ? LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE : LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
-        if (!(m_supportedPointerAccelerationProfiles & profile)) {
-            return;
-        }
+        return;
     }
 
-    if (libinput_device_config_accel_set_profile(m_device, profile) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+    if (profile == LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM) {
+        setPointerAccelerationProfileCustom(true);
+    } else if (libinput_device_config_accel_set_profile(m_device, profile) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         if (m_pointerAccelerationProfile != profile) {
             m_pointerAccelerationProfile = profile;
             Q_EMIT pointerAccelerationProfileChanged();
             writeEntry(ConfigKey::PointerAccelerationProfile, (quint32)profile);
         }
+        m_wantPointerAccelerationCustomProfile = m_pointerAccelerationProfile == LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM;
     }
+}
+
+void Device::setPointerAccelerationProfileCustom(bool set)
+{
+    if (!(m_supportedPointerAccelerationProfiles & LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM)) {
+        return;
+    }
+    if (!set) {
+        return;
+    }
+    if (!m_pointerAccelerationCustomConfig) {
+        m_wantPointerAccelerationCustomProfile = true;
+        return;
+    }
+
+    if (libinput_device_config_accel_apply(m_device, m_pointerAccelerationCustomConfig.get()) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_pointerAccelerationProfile != LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM) {
+            m_pointerAccelerationProfile = LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM;
+            Q_EMIT pointerAccelerationProfileChanged();
+            writeEntry(ConfigKey::PointerAccelerationProfile, (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM);
+        }
+        m_wantPointerAccelerationCustomProfile = m_pointerAccelerationProfile == LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM;
+    }
+}
+
+QString Device::defaultPointerAccelerationEmptyPoints() const
+{
+    return QString();
+}
+
+void Device::setPointerAccelerationCustomPoints(const QString &set, AccelerationCustomProfileData &data)
+{
+    if (!(m_supportedPointerAccelerationProfiles & LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM)) {
+        return;
+    }
+
+    if (set.isEmpty() && !data.serialized.isEmpty()) {
+        data.serialized = set;
+        // clang-format off
+        Q_EMIT (this->*data.changedSignal)();
+        // clang-format on
+        writeEntry(data.configKey, set);
+        // can't unset a type of points in the config object, so let's recreate it from scratch
+        m_pointerAccelerationCustomConfig.reset();
+        for (auto *otherData : {&m_pointerAccelerationCustomProfileFallback, &m_pointerAccelerationCustomProfileMotion, &m_pointerAccelerationCustomProfileScroll}) {
+            if (otherData != &data) {
+                setPointerAccelerationCustomPoints(otherData->serialized, *otherData);
+            }
+        }
+        // if no custom points are left, reset to default (non-custom) acceleration profile instead
+        if (m_pointerAccelerationProfile == LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM && !m_pointerAccelerationCustomConfig) {
+            setPointerAccelerationProfile(true, m_defaultPointerAccelerationProfile);
+        }
+        return;
+    }
+
+    double step;
+    QList<double> points;
+    if (!deserializePointerAccelerationCustomPoints(set, step, points)) {
+        return;
+    }
+    if (!m_pointerAccelerationCustomConfig) {
+        auto config = libinput_config_accel_create(LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM);
+        if (!config) {
+            return;
+        }
+        m_pointerAccelerationCustomConfig = {config, &libinput_config_accel_destroy};
+    }
+
+    if (libinput_config_accel_set_points(m_pointerAccelerationCustomConfig.get(), data.type, step, points.size(), points.data()) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (data.serialized != set) {
+            data.serialized = set;
+            // clang-format off
+            Q_EMIT (this->*data.changedSignal)();
+            // clang-format on
+            writeEntry(data.configKey, set);
+        }
+        if (m_wantPointerAccelerationCustomProfile) {
+            setPointerAccelerationProfileCustom(true);
+        }
+    }
+}
+
+bool Device::deserializePointerAccelerationCustomPoints(const QStringView &curve, double &step, QList<double> &points) const
+{
+    const QList<QStringView> data = curve.split(':');
+    if (data.size() != 2) {
+        return false;
+    }
+
+    bool ok = false;
+    if (step = data[0].toDouble(&ok); !ok) {
+        return false;
+    }
+
+    points.clear();
+    for (const QStringView &pointStr : data[1].split(',')) {
+        if (double point = pointStr.toDouble(&ok); ok) {
+            points.append(point);
+        } else {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void Device::setClickMethod(bool set, enum libinput_config_click_method method)

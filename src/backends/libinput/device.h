@@ -107,6 +107,18 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool supportsPointerAccelerationProfileAdaptive READ supportsPointerAccelerationProfileAdaptive CONSTANT)
     Q_PROPERTY(bool defaultPointerAccelerationProfileAdaptive READ defaultPointerAccelerationProfileAdaptive CONSTANT)
     Q_PROPERTY(bool pointerAccelerationProfileAdaptive READ pointerAccelerationProfileAdaptive WRITE setPointerAccelerationProfileAdaptive NOTIFY pointerAccelerationProfileChanged)
+
+    Q_PROPERTY(bool supportsPointerAccelerationProfileCustom READ supportsPointerAccelerationProfileCustom CONSTANT)
+    Q_PROPERTY(bool defaultPointerAccelerationProfileCustom READ defaultPointerAccelerationProfileCustom CONSTANT)
+    Q_PROPERTY(bool pointerAccelerationProfileCustom READ pointerAccelerationProfileCustom WRITE setPointerAccelerationProfileCustom NOTIFY pointerAccelerationProfileChanged)
+
+    Q_PROPERTY(QString pointerAccelerationCustomPointsFallback READ pointerAccelerationCustomPointsFallback WRITE
+                   setPointerAccelerationCustomPointsFallback NOTIFY pointerAccelerationCustomPointsFallbackChanged)
+    Q_PROPERTY(QString pointerAccelerationCustomPointsMotion READ pointerAccelerationCustomPointsMotion WRITE setPointerAccelerationCustomPointsMotion
+                   NOTIFY pointerAccelerationCustomPointsMotionChanged)
+    Q_PROPERTY(QString pointerAccelerationCustomPointsScroll READ pointerAccelerationCustomPointsScroll WRITE setPointerAccelerationCustomPointsScroll
+                   NOTIFY pointerAccelerationCustomPointsScrollChanged)
+
     //
     // tapping
     Q_PROPERTY(int tapFingerCount READ tapFingerCount CONSTANT)
@@ -533,6 +545,10 @@ public:
     {
         return (m_supportedPointerAccelerationProfiles & LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
     }
+    bool supportsPointerAccelerationProfileCustom() const
+    {
+        return (m_supportedPointerAccelerationProfiles & LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM);
+    }
     bool defaultPointerAccelerationProfileFlat() const
     {
         return (m_defaultPointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT);
@@ -541,6 +557,10 @@ public:
     {
         return (m_defaultPointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
     }
+    bool defaultPointerAccelerationProfileCustom() const
+    {
+        return (m_defaultPointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM);
+    }
     bool pointerAccelerationProfileFlat() const
     {
         return (m_pointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT);
@@ -548,6 +568,10 @@ public:
     bool pointerAccelerationProfileAdaptive() const
     {
         return (m_pointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
+    }
+    bool pointerAccelerationProfileCustom() const
+    {
+        return (m_pointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM);
     }
     void setPointerAccelerationProfile(bool set, enum libinput_config_accel_profile profile);
     void setPointerAccelerationProfileFlat(bool set)
@@ -558,6 +582,7 @@ public:
     {
         setPointerAccelerationProfile(set, LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
     }
+    void setPointerAccelerationProfileCustom(bool set);
     void setPointerAccelerationProfileFromInt(quint32 profile)
     {
         setPointerAccelerationProfile(true, (libinput_config_accel_profile)profile);
@@ -566,6 +591,33 @@ public:
     {
         return defaultValue("PointerAccelerationProfile", static_cast<quint32>(m_defaultPointerAccelerationProfile));
     }
+    QString pointerAccelerationCustomPointsFallback() const
+    {
+        return m_pointerAccelerationCustomProfileFallback.serialized;
+    }
+    QString pointerAccelerationCustomPointsMotion() const
+    {
+        return m_pointerAccelerationCustomProfileMotion.serialized;
+    }
+    QString pointerAccelerationCustomPointsScroll() const
+    {
+        return m_pointerAccelerationCustomProfileScroll.serialized;
+    }
+    QString defaultPointerAccelerationEmptyPoints() const;
+    bool deserializePointerAccelerationCustomPoints(const QStringView &curve, double &step, QList<double> &points) const;
+    void setPointerAccelerationCustomPointsFallback(const QString &set)
+    {
+        setPointerAccelerationCustomPoints(set, m_pointerAccelerationCustomProfileFallback);
+    }
+    void setPointerAccelerationCustomPointsMotion(const QString &set)
+    {
+        setPointerAccelerationCustomPoints(set, m_pointerAccelerationCustomProfileMotion);
+    }
+    void setPointerAccelerationCustomPointsScroll(const QString &set)
+    {
+        setPointerAccelerationCustomPoints(set, m_pointerAccelerationCustomProfileScroll);
+    }
+
     bool supportsClickMethodAreas() const
     {
         return (m_supportedClickMethods & LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
@@ -742,6 +794,9 @@ Q_SIGNALS:
     void disableWhileTypingChanged();
     void pointerAccelerationChanged();
     void pointerAccelerationProfileChanged();
+    void pointerAccelerationCustomPointsFallbackChanged();
+    void pointerAccelerationCustomPointsMotionChanged();
+    void pointerAccelerationCustomPointsScrollChanged();
     void enabledChanged();
     void disableEventsOnExternalMouseChanged();
     void tapToClickChanged();
@@ -774,6 +829,15 @@ private:
 
         return fallback;
     }
+
+    struct AccelerationCustomProfileData
+    {
+        QString serialized;
+        void (Device::*changedSignal)();
+        ConfigKey configKey;
+        enum libinput_config_accel_type type;
+    };
+    void setPointerAccelerationCustomPoints(const QString &set, AccelerationCustomProfileData &data);
 
     libinput_device *m_device;
     bool m_keyboard;
@@ -833,6 +897,11 @@ private:
     quint32 m_supportedPointerAccelerationProfiles;
     enum libinput_config_accel_profile m_defaultPointerAccelerationProfile;
     enum libinput_config_accel_profile m_pointerAccelerationProfile;
+    std::unique_ptr<libinput_config_accel, decltype(&libinput_config_accel_destroy)> m_pointerAccelerationCustomConfig;
+    AccelerationCustomProfileData m_pointerAccelerationCustomProfileFallback;
+    AccelerationCustomProfileData m_pointerAccelerationCustomProfileMotion;
+    AccelerationCustomProfileData m_pointerAccelerationCustomProfileScroll;
+    bool m_wantPointerAccelerationCustomProfile;
     bool m_enabled;
     bool m_disableEventsOnExternalMouseEnabledByDefault;
     bool m_disableEventsOnExternalMouse;

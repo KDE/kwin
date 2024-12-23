@@ -44,6 +44,8 @@ private Q_SLOTS:
     void testDefaultPointerAccelerationProfileFlat();
     void testDefaultPointerAccelerationProfileAdaptive_data();
     void testDefaultPointerAccelerationProfileAdaptive();
+    void testDefaultPointerAccelerationProfileCustom_data();
+    void testDefaultPointerAccelerationProfileCustom();
     void testDefaultClickMethodAreas_data();
     void testDefaultClickMethodAreas();
     void testDefaultClickMethodClickfinger_data();
@@ -137,6 +139,8 @@ private Q_SLOTS:
     void testLoadPointerAcceleration();
     void testLoadPointerAccelerationProfile_data();
     void testLoadPointerAccelerationProfile();
+    void testLoadPointerAccelerationProfileCustom_data();
+    void testLoadPointerAccelerationProfileCustom();
     void testLoadClickMethod_data();
     void testLoadClickMethod();
     void testLoadTapToClick_data();
@@ -514,6 +518,26 @@ void TestLibinputDevice::testDefaultPointerAccelerationProfileAdaptive()
     QCOMPARE(d.defaultPointerAccelerationProfileAdaptive(), enabled);
     QCOMPARE(d.property("defaultPointerAccelerationProfileAdaptive").toBool(), enabled);
     QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultPointerAccelerationProfileAdaptive"), enabled);
+}
+
+void TestLibinputDevice::testDefaultPointerAccelerationProfileCustom_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testDefaultPointerAccelerationProfileCustom()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.defaultPointerAccelerationProfile = enabled ? LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM : LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
+
+    Device d(&device);
+    QCOMPARE(d.defaultPointerAccelerationProfileCustom(), enabled);
+    QCOMPARE(d.property("defaultPointerAccelerationProfileCustom").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultPointerAccelerationProfileCustom"), enabled);
 }
 
 void TestLibinputDevice::testDefaultClickMethodAreas_data()
@@ -1813,14 +1837,21 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile_data()
     QTest::addColumn<quint32>("configValue");
     QTest::addColumn<QString>("configValuePropNameString");
 
-    QTest::newRow("pointerAccelerationProfileFlat -> pointerAccelerationProfileAdaptive")
+    QTest::newRow("pointerAccelerationProfileFlat -> pointerAccelerationProfileAdaptive") //
         << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
         << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
-    QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileFlat")
+    QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileFlat") //
         << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
         << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat";
-    QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileAdaptive")
-        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive" << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
+    QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileAdaptive") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
+    QTest::newRow("pointerAccelerationProfileCustom -> pointerAccelerationProfileFlat") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM << "pointerAccelerationProfileCustom" //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat";
+    QTest::newRow("pointerAccelerationProfileCustom -> pointerAccelerationProfileAdaptive") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM << "pointerAccelerationProfileCustom"
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
 }
 
 void TestLibinputDevice::testLoadPointerAccelerationProfile()
@@ -1836,9 +1867,10 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile()
     QByteArray configValuePropName = configValuePropNameString.toLatin1();
 
     inputConfig.writeEntry("PointerAccelerationProfile", configValue);
+    inputConfig.writeEntry("PointerAccelerationCustomPointsFallback", "1:0,1"); // in case we start with a custom profile
 
     libinput_device device;
-    device.supportedPointerAccelerationProfiles = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT | LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE;
+    device.supportedPointerAccelerationProfiles = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT | LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE | LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM;
     device.pointerAccelerationProfile = (libinput_config_accel_profile)initValue;
     device.setPointerAccelerationProfileReturnValue = false;
 
@@ -1862,6 +1894,117 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile()
     if (configValue != initValue) {
         d.setProperty(initValuePropName, true);
         QCOMPARE(inputConfig.readEntry("PointerAccelerationProfile", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadPointerAccelerationProfileCustom_data()
+{
+    QTest::addColumn<quint32>("initProfile");
+    QTest::addColumn<QString>("initProfilePropNameString");
+    QTest::addColumn<QString>("configPointsType");
+    QTest::addColumn<QString>("configPoints");
+    QTest::addColumn<bool>("configPointsValid");
+    QTest::addColumn<QString>("setPointsType");
+    QTest::addColumn<QString>("setPoints");
+
+    QTest::newRow("fallback step size 1, [0.0, 1.0]") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1.0:0.0,1.0" << true << "Fallback" << "1:0,1";
+    QTest::newRow("fallback step size 1, [0.0, 1.0] + motion step size 3, [0.0, 9.0, 36.0, 81.0]") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
+        << "Fallback" << "1:0,1" << true << "Motion" << "3:0,9,36.,81.0";
+    QTest::newRow("fallback step size 1, [1.0, 1.0] + scroll step size 1, [0.0, 1.0]") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1:1,1" << true << "Scroll" << "1:0,1";
+    QTest::newRow("switch away from custom profile by unsetting points") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
+        << "Fallback" << "1:1,1" << true << "Fallback" << QString();
+    QTest::newRow("missing points entry") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << QString() << QString() << false << QString() << QString();
+    QTest::newRow("invalid step") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
+        << "Fallback" << "0:0,1" << false << QString() << QString();
+    QTest::newRow("missing delimiter") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1" << false << QString() << QString();
+    QTest::newRow("missing step value") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << ":0,1" << false << QString() << QString();
+    QTest::newRow("missing points after step") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1:" << false << QString() << QString();
+    QTest::newRow("missing second point") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1:1" << false << QString() << QString();
+    QTest::newRow("invalid delimiter") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1;0,1" << false << QString() << QString();
+    QTest::newRow("invalid step format") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1s:0,1" << false << QString() << QString();
+    QTest::newRow("invalid point format") //
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+        << "Fallback" << "1:0,1p" << false << QString() << QString();
+}
+
+void TestLibinputDevice::testLoadPointerAccelerationProfileCustom()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+    QFETCH(quint32, initProfile);
+    QFETCH(QString, initProfilePropNameString);
+    QFETCH(QString, configPointsType);
+    QFETCH(QString, configPoints);
+    QFETCH(bool, configPointsValid);
+    QFETCH(QString, setPointsType);
+    QFETCH(QString, setPoints);
+
+    quint32 defaultProfile = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
+    QByteArray defaultProfilePropName = QByteArrayLiteral("pointerAccelerationProfileFlat");
+    QByteArray initProfilePropName = initProfilePropNameString.toLatin1();
+    quint32 configProfile = LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM;
+    QByteArray configProfilePropName = QByteArrayLiteral("pointerAccelerationProfileCustom");
+    QByteArray configPointsPropName = QStringLiteral("pointerAccelerationCustomPoints%1").arg(configPointsType).toLatin1();
+    QString configPointsKey = QStringLiteral("PointerAccelerationCustomPoints%1").arg(configPointsType);
+    QByteArray setPointsPropName = QStringLiteral("pointerAccelerationCustomPoints%1").arg(setPointsType).toLatin1();
+    QString setPointsKey = QStringLiteral("PointerAccelerationCustomPoints%1").arg(setPointsType);
+
+    inputConfig.writeEntry("PointerAccelerationProfile", configProfile);
+    if (!configPointsType.isEmpty() && !configPoints.isEmpty()) {
+        inputConfig.writeEntry(configPointsKey, configPoints.toLatin1());
+    }
+
+    libinput_device device;
+    device.supportedPointerAccelerationProfiles = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT | LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE | LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM;
+    device.defaultPointerAccelerationProfile = (libinput_config_accel_profile)defaultProfile;
+    device.pointerAccelerationProfile = (libinput_config_accel_profile)initProfile;
+    device.setPointerAccelerationProfileReturnValue = false;
+
+    Device d(&device);
+    QCOMPARE(d.property(initProfilePropName).toBool(), true);
+    QCOMPARE(d.property(configProfilePropName).toBool(), initProfile == configProfile);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.property(initProfilePropName).toBool(), true);
+    QCOMPARE(d.property(configProfilePropName).toBool(), initProfile == configProfile);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.property(initProfilePropName).toBool(), !configPointsValid || initProfile == configProfile);
+    QCOMPARE(d.property(configProfilePropName).toBool(), configPointsValid);
+    QCOMPARE(d.property(configPointsPropName).toString(), configPointsValid ? configPoints : QString());
+    QCOMPARE(dbusProperty<bool>(d.sysName(), initProfilePropName), !configPointsValid || initProfile == configProfile);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), configProfilePropName), configPointsValid);
+    QCOMPARE(dbusProperty<QString>(d.sysName(), configPointsPropName), configPointsValid ? configPoints : QString());
+
+    // and try to store a new value
+    if (!setPointsType.isEmpty() && !setPoints.isEmpty()) {
+        d.setProperty(setPointsPropName, setPoints);
+        QCOMPARE(inputConfig.readEntry("PointerAccelerationProfile", (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_NONE), setPoints.isEmpty() ? defaultProfile : configProfile);
+        QCOMPARE(inputConfig.readEntry(configPointsKey, QString()), configPointsType == setPointsType ? setPoints : configPoints);
+        QCOMPARE(inputConfig.readEntry(setPointsKey, QString()), setPoints);
     }
 }
 

@@ -10,6 +10,8 @@
 
 #include "mock_libinput.h"
 
+#include <QMap>
+
 #include <linux/input.h>
 
 int libinput_device_keyboard_has_key(struct libinput_device *device, uint32_t code)
@@ -271,6 +273,49 @@ enum libinput_config_status libinput_device_config_accel_set_profile(struct libi
 enum libinput_config_accel_profile libinput_device_config_accel_get_profile(struct libinput_device *device)
 {
     return device->pointerAccelerationProfile;
+}
+
+struct LibinputConfigAccelPrivate
+{
+    libinput_config_accel_profile profile;
+    QMap<libinput_config_accel_type, QPair<double, QList<double>>> points;
+
+    LibinputConfigAccelPrivate(libinput_config_accel_profile p)
+        : profile(p)
+    {
+    }
+};
+
+struct libinput_config_accel *libinput_config_accel_create(enum libinput_config_accel_profile profile)
+{
+    return reinterpret_cast<libinput_config_accel *>(new LibinputConfigAccelPrivate(profile));
+}
+
+void libinput_config_accel_destroy(struct libinput_config_accel *config)
+{
+    delete reinterpret_cast<LibinputConfigAccelPrivate *>(config);
+}
+
+enum libinput_config_status libinput_config_accel_set_points(struct libinput_config_accel *config,
+                                                             enum libinput_config_accel_type accel_type,
+                                                             double step, size_t npoints, double *points)
+{
+    auto p = reinterpret_cast<LibinputConfigAccelPrivate *>(config);
+    if (p->profile == LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM) {
+        if (step <= 0 || npoints < 2) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        p->points[accel_type] = {step, QList<double>{points, points + npoints}};
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_status libinput_device_config_accel_apply(struct libinput_device *device, struct libinput_config_accel *config)
+{
+    auto p = reinterpret_cast<LibinputConfigAccelPrivate *>(config);
+    // if we were to test that the custom points/step also arrived correctly in libinput, we'd store them here for later comparison
+    return libinput_device_config_accel_set_profile(device, p->profile);
 }
 
 uint32_t libinput_device_config_click_get_methods(struct libinput_device *device)
