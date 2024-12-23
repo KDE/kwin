@@ -258,11 +258,11 @@ public:
     {
         return libinput_event_tablet_tool_get_distance(m_tabletToolEvent);
     }
-    int xTilt() const
+    qreal xTilt() const
     {
         return libinput_event_tablet_tool_get_tilt_x(m_tabletToolEvent);
     }
-    int yTilt() const
+    qreal yTilt() const
     {
         return libinput_event_tablet_tool_get_tilt_y(m_tabletToolEvent);
     }

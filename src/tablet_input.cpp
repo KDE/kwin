@@ -192,7 +192,7 @@ void TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
     m_cursorByTool[device] = cursor;
 }
 
-void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -222,7 +222,7 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     input()->setLastInputHandler(this);
 }
 
-void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -254,7 +254,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
     input()->setLastInputHandler(this);
 }
 
-void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
