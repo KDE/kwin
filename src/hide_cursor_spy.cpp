@@ -36,7 +36,7 @@ void HideCursorSpy::touchDown(qint32 id, const QPointF &pos, std::chrono::micros
 
 void HideCursorSpy::tabletToolProximityEvent(TabletEvent *event)
 {
-    if (event->type() == QEvent::Type::TabletLeaveProximity) {
+    if (event->type == TabletEvent::Type::LeaveProximity) {
         hideCursor();
     } else {
         showCursor();

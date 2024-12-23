@@ -206,16 +206,19 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     update();
     workspace()->setActiveOutput(pos);
 
-    // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
-    const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
-    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(QEvent::TabletMove, dev, pos, pos, pressure,
-                   xTilt, yTilt,
-                   0, // tangentialPressure
-                   rotation,
-                   distance,
-                   Qt::NoModifier, button, button, tool, device);
-    ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+    TabletEvent ev{
+        .type = TabletEvent::Move,
+        .device = device,
+        .rotation = rotation,
+        .position = pos,
+        .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
+        .pressure = pressure,
+        .xTilt = xTilt,
+        .yTilt = yTilt,
+        .distance = distance,
+        .timestamp = time,
+        .tool = tool,
+    };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
     input()->processFilters(std::bind(&InputEventFilter::tabletToolAxisEvent, std::placeholders::_1, &ev));
@@ -238,16 +241,19 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
     update();
     workspace()->setActiveOutput(pos);
 
-    // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
-    const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
-    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity, dev, pos, pos, pressure,
-                   xTilt, yTilt,
-                   0, // tangentialPressure
-                   rotation,
-                   distance,
-                   Qt::NoModifier, button, button, tool, device);
-    ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+    TabletEvent ev{
+        .type = tipNear ? TabletEvent::EnterProximity : TabletEvent::LeaveProximity,
+        .device = device,
+        .rotation = rotation,
+        .position = pos,
+        .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
+        .pressure = pressure,
+        .xTilt = xTilt,
+        .yTilt = yTilt,
+        .distance = distance,
+        .timestamp = time,
+        .tool = tool,
+    };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolProximityEvent, std::placeholders::_1, &ev));
     input()->processFilters(std::bind(&InputEventFilter::tabletToolProximityEvent, std::placeholders::_1, &ev));
@@ -270,16 +276,19 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
     update();
     workspace()->setActiveOutput(pos);
 
-    // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
-    const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
-    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(tipDown ? QEvent::TabletPress : QEvent::TabletRelease, dev, pos, pos, pressure,
-                   xTilt, yTilt,
-                   0, // tangentialPressure
-                   rotation,
-                   distance,
-                   Qt::NoModifier, button, button, tool, device);
-    ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+    TabletEvent ev{
+        .type = tipDown ? TabletEvent::Press : TabletEvent::Release,
+        .device = device,
+        .rotation = rotation,
+        .position = pos,
+        .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
+        .pressure = pressure,
+        .xTilt = xTilt,
+        .yTilt = yTilt,
+        .distance = distance,
+        .timestamp = time,
+        .tool = tool,
+    };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolTipEvent, std::placeholders::_1, &ev));
     input()->processFilters(std::bind(&InputEventFilter::tabletToolTipEvent, std::placeholders::_1, &ev));

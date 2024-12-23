@@ -42,7 +42,7 @@ class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
 struct SwitchEvent;
-class TabletEvent;
+struct TabletEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;

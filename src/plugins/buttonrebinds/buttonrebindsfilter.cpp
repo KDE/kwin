@@ -202,7 +202,7 @@ bool ButtonRebindsFilter::tabletToolProximityEvent(KWin::TabletEvent *event)
     if (RebindScope::isRebinding()) {
         return false;
     }
-    m_tabletCursorPos = event->position();
+    m_tabletCursorPos = event->position;
     return false;
 }
 
@@ -211,7 +211,7 @@ bool ButtonRebindsFilter::tabletToolAxisEvent(KWin::TabletEvent *event)
     if (RebindScope::isRebinding()) {
         return false;
     }
-    m_tabletCursorPos = event->position();
+    m_tabletCursorPos = event->position;
     return false;
 }
 
@@ -220,7 +220,7 @@ bool ButtonRebindsFilter::tabletToolTipEvent(KWin::TabletEvent *event)
     if (RebindScope::isRebinding()) {
         return false;
     }
-    m_tabletCursorPos = event->position();
+    m_tabletCursorPos = event->position;
     return false;
 }
 

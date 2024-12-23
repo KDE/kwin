@@ -61,6 +61,7 @@
 
 #include <QFontMetrics>
 #include <QMatrix4x4>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QTimeLine>

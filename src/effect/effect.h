@@ -26,7 +26,7 @@ class Output;
 class PaintDataPrivate;
 class RenderTarget;
 class RenderViewport;
-class TabletEvent;
+struct TabletEvent;
 class WindowPaintDataPrivate;
 
 /** @defgroup kwineffects KWin effects library

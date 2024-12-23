@@ -13,7 +13,6 @@
 #include <chrono>
 
 class QPointF;
-class QTabletEvent;
 
 namespace KWin
 {
@@ -22,7 +21,7 @@ struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
 struct SwitchEvent;
-class TabletEvent;
+struct TabletEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;

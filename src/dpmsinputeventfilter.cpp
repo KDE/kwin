@@ -130,7 +130,7 @@ bool DpmsInputEventFilter::tabletToolAxisEvent(TabletEvent *event)
 
 bool DpmsInputEventFilter::tabletToolTipEvent(TabletEvent *event)
 {
-    if (event->type() == QEvent::TabletPress) {
+    if (event->type == TabletEvent::Press) {
         // Only wake when the tool is actually pressed down not just hovered over the tablet
         notify();
     }

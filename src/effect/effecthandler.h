@@ -41,7 +41,6 @@ class QMatrix4x4;
 class QMouseEvent;
 class QWheelEvent;
 class QAction;
-class QTabletEvent;
 class QQmlEngine;
 
 /**
@@ -71,7 +70,7 @@ class OffscreenQuickView;
 class Group;
 class Output;
 class Effect;
-class TabletEvent;
+struct TabletEvent;
 class Window;
 class WindowItem;
 class WindowPropertyNotifyX11Filter;

@@ -23,7 +23,6 @@
 #include <KGlobalAccel>
 
 #include <QPainter>
-#include <QTabletEvent>
 
 #include <cmath>
 
@@ -344,26 +343,26 @@ TabletToolEvent &MouseClickEffect::getOrCreateTabletPoint(InputDeviceTabletTool 
 
 bool MouseClickEffect::tabletToolProximity(TabletEvent *event)
 {
-    if (event->type() == QEvent::TabletLeaveProximity) {
-        m_tabletTools.remove(event->tool());
+    if (event->type == TabletEvent::LeaveProximity) {
+        m_tabletTools.remove(event->tool);
     }
     return false;
 }
 
 bool MouseClickEffect::tabletToolAxis(TabletEvent *event)
 {
-    auto &point = getOrCreateTabletPoint(event->tool());
-    point.m_globalPosition = event->globalPosition();
-    point.m_pressure = event->pressure();
+    auto &point = getOrCreateTabletPoint(event->tool);
+    point.m_globalPosition = event->position;
+    point.m_pressure = event->pressure;
     return false;
 }
 
 bool MouseClickEffect::tabletToolTip(TabletEvent *event)
 {
-    auto &point = getOrCreateTabletPoint(event->tool());
-    point.m_pressed = event->type() == QEvent::TabletPress;
-    point.m_pressure = event->pressure();
-    point.m_globalPosition = event->globalPosition();
+    auto &point = getOrCreateTabletPoint(event->tool);
+    point.m_pressed = event->type == TabletEvent::Press;
+    point.m_pressure = event->pressure;
+    point.m_globalPosition = event->position;
     return false;
 }
 

@@ -10,7 +10,6 @@
 
 #include "input.h"
 
-#include <QInputEvent>
 #include <chrono>
 
 namespace KWin
@@ -80,27 +79,28 @@ struct SwitchEvent
     std::chrono::microseconds timestamp;
 };
 
-class TabletEvent : public QTabletEvent
+struct TabletEvent
 {
 public:
-    TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
-                qreal pressure, float xTilt, float yTilt,
-                float tangentialPressure, qreal rotation, float z,
-                Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, InputDeviceTabletTool *tool, InputDevice *device);
+    enum Type {
+        Press,
+        Release,
+        EnterProximity,
+        LeaveProximity,
+        Move,
+    };
 
-    InputDevice *device() const
-    {
-        return m_device;
-    }
-
-    InputDeviceTabletTool *tool() const
-    {
-        return m_tool;
-    }
-
-private:
-    InputDeviceTabletTool *m_tool;
-    InputDevice *m_device;
+    Type type;
+    InputDevice *device;
+    qreal rotation;
+    QPointF position;
+    Qt::MouseButtons buttons;
+    qreal pressure;
+    qreal xTilt;
+    qreal yTilt;
+    qreal distance;
+    std::chrono::microseconds timestamp;
+    InputDeviceTabletTool *tool;
 };
 
 struct TabletToolButtonEvent
