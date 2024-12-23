@@ -77,7 +77,7 @@ bool InputDevice::isLidSwitch() const
 
 bool InputDevice::isPointer() const
 {
-    return false;
+    return true;
 }
 
 bool InputDevice::isTabletModeSwitch() const
@@ -87,12 +87,12 @@ bool InputDevice::isTabletModeSwitch() const
 
 bool InputDevice::isTabletPad() const
 {
-    return false;
+    return true;
 }
 
 bool InputDevice::isTabletTool() const
 {
-    return false;
+    return true;
 }
 
 bool InputDevice::isTouch() const
