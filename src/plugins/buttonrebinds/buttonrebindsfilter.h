@@ -86,6 +86,7 @@ private:
     bool sendKeyModifiers(const Qt::KeyboardModifiers &modifiers, bool pressed, std::chrono::microseconds time);
     bool sendMouseButton(quint32 button, bool pressed, std::chrono::microseconds time);
     bool sendMousePosition(QPointF position, std::chrono::microseconds time);
+    bool sendMouseFrame();
     bool sendTabletToolButton(quint32 button, bool pressed, std::chrono::microseconds time);
 
     InputDevice m_inputDevice;

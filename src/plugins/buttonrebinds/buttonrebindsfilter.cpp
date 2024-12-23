@@ -308,11 +308,16 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
         return sendKeySequence(*seq, pressed, timestamp);
     }
     if (const auto mb = std::get_if<MouseButton>(&action)) {
+        bool sentMouseEvent = false;
         if (pressed && type != Pointer) {
-            sendMousePosition(m_tabletCursorPos, timestamp);
+            sentMouseEvent |= sendMousePosition(m_tabletCursorPos, timestamp);
         }
         sendKeyModifiers(mb->modifiers, pressed, timestamp);
-        return sendMouseButton(mb->button, pressed, timestamp);
+        sentMouseEvent |= sendMouseButton(mb->button, pressed, timestamp);
+        if (sentMouseEvent) {
+            sendMouseFrame();
+        }
+        return sentMouseEvent;
     }
     if (const auto tb = std::get_if<TabletToolButton>(&action)) {
         return sendTabletToolButton(tb->button, pressed, timestamp);
@@ -442,6 +447,13 @@ bool ButtonRebindsFilter::sendMousePosition(QPointF position, std::chrono::micro
 {
     RebindScope scope;
     Q_EMIT m_inputDevice.pointerMotionAbsolute(position, time, &m_inputDevice);
+    return true;
+}
+
+bool ButtonRebindsFilter::sendMouseFrame()
+{
+    RebindScope scope;
+    Q_EMIT m_inputDevice.pointerFrame(&m_inputDevice);
     return true;
 }
 
