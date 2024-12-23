@@ -61,6 +61,7 @@
 
 #include <QFontMetrics>
 #include <QMatrix4x4>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QTimeLine>
@@ -569,7 +570,7 @@ void EffectsHandler::touchCancel()
     }
 }
 
-bool EffectsHandler::tabletToolProximityEvent(TabletEvent *event)
+bool EffectsHandler::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -580,7 +581,7 @@ bool EffectsHandler::tabletToolProximityEvent(TabletEvent *event)
     return false;
 }
 
-bool EffectsHandler::tabletToolAxisEvent(TabletEvent *event)
+bool EffectsHandler::tabletToolAxisEvent(TabletToolAxisEvent *event)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -591,7 +592,7 @@ bool EffectsHandler::tabletToolAxisEvent(TabletEvent *event)
     return false;
 }
 
-bool EffectsHandler::tabletToolTipEvent(TabletEvent *event)
+bool EffectsHandler::tabletToolTipEvent(TabletToolTipEvent *event)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {

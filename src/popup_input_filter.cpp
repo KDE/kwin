@@ -127,13 +127,13 @@ bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::mic
     return false;
 }
 
-bool PopupInputFilter::tabletToolTipEvent(TabletEvent *event)
+bool PopupInputFilter::tabletToolTipEvent(TabletToolTipEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;
     }
-    if (event->type() == QEvent::TabletPress) {
-        auto tabletFocus = input()->findToplevel(event->globalPosition());
+    if (event->type == TabletToolTipEvent::Type::Press) {
+        auto tabletFocus = input()->findToplevel(event->position);
         if (!tabletFocus || !Window::belongToSameApplication(tabletFocus, m_popupWindows.constLast())) {
             // a touch on a window (or no window) not belonging to the popup window
             cancelPopups();
@@ -142,7 +142,7 @@ bool PopupInputFilter::tabletToolTipEvent(TabletEvent *event)
         }
         if (tabletFocus && tabletFocus->isDecorated()) {
             // test whether it is on the decoration
-            if (!exclusiveContains(tabletFocus->clientGeometry(), event->globalPosition())) {
+            if (!exclusiveContains(tabletFocus->clientGeometry(), event->position)) {
                 cancelPopups();
                 return true;
             }

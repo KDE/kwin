@@ -23,7 +23,6 @@
 #include <KGlobalAccel>
 
 #include <QPainter>
-#include <QTabletEvent>
 
 #include <cmath>
 
@@ -342,28 +341,28 @@ TabletToolEvent &MouseClickEffect::getOrCreateTabletPoint(InputDeviceTabletTool 
     return point;
 }
 
-bool MouseClickEffect::tabletToolProximity(TabletEvent *event)
+bool MouseClickEffect::tabletToolProximity(TabletToolProximityEvent *event)
 {
-    if (event->type() == QEvent::TabletLeaveProximity) {
-        m_tabletTools.remove(event->tool());
+    if (event->type == TabletToolProximityEvent::LeaveProximity) {
+        m_tabletTools.remove(event->tool);
     }
     return false;
 }
 
-bool MouseClickEffect::tabletToolAxis(TabletEvent *event)
+bool MouseClickEffect::tabletToolAxis(TabletToolAxisEvent *event)
 {
-    auto &point = getOrCreateTabletPoint(event->tool());
-    point.m_globalPosition = event->globalPosition();
-    point.m_pressure = event->pressure();
+    auto &point = getOrCreateTabletPoint(event->tool);
+    point.m_globalPosition = event->position;
+    point.m_pressure = event->pressure;
     return false;
 }
 
-bool MouseClickEffect::tabletToolTip(TabletEvent *event)
+bool MouseClickEffect::tabletToolTip(TabletToolTipEvent *event)
 {
-    auto &point = getOrCreateTabletPoint(event->tool());
-    point.m_pressed = event->type() == QEvent::TabletPress;
-    point.m_pressure = event->pressure();
-    point.m_globalPosition = event->globalPosition();
+    auto &point = getOrCreateTabletPoint(event->tool);
+    point.m_pressed = event->type == TabletToolTipEvent::Press;
+    point.m_pressure = event->pressure;
+    point.m_globalPosition = event->position;
     return false;
 }
 

@@ -41,7 +41,6 @@ class QMatrix4x4;
 class QMouseEvent;
 class QWheelEvent;
 class QAction;
-class QTabletEvent;
 class QQmlEngine;
 
 /**
@@ -71,7 +70,9 @@ class OffscreenQuickView;
 class Group;
 class Output;
 class Effect;
-class TabletEvent;
+struct TabletToolProximityEvent;
+struct TabletToolAxisEvent;
+struct TabletToolTipEvent;
 class Window;
 class WindowItem;
 class WindowPropertyNotifyX11Filter;
@@ -746,9 +747,9 @@ public:
     bool touchUp(qint32 id, std::chrono::microseconds time);
     void touchCancel();
 
-    bool tabletToolProximityEvent(KWin::TabletEvent *event);
-    bool tabletToolAxisEvent(KWin::TabletEvent *event);
-    bool tabletToolTipEvent(KWin::TabletEvent *event);
+    bool tabletToolProximityEvent(KWin::TabletToolProximityEvent *event);
+    bool tabletToolAxisEvent(KWin::TabletToolAxisEvent *event);
+    bool tabletToolTipEvent(KWin::TabletToolTipEvent *event);
     bool tabletToolButtonEvent(uint button, bool pressed, InputDeviceTabletTool *tool, std::chrono::microseconds time);
     bool tabletPadButtonEvent(uint button, bool pressed, std::chrono::microseconds time, InputDevice *device);
     bool tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);

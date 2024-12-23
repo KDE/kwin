@@ -73,17 +73,17 @@ void HideCursorEffect::pointerButton(PointerButtonEvent *event)
     activity();
 }
 
-void HideCursorEffect::tabletToolProximityEvent(TabletEvent *event)
+void HideCursorEffect::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     activity();
 }
 
-void HideCursorEffect::tabletToolAxisEvent(TabletEvent *event)
+void HideCursorEffect::tabletToolAxisEvent(TabletToolAxisEvent *event)
 {
     activity();
 }
 
-void HideCursorEffect::tabletToolTipEvent(TabletEvent *event)
+void HideCursorEffect::tabletToolTipEvent(TabletToolTipEvent *event)
 {
     activity();
 }

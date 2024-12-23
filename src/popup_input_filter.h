@@ -23,7 +23,7 @@ public:
     bool pointerButton(PointerButtonEvent *event) override;
     bool keyboardKey(KeyboardKeyEvent *event) override;
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
-    bool tabletToolTipEvent(TabletEvent *event) override;
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override;
 
 private:
     void handleWindowAdded(Window *client);

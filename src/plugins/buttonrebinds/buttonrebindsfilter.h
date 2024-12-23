@@ -72,9 +72,9 @@ public:
     explicit ButtonRebindsFilter();
     ~ButtonRebindsFilter() override;
     bool pointerButton(KWin::PointerButtonEvent *event) override;
-    bool tabletToolProximityEvent(KWin::TabletEvent *event) override;
-    bool tabletToolAxisEvent(KWin::TabletEvent *event) override;
-    bool tabletToolTipEvent(KWin::TabletEvent *event) override;
+    bool tabletToolProximityEvent(KWin::TabletToolProximityEvent *event) override;
+    bool tabletToolAxisEvent(KWin::TabletToolAxisEvent *event) override;
+    bool tabletToolTipEvent(KWin::TabletToolTipEvent *event) override;
     bool tabletPadButtonEvent(KWin::TabletPadButtonEvent *event) override;
     bool tabletToolButtonEvent(KWin::TabletToolButtonEvent *event) override;
 

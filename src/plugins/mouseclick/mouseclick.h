@@ -117,9 +117,9 @@ public:
     QFont font() const;
     bool isEnabled() const;
 
-    bool tabletToolProximity(TabletEvent *event) override;
-    bool tabletToolAxis(TabletEvent *event) override;
-    bool tabletToolTip(TabletEvent *event) override;
+    bool tabletToolProximity(TabletToolProximityEvent *event) override;
+    bool tabletToolAxis(TabletToolAxisEvent *event) override;
+    bool tabletToolTip(TabletToolTipEvent *event) override;
 
 private Q_SLOTS:
     void toggleEnabled();
