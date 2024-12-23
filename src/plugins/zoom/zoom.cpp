@@ -46,12 +46,10 @@ ZoomEffect::ZoomEffect()
     a = KStandardAction::zoomIn(this, &ZoomEffect::zoomIn, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
-    effects->registerAxisShortcut(Qt::ControlModifier | Qt::MetaModifier, PointerAxisUp, a);
 
     a = KStandardAction::zoomOut(this, &ZoomEffect::zoomOut, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
-    effects->registerAxisShortcut(Qt::ControlModifier | Qt::MetaModifier, PointerAxisDown, a);
 
     a = KStandardAction::actualSize(this, &ZoomEffect::actualSize, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
@@ -206,6 +204,29 @@ void ZoomEffect::hideCursor()
     }
 }
 
+static Qt::KeyboardModifiers stringToKeyboardModifiers(const QString &string)
+{
+    const QStringList parts = string.split(QLatin1Char('+'));
+    if (parts.isEmpty()) {
+        return Qt::KeyboardModifiers();
+    }
+
+    Qt::KeyboardModifiers modifiers;
+    for (const QString &part : parts) {
+        if (part == QLatin1String("Meta")) {
+            modifiers |= Qt::MetaModifier;
+        } else if (part == QLatin1String("Ctrl")) {
+            modifiers |= Qt::ControlModifier;
+        } else if (part == QLatin1String("Alt")) {
+            modifiers |= Qt::AltModifier;
+        } else if (part == QLatin1String("Shift")) {
+            modifiers |= Qt::ShiftModifier;
+        }
+    }
+
+    return modifiers;
+}
+
 void ZoomEffect::reconfigure(ReconfigureFlags)
 {
     ZoomConfig::self()->read();
@@ -228,6 +249,23 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     m_focusDelay = std::max(uint(0), ZoomConfig::focusDelay());
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
     m_moveFactor = std::max(0.1, ZoomConfig::moveFactor());
+
+    const Qt::KeyboardModifiers pointerAxisModifiers = stringToKeyboardModifiers(ZoomConfig::pointerAxisGestureModifiers());
+    if (m_axisModifiers != pointerAxisModifiers) {
+        m_zoomInAxisAction.reset();
+        m_zoomOutAxisAction.reset();
+        m_axisModifiers = pointerAxisModifiers;
+
+        if (pointerAxisModifiers) {
+            m_zoomInAxisAction = std::make_unique<QAction>();
+            connect(m_zoomInAxisAction.get(), &QAction::triggered, this, &ZoomEffect::zoomIn);
+            effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisUp, m_zoomInAxisAction.get());
+
+            m_zoomOutAxisAction = std::make_unique<QAction>();
+            connect(m_zoomOutAxisAction.get(), &QAction::triggered, this, &ZoomEffect::zoomOut);
+            effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisDown, m_zoomOutAxisAction.get());
+        }
+    }
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
