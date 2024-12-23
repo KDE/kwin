@@ -44,6 +44,8 @@ private Q_SLOTS:
     void testDefaultPointerAccelerationProfileFlat();
     void testDefaultPointerAccelerationProfileAdaptive_data();
     void testDefaultPointerAccelerationProfileAdaptive();
+    void testDefaultPointerAccelerationProfileCustom_data();
+    void testDefaultPointerAccelerationProfileCustom();
     void testDefaultClickMethodAreas_data();
     void testDefaultClickMethodAreas();
     void testDefaultClickMethodClickfinger_data();
@@ -514,6 +516,26 @@ void TestLibinputDevice::testDefaultPointerAccelerationProfileAdaptive()
     QCOMPARE(d.defaultPointerAccelerationProfileAdaptive(), enabled);
     QCOMPARE(d.property("defaultPointerAccelerationProfileAdaptive").toBool(), enabled);
     QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultPointerAccelerationProfileAdaptive"), enabled);
+}
+
+void TestLibinputDevice::testDefaultPointerAccelerationProfileCustom_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testDefaultPointerAccelerationProfileCustom()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.defaultPointerAccelerationProfile = enabled ? LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM : LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
+
+    Device d(&device);
+    QCOMPARE(d.defaultPointerAccelerationProfileCustom(), enabled);
+    QCOMPARE(d.property("defaultPointerAccelerationProfileCustom").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultPointerAccelerationProfileCustom"), enabled);
 }
 
 void TestLibinputDevice::testDefaultClickMethodAreas_data()
@@ -1821,6 +1843,10 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile_data()
         << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat";
     QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileAdaptive")
         << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive" << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
+    QTest::newRow("pointerAccelerationProfileCustom -> pointerAccelerationProfileFlat")
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM << "pointerAccelerationProfileCustom" << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat";
+    QTest::newRow("pointerAccelerationProfileCustom -> pointerAccelerationProfileAdaptive")
+        << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM << "pointerAccelerationProfileCustom" << (quint32)LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
 }
 
 void TestLibinputDevice::testLoadPointerAccelerationProfile()
@@ -1838,7 +1864,7 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile()
     inputConfig.writeEntry("PointerAccelerationProfile", configValue);
 
     libinput_device device;
-    device.supportedPointerAccelerationProfiles = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT | LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE;
+    device.supportedPointerAccelerationProfiles = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT | LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE | LIBINPUT_CONFIG_ACCEL_PROFILE_CUSTOM;
     device.pointerAccelerationProfile = (libinput_config_accel_profile)initValue;
     device.setPointerAccelerationProfileReturnValue = false;
 

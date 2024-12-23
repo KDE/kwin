@@ -268,6 +268,31 @@ enum libinput_config_status libinput_device_config_accel_set_profile(struct libi
     return LIBINPUT_CONFIG_STATUS_INVALID;
 }
 
+struct libinput_config_accel *libinput_config_accel_create(enum libinput_config_accel_profile profile)
+{
+    // TODO
+    return nullptr;
+}
+
+void libinput_config_accel_destroy(struct libinput_config_accel *config)
+{
+    // TODO
+}
+
+enum libinput_config_status libinput_config_accel_set_points(struct libinput_config_accel *accel_config,
+                                                             enum libinput_config_accel_type accel_type,
+                                                             double step, size_t npoints, double *points)
+{
+    // TODO
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_status libinput_device_config_accel_apply(struct libinput_device *device, struct libinput_config_accel *config)
+{
+    // TODO
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
 enum libinput_config_accel_profile libinput_device_config_accel_get_profile(struct libinput_device *device)
 {
     return device->pointerAccelerationProfile;
