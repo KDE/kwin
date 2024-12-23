@@ -42,11 +42,14 @@ class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
 struct SwitchEvent;
-class TabletEvent;
+struct TabletToolTipEvent;
+struct TabletToolAxisEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
 struct KeyboardKeyEvent;
+struct TabletToolProximityEvent;
+struct TabletToolTipEvent;
 struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
@@ -425,9 +428,9 @@ public:
 
     virtual bool switchEvent(SwitchEvent *event);
 
-    virtual bool tabletToolProximityEvent(TabletEvent *event);
-    virtual bool tabletToolAxisEvent(TabletEvent *event);
-    virtual bool tabletToolTipEvent(TabletEvent *event);
+    virtual bool tabletToolProximityEvent(TabletToolProximityEvent *event);
+    virtual bool tabletToolAxisEvent(TabletToolAxisEvent *event);
+    virtual bool tabletToolTipEvent(TabletToolTipEvent *event);
     virtual bool tabletToolButtonEvent(TabletToolButtonEvent *event);
     virtual bool tabletPadButtonEvent(TabletPadButtonEvent *event);
     virtual bool tabletPadStripEvent(TabletPadStripEvent *event);

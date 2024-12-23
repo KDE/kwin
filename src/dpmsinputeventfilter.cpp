@@ -118,19 +118,19 @@ bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, std::chron
     return true;
 }
 
-bool DpmsInputEventFilter::tabletToolProximityEvent(TabletEvent *event)
+bool DpmsInputEventFilter::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     return true;
 }
 
-bool DpmsInputEventFilter::tabletToolAxisEvent(TabletEvent *event)
+bool DpmsInputEventFilter::tabletToolAxisEvent(TabletToolAxisEvent *event)
 {
     return true;
 }
 
-bool DpmsInputEventFilter::tabletToolTipEvent(TabletEvent *event)
+bool DpmsInputEventFilter::tabletToolTipEvent(TabletToolTipEvent *event)
 {
-    if (event->type() == QEvent::TabletPress) {
+    if (event->type == TabletToolTipEvent::Press) {
         // Only wake when the tool is actually pressed down not just hovered over the tablet
         notify();
     }

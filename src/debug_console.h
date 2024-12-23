@@ -138,9 +138,9 @@ public:
 
     void switchEvent(SwitchEvent *event) override;
 
-    void tabletToolProximityEvent(TabletEvent *event) override;
-    void tabletToolAxisEvent(TabletEvent *event) override;
-    void tabletToolTipEvent(TabletEvent *event) override;
+    void tabletToolProximityEvent(TabletToolProximityEvent *event) override;
+    void tabletToolAxisEvent(TabletToolAxisEvent *event) override;
+    void tabletToolTipEvent(TabletToolTipEvent *event) override;
     void tabletToolButtonEvent(TabletToolButtonEvent *event) override;
     void tabletPadButtonEvent(TabletPadButtonEvent *event) override;
     void tabletPadStripEvent(TabletPadStripEvent *event) override;

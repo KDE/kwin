@@ -210,17 +210,17 @@ bool InputEventFilter::switchEvent(SwitchEvent *event)
     return false;
 }
 
-bool InputEventFilter::tabletToolProximityEvent(TabletEvent *event)
+bool InputEventFilter::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::tabletToolAxisEvent(TabletEvent *event)
+bool InputEventFilter::tabletToolAxisEvent(TabletToolAxisEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::tabletToolTipEvent(TabletEvent *event)
+bool InputEventFilter::tabletToolTipEvent(TabletToolTipEvent *event)
 {
     return false;
 }
@@ -255,7 +255,7 @@ bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
             return true;
         }
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
-        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), timestamp.count(), event->nativeScanCode, event->state);
+        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
         return true;
     } else {
         kwinApp()->inputMethod()->commitPendingText();
@@ -614,21 +614,21 @@ public:
         effects->touchCancel();
         return false;
     }
-    bool tabletToolProximityEvent(TabletEvent *event) override
+    bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
     {
         if (!effects) {
             return false;
         }
         return effects->tabletToolProximityEvent(event);
     }
-    bool tabletToolAxisEvent(TabletEvent *event) override
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
     {
         if (!effects) {
             return false;
         }
         return effects->tabletToolAxisEvent(event);
     }
-    bool tabletToolTipEvent(TabletEvent *event) override
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
         if (!effects) {
             return false;
@@ -756,7 +756,7 @@ public:
         return true;
     }
 
-    bool tabletToolProximityEvent(TabletEvent *event) override
+    bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
@@ -766,26 +766,26 @@ public:
         return true;
     }
 
-    bool tabletToolTipEvent(TabletEvent *event) override
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
         }
-        if (event->type() == QEvent::TabletRelease) {
+        if (event->type == TabletToolTipEvent::Release) {
             window->endInteractiveMoveResize();
         }
         return true;
     }
 
-    bool tabletToolAxisEvent(TabletEvent *event) override
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
         }
 
-        window->updateInteractiveMoveResize(event->globalPosition(), input()->keyboardModifiers());
+        window->updateInteractiveMoveResize(event->position, input()->keyboardModifiers());
         return true;
     }
 
@@ -903,14 +903,14 @@ public:
         return true;
     }
 
-    bool tabletToolTipEvent(TabletEvent *event) override
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
         if (!isActive()) {
             return false;
         }
 
-        if (event->type() == QTabletEvent::TabletRelease) {
-            accept(event->position());
+        if (event->type == TabletToolTipEvent::Release) {
+            accept(event->position);
         }
 
         return true;
@@ -1451,17 +1451,17 @@ public:
         return false;
     }
 
-    bool tabletToolProximityEvent(TabletEvent *event) override
+    bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
     {
         if (!input()->tablet()->focus() || !input()->tablet()->focus()->isInternal()) {
             return false;
         }
 
-        const InputDeviceTabletTool *tool = event->tool();
+        const InputDeviceTabletTool *tool = event->tool;
         const int deviceType = int(QPointingDevice::DeviceType::Stylus);
         const int pointerType = int(QPointingDevice::PointerType::Pen);
 
-        if (event->type() == QEvent::TabletEnterProximity) {
+        if (event->type == TabletToolProximityEvent::EnterProximity) {
             QWindowSystemInterface::handleTabletEnterProximityEvent(deviceType, pointerType, tool->serialId());
         } else {
             QWindowSystemInterface::handleTabletLeaveProximityEvent(deviceType, pointerType, tool->serialId());
@@ -1470,39 +1470,39 @@ public:
         return true;
     }
 
-    bool tabletToolAxisEvent(TabletEvent *event) override
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
     {
         if (!input()->tablet()->focus() || !input()->tablet()->focus()->isInternal()) {
             return false;
         }
 
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
-        const QPointF globalPos = event->globalPosition();
+        const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
-        const InputDeviceTabletTool *tool = event->tool();
+        const InputDeviceTabletTool *tool = event->tool;
 
         const int deviceType = int(QPointingDevice::DeviceType::Stylus);
         const int pointerType = int(QPointingDevice::PointerType::Pen);
 
-        QWindowSystemInterface::handleTabletEvent(internal, event->timestamp(), localPos, globalPos, deviceType, pointerType, event->buttons(), event->pressure(), event->xTilt(), event->yTilt(), event->tangentialPressure(), event->rotation(), event->z(), tool->serialId(), input()->keyboardModifiers());
+        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), localPos, globalPos, deviceType, pointerType, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, tool->serialId(), input()->keyboardModifiers());
         return true;
     }
 
-    bool tabletToolTipEvent(TabletEvent *event) override
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
         if (!input()->tablet()->focus() || !input()->tablet()->focus()->isInternal()) {
             return false;
         }
 
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
-        const QPointF globalPos = event->globalPosition();
+        const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
-        const InputDeviceTabletTool *tool = event->tool();
+        const InputDeviceTabletTool *tool = event->tool;
 
         const int deviceType = int(QPointingDevice::DeviceType::Stylus);
         const int pointerType = int(QPointingDevice::PointerType::Pen);
 
-        QWindowSystemInterface::handleTabletEvent(internal, event->timestamp(), localPos, globalPos, deviceType, pointerType, event->buttons(), event->pressure(), event->xTilt(), event->yTilt(), event->tangentialPressure(), event->rotation(), event->z(), tool->serialId(), input()->keyboardModifiers());
+        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), localPos, globalPos, deviceType, pointerType, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, tool->serialId(), input()->keyboardModifiers());
         return true;
     }
 
@@ -1696,17 +1696,17 @@ public:
         return true;
     }
 
-    bool tabletToolProximityEvent(TabletEvent *event) override
+    bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
     {
         auto decoration = input()->tablet()->decoration();
         if (!decoration) {
             return false;
         }
-        if (event->type() == QEvent::TabletEnterProximity) {
-            const QPointF p = event->globalPosition() - decoration->window()->pos();
+        if (event->type == TabletToolProximityEvent::EnterProximity) {
+            const QPointF p = event->position - decoration->window()->pos();
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-            decoration->window()->processDecorationMove(p, event->globalPosition());
+            decoration->window()->processDecorationMove(p, event->position);
         } else {
             QHoverEvent leaveEvent(QEvent::HoverLeave, QPointF(), QPointF());
             QCoreApplication::sendEvent(decoration->decoration(), &leaveEvent);
@@ -1715,34 +1715,34 @@ public:
         return true;
     }
 
-    bool tabletToolAxisEvent(TabletEvent *event) override
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
     {
         auto decoration = input()->tablet()->decoration();
         if (!decoration) {
             return false;
         }
-        const QPointF p = event->globalPosition() - decoration->window()->pos();
+        const QPointF p = event->position - decoration->window()->pos();
 
         QHoverEvent e(QEvent::HoverMove, p, p);
         QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-        decoration->window()->processDecorationMove(p, event->globalPosition());
+        decoration->window()->processDecorationMove(p, event->position);
 
         return true;
     }
 
-    bool tabletToolTipEvent(TabletEvent *event) override
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
         auto decoration = input()->tablet()->decoration();
         if (!decoration) {
             return false;
         }
-        const QPointF globalPos = event->globalPosition();
-        const QPointF p = event->globalPosition() - decoration->window()->pos();
+        const QPointF globalPos = event->position;
+        const QPointF p = event->position - decoration->window()->pos();
 
-        const bool isPressed = event->type() == QEvent::TabletPress;
+        const bool isPressed = event->type == TabletToolTipEvent::Press;
         QMouseEvent e(isPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
                       p,
-                      event->globalPosition(),
+                      event->position,
                       Qt::LeftButton,
                       isPressed ? Qt::LeftButton : Qt::MouseButtons(),
                       input()->keyboardModifiers());
@@ -1751,7 +1751,7 @@ public:
         if (!e.isAccepted() && isPressed) {
             decoration->window()->processDecorationButtonPress(p, globalPos, Qt::LeftButton);
         }
-        if (event->type() == QEvent::TabletRelease) {
+        if (event->type == TabletToolTipEvent::Release) {
             decoration->window()->processDecorationButtonRelease(Qt::LeftButton);
         }
 
@@ -1967,22 +1967,22 @@ public:
         }
         return false;
     }
-    bool tabletToolTipEvent(TabletEvent *event) override
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
         Window *window = input()->tablet()->focus();
         if (!window || !window->isClient()) {
             return false;
         }
 
-        if (event->type() == QEvent::TabletPress) {
+        if (event->type == TabletToolTipEvent::Press) {
             const auto command = window->getMousePressCommand(Qt::LeftButton);
             if (command) {
-                return !window->performMousePressCommand(*command, event->globalPosition());
+                return !window->performMousePressCommand(*command, event->position);
             }
         } else {
             const auto command = window->getMouseReleaseCommand(Qt::LeftButton);
             if (command) {
-                return !window->performMouseReleaseCommand(*command, event->globalPosition());
+                return !window->performMouseReleaseCommand(*command, event->position);
             }
         }
 
@@ -2215,16 +2215,16 @@ public:
         return true;
     }
 
-    bool tabletToolProximityEvent(TabletEvent *event) override
+    bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
     {
-        Window *window = input()->findToplevel(event->globalPosition());
+        Window *window = input()->findToplevel(event->position);
         if (!window || !window->surface()) {
             return false;
         }
 
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
-        TabletToolV2Interface *tool = seat->tool(event->tool());
-        TabletV2Interface *tablet = seat->tablet(event->device());
+        TabletToolV2Interface *tool = seat->tool(event->tool);
+        TabletV2Interface *tablet = seat->tablet(event->device);
 
         SurfaceInterface *surface = window->surface();
         tool->setCurrentSurface(surface);
@@ -2233,40 +2233,40 @@ public:
             return emulateTabletEvent(event);
         }
 
-        if (event->type() == QEvent::TabletEnterProximity) {
+        if (event->type == TabletToolProximityEvent::EnterProximity) {
             tool->sendProximityIn(tablet);
-            tool->sendMotion(window->mapToLocal(event->globalPosition()));
+            tool->sendMotion(window->mapToLocal(event->position));
         } else {
             tool->sendProximityOut();
         }
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
-            tool->sendPressure(event->pressure());
+            tool->sendPressure(event->pressure);
         }
         if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
-            tool->sendTilt(event->xTilt(), event->yTilt());
+            tool->sendTilt(event->xTilt, event->yTilt);
         }
         if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
-            tool->sendRotation(event->rotation());
+            tool->sendRotation(event->rotation);
         }
         if (tool->hasCapability(TabletToolV2Interface::Distance)) {
-            tool->sendDistance(event->z());
+            tool->sendDistance(event->distance);
         }
 
-        tool->sendFrame(event->timestamp());
+        tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         return true;
     }
 
-    bool tabletToolAxisEvent(TabletEvent *event) override
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
     {
-        Window *window = input()->findToplevel(event->globalPosition());
+        Window *window = input()->findToplevel(event->position);
         if (!window || !window->surface()) {
             return false;
         }
 
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
-        TabletToolV2Interface *tool = seat->tool(event->tool());
-        TabletV2Interface *tablet = seat->tablet(event->device());
+        TabletToolV2Interface *tool = seat->tool(event->tool);
+        TabletV2Interface *tablet = seat->tablet(event->device);
 
         SurfaceInterface *surface = window->surface();
         tool->setCurrentSurface(surface);
@@ -2275,35 +2275,35 @@ public:
             return emulateTabletEvent(event);
         }
 
-        tool->sendMotion(window->mapToLocal(event->globalPosition()));
+        tool->sendMotion(window->mapToLocal(event->position));
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
-            tool->sendPressure(event->pressure());
+            tool->sendPressure(event->pressure);
         }
         if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
-            tool->sendTilt(event->xTilt(), event->yTilt());
+            tool->sendTilt(event->xTilt, event->yTilt);
         }
         if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
-            tool->sendRotation(event->rotation());
+            tool->sendRotation(event->rotation);
         }
         if (tool->hasCapability(TabletToolV2Interface::Distance)) {
-            tool->sendDistance(event->z());
+            tool->sendDistance(event->distance);
         }
 
-        tool->sendFrame(event->timestamp());
+        tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         return true;
     }
 
-    bool tabletToolTipEvent(TabletEvent *event) override
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
-        Window *window = input()->findToplevel(event->globalPosition());
+        Window *window = input()->findToplevel(event->position);
         if (!window || !window->surface()) {
             return false;
         }
 
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
-        TabletToolV2Interface *tool = seat->tool(event->tool());
-        TabletV2Interface *tablet = seat->tablet(event->device());
+        TabletToolV2Interface *tool = seat->tool(event->tool);
+        TabletV2Interface *tablet = seat->tablet(event->device);
 
         SurfaceInterface *surface = window->surface();
         tool->setCurrentSurface(surface);
@@ -2312,31 +2312,31 @@ public:
             return emulateTabletEvent(event);
         }
 
-        if (event->type() == QEvent::TabletPress) {
-            tool->sendMotion(window->mapToLocal(event->globalPosition()));
+        if (event->type == TabletToolTipEvent::Press) {
+            tool->sendMotion(window->mapToLocal(event->position));
             tool->sendDown();
         } else {
             tool->sendUp();
         }
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
-            tool->sendPressure(event->pressure());
+            tool->sendPressure(event->pressure);
         }
         if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
-            tool->sendTilt(event->xTilt(), event->yTilt());
+            tool->sendTilt(event->xTilt, event->yTilt);
         }
         if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
-            tool->sendRotation(event->rotation());
+            tool->sendRotation(event->rotation);
         }
         if (tool->hasCapability(TabletToolV2Interface::Distance)) {
-            tool->sendDistance(event->z());
+            tool->sendDistance(event->distance);
         }
 
-        tool->sendFrame(event->timestamp());
+        tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         return true;
     }
 
-    bool emulateTabletEvent(TabletEvent *event)
+    bool emulateTabletEvent(TabletToolProximityEvent *event)
     {
         // Tablet input emulation is deprecated. It will be removed in the near future.
         static bool emulateInput = qEnvironmentVariableIntValue("KWIN_WAYLAND_EMULATE_TABLET") == 1;
@@ -2344,25 +2344,47 @@ public:
             return false;
         }
 
-        switch (event->type()) {
-        case QEvent::TabletMove:
-        case QEvent::TabletEnterProximity:
-            input()->pointer()->processMotionAbsolute(event->globalPosF(), std::chrono::milliseconds(event->timestamp()));
+        switch (event->type) {
+        case TabletToolProximityEvent::EnterProximity:
+            input()->pointer()->processMotionAbsolute(event->position, event->timestamp);
             break;
-        case QEvent::TabletPress:
-            input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
-                                              PointerButtonState::Pressed, std::chrono::milliseconds(event->timestamp()));
-            break;
-        case QEvent::TabletRelease:
-            input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
-                                              PointerButtonState::Released, std::chrono::milliseconds(event->timestamp()));
-            break;
-        case QEvent::TabletLeaveProximity:
-            break;
-        default:
-            qCWarning(KWIN_CORE) << "Unexpected tablet event type" << event;
+        case TabletToolProximityEvent::LeaveProximity:
             break;
         }
+        return true;
+    }
+
+    bool emulateTabletEvent(TabletToolTipEvent *event)
+    {
+        // Tablet input emulation is deprecated. It will be removed in the near future.
+        static bool emulateInput = qEnvironmentVariableIntValue("KWIN_WAYLAND_EMULATE_TABLET") == 1;
+        if (!emulateInput) {
+            return false;
+        }
+
+        switch (event->type) {
+        case TabletToolTipEvent::Press:
+            input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
+                                              PointerButtonState::Pressed, event->timestamp);
+            break;
+        case TabletToolTipEvent::Release:
+            input()->pointer()->processButton(qtMouseButtonToButton(Qt::LeftButton),
+                                              PointerButtonState::Released, event->timestamp);
+            break;
+        }
+        return true;
+    }
+
+    bool emulateTabletEvent(TabletToolAxisEvent *event)
+    {
+        // Tablet input emulation is deprecated. It will be removed in the near future.
+        static bool emulateInput = qEnvironmentVariableIntValue("KWIN_WAYLAND_EMULATE_TABLET") == 1;
+        if (!emulateInput) {
+            return false;
+        }
+
+        input()->pointer()->processMotionAbsolute(event->position, event->timestamp);
+
         return true;
     }
 
@@ -2884,9 +2906,9 @@ public:
         update();
     }
 
-    void tabletToolTipEvent(TabletEvent *event) override
+    void tabletToolTipEvent(TabletToolTipEvent *event) override
     {
-        if (event->type() != QEvent::TabletPress) {
+        if (event->type != TabletToolTipEvent::Type::Press) {
             return;
         }
         update();
@@ -2988,15 +3010,15 @@ public:
         notifyActivity();
     }
 
-    void tabletToolProximityEvent(TabletEvent *event) override
+    void tabletToolProximityEvent(TabletToolProximityEvent *event) override
     {
         notifyActivity();
     }
-    void tabletToolAxisEvent(TabletEvent *event) override
+    void tabletToolAxisEvent(TabletToolAxisEvent *event) override
     {
         notifyActivity();
     }
-    void tabletToolTipEvent(TabletEvent *event) override
+    void tabletToolTipEvent(TabletToolTipEvent *event) override
     {
         notifyActivity();
     }

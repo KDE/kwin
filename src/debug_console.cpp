@@ -490,53 +490,50 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletToolProximityEvent(TabletEvent *event)
+void DebugConsoleFilter::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Proximity"))
-        + tableRow(i18n("Proximity"), event->type() == QEvent::TabletEnterProximity ? i18n("In") : i18n("Out"))
+        + tableRow(i18n("Proximity"), event->type == TabletToolProximityEvent::EnterProximity ? i18n("In") : i18n("Out"))
         + tableRow(i18n("Position"),
-                   QStringLiteral("%1,%2").arg(QString::number(event->position().x()), QString::number(event->position().y())))
+                   QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
         + tableRow(i18n("Tilt"),
-                   QStringLiteral("%1,%2").arg(event->xTilt()).arg(event->yTilt()))
-        + tableRow(i18n("Rotation"), QString::number(event->rotation()))
-        + tableRow(i18n("Pressure"), QString::number(event->pressure()))
-        + tableRow(i18n("Buttons"), QString::number(event->buttons()))
-        + tableRow(i18n("Modifiers"), QString::number(event->modifiers()))
+                   QStringLiteral("%1,%2").arg(event->xTilt).arg(event->yTilt))
+        + tableRow(i18n("Rotation"), QString::number(event->rotation))
+        + tableRow(i18n("Pressure"), QString::number(event->pressure))
+        + tableRow(i18n("Buttons"), QString::number(event->buttons))
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletToolAxisEvent(TabletEvent *event)
+void DebugConsoleFilter::tabletToolAxisEvent(TabletToolAxisEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Axis"))
         + tableRow(i18n("Position"),
-                   QStringLiteral("%1,%2").arg(QString::number(event->position().x()), QString::number(event->position().y())))
+                   QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
         + tableRow(i18n("Tilt"),
-                   QStringLiteral("%1,%2").arg(event->xTilt()).arg(event->yTilt()))
-        + tableRow(i18n("Rotation"), QString::number(event->rotation()))
-        + tableRow(i18n("Pressure"), QString::number(event->pressure()))
-        + tableRow(i18n("Buttons"), QString::number(event->buttons()))
-        + tableRow(i18n("Modifiers"), QString::number(event->modifiers()))
+                   QStringLiteral("%1,%2").arg(event->xTilt).arg(event->yTilt))
+        + tableRow(i18n("Rotation"), QString::number(event->rotation))
+        + tableRow(i18n("Pressure"), QString::number(event->pressure))
+        + tableRow(i18n("Buttons"), QString::number(event->buttons))
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletToolTipEvent(TabletEvent *event)
+void DebugConsoleFilter::tabletToolTipEvent(TabletToolTipEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Tip"))
-        + tableRow(i18n("Tip"), event->type() == QEvent::TabletPress ? i18n("Down") : i18n("Up"))
+        + tableRow(i18n("Tip"), event->type == TabletToolTipEvent::Press ? i18n("Down") : i18n("Up"))
         + tableRow(i18n("Position"),
-                   QStringLiteral("%1,%2").arg(QString::number(event->position().x()), QString::number(event->position().y())))
+                   QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
         + tableRow(i18n("Tilt"),
-                   QStringLiteral("%1,%2").arg(event->xTilt()).arg(event->yTilt()))
-        + tableRow(i18n("Rotation"), QString::number(event->rotation()))
-        + tableRow(i18n("Pressure"), QString::number(event->pressure()))
-        + tableRow(i18n("Buttons"), QString::number(event->buttons()))
-        + tableRow(i18n("Modifiers"), QString::number(event->modifiers()))
+                   QStringLiteral("%1,%2").arg(event->xTilt).arg(event->yTilt))
+        + tableRow(i18n("Rotation"), QString::number(event->rotation))
+        + tableRow(i18n("Pressure"), QString::number(event->pressure))
+        + tableRow(i18n("Buttons"), QString::number(event->buttons))
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);
