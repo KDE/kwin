@@ -10,12 +10,29 @@
 
 #pragma once
 
-#include <kcmodule.h>
+#include <KCModule>
+#include <KKeySequenceWidget>
 
 #include "ui_zoom_config.h"
 
 namespace KWin
 {
+
+class PointerAxisGestureModifiersWidget : public KKeySequenceWidget
+{
+    Q_OBJECT
+    Q_PROPERTY(QString modifiers READ modifiers WRITE setModifiers NOTIFY modifiersChanged)
+
+public:
+    explicit PointerAxisGestureModifiersWidget(QWidget *parent = nullptr);
+
+    QString modifiers() const;
+    void setModifiers(const QString &modifiers);
+
+Q_SIGNALS:
+    void modifiersChanged();
+};
+
 class ZoomEffectConfig : public KCModule
 {
     Q_OBJECT

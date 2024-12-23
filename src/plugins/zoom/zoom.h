@@ -14,6 +14,7 @@
 #include "core/colorspace.h"
 #include "effect/effect.h"
 
+#include <QAction>
 #include <QTime>
 #include <QTimeLine>
 
@@ -140,6 +141,9 @@ private:
     std::map<Output *, OffscreenData> m_offscreenData;
     std::unique_ptr<GLShader> m_pixelGridShader;
     double m_pixelGridZoom;
+    std::unique_ptr<QAction> m_zoomInAxisAction;
+    std::unique_ptr<QAction> m_zoomOutAxisAction;
+    Qt::KeyboardModifiers m_axisModifiers;
 };
 
 } // namespace
