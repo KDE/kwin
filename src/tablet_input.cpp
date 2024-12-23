@@ -346,13 +346,17 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadDialEvent(double delta, uint number,
-                                                      const TabletPadId &tabletPadId, std::chrono::microseconds time)
+void KWin::TabletInputRedirection::tabletPadDialEvent(double delta, uint number, std::chrono::microseconds time, InputDevice *device)
 {
-    input()->processSpies(std::bind(&InputEventSpy::tabletPadDialEvent,
-                                    std::placeholders::_1, delta, number, tabletPadId, time));
-    input()->processFilters(std::bind(&InputEventFilter::tabletPadDialEvent,
-                                      std::placeholders::_1, delta, number, tabletPadId, time));
+    TabletPadDialEvent event{
+        .device = device,
+        .delta = delta,
+        .number = number,
+        .time = time,
+    };
+
+    input()->processSpies(std::bind(&InputEventSpy::tabletPadDialEvent, std::placeholders::_1, &event));
+    input()->processFilters(std::bind(&InputEventFilter::tabletPadDialEvent, std::placeholders::_1, &event));
     input()->setLastInputHandler(this);
 }
 

@@ -145,6 +145,7 @@ public:
     void tabletPadButtonEvent(TabletPadButtonEvent *event) override;
     void tabletPadStripEvent(TabletPadStripEvent *event) override;
     void tabletPadRingEvent(TabletPadRingEvent *event) override;
+    void tabletPadDialEvent(TabletPadDialEvent *event) override;
 
 private:
     QTextEdit *m_textEdit;

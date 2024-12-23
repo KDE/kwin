@@ -77,7 +77,7 @@ bool InputDevice::isLidSwitch() const
 
 bool InputDevice::isPointer() const
 {
-    return false;
+    return true;
 }
 
 bool InputDevice::isTabletModeSwitch() const
@@ -189,20 +189,12 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         const auto dialGroup = tabletDialsGroup.group(tabletDialName);
         const auto tabletDialButtons = dialGroup.keyList();
         for (const auto &buttonName : tabletDialButtons) {
-            // Tablet dial keys are 0-up, 0-down, 1-up, 1-down, and so on. "Up" here means a negative delta, and "Down" here means a positive delta.
-            QStringList nameParts = buttonName.split(QLatin1Char('-'));
-            if (nameParts.length() != 2) {
-                continue;
-            }
-
-            const bool positive = nameParts[1] == "down";
-
             const auto entry = dialGroup.readEntry(buttonName, QStringList());
             bool ok = false;
-            const uint button = nameParts[0].toUInt(&ok);
+            const uint button = buttonName.toUInt(&ok);
             if (ok) {
                 foundActions = true;
-                insert(positive ? TabletDialUp : TabletDialDown, {tabletDialName, button, positive}, entry);
+                insert(TabletDial, {tabletDialName, button}, entry);
             }
         }
     }
@@ -265,14 +257,12 @@ bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *eve
     return send(TabletToolButtonType, {event->device->name(), event->button}, event->pressed, event->time);
 }
 
-bool ButtonRebindsFilter::tabletPadDialEvent(double delta, unsigned int number, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool ButtonRebindsFilter::tabletPadDialEvent(KWin::TabletPadDialEvent *event)
 {
     if (RebindScope::isRebinding()) {
         return false;
     }
-    bool handled = send(delta > 0 ? TabletDialUp : TabletDialDown, {tabletPadId.name, number}, true, time);
-    handled |= send(delta > 0 ? TabletDialUp : TabletDialDown, {tabletPadId.name, number}, false, time);
-    return handled;
+    return send(TabletDial, {event->device->name(), event->number, event->delta}, false, event->time);
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
@@ -325,6 +315,8 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
+    } else if (entry.first() == QLatin1String("Scroll")) {
+        m_actions.at(type).insert(trigger, ScrollWheel{});
     } else if (entry.first() == QLatin1String("Disabled")) {
         m_actions.at(type).insert(trigger, DisabledButton{});
     }
@@ -350,6 +342,12 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     }
     if (const auto tb = std::get_if<TabletToolButton>(&action)) {
         return sendTabletToolButton(tb->button, pressed, timestamp);
+    }
+    if (std::get_if<ScrollWheel>(&action)) {
+        if (type != Pointer) {
+            sendMousePosition(m_tabletCursorPos, timestamp);
+        }
+        return sendScrollWheel(trigger.delta, timestamp);
     }
     if (std::get_if<DisabledButton>(&action)) {
         // Intentional, we don't want to anything to anybody
@@ -486,6 +484,14 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, std
     }
     RebindScope scope;
     Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, m_tabletTool, time, &m_inputDevice);
+    return true;
+}
+
+bool ButtonRebindsFilter::sendScrollWheel(double delta, std::chrono::microseconds time)
+{
+    RebindScope scope;
+    Q_EMIT m_inputDevice.pointerAxisChanged(KWin::PointerAxis::Vertical, (delta > 0.0 ? 15 : -15), delta, KWin::PointerAxisSource::Wheel, false, time, &m_inputDevice);
+    Q_EMIT m_inputDevice.pointerFrame(&m_inputDevice);
     return true;
 }
 

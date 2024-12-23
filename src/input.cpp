@@ -245,7 +245,7 @@ bool InputEventFilter::tabletPadRingEvent(TabletPadRingEvent *event)
     return false;
 }
 
-bool InputEventFilter::tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+bool InputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
 {
     return false;
 }

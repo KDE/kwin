@@ -39,7 +39,7 @@ struct Trigger
 {
     QString device;
     uint button;
-    bool positive;
+    double delta;
     bool operator==(const Trigger &o) const
     {
         return button == o.button && device == o.device;
@@ -54,8 +54,7 @@ public:
         Pointer,
         TabletPad,
         TabletToolButtonType,
-        TabletDialUp,
-        TabletDialDown,
+        TabletDial,
         LastType
     };
     Q_ENUM(TriggerType)
@@ -71,6 +70,9 @@ public:
     struct DisabledButton
     {
     };
+    struct ScrollWheel
+    {
+    };
 
     explicit ButtonRebindsFilter();
     ~ButtonRebindsFilter() override;
@@ -80,7 +82,7 @@ public:
     bool tabletToolTipEvent(KWin::TabletEvent *event) override;
     bool tabletPadButtonEvent(KWin::TabletPadButtonEvent *event) override;
     bool tabletToolButtonEvent(KWin::TabletToolButtonEvent *event) override;
-    bool tabletPadDialEvent(double delta, unsigned int number, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time) override;
+    bool tabletPadDialEvent(KWin::TabletPadDialEvent *event) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
@@ -91,9 +93,10 @@ private:
     bool sendMouseButton(quint32 button, bool pressed, std::chrono::microseconds time);
     bool sendMousePosition(QPointF position, std::chrono::microseconds time);
     bool sendTabletToolButton(quint32 button, bool pressed, std::chrono::microseconds time);
+    bool sendScrollWheel(double delta, std::chrono::microseconds time);
 
     InputDevice m_inputDevice;
-    std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton, DisabledButton>>, LastType> m_actions;
+    std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton, DisabledButton, ScrollWheel>>, LastType> m_actions;
     KConfigWatcher::Ptr m_configWatcher;
     QPointer<KWin::InputDeviceTabletTool> m_tabletTool;
     QPointF m_cursorPos, m_tabletCursorPos;

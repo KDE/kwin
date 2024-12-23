@@ -27,6 +27,7 @@ struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
 struct TabletPadRingEvent;
+struct TabletPadDialEvent;
 
 /**
  * Base class for spying on input events inside InputRedirection.
@@ -85,7 +86,7 @@ public:
     virtual void tabletPadButtonEvent(TabletPadButtonEvent *event);
     virtual void tabletPadStripEvent(TabletPadStripEvent *event);
     virtual void tabletPadRingEvent(TabletPadRingEvent *event);
-    virtual void tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time);
+    virtual void tabletPadDialEvent(TabletPadDialEvent *event);
 };
 
 } // namespace KWin

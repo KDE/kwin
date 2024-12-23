@@ -241,6 +241,7 @@ void DebugConsoleFilter::pointerAxis(PointerAxisEvent *event)
                          event->orientation == Qt::Horizontal ? i18nc("An orientation of a pointer axis event", "Horizontal")
                                                               : i18nc("An orientation of a pointer axis event", "Vertical")));
     text.append(tableRow(i18nc("The angle delta of a pointer axis event", "Delta"), event->delta));
+    text.append(tableRow(i18nc("The V120 angle delta of a pointer axis event", "V120 Delta"), event->deltaV120));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
@@ -589,6 +590,19 @@ void DebugConsoleFilter::tabletPadRingEvent(TabletPadRingEvent *event)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Position"), event->position)
         + tableRow(i18n("isFinger"), event->isFinger)
+        + tableRow(i18n("Tablet"), event->device->name())
+        + timestampRow(event->time)
+        + s_tableEnd;
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::tabletPadDialEvent(TabletPadDialEvent *event)
+{
+    QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Dial"))
+        + tableRow(i18n("Number"), event->number)
+        + tableRow(i18n("Delta"), event->delta)
         + tableRow(i18n("Tablet"), event->device->name())
         + timestampRow(event->time)
         + s_tableEnd;
