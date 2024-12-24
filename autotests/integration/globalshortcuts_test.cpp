@@ -128,7 +128,7 @@ void GlobalShortcutsTest::testNonLatinLayout()
     QFETCH(int, key);
     QFETCH(Qt::Key, qtKey);
 
-    const QKeySequence seq(qtModifier + qtKey);
+    const QKeySequence seq(qtModifier | qtKey);
 
     std::unique_ptr<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral("kwin"));
