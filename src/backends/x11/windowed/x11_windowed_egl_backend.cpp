@@ -109,7 +109,6 @@ void X11WindowedEglPrimaryLayer::present()
 
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
     m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
-    m_buffer = nullptr;
 }
 
 std::shared_ptr<GLTexture> X11WindowedEglPrimaryLayer::texture() const
