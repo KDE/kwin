@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-21 00:42+0000\n"
-"PO-Revision-Date: 2024-12-19 10:18+0100\n"
+"POT-Creation-Date: 2024-12-24 00:41+0000\n"
+"PO-Revision-Date: 2024-12-23 17:09+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -706,25 +706,24 @@ msgid "State"
 msgstr "Stato"
 
 #: debug_console.cpp:494
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Instrumento de tabletta"
+msgstr "Proximitate de Instrumento de tabletta"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Proximitate"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "In"
 
 #: debug_console.cpp:495
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Fora"
 
 #: debug_console.cpp:496 debug_console.cpp:513 debug_console.cpp:531
 #: debug_console.cpp:576 debug_console.cpp:590
@@ -760,33 +759,29 @@ msgid "Modifiers"
 msgstr "Modificatores "
 
 #: debug_console.cpp:512
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Instrumento de tabletta"
+msgstr "Axis de Instrumento de tabletta"
 
 #: debug_console.cpp:529
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Instrumento de tabletta"
+msgstr "Consilio de Instrumento de tabletta"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Culmine"
+msgstr "Consilio"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Mover a basso "
+msgstr "A basso"
 
 #: debug_console.cpp:530
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "In alto"
 
 #: debug_console.cpp:547
 #, kde-format
@@ -1694,6 +1689,13 @@ msgstr "Per gruppo de fenestra"
 #, kde-format
 msgid "Fullscreen windows"
 msgstr "Fenestras de schermo plen"
+
+#: plugins/eis/eisinputcapturemanager.cpp:124
+#, fuzzy, kde-format
+#| msgid "Disable KActivities integration."
+msgctxt "@action shortcut"
+msgid "Disable Active Input Capture"
+msgstr "Disactiva integration de KActivities."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

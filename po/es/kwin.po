@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-21 00:42+0000\n"
+"POT-Creation-Date: 2024-12-24 00:41+0000\n"
 "PO-Revision-Date: 2024-12-21 19:42+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1704,6 +1704,13 @@ msgstr "Por grupo de ventanas"
 #, kde-format
 msgid "Fullscreen windows"
 msgstr "Ventanas a pantalla completa"
+
+#: plugins/eis/eisinputcapturemanager.cpp:124
+#, fuzzy, kde-format
+#| msgid "Disable KActivities integration."
+msgctxt "@action shortcut"
+msgid "Disable Active Input Capture"
+msgstr "Desactivar la integración con KActivities."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

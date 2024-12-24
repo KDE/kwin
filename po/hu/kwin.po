@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-21 00:42+0000\n"
+"POT-Creation-Date: 2024-12-24 00:41+0000\n"
 "PO-Revision-Date: 2024-11-18 20:47+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1684,6 +1684,13 @@ msgstr "Ablakcsoport szerint"
 #, kde-format
 msgid "Fullscreen windows"
 msgstr "Teljes képernyős ablakok"
+
+#: plugins/eis/eisinputcapturemanager.cpp:124
+#, fuzzy, kde-format
+#| msgid "Disable KActivities integration."
+msgctxt "@action shortcut"
+msgid "Disable Active Input Capture"
+msgstr "KActivities intergráció kikapcsolása."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

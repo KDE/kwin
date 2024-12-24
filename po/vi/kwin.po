@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-21 00:42+0000\n"
+"POT-Creation-Date: 2024-12-24 00:41+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -1703,6 +1703,13 @@ msgstr "Vai trò cửa sổ"
 #| msgid "Fullscreen"
 msgid "Fullscreen windows"
 msgstr "Toàn màn hình"
+
+#: plugins/eis/eisinputcapturemanager.cpp:124
+#, fuzzy, kde-format
+#| msgid "Disable KActivities integration."
+msgctxt "@action shortcut"
+msgid "Disable Active Input Capture"
+msgstr "Tắt tích hợp KActivities."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

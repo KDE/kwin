@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1698344 $
+# Version: $Revision: 1698527 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-21 00:42+0000\n"
+"POT-Creation-Date: 2024-12-24 00:41+0000\n"
 "PO-Revision-Date: 2024-12-21 11:28+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1700,6 +1700,13 @@ msgstr "Według grupy okna"
 #, kde-format
 msgid "Fullscreen windows"
 msgstr "Okna pełnoekranowe"
+
+#: plugins/eis/eisinputcapturemanager.cpp:124
+#, fuzzy, kde-format
+#| msgid "Disable KActivities integration."
+msgctxt "@action shortcut"
+msgid "Disable Active Input Capture"
+msgstr "Wyłącz integrację KActivities."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-21 00:42+0000\n"
+"POT-Creation-Date: 2024-12-24 00:41+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -1676,6 +1676,12 @@ msgstr "پنجره‌ها"
 #| msgid "&Fullscreen"
 msgid "Fullscreen windows"
 msgstr "&تمام پرده‌"
+
+#: plugins/eis/eisinputcapturemanager.cpp:124
+#, kde-format
+msgctxt "@action shortcut"
+msgid "Disable Active Input Capture"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

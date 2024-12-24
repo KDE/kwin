@@ -12,15 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-21 00:42+0000\n"
-"PO-Revision-Date: 2024-10-31 16:24+0200\n"
+"POT-Creation-Date: 2024-12-24 00:41+0000\n"
+"PO-Revision-Date: 2024-12-16 17:31+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 24.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -1056,10 +1056,9 @@ msgstr "Ielādēt"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Iziet no atkļūdošanas konsoles"
+msgstr "Atkļūdošanas konsole"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -1683,6 +1682,13 @@ msgstr "Pēc loga grupas"
 #, kde-format
 msgid "Fullscreen windows"
 msgstr "Pilnekrāna logi"
+
+#: plugins/eis/eisinputcapturemanager.cpp:124
+#, fuzzy, kde-format
+#| msgid "Disable KActivities integration."
+msgctxt "@action shortcut"
+msgid "Disable Active Input Capture"
+msgstr "Izslēdz „KActivities“ integrāciju."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
@@ -3079,21 +3085,19 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
-msgstr "Tālummaiņas koeficients:"
+msgstr "Tālummaiņās koeficients:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Rādīt pikseļu tīklu pie tuvinājuma līmeņa:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Peles rādītājs:"
 
@@ -3123,8 +3127,7 @@ msgstr "Paslēpt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Peles izsekošana:"
 
@@ -3171,8 +3174,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Ieslēgt fokusa izsekošanu"
 
@@ -3188,8 +3190,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "Ieslēgt teksta kursora izsekošanu"
 
@@ -3227,7 +3228,7 @@ msgstr "Dzēst šo noteikumu (lietošanai importos)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Šis noteikums ir ieslēgts"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3770,17 +3771,15 @@ msgid "Log Out Anyway"
 msgstr "Izrakstīties tāpat"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "Šīs programmas neaizvērās:\n"
-"%1"
+"%1\n"
+"Sistēma tik un tā izrakstīsies pēc divām minūtēm."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4240,28 +4239,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Paturēt logu visās darbvirsmās"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Ātri flīzēt logu pie kreisās malas"
+msgstr "Pielāgota ātrā logu flīzēšana kreisajā pusē"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Ātri flīzēt logu pie labās malas"
+msgstr "Pielāgota ātrā logu flīzēšana labajā pusē"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Ātri flīzēt logu pie augšējās malas"
+msgstr "Pielāgota ātrā logu flīzēšana augšpusē"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Ātri flīzēt logu pie apakšējās malas"
+msgstr "Pielāgota ātrā logu flīzēšana apakšpusē"
 
 #: useractions.cpp:1014
 #, kde-format

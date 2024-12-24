@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-10 00:41+0000\n"
-"PO-Revision-Date: 2024-01-22 18:56+0200\n"
+"PO-Revision-Date: 2024-12-16 17:29+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -48,10 +48,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:48
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "Aktivizēt un pacelt"
+msgstr "Aktivizēt, padot klikšķi un pacelt pēc atlaišanas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -59,7 +58,7 @@ msgstr "Aktivizēt un pacelt"
 #: actions.ui:53 actions.ui:102 actions.ui:142
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Aktivizē, paceļ un padod klikšķi"
+msgstr "Aktivizēt, pacelt un padod klikšķi"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -67,7 +66,7 @@ msgstr "Aktivizē, paceļ un padod klikšķi"
 #: actions.ui:58 actions.ui:107 actions.ui:147
 #, kde-format
 msgid "Activate and pass click"
-msgstr "Aktivizē un padod klikšķi"
+msgstr "Aktivizēt un padot klikšķi"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -100,6 +99,9 @@ msgid ""
 "Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
 "and falls back to \"Activate, raise and pass click\" instead"
 msgstr ""
+"Ievērojiet, ka „Aktivizēt, padot klikšķi un pacelt pēc atlaišanas“ nestrādā "
+"ar X11 un tā vietā automātiski atgriežas uz „Aktivizēt, pacelt un padod "
+"klikšķi“"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1085,7 +1087,7 @@ msgstr "Aktivizēt un nolaist"
 #: mouse.ui:577
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Maksimizēt logu, veicot dubultklikšķi uz tā ietvara"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:602
