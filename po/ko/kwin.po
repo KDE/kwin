@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-21 02:55+0000\n"
-"PO-Revision-Date: 2024-12-10 01:17+0100\n"
+"PO-Revision-Date: 2024-12-24 17:50+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -2966,7 +2966,7 @@ msgstr ""
 #: plugins/zoom/zoom_config.ui:69
 #, kde-format
 msgid "Enable Focus Tracking"
-msgstr "포커스 위치 추적 사용하기"
+msgstr "포커스 위치 추적 활성화"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:76
@@ -2982,7 +2982,7 @@ msgstr ""
 #: plugins/zoom/zoom_config.ui:79
 #, kde-format
 msgid "Enable Text Cursor Tracking"
-msgstr "텍스트 커서 추적 사용하기"
+msgstr "텍스트 커서 추적 활성화"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:86
