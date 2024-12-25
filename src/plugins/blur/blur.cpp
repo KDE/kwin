@@ -307,7 +307,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
     SurfaceInterface *surf = w->surface();
 
     if (surf && surf->blur()) {
-        content = surf->blur()->region();
+        content = surf->blur()->region().containedAlignedRegion();
     }
 
     if (auto internal = w->internalWindow()) {
@@ -458,24 +458,25 @@ QRegion BlurEffect::decorationBlurRegion(const EffectWindow *w) const
 
 QRegion BlurEffect::blurRegion(EffectWindow *w) const
 {
+    // TODO use device pixels for this
     QRegion region;
 
     if (auto it = m_windows.find(w); it != m_windows.end()) {
-        const std::optional<QRegion> &content = it->second.content;
-        const std::optional<QRegion> &frame = it->second.frame;
+        const std::optional<RegionF> &content = it->second.content;
+        const std::optional<RegionF> &frame = it->second.frame;
         if (content.has_value()) {
             if (content->isEmpty()) {
                 // An empty region means that the blur effect should be enabled
                 // for the whole window.
                 region = w->contentsRect().toRect();
             } else {
-                region = content->translated(w->contentsRect().topLeft().toPoint()) & w->contentsRect().toRect();
+                region = (content->translated(w->contentsRect().topLeft()) & w->contentsRect()).containedAlignedRegion();
             }
             if (frame.has_value()) {
-                region += frame.value();
+                region += frame.value().containedAlignedRegion();
             }
         } else if (frame.has_value()) {
-            region = frame.value();
+            region = frame.value().containedAlignedRegion();
         }
     }
 

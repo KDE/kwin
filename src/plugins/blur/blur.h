@@ -10,6 +10,7 @@
 #include "effect/effect.h"
 #include "opengl/glutils.h"
 #include "scene/item.h"
+#include "utils/regionf.h"
 
 #include <QList>
 
@@ -31,10 +32,10 @@ struct BlurRenderData
 struct BlurEffectData
 {
     /// The region that should be blurred behind the window
-    std::optional<QRegion> content;
+    std::optional<RegionF> content;
 
     /// The region that should be blurred behind the frame
-    std::optional<QRegion> frame;
+    std::optional<RegionF> frame;
 
     /**
      * The render data per render view, as they can have different

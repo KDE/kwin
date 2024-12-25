@@ -62,7 +62,7 @@ void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_create(Resource *res
         wl_client_post_no_memory(resource->client());
         return;
     }
-    auto blur = new BlurInterface(blur_resource);
+    auto blur = new BlurInterface(blur_resource, s);
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setBlur(blur);
 }
@@ -85,11 +85,12 @@ void BlurManagerInterface::remove()
 class BlurInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur
 {
 public:
-    BlurInterfacePrivate(BlurInterface *q, wl_resource *resource);
-    QRegion pendingRegion;
-    QRegion currentRegion;
+    BlurInterfacePrivate(BlurInterface *q, wl_resource *resource, SurfaceInterface *surface);
+    RegionF pendingRegion;
+    RegionF currentRegion;
 
-    BlurInterface *q;
+    BlurInterface *const q;
+    const QPointer<SurfaceInterface> surface;
 
 protected:
     void org_kde_kwin_blur_destroy_resource(Resource *resource) override;
@@ -106,10 +107,10 @@ void BlurInterfacePrivate::org_kde_kwin_blur_commit(Resource *resource)
 void BlurInterfacePrivate::org_kde_kwin_blur_set_region(Resource *resource, wl_resource *region)
 {
     RegionInterface *r = RegionInterface::get(region);
-    if (r) {
-        pendingRegion = r->region();
+    if (r && surface) {
+        pendingRegion = r->region(surface->scaleOverride());
     } else {
-        pendingRegion = QRegion();
+        pendingRegion = RegionF();
     }
 }
 
@@ -123,21 +124,22 @@ void BlurInterfacePrivate::org_kde_kwin_blur_destroy_resource(Resource *resource
     delete q;
 }
 
-BlurInterfacePrivate::BlurInterfacePrivate(BlurInterface *_q, wl_resource *resource)
+BlurInterfacePrivate::BlurInterfacePrivate(BlurInterface *_q, wl_resource *resource, SurfaceInterface *surface)
     : QtWaylandServer::org_kde_kwin_blur(resource)
     , q(_q)
+    , surface(surface)
 {
 }
 
-BlurInterface::BlurInterface(wl_resource *resource)
+BlurInterface::BlurInterface(wl_resource *resource, SurfaceInterface *surface)
     : QObject()
-    , d(new BlurInterfacePrivate(this, resource))
+    , d(new BlurInterfacePrivate(this, resource, surface))
 {
 }
 
 BlurInterface::~BlurInterface() = default;
 
-QRegion BlurInterface::region()
+RegionF BlurInterface::region()
 {
     return d->currentRegion;
 }

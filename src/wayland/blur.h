@@ -8,6 +8,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "utils/regionf.h"
 
 #include <QObject>
 #include <memory>
@@ -19,6 +20,7 @@ namespace KWin
 class Display;
 class BlurManagerInterfacePrivate;
 class BlurInterfacePrivate;
+class SurfaceInterface;
 
 /**
  * @brief Represents the Global for org_kde_kwin_blur_manager interface.
@@ -64,10 +66,10 @@ public:
     /**
      * @returns The region or the SurfaceInterface which should be blurred, null Region implies complete surface.
      */
-    QRegion region();
+    RegionF region();
 
 private:
-    explicit BlurInterface(wl_resource *resource);
+    explicit BlurInterface(wl_resource *resource, SurfaceInterface *surface);
     friend class BlurManagerInterfacePrivate;
 
     std::unique_ptr<BlurInterfacePrivate> d;
