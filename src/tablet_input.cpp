@@ -192,7 +192,7 @@ void TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
     m_cursorByTool[device] = cursor;
 }
 
-void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -212,7 +212,7 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
         .position = pos,
         .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
         .pressure = pressure,
-        .tangentialPressure = 0,
+        .sliderPosition = sliderPosition,
         .xTilt = xTilt,
         .yTilt = yTilt,
         .distance = distance,
@@ -225,7 +225,7 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     input()->setLastInputHandler(this);
 }
 
-void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -246,6 +246,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
         .device = device,
         .rotation = rotation,
         .position = pos,
+        .sliderPosition = sliderPosition,
         .xTilt = xTilt,
         .yTilt = yTilt,
         .distance = distance,
@@ -258,7 +259,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
     input()->setLastInputHandler(this);
 }
 
-void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
+void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -281,7 +282,7 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
         .position = pos,
         .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
         .pressure = pressure,
-        .tangentialPressure = 0,
+        .sliderPosition = sliderPosition,
         .xTilt = xTilt,
         .yTilt = yTilt,
         .distance = distance,

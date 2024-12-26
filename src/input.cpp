@@ -1483,7 +1483,8 @@ public:
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
 
-        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, input()->keyboardModifiers());
+        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->sliderPosition, event->rotation, event->distance, input()->keyboardModifiers());
+
         return true;
     }
 
@@ -1497,7 +1498,8 @@ public:
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
 
-        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, input()->keyboardModifiers());
+        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->sliderPosition, event->rotation, event->distance, input()->keyboardModifiers());
+
         return true;
     }
 
@@ -2266,6 +2268,9 @@ public:
         if (tool->hasCapability(TabletToolV2Interface::Distance)) {
             tool->sendDistance(event->distance);
         }
+        if (tool->hasCapability(TabletToolV2Interface::Slider)) {
+            tool->sendSlider(event->sliderPosition);
+        }
 
         tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         return true;
@@ -2302,6 +2307,9 @@ public:
         }
         if (tool->hasCapability(TabletToolV2Interface::Distance)) {
             tool->sendDistance(event->distance);
+        }
+        if (tool->hasCapability(TabletToolV2Interface::Slider)) {
+            tool->sendSlider(event->sliderPosition);
         }
 
         tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
@@ -2344,6 +2352,9 @@ public:
         }
         if (tool->hasCapability(TabletToolV2Interface::Distance)) {
             tool->sendDistance(event->distance);
+        }
+        if (tool->hasCapability(TabletToolV2Interface::Slider)) {
+            tool->sendSlider(event->sliderPosition);
         }
 
         tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());

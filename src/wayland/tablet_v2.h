@@ -132,7 +132,7 @@ public:
     void sendDistance(qreal distance);
     void sendTilt(qreal degreesX, qreal degreesY);
     void sendRotation(qreal degrees);
-    void sendSlider(qint32 position);
+    void sendSlider(qreal position);
     void sendWheel(qint32 degrees, qint32 clicks);
     void sendButton(quint32 button, bool pressed);
     void sendFrame(quint32 time);
