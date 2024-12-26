@@ -23,17 +23,18 @@ QuickRootTile::QuickRootTile(TileManager *tiling, VirtualDesktop *desktop)
     setRelativeGeometry(QRectF(0, 0, 1, 1));
     setQuickTileMode(QuickTileFlag::None);
 
-    auto createTile = [this](const QRectF &geometry, QuickTileMode tileMode) {
-        Tile *tile = createChildAt<Tile>(geometry, childCount());
+    auto createTile = [this, &tiling](const QRectF &geometry, QuickTileMode tileMode) {
+        Tile *tile = new Tile(tiling, this);
         tile->setPadding(0.0);
         tile->setQuickTileMode(tileMode);
+        tile->setRelativeGeometry(geometry);
 
         connect(tile, &Tile::relativeGeometryChanged, this, [this, tile]() {
             relayoutToFit(tile);
         });
         connect(tile, &Tile::windowRemoved, this, &QuickRootTile::tryReset);
 
-        return tile;
+        return std::unique_ptr<Tile>(tile);
     };
 
     m_leftVerticalTile = createTile(QRectF(0, 0, 0.5, 1), QuickTileFlag::Left);
@@ -61,24 +62,24 @@ void QuickRootTile::relayoutToFit(Tile *tile)
 
     const QRectF geometry = tile->relativeGeometry();
 
-    if (m_topHorizontalTile == tile) {
+    if (m_topHorizontalTile.get() == tile) {
         setVerticalSplit(geometry.bottom());
-    } else if (m_bottomHorizontalTile == tile) {
+    } else if (m_bottomHorizontalTile.get() == tile) {
         setVerticalSplit(geometry.top());
-    } else if (m_leftVerticalTile == tile) {
+    } else if (m_leftVerticalTile.get() == tile) {
         setHorizontalSplit(geometry.right());
-    } else if (m_rightVerticalTile == tile) {
+    } else if (m_rightVerticalTile.get() == tile) {
         setHorizontalSplit(geometry.left());
-    } else if (m_topLeftTile == tile) {
+    } else if (m_topLeftTile.get() == tile) {
         setHorizontalSplit(geometry.right());
         setVerticalSplit(geometry.bottom());
-    } else if (m_topRightTile == tile) {
+    } else if (m_topRightTile.get() == tile) {
         setHorizontalSplit(geometry.left());
         setVerticalSplit(geometry.bottom());
-    } else if (m_bottomRightTile == tile) {
+    } else if (m_bottomRightTile.get() == tile) {
         setHorizontalSplit(geometry.left());
         setVerticalSplit(geometry.top());
-    } else if (m_bottomLeftTile == tile) {
+    } else if (m_bottomLeftTile.get() == tile) {
         setHorizontalSplit(geometry.right());
         setVerticalSplit(geometry.top());
     }
@@ -90,21 +91,21 @@ Tile *QuickRootTile::tileForMode(QuickTileMode mode)
 {
     switch (mode) {
     case QuickTileMode(QuickTileFlag::Left):
-        return m_leftVerticalTile;
+        return m_leftVerticalTile.get();
     case QuickTileMode(QuickTileFlag::Right):
-        return m_rightVerticalTile;
+        return m_rightVerticalTile.get();
     case QuickTileMode(QuickTileFlag::Top):
-        return m_topHorizontalTile;
+        return m_topHorizontalTile.get();
     case QuickTileMode(QuickTileFlag::Bottom):
-        return m_bottomHorizontalTile;
+        return m_bottomHorizontalTile.get();
     case QuickTileMode(QuickTileFlag::Left | QuickTileFlag::Top):
-        return m_topLeftTile;
+        return m_topLeftTile.get();
     case QuickTileMode(QuickTileFlag::Right | QuickTileFlag::Top):
-        return m_topRightTile;
+        return m_topRightTile.get();
     case QuickTileMode(QuickTileFlag::Left | QuickTileFlag::Bottom):
-        return m_bottomLeftTile;
+        return m_bottomLeftTile.get();
     case QuickTileMode(QuickTileFlag::Right | QuickTileFlag::Bottom):
-        return m_bottomRightTile;
+        return m_bottomRightTile.get();
     default:
         return nullptr;
     }
@@ -114,21 +115,21 @@ Tile *QuickRootTile::tileForBorder(ElectricBorder border)
 {
     switch (border) {
     case ElectricTop:
-        return m_topHorizontalTile;
+        return m_topHorizontalTile.get();
     case ElectricTopRight:
-        return m_topRightTile;
+        return m_topRightTile.get();
     case ElectricRight:
-        return m_rightVerticalTile;
+        return m_rightVerticalTile.get();
     case ElectricBottomRight:
-        return m_bottomRightTile;
+        return m_bottomRightTile.get();
     case ElectricBottom:
-        return m_bottomHorizontalTile;
+        return m_bottomHorizontalTile.get();
     case ElectricBottomLeft:
-        return m_bottomLeftTile;
+        return m_bottomLeftTile.get();
     case ElectricLeft:
-        return m_leftVerticalTile;
+        return m_leftVerticalTile.get();
     case ElectricTopLeft:
-        return m_topLeftTile;
+        return m_topLeftTile.get();
     case ElectricNone:
     default:
         return nullptr;
@@ -234,14 +235,14 @@ void QuickRootTile::tryReset()
 
 Tile *QuickRootTile::tileForWindow(Window *window) const
 {
-    Tile *allTiles[] = {m_leftVerticalTile,
-                        m_rightVerticalTile,
-                        m_topHorizontalTile,
-                        m_bottomHorizontalTile,
-                        m_topLeftTile,
-                        m_topRightTile,
-                        m_bottomLeftTile,
-                        m_bottomRightTile};
+    Tile *allTiles[] = {m_leftVerticalTile.get(),
+                        m_rightVerticalTile.get(),
+                        m_topHorizontalTile.get(),
+                        m_bottomHorizontalTile.get(),
+                        m_topLeftTile.get(),
+                        m_topRightTile.get(),
+                        m_bottomLeftTile.get(),
+                        m_bottomRightTile.get()};
 
     for (Tile *tile : allTiles) {
         if (tile->windows().contains(window)) {
