@@ -443,14 +443,12 @@ msgid "Delta"
 msgstr "角度差"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "x 坐标差"
+msgstr ""
 
 #: debug_console.cpp:259
 #, kde-format
@@ -1676,7 +1674,7 @@ msgstr "全屏窗口"
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr ""
+msgstr "禁用活动输入捕获"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

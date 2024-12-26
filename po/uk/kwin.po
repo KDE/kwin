@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-25 00:42+0000\n"
-"PO-Revision-Date: 2024-12-24 18:54+0200\n"
+"PO-Revision-Date: 2024-12-25 08:52+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -463,14 +463,12 @@ msgid "Delta"
 msgstr "Зміна"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Зміна x"
+msgstr "Зміна (V120)"
 
 #: debug_console.cpp:259
 #, kde-format

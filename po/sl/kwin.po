@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1698621 2024-12-25 01:19:05Z scripty $
+# $Id: kwin.po 1698686 2024-12-26 01:18:46Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-25 00:42+0000\n"
-"PO-Revision-Date: 2024-12-24 10:05+0100\n"
+"PO-Revision-Date: 2024-12-25 09:01+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -467,14 +467,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Razlika x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
