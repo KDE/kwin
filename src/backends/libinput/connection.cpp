@@ -479,6 +479,7 @@ void Connection::processEvents()
                                                         tte->distance(),
                                                         tte->isTipDown(),
                                                         tte->isNearby(),
+                                                        tte->sliderPosition(),
                                                         getOrCreateTool(tte->tool()),
                                                         tte->time(),
                                                         tte->device());
@@ -498,6 +499,7 @@ void Connection::processEvents()
                                                              tte->distance(),
                                                              tte->isTipDown(),
                                                              tte->isNearby(),
+                                                             tte->sliderPosition(),
                                                              getOrCreateTool(tte->tool()),
                                                              tte->time(),
                                                              tte->device());
@@ -517,6 +519,7 @@ void Connection::processEvents()
                                                        tte->distance(),
                                                        tte->isTipDown(),
                                                        tte->isNearby(),
+                                                       tte->sliderPosition(),
                                                        getOrCreateTool(tte->tool()),
                                                        tte->time(),
                                                        tte->device());

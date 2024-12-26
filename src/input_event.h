@@ -93,7 +93,7 @@ public:
     QPointF position;
     Qt::MouseButtons buttons;
     qreal pressure;
-    qreal tangentialPressure;
+    qreal sliderPosition;
     qreal xTilt;
     qreal yTilt;
     qreal distance;
@@ -115,7 +115,7 @@ public:
     QPointF position;
     Qt::MouseButtons buttons;
     qreal pressure;
-    qreal tangentialPressure;
+    qreal sliderPosition;
     qreal xTilt;
     qreal yTilt;
     qreal distance;
@@ -131,7 +131,7 @@ public:
     QPointF position;
     Qt::MouseButtons buttons;
     qreal pressure;
-    qreal tangentialPressure;
+    qreal sliderPosition;
     qreal xTilt;
     qreal yTilt;
     qreal distance;

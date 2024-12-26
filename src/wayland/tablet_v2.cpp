@@ -354,10 +354,10 @@ void TabletToolV2Interface::sendRotation(qreal rotation)
     }
 }
 
-void TabletToolV2Interface::sendSlider(int32_t position)
+void TabletToolV2Interface::sendSlider(qreal position)
 {
     for (auto *resource : d->targetResources()) {
-        d->send_slider(resource->handle, position);
+        d->send_slider(resource->handle, 65535 * position);
     }
 }
 
