@@ -23,9 +23,9 @@
 namespace KWin
 {
 
-TileModel::TileModel(Tile *parent)
+TileModel::TileModel(TileManager *parent)
     : QAbstractItemModel(parent)
-    , m_rootTile(parent)
+    , m_tileManager(parent)
 {
 }
 
@@ -71,7 +71,7 @@ QModelIndex TileModel::index(int row, int column, const QModelIndex &parent) con
     CustomTile *parentItem;
 
     if (!parent.isValid()) {
-        parentItem = static_cast<CustomTile *>(m_rootTile);
+        parentItem = m_tileManager->rootTile();
     } else {
         parentItem = static_cast<CustomTile *>(parent.internalPointer());
     }
@@ -92,7 +92,7 @@ QModelIndex TileModel::parent(const QModelIndex &index) const
     CustomTile *childItem = static_cast<CustomTile *>(index.internalPointer());
     CustomTile *parentItem = static_cast<CustomTile *>(childItem->parentTile());
 
-    if (!parentItem || parentItem == static_cast<CustomTile *>(m_rootTile)) {
+    if (!parentItem || parentItem == m_tileManager->rootTile()) {
         return QModelIndex();
     }
 
@@ -107,7 +107,7 @@ int TileModel::rowCount(const QModelIndex &parent) const
     }
 
     if (!parent.isValid()) {
-        parentItem = static_cast<CustomTile *>(m_rootTile);
+        parentItem = m_tileManager->rootTile();
     } else {
         parentItem = static_cast<CustomTile *>(parent.internalPointer());
     }
@@ -126,7 +126,7 @@ void TileModel::beginInsertTile(CustomTile *tile, int position)
     CustomTile *parentTile = static_cast<CustomTile *>(tile->parentTile());
     Q_ASSERT(parentTile);
 
-    auto index = parentTile == tile->rootTile() ? QModelIndex() : createIndex(parentTile->row(), 0, parentTile);
+    auto index = parentTile == m_tileManager->rootTile() ? QModelIndex() : createIndex(parentTile->row(), 0, parentTile);
     const int pos = std::clamp(position, 0, parentTile->childCount());
 
     beginInsertRows(index, pos, pos);
@@ -145,7 +145,7 @@ void TileModel::beginRemoveTile(CustomTile *tile)
         return;
     }
 
-    QModelIndex parentIndex = parentTile == static_cast<CustomTile *>(m_rootTile) ? QModelIndex() : createIndex(parentTile->row(), 0, parentTile);
+    QModelIndex parentIndex = parentTile == m_tileManager->rootTile() ? QModelIndex() : createIndex(parentTile->row(), 0, parentTile);
     beginRemoveRows(parentIndex, tile->row(), tile->row());
 }
 

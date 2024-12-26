@@ -1308,10 +1308,10 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         m_tileManagers.erase(output);
 
         // Evacuate windows from the defunct custom tile tree.
-        tileManager->rootTile()->visitDescendants([](Tile *child) {
+        tileManager->rootTile()->visitDescendants([](const Tile *child) {
             const QList<Window *> windows = child->windows();
             for (Window *window : windows) {
-                child->removeWindow(window);
+                window->requestTile(nullptr);
             }
         });
 
@@ -1337,10 +1337,8 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
             Output *bestOutput = outputAt(output->geometry().center());
             Tile *bestTile = m_tileManagers[bestOutput]->quickTile(quickTileMode);
 
-            if (bestTile) {
-                for (Window *window : windows) {
-                    bestTile->addWindow(window);
-                }
+            for (Window *window : windows) {
+                window->requestTile(bestTile);
             }
         }
     }

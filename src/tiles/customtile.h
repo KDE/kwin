@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "scripting/tilemodel.h"
 #include "tile.h"
 
 #include <kwin_export.h>
@@ -62,14 +61,7 @@ class RootTile : public CustomTile
 {
     Q_OBJECT
 public:
-    RootTile(TileManager *tiling, VirtualDesktop *desktop);
-
-    Tile *tileForWindow(Window *window);
-
-    TileModel *model() const;
-
-private:
-    std::unique_ptr<TileModel> m_tileModel = nullptr;
+    RootTile(TileManager *tiling);
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const CustomTile *tile);

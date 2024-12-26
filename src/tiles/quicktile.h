@@ -16,13 +16,11 @@
 namespace KWin
 {
 
-class VirtualDesktop;
-
 class KWIN_EXPORT QuickRootTile : public Tile
 {
     Q_OBJECT
 public:
-    QuickRootTile(TileManager *tiling, VirtualDesktop *desktop);
+    QuickRootTile(TileManager *tiling, Tile *parentItem = nullptr);
     ~QuickRootTile();
 
     Tile *tileForMode(QuickTileMode mode);
@@ -33,8 +31,6 @@ public:
 
     qreal verticalSplit() const;
     void setVerticalSplit(qreal split);
-
-    Tile *tileForWindow(Window *window) const;
 
 private:
     void relayoutToFit(Tile *tile);
