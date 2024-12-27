@@ -40,7 +40,7 @@ class TabletPadGroupV2Interface;
 class TabletPadGroupV2InterfacePrivate;
 
 /**
- * This is an implementation of wayland-protocols/unstable/tablet/tablet-unstable-v2.xml
+ * This is an implementation of wayland-protocols/stable/tablet/tablet-v2.xml
  *
  * This class is just the means to get a @class TabletSeatInterface, which is
  * the class that will have all of the information we need.

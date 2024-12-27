@@ -12,7 +12,7 @@
 #include "surface.h"
 #include "utils/resource.h"
 
-#include "qwayland-server-tablet-unstable-v2.h"
+#include "qwayland-server-tablet-v2.h"
 
 #include <QHash>
 #include <QPointer>
