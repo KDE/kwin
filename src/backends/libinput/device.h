@@ -252,6 +252,10 @@ public:
     {
         return m_vendor;
     }
+    quint32 busType() const override
+    {
+        return m_busType;
+    }
     void *group() const override;
     Qt::MouseButtons supportedButtons() const
     {
@@ -806,6 +810,7 @@ private:
     QSizeF m_size;
     quint32 m_product;
     quint32 m_vendor;
+    quint32 m_busType;
     Qt::MouseButtons m_supportedButtons = Qt::NoButton;
     int m_tapFingerCount;
     enum libinput_config_tap_button_map m_defaultTapButtonMap;

@@ -266,7 +266,7 @@ private:
     friend class TabletSeatV2InterfacePrivate;
     friend class TabletPadV2Interface;
     friend class TabletToolV2Interface;
-    explicit TabletV2Interface(quint32 vendorId, quint32 productId, const QString &name, const QStringList &paths, QObject *parent);
+    explicit TabletV2Interface(quint32 vendorId, quint32 productId, quint32 busType, const QString &name, const QStringList &paths, QObject *parent);
     std::unique_ptr<TabletV2InterfacePrivate> d;
 };
 

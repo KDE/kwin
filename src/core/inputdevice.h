@@ -102,6 +102,7 @@ public:
     virtual QString name() const = 0;
     virtual quint32 vendor() const;
     virtual quint32 product() const;
+    virtual quint32 busType() const;
 
     virtual void *group() const;
 
