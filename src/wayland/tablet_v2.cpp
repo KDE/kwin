@@ -20,16 +20,17 @@
 
 namespace KWin
 {
-static int s_version = 1;
+static int s_version = 2;
 
 class TabletV2InterfacePrivate : public QtWaylandServer::zwp_tablet_v2
 {
 public:
-    TabletV2InterfacePrivate(TabletV2Interface *q, uint32_t vendorId, uint32_t productId, const QString &name, const QStringList &paths)
+    TabletV2InterfacePrivate(TabletV2Interface *q, uint32_t vendorId, uint32_t productId, quint32 busType, const QString &name, const QStringList &paths)
         : zwp_tablet_v2()
         , q(q)
         , m_vendorId(vendorId)
         , m_productId(productId)
+        , m_busType(busType)
         , m_name(name)
         , m_paths(paths)
     {
@@ -45,13 +46,14 @@ public:
     TabletV2Interface *const q;
     const uint32_t m_vendorId;
     const uint32_t m_productId;
+    const uint32_t m_busType;
     const QString m_name;
     const QStringList m_paths;
 };
 
-TabletV2Interface::TabletV2Interface(uint32_t vendorId, uint32_t productId, const QString &name, const QStringList &paths, QObject *parent)
+TabletV2Interface::TabletV2Interface(uint32_t vendorId, uint32_t productId, quint32 busType, const QString &name, const QStringList &paths, QObject *parent)
     : QObject(parent)
-    , d(new TabletV2InterfacePrivate(this, vendorId, productId, name, paths))
+    , d(new TabletV2InterfacePrivate(this, vendorId, productId, busType, name, paths))
 {
 }
 
@@ -773,6 +775,11 @@ public:
         for (const QString &path : std::as_const(tablet->d->m_paths)) {
             tablet->d->send_path(tabletResource, path);
         }
+
+        if (resource->version() >= ZWP_TABLET_V2_BUSTYPE_SINCE_VERSION) {
+            tablet->d->send_bustype(tabletResource, tablet->d->m_busType);
+        }
+
         tablet->d->send_done(tabletResource);
     }
 
@@ -901,7 +908,7 @@ TabletSeatV2Interface::addTablet(InputDevice *device)
 {
     Q_ASSERT(!d->m_tablets.contains(device));
 
-    auto iface = new TabletV2Interface(device->vendor(), device->product(), device->name(), {device->sysPath()}, this);
+    auto iface = new TabletV2Interface(device->vendor(), device->product(), device->busType(), device->name(), {device->sysPath()}, this);
 
     for (QtWaylandServer::zwp_tablet_seat_v2::Resource *r : d->resourceMap()) {
         d->sendTabletAdded(r, iface);
