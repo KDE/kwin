@@ -62,6 +62,11 @@ unsigned int libinput_device_get_id_vendor(struct libinput_device *device)
     return device->vendor;
 }
 
+unsigned int libinput_device_get_id_bustype(struct libinput_device *device)
+{
+    return device->busType;
+}
+
 int libinput_device_config_tap_get_finger_count(struct libinput_device *device)
 {
     return device->tapFingerCount;
