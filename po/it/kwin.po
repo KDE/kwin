@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-25 00:42+0000\n"
-"PO-Revision-Date: 2024-12-11 15:56+0100\n"
+"POT-Creation-Date: 2024-12-27 00:43+0000\n"
+"PO-Revision-Date: 2024-12-25 17:41+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -113,77 +113,84 @@ msgstr "GLX/OpenGL non è disponibile."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Apertura del profilo ICC «%1» non riuscita"
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 non esiste"
+msgstr "Il profilo ICC «%1» non esiste"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "Il profilo ICC «%1» non è utilizzabile per i gli schermi"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"Il profilo ICC «%1» ha uno spazio di connessione non supportato, è "
+"supportato solo XYZ"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"Il profilo ICC «%1» è danneggiato, lo spazio colore di ingresso/uscita non è "
+"RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "Il profilo ICC «%1» è danneggiato, non ha il punto di bianco"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "Il profilo ICC «%1» è danneggiato, il suo punto di bianco non è valido"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"Il profilo ICC «%1» è danneggiato, l'analisi della matrice di adattamento "
+"cromatico non è riuscita."
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"Il profilo ICC «%1» è danneggiato, l'inversione della matrice di adattamento "
+"cromatico non è riuscita."
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "Il profilo ICC «%1» è danneggiato, non ha primari"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"Il profilo ICC «%1» è danneggiato, impossibile calcolare i suoi primari"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "Il profilo ICC «%1» è danneggiato, i suoi primari non sono validi"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "Il profilo ICC «%1» solo con tag BToD non è supportato"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Mancano i tag TRC nel profilo di colore"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -453,14 +460,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
@@ -715,25 +720,24 @@ msgid "State"
 msgstr "Stato"
 
 #: debug_console.cpp:495
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Strumento tablet"
+msgstr "Strumento di prossimità del tablet"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Prossimità"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Dentro"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Fuori"
 
 #: debug_console.cpp:497 debug_console.cpp:514 debug_console.cpp:532
 #: debug_console.cpp:577 debug_console.cpp:591
@@ -769,33 +773,29 @@ msgid "Modifiers"
 msgstr "Modificatori"
 
 #: debug_console.cpp:513
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Strumento tablet"
+msgstr "Asse dello strumento tablet"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Strumento tablet"
+msgstr "Punta dello strumento tablet"
 
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "In alto"
+msgstr "Punta"
 
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Sposta in basso"
+msgstr "Giù"
 
 #: debug_console.cpp:531
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Su"
 
 #: debug_console.cpp:548
 #, kde-format
@@ -1714,11 +1714,10 @@ msgid "Fullscreen windows"
 msgstr "Finestre a schermo intero"
 
 #: plugins/eis/eisinputcapturemanager.cpp:124
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Disabilita l'integrazione di KActivities."
+msgstr "Disabilita l'acquisizione dell'immissione attiva"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
@@ -4471,27 +4470,29 @@ msgstr "Vai al desktop %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Una delle uscite rilevanti non è più disponibile"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"Non è consentito disabilitare tutte le uscite tramite modifiche alla "
+"configurazione"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "L'ordine fornito non contiene tutte le uscite"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "L'ordine di uscite fornito non è valido"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Il driver ha rifiutato la configurazione di uscita"
 
 #: window.cpp:3173
 #, kde-format
@@ -4499,7 +4500,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Non risponde)"
 
-#: workspace.cpp:1655
+#: workspace.cpp:1653
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
