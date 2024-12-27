@@ -154,8 +154,8 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/tablet/tablet-unstable-v2.xml
-    BASENAME tablet-unstable-v2
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
+    BASENAME tablet-v2
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE

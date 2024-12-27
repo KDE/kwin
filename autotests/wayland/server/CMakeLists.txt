@@ -38,7 +38,7 @@ add_executable(testTabletInterface)
 qt6_generate_wayland_protocol_client_sources(testTabletInterface 
     ${private_code_option}
     FILES
-        ${WaylandProtocols_DATADIR}/unstable/tablet/tablet-unstable-v2.xml
+        ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
     )
 target_sources(testTabletInterface PRIVATE test_tablet_interface.cpp ${TABLET_SRCS})
 target_link_libraries( testTabletInterface Qt::Test kwin Plasma::KWaylandClient Wayland::Client)
