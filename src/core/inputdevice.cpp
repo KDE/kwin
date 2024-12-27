@@ -34,6 +34,11 @@ quint32 InputDevice::product() const
     return 0;
 }
 
+quint32 InputDevice::busType() const
+{
+    return 0;
+}
+
 void *InputDevice::group() const
 {
     return nullptr;
