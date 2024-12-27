@@ -22,7 +22,7 @@
 #include "KWayland/Client/seat.h"
 #include "KWayland/Client/surface.h"
 
-#include "qwayland-tablet-unstable-v2.h"
+#include "qwayland-tablet-v2.h"
 
 using namespace KWin;
 using namespace std::literals;

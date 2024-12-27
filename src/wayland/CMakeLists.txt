@@ -42,6 +42,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
 
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
+        ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
         ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
         ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
@@ -71,7 +72,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/primary-selection/primary-selection-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/relative-pointer/relative-pointer-unstable-v1.xml
-        ${WaylandProtocols_DATADIR}/unstable/tablet/tablet-unstable-v2.xml
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
         ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
