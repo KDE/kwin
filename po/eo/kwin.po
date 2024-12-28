@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-27 00:43+0000\n"
-"PO-Revision-Date: 2024-09-21 10:41+0200\n"
+"PO-Revision-Date: 2024-12-27 22:09+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -114,75 +114,77 @@ msgstr "GLX/OpenGL ne disponeblas."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Malsukcesis malfermi ICC-profilon \"%1\""
 
 #: core/iccprofile.cpp:247
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC-profilo \"%1\" ne ekzistas"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC-profilo \"%1\" ne uzeblas por ekranoj"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC-profilo \"%1\" havas nesubtenatan konektospacon, nur XYZ estas subtenata"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC-profilo \"%1\" estas difekta, en/eliga kolorspaco ne estas RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC-profilo \"%1\" estas difekta, ĝi ne havas blankpunkton"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC-profilo \"%1\" estas difekta, ĝia blankpunkto estas nevalida"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC-profilo \"%1\" estas difekta, analizo de kromata matrico fiaskis"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC-profilo \"%1\" estas difekta, renversigo de kromata adaptomatrico fiaskis"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC-profilo \"%1\" estas difekta, ĝi ne havas primarojn"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC-profilo \"%1\" estas difekta, ne eblis kalkuli ĝiajn primarojn"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC-profilo \"%1\" estas difekta, ĝiaj primaroj estas nevalidaj"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC-profilo \"%1\" kun nur BToD-etikedoj ne estas subtenata"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Al kolorprofilo mankas TRC-etikedoj"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -452,14 +454,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
@@ -714,25 +714,24 @@ msgid "State"
 msgstr "Stato"
 
 #: debug_console.cpp:495
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Tabuleta Ilo"
+msgstr "Proksimeco de Tabuleta Ilo"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Proksimeco"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "En"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "El"
 
 #: debug_console.cpp:497 debug_console.cpp:514 debug_console.cpp:532
 #: debug_console.cpp:577 debug_console.cpp:591
@@ -768,33 +767,29 @@ msgid "Modifiers"
 msgstr "Modifiloj"
 
 #: debug_console.cpp:513
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Tabuleta Ilo"
+msgstr "Tabulet-Ila Akso"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Tabuleta Ilo"
+msgstr "Tabuleta Ŝpruchelpilo"
 
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Supre"
+msgstr "Helpilo"
 
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Movu Malsupren"
+msgstr "Malsupren"
 
 #: debug_console.cpp:531
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Supren"
 
 #: debug_console.cpp:548
 #, kde-format
@@ -820,12 +815,12 @@ msgstr "Tablojdo"
 #: debug_console.cpp:562
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr "Tablojda Kusenetbutono"
+msgstr "Tabuleta Platbutono"
 
 #: debug_console.cpp:575
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr "Tablojda Panelstrio"
+msgstr "Tabuleta Platstrio"
 
 #: debug_console.cpp:576 debug_console.cpp:590
 #, kde-format
@@ -1067,10 +1062,9 @@ msgstr "Ŝargi"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Forlasu Sencimigan Konzolon"
+msgstr "Sencimiga Konzolo"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -1699,11 +1693,10 @@ msgid "Fullscreen windows"
 msgstr "Plenekranaj fenestroj"
 
 #: plugins/eis/eisinputcapturemanager.cpp:124
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Malebligi KActivities-integriĝon."
+msgstr "Malebligi Kapton de Aktiva Enigo"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
@@ -3098,8 +3091,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Zomfaktoro:"
 
@@ -3107,12 +3099,11 @@ msgstr "Zomfaktoro:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Montri rastrumeran kradon je zomnivelo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Musmontrilo:"
 
@@ -3142,10 +3133,9 @@ msgstr "Kaŝi"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
-msgstr "Muso-Spurado:"
+msgstr "Muso-spurado:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:112
@@ -3189,10 +3179,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
-msgstr "Ebligu Fokuso-Spuradon"
+msgstr "Ebligi fokuso-spuradon"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:152
@@ -3206,10 +3195,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
-msgstr "Ebligu Tekstan Kursoro-Spuradon"
+msgstr "Ebligi tekstkursoran spuradon"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -3245,7 +3233,7 @@ msgstr "Forigi ĉi tiun regulon (por uzo en importado)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Tiu ĉi regulo estas ŝaltita"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3788,17 +3776,15 @@ msgid "Log Out Anyway"
 msgstr "Ĉiukaze Elsaluti"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "La sekvantaj aplikaĵoj ne fermiĝis:\n"
-"%1"
+"%1\n"
+"Elsalutante ĉiukaze post 2 minutoj."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4257,28 +4243,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Fiksi fenestron en ĉiuj labortabloj"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Rapida Kahela Fenestro maldekstren"
+msgstr "Propra Rapid-Kahela Fenestro je la Maldekstro"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Rapida Kahela Fenestro dekstre"
+msgstr "Propra Rapid-Kahela Fenestro ja le Dekstro"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Rapida Kahela Fenestro al la Supro"
+msgstr "Propra Rapid-Kahela Fenestro je la Supro"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Rapida Kahela Fenestro al la Malsupro"
+msgstr "Propra Rapid-Kahela Fenestro je la Malsupro"
 
 #: useractions.cpp:1014
 #, kde-format
@@ -4448,27 +4430,27 @@ msgstr "Ŝanĝi al labortablo %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Unu el la rilataj eligoj ne plu disponeblas"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "Malebligi ĉiujn eligojn per agordoŝanĝoj ne estas permesita"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "La provizita elig-sinsekvo ne enhavas ĉiujn eligojn"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "La provizita elig-sinsekvo estas nevalida"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "La pelilo malakceptis la eligan agordon"
 
 #: window.cpp:3173
 #, kde-format
@@ -4504,38 +4486,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgid "EventType"
-#~ msgstr "EventoTipo"
-
-#~ msgid "Red"
-#~ msgstr "Ruĝa"
-
-#~ msgid "Green"
-#~ msgstr "Verda"
-
-#~ msgid "Blue"
-#~ msgstr "Blua"
-
-#~ msgid "Purple"
-#~ msgstr "Purpura"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "Reĝimo:"
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "Protanopia (ruĝa malforta)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "Deuteranopia (verda malforta)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "Tritanopia (blu-flava)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "Intenseco:"
