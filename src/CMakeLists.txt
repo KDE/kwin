@@ -603,6 +603,7 @@ install(FILES
 )
 
 install(FILES
+    scene/borderradius.h
     scene/cursoritem.h
     scene/cursorscene.h
     scene/decorationitem.h
