@@ -152,6 +152,7 @@ target_sources(kwin PRIVATE
     resources.qrc
     rulebooksettings.cpp
     rules.cpp
+    scene/borderradius.cpp
     scene/cursoritem.cpp
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
@@ -602,6 +603,7 @@ install(FILES
 )
 
 install(FILES
+    scene/borderradius.h
     scene/cursoritem.h
     scene/decorationitem.h
     scene/dndiconitem.h
