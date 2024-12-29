@@ -942,6 +942,12 @@ libinput_tablet_pad_mode_group_get_mode(struct libinput_tablet_pad_mode_group *g
     return 0;
 }
 
+unsigned int
+libinput_tablet_pad_mode_group_get_num_modes(struct libinput_tablet_pad_mode_group *group)
+{
+    return 0;
+}
+
 struct libinput_device_group *
 libinput_device_get_device_group(struct libinput_device *device)
 {

@@ -79,6 +79,12 @@ public:
     virtual QList<Capability> capabilities() const = 0;
 };
 
+struct InputDeviceTabletPadModeGroup
+{
+    int modeCount = 0;
+    int currentMode = 0;
+};
+
 /**
  * The InputDevice class represents an input device, e.g. a mouse, or a keyboard, etc.
  */
@@ -117,8 +123,8 @@ public:
     virtual int tabletPadButtonCount() const;
     virtual int tabletPadRingCount() const;
     virtual int tabletPadStripCount() const;
-    virtual int tabletPadModeCount() const;
-    virtual int tabletPadMode() const;
+
+    virtual QList<InputDeviceTabletPadModeGroup> modeGroups() const;
 
 Q_SIGNALS:
     void keyChanged(quint32 key, KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);

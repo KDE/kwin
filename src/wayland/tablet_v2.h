@@ -19,6 +19,7 @@ class ClientConnection;
 class Display;
 class InputDevice;
 class InputDeviceTabletTool;
+class InputDeviceTabletPadModeGroup;
 class SeatInterface;
 class SurfaceInterface;
 class TabletSurfaceCursorV2;
@@ -179,8 +180,7 @@ private:
                                   quint32 buttons,
                                   quint32 rings,
                                   quint32 strips,
-                                  quint32 modes,
-                                  quint32 currentMode,
+                                  QList<InputDeviceTabletPadModeGroup> groups,
                                   Display *display,
                                   TabletSeatV2Interface *parent);
     std::unique_ptr<TabletPadV2InterfacePrivate> d;
@@ -245,7 +245,7 @@ private:
     friend class TabletPadV2Interface;
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadGroupV2Interface(quint32 currentMode, TabletPadV2Interface *parent);
+    explicit TabletPadGroupV2Interface(quint32 modeCount, quint32 currentMode, TabletPadV2Interface *parent);
     std::unique_ptr<TabletPadGroupV2InterfacePrivate> d;
 };
 

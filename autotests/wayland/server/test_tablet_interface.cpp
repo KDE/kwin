@@ -230,16 +230,6 @@ public:
         return m_tabletPadStripCount;
     }
 
-    int tabletPadModeCount() const override
-    {
-        return m_tabletPadModeCount;
-    }
-
-    int tabletPadMode() const override
-    {
-        return m_tabletPadMode;
-    }
-
     void setName(const QString &name)
     {
         m_name = name;

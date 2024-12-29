@@ -621,14 +621,22 @@ int Device::tabletPadStripCount() const
     return libinput_device_tablet_pad_get_num_strips(m_device);
 }
 
-int Device::tabletPadModeCount() const
+QList<InputDeviceTabletPadModeGroup> Device::modeGroups() const
 {
-    return libinput_device_tablet_pad_get_num_mode_groups(m_device);
-}
+    QList<InputDeviceTabletPadModeGroup> result;
 
-int Device::tabletPadMode() const
-{
-    return libinput_tablet_pad_mode_group_get_mode(libinput_device_tablet_pad_get_mode_group(m_device, 0));
+    int numGroups = libinput_device_tablet_pad_get_num_mode_groups(m_device);
+
+    for (int i = 0; i < numGroups; ++i) {
+        libinput_tablet_pad_mode_group *group = libinput_device_tablet_pad_get_mode_group(m_device, i);
+        int modeCount = libinput_tablet_pad_mode_group_get_num_modes(group);
+        int currentMode = libinput_tablet_pad_mode_group_get_mode(group);
+        result << InputDeviceTabletPadModeGroup{
+            .modeCount = modeCount,
+            .currentMode = currentMode,
+        };
+    }
+    return result;
 }
 
 #define CONFIG(method, condition, function, variable, key)                                        \

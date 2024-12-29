@@ -72,14 +72,9 @@ int InputDevice::tabletPadStripCount() const
     return 0;
 }
 
-int InputDevice::tabletPadModeCount() const
+QList<InputDeviceTabletPadModeGroup> InputDevice::modeGroups() const
 {
-    return 0;
-}
-
-int InputDevice::tabletPadMode() const
-{
-    return 0;
+    return {};
 }
 
 } // namespace KWin
