@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-27 00:43+0000\n"
-"PO-Revision-Date: 2024-12-19 18:16+0900\n"
+"PO-Revision-Date: 2024-12-29 01:42+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -451,17 +451,15 @@ msgstr "垂直"
 #, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
-msgstr "Delta"
+msgstr "差異"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "差異 (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
@@ -716,25 +714,24 @@ msgid "State"
 msgstr "狀態"
 
 #: debug_console.cpp:495
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "繪圖板工具"
+msgstr "繪圖板工具距離"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "距離"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "按下"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "放開"
 
 #: debug_console.cpp:497 debug_console.cpp:514 debug_console.cpp:532
 #: debug_console.cpp:577 debug_console.cpp:591
@@ -745,7 +742,7 @@ msgstr "位置"
 #: debug_console.cpp:499 debug_console.cpp:516 debug_console.cpp:534
 #, kde-format
 msgid "Tilt"
-msgstr "Tilt (傾斜)"
+msgstr "傾斜"
 
 #: debug_console.cpp:501 debug_console.cpp:518 debug_console.cpp:536
 #, kde-format
@@ -755,7 +752,7 @@ msgstr "旋轉"
 #: debug_console.cpp:502 debug_console.cpp:519 debug_console.cpp:537
 #, kde-format
 msgid "Pressure"
-msgstr "Pressure (壓力)"
+msgstr "筆壓"
 
 #: debug_console.cpp:503 debug_console.cpp:520 debug_console.cpp:538
 #, kde-format
@@ -770,33 +767,29 @@ msgid "Modifiers"
 msgstr "修飾鍵"
 
 #: debug_console.cpp:513
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "繪圖板工具"
+msgstr "繪圖板工具軸線"
 
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "繪圖板工具"
+msgstr "繪圖板工具尖端"
 
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "上方"
+msgstr "尖端"
 
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "向下移動"
+msgstr "下"
 
 #: debug_console.cpp:531
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "上"
 
 #: debug_console.cpp:548
 #, kde-format
@@ -1689,11 +1682,10 @@ msgid "Fullscreen windows"
 msgstr "全螢幕視窗"
 
 #: plugins/eis/eisinputcapturemanager.cpp:124
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "關閉 KActivities 整合。"
+msgstr "停用作用中輸入擷取"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19

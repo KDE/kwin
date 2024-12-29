@@ -448,7 +448,7 @@ msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr ""
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
