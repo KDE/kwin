@@ -217,27 +217,7 @@ public:
 
     int tabletPadButtonCount() const override
     {
-        return m_tabletPadButtonCount;
-    }
-
-    int tabletPadRingCount() const override
-    {
-        return m_tabletPadRingCount;
-    }
-
-    int tabletPadStripCount() const override
-    {
-        return m_tabletPadStripCount;
-    }
-
-    int tabletPadModeCount() const override
-    {
-        return m_tabletPadModeCount;
-    }
-
-    int tabletPadMode() const override
-    {
-        return m_tabletPadMode;
+        return 1;
     }
 
     void setName(const QString &name)
@@ -270,29 +250,15 @@ public:
         m_tabletPad = pad;
     }
 
-    void setTabletPadButtonCount(int count)
+    QList<InputDeviceTabletPadModeGroup> modeGroups() const override
     {
-        m_tabletPadButtonCount = count;
-    }
-
-    void setTabletPadRingCount(int count)
-    {
-        m_tabletPadRingCount = count;
-    }
-
-    void setTabletPadStripCount(int count)
-    {
-        m_tabletPadStripCount = count;
-    }
-
-    void setTabletPadModeCount(int count)
-    {
-        m_tabletPadModeCount = count;
-    }
-
-    void setTabletPadMode(int mode)
-    {
-        m_tabletPadMode = mode;
+        return {
+            InputDeviceTabletPadModeGroup{
+                .modeCount = 1,
+                .buttons = {0},
+                .rings = {0},
+                .strips = {0},
+            }};
     }
 
 private:
@@ -300,11 +266,6 @@ private:
     QString m_sysPath;
     quint32 m_vendorId = 0;
     quint32 m_productId = 0;
-    int m_tabletPadButtonCount = 0;
-    int m_tabletPadRingCount = 0;
-    int m_tabletPadStripCount = 0;
-    int m_tabletPadModeCount = 0;
-    int m_tabletPadMode = 0;
     bool m_tabletTool = false;
     bool m_tabletPad = false;
 };
@@ -545,19 +506,14 @@ void TestTabletInterface::testAddPad()
     m_tabletPadDevice->setTabletPad(true);
     m_tabletPadDevice->setName(QStringLiteral("tabletpad"));
     m_tabletPadDevice->setSysPath(QStringLiteral("/test/event33"));
-    m_tabletPadDevice->setTabletPadButtonCount(1);
-    m_tabletPadDevice->setTabletPadRingCount(1);
-    m_tabletPadDevice->setTabletPadStripCount(1);
-    m_tabletPadDevice->setTabletPadModeCount(1);
-    m_tabletPadDevice->setTabletPadMode(0);
     m_tabletPad = seatInterface->addPad(m_tabletPadDevice);
     QVERIFY(m_tabletPad);
     QVERIFY(tabletPadSpy.wait() || tabletPadSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_pads.count(), 1);
     QVERIFY(m_tabletSeatClient->m_pads[0]);
 
-    QVERIFY(m_tabletPad->ring(0));
-    QVERIFY(m_tabletPad->strip(0));
+    QVERIFY(m_tabletPad->group(0)->ring(0));
+    QVERIFY(m_tabletPad->group(0)->strip(0));
 
     QCOMPARE(m_surfaces.count(), 3);
     QVERIFY(m_tabletSeatClient->m_pads[0]->buttonStates.isEmpty());

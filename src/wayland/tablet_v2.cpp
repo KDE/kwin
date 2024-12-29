@@ -536,11 +536,26 @@ void TabletPadStripV2Interface::sendStop()
 class TabletPadGroupV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_group_v2
 {
 public:
-    TabletPadGroupV2InterfacePrivate(quint32 currentMode, TabletPadGroupV2Interface *q)
+    TabletPadGroupV2InterfacePrivate(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, TabletPadV2Interface *pad, Display *display, TabletPadGroupV2Interface *q)
         : zwp_tablet_pad_group_v2()
         , q(q)
-        , m_currentMode(currentMode)
+        , m_modeCount(modeCount)
+        , m_buttons(buttons)
+        , m_display(display)
     {
+        for (int ring : rings) {
+            m_rings[ring] = new TabletPadRingV2Interface(pad);
+        }
+
+        for (int strip : strips) {
+            m_strips[strip] = new TabletPadStripV2Interface(pad);
+        }
+    }
+
+    ~TabletPadGroupV2InterfacePrivate()
+    {
+        qDeleteAll(m_rings);
+        qDeleteAll(m_strips);
     }
 
     std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const
@@ -557,24 +572,43 @@ public:
 
     TabletPadGroupV2Interface *const q;
     TabletPadV2Interface *m_pad = nullptr;
-    quint32 m_currentMode;
+    quint32 m_currentMode = 0;
+    quint32 m_modeCount;
+    QList<int> m_buttons;
+    QHash<int, TabletPadRingV2Interface *> m_rings;
+    QHash<int, TabletPadStripV2Interface *> m_strips;
+    Display *const m_display;
 };
 
-TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 currentMode, TabletPadV2Interface *parent)
+TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, Display *display, TabletPadV2Interface *parent)
     : QObject(parent)
-    , d(new TabletPadGroupV2InterfacePrivate(currentMode, this))
+    , d(new TabletPadGroupV2InterfacePrivate(modeCount, buttons, rings, strips, parent, display, this))
 {
     d->m_pad = parent;
 }
 
 TabletPadGroupV2Interface::~TabletPadGroupV2Interface() = default;
 
-void TabletPadGroupV2Interface::sendModeSwitch(quint32 time, quint32 serial, quint32 mode)
+void TabletPadGroupV2Interface::setCurrentMode(quint32 mode)
 {
     d->m_currentMode = mode;
+}
+
+void TabletPadGroupV2Interface::sendModeSwitch(quint32 time)
+{
     for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
-        d->send_mode_switch(resource->handle, time, serial, mode);
+        d->send_mode_switch(resource->handle, time, d->m_display->nextSerial(), d->m_currentMode);
     }
+}
+
+TabletPadRingV2Interface *TabletPadGroupV2Interface::ring(uint at) const
+{
+    return d->m_rings.value(at);
+}
+
+TabletPadStripV2Interface *TabletPadGroupV2Interface::strip(uint at) const
+{
+    return d->m_strips.value(at);
 }
 
 class TabletPadV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_v2
@@ -582,39 +616,24 @@ class TabletPadV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_v2
 public:
     TabletPadV2InterfacePrivate(const QString &path,
                                 quint32 buttons,
-                                quint32 rings,
-                                quint32 strips,
-                                quint32 modes,
-                                quint32 currentMode,
+                                QList<InputDeviceTabletPadModeGroup> groups,
                                 Display *display,
                                 TabletPadV2Interface *q)
         : zwp_tablet_pad_v2()
         , q(q)
         , m_path(path)
         , m_buttons(buttons)
-        , m_modes(modes)
-        , m_padGroup(new TabletPadGroupV2Interface(currentMode, q))
         , m_display(display)
     {
-        for (uint i = 0; i < buttons; ++i) {
-            m_buttons[i] = i;
-        }
-
-        m_rings.reserve(rings);
-        for (quint32 i = 0; i < rings; ++i) {
-            m_rings += new TabletPadRingV2Interface(q);
-        }
-
-        m_strips.reserve(strips);
-        for (quint32 i = 0; i < strips; ++i) {
-            m_strips += new TabletPadStripV2Interface(q);
+        m_groups.reserve(groups.size());
+        for (const InputDeviceTabletPadModeGroup &group : std::as_const(groups)) {
+            m_groups += new TabletPadGroupV2Interface(group.modeCount, group.buttons, group.rings, group.strips, m_display, q);
         }
     }
 
     ~TabletPadV2InterfacePrivate() override
     {
-        qDeleteAll(m_rings);
-        qDeleteAll(m_strips);
+        qDeleteAll(m_groups);
     }
 
     void zwp_tablet_pad_v2_destroy(Resource *resource) override
@@ -637,12 +656,8 @@ public:
     TabletPadV2Interface *const q;
 
     const QString m_path;
-    QList<quint32> m_buttons;
-    const int m_modes;
-
-    QList<TabletPadRingV2Interface *> m_rings;
-    QList<TabletPadStripV2Interface *> m_strips;
-    TabletPadGroupV2Interface *const m_padGroup;
+    quint32 m_buttons;
+    QList<TabletPadGroupV2Interface *> m_groups;
     TabletSeatV2Interface *m_seat = nullptr;
     QPointer<SurfaceInterface> m_currentSurface;
     Display *const m_display;
@@ -650,14 +665,11 @@ public:
 
 TabletPadV2Interface::TabletPadV2Interface(const QString &path,
                                            quint32 buttons,
-                                           quint32 rings,
-                                           quint32 strips,
-                                           quint32 modes,
-                                           quint32 currentMode,
+                                           const QList<InputDeviceTabletPadModeGroup> &groups,
                                            Display *display,
                                            TabletSeatV2Interface *parent)
     : QObject(parent)
-    , d(new TabletPadV2InterfacePrivate(path, buttons, rings, strips, modes, currentMode, display, this))
+    , d(new TabletPadV2InterfacePrivate(path, buttons, groups, display, this))
 {
     d->m_seat = parent;
 }
@@ -678,14 +690,9 @@ void TabletPadV2Interface::sendButton(std::chrono::microseconds time, quint32 bu
     }
 }
 
-TabletPadRingV2Interface *TabletPadV2Interface::ring(uint at) const
+TabletPadGroupV2Interface *TabletPadV2Interface::group(uint at) const
 {
-    return d->m_rings[at];
-}
-
-TabletPadStripV2Interface *TabletPadV2Interface::strip(uint at) const
-{
-    return d->m_strips[at];
+    return d->m_groups[at];
 }
 
 void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet)
@@ -709,7 +716,10 @@ void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2
         for (auto *resource : d->resourcesForSurface(surface)) {
             d->send_enter(resource->handle, serial, tabletResource, surface->resource());
         }
-        d->m_padGroup->sendModeSwitch(0, d->m_display->nextSerial(), d->m_padGroup->d->m_currentMode);
+
+        for (TabletPadGroupV2Interface *group : std::as_const(d->m_groups)) {
+            group->sendModeSwitch(0);
+        }
     }
 }
 
@@ -781,27 +791,32 @@ public:
         wl_resource *tabletResource = pad->d->add(resource->client(), resource->version())->handle;
         send_pad_added(resource->handle, tabletResource);
 
-        pad->d->send_buttons(tabletResource, pad->d->m_buttons.size());
+        pad->d->send_buttons(tabletResource, pad->d->m_buttons);
         pad->d->send_path(tabletResource, pad->d->m_path);
 
-        auto groupResource = pad->d->m_padGroup->d->add(resource->client(), resource->version());
-        pad->d->send_group(tabletResource, groupResource->handle);
-        pad->d->m_padGroup->d->send_modes(groupResource->handle, pad->d->m_modes);
+        for (TabletPadGroupV2Interface *group : std::as_const(pad->d->m_groups)) {
+            auto groupResource = group->d->add(resource->client(), resource->version());
+            pad->d->send_group(tabletResource, groupResource->handle);
 
-        pad->d->m_padGroup->d->send_buttons(
-            groupResource->handle,
-            QByteArray::fromRawData(reinterpret_cast<const char *>(pad->d->m_buttons.data()), pad->d->m_buttons.size() * sizeof(quint32)));
+            if (group->d->m_modeCount > 1) {
+                group->d->send_modes(groupResource->handle, group->d->m_modeCount);
+            }
 
-        for (auto ring : std::as_const(pad->d->m_rings)) {
-            auto ringResource = ring->d->add(resource->client(), resource->version());
-            pad->d->m_padGroup->d->send_ring(groupResource->handle, ringResource->handle);
+            group->d->send_buttons(
+                groupResource->handle,
+                QByteArray::fromRawData(reinterpret_cast<const char *>(group->d->m_buttons.data()), group->d->m_buttons.size() * sizeof(quint32)));
+
+            for (auto ring : std::as_const(group->d->m_rings)) {
+                auto ringResource = ring->d->add(resource->client(), resource->version());
+                group->d->send_ring(groupResource->handle, ringResource->handle);
+            }
+
+            for (auto strip : std::as_const(group->d->m_strips)) {
+                auto stripResource = strip->d->add(resource->client(), resource->version());
+                group->d->send_strip(groupResource->handle, stripResource->handle);
+            }
+            group->d->send_done(groupResource->handle);
         }
-
-        for (auto strip : std::as_const(pad->d->m_strips)) {
-            auto stripResource = strip->d->add(resource->client(), resource->version());
-            pad->d->m_padGroup->d->send_strip(groupResource->handle, stripResource->handle);
-        }
-        pad->d->m_padGroup->d->send_done(groupResource->handle);
         pad->d->send_done(tabletResource);
     }
 
@@ -913,7 +928,7 @@ TabletSeatV2Interface::addTablet(InputDevice *device)
 
 TabletPadV2Interface *TabletSeatV2Interface::addPad(InputDevice *device)
 {
-    auto iface = new TabletPadV2Interface(device->sysPath(), device->tabletPadButtonCount(), device->tabletPadRingCount(), device->tabletPadStripCount(), device->tabletPadModeCount(), device->tabletPadMode(), d->m_display, this);
+    auto iface = new TabletPadV2Interface(device->sysPath(), device->tabletPadButtonCount(), device->modeGroups(), d->m_display, this);
     iface->d->m_seat = this;
     for (auto r : d->resourceMap()) {
         d->sendPadAdded(r, iface);

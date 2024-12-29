@@ -151,6 +151,9 @@ struct TabletPadButtonEvent
     InputDevice *device;
     uint button;
     bool pressed;
+    quint32 group;
+    quint32 mode;
+    bool isModeSwitch;
     std::chrono::microseconds time;
 };
 
@@ -160,6 +163,7 @@ struct TabletPadStripEvent
     int number;
     int position;
     bool isFinger;
+    quint32 group;
     std::chrono::microseconds time;
 };
 
@@ -169,6 +173,7 @@ struct TabletPadRingEvent
     int number;
     int position;
     bool isFinger;
+    quint32 group;
     std::chrono::microseconds time;
 };
 

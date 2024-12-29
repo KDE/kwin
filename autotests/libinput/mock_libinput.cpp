@@ -927,7 +927,7 @@ int libinput_device_tablet_pad_get_num_buttons(struct libinput_device *device)
 
 int libinput_device_tablet_pad_get_num_mode_groups(struct libinput_device *device)
 {
-    return 0;
+    return 1;
 }
 
 struct libinput_tablet_pad_mode_group *
@@ -940,6 +940,30 @@ unsigned int
 libinput_tablet_pad_mode_group_get_mode(struct libinput_tablet_pad_mode_group *group)
 {
     return 0;
+}
+
+unsigned int
+libinput_tablet_pad_mode_group_get_num_modes(struct libinput_tablet_pad_mode_group *group)
+{
+    return 1;
+}
+
+int libinput_tablet_pad_mode_group_has_button(struct libinput_tablet_pad_mode_group *group,
+                                              unsigned int button)
+{
+    return 1;
+}
+
+int libinput_tablet_pad_mode_group_has_ring(struct libinput_tablet_pad_mode_group *group,
+                                            unsigned int ring)
+{
+    return 1;
+}
+
+int libinput_tablet_pad_mode_group_has_strip(struct libinput_tablet_pad_mode_group *group,
+                                             unsigned int strip)
+{
+    return 1;
 }
 
 struct libinput_device_group *

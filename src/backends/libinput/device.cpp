@@ -611,24 +611,48 @@ int Device::tabletPadButtonCount() const
     return libinput_device_tablet_pad_get_num_buttons(m_device);
 }
 
-int Device::tabletPadRingCount() const
+QList<InputDeviceTabletPadModeGroup> Device::modeGroups() const
 {
-    return libinput_device_tablet_pad_get_num_rings(m_device);
-}
+    QList<InputDeviceTabletPadModeGroup> result;
 
-int Device::tabletPadStripCount() const
-{
-    return libinput_device_tablet_pad_get_num_strips(m_device);
-}
+    int numGroups = libinput_device_tablet_pad_get_num_mode_groups(m_device);
 
-int Device::tabletPadModeCount() const
-{
-    return libinput_device_tablet_pad_get_num_mode_groups(m_device);
-}
+    for (int groupIndex = 0; groupIndex < numGroups; ++groupIndex) {
+        libinput_tablet_pad_mode_group *group = libinput_device_tablet_pad_get_mode_group(m_device, groupIndex);
+        int modeCount = libinput_tablet_pad_mode_group_get_num_modes(group);
 
-int Device::tabletPadMode() const
-{
-    return libinput_tablet_pad_mode_group_get_mode(libinput_device_tablet_pad_get_mode_group(m_device, 0));
+        QList<int> buttons;
+        int totalButtons = libinput_device_tablet_pad_get_num_buttons(m_device);
+        for (int buttonIndex = 0; buttonIndex < totalButtons; ++buttonIndex) {
+            if (libinput_tablet_pad_mode_group_has_button(group, buttonIndex)) {
+                buttons << buttonIndex;
+            }
+        }
+
+        QList<int> rings;
+        int totalRings = libinput_device_tablet_pad_get_num_rings(m_device);
+        for (int ringIndex = 0; ringIndex < totalRings; ++ringIndex) {
+            if (libinput_tablet_pad_mode_group_has_ring(group, ringIndex)) {
+                rings << ringIndex;
+            }
+        }
+
+        QList<int> strips;
+        int totalStrips = libinput_device_tablet_pad_get_num_strips(m_device);
+        for (int stripIndex = 0; stripIndex < totalStrips; ++stripIndex) {
+            if (libinput_tablet_pad_mode_group_has_strip(group, stripIndex)) {
+                strips << stripIndex;
+            }
+        }
+
+        result << InputDeviceTabletPadModeGroup{
+            .modeCount = modeCount,
+            .buttons = buttons,
+            .rings = rings,
+            .strips = strips,
+        };
+    }
+    return result;
 }
 
 #define CONFIG(method, condition, function, variable, key)                                        \

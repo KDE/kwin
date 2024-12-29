@@ -357,6 +357,11 @@ public:
     {
         return libinput_event_tablet_pad_get_ring_source(m_tabletPadEvent);
     }
+    int group() const
+    {
+        auto mode_group = libinput_event_tablet_pad_get_mode_group(m_tabletPadEvent);
+        return libinput_tablet_pad_mode_group_get_index(mode_group);
+    }
     std::chrono::microseconds time() const
     {
         return std::chrono::microseconds(libinput_event_tablet_pad_get_time_usec(m_tabletPadEvent));
@@ -383,6 +388,11 @@ public:
     {
         return libinput_event_tablet_pad_get_strip_source(m_tabletPadEvent);
     }
+    int group() const
+    {
+        auto mode_group = libinput_event_tablet_pad_get_mode_group(m_tabletPadEvent);
+        return libinput_tablet_pad_mode_group_get_index(mode_group);
+    }
     std::chrono::microseconds time() const
     {
         return std::chrono::microseconds(libinput_event_tablet_pad_get_time_usec(m_tabletPadEvent));
@@ -405,6 +415,20 @@ public:
     {
         const auto state = libinput_event_tablet_pad_get_button_state(m_tabletPadEvent);
         return state == LIBINPUT_BUTTON_STATE_PRESSED;
+    }
+    uint group() const
+    {
+        auto mode_group = libinput_event_tablet_pad_get_mode_group(m_tabletPadEvent);
+        return libinput_tablet_pad_mode_group_get_index(mode_group);
+    }
+    uint mode() const
+    {
+        return libinput_event_tablet_pad_get_mode(m_tabletPadEvent);
+    }
+    bool isModeSwitch() const
+    {
+        auto mode_group = libinput_event_tablet_pad_get_mode_group(m_tabletPadEvent);
+        return libinput_tablet_pad_mode_group_button_is_toggle(mode_group, buttonId());
     }
     std::chrono::microseconds time() const
     {

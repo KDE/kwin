@@ -19,6 +19,7 @@ class ClientConnection;
 class Display;
 class InputDevice;
 class InputDeviceTabletTool;
+class InputDeviceTabletPadModeGroup;
 class SeatInterface;
 class SurfaceInterface;
 class TabletSurfaceCursorV2;
@@ -162,8 +163,7 @@ class KWIN_EXPORT TabletPadV2Interface : public QObject
 public:
     virtual ~TabletPadV2Interface();
 
-    TabletPadRingV2Interface *ring(uint at) const;
-    TabletPadStripV2Interface *strip(uint at) const;
+    TabletPadGroupV2Interface *group(uint at) const;
     void sendButton(std::chrono::microseconds time, quint32 button, bool pressed);
 
     void setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet);
@@ -177,10 +177,7 @@ private:
     friend class TabletSeatV2InterfacePrivate;
     explicit TabletPadV2Interface(const QString &path,
                                   quint32 buttons,
-                                  quint32 rings,
-                                  quint32 strips,
-                                  quint32 modes,
-                                  quint32 currentMode,
+                                  const QList<InputDeviceTabletPadModeGroup> &groups,
                                   Display *display,
                                   TabletSeatV2Interface *parent);
     std::unique_ptr<TabletPadV2InterfacePrivate> d;
@@ -204,7 +201,7 @@ public:
 
 private:
     friend class TabletPadGroupV2Interface;
-    friend class TabletPadV2InterfacePrivate;
+    friend class TabletPadGroupV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
     explicit TabletPadRingV2Interface(TabletPadV2Interface *parent);
     std::unique_ptr<TabletPadRingV2InterfacePrivate> d;
@@ -227,7 +224,7 @@ public:
 
 private:
     friend class TabletPadGroupV2Interface;
-    friend class TabletPadV2InterfacePrivate;
+    friend class TabletPadGroupV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
     explicit TabletPadStripV2Interface(TabletPadV2Interface *parent);
     std::unique_ptr<TabletPadStripV2InterfacePrivate> d;
@@ -239,13 +236,17 @@ class KWIN_EXPORT TabletPadGroupV2Interface : public QObject
 public:
     virtual ~TabletPadGroupV2Interface();
 
-    void sendModeSwitch(quint32 time, quint32 serial, quint32 mode);
+    void setCurrentMode(quint32 mode);
+    void sendModeSwitch(quint32 time);
+
+    TabletPadRingV2Interface *ring(uint at) const;
+    TabletPadStripV2Interface *strip(uint at) const;
 
 private:
     friend class TabletPadV2Interface;
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadGroupV2Interface(quint32 currentMode, TabletPadV2Interface *parent);
+    explicit TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, Display *display, TabletPadV2Interface *parent);
     std::unique_ptr<TabletPadGroupV2InterfacePrivate> d;
 };
 

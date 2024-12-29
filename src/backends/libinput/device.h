@@ -681,10 +681,7 @@ public:
     }
 
     int tabletPadButtonCount() const override;
-    int tabletPadRingCount() const override;
-    int tabletPadStripCount() const override;
-    int tabletPadModeCount() const override;
-    int tabletPadMode() const override;
+    QList<InputDeviceTabletPadModeGroup> modeGroups() const override;
 
     Output *output() const;
     void setOutput(Output *output);
