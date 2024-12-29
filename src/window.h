@@ -551,7 +551,7 @@ class KWIN_EXPORT Window : public QObject
     /**
      * The Tile this window is associated to, if any
      */
-    Q_PROPERTY(KWin::Tile *tile READ requestedTile WRITE requestTile NOTIFY tileChanged)
+    Q_PROPERTY(KWin::Tile *tile READ requestedTile WRITE setTileCompatibility NOTIFY tileChanged)
 
     /**
      * Returns whether this window is a input method window.
@@ -1120,6 +1120,7 @@ public:
     void commitTile(Tile *tile);
     Tile *requestedTile() const;
     void requestTile(Tile *tile);
+    void setTileCompatibility(Tile *tile);
 
     void handleQuickTileShortcut(QuickTileMode mode);
     void setQuickTileModeAtCurrentPosition(QuickTileMode mode);

@@ -153,7 +153,7 @@ void TilesTest::testWindowInteraction()
     auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
     QVERIFY(leftTile);
 
-    rootWindow->requestTile(leftTile);
+    leftTile->addWindow(rootWindow);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -224,7 +224,7 @@ void TilesTest::testAssignedTileDeletion()
     auto middleBottomTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]->childTiles()[1]);
     QVERIFY(middleBottomTile);
 
-    rootWindow->requestTile(middleBottomTile);
+    middleBottomTile->addWindow(rootWindow);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -301,7 +301,7 @@ void TilesTest::resizeTileFromWindow()
     QVERIFY(bottomLeftTile);
     QCOMPARE(bottomLeftTile->windowGeometry(), QRectF(4, 514, 506, 506));
 
-    window->requestTile(topLeftTile);
+    topLeftTile->addWindow(window);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);

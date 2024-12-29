@@ -8,13 +8,17 @@
 */
 
 #include "quicktile.h"
+#include "tilemanager.h"
+#include "virtualdesktops.h"
 
 namespace KWin
 {
 
-QuickRootTile::QuickRootTile(TileManager *tiling, Tile *parentItem)
-    : Tile(tiling, parentItem)
+QuickRootTile::QuickRootTile(TileManager *tiling, VirtualDesktop *desktop)
+    : Tile(tiling, nullptr)
 {
+    m_desktop = desktop;
+    setParent(tiling);
     setPadding(0.0);
     setRelativeGeometry(QRectF(0, 0, 1, 1));
     setQuickTileMode(QuickTileFlag::None);
@@ -227,6 +231,25 @@ void QuickRootTile::tryReset()
     if (m_topHorizontalTile->windows().isEmpty() && m_bottomHorizontalTile->windows().isEmpty()) {
         setVerticalSplit(0.5);
     }
+}
+
+Tile *QuickRootTile::tileForWindow(Window *window) const
+{
+    Tile *allTiles[] = {m_leftVerticalTile.get(),
+                        m_rightVerticalTile.get(),
+                        m_topHorizontalTile.get(),
+                        m_bottomHorizontalTile.get(),
+                        m_topLeftTile.get(),
+                        m_topRightTile.get(),
+                        m_bottomLeftTile.get(),
+                        m_bottomRightTile.get()};
+
+    for (Tile *tile : allTiles) {
+        if (tile->windows().contains(window)) {
+            return tile;
+        }
+    }
+    return nullptr;
 }
 
 } // namespace KWin
