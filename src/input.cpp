@@ -77,6 +77,7 @@
 #include "osd.h"
 #include "wayland/xdgshell.h"
 #include <cmath>
+#include <linux/input.h>
 
 using namespace std::literals;
 
@@ -1966,6 +1967,22 @@ public:
         const auto command = window->getMousePressCommand(Qt::LeftButton);
         if (command) {
             return !window->performMousePressCommand(*command, event->globalPosition());
+        }
+        return false;
+    }
+    bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
+    {
+        if (!event->pressed) {
+            return false;
+        }
+        Window *window = input()->tablet()->focus();
+        if (!window || !window->isClient()) {
+            return false;
+        }
+
+        const auto command = window->getMousePressCommand(event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton);
+        if (command) {
+            return !window->performMousePressCommand(*command, input()->tablet()->position());
         }
         return false;
     }
