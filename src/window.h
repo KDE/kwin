@@ -609,6 +609,9 @@ public:
      */
     QMargins frameMargins() const;
 
+    QRectF background() const;
+    void setBackground(const QRectF &fill);
+
     virtual QSizeF minSize() const;
     virtual QSizeF maxSize() const;
     QSizeF size() const;
@@ -1484,6 +1487,7 @@ Q_SIGNALS:
     void offscreenRenderingChanged();
     void targetScaleChanged();
     void nextTargetScaleChanged();
+    void backgroundChanged();
 
 protected:
     Window();
@@ -1850,6 +1854,7 @@ protected:
     QRectF m_maximizeGeometryRestore;
     QRectF m_fullscreenGeometryRestore;
     QRectF m_virtualKeyboardGeometry;
+    QRectF m_background;
 
     struct
     {

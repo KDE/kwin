@@ -21,6 +21,7 @@ class Window;
 class DecorationItem;
 class EffectWindow;
 class InternalWindow;
+class RectangleItem;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
@@ -63,6 +64,7 @@ protected:
     void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);
 
 private Q_SLOTS:
+    void updateBackgroundItem();
     void updateDecorationItem();
     void updateShadowItem();
     void updateSurfacePosition();
@@ -79,6 +81,7 @@ private:
     void freeze();
 
     Window *m_window;
+    std::unique_ptr<RectangleItem> m_backgroundItem;
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     std::unique_ptr<DecorationItem> m_decorationItem;
     std::unique_ptr<ShadowItem> m_shadowItem;

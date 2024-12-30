@@ -8,6 +8,7 @@
 #include "effect/effecthandler.h"
 #include "internalwindow.h"
 #include "scene/decorationitem.h"
+#include "scene/rectangleitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem_internal.h"
 #include "scene/surfaceitem_wayland.h"
@@ -34,6 +35,9 @@ WindowItem::WindowItem(Window *window, Item *parent)
 
     connect(window, &Window::shadowChanged, this, &WindowItem::updateShadowItem);
     updateShadowItem();
+
+    connect(window, &Window::backgroundChanged, this, &WindowItem::updateBackgroundItem);
+    updateBackgroundItem();
 
     connect(window, &Window::frameGeometryChanged, this, &WindowItem::updatePosition);
     updatePosition();
@@ -274,6 +278,26 @@ void WindowItem::updateDecorationItem()
         markDamaged();
     } else {
         m_decorationItem.reset();
+    }
+}
+
+void WindowItem::updateBackgroundItem()
+{
+    if (m_window->isDeleted()) {
+        return;
+    }
+
+    const QRectF background = m_window->background();
+    if (!background.isEmpty()) {
+        if (!m_backgroundItem) {
+            m_backgroundItem = std::make_unique<RectangleItem>(this);
+            m_backgroundItem->setZ(-1);
+        }
+        m_backgroundItem->setColor(Qt::black);
+        m_backgroundItem->setPosition(background.topLeft());
+        m_backgroundItem->setSize(background.size());
+    } else {
+        m_backgroundItem.reset();
     }
 }
 

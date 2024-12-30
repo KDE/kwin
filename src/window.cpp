@@ -415,6 +415,19 @@ QMargins Window::frameMargins() const
     return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
 }
 
+QRectF Window::background() const
+{
+    return m_background;
+}
+
+void Window::setBackground(const QRectF &rect)
+{
+    if (m_background != rect) {
+        m_background = rect;
+        Q_EMIT backgroundChanged();
+    }
+}
+
 void Window::updateMouseGrab()
 {
 }

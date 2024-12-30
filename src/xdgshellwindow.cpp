@@ -224,12 +224,23 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         }
     }
 
-    if (isInteractiveMove()) {
-        bool fullscreen = isFullScreen();
-        if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
-            fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+    bool fullscreen = isFullScreen();
+    if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
+        fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+    }
+
+    if (fullscreen) {
+        frameGeometry = workspace()->outputAt(frameGeometry.center())->geometryF();
+
+        const bool coversOutput = (frameGeometry.width() - m_windowGeometry.width()) < 2
+            && (frameGeometry.height() - m_windowGeometry.height()) < 2;
+        if (coversOutput) {
+            setBackground(QRectF());
+        } else {
+            setBackground(QRectF(0, 0, frameGeometry.width(), frameGeometry.height()));
         }
-        if (!fullscreen) {
+    } else {
+        if (isInteractiveMove()) {
             const QPointF anchor = interactiveMoveResizeAnchor();
             const QPointF offset = interactiveMoveOffset();
             frameGeometry.moveTopLeft(QPointF(anchor.x() - offset.x() * frameGeometry.width(),
@@ -283,9 +294,20 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
 
 QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
 {
-    const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
-    const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
-    return QRectF(QPointF(left, top), snapToPixels(surface()->size(), m_targetScale));
+    bool fullscreen = isFullScreen();
+    if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
+        fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+    }
+
+    QPointF position(rect.left() + borderLeft() - m_windowGeometry.left(),
+                     rect.top() + borderTop() - m_windowGeometry.top());
+    if (fullscreen) {
+        // Center the surface inside the frame geometry if the window is shown in fullscreen mode.
+        position += QPointF((rect.width() - m_windowGeometry.width()) * 0.5,
+                            (rect.height() - m_windowGeometry.height()) * 0.5);
+    }
+
+    return QRectF(position, surface()->size());
 }
 
 void XdgSurfaceWindow::handleRoleDestroyed()

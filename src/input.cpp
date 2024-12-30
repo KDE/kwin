@@ -3407,6 +3407,11 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
         if (window->hitTest(pos)) {
             return window;
         }
+        if (window->isFullScreen()) { // 💩
+            if (exclusiveContains(window->output()->geometryF(), pos)) {
+                return nullptr;
+            }
+        }
     } while (it != stacking.begin());
     return nullptr;
 }
