@@ -903,6 +903,19 @@ public:
         return true;
     }
 
+    bool tabletToolTipEvent(TabletEvent *event) override
+    {
+        if (!isActive()) {
+            return false;
+        }
+
+        if (event->type() == QTabletEvent::TabletRelease) {
+            accept(event->position());
+        }
+
+        return true;
+    }
+
     bool isActive() const
     {
         return m_active;
