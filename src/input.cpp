@@ -1956,17 +1956,23 @@ public:
     }
     bool tabletToolTipEvent(TabletEvent *event) override
     {
-        if (event->type() != QEvent::TabletPress) {
-            return false;
-        }
         Window *window = input()->tablet()->focus();
         if (!window || !window->isClient()) {
             return false;
         }
-        const auto command = window->getMousePressCommand(Qt::LeftButton);
-        if (command) {
-            return !window->performMousePressCommand(*command, event->globalPosition());
+
+        if (event->type() == QEvent::TabletPress) {
+            const auto command = window->getMousePressCommand(Qt::LeftButton);
+            if (command) {
+                return !window->performMousePressCommand(*command, event->globalPosition());
+            }
+        } else {
+            const auto command = window->getMouseReleaseCommand(Qt::LeftButton);
+            if (command) {
+                return !window->performMouseReleaseCommand(*command, event->globalPosition());
+            }
         }
+
         return false;
     }
 };
