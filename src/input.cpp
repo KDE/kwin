@@ -2397,7 +2397,12 @@ public:
         }
         auto ring = pad->ring(event->number);
 
-        ring->sendAngle(event->position);
+        if (event->isFinger && event->position == -1) {
+            ring->sendStop();
+        } else {
+            ring->sendAngle(event->position);
+        }
+
         if (event->isFinger) {
             ring->sendSource(TabletPadRingV2Interface::SourceFinger);
         }
