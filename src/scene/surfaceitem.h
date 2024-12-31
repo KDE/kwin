@@ -109,9 +109,6 @@ public:
     GraphicsBuffer *buffer() const;
     void setBuffer(GraphicsBuffer *buffer);
 
-    GraphicsBufferOrigin bufferOrigin() const;
-    void setBufferOrigin(GraphicsBufferOrigin origin);
-
     SurfaceTexture *texture() const;
 
     bool hasAlphaChannel() const;
@@ -127,7 +124,6 @@ public:
 
 protected:
     GraphicsBufferRef m_bufferRef;
-    GraphicsBufferOrigin m_bufferOrigin = GraphicsBufferOrigin::TopLeft;
     QSize m_size;
     bool m_hasAlphaChannel = false;
 

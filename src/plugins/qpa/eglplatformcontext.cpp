@@ -161,7 +161,7 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
         internalWindow->present(InternalWindowFrame{
             .buffer = m_current->buffer,
             .bufferDamage = QRect(QPoint(0, 0), m_current->buffer->size()),
-            .bufferOrigin = GraphicsBufferOrigin::BottomLeft,
+            .bufferTransform = OutputTransform::FlipY,
         });
 
         m_current.reset();

@@ -130,9 +130,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
         texture->bind();
         glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(image));
         texture->unbind();
-        if (m_pixmap->bufferOrigin() == GraphicsBufferOrigin::TopLeft) {
-            texture->setContentTransform(OutputTransform::FlipY);
-        }
+        texture->setContentTransform(OutputTransform::FlipY);
         return texture;
     };
 

@@ -9,7 +9,6 @@
 */
 #include "internalwindow.h"
 #include "decorations/decorationbridge.h"
-#include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 #include "workspace.h"
 
@@ -367,9 +366,9 @@ GraphicsBuffer *InternalWindow::graphicsBuffer() const
     return m_graphicsBufferRef.buffer();
 }
 
-GraphicsBufferOrigin InternalWindow::graphicsBufferOrigin() const
+OutputTransform InternalWindow::bufferTransform() const
 {
-    return m_graphicsBufferOrigin;
+    return m_bufferTransform;
 }
 
 void InternalWindow::present(const InternalWindowFrame &frame)
@@ -384,9 +383,9 @@ void InternalWindow::present(const InternalWindowFrame &frame)
     markAsMapped();
 
     m_graphicsBufferRef = frame.buffer;
-    m_graphicsBufferOrigin = frame.bufferOrigin;
+    m_bufferTransform = frame.bufferTransform;
 
-    surfaceItem()->addDamage(frame.bufferDamage);
+    Q_EMIT presented(frame);
 }
 
 QWindow *InternalWindow::handle() const

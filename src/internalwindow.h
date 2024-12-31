@@ -19,7 +19,7 @@ struct InternalWindowFrame
 {
     GraphicsBuffer *buffer = nullptr;
     QRegion bufferDamage;
-    GraphicsBufferOrigin bufferOrigin = GraphicsBufferOrigin::TopLeft;
+    OutputTransform bufferTransform = OutputTransform::Normal;
 };
 
 class KWIN_EXPORT InternalWindow : public Window
@@ -65,11 +65,14 @@ public:
     void pointerLeaveEvent() override;
 
     GraphicsBuffer *graphicsBuffer() const;
-    GraphicsBufferOrigin graphicsBufferOrigin() const;
+    OutputTransform bufferTransform() const;
 
     void present(const InternalWindowFrame &frame);
     qreal bufferScale() const;
     QWindow *handle() const;
+
+Q_SIGNALS:
+    void presented(const InternalWindowFrame &frame);
 
 protected:
     bool acceptsFocus() const override;
@@ -96,7 +99,7 @@ private:
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;
     GraphicsBufferRef m_graphicsBufferRef;
-    GraphicsBufferOrigin m_graphicsBufferOrigin;
+    OutputTransform m_bufferTransform = OutputTransform::Normal;
 
     Q_DISABLE_COPY(InternalWindow)
 };
