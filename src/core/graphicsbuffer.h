@@ -41,14 +41,6 @@ struct ShmAttributes
 };
 
 /**
- * This enum type is used to describe where the origin lies in a graphics buffer.
- */
-enum class GraphicsBufferOrigin {
-    TopLeft,
-    BottomLeft,
-};
-
-/**
  * The GraphicsBuffer class represents a chunk of memory containing graphics data.
  *
  * A graphics buffer can be referenced. In which case, it won't be destroyed until all
