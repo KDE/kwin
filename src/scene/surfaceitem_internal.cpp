@@ -16,12 +16,13 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
     : SurfaceItem(parent)
     , m_window(window)
 {
-    connect(window, &Window::bufferGeometryChanged,
-            this, &SurfaceItemInternal::handleBufferGeometryChanged);
+    connect(window, &InternalWindow::presented,
+            this, &SurfaceItemInternal::handlePresented);
 
     setDestinationSize(window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
     setBufferSize((window->bufferGeometry().size() * window->bufferScale()).toSize());
+    setBufferTransform(m_window->bufferTransform());
 }
 
 InternalWindow *SurfaceItemInternal::window() const
@@ -39,11 +40,14 @@ std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
     return std::make_unique<SurfacePixmapInternal>(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged()
+void SurfaceItemInternal::handlePresented(const InternalWindowFrame &frame)
 {
     setDestinationSize(m_window->bufferGeometry().size());
-    setBufferSourceBox(QRectF(QPointF(0, 0), m_window->bufferGeometry().size() * m_window->bufferScale()));
-    setBufferSize((m_window->bufferGeometry().size() * m_window->bufferScale()).toSize());
+    setBufferSourceBox(QRectF(QPointF(0, 0), frame.buffer->size()));
+    setBufferSize(frame.buffer->size());
+    setBufferTransform(frame.bufferTransform);
+
+    addDamage(frame.bufferDamage);
 }
 
 SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)
@@ -61,7 +65,6 @@ void SurfacePixmapInternal::update()
 {
     const InternalWindow *window = m_item->window();
     setBuffer(window->graphicsBuffer());
-    setBufferOrigin(window->graphicsBufferOrigin());
 }
 
 bool SurfacePixmapInternal::isValid() const

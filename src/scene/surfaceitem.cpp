@@ -321,16 +321,6 @@ void SurfacePixmap::setBuffer(GraphicsBuffer *buffer)
     }
 }
 
-GraphicsBufferOrigin SurfacePixmap::bufferOrigin() const
-{
-    return m_bufferOrigin;
-}
-
-void SurfacePixmap::setBufferOrigin(GraphicsBufferOrigin origin)
-{
-    m_bufferOrigin = origin;
-}
-
 void SurfacePixmap::update()
 {
 }

@@ -12,6 +12,7 @@ namespace KWin
 {
 
 class InternalWindow;
+struct InternalWindowFrame;
 
 /**
  * The SurfaceItemInternal class represents an internal surface in the scene.
@@ -28,7 +29,7 @@ public:
     QList<QRectF> shape() const override;
 
 private Q_SLOTS:
-    void handleBufferGeometryChanged();
+    void handlePresented(const InternalWindowFrame &frame);
 
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;
