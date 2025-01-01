@@ -9,7 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "backends/virtual/virtual_backend.h"
-#include "compositor_wayland.h"
+#include "compositor.h"
 #include "core/session.h"
 #include "effect/effecthandler.h"
 #include "input.h"
@@ -193,7 +193,7 @@ void WaylandTestApplication::performStartup()
     createVirtualInputDevices();
     createTabletModeManager();
 
-    auto compositor = WaylandCompositor::create();
+    auto compositor = Compositor::create();
     createWorkspace();
     createColorManager();
     createPlugins();
