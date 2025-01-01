@@ -36,12 +36,13 @@ AbstractEglBackend *BasicEGLSurfaceTextureWayland::backend() const
 
 bool BasicEGLSurfaceTextureWayland::create()
 {
-    if (m_pixmap->buffer()->dmabufAttributes()) {
-        return loadDmabufTexture(m_pixmap->buffer());
-    } else if (m_pixmap->buffer()->shmAttributes()) {
-        return loadShmTexture(m_pixmap->buffer());
+    GraphicsBuffer *buffer = m_pixmap->item()->buffer();
+    if (buffer->dmabufAttributes()) {
+        return loadDmabufTexture(buffer);
+    } else if (buffer->shmAttributes()) {
+        return loadShmTexture(buffer);
     } else {
-        qCDebug(KWIN_OPENGL) << "Failed to create BasicEGLSurfaceTextureWayland for a buffer of unknown type" << m_pixmap->buffer();
+        qCDebug(KWIN_OPENGL) << "Failed to create BasicEGLSurfaceTextureWayland for a buffer of unknown type" << buffer;
         return false;
     }
 }
@@ -54,12 +55,13 @@ void BasicEGLSurfaceTextureWayland::destroy()
 
 void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
 {
-    if (m_pixmap->buffer()->dmabufAttributes()) {
-        updateDmabufTexture(m_pixmap->buffer());
-    } else if (m_pixmap->buffer()->shmAttributes()) {
-        updateShmTexture(m_pixmap->buffer(), region);
+    GraphicsBuffer *buffer = m_pixmap->item()->buffer();
+    if (buffer->dmabufAttributes()) {
+        updateDmabufTexture(buffer);
+    } else if (buffer->shmAttributes()) {
+        updateShmTexture(buffer, region);
     } else {
-        qCDebug(KWIN_OPENGL) << "Failed to update BasicEGLSurfaceTextureWayland for a buffer of unknown type" << m_pixmap->buffer();
+        qCDebug(KWIN_OPENGL) << "Failed to update BasicEGLSurfaceTextureWayland for a buffer of unknown type" << buffer;
     }
 }
 

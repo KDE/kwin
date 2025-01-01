@@ -20,8 +20,8 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
             this, &SurfaceItemInternal::handlePresented);
 
     setDestinationSize(window->bufferGeometry().size());
+    setBuffer(m_window->graphicsBuffer());
     setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
-    setBufferSize((window->bufferGeometry().size() * window->bufferScale()).toSize());
     setBufferTransform(m_window->bufferTransform());
 }
 
@@ -43,16 +43,15 @@ std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
 void SurfaceItemInternal::handlePresented(const InternalWindowFrame &frame)
 {
     setDestinationSize(m_window->bufferGeometry().size());
+    setBuffer(frame.buffer);
     setBufferSourceBox(QRectF(QPointF(0, 0), frame.buffer->size()));
-    setBufferSize(frame.buffer->size());
     setBufferTransform(frame.bufferTransform);
 
     addDamage(frame.bufferDamage);
 }
 
-SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), parent)
-    , m_item(item)
+SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item)
+    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), item)
 {
 }
 
@@ -63,13 +62,16 @@ void SurfacePixmapInternal::create()
 
 void SurfacePixmapInternal::update()
 {
-    const InternalWindow *window = m_item->window();
-    setBuffer(window->graphicsBuffer());
+    if (GraphicsBuffer *buffer = m_item->buffer()) {
+        m_size = buffer->size();
+        m_hasAlphaChannel = buffer->hasAlphaChannel();
+        m_valid = true;
+    }
 }
 
 bool SurfacePixmapInternal::isValid() const
 {
-    return m_bufferRef;
+    return m_valid;
 }
 
 } // namespace KWin

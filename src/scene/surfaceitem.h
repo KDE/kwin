@@ -29,6 +29,9 @@ public:
     QSizeF destinationSize() const;
     void setDestinationSize(const QSizeF &size);
 
+    GraphicsBuffer *buffer() const;
+    void setBuffer(GraphicsBuffer *buffer);
+
     QRectF bufferSourceBox() const;
     void setBufferSourceBox(const QRectF &box);
 
@@ -76,6 +79,7 @@ protected:
     QRegion m_damage;
     OutputTransform m_bufferToSurfaceTransform;
     OutputTransform m_surfaceToBufferTransform;
+    GraphicsBufferRef m_bufferRef;
     QRectF m_bufferSourceBox;
     QSize m_bufferSize;
     QSizeF m_destinationSize;
@@ -99,16 +103,17 @@ public:
     virtual void update(const QRegion &region) = 0;
 };
 
+/**
+ * TODO: Drop SurfacePixmap after kwin_wayland and kwin_x11 are split.
+ */
 class KWIN_EXPORT SurfacePixmap : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, QObject *parent = nullptr);
+    SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, SurfaceItem *item);
 
-    GraphicsBuffer *buffer() const;
-    void setBuffer(GraphicsBuffer *buffer);
-
+    SurfaceItem *item() const;
     SurfaceTexture *texture() const;
 
     bool hasAlphaChannel() const;
@@ -123,7 +128,7 @@ public:
     virtual bool isValid() const = 0;
 
 protected:
-    GraphicsBufferRef m_bufferRef;
+    SurfaceItem *m_item;
     QSize m_size;
     bool m_hasAlphaChannel = false;
 

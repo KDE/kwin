@@ -32,6 +32,22 @@ void SurfaceItem::setDestinationSize(const QSizeF &size)
     }
 }
 
+GraphicsBuffer *SurfaceItem::buffer() const
+{
+    return m_bufferRef.buffer();
+}
+
+void SurfaceItem::setBuffer(GraphicsBuffer *buffer)
+{
+    if (buffer) {
+        m_bufferRef = buffer;
+        setBufferSize(buffer->size());
+    } else {
+        m_bufferRef = nullptr;
+        setBufferSize(QSize(0, 0));
+    }
+}
+
 QRectF SurfaceItem::bufferSourceBox() const
 {
     return m_bufferSourceBox;
@@ -298,31 +314,19 @@ SurfaceTexture::~SurfaceTexture()
 {
 }
 
-SurfacePixmap::SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, QObject *parent)
-    : QObject(parent)
+SurfacePixmap::SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, SurfaceItem *item)
+    : m_item(item)
     , m_texture(std::move(texture))
 {
 }
 
-GraphicsBuffer *SurfacePixmap::buffer() const
-{
-    return m_bufferRef.buffer();
-}
-
-void SurfacePixmap::setBuffer(GraphicsBuffer *buffer)
-{
-    if (m_bufferRef.buffer() == buffer) {
-        return;
-    }
-    m_bufferRef = buffer;
-    if (m_bufferRef) {
-        m_hasAlphaChannel = m_bufferRef->hasAlphaChannel();
-        m_size = m_bufferRef->size();
-    }
-}
-
 void SurfacePixmap::update()
 {
+}
+
+SurfaceItem *SurfacePixmap::item() const
+{
+    return m_item;
 }
 
 SurfaceTexture *SurfacePixmap::texture() const

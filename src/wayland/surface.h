@@ -161,12 +161,6 @@ public:
      * QPoint(0, 0) corresponds to the upper left corner of this surface.
      */
     QRectF boundingRect() const;
-    /**
-     * Returns the size of the attached buffer, in device pixels.
-     *
-     * If no buffer is attached to this surface, an invalid QSize will be returned.
-     */
-    QSize bufferSize() const;
 
     /**
      * @returns The SubSurface for this Surface in case there is one.
@@ -391,10 +385,7 @@ Q_SIGNALS:
      */
     void bufferTransformChanged(KWin::OutputTransform);
     void bufferSourceBoxChanged();
-    /**
-     * This signal is emitted when the size of the attached buffer has changed.
-     */
-    void bufferSizeChanged();
+    void bufferChanged();
     /**
      * Emitted when the Surface becomes visible, i.e. a non-null buffer has been attached.
      */

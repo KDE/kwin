@@ -147,7 +147,6 @@ public:
     SurfaceRole *role = nullptr;
     std::unique_ptr<SurfaceState> current;
     std::unique_ptr<SurfaceState> pending;
-    QSize bufferSize = QSize(0, 0);
     QRectF bufferSourceBox;
     QSizeF surfaceSize = QSizeF(0, 0);
 

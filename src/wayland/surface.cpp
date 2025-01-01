@@ -489,10 +489,10 @@ bool SurfaceInterface::hasFrameCallbacks() const
 QRectF SurfaceInterfacePrivate::computeBufferSourceBox() const
 {
     if (!current->viewport.sourceGeometry.isValid()) {
-        return QRectF(0, 0, bufferSize.width(), bufferSize.height());
+        return QRectF(QPointF(0, 0), current->buffer->size());
     }
 
-    const QSizeF bounds = current->bufferTransform.map(bufferSize);
+    const QSizeF bounds = current->bufferTransform.map(current->buffer->size());
     const QRectF box(current->viewport.sourceGeometry.x() * current->bufferScale,
                      current->viewport.sourceGeometry.y() * current->bufferScale,
                      current->viewport.sourceGeometry.width() * current->bufferScale,
@@ -603,7 +603,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
 
 void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 {
-    const bool bufferChanged = next->bufferIsSet;
+    const bool bufferChanged = next->bufferIsSet && (current->buffer != next->buffer);
     const bool opaqueRegionChanged = next->opaqueIsSet;
     const bool transformChanged = next->bufferTransformIsSet && (current->bufferTransform != next->bufferTransform);
     const bool shadowChanged = next->shadowIsSet;
@@ -611,14 +611,13 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool contrastChanged = next->contrastIsSet;
     const bool slideChanged = next->slideIsSet;
     const bool subsurfaceOrderChanged = next->subsurfaceOrderChanged;
-    const bool visibilityChanged = bufferChanged && bool(current->buffer) != bool(next->buffer);
+    const bool visibilityChanged = next->bufferIsSet && bool(current->buffer) != bool(next->buffer);
     const bool colorDescriptionChanged = next->colorDescriptionIsSet;
     const bool presentationModeHintChanged = next->presentationModeHintIsSet;
     const bool bufferReleasePointChanged = next->bufferIsSet && current->releasePoint != next->releasePoint;
     const bool alphaMultiplierChanged = next->alphaMultiplierIsSet;
 
     const QSizeF oldSurfaceSize = surfaceSize;
-    const QSize oldBufferSize = bufferSize;
     const QRectF oldBufferSourceBox = bufferSourceBox;
     const QRegion oldInputRegion = inputRegion;
 
@@ -630,7 +629,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     scaleOverride = pendingScaleOverride;
 
     if (current->buffer) {
-        bufferSize = current->buffer->size();
         bufferSourceBox = computeBufferSourceBox();
 
         if (current->viewport.destinationSize.isValid()) {
@@ -660,7 +658,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         surfaceSize = surfaceSize / scaleOverride;
     } else {
         surfaceSize = QSizeF(0, 0);
-        bufferSize = QSize(0, 0);
         bufferSourceBox = QRectF();
         inputRegion = QRegion();
         opaqueRegion = QRegion();
@@ -681,8 +678,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (bufferSourceBox != oldBufferSourceBox) {
         Q_EMIT q->bufferSourceBoxChanged();
     }
-    if (bufferSize != oldBufferSize) {
-        Q_EMIT q->bufferSizeChanged();
+    if (bufferChanged) {
+        Q_EMIT q->bufferChanged();
     }
     if (surfaceSize != oldSurfaceSize) {
         Q_EMIT q->sizeChanged();
@@ -793,7 +790,7 @@ QRegion SurfaceInterfacePrivate::mapToBuffer(const QRegion &region) const
         return QRegion();
     }
 
-    const QRectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, bufferSize);
+    const QRectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, current->buffer->size());
     const qreal xScale = sourceBox.width() / surfaceSize.width();
     const qreal yScale = sourceBox.height() / surfaceSize.height();
 
@@ -1088,11 +1085,6 @@ QPointF SurfaceInterface::mapToChild(SurfaceInterface *child, const QPointF &poi
     }
 
     return QPointF();
-}
-
-QSize SurfaceInterface::bufferSize() const
-{
-    return d->bufferSize;
 }
 
 qreal SurfaceInterface::scaleOverride() const

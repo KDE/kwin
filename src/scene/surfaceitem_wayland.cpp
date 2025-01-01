@@ -27,8 +27,8 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
 {
     connect(surface, &SurfaceInterface::sizeChanged,
             this, &SurfaceItemWayland::handleSurfaceSizeChanged);
-    connect(surface, &SurfaceInterface::bufferSizeChanged,
-            this, &SurfaceItemWayland::handleBufferSizeChanged);
+    connect(surface, &SurfaceInterface::bufferChanged,
+            this, &SurfaceItemWayland::handleBufferChanged);
     connect(surface, &SurfaceInterface::bufferSourceBoxChanged,
             this, &SurfaceItemWayland::handleBufferSourceBoxChanged);
     connect(surface, &SurfaceInterface::bufferTransformChanged,
@@ -65,7 +65,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setDestinationSize(surface->size());
     setBufferTransform(surface->bufferTransform());
     setBufferSourceBox(surface->bufferSourceBox());
-    setBufferSize(surface->bufferSize());
+    setBuffer(surface->buffer());
     setColorDescription(surface->colorDescription());
     setOpacity(surface->alphaMultiplier());
 }
@@ -93,9 +93,9 @@ void SurfaceItemWayland::handleSurfaceSizeChanged()
     setDestinationSize(m_surface->size());
 }
 
-void SurfaceItemWayland::handleBufferSizeChanged()
+void SurfaceItemWayland::handleBufferChanged()
 {
-    setBufferSize(m_surface->bufferSize());
+    setBuffer(m_surface->buffer());
 }
 
 void SurfaceItemWayland::handleBufferSourceBoxChanged()
@@ -223,9 +223,8 @@ void SurfaceItemWayland::handleAlphaMultiplierChanged()
     setOpacity(m_surface->alphaMultiplier());
 }
 
-SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), parent)
-    , m_item(item)
+SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item)
+    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), item)
 {
 }
 
@@ -236,15 +235,16 @@ void SurfacePixmapWayland::create()
 
 void SurfacePixmapWayland::update()
 {
-    SurfaceInterface *surface = m_item->surface();
-    if (surface) {
-        setBuffer(surface->buffer());
+    if (GraphicsBuffer *buffer = m_item->buffer()) {
+        m_size = buffer->size();
+        m_hasAlphaChannel = buffer->hasAlphaChannel();
+        m_valid = true;
     }
 }
 
 bool SurfacePixmapWayland::isValid() const
 {
-    return m_bufferRef;
+    return m_valid;
 }
 
 #if KWIN_BUILD_X11

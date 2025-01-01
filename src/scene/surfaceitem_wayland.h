@@ -39,7 +39,7 @@ public:
 private Q_SLOTS:
     void handleSurfaceCommitted();
     void handleSurfaceSizeChanged();
-    void handleBufferSizeChanged();
+    void handleBufferChanged();
     void handleBufferSourceBoxChanged();
     void handleBufferTransformChanged();
 
@@ -73,14 +73,14 @@ class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap
     Q_OBJECT
 
 public:
-    explicit SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent = nullptr);
+    explicit SurfacePixmapWayland(SurfaceItemWayland *item);
 
     void create() override;
     void update() override;
     bool isValid() const override;
 
 private:
-    SurfaceItemWayland *m_item;
+    bool m_valid = false;
 };
 
 #if KWIN_BUILD_X11

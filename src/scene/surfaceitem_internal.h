@@ -43,14 +43,14 @@ class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap
     Q_OBJECT
 
 public:
-    explicit SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent = nullptr);
+    explicit SurfacePixmapInternal(SurfaceItemInternal *item);
 
     void create() override;
     void update() override;
     bool isValid() const override;
 
 private:
-    SurfaceItemInternal *m_item;
+    bool m_valid = false;
 };
 
 } // namespace KWin
