@@ -287,13 +287,12 @@ static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
 
 static bool checkForBlackBackground(SurfaceItem *background)
 {
-    if (!background->pixmap()
-        || !background->pixmap()->buffer()
-        || !background->pixmap()->buffer()->shmAttributes()
-        || background->pixmap()->buffer()->shmAttributes()->size != QSize(1, 1)) {
+    if (!background->buffer()
+        || !background->buffer()->shmAttributes()
+        || background->buffer()->shmAttributes()->size != QSize(1, 1)) {
         return false;
     }
-    const GraphicsBufferView view(background->pixmap()->buffer());
+    const GraphicsBufferView view(background->buffer());
     if (!view.image()) {
         return false;
     }
