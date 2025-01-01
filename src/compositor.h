@@ -10,7 +10,8 @@
 #pragma once
 
 #include "config-kwin.h"
-#include <kwin_export.h>
+#include "effect/globals.h"
+#include "kwin_export.h"
 
 #if KWIN_BUILD_X11
 #include <xcb/xcb.h>
@@ -39,6 +40,8 @@ class KWIN_EXPORT Compositor : public QObject
 {
     Q_OBJECT
 public:
+    static Compositor *create(QObject *parent = nullptr);
+
     enum class State {
         On = 0,
         Off,
@@ -49,14 +52,14 @@ public:
     ~Compositor() override;
     static Compositor *self();
 
-    virtual void start() = 0;
-    virtual void stop() = 0;
+    void start();
+    void stop();
 
     /**
      * Re-initializes the Compositor completely.
      * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
      */
-    virtual void reinitialize();
+    void reinitialize();
 
     /**
      * Whether the Compositor is active. That is a Scene is present and the Compositor is
@@ -100,7 +103,7 @@ public:
      * The default implementation returns @c true.
      * @see requiresCompositing
      */
-    virtual bool compositingPossible() const;
+    bool compositingPossible() const;
     /**
      * Returns a user facing text explaining why compositing is not possible in case
      * compositingPossible returns @c false.
@@ -108,7 +111,7 @@ public:
      * The default implementation returns an empty string.
      * @see compositingPossible
      */
-    virtual QString compositingNotPossibleReason() const;
+    QString compositingNotPossibleReason() const;
     /**
      * Whether OpenGL compositing is broken.
      * The Platform can implement this method if it is able to detect whether OpenGL compositing
@@ -117,10 +120,12 @@ public:
      * Default implementation returns @c false.
      * @see createOpenGLSafePoint
      */
-    virtual bool openGLCompositingIsBroken() const;
+    bool openGLCompositingIsBroken() const;
 
-    virtual void inhibit(Window *window);
-    virtual void uninhibit(Window *window);
+    void inhibit(Window *window);
+    void uninhibit(Window *window);
+
+    void createRenderer();
 
 Q_SIGNALS:
     void compositingToggled(bool active);
@@ -134,7 +139,7 @@ protected:
     static Compositor *s_compositor;
 
 protected Q_SLOTS:
-    virtual void composite(RenderLoop *renderLoop) = 0;
+    void composite(RenderLoop *renderLoop);
 
 private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
@@ -153,6 +158,14 @@ protected:
     void postPaintPass(RenderLayer *layer);
     void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
     void framePass(RenderLayer *layer, OutputFrame *frame);
+
+    void createScene();
+    bool attemptOpenGLCompositing();
+    bool attemptQPainterCompositing();
+    void addOutput(Output *output);
+    void removeOutput(Output *output);
+
+    CompositingType m_selectedCompositor = NoCompositing;
 
     State m_state = State::Off;
 #if KWIN_BUILD_X11
