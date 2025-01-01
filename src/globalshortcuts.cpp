@@ -99,15 +99,13 @@ GlobalShortcutsManager::~GlobalShortcutsManager()
 void GlobalShortcutsManager::init()
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        qputenv("KGLOBALACCELD_PLATFORM", QByteArrayLiteral("org.kde.kwin"));
-        m_kglobalAccel = std::make_unique<KGlobalAccelD>();
-        if (!m_kglobalAccel->init()) {
-            qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
-            m_kglobalAccel.reset();
-        } else {
-            qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
-        }
+    qputenv("KGLOBALACCELD_PLATFORM", QByteArrayLiteral("org.kde.kwin"));
+    m_kglobalAccel = std::make_unique<KGlobalAccelD>();
+    if (!m_kglobalAccel->init()) {
+        qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
+        m_kglobalAccel.reset();
+    } else {
+        qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
     }
 #endif
 }

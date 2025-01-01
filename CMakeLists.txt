@@ -54,7 +54,6 @@ option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications sup
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_X11 "Enable building X11 common code and Xwayland support" ON)
-option(KWIN_BUILD_X11_BACKEND "Enable building kwin_x11" ON)
 option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 
@@ -193,14 +192,6 @@ set_package_properties(epoxy PROPERTIES
     PURPOSE "OpenGL dispatch library"
 )
 
-set(HAVE_DL_LIBRARY FALSE)
-if (epoxy_HAS_GLX)
-    find_library(DL_LIBRARY dl)
-    if (DL_LIBRARY)
-        set(HAVE_DL_LIBRARY TRUE)
-    endif()
-endif()
-
 find_package(Wayland 1.22)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
@@ -254,7 +245,6 @@ if (KWIN_BUILD_X11)
         CURSOR
         DAMAGE
         DRI3
-        GLX
         ICCCM
         IMAGE
         KEYSYMS
@@ -287,13 +277,6 @@ if (KWIN_BUILD_X11)
     )
     set(HAVE_XWAYLAND_ENABLE_EI_PORTAL ${Xwayland_HAVE_ENABLE_EI_PORTAL})
 
-    set(HAVE_GLX ${epoxy_HAS_GLX})
-    get_target_property(QT_DISABLED_FEATURES Qt6::Gui QT_DISABLED_PUBLIC_FEATURES)
-    if("xcb_glx_plugin" IN_LIST QT_DISABLED_FEATURES)
-        message(STATUS "Disable GLX because Qt6::Gui was built without xcb_glx_plugin")
-        set(HAVE_GLX false)
-    endif()
-
     # for kwin internal things
     set(HAVE_X11_XCB ${X11_XCB_FOUND})
 
@@ -306,9 +289,6 @@ if (KWIN_BUILD_X11)
 
     # Scripts to run on XWayland startup
     set(XWAYLAND_SESSION_SCRIPTS "/etc/xdg/Xwayland-session.d")
-
-else()
-    set(KWIN_BUILD_X11_BACKEND OFF CACHE BOOL "Enable building kwin_x11" FORCE)
 endif()
 
 find_package(Libinput 1.26)
@@ -540,10 +520,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
 
 ecm_install_configured_files(INPUT plasma-kwin_wayland.service.in @ONLY
             DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
-if (KWIN_BUILD_X11_BACKEND)
-    ecm_install_configured_files(INPUT plasma-kwin_x11.service.in @ONLY
-                DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
-endif()
 
 
 ki18n_install(po)

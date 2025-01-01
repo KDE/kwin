@@ -717,11 +717,6 @@ void Window::doSetDemandsAttention()
 
 void Window::setDesktops(QList<VirtualDesktop *> desktops)
 {
-    // on x11 we can have only one desktop at a time
-    if (kwinApp()->operationMode() == Application::OperationModeX11 && desktops.size() > 1) {
-        desktops = QList<VirtualDesktop *>({desktops.last()});
-    }
-
     desktops = rules()->checkDesktops(desktops);
     if (desktops == m_desktops) {
         return;
@@ -2005,12 +2000,6 @@ std::optional<Options::MouseCommand> Window::getWheelCommand(Qt::Orientation ori
 
 bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &globalPos)
 {
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        // MouseActivateRaiseOnReleaseAndPassClick can't work on X11
-        if (cmd == Options::MouseActivateRaiseOnReleaseAndPassClick) {
-            cmd = Options::MouseActivateRaiseAndPassClick;
-        }
-    }
     bool replay = false;
     switch (cmd) {
     case Options::MouseRaise:
@@ -2213,12 +2202,6 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
 
 bool Window::performMouseReleaseCommand(Options::MouseCommand command, const QPointF &globalPos)
 {
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        // MouseActivateRaiseOnReleaseAndPassClick can't work on X11
-        if (command == Options::MouseActivateRaiseOnReleaseAndPassClick) {
-            command = Options::MouseActivateRaiseAndPassClick;
-        }
-    }
     switch (command) {
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
         if (isActive()) {

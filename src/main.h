@@ -79,23 +79,6 @@ class KWIN_EXPORT Application : public QApplication
     Q_PROPERTY(KSharedConfigPtr config READ config WRITE setConfig)
     Q_PROPERTY(KSharedConfigPtr kxkbConfig READ kxkbConfig WRITE setKxkbConfig)
 public:
-    /**
-     * @brief This enum provides the various operation modes of KWin depending on the available
-     * Windowing Systems at startup. For example whether KWin only talks to X11 or also to a Wayland
-     * Compositor.
-     *
-     */
-    enum OperationMode {
-        /**
-         * @brief KWin uses only X11 for managing windows and compositing
-         */
-        OperationModeX11,
-        /**
-         * @brief KWin uses Wayland
-         */
-        OperationModeWayland,
-    };
-    Q_ENUM(OperationMode)
     ~Application() override;
 
     void setConfigLock(bool lock);
@@ -128,13 +111,6 @@ public:
     }
 
     void start();
-    /**
-     * @brief The operation mode used by KWin.
-     *
-     * @return OperationMode
-     */
-    OperationMode operationMode() const;
-    bool shouldUseWaylandForCompositing() const;
 
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
@@ -352,7 +328,7 @@ Q_SIGNALS:
     void virtualTerminalCreated();
 
 protected:
-    Application(OperationMode mode, int &argc, char **argv);
+    Application(int &argc, char **argv);
     virtual void performStartup() = 0;
 
     void createInput();
@@ -393,7 +369,6 @@ private:
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
     KSharedConfigPtr m_inputConfig;
-    OperationMode m_operationMode;
 #if KWIN_BUILD_X11
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;

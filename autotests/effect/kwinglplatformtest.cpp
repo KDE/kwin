@@ -170,8 +170,7 @@ void GLPlatformTest::testDetect()
     const auto glslVersion = driverGroup.readEntry("ShadingLanguageVersion").toUtf8();
     const auto renderer = driverGroup.readEntry("Renderer").toUtf8();
     const auto vendor = driverGroup.readEntry("Vendor").toUtf8();
-    GLPlatform gl(EglPlatformInterface, version, glslVersion, renderer, vendor);
-    QCOMPARE(gl.platformInterface(), EglPlatformInterface);
+    GLPlatform gl(version, glslVersion, renderer, vendor);
 
     const KConfigGroup settingsGroup = config.group(QStringLiteral("Settings"));
 

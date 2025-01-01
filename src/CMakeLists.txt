@@ -273,17 +273,12 @@ if (KWIN_BUILD_X11)
         PRIVATE
             atoms.cpp
             events.cpp
-            compositor_x11.cpp
             group.cpp
-            moving_client_x11_filter.cpp
             netinfo.cpp
             rootinfo_filter.cpp
-            scene/surfaceitem_x11.cpp
             syncalarmx11filter.cpp
-            was_user_interaction_x11_filter.cpp
             window_property_notify_x11_filter.cpp
             x11eventfilter.cpp
-            x11syncmanager.cpp
             x11window.cpp
     )
     target_link_libraries(kwin
@@ -291,7 +286,6 @@ if (KWIN_BUILD_X11)
             XCB::COMPOSITE
             XCB::CURSOR
             XCB::DAMAGE
-            XCB::GLX
             XCB::ICCCM
             XCB::KEYSYMS
             XCB::RANDR
@@ -381,20 +375,6 @@ qt_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.x
 qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xml OPTIONS -A)
 
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
-
-if (KWIN_BUILD_X11 AND KWIN_BUILD_X11_BACKEND)
-    add_executable(kwin_x11 main_x11.cpp)
-    target_link_libraries(kwin_x11
-        KWinX11Platform
-        kwin
-        KF6::GlobalAccel
-    )
-    target_compile_definitions(kwin_x11 PRIVATE
-        -DTRANSLATION_DOMAIN=\"kwin\"
-    )
-    kcoreaddons_target_static_plugins(kwin_x11 NAMESPACE "${KWIN_PLUGINDIR}/effects/plugins")
-    install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-endif()
 
 install(TARGETS kwin EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -666,7 +646,6 @@ install(FILES
     scene/surfaceitem.h
     scene/surfaceitem_internal.h
     scene/surfaceitem_wayland.h
-    scene/surfaceitem_x11.h
     scene/windowitem.h
     scene/workspacescene.h
     scene/workspacescene_opengl.h

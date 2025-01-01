@@ -325,7 +325,6 @@ private:
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
     void focusOutEvent(xcb_focus_out_event_t *e);
-    void damageNotifyEvent();
 
     bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time = XCB_CURRENT_TIME);
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
@@ -390,7 +389,6 @@ private:
     int checkShadeGeometry(int w, int h);
     void getSyncCounter();
     void sendSyncRequest();
-    void leaveInteractiveMoveResize() override;
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
 
@@ -414,15 +412,11 @@ private:
 
     void updateInputShape();
     void configure(const QRect &nativeFrame, const QRect &nativeWrapper, const QRect &nativeClient);
-    void discardWindowPixmap();
-    void updateWindowPixmap();
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
                                              bool session) const;
     xcb_timestamp_t readUserCreationTime() const;
     void startupIdChanged();
-
-    void updateInputWindow();
 
     Xcb::Property fetchShowOnScreenEdge() const;
     void readShowOnScreenEdge(Xcb::Property &property);
@@ -432,8 +426,6 @@ private:
      */
     void updateShowOnScreenEdge();
 
-    void maybeCreateX11DecorationRenderer();
-    void maybeDestroyX11DecorationRenderer();
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void createDecoration();
     void destroyDecoration();
@@ -530,8 +522,6 @@ private:
 
     QMarginsF m_clientFrameExtents;
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
-
-    std::unique_ptr<X11DecorationRenderer> m_decorationRenderer;
 
     bool m_unmanaged = false;
     bool m_outline = false;

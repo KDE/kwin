@@ -26,7 +26,6 @@
 #include "killprompt.h"
 #include "netinfo.h"
 #include "placement.h"
-#include "scene/surfaceitem_x11.h"
 #include "scene/windowitem.h"
 #include "screenedge.h"
 #include "shadow.h"
@@ -333,21 +332,6 @@ X11Window::X11Window()
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
     connect(this, &X11Window::shapeChanged, this, &X11Window::discardShapeRegion);
 
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        connect(this, &X11Window::moveResizeCursorChanged, this, [this](CursorShape cursor) {
-            xcb_cursor_t nativeCursor = Cursors::self()->mouse()->x11Cursor(cursor);
-            m_frame.defineCursor(nativeCursor);
-            if (m_decoInputExtent.isValid()) {
-                m_decoInputExtent.defineCursor(nativeCursor);
-            }
-            if (isInteractiveMoveResize()) {
-                // changing window attributes doesn't change cursor if there's pointer grab active
-                xcb_change_active_pointer_grab(kwinApp()->x11Connection(), nativeCursor, xTime(),
-                                               XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
-            }
-        });
-    }
-
     m_releaseTimer.setSingleShot(true);
     connect(&m_releaseTimer, &QTimer::timeout, this, [this]() {
         releaseWindow();
@@ -402,9 +386,6 @@ bool X11Window::hasScheduledRelease() const
 void X11Window::releaseWindow(bool on_shutdown)
 {
     destroyWindowManagementInterface();
-    if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
-        item->destroyDamage();
-    }
 
     markAsDeleted();
     Q_EMIT closed();
@@ -490,9 +471,6 @@ void X11Window::releaseWindow(bool on_shutdown)
 void X11Window::destroyWindow()
 {
     destroyWindowManagementInterface();
-    if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
-        item->forgetDamage();
-    }
 
     markAsDeleted();
     Q_EMIT closed();
@@ -586,20 +564,11 @@ bool X11Window::track(xcb_window_t w)
         effects->checkInputWindowStacking();
     }
 
-    switch (kwinApp()->operationMode()) {
-    case Application::OperationModeWayland:
-        // The wayland surface is associated with the override-redirect window asynchronously.
-        if (surface()) {
-            associate();
-        } else {
-            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-        }
-        break;
-    case Application::OperationModeX11:
-        // We have no way knowing whether the override-redirect window can be painted. Mark it
-        // as ready for painting after synthetic 50ms delay.
-        QTimer::singleShot(50, this, &X11Window::setReadyForPainting);
-        break;
+    // The wayland surface is associated with the override-redirect window asynchronously.
+    if (surface()) {
+        associate();
+    } else {
+        connect(this, &Window::surfaceChanged, this, &X11Window::associate);
     }
 
     return true;
@@ -728,7 +697,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     bool asn_valid = workspace()->checkStartupNotification(window(), asn_id, asn_data);
 
     // Make sure that the input window is created before we update the stacking order
-    updateInputWindow();
     updateLayer();
 
     SessionInfo *session = workspace()->sessionManager()->takeSessionInfo(this);
@@ -1205,20 +1173,13 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         info.setOpacityF(opacity());
     });
 
-    switch (kwinApp()->operationMode()) {
-    case Application::OperationModeWayland:
-        // The wayland surface is associated with the window asynchronously.
-        if (surface()) {
-            associate();
-        } else {
-            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-        }
-        connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
-        break;
-    case Application::OperationModeX11:
-        break;
+    // The wayland surface is associated with the window asynchronously.
+    if (surface()) {
+        associate();
+    } else {
+        connect(this, &Window::surfaceChanged, this, &X11Window::associate);
     }
-
+    connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
     return true;
 }
 
@@ -1278,64 +1239,6 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
     updateMouseGrab();
 }
 
-void X11Window::updateInputWindow()
-{
-    if (!Xcb::Extensions::self()->isShapeInputAvailable()) {
-        return;
-    }
-
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        return;
-    }
-
-    QRegion region;
-
-    if (decoration()) {
-        const QMarginsF &r = decoration()->resizeOnlyBorders();
-        const qreal left = r.left();
-        const qreal top = r.top();
-        const qreal right = r.right();
-        const qreal bottom = r.bottom();
-        if (left != 0 || top != 0 || right != 0 || bottom != 0) {
-            region = QRegion(-left,
-                             -top,
-                             m_frame.width() + left + right,
-                             m_frame.height() + top + bottom);
-            region = region.subtracted(QRect(0, 0, m_frame.width(), m_frame.height()));
-        }
-    }
-
-    if (region.isEmpty()) {
-        m_decoInputExtent.reset();
-        return;
-    }
-
-    QRect bounds = region.boundingRect();
-    input_offset = bounds.topLeft();
-
-    // Move the bounding rect to screen coordinates
-    bounds.translate(m_frame.position());
-
-    // Move the region to input window coordinates
-    region.translate(-input_offset);
-
-    if (!m_decoInputExtent.isValid()) {
-        const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
-        const uint32_t values[] = {true,
-                                   XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION};
-        m_decoInputExtent.create(bounds, XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
-        if (mapping_state == Mapped) {
-            m_decoInputExtent.map();
-        }
-    } else {
-        m_decoInputExtent.setGeometry(bounds);
-    }
-
-    const QList<xcb_rectangle_t> rects = Xcb::regionToRects(region);
-    xcb_shape_rectangles(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED,
-                         m_decoInputExtent, 0, 0, rects.count(), rects.constData());
-}
-
 void X11Window::updateDecoration(bool check_workspace_pos, bool force)
 {
     if (!force && ((!isDecorated() && noBorder()) || (isDecorated() && !noBorder()))) {
@@ -1355,7 +1258,6 @@ void X11Window::updateDecoration(bool check_workspace_pos, bool force)
     if (check_workspace_pos) {
         checkWorkspacePosition(oldgeom);
     }
-    updateInputWindow();
     blockGeometryUpdates(false);
     updateFrameExtents();
 }
@@ -1369,11 +1271,6 @@ void X11Window::createDecoration()
 {
     std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
-        connect(decoration.get(), &KDecoration3::Decoration::resizeOnlyBordersChanged, this, [this]() {
-            if (!isDeleted()) {
-                updateInputWindow();
-            }
-        });
         connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (isDeleted()) {
                 return;
@@ -1383,11 +1280,6 @@ void X11Window::createDecoration()
                 checkWorkspacePosition(oldGeometry);
             }
             updateFrameExtents();
-        });
-        connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged, this, [this]() {
-            if (!isDeleted()) {
-                updateInputWindow();
-            }
         });
 
         decoration->apply(decoration->nextState()->clone());
@@ -1400,7 +1292,6 @@ void X11Window::createDecoration()
     setDecoration(decoration);
 
     moveResize(QRectF(calculateGravitation(false), clientSizeToFrameSize(clientSize())));
-    maybeCreateX11DecorationRenderer();
 }
 
 void X11Window::destroyDecoration()
@@ -1408,26 +1299,9 @@ void X11Window::destroyDecoration()
     if (isDecorated()) {
         QPointF grav = calculateGravitation(true);
         setDecoration(nullptr);
-        maybeDestroyX11DecorationRenderer();
         moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
     }
     m_decoInputExtent.reset();
-}
-
-void X11Window::maybeCreateX11DecorationRenderer()
-{
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        return;
-    }
-    if (!Compositor::compositing() && decoratedWindow()) {
-        m_decorationRenderer = std::make_unique<X11DecorationRenderer>(decoratedWindow());
-        decoration()->update();
-    }
-}
-
-void X11Window::maybeDestroyX11DecorationRenderer()
-{
-    m_decorationRenderer.reset();
 }
 
 void X11Window::detectNoBorder()
@@ -1649,8 +1523,6 @@ bool X11Window::setupCompositing()
     if (!Window::setupCompositing()) {
         return false;
     }
-    // If compositing is back on, stop rendering decoration in the frame window.
-    maybeDestroyX11DecorationRenderer();
     updateVisibility(); // for internalKeep()
     return true;
 }
@@ -1659,8 +1531,6 @@ void X11Window::finishCompositing()
 {
     Window::finishCompositing();
     updateVisibility();
-    // If compositing is off, render the decoration in the X11 frame window.
-    maybeCreateX11DecorationRenderer();
 }
 
 /**
@@ -1818,7 +1688,6 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
     info->setState((isShade() || !isShown()) ? NET::Hidden : NET::States(), NET::Hidden);
     updateVisibility();
     updateAllowedActions();
-    discardWindowPixmap();
 }
 
 void X11Window::updateVisibility()
@@ -1829,49 +1698,29 @@ void X11Window::updateVisibility()
     if (isHidden()) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true); // Also hide from taskbar
-        if (Compositor::compositing() && options->hiddenPreviews() == HiddenPreviewsAlways) {
-            internalKeep();
-        } else {
-            internalHide();
-        }
+        internalKeep();
         return;
     }
     if (isHiddenByShowDesktop()) {
         if (waylandServer()) {
             return;
         }
-        if (Compositor::compositing() && options->hiddenPreviews() != HiddenPreviewsNever) {
-            internalKeep();
-        } else {
-            internalHide();
-        }
+        internalKeep();
         return;
     }
     setSkipTaskbar(originalSkipTaskbar()); // Reset from 'hidden'
     if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
-        if (Compositor::compositing() && options->hiddenPreviews() == HiddenPreviewsAlways) {
-            internalKeep();
-        } else {
-            internalHide();
-        }
+        internalKeep();
         return;
     }
     info->setState(NET::States(), NET::Hidden);
     if (!isOnCurrentDesktop()) {
-        if (Compositor::compositing() && options->hiddenPreviews() != HiddenPreviewsNever) {
-            internalKeep();
-        } else {
-            internalHide();
-        }
+        internalKeep();
         return;
     }
     if (!isOnCurrentActivity()) {
-        if (Compositor::compositing() && options->hiddenPreviews() != HiddenPreviewsNever) {
-            internalKeep();
-        } else {
-            internalHide();
-        }
+        internalKeep();
         return;
     }
     internalShow();
@@ -1953,12 +1802,6 @@ void X11Window::internalKeep()
  */
 void X11Window::map()
 {
-    // XComposite invalidates backing pixmaps on unmap (minimize, different
-    // virtual desktop, etc.).  We kept the last known good pixmap around
-    // for use in effects, but now we want to have access to the new pixmap
-    if (Compositor::compositing()) {
-        discardWindowPixmap();
-    }
     m_frame.map();
     if (!isShade()) {
         m_wrapper.map();
@@ -3092,7 +2935,6 @@ void X11Window::finishSync()
         m_syncRequest.interactiveResize = false;
 
         moveResize(moveResizeGeometry());
-        updateWindowPixmap();
     }
 
     m_syncRequest.acked = false;
@@ -3741,12 +3583,6 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     w = std::max(min_size.width(), w);
     h = std::max(min_size.height(), h);
 
-    const bool isX11Mode = kwinApp()->operationMode() == Application::OperationModeX11;
-    if (!rules()->checkStrictGeometry(!isFullScreen() && isX11Mode)) {
-        // Disobey increments and aspect by explicit rule.
-        return QSizeF(w, h);
-    }
-
     qreal width_inc = Xcb::fromXNative(m_geometryHints.resizeIncrements()).width();
     qreal height_inc = Xcb::fromXNative(m_geometryHints.resizeIncrements()).height();
     qreal basew_inc = Xcb::fromXNative(m_geometryHints.baseSize()).width();
@@ -3927,11 +3763,7 @@ QSizeF X11Window::maxSize() const
 
 QSizeF X11Window::basicUnit() const
 {
-    const bool isX11Mode = kwinApp()->operationMode() == Application::OperationModeX11;
-    if (!isX11Mode) {
-        return QSize(1, 1);
-    }
-    return Xcb::fromXNative(m_geometryHints.resizeIncrements());
+    return QSize(1, 1);
 }
 
 /**
@@ -4508,7 +4340,6 @@ void X11Window::configure(const QRect &nativeFrame, const QRect &nativeWrapper, 
         }
 
         updateInputShape();
-        updateInputWindow();
     } else if (m_frame.position() != nativeFrame.topLeft()) {
         m_frame.move(nativeFrame.topLeft());
         if (m_decoInputExtent.isValid()) {
@@ -4826,45 +4657,7 @@ QRect X11Window::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology)
 
 bool X11Window::doStartInteractiveMoveResize()
 {
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        bool has_grab = false;
-        // This reportedly improves smoothness of the moveresize operation,
-        // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
-        // (https://lists.kde.org/?t=107302193400001&r=1&w=2)
-        QRectF r = workspace()->clientArea(FullArea, this, moveResizeOutput());
-        m_moveResizeGrabWindow.create(Xcb::toXNative(r), XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, kwinApp()->x11RootWindow());
-        m_moveResizeGrabWindow.map();
-        m_moveResizeGrabWindow.raise();
-        kwinApp()->updateXTime();
-        const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(kwinApp()->x11Connection(), false, m_moveResizeGrabWindow,
-                                                                            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
-                                                                            XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursors::self()->mouse()->x11Cursor(cursor()), xTime());
-        UniqueCPtr<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(kwinApp()->x11Connection(), cookie, nullptr));
-        if (pointerGrab && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
-            has_grab = true;
-        }
-        if (!has_grab && grabXKeyboard(frameId())) {
-            has_grab = move_resize_has_keyboard_grab = true;
-        }
-        if (!has_grab) { // at least one grab is necessary in order to be able to finish move/resize
-            m_moveResizeGrabWindow.reset();
-            return false;
-        }
-    }
     return true;
-}
-
-void X11Window::leaveInteractiveMoveResize()
-{
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        if (move_resize_has_keyboard_grab) {
-            ungrabXKeyboard();
-        }
-        move_resize_has_keyboard_grab = false;
-        xcb_ungrab_pointer(kwinApp()->x11Connection(), xTime());
-        m_moveResizeGrabWindow.reset();
-    }
-    Window::leaveInteractiveMoveResize();
 }
 
 bool X11Window::isWaitingForInteractiveResizeSync() const
@@ -4998,42 +4791,6 @@ void X11Window::updateWindowRules(Rules::Types selection)
         return;
     }
     Window::updateWindowRules(selection);
-}
-
-void X11Window::damageNotifyEvent()
-{
-    Q_ASSERT(kwinApp()->operationMode() == Application::OperationModeX11);
-
-    if (!readyForPainting()) { // avoid "setReadyForPainting()" function calling overhead
-        if (!m_syncRequest.enabled) { // cannot detect complete redraw, consider done now
-            setReadyForPainting();
-        }
-    }
-
-    SurfaceItemX11 *item = static_cast<SurfaceItemX11 *>(surfaceItem());
-    if (item) {
-        item->processDamage();
-    }
-}
-
-void X11Window::discardWindowPixmap()
-{
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        return;
-    }
-    if (auto item = surfaceItem()) {
-        item->discardPixmap();
-    }
-}
-
-void X11Window::updateWindowPixmap()
-{
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        return;
-    }
-    if (auto item = surfaceItem()) {
-        item->updatePixmap();
-    }
 }
 
 void X11Window::associate()

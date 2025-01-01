@@ -28,7 +28,6 @@
 #include "input.h"
 #include "internalwindow.h"
 #include "killwindow.h"
-#include "moving_client_x11_filter.h"
 #include "outline.h"
 #include "placement.h"
 #include "pluginmanager.h"
@@ -57,7 +56,6 @@
 #include "utils/kernel.h"
 #include "utils/orientationsensor.h"
 #include "virtualdesktops.h"
-#include "was_user_interaction_x11_filter.h"
 #include "wayland/externalbrightness_v1.h"
 #include "wayland_server.h"
 #if KWIN_BUILD_X11
@@ -315,10 +313,6 @@ void Workspace::initializeX11()
     // Select windowmanager privileges
     selectWmInputEventMask();
 
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        m_wasUserInteractionFilter = std::make_unique<WasUserInteractionX11Filter>();
-        m_movingClientFilter = std::make_unique<MovingClientX11Filter>();
-    }
     if (Xcb::Extensions::self()->isSyncAvailable()) {
         m_syncAlarmFilter = std::make_unique<SyncAlarmX11Filter>();
     }
@@ -1671,15 +1665,7 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("\n"));
     support.append(QStringLiteral("Qt compile version: %1\n").arg(QStringLiteral(QT_VERSION_STR)));
     support.append(QStringLiteral("XCB compile version: %1\n\n").arg(XCB_VERSION_STRING));
-    support.append(QStringLiteral("Operation Mode: "));
-    switch (kwinApp()->operationMode()) {
-    case Application::OperationModeX11:
-        support.append(QStringLiteral("X11"));
-        break;
-    case Application::OperationModeWayland:
-        support.append(QStringLiteral("Wayland"));
-        break;
-    }
+    support.append(QStringLiteral("Operation Mode: Wayland"));
     support.append(QStringLiteral("\n\n"));
 
     support.append(QStringLiteral("Build Options\n"));
@@ -1693,8 +1679,6 @@ QString Workspace::supportInformation() const
     support.append(KWIN_BUILD_ACTIVITIES ? yes : no);
     support.append(QStringLiteral("HAVE_X11_XCB: "));
     support.append(HAVE_X11_XCB ? yes : no);
-    support.append(QStringLiteral("HAVE_GLX: "));
-    support.append(HAVE_GLX ? yes : no);
     support.append(QStringLiteral("\n"));
 
 #if KWIN_BUILD_X11
@@ -1814,17 +1798,7 @@ QString Workspace::supportInformation() const
             support.append(QStringLiteral("OpenGL vendor string: ") + QString::fromUtf8(platform->glVendorString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL renderer string: ") + QString::fromUtf8(platform->glRendererString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL version string: ") + QString::fromUtf8(platform->glVersionString()) + QStringLiteral("\n"));
-            support.append(QStringLiteral("OpenGL platform interface: "));
-            switch (platform->platformInterface()) {
-            case GlxPlatformInterface:
-                support.append(QStringLiteral("GLX"));
-                break;
-            case EglPlatformInterface:
-                support.append(QStringLiteral("EGL"));
-                break;
-            default:
-                support.append(QStringLiteral("UNKNOWN"));
-            }
+            support.append(QStringLiteral("OpenGL platform interface: EGL"));
             support.append(QStringLiteral("\n"));
 
             support.append(QStringLiteral("OpenGL shading language version string: ") + QString::fromUtf8(platform->glShadingLanguageVersionString()) + QStringLiteral("\n"));
@@ -2008,11 +1982,6 @@ Window *Workspace::findInternal(QWindow *w) const
     if (!w) {
         return nullptr;
     }
-#if KWIN_BUILD_X11
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        return findUnmanaged(w->winId());
-    }
-#endif
     for (Window *window : m_windows) {
         if (InternalWindow *internal = qobject_cast<InternalWindow *>(window)) {
             if (internal->handle() == w) {

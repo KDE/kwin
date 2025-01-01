@@ -628,9 +628,6 @@ DebugConsole::DebugConsole()
     setAttribute(Qt::WA_ShowWithoutActivating);
     m_ui->setupUi(this);
 
-    // Only on Wayland the window has a proper decoration with a close button.
-    m_ui->quitButton->setVisible(!kwinApp()->shouldUseWaylandForCompositing());
-
     auto windowsModel = new DebugConsoleModel(this);
     QSortFilterProxyModel *proxyWindowsModel = new QSortFilterProxyModel(this);
     proxyWindowsModel->setSourceModel(windowsModel);
@@ -644,14 +641,6 @@ DebugConsole::DebugConsole()
     m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
     m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->tabWidget->setTabIcon(0, QIcon::fromTheme(QStringLiteral("view-list-tree")));
-
-    if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
-        m_ui->tabWidget->setTabEnabled(1, false); // Input Events
-        m_ui->tabWidget->setTabEnabled(2, false); // Input Devices
-        m_ui->tabWidget->setTabEnabled(4, false); // Keyboard
-        m_ui->tabWidget->setTabEnabled(5, false); // Clipboard
-        setWindowFlags(Qt::X11BypassWindowManagerHint);
-    }
 
     m_ui->tabWidget->addTab(new DebugConsoleEffectsTab(), i18nc("@label", "Effects"));
 
@@ -1023,7 +1012,7 @@ int DebugConsoleModel::columnCount(const QModelIndex &parent) const
 
 int DebugConsoleModel::topLevelRowCount() const
 {
-    return kwinApp()->shouldUseWaylandForCompositing() ? 4 : 2;
+    return 4;
 }
 
 template<class T>
