@@ -311,7 +311,7 @@ bool CompositorDBusInterface::isOpenGLBroken() const
 
 bool CompositorDBusInterface::platformRequiresCompositing() const
 {
-    return kwinApp()->operationMode() != Application::OperationModeX11; // TODO: Remove this property?
+    return true;
 }
 
 void CompositorDBusInterface::reinitialize()
@@ -321,19 +321,7 @@ void CompositorDBusInterface::reinitialize()
 
 QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
 {
-    QStringList interfaces;
-    bool supportsGlx = false;
-#if HAVE_GLX
-    supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
-#endif
-    if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
-        supportsGlx = false;
-    }
-    if (supportsGlx) {
-        interfaces << QStringLiteral("glx");
-    }
-    interfaces << QStringLiteral("egl");
-    return interfaces;
+    return {QStringLiteral("egl")};
 }
 
 VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDesktopManager *parent)

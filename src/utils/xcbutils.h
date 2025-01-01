@@ -1520,18 +1520,6 @@ public:
     }
     int syncAlarmNotifyEvent() const;
     QList<ExtensionData> extensions() const;
-    bool hasGlx() const
-    {
-        return m_glx.present;
-    }
-    int glxEventBase() const
-    {
-        return m_glx.eventBase;
-    }
-    int glxMajorOpcode() const
-    {
-        return m_glx.majorOpcode;
-    }
 
     static Extensions *self();
     static void destroy();
@@ -1551,7 +1539,6 @@ private:
     ExtensionData m_render;
     ExtensionData m_fixes;
     ExtensionData m_sync;
-    ExtensionData m_glx;
 
     static Extensions *s_self;
 };

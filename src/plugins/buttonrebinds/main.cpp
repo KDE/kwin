@@ -18,14 +18,7 @@ class KWIN_EXPORT ButtonRebindsFactory : public KWin::PluginFactory
 public:
     std::unique_ptr<KWin::Plugin> create() const override
     {
-        switch (KWin::kwinApp()->operationMode()) {
-        case KWin::Application::OperationModeWayland:
-            return std::make_unique<ButtonRebindsFilter>();
-        case KWin::Application::OperationModeX11:
-            [[fallthrough]];
-        default:
-            return nullptr;
-        }
+        return std::make_unique<ButtonRebindsFilter>();
     }
 };
 

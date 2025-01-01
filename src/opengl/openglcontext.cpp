@@ -74,7 +74,7 @@ static bool checkIndexedQuads(OpenGlContext *context)
     }
 }
 
-OpenGlContext::OpenGlContext(bool EGL)
+OpenGlContext::OpenGlContext()
     : m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
     , m_glslVersionString((const char *)glGetString(GL_SHADING_LANGUAGE_VERSION))
@@ -97,7 +97,7 @@ OpenGlContext::OpenGlContext(bool EGL)
     , m_haveSyncFences((m_isOpenglES && hasVersion(Version(3, 0))) || (!m_isOpenglES && hasVersion(Version(3, 2))) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_sync")))
     , m_supportsIndexedQuads(checkIndexedQuads(this))
     , m_supportsPackInvert(hasOpenglExtension(QByteArrayLiteral("GL_MESA_pack_invert")))
-    , m_glPlatform(std::make_unique<GLPlatform>(EGL ? EglPlatformInterface : GlxPlatformInterface, m_versionString, m_glslVersionString, m_renderer, m_vendor))
+    , m_glPlatform(std::make_unique<GLPlatform>(m_versionString, m_glslVersionString, m_renderer, m_vendor))
 {
 }
 

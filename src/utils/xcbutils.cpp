@@ -377,7 +377,6 @@ void Extensions::init()
     xcb_prefetch_extension_data(c, &xcb_xfixes_id);
     xcb_prefetch_extension_data(c, &xcb_render_id);
     xcb_prefetch_extension_data(c, &xcb_sync_id);
-    xcb_prefetch_extension_data(c, &xcb_glx_id);
 
     m_shape.name = QByteArray("SHAPE");
     m_randr.name = QByteArray("RANDR");
@@ -386,7 +385,6 @@ void Extensions::init()
     m_fixes.name = QByteArray("XFIXES");
     m_render.name = QByteArray("RENDER");
     m_sync.name = QByteArray("SYNC");
-    m_glx.name = QByteArray("GLX");
 
     m_shape.opCodes = shapeOpCodes();
     m_randr.opCodes = randrOpCodes();
@@ -395,12 +393,10 @@ void Extensions::init()
     m_fixes.opCodes = fixesOpCodes();
     m_render.opCodes = renderOpCodes();
     m_sync.opCodes = syncOpCodes();
-    m_glx.opCodes = glxOpCodes();
 
     m_randr.errorCodes = randrErrorCodes();
     m_damage.errorCodes = damageErrorCodes();
     m_fixes.errorCodes = fixesErrorCodes();
-    m_glx.errorCodes = glxErrorCodes();
 
     extensionQueryReply(xcb_get_extension_data(c, &xcb_shape_id), &m_shape);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_randr_id), &m_randr);
@@ -409,7 +405,6 @@ void Extensions::init()
     extensionQueryReply(xcb_get_extension_data(c, &xcb_xfixes_id), &m_fixes);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_render_id), &m_render);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_sync_id), &m_sync);
-    extensionQueryReply(xcb_get_extension_data(c, &xcb_glx_id), &m_glx);
 
     // extension specific queries
     xcb_shape_query_version_cookie_t shapeVersion;
@@ -550,8 +545,7 @@ QList<ExtensionData> Extensions::extensions() const
         m_composite,
         m_render,
         m_fixes,
-        m_sync,
-        m_glx};
+        m_sync};
 }
 
 //****************************************

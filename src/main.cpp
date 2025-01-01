@@ -85,7 +85,7 @@ Atoms *atoms;
 #endif
 int Application::crashes = 0;
 
-Application::Application(Application::OperationMode mode, int &argc, char **argv)
+Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
 #if KWIN_BUILD_X11
     , m_eventFilter(new XcbEventFilter())
@@ -93,7 +93,6 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     , m_configLock(false)
     , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
     , m_kxkbConfig()
-    , m_operationMode(mode)
 {
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
     qRegisterMetaType<KWin::EffectWindow *>();
@@ -105,16 +104,6 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
 void Application::setConfigLock(bool lock)
 {
     m_configLock = lock;
-}
-
-Application::OperationMode Application::operationMode() const
-{
-    return m_operationMode;
-}
-
-bool Application::shouldUseWaylandForCompositing() const
-{
-    return m_operationMode == OperationModeWayland;
 }
 
 void Application::start()
@@ -542,19 +531,7 @@ static quint32 monotonicTime()
 
 void Application::updateXTime()
 {
-    switch (operationMode()) {
-    case Application::OperationModeX11:
-        setX11Time(QX11Info::getTimestamp(), TimestampUpdate::Always);
-        break;
-
-    case Application::OperationModeWayland:
-        setX11Time(monotonicTime(), TimestampUpdate::Always);
-        break;
-
-    default:
-        // Do not update the current X11 time stamp if it's the Wayland only session.
-        break;
-    }
+    setX11Time(monotonicTime(), TimestampUpdate::Always);
 }
 
 void Application::updateX11Time(xcb_generic_event_t *event)

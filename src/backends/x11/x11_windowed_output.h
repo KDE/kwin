@@ -17,8 +17,8 @@
 
 #include <unordered_map>
 
-#include <xcb/xcb.h>
 #include <xcb/present.h>
+#include <xcb/xcb.h>
 
 class NETWinInfo;
 

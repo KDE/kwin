@@ -58,12 +58,9 @@ Options::Options(QObject *parent)
     , m_xwaylandEavesdropsMouse(Options::defaultXwaylandEavesdropsMouse())
     , m_compositingMode(Options::defaultCompositingMode())
     , m_useCompositing(Options::defaultUseCompositing())
-    , m_hiddenPreviews(Options::defaultHiddenPreviews())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
-    , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
-    , m_glPlatformInterface(Options::defaultGlPlatformInterface())
     , m_windowsBlockCompositing(true)
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
@@ -582,15 +579,6 @@ void Options::setUseCompositing(bool useCompositing)
     Q_EMIT useCompositingChanged();
 }
 
-void Options::setHiddenPreviews(int hiddenPreviews)
-{
-    if (m_hiddenPreviews == static_cast<HiddenPreviews>(hiddenPreviews)) {
-        return;
-    }
-    m_hiddenPreviews = static_cast<HiddenPreviews>(hiddenPreviews);
-    Q_EMIT hiddenPreviewsChanged();
-}
-
 void Options::setGlSmoothScale(int glSmoothScale)
 {
     if (m_glSmoothScale == glSmoothScale) {
@@ -627,15 +615,6 @@ void Options::setWindowsBlockCompositing(bool value)
     Q_EMIT windowsBlockCompositingChanged();
 }
 
-void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
-{
-    if (m_glPreferBufferSwap == (GlSwapStrategy)glPreferBufferSwap) {
-        return;
-    }
-    m_glPreferBufferSwap = (GlSwapStrategy)glPreferBufferSwap;
-    Q_EMIT glPreferBufferSwapChanged();
-}
-
 bool Options::allowTearing() const
 {
     return m_allowTearing;
@@ -660,43 +639,6 @@ void Options::setInteractiveWindowMoveEnabled(bool set)
         m_interactiveWindowMoveEnabled = set;
         Q_EMIT interactiveWindowMoveEnabledChanged();
     }
-}
-
-void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
-{
-    // check environment variable
-    const QByteArray envOpenGLInterface(qgetenv("KWIN_OPENGL_INTERFACE"));
-    if (!envOpenGLInterface.isEmpty()) {
-        if (qstrcmp(envOpenGLInterface, "egl") == 0) {
-            qCDebug(KWIN_CORE) << "Forcing EGL native interface through environment variable";
-            interface = EglPlatformInterface;
-        } else if (qstrcmp(envOpenGLInterface, "glx") == 0) {
-            qCDebug(KWIN_CORE) << "Forcing GLX native interface through environment variable";
-            interface = GlxPlatformInterface;
-        }
-    }
-    if (kwinApp()->shouldUseWaylandForCompositing() && interface == GlxPlatformInterface) {
-        // Glx is impossible on Wayland, enforce egl
-        qCDebug(KWIN_CORE) << "Forcing EGL native interface for Wayland mode";
-        interface = EglPlatformInterface;
-    }
-#if !HAVE_GLX
-    qCDebug(KWIN_CORE) << "Forcing EGL native interface as compiled without GLX support";
-    interface = EglPlatformInterface;
-#endif
-    if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
-        qCDebug(KWIN_CORE) << "Forcing EGL native interface as Qt uses OpenGL ES";
-        interface = EglPlatformInterface;
-    } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        qCDebug(KWIN_CORE) << "Forcing EGL native interface as OpenGL ES requested through KWIN_COMPOSE environment variable.";
-        interface = EglPlatformInterface;
-    }
-
-    if (m_glPlatformInterface == interface) {
-        return;
-    }
-    m_glPlatformInterface = interface;
-    Q_EMIT glPlatformInterfaceChanged();
 }
 
 void Options::reparseConfiguration()
@@ -788,50 +730,6 @@ void Options::loadConfig()
     if (!isGlStrictBindingFollowsDriver()) {
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
-
-    char c = 0;
-    const QString s = config.readEntry("GLPreferBufferSwap", QString(QLatin1Char(Options::defaultGlPreferBufferSwap())));
-    if (!s.isEmpty()) {
-        c = s.at(0).toLatin1();
-    }
-    if (c != 'a' && c != 'c' && c != 'p' && c != 'e') {
-        c = Options::defaultGlPreferBufferSwap();
-    }
-    setGlPreferBufferSwap(c);
-
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        HiddenPreviews previews = Options::defaultHiddenPreviews();
-        // 4 - off, 5 - shown, 6 - always, other are old values
-        int hps = config.readEntry("HiddenPreviews", 5);
-        if (hps == 4) {
-            previews = HiddenPreviewsNever;
-        } else if (hps == 5) {
-            previews = HiddenPreviewsShown;
-        } else if (hps == 6) {
-            previews = HiddenPreviewsAlways;
-        }
-        setHiddenPreviews(previews);
-    }
-
-    auto interfaceToKey = [](OpenGLPlatformInterface interface) {
-        switch (interface) {
-        case GlxPlatformInterface:
-            return QStringLiteral("glx");
-        case EglPlatformInterface:
-            return QStringLiteral("egl");
-        default:
-            return QString();
-        }
-    };
-    auto keyToInterface = [](const QString &key) {
-        if (key == QLatin1StringView("glx")) {
-            return GlxPlatformInterface;
-        } else if (key == QLatin1StringView("egl")) {
-            return EglPlatformInterface;
-        }
-        return defaultGlPlatformInterface();
-    };
-    setGlPlatformInterface(keyToInterface(config.readEntry("GLPlatformInterface", interfaceToKey(m_glPlatformInterface))));
 }
 
 void Options::syncFromKcfgc()

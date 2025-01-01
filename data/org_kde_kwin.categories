@@ -9,7 +9,6 @@ kwin_wayland_drm KWin Wayland (DRM backend) DEFAULT_SEVERITY [WARNING] IDENTIFIE
 kwin_wayland_framebuffer KWin Wayland (Framebuffer backend) DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_FB]
 kwin_wayland_backend KWin Wayland (Wayland backend) DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_WAYLAND_BACKEND]
 kwin_wayland_x11windowed KWin Wayland (X11 backend) DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_X11WINDOWED]
-kwin_platform_x11_standalone KWin X11 Standalone Platform DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_X11STANDALONE]
 kwin_libinput KWin Libinput Integration DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_LIBINPUT]
 kwin_tabbox KWin Window Switcher DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_TABBOX]
 kwin_decorations KWin Decorations DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_DECORATIONS]
