@@ -14,7 +14,6 @@
 #include "input.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
-#include "main.h"
 #include "workspace.h"
 #include "xkb.h"
 

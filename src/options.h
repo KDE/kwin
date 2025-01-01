@@ -21,18 +21,6 @@ namespace KWin
 
 // Whether to keep all windows mapped when compositing (i.e. whether to have
 // actively updated window pixmaps).
-enum HiddenPreviews {
-    // The normal mode with regard to mapped windows. Hidden (minimized, etc.)
-    // and windows on inactive virtual desktops are not mapped, their pixmaps
-    // are only their icons.
-    HiddenPreviewsNever,
-    // Like normal mode, but shown windows (i.e. on inactive virtual desktops)
-    // are kept mapped, only hidden windows are unmapped.
-    HiddenPreviewsShown,
-    // All windows are kept mapped regardless of their state.
-    HiddenPreviewsAlways
-};
-
 enum XwaylandEavesdropsMode {
     None,
     NonCharacterKeys,
@@ -184,7 +172,6 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(int killPingTimeout READ killPingTimeout WRITE setKillPingTimeout NOTIFY killPingTimeoutChanged)
     Q_PROPERTY(int compositingMode READ compositingMode WRITE setCompositingMode NOTIFY compositingModeChanged)
     Q_PROPERTY(bool useCompositing READ isUseCompositing WRITE setUseCompositing NOTIFY useCompositingChanged)
-    Q_PROPERTY(int hiddenPreviews READ hiddenPreviews WRITE setHiddenPreviews NOTIFY hiddenPreviewsChanged)
     /**
      * 0 = no, 1 = yes when transformed,
      * 2 = try trilinear when transformed; else 1,
@@ -198,8 +185,6 @@ class KWIN_EXPORT Options : public QObject
      * If @c false glStrictBinding is set from a config value and not updated during scene initialization.
      */
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
-    Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
-    Q_PROPERTY(KWin::OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
     Q_PROPERTY(bool allowTearing READ allowTearing WRITE setAllowTearing NOTIFY allowTearingChanged)
     Q_PROPERTY(bool interactiveWindowMoveEnabled READ interactiveWindowMoveEnabled WRITE setInteractiveWindowMoveEnabled NOTIFY interactiveWindowMoveEnabledChanged)
@@ -657,11 +642,6 @@ public:
     // Separate to mode so the user can toggle
     bool isUseCompositing() const;
 
-    // General preferences
-    HiddenPreviews hiddenPreviews() const
-    {
-        return m_hiddenPreviews;
-    }
     // OpenGL
     // 1 = yes,
     // 2 = try trilinear when transformed; else 1,
@@ -679,22 +659,6 @@ public:
     bool isGlStrictBindingFollowsDriver() const
     {
         return m_glStrictBindingFollowsDriver;
-    }
-    OpenGLPlatformInterface glPlatformInterface() const
-    {
-        return m_glPlatformInterface;
-    }
-
-    enum GlSwapStrategy {
-        CopyFrontBuffer = 'c',
-        PaintFullScreen = 'p',
-        ExtendDamage = 'e',
-        AutoSwapStrategy = 'a',
-    };
-    Q_ENUM(GlSwapStrategy)
-    GlSwapStrategy glPreferBufferSwap() const
-    {
-        return m_glPreferBufferSwap;
     }
 
     bool windowsBlockCompositing() const
@@ -756,12 +720,9 @@ public:
     void setKillPingTimeout(int killPingTimeout);
     void setCompositingMode(int compositingMode);
     void setUseCompositing(bool useCompositing);
-    void setHiddenPreviews(int hiddenPreviews);
     void setGlSmoothScale(int glSmoothScale);
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
-    void setGlPreferBufferSwap(char glPreferBufferSwap);
-    void setGlPlatformInterface(OpenGLPlatformInterface interface);
     void setWindowsBlockCompositing(bool set);
     void setAllowTearing(bool allow);
     void setInteractiveWindowMoveEnabled(bool set);
@@ -855,10 +816,6 @@ public:
     {
         return true;
     }
-    static HiddenPreviews defaultHiddenPreviews()
-    {
-        return HiddenPreviewsShown;
-    }
     static int defaultGlSmoothScale()
     {
         return 2;
@@ -870,14 +827,6 @@ public:
     static bool defaultGlStrictBindingFollowsDriver()
     {
         return true;
-    }
-    static GlSwapStrategy defaultGlPreferBufferSwap()
-    {
-        return AutoSwapStrategy;
-    }
-    static OpenGLPlatformInterface defaultGlPlatformInterface()
-    {
-        return kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
     }
     static XwaylandCrashPolicy defaultXwaylandCrashPolicy()
     {
@@ -963,8 +912,6 @@ Q_SIGNALS:
     void glSmoothScaleChanged();
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
-    void glPreferBufferSwapChanged();
-    void glPlatformInterfaceChanged();
     void windowsBlockCompositingChanged();
     void animationSpeedChanged();
     void configChanged();
@@ -1004,15 +951,11 @@ private:
 
     CompositingType m_compositingMode;
     bool m_useCompositing;
-    HiddenPreviews m_hiddenPreviews;
     int m_glSmoothScale;
     // Settings that should be auto-detected
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;
-    GlSwapStrategy m_glPreferBufferSwap;
-    OpenGLPlatformInterface m_glPlatformInterface;
     bool m_windowsBlockCompositing;
-
     WindowOperation OpTitlebarDblClick;
     WindowOperation opMaxButtonRightClick = defaultOperationMaxButtonRightClick();
     WindowOperation opMaxButtonMiddleClick = defaultOperationMaxButtonMiddleClick();
@@ -1054,4 +997,3 @@ extern KWIN_EXPORT Options *options;
 } // namespace
 
 Q_DECLARE_METATYPE(KWin::Options::WindowOperation)
-Q_DECLARE_METATYPE(KWin::OpenGLPlatformInterface)

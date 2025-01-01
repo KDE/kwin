@@ -292,10 +292,6 @@ private:
     QList<ElectricBorder> m_borderActivate, m_borderAlternativeActivate;
     QHash<ElectricBorder, QAction *> m_touchActivate;
     QHash<ElectricBorder, QAction *> m_touchAlternativeActivate;
-
-#if KWIN_BUILD_X11
-    std::unique_ptr<X11EventFilter> m_x11EventFilter;
-#endif
 };
 
 } // namespace TabBox

@@ -48,8 +48,7 @@ static eglFuncPtr getProcAddress(const char *name)
 }
 
 EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context)
-    : OpenGlContext(true)
-    , m_display(display)
+    : m_display(display)
     , m_handle(context)
     , m_config(config)
     , m_shaderManager(std::make_unique<ShaderManager>())

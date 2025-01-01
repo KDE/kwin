@@ -38,7 +38,7 @@ using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bu
 class KWIN_EXPORT OpenGlContext
 {
 public:
-    explicit OpenGlContext(bool EGL);
+    explicit OpenGlContext();
     virtual ~OpenGlContext();
 
     virtual bool makeCurrent() = 0;

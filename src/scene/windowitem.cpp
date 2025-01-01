@@ -11,7 +11,6 @@
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem_internal.h"
 #include "scene/surfaceitem_wayland.h"
-#include "scene/surfaceitem_x11.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -315,17 +314,10 @@ WindowItemX11::WindowItemX11(X11Window *window, Item *parent)
 
 void WindowItemX11::initialize()
 {
-    switch (kwinApp()->operationMode()) {
-    case Application::OperationModeX11:
-        updateSurfaceItem(std::make_unique<SurfaceItemX11>(static_cast<X11Window *>(window()), this));
-        break;
-    case Application::OperationModeWayland:
-        if (!window()->surface()) {
-            updateSurfaceItem(nullptr);
-        } else {
-            updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), this));
-        }
-        break;
+    if (!window()->surface()) {
+        updateSurfaceItem(nullptr);
+    } else {
+        updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), this));
     }
 }
 #endif

@@ -399,34 +399,18 @@ void UserActionsMenu::showHideActivityMenu()
 
 void UserActionsMenu::initDesktopPopup()
 {
-    if (kwinApp()->operationMode() == Application::OperationModeWayland) {
-        if (m_multipleDesktopsMenu) {
-            return;
-        }
-
-        m_multipleDesktopsMenu = new QMenu(m_menu);
-        connect(m_multipleDesktopsMenu, &QMenu::aboutToShow, this, &UserActionsMenu::multipleDesktopsPopupAboutToShow);
-
-        QAction *action = m_multipleDesktopsMenu->menuAction();
-        // set it as the first item
-        m_menu->insertAction(m_maximizeOperation, action);
-        action->setText(i18n("&Desktops"));
-        action->setIcon(QIcon::fromTheme(QStringLiteral("virtual-desktops")));
-
-    } else {
-        if (m_desktopMenu) {
-            return;
-        }
-
-        m_desktopMenu = new QMenu(m_menu);
-        connect(m_desktopMenu, &QMenu::aboutToShow, this, &UserActionsMenu::desktopPopupAboutToShow);
-
-        QAction *action = m_desktopMenu->menuAction();
-        // set it as the first item
-        m_menu->insertAction(m_maximizeOperation, action);
-        action->setText(i18n("Move to &Desktop"));
-        action->setIcon(QIcon::fromTheme(QStringLiteral("virtual-desktops")));
+    if (m_multipleDesktopsMenu) {
+        return;
     }
+
+    m_multipleDesktopsMenu = new QMenu(m_menu);
+    connect(m_multipleDesktopsMenu, &QMenu::aboutToShow, this, &UserActionsMenu::multipleDesktopsPopupAboutToShow);
+
+    QAction *action = m_multipleDesktopsMenu->menuAction();
+    // set it as the first item
+    m_menu->insertAction(m_maximizeOperation, action);
+    action->setText(i18n("&Desktops"));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("virtual-desktops")));
 }
 
 void UserActionsMenu::initScreenPopup()

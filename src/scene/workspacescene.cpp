@@ -293,11 +293,7 @@ QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
     createStackingOrder();
 
     painted_delegate = delegate;
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        painted_screen = workspace()->outputs().constFirst();
-    } else {
-        painted_screen = painted_delegate->output();
-    }
+    painted_screen = painted_delegate->output();
 
     const RenderLoop *renderLoop = painted_screen->renderLoop();
     const std::chrono::milliseconds presentTime =
@@ -429,8 +425,7 @@ void WorkspaceScene::postPaint()
 
 void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    Output *output = kwinApp()->operationMode() == Application::OperationMode::OperationModeX11 ? nullptr : painted_screen;
-    RenderViewport viewport(output ? output->geometryF() : workspace()->geometry(), output ? output->scale() : 1, renderTarget);
+    RenderViewport viewport(painted_screen->geometryF(), painted_screen->scale(), renderTarget);
 
     m_renderer->beginFrame(renderTarget, viewport);
 

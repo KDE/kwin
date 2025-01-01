@@ -4,7 +4,6 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-#include <main.h>
 #include <plugin.h>
 
 #include "stickykeys.h"
@@ -18,14 +17,7 @@ class KWIN_EXPORT StickyKeysFactory : public KWin::PluginFactory
 public:
     std::unique_ptr<KWin::Plugin> create() const override
     {
-        switch (KWin::kwinApp()->operationMode()) {
-        case KWin::Application::OperationModeWayland:
-            return std::make_unique<StickyKeysFilter>();
-        case KWin::Application::OperationModeX11:
-            [[fallthrough]];
-        default:
-            return nullptr;
-        }
+        return std::make_unique<StickyKeysFilter>();
     }
 };
 

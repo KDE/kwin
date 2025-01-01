@@ -39,12 +39,6 @@ KWIN_EXPORT Q_NAMESPACE
         QPainterCompositing = 1 << 2,
     };
 
-enum OpenGLPlatformInterface {
-    NoOpenGLPlatformInterface = 0,
-    GlxPlatformInterface,
-    EglPlatformInterface,
-};
-
 enum clientAreaOption {
     PlacementArea, // geometry where a window will be initially placed after being mapped
     MovementArea, // ???  window movement snapping area?  ignore struts
