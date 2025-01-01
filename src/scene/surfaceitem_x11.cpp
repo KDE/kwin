@@ -184,9 +184,8 @@ std::unique_ptr<SurfacePixmap> SurfaceItemX11::createPixmap()
     return std::make_unique<SurfacePixmapX11>(this);
 }
 
-SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureX11(this), parent)
-    , m_item(item)
+SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item)
+    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureX11(this), item)
 {
 }
 
@@ -209,12 +208,12 @@ xcb_pixmap_t SurfacePixmapX11::pixmap() const
 
 xcb_visualid_t SurfacePixmapX11::visual() const
 {
-    return m_item->window()->visual();
+    return static_cast<SurfaceItemX11 *>(m_item)->window()->visual();
 }
 
 void SurfacePixmapX11::create()
 {
-    const X11Window *window = m_item->window();
+    const X11Window *window = static_cast<SurfaceItemX11 *>(m_item)->window();
     if (window->isDeleted()) {
         return;
     }

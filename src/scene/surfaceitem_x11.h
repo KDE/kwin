@@ -60,7 +60,7 @@ class KWIN_EXPORT SurfacePixmapX11 final : public SurfacePixmap
     Q_OBJECT
 
 public:
-    explicit SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent = nullptr);
+    explicit SurfacePixmapX11(SurfaceItemX11 *item);
     ~SurfacePixmapX11() override;
 
     xcb_pixmap_t pixmap() const;
@@ -70,7 +70,6 @@ public:
     bool isValid() const override;
 
 private:
-    SurfaceItemX11 *m_item;
     xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
 };
 

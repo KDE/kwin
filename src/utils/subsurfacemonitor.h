@@ -59,10 +59,6 @@ Q_SIGNALS:
      * This signal is emitted when a sub-surface is unmapped.
      */
     void subSurfaceUnmapped();
-    /**
-     * This signal is emitted when the buffer size of a subsurface has changed.
-     */
-    void subSurfaceBufferSizeChanged();
     void subSurfaceCommitted(SubSurfaceInterface *subSurface);
 
 private:
