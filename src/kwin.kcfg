@@ -265,9 +265,6 @@
             <min>4</min>
             <max>6</max>
         </entry>
-        <entry name="GLPlatformInterface" type="String">
-            <default>glx</default>
-        </entry>
         <entry name="WindowsBlockCompositing" type="Bool">
             <default>true</default>
         </entry>

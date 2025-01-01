@@ -30,9 +30,6 @@
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"
-#if KWIN_BUILD_X11
-#include "x11window.h"
-#endif
 // Qt
 #include <QAction>
 #include <QKeyEvent>
@@ -43,16 +40,6 @@
 #include <KLazyLocalizedString>
 #include <KLocalizedString>
 #include <kkeyserver.h>
-#if KWIN_BUILD_X11
-#include "tabbox/x11_filter.h"
-#include "utils/xcbutils.h"
-// X11
-#include <X11/keysym.h>
-#include <X11/keysymdef.h>
-// xcb
-#include <xcb/xcb_keysyms.h>
-#endif
-// specify externals before namespace
 
 namespace KWin
 {
@@ -677,96 +664,11 @@ void TabBox::grabbedKeyEvent(QKeyEvent *event)
     m_tabBox->grabbedKeyEvent(event);
 }
 
-#if KWIN_BUILD_X11
-struct KeySymbolsDeleter
+static bool areModKeysDepressed(const QKeySequence &seq)
 {
-    void operator()(xcb_key_symbols_t *symbols)
-    {
-        xcb_key_symbols_free(symbols);
-    }
-};
-
-/**
- * Handles alt-tab / control-tab
- */
-static bool areKeySymXsDepressed(const uint keySyms[], int nKeySyms)
-{
-    Xcb::QueryKeymap keys;
-
-    std::unique_ptr<xcb_key_symbols_t, KeySymbolsDeleter> symbols(xcb_key_symbols_alloc(connection()));
-    if (!symbols || !keys) {
+    if (seq.isEmpty()) {
         return false;
     }
-    const auto keymap = keys->keys;
-
-    bool depressed = false;
-    for (int iKeySym = 0; iKeySym < nKeySyms; iKeySym++) {
-        uint keySymX = keySyms[iKeySym];
-        xcb_keycode_t *keyCodes = xcb_key_symbols_get_keycode(symbols.get(), keySymX);
-        if (!keyCodes) {
-            continue;
-        }
-
-        int j = 0;
-        while (keyCodes[j] != XCB_NO_SYMBOL) {
-            const xcb_keycode_t keyCodeX = keyCodes[j++];
-            int i = keyCodeX / 8;
-            char mask = 1 << (keyCodeX - (i * 8));
-
-            if (i < 0 || i >= 32) {
-                continue;
-            }
-
-            qCDebug(KWIN_TABBOX) << iKeySym << ": keySymX=0x" << QString::number(keySymX, 16)
-                                 << " i=" << i << " mask=0x" << QString::number(mask, 16)
-                                 << " keymap[i]=0x" << QString::number(keymap[i], 16);
-
-            if (keymap[i] & mask) {
-                depressed = true;
-                break;
-            }
-        }
-
-        free(keyCodes);
-    }
-
-    return depressed;
-}
-
-static bool areModKeysDepressedX11(const QKeySequence &seq)
-{
-    uint rgKeySyms[10];
-    int nKeySyms = 0;
-    Qt::KeyboardModifiers mod = seq[seq.count() - 1].keyboardModifiers();
-
-    if (mod & Qt::ShiftModifier) {
-        rgKeySyms[nKeySyms++] = XK_Shift_L;
-        rgKeySyms[nKeySyms++] = XK_Shift_R;
-    }
-    if (mod & Qt::ControlModifier) {
-        rgKeySyms[nKeySyms++] = XK_Control_L;
-        rgKeySyms[nKeySyms++] = XK_Control_R;
-    }
-    if (mod & Qt::AltModifier) {
-        rgKeySyms[nKeySyms++] = XK_Alt_L;
-        rgKeySyms[nKeySyms++] = XK_Alt_R;
-    }
-    if (mod & Qt::MetaModifier) {
-        // It would take some code to determine whether the Win key
-        // is associated with Super or Meta, so check for both.
-        // See bug #140023 for details.
-        rgKeySyms[nKeySyms++] = XK_Super_L;
-        rgKeySyms[nKeySyms++] = XK_Super_R;
-        rgKeySyms[nKeySyms++] = XK_Meta_L;
-        rgKeySyms[nKeySyms++] = XK_Meta_R;
-    }
-
-    return areKeySymXsDepressed(rgKeySyms, nKeySyms);
-}
-#endif
-
-static bool areModKeysDepressedWayland(const QKeySequence &seq)
-{
     const Qt::KeyboardModifiers mod = seq[seq.count() - 1].keyboardModifiers();
     const Qt::KeyboardModifiers mods = input()->modifiersRelevantForGlobalShortcuts();
 
@@ -783,22 +685,6 @@ static bool areModKeysDepressedWayland(const QKeySequence &seq)
         return true;
     }
     return false;
-}
-
-static bool areModKeysDepressed(const QKeySequence &seq)
-{
-    if (seq.isEmpty()) {
-        return false;
-    }
-#if KWIN_BUILD_X11
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        return areModKeysDepressedWayland(seq);
-    } else {
-        return areModKeysDepressedX11(seq);
-    }
-#else
-    return areModKeysDepressedWayland(seq);
-#endif
 }
 
 void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut, TabBoxMode mode)
@@ -1210,51 +1096,13 @@ Window *TabBox::previousClientStatic(Window *c) const
 
 bool TabBox::establishTabBoxGrab()
 {
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        m_forcedGlobalMouseGrab = true;
-        return true;
-    }
-#if KWIN_BUILD_X11
-    kwinApp()->updateXTime();
-    if (!grabXKeyboard()) {
-        return false;
-    }
-#endif
-    // Don't try to establish a global mouse grab using XGrabPointer, as that would prevent
-    // using Alt+Tab while DND (#44972). However force passive grabs on all windows
-    // in order to catch MouseRelease events and close the tabbox (#67416).
-    // All clients already have passive grabs in their wrapper windows, so check only
-    // the active client, which may not have it.
-    Q_ASSERT(!m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = true;
-    if (Workspace::self()->activeWindow() != nullptr) {
-        Workspace::self()->activeWindow()->updateMouseGrab();
-    }
-#if KWIN_BUILD_X11
-    m_x11EventFilter = std::make_unique<X11Filter>();
-#endif
     return true;
 }
 
 void TabBox::removeTabBoxGrab()
 {
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        m_forcedGlobalMouseGrab = false;
-        return;
-    }
-#if KWIN_BUILD_X11
-    kwinApp()->updateXTime();
-    ungrabXKeyboard();
-#endif
-    Q_ASSERT(m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = false;
-    if (Workspace::self()->activeWindow() != nullptr) {
-        Workspace::self()->activeWindow()->updateMouseGrab();
-    }
-
-#if KWIN_BUILD_X11
-    m_x11EventFilter.reset();
-#endif
 }
 } // namespace TabBox
 } // namespace

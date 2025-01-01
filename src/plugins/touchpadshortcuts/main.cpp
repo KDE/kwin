@@ -18,13 +18,7 @@ class KWIN_EXPORT KeyNotificationFactory : public KWin::PluginFactory
 public:
     std::unique_ptr<KWin::Plugin> create() const override
     {
-        switch (KWin::kwinApp()->operationMode()) {
-        case KWin::Application::OperationModeWayland:
-            return std::make_unique<KWin::TouchpadShortcuts>();
-        case KWin::Application::OperationModeX11:
-        default:
-            return nullptr;
-        }
+        return std::make_unique<KWin::TouchpadShortcuts>();
     }
 };
 

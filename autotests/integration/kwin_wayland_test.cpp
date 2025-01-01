@@ -48,8 +48,8 @@ Q_IMPORT_PLUGIN(KWinIdleTimePoller)
 namespace KWin
 {
 
-WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, char **argv)
-    : Application(mode, argc, argv)
+WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
+    : Application(argc, argv)
 {
     QStandardPaths::setTestModeEnabled(true);
 

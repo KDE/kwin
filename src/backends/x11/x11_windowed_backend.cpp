@@ -165,8 +165,8 @@ bool X11WindowedBackend::initialize()
 
     int screen = m_screenNumber;
     for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(m_connection));
-            it.rem;
-            --screen, xcb_screen_next(&it)) {
+         it.rem;
+         --screen, xcb_screen_next(&it)) {
         if (screen == m_screenNumber) {
             m_screen = it.data;
         }
@@ -259,11 +259,11 @@ void X11WindowedBackend::initXInput()
 
     // verify that the XInput extension is at at least version 2.0
     auto cookie = xcb_input_xi_query_version(m_connection, 2, 2);
-    UniqueCPtr<xcb_input_xi_query_version_reply_t> reply(xcb_input_xi_query_version_reply( m_connection, cookie, nullptr));
+    UniqueCPtr<xcb_input_xi_query_version_reply_t> reply(xcb_input_xi_query_version_reply(m_connection, cookie, nullptr));
     if (!reply) {
         qCDebug(KWIN_X11WINDOWED) << "Failed to init XInput 2.2, trying 2.0";
         auto cookie = xcb_input_xi_query_version(m_connection, 2, 0);
-        reply.reset(xcb_input_xi_query_version_reply( m_connection, cookie, nullptr));
+        reply.reset(xcb_input_xi_query_version_reply(m_connection, cookie, nullptr));
         if (!reply) {
             qCDebug(KWIN_X11WINDOWED) << "Failed to init XInput";
             return;
@@ -378,7 +378,7 @@ void X11WindowedBackend::createOutputs()
 
 static inline qreal fixed1616ToReal(xcb_input_fp1616_t val)
 {
-    return (val)*1.0 / (1 << 16);
+    return (val) * 1.0 / (1 << 16);
 }
 #endif
 

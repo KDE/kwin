@@ -12,14 +12,6 @@
 #include <epoxy/egl.h>
 
 #include "config-kwin.h"
-#if HAVE_GLX
-#include "../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.h"
-#include <epoxy/glx.h>
-
-#ifndef GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV
-#define GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV 0x20F7
-#endif
-#endif
 
 using namespace KWin;
 
@@ -39,8 +31,6 @@ private Q_SLOTS:
     void testEgl();
     void testGles_data();
     void testGles();
-    void testGlx_data();
-    void testGlx();
 };
 
 class MockOpenGLContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
@@ -383,82 +373,6 @@ void OpenGLContextAttributeBuilderTest::testGles()
 
     auto attribs = builder.build();
     QTEST(attribs, "expectedAttribs");
-}
-
-void OpenGLContextAttributeBuilderTest::testGlx_data()
-{
-#if HAVE_GLX
-    QTest::addColumn<bool>("requestVersion");
-    QTest::addColumn<int>("major");
-    QTest::addColumn<int>("minor");
-    QTest::addColumn<bool>("robust");
-    QTest::addColumn<bool>("videoPurge");
-    QTest::addColumn<std::vector<int>>("expectedAttribs");
-
-    QTest::newRow("fallback")
-        << true << 2 << 1 << false << false
-        << std::vector<int>{
-               GLX_CONTEXT_MAJOR_VERSION_ARB, 2,
-               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-               0};
-    QTest::newRow("legacy/robust")
-        << false << 0 << 0 << true << false
-        << std::vector<int>{
-               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-               0};
-    QTest::newRow("legacy/robust/videoPurge")
-        << false << 0 << 0 << true << true
-        << std::vector<int>{
-               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-               GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
-               0};
-    QTest::newRow("core")
-        << true << 3 << 1 << false << false
-        << std::vector<int>{
-               GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-               0};
-    QTest::newRow("core/robust")
-        << true << 3 << 1 << true << false
-        << std::vector<int>{
-               GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-               0};
-    QTest::newRow("core/robust/videoPurge")
-        << true << 3 << 1 << true << true
-        << std::vector<int>{
-               GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-               GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-               GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-               GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-               GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
-               0};
-#endif
-}
-
-void OpenGLContextAttributeBuilderTest::testGlx()
-{
-#if HAVE_GLX
-    QFETCH(bool, requestVersion);
-    QFETCH(int, major);
-    QFETCH(int, minor);
-    QFETCH(bool, robust);
-    QFETCH(bool, videoPurge);
-
-    GlxContextAttributeBuilder builder;
-    if (requestVersion) {
-        builder.setVersion(major, minor);
-    }
-    builder.setRobust(robust);
-    builder.setResetOnVideoMemoryPurge(videoPurge);
-
-    auto attribs = builder.build();
-    QTEST(attribs, "expectedAttribs");
-#endif
 }
 
 QTEST_GUILESS_MAIN(OpenGLContextAttributeBuilderTest)

@@ -122,19 +122,6 @@ if(KWIN_BUILD_X11)
     )
     add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
     ecm_mark_as_test(testXcbWindow)
-
-    ########################################################
-    # Test X11 TimestampUpdate
-    ########################################################
-    add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
-    target_link_libraries(testX11TimestampUpdate
-        KF6::CoreAddons
-        Qt::Test
-        Qt::GuiPrivate
-        kwin
-    )
-    add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)
-    ecm_mark_as_test(testX11TimestampUpdate)
 endif()
 
 ########################################################
@@ -182,9 +169,6 @@ set(testOpenGLContextAttributeBuilder_SRCS
     opengl_context_attribute_builder_test.cpp
 )
 
-if (HAVE_GLX)
-    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.cpp)
-endif()
 add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
 target_link_libraries(testOpenGLContextAttributeBuilder epoxy::epoxy Qt::Test)
 add_test(NAME kwin-testOpenGLContextAttributeBuilder COMMAND testOpenGLContextAttributeBuilder)

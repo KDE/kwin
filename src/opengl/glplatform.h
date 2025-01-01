@@ -138,7 +138,7 @@ enum ChipClass {
 class KWIN_EXPORT GLPlatform
 {
 public:
-    explicit GLPlatform(OpenGLPlatformInterface platformInterface, QByteArrayView openglVersionString, QByteArrayView glslVersionString, QByteArrayView renderer, QByteArrayView vendor);
+    explicit GLPlatform(QByteArrayView openglVersionString, QByteArrayView glslVersionString, QByteArrayView renderer, QByteArrayView vendor);
     ~GLPlatform();
 
     /**
@@ -289,12 +289,6 @@ public:
     bool preferBufferSubData() const;
 
     /**
-     * @returns The OpenGLPlatformInterface currently used
-     * @since 5.0
-     */
-    OpenGLPlatformInterface platformInterface() const;
-
-    /**
      * @returns a human readable form for the @p driver as a QString.
      * @since 4.9
      * @see driver
@@ -336,7 +330,6 @@ private:
     bool m_looseBinding = false;
     bool m_virtualMachine = false;
     bool m_preferBufferSubData = false;
-    OpenGLPlatformInterface m_platformInterface;
 };
 
 } // namespace KWin

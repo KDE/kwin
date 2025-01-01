@@ -142,7 +142,6 @@ class CompositorDBusInterface : public QObject
      * @brief All currently supported OpenGLPlatformInterfaces.
      *
      * Possible values:
-     * @li glx
      * @li egl
      *
      * Values depend on operation mode and compile time options.
