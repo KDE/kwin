@@ -17,12 +17,12 @@
 namespace KWin
 {
 
-class OpenGlContext;
+class EglContext;
 
 class KWIN_EXPORT GLRenderTimeQuery : public RenderTimeQuery
 {
 public:
-    explicit GLRenderTimeQuery(const std::shared_ptr<OpenGlContext> &context);
+    explicit GLRenderTimeQuery(const std::shared_ptr<EglContext> &context);
     ~GLRenderTimeQuery();
 
     void begin();
@@ -34,7 +34,7 @@ public:
     std::optional<RenderTimeSpan> query() override;
 
 private:
-    const std::weak_ptr<OpenGlContext> m_context;
+    const std::weak_ptr<EglContext> m_context;
     bool m_hasResult = false;
 
     struct

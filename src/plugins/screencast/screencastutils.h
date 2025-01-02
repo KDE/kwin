@@ -45,7 +45,7 @@ static void doGrabTexture(GLTexture *texture, QImage *target)
         return;
     }
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     const QSize size = texture->size();
     const bool invertNeeded = context->isOpenGLES() ^ (texture->contentTransform() != OutputTransform::FlipY);
     const bool invertNeededAndSupported = invertNeeded && context->supportsPackInvert();

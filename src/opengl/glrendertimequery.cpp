@@ -7,13 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glrendertimequery.h"
-#include "opengl/glplatform.h"
 #include "utils/common.h"
+#include "opengl/eglcontext.h"
 
 namespace KWin
 {
 
-GLRenderTimeQuery::GLRenderTimeQuery(const std::shared_ptr<OpenGlContext> &context)
+GLRenderTimeQuery::GLRenderTimeQuery(const std::shared_ptr<EglContext> &context)
     : m_context(context)
 {
     if (context->supportsTimerQueries()) {
@@ -26,7 +26,7 @@ GLRenderTimeQuery::~GLRenderTimeQuery()
     if (!m_gpuProbe.query) {
         return;
     }
-    const auto previousContext = OpenGlContext::currentContext();
+    const auto previousContext = EglContext::currentContext();
     const auto context = m_context.lock();
     if (!context || !context->makeCurrent()) {
         qCWarning(KWIN_OPENGL, "Could not delete render time query because no context is current");
@@ -62,7 +62,7 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
 {
     Q_ASSERT(m_hasResult);
     if (m_gpuProbe.query) {
-        const auto previousContext = OpenGlContext::currentContext();
+        const auto previousContext = EglContext::currentContext();
         const auto context = m_context.lock();
         if (!context || !context->makeCurrent()) {
             return std::nullopt;

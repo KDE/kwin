@@ -19,7 +19,7 @@ namespace KWin
 class Output;
 class OpenGLBackend;
 class GLTexture;
-class OpenGlContext;
+class EglContext;
 class EglDisplay;
 
 /**
@@ -50,7 +50,7 @@ public:
 
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
-    virtual OpenGlContext *openglContext() const = 0;
+    virtual EglContext *openglContext() const = 0;
 
     /**
      * @brief Whether the creation of the Backend failed.
