@@ -594,7 +594,6 @@ void Edge::setGeometry(const QRect &geometry)
         }
     }
     m_approachGeometry = QRect(x, y, width, height);
-    doGeometryUpdate();
 
     if (isScreenEdge()) {
         const Output *output = workspace()->outputAt(m_geometry.center());
@@ -618,15 +617,6 @@ void Edge::checkBlocking()
     if (wasTouch != activatesForTouchGesture()) {
         Q_EMIT activatesForTouchGestureChanged();
     }
-    doUpdateBlocking();
-}
-
-void Edge::doUpdateBlocking()
-{
-}
-
-void Edge::doGeometryUpdate()
-{
 }
 
 void Edge::activate()
@@ -634,21 +624,11 @@ void Edge::activate()
     if (activatesForTouchGesture()) {
         m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture.get());
     }
-    doActivate();
-}
-
-void Edge::doActivate()
-{
 }
 
 void Edge::deactivate()
 {
     m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture.get());
-    doDeactivate();
-}
-
-void Edge::doDeactivate()
-{
 }
 
 void Edge::startApproaching()
@@ -657,13 +637,8 @@ void Edge::startApproaching()
         return;
     }
     m_approaching = true;
-    doStartApproaching();
     m_lastApproachingFactor = 0;
     Q_EMIT approaching(border(), 0.0, m_approachGeometry);
-}
-
-void Edge::doStartApproaching()
-{
 }
 
 void Edge::stopApproaching()
@@ -672,13 +647,8 @@ void Edge::stopApproaching()
         return;
     }
     m_approaching = false;
-    doStopApproaching();
     m_lastApproachingFactor = 0;
     Q_EMIT approaching(border(), 0.0, m_approachGeometry);
-}
-
-void Edge::doStopApproaching()
-{
 }
 
 void Edge::updateApproaching(const QPointF &point)

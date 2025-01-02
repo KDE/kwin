@@ -124,12 +124,6 @@ protected:
     ScreenEdges *edges();
     const ScreenEdges *edges() const;
     bool isBlocked() const;
-    virtual void doGeometryUpdate();
-    virtual void doActivate();
-    virtual void doDeactivate();
-    virtual void doStartApproaching();
-    virtual void doStopApproaching();
-    virtual void doUpdateBlocking();
 
 private:
     void activate();
