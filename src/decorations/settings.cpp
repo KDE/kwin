@@ -51,7 +51,7 @@ SettingsImpl::~SettingsImpl() = default;
 
 bool SettingsImpl::isAlphaChannelSupported() const
 {
-    return Compositor::self()->compositing();
+    return true;
 }
 
 bool SettingsImpl::isOnAllDesktopsAvailable() const
