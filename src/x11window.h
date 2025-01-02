@@ -225,7 +225,6 @@ public:
     using Window::keyPressEvent;
     void keyPressEvent(uint key_code, xcb_timestamp_t time); // FRAME ??
     void updateMouseGrab() override;
-    xcb_window_t moveResizeGrabWindow() const;
 
     QPointF gravityAdjustment(xcb_gravity_t gravity) const;
     const QPointF calculateGravitation(bool invert) const;
@@ -453,7 +452,6 @@ private:
     xcb_window_t m_wmClientLeader = XCB_WINDOW_NONE;
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;
-    Xcb::Window m_moveResizeGrabWindow;
     bool move_resize_has_keyboard_grab;
     bool m_managed;
 
@@ -641,11 +639,6 @@ inline QRectF X11Window::resizeWithChecks(const QRectF &geometry, const QSizeF &
 inline bool X11Window::hasUserTimeSupport() const
 {
     return info->userTime() != -1U;
-}
-
-inline xcb_window_t X11Window::moveResizeGrabWindow() const
-{
-    return m_moveResizeGrabWindow;
 }
 
 inline bool X11Window::hiddenPreview() const

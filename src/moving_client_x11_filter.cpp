@@ -27,7 +27,7 @@ bool MovingClientX11Filter::event(xcb_generic_event_t *event)
         return false;
     }
     auto testWindow = [client, event](xcb_window_t window) {
-        return client->moveResizeGrabWindow() == window && client->windowEvent(event);
+        return client->frameId() == window && client->windowEvent(event);
     };
 
     const uint8_t eventType = event->response_type & ~0x80;

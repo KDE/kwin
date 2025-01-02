@@ -1105,7 +1105,7 @@ bool X11Window::buttonReleaseEvent(xcb_window_t w, int button, int state, int x,
         xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
         return true;
     }
-    if (w != frameId() && w != inputId() && w != moveResizeGrabWindow()) {
+    if (w != frameId() && w != inputId()) {
         return true;
     }
     if (w == frameId() && workspace()->userActionsMenu() && workspace()->userActionsMenu()->isShown()) {
@@ -1141,7 +1141,7 @@ bool X11Window::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x
         QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
         QCoreApplication::instance()->sendEvent(decoration(), &event);
     }
-    if (w != frameId() && w != inputId() && w != moveResizeGrabWindow()) {
+    if (w != frameId() && w != inputId()) {
         return true; // care only about the whole frame
     }
     if (!isInteractiveMoveResizePointerButtonDown()) {
@@ -1160,10 +1160,6 @@ bool X11Window::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x
             updateCursor();
         }
         return false;
-    }
-    if (w == moveResizeGrabWindow()) {
-        x = this->x(); // translate from grab window to local coords
-        y = this->y();
     }
 
     if (!isInteractiveMoveResize()) {
