@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-21 02:55+0000\n"
-"PO-Revision-Date: 2024-08-23 21:45+0200\n"
+"PO-Revision-Date: 2024-12-27 22:09+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -695,12 +695,12 @@ msgstr "Tablojdo"
 #: debug_console.cpp:530
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr "Tablojda Kusenetbutono"
+msgstr "Tabuleta Platbutono"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr "Tablojda Panelstrio"
+msgstr "Tabuleta Platstrio"
 
 #: debug_console.cpp:544 debug_console.cpp:558
 #, kde-format
@@ -4295,35 +4295,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgid "Red"
-#~ msgstr "Ruĝa"
-
-#~ msgid "Green"
-#~ msgstr "Verda"
-
-#~ msgid "Blue"
-#~ msgstr "Blua"
-
-#~ msgid "Purple"
-#~ msgstr "Purpura"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "Reĝimo:"
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "Protanopia (ruĝa malforta)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "Deuteranopia (verda malforta)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "Tritanopia (blu-flava)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "Intenseco:"

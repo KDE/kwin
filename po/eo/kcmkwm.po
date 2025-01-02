@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-24 02:49+0000\n"
-"PO-Revision-Date: 2024-01-07 21:26+0100\n"
+"PO-Revision-Date: 2024-12-20 16:53+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -49,7 +49,7 @@ msgstr ""
 #: actions.ui:46 actions.ui:86 actions.ui:126
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Aktivigu, levi kaj preterpasi klakon"
+msgstr "Aktivigi, levi kaj transdoni klakon"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -57,7 +57,7 @@ msgstr "Aktivigu, levi kaj preterpasi klakon"
 #: actions.ui:51 actions.ui:91 actions.ui:131
 #, kde-format
 msgid "Activate and pass click"
-msgstr "Aktivigi kaj pasi klakon"
+msgstr "Aktivigi kaj transdoni klakon"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -1261,33 +1261,3 @@ msgstr ""
 "ŝtelado</em> kaj la <em>langujo ('Alt+Tab')</em> kontraŭdiras la aktivigan "
 "politikon kaj ne funkcios. Vi tre verŝajne volas uzi <em>Foku sekvas muson "
 "(musan prioritaton)</em> anstataŭe!"
-
-#~ msgid "&Special windows:"
-#~ msgstr "&Specialaj fenestroj:"
-
-#~ msgid ""
-#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
-#~ "inactive applications will be hidden and will be shown only when the "
-#~ "application becomes active. Note that applications have to mark the "
-#~ "windows with the proper window type for this feature to work."
-#~ msgstr ""
-#~ "Kiam ebligita, fenestroj de utilaĵoj (ilofenestroj, malfiksitaj "
-#~ "menuoj,...) de neaktivaj aplikaĵoj estos kaŝitaj kaj nur montriĝos kiam "
-#~ "la aplikaĵo aktiviĝas. Notu, aplikaĵoj devas indiki akurate siajn "
-#~ "utilaĵajn fenestrajn tipojn."
-
-#~ msgid "Hide utility windows for inactive applications"
-#~ msgstr "Kaŝi fenestrojn de utilaĵoj por neaktivaj aplikaĵoj"
-
-#~ msgid ""
-#~ "When this option is enabled, the active screen (where new windows appear, "
-#~ "for example) is the screen containing the mouse pointer. When disabled, "
-#~ "the active screen is the screen containing the focused window."
-#~ msgstr ""
-#~ "Kiam ĉi tiu opcio estas ebligita, la aktiva ekrano (kie aperas novaj "
-#~ "fenestroj, ekzemple) estas la ekrano enhavanta la musmontrilon. Kiam "
-#~ "estas malŝaltita, la aktiva ekrano estas la ekrano enhavanta la fokusitan "
-#~ "fenestron."
-
-#~ msgid "Active screen follows &mouse"
-#~ msgstr "Aktiva ekrano sekvas &muson"
