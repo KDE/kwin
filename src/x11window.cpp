@@ -288,7 +288,6 @@ X11Window::X11Window()
     , m_originalTransientForId(XCB_WINDOW_NONE)
     , shade_below(nullptr)
     , m_motif(atoms->motif_wm_hints)
-    , blocks_compositing(false)
     , in_group(nullptr)
     , ping_timer(nullptr)
     , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
@@ -459,7 +458,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         m_syncRequest.alarm = XCB_NONE;
     }
 
-    unblockCompositing();
     unref();
 }
 
@@ -509,7 +507,6 @@ void X11Window::destroyWindow()
         m_syncRequest.alarm = XCB_NONE;
     }
 
-    unblockCompositing();
     unref();
 }
 
@@ -601,7 +598,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     const NET::Properties properties =
         NET::WMDesktop | NET::WMState | NET::WMWindowType | NET::WMStrut | NET::WMName | NET::WMIconGeometry | NET::WMIcon | NET::WMPid | NET::WMIconName;
     const NET::Properties2 properties2 =
-        NET::WM2BlockCompositing | NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2UserTime | NET::WM2StartupId | NET::WM2ExtendedStrut | NET::WM2Opacity | NET::WM2FullscreenMonitors | NET::WM2GroupLeader | NET::WM2Urgency | NET::WM2Input | NET::WM2Protocols | NET::WM2InitialMappingState | NET::WM2IconPixmap | NET::WM2OpaqueRegion | NET::WM2DesktopFileName | NET::WM2GTKFrameExtents | NET::WM2GTKApplicationId;
+        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2UserTime | NET::WM2StartupId | NET::WM2ExtendedStrut | NET::WM2Opacity | NET::WM2FullscreenMonitors | NET::WM2GroupLeader | NET::WM2Urgency | NET::WM2Input | NET::WM2Protocols | NET::WM2InitialMappingState | NET::WM2IconPixmap | NET::WM2OpaqueRegion | NET::WM2DesktopFileName | NET::WM2GTKFrameExtents | NET::WM2GTKApplicationId;
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
@@ -630,17 +627,13 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     getSyncCounter();
     setCaption(readName());
 
-    if (Compositor::compositing()) {
-        // Sending ConfigureNotify is done when setting mapping state below, getting the
-        // first sync response means window is ready for compositing.
-        //
-        // The sync request will block wl_surface commits, and with Xwayland, it is really
-        // important that wl_surfaces commits are blocked before the frame window is mapped.
-        // Otherwise Xwayland can attach a buffer before the sync request is acked.
-        sendSyncRequest();
-    } else {
-        ready_for_painting = true; // set to true in case compositing is turned on later
-    }
+    // Sending ConfigureNotify is done when setting mapping state below, getting the
+    // first sync response means window is ready for compositing.
+    //
+    // The sync request will block wl_surface commits, and with Xwayland, it is really
+    // important that wl_surfaces commits are blocked before the frame window is mapped.
+    // Otherwise Xwayland can attach a buffer before the sync request is acked.
+    sendSyncRequest();
 
     setupWindowRules();
     connect(this, &X11Window::windowClassChanged, this, &X11Window::evaluateWindowRules);
@@ -1155,7 +1148,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     workspace()->rulebook()->discardUsed(this, false); // Remove ApplyNow rules
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
-    setBlockingCompositing(info->isBlockingCompositing());
     readShowOnScreenEdge(showOnScreenEdgeCookie);
 
     setupWindowManagementInterface();
@@ -1783,7 +1775,6 @@ void X11Window::internalHide()
 
 void X11Window::internalKeep()
 {
-    Q_ASSERT(Compositor::compositing());
     if (mapping_state == Kept) {
         return;
     }
@@ -2469,34 +2460,6 @@ bool X11Window::acceptsFocus() const
 void X11Window::doSetQuickTileMode()
 {
     commitTile(requestedTile());
-}
-
-void X11Window::setBlockingCompositing(bool block)
-{
-    const bool blocks = rules()->checkBlockCompositing(block && options->windowsBlockCompositing());
-    if (blocks) {
-        blockCompositing();
-    } else {
-        unblockCompositing();
-    }
-}
-
-void X11Window::blockCompositing()
-{
-    if (blocks_compositing) {
-        return;
-    }
-    blocks_compositing = true;
-    Compositor::self()->inhibit(this);
-}
-
-void X11Window::unblockCompositing()
-{
-    if (!blocks_compositing) {
-        return;
-    }
-    blocks_compositing = false;
-    Compositor::self()->uninhibit(this);
 }
 
 void X11Window::updateAllowedActions(bool force)
@@ -4782,7 +4745,6 @@ void X11Window::applyWindowRules()
 {
     Window::applyWindowRules();
     updateAllowedActions();
-    setBlockingCompositing(info->isBlockingCompositing());
 }
 
 bool X11Window::supportsWindowRules() const

@@ -80,38 +80,12 @@ public:
         return m_backend.get();
     }
 
-    /**
-     * @brief Static check to test whether the Compositor is available and active.
-     *
-     * @return bool @c true if there is a Compositor and it is active, @c false otherwise
-     */
-    static bool compositing()
-    {
-        return s_compositor != nullptr && s_compositor->isActive();
-    }
-
 #if KWIN_BUILD_X11
     // for delayed supportproperty management of effects
     void keepSupportProperty(xcb_atom_t atom);
     void removeSupportProperty(xcb_atom_t atom);
 #endif
 
-    /**
-     * Whether Compositing is possible in the Platform.
-     * Returning @c false in this method makes only sense if requiresCompositing returns @c false.
-     *
-     * The default implementation returns @c true.
-     * @see requiresCompositing
-     */
-    bool compositingPossible() const;
-    /**
-     * Returns a user facing text explaining why compositing is not possible in case
-     * compositingPossible returns @c false.
-     *
-     * The default implementation returns an empty string.
-     * @see compositingPossible
-     */
-    QString compositingNotPossibleReason() const;
     /**
      * Whether OpenGL compositing is broken.
      * The Platform can implement this method if it is able to detect whether OpenGL compositing
@@ -121,9 +95,6 @@ public:
      * @see createOpenGLSafePoint
      */
     bool openGLCompositingIsBroken() const;
-
-    void inhibit(Window *window);
-    void uninhibit(Window *window);
 
     void createRenderer();
 
