@@ -59,7 +59,6 @@ target_sources(kwin PRIVATE
     core/outputbackend.cpp
     core/outputconfiguration.cpp
     core/outputlayer.cpp
-    core/overlaywindow.cpp
     core/renderbackend.cpp
     core/renderjournal.cpp
     core/renderlayer.cpp
@@ -546,7 +545,6 @@ install(FILES
     core/outputbackend.h
     core/outputconfiguration.h
     core/outputlayer.h
-    core/overlaywindow.h
     core/pixelgrid.h
     core/renderbackend.h
     core/renderjournal.h
