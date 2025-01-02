@@ -9,9 +9,9 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "opengl/eglcontext.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
-#include "opengl/openglcontext.h"
 #include "scene/windowitem.h"
 
 namespace KWin
@@ -84,7 +84,7 @@ void OffscreenEffect::unredirect(EffectWindow *window)
         return;
     }
 
-    if (!OpenGlContext::currentContext()) {
+    if (!EglContext::currentContext()) {
         effects->openglContext()->makeCurrent();
     }
 
@@ -397,7 +397,7 @@ void CrossFadeEffect::unredirect(EffectWindow *window)
         return;
     }
 
-    if (!OpenGlContext::currentContext()) {
+    if (!EglContext::currentContext()) {
         effects->openglContext()->makeCurrent();
     }
 
