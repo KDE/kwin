@@ -253,10 +253,6 @@ public:
         return m_windows;
     }
 
-#if KWIN_BUILD_X11
-    void stackScreenEdgesUnderOverrideRedirect();
-#endif
-
     SessionManager *sessionManager() const;
 
     /**

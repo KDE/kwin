@@ -122,20 +122,6 @@ void Workspace::updateStackingOrder(bool propagate_new_windows)
 }
 
 #if KWIN_BUILD_X11
-/**
- * Some fullscreen effects have to raise the screenedge on top of an input window, thus all windows
- * this function puts them back where they belong for regular use and is some cheap variant of
- * the regular propagateWindows function in that it completely ignores managed windows and everything
- * else and also does not update the NETWM property.
- * Called from Effects::destroyInputWindow so far.
- */
-void Workspace::stackScreenEdgesUnderOverrideRedirect()
-{
-    if (!rootInfo()) {
-        return;
-    }
-    Xcb::restackWindows(QList<xcb_window_t>() << rootInfo()->supportWindow() << workspace()->screenEdges()->windows());
-}
 
 /**
  * Propagates the managed windows to the world.
@@ -156,8 +142,6 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     // it ensures that no window will be ever shown above override-redirect
     // windows (e.g. popups).
     newWindowStack << rootInfo()->supportWindow();
-
-    newWindowStack << workspace()->screenEdges()->windows();
 
     newWindowStack << manual_overlays;
 

@@ -92,21 +92,6 @@ public:
     bool activatesForPointer() const;
     bool activatesForTouchGesture() const;
 
-#if KWIN_BUILD_X11
-    /**
-     * The window id of the native window representing the edge.
-     * Default implementation returns @c 0, which means no window.
-     */
-    virtual quint32 window() const;
-    /**
-     * The approach window is a special window to notice when get close to the screen border but
-     * not yet triggering the border.
-     *
-     * The default implementation returns @c 0, which means no window.
-     */
-    virtual quint32 approachWindow() const;
-#endif
-
 public Q_SLOTS:
     void reserve();
     void unreserve();
@@ -124,12 +109,6 @@ protected:
     ScreenEdges *edges();
     const ScreenEdges *edges() const;
     bool isBlocked() const;
-    virtual void doGeometryUpdate();
-    virtual void doActivate();
-    virtual void doDeactivate();
-    virtual void doStartApproaching();
-    virtual void doStopApproaching();
-    virtual void doUpdateBlocking();
 
 private:
     void activate();
@@ -326,20 +305,7 @@ public:
      * @param o Qt orientations
      */
     void reserveDesktopSwitching(bool isToReserve, Qt::Orientations o);
-    /**
-     * Raise electric border windows to the real top of the screen. We only need
-     * to do this if an effect input window is active.
-     */
-    void ensureOnTop();
     bool isEntered(const QPointF &pos, std::chrono::microseconds timestamp);
-
-#if KWIN_BUILD_X11
-    /**
-     * Returns a QList of all existing screen edge windows
-     * @return all existing screen edge windows in a QList
-     */
-    QList<xcb_window_t> windows() const;
-#endif
 
     bool isDesktopSwitching() const;
     bool isDesktopSwitchingMovingClients() const;
@@ -368,10 +334,6 @@ public:
         return m_gestureRecognizer;
     }
 
-#if KWIN_BUILD_X11
-    bool handleDndNotify(xcb_window_t window, const QPoint &point);
-    bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const std::chrono::microseconds &timestamp);
-#endif
     bool remainActiveOnFullscreen() const;
     const std::vector<std::unique_ptr<Edge>> &edges() const;
 

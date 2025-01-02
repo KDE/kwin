@@ -594,7 +594,6 @@ void Edge::setGeometry(const QRect &geometry)
         }
     }
     m_approachGeometry = QRect(x, y, width, height);
-    doGeometryUpdate();
 
     if (isScreenEdge()) {
         const Output *output = workspace()->outputAt(m_geometry.center());
@@ -618,15 +617,6 @@ void Edge::checkBlocking()
     if (wasTouch != activatesForTouchGesture()) {
         Q_EMIT activatesForTouchGestureChanged();
     }
-    doUpdateBlocking();
-}
-
-void Edge::doUpdateBlocking()
-{
-}
-
-void Edge::doGeometryUpdate()
-{
 }
 
 void Edge::activate()
@@ -634,21 +624,11 @@ void Edge::activate()
     if (activatesForTouchGesture()) {
         m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture.get());
     }
-    doActivate();
-}
-
-void Edge::doActivate()
-{
 }
 
 void Edge::deactivate()
 {
     m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture.get());
-    doDeactivate();
-}
-
-void Edge::doDeactivate()
-{
 }
 
 void Edge::startApproaching()
@@ -657,13 +637,8 @@ void Edge::startApproaching()
         return;
     }
     m_approaching = true;
-    doStartApproaching();
     m_lastApproachingFactor = 0;
     Q_EMIT approaching(border(), 0.0, m_approachGeometry);
-}
-
-void Edge::doStartApproaching()
-{
 }
 
 void Edge::stopApproaching()
@@ -672,13 +647,8 @@ void Edge::stopApproaching()
         return;
     }
     m_approaching = false;
-    doStopApproaching();
     m_lastApproachingFactor = 0;
     Q_EMIT approaching(border(), 0.0, m_approachGeometry);
-}
-
-void Edge::doStopApproaching()
-{
 }
 
 void Edge::updateApproaching(const QPointF &point)
@@ -727,18 +697,6 @@ void Edge::updateApproaching(const QPointF &point)
         stopApproaching();
     }
 }
-
-#if KWIN_BUILD_X11
-quint32 Edge::window() const
-{
-    return 0;
-}
-
-quint32 Edge::approachWindow() const
-{
-    return 0;
-}
-#endif
 
 void Edge::setBorder(ElectricBorder border)
 {
@@ -1507,88 +1465,6 @@ bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timest
     }
     return activated;
 }
-
-#if KWIN_BUILD_X11
-bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, const std::chrono::microseconds &timestamp)
-{
-    bool activated = false;
-    bool activatedForClient = false;
-    for (const auto &edge : m_edges) {
-        if (!edge || edge->window() == XCB_WINDOW_NONE) {
-            continue;
-        }
-        if (!edge->isReserved() || edge->isBlocked()) {
-            continue;
-        }
-        if (!edge->activatesForPointer()) {
-            continue;
-        }
-        if (edge->window() == window) {
-            if (edge->check(point, timestamp)) {
-                if (edge->client()) {
-                    activatedForClient = true;
-                }
-            }
-            activated = true;
-            break;
-        }
-        if (edge->approachWindow() == window) {
-            edge->startApproaching();
-            // TODO: if it's a corner, it should also trigger for other windows
-            return true;
-        }
-    }
-    if (activatedForClient) {
-        for (const auto &edge : m_edges) {
-            if (edge->client()) {
-                edge->markAsTriggered(point, timestamp);
-            }
-        }
-    }
-    return activated;
-}
-#endif
-
-void ScreenEdges::ensureOnTop()
-{
-#if KWIN_BUILD_X11
-    Xcb::restackWindowsWithRaise(windows());
-#endif
-}
-
-#if KWIN_BUILD_X11
-bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
-{
-    for (const auto &edge : m_edges) {
-        if (!edge || edge->window() == XCB_WINDOW_NONE) {
-            continue;
-        }
-        if (edge->isReserved() && edge->window() == window) {
-            kwinApp()->updateXTime();
-            edge->check(point, std::chrono::milliseconds(xTime()), true);
-            return true;
-        }
-    }
-    return false;
-}
-
-QList<xcb_window_t> ScreenEdges::windows() const
-{
-    QList<xcb_window_t> wins;
-    for (const auto &edge : m_edges) {
-        xcb_window_t w = edge->window();
-        if (w != XCB_WINDOW_NONE) {
-            wins.append(w);
-        }
-        // TODO:  lambda
-        w = edge->approachWindow();
-        if (w != XCB_WINDOW_NONE) {
-            wins.append(w);
-        }
-    }
-    return wins;
-}
-#endif
 
 void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)
 {
