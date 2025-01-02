@@ -66,68 +66,24 @@ namespace KWin
 
 static uint32_t frameEventMask()
 {
-    if (waylandServer()) {
-        return XCB_EVENT_MASK_FOCUS_CHANGE
-            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
-            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
-            | XCB_EVENT_MASK_PROPERTY_CHANGE;
-    } else {
-        return XCB_EVENT_MASK_FOCUS_CHANGE
-            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
-            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
-            | XCB_EVENT_MASK_PROPERTY_CHANGE
-            | XCB_EVENT_MASK_KEY_PRESS
-            | XCB_EVENT_MASK_KEY_RELEASE
-            | XCB_EVENT_MASK_ENTER_WINDOW
-            | XCB_EVENT_MASK_LEAVE_WINDOW
-            | XCB_EVENT_MASK_BUTTON_PRESS
-            | XCB_EVENT_MASK_BUTTON_RELEASE
-            | XCB_EVENT_MASK_BUTTON_MOTION
-            | XCB_EVENT_MASK_POINTER_MOTION
-            | XCB_EVENT_MASK_KEYMAP_STATE
-            | XCB_EVENT_MASK_EXPOSURE
-            | XCB_EVENT_MASK_VISIBILITY_CHANGE;
-    }
+    return XCB_EVENT_MASK_FOCUS_CHANGE
+        | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+        | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+        | XCB_EVENT_MASK_PROPERTY_CHANGE;
 }
 
 static uint32_t wrapperEventMask()
 {
-    if (waylandServer()) {
-        return XCB_EVENT_MASK_FOCUS_CHANGE
-            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
-            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
-            | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
-    } else {
-        return XCB_EVENT_MASK_FOCUS_CHANGE
-            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
-            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
-            | XCB_EVENT_MASK_KEY_PRESS
-            | XCB_EVENT_MASK_KEY_RELEASE
-            | XCB_EVENT_MASK_ENTER_WINDOW
-            | XCB_EVENT_MASK_LEAVE_WINDOW
-            | XCB_EVENT_MASK_BUTTON_PRESS
-            | XCB_EVENT_MASK_BUTTON_RELEASE
-            | XCB_EVENT_MASK_BUTTON_MOTION
-            | XCB_EVENT_MASK_POINTER_MOTION
-            | XCB_EVENT_MASK_KEYMAP_STATE
-            | XCB_EVENT_MASK_EXPOSURE
-            | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
-    }
+    return XCB_EVENT_MASK_FOCUS_CHANGE
+        | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+        | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+        | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
 }
 
 static uint32_t clientEventMask()
 {
-    if (waylandServer()) {
-        return XCB_EVENT_MASK_FOCUS_CHANGE
-            | XCB_EVENT_MASK_PROPERTY_CHANGE;
-    } else {
-        return XCB_EVENT_MASK_FOCUS_CHANGE
-            | XCB_EVENT_MASK_PROPERTY_CHANGE
-            | XCB_EVENT_MASK_ENTER_WINDOW
-            | XCB_EVENT_MASK_LEAVE_WINDOW
-            | XCB_EVENT_MASK_KEY_PRESS
-            | XCB_EVENT_MASK_KEY_RELEASE;
-    }
+    return XCB_EVENT_MASK_FOCUS_CHANGE
+        | XCB_EVENT_MASK_PROPERTY_CHANGE;
 }
 
 // window types that are supported as normal windows (i.e. KWin actually manages them)
@@ -282,7 +238,6 @@ X11Window::X11Window()
     , m_frame()
     , m_activityUpdatesBlocked(false)
     , m_blockedActivityUpdatesRequireTransients(false)
-    , move_resize_has_keyboard_grab(false)
     , m_managed(false)
     , m_transientForId(XCB_WINDOW_NONE)
     , m_originalTransientForId(XCB_WINDOW_NONE)
@@ -297,7 +252,6 @@ X11Window::X11Window()
     , sm_stacking_order(-1)
     , activitiesDefined(false)
     , sessionActivityOverride(false)
-    , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
 {
     setOutput(workspace()->activeOutput());
@@ -326,7 +280,6 @@ X11Window::X11Window()
     max_mode = MaximizeRestore;
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Window::updateCaption);
-    connect(options, &Options::configChanged, this, &X11Window::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
     connect(this, &X11Window::shapeChanged, this, &X11Window::discardShapeRegion);
 
@@ -1226,8 +1179,6 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
     m_frame.selectInput(frameEventMask());
     m_wrapper.selectInput(wrapperEventMask());
     m_client.selectInput(clientEventMask());
-
-    updateMouseGrab();
 }
 
 void X11Window::updateDecoration(bool check_workspace_pos, bool force)
@@ -1292,7 +1243,6 @@ void X11Window::destroyDecoration()
         setDecoration(nullptr);
         moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
     }
-    m_decoInputExtent.reset();
 }
 
 void X11Window::detectNoBorder()
@@ -1459,58 +1409,13 @@ void X11Window::updateShape()
     Q_EMIT shapeChanged();
 }
 
-static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
-
-void X11Window::cleanupX11()
-{
-    shape_helper_window.reset();
-}
-
 void X11Window::updateInputShape()
 {
     if (hiddenPreview()) { // Sets it to none, don't change
         return;
     }
     if (Xcb::Extensions::self()->isShapeInputAvailable()) {
-        xcb_connection_t *c = kwinApp()->x11Connection();
-        if (waylandServer()) {
-            xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT, frameId(), 0, 0, window());
-        } else {
-            // There appears to be no way to find out if a window has input
-            // shape set or not, so always propagate the input shape
-            // (it's the same like the bounding shape by default).
-            // Also, build the shape using a helper window, not directly
-            // in the frame window, because the sequence set-shape-to-frame,
-            // remove-shape-of-client, add-input-shape-of-client has the problem
-            // that after the second step there's a hole in the input shape
-            // until the real shape of the client is added and that can make
-            // the window lose focus (which is a problem with mouse focus policies)
-            // TODO: It seems there is, after all - XShapeGetRectangles() - but maybe this is better
-            if (!shape_helper_window.isValid()) {
-                shape_helper_window.create(QRect(0, 0, 1, 1));
-            }
-            shape_helper_window.resize(m_frame.size());
-            xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
-                              shape_helper_window, 0, 0, frameId());
-            xcb_shape_combine(c,
-                              XCB_SHAPE_SO_SUBTRACT,
-                              XCB_SHAPE_SK_INPUT,
-                              XCB_SHAPE_SK_BOUNDING,
-                              shape_helper_window,
-                              m_wrapper.x(),
-                              m_wrapper.y(),
-                              window());
-            xcb_shape_combine(c,
-                              XCB_SHAPE_SO_UNION,
-                              XCB_SHAPE_SK_INPUT,
-                              XCB_SHAPE_SK_INPUT,
-                              shape_helper_window,
-                              m_wrapper.x(),
-                              m_wrapper.y(),
-                              window());
-            xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
-                              frameId(), 0, 0, shape_helper_window);
-        }
+        xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT, frameId(), 0, 0, window());
     }
 }
 
@@ -1698,10 +1603,6 @@ void X11Window::updateVisibility()
         return;
     }
     if (isHiddenByShowDesktop()) {
-        if (waylandServer()) {
-            return;
-        }
-        internalKeep();
         return;
     }
     setSkipTaskbar(originalSkipTaskbar()); // Reset from 'hidden'
@@ -1753,7 +1654,6 @@ void X11Window::internalShow()
         map();
     }
     if (old == Kept) {
-        m_decoInputExtent.map();
         updateHiddenPreview();
     }
 }
@@ -1783,7 +1683,6 @@ void X11Window::internalKeep()
     if (old == Unmapped || old == Withdrawn) {
         map();
     }
-    m_decoInputExtent.unmap();
     if (isActive()) {
         workspace()->focusToNull(); // get rid of input focus, bug #317484
     }
@@ -1801,7 +1700,6 @@ void X11Window::map()
     if (!isShade()) {
         m_wrapper.map();
         m_client.map();
-        m_decoInputExtent.map();
         exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
     } else {
         exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
@@ -1823,7 +1721,6 @@ void X11Window::unmap()
     m_frame.unmap();
     m_wrapper.unmap();
     m_client.unmap();
-    m_decoInputExtent.unmap();
     m_wrapper.selectInput(wrapperEventMask());
     exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
 }
@@ -2730,9 +2627,6 @@ QSizeF X11Window::nextClientSizeToFrameSize(const QSizeF &size) const
 
 QRectF X11Window::nextFrameRectToBufferRect(const QRectF &rect) const
 {
-    if (!waylandServer() && isDecorated()) {
-        return rect;
-    }
     return nextFrameRectToClientRect(rect);
 }
 
@@ -2878,10 +2772,6 @@ void X11Window::ackSync()
         m_syncRequest.timeout->stop();
     }
 
-    // With Xwayland, the sync request will be completed after the wl_surface is committed.
-    if (!waylandServer()) {
-        finishSync();
-    }
     setAllowCommits(true);
 }
 
@@ -3790,10 +3680,6 @@ void X11Window::handleCommitted()
 
 void X11Window::setAllowCommits(bool allow)
 {
-    if (!waylandServer()) {
-        return;
-    }
-
     static bool disabled = qEnvironmentVariableIntValue("KWIN_NO_XWAYLAND_ALLOW_COMMITS") == 1;
     if (disabled) {
         return;
@@ -4304,20 +4190,9 @@ void X11Window::configure(const QRect &nativeFrame, const QRect &nativeWrapper, 
             }
         }
 
-        // TODO: This is not required on wayland, keep it until we support Xorg session.
-        if (is_shape) {
-            if (!isDecorated()) {
-                xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING,
-                                  XCB_SHAPE_SK_BOUNDING, frameId(), m_wrapper.x(), m_wrapper.y(), window());
-            }
-        }
-
         updateInputShape();
     } else if (m_frame.position() != nativeFrame.topLeft()) {
         m_frame.move(nativeFrame.topLeft());
-        if (m_decoInputExtent.isValid()) {
-            m_decoInputExtent.move(m_frame.position() + input_offset);
-        }
         sendSyntheticConfigureNotify();
     }
 }

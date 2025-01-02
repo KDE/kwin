@@ -136,9 +136,6 @@ static xcb_window_t findEventWindow(xcb_generic_event_t *event)
         if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
             return reinterpret_cast<xcb_shape_notify_event_t *>(event)->affected_window;
         }
-        if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
-            return reinterpret_cast<xcb_damage_notify_event_t *>(event)->drawable;
-        }
         return XCB_WINDOW_NONE;
     }
 }
@@ -161,10 +158,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 return true;
             }
         } else if (X11Window *window = findClient(Predicate::FrameIdMatch, eventWindow)) {
-            if (window->windowEvent(e)) {
-                return true;
-            }
-        } else if (X11Window *window = findClient(Predicate::InputIdMatch, eventWindow)) {
             if (window->windowEvent(e)) {
                 return true;
             }
@@ -461,8 +454,6 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
     case XCB_BUTTON_PRESS: {
         const auto *event = reinterpret_cast<xcb_button_press_event_t *>(e);
         updateUserTime(event->time);
-        buttonPressEvent(event->event, event->detail, event->state,
-                         event->event_x, event->event_y, event->root_x, event->root_y, event->time);
         break;
     }
     case XCB_KEY_RELEASE:
@@ -471,12 +462,9 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         // would appear as user input to the currently active window
         break;
     case XCB_BUTTON_RELEASE: {
-        const auto *event = reinterpret_cast<xcb_button_release_event_t *>(e);
         // don't update user time on releases
         // e.g. if the user presses Alt+F2, the Alt release
         // would appear as user input to the currently active window
-        buttonReleaseEvent(event->event, event->detail, event->state,
-                           event->event_x, event->event_y, event->root_x, event->root_y);
         break;
     }
     case XCB_MOTION_NOTIFY: {
@@ -487,14 +475,11 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         int root_x = Xcb::fromXNative(event->root_x);
         int root_y = Xcb::fromXNative(event->root_y);
 
-        motionNotifyEvent(event->event, event->state,
-                          x, y, root_x, root_y);
         workspace()->updateFocusMousePosition(QPointF(root_x, root_y));
         break;
     }
     case XCB_ENTER_NOTIFY: {
         auto *event = reinterpret_cast<xcb_enter_notify_event_t *>(e);
-        enterNotifyEvent(event);
         // MotionNotify is guaranteed to be generated only if the mouse
         // move start and ends in the window; for cases when it only
         // starts or only ends there, Enter/LeaveNotify are generated.
@@ -505,23 +490,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         int root_x = Xcb::fromXNative(event->root_x);
         int root_y = Xcb::fromXNative(event->root_y);
 
-        motionNotifyEvent(event->event, event->state,
-                          x, y, root_x, root_y);
         workspace()->updateFocusMousePosition(QPointF(root_x, root_y));
-        break;
-    }
-    case XCB_LEAVE_NOTIFY: {
-        auto *event = reinterpret_cast<xcb_leave_notify_event_t *>(e);
-
-        int x = Xcb::fromXNative(event->event_x);
-        int y = Xcb::fromXNative(event->event_y);
-        int root_x = Xcb::fromXNative(event->root_x);
-        int root_y = Xcb::fromXNative(event->root_y);
-        motionNotifyEvent(event->event, event->state,
-                          x, y, root_x, root_y);
-        leaveNotifyEvent(event);
-        // not here, it'd break following enter notify handling
-        // workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
         break;
     }
     case XCB_FOCUS_IN:
@@ -535,14 +504,6 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
     case XCB_CLIENT_MESSAGE:
         clientMessageEvent(reinterpret_cast<xcb_client_message_event_t *>(e));
         break;
-    case XCB_EXPOSE: {
-        xcb_expose_event_t *event = reinterpret_cast<xcb_expose_event_t *>(e);
-        if (event->window == frameId() && !Compositor::self()->isActive()) {
-            // TODO: only repaint required areas
-            triggerDecorationRepaint();
-        }
-        break;
-    }
     default:
         if (eventType == Xcb::Extensions::self()->shapeNotifyEvent() && reinterpret_cast<xcb_shape_notify_event_t *>(e)->affected_window == window()) {
             detectShape(); // workaround for #19644
@@ -775,400 +736,6 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
     }
 }
 
-void X11Window::enterNotifyEvent(xcb_enter_notify_event_t *e)
-{
-    if (waylandServer()) {
-        return;
-    }
-    if (e->event != frameId()) {
-        return; // care only about entering the whole frame
-    }
-
-    const bool mouseDrivenFocus = !options->focusPolicyIsReasonable() || (options->focusPolicy() == Options::FocusFollowsMouse && options->isNextFocusPrefersMouse());
-    if (e->mode == XCB_NOTIFY_MODE_NORMAL || (e->mode == XCB_NOTIFY_MODE_UNGRAB && mouseDrivenFocus)) {
-        pointerEnterEvent(QPoint(e->root_x, e->root_y));
-        return;
-    }
-}
-
-void X11Window::leaveNotifyEvent(xcb_leave_notify_event_t *e)
-{
-    if (waylandServer()) {
-        return;
-    }
-    if (e->event != frameId()) {
-        return; // care only about leaving the whole frame
-    }
-    if (e->mode == XCB_NOTIFY_MODE_NORMAL) {
-        if (!isInteractiveMoveResizePointerButtonDown()) {
-            setInteractiveMoveResizeGravity(Gravity::None);
-            updateCursor();
-        }
-        bool lostMouse = !exclusiveContains(rect(), QPointF(e->event_x, e->event_y));
-        // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
-        // (i.e. the LeaveNotify event comes before leaving the rect and no LeaveNotify event
-        // comes after leaving the rect) - so lets check if the pointer is really outside the window
-
-        // TODO this still sucks if a window appears above this one - it should lose the mouse
-        // if this window is another window, but not if it's a popup ... maybe after KDE3.1 :(
-        // (repeat after me 'AARGHL!')
-        if (!lostMouse && e->detail != XCB_NOTIFY_DETAIL_INFERIOR) {
-            Xcb::Pointer pointer(frameId());
-            if (!pointer || !pointer->same_screen || pointer->child == XCB_WINDOW_NONE) {
-                // really lost the mouse
-                lostMouse = true;
-            }
-        }
-        if (lostMouse) {
-            pointerLeaveEvent();
-            if (isDecorated()) {
-                // sending a move instead of a leave. With leave we need to send proper coords, with move it's handled internally
-                QHoverEvent leaveEvent(QEvent::HoverMove, QPointF(-1, -1), QPointF(-1, -1), Qt::NoModifier);
-                QCoreApplication::sendEvent(decoration(), &leaveEvent);
-            }
-        }
-        if (options->focusPolicy() == Options::FocusStrictlyUnderMouse && isActive() && lostMouse) {
-            workspace()->requestDelayFocus(nullptr);
-        }
-        return;
-    }
-}
-
-static uint16_t x11CommandAllModifier()
-{
-    switch (options->commandAllModifier()) {
-    case Qt::MetaModifier:
-        return KKeyServer::modXMeta();
-    case Qt::AltModifier:
-        return KKeyServer::modXAlt();
-    default:
-        return 0;
-    }
-}
-
-#define XCapL KKeyServer::modXLock()
-#define XNumL KKeyServer::modXNumLock()
-#define XScrL KKeyServer::modXScrollLock()
-void X11Window::establishCommandWindowGrab(uint8_t button)
-{
-    // Unfortunately there are a lot of possible modifier combinations that we need to take into
-    // account. We tackle that problem in a kind of smart way. First, we grab the button with all
-    // possible modifiers, then we ungrab the ones that are relevant only to commandAllx().
-
-    m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, XCB_MOD_MASK_ANY, button);
-
-    uint16_t x11Modifier = x11CommandAllModifier();
-
-    unsigned int mods[8] = {
-        0, XCapL, XNumL, XNumL | XCapL,
-        XScrL, XScrL | XCapL,
-        XScrL | XNumL, XScrL | XNumL | XCapL};
-    for (int i = 0; i < 8; ++i) {
-        m_wrapper.ungrabButton(x11Modifier | mods[i], button);
-    }
-}
-
-void X11Window::establishCommandAllGrab(uint8_t button)
-{
-    uint16_t x11Modifier = x11CommandAllModifier();
-
-    unsigned int mods[8] = {
-        0, XCapL, XNumL, XNumL | XCapL,
-        XScrL, XScrL | XCapL,
-        XScrL | XNumL, XScrL | XNumL | XCapL};
-    for (int i = 0; i < 8; ++i) {
-        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, x11Modifier | mods[i], button);
-    }
-}
-#undef XCapL
-#undef XNumL
-#undef XScrL
-
-void X11Window::updateMouseGrab()
-{
-    if (waylandServer()) {
-        return;
-    }
-
-    xcb_ungrab_button(kwinApp()->x11Connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
-
-#if KWIN_BUILD_TABBOX
-    if (workspace()->tabbox()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
-        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
-        return;
-    }
-#endif
-
-    // When a passive grab is activated or deactivated, the X server will generate crossing
-    // events as if the pointer were suddenly to warp from its current position to some position
-    // in the grab window. Some /broken/ X11 clients do get confused by such EnterNotify and
-    // LeaveNotify events so we release the passive grab for the active window.
-    //
-    // The passive grab below is established so the window can be raised or activated when it
-    // is clicked.
-    if ((options->focusPolicyIsReasonable() && !isActive()) || (options->isClickRaise() && !isMostRecentlyRaised())) {
-        if (options->commandWindow1() != Options::MouseNothing) {
-            establishCommandWindowGrab(XCB_BUTTON_INDEX_1);
-        }
-        if (options->commandWindow2() != Options::MouseNothing) {
-            establishCommandWindowGrab(XCB_BUTTON_INDEX_2);
-        }
-        if (options->commandWindow3() != Options::MouseNothing) {
-            establishCommandWindowGrab(XCB_BUTTON_INDEX_3);
-        }
-        if (options->commandWindowWheel() != Options::MouseNothing) {
-            establishCommandWindowGrab(XCB_BUTTON_INDEX_4);
-            establishCommandWindowGrab(XCB_BUTTON_INDEX_5);
-        }
-    }
-
-    // We want to grab <command modifier> + buttons no matter what state the window is in. The
-    // window will receive funky EnterNotify and LeaveNotify events, but there is nothing that
-    // we can do about it, unfortunately.
-
-    if (!workspace()->globalShortcutsDisabled()) {
-        if (options->commandAll1() != Options::MouseNothing) {
-            establishCommandAllGrab(XCB_BUTTON_INDEX_1);
-        }
-        if (options->commandAll2() != Options::MouseNothing) {
-            establishCommandAllGrab(XCB_BUTTON_INDEX_2);
-        }
-        if (options->commandAll3() != Options::MouseNothing) {
-            establishCommandAllGrab(XCB_BUTTON_INDEX_3);
-        }
-        if (options->commandAllWheel() != Options::MouseWheelNothing) {
-            establishCommandAllGrab(XCB_BUTTON_INDEX_4);
-            establishCommandAllGrab(XCB_BUTTON_INDEX_5);
-        }
-    }
-}
-
-static bool modKeyDown(int state)
-{
-    const uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ? KKeyServer::modXMeta() : KKeyServer::modXAlt();
-    return keyModX && (state & KKeyServer::accelModMaskX()) == keyModX;
-}
-
-// return value matters only when filtering events before decoration gets them
-bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time)
-{
-    if (waylandServer()) {
-        return true;
-    }
-    if (isInteractiveMoveResizePointerButtonDown()) {
-        if (w == wrapperId()) {
-            xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
-        }
-        return true;
-    }
-
-    if (w == wrapperId() || w == frameId() || w == inputId()) {
-        // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
-        updateUserTime(time);
-        const bool bModKeyHeld = modKeyDown(state);
-
-        if (isSplash()
-            && button == XCB_BUTTON_INDEX_1 && !bModKeyHeld) {
-            // hide splashwindow if the user clicks on it
-            setHidden(true);
-            if (w == wrapperId()) {
-                xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
-            }
-            return true;
-        }
-
-        std::optional<Options::MouseCommand> command;
-        if (bModKeyHeld) {
-            switch (button) {
-            case XCB_BUTTON_INDEX_1:
-                command = options->commandAll1();
-                break;
-            case XCB_BUTTON_INDEX_2:
-                command = options->commandAll2();
-                break;
-            case XCB_BUTTON_INDEX_3:
-                command = options->commandAll3();
-                break;
-            case XCB_BUTTON_INDEX_4:
-            case XCB_BUTTON_INDEX_5:
-                command = options->operationWindowMouseWheel(button == XCB_BUTTON_INDEX_4 ? 120 : -120);
-                break;
-            }
-        } else {
-            if (w == wrapperId()) {
-                if (button < 4) {
-                    command = getMousePressCommand(x11ToQtMouseButton(button));
-                } else if (button < 6) {
-                    command = getWheelCommand(Qt::Vertical);
-                }
-            }
-        }
-        if (command) {
-            bool replay = performMousePressCommand(*command, QPoint(x_root, y_root));
-            if (isSpecialWindow()) {
-                replay = true;
-            }
-            if (w == wrapperId()) { // these can come only from a grab
-                xcb_allow_events(kwinApp()->x11Connection(), replay ? XCB_ALLOW_REPLAY_POINTER : XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
-            }
-            return true;
-        }
-    }
-
-    if (w == wrapperId()) { // these can come only from a grab
-        xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_REPLAY_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
-        return true;
-    }
-    if (w == inputId()) {
-        x = x_root - frameGeometry().x();
-        y = y_root - frameGeometry().y();
-        return processDecorationButtonPress(QPoint(x, y), QPoint(x_root, y_root), x11ToQtMouseButton(button), true);
-    }
-    if (w == frameId() && isDecorated()) {
-        if (button >= 4 && button <= 7) {
-            const Qt::KeyboardModifiers modifiers = x11ToQtKeyboardModifiers(state);
-            // Logic borrowed from qapplication_x11.cpp
-            const int delta = 120 * ((button == 4 || button == 6) ? 1 : -1);
-            const bool hor = (((button == 4 || button == 5) && (modifiers & Qt::AltModifier))
-                              || (button == 6 || button == 7));
-
-            const QPoint angle = hor ? QPoint(delta, 0) : QPoint(0, delta);
-            QWheelEvent event(QPointF(x, y),
-                              QPointF(x_root, y_root),
-                              QPoint(),
-                              angle,
-                              x11ToQtMouseButtons(state),
-                              modifiers,
-                              Qt::NoScrollPhase,
-                              false);
-            event.setAccepted(false);
-            QCoreApplication::sendEvent(decoration(), &event);
-            if (!event.isAccepted() && !hor) {
-                if (titlebarPositionUnderMouse()) {
-                    performMousePressCommand(options->operationTitlebarMouseWheel(delta), QPoint(x_root, y_root));
-                }
-            }
-        } else {
-            QMouseEvent event(QEvent::MouseButtonPress,
-                              QPointF(x, y),
-                              QPointF(x_root, y_root),
-                              x11ToQtMouseButton(button),
-                              x11ToQtMouseButtons(state) | x11ToQtMouseButton(button),
-                              x11ToQtKeyboardModifiers(state));
-            event.setTimestamp(time);
-            event.setAccepted(false);
-            QCoreApplication::sendEvent(decoration(), &event);
-            if (!event.isAccepted()) {
-                processDecorationButtonPress(QPointF(x, y), QPointF(x_root, y_root), x11ToQtMouseButton(button));
-            }
-        }
-        return true;
-    }
-    return true;
-}
-
-// return value matters only when filtering events before decoration gets them
-bool X11Window::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
-{
-    if (waylandServer()) {
-        return true;
-    }
-    if (w == frameId() && isDecorated()) {
-        // wheel handled on buttonPress
-        if (button < 4 || button > 7) {
-            QMouseEvent event(QEvent::MouseButtonRelease,
-                              QPointF(x, y),
-                              QPointF(x_root, y_root),
-                              x11ToQtMouseButton(button),
-                              x11ToQtMouseButtons(state) & ~x11ToQtMouseButton(button),
-                              x11ToQtKeyboardModifiers(state));
-            event.setAccepted(false);
-            QCoreApplication::sendEvent(decoration(), &event);
-        }
-    }
-    if (w == wrapperId()) {
-        xcb_allow_events(kwinApp()->x11Connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
-        return true;
-    }
-    if (w != frameId() && w != inputId()) {
-        return true;
-    }
-    if (w == frameId() && workspace()->userActionsMenu() && workspace()->userActionsMenu()->isShown()) {
-        workspace()->userActionsMenu()->grabInput();
-    }
-    x = this->x(); // translate from grab window to local coords
-    y = this->y();
-
-    // Check whether other buttons are still left pressed
-    int buttonMask = XCB_BUTTON_MASK_1 | XCB_BUTTON_MASK_2 | XCB_BUTTON_MASK_3;
-    if (button == XCB_BUTTON_INDEX_1) {
-        buttonMask &= ~XCB_BUTTON_MASK_1;
-    } else if (button == XCB_BUTTON_INDEX_2) {
-        buttonMask &= ~XCB_BUTTON_MASK_2;
-    } else if (button == XCB_BUTTON_INDEX_3) {
-        buttonMask &= ~XCB_BUTTON_MASK_3;
-    }
-
-    if ((state & buttonMask) == 0) {
-        endInteractiveMoveResize();
-    }
-    return true;
-}
-
-// return value matters only when filtering events before decoration gets them
-bool X11Window::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root)
-{
-    if (waylandServer()) {
-        return true;
-    }
-    if (w == frameId() && isDecorated() && !isMinimized()) {
-        // TODO Mouse move event dependent on state
-        QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
-        QCoreApplication::instance()->sendEvent(decoration(), &event);
-    }
-    if (w != frameId() && w != inputId()) {
-        return true; // care only about the whole frame
-    }
-    if (!isInteractiveMoveResizePointerButtonDown()) {
-        if (w == inputId()) {
-            int x = x_root - frameGeometry().x(); // + padding_left;
-            int y = y_root - frameGeometry().y(); // + padding_top;
-
-            if (isDecorated()) {
-                QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
-                QCoreApplication::instance()->sendEvent(decoration(), &event);
-            }
-        }
-        Gravity newGravity = modKeyDown(state) ? Gravity::None : mouseGravity();
-        if (newGravity != interactiveMoveResizeGravity()) {
-            setInteractiveMoveResizeGravity(newGravity);
-            updateCursor();
-        }
-        return false;
-    }
-
-    if (!isInteractiveMoveResize()) {
-        const QPointF offset(interactiveMoveOffset().x() * width(), interactiveMoveOffset().y() * height());
-        const QPointF delta(QPointF(x, y) - offset);
-        if (delta.manhattanLength() >= QApplication::startDragDistance()) {
-            if (startInteractiveMoveResize()) {
-                updateInteractiveMoveResize(QPointF(x_root, y_root), x11ToQtKeyboardModifiers(state));
-            } else {
-                setInteractiveMoveResizePointerButtonDown(false);
-            }
-            updateCursor();
-        }
-    } else {
-        updateInteractiveMoveResize(QPointF(x_root, y_root), x11ToQtKeyboardModifiers(state));
-
-        if (isInteractiveMove()) {
-            workspace()->screenEdges()->check(QPoint(x_root, y_root), std::chrono::milliseconds(xTime()));
-        }
-    }
-
-    return true;
-}
-
 void X11Window::focusInEvent(xcb_focus_in_event_t *e)
 {
     if (e->event != window()) {
@@ -1255,25 +822,13 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
         setInteractiveMoveResizePointerButtonDown(false);
         updateCursor();
     } else if (direction == NET::Move || (direction >= NET::TopLeft && direction <= NET::Left)) {
-        if (waylandServer()) {
-            if (!button) {
-                if (!input()->qtButtonStates() && !input()->touch()->touchPointCount()) {
-                    return;
-                }
-            } else {
-                if (!(input()->qtButtonStates() & x11ToQtMouseButton(button)) && !input()->touch()->touchPointCount()) {
-                    return;
-                }
+        if (!button) {
+            if (!input()->qtButtonStates() && !input()->touch()->touchPointCount()) {
+                return;
             }
         } else {
-            if (button) {
-                Xcb::Pointer pointer(window());
-                if (!pointer) {
-                    return;
-                }
-                if (!(x11ToQtMouseButtons(pointer->mask) & x11ToQtMouseButton(button))) {
-                    return;
-                }
+            if (!(input()->qtButtonStates() & x11ToQtMouseButton(button)) && !input()->touch()->touchPointCount()) {
+                return;
             }
         }
 
