@@ -557,7 +557,7 @@ bool WorkspaceScene::supportsNativeFence() const
     return false;
 }
 
-OpenGlContext *WorkspaceScene::openglContext() const
+EglContext *WorkspaceScene::openglContext() const
 {
     return nullptr;
 }

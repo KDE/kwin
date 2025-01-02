@@ -9,6 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glshadermanager.h"
+#include "eglcontext.h"
 #include "glplatform.h"
 #include "glshader.h"
 #include "glvertexbuffer.h"
@@ -22,7 +23,7 @@ namespace KWin
 
 ShaderManager *ShaderManager::instance()
 {
-    return OpenGlContext::currentContext()->shaderManager();
+    return EglContext::currentContext()->shaderManager();
 }
 
 ShaderManager::ShaderManager()
@@ -41,7 +42,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     QByteArray source;
     QTextStream stream(&source);
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     QByteArray attribute, varying;
 
     if (!context->isOpenGLES()) {
@@ -91,7 +92,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     QByteArray source;
     QTextStream stream(&source);
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     QByteArray varying, output, textureLookup;
 
     if (!context->isOpenGLES()) {
@@ -256,7 +257,7 @@ static QString resolveShaderFilePath(const QString &filePath)
     QString suffix;
     QString extension;
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     const Version coreVersionNumber = context->isOpenGLES() ? Version(3, 0) : Version(1, 40);
     if (context->glslVersion() >= coreVersionNumber) {
         suffix = QStringLiteral("_core");

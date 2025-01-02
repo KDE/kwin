@@ -65,7 +65,7 @@ bool WorkspaceSceneOpenGL::supportsNativeFence() const
     return m_backend->supportsNativeFence();
 }
 
-OpenGlContext *WorkspaceSceneOpenGL::openglContext() const
+EglContext *WorkspaceSceneOpenGL::openglContext() const
 {
     return m_backend->openglContext();
 }
@@ -234,7 +234,7 @@ void OpenGLShadowTextureProvider::update()
     p.end();
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     if (!context->isOpenGLES() && context->supportsTextureSwizzle() && context->supportsRGTextures()) {
         QImage alphaImage(image.size(), QImage::Format_Alpha8);
         bool alphaOnly = true;

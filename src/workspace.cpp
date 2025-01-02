@@ -45,6 +45,7 @@
 #include "dpmsinputeventfilter.h"
 #include "lidswitchtracker.h"
 #include "main.h"
+#include "opengl/eglcontext.h"
 #include "outputconfigurationstore.h"
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"

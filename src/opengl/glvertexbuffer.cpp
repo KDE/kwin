@@ -43,7 +43,7 @@ IndexBuffer::IndexBuffer()
 
 IndexBuffer::~IndexBuffer()
 {
-    if (!OpenGlContext::currentContext()) {
+    if (!EglContext::currentContext()) {
         qCWarning(KWIN_OPENGL, "Could not delete index buffer because no context is current");
         return;
     }
@@ -176,7 +176,7 @@ public:
 
     ~GLVertexBufferPrivate()
     {
-        if (!OpenGlContext::currentContext()) {
+        if (!EglContext::currentContext()) {
             qCWarning(KWIN_OPENGL, "Could not delete vertex buffer because no context is current");
             return;
         }
@@ -389,7 +389,7 @@ GLvoid *GLVertexBuffer::map(size_t size)
 
     glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     const bool preferBufferSubData = context->glPlatform()->preferBufferSubData();
     if (context->hasMapBufferRange() && !preferBufferSubData) {
         return (GLvoid *)d->mapNextFreeRange(size);
@@ -414,7 +414,7 @@ void GLVertexBuffer::unmap()
         return;
     }
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     const bool preferBufferSubData = context->glPlatform()->preferBufferSubData();
 
     if (context->hasMapBufferRange() && !preferBufferSubData) {
@@ -496,8 +496,8 @@ void GLVertexBuffer::draw(GLenum primitiveMode, int first, int count)
 void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping)
 {
     if (primitiveMode == GL_QUADS) {
-        OpenGlContext::currentContext()->indexBuffer()->bind();
-        OpenGlContext::currentContext()->indexBuffer()->accommodate(count / 4);
+        EglContext::currentContext()->indexBuffer()->bind();
+        EglContext::currentContext()->indexBuffer()->accommodate(count / 4);
 
         count = count * 6 / 4;
 
@@ -580,7 +580,7 @@ void GLVertexBuffer::beginFrame()
 
 GLVertexBuffer *GLVertexBuffer::streamingBuffer()
 {
-    return OpenGlContext::currentContext()->streamingVbo();
+    return EglContext::currentContext()->streamingVbo();
 }
 
 void GLVertexBuffer::setPersistent()
