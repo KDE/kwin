@@ -122,23 +122,12 @@ class KWIN_EXPORT OutlineVisual
 {
 public:
     OutlineVisual(Outline *outline);
-    virtual ~OutlineVisual();
-    virtual void show() = 0;
-    virtual void hide() = 0;
+    ~OutlineVisual();
+    void show();
+    void hide();
 
 protected:
     Outline *const m_outline;
-};
-
-class CompositedOutlineVisual : public OutlineVisual
-{
-public:
-    CompositedOutlineVisual(Outline *outline);
-    ~CompositedOutlineVisual() override;
-    void show() override;
-    void hide() override;
-
-private:
     std::unique_ptr<QQmlContext> m_qmlContext;
     std::unique_ptr<QQmlComponent> m_qmlComponent;
     std::unique_ptr<QObject> m_mainItem;
