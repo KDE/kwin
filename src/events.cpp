@@ -324,9 +324,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         NET::Properties2 dirtyProperties2;
         info->event(e, &dirtyProperties, &dirtyProperties2); // pass through the NET stuff
         if (dirtyProperties2 & NET::WM2Opacity) {
-            if (Compositor::compositing()) {
-                setOpacity(info->opacityF());
-            }
+            setOpacity(info->opacityF());
         }
         if (dirtyProperties2 & NET::WM2OpaqueRegion) {
             getWmOpaqueRegion();
@@ -412,22 +410,13 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
             startupIdChanged();
         }
         if (dirtyProperties2 & NET::WM2Opacity) {
-            if (Compositor::compositing()) {
-                setOpacity(info->opacityF());
-            } else {
-                // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo i(kwinApp()->x11Connection(), frameId(), kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
-                i.setOpacity(info->opacity());
-            }
+            setOpacity(info->opacityF());
         }
         if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
             Q_EMIT windowRoleChanged();
         }
         if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
             getResourceClass();
-        }
-        if (dirtyProperties2.testFlag(NET::WM2BlockCompositing)) {
-            setBlockingCompositing(info->isBlockingCompositing());
         }
         if (dirtyProperties2.testFlag(NET::WM2GroupLeader)) {
             checkGroup();
