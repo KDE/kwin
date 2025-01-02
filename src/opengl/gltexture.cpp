@@ -154,7 +154,7 @@ void GLTexture::update(const QImage &image, const QRegion &region, const QPoint 
 
     Q_ASSERT(d->m_owning);
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     GLenum glFormat;
     GLenum type;
     QImage::Format uploadFormat;
@@ -423,7 +423,7 @@ OutputTransform GLTexture::contentTransform() const
 
 void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)
 {
-    if (!OpenGlContext::currentContext()->isOpenGLES()) {
+    if (!EglContext::currentContext()->isOpenGLES()) {
         const GLuint swizzle[] = {red, green, blue, alpha};
         glTexParameteriv(d->m_target, GL_TEXTURE_SWIZZLE_RGBA, (const GLint *)swizzle);
     } else {
@@ -451,12 +451,12 @@ QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 
 bool GLTexture::supportsSwizzle()
 {
-    return OpenGlContext::currentContext()->supportsTextureSwizzle();
+    return EglContext::currentContext()->supportsTextureSwizzle();
 }
 
 bool GLTexture::supportsFormatRG()
 {
-    return OpenGlContext::currentContext()->supportsRGTextures();
+    return EglContext::currentContext()->supportsRGTextures();
 }
 
 QImage GLTexture::toImage()
@@ -466,7 +466,7 @@ QImage GLTexture::toImage()
     }
     QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
 
-    if (OpenGlContext::currentContext()->isOpenGLES()) {
+    if (EglContext::currentContext()->isOpenGLES()) {
         GLFramebuffer fbo(this);
         GLFramebuffer::pushFramebuffer(&fbo);
         glReadPixels(0, 0, width(), height(), GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
@@ -500,7 +500,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     }
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     if (!context->isOpenGLES()) {
         if (context->supportsTextureStorage()) {
             glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, size.width(), size.height());
@@ -536,7 +536,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
         return nullptr;
     }
 
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     GLenum internalFormat;
     GLenum format;
     GLenum type;

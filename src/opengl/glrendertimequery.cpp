@@ -7,12 +7,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glrendertimequery.h"
-#include "opengl/glplatform.h"
+#include "opengl/eglcontext.h"
 
 namespace KWin
 {
 
-GLRenderTimeQuery::GLRenderTimeQuery(const std::shared_ptr<OpenGlContext> &context)
+GLRenderTimeQuery::GLRenderTimeQuery(const std::shared_ptr<EglContext> &context)
     : m_context(context)
 {
     if (context->supportsTimerQueries()) {
@@ -25,7 +25,7 @@ GLRenderTimeQuery::~GLRenderTimeQuery()
     if (!m_gpuProbe.query) {
         return;
     }
-    const auto previousContext = OpenGlContext::currentContext();
+    const auto previousContext = EglContext::currentContext();
     const auto context = m_context.lock();
     if (!context) {
         return;
@@ -61,7 +61,7 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
 {
     Q_ASSERT(m_hasResult);
     if (m_gpuProbe.query) {
-        const auto previousContext = OpenGlContext::currentContext();
+        const auto previousContext = EglContext::currentContext();
         const auto context = m_context.lock();
         if (!context) {
             return std::nullopt;

@@ -11,8 +11,8 @@
 #include "effect/effecthandler.h"
 
 #include "logging_p.h"
+#include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
-#include "opengl/openglcontext.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>
@@ -208,7 +208,7 @@ void OffscreenQuickView::update()
     }
 
     bool usingGl = d->m_glcontext != nullptr;
-    OpenGlContext *previousContext = OpenGlContext::currentContext();
+    EglContext *previousContext = EglContext::currentContext();
 
     if (usingGl) {
         if (!d->m_glcontext->makeCurrent(d->m_offscreenSurface.get())) {

@@ -34,7 +34,7 @@ class ShadowTextureProvider;
 class SurfaceItem;
 class WindowItem;
 class WindowPaintData;
-class OpenGlContext;
+class EglContext;
 
 class KWIN_EXPORT WorkspaceScene : public Scene
 {
@@ -59,7 +59,7 @@ public:
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
     virtual bool supportsNativeFence() const;
-    virtual OpenGlContext *openglContext() const;
+    virtual EglContext *openglContext() const;
 
     virtual std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *) = 0;
     virtual std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) = 0;

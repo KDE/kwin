@@ -95,7 +95,7 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
 {
     // Prepare the source code
     QByteArray ba;
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     if (context->isOpenGLES() && context->glslVersion() < Version(3, 0)) {
         ba.append("precision highp float;\n");
     }
@@ -188,7 +188,7 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     if (!context->isOpenGLES() && (context->hasVersion(Version(3, 0)) || context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))) {
         glBindFragDataLocation(m_program, index, name);
     }
@@ -460,7 +460,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     int location = uniformLocation(name);
     if (location >= 0) {
         GLfloat m[16];
-        OpenGlContext::currentContext()->glGetnUniformfv(m_program, location, sizeof(m), m);
+        EglContext::currentContext()->glGetnUniformfv(m_program, location, sizeof(m), m);
         QMatrix4x4 matrix(m[0], m[4], m[8], m[12],
                           m[1], m[5], m[9], m[13],
                           m[2], m[6], m[10], m[14],

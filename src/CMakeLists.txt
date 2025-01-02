@@ -142,7 +142,6 @@ target_sources(kwin PRIVATE
     opengl/glutils.cpp
     opengl/glvertexbuffer.cpp
     opengl/icc_shader.cpp
-    opengl/openglcontext.cpp
     options.cpp
     osd.cpp
     outline.cpp
@@ -622,7 +621,6 @@ install(FILES
     opengl/gltexture_p.h
     opengl/glutils.h
     opengl/glvertexbuffer.h
-    opengl/openglcontext.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/opengl COMPONENT Devel
 )
 

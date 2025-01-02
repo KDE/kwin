@@ -369,7 +369,7 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
 {
     QImage image;
 
-    if (OpenGlContext *context = effects->openglContext()) {
+    if (EglContext *context = effects->openglContext()) {
         const auto screenGeometry = m_paintedScreen ? m_paintedScreen->geometry() : effects->virtualScreenGeometry();
         const QSize nativeSize = renderTarget.transform().map(
             snapToPixelGrid(scaledRect(geometry, devicePixelRatio))

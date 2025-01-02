@@ -10,7 +10,7 @@
 #pragma once
 
 #include "effect/globals.h"
-#include "openglcontext.h"
+#include "utils/version.h"
 
 #include <QByteArray>
 #include <QSet>

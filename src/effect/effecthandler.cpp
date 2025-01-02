@@ -273,7 +273,7 @@ bool EffectsHandler::isOpenGLCompositing() const
     return compositing_type & OpenGLCompositing;
 }
 
-OpenGlContext *EffectsHandler::openglContext() const
+EglContext *EffectsHandler::openglContext() const
 {
     return m_scene->openglContext();
 }

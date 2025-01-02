@@ -21,17 +21,17 @@ namespace KWin
 
 GLFramebuffer *GLFramebuffer::currentFramebuffer()
 {
-    return OpenGlContext::currentContext()->currentFramebuffer();
+    return EglContext::currentContext()->currentFramebuffer();
 }
 
 void GLFramebuffer::pushFramebuffer(GLFramebuffer *fbo)
 {
-    OpenGlContext::currentContext()->pushFramebuffer(fbo);
+    EglContext::currentContext()->pushFramebuffer(fbo);
 }
 
 GLFramebuffer *GLFramebuffer::popFramebuffer()
 {
-    return OpenGlContext::currentContext()->popFramebuffer();
+    return EglContext::currentContext()->popFramebuffer();
 }
 
 GLFramebuffer::GLFramebuffer()
@@ -145,7 +145,7 @@ void GLFramebuffer::initColorAttachment(GLTexture *colorAttachment)
 void GLFramebuffer::initDepthStencilAttachment()
 {
     GLuint buffer = 0;
-    const auto context = OpenGlContext::currentContext();
+    const auto context = EglContext::currentContext();
     // Try to attach a depth/stencil combined attachment.
     if (context->supportsBlits()) {
         glGenRenderbuffers(1, &buffer);
@@ -211,7 +211,7 @@ void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destin
     }
 
     const GLFramebuffer *top = currentFramebuffer();
-    if (!OpenGlContext::currentContext()->supportsBlits()) {
+    if (!EglContext::currentContext()->supportsBlits()) {
         const auto texture = top->colorAttachment();
         if (!texture) {
             // can't do anything
@@ -270,7 +270,7 @@ bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget,
     const bool normal = transform == OutputTransform::Normal;
     const bool mirrorX = transform == OutputTransform::FlipX;
     const bool mirrorY = transform == OutputTransform::FlipY;
-    if ((normal || mirrorX || mirrorY) && OpenGlContext::currentContext()->supportsBlits()) {
+    if ((normal || mirrorX || mirrorY) && EglContext::currentContext()->supportsBlits()) {
         // either no transformation or flipping only
         blitFromFramebuffer(sourceViewport.mapToRenderTarget(source), destination, GL_LINEAR, mirrorX, mirrorY);
         return true;

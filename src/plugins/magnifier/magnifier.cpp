@@ -18,8 +18,8 @@
 
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
-#include "opengl/openglcontext.h"
 #include <KGlobalAccel>
 
 using namespace std::chrono_literals;
