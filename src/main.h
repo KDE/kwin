@@ -258,9 +258,6 @@ public:
     void createAtoms();
     void destroyAtoms();
 
-    virtual std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
-    virtual std::unique_ptr<Cursor> createPlatformCursor();
-    virtual std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
     virtual void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene);
 
     static void setupMalloc();
