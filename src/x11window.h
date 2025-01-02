@@ -209,10 +209,6 @@ public:
 
     bool setupCompositing() override;
     void finishCompositing() override;
-    void setBlockingCompositing(bool block);
-    void blockCompositing();
-    void unblockCompositing();
-
     QString captionNormal() const override
     {
         return cap_normal;
@@ -474,7 +470,6 @@ private:
     uint noborder : 1;
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
-    bool blocks_compositing;
     bool is_shape = false;
 
     enum FullScreenMode {

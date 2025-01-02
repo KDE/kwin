@@ -214,27 +214,9 @@ bool Compositor::isActive()
     return m_state == State::On;
 }
 
-bool Compositor::compositingPossible() const
-{
-    return true;
-}
-
-QString Compositor::compositingNotPossibleReason() const
-{
-    return QString();
-}
-
 bool Compositor::openGLCompositingIsBroken() const
 {
     return false;
-}
-
-void Compositor::inhibit(Window *window)
-{
-}
-
-void Compositor::uninhibit(Window *window)
-{
 }
 
 bool Compositor::attemptOpenGLCompositing()

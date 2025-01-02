@@ -271,9 +271,6 @@ CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
 
 QString CompositorDBusInterface::compositingType() const
 {
-    if (!m_compositor->compositing()) {
-        return QStringLiteral("none");
-    }
     switch (m_compositor->backend()->compositingType()) {
     case OpenGLCompositing:
         if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
@@ -296,12 +293,12 @@ bool CompositorDBusInterface::isActive() const
 
 bool CompositorDBusInterface::isCompositingPossible() const
 {
-    return m_compositor->compositingPossible();
+    return true;
 }
 
 QString CompositorDBusInterface::compositingNotPossibleReason() const
 {
-    return m_compositor->compositingNotPossibleReason();
+    return QString();
 }
 
 bool CompositorDBusInterface::isOpenGLBroken() const
