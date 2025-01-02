@@ -114,10 +114,6 @@ void Workspace::updateStackingOrder(bool propagate_new_windows)
         }
 
         Q_EMIT stackingOrderChanged();
-
-        if (m_activeWindow) {
-            m_activeWindow->updateMouseGrab();
-        }
     }
 }
 
@@ -151,11 +147,6 @@ void Workspace::propagateWindows(bool propagate_new_windows)
         X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
         if (!window || window->isDeleted() || window->isUnmanaged() || window->hiddenPreview()) {
             continue;
-        }
-
-        if (window->inputId()) {
-            // Stack the input window above the frame
-            newWindowStack << window->inputId();
         }
 
         newWindowStack << window->frameId();

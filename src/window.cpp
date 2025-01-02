@@ -415,10 +415,6 @@ QMargins Window::frameMargins() const
     return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
 }
 
-void Window::updateMouseGrab()
-{
-}
-
 bool Window::belongToSameApplication(const Window *c1, const Window *c2, SameApplicationChecks checks)
 {
     return c1->belongsToSameApplication(c2, checks);
@@ -522,7 +518,6 @@ void Window::setActive(bool act)
 
     doSetActive();
     Q_EMIT activeChanged();
-    updateMouseGrab();
 }
 
 void Window::doSetActive()
