@@ -104,7 +104,7 @@ void Outline::createHelper()
     if (m_visual) {
         return;
     }
-    m_visual = kwinApp()->createOutline(this);
+    m_visual = std::make_unique<CompositedOutlineVisual>(this);
 }
 
 void Outline::compositingChanged()
