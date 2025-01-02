@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "platformsupport/scenes/opengl/openglbackend.h"
-#include "opengl/openglcontext.h"
+#include "opengl/eglcontext.h"
 
 #include "utils/common.h"
 

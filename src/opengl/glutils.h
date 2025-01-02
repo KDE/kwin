@@ -11,6 +11,7 @@
 #pragma once
 
 #include "core/colorspace.h"
+#include "opengl/eglcontext.h"
 #include "opengl/glframebuffer.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
