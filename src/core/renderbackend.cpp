@@ -174,11 +174,6 @@ OutputLayer *RenderBackend::cursorLayer(Output *output)
     return nullptr;
 }
 
-OverlayWindow *RenderBackend::overlayWindow() const
-{
-    return nullptr;
-}
-
 bool RenderBackend::checkGraphicsReset()
 {
     return false;
