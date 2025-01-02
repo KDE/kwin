@@ -104,7 +104,7 @@ void Outline::createHelper()
     if (m_visual) {
         return;
     }
-    m_visual = std::make_unique<CompositedOutlineVisual>(this);
+    m_visual = std::make_unique<OutlineVisual>(this);
 }
 
 void Outline::compositingChanged()
@@ -129,9 +129,11 @@ bool Outline::isActive() const
 {
     return m_active;
 }
-
 OutlineVisual::OutlineVisual(Outline *outline)
     : m_outline(outline)
+    , m_qmlContext()
+    , m_qmlComponent()
+    , m_mainItem()
 {
 }
 
@@ -139,19 +141,7 @@ OutlineVisual::~OutlineVisual()
 {
 }
 
-CompositedOutlineVisual::CompositedOutlineVisual(Outline *outline)
-    : OutlineVisual(outline)
-    , m_qmlContext()
-    , m_qmlComponent()
-    , m_mainItem()
-{
-}
-
-CompositedOutlineVisual::~CompositedOutlineVisual()
-{
-}
-
-void CompositedOutlineVisual::hide()
+void OutlineVisual::hide()
 {
     if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
         w->hide();
@@ -159,7 +149,7 @@ void CompositedOutlineVisual::hide()
     }
 }
 
-void CompositedOutlineVisual::show()
+void OutlineVisual::show()
 {
     if (!m_qmlContext) {
         m_qmlContext = std::make_unique<QQmlContext>(Scripting::self()->qmlEngine());
