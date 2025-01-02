@@ -631,17 +631,13 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     getSyncCounter();
     setCaption(readName());
 
-    if (Compositor::compositing()) {
-        // Sending ConfigureNotify is done when setting mapping state below, getting the
-        // first sync response means window is ready for compositing.
-        //
-        // The sync request will block wl_surface commits, and with Xwayland, it is really
-        // important that wl_surfaces commits are blocked before the frame window is mapped.
-        // Otherwise Xwayland can attach a buffer before the sync request is acked.
-        sendSyncRequest();
-    } else {
-        ready_for_painting = true; // set to true in case compositing is turned on later
-    }
+    // Sending ConfigureNotify is done when setting mapping state below, getting the
+    // first sync response means window is ready for compositing.
+    //
+    // The sync request will block wl_surface commits, and with Xwayland, it is really
+    // important that wl_surfaces commits are blocked before the frame window is mapped.
+    // Otherwise Xwayland can attach a buffer before the sync request is acked.
+    sendSyncRequest();
 
     setupWindowRules();
     connect(this, &X11Window::windowClassChanged, this, &X11Window::evaluateWindowRules);
@@ -1779,7 +1775,6 @@ void X11Window::internalHide()
 
 void X11Window::internalKeep()
 {
-    Q_ASSERT(Compositor::compositing());
     if (mapping_state == Kept) {
         return;
     }

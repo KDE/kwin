@@ -204,7 +204,7 @@ QList<Window *> TabBoxHandlerImpl::stackingOrder() const
 
 bool TabBoxHandlerImpl::isKWinCompositing() const
 {
-    return Compositor::compositing();
+    return true;
 }
 
 void TabBoxHandlerImpl::raiseClient(Window *c) const

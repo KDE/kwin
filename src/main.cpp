@@ -345,10 +345,7 @@ std::unique_ptr<Cursor> Application::createPlatformCursor()
 
 std::unique_ptr<OutlineVisual> Application::createOutline(Outline *outline)
 {
-    if (Compositor::compositing()) {
-        return std::make_unique<CompositedOutlineVisual>(outline);
-    }
-    return nullptr;
+    return std::make_unique<CompositedOutlineVisual>(outline);
 }
 
 void Application::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
