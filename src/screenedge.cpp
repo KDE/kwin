@@ -1203,7 +1203,7 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
 
 std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction)
 {
-    std::unique_ptr<Edge> edge = kwinApp()->createScreenEdge(this);
+    std::unique_ptr<Edge> edge = std::make_unique<Edge>(this);
     // Edges can not have negative size.
     Q_ASSERT(width >= 0);
     Q_ASSERT(height >= 0);

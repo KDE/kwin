@@ -251,7 +251,7 @@ void Application::createInput()
 #endif
     auto input = InputRedirection::create(this);
     input->init();
-    m_platformCursor = createPlatformCursor();
+    m_platformCursor = std::make_unique<InputRedirectionCursor>();
 }
 
 void Application::createAtoms()
@@ -331,21 +331,6 @@ void Application::destroyColorManager()
 void Application::destroyInputMethod()
 {
     m_inputMethod.reset();
-}
-
-std::unique_ptr<Edge> Application::createScreenEdge(ScreenEdges *edges)
-{
-    return std::make_unique<Edge>(edges);
-}
-
-std::unique_ptr<Cursor> Application::createPlatformCursor()
-{
-    return std::make_unique<InputRedirectionCursor>();
-}
-
-std::unique_ptr<OutlineVisual> Application::createOutline(Outline *outline)
-{
-    return std::make_unique<CompositedOutlineVisual>(outline);
 }
 
 void Application::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
