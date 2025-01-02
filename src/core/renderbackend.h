@@ -19,7 +19,6 @@ namespace KWin
 
 class GraphicsBuffer;
 class Output;
-class OverlayWindow;
 class OutputLayer;
 class SurfacePixmap;
 class SurfacePixmapX11;
@@ -128,7 +127,6 @@ class KWIN_EXPORT RenderBackend : public QObject
 
 public:
     virtual CompositingType compositingType() const = 0;
-    virtual OverlayWindow *overlayWindow() const;
 
     virtual bool checkGraphicsReset();
 
