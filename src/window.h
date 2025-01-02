@@ -946,7 +946,6 @@ public:
 
     void cancelAutoRaise();
 
-    virtual void updateMouseGrab();
     /**
      * @returns The caption consisting of captionNormal and captionSuffix
      * @see captionNormal

@@ -1632,10 +1632,6 @@ void Workspace::disableGlobalShortcutsForClient(bool disable)
     QDBusConnection::sessionBus().asyncCall(message);
 
     m_globalShortcutsDisabledForWindow = disable;
-    // Update also Meta+LMB actions etc.
-    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        (*it)->updateMouseGrab();
-    }
 }
 
 QString Workspace::supportInformation() const
@@ -1943,10 +1939,6 @@ X11Window *Workspace::findClient(Predicate predicate, xcb_window_t w) const
     case Predicate::FrameIdMatch:
         return findClient([w](const X11Window *c) {
             return c->frameId() == w;
-        });
-    case Predicate::InputIdMatch:
-        return findClient([w](const X11Window *c) {
-            return c->inputId() == w;
         });
     }
     return nullptr;
