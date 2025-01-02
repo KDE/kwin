@@ -4,5 +4,4 @@ target_sources(kwin PRIVATE
     openglbackend.cpp
     openglsurfacetexture.cpp
     openglsurfacetexture_wayland.cpp
-    openglsurfacetexture_x11.cpp
 )
