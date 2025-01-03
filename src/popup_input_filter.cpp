@@ -24,6 +24,7 @@ PopupInputFilter::PopupInputFilter()
     , InputEventFilter(InputFilterOrder::Popup)
 {
     connect(workspace(), &Workspace::windowAdded, this, &PopupInputFilter::handleWindowAdded);
+    connect(workspace(), &Workspace::windowActivated, this, &PopupInputFilter::handleWindowFocusChanged);
 }
 
 void PopupInputFilter::handleWindowAdded(Window *window)
@@ -45,6 +46,14 @@ void PopupInputFilter::handleWindowAdded(Window *window)
                 input()->keyboard()->update();
             }
         });
+    }
+}
+
+void PopupInputFilter::handleWindowFocusChanged(Window *client)
+{
+    // user focussed a window through another mechanism such as a shortcut
+    if (!m_popupWindows.contains(client)) {
+        cancelPopups();
     }
 }
 

@@ -27,7 +27,7 @@ public:
 
 private:
     void handleWindowAdded(Window *client);
-
+    void handleWindowFocusChanged(Window *client);
     void focus(Window *popup);
     void cancelPopups();
 
