@@ -158,11 +158,13 @@ static KWin::FPx2 fpx2FromScriptValue(const QJSValue &value)
 ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
 {
     const QString name = effect.pluginId();
-    const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                      KWIN_DATADIR + QLatin1String("/effects/") + name + QLatin1String("/contents/code/main.js"));
+    QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + name + QLatin1String("/contents/code/main.js"));
     if (scriptFile.isEmpty()) {
-        qCDebug(KWIN_SCRIPTING) << "Could not locate effect script" << name;
-        return nullptr;
+        QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + name + QLatin1String("/contents/code/main.js"));
+        if (scriptFile.isEmpty()) {
+            qCDebug(KWIN_SCRIPTING) << "Could not locate effect script" << name;
+            return nullptr;
+        }
     }
 
     return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering"), 0), effect.value(QStringLiteral("X-KWin-Exclusive-Category")));
@@ -222,7 +224,10 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_scriptFile = pathToScript;
 
     // does the effect contain an KConfigXT file?
-    const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
+    QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
+    if (kconfigXTFile.isNull()) {
+        QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
+    }
     if (!kconfigXTFile.isNull()) {
         KConfigGroup cg = QCoreApplication::instance()->property("config").value<KSharedConfigPtr>()->group(QStringLiteral("Effect-%1").arg(m_effectName));
         QFile xmlFile(kconfigXTFile);
@@ -792,8 +797,14 @@ uint ScriptedEffect::addFragmentShader(ShaderTrait traits, const QString &fragme
         m_engine->throwError(QStringLiteral("Failed to make OpenGL context current"));
         return 0;
     }
-    const QString shaderDir{KWIN_DATADIR + QLatin1String("/effects/") + m_effectName + QLatin1String("/contents/shaders/")};
-    const QString fragment = fragmentShaderFile.isEmpty() ? QString{} : QStandardPaths::locate(QStandardPaths::GenericDataLocation, shaderDir + fragmentShaderFile);
+
+    QString fragment;
+    if (!fragmentShaderFile.isEmpty()) {
+        fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + m_effectName + QLatin1String("/contents/shaders/") + fragmentShaderFile);
+        if (fragment.isEmpty()) {
+            fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + m_effectName + QLatin1String("/contents/shaders/") + fragmentShaderFile);
+        }
+    }
 
     auto shader = ShaderManager::instance()->generateShaderFromFile(static_cast<KWin::ShaderTraits>(int(traits)), {}, fragment);
     if (!shader->isValid()) {

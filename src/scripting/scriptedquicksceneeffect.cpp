@@ -43,7 +43,10 @@ void ScriptedQuickSceneEffect::setMetaData(const KPluginMetaData &metaData)
     m_requestedEffectChainPosition = metaData.value(QStringLiteral("X-KDE-Ordering"), 50);
 
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Effect-%1").arg(metaData.pluginId()));
-    const QString configFilePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + metaData.pluginId() + QLatin1String("/contents/config/main.xml"));
+    QString configFilePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + metaData.pluginId() + QLatin1String("/contents/config/main.xml"));
+    if (configFilePath.isNull()) {
+        configFilePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + metaData.pluginId() + QLatin1String("/contents/config/main.xml"));
+    }
     if (configFilePath.isNull()) {
         m_configLoader = new KConfigLoader(cg, nullptr, this);
     } else {

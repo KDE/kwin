@@ -271,46 +271,52 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 {
-    const auto plugins = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), KWIN_DATADIR + QStringLiteral("/effects"));
-    for (const KPluginMetaData &plugin : plugins) {
-        EffectData effect;
+    const QStringList prefixes{
+        KWIN_DATADIR + QStringLiteral("/effects"),
+        QStringLiteral("kwin/effects"),
+    };
+    for (const QString &prefix : prefixes) {
+        const auto plugins = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), prefix);
+        for (const KPluginMetaData &plugin : plugins) {
+            EffectData effect;
 
-        effect.name = plugin.name();
-        effect.description = plugin.description();
-        const auto authors = plugin.authors();
-        effect.authorName = !authors.isEmpty() ? authors.first().name() : QString();
-        effect.authorEmail = !authors.isEmpty() ? authors.first().emailAddress() : QString();
-        effect.license = plugin.license();
-        effect.version = plugin.version();
-        effect.untranslatedCategory = plugin.category();
-        effect.category = translatedCategory(plugin.category());
-        effect.serviceName = plugin.pluginId();
-        effect.iconName = plugin.iconName();
-        effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isEnabledByDefault()));
-        effect.originalStatus = effect.status;
-        effect.enabledByDefault = plugin.isEnabledByDefault();
-        effect.enabledByDefaultFunction = false;
-        effect.video = QUrl(plugin.value(QStringLiteral("X-KWin-Video-Url")));
-        effect.website = QUrl(plugin.website());
-        effect.supported = true;
-        effect.exclusiveGroup = plugin.value(QStringLiteral("X-KWin-Exclusive-Category"));
-        effect.internal = plugin.value(QStringLiteral("X-KWin-Internal"), false);
+            effect.name = plugin.name();
+            effect.description = plugin.description();
+            const auto authors = plugin.authors();
+            effect.authorName = !authors.isEmpty() ? authors.first().name() : QString();
+            effect.authorEmail = !authors.isEmpty() ? authors.first().emailAddress() : QString();
+            effect.license = plugin.license();
+            effect.version = plugin.version();
+            effect.untranslatedCategory = plugin.category();
+            effect.category = translatedCategory(plugin.category());
+            effect.serviceName = plugin.pluginId();
+            effect.iconName = plugin.iconName();
+            effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isEnabledByDefault()));
+            effect.originalStatus = effect.status;
+            effect.enabledByDefault = plugin.isEnabledByDefault();
+            effect.enabledByDefaultFunction = false;
+            effect.video = QUrl(plugin.value(QStringLiteral("X-KWin-Video-Url")));
+            effect.website = QUrl(plugin.website());
+            effect.supported = true;
+            effect.exclusiveGroup = plugin.value(QStringLiteral("X-KWin-Exclusive-Category"));
+            effect.internal = plugin.value(QStringLiteral("X-KWin-Internal"), false);
 
-        if (const QString configModule = plugin.value(QStringLiteral("X-KDE-ConfigModule")); !configModule.isEmpty()) {
-            if (configModule == QLatin1StringView("kcm_kwin4_genericscripted")) {
-                const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
-                const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
-                if (QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile)) {
+            if (const QString configModule = plugin.value(QStringLiteral("X-KDE-ConfigModule")); !configModule.isEmpty()) {
+                if (configModule == QLatin1StringView("kcm_kwin4_genericscripted")) {
+                    const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, prefix + QLatin1Char('/') + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
+                    const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, prefix + QLatin1Char('/') + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
+                    if (QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile)) {
+                        effect.configModule = configModule;
+                        effect.configArgs = QVariantList{plugin.pluginId(), QStringLiteral("KWin/Effect")};
+                    }
+                } else {
                     effect.configModule = configModule;
-                    effect.configArgs = QVariantList{plugin.pluginId(), QStringLiteral("KWin/Effect")};
                 }
-            } else {
-                effect.configModule = configModule;
             }
-        }
 
-        if (shouldStore(effect)) {
-            m_pendingEffects << effect;
+            if (shouldStore(effect)) {
+                m_pendingEffects << effect;
+            }
         }
     }
 }
