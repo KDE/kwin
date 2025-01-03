@@ -157,7 +157,6 @@ static QList<KPackage::Package> availableLnFPackages()
 
 void KWinTabBoxConfig::initLayoutLists()
 {
-    QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages("KWin/WindowSwitcher");
     QStandardItemModel *model = new QStandardItemModel;
 
     auto addToModel = [model](const QString &name, const QString &pluginId, const QString &path) {
@@ -180,16 +179,23 @@ void KWinTabBoxConfig::initLayoutLists()
         addToModel(metaData.name(), metaData.pluginId(), switcherFile);
     }
 
-    for (const auto &offer : offers) {
-        const QString pluginName = offer.pluginId();
-        const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                          KWIN_DATADIR + QLatin1String("/tabbox/") + pluginName + QLatin1String("/contents/ui/main.qml"));
-        if (scriptFile.isEmpty()) {
-            qWarning() << "scriptfile is null" << pluginName;
-            continue;
-        }
+    const QStringList packageRoots{
+        KWIN_DATADIR + QStringLiteral("/tabbox"),
+        QStringLiteral("kwin/tabbox"),
+    };
+    for (const QString &packageRoot : packageRoots) {
+        const QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/WindowSwitcher"), packageRoot);
+        for (const auto &offer : offers) {
+            const QString pluginName = offer.pluginId();
+            const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                              packageRoot + QLatin1Char('/') + pluginName + QLatin1String("/contents/ui/main.qml"));
+            if (scriptFile.isEmpty()) {
+                qWarning() << "scriptfile is null" << pluginName;
+                continue;
+            }
 
-        addToModel(offer.name(), pluginName, scriptFile);
+            addToModel(offer.name(), pluginName, scriptFile);
+        }
     }
 
     model->sort(0);
