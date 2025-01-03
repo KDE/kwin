@@ -250,7 +250,7 @@ void ScriptedEffectLoader::clear()
 
 PluginEffectLoader::PluginEffectLoader(QObject *parent)
     : AbstractEffectLoader(parent)
-    , m_pluginSubDirectory(QStringLiteral("kwin/effects/plugins"))
+    , m_pluginSubDirectory(KWIN_PLUGINDIR + QStringLiteral("/effects/plugins"))
 {
 }
 

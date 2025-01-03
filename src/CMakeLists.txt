@@ -393,7 +393,7 @@ if (KWIN_BUILD_X11 AND KWIN_BUILD_X11_BACKEND)
     target_compile_definitions(kwin_x11 PRIVATE
         -DTRANSLATION_DOMAIN=\"kwin\"
     )
-    kcoreaddons_target_static_plugins(kwin_x11 NAMESPACE "kwin/effects/plugins")
+    kcoreaddons_target_static_plugins(kwin_x11 NAMESPACE "${KWIN_PLUGINDIR}/effects/plugins")
     install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
 
@@ -424,7 +424,7 @@ endif()
 target_compile_definitions(kwin_wayland PRIVATE
     -DTRANSLATION_DOMAIN=\"kwin\"
 )
-kcoreaddons_target_static_plugins(kwin_wayland NAMESPACE "kwin/effects/plugins")
+kcoreaddons_target_static_plugins(kwin_wayland NAMESPACE "${KWIN_PLUGINDIR}/effects/plugins")
 
 install(TARGETS kwin_wayland ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if (HAVE_LIBCAP)

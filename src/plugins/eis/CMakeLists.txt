@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 David Redondo <kde@david-redono.de>
 # SPDX-License-Identifier: BSD-3-Clause
 
-kcoreaddons_add_plugin(eis INSTALL_NAMESPACE "kwin/plugins")
+kcoreaddons_add_plugin(eis INSTALL_NAMESPACE "${KWIN_PLUGINDIR}/plugins")
 
 ecm_qt_declare_logging_category(eis
     HEADER libeis_logging.h

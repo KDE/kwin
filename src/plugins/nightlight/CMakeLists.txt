@@ -1,4 +1,4 @@
-kcoreaddons_add_plugin(nightlight INSTALL_NAMESPACE "kwin/plugins")
+kcoreaddons_add_plugin(nightlight INSTALL_NAMESPACE "${KWIN_PLUGINDIR}/plugins")
 target_sources(nightlight PRIVATE
     clockskewnotifier.cpp
     clockskewnotifierengine.cpp

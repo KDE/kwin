@@ -37,4 +37,4 @@ target_link_libraries(kcm_kwin4_genericscripted
     Qt::DBus
     Qt::UiTools
 )
-install(TARGETS kcm_kwin4_genericscripted DESTINATION ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs)
+install(TARGETS kcm_kwin4_genericscripted DESTINATION ${KDE_INSTALL_PLUGINDIR}/${KWIN_PLUGINDIR}/effects/configs)
