@@ -41,5 +41,5 @@ install(FILES thumbnails/falkon.png
               thumbnails/systemsettings.png
               thumbnails/dolphin.png
               thumbnails/desktop.png
-        DESTINATION ${KDE_INSTALL_DATADIR}/kwin/kcm_kwintabbox)
+        DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_DATADIR}/kcm_kwintabbox)
 install(FILES kwinswitcher.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})

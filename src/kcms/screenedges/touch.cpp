@@ -136,7 +136,7 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
 
     KConfigGroup config(m_config, QStringLiteral("Plugins"));
-    const auto effects = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/builtin-effects/")) << KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/effects/"));
+    const auto effects = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), KWIN_DATADIR + QStringLiteral("/builtin-effects/")) << KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), KWIN_DATADIR + QStringLiteral("/effects/"));
 
     for (const KPluginMetaData &effect : effects) {
         if (!effect.value(QStringLiteral("X-KWin-Border-Activate"), false)) {
@@ -151,7 +151,7 @@ void KWinScreenEdgesConfig::monitorInit()
         m_effectSettings[effect.pluginId()] = new KWinTouchScreenEdgeEffectSettings(effect.pluginId(), this);
     }
 
-    const QString scriptFolder = QStringLiteral("kwin/scripts/");
+    const QString scriptFolder = KWIN_DATADIR + QStringLiteral("/scripts/");
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
     for (const KPluginMetaData &script : scripts) {

@@ -167,7 +167,7 @@ bool ScriptedEffectLoader::loadDeclarativeEffect(const KPluginMetaData &metadata
 {
     const QString name = metadata.pluginId();
     const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                      QLatin1String("kwin/effects/") + name + QLatin1String("/contents/ui/main.qml"));
+                                                      KWIN_DATADIR + QLatin1String("/effects/") + name + QLatin1String("/contents/ui/main.qml"));
     if (scriptFile.isNull()) {
         qCWarning(KWIN_CORE) << "Could not locate the effect script";
         return false;
@@ -226,15 +226,15 @@ void ScriptedEffectLoader::queryAndLoadAll()
 
 QList<KPluginMetaData> ScriptedEffectLoader::findAllEffects() const
 {
-    return KPackage::PackageLoader::self()->listPackages(s_serviceType, QStringLiteral("kwin/effects"));
+    return KPackage::PackageLoader::self()->listPackages(s_serviceType, KWIN_DATADIR + QStringLiteral("/effects"));
 }
 
 KPluginMetaData ScriptedEffectLoader::findEffect(const QString &name) const
 {
-    const auto plugins = KPackage::PackageLoader::self()->findPackages(s_serviceType, QStringLiteral("kwin/effects"),
+    const auto plugins = KPackage::PackageLoader::self()->findPackages(s_serviceType, KWIN_DATADIR + QStringLiteral("/effects"),
                                                                        [name](const KPluginMetaData &metadata) {
-                                                                           return metadata.pluginId().compare(name, Qt::CaseInsensitive) == 0;
-                                                                       });
+        return metadata.pluginId().compare(name, Qt::CaseInsensitive) == 0;
+    });
     if (!plugins.isEmpty()) {
         return plugins.first();
     }

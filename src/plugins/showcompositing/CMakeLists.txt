@@ -16,4 +16,4 @@ target_link_libraries(showcompositing PRIVATE
     Qt::Quick
 )
 
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/showcompositing)
+install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_DATADIR}/effects/showcompositing)

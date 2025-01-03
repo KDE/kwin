@@ -28,8 +28,8 @@ namespace KWin
 RotatingArcsItem::RotatingArcsItem(Item *parentItem)
     : Item(parentItem)
 {
-    const QString f[2] = {QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_outer.png")),
-                          QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_inner.png"))};
+    const QString f[2] = {QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QStringLiteral("/tm_outer.png")),
+                          QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QStringLiteral("/tm_inner.png"))};
     if (f[0].isEmpty() || f[1].isEmpty()) {
         return;
     }

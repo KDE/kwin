@@ -169,7 +169,7 @@ void OnScreenNotification::ensureQmlComponent()
     }
     m_qmlComponent = std::make_unique<QQmlComponent>(m_qmlEngine);
     const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                    m_config->group(QStringLiteral("OnScreenNotification")).readEntry("QmlPath", QStringLiteral("kwin/onscreennotification/plasma/main.qml")));
+                                                    m_config->group(QStringLiteral("OnScreenNotification")).readEntry("QmlPath", QString(KWIN_DATADIR + QStringLiteral("/onscreennotification/plasma/main.qml"))));
     if (fileName.isEmpty()) {
         return;
     }

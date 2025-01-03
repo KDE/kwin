@@ -1,7 +1,7 @@
 #######################################
 # Effect
 # Data files
-install(FILES data/tm_inner.png data/tm_outer.png DESTINATION ${KDE_INSTALL_DATADIR}/kwin)
+install(FILES data/tm_inner.png data/tm_outer.png DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_DATADIR})
 
 set(trackmouse_SOURCES
     main.cpp

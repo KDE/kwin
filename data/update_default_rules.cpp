@@ -9,6 +9,8 @@
 
 // read additional window rules and add them to kwinrulesrc
 
+#include "config-kwin.h"
+
 #include <KConfig>
 #include <KConfigGroup>
 #include <QCoreApplication>
@@ -25,7 +27,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setApplicationName("kwin_update_default_rules");
 
-    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString("kwin/default_rules/%1").arg(argv[1]));
+    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QString("/default_rules/%1").arg(argv[1]));
     if (file.isEmpty()) {
         qWarning() << "File " << argv[1] << " not found!";
         return 1;

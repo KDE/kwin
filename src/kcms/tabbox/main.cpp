@@ -9,6 +9,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "main.h"
+
+#include "config-kwin.h"
+
 #include <kwin_effects_interface.h>
 
 // Qt
@@ -180,7 +183,7 @@ void KWinTabBoxConfig::initLayoutLists()
     for (const auto &offer : offers) {
         const QString pluginName = offer.pluginId();
         const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                          QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/ui/main.qml"));
+                                                          KWIN_DATADIR + QLatin1String("/tabbox/") + pluginName + QLatin1String("/contents/ui/main.qml"));
         if (scriptFile.isEmpty()) {
             qWarning() << "scriptfile is null" << pluginName;
             continue;

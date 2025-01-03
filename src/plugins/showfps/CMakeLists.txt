@@ -17,4 +17,4 @@ target_link_libraries(showfps PRIVATE
     Qt::Quick
     )
 
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/showfps)
+install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_DATADIR}/effects/showfps)

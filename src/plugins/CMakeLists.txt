@@ -27,22 +27,22 @@ macro(kwin_add_builtin_effect name)
     kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "${KWIN_PLUGINDIR}/effects/plugins")
     target_compile_definitions(${name} PRIVATE -DTRANSLATION_DOMAIN=\"kwin\")
     kwin_strip_builtin_effect_metadata(${name} metadata.json)
-    install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/kwin/builtin-effects/ RENAME ${name}.json)
+    install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_DATADIR}/builtin-effects/ RENAME ${name}.json)
 endmacro()
 
 function(kwin_add_scripted_effect name source)
-    kpackage_install_package(${source} ${name} effects kwin)
+    kpackage_install_package(${source} ${name} effects ${KWIN_DATADIR})
 
     # necessary so tests are found without installing
-    file(COPY ${source}/contents ${source}/metadata.json DESTINATION ${CMAKE_BINARY_DIR}/bin/kwin/effects/${name})
+    file(COPY ${source}/contents ${source}/metadata.json DESTINATION ${CMAKE_BINARY_DIR}/bin/${KWIN_DATADIR}/effects/${name})
 endfunction()
 
 function(kwin_add_script name source)
-    kpackage_install_package(${source} ${name} scripts kwin)
+    kpackage_install_package(${source} ${name} scripts ${KWIN_DATADIR})
 
     # Copy the script to the build directory so one can run tests without prior
     # make install. FIXME: use add_custom_command.
-    file(COPY ${source}/contents ${source}/metadata.json DESTINATION ${CMAKE_BINARY_DIR}/bin/kwin/scripts/${name})
+    file(COPY ${source}/contents ${source}/metadata.json DESTINATION ${CMAKE_BINARY_DIR}/bin/${KWIN_DATADIR}/scripts/${name})
 endfunction()
 
 add_subdirectory(private)

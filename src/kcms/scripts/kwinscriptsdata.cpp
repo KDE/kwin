@@ -6,6 +6,8 @@
 
 #include "kwinscriptsdata.h"
 
+#include "config-kwin.h"
+
 #include <KConfigGroup>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
@@ -20,7 +22,7 @@ KWinScriptsData::KWinScriptsData(QObject *parent)
 
 QList<KPluginMetaData> KWinScriptsData::pluginMetaDataList() const
 {
-    const QString scriptFolder = QStringLiteral("kwin/scripts/");
+    const QString scriptFolder = KWIN_DATADIR + QStringLiteral("/scripts/");
     return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder);
 }
 

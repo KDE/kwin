@@ -213,7 +213,7 @@ bool EffectsModel::setData(const QModelIndex &index, const QVariant &value, int 
 void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
 {
     const QString rootDirectory = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                         QStringLiteral("kwin/builtin-effects"),
+                                                         KWIN_DATADIR + QStringLiteral("/builtin-effects"),
                                                          QStandardPaths::LocateDirectory);
 
     const QStringList nameFilters{QStringLiteral("*.json")};
@@ -271,9 +271,7 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 {
-    const auto plugins = KPackage::PackageLoader::self()->listPackages(
-        QStringLiteral("KWin/Effect"),
-        QStringLiteral("kwin/effects"));
+    const auto plugins = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), KWIN_DATADIR + QStringLiteral("/effects"));
     for (const KPluginMetaData &plugin : plugins) {
         EffectData effect;
 
@@ -300,8 +298,8 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
         if (const QString configModule = plugin.value(QStringLiteral("X-KDE-ConfigModule")); !configModule.isEmpty()) {
             if (configModule == QLatin1StringView("kcm_kwin4_genericscripted")) {
-                const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
-                const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
+                const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
+                const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
                 if (QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile)) {
                     effect.configModule = configModule;
                     effect.configArgs = QVariantList{plugin.pluginId(), QStringLiteral("KWin/Effect")};

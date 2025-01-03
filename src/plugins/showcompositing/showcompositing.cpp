@@ -26,7 +26,7 @@ void ShowCompositingEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
     if (!m_scene) {
         m_scene = std::make_unique<OffscreenQuickScene>();
-        m_scene->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/showcompositing/qml/main.qml"))));
+        m_scene->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QStringLiteral("/effects/showcompositing/qml/main.qml"))));
     }
 }
 

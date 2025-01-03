@@ -23,4 +23,4 @@ target_link_libraries(tileseditor PRIVATE
     Qt::Quick
     )
 
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/tileseditor)
+install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_DATADIR}/effects/tileseditor)

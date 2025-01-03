@@ -29,4 +29,4 @@ target_link_libraries(windowview PRIVATE
     Qt::Quick
     )
 
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/windowview)
+install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_DATADIR}/effects/windowview)
