@@ -22,8 +22,8 @@ KWinScriptsData::KWinScriptsData(QObject *parent)
 
 QList<KPluginMetaData> KWinScriptsData::pluginMetaDataList() const
 {
-    const QString scriptFolder = KWIN_DATADIR + QStringLiteral("/scripts/");
-    return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder);
+    return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), KWIN_DATADIR + QStringLiteral("/scripts/"))
+        + KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/scripts/"));
 }
 
 bool KWinScriptsData::isDefaults() const
