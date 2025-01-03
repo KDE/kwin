@@ -346,10 +346,10 @@ static constexpr const auto s_appAltRev = kli18n("Walk Through Windows of Curren
 
 void TabBox::initShortcuts()
 {
-    key(s_windows, &TabBox::slotWalkThroughWindows, {Qt::AltModifier | Qt::Key_Tab});
-    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, {Qt::AltModifier | Qt::ShiftModifier | Qt::Key_Tab});
-    key(s_app, &TabBox::slotWalkThroughCurrentAppWindows, {Qt::AltModifier | Qt::Key_QuoteLeft});
-    key(s_appRev, &TabBox::slotWalkBackThroughCurrentAppWindows, {Qt::AltModifier | Qt::Key_AsciiTilde});
+    key(s_windows, &TabBox::slotWalkThroughWindows, {Qt::MetaModifier | Qt::Key_Tab, Qt::AltModifier | Qt::Key_Tab});
+    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, {Qt::MetaModifier | Qt::ShiftModifier | Qt::Key_Tab, Qt::AltModifier | Qt::ShiftModifier | Qt::Key_Tab});
+    key(s_app, &TabBox::slotWalkThroughCurrentAppWindows, {Qt::MetaModifier | Qt::Key_QuoteLeft, Qt::AltModifier | Qt::Key_QuoteLeft});
+    key(s_appRev, &TabBox::slotWalkBackThroughCurrentAppWindows, {Qt::MetaModifier | Qt::Key_AsciiTilde, Qt::AltModifier | Qt::Key_AsciiTilde});
     key(s_windowsAlt, &TabBox::slotWalkThroughWindowsAlternative);
     key(s_windowsAltRev, &TabBox::slotWalkBackThroughWindowsAlternative);
     key(s_appAlt, &TabBox::slotWalkThroughCurrentAppWindowsAlternative);

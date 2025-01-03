@@ -128,10 +128,10 @@ ShortcutSettings::ShortcutSettings(QObject *parent)
     };
 
     // TabboxType::Main
-    addShortcut(ki18nd("kwin", "Walk Through Windows"), {Qt::ALT | Qt::Key_Tab});
-    addShortcut(ki18nd("kwin", "Walk Through Windows (Reverse)"), {Qt::ALT | Qt::SHIFT | Qt::Key_Tab});
-    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application"), {Qt::ALT | Qt::Key_QuoteLeft});
-    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application (Reverse)"), {Qt::ALT | Qt::Key_AsciiTilde});
+    addShortcut(ki18nd("kwin", "Walk Through Windows"), {Qt::META | Qt::Key_Tab, Qt::ALT | Qt::Key_Tab});
+    addShortcut(ki18nd("kwin", "Walk Through Windows (Reverse)"), {Qt::META | Qt::SHIFT | Qt::Key_Tab, Qt::ALT | Qt::SHIFT | Qt::Key_Tab});
+    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application"), {Qt::META | Qt::Key_QuoteLeft, Qt::ALT | Qt::Key_QuoteLeft});
+    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application (Reverse)"), {Qt::META | Qt::Key_AsciiTilde, Qt::ALT | Qt::Key_AsciiTilde});
     // TabboxType::Alternative
     addShortcut(ki18nd("kwin", "Walk Through Windows Alternative"));
     addShortcut(ki18nd("kwin", "Walk Through Windows Alternative (Reverse)"));
