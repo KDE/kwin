@@ -73,7 +73,6 @@ private Q_SLOTS:
     void onShowDesktopMode();
     void onSwitchingMode();
     void onEffectCombo();
-    void onShortcutChanged(const QKeySequence &seq);
     void updateDefaultIndicators();
 
 private:

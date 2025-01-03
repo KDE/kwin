@@ -463,10 +463,68 @@
          </widget>
         </item>
         <item row="6" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scCurrentReverse" native="true"/>
+         <widget class="QWidget" name="scCurrentReverseContainer">
+          <layout class="QHBoxLayout" name="scCurrentReverseLayout">
+           <item>
+            <widget class="KKeySequenceWidget" name="scCurrentReverse" native="true"/>
+           </item>
+           <item>
+           <widget class="QLabel" name="scCurrentReverseOr">
+            <property name="text">
+             <string>or</string>
+            </property>
+           </widget>
+           </item>
+           <item>
+            <widget class="KKeySequenceWidget" name="scCurrentReverseAlternate" native="true"/>
+           </item>
+           <item>
+            <spacer name="scCurrentReverseSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item row="5" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scCurrent" native="true"/>
+         <widget class="QWidget" name="scCurrentContainer">
+          <layout class="QHBoxLayout" name="scCurrentLayout">
+           <item>
+            <widget class="KKeySequenceWidget" name="scCurrent" native="true"/>
+           </item>
+           <item>
+           <widget class="QLabel" name="scCurrentOr">
+            <property name="text">
+             <string>or</string>
+            </property>
+           </widget>
+           </item>
+           <item>
+            <widget class="KKeySequenceWidget" name="scCurrentAlternate" native="true"/>
+           </item>
+           <item>
+            <spacer name="scCurrentSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item row="4" column="0" colspan="4">
          <widget class="QLabel" name="label_2">
@@ -485,10 +543,68 @@
          </widget>
         </item>
         <item row="2" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scAllReverse" native="true"/>
+         <widget class="QWidget" name="scAllReverseContainer">
+          <layout class="QHBoxLayout" name="scAllReverseLayout">
+           <item>
+            <widget class="KKeySequenceWidget" name="scAllReverse" native="true"/>
+           </item>
+           <item>
+           <widget class="QLabel" name="scAllReverseOr">
+            <property name="text">
+             <string>or</string>
+            </property>
+           </widget>
+           </item>
+           <item>
+            <widget class="KKeySequenceWidget" name="scAllReverseAlternate" native="true"/>
+           </item>
+           <item>
+            <spacer name="scAllReverseSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item row="1" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scAll" native="true"/>
+         <widget class="QWidget" name="scAllContainer">
+          <layout class="QHBoxLayout" name="scAllLayout">
+           <item>
+            <widget class="KKeySequenceWidget" name="scAll" native="true"/>
+           </item>
+           <item>
+           <widget class="QLabel" name="scAllOr">
+            <property name="text">
+             <string>or</string>
+            </property>
+           </widget>
+           </item>
+           <item>
+            <widget class="KKeySequenceWidget" name="scAllAlternate" native="true"/>
+           </item>
+           <item>
+            <spacer name="scAllSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
