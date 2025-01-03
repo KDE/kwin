@@ -11,6 +11,8 @@
 #cmakedefine01 KWIN_BUILD_ACTIVITIES
 #cmakedefine01 KWIN_BUILD_GLOBALSHORTCUTS
 #cmakedefine01 KWIN_BUILD_X11
+constexpr QLatin1String KWIN_DATADIR("${KWIN_DATADIR}");
+constexpr QLatin1String KWIN_PLUGINDIR("${KWIN_PLUGINDIR}");
 constexpr QLatin1String KWIN_CONFIG("kwinrc");
 constexpr QLatin1String KWIN_VERSION_STRING("${PROJECT_VERSION}");
 constexpr QLatin1String XCB_VERSION_STRING("${XCB_VERSION}");
