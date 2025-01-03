@@ -36,7 +36,7 @@ public:
 private:
     KActionCollection *m_actionCollection = nullptr;
     QAction *m_action = nullptr;
-    QKeySequence m_savedShortcut;
+    QList<QKeySequence> m_savedShortcuts;
 };
 
 ShortcutItem::ShortcutItem(QAction *action, KActionCollection *actionCollection)
@@ -45,29 +45,28 @@ ShortcutItem::ShortcutItem(QAction *action, KActionCollection *actionCollection)
     , m_action(action)
 {
     setGetDefaultImpl([this] {
-        return m_actionCollection->defaultShortcut(m_action);
+        return QVariant::fromValue(m_actionCollection->defaultShortcuts(m_action));
     });
 
     setIsDefaultImpl([this] {
-        return m_action->shortcut() == m_actionCollection->defaultShortcut(m_action);
+        return m_action->shortcuts() == m_actionCollection->defaultShortcuts(m_action);
     });
 
     setIsSaveNeededImpl([this] {
-        return (m_action->shortcut() != m_savedShortcut);
+        return (m_action->shortcuts() != m_savedShortcuts);
     });
 }
 
 void ShortcutItem::readConfig(KConfig *config)
 {
-    const auto shortcuts = KGlobalAccel::self()->globalShortcut(m_actionCollection->componentName(), m_action->objectName());
-    m_savedShortcut = shortcuts.isEmpty() ? QKeySequence() : shortcuts.first();
-    m_action->setShortcut(m_savedShortcut);
+    m_savedShortcuts = KGlobalAccel::self()->globalShortcut(m_actionCollection->componentName(), m_action->objectName());
+    m_action->setShortcuts(m_savedShortcuts);
 }
 
 void ShortcutItem::writeConfig(KConfig *config)
 {
-    m_savedShortcut = m_action->shortcut();
-    KGlobalAccel::self()->setShortcut(m_action, {m_action->shortcut()}, KGlobalAccel::NoAutoloading);
+    m_savedShortcuts = m_action->shortcuts();
+    KGlobalAccel::self()->setShortcut(m_action, m_action->shortcuts(), KGlobalAccel::NoAutoloading);
 }
 
 void ShortcutItem::readDefault(KConfig *config)
@@ -76,32 +75,32 @@ void ShortcutItem::readDefault(KConfig *config)
 
 void ShortcutItem::setDefault()
 {
-    m_action->setShortcut(m_actionCollection->defaultShortcut(m_action));
+    m_action->setShortcuts(m_actionCollection->defaultShortcuts(m_action));
 }
 
 void ShortcutItem::swapDefault()
 {
-    QKeySequence previousShortcut = m_action->shortcut();
-    m_action->setShortcut(m_actionCollection->defaultShortcut(m_action));
-    m_actionCollection->setDefaultShortcut(m_action, previousShortcut);
+    const QList<QKeySequence> previousShortcut = m_action->shortcuts();
+    m_action->setShortcuts(m_actionCollection->defaultShortcuts(m_action));
+    m_actionCollection->setDefaultShortcuts(m_action, previousShortcut);
 }
 
 bool ShortcutItem::isEqual(const QVariant &p) const
 {
-    if (!p.canConvert<QKeySequence>()) {
+    if (!p.canConvert<QList<QKeySequence>>()) {
         return false;
     }
-    return m_action->shortcut() == p.value<QKeySequence>();
+    return m_action->shortcuts() == p.value<QList<QKeySequence>>();
 }
 
 QVariant ShortcutItem::property() const
 {
-    return QVariant::fromValue<QKeySequence>(m_action->shortcut());
+    return QVariant::fromValue<QList<QKeySequence>>(m_action->shortcuts());
 }
 
 void ShortcutItem::setProperty(const QVariant &p)
 {
-    m_action->setShortcut(p.value<QKeySequence>());
+    m_action->setShortcuts(p.value<QList<QKeySequence>>());
 }
 
 namespace KWin
@@ -116,23 +115,23 @@ ShortcutSettings::ShortcutSettings(QObject *parent)
     m_actionCollection->setConfigGroup("Navigation");
     m_actionCollection->setConfigGlobal(true);
 
-    auto addShortcut = [this](const KLocalizedString &name, const QKeySequence &sequence = QKeySequence()) {
+    auto addShortcut = [this](const KLocalizedString &name, const QList<QKeySequence> &shortcuts = QList<QKeySequence>()) {
         const QString untranslatedName = QString::fromUtf8(name.untranslatedText());
         QAction *action = m_actionCollection->addAction(untranslatedName);
         action->setObjectName(untranslatedName);
         action->setProperty("isConfigurationAction", true);
         action->setText(name.toString());
 
-        m_actionCollection->setDefaultShortcut(action, sequence);
+        m_actionCollection->setDefaultShortcuts(action, shortcuts);
 
         addItem(new ShortcutItem(action, m_actionCollection));
     };
 
     // TabboxType::Main
-    addShortcut(ki18nd("kwin", "Walk Through Windows"), Qt::ALT | Qt::Key_Tab);
-    addShortcut(ki18nd("kwin", "Walk Through Windows (Reverse)"), Qt::ALT | Qt::SHIFT | Qt::Key_Tab);
-    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application"), Qt::ALT | Qt::Key_QuoteLeft);
-    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application (Reverse)"), Qt::ALT | Qt::Key_AsciiTilde);
+    addShortcut(ki18nd("kwin", "Walk Through Windows"), {Qt::ALT | Qt::Key_Tab});
+    addShortcut(ki18nd("kwin", "Walk Through Windows (Reverse)"), {Qt::ALT | Qt::SHIFT | Qt::Key_Tab});
+    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application"), {Qt::ALT | Qt::Key_QuoteLeft});
+    addShortcut(ki18nd("kwin", "Walk Through Windows of Current Application (Reverse)"), {Qt::ALT | Qt::Key_AsciiTilde});
     // TabboxType::Alternative
     addShortcut(ki18nd("kwin", "Walk Through Windows Alternative"));
     addShortcut(ki18nd("kwin", "Walk Through Windows Alternative (Reverse)"));
@@ -145,25 +144,32 @@ KActionCollection *ShortcutSettings::actionCollection() const
     return m_actionCollection;
 }
 
-QKeySequence ShortcutSettings::shortcut(const QString &name) const
+QKeySequence ShortcutSettings::primaryShortcut(const QString &name) const
 {
     QAction *action = m_actionCollection->action(name);
     Q_ASSERT(action);
-    return action->shortcut();
+    return action->shortcuts().value(0);
 }
 
-void ShortcutSettings::setShortcut(const QString &name, const QKeySequence &seq)
+QKeySequence ShortcutSettings::alternateShortcut(const QString &name) const
 {
     QAction *action = m_actionCollection->action(name);
     Q_ASSERT(action);
-    action->setShortcut(seq);
+    return action->shortcuts().value(1);
+}
+
+void ShortcutSettings::setShortcuts(const QString &name, const QList<QKeySequence> &shortcuts)
+{
+    QAction *action = m_actionCollection->action(name);
+    Q_ASSERT(action);
+    action->setShortcuts(shortcuts);
 }
 
 bool ShortcutSettings::isDefault(const QString &name) const
 {
     QAction *action = m_actionCollection->action(name);
     Q_ASSERT(action);
-    return action->shortcut() == m_actionCollection->defaultShortcut(action);
+    return action->shortcuts() == m_actionCollection->defaultShortcuts(action);
 }
 
 } // namespace TabBox

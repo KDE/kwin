@@ -323,16 +323,16 @@ void TabBox::handlerReady()
 }
 
 template<typename Slot>
-void TabBox::key(const KLazyLocalizedString &actionName, Slot slot, const QKeySequence &shortcut)
+void TabBox::key(const KLazyLocalizedString &actionName, Slot slot, const QList<QKeySequence> &shortcuts)
 {
     QAction *a = new QAction(this);
     a->setProperty("componentName", QStringLiteral("kwin"));
     a->setObjectName(QString::fromUtf8(actionName.untranslatedText()));
     a->setText(actionName.toString());
-    KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>() << shortcut);
+    KGlobalAccel::self()->setGlobalShortcut(a, shortcuts);
     connect(a, &QAction::triggered, this, slot);
     auto cuts = KGlobalAccel::self()->shortcut(a);
-    globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
+    globalShortcutChanged(a, cuts);
 }
 
 static constexpr const auto s_windows = kli18n("Walk Through Windows");
@@ -346,19 +346,21 @@ static constexpr const auto s_appAltRev = kli18n("Walk Through Windows of Curren
 
 void TabBox::initShortcuts()
 {
-    key(s_windows, &TabBox::slotWalkThroughWindows, Qt::AltModifier | Qt::Key_Tab);
-    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, Qt::AltModifier | Qt::ShiftModifier | Qt::Key_Tab);
-    key(s_app, &TabBox::slotWalkThroughCurrentAppWindows, Qt::AltModifier | Qt::Key_QuoteLeft);
-    key(s_appRev, &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::AltModifier | Qt::Key_AsciiTilde);
+    key(s_windows, &TabBox::slotWalkThroughWindows, {Qt::AltModifier | Qt::Key_Tab});
+    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, {Qt::AltModifier | Qt::ShiftModifier | Qt::Key_Tab});
+    key(s_app, &TabBox::slotWalkThroughCurrentAppWindows, {Qt::AltModifier | Qt::Key_QuoteLeft});
+    key(s_appRev, &TabBox::slotWalkBackThroughCurrentAppWindows, {Qt::AltModifier | Qt::Key_AsciiTilde});
     key(s_windowsAlt, &TabBox::slotWalkThroughWindowsAlternative);
     key(s_windowsAltRev, &TabBox::slotWalkBackThroughWindowsAlternative);
     key(s_appAlt, &TabBox::slotWalkThroughCurrentAppWindowsAlternative);
     key(s_appAltRev, &TabBox::slotWalkBackThroughCurrentAppWindowsAlternative);
 
-    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &TabBox::globalShortcutChanged);
+    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, [this](QAction *action) {
+        globalShortcutChanged(action, KGlobalAccel::self()->shortcut(action));
+    });
 }
 
-void TabBox::globalShortcutChanged(QAction *action, const QKeySequence &seq)
+void TabBox::globalShortcutChanged(QAction *action, const QList<QKeySequence> &seq)
 {
     if (qstrcmp(qPrintable(action->objectName()), s_windows.untranslatedText()) == 0) {
         m_cutWalkThroughWindows = seq;
@@ -657,30 +659,34 @@ void TabBox::grabbedKeyEvent(QKeyEvent *event)
     m_tabBox->grabbedKeyEvent(event);
 }
 
-static bool areModKeysDepressed(const QKeySequence &seq)
+static bool areModKeysDepressed(const QList<QKeySequence> &shortcuts)
 {
-    if (seq.isEmpty()) {
+    if (shortcuts.isEmpty()) {
         return false;
     }
-    const Qt::KeyboardModifiers mod = seq[seq.count() - 1].keyboardModifiers();
-    const Qt::KeyboardModifiers mods = input()->modifiersRelevantForGlobalShortcuts();
 
-    if ((mod & Qt::ShiftModifier) && mods.testFlag(Qt::ShiftModifier)) {
-        return true;
+    for (const QKeySequence &seq : shortcuts) {
+        const Qt::KeyboardModifiers mod = seq[seq.count() - 1].keyboardModifiers();
+        const Qt::KeyboardModifiers mods = input()->modifiersRelevantForGlobalShortcuts();
+
+        if ((mod & Qt::ShiftModifier) && mods.testFlag(Qt::ShiftModifier)) {
+            return true;
+        }
+        if ((mod & Qt::ControlModifier) && mods.testFlag(Qt::ControlModifier)) {
+            return true;
+        }
+        if ((mod & Qt::AltModifier) && mods.testFlag(Qt::AltModifier)) {
+            return true;
+        }
+        if ((mod & Qt::MetaModifier) && mods.testFlag(Qt::MetaModifier)) {
+            return true;
+        }
     }
-    if ((mod & Qt::ControlModifier) && mods.testFlag(Qt::ControlModifier)) {
-        return true;
-    }
-    if ((mod & Qt::AltModifier) && mods.testFlag(Qt::AltModifier)) {
-        return true;
-    }
-    if ((mod & Qt::MetaModifier) && mods.testFlag(Qt::MetaModifier)) {
-        return true;
-    }
+
     return false;
 }
 
-void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut, TabBoxMode mode)
+void TabBox::navigatingThroughWindows(bool forward, const QList<QKeySequence> &shortcut, TabBoxMode mode)
 {
     if (!m_ready || isGrabbed()) {
         return;
@@ -880,12 +886,14 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
 // Tests whether a key event matches the shortcut for a given mode, either
 // forward or backward, returning the direction, or Steady for no match
 // Handles pitfalls with the Shift modifier
-TabBox::Direction TabBox::matchShortcuts(const KeyboardKeyEvent &keyEvent, const QKeySequence &forward, const QKeySequence &backward) const
+TabBox::Direction TabBox::matchShortcuts(const KeyboardKeyEvent &keyEvent, const QList<QKeySequence> &forward, const QList<QKeySequence> &backward) const
 {
-    auto contains = [](const QKeySequence &shortcut, const QKeyCombination key) -> bool {
-        for (int i = 0; i < shortcut.count(); ++i) {
-            if (shortcut[i] == key) {
-                return true;
+    auto contains = [](const QList<QKeySequence> &shortcuts, const QKeyCombination key) -> bool {
+        for (const QKeySequence &shortcut : shortcuts) {
+            for (int i = 0; i < shortcut.count(); ++i) {
+                if (shortcut[i] == key) {
+                    return true;
+                }
             }
         }
         return false;
@@ -933,7 +941,7 @@ void TabBox::keyPress(const KeyboardKeyEvent &keyEvent)
 
     Direction direction(Steady);
 
-    const std::array<std::pair<QKeySequence, QKeySequence>, TABBOX_MODE_COUNT> shortcuts = {{
+    const std::array<std::pair<QList<QKeySequence>, QList<QKeySequence>>, TABBOX_MODE_COUNT> shortcuts = {{
         {m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse},
         {m_cutWalkThroughWindowsAlternative, m_cutWalkThroughWindowsAlternativeReverse},
         {m_cutWalkThroughCurrentAppWindows, m_cutWalkThroughCurrentAppWindowsReverse},

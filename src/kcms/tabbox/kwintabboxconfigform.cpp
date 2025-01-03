@@ -61,22 +61,44 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *conf
     connect(ui->switchingModeCombo, &QComboBox::activated, this, &KWinTabBoxConfigForm::onSwitchingMode);
     connect(ui->effectCombo, &QComboBox::activated, this, &KWinTabBoxConfigForm::onEffectCombo);
 
-    auto initShortcutWidget = [this](KKeySequenceWidget *widget, const char *name) {
-        widget->setCheckActionCollections({m_shortcuts->actionCollection()});
-        widget->setProperty("shortcutAction", name);
-        connect(widget, &KKeySequenceWidget::keySequenceChanged, this, &KWinTabBoxConfigForm::onShortcutChanged);
+    auto initShortcutWidget = [this](KKeySequenceWidget *primary, KKeySequenceWidget *alternate, const QString &name) {
+        primary->setCheckActionCollections({m_shortcuts->actionCollection()});
+        primary->setProperty("shortcutAction", name);
+        connect(primary, &KKeySequenceWidget::recordingChanged, this, [this, name, primary]() {
+            if (primary->isRecording()) {
+                return;
+            }
+            const QKeySequence seq = primary->keySequence();
+            if (m_shortcuts->primaryShortcut(name) != seq) {
+                m_shortcuts->setShortcuts(name, {seq, m_shortcuts->alternateShortcut(name)});
+                Q_EMIT configChanged();
+            }
+        });
+
+        alternate->setCheckActionCollections({m_shortcuts->actionCollection()});
+        alternate->setProperty("shortcutAction", name);
+        connect(alternate, &KKeySequenceWidget::recordingChanged, this, [this, name, alternate]() {
+            if (alternate->isRecording()) {
+                return;
+            }
+            const QKeySequence seq = alternate->keySequence();
+            if (m_shortcuts->alternateShortcut(name) != seq) {
+                m_shortcuts->setShortcuts(name, {m_shortcuts->primaryShortcut(name), seq});
+                Q_EMIT configChanged();
+            }
+        });
     };
 
     if (TabboxType::Main == type) {
-        initShortcutWidget(ui->scAll, "Walk Through Windows");
-        initShortcutWidget(ui->scAllReverse, "Walk Through Windows (Reverse)");
-        initShortcutWidget(ui->scCurrent, "Walk Through Windows of Current Application");
-        initShortcutWidget(ui->scCurrentReverse, "Walk Through Windows of Current Application (Reverse)");
+        initShortcutWidget(ui->scAll, ui->scAllAlternate, QStringLiteral("Walk Through Windows"));
+        initShortcutWidget(ui->scAllReverse, ui->scAllReverseAlternate, QStringLiteral("Walk Through Windows (Reverse)"));
+        initShortcutWidget(ui->scCurrent, ui->scCurrentAlternate, QStringLiteral("Walk Through Windows of Current Application"));
+        initShortcutWidget(ui->scCurrentReverse, ui->scCurrentReverseAlternate, QStringLiteral("Walk Through Windows of Current Application (Reverse)"));
     } else if (TabboxType::Alternative == type) {
-        initShortcutWidget(ui->scAll, "Walk Through Windows Alternative");
-        initShortcutWidget(ui->scAllReverse, "Walk Through Windows Alternative (Reverse)");
-        initShortcutWidget(ui->scCurrent, "Walk Through Windows of Current Application Alternative");
-        initShortcutWidget(ui->scCurrentReverse, "Walk Through Windows of Current Application Alternative (Reverse)");
+        initShortcutWidget(ui->scAll, ui->scAllAlternate, QStringLiteral("Walk Through Windows Alternative"));
+        initShortcutWidget(ui->scAllReverse, ui->scAllReverseAlternate, QStringLiteral("Walk Through Windows Alternative (Reverse)"));
+        initShortcutWidget(ui->scCurrent, ui->scCurrentAlternate, QStringLiteral("Walk Through Windows of Current Application Alternative"));
+        initShortcutWidget(ui->scCurrentReverse, ui->scCurrentReverseAlternate, QStringLiteral("Walk Through Windows of Current Application Alternative (Reverse)"));
     }
 
     updateUiFromConfig();
@@ -301,14 +323,6 @@ void KWinTabBoxConfigForm::onEffectCombo()
     Q_EMIT configChanged();
 }
 
-void KWinTabBoxConfigForm::onShortcutChanged(const QKeySequence &seq)
-{
-    const QString actionName = sender()->property("shortcutAction").toString();
-    m_shortcuts->setShortcut(actionName, seq);
-
-    Q_EMIT configChanged();
-}
-
 void KWinTabBoxConfigForm::updateUiFromConfig()
 {
     setFilterScreen(static_cast<TabBoxConfig::ClientMultiScreenMode>(m_config->multiScreenMode()));
@@ -323,7 +337,11 @@ void KWinTabBoxConfigForm::updateUiFromConfig()
 
     for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
         const QString actionName = widget->property("shortcutAction").toString();
-        widget->setKeySequence(m_shortcuts->shortcut(actionName));
+        widget->setKeySequence(m_shortcuts->primaryShortcut(actionName));
+    }
+    for (const auto &widget : {ui->scAllAlternate, ui->scAllReverseAlternate, ui->scCurrentAlternate, ui->scCurrentReverseAlternate}) {
+        const QString actionName = widget->property("shortcutAction").toString();
+        widget->setKeySequence(m_shortcuts->alternateShortcut(actionName));
     }
 
     updateDefaultIndicators();
@@ -379,7 +397,7 @@ void KWinTabBoxConfigForm::updateDefaultIndicators()
     applyDefaultIndicator({ui->switchingModeCombo}, m_config->switchingMode() == m_config->defaultSwitchingModeValue());
     applyDefaultIndicator({ui->effectCombo}, m_config->layoutName() == m_config->defaultLayoutNameValue());
 
-    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
+    for (const auto &widget : {ui->scAll, ui->scAllAlternate, ui->scAllReverse, ui->scAllReverseAlternate, ui->scCurrent, ui->scCurrentAlternate, ui->scCurrentReverse, ui->scCurrentReverseAlternate}) {
         const QString actionName = widget->property("shortcutAction").toString();
         applyDefaultIndicator({widget}, m_shortcuts->isDefault(actionName));
     }

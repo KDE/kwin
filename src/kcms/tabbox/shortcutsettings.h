@@ -27,8 +27,10 @@ public:
 
     KActionCollection *actionCollection() const;
 
-    QKeySequence shortcut(const QString &name) const;
-    void setShortcut(const QString &name, const QKeySequence &seq);
+    QKeySequence primaryShortcut(const QString &name) const;
+    QKeySequence alternateShortcut(const QString &name) const;
+
+    void setShortcuts(const QString &name, const QList<QKeySequence> &shortcuts);
 
     bool isDefault(const QString &name) const;
 
