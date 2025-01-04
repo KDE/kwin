@@ -249,25 +249,6 @@
         <entry name="LastFailureTimestamp" type="Int">
             <default>0</default>
         </entry>
-        <entry name="GLTextureFilter" type="Int">
-            <default>2</default>
-            <min>-1</min>
-            <max>2</max>
-        </entry>
-        <entry name="GLStrictBinding" type="Bool">
-            <default>true</default>
-        </entry>
-        <entry name="GLLegacy" type="Bool">
-            <default>false</default>
-        </entry>
-        <entry name="HiddenPreviews" type="Int">
-            <default>5</default>
-            <min>4</min>
-            <max>6</max>
-        </entry>
-        <entry name="WindowsBlockCompositing" type="Bool">
-            <default>true</default>
-        </entry>
         <entry name="AllowTearing" type="Bool">
             <default>true</default>
         </entry>
