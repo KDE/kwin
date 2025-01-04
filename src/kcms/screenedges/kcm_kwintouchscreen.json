@@ -130,6 +130,9 @@
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxdesktop edgesxx,xxscreen edgesxx,xxside of screenxx,xxscreen behaviorxx,xxtouch screenxx",
     "X-KDE-Keywords[zh_CN]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,chuangkou,guanli,texiao,sijiao,bianyuan,caozuo,qiehuan,zhuomian,kwin pingmubianyuan,zhuomianbianyuan,zuidahuachuangkou,pingpuchuangkou,pingmuxingwei,zhuomianqiehuan,xunizhuomian,xunizhuomianqiehuan,pingmujiaoluo,chumo,chumoping,chukong,chukongping,pingmu,窗口,管理,特效,四角,边缘,操作,切换,桌面,kwin 屏幕边缘,桌面边缘,最大化窗口,平铺窗口,屏幕行为,桌面切换,虚拟桌面,虚拟桌面切换,屏幕角落,触摸,触摸屏,触控,触控屏,屏幕",
     "X-KDE-Keywords[zh_TW]": "kwin,視窗,視窗管理員,效果,邊緣,角落,邊框,動作,切換,桌面,桌面邊緣,觸控螢幕,螢幕行為",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
     "X-KDE-System-Settings-Parent-Category": "hardware-input-touchscreen",
     "X-KDE-Weight": 20
 }

@@ -130,6 +130,9 @@
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxcornerxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxkwin screen edgesxx,xxdesktop edgesxx,xxscreen edgesxx,xxmaximize windowsxx,xxtile windowsxx,xxside of screenxx,xxscreen behaviorxx,xxswitch desktopxx,xxvirtual desktopxx,xxscreen cornersxx,xxbordersxx,xxscreen bordersxx,xxdesktop bordersxx,xxdesktop cornersxx,xxcornersxx,xxsticky cornersxx,xxsticky edgesxx,xxedge barriersxx,xxcorner barriersxx",
     "X-KDE-Keywords[zh_CN]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,chuangkou,guanli,texiao,sijiao,bianjiao,jiaoluo,bianyuan,caozuo,qiehuan,zhuomian,kwin pingmubianyuan,zhuomianbianyuan,zuidahuachuangkou,pingpuchuangkou,pingmuxingwei,zhuomianqiehuan,xunizhuomian,xunizhuomianqiehuan,pingmujiaoluo,pingmubianjiao,biankuang,pingmubiankuang,bianyan,pingmubianyan,zhuomianbiankuang,zhuomianbianyan,zhuomianbianyuan,zhuomiansijiao,zhuomianjiaoluo,zhuomianbianjiao,zhanxing,zhanzhi,zhanxingjiao,zhanxingjiaoluo,zhanxingpingmujiaoluo,zhanxingbian,zhanxingbianyuan,zhanxingpingmubianyuan,zhangai,bianyuanzhangai,pingmubianyuanzhangai,jiaoluozhangai,pingmujiaoluozhangai,窗口,管理,特效,四角,边角,角落,边缘,操作,切换,桌面,kwin 屏幕边缘,桌面边缘,最大化窗口,平铺窗口,屏幕行为,桌面切换,虚拟桌面,虚拟桌面切换,屏幕角落,屏幕边角,边框,屏幕边框,边沿,屏幕边沿,桌面边框,桌面边沿,桌面边缘,桌面四角,桌面角落,桌面边角,粘性,粘滞,粘性角,粘性角落,粘性屏幕角落,粘性边,粘性边缘,粘性屏幕边缘,障碍,边缘障碍,屏幕边缘障碍,角落障碍,屏幕角落障碍",
     "X-KDE-Keywords[zh_TW]": "kwin,視窗,視窗管理員,效果,角落,邊緣,邊框,動作,切換,桌面,螢幕邊緣,桌面邊緣,最大化視窗,鋪排視窗,螢幕行為,切換桌面,虛擬桌面,螢幕角落,角落屏障,邊緣屏障",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
     "X-KDE-System-Settings-Parent-Category": "pointing-devices",
     "X-KDE-Weight": 100
 }

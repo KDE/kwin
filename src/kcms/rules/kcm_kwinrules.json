@@ -136,6 +136,9 @@
     "X-KDE-Keywords[x-test]": "xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx,xxwindow rulesxx,xxappsxx,xxapplicationsxx",
     "X-KDE-Keywords[zh_CN]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,daxiao,weizhi,chuangkouxingwei,teding,gebie,zhiding,jizhu,jiyi,jilu,guize,chuangkouguize,yingyong,yingyongchengxu,大小,位置,窗口行为,特定,个别,指定,记住,记忆,记录,规则,窗口规则,应用,应用程序",
     "X-KDE-Keywords[zh_TW]": "大小,尺寸,位置,狀態,視窗行為,視窗,特定,專用,記住,規則,視窗規則,應用程式,程式",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 40
 }

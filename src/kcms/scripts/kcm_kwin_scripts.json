@@ -132,6 +132,9 @@
     "X-KDE-Keywords[x-test]": "xxkwin scriptxx,xxpluginsxx,xxwindow managerxx",
     "X-KDE-Keywords[zh_CN]": "kwin script,plugins,window manager,jiaoben,chajian,chuangkouguanliqi,kwin 脚本,插件,窗口管理器",
     "X-KDE-Keywords[zh_TW]": "kwin 文稿,kwin 指令稿,插件,外掛程式,視窗管理員",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 50
 }
