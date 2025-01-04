@@ -1493,11 +1493,6 @@ public:
         return m_randr.present;
     }
     int randrNotifyEvent() const;
-    bool isDamageAvailable() const
-    {
-        return m_damage.present;
-    }
-    int damageNotifyEvent() const;
     bool isCompositeAvailable() const
     {
         return m_composite.version > 0;
@@ -1534,7 +1529,6 @@ private:
 
     ExtensionData m_shape;
     ExtensionData m_randr;
-    ExtensionData m_damage;
     ExtensionData m_composite;
     ExtensionData m_render;
     ExtensionData m_fixes;
