@@ -135,6 +135,9 @@
     "X-KDE-Keywords[x-test]": "xxdesktopxx,xxdesktopsxx,xxnumberxx,xxvirtual desktopxx,xxmultiple desktopsxx,xxpagerxx,xxpager widgetxx,xxpager appletxx,xxpager settingsxx,xxindicatorxx,xxnavigationxx,xxcubexx,xxslidexx,xxworkspacesxx",
     "X-KDE-Keywords[zh_CN]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,zhuomian,xunizhuomian,duozhuomian,qiehuan,xunizhuomianqiehuanqi,qiehuanqi,qiehuanqizujian,qiehuanqishezhi,zhishiqi,zhishise,tishiqi,tishise,daohang,fangkuai,zhengfangti,huadong,gongzuoqu,gongzuokongjian,桌面,虚拟桌面,多桌面,切换,虚拟桌面切换器,切换器,切换器组件,切换器设置,指示器,指示色,提示器,提示色,导航,方块,正方体,滑动,工作区,工作空间",
     "X-KDE-Keywords[zh_TW]": "桌面,虛擬桌面,桌面管理器,虛擬桌面管理器,指示器,瀏覽,工作空間",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 60
 }
