@@ -171,21 +171,11 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(int killPingTimeout READ killPingTimeout WRITE setKillPingTimeout NOTIFY killPingTimeoutChanged)
     Q_PROPERTY(int compositingMode READ compositingMode WRITE setCompositingMode NOTIFY compositingModeChanged)
-    Q_PROPERTY(bool useCompositing READ isUseCompositing WRITE setUseCompositing NOTIFY useCompositingChanged)
     /**
      * 0 = no, 1 = yes when transformed,
      * 2 = try trilinear when transformed; else 1,
      * -1 = auto
      */
-    Q_PROPERTY(int glSmoothScale READ glSmoothScale WRITE setGlSmoothScale NOTIFY glSmoothScaleChanged)
-    Q_PROPERTY(bool glStrictBinding READ isGlStrictBinding WRITE setGlStrictBinding NOTIFY glStrictBindingChanged)
-    /**
-     * Whether strict binding follows the driver or has been overwritten by a user defined config value.
-     * If @c true glStrictBinding is set by the OpenGL Scene during initialization.
-     * If @c false glStrictBinding is set from a config value and not updated during scene initialization.
-     */
-    Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
-    Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
     Q_PROPERTY(bool allowTearing READ allowTearing WRITE setAllowTearing NOTIFY allowTearingChanged)
     Q_PROPERTY(bool interactiveWindowMoveEnabled READ interactiveWindowMoveEnabled WRITE setInteractiveWindowMoveEnabled NOTIFY interactiveWindowMoveEnabledChanged)
 public:
@@ -629,8 +619,6 @@ public:
      */
     double animationTimeFactor() const;
 
-    //----------------------
-    // Compositing settings
     CompositingType compositingMode() const
     {
         return m_compositingMode;
@@ -638,32 +626,6 @@ public:
     void setCompositingMode(CompositingType mode)
     {
         m_compositingMode = mode;
-    }
-    // Separate to mode so the user can toggle
-    bool isUseCompositing() const;
-
-    // OpenGL
-    // 1 = yes,
-    // 2 = try trilinear when transformed; else 1,
-    // -1 = auto
-    int glSmoothScale() const
-    {
-        return m_glSmoothScale;
-    }
-
-    // Settings that should be auto-detected
-    bool isGlStrictBinding() const
-    {
-        return m_glStrictBinding;
-    }
-    bool isGlStrictBindingFollowsDriver() const
-    {
-        return m_glStrictBindingFollowsDriver;
-    }
-
-    bool windowsBlockCompositing() const
-    {
-        return m_windowsBlockCompositing;
     }
 
     bool allowTearing() const;
@@ -719,11 +681,6 @@ public:
     void setBorderlessMaximizedWindows(bool borderlessMaximizedWindows);
     void setKillPingTimeout(int killPingTimeout);
     void setCompositingMode(int compositingMode);
-    void setUseCompositing(bool useCompositing);
-    void setGlSmoothScale(int glSmoothScale);
-    void setGlStrictBinding(bool glStrictBinding);
-    void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
-    void setWindowsBlockCompositing(bool set);
     void setAllowTearing(bool allow);
     void setInteractiveWindowMoveEnabled(bool set);
 
@@ -812,22 +769,6 @@ public:
     {
         return OpenGLCompositing;
     }
-    static bool defaultUseCompositing()
-    {
-        return true;
-    }
-    static int defaultGlSmoothScale()
-    {
-        return 2;
-    }
-    static bool defaultGlStrictBinding()
-    {
-        return true;
-    }
-    static bool defaultGlStrictBindingFollowsDriver()
-    {
-        return true;
-    }
     static XwaylandCrashPolicy defaultXwaylandCrashPolicy()
     {
         return XwaylandCrashPolicy::Restart;
@@ -907,12 +848,6 @@ Q_SIGNALS:
     void borderlessMaximizedWindowsChanged();
     void killPingTimeoutChanged();
     void compositingModeChanged();
-    void useCompositingChanged();
-    void hiddenPreviewsChanged();
-    void glSmoothScaleChanged();
-    void glStrictBindingChanged();
-    void glStrictBindingFollowsDriverChanged();
-    void windowsBlockCompositingChanged();
     void animationSpeedChanged();
     void configChanged();
     void allowTearingChanged();
@@ -950,12 +885,6 @@ private:
     bool m_xwaylandEavesdropsMouse;
 
     CompositingType m_compositingMode;
-    bool m_useCompositing;
-    int m_glSmoothScale;
-    // Settings that should be auto-detected
-    bool m_glStrictBinding;
-    bool m_glStrictBindingFollowsDriver;
-    bool m_windowsBlockCompositing;
     WindowOperation OpTitlebarDblClick;
     WindowOperation opMaxButtonRightClick = defaultOperationMaxButtonRightClick();
     WindowOperation opMaxButtonMiddleClick = defaultOperationMaxButtonMiddleClick();
