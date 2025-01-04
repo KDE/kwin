@@ -57,11 +57,6 @@ Options::Options(QObject *parent)
     , m_xwaylandEavesdrops(Options::defaultXwaylandEavesdrops())
     , m_xwaylandEavesdropsMouse(Options::defaultXwaylandEavesdropsMouse())
     , m_compositingMode(Options::defaultCompositingMode())
-    , m_useCompositing(Options::defaultUseCompositing())
-    , m_glSmoothScale(Options::defaultGlSmoothScale())
-    , m_glStrictBinding(Options::defaultGlStrictBinding())
-    , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
-    , m_windowsBlockCompositing(true)
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -570,51 +565,6 @@ void Options::setCompositingMode(int compositingMode)
     Q_EMIT compositingModeChanged();
 }
 
-void Options::setUseCompositing(bool useCompositing)
-{
-    if (m_useCompositing == useCompositing) {
-        return;
-    }
-    m_useCompositing = useCompositing;
-    Q_EMIT useCompositingChanged();
-}
-
-void Options::setGlSmoothScale(int glSmoothScale)
-{
-    if (m_glSmoothScale == glSmoothScale) {
-        return;
-    }
-    m_glSmoothScale = glSmoothScale;
-    Q_EMIT glSmoothScaleChanged();
-}
-
-void Options::setGlStrictBinding(bool glStrictBinding)
-{
-    if (m_glStrictBinding == glStrictBinding) {
-        return;
-    }
-    m_glStrictBinding = glStrictBinding;
-    Q_EMIT glStrictBindingChanged();
-}
-
-void Options::setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver)
-{
-    if (m_glStrictBindingFollowsDriver == glStrictBindingFollowsDriver) {
-        return;
-    }
-    m_glStrictBindingFollowsDriver = glStrictBindingFollowsDriver;
-    Q_EMIT glStrictBindingFollowsDriverChanged();
-}
-
-void Options::setWindowsBlockCompositing(bool value)
-{
-    if (m_windowsBlockCompositing == value) {
-        return;
-    }
-    m_windowsBlockCompositing = value;
-    Q_EMIT windowsBlockCompositingChanged();
-}
-
 bool Options::allowTearing() const
 {
     return m_allowTearing;
@@ -688,7 +638,6 @@ void Options::loadConfig()
 
     // Compositing
     config = KConfigGroup(m_settings->config(), QStringLiteral("Compositing"));
-    bool useCompositing = false;
     CompositingType compositingMode = NoCompositing;
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if (compositingBackend == "QPainter") {
@@ -702,20 +651,10 @@ void Options::loadConfig()
         case 'O':
             qCDebug(KWIN_CORE) << "Compositing forced to OpenGL mode by environment variable";
             compositingMode = OpenGLCompositing;
-            useCompositing = true;
             break;
         case 'Q':
             qCDebug(KWIN_CORE) << "Compositing forced to QPainter mode by environment variable";
             compositingMode = QPainterCompositing;
-            useCompositing = true;
-            break;
-        case 'N':
-            if (getenv("KDE_FAILSAFE")) {
-                qCDebug(KWIN_CORE) << "Compositing disabled forcefully by KDE failsafe mode";
-            } else {
-                qCDebug(KWIN_CORE) << "Compositing disabled forcefully by environment variable";
-            }
-            compositingMode = NoCompositing;
             break;
         default:
             qCDebug(KWIN_CORE) << "Unknown KWIN_COMPOSE mode set, ignoring";
@@ -723,13 +662,6 @@ void Options::loadConfig()
         }
     }
     setCompositingMode(compositingMode);
-    setUseCompositing(useCompositing || config.readEntry("Enabled", Options::defaultUseCompositing()));
-
-    setGlSmoothScale(std::clamp(config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), -1, 2));
-    setGlStrictBindingFollowsDriver(!config.hasKey("GLStrictBinding"));
-    if (!isGlStrictBindingFollowsDriver()) {
-        setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
-    }
 }
 
 void Options::syncFromKcfgc()
@@ -763,7 +695,6 @@ void Options::syncFromKcfgc()
     setElectricBorderMaximize(m_settings->electricBorderMaximize());
     setElectricBorderTiling(m_settings->electricBorderTiling());
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
-    setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
     setAllowTearing(m_settings->allowTearing());
     setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
     setDoubleClickBorderToMaximize(m_settings->doubleClickBorderToMaximize());
@@ -939,11 +870,6 @@ Options::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons butto
 {
     return button == Qt::RightButton ? opMaxButtonRightClick : button == Qt::MiddleButton ? opMaxButtonMiddleClick
                                                                                           : opMaxButtonLeftClick;
-}
-
-bool Options::isUseCompositing() const
-{
-    return m_useCompositing;
 }
 
 } // namespace
