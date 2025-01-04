@@ -581,9 +581,6 @@ void Application::updateX11Time(xcb_generic_event_t *event)
             if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
                 time = reinterpret_cast<xcb_shape_notify_event_t *>(event)->server_time;
             }
-            if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
-                time = reinterpret_cast<xcb_damage_notify_event_t *>(event)->timestamp;
-            }
         }
         break;
     }

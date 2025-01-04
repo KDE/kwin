@@ -380,7 +380,6 @@ void Extensions::init()
 
     m_shape.name = QByteArray("SHAPE");
     m_randr.name = QByteArray("RANDR");
-    m_damage.name = QByteArray("DAMAGE");
     m_composite.name = QByteArray("Composite");
     m_fixes.name = QByteArray("XFIXES");
     m_render.name = QByteArray("RENDER");
@@ -388,19 +387,16 @@ void Extensions::init()
 
     m_shape.opCodes = shapeOpCodes();
     m_randr.opCodes = randrOpCodes();
-    m_damage.opCodes = damageOpCodes();
     m_composite.opCodes = compositeOpCodes();
     m_fixes.opCodes = fixesOpCodes();
     m_render.opCodes = renderOpCodes();
     m_sync.opCodes = syncOpCodes();
 
     m_randr.errorCodes = randrErrorCodes();
-    m_damage.errorCodes = damageErrorCodes();
     m_fixes.errorCodes = fixesErrorCodes();
 
     extensionQueryReply(xcb_get_extension_data(c, &xcb_shape_id), &m_shape);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_randr_id), &m_randr);
-    extensionQueryReply(xcb_get_extension_data(c, &xcb_damage_id), &m_damage);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_composite_id), &m_composite);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_xfixes_id), &m_fixes);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_render_id), &m_render);
@@ -409,7 +405,6 @@ void Extensions::init()
     // extension specific queries
     xcb_shape_query_version_cookie_t shapeVersion;
     xcb_randr_query_version_cookie_t randrVersion;
-    xcb_damage_query_version_cookie_t damageVersion;
     xcb_composite_query_version_cookie_t compositeVersion;
     xcb_xfixes_query_version_cookie_t xfixesVersion;
     xcb_render_query_version_cookie_t renderVersion;
@@ -420,9 +415,6 @@ void Extensions::init()
     if (m_randr.present) {
         randrVersion = xcb_randr_query_version_unchecked(c, RANDR_MAX_MAJOR, RANDR_MAX_MINOR);
         xcb_randr_select_input(connection(), rootWindow(), XCB_RANDR_NOTIFY_MASK_SCREEN_CHANGE);
-    }
-    if (m_damage.present) {
-        damageVersion = xcb_damage_query_version_unchecked(c, DAMAGE_MAX_MAJOR, DAMAGE_MIN_MAJOR);
     }
     if (m_composite.present) {
         compositeVersion = xcb_composite_query_version_unchecked(c, COMPOSITE_MAX_MAJOR, COMPOSITE_MAX_MINOR);
@@ -443,9 +435,6 @@ void Extensions::init()
     if (m_randr.present) {
         initVersion<xcb_randr_query_version_reply_t>(randrVersion, &xcb_randr_query_version_reply, &m_randr);
     }
-    if (m_damage.present) {
-        initVersion<xcb_damage_query_version_reply_t>(damageVersion, &xcb_damage_query_version_reply, &m_damage);
-    }
     if (m_composite.present) {
         initVersion<xcb_composite_query_version_reply_t>(compositeVersion, &xcb_composite_query_version_reply, &m_composite);
     }
@@ -463,8 +452,7 @@ void Extensions::init()
                        << " render: 0x" << QString::number(m_render.version, 16)
                        << " fixes: 0x" << QString::number(m_fixes.version, 16)
                        << " randr: 0x" << QString::number(m_randr.version, 16)
-                       << " sync: 0x" << QString::number(m_sync.version, 16)
-                       << " damage: 0x " << QString::number(m_damage.version, 16);
+                       << " sync: 0x" << QString::number(m_sync.version, 16);
 }
 
 void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill)
@@ -476,11 +464,6 @@ void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extensio
     dataToFill->eventBase = extension->first_event;
     dataToFill->errorBase = extension->first_error;
     dataToFill->majorOpcode = extension->major_opcode;
-}
-
-int Extensions::damageNotifyEvent() const
-{
-    return m_damage.eventBase + XCB_DAMAGE_NOTIFY;
 }
 
 bool Extensions::hasShape(xcb_window_t w) const
@@ -541,7 +524,6 @@ QList<ExtensionData> Extensions::extensions() const
     return {
         m_shape,
         m_randr,
-        m_damage,
         m_composite,
         m_render,
         m_fixes,
