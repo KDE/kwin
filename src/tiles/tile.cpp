@@ -161,6 +161,9 @@ QRectF Tile::maximizedWindowGeometry() const
 
 Qt::Edges Tile::anchors() const
 {
+    if (m_padding > 0) {
+        return Qt::Edges();
+    }
     Qt::Edges anchors = Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge;
 
     if (!qFuzzyCompare(m_relativeGeometry.left(), 0)) {
