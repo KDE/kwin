@@ -11,7 +11,7 @@
 #include <QGuiApplication>
 #include <QStyleHints>
 
-namespace KWin
+namespace Aurorae
 {
 
 ColorSettings::ColorSettings(const QPalette &pal)
