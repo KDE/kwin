@@ -578,8 +578,6 @@ void DrmOutput::tryKmsColorOffloading()
     if (!m_pipeline->activePending() || !primaryLayer()) {
         return;
     }
-    // TODO this doesn't allow using only a CTM for night light offloading
-    // maybe relax correctness in that case and apply night light in non-linear space?
     const QVector3D channelFactors = adaptedChannelFactors();
     const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
     const ColorDescription optimal = colorDescription().transferFunction().type == TransferFunction::gamma22 ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(TransferFunction::gamma22, 0, maxLuminance));
@@ -600,14 +598,27 @@ void DrmOutput::tryKmsColorOffloading()
         m_pipeline->applyPendingChanges();
         setScanoutColorDescription(optimal);
         m_needsShadowBuffer = false;
-    } else {
-        // fall back to using a shadow buffer for doing blending in gamma 2.2 and the channel factors
-        m_pipeline->revertPendingChanges();
-        m_pipeline->setCrtcColorPipeline(ColorPipeline{});
-        m_pipeline->applyPendingChanges();
-        setScanoutColorDescription(colorDescription());
-        m_needsShadowBuffer = (channelFactors - QVector3D(1, 1, 1)).lengthSquared() > 0.0001 || usesICC;
+        return;
     }
+    if (colorDescription().transferFunction().type == TransferFunction::gamma22 && !usesICC) {
+        // allow falling back to applying the night light factors in non-linear space
+        // this isn't technically correct, but the difference is quite small and not worth
+        // losing a lot of performance and battery life over
+        colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
+        colorPipeline.addMultiplier(channelFactors);
+        m_pipeline->setCrtcColorPipeline(colorPipeline);
+        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+            m_pipeline->applyPendingChanges();
+            setScanoutColorDescription(optimal);
+            m_needsShadowBuffer = false;
+            return;
+        }
+    }
+    // fall back to using a shadow buffer for doing blending in gamma 2.2 and the channel factors
+    m_pipeline->setCrtcColorPipeline(ColorPipeline{});
+    m_pipeline->applyPendingChanges();
+    setScanoutColorDescription(colorDescription());
+    m_needsShadowBuffer = (channelFactors - QVector3D(1, 1, 1)).lengthSquared() > 0.0001 || usesICC;
 }
 
 void DrmOutput::setScanoutColorDescription(const ColorDescription &description)
