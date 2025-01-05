@@ -22,11 +22,12 @@ class KConfigLoader;
 namespace KWin
 {
 class Borders;
-class OffscreenQuickView;
 }
 
 namespace Aurorae
 {
+
+class Renderer;
 
 class Decoration : public KDecoration3::Decoration
 {
@@ -79,7 +80,7 @@ private:
     KWin::Borders *m_padding;
     QString m_themeName;
 
-    std::unique_ptr<KWin::OffscreenQuickView> m_view;
+    std::unique_ptr<Renderer> m_view;
 };
 
 class ThemeProvider : public KDecoration3::DecorationThemeProvider

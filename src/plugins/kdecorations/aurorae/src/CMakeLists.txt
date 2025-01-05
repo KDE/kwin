@@ -10,6 +10,7 @@ set(kwin5_aurorae_PART_SRCS
     decorationoptions.cpp
     lib/auroraetheme.cpp
     lib/themeconfig.cpp
+    renderer.cpp
 )
 
 add_library(kwin5_aurorae MODULE ${kwin5_aurorae_PART_SRCS})
@@ -24,7 +25,6 @@ target_compile_definitions(kwin5_aurorae PRIVATE
 
 target_link_libraries(kwin5_aurorae
     KDecoration3::KDecoration
-    kwin
     KF6::I18n
     KF6::Package
     KF6::WindowSystem
