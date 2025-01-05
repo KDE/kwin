@@ -5,11 +5,9 @@
 */
 #include "aurorae.h"
 
-#include "config-kwin.h"
-
 #include "auroraeshared.h"
 #include "auroraetheme.h"
-#include "effect/offscreenquickview.h"
+#include "renderer.h"
 // qml imports
 #include "decorationoptions.h"
 // KDecoration3
@@ -287,7 +285,7 @@ bool Decoration::init()
         m_item->setParentItem(visualParent.value<QQuickItem *>());
         visualParent.value<QQuickItem *>()->setProperty("drawBackground", false);
     } else {
-        m_view = std::make_unique<KWin::OffscreenQuickView>(KWin::OffscreenQuickView::ExportMode::Image);
+        m_view = std::make_unique<Renderer>();
         m_item->setParentItem(m_view->contentItem());
         auto updateSize = [this]() {
             m_item->setSize(m_view->contentItem()->size());
@@ -295,7 +293,7 @@ bool Decoration::init()
         updateSize();
         connect(m_view->contentItem(), &QQuickItem::widthChanged, m_item.get(), updateSize);
         connect(m_view->contentItem(), &QQuickItem::heightChanged, m_item.get(), updateSize);
-        connect(m_view.get(), &KWin::OffscreenQuickView::repaintNeeded, this, &Decoration::updateBuffer);
+        connect(m_view.get(), &Renderer::repaintNeeded, this, &Decoration::updateBuffer);
     }
 
     m_supportsMask = m_item->property("supportsMask").toBool();
