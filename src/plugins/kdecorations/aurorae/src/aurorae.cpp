@@ -207,7 +207,7 @@ void Helper::init()
         }
     }
     m_engine->importPlugin(pluginPath, "org.kde.kwin.decoration", nullptr);
-    qmlRegisterType<KWin::Borders>("org.kde.kwin.decoration", 0, 1, "Borders");
+    qmlRegisterType<Borders>("org.kde.kwin.decoration", 0, 1, "Borders");
 
     qmlRegisterAnonymousType<KDecoration3::Decoration>("org.kde.kwin.decoration", 0);
     qmlRegisterAnonymousType<KDecoration3::DecoratedWindow>("org.kde.kwin.decoration", 0);
@@ -301,23 +301,23 @@ bool Decoration::init()
     setupBorders(m_item.get());
 
     // TODO: Is there a more efficient way to react to border changes?
-    auto trackBorders = [this](KWin::Borders *borders) {
+    auto trackBorders = [this](Borders *borders) {
         if (!borders) {
             return;
         }
-        connect(borders, &KWin::Borders::leftChanged, this, &Decoration::updateBorders);
-        connect(borders, &KWin::Borders::rightChanged, this, &Decoration::updateBorders);
-        connect(borders, &KWin::Borders::topChanged, this, &Decoration::updateBorders);
-        connect(borders, &KWin::Borders::bottomChanged, this, &Decoration::updateBorders);
+        connect(borders, &Borders::leftChanged, this, &Decoration::updateBorders);
+        connect(borders, &Borders::rightChanged, this, &Decoration::updateBorders);
+        connect(borders, &Borders::topChanged, this, &Decoration::updateBorders);
+        connect(borders, &Borders::bottomChanged, this, &Decoration::updateBorders);
     };
     trackBorders(m_borders);
     trackBorders(m_maximizedBorders);
     if (m_extendedBorders) {
         updateExtendedBorders();
-        connect(m_extendedBorders, &KWin::Borders::leftChanged, this, &Decoration::updateExtendedBorders);
-        connect(m_extendedBorders, &KWin::Borders::rightChanged, this, &Decoration::updateExtendedBorders);
-        connect(m_extendedBorders, &KWin::Borders::topChanged, this, &Decoration::updateExtendedBorders);
-        connect(m_extendedBorders, &KWin::Borders::bottomChanged, this, &Decoration::updateExtendedBorders);
+        connect(m_extendedBorders, &Borders::leftChanged, this, &Decoration::updateExtendedBorders);
+        connect(m_extendedBorders, &Borders::rightChanged, this, &Decoration::updateExtendedBorders);
+        connect(m_extendedBorders, &Borders::topChanged, this, &Decoration::updateExtendedBorders);
+        connect(m_extendedBorders, &Borders::bottomChanged, this, &Decoration::updateExtendedBorders);
     }
 
     connect(window(), &KDecoration3::DecoratedWindow::maximizedChanged, this, &Decoration::updateBorders);
@@ -367,15 +367,15 @@ QVariant Decoration::readConfig(const QString &key, const QVariant &defaultValue
 
 void Decoration::setupBorders(QQuickItem *item)
 {
-    m_borders = item->findChild<KWin::Borders *>(QStringLiteral("borders"));
-    m_maximizedBorders = item->findChild<KWin::Borders *>(QStringLiteral("maximizedBorders"));
-    m_extendedBorders = item->findChild<KWin::Borders *>(QStringLiteral("extendedBorders"));
-    m_padding = item->findChild<KWin::Borders *>(QStringLiteral("padding"));
+    m_borders = item->findChild<Borders *>(QStringLiteral("borders"));
+    m_maximizedBorders = item->findChild<Borders *>(QStringLiteral("maximizedBorders"));
+    m_extendedBorders = item->findChild<Borders *>(QStringLiteral("extendedBorders"));
+    m_padding = item->findChild<Borders *>(QStringLiteral("padding"));
 }
 
 void Decoration::updateBorders()
 {
-    KWin::Borders *b = m_borders;
+    Borders *b = m_borders;
     if (window()->isMaximized() && m_maximizedBorders) {
         b = m_maximizedBorders;
     }
