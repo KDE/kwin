@@ -19,14 +19,10 @@ class QQuickItem;
 
 class KConfigLoader;
 
-namespace KWin
-{
-class Borders;
-}
-
 namespace Aurorae
 {
 
+class Borders;
 class Renderer;
 
 class Decoration : public KDecoration3::Decoration
@@ -74,10 +70,10 @@ private:
     QRectF m_contentRect; // the geometry of the part of the buffer that is not a shadow when buffer was created.
     std::unique_ptr<QQuickItem> m_item;
     std::unique_ptr<QQmlContext> m_qmlContext;
-    KWin::Borders *m_borders;
-    KWin::Borders *m_maximizedBorders;
-    KWin::Borders *m_extendedBorders;
-    KWin::Borders *m_padding;
+    Borders *m_borders;
+    Borders *m_maximizedBorders;
+    Borders *m_extendedBorders;
+    Borders *m_padding;
     QString m_themeName;
 
     std::unique_ptr<Renderer> m_view;
