@@ -12,7 +12,7 @@
 #include <QObject>
 #include <QPalette>
 
-namespace KWin
+namespace Aurorae
 {
 
 // TODO: move to deco API
