@@ -60,6 +60,9 @@ public:
     KeyboardLayout *keyboardLayout() const;
     QList<uint32_t> pressedKeys() const;
 
+    bool shortcutSequence() const;
+    void setShortcutSequence(bool seq);
+
 Q_SIGNALS:
     void ledsChanged(KWin::LEDs);
 
@@ -73,6 +76,7 @@ private:
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;
     QList<uint32_t> m_pressedKeys;
+    bool m_shortcutSequence = false;
 };
 
 }

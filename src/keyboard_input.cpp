@@ -77,6 +77,16 @@ QList<uint32_t> KeyboardInputRedirection::pressedKeys() const
     return m_pressedKeys;
 }
 
+bool KeyboardInputRedirection::shortcutSequence() const
+{
+    return m_shortcutSequence;
+}
+
+void KeyboardInputRedirection::setShortcutSequence(bool seq)
+{
+    m_shortcutSequence = seq;
+}
+
 class KeyStateChangedSpy : public InputEventSpy
 {
 public:
@@ -164,7 +174,10 @@ void KeyboardInputRedirection::init()
     });
 #if KWIN_BUILD_SCREENLOCKER
     if (kwinApp()->supportsLockScreen()) {
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this]() {
+            m_shortcutSequence = false;
+            update();
+        });
     }
 #endif
 
@@ -211,6 +224,10 @@ Window *KeyboardInputRedirection::pickFocus() const
                 return t;
             } while (it != stacking.begin());
         }
+        return nullptr;
+    }
+
+    if (m_shortcutSequence) {
         return nullptr;
     }
 
@@ -282,6 +299,11 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
 
     m_input->processSpies(std::bind(&InputEventSpy::keyboardKey, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::keyboardKey, std::placeholders::_1, &event));
+
+    if (m_shortcutSequence && m_pressedKeys.isEmpty()) {
+        m_shortcutSequence = false;
+        update();
+    }
 
     m_xkb->forwardModifiers();
     if (auto *inputmethod = kwinApp()->inputMethod()) {

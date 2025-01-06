@@ -1022,11 +1022,17 @@ public:
             }
         } else if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key);
+                if (input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key)) {
+                    input()->keyboard()->setShortcutSequence(true);
+                    return true;
+                }
             }
         } else if (event->state == KeyboardKeyState::Released) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKeyRelease(event->modifiersRelevantForGlobalShortcuts, event->key);
+                if (input()->shortcuts()->processKeyRelease(event->modifiersRelevantForGlobalShortcuts, event->key)) {
+                    input()->keyboard()->setShortcutSequence(true);
+                    return true;
+                }
             }
         }
         return false;
