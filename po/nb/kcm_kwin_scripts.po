@@ -26,7 +26,6 @@ msgstr "Importer KWin-skript"
 
 #: module.cpp:53
 #, fuzzy, kde-format
-#| msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgid "KWin Script (*.kwinscript)"
 msgstr "*.kwinscript|KWin-skripter (*.kwinscript)"
 

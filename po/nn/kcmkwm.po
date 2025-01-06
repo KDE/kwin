@@ -47,7 +47,6 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:48
 #, fuzzy, kde-format
-#| msgid "Activate and raise"
 msgid "Activate, pass click and raise on release"
 msgstr "Aktiver og hev"
 

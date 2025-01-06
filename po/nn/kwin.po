@@ -453,8 +453,6 @@ msgstr "Delta"
 
 #: debug_console.cpp:244
 #, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
@@ -715,7 +713,6 @@ msgstr "Tilstand"
 
 #: debug_console.cpp:495
 #, fuzzy, kde-format
-#| msgid "Tablet Tool"
 msgid "Tablet Tool Proximity"
 msgstr "Teikneplate-verktøy"
 
@@ -769,25 +766,21 @@ msgstr "Valtastar"
 
 #: debug_console.cpp:513
 #, fuzzy, kde-format
-#| msgid "Tablet Tool"
 msgid "Tablet Tool Axis"
 msgstr "Teikneplate-verktøy"
 
 #: debug_console.cpp:530
 #, fuzzy, kde-format
-#| msgid "Tablet Tool"
 msgid "Tablet Tool Tip"
 msgstr "Teikneplate-verktøy"
 
 #: debug_console.cpp:531
 #, fuzzy, kde-format
-#| msgid "Top"
 msgid "Tip"
 msgstr "Oppe"
 
 #: debug_console.cpp:531
 #, fuzzy, kde-format
-#| msgid "Move Down"
 msgid "Down"
 msgstr "Gå ned"
 
@@ -1068,7 +1061,6 @@ msgstr "Last inn"
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
 #, fuzzy, kde-format
-#| msgid "Quit Debug Console"
 msgid "Debug Console"
 msgstr "Avslutt feilsøkingskonsoll"
 
@@ -1700,7 +1692,6 @@ msgstr "Fullskjermsvindauge"
 
 #: plugins/eis/eisinputcapturemanager.cpp:124
 #, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
 msgstr "Slå av KActivities-integrasjon."
@@ -3095,7 +3086,6 @@ msgstr "Ved forstørring/forminsking, endra med vald storleiksfaktor."
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
 #, fuzzy, kde-format
-#| msgid "Zoom Factor:"
 msgid "Zoom factor:"
 msgstr "Storleiksfaktor:"
 
@@ -3108,7 +3098,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
 #, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
 msgid "Mouse pointer:"
 msgstr "Musepeikar:"
 
@@ -3139,7 +3128,6 @@ msgstr "Gøym"
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
 #, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
 msgid "Mouse tracking:"
 msgstr "Musesporing:"
 
@@ -3186,7 +3174,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
 #, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
 msgid "Enable focus tracking"
 msgstr "Bruk fokusfølging"
 
@@ -3203,7 +3190,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
 #, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
 msgid "Enable text cursor tracking"
 msgstr "Bruk følging av skrivemerke"
 
@@ -3785,9 +3771,6 @@ msgstr "Logg ut likevel"
 
 #: sm.cpp:526
 #, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
@@ -4255,25 +4238,21 @@ msgstr "Vis vindauget på alle skriveborda"
 
 #: useractions.cpp:997
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Legg vindauget kjapt til venstre"
 
 #: useractions.cpp:999
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Legg vindauget kjapt til høgre"
 
 #: useractions.cpp:1001
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Legg vindauget kjapt til oppe"
 
 #: useractions.cpp:1003
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Legg vindauget kjapt til nede"
 

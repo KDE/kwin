@@ -765,7 +765,6 @@ msgstr ""
 
 #: debug_console.cpp:531
 #, fuzzy, kde-format
-#| msgid "Top"
 msgid "Tip"
 msgstr "Badjin"
 

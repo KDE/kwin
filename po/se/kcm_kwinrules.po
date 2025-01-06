@@ -51,13 +51,11 @@ msgstr ""
 
 #: optionsmodel.cpp:201
 #, fuzzy, kde-format
-#| msgid "Regular Expression"
 msgid "Regular expression"
 msgstr "Virolaš cealkka"
 
 #: optionsmodel.cpp:205
 #, fuzzy, kde-format
-#| msgid "Apply Initially"
 msgid "Apply initially"
 msgstr "Geavat álggorájes"
 
@@ -71,7 +69,6 @@ msgstr ""
 
 #: optionsmodel.cpp:209
 #, fuzzy, kde-format
-#| msgid "Apply Now"
 msgid "Apply now"
 msgstr "Geavat dál"
 
@@ -97,7 +94,6 @@ msgstr ""
 
 #: optionsmodel.cpp:217
 #, fuzzy, kde-format
-#| msgid "Do Not Affect"
 msgid "Do not affect"
 msgstr "Ale váikkot"
 
@@ -247,7 +243,6 @@ msgstr ""
 
 #: rulesmodel.cpp:469
 #, fuzzy, kde-format
-#| msgid "All Desktops"
 msgid "Virtual desktops"
 msgstr "Buot čállinbeavddit"
 
@@ -544,19 +539,16 @@ msgstr ""
 
 #: rulesmodel.cpp:811
 #, fuzzy, kde-format
-#| msgid "Normal Window"
 msgid "Normal window"
 msgstr "Dábálaš láse"
 
 #: rulesmodel.cpp:812
 #, fuzzy, kde-format
-#| msgid "Dialog Window"
 msgid "Dialog window"
 msgstr "Láseš"
 
 #: rulesmodel.cpp:813
 #, fuzzy, kde-format
-#| msgid "Utility Window"
 msgid "Utility window"
 msgstr "Reaidoláse"
 
@@ -572,13 +564,11 @@ msgstr "Reaidoholga"
 
 #: rulesmodel.cpp:816
 #, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
 msgid "Torn-off menu"
 msgstr "Gaikojuvvon fállu"
 
 #: rulesmodel.cpp:817
 #, fuzzy, kde-format
-#| msgid "Screen"
 msgid "Splash screen"
 msgstr "Šearbma"
 
@@ -590,7 +580,6 @@ msgstr "Čállinbeavdi"
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:820
 #, fuzzy, kde-format
-#| msgid "Standalone Menubar"
 msgid "Standalone menubar"
 msgstr "Oktonas fálloholga"
 
@@ -601,7 +590,6 @@ msgstr ""
 
 #: rulesmodel.cpp:831
 #, fuzzy, kde-format
-#| msgid "All Desktops"
 msgid "All desktops"
 msgstr "Buot čállinbeavddit"
 
@@ -629,7 +617,6 @@ msgstr ""
 
 #: rulesmodel.cpp:876
 #, fuzzy, kde-format
-#| msgid "No Placement"
 msgid "No placement"
 msgstr "Ii sajádat"
 
@@ -660,13 +647,11 @@ msgstr ""
 
 #: rulesmodel.cpp:882
 #, fuzzy, kde-format
-#| msgid "Under Mouse"
 msgid "Under mouse"
 msgstr "Sáhpána vuolde"
 
 #: rulesmodel.cpp:883
 #, fuzzy, kde-format
-#| msgid "On Main Window"
 msgid "On main window"
 msgstr "Váldoláses"
 

@@ -180,14 +180,12 @@ msgstr "Slått av"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
 #, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
 msgid "Only when moving windows"
 msgstr "Bare ved flytting av vinduer"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
 #, fuzzy, kde-format
-#| msgid "Always Enabled"
 msgid "Always enabled"
 msgstr "Alltid aktiv"
 

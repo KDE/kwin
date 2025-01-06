@@ -4199,25 +4199,21 @@ msgstr "Behold vinduet på alle skrivebord"
 
 #: useractions.cpp:997
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Hurtigflislegg vindu mot venstre"
 
 #: useractions.cpp:999
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Hurtigflislegg vindu mot høyre"
 
 #: useractions.cpp:1001
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Hurtigflislegg vindu øverst"
 
 #: useractions.cpp:1003
 #, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Hurtigflislegg vindu nederst"
 
