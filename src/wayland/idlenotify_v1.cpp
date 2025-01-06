@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 1;
+static const quint32 s_version = 2;
 
 class IdleNotifyV1InterfacePrivate : public QtWaylandServer::ext_idle_notifier_v1
 {
@@ -24,6 +24,7 @@ public:
 protected:
     void ext_idle_notifier_v1_destroy(Resource *resource) override;
     void ext_idle_notifier_v1_get_idle_notification(Resource *resource, uint32_t id, uint32_t timeout, struct ::wl_resource *seat) override;
+    void ext_idle_notifier_v1_get_input_idle_notification(Resource *resource, uint32_t id, uint32_t timeout, wl_resource *seat) override;
 };
 
 class IdleNotificationV1Interface : public QObject, public QtWaylandServer::ext_idle_notification_v1
@@ -31,7 +32,7 @@ class IdleNotificationV1Interface : public QObject, public QtWaylandServer::ext_
     Q_OBJECT
 
 public:
-    IdleNotificationV1Interface(wl_client *client, int version, uint32_t id, std::chrono::milliseconds timeout);
+    IdleNotificationV1Interface(wl_client *client, int version, uint32_t id, std::chrono::milliseconds timeout, IdleDetector::OperatingMode mode);
 
 protected:
     void ext_idle_notification_v1_destroy_resource(Resource *resource) override;
@@ -50,13 +51,18 @@ void IdleNotifyV1InterfacePrivate::ext_idle_notifier_v1_destroy(Resource *resour
 
 void IdleNotifyV1InterfacePrivate::ext_idle_notifier_v1_get_idle_notification(Resource *resource, uint32_t id, uint32_t timeout, struct ::wl_resource *seat)
 {
-    new IdleNotificationV1Interface(resource->client(), resource->version(), id, std::chrono::milliseconds(timeout));
+    new IdleNotificationV1Interface(resource->client(), resource->version(), id, std::chrono::milliseconds(timeout), IdleDetector::OperatingMode::FollowsInhibitors);
 }
 
-IdleNotificationV1Interface::IdleNotificationV1Interface(wl_client *client, int version, uint32_t id, std::chrono::milliseconds timeout)
+void IdleNotifyV1InterfacePrivate::ext_idle_notifier_v1_get_input_idle_notification(Resource *resource, uint32_t id, uint32_t timeout, struct ::wl_resource *seat)
+{
+    new IdleNotificationV1Interface(resource->client(), resource->version(), id, std::chrono::milliseconds(timeout), IdleDetector::OperatingMode::IgnoresInhibitors);
+}
+
+IdleNotificationV1Interface::IdleNotificationV1Interface(wl_client *client, int version, uint32_t id, std::chrono::milliseconds timeout, IdleDetector::OperatingMode mode)
     : QtWaylandServer::ext_idle_notification_v1(client, id, version)
 {
-    auto detector = new IdleDetector(timeout, this);
+    auto detector = new IdleDetector(timeout, mode, this);
     connect(detector, &IdleDetector::idle, this, [this]() {
         send_idled();
     });

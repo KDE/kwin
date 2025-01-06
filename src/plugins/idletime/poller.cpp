@@ -38,7 +38,7 @@ void KWinIdleTimePoller::addTimeout(int nextTimeout)
         return;
     }
 
-    auto detector = new IdleDetector(std::chrono::milliseconds(nextTimeout), this);
+    auto detector = new IdleDetector(std::chrono::milliseconds(nextTimeout), IdleDetector::OperatingMode::FollowsInhibitors, this);
     m_timeouts.insert(nextTimeout, detector);
     connect(detector, &IdleDetector::idle, this, [this, nextTimeout] {
         Q_EMIT timeoutReached(nextTimeout);
@@ -62,7 +62,7 @@ void KWinIdleTimePoller::catchIdleEvent()
         // already setup
         return;
     }
-    m_catchResumeTimeout = new IdleDetector(std::chrono::milliseconds::zero(), this);
+    m_catchResumeTimeout = new IdleDetector(std::chrono::milliseconds::zero(), IdleDetector::OperatingMode::FollowsInhibitors, this);
     connect(m_catchResumeTimeout, &IdleDetector::resumed, this, [this]() {
         m_catchResumeTimeout->deleteLater();
         m_catchResumeTimeout = nullptr;
