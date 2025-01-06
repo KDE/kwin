@@ -5,15 +5,15 @@
 # Matthias Peick <matthias@peick.de>, 2004.
 # Cindy McKee <cfmckee@gmail.com>, 2007.
 # Pierre-Marie Pédrot <pedrotpmx@wanadoo.fr>, 2008.
-# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
+# Oliver Kellogg <olivermkellogg@gmail.com>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2024-03-04 23:34+0100\n"
-"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
+"PO-Revision-Date: 2024-12-27 22:09+0100\n"
+"Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
-"cfmckee@gmail.com,okellogg@users.sourceforge.net"
+"cfmckee@gmail.com,olivermkellogg@gmail.com"
 
 #: composite.cpp:646
 #, kde-format
@@ -360,7 +360,7 @@ msgstr "Shift"
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
-msgstr "Kontrolo"
+msgstr "Ctrl"
 
 #: debug_console.cpp:285
 #, kde-format
@@ -402,7 +402,7 @@ msgstr "Skankodo"
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr "Qt::Ŝlosilkodo"
+msgstr "Qt::Key-kodo"
 
 #: debug_console.cpp:310
 #, kde-format
@@ -655,12 +655,12 @@ msgstr "Tablojdo"
 #: debug_console.cpp:540
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr "Tablojda Kusenetbutono"
+msgstr "Tabuleta Platbutono"
 
 #: debug_console.cpp:553
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr "Tablojda Panelstrio"
+msgstr "Tabuleta Platstrio"
 
 #: debug_console.cpp:554 debug_console.cpp:568
 #, kde-format
