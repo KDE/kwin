@@ -307,11 +307,15 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-system-bell/xdg-system-bell-v1.xml
     BASENAME xdg-system-bell-v1
 )
-
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-toplevel-icon/xdg-toplevel-icon-v1.xml
     BASENAME xdg-toplevel-icon-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/cursor-image/cursor-image-v1.xml
+    BASENAME cursor-image-v1
 )
 
 target_sources(kwin PRIVATE

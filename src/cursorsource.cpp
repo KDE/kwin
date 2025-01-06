@@ -6,6 +6,7 @@
 
 #include "cursorsource.h"
 #include "cursor.h"
+#include "wayland/cursorimage_v1.h"
 #include "wayland/surface.h"
 
 namespace KWin
@@ -186,6 +187,82 @@ void SurfaceCursorSource::update(SurfaceInterface *surface, const QPointF &hotsp
     if (dirty) {
         Q_EMIT changed();
     }
+}
+
+CursorImageV1Source::CursorImageV1Source(QObject *parent)
+    : CursorSource(parent)
+{
+}
+
+SurfaceInterface *CursorImageV1Source::surface() const
+{
+    return m_image ? m_image->surface() : nullptr;
+}
+
+void CursorImageV1Source::frame(std::chrono::milliseconds timestamp)
+{
+    if (m_image && m_image->surface()) {
+        m_image->surface()->traverseTree([&timestamp](SurfaceInterface *surface) {
+            surface->frameRendered(timestamp.count());
+        });
+    }
+}
+
+void CursorImageV1Source::refresh()
+{
+    if (m_image->surface()) {
+        m_size = m_image->surface()->size();
+        m_hotspot = m_image->hotspot();
+    } else {
+        m_size = QSizeF(0, 0);
+        m_hotspot = QPointF(0, 0);
+    }
+
+    Q_EMIT changed();
+}
+
+void CursorImageV1Source::reset()
+{
+    if (m_image->surface()) {
+        disconnect(m_image->surface(), &SurfaceInterface::committed, this, &CursorImageV1Source::refresh);
+        disconnect(m_image->surface(), &SurfaceInterface::destroyed, this, &CursorImageV1Source::refresh);
+    }
+
+    m_size = QSizeF(0, 0);
+    m_hotspot = QPointF(0, 0);
+    m_image = nullptr;
+    Q_EMIT changed();
+}
+
+void CursorImageV1Source::update(CursorImageV1 *image)
+{
+    if (m_image == image) {
+        return;
+    }
+
+    if (m_image) {
+        disconnect(m_image, &CursorImageV1::destroyed, this, &CursorImageV1Source::reset);
+        if (m_image->surface()) {
+            disconnect(m_image->surface(), &SurfaceInterface::committed, this, &CursorImageV1Source::refresh);
+            disconnect(m_image->surface(), &SurfaceInterface::destroyed, this, &CursorImageV1Source::refresh);
+        }
+    }
+
+    m_image = image;
+
+    connect(m_image, &CursorImageV1::destroyed, this, &CursorImageV1Source::reset);
+    if (m_image->surface()) {
+        m_size = m_image->surface()->size();
+        m_hotspot = m_image->hotspot();
+
+        connect(m_image->surface(), &SurfaceInterface::committed, this, &CursorImageV1Source::refresh);
+        connect(m_image->surface(), &SurfaceInterface::destroyed, this, &CursorImageV1Source::refresh);
+    } else {
+        m_size = QSizeF(0, 0);
+        m_hotspot = QPointF(0, 0);
+    }
+
+    Q_EMIT changed();
 }
 
 } // namespace KWin

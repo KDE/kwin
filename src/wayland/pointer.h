@@ -16,6 +16,7 @@ struct wl_resource;
 
 namespace KWin
 {
+class CursorImageV1;
 class PointerSurfaceCursorPrivate;
 class PointerSurfaceCursor;
 class PointerInterfacePrivate;
@@ -23,7 +24,7 @@ class ClientConnection;
 class SeatInterface;
 class SurfaceInterface;
 
-using PointerCursor = std::variant<PointerSurfaceCursor *, QByteArray>;
+using PointerCursor = std::variant<PointerSurfaceCursor *, CursorImageV1 *, QByteArray>;
 
 /**
  * The PointerInterface class represents one or more input devices such as mice, which control

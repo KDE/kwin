@@ -23,6 +23,7 @@
 #include "osd.h"
 #include "screenedge.h"
 #include "wayland/abstract_data_source.h"
+#include "wayland/cursorimage_v1.h"
 #include "wayland/display.h"
 #include "wayland/pointer.h"
 #include "wayland/pointerconstraints_v1.h"
@@ -979,6 +980,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_decoration.cursor = std::make_unique<ShapeCursorSource>();
     m_serverCursor.surface = std::make_unique<SurfaceCursorSource>();
     m_serverCursor.shape = std::make_unique<ShapeCursorSource>();
+    m_serverCursor.image = std::make_unique<CursorImageV1Source>();
     m_dragCursor = std::make_unique<ShapeCursorSource>();
 
 #if KWIN_BUILD_SCREENLOCKER
@@ -1123,6 +1125,9 @@ void CursorImage::updateServerCursor(const PointerCursor &cursor)
     } else if (auto shapeCursor = std::get_if<QByteArray>(&cursor)) {
         m_serverCursor.shape->setShape(*shapeCursor);
         m_serverCursor.cursor = m_serverCursor.shape.get();
+    } else if (auto imageCursor = std::get_if<CursorImageV1 *>(&cursor)) {
+        m_serverCursor.image->update(*imageCursor);
+        m_serverCursor.cursor = m_serverCursor.image.get();
     }
     reevaluteSource();
 }

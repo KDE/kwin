@@ -16,6 +16,7 @@ struct wl_resource;
 namespace KWin
 {
 class ClientConnection;
+class CursorImageV1;
 class Display;
 class InputDevice;
 class InputDeviceTabletTool;
@@ -76,7 +77,7 @@ private:
     friend class TabletToolV2InterfacePrivate;
 };
 
-using TabletCursorSourceV2 = std::variant<TabletSurfaceCursorV2 *, QByteArray>;
+using TabletCursorSourceV2 = std::variant<TabletSurfaceCursorV2 *, CursorImageV1 *, QByteArray>;
 
 class KWIN_EXPORT TabletToolV2Interface : public QObject
 {

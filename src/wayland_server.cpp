@@ -29,6 +29,7 @@
 #include "wayland/clientconnection.h"
 #include "wayland/compositor.h"
 #include "wayland/contenttype_v1.h"
+#include "wayland/cursorimage_v1.h"
 #include "wayland/cursorshape_v1.h"
 #include "wayland/datacontroldevicemanager_v1.h"
 #include "wayland/datadevicemanager.h"
@@ -384,6 +385,7 @@ bool WaylandServer::init()
     new RelativePointerManagerV1Interface(m_display, m_display);
     m_dataDeviceManager = new DataDeviceManagerInterface(m_display, m_display);
     new DataControlDeviceManagerV1Interface(m_display, m_display);
+    new CursorImageManagerV1Interface(m_display, m_display);
     new CursorShapeManagerV1Interface(m_display, m_display);
 
     const auto kwinConfig = kwinApp()->config();

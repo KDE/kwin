@@ -16,6 +16,7 @@
 namespace KWin
 {
 
+class CursorImageV1;
 class SurfaceInterface;
 
 /**
@@ -96,6 +97,27 @@ private:
     void reset();
 
     SurfaceInterface *m_surface = nullptr;
+};
+
+class KWIN_EXPORT CursorImageV1Source : public CursorSource
+{
+    Q_OBJECT
+
+public:
+    explicit CursorImageV1Source(QObject *parent = nullptr);
+
+    SurfaceInterface *surface() const;
+
+    void frame(std::chrono::milliseconds timestamp) override;
+
+public Q_SLOTS:
+    void update(CursorImageV1 *image);
+
+private:
+    void refresh();
+    void reset();
+
+    CursorImageV1 *m_image = nullptr;
 };
 
 } // namespace KWin

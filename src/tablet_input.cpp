@@ -50,6 +50,15 @@ public:
                 }
             }
 
+            if (auto imageCursor = std::get_if<CursorImageV1 *>(&cursor)) {
+                if (!m_imageSource) {
+                    m_imageSource = std::make_unique<CursorImageV1Source>();
+                }
+                m_imageSource->update(*imageCursor);
+                setSource(m_imageSource.get());
+                return;
+            }
+
             QByteArray shape;
             if (auto shapeCursor = std::get_if<QByteArray>(&cursor)) {
                 shape = *shapeCursor;
@@ -70,6 +79,7 @@ public:
 private:
     std::unique_ptr<ShapeCursorSource> m_shapeSource;
     std::unique_ptr<SurfaceCursorSource> m_surfaceSource;
+    std::unique_ptr<CursorImageV1Source> m_imageSource;
 };
 
 TabletInputRedirection::TabletInputRedirection(InputRedirection *parent)

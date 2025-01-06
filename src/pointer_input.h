@@ -23,6 +23,8 @@ class QWindow;
 
 namespace KWin
 {
+class CursorImageV1;
+class CursorImageV1Source;
 class Window;
 class CursorImage;
 class InputDevice;
@@ -240,7 +242,7 @@ Q_SIGNALS:
 
 private:
     void reevaluteSource();
-    void updateServerCursor(const std::variant<PointerSurfaceCursor *, QByteArray> &cursor);
+    void updateServerCursor(const std::variant<PointerSurfaceCursor *, CursorImageV1 *, QByteArray> &cursor);
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();
@@ -268,6 +270,7 @@ private:
         QMetaObject::Connection connection;
         std::unique_ptr<SurfaceCursorSource> surface;
         std::unique_ptr<ShapeCursorSource> shape;
+        std::unique_ptr<CursorImageV1Source> image;
         CursorSource *cursor = nullptr;
     } m_serverCursor;
 };
