@@ -547,7 +547,7 @@ void ZoomEffect::moveZoomDown()
 
 void ZoomEffect::moveMouseToFocus()
 {
-    if (effects->waylandDisplay()) {
+    if (effects->waylandDisplay() || !ZoomEffect::isActive()) {
         const auto window = effects->activeWindow();
         if (!window) {
             return;
