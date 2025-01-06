@@ -234,6 +234,14 @@ void KeyboardInputRedirection::update()
     }
     auto seat = waylandServer()->seat();
 
+    if (m_currentKey.has_value()) {
+        const uint32_t key = m_currentKey.value();
+        if (!m_pressedKeys.contains(key)) {
+            m_pressedKeys.append(key);
+        }
+        m_currentKey.reset();
+    }
+
     // TODO: this needs better integration
     Window *found = pickFocus();
     if (found && found->surface()) {
@@ -252,17 +260,18 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         return;
     }
 
-    if (state == KeyboardKeyState::Pressed) {
-        if (!m_pressedKeys.contains(key)) {
-            m_pressedKeys.append(key);
-        }
-    } else if (state == KeyboardKeyState::Released) {
-        m_pressedKeys.removeOne(key);
-    }
+    // key releases always update the current state, even if they were filtered
 
     const quint32 previousLayout = m_xkb->currentLayout();
     if (state != KeyboardKeyState::Repeated) {
         m_xkb->updateKey(key, state);
+    }
+
+    if (state == KeyboardKeyState::Pressed) {
+        m_currentKey = key;
+    }
+    if (state == KeyboardKeyState::Released) {
+        m_pressedKeys.removeOne(key);
     }
 
     const xkb_keysym_t keySym = m_xkb->toKeysym(key);
@@ -282,6 +291,8 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
 
     m_input->processSpies(std::bind(&InputEventSpy::keyboardKey, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::keyboardKey, std::placeholders::_1, &event));
+
+    m_currentKey.reset();
 
     m_xkb->forwardModifiers();
     if (auto *inputmethod = kwinApp()->inputMethod()) {

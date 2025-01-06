@@ -58,6 +58,12 @@ public:
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
     KeyboardLayout *keyboardLayout() const;
+
+    /**
+     * Keys currently held that should be forwarded to clients on focus changes.
+     * During key event filter processing this will not have the currently held key.
+     * Calling KeyboardInputRedirection::update() will update the pressed keys before forwarding.
+     */
     QList<uint32_t> pressedKeys() const;
 
 Q_SIGNALS:
@@ -73,6 +79,7 @@ private:
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;
     QList<uint32_t> m_pressedKeys;
+    std::optional<uint32_t> m_currentKey;
 };
 
 }
