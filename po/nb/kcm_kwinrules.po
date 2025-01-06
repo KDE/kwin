@@ -46,25 +46,21 @@ msgstr "Ikke viktig"
 
 #: optionsmodel.cpp:199
 #, fuzzy, kde-format
-#| msgid "Exact Match"
 msgid "Exact match"
 msgstr "Nøyaktig treff"
 
 #: optionsmodel.cpp:200
 #, fuzzy, kde-format
-#| msgid "Substring Match"
 msgid "Substring match"
 msgstr "Treff i delstreng"
 
 #: optionsmodel.cpp:201
 #, fuzzy, kde-format
-#| msgid "Regular Expression"
 msgid "Regular expression"
 msgstr "Regulært uttrykk"
 
 #: optionsmodel.cpp:205
 #, fuzzy, kde-format
-#| msgid "Apply Initially"
 msgid "Apply initially"
 msgstr "Bruk fra start"
 
@@ -78,7 +74,6 @@ msgstr ""
 
 #: optionsmodel.cpp:209
 #, fuzzy, kde-format
-#| msgid "Apply Now"
 msgid "Apply now"
 msgstr "Bruk nå"
 
@@ -104,7 +99,6 @@ msgstr ""
 
 #: optionsmodel.cpp:217
 #, fuzzy, kde-format
-#| msgid "Do Not Affect"
 msgid "Do not affect"
 msgstr "Ikke påvirk"
 
@@ -128,7 +122,6 @@ msgstr ""
 
 #: optionsmodel.cpp:224
 #, fuzzy, kde-format
-#| msgid "Force Temporarily"
 msgid "Force temporarily"
 msgstr "Tving foreløpig"
 
@@ -259,7 +252,6 @@ msgstr ""
 
 #: rulesmodel.cpp:469
 #, fuzzy, kde-format
-#| msgid "All Desktops"
 msgid "Virtual desktops"
 msgstr "Alle skrivebord"
 
@@ -562,19 +554,16 @@ msgstr ""
 
 #: rulesmodel.cpp:811
 #, fuzzy, kde-format
-#| msgid "Normal Window"
 msgid "Normal window"
 msgstr "Normalt vindu"
 
 #: rulesmodel.cpp:812
 #, fuzzy, kde-format
-#| msgid "Dialog Window"
 msgid "Dialog window"
 msgstr "Dialogvindu"
 
 #: rulesmodel.cpp:813
 #, fuzzy, kde-format
-#| msgid "Utility Window"
 msgid "Utility window"
 msgstr "Verktøyvindu"
 
@@ -590,13 +579,11 @@ msgstr "Verktøylinje"
 
 #: rulesmodel.cpp:816
 #, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
 msgid "Torn-off menu"
 msgstr "Avrevet meny"
 
 #: rulesmodel.cpp:817
 #, fuzzy, kde-format
-#| msgid "Splash Screen"
 msgid "Splash screen"
 msgstr "Velkomstbilde"
 
@@ -608,7 +595,6 @@ msgstr "Skrivebord"
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:820
 #, fuzzy, kde-format
-#| msgid "Standalone Menubar"
 msgid "Standalone menubar"
 msgstr "Frittstående menylinje"
 
@@ -619,7 +605,6 @@ msgstr ""
 
 #: rulesmodel.cpp:831
 #, fuzzy, kde-format
-#| msgid "All Desktops"
 msgid "All desktops"
 msgstr "Alle skrivebord"
 
@@ -631,7 +616,6 @@ msgstr ""
 
 #: rulesmodel.cpp:852
 #, fuzzy, kde-format
-#| msgid "All Activities"
 msgid "All activities"
 msgstr "Alle aktiviteter"
 
@@ -648,7 +632,6 @@ msgstr "Standard"
 
 #: rulesmodel.cpp:876
 #, fuzzy, kde-format
-#| msgid "No Placement"
 msgid "No placement"
 msgstr "Ingen plassering"
 
@@ -679,13 +662,11 @@ msgstr ""
 
 #: rulesmodel.cpp:882
 #, fuzzy, kde-format
-#| msgid "Under Mouse"
 msgid "Under mouse"
 msgstr "Under mus"
 
 #: rulesmodel.cpp:883
 #, fuzzy, kde-format
-#| msgid "On Main Window"
 msgid "On main window"
 msgstr "På hovedvindu"
 
