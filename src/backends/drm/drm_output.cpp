@@ -395,9 +395,9 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     return true;
 }
 
-static QVector3D adaptChannelFactors(const ColorDescription &color, const QVector3D &sRGBchannelFactors)
+static QVector3D adaptChannelFactors(const ColorDescription &originalColor, const QVector3D &sRGBchannelFactors)
 {
-    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(color, RenderingIntent::RelativeColorimetric) * sRGBchannelFactors;
+    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(originalColor, RenderingIntent::RelativeColorimetric) * sRGBchannelFactors;
     // normalize to red = 1, and clamp green and blue to ]0; 1]
     // otherwise the white point might end up on or outside the edges of the gamut,
     // which leads to terrible glitches
@@ -407,13 +407,14 @@ static QVector3D adaptChannelFactors(const ColorDescription &color, const QVecto
     return adaptedChannelFactors;
 }
 
-static ColorDescription applyNightLight(const ColorDescription &input, const QVector3D &sRGBchannelFactors)
+static std::pair<ColorDescription, QVector3D> applyNightLight(const ColorDescription &originalColor, const QVector3D &sRGBchannelFactors)
 {
-    const xyY newWhite = XYZ::fromVector(input.containerColorimetry().toXYZ() * adaptChannelFactors(input, sRGBchannelFactors)).toxyY();
-    return input.withWhitepoint(newWhite);
+    const QVector3D adapted = adaptChannelFactors(originalColor, sRGBchannelFactors);
+    const xyY newWhite = XYZ::fromVector(originalColor.containerColorimetry().toXYZ() * adapted).toxyY();
+    return std::make_pair(originalColor.withWhitepoint(newWhite), adapted);
 }
 
-ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props, double brightness) const
+std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props, double brightness) const
 {
     const auto colorSource = props->colorProfileSource.value_or(colorProfileSource());
     const bool hdr = props->highDynamicRange.value_or(m_state.highDynamicRange);
@@ -424,8 +425,9 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
         const auto sdrColor = Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(iccProfile->colorimetry(), sdrGamutWideness);
-        // TODO properly apply night light here as well, somehow
-        return ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness, iccProfile->colorimetry(), sdrColor);
+        // TODO properly apply night light here as well
+        const auto ret = ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness, iccProfile->colorimetry(), sdrColor);
+        return std::make_pair(ret, adaptChannelFactors(ret, m_channelFactors));
     }
     const bool supportsHdr = (capabilities() & Capability::HighDynamicRange) && (capabilities() & Capability::WideColorGamut);
     const bool effectiveHdr = hdr && supportsHdr;
@@ -477,7 +479,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
-    next.colorDescription = createColorDescription(props, m_state.currentBrightness.value_or(m_state.brightnessSetting));
+    std::tie(next.colorDescription, m_adaptedChannelFactors) = createColorDescription(props, m_state.currentBrightness.value_or(m_state.brightnessSetting));
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
@@ -529,7 +531,7 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
         m_brightnessDevice->setBrightness(effectiveBrightness);
     }
     State next = m_state;
-    next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>(), newBrightness);
+    std::tie(next.colorDescription, m_adaptedChannelFactors) = createColorDescription(std::make_shared<OutputChangeSet>(), newBrightness);
     next.currentBrightness = newBrightness;
     next.artificialHdrHeadroom = newArtificialHdrHeadroom;
     setState(next);
@@ -556,7 +558,7 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
     if (rgb != m_channelFactors) {
         m_channelFactors = rgb;
         State next = m_state;
-        next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>(), next.currentBrightness.value_or(m_state.brightnessSetting));
+        std::tie(next.colorDescription, m_adaptedChannelFactors) = createColorDescription(std::make_shared<OutputChangeSet>(), next.currentBrightness.value_or(m_state.brightnessSetting));
         setState(next);
         tryKmsColorOffloading();
     }
@@ -641,7 +643,7 @@ bool DrmOutput::needsShadowBuffer() const
 
 QVector3D DrmOutput::adaptedChannelFactors() const
 {
-    return adaptChannelFactors(colorDescription(), m_channelFactors);
+    return m_adaptedChannelFactors;
 }
 
 const ColorDescription &DrmOutput::scanoutColorDescription() const

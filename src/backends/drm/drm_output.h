@@ -78,7 +78,7 @@ private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     void tryKmsColorOffloading();
-    ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props, double brightness) const;
+    std::pair<ColorDescription, QVector3D> createColorDescription(const std::shared_ptr<OutputChangeSet> &props, double brightness) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
     void setBrightnessDevice(BrightnessDevice *device) override;
@@ -95,6 +95,7 @@ private:
     DrmLease *m_lease = nullptr;
 
     QVector3D m_channelFactors = {1, 1, 1};
+    QVector3D m_adaptedChannelFactors = {1, 1, 1};
     bool m_needsShadowBuffer = false;
     ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
