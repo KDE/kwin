@@ -40,13 +40,7 @@ IccShader::~IccShader()
 {
 }
 
-static const XYZ D50{
-    .X = 0.9642,
-    .Y = 1.0,
-    .Z = 0.8249,
-};
-
-bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor)
+bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, RenderingIntent intent)
 {
     if (!profile) {
         m_toXYZD50.setToIdentity();
@@ -57,7 +51,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
         m_A.reset();
         return false;
     }
-    if (m_profile != profile || m_inputColor != inputColor) {
+    if (m_profile != profile || m_inputColor != inputColor || m_intent != intent) {
         const auto vcgt = profile->vcgt();
         QMatrix4x4 toXYZD50;
         std::unique_ptr<GlLookUpTable> B;
@@ -65,8 +59,29 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
         std::unique_ptr<GlLookUpTable> M;
         std::unique_ptr<GlLookUpTable3D> C;
         std::unique_ptr<GlLookUpTable> A;
-        if (const auto tag = profile->BToATag(RenderingIntent::RelativeColorimetric)) {
-            toXYZD50 = Colorimetry::chromaticAdaptationMatrix(inputColor.containerColorimetry().white(), D50) * inputColor.containerColorimetry().toXYZ();
+        const ColorDescription linearizedInput(inputColor.containerColorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
+        const ColorDescription linearizedProfile(profile->colorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
+        if (const auto tag = profile->BToATag(intent)) {
+            if (intent == RenderingIntent::AbsoluteColorimetric) {
+                // There's no BToA tag for absolute colorimetric, we have to piece it together ourselves with
+                // input white point -(absolute colorimetric)-> display white point
+                // -(relative colorimetric)-> XYZ D50 -(BToA1, also relative colorimetric)-> display white point
+
+                // First, transform from the input color to the display color space in absolute colorimetric mode
+                const QMatrix4x4 toLinearDisplay = linearizedInput.toOther(linearizedProfile, RenderingIntent::AbsoluteColorimetric);
+
+                // Now transform that display color space to XYZ D50 in relative colorimetric mode.
+                // the BToA1 tag goes from XYZ D50 to the native white point of the display,
+                // so this matrix gets reverted by it
+                const QMatrix4x4 toXYZ = linearizedProfile.toOther(IccProfile::s_connectionSpace, RenderingIntent::RelativeColorimetric);
+
+                toXYZD50 = toXYZ * toLinearDisplay;
+            } else {
+                toXYZD50 = linearizedInput.toOther(IccProfile::s_connectionSpace, intent);
+            }
+            // while the above converts to XYZ D50, the encoding the ICC profile tag
+            // wants is CIEXYZ -> add the (absolute colorimetric) transform to that
+            toXYZD50 = IccProfile::s_connectionSpace.containerColorimetry().toXYZ() * toXYZD50;
             auto it = tag->ops.begin();
             if (it != tag->ops.end() && std::holds_alternative<std::shared_ptr<ColorTransformation>>(it->operation)) {
                 const auto sample = [&op = std::get<std::shared_ptr<ColorTransformation>>(it->operation)](size_t x) {
@@ -131,6 +146,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
                 return false;
             }
         } else {
+            toXYZD50 = linearizedInput.toOther(linearizedProfile, intent);
             const auto inverseEOTF = profile->inverseTransferFunction();
             const auto sample = [inverseEOTF, vcgt](size_t x) {
                 const float relativeX = x / double(lutSize - 1);
@@ -154,6 +170,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
         m_A = std::move(A);
         m_profile = profile;
         m_inputColor = inputColor;
+        m_intent = intent;
     }
     return true;
 }
@@ -163,16 +180,12 @@ GLShader *IccShader::shader() const
     return m_shader.get();
 }
 
-void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, const QVector3D &channelFactors)
+void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, RenderingIntent intent)
 {
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
-    setProfile(profile, inputColor);
+    setProfile(profile, inputColor, intent);
 
-    QMatrix4x4 nightColor;
-    nightColor(0, 0) = channelFactors.x();
-    nightColor(1, 1) = channelFactors.y();
-    nightColor(2, 2) = channelFactors.z();
-    m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50 * nightColor);
+    m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50);
     m_shader->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, inputColor.transferFunction().type);
     m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor.transferFunction().minLuminance, inputColor.transferFunction().maxLuminance - inputColor.transferFunction().minLuminance));
     m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor.referenceLuminance());

@@ -26,13 +26,14 @@ public:
     ~IccShader();
 
     GLShader *shader() const;
-    void setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, const QVector3D &channelFactors);
+    void setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, RenderingIntent intent);
 
 private:
-    bool setProfile(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor);
+    bool setProfile(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, RenderingIntent intent);
 
     std::unique_ptr<GLShader> m_shader;
     std::shared_ptr<IccProfile> m_profile;
+    RenderingIntent m_intent = RenderingIntent::RelativeColorimetric;
     ColorDescription m_inputColor = ColorDescription::sRGB;
 
     QMatrix4x4 m_toXYZD50;

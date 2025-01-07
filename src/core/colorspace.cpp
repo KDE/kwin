@@ -536,6 +536,24 @@ ColorDescription ColorDescription::withWhitepoint(xyY newWhitePoint) const
     };
 }
 
+ColorDescription ColorDescription::dimmed(double brightnessFactor) const
+{
+    return ColorDescription{
+        m_containerColorimetry,
+        m_transferFunction,
+        m_referenceLuminance * brightnessFactor,
+        m_minLuminance * brightnessFactor,
+        m_maxAverageLuminance.transform([&](double value) {
+        return value * brightnessFactor;
+    }),
+        m_maxHdrLuminance.transform([&](double value) {
+        return value * brightnessFactor;
+    }),
+        m_masteringColorimetry,
+        m_sdrColorimetry,
+    };
+}
+
 double TransferFunction::defaultMinLuminanceFor(Type type)
 {
     switch (type) {

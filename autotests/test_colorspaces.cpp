@@ -39,6 +39,7 @@ private Q_SLOTS:
     void testXYZ();
     void testOpenglShader_data();
     void testOpenglShader();
+    void testIccShader_data();
     void testIccShader();
     void dontCrashWithWeirdHdrMetadata();
 };
@@ -298,6 +299,22 @@ void TestColorspaces::testOpenglShader()
     }
 }
 
+void TestColorspaces::testIccShader_data()
+{
+    QTest::addColumn<QString>("iccProfilePath");
+    QTest::addColumn<RenderingIntent>("intent");
+    QTest::addColumn<uint32_t>("lcmsIntent");
+    QTest::addColumn<int>("maxAllowedError");
+
+    const auto F13 = QFINDTESTDATA("data/Framework 13.icc");
+    const auto Samsung = QFINDTESTDATA("data/Samsung CRG49 Shaper Matrix.icc");
+    QTest::addRow("relative colorimetric Framework 13") << F13 << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC) << 6;
+    QTest::addRow("absolute colorimetric Framework 13") << F13 << RenderingIntent::AbsoluteColorimetric << uint32_t(INTENT_ABSOLUTE_COLORIMETRIC) << 6;
+    // FIXME why is this further away from the LCMS result? It's way simpler to calculate...
+    QTest::addRow("relative colorimetric CRG49") << Samsung << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC) << 13;
+    QTest::addRow("absolute colorimetric CRG49") << Samsung << RenderingIntent::AbsoluteColorimetric << uint32_t(INTENT_ABSOLUTE_COLORIMETRIC) << 13;
+}
+
 void TestColorspaces::testIccShader()
 {
     const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY));
@@ -310,10 +327,19 @@ void TestColorspaces::testIccShader()
         }
     }
 
-    const QString path = QFINDTESTDATA("data/Framework 13.icc");
+    QFETCH(QString, iccProfilePath);
+    QFETCH(RenderingIntent, intent);
+    QFETCH(uint32_t, lcmsIntent);
+
+    const std::shared_ptr<IccProfile> profile = IccProfile::load(iccProfilePath).profile.value_or(nullptr);
+    QVERIFY(profile);
 
     QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
     {
+        // by default, LCMS uses adaption state 1.0 for absolute colorimetric,
+        // also known as relative colorimetric... we don't want that
+        cmsSetAdaptationState(0);
+
         const auto toCmsxyY = [](const xyY &primary) {
             return cmsCIExyY{
                 .x = primary.x,
@@ -337,10 +363,10 @@ void TestColorspaces::testIccShader()
         // as that uses the sRGB piece-wise transfer function, which is not correct for our use case
         cmsHPROFILE sRGBHandle = cmsCreateRGBProfile(&sRGBWhite, &sRGBPrimaries, toneCurves.data());
 
-        cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
+        cmsHPROFILE handle = cmsOpenProfileFromFile(iccProfilePath.toUtf8(), "r");
         QVERIFY(handle);
 
-        const auto transform = cmsCreateTransform(sRGBHandle, TYPE_RGB_8, handle, TYPE_RGB_8, INTENT_RELATIVE_COLORIMETRIC, cmsFLAGS_NOOPTIMIZE);
+        const auto transform = cmsCreateTransform(sRGBHandle, TYPE_RGB_8, handle, TYPE_RGB_8, lcmsIntent, cmsFLAGS_NOOPTIMIZE);
         QVERIFY(transform);
 
         for (int x = 0; x < input.width(); x++) {
@@ -361,14 +387,11 @@ void TestColorspaces::testIccShader()
         cmsCloseProfile(handle);
     }
 
-    const std::shared_ptr<IccProfile> profile = IccProfile::load(path).profile.value_or(nullptr);
-    QVERIFY(profile);
-
     QImage openGlResult;
     {
         IccShader shader;
         ShaderBinder binder{shader.shader()};
-        shader.setUniforms(profile, ColorDescription::sRGB, QVector3D(1, 1, 1));
+        shader.setUniforms(profile, ColorDescription::sRGB, intent);
 
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));
@@ -385,6 +408,7 @@ void TestColorspaces::testIccShader()
         openGlResult.mirror();
     }
 
+    float maxError = 0;
     for (int x = 0; x < input.width(); x++) {
         for (int y = 0; y < input.height(); y++) {
             const auto glPixel = openGlResult.pixel(x, y);
@@ -393,11 +417,13 @@ void TestColorspaces::testIccShader()
             const QVector3D pipeColors = QVector3D(qRed(pipePixel), qGreen(pipePixel), qBlue(pipePixel));
             const QVector3D difference = (glColors - pipeColors);
 
-            // TODO get this difference down!
-            // Can most likely be achieved with tetrahedal interpolation for the 3D LUT
-            QCOMPARE_LE(difference.length(), 6);
+            maxError = std::max(difference.length(), maxError);
         }
     }
+
+    qWarning() << "Max ICC shader error:" << maxError;
+    QFETCH(int, maxAllowedError);
+    QCOMPARE_LE(maxError, maxAllowedError);
 }
 
 void TestColorspaces::dontCrashWithWeirdHdrMetadata()

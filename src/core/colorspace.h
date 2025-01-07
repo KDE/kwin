@@ -232,6 +232,7 @@ public:
      * this does not do whitepoint adaptation!
      */
     ColorDescription withWhitepoint(xyY newWhitePoint) const;
+    ColorDescription dimmed(double brightnessFactor) const;
 
     /**
      * @returns a matrix that transforms from linear RGB in this color description to linear RGB in the other one
