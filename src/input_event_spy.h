@@ -17,7 +17,7 @@ class QTabletEvent;
 
 namespace KWin
 {
-class KeyboardKeyEvent;
+struct KeyboardKeyEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
