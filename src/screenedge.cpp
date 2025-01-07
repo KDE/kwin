@@ -815,6 +815,7 @@ ScreenEdges::ScreenEdges()
 
 void ScreenEdges::init()
 {
+    VirtualDesktopManager::self()->updateLayout();
     reconfigure();
     updateLayout();
     recreateEdges();
@@ -957,7 +958,7 @@ void ScreenEdges::setActionForTouchBorder(ElectricBorder border, ElectricBorderA
 
 void ScreenEdges::updateLayout()
 {
-    const QSize desktopMatrix = VirtualDesktopManager::self()->grid().size();
+    const QSize desktopMatrix = VirtualDesktopManager::self()->grids().first().size();
     Qt::Orientations newLayout = {};
     if (desktopMatrix.width() > 1) {
         newLayout |= Qt::Horizontal;

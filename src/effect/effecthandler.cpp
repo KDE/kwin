@@ -823,7 +823,7 @@ void EffectsHandler::setCurrentDesktop(VirtualDesktop *desktop)
 
 QSize EffectsHandler::desktopGridSize() const
 {
-    return VirtualDesktopManager::self()->grid().size();
+    return VirtualDesktopManager::self()->grids().first().size();
 }
 
 int EffectsHandler::desktopGridWidth() const
@@ -848,17 +848,17 @@ int EffectsHandler::workspaceHeight() const
 
 VirtualDesktop *EffectsHandler::desktopAtCoords(QPoint coords) const
 {
-    return VirtualDesktopManager::self()->grid().at(coords);
+    return VirtualDesktopManager::self()->grids().first().at(coords);
 }
 
 QPoint EffectsHandler::desktopGridCoords(VirtualDesktop *desktop) const
 {
-    return VirtualDesktopManager::self()->grid().gridCoords(desktop);
+    return VirtualDesktopManager::self()->grids().first().gridCoords(desktop);
 }
 
 QPoint EffectsHandler::desktopCoords(VirtualDesktop *desktop) const
 {
-    QPoint coords = VirtualDesktopManager::self()->grid().gridCoords(desktop);
+    QPoint coords = VirtualDesktopManager::self()->grids().first().gridCoords(desktop);
     if (coords.x() == -1) {
         return QPoint(-1, -1);
     }

@@ -725,6 +725,15 @@ private:
     QHash<const VirtualDesktop *, QRectF> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
     QHash<const VirtualDesktop *, QHash<const Output *, QRectF>> m_screenAreas;
+
+    /**
+     * Represents the geometry of the workspace.
+     *
+     * This member variable holds the dimensions and position of the workspace
+     * in the form of a QRect, which includes the x and y coordinates as well
+     * as the width and height. It is used to manage the layout and rendering
+     * of windows within the workspace.
+     */
     QRect m_geometry;
 
     QHash<const Output *, QRect> m_oldScreenGeometries;

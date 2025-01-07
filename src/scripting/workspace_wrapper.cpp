@@ -349,7 +349,7 @@ bool WorkspaceWrapper::isEffectActive(const QString &pluginId) const
 
 QSize WorkspaceWrapper::desktopGridSize() const
 {
-    return VirtualDesktopManager::self()->grid().size();
+    return VirtualDesktopManager::self()->grids().first().size();
 }
 
 int WorkspaceWrapper::desktopGridWidth() const
