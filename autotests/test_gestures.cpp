@@ -100,10 +100,9 @@ void GestureTest::testMinimumScaleDelta()
     // pinch gesture
     PinchGesture gesture(4);
     gesture.setDirection(PinchDirection::Contracting);
-    gesture.setMinimumScaleDelta(.5);
 
-    QCOMPARE(gesture.minimumScaleDeltaReached(1.25), false);
-    QCOMPARE(gesture.minimumScaleDeltaReached(1.5), true);
+    QCOMPARE(gesture.minimumScaleDeltaReached(1.1), false);
+    QCOMPARE(gesture.minimumScaleDeltaReached(1.3), true);
 
     GestureRecognizer recognizer;
     recognizer.registerPinchGesture(&gesture);
