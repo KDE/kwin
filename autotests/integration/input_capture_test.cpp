@@ -293,8 +293,12 @@ void TestInputCapture::testInputCapture()
     QCOMPARE(input()->globalPointer(), QPoint(1, 1));
 
     QVERIFY(eiReadableSpy.wait());
-    ei_dispatch(ei);
     eiReadableSpy.clear();
+    ei_dispatch(ei);
+    // Throw away the disconnection events
+    while (auto event = ei_get_event(ei)) {
+        ei_event_unref(event);
+    }
 
     Test::pointerMotion({2, 2}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
@@ -306,7 +310,11 @@ void TestInputCapture::testInputCapture()
     QVERIFY(buttonSpy.count());
     QVERIFY(axisSpy.count());
     QVERIFY(keySpy.count());
-    QVERIFY(eiReadableSpy.empty());
+
+    if (!eiReadableSpy.empty()) {
+        ei_dispatch(ei);
+        QVERIFY(!ei_peek_event(ei));
+    }
 
     msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("removeInputCapture"));
     msg << QDBusObjectPath(capture.dbusPath);
