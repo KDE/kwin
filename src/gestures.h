@@ -54,6 +54,8 @@ class SwipeGesture : public Gesture
 {
     Q_OBJECT
 public:
+    static constexpr double s_minimumDelta = 200;
+
     explicit SwipeGesture(uint32_t fingerCount);
     ~SwipeGesture() override;
 
@@ -61,10 +63,6 @@ public:
 
     SwipeDirection direction() const;
     void setDirection(SwipeDirection direction);
-
-    QPointF minimumDelta() const;
-    void setMinimumDelta(const QPointF &delta);
-    bool isMinimumDeltaRelevant() const;
 
     qreal deltaToProgress(const QPointF &delta) const;
     bool minimumDeltaReached(const QPointF &delta) const;
@@ -84,16 +82,6 @@ Q_SIGNALS:
 private:
     const uint32_t m_fingerCount;
     SwipeDirection m_direction = SwipeDirection::Down;
-    bool m_minimumXRelevant = false;
-    int m_minimumX = 0;
-    bool m_minimumYRelevant = false;
-    int m_minimumY = 0;
-    bool m_maximumXRelevant = false;
-    int m_maximumX = 0;
-    bool m_maximumYRelevant = false;
-    int m_maximumY = 0;
-    bool m_minimumDeltaRelevant = false;
-    QPointF m_minimumDelta;
 };
 
 class PinchGesture : public Gesture

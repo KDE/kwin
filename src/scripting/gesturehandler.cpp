@@ -29,7 +29,6 @@ void SwipeGestureHandler::componentComplete()
 {
     m_gesture = std::make_unique<SwipeGesture>(m_fingerCount);
     m_gesture->setDirection(SwipeDirection(m_direction));
-    m_gesture->setMinimumDelta(QPointF(200, 200));
 
     connect(m_gesture.get(), &SwipeGesture::triggered, this, &SwipeGestureHandler::activated);
     connect(m_gesture.get(), &SwipeGesture::cancelled, this, &SwipeGestureHandler::cancelled);

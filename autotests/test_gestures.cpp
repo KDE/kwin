@@ -38,23 +38,22 @@ private Q_SLOTS:
 void GestureTest::testMinimumDeltaReached_data()
 {
     QTest::addColumn<SwipeDirection>("direction");
-    QTest::addColumn<QPointF>("minimumDelta");
     QTest::addColumn<QPointF>("delta");
     QTest::addColumn<bool>("reached");
     QTest::addColumn<qreal>("progress");
 
-    QTest::newRow("Up (more)") << SwipeDirection::Up << QPointF(0, -30) << QPointF(0, -40) << true << 1.0;
-    QTest::newRow("Up (exact)") << SwipeDirection::Up << QPointF(0, -30) << QPointF(0, -30) << true << 1.0;
-    QTest::newRow("Up (less)") << SwipeDirection::Up << QPointF(0, -30) << QPointF(0, -29) << false << 29.0 / 30.0;
-    QTest::newRow("Left (more)") << SwipeDirection::Left << QPointF(-30, -30) << QPointF(-40, 20) << true << 1.0;
-    QTest::newRow("Left (exact)") << SwipeDirection::Left << QPointF(-30, -40) << QPointF(-30, 0) << true << 1.0;
-    QTest::newRow("Left (less)") << SwipeDirection::Left << QPointF(-30, -30) << QPointF(-29, 0) << false << 29.0 / 30.0;
-    QTest::newRow("Right (more)") << SwipeDirection::Right << QPointF(30, -30) << QPointF(40, 20) << true << 1.0;
-    QTest::newRow("Right (exact)") << SwipeDirection::Right << QPointF(30, -40) << QPointF(30, 0) << true << 1.0;
-    QTest::newRow("Right (less)") << SwipeDirection::Right << QPointF(30, -30) << QPointF(29, 0) << false << 29.0 / 30.0;
-    QTest::newRow("Down (more)") << SwipeDirection::Down << QPointF(0, 30) << QPointF(0, 40) << true << 1.0;
-    QTest::newRow("Down (exact)") << SwipeDirection::Down << QPointF(0, 30) << QPointF(0, 30) << true << 1.0;
-    QTest::newRow("Down (less)") << SwipeDirection::Down << QPointF(0, 30) << QPointF(0, 29) << false << 29.0 / 30.0;
+    QTest::newRow("Up (more)") << SwipeDirection::Up << QPointF(0, -SwipeGesture::s_minimumDelta * 2) << true << 1.0;
+    QTest::newRow("Up (exact)") << SwipeDirection::Up << QPointF(0, -SwipeGesture::s_minimumDelta) << true << 1.0;
+    QTest::newRow("Up (less)") << SwipeDirection::Up << QPointF(0, -SwipeGesture::s_minimumDelta / 2) << false << 0.5;
+    QTest::newRow("Left (more)") << SwipeDirection::Left << QPointF(-SwipeGesture::s_minimumDelta * 2, 0) << true << 1.0;
+    QTest::newRow("Left (exact)") << SwipeDirection::Left << QPointF(-SwipeGesture::s_minimumDelta, 0) << true << 1.0;
+    QTest::newRow("Left (less)") << SwipeDirection::Left << QPointF(-SwipeGesture::s_minimumDelta / 2, 0) << false << 0.5;
+    QTest::newRow("Right (more)") << SwipeDirection::Right << QPointF(SwipeGesture::s_minimumDelta * 2, 0) << true << 1.0;
+    QTest::newRow("Right (exact)") << SwipeDirection::Right << QPointF(SwipeGesture::s_minimumDelta, 0) << true << 1.0;
+    QTest::newRow("Right (less)") << SwipeDirection::Right << QPointF(SwipeGesture::s_minimumDelta / 2, 0) << false << 0.5;
+    QTest::newRow("Down (more)") << SwipeDirection::Down << QPointF(0, SwipeGesture::s_minimumDelta * 2) << true << 1.0;
+    QTest::newRow("Down (exact)") << SwipeDirection::Down << QPointF(0, SwipeGesture::s_minimumDelta) << true << 1.0;
+    QTest::newRow("Down (less)") << SwipeDirection::Down << QPointF(0, SwipeGesture::s_minimumDelta / 2) << false << 0.5;
 }
 
 void GestureTest::testMinimumDeltaReached()
@@ -65,8 +64,6 @@ void GestureTest::testMinimumDeltaReached()
     SwipeGesture gesture(1);
     QFETCH(SwipeDirection, direction);
     gesture.setDirection(direction);
-    QFETCH(QPointF, minimumDelta);
-    gesture.setMinimumDelta(minimumDelta);
     QFETCH(QPointF, delta);
     QFETCH(bool, reached);
     QCOMPARE(gesture.minimumDeltaReached(delta), reached);
@@ -210,10 +207,10 @@ void GestureTest::testSwipeUpdateTrigger_data()
     QTest::addColumn<SwipeDirection>("direction");
     QTest::addColumn<QPointF>("delta");
 
-    QTest::newRow("Up") << SwipeDirection::Up << QPointF(2, -3);
-    QTest::newRow("Left") << SwipeDirection::Left << QPointF(-3, 1);
-    QTest::newRow("Right") << SwipeDirection::Right << QPointF(20, -19);
-    QTest::newRow("Down") << SwipeDirection::Down << QPointF(0, 50);
+    QTest::newRow("Up") << SwipeDirection::Up << QPointF(2, -300);
+    QTest::newRow("Left") << SwipeDirection::Left << QPointF(-200, 1);
+    QTest::newRow("Right") << SwipeDirection::Right << QPointF(400, -19);
+    QTest::newRow("Down") << SwipeDirection::Down << QPointF(0, 500);
 }
 
 void GestureTest::testSwipeUpdateTrigger()
