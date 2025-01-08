@@ -18,11 +18,6 @@
 
 namespace KWin
 {
-/*
- * Everytime the scale of the gesture changes by this much, the callback changes by 1.
- * This is the amount of change for 1 unit of change, like switch by 1 desktop.
- * */
-static const qreal DEFAULT_UNIT_SCALE_DELTA = .2; // 20%
 
 class Gesture : public QObject
 {
@@ -88,6 +83,12 @@ class PinchGesture : public Gesture
 {
     Q_OBJECT
 public:
+    /**
+     * Every time the scale of the gesture changes by this much, the callback changes by 1.
+     * This is the amount of change for 1 unit of change, like switch by 1 desktop.
+     */
+    static constexpr double s_minimumScaleDelta = 0.2;
+
     explicit PinchGesture(uint32_t fingerCount);
     ~PinchGesture() override;
 
@@ -95,15 +96,6 @@ public:
 
     PinchDirection direction() const;
     void setDirection(PinchDirection direction);
-
-    qreal minimumScaleDelta() const;
-
-    /**
-     * scaleDelta is the % scale difference needed to trigger
-     * 0.25 will trigger when scale reaches 0.75 or 1.25
-     */
-    void setMinimumScaleDelta(const qreal &scaleDelta);
-    bool isMinimumScaleDeltaRelevant() const;
 
     qreal scaleDeltaToProgress(const qreal &scaleDelta) const;
     bool minimumScaleDeltaReached(const qreal &scaleDelta) const;
@@ -118,8 +110,6 @@ Q_SIGNALS:
 private:
     const uint32_t m_fingerCount;
     PinchDirection m_direction = PinchDirection::Expanding;
-    bool m_minimumScaleDeltaRelevant = false;
-    qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
 };
 
 class KWIN_EXPORT GestureRecognizer

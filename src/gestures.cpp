@@ -57,7 +57,7 @@ PinchGesture::~PinchGesture() = default;
 
 qreal PinchGesture::scaleDeltaToProgress(const qreal &scaleDelta) const
 {
-    return std::clamp(std::abs(scaleDelta - 1) / minimumScaleDelta(), 0.0, 1.0);
+    return std::clamp(std::abs(scaleDelta - 1) / s_minimumScaleDelta, 0.0, 1.0);
 }
 
 bool PinchGesture::minimumScaleDeltaReached(const qreal &scaleDelta) const
@@ -340,22 +340,6 @@ PinchDirection PinchGesture::direction() const
 void PinchGesture::setDirection(PinchDirection direction)
 {
     m_direction = direction;
-}
-
-qreal PinchGesture::minimumScaleDelta() const
-{
-    return m_minimumScaleDelta;
-}
-
-void PinchGesture::setMinimumScaleDelta(const qreal &scaleDelta)
-{
-    m_minimumScaleDelta = scaleDelta;
-    m_minimumScaleDeltaRelevant = true;
-}
-
-bool PinchGesture::isMinimumScaleDeltaRelevant() const
-{
-    return m_minimumScaleDeltaRelevant;
 }
 
 int GestureRecognizer::startSwipeGesture(uint fingerCount)
