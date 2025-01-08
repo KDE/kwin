@@ -31,17 +31,13 @@ SwipeGesture::~SwipeGesture() = default;
 
 qreal SwipeGesture::deltaToProgress(const QPointF &delta) const
 {
-    if (!m_minimumDeltaRelevant || m_minimumDelta.isNull()) {
-        return 1.0;
-    }
-
     switch (m_direction) {
     case SwipeDirection::Up:
     case SwipeDirection::Down:
-        return std::min(std::abs(delta.y()) / std::abs(m_minimumDelta.y()), 1.0);
+        return std::min(std::abs(delta.y()) / s_minimumDelta, 1.0);
     case SwipeDirection::Left:
     case SwipeDirection::Right:
-        return std::min(std::abs(delta.x()) / std::abs(m_minimumDelta.x()), 1.0);
+        return std::min(std::abs(delta.x()) / s_minimumDelta, 1.0);
     default:
         Q_UNREACHABLE();
     }
@@ -329,22 +325,6 @@ SwipeDirection SwipeGesture::direction() const
 void SwipeGesture::setDirection(SwipeDirection direction)
 {
     m_direction = direction;
-}
-
-QPointF SwipeGesture::minimumDelta() const
-{
-    return m_minimumDelta;
-}
-
-void SwipeGesture::setMinimumDelta(const QPointF &delta)
-{
-    m_minimumDelta = delta;
-    m_minimumDeltaRelevant = true;
-}
-
-bool SwipeGesture::isMinimumDeltaRelevant() const
-{
-    return m_minimumDeltaRelevant;
 }
 
 uint32_t PinchGesture::fingerCount() const
