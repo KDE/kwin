@@ -496,7 +496,6 @@ void Connection::processEvents()
                                                              tte->yTilt(),
                                                              tte->rotation(),
                                                              tte->distance(),
-                                                             tte->isTipDown(),
                                                              tte->isNearby(),
                                                              getOrCreateTool(tte->tool()),
                                                              tte->time(),
