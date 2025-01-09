@@ -91,7 +91,6 @@ public:
     InputDevice *device;
     qreal rotation;
     QPointF position;
-    qreal pressure;
     qreal xTilt;
     qreal yTilt;
     qreal distance;

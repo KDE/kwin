@@ -2254,9 +2254,6 @@ public:
             tool->sendProximityOut();
         }
 
-        if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
-            tool->sendPressure(event->pressure);
-        }
         if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
             tool->sendTilt(event->xTilt, event->yTilt);
         }

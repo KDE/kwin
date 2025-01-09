@@ -490,7 +490,6 @@ void Connection::processEvents()
                 libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
             }
             Q_EMIT event->device()->tabletToolProximityEvent(tabletToolPosition(tte),
-                                                             tte->device()->pressureCurve().valueForProgress(tte->pressure()),
                                                              tte->xTilt(),
                                                              tte->yTilt(),
                                                              tte->rotation(),
