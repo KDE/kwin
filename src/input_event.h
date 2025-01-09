@@ -92,7 +92,6 @@ public:
     qreal rotation;
     QPointF position;
     qreal pressure;
-    qreal tangentialPressure;
     qreal xTilt;
     qreal yTilt;
     qreal distance;

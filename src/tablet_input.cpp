@@ -247,7 +247,6 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
         .rotation = rotation,
         .position = pos,
         .pressure = pressure,
-        .tangentialPressure = 0,
         .xTilt = xTilt,
         .yTilt = yTilt,
         .distance = distance,
