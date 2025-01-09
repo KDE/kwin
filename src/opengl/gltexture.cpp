@@ -122,6 +122,10 @@ GLTexturePrivate::GLTexturePrivate()
 
 GLTexturePrivate::~GLTexturePrivate()
 {
+    if (!OpenGlContext::currentContext()) {
+        qCWarning(KWIN_OPENGL, "Could not delete texture because no context is current");
+        return;
+    }
     if (m_texture != 0 && m_owning) {
         glDeleteTextures(1, &m_texture);
     }

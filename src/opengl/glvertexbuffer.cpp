@@ -43,6 +43,10 @@ IndexBuffer::IndexBuffer()
 
 IndexBuffer::~IndexBuffer()
 {
+    if (!OpenGlContext::currentContext()) {
+        qCWarning(KWIN_OPENGL, "Could not delete index buffer because no context is current");
+        return;
+    }
     glDeleteBuffers(1, &m_buffer);
 }
 
@@ -172,6 +176,10 @@ public:
 
     ~GLVertexBufferPrivate()
     {
+        if (!OpenGlContext::currentContext()) {
+            qCWarning(KWIN_OPENGL, "Could not delete vertex buffer because no context is current");
+            return;
+        }
         deleteAll(fences);
 
         if (buffer != 0) {
