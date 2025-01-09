@@ -478,7 +478,6 @@ void Connection::processEvents()
                                                         tte->rotation(),
                                                         tte->distance(),
                                                         tte->isTipDown(),
-                                                        tte->isNearby(),
                                                         getOrCreateTool(tte->tool()),
                                                         tte->time(),
                                                         tte->device());
@@ -515,7 +514,6 @@ void Connection::processEvents()
                                                        tte->rotation(),
                                                        tte->distance(),
                                                        tte->isTipDown(),
-                                                       tte->isNearby(),
                                                        getOrCreateTool(tte->tool()),
                                                        tte->time(),
                                                        tte->device());
