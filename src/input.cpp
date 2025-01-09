@@ -1314,6 +1314,11 @@ public:
                                                           QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position,
                                                           10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
         QWindowSystemInterface::registerInputDevice(m_touchDevice.get());
+
+        m_tabletDevice = std::make_unique<QPointingDevice>(QLatin1String("some tablet"), 0, QInputDevice::DeviceType::Stylus,
+                                                           QPointingDevice::PointerType::Pen, QInputDevice::Capability::Position | QInputDevice::Capability::ZPosition | QInputDevice::Capability::Pressure,
+                                                           10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
+        QWindowSystemInterface::registerInputDevice(m_tabletDevice.get());
     }
     bool pointerMotion(PointerMotionEvent *event) override
     {
@@ -1457,15 +1462,9 @@ public:
             return false;
         }
 
-        const InputDeviceTabletTool *tool = event->tool;
-        const int deviceType = int(QPointingDevice::DeviceType::Stylus);
-        const int pointerType = int(QPointingDevice::PointerType::Pen);
-
-        if (event->type == TabletToolProximityEvent::EnterProximity) {
-            QWindowSystemInterface::handleTabletEnterProximityEvent(deviceType, pointerType, tool->serialId());
-        } else {
-            QWindowSystemInterface::handleTabletLeaveProximityEvent(deviceType, pointerType, tool->serialId());
-        }
+        // handleTabletEnterLeaveProximityEvent has lots of parameters, most of which are ignored, so don't bother with them
+        QWindowSystemInterface::handleTabletEnterLeaveProximityEvent(nullptr,
+                                                                     m_tabletDevice.get(), event->type == TabletToolProximityEvent::EnterProximity);
 
         return true;
     }
@@ -1479,12 +1478,8 @@ public:
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
-        const InputDeviceTabletTool *tool = event->tool;
 
-        const int deviceType = int(QPointingDevice::DeviceType::Stylus);
-        const int pointerType = int(QPointingDevice::PointerType::Pen);
-
-        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), localPos, globalPos, deviceType, pointerType, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, tool->serialId(), input()->keyboardModifiers());
+        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, input()->keyboardModifiers());
         return true;
     }
 
@@ -1497,17 +1492,14 @@ public:
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
-        const InputDeviceTabletTool *tool = event->tool;
 
-        const int deviceType = int(QPointingDevice::DeviceType::Stylus);
-        const int pointerType = int(QPointingDevice::PointerType::Pen);
-
-        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), localPos, globalPos, deviceType, pointerType, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, tool->serialId(), input()->keyboardModifiers());
+        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->tangentialPressure, event->rotation, event->distance, input()->keyboardModifiers());
         return true;
     }
 
 private:
     std::unique_ptr<QPointingDevice> m_touchDevice;
+    std::unique_ptr<QPointingDevice> m_tabletDevice;
     QList<QWindowSystemInterface::TouchPoint> m_touchPoints;
 };
 
