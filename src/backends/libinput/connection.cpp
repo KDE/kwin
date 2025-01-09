@@ -112,6 +112,11 @@ Connection::Connection(std::unique_ptr<Context> &&input)
 
 Connection::~Connection()
 {
+    for (Device *device : std::as_const(m_devices)) {
+        Q_EMIT deviceRemoved(device);
+    }
+
+    qDeleteAll(m_devices);
     qDeleteAll(m_tools);
 }
 
