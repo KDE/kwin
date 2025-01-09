@@ -3145,8 +3145,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Παράγοντας εστίασης:"
 
@@ -3158,8 +3157,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Δείκτης ποντικιού:"
 
@@ -3189,8 +3187,7 @@ msgstr "Απόκρυψη"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Εντοπισμός ποντικιού:"
 
@@ -3241,8 +3238,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Ενεργοποίηση εντοπισμού εστίασης"
 
