@@ -500,7 +500,6 @@ void DebugConsoleFilter::tabletToolProximityEvent(TabletToolProximityEvent *even
                    QStringLiteral("%1,%2").arg(event->xTilt).arg(event->yTilt))
         + tableRow(i18n("Rotation"), QString::number(event->rotation))
         + tableRow(i18n("Pressure"), QString::number(event->pressure))
-        + tableRow(i18n("Buttons"), QString::number(event->buttons))
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);

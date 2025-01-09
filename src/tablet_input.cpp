@@ -246,7 +246,6 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
         .device = device,
         .rotation = rotation,
         .position = pos,
-        .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
         .pressure = pressure,
         .tangentialPressure = 0,
         .xTilt = xTilt,

@@ -91,7 +91,6 @@ public:
     InputDevice *device;
     qreal rotation;
     QPointF position;
-    Qt::MouseButtons buttons;
     qreal pressure;
     qreal tangentialPressure;
     qreal xTilt;
