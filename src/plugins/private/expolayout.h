@@ -33,6 +33,11 @@ struct LayeredPacking;
  * tries to minimize horizontal movement (for rows) or vertical movement (for
  * columns) of the windows.
  *
+ * As a special case, the algorithm tries to detect if the windows are already
+ * tiled (meaning they fill the bounding box with little overlap and gaps), and
+ * if in addition, the bounding box has similar aspect ratio to the layout area,
+ * just scale the original layout.
+ *
  * [0] Hirschberg, Daniel S., and Lawrence L. Larmore. "The least weight
  * subsequence problem." SIAM Journal on Computing 16.4 (1987): 628-638.
  */

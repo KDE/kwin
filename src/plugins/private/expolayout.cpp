@@ -369,6 +369,50 @@ static void moveToFit(QRectF &rect, const QRectF &area)
     rect.moveCenter(area.center());
 }
 
+static QRectF getBoundingBox(const QList<QRectF> &rects)
+{
+    QRectF boundingBox;
+    for (const QRectF &rect : rects) {
+        boundingBox = boundingBox.united(rect);
+    }
+    return boundingBox;
+}
+
+/**
+ * Check if @param rects are tiled inside @param area.
+ *
+ * Tiled means @param rects almost fill @param area with almost no overlap and no gap, up to a small slack.
+ */
+static bool areTiled(const QList<QRectF> &rects, const QRectF &area)
+{
+    const qreal slack = 5;
+    const QMarginsF margins(slack, slack, slack, slack);
+    const size_t n = rects.size();
+    if (n == 0) {
+        return false;
+    }
+    for (size_t i = 0; i < n; ++i) {
+        QRectF rect = rects[i].marginsRemoved(margins);
+        for (size_t j = i + 1; j < n; ++j) {
+            if (rect.intersects(rects[j])) {
+                return false;
+            }
+        }
+    }
+    QRegion region(area.toAlignedRect());
+    for (const QRectF &rect : rects) {
+        region -= rect.marginsAdded(margins).toAlignedRect();
+    }
+    return region.isEmpty();
+}
+
+static bool aspectRatioSimilar(const QRectF &a, const QRectF &b, qreal threshold = 0.5)
+{
+    qreal aspectA = a.width() / a.height();
+    qreal aspectB = b.width() / b.height();
+    return aspectA / aspectB < 1 + threshold && aspectB / aspectA < 1 + threshold;
+}
+
 void ExpoLayout::updatePolish()
 {
     if (m_cells.isEmpty()) {
@@ -383,22 +427,68 @@ void ExpoLayout::updatePolish()
                   return a->persistentKey() < b->persistentKey();
               });
 
-    // Estimate the scale factor we need to apply by simple heuristics
-    qreal totalArea = 0;
-    qreal availableArea = area.width() * area.height();
+    QList<QRectF> naturalRects;
     for (ExpoCell *cell : std::as_const(m_cells)) {
-        totalArea += cell->naturalWidth() * cell->naturalHeight();
+        naturalRects.append(cell->naturalRect());
     }
-    qreal scale = std::sqrt(availableArea / totalArea) * 0.7; // conservative estimate
-    scale = std::clamp(scale, 0.1, 10.0); // don't go crazy
+    const QRectF naturalBoundingBox = getBoundingBox(naturalRects);
 
-    QList<QRectF> windowSizes;
-    for (ExpoCell *cell : std::as_const(m_cells)) {
-        const QMarginsF &margins = cell->margins();
-        const QMarginsF scaledMargins(margins.left() / scale, margins.top() / scale, margins.right() / scale, margins.bottom() / scale);
-        windowSizes.emplace_back(cell->naturalRect().marginsAdded(scaledMargins));
+    QList<QRectF> windowLayouts;
+    if (aspectRatioSimilar(naturalBoundingBox, area) && areTiled(naturalRects, naturalBoundingBox)) {
+        // try to respect original layout
+        const qreal overallScale = std::min(area.width() / naturalBoundingBox.width(), area.height() / naturalBoundingBox.height());
+        const qreal shortSide = std::min(area.width(), area.height());
+        const QMarginsF spacing(shortSide * m_relativeMarginLeft,
+                                shortSide * m_relativeMarginTop,
+                                shortSide * m_relativeMarginRight,
+                                shortSide * m_relativeMarginBottom);
+        const qreal minLength = m_relativeMinLength * shortSide;
+        for (int i = 0; i < m_cells.size(); ++i) {
+            const QRectF &rect = naturalRects[i];
+            // target is the image of rect when transforming boundingBox to area, preserving aspect ratio
+            QRectF target = rect;
+            target.setWidth(rect.width() * overallScale);
+            target.setHeight(rect.height() * overallScale);
+            target.moveCenter(area.center() + (rect.center() - naturalBoundingBox.center()) * overallScale);
+
+            // rectMinSize is rect with minimal size minLength
+            QRectF rectMinSize(rect);
+            rectMinSize.setWidth(std::max(minLength, rect.width()));
+            rectMinSize.setHeight(std::max(minLength, rect.height()));
+
+            // (rectMinSize + spacing) * scale + cellMargins must fit it target
+            // We need to store rectMinSize * scale + cellMargins
+            QRectF targetNoCellMargins = target.marginsRemoved(m_cells[i]->margins());
+            if (!targetNoCellMargins.isValid()) {
+                targetNoCellMargins = target;
+            }
+            const QRectF rectWithSpacing = rectMinSize.marginsAdded(spacing);
+            const qreal scale = std::min({m_maxScale,
+                                          targetNoCellMargins.width() / rectWithSpacing.width(),
+                                          targetNoCellMargins.height() / rectWithSpacing.height()});
+            rectMinSize.setWidth(rectMinSize.width() * scale);
+            rectMinSize.setHeight(rectMinSize.height() * scale);
+            rectMinSize.moveCenter(targetNoCellMargins.center());
+            windowLayouts.append(rectMinSize.marginsAdded(m_cells[i]->margins()));
+        }
+    } else {
+        // Estimate the scale factor we need to apply by simple heuristics
+        qreal totalArea = 0;
+        qreal availableArea = area.width() * area.height();
+        for (ExpoCell *cell : std::as_const(m_cells)) {
+            totalArea += cell->naturalWidth() * cell->naturalHeight();
+        }
+        qreal scale = std::sqrt(availableArea / totalArea) * 0.7; // conservative estimate
+        scale = std::clamp(scale, 0.1, 10.0); // don't go crazy
+
+        QList<QRectF> windowSizes;
+        for (ExpoCell *cell : std::as_const(m_cells)) {
+            const QMarginsF &margins = cell->margins();
+            const QMarginsF scaledMargins(margins.left() / scale, margins.top() / scale, margins.right() / scale, margins.bottom() / scale);
+            windowSizes.emplace_back(cell->naturalRect().marginsAdded(scaledMargins));
+        }
+        windowLayouts = ExpoLayout::layout(area, windowSizes);
     }
-    auto windowLayouts = ExpoLayout::layout(area, windowSizes);
     for (int i = 0; i < windowLayouts.size(); ++i) {
         ExpoCell *cell = m_cells[i];
         QRectF target = windowLayouts[i];
