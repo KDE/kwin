@@ -7,6 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "gllut.h"
+#include "openglcontext.h"
+#include "utils/common.h"
 
 #include <vector>
 
@@ -21,6 +23,10 @@ GlLookUpTable::GlLookUpTable(GLuint handle, size_t size)
 
 GlLookUpTable::~GlLookUpTable()
 {
+    if (!OpenGlContext::currentContext()) {
+        qCWarning(KWIN_OPENGL, "Could not delete 1D LUT because no context is current");
+        return;
+    }
     glDeleteTextures(1, &m_handle);
 }
 

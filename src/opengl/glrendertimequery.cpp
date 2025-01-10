@@ -8,6 +8,7 @@
 */
 #include "glrendertimequery.h"
 #include "opengl/glplatform.h"
+#include "utils/common.h"
 
 namespace KWin
 {
@@ -27,10 +28,10 @@ GLRenderTimeQuery::~GLRenderTimeQuery()
     }
     const auto previousContext = OpenGlContext::currentContext();
     const auto context = m_context.lock();
-    if (!context) {
+    if (!context || !context->makeCurrent()) {
+        qCWarning(KWIN_OPENGL, "Could not delete render time query because no context is current");
         return;
     }
-    context->makeCurrent();
     glDeleteQueries(1, &m_gpuProbe.query);
     if (previousContext && previousContext != context.get()) {
         previousContext->makeCurrent();
@@ -63,10 +64,9 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
     if (m_gpuProbe.query) {
         const auto previousContext = OpenGlContext::currentContext();
         const auto context = m_context.lock();
-        if (!context) {
+        if (!context || !context->makeCurrent()) {
             return std::nullopt;
         }
-        context->makeCurrent();
         GLint64 end = 0;
         glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &end);
         m_gpuProbe.end = std::chrono::nanoseconds(end);

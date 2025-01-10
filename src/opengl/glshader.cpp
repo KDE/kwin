@@ -37,6 +37,10 @@ GLShader::GLShader(const QString &vertexfile, const QString &fragmentfile, unsig
 
 GLShader::~GLShader()
 {
+    if (!OpenGlContext::currentContext()) {
+        qCWarning(KWIN_OPENGL, "Could not delete shader because no context is current");
+        return;
+    }
     if (m_program) {
         glDeleteProgram(m_program);
     }
