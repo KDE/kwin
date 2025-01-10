@@ -77,6 +77,7 @@
 #include "osd.h"
 #include "wayland/xdgshell.h"
 #include <cmath>
+#include <linux/input.h>
 
 using namespace std::literals;
 
@@ -1983,6 +1984,27 @@ public:
             const auto command = window->getMouseReleaseCommand(Qt::LeftButton);
             if (command) {
                 return !window->performMouseReleaseCommand(*command, event->globalPosition());
+            }
+        }
+
+        return false;
+    }
+    bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
+    {
+        Window *window = input()->tablet()->focus();
+        if (!window || !window->isClient()) {
+            return false;
+        }
+
+        if (event->pressed) {
+            const auto command = window->getMousePressCommand(event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton);
+            if (command) {
+                return !window->performMousePressCommand(*command, input()->tablet()->position());
+            }
+        } else {
+            const auto command = window->getMouseReleaseCommand(event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton);
+            if (command) {
+                return !window->performMouseReleaseCommand(*command, input()->tablet()->position());
             }
         }
 
