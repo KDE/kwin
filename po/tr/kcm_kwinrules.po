@@ -5,13 +5,13 @@
 # Onur Küçük <onur@pardus.org.tr>, 2010.
 # Ozan Çağlayan <ozan@pardus.org.tr>, 2010, 2011.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2014, 2015, 2017, 2021.
-# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-26 00:41+0000\n"
-"PO-Revision-Date: 2024-08-30 12:05+0300\n"
+"PO-Revision-Date: 2025-01-09 16:12+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.11.70\n"
+"X-Generator: Lokalize 25.03.70\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -174,7 +174,7 @@ msgid ""
 msgstr ""
 "Bazı uygulamalar başlatıldıktan sonra kendi geometrilerini ayarlarlar ve "
 "boyut ve konum ayarlarınızı geçersiz kılarlar. Bu ayarları zorlamak için "
-"ayrıca “%1” özelliğini ‘Evet’ olarak zorlayın."
+"ayrıca “%1” özelliğini “Evet” olarak zorlayın."
 
 #: rulesmodel.cpp:257
 #, kde-format

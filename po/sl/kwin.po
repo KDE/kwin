@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1699191 2025-01-01 01:19:06Z scripty $
+# $Id: kwin.po 1699909 2025-01-10 10:04:43Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-01 00:42+0000\n"
+"POT-Creation-Date: 2025-01-10 09:29+0000\n"
 "PO-Revision-Date: 2024-12-25 09:01+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -746,328 +746,321 @@ msgstr "Noter"
 msgid "Out"
 msgstr "Ven"
 
-#: debug_console.cpp:497 debug_console.cpp:514 debug_console.cpp:532
-#: debug_console.cpp:577 debug_console.cpp:591
+#: debug_console.cpp:497 debug_console.cpp:513 debug_console.cpp:530
+#: debug_console.cpp:574 debug_console.cpp:588
 #, kde-format
 msgid "Position"
 msgstr "Položaj"
 
-#: debug_console.cpp:499 debug_console.cpp:516 debug_console.cpp:534
+#: debug_console.cpp:499 debug_console.cpp:515 debug_console.cpp:532
 #, kde-format
 msgid "Tilt"
 msgstr "Nagib"
 
-#: debug_console.cpp:501 debug_console.cpp:518 debug_console.cpp:536
+#: debug_console.cpp:501 debug_console.cpp:517 debug_console.cpp:534
 #, kde-format
 msgid "Rotation"
 msgstr "Vrtenje"
 
-#: debug_console.cpp:502 debug_console.cpp:519 debug_console.cpp:537
+#: debug_console.cpp:502 debug_console.cpp:518 debug_console.cpp:535
 #, kde-format
 msgid "Pressure"
 msgstr "Pritisk"
 
-#: debug_console.cpp:503 debug_console.cpp:520 debug_console.cpp:538
+#: debug_console.cpp:503 debug_console.cpp:519 debug_console.cpp:536
 #, kde-format
 msgid "Buttons"
 msgstr "Gumbi"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:504 debug_console.cpp:521 debug_console.cpp:539
-#: debug_console.ui:355
-#, kde-format
-msgid "Modifiers"
-msgstr "Spremenilniki"
-
-#: debug_console.cpp:513
+#: debug_console.cpp:512
 #, kde-format
 msgid "Tablet Tool Axis"
 msgstr "Os orodja za tablico"
 
-#: debug_console.cpp:530
+#: debug_console.cpp:528
 #, kde-format
 msgid "Tablet Tool Tip"
 msgstr "Namig orodja za tablico"
 
-#: debug_console.cpp:531
+#: debug_console.cpp:529
 #, kde-format
 msgid "Tip"
 msgstr "Namig"
 
-#: debug_console.cpp:531
+#: debug_console.cpp:529
 #, kde-format
 msgid "Down"
 msgstr "Dol"
 
-#: debug_console.cpp:531
+#: debug_console.cpp:529
 #, kde-format
 msgid "Up"
 msgstr "Gor"
 
-#: debug_console.cpp:548
+#: debug_console.cpp:545
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr "Orodje za gumbe na tablici"
 
-#: debug_console.cpp:549 debug_console.cpp:563
+#: debug_console.cpp:546 debug_console.cpp:560
 #, kde-format
 msgid "Button"
 msgstr "Gumb"
 
-#: debug_console.cpp:550 debug_console.cpp:564
+#: debug_console.cpp:547 debug_console.cpp:561
 #, kde-format
 msgid "Pressed"
 msgstr "Pritisnjen"
 
-#: debug_console.cpp:551 debug_console.cpp:565 debug_console.cpp:579
-#: debug_console.cpp:593
+#: debug_console.cpp:548 debug_console.cpp:562 debug_console.cpp:576
+#: debug_console.cpp:590
 #, kde-format
 msgid "Tablet"
 msgstr "Tablica"
 
-#: debug_console.cpp:562
+#: debug_console.cpp:559
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr "Gumb podloge tabličnega računalnika"
 
-#: debug_console.cpp:575
+#: debug_console.cpp:572
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr "Trak za tablični računalnik"
 
-#: debug_console.cpp:576 debug_console.cpp:590
+#: debug_console.cpp:573 debug_console.cpp:587
 #, kde-format
 msgid "Number"
 msgstr "Število"
 
-#: debug_console.cpp:578 debug_console.cpp:592
+#: debug_console.cpp:575 debug_console.cpp:589
 #, kde-format
 msgid "isFinger"
 msgstr "jePrst"
 
-#: debug_console.cpp:589
+#: debug_console.cpp:586
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr "Obroč za tablični računalnik"
 
-#: debug_console.cpp:656
+#: debug_console.cpp:653
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Učinki"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:827
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Brez miškinih gumbov"
 
-#: debug_console.cpp:834
+#: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "levi"
 
-#: debug_console.cpp:837
+#: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "desni"
 
-#: debug_console.cpp:840
+#: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "srednji"
 
-#: debug_console.cpp:843
+#: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "nazaj"
 
-#: debug_console.cpp:846
+#: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "naprej"
 
-#: debug_console.cpp:849
+#: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "dodatni 1"
 
-#: debug_console.cpp:852
+#: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "dodatni 2"
 
-#: debug_console.cpp:855
+#: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "dodatni 3"
 
-#: debug_console.cpp:858
+#: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "dodatni 4"
 
-#: debug_console.cpp:861
+#: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "dodatni 5"
 
-#: debug_console.cpp:864
+#: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "dodatni 6"
 
-#: debug_console.cpp:867
+#: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "dodatni 7"
 
-#: debug_console.cpp:870
+#: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "dodatni 8"
 
-#: debug_console.cpp:873
+#: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "dodatni 9"
 
-#: debug_console.cpp:876
+#: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "dodatni 10"
 
-#: debug_console.cpp:879
+#: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "dodatni 11"
 
-#: debug_console.cpp:882
+#: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "dodatni 12"
 
-#: debug_console.cpp:885
+#: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "dodatni 13"
 
-#: debug_console.cpp:888
+#: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "dodatni 14"
 
-#: debug_console.cpp:891
+#: debug_console.cpp:888
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "dodatni 15"
 
-#: debug_console.cpp:894
+#: debug_console.cpp:891
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "dodatni 16"
 
-#: debug_console.cpp:897
+#: debug_console.cpp:894
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "dodatni 17"
 
-#: debug_console.cpp:900
+#: debug_console.cpp:897
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "dodatni 18"
 
-#: debug_console.cpp:903
+#: debug_console.cpp:900
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "dodatni 19"
 
-#: debug_console.cpp:906
+#: debug_console.cpp:903
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "dodatni 20"
 
-#: debug_console.cpp:909
+#: debug_console.cpp:906
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "dodatni 21"
 
-#: debug_console.cpp:912
+#: debug_console.cpp:909
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "dodatni 22"
 
-#: debug_console.cpp:915
+#: debug_console.cpp:912
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "dodatni 23"
 
-#: debug_console.cpp:918
+#: debug_console.cpp:915
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "dodatni 24"
 
-#: debug_console.cpp:921
+#: debug_console.cpp:918
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "opravilo"
 
-#: debug_console.cpp:1273
+#: debug_console.cpp:1270
 #, kde-format
 msgid "X11 Windows"
 msgstr "Okna X11"
 
-#: debug_console.cpp:1275
+#: debug_console.cpp:1272
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Okna X11, ki niso upravljana"
 
-#: debug_console.cpp:1277
+#: debug_console.cpp:1274
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Okna Wayland"
 
-#: debug_console.cpp:1279
+#: debug_console.cpp:1276
 #, kde-format
 msgid "Internal Windows"
 msgstr "Notranja okna"
 
-#: debug_console.cpp:1619 debug_console.cpp:1633
+#: debug_console.cpp:1616 debug_console.cpp:1630
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Odloži"
 
-#: debug_console.cpp:1621 debug_console.cpp:1635
+#: debug_console.cpp:1618 debug_console.cpp:1632
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1198,6 +1191,12 @@ msgstr "Razporeditev tipk"
 #, kde-format
 msgid "Current Layout:"
 msgstr "Trenutna razporeditev:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.ui:355
+#, kde-format
+msgid "Modifiers"
+msgstr "Spremenilniki"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:371
@@ -1365,7 +1364,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ime gostitelja: %1"
 
-#: input.cpp:3292
+#: input.cpp:3333
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -2185,25 +2184,25 @@ msgstr " px"
 msgid "&Height:"
 msgstr "Višina:"
 
-#: plugins/mouseclick/mouseclick.cpp:40
+#: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
 msgstr "Preklopi animacijo klika miške"
 
-#: plugins/mouseclick/mouseclick.cpp:47
+#: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Levi"
 
-#: plugins/mouseclick/mouseclick.cpp:48
+#: plugins/mouseclick/mouseclick.cpp:47
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Srednji"
 
-#: plugins/mouseclick/mouseclick.cpp:49
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-01 00:42+0000\n"
+"POT-Creation-Date: 2025-01-10 09:29+0000\n"
 "PO-Revision-Date: 2025-01-04 15:58+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -735,328 +735,321 @@ msgstr "Uz iekšu"
 msgid "Out"
 msgstr "Uz āru"
 
-#: debug_console.cpp:497 debug_console.cpp:514 debug_console.cpp:532
-#: debug_console.cpp:577 debug_console.cpp:591
+#: debug_console.cpp:497 debug_console.cpp:513 debug_console.cpp:530
+#: debug_console.cpp:574 debug_console.cpp:588
 #, kde-format
 msgid "Position"
 msgstr "Novietojums"
 
-#: debug_console.cpp:499 debug_console.cpp:516 debug_console.cpp:534
+#: debug_console.cpp:499 debug_console.cpp:515 debug_console.cpp:532
 #, kde-format
 msgid "Tilt"
 msgstr "Savērsums"
 
-#: debug_console.cpp:501 debug_console.cpp:518 debug_console.cpp:536
+#: debug_console.cpp:501 debug_console.cpp:517 debug_console.cpp:534
 #, kde-format
 msgid "Rotation"
 msgstr "Rotācija"
 
-#: debug_console.cpp:502 debug_console.cpp:519 debug_console.cpp:537
+#: debug_console.cpp:502 debug_console.cpp:518 debug_console.cpp:535
 #, kde-format
 msgid "Pressure"
 msgstr "Spiediens"
 
-#: debug_console.cpp:503 debug_console.cpp:520 debug_console.cpp:538
+#: debug_console.cpp:503 debug_console.cpp:519 debug_console.cpp:536
 #, kde-format
 msgid "Buttons"
 msgstr "Taustiņi"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:504 debug_console.cpp:521 debug_console.cpp:539
-#: debug_console.ui:355
-#, kde-format
-msgid "Modifiers"
-msgstr "Modifikatori"
-
-#: debug_console.cpp:513
+#: debug_console.cpp:512
 #, kde-format
 msgid "Tablet Tool Axis"
 msgstr "Planšetdatora rīka asis"
 
-#: debug_console.cpp:530
+#: debug_console.cpp:528
 #, kde-format
 msgid "Tablet Tool Tip"
 msgstr "Planšetdatora rīka uzgalis"
 
-#: debug_console.cpp:531
+#: debug_console.cpp:529
 #, kde-format
 msgid "Tip"
 msgstr "Uzgalis"
 
-#: debug_console.cpp:531
+#: debug_console.cpp:529
 #, kde-format
 msgid "Down"
 msgstr "Lejup"
 
-#: debug_console.cpp:531
+#: debug_console.cpp:529
 #, kde-format
 msgid "Up"
 msgstr "Augšup"
 
-#: debug_console.cpp:548
+#: debug_console.cpp:545
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr "Planšetdatora rīka taustiņš"
 
-#: debug_console.cpp:549 debug_console.cpp:563
+#: debug_console.cpp:546 debug_console.cpp:560
 #, kde-format
 msgid "Button"
 msgstr "Taustiņš"
 
-#: debug_console.cpp:550 debug_console.cpp:564
+#: debug_console.cpp:547 debug_console.cpp:561
 #, kde-format
 msgid "Pressed"
 msgstr "Nospiests"
 
-#: debug_console.cpp:551 debug_console.cpp:565 debug_console.cpp:579
-#: debug_console.cpp:593
+#: debug_console.cpp:548 debug_console.cpp:562 debug_console.cpp:576
+#: debug_console.cpp:590
 #, kde-format
 msgid "Tablet"
 msgstr "Planšetdators"
 
-#: debug_console.cpp:562
+#: debug_console.cpp:559
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr "Planšetdatora taustiņš"
 
-#: debug_console.cpp:575
+#: debug_console.cpp:572
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr "Planšetdatora josta"
 
-#: debug_console.cpp:576 debug_console.cpp:590
+#: debug_console.cpp:573 debug_console.cpp:587
 #, kde-format
 msgid "Number"
 msgstr "Skaits"
 
-#: debug_console.cpp:578 debug_console.cpp:592
+#: debug_console.cpp:575 debug_console.cpp:589
 #, kde-format
 msgid "isFinger"
 msgstr "ir Pirksts"
 
-#: debug_console.cpp:589
+#: debug_console.cpp:586
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr "Planšetes riņķis"
 
-#: debug_console.cpp:656
+#: debug_console.cpp:653
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Efekti"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:827
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Nav peles taustiņu"
 
-#: debug_console.cpp:834
+#: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "kreisais"
 
-#: debug_console.cpp:837
+#: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "labais"
 
-#: debug_console.cpp:840
+#: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "vidējais"
 
-#: debug_console.cpp:843
+#: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "atpakaļ"
 
-#: debug_console.cpp:846
+#: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "uz priekšu"
 
-#: debug_console.cpp:849
+#: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "papildu 1"
 
-#: debug_console.cpp:852
+#: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "papildu 2"
 
-#: debug_console.cpp:855
+#: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "papildu 3"
 
-#: debug_console.cpp:858
+#: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "papildu 4"
 
-#: debug_console.cpp:861
+#: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "papildu 5"
 
-#: debug_console.cpp:864
+#: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "papildu 6"
 
-#: debug_console.cpp:867
+#: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "papildu 7"
 
-#: debug_console.cpp:870
+#: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "papildu 8"
 
-#: debug_console.cpp:873
+#: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "papildu 9"
 
-#: debug_console.cpp:876
+#: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "papildu 10"
 
-#: debug_console.cpp:879
+#: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "papildu 11"
 
-#: debug_console.cpp:882
+#: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "papildu 12"
 
-#: debug_console.cpp:885
+#: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "papildu 13"
 
-#: debug_console.cpp:888
+#: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "papildu 14"
 
-#: debug_console.cpp:891
+#: debug_console.cpp:888
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "papildu 15"
 
-#: debug_console.cpp:894
+#: debug_console.cpp:891
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "papildu 16"
 
-#: debug_console.cpp:897
+#: debug_console.cpp:894
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "papildu 17"
 
-#: debug_console.cpp:900
+#: debug_console.cpp:897
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "papildu 18"
 
-#: debug_console.cpp:903
+#: debug_console.cpp:900
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "papildu 19"
 
-#: debug_console.cpp:906
+#: debug_console.cpp:903
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "papildu 20"
 
-#: debug_console.cpp:909
+#: debug_console.cpp:906
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "papildu 21"
 
-#: debug_console.cpp:912
+#: debug_console.cpp:909
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "papildu 22"
 
-#: debug_console.cpp:915
+#: debug_console.cpp:912
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "papildu 23"
 
-#: debug_console.cpp:918
+#: debug_console.cpp:915
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "papildu 24"
 
-#: debug_console.cpp:921
+#: debug_console.cpp:918
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "uzdevums"
 
-#: debug_console.cpp:1273
+#: debug_console.cpp:1270
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 logi"
 
-#: debug_console.cpp:1275
+#: debug_console.cpp:1272
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 nepārvaldīti logi"
 
-#: debug_console.cpp:1277
+#: debug_console.cpp:1274
 #, kde-format
 msgid "Wayland Windows"
 msgstr "„Wayland“ logi"
 
-#: debug_console.cpp:1279
+#: debug_console.cpp:1276
 #, kde-format
 msgid "Internal Windows"
 msgstr "Iekšējie logi"
 
-#: debug_console.cpp:1619 debug_console.cpp:1633
+#: debug_console.cpp:1616 debug_console.cpp:1630
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Izlādēt"
 
-#: debug_console.cpp:1621 debug_console.cpp:1635
+#: debug_console.cpp:1618 debug_console.cpp:1632
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1187,6 +1180,12 @@ msgstr "Taustiņu kartes izkārtojumi"
 #, kde-format
 msgid "Current Layout:"
 msgstr "Pašreizējais izkārtojums:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.ui:355
+#, kde-format
+msgid "Modifiers"
+msgstr "Modifikatori"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:371
@@ -1354,7 +1353,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Resursdatora nosaukums: %1"
 
-#: input.cpp:3292
+#: input.cpp:3333
 #, kde-format
 msgid "Touchpad"
 msgstr "Skārienpaliktnis"
@@ -2169,25 +2168,25 @@ msgstr " px"
 msgid "&Height:"
 msgstr "&Augstums"
 
-#: plugins/mouseclick/mouseclick.cpp:40
+#: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
 msgstr "Iesl./izsl. peles klikšķa animāciju"
 
-#: plugins/mouseclick/mouseclick.cpp:47
+#: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Kreisais"
 
-#: plugins/mouseclick/mouseclick.cpp:48
+#: plugins/mouseclick/mouseclick.cpp:47
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Vidējais"
 
-#: plugins/mouseclick/mouseclick.cpp:49
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
