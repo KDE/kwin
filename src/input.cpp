@@ -2934,7 +2934,9 @@ class UserActivitySpy : public InputEventSpy
 public:
     void pointerMotion(PointerMotionEvent *event) override
     {
-        notifyActivity();
+        if (!event->warp) {
+            notifyActivity();
+        }
     }
     void pointerButton(PointerButtonEvent *event) override
     {
