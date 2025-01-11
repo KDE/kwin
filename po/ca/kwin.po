@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-10 01:59+0000\n"
+"POT-Creation-Date: 2025-01-11 02:29+0000\n"
 "PO-Revision-Date: 2024-12-25 09:03+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1361,7 +1361,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom de la màquina: %1"
 
-#: input.cpp:3311
+#: input.cpp:3335
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
