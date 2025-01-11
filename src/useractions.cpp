@@ -1078,7 +1078,9 @@ void Workspace::initShortcuts()
 
 void Workspace::setupWindowShortcut(Window *window)
 {
-    Q_ASSERT(m_windowKeysDialog == nullptr);
+    if (m_windowKeysDialog) {
+        return;
+    }
     // TODO: PORT ME (KGlobalAccel related)
     // keys->setEnabled( false );
     // disable_shortcuts_keys->setEnabled( false );
