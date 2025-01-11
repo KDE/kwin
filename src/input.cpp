@@ -1003,15 +1003,15 @@ public:
         }
         PointerAxisDirection direction = PointerAxisUp;
         if (event->orientation == Qt::Horizontal) {
-            if (event->delta < 0) {
+            if (event->delta > 0) {
                 direction = PointerAxisRight;
-            } else if (event->delta > 0) {
+            } else if (event->delta < 0) {
                 direction = PointerAxisLeft;
             }
         } else {
-            if (event->delta < 0) {
+            if (event->delta > 0) {
                 direction = PointerAxisDown;
-            } else if (event->delta > 0) {
+            } else if (event->delta < 0) {
                 direction = PointerAxisUp;
             }
         }

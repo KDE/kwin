@@ -643,10 +643,10 @@ void LockScreenTest::testAxisShortcut_data()
     QTest::addColumn<Qt::Orientation>("direction");
     QTest::addColumn<int>("sign");
 
-    QTest::newRow("up") << Qt::Vertical << 1;
-    QTest::newRow("down") << Qt::Vertical << -1;
-    QTest::newRow("left") << Qt::Horizontal << 1;
-    QTest::newRow("right") << Qt::Horizontal << -1;
+    QTest::newRow("up") << Qt::Vertical << -1;
+    QTest::newRow("down") << Qt::Vertical << 1;
+    QTest::newRow("left") << Qt::Horizontal << -1;
+    QTest::newRow("right") << Qt::Horizontal << 1;
 }
 
 void LockScreenTest::testAxisShortcut()
@@ -657,9 +657,9 @@ void LockScreenTest::testAxisShortcut()
     QFETCH(int, sign);
     PointerAxisDirection axisDirection = PointerAxisUp;
     if (direction == Qt::Vertical) {
-        axisDirection = sign > 0 ? PointerAxisUp : PointerAxisDown;
+        axisDirection = sign < 0 ? PointerAxisUp : PointerAxisDown;
     } else {
-        axisDirection = sign > 0 ? PointerAxisLeft : PointerAxisRight;
+        axisDirection = sign < 0 ? PointerAxisLeft : PointerAxisRight;
     }
     input()->registerAxisShortcut(Qt::MetaModifier, axisDirection, action.get());
 
