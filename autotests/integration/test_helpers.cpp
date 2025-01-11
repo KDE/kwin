@@ -1824,7 +1824,7 @@ void tabletToolButtonReleased(quint32 button, quint32 time)
     Q_EMIT tablet->tabletToolButtonEvent(button, false, tool, std::chrono::milliseconds(time), tablet);
 }
 
-void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, quint32 time)
+void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, quint32 time)
 {
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();

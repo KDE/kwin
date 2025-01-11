@@ -703,7 +703,7 @@ void tabletPadButtonPressed(quint32 button, quint32 time);
 void tabletPadButtonReleased(quint32 button, quint32 time);
 void tabletToolButtonPressed(quint32 button, quint32 time);
 void tabletToolButtonReleased(quint32 button, quint32 time);
-void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, quint32 time);
+void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, quint32 time);
 
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various
