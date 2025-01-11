@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-10 09:29+0000\n"
+"POT-Creation-Date: 2025-01-11 00:42+0000\n"
 "PO-Revision-Date: 2024-09-20 11:48+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -762,325 +762,325 @@ msgstr ""
 msgid "Out"
 msgstr ""
 
-#: debug_console.cpp:497 debug_console.cpp:513 debug_console.cpp:530
-#: debug_console.cpp:574 debug_console.cpp:588
+#: debug_console.cpp:497 debug_console.cpp:511 debug_console.cpp:528
+#: debug_console.cpp:572 debug_console.cpp:586
 #, kde-format
 msgid "Position"
 msgstr "Положение"
 
-#: debug_console.cpp:499 debug_console.cpp:515 debug_console.cpp:532
+#: debug_console.cpp:499 debug_console.cpp:513 debug_console.cpp:530
 #, kde-format
 msgid "Tilt"
 msgstr "Наклон"
 
-#: debug_console.cpp:501 debug_console.cpp:517 debug_console.cpp:534
+#: debug_console.cpp:501 debug_console.cpp:515 debug_console.cpp:532
 #, kde-format
 msgid "Rotation"
 msgstr "Поворот"
 
-#: debug_console.cpp:502 debug_console.cpp:518 debug_console.cpp:535
-#, kde-format
-msgid "Pressure"
-msgstr "Нажим"
-
-#: debug_console.cpp:503 debug_console.cpp:519 debug_console.cpp:536
-#, kde-format
-msgid "Buttons"
-msgstr "Кнопки"
-
-#: debug_console.cpp:512
+#: debug_console.cpp:510
 #, fuzzy, kde-format
 #| msgid "Tablet Tool"
 msgid "Tablet Tool Axis"
 msgstr "Инструмент планшета"
 
-#: debug_console.cpp:528
+#: debug_console.cpp:516 debug_console.cpp:533
+#, kde-format
+msgid "Pressure"
+msgstr "Нажим"
+
+#: debug_console.cpp:517 debug_console.cpp:534
+#, kde-format
+msgid "Buttons"
+msgstr "Кнопки"
+
+#: debug_console.cpp:526
 #, fuzzy, kde-format
 #| msgid "Tablet Tool"
 msgid "Tablet Tool Tip"
 msgstr "Инструмент планшета"
 
-#: debug_console.cpp:529
+#: debug_console.cpp:527
 #, fuzzy, kde-format
 #| msgid "Top"
 msgid "Tip"
 msgstr "Сверху"
 
-#: debug_console.cpp:529
+#: debug_console.cpp:527
 #, fuzzy, kde-format
 #| msgid "Move Down"
 msgid "Down"
 msgstr "Переместить вниз"
 
-#: debug_console.cpp:529
+#: debug_console.cpp:527
 #, kde-format
 msgid "Up"
 msgstr ""
 
-#: debug_console.cpp:545
+#: debug_console.cpp:543
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr "Инструмент кнопок планшета"
 
-#: debug_console.cpp:546 debug_console.cpp:560
+#: debug_console.cpp:544 debug_console.cpp:558
 #, kde-format
 msgid "Button"
 msgstr "Кнопка"
 
-#: debug_console.cpp:547 debug_console.cpp:561
+#: debug_console.cpp:545 debug_console.cpp:559
 #, kde-format
 msgid "Pressed"
 msgstr "Нажато"
 
-#: debug_console.cpp:548 debug_console.cpp:562 debug_console.cpp:576
-#: debug_console.cpp:590
+#: debug_console.cpp:546 debug_console.cpp:560 debug_console.cpp:574
+#: debug_console.cpp:588
 #, kde-format
 msgid "Tablet"
 msgstr "Планшет"
 
-#: debug_console.cpp:559
+#: debug_console.cpp:557
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr "Кнопки планшета"
 
-#: debug_console.cpp:572
+#: debug_console.cpp:570
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr "Сенсорная полоса планшета"
 
-#: debug_console.cpp:573 debug_console.cpp:587
+#: debug_console.cpp:571 debug_console.cpp:585
 #, kde-format
 msgid "Number"
 msgstr "Число"
 
-#: debug_console.cpp:575 debug_console.cpp:589
+#: debug_console.cpp:573 debug_console.cpp:587
 #, kde-format
 msgid "isFinger"
 msgstr "isFinger"
 
-#: debug_console.cpp:586
+#: debug_console.cpp:584
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr "Сенсорное кольцо планшета"
 
-#: debug_console.cpp:653
+#: debug_console.cpp:651
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Эффекты"
 
-#: debug_console.cpp:827
+#: debug_console.cpp:825
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Нет кнопок мыши"
 
-#: debug_console.cpp:831
+#: debug_console.cpp:829
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "левая"
 
-#: debug_console.cpp:834
+#: debug_console.cpp:832
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "правая"
 
-#: debug_console.cpp:837
+#: debug_console.cpp:835
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "средняя"
 
-#: debug_console.cpp:840
+#: debug_console.cpp:838
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "назад"
 
-#: debug_console.cpp:843
+#: debug_console.cpp:841
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "вперёд"
 
-#: debug_console.cpp:846
+#: debug_console.cpp:844
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "доп. 1"
 
-#: debug_console.cpp:849
+#: debug_console.cpp:847
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "доп. 2"
 
-#: debug_console.cpp:852
+#: debug_console.cpp:850
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "доп. 3"
 
-#: debug_console.cpp:855
+#: debug_console.cpp:853
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "доп. 4"
 
-#: debug_console.cpp:858
+#: debug_console.cpp:856
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "доп. 5"
 
-#: debug_console.cpp:861
+#: debug_console.cpp:859
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "доп. 6"
 
-#: debug_console.cpp:864
+#: debug_console.cpp:862
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "доп. 7"
 
-#: debug_console.cpp:867
+#: debug_console.cpp:865
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "доп. 8"
 
-#: debug_console.cpp:870
+#: debug_console.cpp:868
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "доп. 9"
 
-#: debug_console.cpp:873
+#: debug_console.cpp:871
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "доп. 10"
 
-#: debug_console.cpp:876
+#: debug_console.cpp:874
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "доп. 11"
 
-#: debug_console.cpp:879
+#: debug_console.cpp:877
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "доп. 12"
 
-#: debug_console.cpp:882
+#: debug_console.cpp:880
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "доп. 13"
 
-#: debug_console.cpp:885
+#: debug_console.cpp:883
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "доп. 14"
 
-#: debug_console.cpp:888
+#: debug_console.cpp:886
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "доп. 15"
 
-#: debug_console.cpp:891
+#: debug_console.cpp:889
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "доп. 16"
 
-#: debug_console.cpp:894
+#: debug_console.cpp:892
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "доп. 17"
 
-#: debug_console.cpp:897
+#: debug_console.cpp:895
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "доп. 18"
 
-#: debug_console.cpp:900
+#: debug_console.cpp:898
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "доп. 19"
 
-#: debug_console.cpp:903
+#: debug_console.cpp:901
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "доп. 20"
 
-#: debug_console.cpp:906
+#: debug_console.cpp:904
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "доп. 21"
 
-#: debug_console.cpp:909
+#: debug_console.cpp:907
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "доп. 22"
 
-#: debug_console.cpp:912
+#: debug_console.cpp:910
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "доп. 23"
 
-#: debug_console.cpp:915
+#: debug_console.cpp:913
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "доп. 24"
 
-#: debug_console.cpp:918
+#: debug_console.cpp:916
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "задача"
 
-#: debug_console.cpp:1270
+#: debug_console.cpp:1268
 #, kde-format
 msgid "X11 Windows"
 msgstr "Окна X11"
 
-#: debug_console.cpp:1272
+#: debug_console.cpp:1270
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Неуправляемые окна X11"
 
-#: debug_console.cpp:1274
+#: debug_console.cpp:1272
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Окна Wayland"
 
-#: debug_console.cpp:1276
+#: debug_console.cpp:1274
 #, kde-format
 msgid "Internal Windows"
 msgstr "Внутренние окна"
 
-#: debug_console.cpp:1616 debug_console.cpp:1630
+#: debug_console.cpp:1614 debug_console.cpp:1628
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Выгрузить"
 
-#: debug_console.cpp:1618 debug_console.cpp:1632
+#: debug_console.cpp:1616 debug_console.cpp:1630
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1387,7 +1387,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Имя хоста: %1"
 
-#: input.cpp:3333
+#: input.cpp:3346
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорная панель"
