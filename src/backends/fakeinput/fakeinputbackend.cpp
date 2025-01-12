@@ -6,14 +6,24 @@
 
 #include "fakeinputbackend.h"
 #include "fakeinputdevice.h"
+#include "keyboard_input.h"
 #include "wayland/display.h"
+#include "xkb.h"
 
 #include "wayland/qwayland-server-fake-input.h"
+
+#include <linux/input-event-codes.h>
+
+#include <QDebug>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(KWIN_LIBINPUT)
+Q_LOGGING_CATEGORY(KWIN_FAKEINPUT, "kwin_fakeinput", QtWarningMsg)
 
 namespace KWin
 {
 
-static const quint32 s_version = 5;
+static const quint32 s_version = 6;
 
 class FakeInputBackendPrivate : public QtWaylandServer::org_kde_kwin_fake_input
 {
@@ -45,6 +55,7 @@ protected:
     void org_kde_kwin_fake_input_touch_frame(Resource *resource) override;
     void org_kde_kwin_fake_input_pointer_motion_absolute(Resource *resource, wl_fixed_t x, wl_fixed_t y) override;
     void org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state) override;
+    void org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keysym, uint32_t state) override;
     void org_kde_kwin_fake_input_destroy(Resource *resource) override;
 };
 
@@ -275,6 +286,25 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
     }
 
     Q_EMIT device->keyChanged(key, nativeState, currentTime(), device);
+}
+
+void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keysym, uint32_t state)
+{
+    const auto result = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(keysym);
+
+    if (result) {
+        if (result->level == 1) {
+            org_kde_kwin_fake_input_keyboard_key(resource, KEY_LEFTSHIFT, state);
+        } else if (result->level == 2) {
+            org_kde_kwin_fake_input_keyboard_key(resource, KEY_RIGHTALT, state);
+        } else if (result->level != 0) {
+            qCWarning(KWIN_FAKEINPUT) << "Did not handle key level" << result->level;
+        }
+
+        org_kde_kwin_fake_input_keyboard_key(resource, result->keyCode, state);
+    } else {
+        qCWarning(KWIN_FAKEINPUT) << "Could not resolve keycode for keysym" << keysym;
+    }
 }
 
 FakeInputBackend::FakeInputBackend(Display *display)
