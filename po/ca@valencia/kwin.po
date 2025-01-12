@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-11 00:42+0000\n"
+"POT-Creation-Date: 2025-01-12 00:43+0000\n"
 "PO-Revision-Date: 2024-12-25 09:03+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -4405,7 +4405,7 @@ msgstr "Ullada a l'escriptori"
 msgid "Kill Window"
 msgstr "Mata la finestra"
 
-#: useractions.cpp:1136
+#: useractions.cpp:1138
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Activa la finestra (%1)"
