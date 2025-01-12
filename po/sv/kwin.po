@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-11 02:29+0000\n"
-"PO-Revision-Date: 2025-01-10 21:52+0100\n"
+"POT-Creation-Date: 2025-01-12 02:42+0000\n"
+"PO-Revision-Date: 2025-01-11 11:00+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -117,70 +117,75 @@ msgstr "Misslyckades öppna ICC-profil \"%1\""
 #: core/iccprofile.cpp:247
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC-profilen \"%1\" finns inte"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC-profilen \"%1\" är inte användbar för bildskärmar"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "ICC-profilen \"%1\" har anslutningsrymd som inte stöds, bara XYZ stöds"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"ICC-profilen \"%1\" är felaktig, indata- och utdatafärgrymden är inte RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC-profilen \"%1\" är felaktig, den har ingen vitpunkt"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC-profilen \"%1\" är felaktig, dess vitpunkt är ogiltig"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"ICC-profilen \"%1\" är felaktig, tolkning av kromatisk anpassningsmatris "
+"misslyckades"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC-profilen \"%1\" är felaktig, invertering av kromatisk anpassningsmatris "
+"misslyckades"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC-profilen \"%1\" är felaktig, den har inga grundfärger"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC-profilen \"%1\" är felaktig, kunde inte beräkna dess grundfärger"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC-profilen \"%1\" är felaktig, dess grundfärger är ogiltiga"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC-profilen \"%1\" med bara BToD-taggar stöds inte"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Färgprofilen saknar TRC-taggar"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -712,22 +717,22 @@ msgstr "Tillstånd"
 #: debug_console.cpp:495
 #, kde-format
 msgid "Tablet Tool Proximity"
-msgstr ""
+msgstr "Näravstånd för ritplatteverktyget"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Näravstånd"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "In"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Ut"
 
 #: debug_console.cpp:497 debug_console.cpp:514 debug_console.cpp:532
 #: debug_console.cpp:577 debug_console.cpp:591
@@ -765,17 +770,17 @@ msgstr "Väljartangenter"
 #: debug_console.cpp:513
 #, kde-format
 msgid "Tablet Tool Axis"
-msgstr ""
+msgstr "Axel på ritplatteverktyget"
 
 #: debug_console.cpp:530
 #, kde-format
 msgid "Tablet Tool Tip"
-msgstr ""
+msgstr "Spets på ritplatteverktyget"
 
 #: debug_console.cpp:531
 #, kde-format
 msgid "Tip"
-msgstr "Lutning"
+msgstr "Spets"
 
 #: debug_console.cpp:531
 #, kde-format
@@ -3092,7 +3097,7 @@ msgstr "Zoomfaktor:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Visa bildpunktsnät vid zoomnivå:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
@@ -4371,7 +4376,7 @@ msgstr "Kika på skrivbord"
 msgid "Kill Window"
 msgstr "Terminera fönster"
 
-#: useractions.cpp:1136
+#: useractions.cpp:1138
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivera fönster (%1)"
@@ -4424,27 +4429,27 @@ msgstr "Byt till skrivbord %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "En av de relevanta utgångarna är inte längre tillgänglig"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "Inaktivering av alla utgångar med inställningsändringar tillåts inte"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "Tillhandahållen utgångsordning innehåller inte alla utgångar"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "Tillhandahållen utgångsordning är ogiltig"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Drivrutinen förkastade utgångsinställningen"
 
 #: window.cpp:3173
 #, kde-format

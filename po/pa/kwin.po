@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-11 02:29+0000\n"
+"POT-Creation-Date: 2025-01-12 02:42+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -4515,7 +4515,7 @@ msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
 msgid "Kill Window"
 msgstr "ਵਿੰਡੋ ਖਤਮ ਕਰੋ"
 
-#: useractions.cpp:1136
+#: useractions.cpp:1138
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "ਵਿੰਡੋ (%1) ਸਰਗਰਮ"
