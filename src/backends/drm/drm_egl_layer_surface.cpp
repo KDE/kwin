@@ -277,7 +277,8 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription, m_surface->channelFactors);
+            // absolute colorimetric, because whitepoint adjustment is done in compositing already
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription, RenderingIntent::AbsoluteColorimetric);
         } else {
             binder.shader()->setColorspaceUniforms(m_surface->intermediaryColorDescription, m_surface->targetColorDescription, RenderingIntent::RelativeColorimetric);
             QMatrix4x4 ctm;
