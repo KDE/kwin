@@ -29,6 +29,68 @@ namespace KWin
 
 static const QString s_socketName = QStringLiteral("wayland_test_output_changes-0");
 
+enum class DeviceType {
+    Desktop,
+    Laptop,
+};
+
+class LidSwitch : public InputDevice
+{
+    Q_OBJECT
+
+public:
+    explicit LidSwitch(QObject *parent = nullptr)
+        : InputDevice(parent)
+    {
+    }
+
+    QString name() const override
+    {
+        return QStringLiteral("lid switch");
+    }
+
+    bool isEnabled() const override
+    {
+        return true;
+    }
+    void setEnabled(bool enabled) override
+    {
+    }
+
+    bool isKeyboard() const override
+    {
+        return false;
+    }
+    bool isPointer() const override
+    {
+        return false;
+    }
+    bool isTouchpad() const override
+    {
+        return false;
+    }
+    bool isTouch() const override
+    {
+        return false;
+    }
+    bool isTabletTool() const override
+    {
+        return false;
+    }
+    bool isTabletPad() const override
+    {
+        return false;
+    }
+    bool isTabletModeSwitch() const override
+    {
+        return false;
+    }
+    bool isLidSwitch() const override
+    {
+        return true;
+    }
+};
+
 class OutputChangesTest : public QObject
 {
     Q_OBJECT
@@ -1191,84 +1253,159 @@ using ModeInfo = std::tuple<QSize, uint64_t, OutputMode::Flags>;
 
 void OutputChangesTest::testGenerateConfigs_data()
 {
+    QTest::addColumn<DeviceType>("deviceType");
     QTest::addColumn<Test::OutputInfo>("outputInfo");
     QTest::addColumn<std::tuple<QSize, uint64_t, OutputMode::Flags>>("defaultMode");
     QTest::addColumn<double>("defaultScale");
 
-    QTest::addRow("1080p 27\"") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 1920, 1080),
-        .internal = false,
-        .physicalSizeInMM = QSize(598, 336),
-        .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
-    } << ModeInfo(QSize(1920, 1080), 60000ul, OutputMode::Flag::Preferred)
-                                << 1.0;
+    QTest::addRow("1080p 27\"")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 1920, 1080),
+               .internal = false,
+               .physicalSizeInMM = QSize(598, 336),
+               .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(1920, 1080), 60000ul, OutputMode::Flag::Preferred) << 1.0;
 
-    QTest::addRow("2160p 27\"") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 3840, 2160),
-        .internal = false,
-        .physicalSizeInMM = QSize(598, 336),
-        .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
-    } << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred)
-                                << 1.75;
+    QTest::addRow("2160p 27\"")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 3840, 2160),
+               .internal = false,
+               .physicalSizeInMM = QSize(598, 336),
+               .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.75;
 
-    QTest::addRow("2160p invalid size") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 3840, 2160),
-        .internal = false,
-        .physicalSizeInMM = QSize(),
-        .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
-    } << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred)
-                                        << 1.0;
+    QTest::addRow("2160p invalid size")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 3840, 2160),
+               .internal = false,
+               .physicalSizeInMM = QSize(),
+               .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.0;
 
-    QTest::addRow("2160p impossibly tiny size") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 3840, 2160),
-        .internal = false,
-        .physicalSizeInMM = QSize(1, 1),
-        .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
-    } << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred)
-                                                << 1.0;
+    QTest::addRow("2160p impossibly tiny size")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 3840, 2160),
+               .internal = false,
+               .physicalSizeInMM = QSize(1, 1),
+               .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.0;
 
-    QTest::addRow("1080p 27\" with non-preferred high refresh option") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 1920, 1080),
-        .internal = false,
-        .physicalSizeInMM = QSize(598, 336),
-        .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(1920, 1080), 120000, OutputMode::Flags{})},
-    } << ModeInfo(QSize(1920, 1080), 120000ul, OutputMode::Flags{}) << 1.0;
+    QTest::addRow("1080p 27\" with non-preferred high refresh option")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 1920, 1080),
+               .internal = false,
+               .physicalSizeInMM = QSize(598, 336),
+               .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(1920, 1080), 120000, OutputMode::Flags{})},
+           }
+        << ModeInfo(QSize(1920, 1080), 120000ul, OutputMode::Flags{}) << 1.0;
 
-    QTest::addRow("2160p 27\" with 30Hz preferred mode") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 3840, 2160),
-        .internal = false,
-        .physicalSizeInMM = QSize(598, 336),
-        .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flags{})},
-    } << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{})
-                                                         << 1.25;
+    QTest::addRow("2160p 27\" with 30Hz preferred mode")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 3840, 2160),
+               .internal = false,
+               .physicalSizeInMM = QSize(598, 336),
+               .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flags{})},
+           }
+        << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{}) << 1.25;
 
-    QTest::addRow("2160p 27\" with 30Hz preferred and a generated 60Hz mode") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 3840, 2160),
-        .internal = false,
-        .physicalSizeInMM = QSize(598, 336),
-        .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flag::Generated)},
-    } << ModeInfo(QSize(3840, 2160), 30000ul, OutputMode::Flag::Preferred) << 1.75;
+    QTest::addRow("2160p 27\" with 30Hz preferred and a generated 60Hz mode")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 3840, 2160),
+               .internal = false,
+               .physicalSizeInMM = QSize(598, 336),
+               .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flag::Generated)},
+           }
+        << ModeInfo(QSize(3840, 2160), 30000ul, OutputMode::Flag::Preferred) << 1.75;
 
-    QTest::addRow("1440p 32:9 49\" with two preferred modes") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 5120, 1440),
-        .internal = false,
-        .physicalSizeInMM = QSize(1190, 340),
-        .modes = {ModeInfo(QSize(3840, 1080), 120000, OutputMode::Flag::Preferred), ModeInfo(QSize(5120, 1440), 120000, OutputMode::Flag::Preferred)},
-    } << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred)
-                                                              << 1.0;
+    QTest::addRow("1440p 32:9 49\" with two preferred modes")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 5120, 1440),
+               .internal = false,
+               .physicalSizeInMM = QSize(1190, 340),
+               .modes = {ModeInfo(QSize(3840, 1080), 120000, OutputMode::Flag::Preferred), ModeInfo(QSize(5120, 1440), 120000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred) << 1.0;
 
-    QTest::addRow("2160p 32:9 57\" with non-native preferred mode") << Test::OutputInfo{
-        .geometry = QRect(0, 0, 7680, 2160),
-        .internal = false,
-        .physicalSizeInMM = QSize(1400, 400),
-        .modes = {ModeInfo(QSize(3840, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(7680, 2160), 120000, OutputMode::Flags{})},
-    } << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.5;
+    QTest::addRow("2160p 32:9 57\" with non-native preferred mode")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 7680, 2160),
+               .internal = false,
+               .physicalSizeInMM = QSize(1400, 400),
+               .modes = {ModeInfo(QSize(3840, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(7680, 2160), 120000, OutputMode::Flags{})},
+           }
+        << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.5;
+
+    QTest::addRow("Framework 1920p 13.5\"")
+        << DeviceType::Laptop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 2880, 1920),
+               .internal = true,
+               .physicalSizeInMM = QSize(285, 190),
+               .modes = {ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred) << 2.0;
+
+    QTest::addRow("DELL XPS 13 1080p 13\"")
+        << DeviceType::Laptop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 1920, 1080),
+               .internal = true,
+               .physicalSizeInMM = QSize(293, 162),
+               .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred) << 1.25;
+
+    QTest::addRow("DELL XPS 13 2160p 13\"")
+        << DeviceType::Laptop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 3840, 2160),
+               .internal = true,
+               .physicalSizeInMM = QSize(294, 165),
+               .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred) << 2.75;
+
+    QTest::addRow("ThinkPad T14 2400p 14\"")
+        << DeviceType::Laptop
+        << Test::OutputInfo{
+               .geometry = QRect(0, 0, 3840, 2400),
+               .internal = true,
+               .physicalSizeInMM = QSize(301, 188),
+               .modes = {ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred) << 2.5;
 }
 
 void OutputChangesTest::testGenerateConfigs()
 {
     // delete the previous config to avoid clashes between test runs
     QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
+    // Whether there is a lid switch input device is not a totally reliable way to determine if it's
+    // a laptop, but on the other hand, we don't have any other better hints.
+    QFETCH(DeviceType, deviceType);
+    LidSwitch lidSwitch;
+    if (deviceType == DeviceType::Laptop) {
+        input()->addInputDevice(&lidSwitch);
+    }
+    const auto lidSwitchGuard = qScopeGuard([&]() {
+        if (deviceType == DeviceType::Laptop) {
+            input()->removeInputDevice(&lidSwitch);
+        }
+    });
 
     QFETCH(Test::OutputInfo, outputInfo);
     Test::setOutputConfig({outputInfo});
