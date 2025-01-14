@@ -212,7 +212,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
-                .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
+                .edidHash = output->edid().hash(),
                 .mstPath = output->mstPath(),
                 .mode = ModeData{
                     .size = modeSize,
@@ -256,7 +256,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
-                .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
+                .edidHash = output->edid().hash(),
                 .mstPath = output->mstPath(),
                 .mode = ModeData{
                     .size = modeSize,

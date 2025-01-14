@@ -27,7 +27,7 @@ namespace KScreenIntegration
 /// See KScreen::Output::hashMd5
 static QString outputHash(Output *output)
 {
-    if (output->edid().isValid()) {
+    if (!output->edid().hash().isEmpty()) {
         return output->edid().hash();
     } else {
         return output->name();

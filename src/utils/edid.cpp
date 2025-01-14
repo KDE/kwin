@@ -131,6 +131,10 @@ Edid::Edid(const void *data, uint32_t size)
     m_raw.resize(size);
     memcpy(m_raw.data(), data, size);
 
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(m_raw);
+    m_hash = QString::fromLatin1(hash.result().toHex());
+
     const uint8_t *bytes = static_cast<const uint8_t *>(data);
 
     auto info = di_info_parse_edid(data, size);
@@ -149,9 +153,6 @@ Edid::Edid(const void *data, uint32_t size)
     UniqueCPtr<char> serial{di_info_get_serial(info)};
     m_serialNumber = QByteArray(serial.get());
     m_vendor = parseVendor(bytes);
-    QCryptographicHash hash(QCryptographicHash::Md5);
-    hash.addData(m_raw);
-    m_hash = QString::fromLatin1(hash.result().toHex());
 
     m_identifier = QByteArray(productInfo->manufacturer, 3) + " " + QByteArray::number(productInfo->product) + " " + QByteArray::number(productInfo->serial) + " "
         + QByteArray::number(productInfo->manufacture_week) + " " + QByteArray::number(productInfo->manufacture_year) + " " + QByteArray::number(productInfo->model_year);
