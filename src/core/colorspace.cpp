@@ -256,6 +256,11 @@ Colorimetry Colorimetry::withWhitepoint(xyY newWhitePoint) const
     };
 }
 
+QMatrix4x4 Colorimetry::relativeColorimetricTo(const Colorimetry &other) const
+{
+    return other.fromXYZ() * chromaticAdaptationMatrix(white(), other.white()) * toXYZ();
+}
+
 bool Colorimetry::operator==(const Colorimetry &other) const
 {
     return red() == other.red() && green() == other.green() && blue() == other.blue() && white() == other.white();
