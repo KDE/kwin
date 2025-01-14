@@ -1398,7 +1398,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .modes = {ModeInfo(QSize(800, 1280), 90000, OutputMode::Flag::Preferred)},
                .panelOrientation = OutputTransform::Kind::Rotate90,
            }
-        << ModeInfo(QSize(800, 1280), 90000ul, OutputMode::Flag::Preferred) << 1.75;
+        << ModeInfo(QSize(800, 1280), 90000ul, OutputMode::Flag::Preferred) << 1.0;
 
     QTest::addRow("Pixel 3a")
         << DeviceType::Phone

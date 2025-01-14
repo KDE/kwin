@@ -557,36 +557,48 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
         // all caused by the screen mis-reporting its size.
         return 1.0;
     }
-    const double outputDpi = mode->size().height() / (output->physicalSize().height() / 25.4);
-    const double desiredScale = outputDpi / targetDpi(output);
-    // round to 25% steps
-    return std::clamp(std::round(100.0 * desiredScale / 25.0) * 25.0 / 100.0, 1.0, 3.0);
-}
 
-double OutputConfigurationStore::targetDpi(Output *output) const
-{
     // The eye's ability to perceive detail diminishes with distance, so objects
     // that are closer can be smaller and their details remain equally
     // distinguishable. As a result, each device type has its own ideal physical
     // size of items on its screen based on how close the user's eyes are
     // expected to be from it on average, and its target DPI value needs to be
     // changed accordingly.
-    const auto devices = input()->devices();
-    const bool hasLaptopLid = std::any_of(devices.begin(), devices.end(), [](const auto &device) {
-        return device->isLidSwitch();
-    });
+    //
+    // The minSize specifies the minimum amount of logical pixels that must be available
+    // after applying the chosen scale factor.
+    double targetDpi;
+    double minSize;
     if (output->isInternal()) {
+        const bool hasLaptopLid = std::ranges::any_of(input()->devices(), [](const auto &device) {
+            return device->isLidSwitch();
+        });
         if (hasLaptopLid) {
             // laptop screens: usually closer to the face than desktop monitors
-            return 125;
+            targetDpi = 125;
+            minSize = 800;
         } else {
             // phone screens: even closer than laptops
-            return 150;
+            targetDpi = 150;
+            minSize = 360;
         }
     } else {
         // "normal" 1x scale desktop monitor dpi
-        return 96;
+        targetDpi = 96;
+        minSize = 800;
     }
+
+    const double dpiX = mode->size().width() / (output->physicalSize().width() / 25.4);
+    const double maxScaleX = std::clamp(mode->size().width() / minSize, 1.0, 3.0);
+    const double scaleX = std::clamp(dpiX / targetDpi, 1.0, maxScaleX);
+
+    const double dpiY = mode->size().height() / (output->physicalSize().height() / 25.4);
+    const double maxScaleY = std::clamp(mode->size().height() / minSize, 1.0, 3.0);
+    const double scaleY = std::clamp(dpiY / targetDpi, 1.0, maxScaleY);
+
+    const double scale = std::min(scaleX, scaleY);
+    const double steps = 25;
+    return std::round(100.0 * scale / steps) * steps / 100.0;
 }
 
 void OutputConfigurationStore::load()
