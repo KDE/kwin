@@ -1779,6 +1779,9 @@ QString Workspace::supportInformation() const
                                .arg(geo.y())
                                .arg(geo.width())
                                .arg(geo.height()));
+            support.append(QStringLiteral("Physical size: %1x%2mm\n")
+                               .arg(output->physicalSize().width())
+                               .arg(output->physicalSize().height()));
             support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
             support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
             QString vrr = QStringLiteral("incapable");
