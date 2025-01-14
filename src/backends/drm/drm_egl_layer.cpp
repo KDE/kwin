@@ -60,11 +60,12 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     return m_surface.startRendering(targetRect().size(),
                                     m_pipeline->output()->transform().combine(OutputTransform::FlipY),
                                     m_pipeline->formats(m_type),
+                                    m_pipeline->output()->blendingColorDescription(),
                                     m_pipeline->output()->scanoutColorDescription(),
-                                    m_pipeline->output()->needsShadowBuffer() ? m_pipeline->output()->adaptedChannelFactors() : QVector3D(1, 1, 1),
                                     m_pipeline->output()->needsShadowBuffer() ? m_pipeline->iccProfile() : nullptr,
                                     m_pipeline->output()->scale(),
-                                    m_pipeline->output()->colorPowerTradeoff());
+                                    m_pipeline->output()->colorPowerTradeoff(),
+                                    m_pipeline->output()->needsShadowBuffer());
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
@@ -108,17 +109,12 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         // the hardware to some buffer format we can't switch away from
         return false;
     }
-    if (m_pipeline->output()->colorProfileSource() == Output::ColorProfileSource::ICC && !m_pipeline->output()->highDynamicRange() && m_pipeline->iccProfile()) {
-        // TODO make the icc profile output a color pipeline too?
+    if (m_pipeline->output()->needsShadowBuffer()) {
+        // while there are cases where this could still work (if the client prepares the buffer to match the output exactly)
+        // it's likely not worth making this code more complicated to handle those edge cases
         return false;
     }
-    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
-    if (m_pipeline->output()->needsShadowBuffer()) {
-        pipeline.addTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
-        pipeline.addMultiplier(m_pipeline->output()->adaptedChannelFactors());
-        pipeline.addInverseTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
-    }
-    m_colorPipeline = pipeline;
+    m_colorPipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
     m_scanoutColor = color;
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."

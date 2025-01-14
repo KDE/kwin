@@ -495,6 +495,8 @@ protected:
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
         ColorProfileSource colorProfileSource = ColorProfileSource::sRGB;
+        // color description without night light applied
+        ColorDescription originalColorDescription = ColorDescription::sRGB;
         ColorDescription colorDescription = ColorDescription::sRGB;
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;

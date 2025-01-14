@@ -348,6 +348,11 @@ QMatrix4x4 Colorimetry::relativeColorimetricTo(const Colorimetry &other) const
     return other.fromXYZ() * chromaticAdaptationMatrix(white(), other.white()) * toXYZ();
 }
 
+QMatrix4x4 Colorimetry::absoluteColorimetricTo(const Colorimetry &other) const
+{
+    return other.fromXYZ() * toXYZ();
+}
+
 bool Colorimetry::operator==(const Colorimetry &other) const
 {
     return red() == other.red() && green() == other.green() && blue() == other.blue() && white() == other.white();
@@ -618,6 +623,20 @@ ColorDescription ColorDescription::dimmed(double brightnessFactor) const
         m_maxHdrLuminance.transform([&](double value) {
         return value * brightnessFactor;
     }),
+        m_masteringColorimetry,
+        m_sdrColorimetry,
+    };
+}
+
+ColorDescription ColorDescription::withReference(double referenceLuminance) const
+{
+    return ColorDescription{
+        m_containerColorimetry,
+        m_transferFunction,
+        referenceLuminance,
+        m_minLuminance,
+        m_maxAverageLuminance,
+        m_maxHdrLuminance,
         m_masteringColorimetry,
         m_sdrColorimetry,
     };

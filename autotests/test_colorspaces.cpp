@@ -208,19 +208,6 @@ void TestColorspaces::testColorPipeline()
     QVERIFY(compareVectors(inversePipeline.evaluate(dstWhite), QVector3D(1, 1, 1), s_resolution10bit));
 }
 
-static bool isFuzzyIdentity(const QMatrix4x4 &mat)
-{
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            const float targetValue = i == j ? 1 : 0;
-            if (std::abs(mat(i, j) - targetValue) > ColorPipeline::s_maxResolution) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 void TestColorspaces::testXYZ()
 {
     Colorimetry xyz = Colorimetry::CIEXYZ;
