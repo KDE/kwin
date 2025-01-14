@@ -135,6 +135,7 @@ public:
     Colorimetry interpolateGamutTo(const Colorimetry &one, double factor) const;
 
     QMatrix4x4 relativeColorimetricTo(const Colorimetry &other) const;
+    QMatrix4x4 absoluteColorimetricTo(const Colorimetry &other) const;
 
     const XYZ &red() const;
     const XYZ &green() const;
@@ -252,6 +253,7 @@ public:
      */
     ColorDescription withWhitepoint(xyY newWhitePoint) const;
     ColorDescription dimmed(double brightnessFactor) const;
+    ColorDescription withReference(double referenceLuminance) const;
     ColorDescription withYuvCoefficients(YUVMatrixCoefficients coefficient) const;
 
     /**

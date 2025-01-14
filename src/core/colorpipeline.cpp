@@ -175,7 +175,7 @@ void ColorPipeline::addInverseTransferFunction(TransferFunction tf)
     }
 }
 
-static bool isFuzzyIdentity(const QMatrix4x4 &mat)
+bool isFuzzyIdentity(const QMatrix4x4 &mat)
 {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {

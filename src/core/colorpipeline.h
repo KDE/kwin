@@ -129,6 +129,8 @@ public:
     ValueRange inputRange;
     std::vector<ColorOp> ops;
 };
+
+KWIN_EXPORT bool isFuzzyIdentity(const QMatrix4x4 &mat);
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline);
