@@ -397,7 +397,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 
 static QVector3D adaptChannelFactors(const ColorDescription &originalColor, const QVector3D &sRGBchannelFactors)
 {
-    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(originalColor, RenderingIntent::RelativeColorimetric) * sRGBchannelFactors;
+    QVector3D adaptedChannelFactors = ColorDescription::sRGB.containerColorimetry().relativeColorimetricTo(originalColor.containerColorimetry()) * sRGBchannelFactors;
     // ensure none of the values reach zero, otherwise the white point might end up on or outside
     // the edges of the gamut, which leads to terrible glitches
     adaptedChannelFactors.setX(std::max(adaptedChannelFactors.x(), 0.01f));

@@ -128,6 +128,8 @@ public:
      */
     Colorimetry interpolateGamutTo(const Colorimetry &one, double factor) const;
 
+    QMatrix4x4 relativeColorimetricTo(const Colorimetry &other) const;
+
     const XYZ &red() const;
     const XYZ &green() const;
     const XYZ &blue() const;
