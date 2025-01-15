@@ -60,6 +60,17 @@ public:
     KeyboardLayout *keyboardLayout() const;
     QList<uint32_t> pressedKeys() const;
 
+    /**
+     * Keys that have been captured by input event filters and should not be reported to clients.
+     */
+    QList<uint32_t> filteredKeys() const;
+    void addFilteredKey(uint32_t key);
+
+    /**
+     * Pressed keys without the filtered keys.
+     */
+    QList<uint32_t> unfilteredKeys() const;
+
 Q_SIGNALS:
     void ledsChanged(KWin::LEDs);
 
@@ -73,6 +84,7 @@ private:
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;
     QList<uint32_t> m_pressedKeys;
+    QList<uint32_t> m_filteredKeys;
 };
 
 }
