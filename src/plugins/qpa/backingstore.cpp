@@ -93,9 +93,12 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
     }
 
     const qreal scale = platformWindow->devicePixelRatio();
+    const QRect bufferRect(QPoint(0, 0), m_buffer->size());
     QRegion bufferDamage;
     for (const QRect &rect : region) {
-        bufferDamage += QRectF(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale).toAlignedRect();
+        bufferDamage += QRectF(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale)
+                            .toAlignedRect()
+                            .intersected(bufferRect);
     }
 
     internalWindow->present(InternalWindowFrame{
