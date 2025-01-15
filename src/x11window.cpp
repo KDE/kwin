@@ -695,7 +695,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     if (desktopFileName.isEmpty()) {
         desktopFileName = QString::fromUtf8(info->gtkApplicationId());
     }
-    if (desktopFileName.isEmpty()) {
+    if (desktopFileName.isEmpty() && !resourceName().isEmpty()) {
         // Fallback to StartupWMClass for legacy apps
         const auto service = KApplicationTrader::query([this](const KService::Ptr &service) {
             return service->property<QString>("StartupWMClass").compare(resourceName(), Qt::CaseInsensitive) == 0;
