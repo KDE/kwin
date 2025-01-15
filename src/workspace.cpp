@@ -852,7 +852,13 @@ void Workspace::addWaylandWindow(Window *window)
 
 void Workspace::removeWaylandWindow(Window *window)
 {
-    activateNextWindow(window);
+    if (window == m_activeWindow || (should_get_focus.count() > 0 && window == should_get_focus.last())) {
+        if (auto parentWindow = window->transientFor()) {
+            activateWindow(parentWindow, true);
+        } else {
+            activateNextWindow(window);
+        }
+    }
     removeWindow(window);
 }
 
