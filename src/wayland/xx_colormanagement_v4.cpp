@@ -178,8 +178,13 @@ void XXColorSurfaceV4::xx_color_management_surface_v4_set_image_description(Reso
         wl_resource_post_error(resource->handle, XX_COLOR_MANAGER_V4_ERROR_UNSUPPORTED_FEATURE, "rendering intent is not supported");
         return;
     }
+    const auto description = XXImageDescriptionV4::get(image_description);
+    if (!description->description().has_value()) {
+        wl_resource_post_error(resource->handle, error_image_description, "failed image description can't be used");
+        return;
+    }
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
-    priv->pending->colorDescription = XXImageDescriptionV4::get(image_description)->description();
+    priv->pending->colorDescription = *XXImageDescriptionV4::get(image_description)->description();
     priv->pending->renderingIntent = *intent;
     priv->pending->colorDescriptionIsSet = true;
 }
@@ -233,7 +238,11 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_create(R
         func.maxLuminance = m_transferFunctionLuminances->max;
         referenceLuminance = m_transferFunctionLuminances->reference;
     }
-    new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
+    if (Colorimetry::isValid(m_colorimetry->red().toxy(), m_colorimetry->green().toxy(), m_colorimetry->blue().toxy(), m_colorimetry->white().toxy())) {
+        new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
+    } else {
+        new XXImageDescriptionV4(resource->client(), image_description, resource->version(), std::nullopt);
+    }
     wl_resource_destroy(resource->handle);
 }
 
@@ -392,11 +401,15 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_max_
     }
 }
 
-XXImageDescriptionV4::XXImageDescriptionV4(wl_client *client, uint32_t id, uint32_t version, const ColorDescription &color)
+XXImageDescriptionV4::XXImageDescriptionV4(wl_client *client, uint32_t id, uint32_t version, const std::optional<ColorDescription> &color)
     : QtWaylandServer::xx_image_description_v4(client, id, version)
     , m_description(color)
 {
-    send_ready(resource()->handle, 0);
+    if (color.has_value()) {
+        send_ready(resource()->handle, 0);
+    } else {
+        send_failed(resource()->handle, cause::cause_unsupported, "The provided image description failed to verify as usable");
+    }
 }
 
 void XXImageDescriptionV4::xx_image_description_v4_destroy_resource(Resource *resource)
@@ -453,23 +466,27 @@ static uint32_t kwinPrimariesToProtoPrimaires(NamedColorimetry primaries)
 
 void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtResource, uint32_t information)
 {
+    if (!m_description.has_value()) {
+        wl_resource_post_error(qtResource->handle, error_no_information, "Can't request information from a failed image description");
+        return;
+    }
     auto resource = wl_resource_create(qtResource->client(), &xx_image_description_info_v4_interface, qtResource->version(), information);
     const auto round = [](float f) {
         return std::clamp(std::round(f * 10'000.0), 0.0, 10'000.0);
     };
-    const xyY containerRed = m_description.containerColorimetry().red().toxyY();
-    const xyY containerGreen = m_description.containerColorimetry().green().toxyY();
-    const xyY containerBlue = m_description.containerColorimetry().blue().toxyY();
-    const xyY containerWhite = m_description.containerColorimetry().white().toxyY();
+    const xyY containerRed = m_description->containerColorimetry().red().toxyY();
+    const xyY containerGreen = m_description->containerColorimetry().green().toxyY();
+    const xyY containerBlue = m_description->containerColorimetry().blue().toxyY();
+    const xyY containerWhite = m_description->containerColorimetry().white().toxyY();
     xx_image_description_info_v4_send_primaries(resource,
                                                 round(containerRed.x), round(containerRed.y),
                                                 round(containerGreen.x), round(containerGreen.y),
                                                 round(containerBlue.x), round(containerBlue.y),
                                                 round(containerWhite.x), round(containerWhite.y));
-    if (auto name = m_description.containerColorimetry().name()) {
+    if (auto name = m_description->containerColorimetry().name()) {
         xx_image_description_info_v4_send_primaries_named(resource, kwinPrimariesToProtoPrimaires(*name));
     }
-    if (auto m = m_description.masteringColorimetry()) {
+    if (auto m = m_description->masteringColorimetry()) {
         const xyY masterRed = m->red().toxyY();
         const xyY masterGreen = m->green().toxyY();
         const xyY masterBlue = m->blue().toxyY();
@@ -480,20 +497,20 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
                                                            round(masterBlue.x), round(masterBlue.y),
                                                            round(masterWhite.x), round(masterWhite.y));
     }
-    if (auto maxfall = m_description.maxAverageLuminance()) {
+    if (auto maxfall = m_description->maxAverageLuminance()) {
         xx_image_description_info_v4_send_target_max_fall(resource, *maxfall);
     }
-    if (auto maxcll = m_description.maxHdrLuminance()) {
+    if (auto maxcll = m_description->maxHdrLuminance()) {
         xx_image_description_info_v4_send_target_max_cll(resource, *maxcll);
     }
-    xx_image_description_info_v4_send_luminances(resource, std::round(m_description.transferFunction().minLuminance * 10'000), std::round(m_description.transferFunction().maxLuminance), std::round(m_description.referenceLuminance()));
-    xx_image_description_info_v4_send_target_luminance(resource, m_description.minLuminance(), m_description.maxHdrLuminance().value_or(800));
-    xx_image_description_info_v4_send_tf_named(resource, kwinTFtoProtoTF(m_description.transferFunction()));
+    xx_image_description_info_v4_send_luminances(resource, std::round(m_description->transferFunction().minLuminance * 10'000), std::round(m_description->transferFunction().maxLuminance), std::round(m_description->referenceLuminance()));
+    xx_image_description_info_v4_send_target_luminance(resource, m_description->minLuminance(), m_description->maxHdrLuminance().value_or(800));
+    xx_image_description_info_v4_send_tf_named(resource, kwinTFtoProtoTF(m_description->transferFunction()));
     xx_image_description_info_v4_send_done(resource);
     wl_resource_destroy(resource);
 }
 
-const ColorDescription &XXImageDescriptionV4::description() const
+const std::optional<ColorDescription> &XXImageDescriptionV4::description() const
 {
     return m_description;
 }

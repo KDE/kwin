@@ -104,9 +104,9 @@ private:
 class XXImageDescriptionV4 : private QtWaylandServer::xx_image_description_v4
 {
 public:
-    explicit XXImageDescriptionV4(wl_client *client, uint32_t id, uint32_t version, const ColorDescription &color);
+    explicit XXImageDescriptionV4(wl_client *client, uint32_t id, uint32_t version, const std::optional<ColorDescription> &color);
 
-    const ColorDescription &description() const;
+    const std::optional<ColorDescription> &description() const;
 
     static XXImageDescriptionV4 *get(wl_resource *resource);
 
@@ -115,7 +115,7 @@ private:
     void xx_image_description_v4_destroy(Resource *resource) override;
     void xx_image_description_v4_get_information(Resource *resource, uint32_t information) override;
 
-    const ColorDescription m_description;
+    const std::optional<ColorDescription> m_description;
 };
 
 class XXColorManagementOutputV4 : public QObject, private QtWaylandServer::xx_color_management_output_v4

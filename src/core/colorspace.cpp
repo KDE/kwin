@@ -73,6 +73,22 @@ xyY XYZ::toxyY() const
     };
 }
 
+xy XYZ::toxy() const
+{
+    const double sum = X + Y + Z;
+    if (qFuzzyIsNull(sum)) {
+        // this is nonsense, but at least won't crash
+        return xy{
+            .x = 0,
+            .y = 0,
+        };
+    }
+    return xy{
+        .x = X / sum,
+        .y = Y / sum,
+    };
+}
+
 XYZ XYZ::operator*(double factor) const
 {
     return XYZ{

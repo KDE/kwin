@@ -73,6 +73,7 @@ struct KWIN_EXPORT XYZ
     double Z;
 
     xyY toxyY() const;
+    xy toxy() const;
     QVector3D asVector() const;
     XYZ operator*(double factor) const;
     XYZ operator/(double factor) const;
