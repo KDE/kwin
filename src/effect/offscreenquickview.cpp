@@ -54,6 +54,8 @@ public:
     bool m_hasAlphaChannel = true;
     bool m_automaticRepaint = true;
 
+    std::optional<qreal> m_explicitDpr;
+
     QList<QEventPoint> touchPoints;
     QSet<uint32_t> acceptedTouchPoints;
     QPointingDevice *touchDevice;
@@ -182,6 +184,11 @@ void OffscreenQuickView::setAutomaticRepaint(bool set)
     }
 }
 
+void OffscreenQuickView::setDevicePixelRatio(qreal dpr)
+{
+    d->m_explicitDpr = dpr;
+}
+
 void OffscreenQuickView::handleSceneChanged()
 {
     if (d->m_automaticRepaint) {
@@ -216,7 +223,12 @@ void OffscreenQuickView::update()
             return;
         }
 
-        const QSize nativeSize = d->m_view->size() * d->m_view->devicePixelRatio();
+        qreal dpr = d->m_view->screen() ? d->m_view->screen()->devicePixelRatio() : 1.0;
+        if (d->m_explicitDpr.has_value()) {
+            dpr = d->m_explicitDpr.value();
+        }
+
+        const QSize nativeSize = d->m_view->size() * dpr;
         if (!d->m_fbo || d->m_fbo->size() != nativeSize) {
             d->m_textureExport.reset(nullptr);
 
@@ -233,8 +245,7 @@ void OffscreenQuickView::update()
         }
 
         QQuickRenderTarget renderTarget = QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size());
-        renderTarget.setDevicePixelRatio(d->m_view->devicePixelRatio());
-
+        renderTarget.setDevicePixelRatio(dpr);
         d->m_view->setRenderTarget(renderTarget);
     }
 
@@ -255,7 +266,7 @@ void OffscreenQuickView::update()
     if (d->m_useBlit) {
         if (usingGl) {
             d->m_image = d->m_fbo->toImage();
-            d->m_image.setDevicePixelRatio(d->m_view->devicePixelRatio());
+            d->m_image.setDevicePixelRatio(d->m_view->effectiveDevicePixelRatio());
         } else {
             d->m_image = d->m_view->grabWindow();
         }

@@ -340,6 +340,13 @@ bool Decoration::init()
         connect(window(), &KDecoration3::DecoratedWindow::heightChanged, this, resizeWindow);
         connect(window(), &KDecoration3::DecoratedWindow::maximizedChanged, this, resizeWindow);
         connect(window(), &KDecoration3::DecoratedWindow::shadedChanged, this, resizeWindow);
+
+        m_view->setDevicePixelRatio(window()->scale());
+        connect(window(), &KDecoration3::DecoratedWindow::scaleChanged, this, [this]() {
+            m_view->setDevicePixelRatio(window()->scale());
+            updateBuffer();
+        });
+
         resizeWindow();
         updateBuffer();
     } else {
