@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-12 02:42+0000\n"
+"POT-Creation-Date: 2025-01-15 02:34+0000\n"
 "PO-Revision-Date: 2024-12-25 17:41+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -4422,7 +4422,7 @@ msgstr "Termina la finestra"
 msgid "Activate Window (%1)"
 msgstr "Attiva finestra (%1)"
 
-#: utils/edid.cpp:316
+#: utils/edid.cpp:317
 #, kde-format
 msgid "unknown"
 msgstr "sconosciuto"

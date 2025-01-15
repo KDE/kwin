@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-12 02:42+0000\n"
+"POT-Creation-Date: 2025-01-15 02:34+0000\n"
 "PO-Revision-Date: 2024-12-25 09:30+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -4367,7 +4367,7 @@ msgstr "חיסול חלון"
 msgid "Activate Window (%1)"
 msgstr "הפעלת חלון (%1)"
 
-#: utils/edid.cpp:316
+#: utils/edid.cpp:317
 #, kde-format
 msgid "unknown"
 msgstr "לא ידוע"

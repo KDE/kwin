@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-12 02:42+0000\n"
+"POT-Creation-Date: 2025-01-15 02:34+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -4539,7 +4539,7 @@ msgstr "كۆزنەكنى ئۆلتۈر"
 msgid "Activate Window (%1)"
 msgstr "كۆزنەك (%1) نى ئاكتىپلا"
 
-#: utils/edid.cpp:316
+#: utils/edid.cpp:317
 #, kde-format
 msgid "unknown"
 msgstr ""

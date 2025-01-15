@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-12 02:42+0000\n"
+"POT-Creation-Date: 2025-01-15 02:34+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -4520,7 +4520,7 @@ msgstr "ਵਿੰਡੋ ਖਤਮ ਕਰੋ"
 msgid "Activate Window (%1)"
 msgstr "ਵਿੰਡੋ (%1) ਸਰਗਰਮ"
 
-#: utils/edid.cpp:316
+#: utils/edid.cpp:317
 #, kde-format
 msgid "unknown"
 msgstr "ਅਣਪਛਾਤਾ"
