@@ -50,8 +50,14 @@ public:
         Q_EMIT ready();
     }
 
+    void xx_image_description_v4_failed(uint32_t cause, const QString &msg) override
+    {
+        Q_EMIT failed();
+    }
+
 Q_SIGNALS:
     void ready();
+    void failed();
 };
 
 class ColorManagementSurface : public QObject, public QtWayland::xx_color_management_surface_v4
@@ -83,6 +89,7 @@ private Q_SLOTS:
     void testUnsupportedPrimaries();
     void testNoPrimaries();
     void testNoTf();
+    void testNonsensePrimaries();
 };
 
 void ColorManagementTest::initTestCase()
@@ -123,14 +130,16 @@ void ColorManagementTest::testSetImageDescription_data()
 {
     QTest::addColumn<ColorDescription>("input");
     QTest::addColumn<bool>("protocolError");
+    QTest::addColumn<bool>("shouldSucceed");
 
-    QTest::addRow("sRGB") << ColorDescription::sRGB << false;
-    QTest::addRow("rec.2020 PQ") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false;
-    QTest::addRow("scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80) << false;
-    QTest::addRow("custom") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400) << false;
-    QTest::addRow("invalid tf") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400) << true;
+    QTest::addRow("sRGB") << ColorDescription::sRGB << false << true;
+    QTest::addRow("rec.2020 PQ") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << true;
+    QTest::addRow("scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80) << false << true;
+    QTest::addRow("custom") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400) << false << true;
+    QTest::addRow("invalid tf") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400) << true << false;
     // TODO this should fail with the wp protocol version
-    QTest::addRow("invalid HDR metadata") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400) << false;
+    QTest::addRow("invalid HDR metadata") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400) << false << true;
+    QTest::addRow("rec.2020 PQ with out of bounds white point") << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
 }
 
 void ColorManagementTest::testSetImageDescription()
@@ -184,16 +193,27 @@ void ColorManagementTest::testSetImageDescription()
         return;
     }
 
-    QSignalSpy ready(&imageDescr, &ImageDescription::ready);
-    QVERIFY(ready.wait(50ms));
+    QFETCH(bool, shouldSucceed);
+    if (shouldSucceed) {
+        QSignalSpy ready(&imageDescr, &ImageDescription::ready);
+        QVERIFY(ready.wait(50ms));
 
-    cmSurf->set_image_description(imageDescr.object(), XX_COLOR_MANAGER_V4_RENDER_INTENT_PERCEPTUAL);
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+        cmSurf->set_image_description(imageDescr.object(), XX_COLOR_MANAGER_V4_RENDER_INTENT_PERCEPTUAL);
+        surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
-    QVERIFY(colorChange.wait());
+        QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
+        QVERIFY(colorChange.wait());
 
-    QCOMPARE(window->surface()->colorDescription(), input);
+        QCOMPARE(window->surface()->colorDescription(), input);
+    } else {
+        QSignalSpy fail(&imageDescr, &ImageDescription::failed);
+        QVERIFY(fail.wait(50ms));
+
+        // trying to use a failed image description should cause an error
+        QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+        cmSurf->set_image_description(imageDescr.object(), XX_COLOR_MANAGER_V4_RENDER_INTENT_PERCEPTUAL);
+        QVERIFY(error.wait(50ms));
+    }
 }
 
 void ColorManagementTest::testUnsupportedPrimaries()
@@ -218,6 +238,15 @@ void ColorManagementTest::testNoTf()
 {
     QtWayland::xx_image_description_creator_params_v4 creator = QtWayland::xx_image_description_creator_params_v4(Test::colorManager()->new_parametric_creator());
     creator.set_primaries_named(XX_COLOR_MANAGER_V4_PRIMARIES_CIE1931_XYZ);
+    xx_image_description_creator_params_v4_create(creator.object());
+    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    QVERIFY(error.wait(50ms));
+}
+
+void ColorManagementTest::testNonsensePrimaries()
+{
+    QtWayland::xx_image_description_creator_params_v4 creator = QtWayland::xx_image_description_creator_params_v4(Test::colorManager()->new_parametric_creator());
+    creator.set_primaries(0, 0, 0, 0, 0, 0, 0, 0);
     xx_image_description_creator_params_v4_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
