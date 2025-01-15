@@ -163,6 +163,7 @@ public:
         IccProfile = 1 << 7,
         Tearing = 1 << 8,
         BrightnessControl = 1 << 9,
+        BuiltInColorProfile = 1 << 10,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 

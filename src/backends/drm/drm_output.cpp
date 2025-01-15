@@ -280,6 +280,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_state.highDynamicRange || m_brightnessDevice || m_state.allowSdrSoftwareBrightness) {
         capabilities |= Capability::BrightnessControl;
     }
+    if (m_connector->edid()->isValid() && m_connector->edid()->colorimetry().has_value()) {
+        capabilities |= Capability::BuiltInColorProfile;
+    }
     return capabilities;
 }
 
