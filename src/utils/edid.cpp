@@ -160,12 +160,20 @@ Edid::Edid(const void *data, uint32_t size)
     // colorimetry and HDR metadata
     const auto chromaticity = di_edid_get_chromaticity_coords(edid);
     if (chromaticity) {
-        m_colorimetry = Colorimetry{
-            xy{chromaticity->red_x, chromaticity->red_y},
-            xy{chromaticity->green_x, chromaticity->green_y},
-            xy{chromaticity->blue_x, chromaticity->blue_y},
-            xy{chromaticity->white_x, chromaticity->white_y},
-        };
+        const xy red{chromaticity->red_x, chromaticity->red_y};
+        const xy green{chromaticity->green_x, chromaticity->green_y};
+        const xy blue{chromaticity->blue_x, chromaticity->blue_y};
+        const xy white{chromaticity->white_x, chromaticity->white_y};
+        if (Colorimetry::isReal(red, green, blue, white)) {
+            m_colorimetry = Colorimetry{
+                red,
+                green,
+                blue,
+                white,
+            };
+        } else {
+            qCWarning(KWIN_CORE) << "EDID colorimetry" << red << green << blue << white << "is is invalid";
+        }
     } else {
         m_colorimetry.reset();
     }
