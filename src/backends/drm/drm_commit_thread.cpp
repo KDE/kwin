@@ -51,6 +51,13 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                     }
                     if (m_committed) {
                         qCCritical(KWIN_DRM, "Pageflip timed out! This is bug in the %s kernel driver", qPrintable(m_gpu->driverName()));
+                        if (m_gpu->isAmdgpu()) {
+                            qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/amd/-/issues");
+                        } else if (m_gpu->isNVidia()) {
+                            qCCritical(KWIN_DRM, "Please report this at https://forums.developer.nvidia.com/c/gpu-graphics/linux");
+                        } else if (m_gpu->isI915()) {
+                            qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/i915/kernel/-/issues");
+                        }
                     } else {
                         qCWarning(KWIN_DRM, "The main thread was hanging temporarily!");
                     }
