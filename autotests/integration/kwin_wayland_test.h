@@ -44,11 +44,13 @@ namespace Client
 class AppMenuManager;
 class ConnectionThread;
 class Compositor;
+class EventQueue;
 class Output;
 class PlasmaShell;
 class PlasmaWindowManagement;
 class Pointer;
 class PointerConstraints;
+class Registry;
 class Seat;
 class ShadowManager;
 class ShmPool;
@@ -679,6 +681,46 @@ class XXColorManagerV4 : public QtWayland::xx_color_manager_v4
 public:
     explicit XXColorManagerV4(::wl_registry *registry, uint32_t id, int version);
     ~XXColorManagerV4() override;
+};
+
+struct Connection
+{
+    static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
+    ~Connection();
+
+    KWayland::Client::ConnectionThread *connection = nullptr;
+    KWayland::Client::EventQueue *queue = nullptr;
+    KWayland::Client::Compositor *compositor = nullptr;
+    KWayland::Client::SubCompositor *subCompositor = nullptr;
+    KWayland::Client::ShadowManager *shadowManager = nullptr;
+    XdgShell *xdgShell = nullptr;
+    KWayland::Client::ShmPool *shm = nullptr;
+    KWayland::Client::Seat *seat = nullptr;
+    KWayland::Client::PlasmaShell *plasmaShell = nullptr;
+    KWayland::Client::PlasmaWindowManagement *windowManagement = nullptr;
+    KWayland::Client::PointerConstraints *pointerConstraints = nullptr;
+    KWayland::Client::Registry *registry = nullptr;
+    WaylandOutputManagementV2 *outputManagementV2 = nullptr;
+    QThread *thread = nullptr;
+    QList<KWayland::Client::Output *> outputs;
+    QList<WaylandOutputDeviceV2 *> outputDevicesV2;
+    IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
+    KWayland::Client::AppMenuManager *appMenu = nullptr;
+    XdgDecorationManagerV1 *xdgDecorationManagerV1 = nullptr;
+    KWayland::Client::TextInputManager *textInputManager = nullptr;
+    QtWayland::zwp_input_panel_v1 *inputPanelV1 = nullptr;
+    MockInputMethod *inputMethodV1 = nullptr;
+    QtWayland::zwp_input_method_context_v1 *inputMethodContextV1 = nullptr;
+    LayerShellV1 *layerShellV1 = nullptr;
+    TextInputManagerV3 *textInputManagerV3 = nullptr;
+    FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
+    ScreencastingV1 *screencastingV1 = nullptr;
+    ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
+    CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
+    FakeInput *fakeInput = nullptr;
+    SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
+    XdgWmDialogV1 *xdgWmDialogV1;
+    std::unique_ptr<XXColorManagerV4> colorManager;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);

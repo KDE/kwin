@@ -8,8 +8,6 @@
 
 #include "config-kwin.h"
 
-#include "utils/socketpair.h"
-#include "wayland/display.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -17,13 +15,8 @@
 #include <KGlobalAccel>
 #endif
 
-#include <KWayland/Client/compositor.h>
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/shm_pool.h>
 
 #include <linux/input-event-codes.h>
 
@@ -31,104 +24,6 @@ namespace KWin
 {
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_kbd_input-0");
-
-struct Connection
-{
-    static std::unique_ptr<Connection> create()
-    {
-        auto socketPair = SocketPair::create(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
-        if (!socketPair) {
-            return nullptr;
-        }
-
-        waylandServer()->display()->createClient(socketPair->fds[0].take());
-
-        auto connection = std::make_unique<Connection>();
-        connection->connection = new KWayland::Client::ConnectionThread;
-        QSignalSpy connectedSpy(connection->connection, &KWayland::Client::ConnectionThread::connected);
-        connection->connection->setSocketFd(socketPair->fds[1].take());
-
-        connection->thread = new QThread(kwinApp());
-        connection->connection->moveToThread(connection->thread);
-        connection->thread->start();
-
-        connection->connection->initConnection();
-        if (!connectedSpy.wait()) {
-            return nullptr;
-        }
-
-        connection->queue = new KWayland::Client::EventQueue;
-        connection->queue->setup(connection->connection);
-        if (!connection->queue->isValid()) {
-            return nullptr;
-        }
-
-        connection->registry = new KWayland::Client::Registry;
-        connection->registry->setEventQueue(connection->queue);
-
-        QObject::connect(connection->registry, &KWayland::Client::Registry::interfaceAnnounced, [&](const QByteArray &interface, quint32 name, quint32 version) {
-            if (interface == wl_compositor_interface.name) {
-                connection->compositor = connection->registry->createCompositor(name, version);
-            } else if (interface == wl_shm_interface.name) {
-                connection->shm = connection->registry->createShmPool(name, version);
-            } else if (interface == wl_seat_interface.name) {
-                connection->seat = connection->registry->createSeat(name, version);
-            } else if (interface == xdg_wm_base_interface.name) {
-                connection->xdgShell = new Test::XdgShell();
-                connection->xdgShell->init(*connection->registry, name, version);
-            }
-        });
-
-        connection->registry->create(connection->connection);
-        if (!connection->registry->isValid()) {
-            return nullptr;
-        }
-
-        connection->registry->setup();
-        QSignalSpy allAnnounced(connection->registry, &KWayland::Client::Registry::interfacesAnnounced);
-        if (!allAnnounced.wait()) {
-            return nullptr;
-        }
-
-        return connection;
-    }
-
-    ~Connection()
-    {
-        delete compositor;
-        compositor = nullptr;
-
-        delete seat;
-        seat = nullptr;
-
-        delete xdgShell;
-        xdgShell = nullptr;
-
-        delete shm;
-        shm = nullptr;
-
-        delete registry;
-        registry = nullptr;
-
-        delete queue; // Must be destroyed last
-
-        if (thread) {
-            connection->deleteLater();
-            thread->quit();
-            thread->wait();
-            delete thread;
-        }
-    }
-
-    QThread *thread = nullptr;
-    KWayland::Client::ConnectionThread *connection = nullptr;
-    KWayland::Client::EventQueue *queue = nullptr;
-    KWayland::Client::Registry *registry = nullptr;
-    Test::XdgShell *xdgShell = nullptr;
-    KWayland::Client::Compositor *compositor = nullptr;
-    KWayland::Client::Seat *seat = nullptr;
-    KWayland::Client::ShmPool *shm = nullptr;
-};
 
 class KeyboardInputTest : public QObject
 {
@@ -144,13 +39,13 @@ private Q_SLOTS:
     void globalShortcut();
 
 private:
-    std::unique_ptr<Connection> m_firstConnection;
+    std::unique_ptr<Test::Connection> m_firstConnection;
     std::unique_ptr<KWayland::Client::Keyboard> m_firstKeyboard;
     std::unique_ptr<KWayland::Client::Surface> m_firstSurface;
     std::unique_ptr<Test::XdgToplevel> m_firstShellSurface;
     QPointer<Window> m_firstWindow;
 
-    std::unique_ptr<Connection> m_secondConnection;
+    std::unique_ptr<Test::Connection> m_secondConnection;
     std::unique_ptr<KWayland::Client::Keyboard> m_secondKeyboard;
     std::unique_ptr<KWayland::Client::Surface> m_secondSurface;
     std::unique_ptr<Test::XdgToplevel> m_secondShellSurface;
@@ -170,7 +65,7 @@ void KeyboardInputTest::initTestCase()
 
 void KeyboardInputTest::init()
 {
-    m_firstConnection = Connection::create();
+    m_firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat);
     QVERIFY(Test::waitForWaylandKeyboard(m_firstConnection->seat));
     m_firstKeyboard = std::unique_ptr<KWayland::Client::Keyboard>(m_firstConnection->seat->createKeyboard());
     m_firstSurface = Test::createSurface(m_firstConnection->compositor);
@@ -179,7 +74,7 @@ void KeyboardInputTest::init()
     QSignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
     QVERIFY(firstEnteredSpy.wait());
 
-    m_secondConnection = Connection::create();
+    m_secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat);
     QVERIFY(Test::waitForWaylandKeyboard(m_secondConnection->seat));
     m_secondKeyboard = std::unique_ptr<KWayland::Client::Keyboard>(m_secondConnection->seat->createKeyboard());
     m_secondSurface = Test::createSurface(m_secondConnection->compositor);

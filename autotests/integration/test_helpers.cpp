@@ -60,6 +60,8 @@ namespace KWin
 namespace Test
 {
 
+static std::unique_ptr<Connection> s_waylandConnection;
+
 LayerShellV1::~LayerShellV1()
 {
     destroy();
@@ -285,51 +287,14 @@ XdgDialogV1::~XdgDialogV1()
     destroy();
 }
 
-static struct
-{
-    KWayland::Client::ConnectionThread *connection = nullptr;
-    KWayland::Client::EventQueue *queue = nullptr;
-    KWayland::Client::Compositor *compositor = nullptr;
-    KWayland::Client::SubCompositor *subCompositor = nullptr;
-    KWayland::Client::ShadowManager *shadowManager = nullptr;
-    XdgShell *xdgShell = nullptr;
-    KWayland::Client::ShmPool *shm = nullptr;
-    KWayland::Client::Seat *seat = nullptr;
-    KWayland::Client::PlasmaShell *plasmaShell = nullptr;
-    KWayland::Client::PlasmaWindowManagement *windowManagement = nullptr;
-    KWayland::Client::PointerConstraints *pointerConstraints = nullptr;
-    KWayland::Client::Registry *registry = nullptr;
-    WaylandOutputManagementV2 *outputManagementV2 = nullptr;
-    QThread *thread = nullptr;
-    QList<KWayland::Client::Output *> outputs;
-    QList<WaylandOutputDeviceV2 *> outputDevicesV2;
-    IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
-    KWayland::Client::AppMenuManager *appMenu = nullptr;
-    XdgDecorationManagerV1 *xdgDecorationManagerV1 = nullptr;
-    KWayland::Client::TextInputManager *textInputManager = nullptr;
-    QtWayland::zwp_input_panel_v1 *inputPanelV1 = nullptr;
-    MockInputMethod *inputMethodV1 = nullptr;
-    QtWayland::zwp_input_method_context_v1 *inputMethodContextV1 = nullptr;
-    LayerShellV1 *layerShellV1 = nullptr;
-    TextInputManagerV3 *textInputManagerV3 = nullptr;
-    FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
-    ScreencastingV1 *screencastingV1 = nullptr;
-    ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
-    CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
-    FakeInput *fakeInput = nullptr;
-    SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
-    XdgWmDialogV1 *xdgWmDialogV1;
-    std::unique_ptr<XXColorManagerV4> colorManager;
-} s_waylandConnection;
-
 MockInputMethod *inputMethod()
 {
-    return s_waylandConnection.inputMethodV1;
+    return s_waylandConnection->inputMethodV1;
 }
 
 KWayland::Client::Surface *inputPanelSurface()
 {
-    return s_waylandConnection.inputMethodV1->inputPanelSurface();
+    return s_waylandConnection->inputMethodV1->inputPanelSurface();
 }
 
 MockInputMethod::MockInputMethod(struct wl_registry *registry, int id, int version)
@@ -344,7 +309,7 @@ void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_con
 {
     if (!m_inputSurface) {
         m_inputSurface = Test::createSurface();
-        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface.get(), s_waylandConnection.outputs.first(), m_mode);
+        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface.get(), s_waylandConnection->outputs.first(), m_mode);
     }
     m_context = context;
 
@@ -381,108 +346,119 @@ void MockInputMethod::zwp_input_method_v1_deactivate(struct ::zwp_input_method_c
 
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
 {
-    if (s_waylandConnection.connection) {
+    if (s_waylandConnection) {
         return false;
     }
+    s_waylandConnection = Connection::setup(flags);
+    return bool(s_waylandConnection);
+}
 
+void destroyWaylandConnection()
+{
+    s_waylandConnection.reset();
+}
+
+std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
+{
     int sx[2];
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
-        return false;
+        return nullptr;
     }
     KWin::waylandServer()->display()->createClient(sx[0]);
     // setup connection
-    s_waylandConnection.connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(s_waylandConnection.connection, &KWayland::Client::ConnectionThread::connected);
+    auto connection = std::make_unique<Connection>();
+    connection->connection = new KWayland::Client::ConnectionThread;
+    QSignalSpy connectedSpy(connection->connection, &KWayland::Client::ConnectionThread::connected);
     if (!connectedSpy.isValid()) {
-        return false;
+        return nullptr;
     }
-    s_waylandConnection.connection->setSocketFd(sx[1]);
+    connection->connection->setSocketFd(sx[1]);
 
-    s_waylandConnection.thread = new QThread(kwinApp());
-    s_waylandConnection.connection->moveToThread(s_waylandConnection.thread);
-    s_waylandConnection.thread->start();
+    connection->thread = new QThread(kwinApp());
+    connection->connection->moveToThread(connection->thread);
+    connection->thread->start();
 
-    s_waylandConnection.connection->initConnection();
+    connection->connection->initConnection();
     if (!connectedSpy.wait()) {
-        return false;
+        return nullptr;
     }
 
-    s_waylandConnection.queue = new KWayland::Client::EventQueue;
-    s_waylandConnection.queue->setup(s_waylandConnection.connection);
-    if (!s_waylandConnection.queue->isValid()) {
-        return false;
+    connection->queue = new KWayland::Client::EventQueue;
+    connection->queue->setup(connection->connection);
+    if (!connection->queue->isValid()) {
+        return nullptr;
     }
 
     KWayland::Client::Registry *registry = new KWayland::Client::Registry;
-    s_waylandConnection.registry = registry;
-    registry->setEventQueue(s_waylandConnection.queue);
+    connection->registry = registry;
+    registry->setEventQueue(connection->queue);
 
-    QObject::connect(registry, &KWayland::Client::Registry::outputAnnounced, [=](quint32 name, quint32 version) {
-        KWayland::Client::Output *output = registry->createOutput(name, version, s_waylandConnection.registry);
-        s_waylandConnection.outputs << output;
+    QObject::connect(registry, &KWayland::Client::Registry::outputAnnounced, [c = connection.get()](quint32 name, quint32 version) {
+        KWayland::Client::Output *output = c->registry->createOutput(name, version, c->registry);
+        c->outputs << output;
         QObject::connect(output, &KWayland::Client::Output::removed, [=]() {
             output->deleteLater();
-            s_waylandConnection.outputs.removeOne(output);
+            c->outputs.removeOne(output);
         });
         QObject::connect(output, &KWayland::Client::Output::destroyed, [=]() {
-            s_waylandConnection.outputs.removeOne(output);
+            c->outputs.removeOne(output);
         });
     });
 
-    QObject::connect(registry, &KWayland::Client::Registry::interfaceAnnounced, [=](const QByteArray &interface, quint32 name, quint32 version) {
+    QObject::connect(registry, &KWayland::Client::Registry::interfaceAnnounced, [c = connection.get(), flags](const QByteArray &interface, quint32 name, quint32 version) {
         if (flags & AdditionalWaylandInterface::InputMethodV1) {
             if (interface == QByteArrayLiteral("zwp_input_method_v1")) {
-                s_waylandConnection.inputMethodV1 = new MockInputMethod(*registry, name, version);
+                c->inputMethodV1 = new MockInputMethod(*c->registry, name, version);
             } else if (interface == QByteArrayLiteral("zwp_input_panel_v1")) {
-                s_waylandConnection.inputPanelV1 = new QtWayland::zwp_input_panel_v1(*registry, name, version);
+                c->inputPanelV1 = new QtWayland::zwp_input_panel_v1(*c->registry, name, version);
             }
         }
         if (flags & AdditionalWaylandInterface::LayerShellV1) {
             if (interface == QByteArrayLiteral("zwlr_layer_shell_v1")) {
-                s_waylandConnection.layerShellV1 = new LayerShellV1();
-                s_waylandConnection.layerShellV1->init(*registry, name, version);
+                c->layerShellV1 = new LayerShellV1();
+                c->layerShellV1->init(*c->registry, name, version);
             }
         }
         if (flags & AdditionalWaylandInterface::TextInputManagerV3) {
             // do something
             if (interface == QByteArrayLiteral("zwp_text_input_manager_v3")) {
-                s_waylandConnection.textInputManagerV3 = new TextInputManagerV3();
-                s_waylandConnection.textInputManagerV3->init(*registry, name, version);
+                c->textInputManagerV3 = new TextInputManagerV3();
+                c->textInputManagerV3->init(*c->registry, name, version);
             }
         }
         if (interface == QByteArrayLiteral("xdg_wm_base")) {
-            s_waylandConnection.xdgShell = new XdgShell();
-            s_waylandConnection.xdgShell->init(*registry, name, version);
+            c->xdgShell = new XdgShell();
+            c->xdgShell->init(*c->registry, name, version);
         }
         if (flags & AdditionalWaylandInterface::XdgDecorationV1) {
             if (interface == zxdg_decoration_manager_v1_interface.name) {
-                s_waylandConnection.xdgDecorationManagerV1 = new XdgDecorationManagerV1();
-                s_waylandConnection.xdgDecorationManagerV1->init(*registry, name, version);
+                c->xdgDecorationManagerV1 = new XdgDecorationManagerV1();
+                c->xdgDecorationManagerV1->init(*c->registry, name, version);
                 return;
             }
         }
         if (flags & AdditionalWaylandInterface::IdleInhibitV1) {
             if (interface == zwp_idle_inhibit_manager_v1_interface.name) {
-                s_waylandConnection.idleInhibitManagerV1 = new IdleInhibitManagerV1();
-                s_waylandConnection.idleInhibitManagerV1->init(*registry, name, version);
+                c->idleInhibitManagerV1 = new IdleInhibitManagerV1();
+                c->idleInhibitManagerV1->init(*c->registry, name, version);
                 return;
             }
         }
         if (flags & AdditionalWaylandInterface::OutputDeviceV2) {
             if (interface == kde_output_device_v2_interface.name) {
                 WaylandOutputDeviceV2 *device = new WaylandOutputDeviceV2(name);
-                device->init(*registry, name, version);
+                device->init(*c->registry, name, version);
 
-                s_waylandConnection.outputDevicesV2 << device;
+                c->outputDevicesV2 << device;
 
                 QObject::connect(device, &WaylandOutputDeviceV2::destroyed, [=]() {
-                    s_waylandConnection.outputDevicesV2.removeOne(device);
+                    c->outputDevicesV2.removeOne(device);
                     device->deleteLater();
                 });
 
-                QObject::connect(registry, &KWayland::Client::Registry::interfaceRemoved, device, [name, device](const quint32 &interfaceName) {
+                QObject::connect(c->registry, &KWayland::Client::Registry::interfaceRemoved, device, [c, name, device](const quint32 &interfaceName) {
                     if (name == interfaceName) {
-                        s_waylandConnection.outputDevicesV2.removeOne(device);
+                        c->outputDevicesV2.removeOne(device);
                         device->deleteLater();
                     }
                 });
@@ -492,277 +468,277 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
         }
         if (flags & AdditionalWaylandInterface::OutputManagementV2) {
             if (interface == kde_output_management_v2_interface.name) {
-                s_waylandConnection.outputManagementV2 = new WaylandOutputManagementV2(*registry, name, version);
+                c->outputManagementV2 = new WaylandOutputManagementV2(*c->registry, name, version);
                 return;
             }
         }
         if (flags & AdditionalWaylandInterface::FractionalScaleManagerV1) {
             if (interface == wp_fractional_scale_manager_v1_interface.name) {
-                s_waylandConnection.fractionalScaleManagerV1 = new FractionalScaleManagerV1();
-                s_waylandConnection.fractionalScaleManagerV1->init(*registry, name, version);
+                c->fractionalScaleManagerV1 = new FractionalScaleManagerV1();
+                c->fractionalScaleManagerV1->init(*c->registry, name, version);
                 return;
             }
         }
         if (flags & AdditionalWaylandInterface::ScreencastingV1) {
             if (interface == zkde_screencast_unstable_v1_interface.name) {
-                s_waylandConnection.screencastingV1 = new ScreencastingV1();
-                s_waylandConnection.screencastingV1->init(*registry, name, version);
+                c->screencastingV1 = new ScreencastingV1();
+                c->screencastingV1->init(*c->registry, name, version);
                 return;
             }
         }
         if (flags & AdditionalWaylandInterface::ScreenEdgeV1) {
             if (interface == kde_screen_edge_manager_v1_interface.name) {
-                s_waylandConnection.screenEdgeManagerV1 = new ScreenEdgeManagerV1();
-                s_waylandConnection.screenEdgeManagerV1->init(*registry, name, version);
+                c->screenEdgeManagerV1 = new ScreenEdgeManagerV1();
+                c->screenEdgeManagerV1->init(*c->registry, name, version);
                 return;
             }
         }
         if (flags & AdditionalWaylandInterface::CursorShapeV1) {
             if (interface == wp_cursor_shape_manager_v1_interface.name) {
-                s_waylandConnection.cursorShapeManagerV1 = new CursorShapeManagerV1();
-                s_waylandConnection.cursorShapeManagerV1->init(*registry, name, version);
+                c->cursorShapeManagerV1 = new CursorShapeManagerV1();
+                c->cursorShapeManagerV1->init(*c->registry, name, version);
             }
         }
         if (flags & AdditionalWaylandInterface::FakeInput) {
             if (interface == org_kde_kwin_fake_input_interface.name) {
-                s_waylandConnection.fakeInput = new FakeInput();
-                s_waylandConnection.fakeInput->init(*registry, name, version);
+                c->fakeInput = new FakeInput();
+                c->fakeInput->init(*c->registry, name, version);
             }
         }
         if (flags & AdditionalWaylandInterface::SecurityContextManagerV1) {
             if (interface == wp_security_context_manager_v1_interface.name) {
-                s_waylandConnection.securityContextManagerV1 = new SecurityContextManagerV1();
-                s_waylandConnection.securityContextManagerV1->init(*registry, name, version);
+                c->securityContextManagerV1 = new SecurityContextManagerV1();
+                c->securityContextManagerV1->init(*c->registry, name, version);
             }
         }
         if (flags & AdditionalWaylandInterface::XdgDialogV1) {
             if (interface == xdg_wm_dialog_v1_interface.name) {
-                s_waylandConnection.xdgWmDialogV1 = new XdgWmDialogV1();
-                s_waylandConnection.xdgWmDialogV1->init(*registry, name, version);
+                c->xdgWmDialogV1 = new XdgWmDialogV1();
+                c->xdgWmDialogV1->init(*c->registry, name, version);
             }
         }
         if (flags & AdditionalWaylandInterface::ColorManagement) {
             if (interface == xx_color_manager_v4_interface.name) {
-                s_waylandConnection.colorManager = std::make_unique<XXColorManagerV4>(*registry, name, version);
+                c->colorManager = std::make_unique<XXColorManagerV4>(*c->registry, name, version);
             }
         }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
     if (!allAnnounced.isValid()) {
-        return false;
+        return nullptr;
     }
-    registry->create(s_waylandConnection.connection);
+    registry->create(connection->connection);
     if (!registry->isValid()) {
-        return false;
+        return nullptr;
     }
     registry->setup();
     if (!allAnnounced.wait()) {
-        return false;
+        return nullptr;
     }
 
-    s_waylandConnection.compositor = registry->createCompositor(registry->interface(KWayland::Client::Registry::Interface::Compositor).name, registry->interface(KWayland::Client::Registry::Interface::Compositor).version);
-    if (!s_waylandConnection.compositor->isValid()) {
-        return false;
+    connection->compositor = registry->createCompositor(registry->interface(KWayland::Client::Registry::Interface::Compositor).name, registry->interface(KWayland::Client::Registry::Interface::Compositor).version);
+    if (!connection->compositor->isValid()) {
+        return nullptr;
     }
-    s_waylandConnection.subCompositor = registry->createSubCompositor(registry->interface(KWayland::Client::Registry::Interface::SubCompositor).name, registry->interface(KWayland::Client::Registry::Interface::SubCompositor).version);
-    if (!s_waylandConnection.subCompositor->isValid()) {
-        return false;
+    connection->subCompositor = registry->createSubCompositor(registry->interface(KWayland::Client::Registry::Interface::SubCompositor).name, registry->interface(KWayland::Client::Registry::Interface::SubCompositor).version);
+    if (!connection->subCompositor->isValid()) {
+        return nullptr;
     }
-    s_waylandConnection.shm = registry->createShmPool(registry->interface(KWayland::Client::Registry::Interface::Shm).name, registry->interface(KWayland::Client::Registry::Interface::Shm).version);
-    if (!s_waylandConnection.shm->isValid()) {
-        return false;
+    connection->shm = registry->createShmPool(registry->interface(KWayland::Client::Registry::Interface::Shm).name, registry->interface(KWayland::Client::Registry::Interface::Shm).version);
+    if (!connection->shm->isValid()) {
+        return nullptr;
     }
     if (flags.testFlag(AdditionalWaylandInterface::Seat)) {
-        s_waylandConnection.seat = registry->createSeat(registry->interface(KWayland::Client::Registry::Interface::Seat).name, registry->interface(KWayland::Client::Registry::Interface::Seat).version);
-        if (!s_waylandConnection.seat->isValid()) {
-            return false;
+        connection->seat = registry->createSeat(registry->interface(KWayland::Client::Registry::Interface::Seat).name, registry->interface(KWayland::Client::Registry::Interface::Seat).version);
+        if (!connection->seat->isValid()) {
+            return nullptr;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::ShadowManager)) {
-        s_waylandConnection.shadowManager = registry->createShadowManager(registry->interface(KWayland::Client::Registry::Interface::Shadow).name,
-                                                                          registry->interface(KWayland::Client::Registry::Interface::Shadow).version);
-        if (!s_waylandConnection.shadowManager->isValid()) {
-            return false;
+        connection->shadowManager = registry->createShadowManager(registry->interface(KWayland::Client::Registry::Interface::Shadow).name,
+                                                                  registry->interface(KWayland::Client::Registry::Interface::Shadow).version);
+        if (!connection->shadowManager->isValid()) {
+            return nullptr;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::PlasmaShell)) {
-        s_waylandConnection.plasmaShell = registry->createPlasmaShell(registry->interface(KWayland::Client::Registry::Interface::PlasmaShell).name,
-                                                                      registry->interface(KWayland::Client::Registry::Interface::PlasmaShell).version);
-        if (!s_waylandConnection.plasmaShell->isValid()) {
-            return false;
+        connection->plasmaShell = registry->createPlasmaShell(registry->interface(KWayland::Client::Registry::Interface::PlasmaShell).name,
+                                                              registry->interface(KWayland::Client::Registry::Interface::PlasmaShell).version);
+        if (!connection->plasmaShell->isValid()) {
+            return nullptr;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::WindowManagement)) {
-        s_waylandConnection.windowManagement = registry->createPlasmaWindowManagement(registry->interface(KWayland::Client::Registry::Interface::PlasmaWindowManagement).name,
-                                                                                      registry->interface(KWayland::Client::Registry::Interface::PlasmaWindowManagement).version);
-        if (!s_waylandConnection.windowManagement->isValid()) {
-            return false;
+        connection->windowManagement = registry->createPlasmaWindowManagement(registry->interface(KWayland::Client::Registry::Interface::PlasmaWindowManagement).name,
+                                                                              registry->interface(KWayland::Client::Registry::Interface::PlasmaWindowManagement).version);
+        if (!connection->windowManagement->isValid()) {
+            return nullptr;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::PointerConstraints)) {
-        s_waylandConnection.pointerConstraints = registry->createPointerConstraints(registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).name,
-                                                                                    registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).version);
-        if (!s_waylandConnection.pointerConstraints->isValid()) {
-            return false;
+        connection->pointerConstraints = registry->createPointerConstraints(registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).name,
+                                                                            registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).version);
+        if (!connection->pointerConstraints->isValid()) {
+            return nullptr;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::AppMenu)) {
-        s_waylandConnection.appMenu = registry->createAppMenuManager(registry->interface(KWayland::Client::Registry::Interface::AppMenu).name, registry->interface(KWayland::Client::Registry::Interface::AppMenu).version);
-        if (!s_waylandConnection.appMenu->isValid()) {
-            return false;
+        connection->appMenu = registry->createAppMenuManager(registry->interface(KWayland::Client::Registry::Interface::AppMenu).name, registry->interface(KWayland::Client::Registry::Interface::AppMenu).version);
+        if (!connection->appMenu->isValid()) {
+            return nullptr;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::TextInputManagerV2)) {
-        s_waylandConnection.textInputManager = registry->createTextInputManager(registry->interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).name, registry->interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).version);
-        if (!s_waylandConnection.textInputManager->isValid()) {
-            return false;
+        connection->textInputManager = registry->createTextInputManager(registry->interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).name, registry->interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).version);
+        if (!connection->textInputManager->isValid()) {
+            return nullptr;
         }
     }
 
-    return true;
+    return connection;
 }
 
-void destroyWaylandConnection()
+Connection::~Connection()
 {
-    delete s_waylandConnection.compositor;
-    s_waylandConnection.compositor = nullptr;
-    delete s_waylandConnection.subCompositor;
-    s_waylandConnection.subCompositor = nullptr;
-    delete s_waylandConnection.windowManagement;
-    s_waylandConnection.windowManagement = nullptr;
-    delete s_waylandConnection.plasmaShell;
-    s_waylandConnection.plasmaShell = nullptr;
-    delete s_waylandConnection.seat;
-    s_waylandConnection.seat = nullptr;
-    delete s_waylandConnection.pointerConstraints;
-    s_waylandConnection.pointerConstraints = nullptr;
-    delete s_waylandConnection.xdgShell;
-    s_waylandConnection.xdgShell = nullptr;
-    delete s_waylandConnection.shadowManager;
-    s_waylandConnection.shadowManager = nullptr;
-    delete s_waylandConnection.idleInhibitManagerV1;
-    s_waylandConnection.idleInhibitManagerV1 = nullptr;
-    delete s_waylandConnection.shm;
-    s_waylandConnection.shm = nullptr;
-    delete s_waylandConnection.registry;
-    s_waylandConnection.registry = nullptr;
-    delete s_waylandConnection.appMenu;
-    s_waylandConnection.appMenu = nullptr;
-    delete s_waylandConnection.xdgDecorationManagerV1;
-    s_waylandConnection.xdgDecorationManagerV1 = nullptr;
-    delete s_waylandConnection.textInputManager;
-    s_waylandConnection.textInputManager = nullptr;
-    delete s_waylandConnection.inputPanelV1;
-    s_waylandConnection.inputPanelV1 = nullptr;
-    delete s_waylandConnection.layerShellV1;
-    s_waylandConnection.layerShellV1 = nullptr;
-    delete s_waylandConnection.outputManagementV2;
-    s_waylandConnection.outputManagementV2 = nullptr;
-    delete s_waylandConnection.fractionalScaleManagerV1;
-    s_waylandConnection.fractionalScaleManagerV1 = nullptr;
-    delete s_waylandConnection.screencastingV1;
-    s_waylandConnection.screencastingV1 = nullptr;
-    delete s_waylandConnection.screenEdgeManagerV1;
-    s_waylandConnection.screenEdgeManagerV1 = nullptr;
-    delete s_waylandConnection.cursorShapeManagerV1;
-    s_waylandConnection.cursorShapeManagerV1 = nullptr;
-    delete s_waylandConnection.fakeInput;
-    s_waylandConnection.fakeInput = nullptr;
-    delete s_waylandConnection.securityContextManagerV1;
-    s_waylandConnection.securityContextManagerV1 = nullptr;
-    delete s_waylandConnection.xdgWmDialogV1;
-    s_waylandConnection.xdgWmDialogV1 = nullptr;
-    s_waylandConnection.colorManager.reset();
+    delete compositor;
+    compositor = nullptr;
+    delete subCompositor;
+    subCompositor = nullptr;
+    delete windowManagement;
+    windowManagement = nullptr;
+    delete plasmaShell;
+    plasmaShell = nullptr;
+    delete seat;
+    seat = nullptr;
+    delete pointerConstraints;
+    pointerConstraints = nullptr;
+    delete xdgShell;
+    xdgShell = nullptr;
+    delete shadowManager;
+    shadowManager = nullptr;
+    delete idleInhibitManagerV1;
+    idleInhibitManagerV1 = nullptr;
+    delete shm;
+    shm = nullptr;
+    delete registry;
+    registry = nullptr;
+    delete appMenu;
+    appMenu = nullptr;
+    delete xdgDecorationManagerV1;
+    xdgDecorationManagerV1 = nullptr;
+    delete textInputManager;
+    textInputManager = nullptr;
+    delete inputPanelV1;
+    inputPanelV1 = nullptr;
+    delete layerShellV1;
+    layerShellV1 = nullptr;
+    delete outputManagementV2;
+    outputManagementV2 = nullptr;
+    delete fractionalScaleManagerV1;
+    fractionalScaleManagerV1 = nullptr;
+    delete screencastingV1;
+    screencastingV1 = nullptr;
+    delete screenEdgeManagerV1;
+    screenEdgeManagerV1 = nullptr;
+    delete cursorShapeManagerV1;
+    cursorShapeManagerV1 = nullptr;
+    delete fakeInput;
+    fakeInput = nullptr;
+    delete securityContextManagerV1;
+    securityContextManagerV1 = nullptr;
+    delete xdgWmDialogV1;
+    xdgWmDialogV1 = nullptr;
+    colorManager.reset();
 
-    delete s_waylandConnection.queue; // Must be destroyed last
-    s_waylandConnection.queue = nullptr;
+    delete queue; // Must be destroyed last
+    queue = nullptr;
 
-    if (s_waylandConnection.thread) {
-        s_waylandConnection.connection->deleteLater();
-        s_waylandConnection.thread->quit();
-        s_waylandConnection.thread->wait();
-        delete s_waylandConnection.thread;
-        s_waylandConnection.thread = nullptr;
-        s_waylandConnection.connection = nullptr;
+    if (thread) {
+        connection->deleteLater();
+        thread->quit();
+        thread->wait();
+        delete thread;
+        thread = nullptr;
+        connection = nullptr;
     }
-    s_waylandConnection.outputs.clear();
-    s_waylandConnection.outputDevicesV2.clear();
+    outputs.clear();
+    outputDevicesV2.clear();
 }
 
 KWayland::Client::ConnectionThread *waylandConnection()
 {
-    return s_waylandConnection.connection;
+    return s_waylandConnection->connection;
 }
 
 KWayland::Client::Compositor *waylandCompositor()
 {
-    return s_waylandConnection.compositor;
+    return s_waylandConnection->compositor;
 }
 
 KWayland::Client::SubCompositor *waylandSubCompositor()
 {
-    return s_waylandConnection.subCompositor;
+    return s_waylandConnection->subCompositor;
 }
 
 KWayland::Client::ShadowManager *waylandShadowManager()
 {
-    return s_waylandConnection.shadowManager;
+    return s_waylandConnection->shadowManager;
 }
 
 KWayland::Client::ShmPool *waylandShmPool()
 {
-    return s_waylandConnection.shm;
+    return s_waylandConnection->shm;
 }
 
 KWayland::Client::Seat *waylandSeat()
 {
-    return s_waylandConnection.seat;
+    return s_waylandConnection->seat;
 }
 
 KWayland::Client::PlasmaShell *waylandPlasmaShell()
 {
-    return s_waylandConnection.plasmaShell;
+    return s_waylandConnection->plasmaShell;
 }
 
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement()
 {
-    return s_waylandConnection.windowManagement;
+    return s_waylandConnection->windowManagement;
 }
 
 KWayland::Client::PointerConstraints *waylandPointerConstraints()
 {
-    return s_waylandConnection.pointerConstraints;
+    return s_waylandConnection->pointerConstraints;
 }
 
 KWayland::Client::AppMenuManager *waylandAppMenuManager()
 {
-    return s_waylandConnection.appMenu;
+    return s_waylandConnection->appMenu;
 }
 
 KWin::Test::WaylandOutputManagementV2 *waylandOutputManagementV2()
 {
-    return s_waylandConnection.outputManagementV2;
+    return s_waylandConnection->outputManagementV2;
 }
 
 KWayland::Client::TextInputManager *waylandTextInputManager()
 {
-    return s_waylandConnection.textInputManager;
+    return s_waylandConnection->textInputManager;
 }
 
 TextInputManagerV3 *waylandTextInputManagerV3()
 {
-    return s_waylandConnection.textInputManagerV3;
+    return s_waylandConnection->textInputManagerV3;
 }
 
 QList<KWayland::Client::Output *> waylandOutputs()
 {
-    return s_waylandConnection.outputs;
+    return s_waylandConnection->outputs;
 }
 
 KWayland::Client::Output *waylandOutput(const QString &name)
 {
-    for (KWayland::Client::Output *output : std::as_const(s_waylandConnection.outputs)) {
+    for (KWayland::Client::Output *output : std::as_const(s_waylandConnection->outputs)) {
         if (output->name() == name) {
             return output;
         }
@@ -772,27 +748,27 @@ KWayland::Client::Output *waylandOutput(const QString &name)
 
 ScreencastingV1 *screencasting()
 {
-    return s_waylandConnection.screencastingV1;
+    return s_waylandConnection->screencastingV1;
 }
 
 QList<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
 {
-    return s_waylandConnection.outputDevicesV2;
+    return s_waylandConnection->outputDevicesV2;
 }
 
 FakeInput *waylandFakeInput()
 {
-    return s_waylandConnection.fakeInput;
+    return s_waylandConnection->fakeInput;
 }
 
 SecurityContextManagerV1 *waylandSecurityContextManagerV1()
 {
-    return s_waylandConnection.securityContextManagerV1;
+    return s_waylandConnection->securityContextManagerV1;
 }
 
 XXColorManagerV4 *colorManager()
 {
-    return s_waylandConnection.colorManager.get();
+    return s_waylandConnection->colorManager.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -806,10 +782,10 @@ bool waitForWaylandSurface(Window *window)
 
 bool waitForWaylandPointer()
 {
-    if (!s_waylandConnection.seat) {
+    if (!s_waylandConnection->seat) {
         return false;
     }
-    return waitForWaylandPointer(s_waylandConnection.seat);
+    return waitForWaylandPointer(s_waylandConnection->seat);
 }
 
 bool waitForWaylandPointer(KWayland::Client::Seat *seat)
@@ -820,10 +796,10 @@ bool waitForWaylandPointer(KWayland::Client::Seat *seat)
 
 bool waitForWaylandTouch()
 {
-    if (!s_waylandConnection.seat) {
+    if (!s_waylandConnection->seat) {
         return false;
     }
-    return waitForWaylandTouch(s_waylandConnection.seat);
+    return waitForWaylandTouch(s_waylandConnection->seat);
 }
 
 bool waitForWaylandTouch(KWayland::Client::Seat *seat)
@@ -834,10 +810,10 @@ bool waitForWaylandTouch(KWayland::Client::Seat *seat)
 
 bool waitForWaylandKeyboard()
 {
-    if (!s_waylandConnection.seat) {
+    if (!s_waylandConnection->seat) {
         return false;
     }
-    return waitForWaylandKeyboard(s_waylandConnection.seat);
+    return waitForWaylandKeyboard(s_waylandConnection->seat);
 }
 
 bool waitForWaylandKeyboard(KWayland::Client::Seat *seat)
@@ -848,7 +824,7 @@ bool waitForWaylandKeyboard(KWayland::Client::Seat *seat)
 
 void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
 {
-    render(s_waylandConnection.shm, surface, size, color, format);
+    render(s_waylandConnection->shm, surface, size, color, format);
 }
 
 void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
@@ -860,7 +836,7 @@ void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, 
 
 void render(KWayland::Client::Surface *surface, const QImage &img)
 {
-    render(s_waylandConnection.shm, surface, img);
+    render(s_waylandConnection->shm, surface, img);
 }
 
 void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img)
@@ -884,7 +860,7 @@ Window *waitForWaylandWindowShown(int timeout)
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
-    return renderAndWaitForShown(s_waylandConnection.shm, surface, size, color, format, timeout);
+    return renderAndWaitForShown(s_waylandConnection->shm, surface, size, color, format, timeout);
 }
 
 Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
@@ -896,7 +872,7 @@ Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &img, int timeout)
 {
-    return renderAndWaitForShown(s_waylandConnection.shm, surface, img, timeout);
+    return renderAndWaitForShown(s_waylandConnection->shm, surface, img, timeout);
 }
 
 Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img, int timeout)
@@ -915,8 +891,8 @@ Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::
 
 void flushWaylandConnection()
 {
-    if (s_waylandConnection.connection) {
-        s_waylandConnection.connection->flush();
+    if (s_waylandConnection) {
+        s_waylandConnection->connection->flush();
     }
 }
 
@@ -953,17 +929,17 @@ private:
 
 bool waylandSync()
 {
-    WaylandSyncPoint syncPoint(s_waylandConnection.connection, s_waylandConnection.queue);
+    WaylandSyncPoint syncPoint(s_waylandConnection->connection, s_waylandConnection->queue);
     QSignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
     return doneSpy.wait();
 }
 
 std::unique_ptr<KWayland::Client::Surface> createSurface()
 {
-    if (!s_waylandConnection.compositor) {
+    if (!s_waylandConnection->compositor) {
         return nullptr;
     }
-    return createSurface(s_waylandConnection.compositor);
+    return createSurface(s_waylandConnection->compositor);
 }
 
 std::unique_ptr<KWayland::Client::Surface> createSurface(KWayland::Client::Compositor *compositor)
@@ -974,10 +950,10 @@ std::unique_ptr<KWayland::Client::Surface> createSurface(KWayland::Client::Compo
 
 std::unique_ptr<KWayland::Client::SubSurface> createSubSurface(KWayland::Client::Surface *surface, KWayland::Client::Surface *parentSurface)
 {
-    if (!s_waylandConnection.subCompositor) {
+    if (!s_waylandConnection->subCompositor) {
         return nullptr;
     }
-    std::unique_ptr<KWayland::Client::SubSurface> s(s_waylandConnection.subCompositor->createSubSurface(surface, parentSurface));
+    std::unique_ptr<KWayland::Client::SubSurface> s(s_waylandConnection->subCompositor->createSubSurface(surface, parentSurface));
     if (!s->isValid()) {
         return nullptr;
     }
@@ -986,7 +962,7 @@ std::unique_ptr<KWayland::Client::SubSurface> createSubSurface(KWayland::Client:
 
 std::unique_ptr<LayerSurfaceV1> createLayerSurfaceV1(KWayland::Client::Surface *surface, const QString &scope, KWayland::Client::Output *output, LayerShellV1::layer layer)
 {
-    LayerShellV1 *shell = s_waylandConnection.layerShellV1;
+    LayerShellV1 *shell = s_waylandConnection->layerShellV1;
     if (!shell) {
         qWarning() << "Could not create a layer surface because the layer shell global is not bound";
         return nullptr;
@@ -1005,11 +981,11 @@ std::unique_ptr<LayerSurfaceV1> createLayerSurfaceV1(KWayland::Client::Surface *
 
 std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> createInputPanelSurfaceV1(KWayland::Client::Surface *surface, KWayland::Client::Output *output, MockInputMethod::Mode mode)
 {
-    if (!s_waylandConnection.inputPanelV1) {
+    if (!s_waylandConnection->inputPanelV1) {
         qWarning() << "Unable to create the input panel surface. The interface input_panel global is not bound";
         return nullptr;
     }
-    auto s = std::make_unique<QtWayland::zwp_input_panel_surface_v1>(s_waylandConnection.inputPanelV1->get_input_panel_surface(*surface));
+    auto s = std::make_unique<QtWayland::zwp_input_panel_surface_v1>(s_waylandConnection->inputPanelV1->get_input_panel_surface(*surface));
     if (!s->isInitialized()) {
         return nullptr;
     }
@@ -1028,12 +1004,12 @@ std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> createInputPanelSurfaceV1
 
 std::unique_ptr<FractionalScaleV1> createFractionalScaleV1(KWayland::Client::Surface *surface)
 {
-    if (!s_waylandConnection.fractionalScaleManagerV1) {
+    if (!s_waylandConnection->fractionalScaleManagerV1) {
         qWarning() << "Unable to create fractional scale surface. The global is not bound";
         return nullptr;
     }
     auto scale = std::make_unique<FractionalScaleV1>();
-    scale->init(s_waylandConnection.fractionalScaleManagerV1->get_fractional_scale(*surface));
+    scale->init(s_waylandConnection->fractionalScaleManagerV1->get_fractional_scale(*surface));
 
     return scale;
 }
@@ -1060,7 +1036,7 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland:
 
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode)
 {
-    XdgShell *shell = s_waylandConnection.xdgShell;
+    XdgShell *shell = s_waylandConnection->xdgShell;
 
     if (!shell) {
         qWarning() << "Could not create an xdg_toplevel surface because xdg_wm_base global is not bound";
@@ -1084,7 +1060,7 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland:
 
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, std::function<void(XdgToplevel *toplevel)> setup)
 {
-    XdgShell *shell = s_waylandConnection.xdgShell;
+    XdgShell *shell = s_waylandConnection->xdgShell;
 
     if (!shell) {
         qWarning() << "Could not create an xdg_toplevel surface because xdg_wm_base global is not bound";
@@ -1107,7 +1083,7 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland:
 
 std::unique_ptr<XdgPositioner> createXdgPositioner()
 {
-    XdgShell *shell = s_waylandConnection.xdgShell;
+    XdgShell *shell = s_waylandConnection->xdgShell;
 
     if (!shell) {
         qWarning() << "Could not create an xdg_positioner object because xdg_wm_base global is not bound";
@@ -1119,7 +1095,7 @@ std::unique_ptr<XdgPositioner> createXdgPositioner()
 
 std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface, XdgPositioner *positioner, CreationSetup configureMode)
 {
-    XdgShell *shell = s_waylandConnection.xdgShell;
+    XdgShell *shell = s_waylandConnection->xdgShell;
 
     if (!shell) {
         qWarning() << "Could not create an xdg_popup surface because xdg_wm_base global is not bound";
@@ -1138,7 +1114,7 @@ std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surfa
 
 std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplevel *toplevel)
 {
-    XdgDecorationManagerV1 *manager = s_waylandConnection.xdgDecorationManagerV1;
+    XdgDecorationManagerV1 *manager = s_waylandConnection->xdgDecorationManagerV1;
 
     if (!manager) {
         qWarning() << "Could not create an xdg_toplevel_decoration_v1 because xdg_decoration_manager_v1 global is not bound";
@@ -1150,7 +1126,7 @@ std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplev
 
 std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface *surface)
 {
-    IdleInhibitManagerV1 *manager = s_waylandConnection.idleInhibitManagerV1;
+    IdleInhibitManagerV1 *manager = s_waylandConnection->idleInhibitManagerV1;
     if (!manager) {
         qWarning() << "Could not create an idle_inhibitor_v1 because idle_inhibit_manager_v1 global is not bound";
         return nullptr;
@@ -1161,7 +1137,7 @@ std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface
 
 std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border)
 {
-    ScreenEdgeManagerV1 *manager = s_waylandConnection.screenEdgeManagerV1;
+    ScreenEdgeManagerV1 *manager = s_waylandConnection->screenEdgeManagerV1;
     if (!manager) {
         qWarning() << "Could not create an kde_auto_hide_screen_edge_v1 because kde_screen_edge_manager_v1 global is not bound";
         return nullptr;
@@ -1172,7 +1148,7 @@ std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Clien
 
 std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)
 {
-    CursorShapeManagerV1 *manager = s_waylandConnection.cursorShapeManagerV1;
+    CursorShapeManagerV1 *manager = s_waylandConnection->cursorShapeManagerV1;
     if (!manager) {
         qWarning() << "Could not create a wp_cursor_shape_device_v1 because wp_cursor_shape_manager_v1 global is not bound";
         return nullptr;
@@ -1183,7 +1159,7 @@ std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client:
 
 std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel)
 {
-    XdgWmDialogV1 *wm = s_waylandConnection.xdgWmDialogV1;
+    XdgWmDialogV1 *wm = s_waylandConnection->xdgWmDialogV1;
     if (!wm) {
         qWarning() << "Could not create a xdg_dialog_v1 because xdg_wm_dialog_v1 global is not bound";
         return nullptr;
