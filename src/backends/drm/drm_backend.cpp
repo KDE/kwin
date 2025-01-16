@@ -175,6 +175,8 @@ void DrmBackend::handleUdevEvent()
             DrmGpu *gpu = findGpu(device->devNum());
             if (gpu) {
                 qCWarning(KWIN_DRM) << "Received unexpected add udev event for:" << device->devNode();
+                m_forceQPainter = !m_forceQPainter;
+                Q_EMIT supportedCompositorsChanged();
                 continue;
             }
             if (addGpu(device->devNode())) {

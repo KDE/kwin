@@ -47,6 +47,7 @@ EglGbmBackend::~EglGbmBackend()
     m_contexts.clear();
     cleanup();
     m_backend->setRenderBackend(nullptr);
+    destroyGlobalShareContext();
 }
 
 bool EglGbmBackend::initializeEgl()
