@@ -809,10 +809,12 @@ bool waitForWaylandPointer()
     if (!s_waylandConnection.seat) {
         return false;
     }
-    QSignalSpy hasPointerSpy(s_waylandConnection.seat, &KWayland::Client::Seat::hasPointerChanged);
-    if (!hasPointerSpy.isValid()) {
-        return false;
-    }
+    return waitForWaylandPointer(s_waylandConnection.seat);
+}
+
+bool waitForWaylandPointer(KWayland::Client::Seat *seat)
+{
+    QSignalSpy hasPointerSpy(seat, &KWayland::Client::Seat::hasPointerChanged);
     return hasPointerSpy.wait();
 }
 
@@ -821,10 +823,12 @@ bool waitForWaylandTouch()
     if (!s_waylandConnection.seat) {
         return false;
     }
-    QSignalSpy hasTouchSpy(s_waylandConnection.seat, &KWayland::Client::Seat::hasTouchChanged);
-    if (!hasTouchSpy.isValid()) {
-        return false;
-    }
+    return waitForWaylandTouch(s_waylandConnection.seat);
+}
+
+bool waitForWaylandTouch(KWayland::Client::Seat *seat)
+{
+    QSignalSpy hasTouchSpy(seat, &KWayland::Client::Seat::hasTouchChanged);
     return hasTouchSpy.wait();
 }
 
@@ -833,14 +837,21 @@ bool waitForWaylandKeyboard()
     if (!s_waylandConnection.seat) {
         return false;
     }
-    QSignalSpy hasKeyboardSpy(s_waylandConnection.seat, &KWayland::Client::Seat::hasKeyboardChanged);
-    if (!hasKeyboardSpy.isValid()) {
-        return false;
-    }
+    return waitForWaylandKeyboard(s_waylandConnection.seat);
+}
+
+bool waitForWaylandKeyboard(KWayland::Client::Seat *seat)
+{
+    QSignalSpy hasKeyboardSpy(seat, &KWayland::Client::Seat::hasKeyboardChanged);
     return hasKeyboardSpy.wait();
 }
 
 void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
+{
+    render(s_waylandConnection.shm, surface, size, color, format);
+}
+
+void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
 {
     QImage img(size, format);
     img.fill(color);
@@ -849,7 +860,12 @@ void render(KWayland::Client::Surface *surface, const QSize &size, const QColor 
 
 void render(KWayland::Client::Surface *surface, const QImage &img)
 {
-    surface->attachBuffer(s_waylandConnection.shm->createBuffer(img));
+    render(s_waylandConnection.shm, surface, img);
+}
+
+void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img)
+{
+    surface->attachBuffer(shm->createBuffer(img));
     surface->damage(QRect(QPoint(0, 0), img.size()));
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 }
@@ -868,18 +884,28 @@ Window *waitForWaylandWindowShown(int timeout)
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
+    return renderAndWaitForShown(s_waylandConnection.shm, surface, size, color, format, timeout);
+}
+
+Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
+{
     QImage img(size, format);
     img.fill(color);
-    return renderAndWaitForShown(surface, img, timeout);
+    return renderAndWaitForShown(shm, surface, img, timeout);
 }
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &img, int timeout)
+{
+    return renderAndWaitForShown(s_waylandConnection.shm, surface, img, timeout);
+}
+
+Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img, int timeout)
 {
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     if (!windowAddedSpy.isValid()) {
         return nullptr;
     }
-    render(surface, img);
+    render(shm, surface, img);
     flushWaylandConnection();
     if (!windowAddedSpy.wait(timeout)) {
         return nullptr;
@@ -937,7 +963,12 @@ std::unique_ptr<KWayland::Client::Surface> createSurface()
     if (!s_waylandConnection.compositor) {
         return nullptr;
     }
-    std::unique_ptr<KWayland::Client::Surface> s{s_waylandConnection.compositor->createSurface()};
+    return createSurface(s_waylandConnection.compositor);
+}
+
+std::unique_ptr<KWayland::Client::Surface> createSurface(KWayland::Client::Compositor *compositor)
+{
+    std::unique_ptr<KWayland::Client::Surface> s{compositor->createSurface()};
     return s->isValid() ? std::move(s) : nullptr;
 }
 
@@ -1022,6 +1053,11 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface 
     return createXdgToplevelSurface(surface, CreationSetup::CreateAndConfigure);
 }
 
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland::Client::Surface *surface)
+{
+    return createXdgToplevelSurface(shell, surface, CreationSetup::CreateAndConfigure);
+}
+
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode)
 {
     XdgShell *shell = s_waylandConnection.xdgShell;
@@ -1031,6 +1067,11 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface 
         return nullptr;
     }
 
+    return createXdgToplevelSurface(shell, surface, configureMode);
+}
+
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland::Client::Surface *surface, CreationSetup configureMode)
+{
     XdgSurface *xdgSurface = new XdgSurface(shell, surface);
     std::unique_ptr<XdgToplevel> xdgToplevel = std::make_unique<XdgToplevel>(xdgSurface);
 
@@ -1050,6 +1091,11 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface 
         return nullptr;
     }
 
+    return createXdgToplevelSurface(shell, surface, setup);
+}
+
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland::Client::Surface *surface, std::function<void(XdgToplevel *toplevel)> setup)
+{
     XdgSurface *xdgSurface = new XdgSurface(shell, surface);
     std::unique_ptr<XdgToplevel> xdgToplevel = std::make_unique<XdgToplevel>(xdgSurface);
 

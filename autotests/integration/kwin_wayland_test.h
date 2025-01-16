@@ -744,8 +744,11 @@ XXColorManagerV4 *colorManager();
 bool waitForWaylandSurface(Window *window);
 
 bool waitForWaylandPointer();
+bool waitForWaylandPointer(KWayland::Client::Seat *seat);
 bool waitForWaylandTouch();
+bool waitForWaylandTouch(KWayland::Client::Seat *seat);
 bool waitForWaylandKeyboard();
+bool waitForWaylandKeyboard(KWayland::Client::Seat *seat);
 
 void flushWaylandConnection();
 
@@ -756,6 +759,7 @@ void flushWaylandConnection();
 bool waylandSync();
 
 std::unique_ptr<KWayland::Client::Surface> createSurface();
+std::unique_ptr<KWayland::Client::Surface> createSurface(KWayland::Client::Compositor *compositor);
 std::unique_ptr<KWayland::Client::SubSurface> createSubSurface(KWayland::Client::Surface *surface,
                                                                KWayland::Client::Surface *parentSurface);
 
@@ -778,8 +782,11 @@ std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> createInputPanelSurfaceV1
 std::unique_ptr<FractionalScaleV1> createFractionalScaleV1(KWayland::Client::Surface *surface);
 
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface);
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland::Client::Surface *surface);
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode);
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland::Client::Surface *surface, CreationSetup configureMode);
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, std::function<void(XdgToplevel *toplevel)> setup);
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland::Client::Surface *surface, std::function<void(XdgToplevel *toplevel)> setup);
 
 std::unique_ptr<XdgPositioner> createXdgPositioner();
 
@@ -798,11 +805,13 @@ std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel);
  * The @p surface gets damaged and committed, thus it's rendered.
  */
 void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32_Premultiplied);
+void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32_Premultiplied);
 
 /**
  * Creates a shared memory buffer using the supplied image @p img and attaches it to the @p surface
  */
 void render(KWayland::Client::Surface *surface, const QImage &img);
+void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img);
 
 /**
  * Waits till a new Window is shown and returns the created Window.
@@ -814,8 +823,10 @@ Window *waitForWaylandWindowShown(int timeout = 5000);
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
  */
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
+Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &img, int timeout = 5000);
+Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img, int timeout = 5000);
 
 /**
  * Waits for the @p window to be destroyed.

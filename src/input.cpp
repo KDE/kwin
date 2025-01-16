@@ -1036,7 +1036,10 @@ public:
             }
         } else if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key);
+                if (input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key)) {
+                    input()->keyboard()->addFilteredKey(event->nativeScanCode);
+                    return true;
+                }
             }
         } else if (event->state == KeyboardKeyState::Released) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {

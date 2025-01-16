@@ -162,7 +162,7 @@ void PopupInputFilter::focus(Window *popup)
         if (QGuiApplication::focusWindow()) {
             QWindowSystemInterface::handleFocusWindowChanged(nullptr);
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(waylandWindow->surface(), input()->keyboard()->pressedKeys());
+        waylandServer()->seat()->setFocusedKeyboardSurface(waylandWindow->surface(), input()->keyboard()->unfilteredKeys());
     }
 }
 

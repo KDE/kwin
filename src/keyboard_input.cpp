@@ -77,6 +77,27 @@ QList<uint32_t> KeyboardInputRedirection::pressedKeys() const
     return m_pressedKeys;
 }
 
+QList<uint32_t> KeyboardInputRedirection::filteredKeys() const
+{
+    return m_filteredKeys;
+}
+
+QList<uint32_t> KeyboardInputRedirection::unfilteredKeys() const
+{
+    QList<uint32_t> ret = m_pressedKeys;
+    for (const uint32_t &key : m_filteredKeys) {
+        ret.removeOne(key);
+    }
+    return ret;
+}
+
+void KeyboardInputRedirection::addFilteredKey(uint32_t key)
+{
+    if (!m_filteredKeys.contains(key)) {
+        m_filteredKeys.append(key);
+    }
+}
+
 class KeyStateChangedSpy : public InputEventSpy
 {
 public:
@@ -238,7 +259,7 @@ void KeyboardInputRedirection::update()
     Window *found = pickFocus();
     if (found && found->surface()) {
         if (found->surface() != seat->focusedKeyboardSurface()) {
-            seat->setFocusedKeyboardSurface(found->surface(), pressedKeys());
+            seat->setFocusedKeyboardSurface(found->surface(), unfilteredKeys());
         }
     } else {
         seat->setFocusedKeyboardSurface(nullptr);
@@ -282,6 +303,10 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
 
     m_input->processSpies(std::bind(&InputEventSpy::keyboardKey, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::keyboardKey, std::placeholders::_1, &event));
+
+    if (state == KeyboardKeyState::Released) {
+        m_filteredKeys.removeOne(key);
+    }
 
     m_xkb->forwardModifiers();
     if (auto *inputmethod = kwinApp()->inputMethod()) {
