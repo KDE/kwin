@@ -11,6 +11,7 @@
 #include <memory>
 
 #include <QList>
+#include <unordered_map>
 #include <vector>
 
 #include <sys/types.h>
@@ -35,7 +36,7 @@ public:
     bool hasProperty(const char *key, const char *value);
     QString action() const;
 
-    QMap<QByteArray, QByteArray> properties() const;
+    std::unordered_map<QByteArray, QByteArray> properties() const;
     bool isBootVga() const;
     QString seat() const;
     bool isHotpluggable() const;

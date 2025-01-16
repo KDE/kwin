@@ -13,6 +13,8 @@
 #include "drm_pipeline.h"
 #include "drm_qpainter_layer.h"
 #include "drm_virtual_output.h"
+#include "wayland/drmclientbuffer.h"
+#include "wayland_server.h"
 
 #include <drm_fourcc.h>
 
@@ -25,6 +27,8 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
 {
     m_backend->setRenderBackend(this);
     m_backend->createLayers();
+    waylandServer()->setRenderBackend(this);
+    waylandServer()->drm()->setDevice(QString());
 }
 
 DrmQPainterBackend::~DrmQPainterBackend()

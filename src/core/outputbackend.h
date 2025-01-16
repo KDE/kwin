@@ -107,6 +107,7 @@ Q_SIGNALS:
      * This signal is emitted when an output has been disconnected.
      */
     void outputRemoved(Output *output);
+    void supportedCompositorsChanged();
 
 protected:
     explicit OutputBackend(QObject *parent = nullptr);

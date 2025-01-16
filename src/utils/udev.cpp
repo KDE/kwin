@@ -195,16 +195,16 @@ const char *UdevDevice::property(const char *key)
     return udev_device_get_property_value(m_device, key);
 }
 
-QMap<QByteArray, QByteArray> UdevDevice::properties() const
+std::unordered_map<QByteArray, QByteArray> UdevDevice::properties() const
 {
-    QMap<QByteArray, QByteArray> r;
+    std::unordered_map<QByteArray, QByteArray> ret;
     auto it = udev_device_get_properties_list_entry(m_device);
     auto current = it;
     udev_list_entry_foreach(current, it)
     {
-        r.insert(udev_list_entry_get_name(current), udev_list_entry_get_value(current));
+        ret.emplace(udev_list_entry_get_name(current), udev_list_entry_get_value(current));
     }
-    return r;
+    return ret;
 }
 
 bool UdevDevice::hasProperty(const char *key, const char *value)

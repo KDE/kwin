@@ -93,6 +93,7 @@ private:
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     QList<DrmVirtualOutput *> m_virtualOutputs;
     DrmRenderBackend *m_renderBackend = nullptr;
+    bool m_forceQPainter = false;
 };
 
 }

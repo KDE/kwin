@@ -198,6 +198,27 @@ void DrmBackend::handleUdevEvent()
                 gpu = addGpu(device->devNode());
             }
             if (gpu && gpu->isActive()) {
+                const auto props = device->properties();
+                const auto it = props.find(QByteArrayLiteral("WEDGED"));
+                if (it != props.end()) {
+                    const auto actions = it->second.split(',');
+                    if (actions.isEmpty()) {
+                        qCWarning(KWIN_DRM, "Got a WEDGED event without any actions?");
+                        return;
+                    }
+                    if (actions.front() == QByteArrayLiteral("none")) {
+                        // TODO send a notification about this, with the app name once we can get that
+                        qCWarning(KWIN_DRM, "%s has recovered from a GPU reset", qPrintable(gpu->drmDevice()->path()));
+                    } else if (gpu == primaryGpu()) {
+                        // the other actions are "rebind", "bus-reset" and "unknown"
+                        // TODO try one of them before giving up? We might not even be able to display anything with this...
+                        // also TODO, add a way to force an OpenGL software renderer instead of QPainter
+                        m_forceQPainter = true;
+                        Q_EMIT supportedCompositorsChanged();
+                        qCWarning(KWIN_DRM, "%s has experienced a severe GPU reset", qPrintable(gpu->drmDevice()->path()));
+                    }
+                    return;
+                }
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
                 updateOutputs();
             }
@@ -312,7 +333,11 @@ std::unique_ptr<OpenGLBackend> DrmBackend::createOpenGLBackend()
 
 QList<CompositingType> DrmBackend::supportedCompositors() const
 {
-    return QList<CompositingType>{OpenGLCompositing, QPainterCompositing};
+    if (m_forceQPainter) {
+        return QList<CompositingType>{QPainterCompositing};
+    } else {
+        return QList<CompositingType>{OpenGLCompositing, QPainterCompositing};
+    }
 }
 
 QString DrmBackend::supportInformation() const

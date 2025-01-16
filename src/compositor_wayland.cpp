@@ -114,7 +114,9 @@ void WaylandCompositor::createRenderer()
     const QList<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
     QList<CompositingType> candidateCompositors;
 
-    if (m_selectedCompositor != NoCompositing) {
+    connect(kwinApp()->outputBackend(), &OutputBackend::supportedCompositorsChanged, this, &WaylandCompositor::reinitialize, Qt::UniqueConnection);
+
+    if (m_selectedCompositor != NoCompositing && availableCompositors.contains(m_selectedCompositor)) {
         candidateCompositors.append(m_selectedCompositor);
     } else {
         candidateCompositors = availableCompositors;
@@ -192,19 +194,16 @@ void WaylandCompositor::start()
         return;
     }
 
-    if (m_selectedCompositor == NoCompositing) {
-        m_selectedCompositor = m_backend->compositingType();
-
-        switch (m_selectedCompositor) {
-        case NoCompositing:
-            break;
-        case OpenGLCompositing:
-            QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
-            break;
-        case QPainterCompositing:
-            QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
-            break;
-        }
+    m_selectedCompositor = m_backend->compositingType();
+    switch (m_selectedCompositor) {
+    case NoCompositing:
+        break;
+    case OpenGLCompositing:
+        QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+        break;
+    case QPainterCompositing:
+        QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
+        break;
     }
 
     createScene();
