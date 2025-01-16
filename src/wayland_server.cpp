@@ -523,9 +523,6 @@ DrmClientBufferIntegration *WaylandServer::drm()
 
 LinuxDmaBufV1ClientBufferIntegration *WaylandServer::linuxDmabuf()
 {
-    if (!m_linuxDmabuf) {
-        m_linuxDmabuf = new LinuxDmaBufV1ClientBufferIntegration(m_display);
-    }
     return m_linuxDmabuf;
 }
 
@@ -826,19 +823,22 @@ void WaylandServer::setRenderBackend(RenderBackend *backend)
     if (backend->drmDevice()->supportsSyncObjTimelines()) {
         // ensure the DRM_IOCTL_SYNCOBJ_EVENTFD ioctl is supported
         const auto linuxVersion = linuxKernelVersion();
-        if (linuxVersion.majorVersion() < 6 && linuxVersion.minorVersion() < 6) {
-            return;
-        }
-        // also ensure the implementation isn't totally broken, see https://lists.freedesktop.org/archives/dri-devel/2024-January/439101.html
-        if (linuxVersion.majorVersion() == 6 && (linuxVersion.minorVersion() == 7 || (linuxVersion.minorVersion() == 6 && linuxVersion.patchVersion() < 19))) {
-            return;
-        }
-        if (!m_linuxDrmSyncObj) {
+        // ensure the implementation exists and isn't totally broken, see https://lists.freedesktop.org/archives/dri-devel/2024-January/439101.html
+        const bool syncobjEventFdSupported = linuxVersion.majorVersion() > 6
+            || (linuxVersion.majorVersion() == 6 && linuxVersion.minorVersion() == 6 && linuxVersion.patchVersion() >= 19)
+            || (linuxVersion.majorVersion() == 6 && linuxVersion.minorVersion() >= 8);
+        if (syncobjEventFdSupported && !m_linuxDrmSyncObj) {
             m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display, backend->drmDevice());
         }
     } else if (m_linuxDrmSyncObj) {
         m_linuxDrmSyncObj->remove();
         m_linuxDrmSyncObj = nullptr;
+    }
+    if (backend->supportsDmabuf() && !m_linuxDmabuf) {
+        m_linuxDmabuf = new LinuxDmaBufV1ClientBufferIntegration(m_display);
+    } else if (!backend->supportsDmabuf() && m_linuxDmabuf) {
+        m_linuxDmabuf->remove();
+        m_linuxDmabuf = nullptr;
     }
 }
 

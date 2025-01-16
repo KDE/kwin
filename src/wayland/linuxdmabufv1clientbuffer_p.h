@@ -46,6 +46,7 @@ protected:
     void zwp_linux_dmabuf_v1_create_params(Resource *resource, uint32_t params_id) override;
     void zwp_linux_dmabuf_v1_get_default_feedback(Resource *resource, uint32_t id) override;
     void zwp_linux_dmabuf_v1_get_surface_feedback(Resource *resource, uint32_t id, wl_resource *surface) override;
+    void zwp_linux_dmabuf_v1_destroy_global() override;
 };
 
 class LinuxDmaBufParamsV1 : public QtWaylandServer::zwp_linux_buffer_params_v1

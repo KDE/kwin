@@ -74,6 +74,8 @@ public:
 
     void setSupportedFormatsWithModifiers(const QList<LinuxDmaBufV1Feedback::Tranche> &tranches);
 
+    void remove();
+
 private:
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
     std::unique_ptr<LinuxDmaBufV1ClientBufferIntegrationPrivate> d;

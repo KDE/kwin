@@ -213,6 +213,11 @@ void RenderBackend::repairPresentation(Output *output)
 {
 }
 
+bool RenderBackend::supportsDmabuf() const
+{
+    return false;
+}
+
 } // namespace KWin
 
 #include "moc_renderbackend.cpp"

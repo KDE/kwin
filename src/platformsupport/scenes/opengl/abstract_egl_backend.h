@@ -48,6 +48,8 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
+    bool supportsDmabuf() const override;
+
 protected:
     AbstractEglBackend();
     void cleanup();

@@ -85,6 +85,11 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_create_par
     new LinuxDmaBufParamsV1(q, paramsResource);
 }
 
+void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_destroy_global()
+{
+    delete q;
+}
+
 LinuxDmaBufParamsV1::LinuxDmaBufParamsV1(LinuxDmaBufV1ClientBufferIntegration *integration, ::wl_resource *resource)
     : QtWaylandServer::zwp_linux_buffer_params_v1(resource)
     , m_integration(integration)
@@ -326,6 +331,11 @@ void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(cons
         d->table = std::make_unique<LinuxDmaBufV1FormatTable>(set);
         d->defaultFeedback->setTranches(tranches);
     }
+}
+
+void LinuxDmaBufV1ClientBufferIntegration::remove()
+{
+    d->globalRemove();
 }
 
 void LinuxDmaBufV1ClientBuffer::buffer_destroy_resource(wl_resource *resource)

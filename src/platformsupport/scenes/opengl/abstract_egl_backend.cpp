@@ -100,6 +100,7 @@ void AbstractEglBackend::initWayland()
         return;
     }
 
+    waylandServer()->setRenderBackend(this);
     if (DrmDevice *scanoutDevice = drmDevice()) {
         QString renderNode = m_display->renderNode();
         if (renderNode.isEmpty()) {
@@ -193,7 +194,6 @@ void AbstractEglBackend::initWayland()
         dmabuf->setRenderBackend(this);
         dmabuf->setSupportedFormatsWithModifiers(m_tranches);
     }
-    waylandServer()->setRenderBackend(this);
 }
 
 void AbstractEglBackend::initClientExtensions()
@@ -353,6 +353,11 @@ EglContext *AbstractEglBackend::openglContext() const
 std::shared_ptr<EglContext> AbstractEglBackend::openglContextRef() const
 {
     return m_context;
+}
+
+bool AbstractEglBackend::supportsDmabuf() const
+{
+    return !m_context->isSoftwareRenderer();
 }
 }
 
