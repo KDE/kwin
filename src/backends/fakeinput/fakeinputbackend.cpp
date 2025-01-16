@@ -20,12 +20,16 @@ class FakeInputBackendPrivate : public QtWaylandServer::org_kde_kwin_fake_input
 public:
     FakeInputBackendPrivate(FakeInputBackend *q, Display *display);
 
+    using FakeInputDeviceMap = std::map<Resource *, std::unique_ptr<FakeInputDevice>>;
+
     FakeInputDevice *findDevice(Resource *resource);
+    void removeDeviceByResource(Resource *resource);
+    void removeDeviceByIterator(FakeInputDeviceMap::iterator it);
     std::chrono::microseconds currentTime() const;
 
     FakeInputBackend *q;
     Display *display;
-    std::map<Resource *, std::unique_ptr<FakeInputDevice>> devices;
+    FakeInputDeviceMap devices;
 
 protected:
     void org_kde_kwin_fake_input_bind_resource(Resource *resource) override;
@@ -64,12 +68,24 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy(Resource *resource
 
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy_resource(Resource *resource)
 {
-    auto it = devices.find(resource);
-    if (it == devices.end()) {
-        return;
-    }
+    removeDeviceByResource(resource);
+}
 
-    const auto [r, device] = std::move(*it);
+FakeInputDevice *FakeInputBackendPrivate::findDevice(Resource *resource)
+{
+    return devices[resource].get();
+}
+
+void FakeInputBackendPrivate::removeDeviceByResource(Resource *resource)
+{
+    if (const auto it = devices.find(resource); it != devices.end()) {
+        removeDeviceByIterator(it);
+    }
+}
+
+void FakeInputBackendPrivate::removeDeviceByIterator(FakeInputDeviceMap::iterator it)
+{
+    const auto device = std::move(it->second);
     for (const auto button : device->pressedButtons) {
         Q_EMIT device->pointerButtonChanged(button, PointerButtonState::Released, currentTime(), device.get());
     }
@@ -81,11 +97,6 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy_resource(Resource 
     }
     devices.erase(it);
     Q_EMIT q->deviceRemoved(device.get());
-}
-
-FakeInputDevice *FakeInputBackendPrivate::findDevice(Resource *resource)
-{
-    return devices[resource].get();
 }
 
 std::chrono::microseconds FakeInputBackendPrivate::currentTime() const
@@ -271,7 +282,12 @@ FakeInputBackend::FakeInputBackend(Display *display)
 {
 }
 
-FakeInputBackend::~FakeInputBackend() = default;
+FakeInputBackend::~FakeInputBackend()
+{
+    while (!d->devices.empty()) {
+        d->removeDeviceByIterator(d->devices.begin());
+    }
+}
 
 void FakeInputBackend::initialize()
 {
