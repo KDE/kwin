@@ -326,7 +326,9 @@ class X11EventRecorder :
                         int nativeKeyCode = keyEvent->detail - 0x08;
 
                         if (nativeKeyCode == 0) {
-                            Q_EMIT fenceReceived();
+                            if (geEvent->event_type == XCB_INPUT_KEY_RELEASE) {
+                                Q_EMIT fenceReceived();
+                            }
                         } else {
                             KeyAction action({geEvent->event_type == XCB_INPUT_KEY_PRESS ? State::Press : State::Release, nativeKeyCode});
                             m_keyEvents << action;
@@ -354,14 +356,11 @@ QList<KeyAction> X11KeyReadTest::recievedX11EventsForInput(const QList<KeyAction
         } else {
             Test::keyboardKeyReleased(action.second, timestamp++);
         }
-        Test::flushWaylandConnection();
-        QTest::qWait(5);
     }
     // special case, explicitly send key 0, to use as a fence
     ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
     waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Pressed, xwaylandClient);
-
-    Test::flushWaylandConnection();
+    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Released, xwaylandClient);
 
     bool fenceComplete = fenceEventSpy.wait();
     Q_ASSERT(fenceComplete);
