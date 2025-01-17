@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1700310 2025-01-15 03:02:58Z scripty $
+# $Id: kwin.po 1700455 2025-01-17 03:01:31Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 02:34+0000\n"
+"POT-Creation-Date: 2025-01-17 02:32+0000\n"
 "PO-Revision-Date: 2024-12-25 09:01+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1365,7 +1365,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ime gostitelja: %1"
 
-#: input.cpp:3335
+#: input.cpp:3338
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -4400,7 +4400,7 @@ msgstr "Uniči okno"
 msgid "Activate Window (%1)"
 msgstr "Omogoči okno (%1)"
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, kde-format
 msgid "unknown"
 msgstr "neznano"

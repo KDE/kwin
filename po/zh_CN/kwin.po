@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 02:34+0000\n"
+"POT-Creation-Date: 2025-01-17 02:32+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1341,7 +1341,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主机名：%1"
 
-#: input.cpp:3335
+#: input.cpp:3338
 #, kde-format
 msgid "Touchpad"
 msgstr "触摸板"
@@ -4342,7 +4342,7 @@ msgstr "强制终止窗口"
 msgid "Activate Window (%1)"
 msgstr "活动窗口 (%1)"
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, kde-format
 msgid "unknown"
 msgstr "未知"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 02:34+0000\n"
+"POT-Creation-Date: 2025-01-17 02:32+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1474,7 +1474,7 @@ msgid "Host name: %1"
 msgstr "име домаћина"
 
 # >> @item
-#: input.cpp:3335
+#: input.cpp:3338
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -4777,7 +4777,7 @@ msgid "Activate Window (%1)"
 msgstr "Активирај прозор (%1)"
 
 # >> @item
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, fuzzy, kde-format
 #| msgctxt "The input device of the event is not known"
 #| msgid "Unknown"
