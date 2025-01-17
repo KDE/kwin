@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 00:42+0000\n"
+"POT-Creation-Date: 2025-01-17 00:42+0000\n"
 "PO-Revision-Date: 2024-12-27 18:38+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -1367,7 +1367,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Servidor: %1"
 
-#: input.cpp:3346
+#: input.cpp:3349
 #, kde-format
 msgid "Touchpad"
 msgstr "Área táctil"
@@ -4397,7 +4397,7 @@ msgstr "Matar a xanela"
 msgid "Activate Window (%1)"
 msgstr "Activar a xanela (%1)"
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, kde-format
 msgid "unknown"
 msgstr "descoñecido"

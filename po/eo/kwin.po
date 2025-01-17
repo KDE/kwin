@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 00:42+0000\n"
+"POT-Creation-Date: 2025-01-17 00:42+0000\n"
 "PO-Revision-Date: 2025-01-12 08:09+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -1351,7 +1351,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Gastigantnomo: %1"
 
-#: input.cpp:3346
+#: input.cpp:3349
 #, kde-format
 msgid "Touchpad"
 msgstr "Tuŝplato"
@@ -4381,7 +4381,7 @@ msgstr "Mortigi fenestron"
 msgid "Activate Window (%1)"
 msgstr "Aktivigi Fenestron (%1)"
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, kde-format
 msgid "unknown"
 msgstr "nekonata"

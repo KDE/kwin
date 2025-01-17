@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 00:42+0000\n"
+"POT-Creation-Date: 2025-01-17 00:42+0000\n"
 "PO-Revision-Date: 2010-12-17 20:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -1353,7 +1353,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3346
+#: input.cpp:3349
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -4561,7 +4561,7 @@ msgstr "บังคับปิดหน้าต่าง"
 msgid "Activate Window (%1)"
 msgstr "เรียกใช้งานหน้าต่าง (%1)"
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, kde-format
 msgid "unknown"
 msgstr ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 00:42+0000\n"
+"POT-Creation-Date: 2025-01-17 00:42+0000\n"
 "PO-Revision-Date: 2024-12-29 01:42+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -1351,7 +1351,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主機名稱：%1"
 
-#: input.cpp:3346
+#: input.cpp:3349
 #, kde-format
 msgid "Touchpad"
 msgstr "觸控板"
@@ -4353,7 +4353,7 @@ msgstr "砍掉程式"
 msgid "Activate Window (%1)"
 msgstr "作用中視窗（%1）"
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, kde-format
 msgid "unknown"
 msgstr "未知"

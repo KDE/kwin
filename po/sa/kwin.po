@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 00:42+0000\n"
+"POT-Creation-Date: 2025-01-17 00:42+0000\n"
 "PO-Revision-Date: 2024-12-25 19:14+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1342,7 +1342,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "होस्ट् नाम: %1"
 
-#: input.cpp:3346
+#: input.cpp:3349
 #, kde-format
 msgid "Touchpad"
 msgstr "टचपैड"
@@ -4360,7 +4360,7 @@ msgstr "किल विण्डो"
 msgid "Activate Window (%1)"
 msgstr "विण्डो सक्रियं कुर्वन्तु (%1) ."
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, kde-format
 msgid "unknown"
 msgstr "अज्ञात"

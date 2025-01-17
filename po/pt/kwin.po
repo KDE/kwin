@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-15 00:42+0000\n"
+"POT-Creation-Date: 2025-01-17 00:42+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -1380,7 +1380,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "hostname"
 
-#: input.cpp:3346
+#: input.cpp:3349
 #, kde-format
 msgid "Touchpad"
 msgstr "Rato por toque"
@@ -4535,7 +4535,7 @@ msgstr "Matar a Janela"
 msgid "Activate Window (%1)"
 msgstr "Activar a Janela (%1)"
 
-#: utils/edid.cpp:317
+#: utils/edid.cpp:325
 #, fuzzy, kde-format
 #| msgctxt "The input device of the event is not known"
 #| msgid "Unknown"
