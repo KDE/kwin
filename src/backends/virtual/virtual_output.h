@@ -25,7 +25,7 @@ class VirtualOutput : public Output
     Q_OBJECT
 
 public:
-    explicit VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath);
+    explicit VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath);
     ~VirtualOutput() override;
 
     RenderLoop *renderLoop() const override;

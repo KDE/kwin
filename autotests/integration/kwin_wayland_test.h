@@ -994,6 +994,7 @@ struct OutputInfo
     QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> modes;
     OutputTransform panelOrientation = OutputTransform::Kind::Normal;
     QByteArray edid;
+    std::optional<QByteArray> edidIdentifierOverride;
     std::optional<QString> connectorName;
     std::optional<QByteArray> mstPath;
 };

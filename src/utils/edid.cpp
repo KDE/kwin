@@ -131,6 +131,14 @@ Edid::Edid(const void *data, uint32_t size)
 {
 }
 
+Edid::Edid(QByteArrayView data, std::optional<QByteArrayView> identifierOverride)
+    : Edid(data)
+{
+    if (identifierOverride.has_value()) {
+        m_identifier = QByteArray(*identifierOverride);
+    }
+}
+
 Edid::Edid(QByteArrayView data)
 {
     m_raw = QByteArray(data.data(), data.size());
