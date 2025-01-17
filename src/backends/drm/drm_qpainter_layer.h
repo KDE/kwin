@@ -35,6 +35,7 @@ public:
     void releaseBuffers() override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    QList<QSize> recommendedSizes() const override;
 
 private:
     bool doesSwapchainFit() const;

@@ -29,7 +29,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex ty
 std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::doBeginFrame()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), targetRect().size(), m_pipeline->formats(m_type).contains(DRM_FORMAT_ARGB8888) ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888);
         m_damageJournal = DamageJournal();
     }
 
@@ -64,7 +64,7 @@ bool DrmQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &
 bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), targetRect().size(), m_pipeline->formats(m_type).contains(DRM_FORMAT_ARGB8888) ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888);
         m_currentBuffer = m_swapchain->acquire();
         if (m_currentBuffer) {
             m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
@@ -81,7 +81,7 @@ bool DrmQPainterLayer::checkTestBuffer()
 
 bool DrmQPainterLayer::doesSwapchainFit() const
 {
-    return m_swapchain && m_swapchain->size() == m_pipeline->mode()->size();
+    return m_swapchain && m_swapchain->size() == targetRect().size();
 }
 
 std::shared_ptr<DrmFramebuffer> DrmQPainterLayer::currentBuffer() const
@@ -102,6 +102,11 @@ DrmDevice *DrmQPainterLayer::scanoutDevice() const
 QHash<uint32_t, QList<uint64_t>> DrmQPainterLayer::supportedDrmFormats() const
 {
     return m_pipeline->formats(m_type);
+}
+
+QList<QSize> DrmQPainterLayer::recommendedSizes() const
+{
+    return m_pipeline->recommendedSizes(m_type);
 }
 
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
