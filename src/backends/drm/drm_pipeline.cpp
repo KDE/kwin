@@ -72,10 +72,10 @@ DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &fram
     }
 }
 
-bool DrmPipeline::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
+void DrmPipeline::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
 {
     m_modesetPresentPending = true;
-    return gpu()->maybeModeset(frame);
+    gpu()->maybeModeset(this, frame);
 }
 
 DrmPipeline::Error DrmPipeline::commitPipelines(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects)
@@ -419,6 +419,9 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
     m_commitThread->pageFlipped(timestamp);
+    if (gpu()->needsModeset()) {
+        gpu()->maybeModeset(nullptr, nullptr);
+    }
 }
 
 void DrmPipeline::setOutput(DrmOutput *output)
