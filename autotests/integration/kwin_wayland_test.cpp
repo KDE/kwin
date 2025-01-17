@@ -296,6 +296,7 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .modes = info.modes,
             .panelOrientation = info.panelOrientation,
             .edid = info.edid,
+            .edidIdentifierOverride = info.edidIdentifierOverride,
             .connectorName = info.connectorName,
             .mstPath = info.mstPath,
         };

@@ -130,6 +130,7 @@ private Q_SLOTS:
     void testAutorotate();
     void testSettingRestoration_data();
     void testSettingRestoration();
+    void testSettingRestoration_initialParsingFailure();
 };
 
 void OutputChangesTest::initTestCase()
@@ -1586,6 +1587,18 @@ void OutputChangesTest::testSettingRestoration_data()
                                                                                       << QByteArray{}
                                                                                       << std::make_optional(QByteArrayLiteral("MST-1-1"))
                                                                                       << std::make_optional(QByteArrayLiteral("MST-1-2"));
+    QTest::addRow("Only EDID hash, no connector names, no MST path") << std::optional<QString>()
+                                                                     << std::optional<QString>()
+                                                                     << QByteArrayLiteral("bbbbbbbbbbbbbbbb")
+                                                                     << QByteArrayLiteral("aaaaaaaaaaaaaaaa")
+                                                                     << std::optional<QByteArray>()
+                                                                     << std::optional<QByteArray>();
+    QTest::addRow("One EDID ID, other only EDID hash") << std::optional<QString>()
+                                                       << std::optional<QString>()
+                                                       << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
+                                                       << QByteArrayLiteral("aaaaaaaaaaaaaaaa")
+                                                       << std::optional<QByteArray>()
+                                                       << std::optional<QByteArray>();
 }
 
 void OutputChangesTest::testSettingRestoration()
@@ -1697,6 +1710,93 @@ void OutputChangesTest::testSettingRestoration()
         const auto [config, order, type] = *cfg;
         QCOMPARE(output0Pos, config.constChangeSet(outputs[1])->pos);
         QCOMPARE(output1Pos, config.constChangeSet(outputs[0])->pos);
+    }
+}
+
+void OutputChangesTest::testSettingRestoration_initialParsingFailure()
+{
+    // this test checks that when libdisplay-info fails to parse an EDID
+    // and gets fixed later, we still pick the same settings as before
+
+    // delete the previous config to avoid clashes between test runs
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
+    QFile file(QFINDTESTDATA("data/same serial number/edid.bin"));
+    file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
+    const auto edid = file.readAll();
+
+    // first, libdisplay-info failed to parse the EDID and we don't have an EDID ID
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {
+                ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred),
+                ModeInfo(QSize(640, 480), 60000, OutputMode::Flags{}),
+            },
+            .edid = edid,
+            .edidIdentifierOverride = QByteArray(),
+            .connectorName = std::nullopt,
+            .mstPath = std::nullopt,
+        },
+    });
+
+    auto outputs = kwinApp()->outputBackend()->outputs();
+    OutputConfigurationStore configs;
+
+    {
+        // query the generated config, like KWin normally would
+        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        QVERIFY(cfg.has_value());
+        const auto [config, order, type] = *cfg;
+        outputs.front()->applyChanges(config);
+        QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(1280, 1024));
+    }
+    {
+        // change the mode, so that we know if a new config entry was generated
+        OutputConfiguration config;
+        const auto changeSet = config.changeSet(outputs[0]);
+        changeSet->mode = outputs[0]->modes()[1];
+        changeSet->desiredModeSize = QSize(640, 480);
+        changeSet->desiredModeRefreshRate = 60000;
+        outputs.front()->applyChanges(config);
+        configs.storeConfig(outputs, false, config, outputs);
+    }
+    {
+        // verify that querying the config also shows the changed mode
+        // things could already go wrong here
+        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        QVERIFY(cfg.has_value());
+        const auto [config, order, type] = *cfg;
+        QCOMPARE(type, OutputConfigurationStore::ConfigType::Preexisting);
+        outputs.front()->applyChanges(config);
+        QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
+    }
+
+    // now libdisplay-info was updated, and we have an EDID ID for the same hash
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {
+                ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred),
+                ModeInfo(QSize(640, 480), 60000, OutputMode::Flags{}),
+            },
+            .edid = edid,
+            .edidIdentifierOverride = std::nullopt,
+            .connectorName = std::nullopt,
+            .mstPath = std::nullopt,
+        },
+    });
+    outputs = kwinApp()->outputBackend()->outputs();
+
+    {
+        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        QVERIFY(cfg.has_value());
+        const auto [config, order, type] = *cfg;
+        QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
     }
 }
 
