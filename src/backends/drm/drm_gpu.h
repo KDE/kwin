@@ -109,7 +109,7 @@ public:
 
     DrmPipeline::Error testPendingConfiguration();
     bool needsModeset() const;
-    bool maybeModeset(const std::shared_ptr<OutputFrame> &frame);
+    void maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFrame> &frame);
 
     std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer, FileDescriptor &&explicitFence);
     void releaseBuffers();
@@ -118,6 +118,7 @@ public:
     FileDescriptor createNonMasterFd() const;
     std::unique_ptr<DrmLease> leaseOutputs(const QList<DrmOutput *> &outputs);
     void waitIdle();
+    bool isIdle() const;
     void dispatchEvents();
 
 Q_SIGNALS:
@@ -166,7 +167,8 @@ private:
 
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     QSize m_cursorSize;
-    std::vector<std::shared_ptr<OutputFrame>> m_pendingModesetFrames;
+    std::unordered_map<DrmPipeline *, std::shared_ptr<OutputFrame>> m_pendingModesetFrames;
+    bool m_inModeset = false;
 };
 
 }

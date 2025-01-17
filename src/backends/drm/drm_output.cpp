@@ -311,7 +311,8 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     if (needsModeset) {
         m_pipeline->setPresentationMode(PresentationMode::VSync);
         m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
-        success = m_pipeline->maybeModeset(frame);
+        m_pipeline->maybeModeset(frame);
+        success = true;
     } else {
         m_pipeline->setPresentationMode(frame->presentationMode());
         if (m_pipeline->cursorLayer()->isEnabled()) {
@@ -495,7 +496,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     setInformation(newInfo);
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
-        m_gpu->maybeModeset(nullptr);
+        m_gpu->maybeModeset(nullptr, nullptr);
     }
 
     m_renderLoop->setRefreshRate(refreshRate());

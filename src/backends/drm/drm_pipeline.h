@@ -57,7 +57,7 @@ public:
      * if the test fails, there is a guarantee for no lasting changes
      */
     Error present(const std::shared_ptr<OutputFrame> &frame);
-    bool maybeModeset(const std::shared_ptr<OutputFrame> &frame);
+    void maybeModeset(const std::shared_ptr<OutputFrame> &frame);
     void forceLegacyModeset();
 
     bool needsModeset() const;
