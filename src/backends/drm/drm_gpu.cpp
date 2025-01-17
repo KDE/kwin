@@ -509,6 +509,13 @@ void DrmGpu::waitIdle()
     m_socketNotifier->setEnabled(true);
 }
 
+bool DrmGpu::isIdle() const
+{
+    return std::ranges::none_of(m_pipelines, [](DrmPipeline *pipeline) {
+        return pipeline->commitThread()->pageflipsPending();
+    });
+}
+
 static std::chrono::nanoseconds convertTimestamp(const timespec &timestamp)
 {
     return std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec);
@@ -741,10 +748,10 @@ bool DrmGpu::needsModeset() const
     });
 }
 
-bool DrmGpu::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
+void DrmGpu::maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFrame> &frame)
 {
-    if (frame) {
-        m_pendingModesetFrames.push_back(frame);
+    if (pipeline && frame) {
+        m_pendingModesetFrames.emplace(pipeline, frame);
     }
     auto pipelines = m_pipelines;
     for (const auto &output : std::as_const(m_drmOutputs)) {
@@ -757,11 +764,20 @@ bool DrmGpu::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
     });
     if (!presentPendingForAll) {
         // commit only once all pipelines are ready for presentation
-        return true;
+        return;
     }
-    // make sure there's no pending pageflips
-    waitIdle();
+    if (!isIdle()) {
+        // doing a modeset with pending pageflips would crash
+        return;
+    }
+    // if the commit succeeds, it'll call DrmAtomicCommit::pageFlipped, which calls this method again...
+    // this is ugly, but at least simple and prevents the recursion
+    if (m_inModeset) {
+        return;
+    }
+    m_inModeset = true;
     const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
+    m_inModeset = false;
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
@@ -769,18 +785,15 @@ bool DrmGpu::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
     }
     m_forceModeset = false;
     if (err == DrmPipeline::Error::None) {
-        for (const auto &frame : m_pendingModesetFrames) {
+        for (const auto &[pipeline, frame] : m_pendingModesetFrames) {
             frame->presented(std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
         }
-        m_pendingModesetFrames.clear();
-        return true;
     } else {
         if (err != DrmPipeline::Error::FramePending) {
             QTimer::singleShot(0, m_platform, &DrmBackend::updateOutputs);
         }
-        m_pendingModesetFrames.clear();
-        return false;
     }
+    m_pendingModesetFrames.clear();
 }
 
 QList<DrmObject *> DrmGpu::unusedObjects() const
