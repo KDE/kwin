@@ -81,6 +81,7 @@ private:
     void removeOutput(DrmAbstractOutput *output);
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);
+    void scanForGPUs();
 
     std::unique_ptr<Udev> m_udev;
     std::unique_ptr<UdevMonitor> m_udevMonitor;

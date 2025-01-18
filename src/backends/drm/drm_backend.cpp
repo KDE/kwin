@@ -104,18 +104,7 @@ bool DrmBackend::initialize()
         }
     });
 
-    if (!m_explicitGpus.isEmpty()) {
-        for (const QString &fileName : m_explicitGpus) {
-            addGpu(fileName);
-        }
-    } else {
-        const auto devices = m_udev->listGPUs();
-        for (const auto &device : devices) {
-            if (device->seat() == m_session->seat()) {
-                addGpu(device->devNode());
-            }
-        }
-    }
+    scanForGPUs();
 
     if (m_gpus.empty()) {
         qCWarning(KWIN_DRM) << "No suitable DRM devices have been found";
@@ -180,19 +169,27 @@ void DrmBackend::handleUdevEvent()
                 continue;
             }
             if (addGpu(device->devNode())) {
+                if (m_gpus.size() == 1 && m_forceQPainter) {
+                    m_forceQPainter = false;
+                    Q_EMIT supportedCompositorsChanged();
+                }
                 updateOutputs();
             }
         } else if (device->action() == QLatin1StringView("remove")) {
             DrmGpu *gpu = findGpu(device->devNum());
             if (gpu) {
-                if (primaryGpu() == gpu) {
-                    qCCritical(KWIN_DRM) << "Primary gpu has been removed! Quitting...";
-                    QCoreApplication::exit(1);
-                    return;
-                } else {
-                    gpu->setRemoved();
-                    updateOutputs();
+                if (gpu == primaryGpu()) {
+                    qCCritical(KWIN_DRM) << "Primary gpu has been removed!";
+                    // try to find other GPUs to switch to
+                    scanForGPUs();
+                    if (m_gpus.size() == 1) {
+                        // no GPU -> use QPainter to avoid crashing
+                        m_forceQPainter = true;
+                    }
+                    Q_EMIT supportedCompositorsChanged();
                 }
+                gpu->setRemoved();
+                updateOutputs();
             }
         } else if (device->action() == QLatin1StringView("change")) {
             DrmGpu *gpu = findGpu(device->devNum());
@@ -215,14 +212,38 @@ void DrmBackend::handleUdevEvent()
                         // the other actions are "rebind", "bus-reset" and "unknown"
                         // TODO try one of them before giving up? We might not even be able to display anything with this...
                         // also TODO, add a way to force an OpenGL software renderer instead of QPainter
-                        m_forceQPainter = true;
-                        Q_EMIT supportedCompositorsChanged();
+                        if (!m_forceQPainter) {
+                            m_forceQPainter = true;
+                            Q_EMIT supportedCompositorsChanged();
+                        }
                         qCWarning(KWIN_DRM, "%s has experienced a severe GPU reset", qPrintable(gpu->drmDevice()->path()));
                     }
                     return;
                 }
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
                 updateOutputs();
+            }
+        }
+    }
+}
+
+void DrmBackend::scanForGPUs()
+{
+    if (!m_explicitGpus.isEmpty()) {
+        for (const QString &fileName : m_explicitGpus) {
+            const auto canonicalPath = QFileInfo(fileName).canonicalFilePath();
+            const bool foundMatch = std::ranges::any_of(m_gpus, [&canonicalPath](const auto &gpu) {
+                return QFileInfo(gpu->drmDevice()->path()).canonicalFilePath() == canonicalPath;
+            });
+            if (!foundMatch) {
+                addGpu(fileName);
+            }
+        }
+    } else {
+        const auto devices = m_udev->listGPUs();
+        for (const auto &device : devices) {
+            if (device->seat() == m_session->seat() && !findGpu(device->devNum())) {
+                addGpu(device->devNode());
             }
         }
     }

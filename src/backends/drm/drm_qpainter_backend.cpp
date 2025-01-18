@@ -39,7 +39,12 @@ DrmQPainterBackend::~DrmQPainterBackend()
 
 DrmDevice *DrmQPainterBackend::drmDevice() const
 {
-    return m_backend->primaryGpu()->drmDevice();
+    // QPainter can run without a GPU
+    if (auto gpu = m_backend->primaryGpu()) {
+        return gpu->drmDevice();
+    } else {
+        return nullptr;
+    }
 }
 
 bool DrmQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
