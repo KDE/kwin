@@ -28,6 +28,7 @@
 #include "scene/itemrenderer_qpainter.h"
 #include "scene/workspacescene_opengl.h"
 #include "scene/workspacescene_qpainter.h"
+#include "tabbox/tabbox.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -238,12 +239,15 @@ void WaylandCompositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
+        // TODO maybe make a method in Workspace that does this?
         const auto windows = workspace()->windows();
         for (Window *window : windows) {
             window->finishCompositing();
         }
         disconnect(workspace(), &Workspace::outputAdded, this, &WaylandCompositor::addOutput);
         disconnect(workspace(), &Workspace::outputRemoved, this, &WaylandCompositor::removeOutput);
+
+        workspace()->tabbox()->close(true);
     }
 
     if (m_backend->compositingType() == OpenGLCompositing) {

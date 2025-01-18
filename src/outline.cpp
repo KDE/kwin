@@ -30,6 +30,9 @@ namespace KWin
 Outline::Outline()
     : m_active(false)
 {
+    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, [this]() {
+        m_visual.reset();
+    });
     connect(Compositor::self(), &Compositor::compositingToggled, this, &Outline::compositingChanged);
 }
 
