@@ -10,7 +10,7 @@
 #include "utils/common.h"
 
 #include <KLocalizedString>
-#include <filesystem>
+#include <fcntl.h>
 #include <lcms2.h>
 #include <span>
 #include <tuple>
@@ -239,14 +239,23 @@ IccProfile::Expected IccProfile::load(const QString &path)
     if (path.isEmpty()) {
         return std::unique_ptr<IccProfile>();
     }
-    cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
-    if (!handle) {
-        if (std::filesystem::exists(path.toStdString())) {
-            return Expected(i18n("Failed to open ICC profile \"%1\"", path));
-        } else {
+
+    FILE *file = ::fopen(path.toUtf8(), "r");
+    if (!file) {
+        switch (errno) {
+        case ENOENT:
             return Expected(i18n("ICC profile \"%1\" doesn't exist", path));
+        default:
+            return Expected(i18n("Failed to open ICC profile \"%1\"", path));
         }
     }
+    // LittleCMS takes ownership of the file stream
+    cmsHPROFILE handle = cmsOpenProfileFromStream(file, "r");
+    if (!handle) {
+        ::fclose(file);
+        return Expected(i18n("Failed to open ICC profile \"%1\"", path));
+    }
+
     if (cmsGetDeviceClass(handle) != cmsSigDisplayClass) {
         return Expected(i18n("ICC profile \"%1\" is not usable for displays", path));
     }
