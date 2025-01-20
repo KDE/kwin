@@ -243,10 +243,12 @@ IccProfile::Expected IccProfile::load(const QString &path)
     FILE *file = ::fopen(path.toUtf8(), "r");
     if (!file) {
         switch (errno) {
+        case EPERM:
+            return Expected(i18n("Failed to open ICC profile \"%1\" due to missing permissions", path));
         case ENOENT:
             return Expected(i18n("ICC profile \"%1\" doesn't exist", path));
         default:
-            return Expected(i18n("Failed to open ICC profile \"%1\"", path));
+            return Expected(i18n("Failed to open ICC profile \"%1\", because of \"%2\"", path, strerror(errno)));
         }
     }
     // LittleCMS takes ownership of the file stream
