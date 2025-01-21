@@ -183,14 +183,14 @@ void ColorManagementTest::testSetImageDescription()
 
     QFETCH(ColorDescription, input);
 
-    creator.set_primaries(std::round(10'000 * input.containerColorimetry().red().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().red().toxyY().y),
-                          std::round(10'000 * input.containerColorimetry().green().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().green().toxyY().y),
-                          std::round(10'000 * input.containerColorimetry().blue().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().blue().toxyY().y),
-                          std::round(10'000 * input.containerColorimetry().white().toxyY().x),
-                          std::round(10'000 * input.containerColorimetry().white().toxyY().y));
+    creator.set_primaries(std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().y),
+                          std::round(1'000'000.0 * input.containerColorimetry().green().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().green().toxyY().y),
+                          std::round(1'000'000.0 * input.containerColorimetry().blue().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().blue().toxyY().y),
+                          std::round(1'000'000.0 * input.containerColorimetry().white().toxyY().x),
+                          std::round(1'000'000.0 * input.containerColorimetry().white().toxyY().y));
     switch (input.transferFunction().type) {
     case TransferFunction::sRGB:
         creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB);

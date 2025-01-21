@@ -315,6 +315,8 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_primar
     }
 }
 
+constexpr double s_primaryUnit = 1.0 / 1'000'000.0;
+
 void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_primaries(Resource *resource, int32_t r_x, int32_t r_y, int32_t g_x, int32_t g_y, int32_t b_x, int32_t b_y, int32_t w_x, int32_t w_y)
 {
     if (m_colorimetry) {
@@ -322,10 +324,10 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_primar
         return;
     }
     m_colorimetry = Colorimetry{
-        xy{r_x / 10'000.0, r_y / 10'000.0},
-        xy{g_x / 10'000.0, g_y / 10'000.0},
-        xy{b_x / 10'000.0, b_y / 10'000.0},
-        xy{w_x / 10'000.0, w_y / 10'000.0},
+        xy{r_x * s_primaryUnit, r_y * s_primaryUnit},
+        xy{g_x * s_primaryUnit, g_y * s_primaryUnit},
+        xy{b_x * s_primaryUnit, b_y * s_primaryUnit},
+        xy{w_x * s_primaryUnit, w_y * s_primaryUnit},
     };
 }
 
@@ -355,10 +357,10 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_master
         return;
     }
     m_masteringColorimetry = Colorimetry{
-        xy{r_x / 10'000.0, r_y / 10'000.0},
-        xy{g_x / 10'000.0, g_y / 10'000.0},
-        xy{b_x / 10'000.0, b_y / 10'000.0},
-        xy{w_x / 10'000.0, w_y / 10'000.0},
+        xy{r_x * s_primaryUnit, r_y * s_primaryUnit},
+        xy{g_x * s_primaryUnit, g_y * s_primaryUnit},
+        xy{b_x * s_primaryUnit, b_y * s_primaryUnit},
+        xy{w_x * s_primaryUnit, w_y * s_primaryUnit},
     };
 }
 
@@ -471,7 +473,7 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
     }
     auto resource = wl_resource_create(qtResource->client(), &wp_image_description_info_v1_interface, qtResource->version(), information);
     const auto round = [](float f) {
-        return std::clamp(std::round(f * 10'000.0), 0.0, 10'000.0);
+        return std::clamp(std::round(f / s_primaryUnit), 0.0, 1.0 / s_primaryUnit);
     };
     const xyY containerRed = m_description->containerColorimetry().red().toxyY();
     const xyY containerGreen = m_description->containerColorimetry().green().toxyY();
@@ -502,7 +504,7 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
     if (auto maxcll = m_description->maxHdrLuminance()) {
         wp_image_description_info_v1_send_target_max_cll(resource, *maxcll);
     }
-    wp_image_description_info_v1_send_luminances(resource, std::round(m_description->transferFunction().minLuminance * 10'000), std::round(m_description->transferFunction().maxLuminance), std::round(m_description->referenceLuminance()));
+    wp_image_description_info_v1_send_luminances(resource, std::round(m_description->transferFunction().minLuminance / s_minLuminanceUnit), std::round(m_description->transferFunction().maxLuminance), std::round(m_description->referenceLuminance()));
     wp_image_description_info_v1_send_target_luminance(resource, m_description->minLuminance(), m_description->maxHdrLuminance().value_or(800));
     wp_image_description_info_v1_send_tf_named(resource, kwinTFtoProtoTF(m_description->transferFunction()));
     wp_image_description_info_v1_send_done(resource);

@@ -43,6 +43,12 @@ QVector2D xy::asVector() const
     return QVector2D(x, y);
 }
 
+bool xy::operator==(const xy &other) const
+{
+    return qFuzzyCompare(x, other.x)
+        && qFuzzyCompare(y, other.y);
+}
+
 XYZ xyY::toXYZ() const
 {
     if (y == 0) {
@@ -53,6 +59,13 @@ XYZ xyY::toXYZ() const
         .Y = Y,
         .Z = Y * (1 - x - y) / y,
     };
+}
+
+bool xyY::operator==(const xyY &other) const
+{
+    return qFuzzyCompare(x, other.x)
+        && qFuzzyCompare(y, other.y)
+        && qFuzzyCompare(Y, other.Y);
 }
 
 xyY XYZ::toxyY() const
@@ -128,6 +141,13 @@ XYZ XYZ::fromVector(const QVector3D &vector)
         .Y = vector.y(),
         .Z = vector.z(),
     };
+}
+
+bool XYZ::operator==(const XYZ &other) const
+{
+    return qFuzzyCompare(X, other.X)
+        && qFuzzyCompare(Y, other.Y)
+        && qFuzzyCompare(Z, other.Z);
 }
 
 QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(XYZ sourceWhitepoint, XYZ destinationWhitepoint)
