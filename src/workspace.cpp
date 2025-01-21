@@ -334,23 +334,35 @@ void Workspace::initializeX11()
     const auto vds = VirtualDesktopManager::self();
     vds->setRootInfo(rootInfo);
 
-    // TODO: only in X11 mode
-    // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
-    NETRootInfo client_info(kwinApp()->x11Connection(), NET::ActiveWindow | NET::CurrentDesktop);
-    bool sessionRestored = false;
+    // NETWM spec says we have to set it to (0,0) if we don't support it
+    NETPoint *viewports = new NETPoint[VirtualDesktopManager::self()->count()];
+    rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
+    delete[] viewports;
+
+    NETSize desktop_geometry;
+    desktop_geometry.width = m_geometry.width();
+    desktop_geometry.height = m_geometry.height();
+    rootInfo->setDesktopGeometry(desktop_geometry);
+
+    if (waylandServer()) {
+        rootInfo->setActiveWindow(XCB_WINDOW_NONE);
+        focusToNull(); // TODO: is this really needed on Wayland?
+    } else {
+        // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
+        NETRootInfo client_info(kwinApp()->x11Connection(), NET::ActiveWindow | NET::CurrentDesktop);
+        bool sessionRestored = false;
 #ifndef QT_NO_SESSIONMANAGER
-    sessionRestored = qApp->isSessionRestored();
+        sessionRestored = qApp->isSessionRestored();
 #endif
 
-    // TODO: better value
-    rootInfo->setActiveWindow(XCB_WINDOW_NONE);
-    focusToNull();
+        // TODO: better value
+        rootInfo->setActiveWindow(XCB_WINDOW_NONE);
+        focusToNull();
 
-    if (!sessionRestored) {
-        ++block_focus; // Because it will be set below
-    }
+        if (!sessionRestored) {
+            ++block_focus; // Because it will be set below
+        }
 
-    if (!waylandServer()) {
         Xcb::Tree tree(kwinApp()->x11RootWindow());
         if (tree.isNull()) {
             qCCritical(KWIN_CORE) << "Failed to query X11 root window children, some windows may be unmanaged";
@@ -397,35 +409,24 @@ void Workspace::initializeX11()
 
             rearrange();
         }
-    }
 
-    // NETWM spec says we have to set it to (0,0) if we don't support it
-    NETPoint *viewports = new NETPoint[VirtualDesktopManager::self()->count()];
-    rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
-    delete[] viewports;
-
-    NETSize desktop_geometry;
-    desktop_geometry.width = m_geometry.width();
-    desktop_geometry.height = m_geometry.height();
-    rootInfo->setDesktopGeometry(desktop_geometry);
-
-    // TODO: only on X11?
-    Window *newActiveWindow = nullptr;
-    if (!sessionRestored) {
-        --block_focus;
-        newActiveWindow = findClient(Predicate::WindowMatch, client_info.activeWindow());
-    }
-    if (newActiveWindow == nullptr && activeWindow() == nullptr && should_get_focus.count() == 0) {
-        // No client activated in manage()
-        if (newActiveWindow == nullptr) {
-            newActiveWindow = topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop());
+        Window *newActiveWindow = nullptr;
+        if (!sessionRestored) {
+            --block_focus;
+            newActiveWindow = findClient(Predicate::WindowMatch, client_info.activeWindow());
         }
-        if (newActiveWindow == nullptr) {
-            newActiveWindow = findDesktop(VirtualDesktopManager::self()->currentDesktop(), activeOutput());
+        if (newActiveWindow == nullptr && activeWindow() == nullptr && should_get_focus.count() == 0) {
+            // No client activated in manage()
+            if (newActiveWindow == nullptr) {
+                newActiveWindow = topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop());
+            }
+            if (newActiveWindow == nullptr) {
+                newActiveWindow = findDesktop(VirtualDesktopManager::self()->currentDesktop(), activeOutput());
+            }
         }
-    }
-    if (newActiveWindow != nullptr) {
-        activateWindow(newActiveWindow);
+        if (newActiveWindow != nullptr) {
+            activateWindow(newActiveWindow);
+        }
     }
 }
 
