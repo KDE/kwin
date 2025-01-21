@@ -49,6 +49,8 @@ void ColorManagerV1::wp_color_manager_v1_bind_resource(Resource *resource)
     send_supported_intent(resource->handle, render_intent::render_intent_absolute);
     send_supported_intent(resource->handle, render_intent::render_intent_relative_bpc);
     // TODO implement saturation intent
+
+    send_done(resource->handle);
 }
 
 void ColorManagerV1::wp_color_manager_v1_destroy(Resource *resource)
