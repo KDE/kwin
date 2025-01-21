@@ -89,7 +89,6 @@ private Q_SLOTS:
     void testUnsupportedPrimaries();
     void testNoPrimaries();
     void testNoTf();
-    void testNonsensePrimaries();
 };
 
 void ColorManagementTest::initTestCase()
@@ -140,6 +139,7 @@ void ColorManagementTest::testSetImageDescription_data()
     // TODO this should fail with the wp protocol version
     QTest::addRow("invalid HDR metadata") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400) << false << true;
     QTest::addRow("rec.2020 PQ with out of bounds white point") << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
+    QTest::addRow("nonsense primaries") << ColorDescription(Colorimetry(xy{0, 0}, xy{0, 0}, xy{0, 0}, xy{0, 0}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
 }
 
 void ColorManagementTest::testSetImageDescription()
@@ -238,15 +238,6 @@ void ColorManagementTest::testNoTf()
 {
     QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
     creator.set_primaries_named(WP_COLOR_MANAGER_V1_PRIMARIES_CIE1931_XYZ);
-    wp_image_description_creator_params_v1_create(creator.object());
-    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-    QVERIFY(error.wait(50ms));
-}
-
-void ColorManagementTest::testNonsensePrimaries()
-{
-    QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
-    creator.set_primaries(0, 0, 0, 0, 0, 0, 0, 0);
     wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
