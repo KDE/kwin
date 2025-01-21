@@ -130,15 +130,44 @@ void ColorManagementTest::testSetImageDescription_data()
     QTest::addColumn<ColorDescription>("input");
     QTest::addColumn<bool>("protocolError");
     QTest::addColumn<bool>("shouldSucceed");
+    QTest::addColumn<std::optional<ColorDescription>>("expectedResult");
 
-    QTest::addRow("sRGB") << ColorDescription::sRGB << false << true;
-    QTest::addRow("rec.2020 PQ") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << true;
-    QTest::addRow("scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80) << false << true;
-    QTest::addRow("custom") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400) << false << true;
-    QTest::addRow("invalid tf") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400) << true << false;
-    QTest::addRow("invalid HDR metadata") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400) << true << false;
-    QTest::addRow("rec.2020 PQ with out of bounds white point") << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
-    QTest::addRow("nonsense primaries") << ColorDescription(Colorimetry(xy{0, 0}, xy{0, 0}, xy{0, 0}, xy{0, 0}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
+    QTest::addRow("sRGB")
+        << ColorDescription::sRGB
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("rec.2020 PQ")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("scRGB")
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80)
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("custom")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400)
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("invalid tf")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400)
+        << true << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("invalid HDR metadata")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400)
+        << true << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("rec.2020 PQ with out of bounds white point")
+        << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << false << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("nonsense primaries")
+        << ColorDescription(Colorimetry(xy{0, 0}, xy{0, 0}, xy{0, 0}, xy{0, 0}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << false << false
+        << std::optional<ColorDescription>();
+    QTest::addRow("custom PQ luminances are ignored")
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 100), 203, 0, 400, 400)
+        << false << true
+        << std::make_optional<ColorDescription>(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000), 203, 0, 400, 400);
 }
 
 void ColorManagementTest::testSetImageDescription()
@@ -193,6 +222,7 @@ void ColorManagementTest::testSetImageDescription()
     }
 
     QFETCH(bool, shouldSucceed);
+    QFETCH(std::optional<ColorDescription>, expectedResult);
     if (shouldSucceed) {
         QSignalSpy ready(&imageDescr, &ImageDescription::ready);
         QVERIFY(ready.wait(50ms));
@@ -203,7 +233,7 @@ void ColorManagementTest::testSetImageDescription()
         QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
         QVERIFY(colorChange.wait());
 
-        QCOMPARE(window->surface()->colorDescription(), input);
+        QCOMPARE(window->surface()->colorDescription(), expectedResult.value_or(input));
     } else {
         QSignalSpy fail(&imageDescr, &ImageDescription::failed);
         QVERIFY(fail.wait(50ms));

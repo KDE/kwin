@@ -230,8 +230,11 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
     TransferFunction func{*m_transferFunctionType};
     double referenceLuminance = TransferFunction::defaultReferenceLuminanceFor(func.type);
     if (m_transferFunctionLuminances) {
-        func.minLuminance = m_transferFunctionLuminances->min;
-        func.maxLuminance = m_transferFunctionLuminances->max;
+        // PQ is special cased to not allow min/max to be changed
+        if (m_transferFunctionType != TransferFunction::PerceptualQuantizer) {
+            func.minLuminance = m_transferFunctionLuminances->min;
+            func.maxLuminance = m_transferFunctionLuminances->max;
+        }
         referenceLuminance = m_transferFunctionLuminances->reference;
     }
     if (Colorimetry::isValid(m_colorimetry->red().toxy(), m_colorimetry->green().toxy(), m_colorimetry->blue().toxy(), m_colorimetry->white().toxy())) {
