@@ -346,7 +346,6 @@ void Workspace::initializeX11()
 
     if (waylandServer()) {
         rootInfo->setActiveWindow(XCB_WINDOW_NONE);
-        focusToNull(); // TODO: is this really needed on Wayland?
     } else {
         // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
         NETRootInfo client_info(kwinApp()->x11Connection(), NET::ActiveWindow | NET::CurrentDesktop);
