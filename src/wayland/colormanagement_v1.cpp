@@ -365,6 +365,10 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_master
         wl_resource_post_error(resource->handle, error::error_already_set, "mastering luminance is already set");
         return;
     }
+    if (min_lum * s_minLuminanceUnit >= max_lum) {
+        wl_resource_post_error(resource->handle, error::error_invalid_luminance, "min_lum can't be higher or equal to max_lum");
+        return;
+    }
     m_minMasteringLuminance = min_lum * s_minLuminanceUnit;
     if (max_lum > 0) {
         m_maxMasteringLuminance = max_lum;

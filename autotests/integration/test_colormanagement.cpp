@@ -136,8 +136,7 @@ void ColorManagementTest::testSetImageDescription_data()
     QTest::addRow("scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80) << false << true;
     QTest::addRow("custom") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400) << false << true;
     QTest::addRow("invalid tf") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400) << true << false;
-    // TODO this should fail with the wp protocol version
-    QTest::addRow("invalid HDR metadata") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400) << false << true;
+    QTest::addRow("invalid HDR metadata") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400) << true << false;
     QTest::addRow("rec.2020 PQ with out of bounds white point") << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
     QTest::addRow("nonsense primaries") << ColorDescription(Colorimetry(xy{0, 0}, xy{0, 0}, xy{0, 0}, xy{0, 0}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << false;
 }
