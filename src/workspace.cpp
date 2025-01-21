@@ -350,11 +350,13 @@ void Workspace::initializeX11()
         ++block_focus; // Because it will be set below
     }
 
-    {
+    Xcb::Tree tree(kwinApp()->x11RootWindow());
+    if (tree.isNull()) {
+        qCCritical(KWIN_CORE) << "Failed to query X11 root window children, some windows may be unmanaged";
+    } else {
         // Begin updates blocker block
         StackingUpdatesBlocker blocker(this);
 
-        Xcb::Tree tree(kwinApp()->x11RootWindow());
         xcb_window_t *wins = xcb_query_tree_children(tree.data());
 
         QList<Xcb::WindowAttributes> windowAttributes(tree->children_len);
@@ -393,18 +395,17 @@ void Workspace::initializeX11()
         updateStackingOrder(true);
 
         rearrange();
+    }
 
-        // NETWM spec says we have to set it to (0,0) if we don't support it
-        NETPoint *viewports = new NETPoint[VirtualDesktopManager::self()->count()];
-        rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
-        delete[] viewports;
+    // NETWM spec says we have to set it to (0,0) if we don't support it
+    NETPoint *viewports = new NETPoint[VirtualDesktopManager::self()->count()];
+    rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
+    delete[] viewports;
 
-        NETSize desktop_geometry;
-        desktop_geometry.width = m_geometry.width();
-        desktop_geometry.height = m_geometry.height();
-        rootInfo->setDesktopGeometry(desktop_geometry);
-
-    } // End updates blocker block
+    NETSize desktop_geometry;
+    desktop_geometry.width = m_geometry.width();
+    desktop_geometry.height = m_geometry.height();
+    rootInfo->setDesktopGeometry(desktop_geometry);
 
     // TODO: only on X11?
     Window *newActiveWindow = nullptr;
