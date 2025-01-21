@@ -825,36 +825,42 @@ TransferFunction TransferFunction::relativeScaledTo(double referenceLuminance) c
 
 QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)
 {
-    debug << "TransferFunction(" << tf.type << ", [" << tf.minLuminance << "," << tf.maxLuminance << "] )";
+    QDebugStateSaver state(debug);
+    debug.nospace() << "TransferFunction(" << tf.type << ", [" << tf.minLuminance << "," << tf.maxLuminance << "] )";
     return debug;
 }
 
 QDebug operator<<(QDebug debug, const KWin::XYZ &xyz)
 {
-    debug << "XYZ(" << xyz.X << xyz.Y << xyz.Z << ")";
+    QDebugStateSaver state(debug);
+    debug.nospace() << "XYZ(" << xyz.X << ", " << xyz.Y << ", " << xyz.Z << ")";
     return debug;
 }
 
 QDebug operator<<(QDebug debug, const KWin::xyY &xyY)
 {
-    debug << "xyY(" << xyY.x << xyY.y << xyY.Y << ")";
+    QDebugStateSaver state(debug);
+    debug.nospace() << "xyY(" << xyY.x << ", " << xyY.y << ", " << xyY.Y << ")";
     return debug;
 }
 
 QDebug operator<<(QDebug debug, const KWin::xy &xy)
 {
-    debug << "xy(" << xy.x << xy.y << ")";
+    QDebugStateSaver state(debug);
+    debug.nospace() << "xy(" << xy.x << ", " << xy.y << ")";
     return debug;
 }
 
 QDebug operator<<(QDebug debug, const KWin::Colorimetry &color)
 {
-    debug << "Colorimetry(" << color.red() << color.green() << color.blue() << color.white() << ")";
+    QDebugStateSaver state(debug);
+    debug.nospace() << "Colorimetry(" << color.red() << ", " << color.green() << ", " << color.blue() << ", " << color.white() << ")";
     return debug;
 }
 
 QDebug operator<<(QDebug debug, const KWin::ColorDescription &color)
 {
-    debug << "ColorDescription(" << color.containerColorimetry() << color.transferFunction() << "ref" << color.referenceLuminance() << "min" << color.minLuminance() << "max. avg" << color.maxAverageLuminance() << "max" << color.maxHdrLuminance() << ")";
+    QDebugStateSaver state(debug);
+    debug << "ColorDescription(" << color.containerColorimetry() << ", " << color.transferFunction() << ", ref" << color.referenceLuminance() << ", min" << color.minLuminance() << ", max. avg" << color.maxAverageLuminance() << ", max" << color.maxHdrLuminance() << ")";
     return debug;
 }
