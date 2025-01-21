@@ -26,6 +26,7 @@ void ColorManagerV1::wp_color_manager_v1_bind_resource(Resource *resource)
     send_supported_feature(resource->handle, feature::feature_set_mastering_display_primaries);
     send_supported_feature(resource->handle, feature::feature_set_primaries);
     send_supported_feature(resource->handle, feature::feature_set_luminances);
+    send_supported_feature(resource->handle, feature::feature_windows_scrgb);
 
     send_supported_primaries_named(resource->handle, primaries::primaries_srgb);
     send_supported_primaries_named(resource->handle, primaries::primaries_pal_m);
@@ -86,6 +87,21 @@ void ColorManagerV1::wp_color_manager_v1_create_icc_creator(Resource *resource, 
 void ColorManagerV1::wp_color_manager_v1_create_parametric_creator(Resource *resource, uint32_t obj)
 {
     new ColorParametricCreatorV1(resource->client(), obj, resource->version());
+}
+
+void ColorManagerV1::wp_color_manager_v1_create_windows_scrgb(Resource *resource, uint32_t image_description)
+{
+    const auto scrgb = ColorDescription{
+        NamedColorimetry::BT709,
+        TransferFunction(TransferFunction::linear, 0, 80),
+        80,
+        0,
+        std::nullopt,
+        std::nullopt,
+        Colorimetry::fromName(NamedColorimetry::BT2020),
+        Colorimetry::fromName(NamedColorimetry::BT709),
+    };
+    new ImageDescriptionV1(resource->client(), image_description, resource->version(), scrgb);
 }
 
 ColorFeedbackSurfaceV1::ColorFeedbackSurfaceV1(wl_client *client, uint32_t id, uint32_t version, SurfaceInterface *surface)
