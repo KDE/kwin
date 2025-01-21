@@ -350,51 +350,53 @@ void Workspace::initializeX11()
         ++block_focus; // Because it will be set below
     }
 
-    Xcb::Tree tree(kwinApp()->x11RootWindow());
-    if (tree.isNull()) {
-        qCCritical(KWIN_CORE) << "Failed to query X11 root window children, some windows may be unmanaged";
-    } else {
-        // Begin updates blocker block
-        StackingUpdatesBlocker blocker(this);
+    if (!waylandServer()) {
+        Xcb::Tree tree(kwinApp()->x11RootWindow());
+        if (tree.isNull()) {
+            qCCritical(KWIN_CORE) << "Failed to query X11 root window children, some windows may be unmanaged";
+        } else {
+            // Begin updates blocker block
+            StackingUpdatesBlocker blocker(this);
 
-        xcb_window_t *wins = xcb_query_tree_children(tree.data());
+            xcb_window_t *wins = xcb_query_tree_children(tree.data());
 
-        QList<Xcb::WindowAttributes> windowAttributes(tree->children_len);
-        QList<Xcb::WindowGeometry> windowGeometries(tree->children_len);
+            QList<Xcb::WindowAttributes> windowAttributes(tree->children_len);
+            QList<Xcb::WindowGeometry> windowGeometries(tree->children_len);
 
-        // Request the attributes and geometries of all toplevel windows
-        for (int i = 0; i < tree->children_len; i++) {
-            windowAttributes[i] = Xcb::WindowAttributes(wins[i]);
-            windowGeometries[i] = Xcb::WindowGeometry(wins[i]);
-        }
-
-        // Get the replies
-        for (int i = 0; i < tree->children_len; i++) {
-            Xcb::WindowAttributes attr(windowAttributes.at(i));
-
-            if (attr.isNull()) {
-                continue;
+            // Request the attributes and geometries of all toplevel windows
+            for (int i = 0; i < tree->children_len; i++) {
+                windowAttributes[i] = Xcb::WindowAttributes(wins[i]);
+                windowGeometries[i] = Xcb::WindowGeometry(wins[i]);
             }
 
-            if (attr->override_redirect) {
-                if (attr->map_state == XCB_MAP_STATE_VIEWABLE && attr->_class != XCB_WINDOW_CLASS_INPUT_ONLY) {
+            // Get the replies
+            for (int i = 0; i < tree->children_len; i++) {
+                Xcb::WindowAttributes attr(windowAttributes.at(i));
+
+                if (attr.isNull()) {
+                    continue;
+                }
+
+                if (attr->override_redirect) {
+                    if (attr->map_state == XCB_MAP_STATE_VIEWABLE && attr->_class != XCB_WINDOW_CLASS_INPUT_ONLY) {
+                        // ### This will request the attributes again
+                        createUnmanaged(wins[i]);
+                    }
+                } else if (attr->map_state != XCB_MAP_STATE_UNMAPPED) {
+                    if (Application::wasCrash()) {
+                        fixPositionAfterCrash(wins[i], windowGeometries.at(i).data());
+                    }
+
                     // ### This will request the attributes again
-                    createUnmanaged(wins[i]);
+                    createX11Window(wins[i], true);
                 }
-            } else if (attr->map_state != XCB_MAP_STATE_UNMAPPED) {
-                if (Application::wasCrash()) {
-                    fixPositionAfterCrash(wins[i], windowGeometries.at(i).data());
-                }
-
-                // ### This will request the attributes again
-                createX11Window(wins[i], true);
             }
+
+            // Propagate windows, will really happen at the end of the updates blocker block
+            updateStackingOrder(true);
+
+            rearrange();
         }
-
-        // Propagate windows, will really happen at the end of the updates blocker block
-        updateStackingOrder(true);
-
-        rearrange();
     }
 
     // NETWM spec says we have to set it to (0,0) if we don't support it
