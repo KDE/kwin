@@ -1471,13 +1471,16 @@ void Workspace::selectWmInputEventMask()
         presentMask = attr->your_event_mask;
     }
 
-    const uint32_t wmMask = XCB_EVENT_MASK_KEY_PRESS
-        | XCB_EVENT_MASK_PROPERTY_CHANGE
-        | XCB_EVENT_MASK_COLOR_MAP_CHANGE
+    uint32_t wmMask = XCB_EVENT_MASK_PROPERTY_CHANGE
         | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
         | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
-        | XCB_EVENT_MASK_FOCUS_CHANGE // For NotifyDetailNone
-        | XCB_EVENT_MASK_EXPOSURE;
+        | XCB_EVENT_MASK_FOCUS_CHANGE; // For NotifyDetailNone
+
+    if (!waylandServer()) {
+        wmMask |= XCB_EVENT_MASK_KEY_PRESS
+            | XCB_EVENT_MASK_COLOR_MAP_CHANGE
+            | XCB_EVENT_MASK_EXPOSURE;
+    }
 
     Xcb::selectInput(kwinApp()->x11RootWindow(), presentMask | wmMask);
 }
