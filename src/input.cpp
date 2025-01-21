@@ -392,7 +392,6 @@ public:
         }
 
         // continue normal processing
-        input()->keyboard()->update();
         if (!keyboardSurfaceAllowed()) {
             // don't pass event to seat
             return true;
@@ -2104,7 +2103,6 @@ public:
             // handled by Wayland client
             return false;
         }
-        input()->keyboard()->update();
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
         seat->notifyKeyboardKey(event->nativeScanCode, event->state);
