@@ -606,7 +606,7 @@ void Edge::setGeometry(const QRect &geometry)
 void Edge::checkBlocking()
 {
     Window *client = Workspace::self()->activeWindow();
-    const bool newValue = !m_edges->remainActiveOnFullscreen() && client && client->isFullScreen() && exclusiveContains(client->frameGeometry(), m_geometry.center()) && !(effects && effects->hasActiveFullScreenEffect());
+    const bool newValue = (!m_edges->remainActiveOnFullscreen() || m_client) && client && client->isFullScreen() && exclusiveContains(client->frameGeometry(), m_geometry.center()) && !(effects && effects->hasActiveFullScreenEffect());
     if (newValue == m_blocked) {
         return;
     }
@@ -1235,6 +1235,7 @@ std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int 
             }
         }
     }
+    edge->checkBlocking();
     connect(edge.get(), &Edge::approaching, this, &ScreenEdges::approaching);
     connect(this, &ScreenEdges::checkBlocking, edge.get(), &Edge::checkBlocking);
     return edge;
