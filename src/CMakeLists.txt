@@ -56,6 +56,7 @@ target_sources(kwin PRIVATE
     core/iccprofile.cpp
     core/inputbackend.cpp
     core/inputdevice.cpp
+    core/keystroke.cpp
     core/output.cpp
     core/outputbackend.cpp
     core/outputconfiguration.cpp
