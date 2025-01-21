@@ -1798,6 +1798,8 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     const auto edid = file.readAll();
 
     // first, libdisplay-info failed to parse the EDID and we don't have an EDID ID
+    // note that this uses two displays with the same EDID,
+    // to additionally test the case when EDID ID isn't unique when this happens
     Test::setOutputConfig({
         Test::OutputInfo{
             .geometry = QRect(0, 0, 1280, 1024),
@@ -1810,7 +1812,20 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
             .edid = edid,
             .edidIdentifierOverride = QByteArray(),
             .connectorName = std::nullopt,
-            .mstPath = std::nullopt,
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {
+                ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred),
+                ModeInfo(QSize(640, 480), 60000, OutputMode::Flags{}),
+            },
+            .edid = edid,
+            .edidIdentifierOverride = QByteArray(),
+            .connectorName = std::nullopt,
+            .mstPath = QByteArrayLiteral("MST-1-2"),
         },
     });
 
@@ -1859,7 +1874,20 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
             .edid = edid,
             .edidIdentifierOverride = std::nullopt,
             .connectorName = std::nullopt,
-            .mstPath = std::nullopt,
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {
+                ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred),
+                ModeInfo(QSize(640, 480), 60000, OutputMode::Flags{}),
+            },
+            .edid = edid,
+            .edidIdentifierOverride = std::nullopt,
+            .connectorName = std::nullopt,
+            .mstPath = QByteArrayLiteral("MST-1-2"),
         },
     });
     outputs = kwinApp()->outputBackend()->outputs();
