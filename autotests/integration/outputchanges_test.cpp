@@ -1670,6 +1670,24 @@ void OutputChangesTest::testSettingRestoration_data()
             .mstPath = std::nullopt,
         },
     };
+
+    QTest::addRow("three outputs, two with the same EDID, with overlapping MST paths") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-2"),
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+    };
 }
 
 void OutputChangesTest::testSettingRestoration()
