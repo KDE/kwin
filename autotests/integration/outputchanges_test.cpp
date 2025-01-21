@@ -1524,14 +1524,16 @@ void OutputChangesTest::testAutorotate()
     QCOMPARE(outputConfig->transform->kind(), expectedRotation);
 }
 
+struct IdentificationData
+{
+    std::optional<QString> connectorName;
+    QByteArray edid;
+    std::optional<QByteArray> mstPath;
+};
+
 void OutputChangesTest::testSettingRestoration_data()
 {
-    QTest::addColumn<std::optional<QString>>("connectorName1");
-    QTest::addColumn<std::optional<QString>>("connectorName2");
-    QTest::addColumn<QByteArray>("edid1");
-    QTest::addColumn<QByteArray>("edid2");
-    QTest::addColumn<std::optional<QByteArray>>("mstPath1");
-    QTest::addColumn<std::optional<QByteArray>>("mstPath2");
+    QTest::addColumn<QList<IdentificationData>>("outputData");
 
     const auto readEdid = [](const QString &path) {
         QFile file(path);
@@ -1539,66 +1541,135 @@ void OutputChangesTest::testSettingRestoration_data()
         return file.readAll();
     };
 
-    QTest::addRow("Same EDID ID, different hash") << std::optional<QString>()
-                                                  << std::optional<QString>()
-                                                  << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                  << readEdid(QFINDTESTDATA("data/same serial number/edid2.bin"))
-                                                  << std::optional<QByteArray>()
-                                                  << std::optional<QByteArray>();
-    QTest::addRow("Same EDID") << std::make_optional(QStringLiteral("connector1"))
-                               << std::make_optional(QStringLiteral("connector2"))
-                               << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                               << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                               << std::optional<QByteArray>()
-                               << std::optional<QByteArray>();
-    QTest::addRow("No EDID") << std::make_optional(QStringLiteral("connector1"))
-                             << std::make_optional(QStringLiteral("connector2"))
-                             << QByteArray{}
-                             << QByteArray{}
-                             << std::optional<QByteArray>()
-                             << std::optional<QByteArray>();
-    QTest::addRow("One has EDID, the other doesn't") << std::make_optional(QStringLiteral("connector1"))
-                                                     << std::make_optional(QStringLiteral("connector2"))
-                                                     << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                     << QByteArray{}
-                                                     << std::optional<QByteArray>()
-                                                     << std::optional<QByteArray>();
-    QTest::addRow("Same EDID, no connector names, different MST paths") << std::optional<QString>()
-                                                                        << std::optional<QString>()
-                                                                        << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                                        << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                                        << std::make_optional(QByteArrayLiteral("MST-1-1"))
-                                                                        << std::make_optional(QByteArrayLiteral("MST-1-2"));
-    QTest::addRow("Same EDID ID, different hash, no connector names, different MST paths") << std::optional<QString>()
-                                                                                           << std::optional<QString>()
-                                                                                           << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                                                           << readEdid(QFINDTESTDATA("data/same serial number/edid2.bin"))
-                                                                                           << std::make_optional(QByteArrayLiteral("MST-1-1"))
-                                                                                           << std::make_optional(QByteArrayLiteral("MST-1-2"));
-    QTest::addRow("No EDID, no connector names, different MST paths") << std::optional<QString>()
-                                                                      << std::optional<QString>()
-                                                                      << QByteArray{}
-                                                                      << QByteArray{}
-                                                                      << std::make_optional(QByteArrayLiteral("MST-1-1"))
-                                                                      << std::make_optional(QByteArrayLiteral("MST-1-2"));
-    QTest::addRow("One EDID, the other not, no connector names, different MST paths") << std::optional<QString>()
-                                                                                      << std::optional<QString>()
-                                                                                      << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                                                      << QByteArray{}
-                                                                                      << std::make_optional(QByteArrayLiteral("MST-1-1"))
-                                                                                      << std::make_optional(QByteArrayLiteral("MST-1-2"));
-    QTest::addRow("Only EDID hash, no connector names, no MST path") << std::optional<QString>()
-                                                                     << std::optional<QString>()
-                                                                     << QByteArrayLiteral("bbbbbbbbbbbbbbbb")
-                                                                     << QByteArrayLiteral("aaaaaaaaaaaaaaaa")
-                                                                     << std::optional<QByteArray>()
-                                                                     << std::optional<QByteArray>();
-    QTest::addRow("One EDID ID, other only EDID hash") << std::optional<QString>()
-                                                       << std::optional<QString>()
-                                                       << readEdid(QFINDTESTDATA("data/same serial number/edid.bin"))
-                                                       << QByteArrayLiteral("aaaaaaaaaaaaaaaa")
-                                                       << std::optional<QByteArray>()
-                                                       << std::optional<QByteArray>();
+    QTest::addRow("Same EDID ID, different hash") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = std::nullopt,
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+            .mstPath = std::nullopt,
+        },
+    };
+
+    QTest::addRow("Same EDID") << QList{
+        IdentificationData{
+            .connectorName = QStringLiteral("connector1"),
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = std::nullopt,
+        },
+        IdentificationData{
+            .connectorName = QStringLiteral("connector2"),
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = std::nullopt,
+        },
+    };
+
+    QTest::addRow("No EDID") << QList{
+        IdentificationData{
+            .connectorName = QStringLiteral("connector1"),
+            .edid = QByteArray{},
+            .mstPath = std::nullopt,
+        },
+        IdentificationData{
+            .connectorName = QStringLiteral("connector2"),
+            .edid = QByteArray{},
+            .mstPath = std::nullopt,
+        },
+    };
+
+    QTest::addRow("One has EDID, the other doesn't") << QList{
+        IdentificationData{
+            .connectorName = QStringLiteral("connector1"),
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = std::nullopt,
+        },
+        IdentificationData{
+            .connectorName = QStringLiteral("connector2"),
+            .edid = QByteArray{},
+            .mstPath = std::nullopt,
+        },
+    };
+
+    QTest::addRow("Same EDID, no connector names, different MST paths") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-2"),
+        },
+    };
+
+    QTest::addRow("Same EDID ID, different hash, no connector names, different MST paths") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid2.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-2"),
+        },
+    };
+
+    QTest::addRow("No EDID, no connector names, different MST paths") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = QByteArray{},
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = QByteArray{},
+            .mstPath = QByteArrayLiteral("MST-1-2"),
+        },
+    };
+
+    QTest::addRow("One EDID, the other not, no connector names, different MST paths") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = QByteArrayLiteral("MST-1-1"),
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = QByteArray{},
+            .mstPath = QByteArrayLiteral("MST-1-2"),
+        },
+    };
+
+    QTest::addRow("Only EDID hash, no connector names, no MST path") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = QByteArrayLiteral("bbbbbbbbbbbbbbbb"),
+            .mstPath = std::nullopt,
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = QByteArrayLiteral("aaaaaaaaaaaaaaaa"),
+            .mstPath = std::nullopt,
+        },
+    };
+
+    QTest::addRow("One EDID ID, other only EDID hash") << QList{
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = readEdid(QFINDTESTDATA("data/same serial number/edid.bin")),
+            .mstPath = std::nullopt,
+        },
+        IdentificationData{
+            .connectorName = std::nullopt,
+            .edid = QByteArrayLiteral("aaaaaaaaaaaaaaaa"),
+            .mstPath = std::nullopt,
+        },
+    };
 }
 
 void OutputChangesTest::testSettingRestoration()
@@ -1609,69 +1680,58 @@ void OutputChangesTest::testSettingRestoration()
     // delete the previous config to avoid clashes between test runs
     QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
 
-    QFETCH(std::optional<QString>, connectorName1);
-    QFETCH(std::optional<QString>, connectorName2);
-    QFETCH(QByteArray, edid1);
-    QFETCH(QByteArray, edid2);
-    QFETCH(std::optional<QByteArray>, mstPath1);
-    QFETCH(std::optional<QByteArray>, mstPath2);
+    QFETCH(QList<IdentificationData>, outputData);
 
-    Test::setOutputConfig({
-        Test::OutputInfo{
+    Test::setOutputConfig(outputData | std::views::transform([](const IdentificationData &data) {
+        return Test::OutputInfo{
             .geometry = QRect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = edid1,
-            .connectorName = connectorName1,
-            .mstPath = mstPath1,
-        },
-        Test::OutputInfo{
-            .geometry = QRect(1280, 0, 1280, 1024),
-            .internal = false,
-            .physicalSizeInMM = QSize(598, 336),
-            .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = edid2,
-            .connectorName = connectorName2,
-            .mstPath = mstPath2,
-        },
-    });
+            .edid = data.edid,
+            .edidIdentifierOverride = std::nullopt,
+            .connectorName = data.connectorName,
+            .mstPath = data.mstPath,
+        };
+    }) | std::ranges::to<QList>());
 
     auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
 
-    std::optional<QPoint> output0Pos;
-    std::optional<QPoint> output1Pos;
+    QList<std::optional<QPoint>> outputPositions;
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
         const auto [config, order, type] = *cfg;
-        outputs.front()->applyChanges(config);
-        outputs.back()->applyChanges(config);
-        output0Pos = config.constChangeSet(outputs[0])->pos;
-        output1Pos = config.constChangeSet(outputs[1])->pos;
+        for (const auto output : outputs) {
+            output->applyChanges(config);
+            outputPositions.push_back(config.constChangeSet(output)->pos);
+        }
     }
 
     // the positions must be independent of the order of outputs in the list
-    std::swap(outputs[0], outputs[1]);
+    std::ranges::reverse(outputs);
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
         const auto [config, order, type] = *cfg;
-        QCOMPARE(output0Pos, config.constChangeSet(outputs[1])->pos);
-        QCOMPARE(output1Pos, config.constChangeSet(outputs[0])->pos);
+        auto revertedPositions = outputPositions | std::views::reverse;
+        for (int i = 0; i < outputs.size(); i++) {
+            QCOMPARE(revertedPositions[i], config.constChangeSet(outputs[i])->pos);
+        }
     }
 
     // this must work if one of the outputs is removed in between as well
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = QRect(1280, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = edid2,
-            .connectorName = connectorName2,
-            .mstPath = mstPath2,
+            .edid = outputData.back().edid,
+            .edidIdentifierOverride = std::nullopt,
+            .connectorName = outputData.back().connectorName,
+            .mstPath = outputData.back().mstPath,
         },
     });
     outputs = kwinApp()->outputBackend()->outputs();
@@ -1682,34 +1742,28 @@ void OutputChangesTest::testSettingRestoration()
     }
 
     // and add it again, with the inverted order
-    Test::setOutputConfig({
-        Test::OutputInfo{
+    Test::setOutputConfig(outputData | std::views::reverse | std::views::transform([](const IdentificationData &data) {
+        return Test::OutputInfo{
             .geometry = QRect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = edid2,
-            .connectorName = connectorName2,
-            .mstPath = mstPath2,
-        },
-        Test::OutputInfo{
-            .geometry = QRect(1280, 0, 1280, 1024),
-            .internal = false,
-            .physicalSizeInMM = QSize(598, 336),
-            .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
-            .edid = edid1,
-            .connectorName = connectorName1,
-            .mstPath = mstPath1,
-        },
-    });
+            .edid = data.edid,
+            .edidIdentifierOverride = std::nullopt,
+            .connectorName = data.connectorName,
+            .mstPath = data.mstPath,
+        };
+    }) | std::ranges::to<QList>());
     outputs = kwinApp()->outputBackend()->outputs();
 
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
         const auto [config, order, type] = *cfg;
-        QCOMPARE(output0Pos, config.constChangeSet(outputs[1])->pos);
-        QCOMPARE(output1Pos, config.constChangeSet(outputs[0])->pos);
+        auto revertedPositions = outputPositions | std::views::reverse;
+        for (int i = 0; i < outputs.size(); i++) {
+            QCOMPARE(revertedPositions[i], config.constChangeSet(outputs[i])->pos);
+        }
     }
 }
 
