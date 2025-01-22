@@ -10,6 +10,7 @@
 
 #include "config-kwin.h"
 
+#include "effect/effecthandler.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "inputmethod.h"
@@ -232,6 +233,10 @@ Window *KeyboardInputRedirection::pickFocus() const
                 return t;
             } while (it != stacking.begin());
         }
+        return nullptr;
+    }
+
+    if (effects->hasKeyboardGrab()) {
         return nullptr;
     }
 

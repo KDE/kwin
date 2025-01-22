@@ -454,6 +454,7 @@ bool EffectsHandler::grabKeyboard(Effect *effect)
         return false;
     }
     keyboard_grab_effect = effect;
+    input()->keyboard()->update();
     return true;
 }
 

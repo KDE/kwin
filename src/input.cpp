@@ -576,7 +576,6 @@ public:
         if (!effects || !effects->hasKeyboardGrab()) {
             return false;
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
         QKeyEvent keyEvent(event->state == KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
                            event->key,
                            event->modifiers,
@@ -832,7 +831,6 @@ public:
         if (!m_active) {
             return false;
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
 
         if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             // x11 variant does this on key press, so do the same
