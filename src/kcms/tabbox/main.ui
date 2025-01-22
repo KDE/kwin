@@ -65,7 +65,7 @@
         <item row="3" column="0" colspan="3">
          <widget class="QCheckBox" name="oneAppWindow">
           <property name="text">
-           <string>Only one window per application</string>
+           <string>Show one window per application</string>
           </property>
           <property name="checked">
            <bool>false</bool>
