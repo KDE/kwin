@@ -315,8 +315,8 @@ void XdgSurfaceWindow::destroyWindow()
     cleanTabBox();
     StackingUpdatesBlocker blocker(workspace());
     workspace()->rulebook()->discardUsed(this, true);
-    cleanGrouping();
     waylandServer()->removeWindow(this);
+    cleanGrouping();
 
     unref();
 }

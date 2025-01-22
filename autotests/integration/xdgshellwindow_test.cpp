@@ -107,6 +107,7 @@ private Q_SLOTS:
     void testChangeDecorationModeAfterInitialCommit();
     void testModal();
     void testCloseModal();
+    void testCloseModalPreSetup();
     void testCloseInactiveModal();
     void testClosePopupOnParentUnmapped();
     void testMinimumSize();
@@ -2275,6 +2276,41 @@ void TestXdgShellWindow::testCloseModal()
     childToplevel.reset();
     childSurface.reset();
     dialog.reset();
+    Test::flushWaylandConnection();
+    QVERIFY(childClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), parent);
+}
+
+void TestXdgShellWindow::testCloseModalPreSetup()
+{
+    // This test verifies that the parent window will be activated when an active modal dialog is closed
+    // even if the modality existed before mapping the parent
+
+    // Create a parent and a child windows.
+    auto parentSurface = Test::createSurface();
+    auto parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
+
+    auto childSurface = Test::createSurface();
+    auto childToplevel = Test::createXdgToplevelSurface(childSurface.get(), [&parentToplevel](Test::XdgToplevel *toplevel) {
+        toplevel->set_parent(parentToplevel->object());
+    });
+    auto dialog = Test::createXdgDialogV1(childToplevel.get());
+    dialog->set_modal();
+
+    auto parent = Test::renderAndWaitForShown(parentSurface.get(), {200, 200}, Qt::cyan);
+    QVERIFY(parent);
+    auto child = Test::renderAndWaitForShown(childSurface.get(), {200, 200}, Qt::yellow);
+    QVERIFY(child);
+    QCOMPARE(child->transientFor(), parent);
+
+    Test::flushWaylandConnection();
+    QVERIFY(child->isModal());
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // Close the child.
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    childToplevel.reset();
+    childSurface.reset();
     Test::flushWaylandConnection();
     QVERIFY(childClosedSpy.wait());
     QCOMPARE(workspace()->activeWindow(), parent);
