@@ -132,7 +132,7 @@ void ColorManagementTest::testSetImageDescription_data()
     QTest::addColumn<bool>("protocolError");
     QTest::addColumn<bool>("shouldSucceed");
 
-    QTest::addRow("sRGB") << ColorDescription::sRGB << false << true;
+    // sRGB is not tested, because it's the default
     QTest::addRow("rec.2020 PQ") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400) << false << true;
     QTest::addRow("scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80) << false << true;
     QTest::addRow("custom") << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400) << false << true;
