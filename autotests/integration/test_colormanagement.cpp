@@ -132,10 +132,7 @@ void ColorManagementTest::testSetImageDescription_data()
     QTest::addColumn<bool>("shouldSucceed");
     QTest::addColumn<std::optional<ColorDescription>>("expectedResult");
 
-    QTest::addRow("sRGB")
-        << ColorDescription::sRGB
-        << false << true
-        << std::optional<ColorDescription>();
+    // sRGB is not tested, because it's the default (and thus no change signal will be emitted)
     QTest::addRow("rec.2020 PQ")
         << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
         << false << true
