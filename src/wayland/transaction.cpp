@@ -266,6 +266,10 @@ bool Transaction::tryApply()
 void Transaction::commit()
 {
     for (TransactionEntry &entry : m_entries) {
+        if (!entry.surface) {
+            continue;
+        }
+
         if (entry.state->bufferIsSet && entry.state->buffer) {
             // Avoid applying the transaction until all graphics buffers have become idle.
             if (entry.state->acquirePoint.timeline) {
