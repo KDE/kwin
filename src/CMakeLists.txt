@@ -603,7 +603,6 @@ install(FILES
     utils/resource.h
     utils/serviceutils.h
     utils/softwarevsyncmonitor.h
-    utils/subsurfacemonitor.h
     utils/udev.h
     utils/version.h
     utils/vsyncmonitor.h

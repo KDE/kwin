@@ -8,7 +8,6 @@ target_sources(kwin PRIVATE
     ramfile.cpp
     realtime.cpp
     softwarevsyncmonitor.cpp
-    subsurfacemonitor.cpp
     udev.cpp
     vsyncmonitor.cpp
 )
