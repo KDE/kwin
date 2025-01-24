@@ -50,7 +50,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                         m_pong.wait(lock);
                     }
                     if (m_committed) {
-                        qCCritical(KWIN_DRM, "Pageflip timed out! This is bug in the %s kernel driver", qPrintable(m_gpu->driverName()));
+                        qCCritical(KWIN_DRM, "Pageflip timed out! This is a bug in the %s kernel driver", qPrintable(m_gpu->driverName()));
                         if (m_gpu->isAmdgpu()) {
                             qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/amd/-/issues");
                         } else if (m_gpu->isNVidia()) {
