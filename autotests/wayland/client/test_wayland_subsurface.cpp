@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testSurfaceAt();
     void testDestroyAttachedBuffer();
     void testDestroyParentSurface();
+    void testDestroyCommittedSubSurfaceBeforeParent();
 
 private:
     KWin::Display *m_display;
@@ -1019,6 +1020,66 @@ void TestSubSurface::testDestroyParentSurface()
     QSignalSpy destroySpy(serverChildSurface, &QObject::destroyed);
     child.reset();
     QVERIFY(destroySpy.wait());
+}
+
+void TestSubSurface::testDestroyCommittedSubSurfaceBeforeParent()
+{
+    // this test verifies that no crash occurs when a committed synchronized subsurface is destroyed
+    // before the parent is committed
+
+    using namespace KWin;
+
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    std::unique_ptr<KWayland::Client::Surface> parent(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverParentSurface = serverSurfaceCreated.last().first().value<KWin::SurfaceInterface *>();
+
+    std::unique_ptr<KWayland::Client::Surface> child(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverChildSurface = serverSurfaceCreated.last().first().value<KWin::SurfaceInterface *>();
+
+    std::unique_ptr<KWayland::Client::Surface> grandChild(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+
+    auto firstSubSurface = m_subCompositor->createSubSurface(child.get(), parent.get());
+    firstSubSurface->setMode(KWayland::Client::SubSurface::Mode::Synchronized);
+    auto secondSubSurface = m_subCompositor->createSubSurface(grandChild.get(), child.get());
+    secondSubSurface->setMode(KWayland::Client::SubSurface::Mode::Synchronized);
+
+    {
+        QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
+        image.fill(Qt::red);
+        grandChild->attachBuffer(m_shm->createBuffer(image));
+        grandChild->damage(QRect(0, 0, 100, 100));
+        grandChild->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
+
+    {
+        QImage image(QSize(75, 75), QImage::Format_ARGB32_Premultiplied);
+        image.fill(Qt::red);
+        child->attachBuffer(m_shm->createBuffer(image));
+        child->damage(QRect(0, 0, 75, 75));
+        child->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
+
+    {
+        delete secondSubSurface;
+        grandChild.reset();
+    }
+
+    {
+        QImage image(QSize(60, 60), QImage::Format_ARGB32_Premultiplied);
+        image.fill(Qt::red);
+        parent->attachBuffer(m_shm->createBuffer(image));
+        parent->damage(QRect(0, 0, 60, 60));
+        parent->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
+
+    QSignalSpy parentCommittedSpy(serverParentSurface, &SurfaceInterface::committed);
+    QVERIFY(parentCommittedSpy.wait());
+
+    QCOMPARE(serverParentSurface->size(), QSize(60, 60));
+    QCOMPARE(serverChildSurface->size(), QSize(75, 75));
 }
 
 QTEST_GUILESS_MAIN(TestSubSurface)
