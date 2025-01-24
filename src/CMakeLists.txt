@@ -605,7 +605,6 @@ install(FILES
     utils/resource.h
     utils/serial.h
     utils/softwarevsyncmonitor.h
-    utils/subsurfacemonitor.h
     utils/udev.h
     utils/version.h
     utils/vsyncmonitor.h
