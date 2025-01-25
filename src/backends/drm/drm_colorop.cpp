@@ -126,6 +126,9 @@ DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32
 
 bool DrmLutColorOp::canBeUsedFor(const ColorOp &op)
 {
+    if (op.input.max > 1.0 || op.input.min < 0.0) {
+        return false;
+    }
     if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
         || std::holds_alternative<ColorTonemapper>(op.operation) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op.operation)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
