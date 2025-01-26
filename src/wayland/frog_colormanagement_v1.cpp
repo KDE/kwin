@@ -178,7 +178,22 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
 {
     if (m_surface) {
         SurfaceInterfacePrivate *priv = SurfaceInterfacePrivate::get(m_surface);
-        priv->pending->colorDescription = ColorDescription(m_containerColorimetry, m_transferFunction, TransferFunction::defaultReferenceLuminanceFor(m_transferFunction.type), m_minMasteringLuminance.value_or(m_transferFunction.minLuminance), m_maxAverageLuminance, m_maxPeakBrightness, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709));
+        double referenceLuminance = TransferFunction::defaultReferenceLuminanceFor(m_transferFunction.type);
+        if (m_transferFunction.type == TransferFunction::linear) {
+            // we know we're dealing with Windows scRGB here, which works
+            // quite badly when the more correct reference of 80 nits is used
+            referenceLuminance = 203;
+        }
+        priv->pending->colorDescription = ColorDescription{
+            m_containerColorimetry,
+            m_transferFunction,
+            referenceLuminance,
+            m_minMasteringLuminance.value_or(m_transferFunction.minLuminance),
+            m_maxAverageLuminance,
+            m_maxPeakBrightness,
+            m_masteringColorimetry,
+            Colorimetry::fromName(NamedColorimetry::BT709),
+        };
         priv->pending->colorDescriptionIsSet = true;
     }
 }
