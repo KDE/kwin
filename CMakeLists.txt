@@ -68,6 +68,13 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Svg
 )
 
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.10.0")
+    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+        GuiPrivate
+        QmlPrivate
+    )
+endif()
+
 find_package(Qt6Test ${QT_MIN_VERSION} CONFIG QUIET)
 set_package_properties(Qt6Test PROPERTIES
     PURPOSE "Required for tests"
