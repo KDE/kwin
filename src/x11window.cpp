@@ -1606,41 +1606,45 @@ void X11Window::updateInputShape()
         return;
     }
     if (Xcb::Extensions::self()->isShapeInputAvailable()) {
-        // There appears to be no way to find out if a window has input
-        // shape set or not, so always propagate the input shape
-        // (it's the same like the bounding shape by default).
-        // Also, build the shape using a helper window, not directly
-        // in the frame window, because the sequence set-shape-to-frame,
-        // remove-shape-of-client, add-input-shape-of-client has the problem
-        // that after the second step there's a hole in the input shape
-        // until the real shape of the client is added and that can make
-        // the window lose focus (which is a problem with mouse focus policies)
-        // TODO: It seems there is, after all - XShapeGetRectangles() - but maybe this is better
-        if (!shape_helper_window.isValid()) {
-            shape_helper_window.create(QRect(0, 0, 1, 1));
-        }
-        shape_helper_window.resize(m_frame.size());
         xcb_connection_t *c = kwinApp()->x11Connection();
-        xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
-                          shape_helper_window, 0, 0, frameId());
-        xcb_shape_combine(c,
-                          XCB_SHAPE_SO_SUBTRACT,
-                          XCB_SHAPE_SK_INPUT,
-                          XCB_SHAPE_SK_BOUNDING,
-                          shape_helper_window,
-                          m_wrapper.x(),
-                          m_wrapper.y(),
-                          window());
-        xcb_shape_combine(c,
-                          XCB_SHAPE_SO_UNION,
-                          XCB_SHAPE_SK_INPUT,
-                          XCB_SHAPE_SK_INPUT,
-                          shape_helper_window,
-                          m_wrapper.x(),
-                          m_wrapper.y(),
-                          window());
-        xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
-                          frameId(), 0, 0, shape_helper_window);
+        if (waylandServer()) {
+            xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT, frameId(), 0, 0, window());
+        } else {
+            // There appears to be no way to find out if a window has input
+            // shape set or not, so always propagate the input shape
+            // (it's the same like the bounding shape by default).
+            // Also, build the shape using a helper window, not directly
+            // in the frame window, because the sequence set-shape-to-frame,
+            // remove-shape-of-client, add-input-shape-of-client has the problem
+            // that after the second step there's a hole in the input shape
+            // until the real shape of the client is added and that can make
+            // the window lose focus (which is a problem with mouse focus policies)
+            // TODO: It seems there is, after all - XShapeGetRectangles() - but maybe this is better
+            if (!shape_helper_window.isValid()) {
+                shape_helper_window.create(QRect(0, 0, 1, 1));
+            }
+            shape_helper_window.resize(m_frame.size());
+            xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
+                              shape_helper_window, 0, 0, frameId());
+            xcb_shape_combine(c,
+                              XCB_SHAPE_SO_SUBTRACT,
+                              XCB_SHAPE_SK_INPUT,
+                              XCB_SHAPE_SK_BOUNDING,
+                              shape_helper_window,
+                              m_wrapper.x(),
+                              m_wrapper.y(),
+                              window());
+            xcb_shape_combine(c,
+                              XCB_SHAPE_SO_UNION,
+                              XCB_SHAPE_SK_INPUT,
+                              XCB_SHAPE_SK_INPUT,
+                              shape_helper_window,
+                              m_wrapper.x(),
+                              m_wrapper.y(),
+                              window());
+            xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
+                              frameId(), 0, 0, shape_helper_window);
+        }
     }
 }
 
