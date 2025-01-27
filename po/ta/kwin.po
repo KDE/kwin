@@ -5,13 +5,13 @@
 #
 # Vasee Vaseeharan <vasee@ieee.org>, 2004.
 # root <root@localhost.localdomain>, 2004.
-# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024 Kishore G <kishore96@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024, 2025 Kishore G <kishore96@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-24 02:34+0000\n"
-"PO-Revision-Date: 2024-12-15 16:58+0530\n"
+"PO-Revision-Date: 2025-01-26 19:08+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -110,40 +110,44 @@ msgstr "GLX/OpenGL கிடைக்கவில்லை."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "\"%1\" எனும் ICC பயன்முறையை திறக்க முடியவில்லை"
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 என்பது இல்லை"
+msgstr "\"%1\" எனும் ICC பயன்முறை இல்லை"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "\"%1\" எனும் ICC பயன்முறையை திரைகளுக்கு பயன்படுத்த முடியாது"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை ஆதரிக்கப்படா இணைப்புகளை குறிப்பிடுகிறுது. XYZ மட்டுமே "
+"ஆதரிக்கப்படும்"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. நிறவீச்சு RGB-யாக இல்லை"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. வெள்ளை நிறம் எது என்பதை அது "
+"குறிப்பிடவில்லை."
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அது குறிப்பிடும் வெள்ளை நிறம் "
+"செல்லுபடியாகாதது."
 
 #: core/iccprofile.cpp:292
 #, kde-format
@@ -161,16 +165,20 @@ msgstr ""
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. முதன்மை நிரங்கள் எவை என்பதை அது "
+"குறிப்பிடவில்லை"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் முதன்மை நிரங்களை கணிக்க முடியவில்லை"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் முதன்மை நிரங்கள் செல்லுபடியாகாதவை"
 
 #: core/iccprofile.cpp:350
 #, kde-format
@@ -180,7 +188,7 @@ msgstr ""
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "நிறப்பயன்முறையில் TRC குறிச்சொற்களை காணவில்லை."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -3167,10 +3175,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
-msgstr "குவியத்தை தொடர்"
+msgstr "குவியத்தை தொடர்வதை இயக்கு"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:152
@@ -3185,10 +3192,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
-msgstr "உரைக்கான இடஞ்சுட்டியை தொடர்"
+msgstr "உரைக்கான இடஞ்சுட்டியை தொடர்வதை இயக்கு"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4425,27 +4431,27 @@ msgstr "பணிமேடை %1-க்கு தாவு"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "ஓர் திரை இப்போது கிடைக்கவில்லை"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "அனைத்து திரைகளையும் முடக்குவது அனுமதிக்கப்படாதது"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "குறிப்பிட்ட வெளியீட்டு வரிசை சிலவற்றை உட்படுத்தவில்லை"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "குறிப்பிட்ட வெளியீட்டு வரிசை செல்லுபடியாகாதது"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "சாதனநிரல் அமைப்புகளை நிராகரித்தது"
 
 #: window.cpp:3173
 #, kde-format
