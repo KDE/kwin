@@ -110,6 +110,7 @@ private Q_SLOTS:
     void testCloseModalPreSetup();
     void testCloseInactiveModal();
     void testClosePopupOnParentUnmapped();
+    void testPopupWithDismissedParent();
     void testMinimumSize();
     void testNoMinimumSize();
     void testMaximumSize();
@@ -2384,6 +2385,36 @@ void TestXdgShellWindow::testClosePopupOnParentUnmapped()
     parentToplevel.reset();
     parentSurface.reset();
     QVERIFY(childClosedSpy.wait());
+}
+
+void TestXdgShellWindow::testPopupWithDismissedParent()
+{
+    // This test verifies that a popup window will be closed when the parent window is already dismissed by the compositor.
+
+    std::unique_ptr<KWayland::Client::Surface> parentSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
+    Window *parent = Test::renderAndWaitForShown(parentSurface.get(), QSize(200, 200), Qt::cyan);
+    QVERIFY(parent);
+
+    std::unique_ptr<Test::XdgPositioner> positioner = Test::createXdgPositioner();
+    positioner->set_size(10, 10);
+    positioner->set_anchor_rect(10, 10, 10, 10);
+
+    std::unique_ptr<KWayland::Client::Surface> childSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgPopup> popup = Test::createXdgPopupSurface(childSurface.get(), parentToplevel->xdgSurface(), positioner.get());
+    Window *child = Test::renderAndWaitForShown(childSurface.get(), QSize(10, 10), Qt::cyan);
+    QVERIFY(child);
+
+    QSignalSpy childDoneSpy(popup.get(), &Test::XdgPopup::doneReceived);
+    child->popupDone();
+    QVERIFY(childDoneSpy.wait());
+
+    // A nested popup will be dismissed immediately if its parent popup is already dismissed.
+    std::unique_ptr<KWayland::Client::Surface> grandChildSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgPopup> grandChildPopup = Test::createXdgPopupSurface(grandChildSurface.get(), popup->xdgSurface(), positioner.get(), Test::CreationSetup::CreateOnly);
+    QSignalSpy grandChildDoneSpy(grandChildPopup.get(), &Test::XdgPopup::doneReceived);
+    grandChildPopup->xdgSurface()->surface()->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(grandChildDoneSpy.wait());
 }
 
 void TestXdgShellWindow::testMinimumSize()
