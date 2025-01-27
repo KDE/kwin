@@ -9,7 +9,6 @@
 // own
 #include "layoutpreview.h"
 
-#include <KApplicationTrader>
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KLocalizedString>
@@ -19,6 +18,7 @@
 #include <QQmlEngine>
 #include <QScreen>
 #include <QStandardPaths>
+#include <QStringLiteral>
 
 namespace KWin
 {
@@ -108,18 +108,22 @@ ExampleClientModel::~ExampleClientModel()
 
 void ExampleClientModel::init()
 {
-    if (const auto s = KApplicationTrader::preferredService(QStringLiteral("inode/directory"))) {
-        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::Dolphin, s->name(), s->icon()};
-    }
-    if (const auto s = KApplicationTrader::preferredService(QStringLiteral("text/html"))) {
-        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::Konqueror, s->name(), s->icon()};
-    }
-    if (const auto s = KApplicationTrader::preferredService(QStringLiteral("message/rfc822"))) {
-        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::KMail, s->name(), s->icon()};
-    }
-    if (const auto s = KService::serviceByDesktopName(QStringLiteral("kdesystemsettings"))) {
-        m_thumbnails << ThumbnailInfo{WindowThumbnailItem::Systemsettings, s->name(), s->icon()};
-    }
+    m_thumbnails << ThumbnailInfo{
+        WindowThumbnailItem::Dolphin,
+        i18nc("The name of KDE's file manager in this language, if translated", "Dolphin"),
+        QStringLiteral("system-file-manager")};
+    m_thumbnails << ThumbnailInfo{
+        WindowThumbnailItem::Konqueror,
+        i18nc("The name of KDE's web browser in this language, if translated", "Konqueror"),
+        QStringLiteral("konqueror")};
+    m_thumbnails << ThumbnailInfo{
+        WindowThumbnailItem::KMail,
+        i18nc("The name of KDE's email client in this language, if translated", "KMail"),
+        QStringLiteral("kmail")};
+    m_thumbnails << ThumbnailInfo{
+        WindowThumbnailItem::Systemsettings,
+        i18nc("The name of KDE's System Settings app in this language, if translated", "System Settings"),
+        QStringLiteral("systemsettings")};
 }
 
 void ExampleClientModel::showDesktopThumbnail(bool showDesktop)
