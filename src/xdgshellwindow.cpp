@@ -1701,7 +1701,7 @@ void XdgPopupWindow::handleRoleDestroyed()
         disconnect(transientFor(), &Window::frameGeometryChanged,
                    this, &XdgPopupWindow::relayout);
         disconnect(transientFor(), &Window::closed,
-                   this, &XdgPopupWindow::destroyWindow);
+                   this, &XdgPopupWindow::popupDone);
     }
 
     m_shellSurface->disconnect(this);
@@ -1850,7 +1850,7 @@ void XdgPopupWindow::initialize()
 
     updateRelativePlacement();
     connect(parent, &Window::frameGeometryChanged, this, &XdgPopupWindow::relayout);
-    connect(parent, &Window::closed, this, &XdgPopupWindow::destroyWindow);
+    connect(parent, &Window::closed, this, &XdgPopupWindow::popupDone);
 
     workspace()->placement()->place(this, QRectF());
     scheduleConfigure();
