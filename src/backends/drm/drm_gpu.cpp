@@ -161,8 +161,7 @@ void DrmGpu::initDrmResources()
             qCDebug(KWIN_DRM) << "Number of planes on GPU" << this << ":" << planeResources->count_planes;
             // create the plane objects
             for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
-                DrmUniquePtr<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
-                auto plane = std::make_unique<DrmPlane>(this, kplane->plane_id);
+                auto plane = std::make_unique<DrmPlane>(this, planeResources->planes[i]);
                 if (plane->init()) {
                     m_allObjects << plane.get();
                     m_planes.push_back(std::move(plane));
