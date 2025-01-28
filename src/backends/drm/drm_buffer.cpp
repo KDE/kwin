@@ -34,12 +34,11 @@ namespace KWin
 static bool s_envIsSet = false;
 static bool s_disableBufferWait = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_BUFFER_READABILITY_CHECKS", &s_envIsSet) && s_envIsSet;
 
-DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer, FileDescriptor &&readFence)
-    : m_framebufferId(fbId)
-    , m_gpu(gpu)
+DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, GraphicsBuffer *buffer, FileDescriptor &&readFence)
+    : m_data(data)
     , m_bufferRef(buffer)
 {
-    if (s_disableBufferWait || ((m_gpu->isVmwgfx()) && !s_envIsSet)) {
+    if (s_disableBufferWait || ((data->m_gpu->isVmwgfx()) && !s_envIsSet)) {
         // buffer readability checks cause frames to be wrongly delayed on Virtual Machines running vmwgfx
         m_readable = true;
     }
@@ -57,7 +56,7 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
 #endif
 }
 
-DrmFramebuffer::~DrmFramebuffer()
+DrmFramebufferData::~DrmFramebufferData()
 {
     uint32_t nonConstFb = m_framebufferId;
 
@@ -76,7 +75,7 @@ DrmFramebuffer::~DrmFramebuffer()
 
 uint32_t DrmFramebuffer::framebufferId() const
 {
-    return m_framebufferId;
+    return m_data->m_framebufferId;
 }
 
 GraphicsBuffer *DrmFramebuffer::buffer() const

@@ -61,6 +61,12 @@ class KWIN_EXPORT GraphicsBuffer : public QObject
 
 public:
     explicit GraphicsBuffer(QObject *parent = nullptr);
+    ~GraphicsBuffer()
+    {
+        if (m_destructor) {
+            m_destructor(this);
+        }
+    }
 
     bool isReferenced() const;
     bool isDropped() const;
@@ -95,6 +101,11 @@ public:
     void addReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
     static bool alphaChannelFromDrmFormat(uint32_t format);
+    void setDestructor(const std::function<void(GraphicsBuffer *)> &destructor)
+    {
+        Q_ASSERT(!m_destructor);
+        m_destructor = destructor;
+    }
 
 Q_SIGNALS:
     void released();
@@ -103,6 +114,7 @@ protected:
     int m_refCount = 0;
     bool m_dropped = false;
     std::vector<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
+    std::function<void(GraphicsBuffer *)> m_destructor;
 };
 
 /**
