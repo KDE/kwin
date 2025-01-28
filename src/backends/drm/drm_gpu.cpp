@@ -254,16 +254,19 @@ bool DrmGpu::updateOutputs()
 
     // In principle these things are supposed to be detected through the wayland protocol.
     // In practice SteamVR doesn't always behave correctly
-    DrmUniquePtr<drmModeLesseeListRes> lessees{drmModeListLessees(m_fd)};
-    for (const auto &output : std::as_const(m_drmOutputs)) {
-        if (output->lease()) {
-            const bool leaseActive = std::ranges::any_of(std::span(lessees->lessees, lessees->count), [output](uint32_t id) {
-                return output->lease()->lesseeId() == id;
-            });
-            if (!leaseActive) {
-                Q_EMIT output->lease()->revokeRequested();
+    if (DrmUniquePtr<drmModeLesseeListRes> lessees{drmModeListLessees(m_fd)}) {
+        for (const auto &output : std::as_const(m_drmOutputs)) {
+            if (output->lease()) {
+                const bool leaseActive = std::ranges::any_of(std::span(lessees->lessees, lessees->count), [output](uint32_t id) {
+                    return output->lease()->lesseeId() == id;
+                });
+                if (!leaseActive) {
+                    Q_EMIT output->lease()->revokeRequested();
+                }
             }
         }
+    } else {
+        qCWarning(KWIN_DRM) << "drmModeListLessees() failed:" << strerror(errno);
     }
 
     // update crtc properties
