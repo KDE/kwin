@@ -105,6 +105,8 @@ public:
     void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
 
     bool updateOutputs();
+    void finishUpdateOutputs();
+
     void removeOutputs();
 
     DrmPipeline::Error testPendingConfiguration();
@@ -164,6 +166,9 @@ private:
     QList<DrmPipeline *> m_pipelines;
 
     QList<DrmOutput *> m_drmOutputs;
+
+    QList<DrmOutput *> m_zombieOutputs;
+    std::vector<std::shared_ptr<DrmConnector>> m_zombieConnectors;
 
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     QSize m_cursorSize;

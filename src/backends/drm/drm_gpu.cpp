@@ -108,7 +108,12 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
 
 DrmGpu::~DrmGpu()
 {
-    removeOutputs();
+    const auto outputs = m_drmOutputs;
+    for (const auto &output : outputs) {
+        removeOutput(output);
+        output->unref();
+    }
+
     m_eglDisplay.reset();
     m_crtcs.clear();
     m_connectors.clear();
@@ -303,6 +308,7 @@ bool DrmGpu::updateOutputs()
         if (!stillExists || !conn->isConnected()) {
             if (output) {
                 removeOutput(output);
+                m_zombieOutputs.append(output);
             }
         } else if (!output) {
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_drmDevice->path()), qPrintable(conn->modelName()));
@@ -323,10 +329,21 @@ bool DrmGpu::updateOutputs()
             it++;
         } else {
             m_allObjects.removeOne(it->get());
+            m_zombieConnectors.push_back(std::move(*it));
             it = m_connectors.erase(it);
         }
     }
     return true;
+}
+
+void DrmGpu::finishUpdateOutputs()
+{
+    for (DrmOutput *output : std::as_const(m_zombieOutputs)) {
+        output->unref();
+    }
+
+    m_zombieOutputs.clear();
+    m_zombieConnectors.clear();
 }
 
 void DrmGpu::removeOutputs()
@@ -334,6 +351,7 @@ void DrmGpu::removeOutputs()
     const auto outputs = m_drmOutputs;
     for (const auto &output : outputs) {
         removeOutput(output);
+        m_zombieOutputs.append(output);
     }
 }
 
@@ -572,7 +590,6 @@ void DrmGpu::removeOutput(DrmOutput *output)
     output->pipeline()->setLayers(nullptr, nullptr);
     m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
-    output->unref();
     // force a modeset to make sure unused objects are cleaned up
     m_forceModeset = true;
 }

@@ -282,6 +282,10 @@ void DrmBackend::updateOutputs()
 
     Q_EMIT outputsQueried();
 
+    for (auto it = m_gpus.begin(); it != m_gpus.end(); ++it) {
+        (*it)->finishUpdateOutputs();
+    }
+
     for (auto it = m_gpus.begin(); it != m_gpus.end();) {
         DrmGpu *gpu = it->get();
         if (gpu->isRemoved() || (gpu != primaryGpu() && gpu->drmOutputs().isEmpty())) {
