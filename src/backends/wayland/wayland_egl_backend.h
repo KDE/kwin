@@ -40,7 +40,6 @@ public:
 
     GLFramebuffer *fbo() const;
     std::shared_ptr<GLTexture> texture() const;
-    void present();
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
@@ -54,7 +53,6 @@ private:
     std::shared_ptr<EglSwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
     WaylandEglBackend *const m_backend;
-    wl_buffer *m_presentationBuffer = nullptr;
 
     friend class WaylandEglBackend;
 };

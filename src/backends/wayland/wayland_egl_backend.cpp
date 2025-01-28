@@ -104,7 +104,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     glFlush();
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
-    m_presentationBuffer = m_backend->backend()->importBuffer(m_buffer->buffer());
+    static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()));
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
 
     m_damageJournal.add(damagedRegion);
@@ -113,7 +113,6 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
 
 bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
 {
-    Q_ASSERT(!m_presentationBuffer);
     // TODO use viewporter to relax this check
     if (sourceRect() != targetRect() || targetRect() != QRectF(QPointF(0, 0), m_output->modeSize())) {
         return false;
@@ -121,21 +120,11 @@ bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const
     if (offloadTransform() != OutputTransform::Kind::Normal || color != ColorDescription::sRGB) {
         return false;
     }
-    m_presentationBuffer = m_backend->backend()->importBuffer(buffer);
-    return m_presentationBuffer;
-}
-
-void WaylandEglPrimaryLayer::present()
-{
-    const auto waylandOutput = static_cast<WaylandOutput *>(m_output);
-    KWayland::Client::Surface *surface = waylandOutput->surface();
-    if (m_presentationBuffer) {
-        surface->attachBuffer(m_presentationBuffer);
-        surface->damage(m_damageJournal.lastDamage());
-        surface->setScale(std::ceil(waylandOutput->scale()));
-        m_presentationBuffer = nullptr;
+    auto presentationBuffer = m_backend->backend()->importBuffer(buffer);
+    if (presentationBuffer) {
+        static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(presentationBuffer);
     }
-    surface->commit();
+    return presentationBuffer;
 }
 
 DrmDevice *WaylandEglPrimaryLayer::scanoutDevice() const
@@ -349,9 +338,7 @@ std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(S
 
 bool WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    m_outputs[output].primaryLayer->present();
-    static_cast<WaylandOutput *>(output)->setPendingFrame(frame);
-    Q_EMIT static_cast<WaylandOutput *>(output)->outputChange(frame->damage());
+    static_cast<WaylandOutput *>(output)->present(frame);
     return true;
 }
 
