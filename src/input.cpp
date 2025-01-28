@@ -55,7 +55,6 @@
 #include "xwayland/xwayland_interface.h"
 
 #include <KDecoration3/Decoration>
-#include <KGlobalAccel>
 #include <KLocalizedString>
 #include <decorations/decoratedwindow.h>
 
@@ -65,9 +64,6 @@
 #endif
 // Qt
 #include <QAction>
-#include <QDBusConnection>
-#include <QDBusMessage>
-#include <QDBusPendingCall>
 #include <QKeyEvent>
 #include <QThread>
 #include <qpa/qwindowsysteminterface.h>
@@ -2803,8 +2799,6 @@ private:
 
 KWIN_SINGLETON_FACTORY(InputRedirection)
 
-static const QString s_touchpadComponent = QStringLiteral("kcm_touchpad");
-
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
     , m_keyboard(new KeyboardInputRedirection(this))
@@ -2875,7 +2869,6 @@ void InputRedirection::setupWorkspace()
         updateLeds(m_keyboard->xkb()->leds());
         connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
 
-        setupTouchpadShortcuts();
         setupInputFilters();
         updateScreens();
     }
@@ -3280,57 +3273,6 @@ void InputRedirection::updateAvailableInputDevices()
     }
 }
 
-void InputRedirection::enableOrDisableTouchpads(bool enable)
-{
-
-    bool changed = false;
-    for (InputDevice *device : std::as_const(m_inputDevices)) {
-        if (!device->isTouchpad()) {
-            continue;
-        }
-        if (device->isEnabled() != enable) {
-            device->setEnabled(enable);
-            changed = true;
-        }
-    }
-    // send OSD message
-    if (changed) {
-        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
-                                                          QStringLiteral("/org/kde/osdService"),
-                                                          QStringLiteral("org.kde.osdService"),
-                                                          QStringLiteral("touchpadEnabledChanged"));
-        msg.setArguments({enable});
-        QDBusConnection::sessionBus().asyncCall(msg);
-    }
-}
-
-void InputRedirection::toggleTouchpads()
-{
-    bool enabled = true;
-    for (InputDevice *device : std::as_const(m_inputDevices)) {
-        if (!device->isTouchpad()) {
-            continue;
-        }
-
-        if (!device->isEnabled()) {
-            enabled = false;
-            break;
-        }
-    }
-
-    enableOrDisableTouchpads(!enabled);
-}
-
-void InputRedirection::enableTouchpads()
-{
-    enableOrDisableTouchpads(true);
-}
-
-void InputRedirection::disableTouchpads()
-{
-    enableOrDisableTouchpads(false);
-}
-
 void InputRedirection::addInputBackend(std::unique_ptr<InputBackend> &&inputBackend)
 {
     connect(inputBackend.get(), &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
@@ -3351,34 +3293,6 @@ void InputRedirection::setupInputBackends()
     if (waylandServer()) {
         addInputBackend(std::make_unique<FakeInputBackend>(waylandServer()->display()));
     }
-}
-
-void InputRedirection::setupTouchpadShortcuts()
-{
-    QAction *touchpadToggleAction = new QAction(this);
-    QAction *touchpadOnAction = new QAction(this);
-    QAction *touchpadOffAction = new QAction(this);
-
-    const QString touchpadDisplayName = i18n("Touchpad");
-
-    touchpadToggleAction->setObjectName(QStringLiteral("Toggle Touchpad"));
-    touchpadToggleAction->setProperty("componentName", s_touchpadComponent);
-    touchpadToggleAction->setProperty("componentDisplayName", touchpadDisplayName);
-    touchpadOnAction->setObjectName(QStringLiteral("Enable Touchpad"));
-    touchpadOnAction->setProperty("componentName", s_touchpadComponent);
-    touchpadOnAction->setProperty("componentDisplayName", touchpadDisplayName);
-    touchpadOffAction->setObjectName(QStringLiteral("Disable Touchpad"));
-    touchpadOffAction->setProperty("componentName", s_touchpadComponent);
-    touchpadOffAction->setProperty("componentDisplayName", touchpadDisplayName);
-    KGlobalAccel::self()->setDefaultShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle, Qt::ControlModifier | Qt::MetaModifier | Qt::Key_Zenkaku_Hankaku});
-    KGlobalAccel::self()->setShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle, Qt::ControlModifier | Qt::MetaModifier | Qt::Key_Zenkaku_Hankaku});
-    KGlobalAccel::self()->setDefaultShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
-    KGlobalAccel::self()->setShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
-    KGlobalAccel::self()->setDefaultShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
-    KGlobalAccel::self()->setShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
-    connect(touchpadToggleAction, &QAction::triggered, this, &InputRedirection::toggleTouchpads);
-    connect(touchpadOnAction, &QAction::triggered, this, &InputRedirection::enableTouchpads);
-    connect(touchpadOffAction, &QAction::triggered, this, &InputRedirection::disableTouchpads);
 }
 
 bool InputRedirection::hasPointer() const

@@ -201,11 +201,6 @@ public:
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
-    void enableOrDisableTouchpads(bool enable);
-    void toggleTouchpads();
-    void enableTouchpads();
-    void disableTouchpads();
-
     void addInputDevice(InputDevice *device);
     void removeInputDevice(InputDevice *device);
     void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
@@ -263,7 +258,6 @@ private Q_SLOTS:
 
 private:
     void setupInputBackends();
-    void setupTouchpadShortcuts();
     void setupWorkspace();
     void setupInputFilters();
     void updateLeds(LEDs leds);
