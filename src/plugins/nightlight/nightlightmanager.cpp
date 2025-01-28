@@ -326,6 +326,12 @@ void NightLightManager::resetSlowUpdateTimers()
         return;
     }
 
+    // If a preview is currently running, do not reset the update timer as it
+    // would change the temperature back to the normal value.
+    if (m_previewTimer && m_previewTimer->isActive()) {
+        return;
+    }
+
     // There is no need for starting the slow update timer. Screen color temperature
     // will be constant all the time now.
     if (m_mode == NightLightMode::Constant) {
