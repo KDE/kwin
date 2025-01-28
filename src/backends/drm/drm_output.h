@@ -35,7 +35,7 @@ class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    explicit DrmOutput(const std::shared_ptr<DrmConnector> &connector);
+    explicit DrmOutput(DrmConnector *connector);
     ~DrmOutput() override;
 
     DrmConnector *connector() const;
@@ -89,7 +89,7 @@ private:
 
     DrmGpu *const m_gpu;
     DrmPipeline *m_pipeline;
-    const std::shared_ptr<DrmConnector> m_connector;
+    DrmConnector *m_connector;
 
     QTimer m_turnOffTimer;
     DrmLease *m_lease = nullptr;

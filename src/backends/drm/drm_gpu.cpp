@@ -284,7 +284,7 @@ bool DrmGpu::updateOutputs()
             return connector->id() == currentConnector;
         });
         if (it == m_connectors.end()) {
-            auto conn = std::make_shared<DrmConnector>(this, currentConnector);
+            auto conn = std::make_unique<DrmConnector>(this, currentConnector);
             if (!conn->init()) {
                 continue;
             }
@@ -308,7 +308,7 @@ bool DrmGpu::updateOutputs()
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_drmDevice->path()), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
-            auto output = new DrmOutput(*it);
+            auto output = new DrmOutput(conn);
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);

@@ -40,7 +40,7 @@ namespace KWin
 static bool s_disableTripleBufferingSet = false;
 static const bool s_disableTripleBuffering = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_TRIPLE_BUFFERING", &s_disableTripleBufferingSet) == 1;
 
-DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
+DrmOutput::DrmOutput(DrmConnector *conn)
     : m_gpu(conn->gpu())
     , m_pipeline(conn->pipeline())
     , m_connector(conn)
@@ -349,7 +349,7 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 
 DrmConnector *DrmOutput::connector() const
 {
-    return m_connector.get();
+    return m_connector;
 }
 
 DrmPipeline *DrmOutput::pipeline() const

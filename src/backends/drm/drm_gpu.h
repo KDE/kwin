@@ -159,7 +159,7 @@ private:
 
     std::vector<std::unique_ptr<DrmPlane>> m_planes;
     std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;
-    std::vector<std::shared_ptr<DrmConnector>> m_connectors;
+    std::vector<std::unique_ptr<DrmConnector>> m_connectors;
     QList<DrmObject *> m_allObjects;
     QList<DrmPipeline *> m_pipelines;
 
