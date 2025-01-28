@@ -20,6 +20,8 @@
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgdecoration.h>
 
+#include "wayland-presentation-time-client-protocol.h"
+
 #include <KLocalizedString>
 
 #include <QPainter>
@@ -139,6 +141,10 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
 
 WaylandOutput::~WaylandOutput()
 {
+    if (m_presentationFeedback) {
+        wp_presentation_feedback_destroy(m_presentationFeedback);
+        m_presentationFeedback = nullptr;
+    }
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
     m_surface.reset();
@@ -149,6 +155,41 @@ void WaylandOutput::setPrimaryBuffer(wl_buffer *buffer)
     m_presentationBuffer = buffer;
 }
 
+static void handleDiscarded(void *data,
+                            struct wp_presentation_feedback *wp_presentation_feedback)
+{
+    reinterpret_cast<WaylandOutput *>(data)->frameDiscarded();
+}
+
+static void handlePresented(void *data,
+                            struct wp_presentation_feedback *wp_presentation_feedback,
+                            uint32_t tv_sec_hi,
+                            uint32_t tv_sec_lo,
+                            uint32_t tv_nsec,
+                            uint32_t refresh,
+                            uint32_t seq_hi,
+                            uint32_t seq_lo,
+                            uint32_t flags)
+{
+    const auto timestamp = std::chrono::seconds((uint64_t(tv_sec_hi) << 32) | tv_sec_lo) + std::chrono::nanoseconds(tv_nsec);
+    uint32_t refreshRate = 60'000;
+    if (refresh != 0) {
+        refreshRate = 1'000'000'000'000 / refresh;
+    }
+    reinterpret_cast<WaylandOutput *>(data)->framePresented(timestamp, refreshRate);
+}
+
+static void handleSyncOutput(void *data, struct wp_presentation_feedback *, struct wl_output *)
+{
+    // intentionally ignored
+}
+
+static constexpr struct wp_presentation_feedback_listener s_presentationListener{
+    .sync_output = handleSyncOutput,
+    .presented = handlePresented,
+    .discarded = handleDiscarded,
+};
+
 void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     Q_ASSERT(m_presentationBuffer);
@@ -156,9 +197,43 @@ void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
     m_surface->damage(frame->damage());
     m_surface->setScale(std::ceil(scale()));
     m_presentationBuffer = nullptr;
-    m_surface->commit();
+    if (auto presentationTime = m_backend->display()->presentationTime()) {
+        m_presentationFeedback = wp_presentation_feedback(presentationTime, *m_surface);
+        wp_presentation_feedback_add_listener(m_presentationFeedback, &s_presentationListener, this);
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    } else {
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
+    }
     m_frame = frame;
     Q_EMIT outputChange(frame->damage());
+}
+
+void WaylandOutput::frameDiscarded()
+{
+    m_frame.reset();
+    if (m_presentationFeedback) {
+        wp_presentation_feedback_destroy(m_presentationFeedback);
+        m_presentationFeedback = nullptr;
+    }
+}
+
+void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
+{
+    if (refreshRate != this->refreshRate()) {
+        m_refreshRate = refreshRate;
+        const auto mode = std::make_shared<OutputMode>(pixelSize(), m_refreshRate);
+        State next = m_state;
+        next.modes = {mode};
+        next.currentMode = mode;
+        setState(next);
+        m_renderLoop->setRefreshRate(m_refreshRate);
+    }
+    m_frame->presented(timestamp, PresentationMode::VSync);
+    m_frame.reset();
+    if (m_presentationFeedback) {
+        wp_presentation_feedback_destroy(m_presentationFeedback);
+        m_presentationFeedback = nullptr;
+    }
 }
 
 bool WaylandOutput::isReady() const
@@ -200,9 +275,9 @@ bool WaylandOutput::updateCursorLayer()
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale)
 {
-    m_renderLoop->setRefreshRate(s_refreshRate);
+    m_renderLoop->setRefreshRate(m_refreshRate);
 
-    auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
+    auto mode = std::make_shared<OutputMode>(pixelSize, m_refreshRate);
 
     State initialState;
     initialState.modes = {mode};
@@ -215,7 +290,7 @@ void WaylandOutput::init(const QSize &pixelSize, qreal scale)
 
 void WaylandOutput::resize(const QSize &pixelSize)
 {
-    auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
+    auto mode = std::make_shared<OutputMode>(pixelSize, m_refreshRate);
 
     State next = m_state;
     next.modes = {mode};

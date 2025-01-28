@@ -34,6 +34,7 @@
 #include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 #include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
 #include "wayland-pointer-gestures-unstable-v1-server-protocol.h"
+#include "wayland-presentation-time-client-protocol.h"
 #include "wayland-relative-pointer-unstable-v1-client-protocol.h"
 #include "wayland-xdg-decoration-unstable-v1-client-protocol.h"
 #include "wayland-xdg-shell-client-protocol.h"
@@ -334,6 +335,9 @@ WaylandDisplay::~WaylandDisplay()
     if (m_shm) {
         wl_shm_destroy(m_shm);
     }
+    if (m_presentationTime) {
+        wp_presentation_destroy(m_presentationTime);
+    }
     if (m_registry) {
         wl_registry_destroy(m_registry);
     }
@@ -420,6 +424,11 @@ WaylandLinuxDmabufV1 *WaylandDisplay::linuxDmabuf() const
     return m_linuxDmabuf.get();
 }
 
+wp_presentation *WaylandDisplay::presentationTime() const
+{
+    return m_presentationTime;
+}
+
 void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t name, const char *interface, uint32_t version)
 {
     WaylandDisplay *display = static_cast<WaylandDisplay *>(data);
@@ -456,6 +465,8 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
             return;
         }
         display->m_linuxDmabuf = std::make_unique<WaylandLinuxDmabufV1>(registry, name, std::min(version, 4u));
+    } else if (strcmp(interface, wp_presentation_interface.name) == 0) {
+        display->m_presentationTime = reinterpret_cast<wp_presentation *>(wl_registry_bind(registry, name, &wp_presentation_interface, std::min(version, 2u)));
     }
 }
 
