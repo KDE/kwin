@@ -340,11 +340,13 @@ Output *DrmBackend::createVirtualOutput(const QString &name, const QString &desc
 void DrmBackend::removeVirtualOutput(Output *output)
 {
     auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output);
-    if (!virtualOutput) {
+    Q_ASSERT(virtualOutput);
+    if (!m_virtualOutputs.removeOne(virtualOutput)) {
         return;
     }
     removeOutput(virtualOutput);
     Q_EMIT outputsQueried();
+    virtualOutput->unref();
 }
 
 DrmGpu *DrmBackend::primaryGpu() const
