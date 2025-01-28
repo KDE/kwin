@@ -34,12 +34,37 @@ namespace KWin
 static bool s_envIsSet = false;
 static bool s_disableBufferWait = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_BUFFER_READABILITY_CHECKS", &s_envIsSet) && s_envIsSet;
 
-DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer, FileDescriptor &&readFence)
-    : m_framebufferId(fbId)
-    , m_gpu(gpu)
+DrmFramebufferData::DrmFramebufferData(DrmGpu *gpu, uint32_t fbid, GraphicsBuffer *buffer)
+    : m_gpu(gpu)
+    , m_framebufferId(fbid)
+    , m_buffer(buffer)
+{
+}
+
+DrmFramebufferData::~DrmFramebufferData()
+{
+    uint32_t nonConstFb = m_framebufferId;
+
+#ifdef DRM_IOCTL_MODE_CLOSEFB
+    struct drm_mode_closefb closeArgs
+    {
+        .fb_id = m_framebufferId,
+        .pad = 0,
+    };
+    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CLOSEFB, &closeArgs) != 0) {
+        drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
+    }
+#else
+    drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
+#endif
+    m_gpu->forgetBuffer(m_buffer);
+}
+
+DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, GraphicsBuffer *buffer, FileDescriptor &&readFence)
+    : m_data(data)
     , m_bufferRef(buffer)
 {
-    if (s_disableBufferWait || ((m_gpu->isVmwgfx()) && !s_envIsSet)) {
+    if (s_disableBufferWait || ((data->m_gpu->isVmwgfx()) && !s_envIsSet)) {
         // buffer readability checks cause frames to be wrongly delayed on Virtual Machines running vmwgfx
         m_readable = true;
     }
@@ -57,26 +82,9 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
 #endif
 }
 
-DrmFramebuffer::~DrmFramebuffer()
-{
-    uint32_t nonConstFb = m_framebufferId;
-
-#ifdef DRM_IOCTL_MODE_CLOSEFB
-    struct drm_mode_closefb closeArgs{
-        .fb_id = m_framebufferId,
-        .pad = 0,
-    };
-    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CLOSEFB, &closeArgs) != 0) {
-        drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
-    }
-#else
-    drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
-#endif
-}
-
 uint32_t DrmFramebuffer::framebufferId() const
 {
-    return m_framebufferId;
+    return m_data->m_framebufferId;
 }
 
 GraphicsBuffer *DrmFramebuffer::buffer() const
@@ -121,5 +129,10 @@ void DrmFramebuffer::setDeadline(std::chrono::steady_clock::time_point deadline)
     };
     drmIoctl(m_syncFd.get(), SYNC_IOC_SET_DEADLINE, &args);
 #endif
+}
+
+std::shared_ptr<KWin::DrmFramebufferData> DrmFramebuffer::data() const
+{
+    return m_data;
 }
 }

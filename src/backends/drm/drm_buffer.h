@@ -18,15 +18,25 @@ namespace KWin
 {
 
 class DrmGpu;
-class DrmFramebuffer;
+
+class DrmFramebufferData
+{
+public:
+    DrmFramebufferData(DrmGpu *gpu, uint32_t fbid, GraphicsBuffer *buffer);
+    ~DrmFramebufferData();
+
+    DrmGpu *const m_gpu;
+    const uint32_t m_framebufferId;
+    GraphicsBuffer *const m_buffer;
+};
 
 class DrmFramebuffer
 {
 public:
-    DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer, FileDescriptor &&readFence);
-    ~DrmFramebuffer();
+    DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, GraphicsBuffer *buffer, FileDescriptor &&readFence);
 
     uint32_t framebufferId() const;
+
     /**
      * may be nullptr
      */
@@ -38,9 +48,10 @@ public:
     const FileDescriptor &syncFd() const;
     void setDeadline(std::chrono::steady_clock::time_point deadline);
 
+    std::shared_ptr<DrmFramebufferData> data() const;
+
 protected:
-    const uint32_t m_framebufferId;
-    DrmGpu *const m_gpu;
+    const std::shared_ptr<DrmFramebufferData> m_data;
     GraphicsBufferRef m_bufferRef;
     bool m_readable = false;
     FileDescriptor m_syncFd;

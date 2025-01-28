@@ -22,6 +22,7 @@ namespace KWin
 {
 
 class DrmFramebuffer;
+class DrmFramebufferData;
 class DrmCrtc;
 
 class DrmPlane : public DrmObject
@@ -102,6 +103,7 @@ public:
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
+    QList<std::shared_ptr<DrmFramebufferData>> m_lastBuffers;
 
     QHash<uint32_t, QList<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;

@@ -182,7 +182,15 @@ std::shared_ptr<DrmFramebuffer> DrmPlane::currentBuffer() const
 
 void DrmPlane::setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b)
 {
+    if (m_current == b) {
+        return;
+    }
+
     m_current = b;
+    if (b) {
+        m_lastBuffers.prepend(b->data());
+        m_lastBuffers.resize(4);
+    }
 }
 
 void DrmPlane::disable(DrmAtomicCommit *commit)

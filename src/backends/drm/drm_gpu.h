@@ -9,6 +9,7 @@
 #pragma once
 
 #include "core/drmdevice.h"
+#include "drm_buffer.h"
 #include "drm_pipeline.h"
 #include "utils/filedescriptor.h"
 #include "utils/version.h"
@@ -112,6 +113,7 @@ public:
     void maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFrame> &frame);
 
     std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer, FileDescriptor &&explicitFence);
+    void forgetBuffer(GraphicsBuffer *buf);
     void releaseBuffers();
     void recreateSurfaces();
 
@@ -169,6 +171,7 @@ private:
     QSize m_cursorSize;
     std::unordered_map<DrmPipeline *, std::shared_ptr<OutputFrame>> m_pendingModesetFrames;
     bool m_inModeset = false;
+    QHash<GraphicsBuffer *, std::weak_ptr<DrmFramebufferData>> m_fbCache;
 };
 
 }

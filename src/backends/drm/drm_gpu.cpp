@@ -850,6 +850,11 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, Fil
         return nullptr;
     }
 
+    const auto it = m_fbCache.constFind(buffer);
+    if (it != m_fbCache.constEnd()) {
+        return std::make_shared<DrmFramebuffer>(it->lock(), buffer, std::move(readFence));
+    }
+
     uint32_t handles[] = {0, 0, 0, 0};
     auto cleanup = qScopeGuard([this, &handles]() {
         for (int i = 0; i < 4; ++i) {
@@ -918,7 +923,14 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, Fil
         return nullptr;
     }
 
-    return std::make_shared<DrmFramebuffer>(this, framebufferId, buffer, std::move(readFence));
+    auto fbData = std::make_shared<DrmFramebufferData>(this, framebufferId, buffer);
+    m_fbCache[buffer] = fbData;
+    return std::make_shared<DrmFramebuffer>(fbData, buffer, std::move(readFence));
+}
+
+void DrmGpu::forgetBuffer(GraphicsBuffer *buf)
+{
+    m_fbCache.remove(buf);
 }
 
 QString DrmGpu::driverName() const
