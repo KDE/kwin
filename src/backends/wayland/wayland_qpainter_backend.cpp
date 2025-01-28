@@ -36,20 +36,6 @@ WaylandQPainterPrimaryLayer::~WaylandQPainterPrimaryLayer()
 {
 }
 
-void WaylandQPainterPrimaryLayer::present()
-{
-    wl_buffer *buffer = m_waylandOutput->backend()->importBuffer(m_back->buffer());
-    Q_ASSERT(buffer);
-
-    auto s = m_waylandOutput->surface();
-    s->attachBuffer(buffer);
-    s->damage(m_damageJournal.lastDamage());
-    s->setScale(std::ceil(m_waylandOutput->scale()));
-    s->commit();
-
-    m_swapchain->release(m_back);
-}
-
 QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
 {
     return m_damageJournal.accumulate(bufferAge, infiniteRegion());
@@ -79,6 +65,8 @@ bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, cons
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
     m_damageJournal.add(damagedRegion);
+    m_waylandOutput->setPrimaryBuffer(m_waylandOutput->backend()->importBuffer(m_back->buffer()));
+    m_swapchain->release(m_back);
     return true;
 }
 
@@ -180,8 +168,7 @@ GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
 
 bool WaylandQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    m_outputs[output].primaryLayer->present();
-    static_cast<WaylandOutput *>(output)->setPendingFrame(frame);
+    static_cast<WaylandOutput *>(output)->present(frame);
     return true;
 }
 

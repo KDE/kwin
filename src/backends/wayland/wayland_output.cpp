@@ -144,9 +144,21 @@ WaylandOutput::~WaylandOutput()
     m_surface.reset();
 }
 
-void WaylandOutput::setPendingFrame(const std::shared_ptr<OutputFrame> &frame)
+void WaylandOutput::setPrimaryBuffer(wl_buffer *buffer)
 {
+    m_presentationBuffer = buffer;
+}
+
+void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
+{
+    Q_ASSERT(m_presentationBuffer);
+    m_surface->attachBuffer(m_presentationBuffer);
+    m_surface->damage(frame->damage());
+    m_surface->setScale(std::ceil(scale()));
+    m_presentationBuffer = nullptr;
+    m_surface->commit();
     m_frame = frame;
+    Q_EMIT outputChange(frame->damage());
 }
 
 bool WaylandOutput::isReady() const

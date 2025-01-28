@@ -82,7 +82,8 @@ public:
     void updateDpmsMode(DpmsMode dpmsMode);
     void updateEnabled(bool enabled);
 
-    void setPendingFrame(const std::shared_ptr<OutputFrame> &frame);
+    void present(const std::shared_ptr<OutputFrame> &frame);
+    void setPrimaryBuffer(wl_buffer *buffer);
 
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
@@ -100,6 +101,7 @@ private:
     bool m_hasPointerLock = false;
     bool m_ready = false;
     std::shared_ptr<OutputFrame> m_frame;
+    wl_buffer *m_presentationBuffer = nullptr;
     quint32 m_pendingConfigureSerial = 0;
     QSize m_pendingConfigureSize;
     QTimer m_configureThrottleTimer;

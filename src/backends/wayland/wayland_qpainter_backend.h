@@ -42,8 +42,6 @@ public:
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
-    void present();
-
     QRegion accumulateDamage(int bufferAge) const;
 
 private:
