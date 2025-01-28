@@ -148,7 +148,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                         })
     , path(this, QByteArrayLiteral("PATH"))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
-    , m_pipeline(m_conn ? std::make_unique<DrmPipeline>(this) : nullptr)
+    , m_pipeline(std::make_unique<DrmPipeline>(this))
 {
     if (m_conn) {
         for (int i = 0; i < m_conn->count_encoders; ++i) {
