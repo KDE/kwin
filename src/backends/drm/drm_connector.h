@@ -53,6 +53,8 @@ class DrmConnector : public DrmObject
 public:
     DrmConnector(DrmGpu *gpu, uint32_t connectorId);
 
+    bool init();
+
     bool updateProperties() override;
     void disable(DrmAtomicCommit *commit) override;
 

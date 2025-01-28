@@ -72,6 +72,11 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
 {
 }
 
+bool DrmPlane::init()
+{
+    return updateProperties();
+}
+
 bool DrmPlane::updateProperties()
 {
     DrmUniquePtr<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
