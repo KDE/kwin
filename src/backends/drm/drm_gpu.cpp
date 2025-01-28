@@ -248,7 +248,7 @@ bool DrmGpu::updateOutputs()
     waitIdle();
     DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
-        qCWarning(KWIN_DRM) << "drmModeGetResources failed";
+        qCWarning(KWIN_DRM) << "drmModeGetResources failed:" << strerror(errno);
         return false;
     }
 
