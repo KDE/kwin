@@ -132,6 +132,22 @@ AnimationSettings animationSettingsFromObject(const QJSValue &object)
         settings.shader = shader.toUInt();
     }
 
+    typedef QMap<AnimationEffect::MetaType, QString> MetaTypeMap;
+    static MetaTypeMap metaTypes({{AnimationEffect::SourceAnchor, QStringLiteral("sourceAnchor")},
+                                  {AnimationEffect::TargetAnchor, QStringLiteral("targetAnchor")},
+                                  {AnimationEffect::RelativeSourceX, QStringLiteral("relativeSourceX")},
+                                  {AnimationEffect::RelativeSourceY, QStringLiteral("relativeSourceY")},
+                                  {AnimationEffect::RelativeTargetX, QStringLiteral("relativeTargetX")},
+                                  {AnimationEffect::RelativeTargetY, QStringLiteral("relativeTargetY")},
+                                  {AnimationEffect::Axis, QStringLiteral("axis")}});
+
+    for (auto it = metaTypes.constBegin(); it != metaTypes.constEnd(); ++it) {
+        QJSValue metaVal = object.property(*it);
+        if (metaVal.isNumber()) {
+            AnimationEffect::setMetaData(it.key(), metaVal.toInt(), settings.metaData);
+        }
+    }
+
     return settings;
 }
 
@@ -387,24 +403,6 @@ QJSValue ScriptedEffect::animate_helper(const QJSValue &object, AnimationType an
                     s.shader = settings.at(0).shader;
                 }
 
-                s.metaData = 0;
-                typedef QMap<AnimationEffect::MetaType, QString> MetaTypeMap;
-                static MetaTypeMap metaTypes({{AnimationEffect::SourceAnchor, QStringLiteral("sourceAnchor")},
-                                              {AnimationEffect::TargetAnchor, QStringLiteral("targetAnchor")},
-                                              {AnimationEffect::RelativeSourceX, QStringLiteral("relativeSourceX")},
-                                              {AnimationEffect::RelativeSourceY, QStringLiteral("relativeSourceY")},
-                                              {AnimationEffect::RelativeTargetX, QStringLiteral("relativeTargetX")},
-                                              {AnimationEffect::RelativeTargetY, QStringLiteral("relativeTargetY")},
-                                              {AnimationEffect::Axis, QStringLiteral("axis")}});
-
-                for (auto it = metaTypes.constBegin(),
-                          end = metaTypes.constEnd();
-                     it != end; ++it) {
-                    QJSValue metaVal = value.property(*it);
-                    if (metaVal.isNumber()) {
-                        AnimationEffect::setMetaData(it.key(), metaVal.toInt(), s.metaData);
-                    }
-                }
                 if (s.type == ShaderUniform && s.shader) {
                     auto uniformProperty = value.property(QStringLiteral("uniform")).toString();
                     auto shader = findShader(s.shader.value());
