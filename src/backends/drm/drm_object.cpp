@@ -25,11 +25,6 @@ DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, uint32_t objectType)
 {
 }
 
-bool DrmObject::init()
-{
-    return updateProperties();
-}
-
 DrmPropertyList DrmObject::queryProperties() const
 {
     DrmUniquePtr<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, m_objectType));

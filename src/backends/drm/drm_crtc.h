@@ -28,6 +28,8 @@ class DrmCrtc : public DrmObject
 public:
     explicit DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane);
 
+    bool init();
+
     void disable(DrmAtomicCommit *commit) override;
     bool updateProperties() override;
 

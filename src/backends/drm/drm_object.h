@@ -45,12 +45,6 @@ public:
     DrmObject(const DrmObject &) = delete;
 
     /**
-     * Must be called to query necessary data directly after creation.
-     * @return true when initializing was successful
-     */
-    bool init();
-
-    /**
      * Set the properties in such a way that this resource won't be used anymore
      */
     virtual void disable(DrmAtomicCommit *commit) = 0;

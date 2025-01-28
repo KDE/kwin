@@ -30,6 +30,8 @@ class DrmPlane : public DrmObject
 public:
     DrmPlane(DrmGpu *gpu, uint32_t planeId);
 
+    bool init();
+
     bool updateProperties() override;
     void disable(DrmAtomicCommit *commit) override;
 

@@ -34,6 +34,11 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
 {
 }
 
+bool DrmCrtc::init()
+{
+    return updateProperties();
+}
+
 bool DrmCrtc::updateProperties()
 {
     if (!m_crtc) {

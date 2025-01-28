@@ -147,21 +147,19 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                             QByteArrayLiteral("BT2020_YCC"),
                                                         })
     , path(this, QByteArrayLiteral("PATH"))
-    , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
-    , m_pipeline(m_conn ? std::make_unique<DrmPipeline>(this) : nullptr)
 {
-    if (m_conn) {
-        for (int i = 0; i < m_conn->count_encoders; ++i) {
-            DrmUniquePtr<drmModeEncoder> enc(drmModeGetEncoder(gpu->fd(), m_conn->encoders[i]));
-            if (!enc) {
-                qCWarning(KWIN_DRM) << "failed to get encoder" << m_conn->encoders[i];
-                continue;
-            }
-            m_possibleCrtcs |= enc->possible_crtcs;
-        }
-    } else {
-        qCWarning(KWIN_DRM) << "drmModeGetConnector failed!" << strerror(errno);
+}
+
+bool DrmConnector::init()
+{
+    if (!updateProperties()) {
+        return false;
     }
+
+    m_possibleCrtcs = drmModeConnectorGetPossibleCrtcs(gpu()->fd(), m_conn.get());
+    m_pipeline = std::make_unique<DrmPipeline>(this);
+
+    return true;
 }
 
 bool DrmConnector::isConnected() const
@@ -240,7 +238,11 @@ bool DrmConnector::updateProperties()
 {
     if (auto connector = drmModeGetConnector(gpu()->fd(), id())) {
         m_conn.reset(connector);
-    } else if (!m_conn) {
+    } else {
+        qCWarning(KWIN_DRM) << "drmModeGetConnector() failed:" << strerror(errno);
+    }
+
+    if (!m_conn) {
         return false;
     }
     DrmPropertyList props = queryProperties();
