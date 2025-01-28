@@ -111,7 +111,7 @@ DrmGpu::~DrmGpu()
     const auto outputs = m_drmOutputs;
     for (const auto &output : outputs) {
         removeOutput(output);
-        output->unref();
+        delete output;
     }
 
     m_eglDisplay.reset();
@@ -338,9 +338,7 @@ bool DrmGpu::updateOutputs()
 
 void DrmGpu::finishUpdateOutputs()
 {
-    for (DrmOutput *output : std::as_const(m_zombieOutputs)) {
-        output->unref();
-    }
+    qDeleteAll(m_zombieOutputs);
 
     m_zombieOutputs.clear();
     m_zombieConnectors.clear();

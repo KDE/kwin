@@ -420,7 +420,6 @@ void X11StandaloneBackend::doUpdateOutputs()
             nativeOutput->updateEnabled(false);
         }
         Q_EMIT outputRemoved(output);
-        output->unref();
     }
 
     // Make sure that the position of an output in m_outputs matches its xinerama index, there
@@ -438,6 +437,8 @@ void X11StandaloneBackend::doUpdateOutputs()
     });
 
     Q_EMIT outputsQueried();
+
+    qDeleteAll(removed);
 }
 
 X11Output *X11StandaloneBackend::findX11Output(const QString &name) const

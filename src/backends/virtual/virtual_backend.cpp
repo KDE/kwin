@@ -129,10 +129,11 @@ void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
         output->updateEnabled(false);
         m_outputs.removeOne(output);
         Q_EMIT outputRemoved(output);
-        output->unref();
     }
 
     Q_EMIT outputsQueried();
+
+    qDeleteAll(removed);
 }
 
 void VirtualBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)

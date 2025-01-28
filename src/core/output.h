@@ -203,9 +203,6 @@ public:
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
 
-    void ref();
-    void unref();
-
     /**
      * Maps the specified @a rect from the global coordinate system to the output-local coords.
      */
@@ -517,7 +514,6 @@ protected:
     State m_state;
     Information m_information;
     QUuid m_uuid;
-    int m_refCount = 1;
     BrightnessDevice *m_brightnessDevice = nullptr;
 };
 

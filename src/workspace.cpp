@@ -486,14 +486,7 @@ Workspace::~Workspace()
     m_placement.reset();
     delete m_windowKeysDialog;
 
-    if (m_placeholderOutput) {
-        m_placeholderOutput->unref();
-    }
     m_tileManagers.clear();
-
-    for (Output *output : std::as_const(m_outputs)) {
-        output->unref();
-    }
 
     _self = nullptr;
 }
@@ -1254,15 +1247,14 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     // The workspace requires at least one output connected.
     if (m_outputs.isEmpty()) {
         if (!m_placeholderOutput) {
-            m_placeholderOutput = new PlaceholderOutput(QSize(1920, 1080), 1);
+            m_placeholderOutput = std::make_unique<PlaceholderOutput>(QSize(1920, 1080), 1);
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
             input()->installInputEventFilter(m_placeholderFilter.get());
         }
-        m_outputs.append(m_placeholderOutput);
+        m_outputs.append(m_placeholderOutput.get());
     } else {
         if (m_placeholderOutput) {
-            m_placeholderOutput->unref();
-            m_placeholderOutput = nullptr;
+            m_placeholderOutput.reset();
             m_placeholderFilter.reset();
         }
     }
@@ -1291,7 +1283,6 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 
     const auto added = outputsSet - oldOutputsSet;
     for (Output *output : added) {
-        output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
         connect(output, &Output::wakeUp, this, &Workspace::maybeDestroyDpmsFilter);
@@ -1350,10 +1341,6 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 
     m_placementTracker->uninhibit();
     m_placementTracker->restore(getPlacementTrackerHash());
-
-    for (Output *output : removed) {
-        output->unref();
-    }
 
     Q_EMIT outputsChanged();
 }
