@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-06 00:41+0000\n"
+"POT-Creation-Date: 2025-01-28 00:42+0000\n"
 "PO-Revision-Date: 2024-09-10 11:29+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -18,12 +18,36 @@ msgstr ""
 "X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: layoutpreview.cpp:127
+#: layoutpreview.cpp:113
+#, kde-format
+msgctxt "The name of KDE's file manager in this language, if translated"
+msgid "Dolphin"
+msgstr ""
+
+#: layoutpreview.cpp:117
+#, kde-format
+msgctxt "The name of KDE's web browser in this language, if translated"
+msgid "Konqueror"
+msgstr ""
+
+#: layoutpreview.cpp:121
+#, kde-format
+msgctxt "The name of KDE's email client in this language, if translated"
+msgid "KMail"
+msgstr ""
+
+#: layoutpreview.cpp:125
+#, kde-format
+msgctxt "The name of KDE's System Settings app in this language, if translated"
+msgid "System Settings"
+msgstr ""
+
+#: layoutpreview.cpp:131
 #, kde-format
 msgid "Show Desktop"
 msgstr "Bureaublad tonen"
 
-#: layoutpreview.cpp:157
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"

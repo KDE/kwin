@@ -1,5 +1,5 @@
 #
-# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2021, 2024, 2025 Kristof Kiszel <ulysses@fsf.hu>
 # John Zero <johnzero@telnet.hu>, 1997.
 # Balazs Nagy <julian7@kva.hu>, 1998.
 # Csaba Major <major@terrasoft.hu>, 1998.
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-10 00:41+0000\n"
-"PO-Revision-Date: 2024-11-18 20:58+0100\n"
+"PO-Revision-Date: 2025-01-27 21:06+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -1095,7 +1095,7 @@ msgstr "Aktiválás és lesüllyesztés"
 #: mouse.ui:577
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Ablak maximalizálása a keretére való dupla kattintással"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:602

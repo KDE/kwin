@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-24 00:43+0000\n"
+"POT-Creation-Date: 2025-01-28 00:42+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1358,7 +1358,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Назва хоста: %1"
 
-#: input.cpp:3360
+#: input.cpp:3362
 #, kde-format
 msgid "Touchpad"
 msgstr "Сэнсарная панэль"
