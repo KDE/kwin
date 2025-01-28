@@ -15,6 +15,7 @@ struct wl_display;
 struct wl_registry;
 struct wl_shm;
 struct zwp_linux_dmabuf_v1;
+struct wp_presentation;
 
 namespace KWayland
 {
@@ -76,6 +77,7 @@ public:
     wl_shm *shm() const;
     KWayland::Client::XdgShell *xdgShell() const;
     WaylandLinuxDmabufV1 *linuxDmabuf() const;
+    wp_presentation *presentationTime() const;
 
 public Q_SLOTS:
     void flush();
@@ -87,6 +89,7 @@ private:
     wl_display *m_display = nullptr;
     wl_registry *m_registry = nullptr;
     wl_shm *m_shm = nullptr;
+    wp_presentation *m_presentationTime = nullptr;
     std::unique_ptr<WaylandEventThread> m_eventThread;
     std::unique_ptr<WaylandLinuxDmabufV1> m_linuxDmabuf;
     std::unique_ptr<KWayland::Client::Compositor> m_compositor;
