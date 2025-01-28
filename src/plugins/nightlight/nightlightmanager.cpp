@@ -286,7 +286,7 @@ void NightLightManager::resetQuickAdjustTimer(int targetTemperature)
             quickAdjust(targetTemperature);
         });
 
-        int interval = (QUICK_ADJUST_DURATION / (m_previewTimer && m_previewTimer->isActive() ? 8 : 1)) / (tempDiff / TEMPERATURE_STEP);
+        int interval = (QUICK_ADJUST_DURATION / (m_previewTimer ? 8 : 1)) / (tempDiff / TEMPERATURE_STEP);
         if (interval == 0) {
             interval = 1;
         }
@@ -328,7 +328,7 @@ void NightLightManager::resetSlowUpdateTimers()
 
     // If a preview is currently running, do not reset the update timer as it
     // would change the temperature back to the normal value.
-    if (m_previewTimer && m_previewTimer->isActive()) {
+    if (m_previewTimer) {
         return;
     }
 
@@ -420,7 +420,8 @@ void NightLightManager::preview(uint previewTemp)
 
 void NightLightManager::stopPreview()
 {
-    if (m_previewTimer && m_previewTimer->isActive()) {
+    if (m_previewTimer) {
+        m_previewTimer.reset();
         updateTransitionTimings(QDateTime::currentDateTime());
         updateTargetTemperature();
         resetQuickAdjustTimer(currentTargetTemperature());
