@@ -32,7 +32,10 @@ VirtualEglGbmLayer::VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutp
 {
 }
 
-VirtualEglGbmLayer::~VirtualEglGbmLayer() = default;
+VirtualEglGbmLayer::~VirtualEglGbmLayer()
+{
+    releaseBuffers();
+}
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::doBeginFrame()
 {
