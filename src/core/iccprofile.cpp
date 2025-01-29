@@ -10,7 +10,7 @@
 #include "utils/common.h"
 
 #include <KLocalizedString>
-#include <filesystem>
+#include <QFileInfo>
 #include <lcms2.h>
 #include <span>
 #include <tuple>
@@ -241,7 +241,7 @@ IccProfile::Expected IccProfile::load(const QString &path)
     }
     cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
     if (!handle) {
-        if (std::filesystem::exists(path.toStdString())) {
+        if (QFileInfo::exists(path)) {
             return Expected(i18n("Failed to open ICC profile \"%1\"", path));
         } else {
             return Expected(i18n("ICC profile \"%1\" doesn't exist", path));
