@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: CC0-1.0
 
 Dependencies:
-- 'on': ['@all']
-  'require':
+ - 'on': ['@all']
+   'require':
     'frameworks/breeze-icons': '@latest-kf6'
     'frameworks/extra-cmake-modules': '@latest-kf6'
     'frameworks/kcmutils': '@latest-kf6'
@@ -37,13 +37,13 @@ Dependencies:
     'third-party/wayland-protocols': '@latest'
 
 RuntimeDependencies:
-- 'on': ['@all']
-  'require':
+ - 'on': ['@all']
+   'require':
     'frameworks/kirigami': '@latest-kf6'
     'plasma/libplasma': '@same'
     'plasma/plasma-workspace': '@same' # kscreenlocker needs it
 
 Options:
-  ctest-arguments: '--repeat until-pass:5'
-  use-ccache: True
-  require-passing-tests-on: ['Linux']
+ ctest-arguments: '--repeat until-pass:5'
+ use-ccache: True
+ require-passing-tests-on: ['Linux']
