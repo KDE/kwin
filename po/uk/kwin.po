@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-28 00:42+0000\n"
+"POT-Creation-Date: 2025-01-29 00:42+0000\n"
 "PO-Revision-Date: 2024-12-25 08:52+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rysin@kde.org,kov@tokyo.email.ne.jp,iip@telus.net"
 
-#: backends/wayland/wayland_output.cpp:275
+#: backends/wayland/wayland_output.cpp:362
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Натисніть праву клавішу Ctrl для скасування захоплення вказівника"
 
-#: backends/wayland/wayland_output.cpp:277
+#: backends/wayland/wayland_output.cpp:364
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Натисніть праву клавішу Ctrl для захоплення вказівника"
 
-#: backends/wayland/wayland_output.cpp:281
+#: backends/wayland/wayland_output.cpp:368
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Засіб композиції KDE для %1"
 
-#: backends/wayland/wayland_output.cpp:284
+#: backends/wayland/wayland_output.cpp:371
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Виведення вимкнено"
 
-#: backends/wayland/wayland_output.cpp:286
+#: backends/wayland/wayland_output.cpp:373
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Виведення притлумлено"
@@ -1360,11 +1360,6 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Назва вузла: %1"
 
-#: input.cpp:3362
-#, kde-format
-msgid "Touchpad"
-msgstr "Сенсорна панель"
-
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
@@ -2419,7 +2414,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Призупинити/Поновити нічні кольори"
 
-#: plugins/nightlight/nightlightmanager.cpp:411
+#: plugins/nightlight/nightlightmanager.cpp:417
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Перегляд температури кольорів"
@@ -2792,6 +2787,11 @@ msgstr "Додати рухому плитку"
 #, kde-format
 msgid "Delete"
 msgstr "Вилучити"
+
+#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
+#, kde-format
+msgid "Touchpad"
+msgstr "Сенсорна панель"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49

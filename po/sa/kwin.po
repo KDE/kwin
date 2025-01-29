@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-28 00:42+0000\n"
+"POT-Creation-Date: 2025-01-29 00:42+0000\n"
 "PO-Revision-Date: 2024-12-25 19:14+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -29,29 +29,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "skkalwar999@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:275
+#: backends/wayland/wayland_output.cpp:362
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "सूचकं अनग्राब् कर्तुं right control नुदन्तु"
 
-#: backends/wayland/wayland_output.cpp:277
+#: backends/wayland/wayland_output.cpp:364
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "सूचकं ग्रहीतुं दक्षिणनियन्त्रणकुंजी नुदन्तु"
 
-#: backends/wayland/wayland_output.cpp:281
+#: backends/wayland/wayland_output.cpp:368
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "WHERE Wayland रचनाकार %1"
 
-#: backends/wayland/wayland_output.cpp:284
+#: backends/wayland/wayland_output.cpp:371
 #, kde-format
 msgid "- Output disabled"
 msgstr "- आउटपुट् अक्षमम्"
 
-#: backends/wayland/wayland_output.cpp:286
+#: backends/wayland/wayland_output.cpp:373
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- आउटपुट मन्द"
@@ -1342,11 +1342,6 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "होस्ट् नाम: %1"
 
-#: input.cpp:3362
-#, kde-format
-msgid "Touchpad"
-msgstr "टचपैड"
-
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
@@ -2387,7 +2382,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "रात्रौ प्रकाशं निलम्बयन्तु/पुनः आरभत"
 
-#: plugins/nightlight/nightlightmanager.cpp:411
+#: plugins/nightlight/nightlightmanager.cpp:417
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "रङ्ग तापमान पूर्वावलोकन"
@@ -2754,6 +2749,11 @@ msgstr "Floating Tile योजयन्तु"
 #, kde-format
 msgid "Delete"
 msgstr "लुप्"
+
+#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
+#, kde-format
+msgid "Touchpad"
+msgstr "टचपैड"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49

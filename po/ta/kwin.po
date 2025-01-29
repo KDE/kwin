@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-28 00:42+0000\n"
+"POT-Creation-Date: 2025-01-29 00:42+0000\n"
 "PO-Revision-Date: 2025-01-26 19:08+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -31,29 +31,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tamilpc@ambalam.com,rajan_agnel@yahoo.co.in,shafi6_loyola@yahoo.co.in"
 
-#: backends/wayland/wayland_output.cpp:275
+#: backends/wayland/wayland_output.cpp:362
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "சுட்டிக்குறியை விடுவிக்க வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/wayland/wayland_output.cpp:277
+#: backends/wayland/wayland_output.cpp:364
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "சுட்டிக்குறியை கைபற்ற வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/wayland/wayland_output.cpp:281
+#: backends/wayland/wayland_output.cpp:368
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல் %1"
 
-#: backends/wayland/wayland_output.cpp:284
+#: backends/wayland/wayland_output.cpp:371
 #, kde-format
 msgid "- Output disabled"
 msgstr "- வெளியீடு முடக்கப்பட்டுள்ளது"
 
-#: backends/wayland/wayland_output.cpp:286
+#: backends/wayland/wayland_output.cpp:373
 #, kde-format
 msgid "- Output dimmed"
 msgstr "வெளியீடு மங்கலாக்கப்பட்டுள்ளது"
@@ -1359,11 +1359,6 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "புரவன் பெயர்: %1"
 
-#: input.cpp:3362
-#, kde-format
-msgid "Touchpad"
-msgstr "தொடுபலகை"
-
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
@@ -2407,7 +2402,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "இரவு நிறமாற்றத்தை இடைநிறுத்து/தொடர்"
 
-#: plugins/nightlight/nightlightmanager.cpp:411
+#: plugins/nightlight/nightlightmanager.cpp:417
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "நிறவெப்பநிலையின் முன்னோட்டம்"
@@ -2770,6 +2765,11 @@ msgstr "மிதக்கும் பகுதியை சேர்"
 #, kde-format
 msgid "Delete"
 msgstr "நீக்கு"
+
+#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
+#, kde-format
+msgid "Touchpad"
+msgstr "தொடுபலகை"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49

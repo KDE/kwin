@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-28 00:42+0000\n"
+"POT-Creation-Date: 2025-01-29 00:42+0000\n"
 "PO-Revision-Date: 2024-09-17 14:52+0200\n"
 "Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -32,17 +32,17 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-i18n-de@kde.org, thd@kde.org"
 
-#: backends/wayland/wayland_output.cpp:275
+#: backends/wayland/wayland_output.cpp:362
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:277
+#: backends/wayland/wayland_output.cpp:364
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:281
+#: backends/wayland/wayland_output.cpp:368
 #, fuzzy, kde-format
 #| msgid "KDE Wayland Compositor"
 msgctxt ""
@@ -50,12 +50,12 @@ msgctxt ""
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE-Wayland-Compositor"
 
-#: backends/wayland/wayland_output.cpp:284
+#: backends/wayland/wayland_output.cpp:371
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:286
+#: backends/wayland/wayland_output.cpp:373
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -1373,11 +1373,6 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Rechnername: „%1“"
 
-#: input.cpp:3362
-#, kde-format
-msgid "Touchpad"
-msgstr "Touchpad"
-
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
@@ -2444,7 +2439,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Nachtlicht aussetzen/fortsetzen"
 
-#: plugins/nightlight/nightlightmanager.cpp:411
+#: plugins/nightlight/nightlightmanager.cpp:417
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Farbtemperaturvorschau"
@@ -2817,6 +2812,11 @@ msgstr "Schwebende Kachel hinzufügen"
 #, kde-format
 msgid "Delete"
 msgstr "Löschen"
+
+#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
+#, kde-format
+msgid "Touchpad"
+msgstr "Touchpad"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49

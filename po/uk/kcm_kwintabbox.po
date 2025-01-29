@@ -3,13 +3,13 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2009, 2010, 2011, 2012, 2018, 2021, 2022, 2023, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2009, 2010, 2011, 2012, 2018, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-28 00:42+0000\n"
-"PO-Revision-Date: 2024-09-10 09:58+0300\n"
+"PO-Revision-Date: 2025-01-28 21:35+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -24,25 +24,25 @@ msgstr ""
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
-msgstr ""
+msgstr "Dolphin"
 
 #: layoutpreview.cpp:117
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
-msgstr ""
+msgstr "Konqueror"
 
 #: layoutpreview.cpp:121
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
-msgstr ""
+msgstr "KMail"
 
 #: layoutpreview.cpp:125
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr ""
+msgstr "Системні параметри"
 
 #: layoutpreview.cpp:131
 #, kde-format

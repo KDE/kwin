@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-28 00:42+0000\n"
+"POT-Creation-Date: 2025-01-29 00:42+0000\n"
 "PO-Revision-Date: 2025-01-12 08:09+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -35,29 +35,29 @@ msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
 "cfmckee@gmail.com,olivermkellogg@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:275
+#: backends/wayland/wayland_output.cpp:362
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premu dekstran Ctrl-klavon por malkapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:277
+#: backends/wayland/wayland_output.cpp:364
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premu dekstran Ctrl-klavon por kapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:281
+#: backends/wayland/wayland_output.cpp:368
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Komponilo %1"
 
-#: backends/wayland/wayland_output.cpp:284
+#: backends/wayland/wayland_output.cpp:371
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Eligo malebligita"
 
-#: backends/wayland/wayland_output.cpp:286
+#: backends/wayland/wayland_output.cpp:373
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Eligo malheliĝis"
@@ -1351,11 +1351,6 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Gastigantnomo: %1"
 
-#: input.cpp:3362
-#, kde-format
-msgid "Touchpad"
-msgstr "Tuŝplato"
-
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
@@ -2402,7 +2397,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Suspendi/Reŝalti Noktan Lumon"
 
-#: plugins/nightlight/nightlightmanager.cpp:411
+#: plugins/nightlight/nightlightmanager.cpp:417
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Antaŭrigardo de Kolora Temperaturo"
@@ -2774,6 +2769,11 @@ msgstr "Aldoni Flosantan Kahelon"
 #, kde-format
 msgid "Delete"
 msgstr "Forigi"
+
+#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
+#, kde-format
+msgid "Touchpad"
+msgstr "Tuŝplato"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
