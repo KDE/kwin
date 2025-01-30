@@ -3379,7 +3379,8 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
 
 void InputRedirection::simulateUserActivity()
 {
-    for (IdleDetector *idleDetector : std::as_const(m_idleDetectors)) {
+    const auto idleDetectors = m_idleDetectors; // the detector list can potentially change
+    for (IdleDetector *idleDetector : idleDetectors) {
         idleDetector->activity();
     }
 }
