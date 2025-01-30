@@ -21,6 +21,7 @@
 #include <KWayland/Client/xdgdecoration.h>
 
 #include "wayland-presentation-time-client-protocol.h"
+#include "wayland-tearing-control-v1-client-protocol.h"
 
 #include <KLocalizedString>
 
@@ -107,10 +108,15 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         m_xdgDecoration->setMode(KWayland::Client::XdgDecoration::Mode::ServerSide);
     }
 
+    Capabilities caps = Capability::Dpms;
+    if (auto manager = backend->display()->tearingControl()) {
+        caps |= Capability::Tearing;
+        m_tearingControl = wp_tearing_control_manager_v1_get_tearing_control(manager, *m_surface);
+    }
     setInformation(Information{
         .name = name,
         .model = name,
-        .capabilities = Capability::Dpms,
+        .capabilities = caps,
     });
 
     m_turnOffTimer.setSingleShot(true);
@@ -143,6 +149,10 @@ WaylandOutput::~WaylandOutput()
     if (m_presentationFeedback) {
         wp_presentation_feedback_destroy(m_presentationFeedback);
         m_presentationFeedback = nullptr;
+    }
+    if (m_tearingControl) {
+        wp_tearing_control_v1_destroy(m_tearingControl);
+        m_tearingControl = nullptr;
     }
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
@@ -192,6 +202,14 @@ static constexpr struct wp_presentation_feedback_listener s_presentationListener
 void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     Q_ASSERT(m_presentationBuffer);
+    if (m_tearingControl) {
+        if (frame->presentationMode() == PresentationMode::Async) {
+            wp_tearing_control_v1_set_presentation_hint(m_tearingControl, WP_TEARING_CONTROL_V1_PRESENTATION_HINT_ASYNC);
+        } else {
+            wp_tearing_control_v1_set_presentation_hint(m_tearingControl, WP_TEARING_CONTROL_V1_PRESENTATION_HINT_VSYNC);
+        }
+        m_renderLoop->setPresentationMode(frame->presentationMode());
+    }
     m_surface->attachBuffer(m_presentationBuffer);
     m_surface->damage(frame->damage());
     m_surface->setScale(std::ceil(scale()));

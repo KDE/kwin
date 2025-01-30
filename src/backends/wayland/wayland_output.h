@@ -28,6 +28,7 @@ class XdgDecoration;
 
 struct wl_buffer;
 struct wp_presentation_feedback;
+struct wp_tearing_control_v1;
 
 namespace KWin
 {
@@ -110,6 +111,7 @@ private:
     QSize m_pendingConfigureSize;
     QTimer m_configureThrottleTimer;
     wp_presentation_feedback *m_presentationFeedback = nullptr;
+    wp_tearing_control_v1 *m_tearingControl = nullptr;
     uint32_t m_refreshRate = 60'000;
 };
 
