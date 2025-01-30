@@ -978,6 +978,40 @@ public:
     void read()
     {
         m_sizeHints = m_hints.sizeHints();
+
+        if (!hasMaxSize()) {
+            m_sizeHints->maxWidth = INT_MAX;
+            m_sizeHints->maxHeight = INT_MAX;
+        } else {
+            m_sizeHints->maxWidth = std::max(m_sizeHints->maxWidth, 1);
+            m_sizeHints->maxHeight = std::max(m_sizeHints->maxHeight, 1);
+        }
+
+        if (!hasBaseSize()) {
+            m_sizeHints->baseWidth = 0;
+            m_sizeHints->baseHeight = 0;
+        } else {
+            m_sizeHints->baseWidth = std::clamp(m_sizeHints->baseWidth, 0, m_sizeHints->maxWidth);
+            m_sizeHints->baseHeight = std::clamp(m_sizeHints->baseHeight, 0, m_sizeHints->maxHeight);
+        }
+
+        if (!hasMinSize()) {
+            // according to ICCCM 4.1.23 base size should be used as a fallback
+            m_sizeHints->minWidth = m_sizeHints->baseWidth;
+            m_sizeHints->maxWidth = m_sizeHints->baseHeight;
+        } else {
+            m_sizeHints->minWidth = std::max(m_sizeHints->minWidth, 0);
+            m_sizeHints->minHeight = std::max(m_sizeHints->minHeight, 0);
+        }
+
+        if (m_sizeHints->minWidth > m_sizeHints->maxWidth) {
+            m_sizeHints->minWidth = m_sizeHints->baseWidth;
+            m_sizeHints->maxHeight = INT_MAX;
+        }
+        if (m_sizeHints->minHeight > m_sizeHints->maxHeight) {
+            m_sizeHints->minHeight = m_sizeHints->baseHeight;
+            m_sizeHints->maxHeight = INT_MAX;
+        }
     }
 
     bool hasPosition() const
@@ -1014,25 +1048,14 @@ public:
     }
     QSize maxSize() const
     {
-        if (!hasMaxSize()) {
-            return QSize(INT_MAX, INT_MAX);
-        }
-        return QSize(std::max(m_sizeHints->maxWidth, 1), std::max(m_sizeHints->maxHeight, 1));
+        return QSize(m_sizeHints->maxWidth, m_sizeHints->maxHeight);
     }
     QSize minSize() const
     {
-        if (!hasMinSize()) {
-            // according to ICCCM 4.1.23 base size should be used as a fallback
-            return baseSize();
-        }
         return QSize(m_sizeHints->minWidth, m_sizeHints->minHeight);
     }
     QSize baseSize() const
     {
-        // Note: not using minSize as fallback
-        if (!hasBaseSize()) {
-            return QSize(0, 0);
-        }
         return QSize(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
     }
     QSize resizeIncrements() const
