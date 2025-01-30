@@ -7,7 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_output.h"
+#include "color_manager.h"
 #include "compositor.h"
+#include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
 #include "core/renderloop_p.h"
@@ -113,6 +115,17 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         caps |= Capability::Tearing;
         m_tearingControl = wp_tearing_control_manager_v1_get_tearing_control(manager, *m_surface);
     }
+    if (auto manager = backend->display()->colorManager()) {
+        const bool supportsHDR = manager->supportsFeature(XX_COLOR_MANAGER_V4_FEATURE_PARAMETRIC)
+            && manager->supportsFeature(XX_COLOR_MANAGER_V4_FEATURE_SET_LUMINANCES)
+            && manager->supportsPrimaries(XX_COLOR_MANAGER_V4_PRIMARIES_BT2020)
+            && manager->supportsTransferFunction(XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_GAMMA22);
+        if (supportsHDR) {
+            caps |= Capability::HighDynamicRange;
+            caps |= Capability::WideColorGamut;
+            m_colorSurface = xx_color_manager_v4_get_surface(manager->object(), *m_surface);
+        }
+    }
     setInformation(Information{
         .name = name,
         .model = name,
@@ -153,6 +166,10 @@ WaylandOutput::~WaylandOutput()
     if (m_tearingControl) {
         wp_tearing_control_v1_destroy(m_tearingControl);
         m_tearingControl = nullptr;
+    }
+    if (m_colorSurface) {
+        xx_color_management_surface_v4_destroy(m_colorSurface);
+        m_colorSurface = nullptr;
     }
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
@@ -250,6 +267,40 @@ void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t 
     if (m_presentationFeedback) {
         wp_presentation_feedback_destroy(m_presentationFeedback);
         m_presentationFeedback = nullptr;
+    }
+}
+
+void WaylandOutput::applyChanges(const OutputConfiguration &config)
+{
+    const auto props = config.constChangeSet(this);
+    if (!props) {
+        return;
+    }
+    State next = m_state;
+    next.enabled = props->enabled.value_or(m_state.enabled);
+    next.transform = props->transform.value_or(m_state.transform);
+    next.position = props->pos.value_or(m_state.position);
+    next.scale = props->scale.value_or(m_state.scale);
+    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
+    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    next.highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
+    next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
+    // TODO unconditionally use the primaries + luminance ranges from the preferred image description instead of this?
+    const auto tf = next.highDynamicRange ? TransferFunction(TransferFunction::gamma22, 0, 1000) : TransferFunction(TransferFunction::gamma22);
+    next.colorDescription = ColorDescription{
+        next.wideColorGamut ? NamedColorimetry::BT2020 : NamedColorimetry::BT709,
+        tf,
+        next.highDynamicRange ? 203 : TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22),
+        tf.minLuminance,
+        tf.maxLuminance,
+        tf.maxLuminance,
+    };
+    setState(next);
+
+    if (m_colorSurface) {
+        const auto imageDescription = m_backend->display()->colorManager()->createImageDescription(next.colorDescription);
+        xx_color_management_surface_v4_set_image_description(m_colorSurface, imageDescription, XX_COLOR_MANAGER_V4_RENDER_INTENT_PERCEPTUAL);
+        xx_image_description_v4_destroy(imageDescription);
     }
 }
 

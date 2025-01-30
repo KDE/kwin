@@ -29,6 +29,7 @@ class XdgDecoration;
 struct wl_buffer;
 struct wp_presentation_feedback;
 struct wp_tearing_control_v1;
+struct xx_color_management_surface_v4;
 
 namespace KWin
 {
@@ -90,6 +91,8 @@ public:
     void frameDiscarded();
     void framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate);
 
+    void applyChanges(const OutputConfiguration &config) override;
+
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
@@ -112,6 +115,7 @@ private:
     QTimer m_configureThrottleTimer;
     wp_presentation_feedback *m_presentationFeedback = nullptr;
     wp_tearing_control_v1 *m_tearingControl = nullptr;
+    xx_color_management_surface_v4 *m_colorSurface = nullptr;
     uint32_t m_refreshRate = 60'000;
 };
 

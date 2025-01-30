@@ -30,6 +30,8 @@
 #include <wayland-client.h>
 #include <xf86drm.h>
 
+#include "color_manager.h"
+
 // Generated in src/wayland.
 #include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 #include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
@@ -332,6 +334,7 @@ WaylandDisplay::~WaylandDisplay()
     m_xdgDecorationManager.reset();
     m_xdgShell.reset();
     m_linuxDmabuf.reset();
+    m_colorManager.reset();
 
     if (m_shm) {
         wl_shm_destroy(m_shm);
@@ -438,6 +441,11 @@ wp_tearing_control_manager_v1 *WaylandDisplay::tearingControl() const
     return m_tearingControl;
 }
 
+ColorManager *WaylandDisplay::colorManager() const
+{
+    return m_colorManager.get();
+}
+
 void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t name, const char *interface, uint32_t version)
 {
     WaylandDisplay *display = static_cast<WaylandDisplay *>(data);
@@ -478,6 +486,9 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
         display->m_presentationTime = reinterpret_cast<wp_presentation *>(wl_registry_bind(registry, name, &wp_presentation_interface, std::min(version, 2u)));
     } else if (strcmp(interface, wp_tearing_control_v1_interface.name) == 0) {
         display->m_tearingControl = reinterpret_cast<wp_tearing_control_manager_v1 *>(wl_registry_bind(registry, name, &wp_tearing_control_v1_interface, 1));
+    } else if (strcmp(interface, xx_color_manager_v4_interface.name) == 0) {
+        const auto global = reinterpret_cast<xx_color_manager_v4 *>(wl_registry_bind(registry, name, &xx_color_manager_v4_interface, 1));
+        display->m_colorManager = std::make_unique<ColorManager>(global);
     }
 }
 

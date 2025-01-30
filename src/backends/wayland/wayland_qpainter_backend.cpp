@@ -55,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFra
 
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_back->view()->image()),
+        .renderTarget = RenderTarget(m_back->view()->image(), m_output->colorDescription()),
         .repaint = accumulateDamage(m_back->age()),
     };
 }

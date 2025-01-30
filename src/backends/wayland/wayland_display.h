@@ -39,6 +39,7 @@ namespace Wayland
 
 class WaylandEventThread;
 class WaylandLinuxDmabufFeedbackV1;
+class ColorManager;
 
 class WaylandLinuxDmabufV1
 {
@@ -80,6 +81,7 @@ public:
     WaylandLinuxDmabufV1 *linuxDmabuf() const;
     wp_presentation *presentationTime() const;
     wp_tearing_control_manager_v1 *tearingControl() const;
+    ColorManager *colorManager() const;
 
 public Q_SLOTS:
     void flush();
@@ -93,6 +95,7 @@ private:
     wl_shm *m_shm = nullptr;
     wp_presentation *m_presentationTime = nullptr;
     wp_tearing_control_manager_v1 *m_tearingControl = nullptr;
+    std::unique_ptr<ColorManager> m_colorManager;
     std::unique_ptr<WaylandEventThread> m_eventThread;
     std::unique_ptr<WaylandLinuxDmabufV1> m_linuxDmabuf;
     std::unique_ptr<KWayland::Client::Compositor> m_compositor;
