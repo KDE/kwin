@@ -34,7 +34,6 @@ namespace Wayland
 {
 
 using namespace KWayland::Client;
-static const int s_refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
 
 WaylandCursor::WaylandCursor(WaylandBackend *backend)
     : m_surface(backend->display()->compositor()->createSurface())
