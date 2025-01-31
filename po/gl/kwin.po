@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2024-12-08 12:56+0100\n"
+"PO-Revision-Date: 2025-01-19 13:39+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -321,7 +321,7 @@ msgstr "Liberación de botón do punteiro"
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr "Eixo de punteiro"
+msgstr "Eixe de punteiro"
 
 #: debug_console.cpp:247
 #, kde-format
