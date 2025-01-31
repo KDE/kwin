@@ -440,7 +440,7 @@ msgstr "Liberación de botón do punteiro"
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr "Eixo de punteiro"
+msgstr "Eixe de punteiro"
 
 #: debug_console.cpp:240
 #, kde-format
