@@ -27,6 +27,7 @@ KCM.ScrollViewKCM {
             enabled: !exportInfo.visible
             text: i18n("Add New…")
             icon.name: "list-add-symbolic"
+            displayHint: Kirigami.DisplayHint.KeepVisible
             onTriggered: kcm.createRule();
         },
         Kirigami.Action {

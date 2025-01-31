@@ -53,6 +53,7 @@ KCM.ScrollViewKCM {
         Kirigami.Action {
             text: i18nc("@action:button", "Add Desktop")
             icon.name: "list-add"
+            displayHint: Kirigami.DisplayHint.KeepVisible
             onTriggered: kcm.desktopsModel.createDesktop()
         }
     ]
