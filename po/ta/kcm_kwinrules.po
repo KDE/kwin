@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:41+0000\n"
+"POT-Creation-Date: 2025-02-01 00:42+0000\n"
 "PO-Revision-Date: 2024-10-27 12:38+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -768,27 +768,27 @@ msgstr "கேவின் விதிமுறைகள் (*.kwinrule)"
 msgid "Add New…"
 msgstr "புதியதை சேர்…"
 
-#: ui/main.qml:34
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "இறக்குமதி…"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "ஏற்றுமதியை ரத்து செய்"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "ஏற்றுமதி…"
 
-#: ui/main.qml:87
+#: ui/main.qml:88
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "குறிப்பிட்ட சாளரங்களுக்கான தனிப்பட்ட விதியேதும் அமைக்கப்படவில்லை"
 
-#: ui/main.qml:88
+#: ui/main.qml:89
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid "Click the <interface>Add New…</interface> button below to add some"
@@ -796,47 +796,47 @@ msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr "சிலவற்றை சேர்க்க, <interface>புதியதை சேர்…</interface> பட்டனை அழுத்தவும்"
 
-#: ui/main.qml:96
+#: ui/main.qml:97
 #, kde-format
 msgid "Select the rules to export"
 msgstr "ஏற்றுமதி செய்ய வேண்டிய விதிமுறைகளைத் தேர்ந்தெடுக்கவும்"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Unselect All"
 msgstr "அனைத்து தேர்வுகளை நிராகரி"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Select All"
 msgstr "அனைத்தையும் தேர்ந்தெடு"
 
-#: ui/main.qml:114
+#: ui/main.qml:115
 #, kde-format
 msgid "Save Rules"
 msgstr "விதிமுறைகளை சேமி"
 
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Edit"
 msgstr "திருத்து"
 
-#: ui/main.qml:207
+#: ui/main.qml:208
 #, kde-format
 msgid "Duplicate"
 msgstr "நகலெடு"
 
-#: ui/main.qml:213
+#: ui/main.qml:214
 #, kde-format
 msgid "Delete"
 msgstr "நீக்கு"
 
-#: ui/main.qml:245
+#: ui/main.qml:246
 #, kde-format
 msgid "Import Rules"
 msgstr "விதிமுறைகளை இறக்குமதி செய்"
 
-#: ui/main.qml:257
+#: ui/main.qml:258
 #, kde-format
 msgid "Export Rules"
 msgstr "விதிமுறைகளை ஏற்றுமதி செய்"

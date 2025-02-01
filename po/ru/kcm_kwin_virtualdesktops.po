@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2025-02-01 00:42+0000\n"
 "PO-Revision-Date: 2024-05-06 09:22+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -74,25 +74,25 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Добавить рабочий стол"
 
-#: ui/main.qml:122
+#: ui/main.qml:123
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Переименовать"
 
-#: ui/main.qml:134
+#: ui/main.qml:135
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Подтвердить переименование"
 
-#: ui/main.qml:143
+#: ui/main.qml:144
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Удалить"
 
-#: ui/main.qml:176
+#: ui/main.qml:177
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -101,37 +101,37 @@ msgstr ""
 "Параметры рабочих столов были изменены другим приложением. При сохранении "
 "параметров в этом окне будут проигнорированы сторонние изменения."
 
-#: ui/main.qml:192
+#: ui/main.qml:193
 #, kde-format
 msgid "Row %1"
 msgstr "Строка %1"
 
-#: ui/main.qml:206
+#: ui/main.qml:207
 #, kde-format
 msgid "Options:"
 msgstr "Параметры:"
 
-#: ui/main.qml:208
+#: ui/main.qml:209
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "С переходом по циклу"
 
-#: ui/main.qml:226
+#: ui/main.qml:227
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Анимация при переключении:"
 
-#: ui/main.qml:277
+#: ui/main.qml:278
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Показывать экранное уведомление при переключении:"
 
-#: ui/main.qml:296
+#: ui/main.qml:297
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 мс"
 
-#: ui/main.qml:320
+#: ui/main.qml:321
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Схематический обзор всех рабочих столов"
