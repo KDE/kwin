@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:41+0000\n"
+"POT-Creation-Date: 2025-02-01 02:33+0000\n"
 "PO-Revision-Date: 2024-11-09 20:04+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -831,73 +831,73 @@ msgstr "Правила на KWin (* .kwinrule)"
 msgid "Add New…"
 msgstr "Добавяне на ново…"
 
-#: ui/main.qml:34
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "Импортиране…"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "Анулиране на експортирането"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "Експортиране…"
 
-#: ui/main.qml:87
+#: ui/main.qml:88
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "Понастоящем няма зададени правила за конкретни прозорци"
 
-#: ui/main.qml:88
+#: ui/main.qml:89
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr "Щракнете върху бутона<interface> Добавяне на нов… </interface>"
 
-#: ui/main.qml:96
+#: ui/main.qml:97
 #, kde-format
 msgid "Select the rules to export"
 msgstr "Изберете правилата за експортиране"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Unselect All"
 msgstr "Размаркиране на всички"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Select All"
 msgstr "Избиране Всички"
 
-#: ui/main.qml:114
+#: ui/main.qml:115
 #, kde-format
 msgid "Save Rules"
 msgstr "Запазване на правилата"
 
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Edit"
 msgstr "Редактиране"
 
-#: ui/main.qml:207
+#: ui/main.qml:208
 #, kde-format
 msgid "Duplicate"
 msgstr "Дублиране"
 
-#: ui/main.qml:213
+#: ui/main.qml:214
 #, kde-format
 msgid "Delete"
 msgstr "Изтриване"
 
-#: ui/main.qml:245
+#: ui/main.qml:246
 #, kde-format
 msgid "Import Rules"
 msgstr "Правила за внасяне"
 
-#: ui/main.qml:257
+#: ui/main.qml:258
 #, kde-format
 msgid "Export Rules"
 msgstr "Експортиране на правила"

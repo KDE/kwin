@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2025-02-01 02:33+0000\n"
 "PO-Revision-Date: 2024-05-28 22:56+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -65,25 +65,25 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Asztal hozzáadása"
 
-#: ui/main.qml:122
+#: ui/main.qml:123
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Átnevezés"
 
-#: ui/main.qml:134
+#: ui/main.qml:135
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Új név megerősítése"
 
-#: ui/main.qml:143
+#: ui/main.qml:144
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: ui/main.qml:176
+#: ui/main.qml:177
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -92,37 +92,37 @@ msgstr ""
 "A virtuális asztalok beállítását a modul hatáskörén kívül módosították. A "
 "mentés felül fogja írni ezeket a változtatásokat."
 
-#: ui/main.qml:192
+#: ui/main.qml:193
 #, kde-format
 msgid "Row %1"
 msgstr "%1. sor"
 
-#: ui/main.qml:206
+#: ui/main.qml:207
 #, kde-format
 msgid "Options:"
 msgstr "Beállítások:"
 
-#: ui/main.qml:208
+#: ui/main.qml:209
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Körkörös navigáció"
 
-#: ui/main.qml:226
+#: ui/main.qml:227
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Animáció váltáskor:"
 
-#: ui/main.qml:277
+#: ui/main.qml:278
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Miniatűr megjelenítése váltáskor:"
 
-#: ui/main.qml:296
+#: ui/main.qml:297
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:320
+#: ui/main.qml:321
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Asztalelrendezés-jelzők megjelenítése"

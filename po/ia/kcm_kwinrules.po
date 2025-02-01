@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:41+0000\n"
+"POT-Creation-Date: 2025-02-01 02:33+0000\n"
 "PO-Revision-Date: 2024-09-02 15:44+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -823,73 +823,73 @@ msgstr "Regulas de KWin (*.kwinrule)"
 msgid "Add New…"
 msgstr "Adde Nove …"
 
-#: ui/main.qml:34
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "Importa…"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "Cancella exportation"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "Exporta…"
 
-#: ui/main.qml:87
+#: ui/main.qml:88
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "Nulle regulas per fenestras specific es currentemente assignate"
 
-#: ui/main.qml:88
+#: ui/main.qml:89
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr "Clicca <interface>Adde Nove...</interface>  per adder alcun"
 
-#: ui/main.qml:96
+#: ui/main.qml:97
 #, kde-format
 msgid "Select the rules to export"
 msgstr "Selige le regulas de exportar"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Unselect All"
 msgstr "Annulla toto"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Select All"
 msgstr "Selige toto"
 
-#: ui/main.qml:114
+#: ui/main.qml:115
 #, kde-format
 msgid "Save Rules"
 msgstr "Salveguarda regulas"
 
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Edit"
 msgstr "Edita"
 
-#: ui/main.qml:207
+#: ui/main.qml:208
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplica"
 
-#: ui/main.qml:213
+#: ui/main.qml:214
 #, kde-format
 msgid "Delete"
 msgstr "Dele"
 
-#: ui/main.qml:245
+#: ui/main.qml:246
 #, kde-format
 msgid "Import Rules"
 msgstr "Regulas de importation"
 
-#: ui/main.qml:257
+#: ui/main.qml:258
 #, kde-format
 msgid "Export Rules"
 msgstr "Regulas de exportation"

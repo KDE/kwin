@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2025-02-01 02:33+0000\n"
 "PO-Revision-Date: 2024-04-27 06:46+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -70,25 +70,25 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Dodaj namizje"
 
-#: ui/main.qml:122
+#: ui/main.qml:123
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Preimenuj"
 
-#: ui/main.qml:134
+#: ui/main.qml:135
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Potrdi novo ime"
 
-#: ui/main.qml:143
+#: ui/main.qml:144
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Odstrani"
 
-#: ui/main.qml:176
+#: ui/main.qml:177
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -97,37 +97,37 @@ msgstr ""
 "Navidezna namizja so bila spremenjena izven tega nastavitvenega programa. "
 "Shranjevanje bo prepisalo prejšnje spremembe."
 
-#: ui/main.qml:192
+#: ui/main.qml:193
 #, kde-format
 msgid "Row %1"
 msgstr "Vrstica %1"
 
-#: ui/main.qml:206
+#: ui/main.qml:207
 #, kde-format
 msgid "Options:"
 msgstr "Opcije:"
 
-#: ui/main.qml:208
+#: ui/main.qml:209
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Krmarjenje med namizji se krožno nadaljuje"
 
-#: ui/main.qml:226
+#: ui/main.qml:227
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Prikaži animacijo ob preklopu:"
 
-#: ui/main.qml:277
+#: ui/main.qml:278
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Ob preklopu prikaži zaslon na zaslonu:"
 
-#: ui/main.qml:296
+#: ui/main.qml:297
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:320
+#: ui/main.qml:321
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Prikaži prikazovalnik razporeda namizij"

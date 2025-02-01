@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-26 00:41+0000\n"
+"POT-Creation-Date: 2025-02-01 02:33+0000\n"
 "PO-Revision-Date: 2012-06-13 15:34+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -886,78 +886,78 @@ msgstr ""
 msgid "Add New…"
 msgstr "ថ្មី..."
 
-#: ui/main.qml:34
+#: ui/main.qml:35
 #, fuzzy, kde-format
 #| msgid "&Import"
 msgid "Import…"
 msgstr "នាំចូល"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, fuzzy, kde-format
 #| msgid "&Export"
 msgid "Cancel Export"
 msgstr "នាំចេញ"
 
-#: ui/main.qml:39
+#: ui/main.qml:40
 #, fuzzy, kde-format
 #| msgid "&Export"
 msgid "Export…"
 msgstr "នាំចេញ"
 
-#: ui/main.qml:87
+#: ui/main.qml:88
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr ""
 
-#: ui/main.qml:88
+#: ui/main.qml:89
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
 
-#: ui/main.qml:96
+#: ui/main.qml:97
 #, kde-format
 msgid "Select the rules to export"
 msgstr ""
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Unselect All"
 msgstr ""
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgid "Select All"
 msgstr ""
 
-#: ui/main.qml:114
+#: ui/main.qml:115
 #, kde-format
 msgid "Save Rules"
 msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 1919
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Edit"
 msgstr "កែ​សម្រួល​"
 
-#: ui/main.qml:207
+#: ui/main.qml:208
 #, kde-format
 msgid "Duplicate"
 msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 286
-#: ui/main.qml:213
+#: ui/main.qml:214
 #, kde-format
 msgid "Delete"
 msgstr "លុប​"
 
-#: ui/main.qml:245
+#: ui/main.qml:246
 #, kde-format
 msgid "Import Rules"
 msgstr "នាំចូល​បន្ទាត់"
 
-#: ui/main.qml:257
+#: ui/main.qml:258
 #, fuzzy, kde-format
 #| msgid "Export Rule"
 msgid "Export Rules"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2025-02-01 02:33+0000\n"
 "PO-Revision-Date: 2022-07-03 13:56+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -64,25 +64,25 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Yeni İş masası"
 
-#: ui/main.qml:122
+#: ui/main.qml:123
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Adını Dəyişmək"
 
-#: ui/main.qml:134
+#: ui/main.qml:135
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Yeni adı təsdiq edin"
 
-#: ui/main.qml:143
+#: ui/main.qml:144
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Silmək"
 
-#: ui/main.qml:176
+#: ui/main.qml:177
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -91,37 +91,37 @@ msgstr ""
 "Virtual İş Masaları başqa tətbiq tərəfindən dəyişdirildi. Bu pəncərədə "
 "ayarların saxlanılması kənar dəyişikləri inkar edəcək."
 
-#: ui/main.qml:192
+#: ui/main.qml:193
 #, kde-format
 msgid "Row %1"
 msgstr "Sətir %1"
 
-#: ui/main.qml:206
+#: ui/main.qml:207
 #, kde-format
 msgid "Options:"
 msgstr "Seçimlər:"
 
-#: ui/main.qml:208
+#: ui/main.qml:209
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Dairəvi naviqasiya"
 
-#: ui/main.qml:226
+#: ui/main.qml:227
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Dəyişdirmə zamanı animasiyaları göstərmək"
 
-#: ui/main.qml:277
+#: ui/main.qml:278
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Dəyişdirilmə zamanı bildirişi ekranda göstərmək:"
 
-#: ui/main.qml:296
+#: ui/main.qml:297
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 msan"
 
-#: ui/main.qml:320
+#: ui/main.qml:321
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Bütün İş Masalarının sxematik görünüşü"
