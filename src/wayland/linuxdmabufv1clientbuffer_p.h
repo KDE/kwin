@@ -72,6 +72,7 @@ private:
 
     LinuxDmaBufV1ClientBufferIntegration *m_integration;
     DmaBufAttributes m_attrs;
+    std::array<uint64_t, 4> m_modifiers;
     bool m_isUsed = false;
 };
 

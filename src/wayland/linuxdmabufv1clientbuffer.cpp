@@ -23,7 +23,7 @@
 
 namespace KWin
 {
-static const int s_version = 4;
+static const int s_version = 5;
 
 LinuxDmaBufV1ClientBufferIntegrationPrivate::LinuxDmaBufV1ClientBufferIntegrationPrivate(LinuxDmaBufV1ClientBufferIntegration *q, Display *display)
     : QtWaylandServer::zwp_linux_dmabuf_v1(*display, s_version)
@@ -102,34 +102,33 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_destroy(Resource *resource)
 }
 
 void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource,
-                                                         int32_t fd,
+                                                         int32_t fd_num,
                                                          uint32_t plane_idx,
                                                          uint32_t offset,
                                                          uint32_t stride,
                                                          uint32_t modifier_hi,
                                                          uint32_t modifier_lo)
 {
+    FileDescriptor fd{fd_num};
     if (Q_UNLIKELY(m_isUsed)) {
         wl_resource_post_error(resource->handle, error_already_used, "the params object has already been used to create a wl_buffer");
-        close(fd);
         return;
     }
 
     if (Q_UNLIKELY(plane_idx >= 4)) {
         wl_resource_post_error(resource->handle, error_plane_idx, "plane index %d is out of bounds", plane_idx);
-        close(fd);
         return;
     }
 
     if (Q_UNLIKELY(m_attrs.fd[plane_idx].isValid())) {
         wl_resource_post_error(resource->handle, error_plane_set, "the plane index %d was already set", plane_idx);
-        close(fd);
         return;
     }
-    m_attrs.fd[plane_idx] = FileDescriptor{fd};
+    m_attrs.fd[plane_idx] = std::move(fd);
     m_attrs.offset[plane_idx] = offset;
     m_attrs.pitch[plane_idx] = stride;
     m_attrs.modifier = (quint64(modifier_hi) << 32) | modifier_lo;
+    m_modifiers[plane_idx] = m_attrs.modifier;
     m_attrs.planeCount++;
 }
 
@@ -282,6 +281,11 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
         // fourcc format.
         if (Q_UNLIKELY(i == 0 && m_attrs.offset[i] + m_attrs.pitch[i] * height > size)) {
             wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid buffer stride of height for plane %d", i);
+            return false;
+        }
+
+        if (Q_UNLIKELY(m_attrs.modifier != m_modifiers[i])) {
+            wl_resource_post_error(resource->handle, error_invalid_format, "Tried to set a different modifier for different planes");
             return false;
         }
     }
