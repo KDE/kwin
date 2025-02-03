@@ -95,8 +95,6 @@ private Q_SLOTS:
     void handleXwaylandError(QProcess::ProcessError error);
 
 private:
-    void maybeDestroyReadyNotifier();
-
     QProcess *m_xwaylandProcess = nullptr;
     std::unique_ptr<QSocketNotifier> m_readyNotifier;
     QTimer *m_resetCrashCountTimer = nullptr;
