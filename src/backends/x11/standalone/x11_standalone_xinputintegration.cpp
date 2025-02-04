@@ -46,6 +46,8 @@ public:
     {
         GeEventMemMover ge(event);
         switch (ge->event_type) {
+        case XI_RawButtonPress:
+        case XI_RawButtonRelease:
         case XI_RawMotion: {
             if (m_x11Cursor) {
                 m_x11Cursor->notifyCursorPosChanged();
@@ -165,6 +167,8 @@ void XInputIntegration::startListening()
 
     memset(mask1, 0, sizeof(mask1));
 
+    XISetMask(mask1, XI_RawButtonPress);
+    XISetMask(mask1, XI_RawButtonRelease);
     XISetMask(mask1, XI_RawMotion);
     if (m_majorVersion >= 2 && m_minorVersion >= 2) {
         // touch events since 2.2
