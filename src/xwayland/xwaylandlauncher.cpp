@@ -199,11 +199,14 @@ bool XwaylandLauncher::start()
 
     // When Xwayland starts writing the display name to displayfd, it is ready. Alternatively,
     // the Xwayland can send us the SIGUSR1 signal, but it's already reserved for VT hand-off.
+    // Xwayland writes the display name followed by "\n". If either write() fails, Xwayland
+    // will quit. So we keep the ready file descriptor open instead of closing it when the socket
+    // notifier is activated.
     m_xcbConnectionFd = std::move(wmfd->fds[0]);
     m_readyFd = std::move(displayfd->fds[0]);
     m_readyNotifier = std::make_unique<QSocketNotifier>(m_readyFd.get(), QSocketNotifier::Read);
     connect(m_readyNotifier.get(), &QSocketNotifier::activated, this, [this]() {
-        maybeDestroyReadyNotifier();
+        m_readyNotifier.reset();
         Q_EMIT ready();
     });
 
@@ -240,8 +243,10 @@ void XwaylandLauncher::stop()
     }
     Q_EMIT finished();
 
-    maybeDestroyReadyNotifier();
     waylandServer()->destroyXWaylandConnection();
+
+    m_readyNotifier.reset();
+    m_readyFd.reset();
     m_xcbConnectionFd.reset();
 
     // When the Xwayland process is finally terminated, the finished() signal will be emitted,
@@ -254,12 +259,6 @@ void XwaylandLauncher::stop()
     }
     delete m_xwaylandProcess;
     m_xwaylandProcess = nullptr;
-}
-
-void XwaylandLauncher::maybeDestroyReadyNotifier()
-{
-    m_readyNotifier.reset();
-    m_readyFd.reset();
 }
 
 void XwaylandLauncher::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus)
