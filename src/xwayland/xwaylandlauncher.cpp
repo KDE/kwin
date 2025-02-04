@@ -181,6 +181,7 @@ bool XwaylandLauncher::start()
     m_xwaylandProcess->setArguments(arguments);
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_xwaylandProcess->setProcessEnvironment(env);
+    m_xwaylandProcess->setUnixProcessParameters(QProcess::UnixProcessFlag::UseVFork);
     m_xwaylandProcess->setChildProcessModifier([this, fdsToPass]() {
         for (const int &fd : fdsToPass) {
             const int originalFlags = fcntl(fd, F_GETFD);
