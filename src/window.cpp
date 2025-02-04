@@ -694,7 +694,7 @@ bool Window::wantsTabFocus() const
 bool Window::isSpecialWindow() const
 {
     // TODO
-    return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay() || isCriticalNotification();
+    return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay() || isCriticalNotification() || isAppletPopup();
 }
 
 void Window::demandAttention(bool set)
