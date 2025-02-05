@@ -3967,6 +3967,7 @@ void X11Window::handleXwaylandScaleChanged()
     // while KWin implicitly considers the window already resized when the scale changes,
     // this is needed to make Xwayland actually resize it as well
     resize(moveResizeGeometry().size());
+    getWmOpaqueRegion();
 }
 
 void X11Window::handleCommitted()
