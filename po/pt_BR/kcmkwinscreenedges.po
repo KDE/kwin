@@ -4,13 +4,13 @@
 #
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2009, 2010, 2012, 2013, 2014, 2016, 2019.
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2016, 2017, 2018, 2021, 2022.
-# SPDX-FileCopyrightText: 2023, 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Geraldo Simiao <geraldosimiao@fedoraproject.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-28 00:40+0000\n"
-"PO-Revision-Date: 2024-08-05 13:57-0300\n"
+"PO-Revision-Date: 2025-02-04 16:11-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -184,15 +184,13 @@ msgstr "Desabilitado"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
+#, kde-format
 msgid "Only when moving windows"
 msgstr "Somente ao mover as janelas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
 msgstr "Sempre habilitado"
 

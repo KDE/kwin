@@ -5,13 +5,13 @@
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2010, 2012, 2016, 2017, 2018, 2021, 2022.
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2009, 2010, 2011, 2012, 2014, 2015, 2019.
 # Marcus Gama <marcus.gama@gmail.com>, 2012.
-# SPDX-FileCopyrightText: 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+# SPDX-FileCopyrightText: 2024, 2025 Geraldo Simiao <geraldosimiao@fedoraproject.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-28 00:42+0000\n"
-"PO-Revision-Date: 2024-08-05 13:58-0300\n"
+"PO-Revision-Date: 2025-02-04 16:11-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #: layoutpreview.cpp:113
 #, kde-format
@@ -67,10 +67,9 @@ msgid "Alternative"
 msgstr "Alternativo"
 
 #: main.cpp:75
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Baixar novo seletor de tarefas..."
+msgstr "Baixar novos estilos para o seletor de tarefas..."
 
 #: main.cpp:93
 #, kde-format

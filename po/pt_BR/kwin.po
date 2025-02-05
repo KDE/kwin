@@ -13,14 +13,14 @@
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019, 2020.
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2010, 2012, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Thiago Masato Costa Sueto <herzenschein@gmail.com>, 2020, 2021.
-# SPDX-FileCopyrightText: 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+# SPDX-FileCopyrightText: 2024, 2025 Geraldo Simiao <geraldosimiao@fedoraproject.org>
 # SPDX-FileCopyrightText: 2024 Guilherme Marcal Silva <guimarcalsilva@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-01 00:42+0000\n"
-"PO-Revision-Date: 2024-08-06 10:18-0300\n"
+"POT-Creation-Date: 2025-02-05 00:43+0000\n"
+"PO-Revision-Date: 2025-02-04 19:00-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -127,77 +127,83 @@ msgstr "GLX/OpenGL não está disponível."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Falha ao abrir o perfil ICC \"%1\""
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 não existe"
+msgstr "O perfil ICC \"%1\" não existe"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "O perfil ICC \"%1\" não pode ser usado para telas"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"O perfil ICC \"%1\" tem espaço de conexão não suportado, apenas XYZ é "
+"suportado"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"O perfil ICC \"%1\" está quebrado, o espaço de cor de entrada/saída não é RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está quebrado, não tem ponto branco"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está quebrado, seu ponto branco é inválido"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"O perfil ICC \"%1\" está quebrado, a análise da matriz de adaptação "
+"cromática falhou"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"O perfil ICC \"%1\" está quebrado, a inversão da matriz de adaptação "
+"cromática falhou"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está quebrado, não possui primários"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"O perfil ICC \"%1\" está quebrado, não foi possível calcular seus primários"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está quebrado, seus primários são inválidos"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "O perfil ICC \"%1\" com apenas tags BToD não é suportado"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "O perfil de cores não possui tags TRC"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -467,14 +473,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
@@ -531,12 +535,10 @@ msgid "Repeat"
 msgstr "Repetição"
 
 #: debug_console.cpp:301
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Código do Qt::Key"
+msgstr "Keycode"
 
 #: debug_console.cpp:302
 #, kde-format
@@ -731,25 +733,24 @@ msgid "State"
 msgstr "Estado"
 
 #: debug_console.cpp:495
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Ferramenta do tablet"
+msgstr "Ferramenta do tablet proximidade"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Proximidade"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Entrada"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Saída"
 
 #: debug_console.cpp:497 debug_console.cpp:511 debug_console.cpp:528
 #: debug_console.cpp:572 debug_console.cpp:586
@@ -768,10 +769,9 @@ msgid "Rotation"
 msgstr "Rotação"
 
 #: debug_console.cpp:510
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Ferramenta do tablet"
+msgstr "Ferramenta do tablet eixo"
 
 #: debug_console.cpp:516 debug_console.cpp:533
 #, kde-format
@@ -784,27 +784,24 @@ msgid "Buttons"
 msgstr "Botões"
 
 #: debug_console.cpp:526
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Ferramenta do tablet"
+msgstr "Ferramenta do tablet  tip"
 
 #: debug_console.cpp:527
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Superior"
+msgstr "Tip"
 
 #: debug_console.cpp:527
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Mover para baixo"
+msgstr "Para baixo"
 
 #: debug_console.cpp:527
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Para cima"
 
 #: debug_console.cpp:543
 #, kde-format
@@ -1077,10 +1074,9 @@ msgstr "Carregar"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Sair do console de depuração"
+msgstr "Console de depuração"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -1716,11 +1712,10 @@ msgid "Fullscreen windows"
 msgstr "Janelas em tela cheia"
 
 #: plugins/eis/eisinputcapturemanager.cpp:124
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Desativar a integração com o KActivities."
+msgstr "Desativar captura de entrada ativa"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
@@ -2197,10 +2192,9 @@ msgstr "&Altura:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Alternar efeito do clique do mouse"
+msgstr "Alternar animação do clique do mouse"
 
 #: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
@@ -2621,11 +2615,10 @@ msgstr ""
 "Esc ou clique direito para cancelar."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Bloquear composição"
+msgstr "Composição"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -3126,8 +3119,7 @@ msgstr "Na ampliação e redução, alterar o zoom para o fator definido."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Fator de zoom:"
 
@@ -3135,12 +3127,11 @@ msgstr "Fator de zoom:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Mostrar grade de pixels no nível de zoom:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Ponteiro do mouse:"
 
@@ -3170,8 +3161,7 @@ msgstr "Ocultar"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Seguimento do mouse:"
 
@@ -3218,8 +3208,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Habilitar o seguimento do foco"
 
@@ -3236,8 +3225,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "Habilitar o seguimento do cursor do texto"
 
@@ -3275,7 +3263,7 @@ msgstr "Apagar esta regra (para usar na importação)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Esta regra está habilitada"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3783,17 +3771,15 @@ msgstr "Tipo de regra de Sincronização Adaptativa"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "Permitir rotação"
+msgstr "Permitir tearing"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:463
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Tipo de regra de camada"
+msgstr "Tipo de regra de tearing"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3820,17 +3806,15 @@ msgid "Log Out Anyway"
 msgstr "Encerrar sessão de qualquer maneira"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
-"As seguintes aplicações não foram fechadas:\n"
-"%1"
+"Os seguintes aplicativos não foram fechados:\n"
+"%1\n"
+" Saindo mesmo assim em 2 minutos."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4291,28 +4275,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Manter janela em todas as áreas de trabalho"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Colocar a janela lado a lado à esquerda"
+msgstr "Janela de mosaico (lado a lado) rápido personalizada à esquerda"
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Colocar a janela lado a lado à direita"
+msgstr "Janela de mosaico (lado a lado) rápido personalizada à direita"
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Colocar a janela lado a lado parte superior"
+msgstr "Janela de mosaico (lado a lado) rápido personalizada na parte superior"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Colocar a janela lado a lado na parte inferior"
+msgstr "Janela de mosaico (lado a lado) rápido personalizada na parte inferior"
 
 #: useractions.cpp:1014
 #, kde-format
@@ -4482,27 +4462,29 @@ msgstr "Mudar para a área de trabalho %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Uma das saídas relevantes não está mais disponível"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"Não é permitido desabilitar todas as saídas por meio de alterações de "
+"configuração"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "A ordem de saída fornecida não contém todas as saídas"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "A ordem de saída fornecida é inválida"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "O driver rejeitou a configuração de saída"
 
 #: window.cpp:3173
 #, kde-format
@@ -4535,7 +4517,7 @@ msgstr ""
 "remoto, como o https://paste.kde.org, em vez de colar o texto nos tópicos de "
 "suporte.\n"
 
-#: xwayland/xwaylandlauncher.cpp:270
+#: xwayland/xwaylandlauncher.cpp:269
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "O Xwayland falhou"
