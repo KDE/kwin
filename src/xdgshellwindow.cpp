@@ -1172,7 +1172,6 @@ void XdgToplevelWindow::handlePingTimeout(quint32 serial)
             m_killPrompt->start();
         }
     }
-    m_pings.erase(pingIt);
 }
 
 void XdgToplevelWindow::handlePingDelayed(quint32 serial)
