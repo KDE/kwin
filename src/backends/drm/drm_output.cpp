@@ -447,7 +447,7 @@ std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const s
 
     const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     const double brightnessFactor = (!m_brightnessDevice && allowSdrSoftwareBrightness) || effectiveHdr ? brightness : 1.0;
-    const double effectiveReferenceLuminance = 25 + (referenceLuminance - 25) * brightnessFactor;
+    const double effectiveReferenceLuminance = 5 + (referenceLuminance - 5) * brightnessFactor;
     return applyNightLight(ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry), m_channelFactors);
 }
 
