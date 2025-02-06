@@ -58,6 +58,8 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                         } else if (m_gpu->isI915()) {
                             qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/i915/kernel/-/issues");
                         }
+                        qCCritical(KWIN_DRM, "With the output of 'sudo dmesg' and 'journalctl --user-unit plasma-kwin_wayland --boot 0'");
+                        m_pageflipTimeoutDetected = true;
                     } else {
                         qCWarning(KWIN_DRM, "The main thread was hanging temporarily!");
                     }
@@ -132,6 +134,7 @@ void DrmCommitThread::submit()
     const auto vrr = commit->isVrr();
     const bool success = commit->commit();
     if (success) {
+        m_lastCommitTime = std::chrono::steady_clock::now();
         m_vrr = vrr.value_or(m_vrr);
         m_tearing = commit->isTearing();
         m_committed = std::move(m_commits.front());
@@ -332,6 +335,10 @@ void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vbl
 void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     std::unique_lock lock(m_mutex);
+    if (m_pageflipTimeoutDetected) {
+        qCCritical(KWIN_DRM, "Pageflip arrived after all, %lums after the commit", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - m_lastCommitTime).count());
+        m_pageflipTimeoutDetected = false;
+    }
     m_lastPageflip = TimePoint(timestamp);
     m_committed.reset();
     if (!m_commits.empty()) {

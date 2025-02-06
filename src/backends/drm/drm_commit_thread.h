@@ -67,12 +67,14 @@ private:
     std::condition_variable m_pong;
     TimePoint m_lastPageflip;
     TimePoint m_targetPageflipTime;
+    TimePoint m_lastCommitTime;
     std::chrono::nanoseconds m_minVblankInterval;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commitsToDelete;
     bool m_vrr = false;
     bool m_tearing = false;
     std::chrono::nanoseconds m_safetyMargin{0};
     bool m_ping = false;
+    bool m_pageflipTimeoutDetected = false;
 };
 
 }
