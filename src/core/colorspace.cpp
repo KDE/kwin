@@ -561,22 +561,40 @@ YUVMatrixCoefficients ColorDescription::yuvCoefficients() const
     return m_yuvCoefficients;
 }
 
+static QMatrix4x4 calculateYuvToRgbMatrix(double kr, double kg, double kb, bool limitedRange)
+{
+    const QMatrix4x4 conversion(
+        1, 0, 2 - 2 * kr, 0.0,
+        1, -kb / kg * (2 - 2 * kb), -kr / kg * (2 - 2 * kr), 0.0,
+        1, 2 - 2 * kb, 0, 0.0,
+        0.0, 0.0, 0.0, 1.0);
+    if (limitedRange) {
+        QMatrix4x4 limitedToFullRangeYCbCr;
+        limitedToFullRangeYCbCr.scale(255.0 / 219.0, 255.0 / 224.0, 255.0 / 224.0);
+        limitedToFullRangeYCbCr.translate(-16.0 / 255.0, -0.5, -0.5);
+        return conversion * limitedToFullRangeYCbCr;
+    } else {
+        return conversion;
+    }
+}
+
+static const QMatrix4x4 s_limitedRangeBT601 = calculateYuvToRgbMatrix(0.299, 0.587, 0.114, true);
+static const QMatrix4x4 s_limitedRangeBT709 = calculateYuvToRgbMatrix(0.2126, 0.7152, 0.0722, true);
+static const QMatrix4x4 s_limitedRangeBT2020 = calculateYuvToRgbMatrix(0.2627, 0.6780, 0.0593, true);
+
 QMatrix4x4 ColorDescription::yuvMatrix() const
 {
-    // clang-format off
     switch (m_yuvCoefficients) {
     case YUVMatrixCoefficients::Identity:
         return QMatrix4x4();
     case YUVMatrixCoefficients::BT601:
-        return QMatrix4x4{
-            1.16438356f,  0.0f,         1.59602678f, -0.874202218f,
-            1.16438356f, -0.39176229f, -0.81296764f,  0.531667823f,
-            1.16438356f,  2.01723214f,  0.0f,        -1.085630789f,
-            0.0f,         0.0f,         0.0f,         1.0f,
-        };
+        return s_limitedRangeBT601;
+    case YUVMatrixCoefficients::BT709:
+        return s_limitedRangeBT709;
+    case YUVMatrixCoefficients::BT2020:
+        return s_limitedRangeBT2020;
     }
     Q_UNREACHABLE();
-    // clang-format on
 }
 
 QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingIntent intent) const

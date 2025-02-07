@@ -200,6 +200,8 @@ public:
 enum class YUVMatrixCoefficients {
     Identity,
     BT601,
+    BT709,
+    BT2020,
 };
 
 /**

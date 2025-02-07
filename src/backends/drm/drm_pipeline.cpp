@@ -228,6 +228,20 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT601_YCbCr);
         commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
         break;
+    case YUVMatrixCoefficients::BT709:
+        if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
+            return Error::InvalidArguments;
+        }
+        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
+        commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        break;
+    case YUVMatrixCoefficients::BT2020:
+        if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
+            return Error::InvalidArguments;
+        }
+        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT2020_YCbCr);
+        commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        break;
     }
     return Error::None;
 }
