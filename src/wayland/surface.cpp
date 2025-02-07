@@ -355,7 +355,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     if (bufferRef && bufferRef->dmabufAttributes()) {
         switch (bufferRef->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
-            pending->yuvCoefficients = YUVMatrixCoefficients::BT601;
+            pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
             pending->yuvCoefficientsIsSet = true;
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription::sRGB;
