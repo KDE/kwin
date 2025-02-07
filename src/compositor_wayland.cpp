@@ -40,6 +40,18 @@
 namespace KWin
 {
 
+static bool isTearingRequested(const Item *item)
+{
+    if (item->presentationHint() == PresentationModeHint::Async) {
+        return true;
+    }
+
+    const auto childItems = item->childItems();
+    return std::ranges::any_of(childItems, [](const Item *childItem) {
+        return isTearingRequested(childItem);
+    });
+}
+
 WaylandCompositor *WaylandCompositor::create(QObject *parent)
 {
     Q_ASSERT(!s_compositor);
@@ -379,7 +391,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
 
         const bool wantsAdaptiveSync = activeWindow && activeWindow->isOnOutput(output) && activeWindow->wantsAdaptiveSync();
         const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
-        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(activeFullscreenItem->presentationHint() == PresentationModeHint::Async);
+        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
         if (vrr) {
             frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
         } else {
