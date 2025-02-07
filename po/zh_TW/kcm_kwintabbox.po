@@ -5,13 +5,13 @@
 # pan93412 <pan93412@gmail.com>, 2018.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2009, 2010.
 # Jeff Huang <s8321414@gmail.com>, 2022.
-# SPDX-FileCopyrightText: 2022, 2023, 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-28 00:42+0000\n"
-"PO-Revision-Date: 2024-09-17 07:54+0900\n"
+"PO-Revision-Date: 2025-02-06 20:33+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -19,32 +19,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "dot tw>\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 25.03.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: layoutpreview.cpp:113
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
-msgstr ""
+msgstr "Dolphin"
 
 #: layoutpreview.cpp:117
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
-msgstr ""
+msgstr "Konqueror 征服家"
 
 #: layoutpreview.cpp:121
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
-msgstr ""
+msgstr "KMail"
 
 #: layoutpreview.cpp:125
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr ""
+msgstr "系統設定"
 
 #: layoutpreview.cpp:131
 #, kde-format
