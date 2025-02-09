@@ -50,7 +50,9 @@ QRegion OutputLayer::repaints() const
 void OutputLayer::addRepaint(const QRegion &region)
 {
     m_repaints += region;
-    m_output->renderLoop()->scheduleRepaint(nullptr, nullptr);
+    if (m_output) {
+        m_output->renderLoop()->scheduleRepaint(nullptr, nullptr);
+    }
 }
 
 void OutputLayer::resetRepaints()
