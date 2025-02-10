@@ -7,13 +7,13 @@
 # Eugene Onischenko <oneugene@ukr.net>, 2002, 2004, 2005.
 # Andriy Rysin <rysin@kde.org>, 2002, 2003, 2004.
 # Ivan Petrouchtchak <fr.ivan@ukrainian-orthodox.org>, 2004, 2005, 2006, 2007, 2008.
-# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-05 02:35+0000\n"
-"PO-Revision-Date: 2024-12-25 08:52+0200\n"
+"PO-Revision-Date: 2025-02-09 17:30+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -1709,7 +1709,7 @@ msgstr "Вікна не увесь екран"
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Вимкнути активне захоплення вхідних даних"
+msgstr "Вимкнути активне захоплення введення"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
@@ -2188,7 +2188,7 @@ msgstr "&Висота:"
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Увімкнути або вимкнути анімації клацання кнопкою миші"
+msgstr "Увімкнути/Вимкнути анімації клацання кнопкою миші"
 
 #: plugins/mouseclick/mouseclick.cpp:47
 #, kde-format
@@ -2648,7 +2648,7 @@ msgstr "Максимальна частота"
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format
 msgid "Toggle Show Paint"
-msgstr "Увімкнути або вимкнути показ малювання"
+msgstr "Увімкнути/Вимкнути показ малювання"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
@@ -2948,26 +2948,25 @@ msgstr "Немає"
 #: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr "Увімкнути або вимкнути «Показ вікон» (поточна стільниця)"
+msgstr "Увімкнути/Вимкнути «Показ вікон» (поточна стільниця)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:57
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Увімкнути або вимкнути «Показ вікон» (всі стільниці)"
+msgstr "Увімкнути/Вимкнути «Показ вікон» (всі стільниці)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:66
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "Увімкнути або вимкнути «Показ вікон» (клас вікон)"
+msgstr "Увімкнути/Вимкнути «Показ вікон» (клас вікон)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
 #: plugins/windowview/windowvieweffect.cpp:75
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr ""
-"Увімкнути або вимкнути «Показ вікон» (клас Window на поточній стільниці)"
+msgstr "Увімкнути/Вимкнути «Показ вікон» (клас Window на поточній стільниці)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
@@ -3073,7 +3072,7 @@ msgstr "Пересунути збільшену область вниз"
 #: plugins/zoom/zoom.cpp:91 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Пересунути мишу для фокусування"
+msgstr "Пересувати мишу за фокусуванням"
 
 #: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:105
 #, kde-format
@@ -4112,12 +4111,12 @@ msgstr "Опустити вікно"
 #: useractions.cpp:933
 #, kde-format
 msgid "Toggle Window Raise/Lower"
-msgstr "Перемикач підняти/опустити вікно"
+msgstr "Перемкнути підняття/опускання вікна"
 
 #: useractions.cpp:935
 #, kde-format
 msgid "Make Window Fullscreen"
-msgstr "Помістити вікно на весь екран"
+msgstr "Розгорнути вікно на весь екран"
 
 #: useractions.cpp:937
 #, kde-format
@@ -4137,7 +4136,7 @@ msgstr "Утримувати вікно під іншими"
 #: useractions.cpp:943
 #, kde-format
 msgid "Activate Window Demanding Attention"
-msgstr "Активізувати вікно, що потребує уваги"
+msgstr "Задіяти вікно, що потребує уваги"
 
 #: useractions.cpp:945
 #, kde-format
@@ -4402,7 +4401,7 @@ msgstr "Вбити вікно"
 #: useractions.cpp:1138
 #, kde-format
 msgid "Activate Window (%1)"
-msgstr "Активувати вікно (%1)"
+msgstr "Задіяти вікно (%1)"
 
 #: utils/edid.cpp:340
 #, kde-format
