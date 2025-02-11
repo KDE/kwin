@@ -507,7 +507,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     }
 
     m_renderLoop->setRefreshRate(refreshRate());
-    m_renderLoop->scheduleRepaint();
 
     tryKmsColorOffloading();
 

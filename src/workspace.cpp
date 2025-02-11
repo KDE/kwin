@@ -519,6 +519,11 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
         kwinApp()->setXwaylandScale(1);
     }
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+
+    for (Output *output : std::as_const(m_outputs)) {
+        output->renderLoop()->scheduleRepaint();
+    }
+
     return true;
 }
 
