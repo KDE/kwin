@@ -114,6 +114,11 @@ Edge::Edge(ScreenEdges *parent)
             stopApproaching();
             if (m_client) {
                 m_client->showOnScreenEdge();
+                // We also set the client active if it's triggered
+                // through a touch gestures so that it can hide again
+                // if the user clicks on another window and the client
+                // loses focus.
+                m_client->setActive(true);
                 unreserve();
                 return;
             }
