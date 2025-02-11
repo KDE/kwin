@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-08 00:42+0000\n"
+"POT-Creation-Date: 2025-02-11 00:42+0000\n"
 "PO-Revision-Date: 2024-09-27 11:45+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -448,14 +448,12 @@ msgid "Delta"
 msgstr "Rozdíl"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Rozdíl x"
+msgstr ""
 
 #: debug_console.cpp:259
 #, kde-format
@@ -710,10 +708,9 @@ msgid "State"
 msgstr "Stav"
 
 #: debug_console.cpp:495
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Nástroj pro tablet"
+msgstr ""
 
 #: debug_console.cpp:496
 #, kde-format
@@ -747,10 +744,9 @@ msgid "Rotation"
 msgstr "Rotace"
 
 #: debug_console.cpp:510
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Nástroj pro tablet"
+msgstr ""
 
 #: debug_console.cpp:516 debug_console.cpp:533
 #, kde-format
@@ -763,10 +759,9 @@ msgid "Buttons"
 msgstr "Tlačítka"
 
 #: debug_console.cpp:526
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Nástroj pro tablet"
+msgstr ""
 
 #: debug_console.cpp:527
 #, kde-format
@@ -1054,10 +1049,9 @@ msgstr "Načíst"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Ukončit ladicí konzoli"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:38
@@ -3076,10 +3070,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
-msgstr "Ukazatel myši:"
+msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:80
@@ -3107,10 +3100,9 @@ msgstr "Skrýt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
-msgstr "Sledování myši:"
+msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:112
@@ -3152,10 +3144,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
-msgstr "Povolit sledování zaměření"
+msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:152
@@ -3167,10 +3158,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
-msgstr "Povolit sledování zaměření"
+msgstr ""
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -3749,17 +3739,12 @@ msgid "Log Out Anyway"
 msgstr "Přesto odhlásit"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
-"Následující aplikace nebyly zavřeny:\n"
-"%1"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4218,28 +4203,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Podržet okno na všech plochách"
 
 #: useractions.cpp:997
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Rychlá dlaždice okna doleva"
+msgstr ""
 
 #: useractions.cpp:999
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Rychlá dlaždice okna doprava"
+msgstr ""
 
 #: useractions.cpp:1001
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Rychlá dlaždice okna nahoru"
+msgstr ""
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Rychlá dlaždice okna dolů"
+msgstr ""
 
 #: useractions.cpp:1014
 #, kde-format
@@ -4361,7 +4342,7 @@ msgstr "Zabít okno"
 msgid "Activate Window (%1)"
 msgstr "Aktivovat okno (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:324
 #, kde-format
 msgid "unknown"
 msgstr "neznámý"
@@ -4456,6 +4437,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
-
-#~ msgid "EventType"
-#~ msgstr "TypUdálosti"

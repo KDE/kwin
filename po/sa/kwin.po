@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-08 00:42+0000\n"
+"POT-Creation-Date: 2025-02-11 00:42+0000\n"
 "PO-Revision-Date: 2024-12-25 19:14+0530\n"
 "Last-Translator: kali <shreekantkalwar@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -4360,7 +4360,7 @@ msgstr "किल विण्डो"
 msgid "Activate Window (%1)"
 msgstr "विण्डो सक्रियं कुर्वन्तु (%1) ."
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:324
 #, kde-format
 msgid "unknown"
 msgstr "अज्ञात"

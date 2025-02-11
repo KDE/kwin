@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-08 00:42+0000\n"
+"POT-Creation-Date: 2025-02-11 00:42+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -4543,7 +4543,7 @@ msgstr "කවුළුව වසන්න"
 msgid "Activate Window (%1)"
 msgstr "සක්‍රීය කවුළුව (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:324
 #, kde-format
 msgid "unknown"
 msgstr ""
