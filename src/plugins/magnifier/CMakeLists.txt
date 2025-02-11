@@ -15,7 +15,6 @@ target_link_libraries(magnifier PRIVATE
     kwin
 
     KF6::ConfigGui
-    KF6::ConfigWidgets
     KF6::GlobalAccel
     KF6::I18n
 )

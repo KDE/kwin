@@ -22,7 +22,6 @@ target_link_libraries(zoom PRIVATE
     kwin
 
     KF6::ConfigGui
-    KF6::ConfigWidgets
     KF6::GlobalAccel
     KF6::I18n
 )

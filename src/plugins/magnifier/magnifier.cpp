@@ -14,7 +14,8 @@
 #include "magnifierconfig.h"
 
 #include <QAction>
-#include <kstandardaction.h>
+
+#include <KStandardActions>
 
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -38,15 +39,15 @@ MagnifierEffect::MagnifierEffect()
 {
     MagnifierConfig::instance(effects->config());
     QAction *a;
-    a = KStandardAction::zoomIn(this, &MagnifierEffect::zoomIn, this);
+    a = KStandardActions::zoomIn(this, &MagnifierEffect::zoomIn, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
 
-    a = KStandardAction::zoomOut(this, &MagnifierEffect::zoomOut, this);
+    a = KStandardActions::zoomOut(this, &MagnifierEffect::zoomOut, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
 
-    a = KStandardAction::actualSize(this, &MagnifierEffect::toggle, this);
+    a = KStandardActions::actualSize(this, &MagnifierEffect::toggle, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
 
