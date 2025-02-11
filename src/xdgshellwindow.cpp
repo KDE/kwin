@@ -562,7 +562,7 @@ bool XdgToplevelWindow::isMovable() const
     if (isRequestedFullScreen()) {
         return false;
     }
-    if ((isSpecialWindow() && !isSplash() && !isToolbar()) || isAppletPopup()) {
+    if (isSpecialWindow() && !isSplash() && !isToolbar()) {
         return false;
     }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
@@ -576,7 +576,7 @@ bool XdgToplevelWindow::isMovable() const
 
 bool XdgToplevelWindow::isMovableAcrossScreens() const
 {
-    if ((isSpecialWindow() && !isSplash() && !isToolbar()) || isAppletPopup()) {
+    if (isSpecialWindow() && !isSplash() && !isToolbar()) {
         return false;
     }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
@@ -593,7 +593,7 @@ bool XdgToplevelWindow::isResizable() const
     if (isRequestedFullScreen()) {
         return false;
     }
-    if (isSpecialWindow() || isSplash() || isToolbar()) {
+    if (isSpecialWindow() && !isAppletPopup()) {
         return false;
     }
     if (rules()->checkSize(QSize()).isValid()) {

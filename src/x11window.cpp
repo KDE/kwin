@@ -4346,7 +4346,7 @@ bool X11Window::isResizable() const
     if (isFullScreen()) {
         return false;
     }
-    if (isSpecialWindow() || isSplash() || isToolbar()) {
+    if (isSpecialWindow() && !isAppletPopup()) {
         return false;
     }
     if (rules()->checkSize(QSize()).isValid()) { // forced size
