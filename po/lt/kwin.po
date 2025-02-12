@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-05 02:35+0000\n"
+"POT-Creation-Date: 2025-02-12 02:31+0000\n"
 "PO-Revision-Date: 2024-10-05 22:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -72,7 +72,7 @@ msgstr "Paspauskite dešinįjį valdymo klavišą norėdami pagriebti įvestį"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland kompozitorius"
 
-#: compositor_wayland.cpp:312 compositor_x11.cpp:457
+#: compositor_wayland.cpp:324 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Darbalaukio efektai buvo paleisti iš naujo dėl grafikos atstatymo"
@@ -4490,7 +4490,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nereaguoja)"
 
-#: workspace.cpp:1654
+#: workspace.cpp:1659
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

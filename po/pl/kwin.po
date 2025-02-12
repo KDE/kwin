@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1702007 $
+# Version: $Revision: 1702496 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-05 02:35+0000\n"
+"POT-Creation-Date: 2025-02-12 02:31+0000\n"
 "PO-Revision-Date: 2025-01-11 11:58+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -80,7 +80,7 @@ msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wprowadzanie"
 msgid "KDE Wayland Compositor"
 msgstr "Kompozytor KDE Wayland"
 
-#: compositor_wayland.cpp:312 compositor_x11.cpp:457
+#: compositor_wayland.cpp:324 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Wczytano efekty pulpitu na nowo po wyłączeniu grafiki"
@@ -4483,7 +4483,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nie odpowiada)"
 
-#: workspace.cpp:1654
+#: workspace.cpp:1659
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
