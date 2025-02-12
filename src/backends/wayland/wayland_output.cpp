@@ -192,7 +192,9 @@ static constexpr struct wp_presentation_feedback_listener s_presentationListener
 
 void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
-    Q_ASSERT(m_presentationBuffer);
+    if (!m_presentationBuffer) {
+        return;
+    }
     m_surface->attachBuffer(m_presentationBuffer);
     m_surface->damage(frame->damage());
     m_surface->setScale(std::ceil(scale()));
