@@ -111,7 +111,6 @@ int Context::openRestricted(const char *path, int flags)
     // adjust flags - based on Weston (logind-util.c)
     int fl = fcntl(fd, F_GETFL);
     auto errorHandling = [fd, this]() {
-        close(fd);
         closeRestricted(fd);
     };
     if (fl < 0) {
