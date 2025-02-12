@@ -116,6 +116,7 @@ Connection::~Connection()
         Q_EMIT deviceRemoved(device);
     }
 
+    m_eventQueue.clear();
     qDeleteAll(m_devices);
     qDeleteAll(m_tools);
 }
