@@ -93,8 +93,6 @@ void Window::setVisible(bool visible)
     } else {
         unmap();
     }
-
-    QPlatformWindow::setVisible(visible);
 }
 
 QSurfaceFormat Window::format() const
@@ -141,6 +139,11 @@ qreal Window::devicePixelRatio() const
     return m_scale;
 }
 
+bool Window::isExposed() const
+{
+    return m_exposed;
+}
+
 InternalWindow *Window::internalWindow() const
 {
     return m_handle;
@@ -153,6 +156,9 @@ void Window::map()
     }
 
     m_handle = new InternalWindow(window());
+
+    m_exposed = true;
+    QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), geometry().size()));
 }
 
 void Window::unmap()
@@ -165,6 +171,9 @@ void Window::unmap()
     m_handle = nullptr;
 
     invalidateSurface();
+
+    m_exposed = false;
+    QWindowSystemInterface::handleExposeEvent(window(), QRect());
 }
 
 }
