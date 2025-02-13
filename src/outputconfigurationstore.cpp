@@ -587,7 +587,7 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
         });
         // if the preferred mode size has a refresh rate that's too low for PCs,
         // allow falling back to a mode with lower resolution and a more usable refresh rate
-        if ((*highestRefresh)->refreshRate() >= 50000) {
+        if (highestRefresh != correctSize.end() && (*highestRefresh)->refreshRate() >= 50000) {
             return *highestRefresh;
         }
     }
