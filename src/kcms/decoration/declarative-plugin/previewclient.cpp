@@ -255,6 +255,16 @@ qreal PreviewClient::nextScale() const
     return 1;
 }
 
+QString PreviewClient::applicationMenuServiceName() const
+{
+    return QString();
+}
+
+QString PreviewClient::applicationMenuObjectPath() const
+{
+    return QString();
+}
+
 bool PreviewClient::hasApplicationMenu() const
 {
     return true;

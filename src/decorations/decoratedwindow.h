@@ -55,6 +55,8 @@ public:
     QString windowClass() const override;
     qreal scale() const override;
     qreal nextScale() const override;
+    QString applicationMenuServiceName() const override;
+    QString applicationMenuObjectPath() const override;
 
     Qt::Edges adjacentScreenEdges() const override;
 
