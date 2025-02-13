@@ -38,6 +38,7 @@ public:
     void requestActivateWindow() override;
     void raise() override;
     void lower() override;
+    bool isExposed() const override;
 
     InternalWindow *internalWindow() const;
     Swapchain *swapchain(const std::shared_ptr<EglContext> &context, const QHash<uint32_t, QList<uint64_t>> &formats);
@@ -52,6 +53,7 @@ private:
     std::weak_ptr<EglContext> m_eglContext;
     quint32 m_windowId;
     qreal m_scale = 1;
+    bool m_exposed = false;
 };
 
 }
