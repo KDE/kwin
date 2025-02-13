@@ -126,7 +126,8 @@ DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32
 
 bool DrmLutColorOp::canBeUsedFor(const ColorOp &op)
 {
-    if (op.input.max > 1.0 || op.input.min < 0.0) {
+    constexpr double eta = 0.0001;
+    if (op.input.max > 1 + eta || op.input.min < -eta) {
         return false;
     }
     if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
