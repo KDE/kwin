@@ -128,6 +128,13 @@ qreal InternalWindow::bufferScale() const
     return 1;
 }
 
+void InternalWindow::doSetNextTargetScale()
+{
+    if (m_handle) {
+        setTargetScale(m_handle->devicePixelRatio());
+    }
+}
+
 QString InternalWindow::captionNormal() const
 {
     return m_captionNormal;
