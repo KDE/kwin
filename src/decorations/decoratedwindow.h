@@ -23,7 +23,7 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivate
+class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV2
 {
     Q_OBJECT
 public:
@@ -55,6 +55,8 @@ public:
     QString windowClass() const override;
     qreal scale() const override;
     qreal nextScale() const override;
+    QString applicationMenuServiceName() const override;
+    QString applicationMenuObjectPath() const override;
 
     Qt::Edges adjacentScreenEdges() const override;
 

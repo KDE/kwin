@@ -28,7 +28,7 @@ namespace Decoration
 
 DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration)
     : QObject()
-    , DecoratedWindowPrivate(decoratedClient, decoration)
+    , DecoratedWindowPrivateV2(decoratedClient, decoration)
     , m_window(window)
     , m_clientSize(window->clientSize())
 {
@@ -77,6 +77,7 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
 
     connect(window, &Window::targetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::scaleChanged);
     connect(window, &Window::nextTargetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::nextScaleChanged);
+    connect(window, &Window::applicationMenuChanged, decoratedClient, &KDecoration3::DecoratedWindow::applicationMenuChanged);
 
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {
@@ -316,6 +317,16 @@ qreal DecoratedWindowImpl::scale() const
 qreal DecoratedWindowImpl::nextScale() const
 {
     return m_window->nextTargetScale();
+}
+
+QString DecoratedWindowImpl::applicationMenuServiceName() const
+{
+    return m_window->applicationMenuServiceName();
+}
+
+QString DecoratedWindowImpl::applicationMenuObjectPath() const
+{
+    return m_window->applicationMenuObjectPath();
 }
 }
 }

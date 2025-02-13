@@ -18,7 +18,7 @@ namespace KDecoration3
 {
 namespace Preview
 {
-class PreviewClient : public QObject, public DecoratedWindowPrivate
+class PreviewClient : public QObject, public DecoratedWindowPrivateV2
 {
     Q_OBJECT
     QML_ANONYMOUS
@@ -80,6 +80,8 @@ public:
     QString windowClass() const override;
     qreal scale() const override;
     qreal nextScale() const override;
+    QString applicationMenuServiceName() const override;
+    QString applicationMenuObjectPath() const override;
 
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;
