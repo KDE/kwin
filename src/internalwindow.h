@@ -69,6 +69,7 @@ public:
 
     void present(const InternalWindowFrame &frame);
     qreal bufferScale() const;
+    void doSetNextTargetScale() override;
     QWindow *handle() const;
 
 Q_SIGNALS:

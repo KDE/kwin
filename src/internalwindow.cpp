@@ -129,6 +129,11 @@ qreal InternalWindow::bufferScale() const
     return 1;
 }
 
+void InternalWindow::doSetNextTargetScale()
+{
+    setTargetScale(nextTargetScale());
+}
+
 QString InternalWindow::captionNormal() const
 {
     return m_captionNormal;
