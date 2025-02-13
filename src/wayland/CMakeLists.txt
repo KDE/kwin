@@ -279,7 +279,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
-    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/color-management-v1.xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/color-management/color-management-v1.xml
     BASENAME color-management-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
