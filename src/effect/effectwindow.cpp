@@ -184,7 +184,7 @@ bool EffectWindow::isOnAllDesktops() const
 
 bool EffectWindow::hasDecoration() const
 {
-    return contentsRect() != QRect(0, 0, width(), height());
+    return d->m_window->decoration();
 }
 
 bool EffectWindow::isVisible() const
