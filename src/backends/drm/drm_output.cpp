@@ -593,14 +593,16 @@ void DrmOutput::tryKmsColorOffloading()
     if (m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile) {
         colorPipeline.addTransferFunction(colorDescription().transferFunction());
         colorPipeline.addMultiplier(1.0 / colorDescription().referenceLuminance());
+        colorPipeline.addMultiplier(channelFactors);
         colorPipeline.add1DLUT(m_state.iccProfile->inverseTransferFunction());
         if (m_state.iccProfile->vcgt()) {
             colorPipeline.add1DLUT(m_state.iccProfile->vcgt());
         }
+    } else {
+        colorPipeline.addTransferFunction(colorDescription().transferFunction());
+        colorPipeline.addMultiplier(channelFactors);
+        colorPipeline.addInverseTransferFunction(colorDescription().transferFunction());
     }
-    colorPipeline.addTransferFunction(colorDescription().transferFunction());
-    colorPipeline.addMultiplier(channelFactors);
-    colorPipeline.addInverseTransferFunction(colorDescription().transferFunction());
     m_pipeline->setCrtcColorPipeline(colorPipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
