@@ -27,7 +27,7 @@ public:
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
-    virtual bool canBeUsedFor(const ColorOp &op) = 0;
+    virtual bool canBeUsedFor(const ColorOp &op, bool scaling) = 0;
     virtual void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) = 0;
     virtual void bypass(DrmAtomicCommit *commit) = 0;
 
@@ -45,7 +45,7 @@ class DrmLutColorOp : public DrmAbstractColorOp
 public:
     explicit DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize);
 
-    bool canBeUsedFor(const ColorOp &op) override;
+    bool canBeUsedFor(const ColorOp &op, bool scaling) override;
     void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
     void bypass(DrmAtomicCommit *commit) override;
 
@@ -60,7 +60,7 @@ class LegacyMatrixColorOp : public DrmAbstractColorOp
 public:
     explicit LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop);
 
-    bool canBeUsedFor(const ColorOp &op) override;
+    bool canBeUsedFor(const ColorOp &op, bool scaling) override;
     void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
     void bypass(DrmAtomicCommit *commit) override;
 
