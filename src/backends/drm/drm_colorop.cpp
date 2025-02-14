@@ -58,7 +58,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
                 .max = 1.0,
             },
         };
-        while (currentOp && !currentOp->canBeUsedFor(*initialOp)) {
+        while (currentOp && !currentOp->canBeUsedFor(*initialOp, false)) {
             currentOp = currentOp->next();
         }
         if (!currentOp) {
@@ -67,7 +67,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         currentOp = currentOp->next();
     }
     for (auto it = pipeline.ops.begin(); it != pipeline.ops.end(); it++) {
-        while (currentOp && !currentOp->canBeUsedFor(*it)) {
+        while (currentOp && !currentOp->canBeUsedFor(*it, true)) {
             currentOp = currentOp->next();
         }
         if (!currentOp) {
@@ -79,7 +79,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
     currentOp = this;
     m_cache = std::make_unique<DrmAtomicCommit>(commit->gpu());
     if (initialOp) {
-        while (!currentOp->canBeUsedFor(*initialOp)) {
+        while (!currentOp->canBeUsedFor(*initialOp, false)) {
             currentOp->bypass(m_cache.get());
             currentOp = currentOp->next();
         }
@@ -87,14 +87,14 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         currentOp = currentOp->next();
     }
     for (auto it = pipeline.ops.begin(); it != pipeline.ops.end();) {
-        while (!currentOp->canBeUsedFor(*it)) {
+        while (!currentOp->canBeUsedFor(*it, true)) {
             currentOp->bypass(m_cache.get());
             currentOp = currentOp->next();
         }
         auto firstIt = it;
         it++;
         // combine as many operations into one hardware operation as possible
-        while (it != pipeline.ops.end() && currentOp->canBeUsedFor(*it)) {
+        while (it != pipeline.ops.end() && currentOp->canBeUsedFor(*it, true)) {
             it++;
         }
         std::span operations(firstIt, it);
@@ -124,10 +124,11 @@ DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32
 {
 }
 
-bool DrmLutColorOp::canBeUsedFor(const ColorOp &op)
+bool DrmLutColorOp::canBeUsedFor(const ColorOp &op, bool scaling)
 {
     constexpr double eta = 0.0001;
-    if (op.input.max > 1 + eta || op.input.min < -eta) {
+    // if scaling is true, we can assume the input to be bounded to [0; 1] already
+    if ((!scaling && op.input.max > 1 + eta) || op.input.min < -eta) {
         return false;
     }
     if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
@@ -183,7 +184,7 @@ LegacyMatrixColorOp::LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *
 {
 }
 
-bool LegacyMatrixColorOp::canBeUsedFor(const ColorOp &op)
+bool LegacyMatrixColorOp::canBeUsedFor(const ColorOp &op, bool scaling)
 {
     // this isn't necessarily true, but let's keep things simple for now
     if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
