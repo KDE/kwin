@@ -42,15 +42,11 @@ GLXFBConfig chooseGlxFbConfig(::Display *display, const int attributes[])
     }
 
     std::stable_sort(candidates.begin(), candidates.end(), [](const FBConfig &left, const FBConfig &right) {
-        if (left.depth < right.depth) {
-            return true;
+        if (left.depth != right.depth) {
+            return left.depth < right.depth;
         }
 
-        if (left.stencil < right.stencil) {
-            return true;
-        }
-
-        return false;
+        return left.stencil < right.stencil;
     });
 
     return candidates.empty() ? nullptr : candidates.front().config;
