@@ -261,14 +261,19 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> readOutputConfig(
         return !cfg.constChangeSet(pair.second)->enabled.value_or(pair.second->isEnabled());
     });
     std::sort(outputOrder.begin(), outputOrder.end(), [](const auto &left, const auto &right) {
-        if (left.first == right.first) {
-            // sort alphabetically as a fallback
-            return left.second->name() < right.second->name();
-        } else if (left.first == 0) {
-            return false;
-        } else {
+        if (left.first != right.first) {
+            // All the outputs marked with prio 0 should be at the end of the list
+            if (left.first == 0) {
+                return false;
+            }
+            if (right.first == 0) {
+                return true;
+            }
+
             return left.first < right.first;
         }
+        // sort alphabetically as a fallback
+        return left.second->name() < right.second->name();
     });
 
     QList<Output *> order;
