@@ -143,7 +143,8 @@ std::vector<std::unique_ptr<UdevDevice>> Udev::listGPUs()
         if (device2->isBootVga()) {
             return false;
         }
-        return true;
+
+        return false;
     });
     return vect;
 #endif
