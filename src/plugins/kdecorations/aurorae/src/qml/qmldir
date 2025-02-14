@@ -1,8 +1,0 @@
-module org.kde.kwin.decoration
-plugin decorationplugin
-
-Decoration 0.1 Decoration.qml
-DecorationButton 0.1 DecorationButton.qml
-MenuButton 0.1 MenuButton.qml
-AppMenuButton 0.1 AppMenuButton.qml
-ButtonGroup 0.1 ButtonGroup.qml
