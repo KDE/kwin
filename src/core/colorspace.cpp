@@ -49,11 +49,6 @@ bool xy::operator==(const xy &other) const
         && qFuzzyCompare(y, other.y);
 }
 
-bool xy::operator!=(const xy &other) const
-{
-    return !(*this == other);
-}
-
 XYZ xyY::toXYZ() const
 {
     if (y == 0) {
@@ -71,11 +66,6 @@ bool xyY::operator==(const xyY &other) const
     return qFuzzyCompare(x, other.x)
         && qFuzzyCompare(y, other.y)
         && qFuzzyCompare(Y, other.Y);
-}
-
-bool xyY::operator!=(const xyY &other) const
-{
-    return !(*this == other);
 }
 
 xyY XYZ::toxyY() const
@@ -158,11 +148,6 @@ bool XYZ::operator==(const XYZ &other) const
     return qFuzzyCompare(X, other.X)
         && qFuzzyCompare(Y, other.Y)
         && qFuzzyCompare(Z, other.Z);
-}
-
-bool XYZ::operator!=(const XYZ &other) const
-{
-    return !(*this == other);
 }
 
 QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(XYZ sourceWhitepoint, XYZ destinationWhitepoint)
