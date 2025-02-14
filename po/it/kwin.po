@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-12 00:42+0000\n"
+"POT-Creation-Date: 2025-02-14 00:44+0000\n"
 "PO-Revision-Date: 2024-12-25 17:41+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -31,29 +31,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "smart2128vr@gmail.com,,,"
 
-#: backends/wayland/wayland_output.cpp:430
+#: backends/wayland/wayland_output.cpp:432
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premi il tasto control destro per rilasciare il puntatore"
 
-#: backends/wayland/wayland_output.cpp:432
+#: backends/wayland/wayland_output.cpp:434
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premere il tasto control destro per acquisire il puntatore"
 
-#: backends/wayland/wayland_output.cpp:436
+#: backends/wayland/wayland_output.cpp:438
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Compositore KDE Wayland %1"
 
-#: backends/wayland/wayland_output.cpp:439
+#: backends/wayland/wayland_output.cpp:441
 #, kde-format
 msgid "- Output disabled"
 msgstr "- uscita disabilitata"
 
-#: backends/wayland/wayland_output.cpp:441
+#: backends/wayland/wayland_output.cpp:443
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- uscita oscurata"

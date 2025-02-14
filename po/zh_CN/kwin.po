@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-12 00:42+0000\n"
+"POT-Creation-Date: 2025-02-14 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -27,29 +27,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-china@kde.org, csslayer@kde.org, i@guoyunhe.me, tds00@qq.com"
 
-#: backends/wayland/wayland_output.cpp:430
+#: backends/wayland/wayland_output.cpp:432
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "按右 Ctrl 键释放指针"
 
-#: backends/wayland/wayland_output.cpp:432
+#: backends/wayland/wayland_output.cpp:434
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "按右 Ctrl 键抓取指针"
 
-#: backends/wayland/wayland_output.cpp:436
+#: backends/wayland/wayland_output.cpp:438
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland 显示特效混合器 %1"
 
-#: backends/wayland/wayland_output.cpp:439
+#: backends/wayland/wayland_output.cpp:441
 #, kde-format
 msgid "- Output disabled"
 msgstr "- 输出已禁用"
 
-#: backends/wayland/wayland_output.cpp:441
+#: backends/wayland/wayland_output.cpp:443
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- 输出已变暗"

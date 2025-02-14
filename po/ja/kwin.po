@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-12 00:42+0000\n"
+"POT-Creation-Date: 2025-02-14 00:44+0000\n"
 "PO-Revision-Date: 2021-10-03 17:31-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -39,29 +39,29 @@ msgstr ""
 "kom@kde.gr.jp,shinobo@leo.bekkoame.ne.jp,ryuk@user.script.nu,okushi@kde.gr."
 "jp,tsuno@ngy.1st.ne.jp"
 
-#: backends/wayland/wayland_output.cpp:430
+#: backends/wayland/wayland_output.cpp:432
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:432
+#: backends/wayland/wayland_output.cpp:434
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:436
+#: backends/wayland/wayland_output.cpp:438
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:439
+#: backends/wayland/wayland_output.cpp:441
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:441
+#: backends/wayland/wayland_output.cpp:443
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-12 00:42+0000\n"
+"POT-Creation-Date: 2025-02-14 00:44+0000\n"
 "PO-Revision-Date: 2024-09-26 14:15+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -38,29 +38,29 @@ msgid "Your emails"
 msgstr ""
 "ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:430
+#: backends/wayland/wayland_output.cpp:432
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Ýttu á hægri stjórnlykil til að sleppa bendli"
 
-#: backends/wayland/wayland_output.cpp:432
+#: backends/wayland/wayland_output.cpp:434
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Ýttu á hægri stjórnlykil til að grípa bendil"
 
-#: backends/wayland/wayland_output.cpp:436
+#: backends/wayland/wayland_output.cpp:438
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland myndsmiður %1"
 
-#: backends/wayland/wayland_output.cpp:439
+#: backends/wayland/wayland_output.cpp:441
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Úttak óvirkt"
 
-#: backends/wayland/wayland_output.cpp:441
+#: backends/wayland/wayland_output.cpp:443
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Úttak deyft"

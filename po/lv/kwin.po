@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-12 00:42+0000\n"
+"POT-Creation-Date: 2025-02-14 00:44+0000\n"
 "PO-Revision-Date: 2025-01-04 15:58+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "andris.m@delfi.lv, maris.kde@gmail.com, toms.trasuns@posteo.net"
 
-#: backends/wayland/wayland_output.cpp:430
+#: backends/wayland/wayland_output.cpp:432
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Spiediet labo „Control“ taustiņu, lai atdotu peles kursoru"
 
-#: backends/wayland/wayland_output.cpp:432
+#: backends/wayland/wayland_output.cpp:434
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Spiediet labo „Control“ taustiņu, lai paņemtu peles kursoru"
 
-#: backends/wayland/wayland_output.cpp:436
+#: backends/wayland/wayland_output.cpp:438
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE „Wayland“ kompozitors „%1“"
 
-#: backends/wayland/wayland_output.cpp:439
+#: backends/wayland/wayland_output.cpp:441
 #, kde-format
 msgid "- Output disabled"
 msgstr "– Izvade ir izslēgta"
 
-#: backends/wayland/wayland_output.cpp:441
+#: backends/wayland/wayland_output.cpp:443
 #, kde-format
 msgid "- Output dimmed"
 msgstr "– Izvade ir satumsināta"
