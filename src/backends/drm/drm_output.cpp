@@ -615,7 +615,7 @@ void DrmOutput::tryKmsColorOffloading()
         // this isn't technically correct, but the difference is quite small and not worth
         // losing a lot of performance and battery life over
         colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
-        colorPipeline.addMultiplier(channelFactors);
+        colorPipeline.addMultiplier(TransferFunction(TransferFunction::gamma22, 0, 1).nitsToEncoded(channelFactors));
         m_pipeline->setCrtcColorPipeline(colorPipeline);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
