@@ -1460,37 +1460,153 @@ qreal Window::titlebarThickness() const
 }
 
 /**
- * Find closest offset to place anchor corner of a window originally at @p pos,
- * such that at least @p requiredPixels *contiguous* pixels of the length of @p titlebarRect
- * are visible. Visible means inside @p availabeArea and not obstructed by @p struts,
- * and inside @p outputs.
+ * Computes possible locations for the visible titlebar subrect of height at least @p minHeight
+ * and width at least @p minWidth. @p geometry is the geometry of the window,
+ * and @p gravity specifies the move/resize mode.
  *
- * anchor means top right corner when resizing the right, top right, or bottom right.
- * Otherwise anchor means top left corner.
+ * When @p gravity is None, TopLeft, Left, BottomLeft, or Top, returns the *top left corner* of the visible subrect.
+ * When @p gravity is Right, TopRight, or BottomRight, returns the *top right corner* of the visible subrect.
+ * @p gravity being Bottom is not supported, since in this case the titlebar does not move
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-static std::optional<QPointF> closestUnobstructedGeom(
-    const QRectF windowGeom, const QRectF availableArea, const StrutRects struts, const QList<Output *> outputs,
-    const qreal titlebarHeight, const Gravity gravity = Gravity::None, int requiredPixels = 100)
+static QRegion interactiveMoveResizeVisibleSubrectRegion(const QRectF &geometry, Gravity gravity, int minWidth, int minHeight)
 {
-    if (gravity == Gravity::Bottom) {
-        // Titlebar doesn't move when resizing from the bottom
-        return QPointF(0, 0);
+    const auto outputs = workspace()->outputs();
+    const auto struts = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput(), VirtualDesktopManager::self()->currentDesktop());
+
+    QRegion offscreenArea(availableArea.toAlignedRect());
+    for (const Output *output : outputs) {
+        offscreenArea -= output->geometry();
     }
 
-    QRegion nonScreenRegion(availableArea.toAlignedRect());
-    for (const Output *output : outputs) {
-        nonScreenRegion -= output->geometry();
+    QRect initialRect = availableArea.toAlignedRect();
+    switch (gravity) {
+    case Gravity::None:
+        initialRect.adjust(0, 0, -minWidth, -minHeight);
+        break;
+    case Gravity::Top:
+        initialRect.setLeft(std::max((qreal)initialRect.left(), geometry.left()));
+        Q_FALLTHROUGH();
+    case Gravity::Left:
+    case Gravity::TopLeft:
+    case Gravity::BottomLeft:
+        initialRect.setRight(std::min((qreal)initialRect.right(), geometry.right()));
+        initialRect.setBottom(std::min((qreal)initialRect.bottom(), geometry.bottom()));
+        initialRect.adjust(0, 0, -minWidth, -minHeight);
+        break;
+    case Gravity::Right:
+    case Gravity::TopRight:
+    case Gravity::BottomRight:
+        initialRect.setLeft(std::max((qreal)initialRect.left(), geometry.left()));
+        initialRect.setBottom(std::min((qreal)initialRect.bottom(), geometry.bottom()));
+        initialRect.adjust(minWidth, 0, 0, -minHeight);
+        break;
+    default:
+        Q_UNREACHABLE();
     }
-    requiredPixels = std::min(std::floor(windowGeom.width()), qreal(requiredPixels));
-    // availableRegion contains positions for *top-left* of visible titlebar subrect
-    QRegion availableRegion(availableArea.adjusted(0, 0, -requiredPixels, -titlebarHeight).toAlignedRect());
-    for (const QRect &rect : struts) {
-        availableRegion -= rect.adjusted(-requiredPixels, -titlebarHeight, 0, 0);
+    QRegion availableRegion(initialRect);
+
+    switch (gravity) {
+    case Gravity::None:
+    case Gravity::Top:
+    case Gravity::Left:
+    case Gravity::TopLeft:
+    case Gravity::BottomLeft:
+        for (const QRect &rect : struts) {
+            availableRegion -= rect.adjusted(-minWidth, -minHeight, 0, 0);
+        }
+        for (const QRect &rect : offscreenArea) {
+            availableRegion -= rect.adjusted(-minWidth, -minHeight, 0, 0);
+        }
+        break;
+    case Gravity::Right:
+    case Gravity::TopRight:
+    case Gravity::BottomRight:
+        for (const QRect &rect : struts) {
+            availableRegion -= rect.adjusted(0, -minHeight, minWidth, 0);
+        }
+        for (const QRect &rect : offscreenArea) {
+            availableRegion -= rect.adjusted(0, -minHeight, minWidth, 0);
+        }
+        break;
+    default:
+        Q_UNREACHABLE();
     }
-    for (const QRect &rect : nonScreenRegion) {
-        availableRegion -= rect.adjusted(-requiredPixels, -titlebarHeight, 0, 0);
+
+    return availableRegion;
+}
+
+/**
+ * Find closest point to move top left corner of window such that a titlebar subrect of size at least @p minWidth by @p minHeight is visible.
+ *
+ * See doc/moveresizerestriction for more details on algorithm.
+ */
+static std::optional<QPointF> confineInteractiveMove(const QRectF &geometry, int minWidth, int minHeight)
+{
+    std::optional<QPointF> candidate;
+    qreal bestScore;
+
+    minWidth = std::min(std::floor(geometry.width()), qreal(minWidth));
+
+    const QRegion visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::None, minWidth, minHeight);
+    const QPointF anchor = geometry.topLeft();
+    for (QRect rect : visibleSubrectRegion) {
+        // convert visibleSubrect top left to window top left
+        rect.setLeft(rect.left() - geometry.width() + minWidth);
+        const QPointF closest(std::clamp<qreal>(anchor.x(), rect.x(), rect.x() + rect.width()),
+                              std::clamp<qreal>(anchor.y(), rect.y(), rect.y() + rect.height()));
+        const qreal score = QLineF(anchor, closest).length();
+
+        if (!candidate || score < bestScore) {
+            candidate = closest;
+            bestScore = score;
+        }
+    }
+
+    return candidate;
+}
+
+/**
+ * Find closest point to move anchor corner of window such that a titlebar subrect of size at least @p minWidth by @p minHeight is visible.
+ *
+ * When @p gravity is None, TopLeft, Left, BottomLeft, or Top, anchor is *top left corner*
+ * When @p gravity is Right, TopRight, or BottomRight, anchor is *top right corner*
+ * When @p gravity is Bottom, anchor is *bottom left corner*
+ *
+ * See doc/moveresizerestriction for more details on algorithm.
+ */
+static std::optional<QPointF> confineInteractiveResize(const QRectF &geometry, Gravity gravity, int minWidth, int minHeight)
+{
+    std::optional<QPointF> candidate;
+    qreal bestScore;
+    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput(), VirtualDesktopManager::self()->currentDesktop());
+
+    if (gravity == Gravity::Bottom) {
+        candidate = geometry.bottomLeft();
+        if (geometry.height() < minHeight) {
+            candidate->setY(geometry.top() + minHeight);
+        }
+        return candidate;
+    }
+
+    const QRegion visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, gravity, minWidth, minHeight);
+    QPointF anchor;
+    switch (gravity) {
+    case Gravity::Top:
+    case Gravity::Left:
+    case Gravity::TopLeft:
+    case Gravity::BottomLeft:
+        anchor = geometry.topLeft();
+        break;
+    case Gravity::Right:
+    case Gravity::TopRight:
+    case Gravity::BottomRight:
+        anchor = geometry.topRight();
+        break;
+    default:
+        Q_UNREACHABLE();
     }
 
     const auto clampPoint = [](const QRect &rect, const QPointF &point) {
@@ -1522,83 +1638,43 @@ static std::optional<QPointF> closestUnobstructedGeom(
         return QLineF(source, dest).length();
     };
 
-    const QPointF anchor = (gravity == Gravity::Right || gravity == Gravity::TopRight || gravity == Gravity::BottomRight) ? windowGeom.topRight() : windowGeom.topLeft();
-
-    qreal minDistance = std::numeric_limits<qreal>::max();
-    QPointF closestPoint;
-    for (QRect rect : availableRegion) {
-        // 1. Restrict top-left positions of the visible titlebar subrect based on gravity.
-        // E.g., when resizing from the right, the right of the window must stay to the right of
-        // window left edge.
-        //
-        // For some resize modes, no horizontal or vertical movement of anchor is allowed. Enforce
-        // this in calcDistance, since applying such constraints here creates invalid QRects.
-        //
-        // 2. convert top-left positions of the visible titlebar subrect to positions of anchor.
-
-        // Stop if rect becomes invalid at any stage of processing
-        // Otherwise, further processing may erroneously convert rect back to a valid QRect
-
-        if (gravity != Gravity::None) {
-            // for resize, must be above windowGeom.bottom()
-            rect.setBottom(std::max((qreal)rect.bottom(), windowGeom.bottom() - titlebarHeight));
-            if (!rect.isValid()) {
-                continue;
-            }
-        }
-        switch (gravity) {
-        case Gravity::None:
-        case Gravity::Top:
-            // convert top-left of visible titlebar subrect to top-left of the window
-            // In this case the width of the window doesn't change
-            rect.setLeft(rect.left() - windowGeom.width() + requiredPixels);
-            break;
-        case (Gravity::Left):
-        case (Gravity::TopLeft):
-        case (Gravity::BottomLeft): {
-            // top-left of visible titlebar subrect must be to the left of windowGeom.right()
-            rect.setRight(std::min((qreal)rect.right(), windowGeom.right() - requiredPixels));
-            if (!rect.isValid()) {
-                continue;
-            }
+    switch (gravity) {
+    case (Gravity::Top):
+    case (Gravity::Left):
+    case (Gravity::TopLeft):
+    case (Gravity::BottomLeft):
+        for (QRect rect : visibleSubrectRegion) {
             // convert top-left of visible titlebar subrect to top-left of the window
             rect.setLeft(availableArea.left());
-            break;
-        }
-        case (Gravity::Right):
-        case (Gravity::TopRight):
-        case (Gravity::BottomRight): {
-            // top-left of visible titlebar subrect must be to the right of windowGeom.left()
-            rect.setLeft(std::max((qreal)rect.left(), windowGeom.left()));
-            if (!rect.isValid()) {
-                continue;
+
+            const QPointF closest = clampPoint(rect, anchor);
+            const qreal score = calcDistance(anchor, closest);
+            if (!candidate || score < bestScore) {
+                candidate = closest;
+                bestScore = score;
             }
-            // convert top-left of visible titlebar subrect to anchor (top-right of window)
+        }
+        break;
+    case (Gravity::Right):
+    case (Gravity::TopRight):
+    case (Gravity::BottomRight):
+        for (QRect rect : visibleSubrectRegion) {
+            // convert top-right of visible titlebar subrect to top-right of the window
             rect.setRight(availableArea.left() + availableArea.width());
-            rect.setLeft(rect.left() + requiredPixels);
-            break;
-        }
-        default:
-            Q_UNREACHABLE();
-            break;
-        }
-        if (!rect.isValid()) {
-            continue;
-        }
 
-        const QPointF dest = clampPoint(rect, anchor);
-        const qreal distance = calcDistance(anchor, dest);
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestPoint = dest;
+            const QPointF closest = clampPoint(rect, anchor);
+            const qreal score = calcDistance(anchor, closest);
+            if (!candidate || score < bestScore) {
+                candidate = closest;
+                bestScore = score;
+            }
         }
+        break;
+    default:
+        Q_UNREACHABLE();
     }
 
-    if (minDistance == std::numeric_limits<qreal>::max()) {
-        return std::nullopt;
-    } else {
-        return closestPoint - anchor;
-    }
+    return candidate;
 }
 
 QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
@@ -1662,20 +1738,30 @@ QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     nextMoveResizeGeom = workspace()->adjustWindowSize(this, nextMoveResizeGeom, gravity);
 
     if (!isUnrestrictedInteractiveMoveResize()) {
-        const std::optional<QPointF> offset = closestUnobstructedGeom(
-            nextMoveResizeGeom, workspace()->clientArea(FullArea, this, workspace()->activeOutput()),
-            workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop()),
-            workspace()->outputs(), titlebarThickness(), gravity);
-        if (offset) {
-            if (gravity == Gravity::TopLeft || gravity == Gravity::BottomLeft || gravity == Gravity::Left) {
-                nextMoveResizeGeom.setLeft(nextMoveResizeGeom.left() + offset->x());
-            } else if (gravity == Gravity::TopRight || gravity == Gravity::BottomRight || gravity == Gravity::Right) {
-                nextMoveResizeGeom.setRight(nextMoveResizeGeom.right() + offset->x());
-            }
-            if (gravity == Gravity::TopLeft || gravity == Gravity::TopRight || gravity == Gravity::Top) {
-                nextMoveResizeGeom.setTop(nextMoveResizeGeom.top() + offset->y());
-            } else if (gravity == Gravity::BottomLeft || gravity == Gravity::BottomRight || gravity == Gravity::Bottom) {
-                nextMoveResizeGeom.setBottom(nextMoveResizeGeom.bottom() + offset->y());
+        if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity, 100, titlebarThickness())) {
+            switch (gravity) {
+            case Gravity::TopLeft:
+                nextMoveResizeGeom.setTopLeft(*anchor);
+                break;
+            case Gravity::Top:
+                nextMoveResizeGeom.setTop(anchor->y());
+                break;
+            case Gravity::TopRight:
+                nextMoveResizeGeom.setTopRight(*anchor);
+                break;
+            case Gravity::Right:
+            case Gravity::BottomRight:
+                nextMoveResizeGeom.setRight(anchor->x());
+                break;
+            case Gravity::Left:
+            case Gravity::BottomLeft:
+                nextMoveResizeGeom.setLeft(anchor->x());
+                break;
+            case Gravity::Bottom:
+                nextMoveResizeGeom.setBottom(anchor->y());
+                break;
+            default:
+                Q_UNREACHABLE();
             }
         } else {
             nextMoveResizeGeom = currentMoveResizeGeom;
@@ -1716,12 +1802,8 @@ QRectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
     nextMoveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, nextMoveResizeGeom.topLeft(), isUnrestrictedInteractiveMoveResize()));
 
     if (!isUnrestrictedInteractiveMoveResize()) {
-        const std::optional<QPointF> offset = closestUnobstructedGeom(
-            nextMoveResizeGeom, workspace()->clientArea(FullArea, this, workspace()->activeOutput()),
-            workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop()),
-            workspace()->outputs(), titlebarThickness());
-        if (offset) {
-            nextMoveResizeGeom.translate(offset.value());
+        if (const auto anchor = confineInteractiveMove(nextMoveResizeGeom, 100, titlebarThickness())) {
+            nextMoveResizeGeom.moveTopLeft(anchor.value());
         }
     }
 
@@ -4234,7 +4316,7 @@ bool Window::isRequestedFullScreen() const
  *
  * Default implementation does nothing.
  *
- * @param set @c true if the Window has to be shown in full screen mode, otherwise @c false
+ * @p set @c true if the Window has to be shown in full screen mode, otherwise @c false
  */
 void Window::setFullScreen(bool set)
 {
