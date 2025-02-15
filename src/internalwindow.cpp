@@ -276,6 +276,7 @@ void InternalWindow::setNoBorder(bool set)
     }
     m_userNoBorder = set;
     updateDecoration(true);
+    Q_EMIT noBorderChanged();
 }
 
 void InternalWindow::createDecoration(const QRectF &oldGeometry)

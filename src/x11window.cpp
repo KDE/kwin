@@ -1546,6 +1546,7 @@ void X11Window::setNoBorder(bool set)
     noborder = set;
     updateDecoration(true, false);
     updateWindowRules(Rules::NoBorder);
+    Q_EMIT noBorderChanged();
 }
 
 void X11Window::checkNoBorder()
