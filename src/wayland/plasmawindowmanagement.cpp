@@ -749,6 +749,9 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_state(Resource *res
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE) {
         Q_EMIT q->virtualDesktopChangeableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE);
     }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_NO_BORDER) {
+        Q_EMIT q->noBorderRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_NO_BORDER);
+    }
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_minimized_geometry(Resource *resource,
@@ -1044,6 +1047,16 @@ void PlasmaWindowInterface::setResizable(bool set)
 void PlasmaWindowInterface::setVirtualDesktopChangeable(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE, set);
+}
+
+void PlasmaWindowInterface::setNoBorder(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_NO_BORDER, set);
+}
+
+void PlasmaWindowInterface::setCanSetNoBorder(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_CAN_SET_NO_BORDER, set);
 }
 
 void PlasmaWindowInterface::setParentWindow(PlasmaWindowInterface *parentWindow)
