@@ -2,7 +2,7 @@
 # KDE Finnish translation sprint participants:
 # Author: Artnay
 # Author: Lliehu
-# SPDX-FileCopyrightText: 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Tommi Nieminen <translator@legisign.org>
+# SPDX-FileCopyrightText: 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Tommi Nieminen <translator@legisign.org>
 # Kim Enkovaara <kim.enkovaara@iki.fi>, 2002, 2003, 2005.
 # Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2003, 2004, 2008.
 # Tapio Kautto <eleknader@phnet.fi>, 2004.
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-14 02:46+0000\n"
-"PO-Revision-Date: 2024-12-09 21:28+0200\n"
+"PO-Revision-Date: 2025-02-11 10:23+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -123,77 +123,78 @@ msgstr "GLX/OpenGL ei ole käytettävissä."
 #: core/iccprofile.cpp:245
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "ICC-profiilia ”%1” ei voida avata"
 
 #: core/iccprofile.cpp:247
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "Tiedostoa %1 ei ole olemassa"
+msgstr "ICC-profiilia ”%1” ei ole olemassa"
 
 #: core/iccprofile.cpp:251
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC-profiili ”%1” ei ole käytettävissä näytöille"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "ICC-profiilin ”%1” yhteysavaruutta ei tueta, vain XYZ:aa tuetaan"
 
 #: core/iccprofile.cpp:257
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC-profiili ”%1” on rikki: syöttö/tulosväriavaruus ei ole RGB"
 
 #: core/iccprofile.cpp:276
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC-profiili ”%1” on rikki: siitä puuttuu valkopiste"
 
 #: core/iccprofile.cpp:279
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC-profiili ”%1” on rikki: sen valkopiste on virheellinen"
 
 #: core/iccprofile.cpp:292
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"ICC-profiili ”%1” on rikki: kromaattisen sovitusmatriisin jäsennys "
+"epäonnistui"
 
 #: core/iccprofile.cpp:297
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC-profiili ”%1” on rikki: kromaattisen sovitusmatriisin kääntö epäonnistui"
 
 #: core/iccprofile.cpp:310
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC-profiili ”%1” on rikki: siitä puuttuvat päävärit"
 
 #: core/iccprofile.cpp:325
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC-profiili ”%1” on rikki: sen päävärejä ei voi laskea"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC-profiili ”%1” on rikki: sen päävärit ovat virheellisiä"
 
 #: core/iccprofile.cpp:350
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC-profiilia ”%1”, jossa on vain BToD-tunnisteita, ei tueta"
 
 #: core/iccprofile.cpp:389
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Väriprofiililta puuttuu TRC-tunnisteita"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -463,14 +464,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta-x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
@@ -728,25 +727,24 @@ msgid "State"
 msgstr "Tila"
 
 #: debug_console.cpp:495
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Tablettityökalu"
+msgstr "Tablettityökalun läheisyys"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Läheisyys"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Sisään"
 
 #: debug_console.cpp:496
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Ulos"
 
 #: debug_console.cpp:497 debug_console.cpp:514 debug_console.cpp:532
 #: debug_console.cpp:577 debug_console.cpp:591
@@ -782,34 +780,32 @@ msgid "Modifiers"
 msgstr "Muuntonäppäimet"
 
 #: debug_console.cpp:513
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Tablettityökalu"
+msgstr "Tablettityökalun akseli"
 
+# *** TARKISTA: Voisi olla myös ”vihje”, pitäisi tietää konteksti.
 #: debug_console.cpp:530
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Tablettityökalu"
+msgstr "Tablettityökalun kärki"
 
+# *** TARKISTA: Voisi olla myös ”vihje”, pitäisi tietää konteksti.
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Ylhäällä"
+msgstr "Kärki"
 
 # *** TARKISTA: Voi olla myös ”alas”
 #: debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Siirrä alemmas"
+msgstr "Alas"
 
 #: debug_console.cpp:531
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Ylös"
 
 #: debug_console.cpp:548
 #, kde-format
@@ -1714,11 +1710,10 @@ msgid "Fullscreen windows"
 msgstr "Koko ruudun ikkunat"
 
 #: plugins/eis/eisinputcapturemanager.cpp:124
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Poista KActivities-integraatio käytöstä."
+msgstr "Poista aktiivisen sisäänmenon kaappaus käytöstä"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
@@ -3114,8 +3109,7 @@ msgstr "Lähennä ja loitonna määritetyn kertoimen mukaisesti."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Lähennyskerroin:"
 
@@ -3123,14 +3117,13 @@ msgstr "Lähennyskerroin:"
 #: plugins/zoom/zoom_config.ui:57
 #, kde-format
 msgid "Show pixel grid at zoom level:"
-msgstr ""
+msgstr "Näytä kuvapisteruudukko lähennystasolla:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
-msgstr "Hiirikohdistin:"
+msgstr "Hiiriosoitin:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:80
@@ -3158,8 +3151,7 @@ msgstr "Piilota"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Hiiren jäljitys:"
 
@@ -3205,10 +3197,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
-msgstr "Seuraa kohdistusta"
+msgstr "Käytä kohdistuksen jäljitystä"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:152
@@ -3222,10 +3213,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
-msgstr "Seuraa tekstikohdistusta"
+msgstr "Käytä tekstikohdistimen jäljitystä"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -3804,17 +3794,15 @@ msgid "Log Out Anyway"
 msgstr "Kirjaudu silti ulos"
 
 #: sm.cpp:526
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "Seuraavat sovellukset eivät sulkeutuneet:\n"
-"%1"
+"%1\n"
+"Kirjaudutaan silti ulos 2 minuutissa."
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4470,27 +4458,27 @@ msgstr "Vaihda työpöydälle %1"
 #: wayland/outputmanagement_v2.cpp:433
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Yksi asiaan kuuluvista ulostuloista ei enää ole käytettävissä"
 
 #: wayland/outputmanagement_v2.cpp:451
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "Kaikkien ulostulojen poistamista käytöstä asetusmuutoksin ei sallita"
 
 #: wayland/outputmanagement_v2.cpp:461
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "Annettu ulostulojärjestys ei käsitä kaikkia ulostuloja"
 
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "Tarjottu ulostulojärjestys on virheellinen"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Ajuri hylkäsi ulostulomäärityksen"
 
 #: window.cpp:3173
 #, kde-format
