@@ -460,7 +460,7 @@ class KWIN_EXPORT Window : public QObject
      * The decision whether a window has a border or not belongs to the window manager.
      * If this property gets abused by application developers, it will be removed again.
      */
-    Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
+    Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder NOTIFY noBorderChanged)
 
     /**
      * Whether the Window provides context help. Mostly needed by decorations to decide whether to
@@ -1484,6 +1484,7 @@ Q_SIGNALS:
     void offscreenRenderingChanged();
     void targetScaleChanged();
     void nextTargetScaleChanged();
+    void noBorderChanged();
 
 protected:
     Window();

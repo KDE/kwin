@@ -671,6 +671,7 @@ void XdgToplevelWindow::setNoBorder(bool set)
     m_userNoBorder = set;
     configureDecoration();
     updateWindowRules(Rules::NoBorder);
+    Q_EMIT noBorderChanged();
 }
 
 KDecoration3::Decoration *XdgToplevelWindow::nextDecoration() const
