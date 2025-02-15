@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2023-10-12 23:43+0200\n"
+"PO-Revision-Date: 2024-09-18 19:10+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -34,7 +34,7 @@ msgstr "Javier Jardón, Marce Villarino, Adrian Chaves (Gallaecio)"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"javierjc@mundo-r.com, mvillarino@users.sourceforge.net, adrian@chaves.io"
+"javierjc@mundo-r.com, mvillarino@users.sourceforge.net, adrian@chaves.gal"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
