@@ -157,7 +157,7 @@ void ColorManagementTest::testSetImageDescription_data()
         << true << false
         << std::optional<ColorDescription>();
     QTest::addRow("rec.2020 PQ with out of bounds white point")
-        << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << ColorDescription(Colorimetry::BT2020.withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
         << false << false
         << std::optional<ColorDescription>();
     QTest::addRow("nonsense primaries")

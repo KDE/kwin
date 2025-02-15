@@ -433,17 +433,17 @@ std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const s
     if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
-        const auto sdrColor = Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(iccProfile->colorimetry(), sdrGamutWideness);
+        const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(iccProfile->colorimetry(), sdrGamutWideness);
         return applyNightLight(ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness, iccProfile->colorimetry(), sdrColor), m_channelFactors);
     }
     const bool supportsHdr = (capabilities() & Capability::HighDynamicRange) && (capabilities() & Capability::WideColorGamut);
     const bool effectiveHdr = hdr && supportsHdr;
     const bool effectiveWcg = wcg && supportsHdr;
-    const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
+    const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::BT709);
 
-    const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT2020) : (colorSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709));
-    const Colorimetry masteringColorimetry = (effectiveWcg || colorSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709);
-    const Colorimetry sdrColorimetry = (effectiveWcg || colorSource == ColorProfileSource::EDID) ? Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, sdrGamutWideness) : Colorimetry::fromName(NamedColorimetry::BT709);
+    const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::BT2020 : (colorSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::BT709);
+    const Colorimetry masteringColorimetry = (effectiveWcg || colorSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::BT709;
+    const Colorimetry sdrColorimetry = (effectiveWcg || colorSource == ColorProfileSource::EDID) ? Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, sdrGamutWideness) : Colorimetry::BT709;
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
     const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.referenceLuminance)) : 200;
     const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * m_state.artificialHdrHeadroom;

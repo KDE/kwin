@@ -192,7 +192,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
             m_maxAverageLuminance,
             m_maxPeakBrightness,
             m_masteringColorimetry,
-            Colorimetry::fromName(NamedColorimetry::BT709),
+            Colorimetry::BT709,
         };
         priv->pending->colorDescriptionIsSet = true;
     }

@@ -223,7 +223,7 @@ static bool isFuzzyIdentity(const QMatrix4x4 &mat)
 
 void TestColorspaces::testXYZ()
 {
-    Colorimetry xyz = Colorimetry::fromName(NamedColorimetry::CIEXYZ);
+    Colorimetry xyz = Colorimetry::CIEXYZ;
     QVERIFY(isFuzzyIdentity(xyz.toXYZ()));
     QVERIFY(isFuzzyIdentity(xyz.fromXYZ()));
 }

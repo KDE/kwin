@@ -378,67 +378,67 @@ const XYZ &Colorimetry::white() const
     return m_white;
 }
 
-static const Colorimetry BT709 = Colorimetry{
+const Colorimetry Colorimetry::BT709 = Colorimetry{
     xy{0.64, 0.33},
     xy{0.30, 0.60},
     xy{0.15, 0.06},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry PAL_M = Colorimetry{
+const Colorimetry Colorimetry::PAL_M = Colorimetry{
     xy{0.67, 0.33},
     xy{0.21, 0.71},
     xy{0.14, 0.08},
     xy{0.310, 0.316},
 };
-static const Colorimetry PAL = Colorimetry{
+const Colorimetry Colorimetry::PAL = Colorimetry{
     xy{0.640, 0.330},
     xy{0.290, 0.600},
     xy{0.150, 0.060},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry NTSC = Colorimetry{
+const Colorimetry Colorimetry::NTSC = Colorimetry{
     xy{0.630, 0.340},
     xy{0.310, 0.595},
     xy{0.155, 0.070},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry GenericFilm = Colorimetry{
+const Colorimetry Colorimetry::GenericFilm = Colorimetry{
     xy{0.243, 0.692},
     xy{0.145, 0.049},
     xy{0.681, 0.319},
     xy{0.310, 0.316},
 };
-static const Colorimetry BT2020 = Colorimetry{
+const Colorimetry Colorimetry::BT2020 = Colorimetry{
     xy{0.708, 0.292},
     xy{0.170, 0.797},
     xy{0.131, 0.046},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry CIEXYZ = Colorimetry{
+const Colorimetry Colorimetry::CIEXYZ = Colorimetry{
     XYZ{1.0, 0.0, 0.0},
     XYZ{0.0, 1.0, 0.0},
     XYZ{0.0, 0.0, 1.0},
     xy{1.0 / 3.0, 1.0 / 3.0}.toXYZ(),
 };
-static const Colorimetry CIEXYZD50 = Colorimetry{
+const Colorimetry Colorimetry::CIEXYZD50 = Colorimetry{
     XYZ{1.0, 0.0, 0.0},
     XYZ{0.0, 1.0, 0.0},
     XYZ{0.0, 0.0, 1.0},
     XYZ(0.9642, 1.0, 0.8249),
 };
-static const Colorimetry DCIP3 = Colorimetry{
+const Colorimetry Colorimetry::DCIP3 = Colorimetry{
     xy{0.680, 0.320},
     xy{0.265, 0.690},
     xy{0.150, 0.060},
     xy{0.314, 0.351},
 };
-static const Colorimetry DisplayP3 = Colorimetry{
+const Colorimetry Colorimetry::DisplayP3 = Colorimetry{
     xy{0.680, 0.320},
     xy{0.265, 0.690},
     xy{0.150, 0.060},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry AdobeRGB = Colorimetry{
+const Colorimetry Colorimetry::AdobeRGB = Colorimetry{
     xy{0.6400, 0.3300},
     xy{0.2100, 0.7100},
     xy{0.1500, 0.0600},

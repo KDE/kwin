@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-const ColorDescription IccProfile::s_connectionSpace = ColorDescription(Colorimetry::fromName(NamedColorimetry::CIEXYZD50), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
+const ColorDescription IccProfile::s_connectionSpace = ColorDescription(Colorimetry::CIEXYZD50, TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
 
 IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
     : m_handle(handle)

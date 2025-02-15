@@ -91,6 +91,18 @@ struct KWIN_EXPORT XYZ
 class KWIN_EXPORT Colorimetry
 {
 public:
+    static const Colorimetry BT709;
+    static const Colorimetry PAL_M;
+    static const Colorimetry PAL;
+    static const Colorimetry NTSC;
+    static const Colorimetry GenericFilm;
+    static const Colorimetry BT2020;
+    static const Colorimetry CIEXYZ;
+    static const Colorimetry CIEXYZD50;
+    static const Colorimetry DCIP3;
+    static const Colorimetry DisplayP3;
+    static const Colorimetry AdobeRGB;
+
     static const Colorimetry &fromName(NamedColorimetry name);
     /**
      * @returns a matrix adapting XYZ values from the source whitepoint to the destination whitepoint with the Bradford transform
