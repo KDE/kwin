@@ -657,7 +657,7 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type t
     if (!m_connector->edid()->supportsPQ()) {
         return nullptr;
     }
-    const auto colorimetry = m_connector->edid()->colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
+    const auto colorimetry = m_connector->edid()->colorimetry().value_or(Colorimetry::BT709);
     const xyY red = colorimetry.red().toxyY();
     const xyY green = colorimetry.green().toxyY();
     const xyY blue = colorimetry.blue().toxyY();

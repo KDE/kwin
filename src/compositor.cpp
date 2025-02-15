@@ -430,7 +430,7 @@ static bool checkForBlackBackground(SurfaceItem *background)
     }
     const QRgb rgb = view.image()->pixel(0, 0);
     const QVector3D encoded(qRed(rgb) / 255.0, qGreen(rgb) / 255.0, qBlue(rgb) / 255.0);
-    const QVector3D nits = background->colorDescription().mapTo(encoded, ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear), 100, 0, std::nullopt, std::nullopt), background->renderingIntent());
+    const QVector3D nits = background->colorDescription().mapTo(encoded, ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::linear), 100, 0, std::nullopt, std::nullopt), background->renderingIntent());
     // below 0.1 nits, it shouldn't be noticeable that we replace it with black
     return nits.lengthSquared() <= (0.1 * 0.1);
 }

@@ -110,10 +110,10 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_containe
     switch (primaries) {
     case primaries_undefined:
     case primaries_rec709:
-        m_containerColorimetry = NamedColorimetry::BT709;
+        m_containerColorimetry = Colorimetry::BT709;
         break;
     case primaries_rec2020:
-        m_containerColorimetry = NamedColorimetry::BT2020;
+        m_containerColorimetry = Colorimetry::BT2020;
         break;
     }
     updateColorDescription();
@@ -197,7 +197,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
             m_maxAverageLuminance,
             m_maxPeakBrightness,
             m_masteringColorimetry,
-            Colorimetry::fromName(NamedColorimetry::BT709),
+            Colorimetry::BT709,
         };
         priv->pending->colorDescriptionIsSet = true;
     }

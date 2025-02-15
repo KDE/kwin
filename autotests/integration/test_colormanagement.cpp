@@ -137,27 +137,27 @@ void ColorManagementTest::testSetImageDescription_data()
         << false << true
         << std::optional<ColorDescription>();
     QTest::addRow("rec.2020 PQ")
-        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
         << false << true
         << std::optional<ColorDescription>();
     QTest::addRow("scRGB")
-        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80)
+        << ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80)
         << false << true
         << std::optional<ColorDescription>();
     QTest::addRow("custom")
-        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400)
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400)
         << false << true
         << std::optional<ColorDescription>();
     QTest::addRow("invalid tf")
-        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400)
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400)
         << true << false
         << std::optional<ColorDescription>();
     QTest::addRow("invalid HDR metadata")
-        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400)
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400)
         << true << false
         << std::optional<ColorDescription>();
     QTest::addRow("rec.2020 PQ with out of bounds white point")
-        << ColorDescription(Colorimetry::fromName(NamedColorimetry::BT2020).withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << ColorDescription(Colorimetry::BT2020.withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
         << false << false
         << std::optional<ColorDescription>();
     QTest::addRow("nonsense primaries")
@@ -165,9 +165,9 @@ void ColorManagementTest::testSetImageDescription_data()
         << false << false
         << std::optional<ColorDescription>();
     QTest::addRow("custom PQ luminances are ignored")
-        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 100), 203, 0, 400, 400)
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 100), 203, 0, 400, 400)
         << false << true
-        << std::make_optional<ColorDescription>(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 10'010), 203, 0, 400, 400);
+        << std::make_optional<ColorDescription>(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 10'010), 203, 0, 400, 400);
 }
 
 void ColorManagementTest::testSetImageDescription()

@@ -353,11 +353,6 @@ bool Colorimetry::operator==(const Colorimetry &other) const
     return red() == other.red() && green() == other.green() && blue() == other.blue() && white() == other.white();
 }
 
-bool Colorimetry::operator==(NamedColorimetry name) const
-{
-    return *this == fromName(name);
-}
-
 const XYZ &Colorimetry::red() const
 {
     return m_red;
@@ -378,123 +373,71 @@ const XYZ &Colorimetry::white() const
     return m_white;
 }
 
-static const Colorimetry BT709 = Colorimetry{
+const Colorimetry Colorimetry::BT709 = Colorimetry{
     xy{0.64, 0.33},
     xy{0.30, 0.60},
     xy{0.15, 0.06},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry PAL_M = Colorimetry{
+const Colorimetry Colorimetry::PAL_M = Colorimetry{
     xy{0.67, 0.33},
     xy{0.21, 0.71},
     xy{0.14, 0.08},
     xy{0.310, 0.316},
 };
-static const Colorimetry PAL = Colorimetry{
+const Colorimetry Colorimetry::PAL = Colorimetry{
     xy{0.640, 0.330},
     xy{0.290, 0.600},
     xy{0.150, 0.060},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry NTSC = Colorimetry{
+const Colorimetry Colorimetry::NTSC = Colorimetry{
     xy{0.630, 0.340},
     xy{0.310, 0.595},
     xy{0.155, 0.070},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry GenericFilm = Colorimetry{
+const Colorimetry Colorimetry::GenericFilm = Colorimetry{
     xy{0.243, 0.692},
     xy{0.145, 0.049},
     xy{0.681, 0.319},
     xy{0.310, 0.316},
 };
-static const Colorimetry BT2020 = Colorimetry{
+const Colorimetry Colorimetry::BT2020 = Colorimetry{
     xy{0.708, 0.292},
     xy{0.170, 0.797},
     xy{0.131, 0.046},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry CIEXYZ = Colorimetry{
+const Colorimetry Colorimetry::CIEXYZ = Colorimetry{
     XYZ{1.0, 0.0, 0.0},
     XYZ{0.0, 1.0, 0.0},
     XYZ{0.0, 0.0, 1.0},
     xy{1.0 / 3.0, 1.0 / 3.0}.toXYZ(),
 };
-static const Colorimetry DCIP3 = Colorimetry{
+const Colorimetry Colorimetry::DCIP3 = Colorimetry{
     xy{0.680, 0.320},
     xy{0.265, 0.690},
     xy{0.150, 0.060},
     xy{0.314, 0.351},
 };
-static const Colorimetry DisplayP3 = Colorimetry{
+const Colorimetry Colorimetry::DisplayP3 = Colorimetry{
     xy{0.680, 0.320},
     xy{0.265, 0.690},
     xy{0.150, 0.060},
     xy{0.3127, 0.3290},
 };
-static const Colorimetry AdobeRGB = Colorimetry{
+const Colorimetry Colorimetry::AdobeRGB = Colorimetry{
     xy{0.6400, 0.3300},
     xy{0.2100, 0.7100},
     xy{0.1500, 0.0600},
     xy{0.3127, 0.3290},
 };
 
-const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
-{
-    switch (name) {
-    case NamedColorimetry::BT709:
-        return BT709;
-    case NamedColorimetry::PAL_M:
-        return PAL_M;
-    case NamedColorimetry::PAL:
-        return PAL;
-    case NamedColorimetry::NTSC:
-        return NTSC;
-    case NamedColorimetry::GenericFilm:
-        return GenericFilm;
-    case NamedColorimetry::BT2020:
-        return BT2020;
-    case NamedColorimetry::CIEXYZ:
-        return CIEXYZ;
-    case NamedColorimetry::DCIP3:
-        return DCIP3;
-    case NamedColorimetry::DisplayP3:
-        return DisplayP3;
-    case NamedColorimetry::AdobeRGB:
-        return AdobeRGB;
-    }
-    Q_UNREACHABLE();
-}
-
-std::optional<NamedColorimetry> Colorimetry::name() const
-{
-    constexpr std::array names = {
-        NamedColorimetry::BT709,
-        NamedColorimetry::PAL_M,
-        NamedColorimetry::PAL,
-        NamedColorimetry::NTSC,
-        NamedColorimetry::GenericFilm,
-        NamedColorimetry::BT2020,
-        NamedColorimetry::CIEXYZ,
-        NamedColorimetry::DCIP3,
-        NamedColorimetry::DisplayP3,
-        NamedColorimetry::AdobeRGB,
-    };
-    const auto it = std::ranges::find_if(names, [this](NamedColorimetry name) {
-        return *this == name;
-    });
-    return it != names.end() ? std::optional(*it) : std::nullopt;
-}
-
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
+const ColorDescription ColorDescription::sRGB = ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
-    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
-{
-}
-
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
-    : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
+    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::BT709)
 {
 }
 
@@ -507,11 +450,6 @@ ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, Tran
     , m_minLuminance(minLuminance)
     , m_maxAverageLuminance(maxAverageLuminance)
     , m_maxHdrLuminance(maxHdrLuminance)
-{
-}
-
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
-    : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, masteringColorimetry, sdrColorimetry)
 {
 }
 
@@ -578,7 +516,7 @@ QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingInt
     }
     switch (intent) {
     case RenderingIntent::Perceptual: {
-        const Colorimetry &srcContainer = containerColorimetry() == NamedColorimetry::BT709 ? other.sdrColorimetry() : containerColorimetry();
+        const Colorimetry &srcContainer = containerColorimetry() == Colorimetry::BT709 ? other.sdrColorimetry() : containerColorimetry();
         return luminanceAfter * other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(srcContainer.white(), other.containerColorimetry().white()) * srcContainer.toXYZ() * luminanceBefore;
     }
     case RenderingIntent::RelativeColorimetric: {

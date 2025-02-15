@@ -75,33 +75,29 @@ wp_color_manager_v1 *ColorManager::object() const
 
 static std::optional<uint32_t> kwinPrimariesToProtoPrimaires(const Colorimetry &color)
 {
-    const auto primaries = color.name();
-    if (!primaries) {
+    if (color == Colorimetry::BT709) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_SRGB;
+    } else if (color == Colorimetry::PAL_M) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_PAL_M;
+    } else if (color == Colorimetry::PAL) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_PAL;
+    } else if (color == Colorimetry::NTSC) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_NTSC;
+    } else if (color == Colorimetry::GenericFilm) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_GENERIC_FILM;
+    } else if (color == Colorimetry::BT2020) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_BT2020;
+    } else if (color == Colorimetry::CIEXYZ) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_CIE1931_XYZ;
+    } else if (color == Colorimetry::DCIP3) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_DCI_P3;
+    } else if (color == Colorimetry::DisplayP3) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_DISPLAY_P3;
+    } else if (color == Colorimetry::AdobeRGB) {
+        return WP_COLOR_MANAGER_V1_PRIMARIES_ADOBE_RGB;
+    } else {
         return std::nullopt;
     }
-    switch (*primaries) {
-    case NamedColorimetry::BT709:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_SRGB;
-    case NamedColorimetry::PAL_M:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_PAL_M;
-    case NamedColorimetry::PAL:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_PAL;
-    case NamedColorimetry::NTSC:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_NTSC;
-    case NamedColorimetry::GenericFilm:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_GENERIC_FILM;
-    case NamedColorimetry::BT2020:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_BT2020;
-    case NamedColorimetry::CIEXYZ:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_CIE1931_XYZ;
-    case NamedColorimetry::DCIP3:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_DCI_P3;
-    case NamedColorimetry::DisplayP3:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_DISPLAY_P3;
-    case NamedColorimetry::AdobeRGB:
-        return WP_COLOR_MANAGER_V1_PRIMARIES_ADOBE_RGB;
-    }
-    Q_UNREACHABLE();
 }
 
 static uint32_t kwinTFtoProtoTF(TransferFunction tf)

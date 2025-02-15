@@ -290,7 +290,7 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
     // TODO unconditionally use the primaries + luminance ranges from the preferred image description instead of this?
     const auto tf = next.highDynamicRange ? TransferFunction(TransferFunction::gamma22, 0, 1000) : TransferFunction(TransferFunction::gamma22);
     next.colorDescription = ColorDescription{
-        next.wideColorGamut ? NamedColorimetry::BT2020 : NamedColorimetry::BT709,
+        next.wideColorGamut ? Colorimetry::BT2020 : Colorimetry::BT709,
         tf,
         next.highDynamicRange ? 203 : TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22),
         tf.minLuminance,

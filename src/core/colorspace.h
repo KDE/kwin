@@ -30,19 +30,6 @@ enum class RenderingIntent {
     RelativeColorimetricWithBPC,
 };
 
-enum class NamedColorimetry {
-    BT709,
-    PAL_M,
-    PAL,
-    NTSC,
-    GenericFilm,
-    BT2020,
-    CIEXYZ,
-    DCIP3,
-    DisplayP3,
-    AdobeRGB
-};
-
 struct XYZ;
 /**
  * xyY, with Y unspecified
@@ -90,7 +77,17 @@ struct KWIN_EXPORT XYZ
 class KWIN_EXPORT Colorimetry
 {
 public:
-    static const Colorimetry &fromName(NamedColorimetry name);
+    static const Colorimetry BT709;
+    static const Colorimetry PAL_M;
+    static const Colorimetry PAL;
+    static const Colorimetry NTSC;
+    static const Colorimetry GenericFilm;
+    static const Colorimetry BT2020;
+    static const Colorimetry CIEXYZ;
+    static const Colorimetry DCIP3;
+    static const Colorimetry DisplayP3;
+    static const Colorimetry AdobeRGB;
+
     /**
      * @returns a matrix adapting XYZ values from the source whitepoint to the destination whitepoint with the Bradford transform
      */
@@ -123,7 +120,6 @@ public:
     QMatrix4x4 fromLMS() const;
 
     bool operator==(const Colorimetry &other) const;
-    bool operator==(NamedColorimetry name) const;
     /**
      * @returns this colorimetry, adapted to the new whitepoint using the Bradford transform
      */
@@ -144,8 +140,6 @@ public:
     const XYZ &green() const;
     const XYZ &blue() const;
     const XYZ &white() const;
-
-    std::optional<NamedColorimetry> name() const;
 
 private:
     XYZ m_red;
@@ -214,9 +208,7 @@ public:
      * @param sdrColorimetry
      */
     explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance);
-    explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance);
     explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
-    explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
 
     /**
      * The primaries and whitepoint that colors are encoded for. This is used to convert between different colorspaces.
