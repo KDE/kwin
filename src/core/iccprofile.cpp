@@ -11,6 +11,7 @@
 
 #include <KLocalizedString>
 #include <QFileInfo>
+#include <QtEndian>
 #include <lcms2.h>
 #include <span>
 #include <tuple>
@@ -88,12 +89,7 @@ static std::vector<uint8_t> readTagRaw(cmsHPROFILE profile, cmsTagSignature tag)
 template<typename T>
 static T read(std::span<const uint8_t> data, size_t index)
 {
-    // ICC profile data is big-endian
-    T ret;
-    for (size_t i = 0; i < sizeof(T); i++) {
-        *(reinterpret_cast<uint8_t *>(&ret) + i) = data[index + sizeof(T) - i - 1];
-    }
-    return ret;
+    return qFromBigEndian<T>(data.subspan(index).data());
 }
 
 static float readS15Fixed16(std::span<const uint8_t> data, size_t index)
