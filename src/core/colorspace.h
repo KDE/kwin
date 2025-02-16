@@ -38,7 +38,6 @@ enum class NamedColorimetry {
     GenericFilm,
     BT2020,
     CIEXYZ,
-    CIEXYZD50,
     DCIP3,
     DisplayP3,
     AdobeRGB

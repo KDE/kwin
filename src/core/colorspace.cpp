@@ -420,12 +420,6 @@ static const Colorimetry CIEXYZ = Colorimetry{
     XYZ{0.0, 0.0, 1.0},
     xy{1.0 / 3.0, 1.0 / 3.0}.toXYZ(),
 };
-static const Colorimetry CIEXYZD50 = Colorimetry{
-    XYZ{1.0, 0.0, 0.0},
-    XYZ{0.0, 1.0, 0.0},
-    XYZ{0.0, 0.0, 1.0},
-    XYZ(0.9642, 1.0, 0.8249),
-};
 static const Colorimetry DCIP3 = Colorimetry{
     xy{0.680, 0.320},
     xy{0.265, 0.690},
@@ -462,8 +456,6 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
         return BT2020;
     case NamedColorimetry::CIEXYZ:
         return CIEXYZ;
-    case NamedColorimetry::CIEXYZD50:
-        return CIEXYZD50;
     case NamedColorimetry::DCIP3:
         return DCIP3;
     case NamedColorimetry::DisplayP3:

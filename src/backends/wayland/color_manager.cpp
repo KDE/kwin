@@ -100,8 +100,6 @@ static std::optional<uint32_t> kwinPrimariesToProtoPrimaires(const Colorimetry &
         return WP_COLOR_MANAGER_V1_PRIMARIES_DISPLAY_P3;
     case NamedColorimetry::AdobeRGB:
         return WP_COLOR_MANAGER_V1_PRIMARIES_ADOBE_RGB;
-    case NamedColorimetry::CIEXYZD50:
-        return std::nullopt;
     }
     Q_UNREACHABLE();
 }
