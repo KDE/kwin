@@ -430,7 +430,7 @@ msgid ""
 msgstr ""
 "Heu especificat la classe de finestra com a sense importància.\n"
 "Açò significa que els valors possiblement aplicaran a les finestres de totes "
-"les aplicacions. Si segur que voleu crear un configuració genèric, es "
+"les aplicacions. Si segur que voleu crear una configuració genèrica, es "
 "recomana que, com a mínim, limiteu els tipus de finestra per tal d'evitar "
 "tipus de finestra especials."
 
