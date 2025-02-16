@@ -16,7 +16,9 @@ namespace KWin
 
 void HideCursorSpy::pointerMotion(PointerMotionEvent *event)
 {
-    showCursor();
+    if (!event->warp) {
+        showCursor();
+    }
 }
 
 void HideCursorSpy::pointerButton(PointerButtonEvent *event)
