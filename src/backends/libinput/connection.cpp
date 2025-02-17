@@ -8,6 +8,7 @@
 */
 #include "connection.h"
 #include "context.h"
+#include "dbusproperties_interface.h"
 #include "device.h"
 #include "events.h"
 
@@ -27,8 +28,12 @@
 #include "utils/udev.h"
 
 #include <QDBusConnection>
+#include <QDBusPendingCallWatcher>
 #include <QMutexLocker>
 #include <QSocketNotifier>
+
+#include <Solid/Battery>
+#include <Solid/Device>
 
 #include <cmath>
 #include <libinput.h>
@@ -126,6 +131,26 @@ void Connection::setup()
     QMetaObject::invokeMethod(this, &Connection::doSetup, Qt::QueuedConnection);
 }
 
+bool batteriesPluggedIn()
+{
+    const QList<Solid::Device> devices = Solid::Device::listFromType(Solid::DeviceInterface::Battery);
+    if (devices.isEmpty()) {
+        return true;
+    }
+
+    bool ret = false;
+    for (const Solid::Device &device : devices) {
+        auto battery = device.as<Solid::Battery>();
+        if (battery && battery->type() == Solid::Battery::PrimaryBattery) {
+            ret |= battery->chargeState() != Solid::Battery::Discharging;
+            if (ret) {
+                break;
+            }
+        }
+    }
+    return ret;
+}
+
 void Connection::doSetup()
 {
     Q_ASSERT(!m_notifier);
@@ -134,6 +159,19 @@ void Connection::doSetup()
 
     m_notifier = std::make_unique<QSocketNotifier>(m_input->fileDescriptor(), QSocketNotifier::Read);
     connect(m_notifier.get(), &QSocketNotifier::activated, this, &Connection::handleEvent);
+
+    reconsiderThrottle();
+    const QList<Solid::Device> devices = Solid::Device::listFromType(Solid::DeviceInterface::Battery);
+    for (const Solid::Device &device : devices) {
+        auto battery = device.as<Solid::Battery>();
+        if (battery && battery->type() == Solid::Battery::PrimaryBattery) {
+            connect(battery, &Solid::Battery::chargeStateChanged, this, &Connection::reconsiderThrottle);
+            connect(battery, &Solid::Battery::powerSupplyStateChanged, this, &Connection::reconsiderThrottle);
+        }
+    }
+
+    m_throttleScheduler = new QTimer(this);
+    connect(m_throttleScheduler, &QTimer::timeout, this, &Connection::handleEvent);
 
     connect(m_input->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
@@ -146,6 +184,25 @@ void Connection::doSetup()
         }
     });
     handleEvent();
+}
+
+void Connection::reconsiderThrottle()
+{
+    const QList<Solid::Device> devices = Solid::Device::listFromType(Solid::DeviceInterface::Battery);
+    if (devices.isEmpty()) {
+        m_throttleEvents = false;
+        return;
+    }
+
+    m_throttleEvents = false;
+    for (const Solid::Device &device : devices) {
+        auto battery = device.as<Solid::Battery>();
+        if (battery && battery->type() == Solid::Battery::PrimaryBattery) {
+            if (battery->chargeState() == Solid::Battery::Discharging && battery->isPowerSupply()) {
+                m_throttleEvents = true;
+            }
+        }
+    }
 }
 
 void Connection::deactivate()
@@ -161,6 +218,23 @@ void Connection::handleEvent()
 {
     QMutexLocker locker(&m_mutex);
     const bool wasEmpty = m_eventQueue.empty();
+
+    if (m_throttleEvents) {
+        using namespace std::chrono_literals;
+        const auto now = std::chrono::system_clock::now();
+
+        const auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_last);
+        constexpr std::chrono::milliseconds threshold = 16ms; // 60 Hz
+        if (diff < threshold) {
+            if (!m_throttleScheduler->isActive()) {
+                m_throttleScheduler->start(threshold - diff);
+            }
+            return;
+        }
+        m_last = now;
+        m_throttleScheduler->stop();
+    }
+
     do {
         m_input->dispatch();
         std::unique_ptr<Event> event = m_input->event();
