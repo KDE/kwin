@@ -6,20 +6,21 @@
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2009, 2010, 2013, 2014, 2015, 2019.
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2016, 2018, 2021, 2023.
 # SPDX-FileCopyrightText: 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+# SPDX-FileCopyrightText: 2025 Guilherme Marçal Silva <guimarcalsilva@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-01 00:42+0000\n"
-"PO-Revision-Date: 2024-07-19 18:27-0300\n"
-"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
+"PO-Revision-Date: 2025-02-16 00:51-0300\n"
+"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -107,7 +108,7 @@ msgstr "Opções:"
 #: ui/main.qml:209
 #, kde-format
 msgid "Navigation wraps around"
-msgstr "Navegação envolvente"
+msgstr "Navegação circular"
 
 #: ui/main.qml:227
 #, kde-format

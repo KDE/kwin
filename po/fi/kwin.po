@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-15 00:44+0000\n"
+"POT-Creation-Date: 2025-02-17 00:42+0000\n"
 "PO-Revision-Date: 2025-02-11 10:23+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -120,43 +120,43 @@ msgstr ""
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole käytettävissä."
 
-#: core/iccprofile.cpp:245
+#: core/iccprofile.cpp:252
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ICC-profiilia ”%1” ei voida avata"
 
-#: core/iccprofile.cpp:247
+#: core/iccprofile.cpp:254
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC-profiilia ”%1” ei ole olemassa"
 
-#: core/iccprofile.cpp:251
+#: core/iccprofile.cpp:258
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC-profiili ”%1” ei ole käytettävissä näytöille"
 
-#: core/iccprofile.cpp:254
+#: core/iccprofile.cpp:261
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr "ICC-profiilin ”%1” yhteysavaruutta ei tueta, vain XYZ:aa tuetaan"
 
-#: core/iccprofile.cpp:257
+#: core/iccprofile.cpp:264
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC-profiili ”%1” on rikki: syöttö/tulosväriavaruus ei ole RGB"
 
-#: core/iccprofile.cpp:276
+#: core/iccprofile.cpp:283
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC-profiili ”%1” on rikki: siitä puuttuu valkopiste"
 
-#: core/iccprofile.cpp:279
+#: core/iccprofile.cpp:286
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC-profiili ”%1” on rikki: sen valkopiste on virheellinen"
 
-#: core/iccprofile.cpp:292
+#: core/iccprofile.cpp:299
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -164,34 +164,34 @@ msgstr ""
 "ICC-profiili ”%1” on rikki: kromaattisen sovitusmatriisin jäsennys "
 "epäonnistui"
 
-#: core/iccprofile.cpp:297
+#: core/iccprofile.cpp:304
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 "ICC-profiili ”%1” on rikki: kromaattisen sovitusmatriisin kääntö epäonnistui"
 
-#: core/iccprofile.cpp:310
+#: core/iccprofile.cpp:317
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC-profiili ”%1” on rikki: siitä puuttuvat päävärit"
 
-#: core/iccprofile.cpp:325
+#: core/iccprofile.cpp:332
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr "ICC-profiili ”%1” on rikki: sen päävärejä ei voi laskea"
 
-#: core/iccprofile.cpp:334
+#: core/iccprofile.cpp:341
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC-profiili ”%1” on rikki: sen päävärit ovat virheellisiä"
 
-#: core/iccprofile.cpp:350
+#: core/iccprofile.cpp:357
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC-profiilia ”%1”, jossa on vain BToD-tunnisteita, ei tueta"
 
-#: core/iccprofile.cpp:389
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Väriprofiililta puuttuu TRC-tunnisteita"

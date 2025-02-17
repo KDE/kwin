@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-15 00:44+0000\n"
+"POT-Creation-Date: 2025-02-17 00:42+0000\n"
 "PO-Revision-Date: 2024-12-25 08:11+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -116,22 +116,22 @@ msgstr "Beharrezko X luzapenak (XComposite eta XDamage) ez daude eskuragarri."
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ez dago erabilgarri."
 
-#: core/iccprofile.cpp:245
+#: core/iccprofile.cpp:252
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ICC profila, \"%1\", irekitzea huts egin du"
 
-#: core/iccprofile.cpp:247
+#: core/iccprofile.cpp:254
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC profila,\"%1\" , ez da existitzen"
 
-#: core/iccprofile.cpp:251
+#: core/iccprofile.cpp:258
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC profila, \"%1\", ez da bistaratzaileekin erabilgarria"
 
-#: core/iccprofile.cpp:254
+#: core/iccprofile.cpp:261
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -139,23 +139,23 @@ msgstr ""
 "ICC profilak, \"%1\", euskarririk gabeko konexio-eremua du, XYZ bakarrik da "
 "bateragarria"
 
-#: core/iccprofile.cpp:257
+#: core/iccprofile.cpp:264
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "ICC profila, \"%1\",  hautsita dago, sarrera/irteera kolore-eremua ez da RGB"
 
-#: core/iccprofile.cpp:276
+#: core/iccprofile.cpp:283
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC profila, \"%1\", hautsita dago, ez dauka zuri-punturik"
 
-#: core/iccprofile.cpp:279
+#: core/iccprofile.cpp:286
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC profila, \"%1\", hautsita dago, bere zuri-puntua baliogabea da"
 
-#: core/iccprofile.cpp:292
+#: core/iccprofile.cpp:299
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -163,7 +163,7 @@ msgstr ""
 "ICC profila, \"%1\", hautsita dago, egokitzapen kromatikorako matrizea "
 "prozesatzea huts egin du"
 
-#: core/iccprofile.cpp:297
+#: core/iccprofile.cpp:304
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -171,28 +171,28 @@ msgstr ""
 "ICC profila, \"%1\", hautsita dago, egokitzapen kromatikorako matrizea "
 "alderantzikatzea huts egin du"
 
-#: core/iccprofile.cpp:310
+#: core/iccprofile.cpp:317
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC profila, \"%1\", hautsita dago, ez du primariorik"
 
-#: core/iccprofile.cpp:325
+#: core/iccprofile.cpp:332
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "ICC profila, \"%1\" hautsita dago, ezin izan ditu bere primarioak kalkulatu"
 
-#: core/iccprofile.cpp:334
+#: core/iccprofile.cpp:341
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "\"%1\" ICC profila hondatuta dago, bere primarioak baliogabeak dira"
 
-#: core/iccprofile.cpp:350
+#: core/iccprofile.cpp:357
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC profila, \"%1\", BToD etiketak bakarrik dituena ez da bateragarria"
 
-#: core/iccprofile.cpp:389
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Kolore-profilak TRC etiketak falta ditu"
