@@ -32,6 +32,7 @@ InternalWindow::InternalWindow(QWindow *handle)
     : m_handle(handle)
     , m_internalWindowFlags(handle->flags())
 {
+    // TODO: The geometry data flow is error-prone. Consider adopting the configure event design from xdg-shell.
     connect(m_handle, &QWindow::xChanged, this, &InternalWindow::updateInternalWindowGeometry);
     connect(m_handle, &QWindow::yChanged, this, &InternalWindow::updateInternalWindowGeometry);
     connect(m_handle, &QWindow::widthChanged, this, &InternalWindow::updateInternalWindowGeometry);
@@ -381,12 +382,15 @@ void InternalWindow::present(const InternalWindowFrame &frame)
     }
 
     commitGeometry(geometry);
-    markAsMapped();
 
     m_graphicsBufferRef = frame.buffer;
     m_graphicsBufferOrigin = frame.bufferOrigin;
 
-    surfaceItem()->addDamage(frame.bufferDamage);
+    if (surfaceItem()) {
+        surfaceItem()->addDamage(frame.bufferDamage);
+    }
+
+    markAsMapped();
 }
 
 QWindow *InternalWindow::handle() const
