@@ -254,7 +254,7 @@ QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &si
 
 void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    const QSizeF requestedClientSize = nextFrameSizeToClientSize(rect.size());
+    const QSize requestedClientSize = nextFrameSizeToClientSize(rect.size()).toSize();
     if (clientSize() == requestedClientSize) {
         commitGeometry(rect);
     } else {
@@ -488,7 +488,7 @@ void InternalWindow::markAsMapped()
 
 void InternalWindow::syncGeometryToInternalWindow()
 {
-    if (m_handle->geometry() == frameRectToClientRect(frameGeometry())) {
+    if (m_handle->geometry() == frameRectToClientRect(frameGeometry()).toRect()) {
         return;
     }
 
