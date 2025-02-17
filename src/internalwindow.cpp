@@ -432,7 +432,7 @@ void InternalWindow::updateCaption()
 void InternalWindow::requestGeometry(const QRectF &rect)
 {
     if (m_handle) {
-        m_handle->setGeometry(frameRectToClientRect(rect).toRect());
+        m_handle->setGeometry(nextFrameRectToClientRect(rect).toRect());
     }
 }
 
