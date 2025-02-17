@@ -171,6 +171,11 @@ void Connection::handleEvent()
     if (wasEmpty && !m_eventQueue.empty()) {
         Q_EMIT eventsRead();
     }
+    m_notifier->setEnabled(false);
+    using namespace std::chrono_literals;
+    QTimer::singleShot(10ms, m_notifier.get(), [this] () {
+        m_notifier->setEnabled(true);
+    });
 }
 
 #ifndef KWIN_BUILD_TESTING
