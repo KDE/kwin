@@ -22,4 +22,4 @@ target_sources(kwin PRIVATE
     libinput_logging.cpp
     libinputbackend.cpp
 )
-target_link_libraries(kwin PRIVATE Libinput::Libinput)
+target_link_libraries(kwin PRIVATE Libinput::Libinput KF6::Solid)
