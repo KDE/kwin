@@ -165,6 +165,9 @@ bool FallApartEffect::isRealWindow(EffectWindow *w)
     if (w->isOutline()) {
         return false;
     }
+    if (w->isLockScreen()) {
+        return false;
+    }
     if (w->isX11Client() && !w->isManaged()) {
         return false;
     }
