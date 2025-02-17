@@ -589,7 +589,7 @@ void DrmOutput::tryKmsColorOffloading()
     const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
     const ColorDescription optimal = colorDescription().transferFunction().type == TransferFunction::gamma22 ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(TransferFunction::gamma22, 0, maxLuminance));
     ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
-    if (m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile) {
+    if (usesICC) {
         colorPipeline.addTransferFunction(colorDescription().transferFunction());
         colorPipeline.addMultiplier(1.0 / colorDescription().referenceLuminance());
         colorPipeline.addMultiplier(channelFactors);
