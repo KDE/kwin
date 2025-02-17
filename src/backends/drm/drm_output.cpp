@@ -566,13 +566,14 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 
 void DrmOutput::tryKmsColorOffloading()
 {
+    constexpr TransferFunction::Type blendingSpace = TransferFunction::gamma22;
     // offloading color operations doesn't make sense when we have to apply the icc shader anyways
     const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !m_state.highDynamicRange && !m_state.wideColorGamut;
     if (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy) {
         setScanoutColorDescription(colorDescription());
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
-        m_needsShadowBuffer = usesICC || colorDescription().transferFunction().type != TransferFunction::gamma22;
+        m_needsShadowBuffer = usesICC || colorDescription().transferFunction().type != blendingSpace;
         return;
     }
     if (!m_pipeline->activePending() || !primaryLayer()) {
@@ -580,7 +581,7 @@ void DrmOutput::tryKmsColorOffloading()
     }
     const QVector3D channelFactors = adaptedChannelFactors();
     const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
-    const ColorDescription optimal = colorDescription().transferFunction().type == TransferFunction::gamma22 ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(TransferFunction::gamma22, 0, maxLuminance));
+    const ColorDescription optimal = colorDescription().transferFunction().type == blendingSpace ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(blendingSpace, 0, maxLuminance));
     ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
     if (usesICC) {
         colorPipeline.addTransferFunction(colorDescription().transferFunction());
@@ -602,12 +603,12 @@ void DrmOutput::tryKmsColorOffloading()
         m_needsShadowBuffer = false;
         return;
     }
-    if (colorDescription().transferFunction().type == TransferFunction::gamma22 && !usesICC) {
+    if (colorDescription().transferFunction().type == blendingSpace && !usesICC) {
         // allow falling back to applying the night light factors in non-linear space
         // this isn't technically correct, but the difference is quite small and not worth
         // losing a lot of performance and battery life over
         colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
-        colorPipeline.addMultiplier(TransferFunction(TransferFunction::gamma22, 0, 1).nitsToEncoded(channelFactors));
+        colorPipeline.addMultiplier(TransferFunction(blendingSpace, 0, 1).nitsToEncoded(channelFactors));
         m_pipeline->setCrtcColorPipeline(colorPipeline);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
