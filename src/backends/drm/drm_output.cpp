@@ -575,12 +575,11 @@ void DrmOutput::tryKmsColorOffloading()
 {
     // offloading color operations doesn't make sense when we have to apply the icc shader anyways
     const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !m_state.highDynamicRange && !m_state.wideColorGamut;
-    const bool disallowOffloading = usesICC && (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy || !m_state.iccProfile->inverseTransferFunction());
-    if (disallowOffloading) {
+    if (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy) {
         setScanoutColorDescription(colorDescription());
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
-        m_needsShadowBuffer = true;
+        m_needsShadowBuffer = usesICC || colorDescription().transferFunction().type != TransferFunction::gamma22;
         return;
     }
     if (!m_pipeline->activePending() || !primaryLayer()) {
