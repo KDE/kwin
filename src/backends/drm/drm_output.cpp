@@ -418,7 +418,7 @@ static std::pair<ColorDescription, QVector3D> applyNightLight(const ColorDescrip
 {
     const QVector3D adapted = adaptChannelFactors(originalColor, sRGBchannelFactors);
     // the new white point can have channels above one, compensate for that
-    const double brightness = 1.0 / std::max({adapted.x(), adapted.y(), adapted.z()});
+    const double brightness = 1.0 / std::max({adapted.x(), adapted.y(), adapted.z(), 1.0f});
     const xyY newWhite = XYZ::fromVector(originalColor.containerColorimetry().toXYZ() * adapted).toxyY();
     return std::make_pair(originalColor.withWhitepoint(newWhite).dimmed(brightness), adapted);
 }
