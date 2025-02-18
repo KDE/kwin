@@ -218,7 +218,7 @@ bool Colorimetry::isValid(xy red, xy green, xy blue, xy white)
     // this is more of a heuristic than a hard rule
     // but if the gamut is too small, it's not really usable
     const double gamutArea = triangleArea(red.asVector(), green.asVector(), blue.asVector());
-    if (gamutArea < 0.1) {
+    if (gamutArea < 0.02) {
         return false;
     }
     // if the white point is inside the gamut triangle,
