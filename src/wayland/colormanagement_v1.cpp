@@ -238,17 +238,6 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
         wl_resource_post_error(resource->handle, error::error_incomplete_set, "colorimetry or transfer function missing");
         return;
     }
-    std::optional<double> maxFrameAverageLuminance = m_maxFall ? m_maxFall : m_maxMasteringLuminance;
-    std::optional<double> maxHdrLuminance = m_maxCll ? m_maxCll : m_maxMasteringLuminance;
-
-    // some applications provide truly nonsensical luminance values, like 10 million nits.
-    // this is just a basic sanity check to not make use of that
-    const bool hasSaneMetadata = m_maxFall <= 10'000 && m_maxCll <= 10'000 && m_maxMasteringLuminance <= 10'000;
-    if (!hasSaneMetadata) {
-        maxFrameAverageLuminance.reset();
-        maxHdrLuminance.reset();
-        m_minMasteringLuminance.reset();
-    }
 
     TransferFunction func{*m_transferFunctionType};
     double referenceLuminance = TransferFunction::defaultReferenceLuminanceFor(func.type);
@@ -262,6 +251,18 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
             func.maxLuminance = m_transferFunctionLuminances->max;
         }
         referenceLuminance = m_transferFunctionLuminances->reference;
+    }
+
+    std::optional<double> maxFrameAverageLuminance = m_maxFall ? m_maxFall : m_maxMasteringLuminance;
+    std::optional<double> maxHdrLuminance = m_maxCll ? m_maxCll : m_maxMasteringLuminance;
+    // some applications provide truly nonsensical luminance values, like 10 million nits.
+    // this is just a basic sanity check to not make use of that and instead assume HGIG values
+    // which are fine for most HDR games and videos
+    const bool hasSaneMetadata = m_maxFall <= 10'000 && m_maxCll <= 10'000 && m_maxMasteringLuminance <= 10'000;
+    if (!hasSaneMetadata) {
+        maxFrameAverageLuminance = 600;
+        maxHdrLuminance = 1'000;
+        m_minMasteringLuminance = func.minLuminance;
     }
     if (Colorimetry::isValid(m_colorimetry->red().toxy(), m_colorimetry->green().toxy(), m_colorimetry->blue().toxy(), m_colorimetry->white().toxy())) {
         new ImageDescriptionV1(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
