@@ -291,7 +291,7 @@ void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data
             (bottom - top + 1.0) * data.yScale());
         // Expand the dirty region by 1px to fix potential round/floor issues.
         dirtyRect.adjust(-1.0, -1.0, 1.0, 1.0);
-        m_updateRegion = m_updateRegion.united(dirtyRect.toRect());
+        m_updateRegion = m_updateRegion.united(dirtyRect.toAlignedRect());
     }
 }
 
