@@ -19,7 +19,7 @@ namespace Preview
 
 PreviewClient::PreviewClient(DecoratedWindow *c, Decoration *decoration)
     : QObject(decoration)
-    , DecoratedWindowPrivate(c, decoration)
+    , DecoratedWindowPrivateV2(c, decoration)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
     , m_iconName(m_icon.name())
     , m_palette(QStringLiteral("kdeglobals"))
@@ -253,6 +253,16 @@ qreal PreviewClient::scale() const
 qreal PreviewClient::nextScale() const
 {
     return 1;
+}
+
+QString PreviewClient::applicationMenuServiceName() const
+{
+    return QString();
+}
+
+QString PreviewClient::applicationMenuObjectPath() const
+{
+    return QString();
 }
 
 bool PreviewClient::hasApplicationMenu() const
