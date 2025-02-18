@@ -316,7 +316,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
     case QEvent::HoverLeave:
     case QEvent::HoverMove: {
         QHoverEvent *he = static_cast<QHoverEvent *>(e);
-        const QPointF widgetPos = d->m_view->mapFromGlobal(he->pos());
+        const QPointF widgetPos = d->m_view->mapFromGlobal(he->position());
         const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
         QHoverEvent cloneEvent(he->type(), widgetPos, oldWidgetPos, he->modifiers());
         cloneEvent.setAccepted(false);

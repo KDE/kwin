@@ -287,7 +287,7 @@ static QHoverEvent cloneEventWithPadding(QHoverEvent *event, int paddingLeft, in
 {
     return QHoverEvent(
         event->type(),
-        event->posF() - QPointF(paddingLeft, paddingTop),
+        event->position() - QPointF(paddingLeft, paddingTop),
         event->oldPosF() - QPointF(paddingLeft, paddingTop),
         event->modifiers());
 }
