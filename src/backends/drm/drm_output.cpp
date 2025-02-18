@@ -434,7 +434,10 @@ std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const s
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
         const auto sdrColor = Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(iccProfile->colorimetry(), sdrGamutWideness);
-        return applyNightLight(ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness, iccProfile->colorimetry(), sdrColor), m_channelFactors);
+        const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
+        const double brightnessFactor = (!m_brightnessDevice && allowSdrSoftwareBrightness) ? brightness : 1.0;
+        const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
+        return applyNightLight(ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxBrightness), effectiveReferenceLuminance, minBrightness, maxBrightness, maxBrightness, iccProfile->colorimetry(), sdrColor), m_channelFactors);
     }
     const bool supportsHdr = (capabilities() & Capability::HighDynamicRange) && (capabilities() & Capability::WideColorGamut);
     const bool effectiveHdr = hdr && supportsHdr;
