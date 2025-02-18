@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QString>
 
-QString executablePathFromPid(pid_t);
+KWIN_EXPORT QString executablePathFromPid(pid_t);
