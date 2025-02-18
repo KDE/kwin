@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-17 00:42+0000\n"
+"POT-Creation-Date: 2025-02-18 00:42+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -4552,7 +4552,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3173
+#: window.cpp:3181
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
