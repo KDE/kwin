@@ -9,10 +9,7 @@
 
 #pragma once
 
-// cmake stuff
-#include "config-kwin.h"
 // kwin
-#include "effect/globals.h"
 #include "utils/executable_path.h"
 // Qt
 #include <QFileInfo>
