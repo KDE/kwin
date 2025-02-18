@@ -133,7 +133,8 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_hdr_metadata(R
                                                                                uint32_t max_cll, uint32_t max_fall)
 {
     // some applications provide truly nonsensical luminance values, like 10 million nits.
-    // this is just a basic sanity check to not make use of that
+    // this is just a basic sanity check to not make use of that and instead assume HGIG values
+    // which are fine for most HDR games and videos
     const bool hasSensibleLuminances = max_display_mastering_luminance <= 10'000 && max_cll <= 10'000 && max_fall <= 10'000;
     if (hasSensibleLuminances) {
         // max_display_mastering_luminance and max_cll more or less have the same meaning in practice
@@ -152,6 +153,10 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_hdr_metadata(R
             || (m_maxAverageLuminance && minLuminance < *m_maxAverageLuminance)) {
             m_minMasteringLuminance = minLuminance;
         }
+    } else {
+        m_minMasteringLuminance = m_transferFunction.minLuminance;
+        m_maxAverageLuminance = 600;
+        m_maxPeakBrightness = 1'000;
     }
     if (mastering_display_primary_red_x > 0 && mastering_display_primary_red_y > 0 && mastering_display_primary_green_x > 0 && mastering_display_primary_green_y > 0 && mastering_display_primary_blue_x > 0 && mastering_display_primary_blue_y > 0 && mastering_white_point_x > 0 && mastering_white_point_y > 0) {
         m_masteringColorimetry = Colorimetry{
