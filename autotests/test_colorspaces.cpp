@@ -464,6 +464,9 @@ void TestColorspaces::testColorimetryCheck_data()
     QTest::addRow("all ones") << false << xy{1, 1} << xy{1, 1} << xy{1, 1} << xy{1, 1};
     QTest::addRow("BT2020") << true << xy{0.708, 0.292} << xy{0.170, 0.797} << xy{0.131, 0.046} << xy{0.3127, 0.3290};
     QTest::addRow("Display P3") << true << xy{0.680, 0.320} << xy{0.265, 0.690} << xy{0.150, 0.060} << xy{0.3127, 0.3290};
+    QTest::addRow("AUO 44944") << true << xy{0.5664, 0.3388} << xy{0.3505, 0.5683} << xy{0.1582, 0.1210} << xy{0.3134, 0.3291};
+    QTest::addRow("SAM 3996") << true << xy{0.6777, 0.3105} << xy{0.2734, 0.6542} << xy{0.1425, 0.0566} << xy{0.3125, 0.3291};
+    QTest::addRow("BOE 3252") << true << xy{0.6523, 0.3320} << xy{0.2949, 0.6230} << xy{0.1464, 0.0488} << xy{0.3134, 0.3291};
 }
 
 void TestColorspaces::testColorimetryCheck()
