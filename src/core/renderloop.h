@@ -18,6 +18,7 @@ class SurfaceItem;
 class Item;
 class Output;
 class RenderLayer;
+class OutputLayer;
 
 /**
  * The RenderLoop class represents the compositing scheduler on a particular output.
@@ -76,7 +77,7 @@ public:
     /**
      * Schedules a compositing cycle at the next available moment.
      */
-    void scheduleRepaint(Item *item = nullptr, RenderLayer *layer = nullptr);
+    void scheduleRepaint(Item *item = nullptr, RenderLayer *layer = nullptr, OutputLayer *outputLayer = nullptr);
 
     /**
      * Returns the timestamp of the last frame that has been presented on the screen.
