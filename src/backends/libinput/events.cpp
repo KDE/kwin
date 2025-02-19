@@ -343,8 +343,8 @@ TabletToolEvent::TabletToolEvent(libinput_event *event, libinput_event_type type
 QPointF TabletToolEvent::transformedPosition(const QSize &size) const
 {
     const QRectF outputArea = device()->outputArea();
-    return {size.width() * outputArea.x() + libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, size.width() * outputArea.width()),
-            size.height() * outputArea.y() + libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, size.height() * outputArea.height())};
+    return {(size.width() - 1) * outputArea.x() + libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, (size.width() - 1) * outputArea.width()),
+            (size.height() - 1) * outputArea.y() + libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, (size.height() - 1) * outputArea.height())};
 }
 
 TabletToolButtonEvent::TabletToolButtonEvent(libinput_event *event, libinput_event_type type)
