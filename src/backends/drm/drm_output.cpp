@@ -572,17 +572,19 @@ void DrmOutput::tryKmsColorOffloading()
     constexpr TransferFunction::Type blendingSpace = TransferFunction::gamma22;
     // offloading color operations doesn't make sense when we have to apply the icc shader anyways
     const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !m_state.highDynamicRange && !m_state.wideColorGamut;
+    const QVector3D channelFactors = adaptedChannelFactors();
     if (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy) {
         setScanoutColorDescription(colorDescription());
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
-        m_needsShadowBuffer = usesICC || colorDescription().transferFunction().type != blendingSpace;
+        m_needsShadowBuffer = usesICC
+            || colorDescription().transferFunction().type != blendingSpace
+            || (channelFactors - QVector3D(1, 1, 1)).lengthSquared() > 0.0001;
         return;
     }
     if (!m_pipeline->activePending() || !primaryLayer()) {
         return;
     }
-    const QVector3D channelFactors = adaptedChannelFactors();
     const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
     const ColorDescription optimal = colorDescription().transferFunction().type == blendingSpace ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(blendingSpace, 0, maxLuminance));
     ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
