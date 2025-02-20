@@ -29,6 +29,7 @@
 #include "wayland/appmenu.h"
 #include "wayland/clientconnection.h"
 #include "wayland/colormanagement_v1.h"
+#include "wayland/colorrepresentation_v1.h"
 #include "wayland/compositor.h"
 #include "wayland/contenttype_v1.h"
 #include "wayland/cursorshape_v1.h"
@@ -525,6 +526,7 @@ bool WaylandServer::init()
 #endif
     m_fifoManager = new FifoManagerV1(m_display, m_display);
     m_singlePixelBuffer = new SinglePixelBufferManagerV1(m_display, m_display);
+    m_colorRepresentation = new ColorRepresentationManagerV1(m_display, m_display);
     return true;
 }
 

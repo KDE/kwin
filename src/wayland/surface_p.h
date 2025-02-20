@@ -33,6 +33,7 @@ class LinuxDrmSyncObjSurfaceV1;
 class AlphaModifierSurfaceV1;
 class FifoV1Surface;
 class FifoBarrier;
+class ColorRepresentationSurfaceV1;
 
 struct SurfaceState
 {
@@ -197,6 +198,7 @@ public:
     LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
     FifoV1Surface *fifoSurface = nullptr;
+    ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
 
     struct
     {

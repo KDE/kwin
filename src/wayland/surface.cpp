@@ -8,6 +8,7 @@
 #include "blur.h"
 #include "clientconnection.h"
 #include "colormanagement_v1.h"
+#include "colorrepresentation_v1.h"
 #include "compositor.h"
 #include "contrast.h"
 #include "display.h"
@@ -354,39 +355,48 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
     // matrix and color space to be attached to YUV formats
     const bool hasColorManagementProtocol = colorSurface || frogColorManagement;
+    const bool hasColorRepresentation = colorRepresentation != nullptr;
     if (bufferRef && bufferRef->dmabufAttributes()) {
         switch (bufferRef->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
-            pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
-            pending->range = EncodingRange::Limited;
-            pending->committed |= SurfaceState::Field::YuvCoefficients;
+            if (!hasColorRepresentation) {
+                pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
+                pending->range = EncodingRange::Limited;
+                pending->committed |= SurfaceState::Field::YuvCoefficients;
+            }
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription::sRGB;
                 pending->committed |= SurfaceState::Field::ColorDescription;
             }
             break;
         case DRM_FORMAT_P010:
-            pending->yuvCoefficients = YUVMatrixCoefficients::BT2020;
-            pending->range = EncodingRange::Limited;
-            pending->committed |= SurfaceState::Field::YuvCoefficients;
+            if (!hasColorRepresentation) {
+                pending->yuvCoefficients = YUVMatrixCoefficients::BT2020;
+                pending->range = EncodingRange::Limited;
+                pending->committed |= SurfaceState::Field::YuvCoefficients;
+            }
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer));
                 pending->committed |= SurfaceState::Field::ColorDescription;
             }
             break;
         default:
-            pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
-            pending->range = EncodingRange::Full;
-            pending->committed |= SurfaceState::Field::YuvCoefficients;
+            if (!hasColorRepresentation) {
+                pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+                pending->range = EncodingRange::Full;
+                pending->committed |= SurfaceState::Field::YuvCoefficients;
+            }
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription::sRGB;
                 pending->committed |= SurfaceState::Field::ColorDescription;
             }
         }
     } else {
-        pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
-        pending->range = EncodingRange::Full;
-        pending->committed |= SurfaceState::Field::YuvCoefficients;
+        if (!hasColorRepresentation) {
+            pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+            pending->range = EncodingRange::Full;
+            pending->committed |= SurfaceState::Field::YuvCoefficients;
+        }
         if (!hasColorManagementProtocol) {
             pending->colorDescription = ColorDescription::sRGB;
             pending->committed |= SurfaceState::Field::ColorDescription;
