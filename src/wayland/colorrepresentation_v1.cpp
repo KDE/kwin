@@ -24,8 +24,11 @@ void ColorRepresentationManagerV1::wp_color_representation_manager_v1_bind_resou
     send_supported_alpha_mode(resource->handle, WP_COLOR_REPRESENTATION_V1_ALPHA_MODE_PREMULTIPLIED_ELECTRICAL);
     send_supported_coefficients_and_ranges(resource->handle, WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_IDENTITY, WP_COLOR_REPRESENTATION_V1_RANGE_FULL);
     send_supported_coefficients_and_ranges(resource->handle, WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_BT601, WP_COLOR_REPRESENTATION_V1_RANGE_LIMITED);
+    send_supported_coefficients_and_ranges(resource->handle, WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_BT601, WP_COLOR_REPRESENTATION_V1_RANGE_FULL);
     send_supported_coefficients_and_ranges(resource->handle, WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_BT709, WP_COLOR_REPRESENTATION_V1_RANGE_LIMITED);
+    send_supported_coefficients_and_ranges(resource->handle, WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_BT709, WP_COLOR_REPRESENTATION_V1_RANGE_FULL);
     send_supported_coefficients_and_ranges(resource->handle, WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_BT2020, WP_COLOR_REPRESENTATION_V1_RANGE_LIMITED);
+    send_supported_coefficients_and_ranges(resource->handle, WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_BT2020, WP_COLOR_REPRESENTATION_V1_RANGE_FULL);
     // this means the sample is in the center of the pixel, which *should* be what we're doing
     // TODO support the other locations too?
     send_supported_chroma_location(resource->handle, WP_COLOR_REPRESENTATION_V1_CHROMA_LOCATION_TYPE_1);
@@ -102,16 +105,14 @@ void ColorRepresentationV1::wp_color_representation_v1_set_coefficients_and_rang
         wl_resource_post_error(resource->handle, WP_COLOR_REPRESENTATION_V1_ERROR_UNSUPPORTED_COEFFICIENTS, "unsupported coefficients used");
         return;
     }
-    // TODO support limited and full range with all combinations
+    // TODO support limited range rgb
     if (coefficients == WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_IDENTITY && range != WP_COLOR_REPRESENTATION_V1_RANGE_FULL) {
         wl_resource_post_error(resource->handle, WP_COLOR_REPRESENTATION_V1_ERROR_UNSUPPORTED_COEFFICIENTS, "Limited range isn't supported with RGB");
-        return;
-    } else if (coefficients != WP_COLOR_REPRESENTATION_V1_COEFFICIENTS_IDENTITY && range != WP_COLOR_REPRESENTATION_V1_RANGE_LIMITED) {
-        wl_resource_post_error(resource->handle, WP_COLOR_REPRESENTATION_V1_ERROR_UNSUPPORTED_COEFFICIENTS, "Full range isn't supported with YUV");
         return;
     }
     auto surfPrivate = SurfaceInterfacePrivate::get(m_surface);
     surfPrivate->pending->yuvCoefficients = it->second;
+    surfPrivate->pending->range = range == WP_COLOR_REPRESENTATION_V1_RANGE_LIMITED ? EncodingRange::Limited : EncodingRange::Full;
     surfPrivate->pending->yuvCoefficientsIsSet = true;
 }
 
