@@ -22,6 +22,8 @@
 #include <QDBusContext>
 #include <QDBusMessage>
 
+#include <QCoroCore>
+
 class QQmlComponent;
 class QQmlContext;
 class QQmlEngine;
@@ -200,6 +202,14 @@ private Q_SLOTS:
     bool slotBorderActivated(ElectricBorder border);
 
 private:
+    /**
+     * Handles the call to a D-Bus method, allowing the `callDBus` method to
+     * return since it can't be a coroutine itself.
+     */
+    QCoro::Task<void> handleCallDBus(const QString service, const QString path,
+                                     const QString interface, const QString method,
+                                     const QJSValueList args);
+
     /**
      * Read the script from file into a byte array.
      * If file cannot be read an empty byte array is returned.

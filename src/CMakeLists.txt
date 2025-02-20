@@ -222,6 +222,11 @@ target_link_libraries(kwin
         Qt::DBus
         Qt::Quick
         Qt::Widgets
+        Qt::Xml
+
+        QCoro::Core
+        QCoro::DBus
+
         Wayland::Server
         KF6::ConfigCore
         KF6::CoreAddons
