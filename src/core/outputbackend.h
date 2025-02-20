@@ -92,7 +92,7 @@ public:
     /**
      * Applies the output changes. Default implementation only sets values common between platforms
      */
-    virtual bool applyOutputChanges(const OutputConfiguration &config);
+    virtual OutputConfigurationError applyOutputChanges(const OutputConfiguration &config);
 
     virtual Session *session() const;
 
