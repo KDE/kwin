@@ -40,7 +40,6 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
         QSKIP("no render node available");
         return;
     }
-    qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
