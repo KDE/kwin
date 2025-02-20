@@ -80,3 +80,15 @@ options.configChanged.connect(init);
 
 registerShortcut("MinimizeAll", "MinimizeAll", "Meta+Shift+D", minimizeAllWindows);
 init();
+
+console.warn("-------------------------------------- MinimizeAll")
+
+callDBus("org.freedesktop.systemd1", "/", "org.freedesktop.DBus.Peer", "Ping")
+callDBus("org.freedesktop.systemd1", "/", "org.freedesktop.DBus.Peer", "Ping", (result) => {
+    console.log("callback", result)
+})
+callDBus("org.freedesktop.systemd1", "/", "org.freedesktop.DBus.Peer", "Invalid")
+
+callDBus("org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.DBus.Properties", "GetAll", "org.freedesktop.systemd1.Manager", (result) => {
+    console.log("Props callback", JSON.stringify(result))
+})

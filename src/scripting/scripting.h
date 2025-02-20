@@ -109,18 +109,6 @@ public:
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
-    Q_INVOKABLE void callDBus(const QString &service, const QString &path,
-                              const QString &interface, const QString &method,
-                              const QJSValue &arg1 = QJSValue(),
-                              const QJSValue &arg2 = QJSValue(),
-                              const QJSValue &arg3 = QJSValue(),
-                              const QJSValue &arg4 = QJSValue(),
-                              const QJSValue &arg5 = QJSValue(),
-                              const QJSValue &arg6 = QJSValue(),
-                              const QJSValue &arg7 = QJSValue(),
-                              const QJSValue &arg8 = QJSValue(),
-                              const QJSValue &arg9 = QJSValue());
-
     Q_INVOKABLE bool registerShortcut(const QString &objectName, const QString &text,
                                       const QString &keySequence, const QJSValue &callback);
 

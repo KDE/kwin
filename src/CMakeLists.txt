@@ -183,7 +183,6 @@ target_sources(kwin PRIVATE
     scene/workspacescene_opengl.cpp
     scene/workspacescene_qpainter.cpp
     screenedge.cpp
-    scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
     scripting/gesturehandler.cpp
     scripting/screenedgehandler.cpp
@@ -251,6 +250,7 @@ target_link_libraries(kwin
         KF6::I18nQml
         KF6::Package
         KF6::Service
+        KF6::DBusAddonsQML
 
         KDecoration3::KDecoration
         KDecoration3::KDecoration3Private

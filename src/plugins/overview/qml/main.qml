@@ -790,7 +790,56 @@ FocusScope {
         id: desktopModel
     }
 
+    KWinComponents.DBusCall {
+        id: ping
+        service: "org.freedesktop.systemd1"
+        path: "/"
+        dbusInterface: "org.freedesktop.DBus.Peer"
+        method: "Ping"
+        arguments: []
+        onFinished: (args) => {
+            console.warn("Ping finished", args)
+        }
+        onFailed: {
+            console.warn("Ping failed")
+        }
+    }
+
+    KWinComponents.DBusCall {
+        id: invalid
+        service: "org.freedesktop.systemd1"
+        path: "/"
+        dbusInterface: "org.freedesktop.DBus.Peer"
+        method: "Invalid"
+        arguments: []
+        onFinished: (args) => {
+            console.warn("Invalid finished", args)
+        }
+        onFailed: {
+            console.warn("Invalid failed")
+        }
+    }
+
+    KWinComponents.DBusCall {
+        id: props
+        service: "org.freedesktop.systemd1"
+        path: "/org/freedesktop/systemd1"
+        dbusInterface: "org.freedesktop.DBus.Properties"
+        method: "GetAll"
+        arguments: ["org.freedesktop.systemd1.Manager"]
+        onFinished: (args) => {
+            console.warn("Props finished", JSON.stringify(args))
+        }
+        onFailed: {
+            console.warn("Props failed")
+        }
+    }
+
     Component.onCompleted: {
+        console.warn("---------------------------------------------- Overview")
+        ping.call()
+        invalid.call()
+        props.call()
         // The following line unbinds the verticalDesktopBar, meaning that it
         // won't react to changes in number of desktops or rows. This is beacuse we
         // don't want the desktop bar changing screenside whilst the user is

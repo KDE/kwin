@@ -11,7 +11,6 @@
 
 #include "scripting.h"
 // own
-#include "dbuscall.h"
 #include "desktopbackgrounditem.h"
 #include "effect/quickeffect.h"
 #include "gesturehandler.h"
@@ -37,6 +36,7 @@
 #include <KConfigGroup>
 #include <KConfigPropertyMap>
 #include <KGlobalAccel>
+#include <KJSDBusInterface>
 #include <KLocalizedContext>
 #include <KLocalizedQmlContext>
 #include <KPackage/PackageLoader>
@@ -55,6 +55,8 @@
 #include <QtConcurrentRun>
 
 #include "scriptadaptor.h"
+
+using namespace Qt::StringLiterals;
 
 static QRect scriptValueToRect(const QJSValue &value)
 {
@@ -220,6 +222,8 @@ void KWin::Script::slotScriptLoadedFromFile()
     // Expose enums.
     m_engine->globalObject().setProperty(QStringLiteral("KWin"), m_engine->newQMetaObject(&QtScriptWorkspaceWrapper::staticMetaObject));
 
+    KJSDBusInterface::registerMetaObject(*m_engine, m_engine->globalObject(), u"DBusInterface"_s);
+
     // Make the options object visible to QJSEngine.
     QJSValue optionsObject = m_engine->newQObject(options);
     QJSEngine::setObjectOwnership(options, QJSEngine::CppOwnership);
@@ -235,7 +239,6 @@ void KWin::Script::slotScriptLoadedFromFile()
 
     static const QStringList globalProperties{
         QStringLiteral("readConfig"),
-        QStringLiteral("callDBus"),
 
         QStringLiteral("registerShortcut"),
         QStringLiteral("registerScreenEdge"),
@@ -270,6 +273,27 @@ void KWin::Script::slotScriptLoadedFromFile()
         function assertEquals(expected, actual, message) {
             console.assert(expected === actual, message || 'Assertion failed');
         }
+        function callDBus(service, path, interface, method, ...args) {
+            const dbusInterface = new DBusInterface("session", service, path, interface)
+
+            let callback = null
+            lastArg = args[args.length - 1]
+            if (typeof lastArg === 'function') {
+                callback = lastArg
+                args.pop()
+            }
+
+            new Promise((resolve, reject) => {
+                dbusInterface.asyncCall(method, "_implied_", args, resolve, reject)
+            }).then((result, ...resolveArgs) => {
+                if (callback) {
+                    callback([result, resolveArgs])
+                }
+            }).catch((error) => {
+                console.error("Error!", error)
+                // original callDBus returned without callback on error!
+            })
+        }
     )"));
     Q_ASSERT(!result.isError());
 
@@ -295,81 +319,6 @@ void KWin::Script::slotScriptLoadedFromFile()
 QVariant KWin::Script::readConfig(const QString &key, const QVariant &defaultValue)
 {
     return config().readEntry(key, defaultValue);
-}
-
-void KWin::Script::callDBus(const QString &service, const QString &path, const QString &interface,
-                            const QString &method, const QJSValue &arg1, const QJSValue &arg2,
-                            const QJSValue &arg3, const QJSValue &arg4, const QJSValue &arg5,
-                            const QJSValue &arg6, const QJSValue &arg7, const QJSValue &arg8,
-                            const QJSValue &arg9)
-{
-    QJSValueList jsArguments;
-    jsArguments.reserve(9);
-
-    if (!arg1.isUndefined()) {
-        jsArguments << arg1;
-    }
-    if (!arg2.isUndefined()) {
-        jsArguments << arg2;
-    }
-    if (!arg3.isUndefined()) {
-        jsArguments << arg3;
-    }
-    if (!arg4.isUndefined()) {
-        jsArguments << arg4;
-    }
-    if (!arg5.isUndefined()) {
-        jsArguments << arg5;
-    }
-    if (!arg6.isUndefined()) {
-        jsArguments << arg6;
-    }
-    if (!arg7.isUndefined()) {
-        jsArguments << arg7;
-    }
-    if (!arg8.isUndefined()) {
-        jsArguments << arg8;
-    }
-    if (!arg9.isUndefined()) {
-        jsArguments << arg9;
-    }
-
-    QJSValue callback;
-    if (!jsArguments.isEmpty() && jsArguments.last().isCallable()) {
-        callback = jsArguments.takeLast();
-    }
-
-    QVariantList dbusArguments;
-    dbusArguments.reserve(jsArguments.count());
-    for (const QJSValue &jsArgument : std::as_const(jsArguments)) {
-        dbusArguments << jsArgument.toVariant();
-    }
-
-    QDBusMessage message = QDBusMessage::createMethodCall(service, path, interface, method);
-    message.setArguments(dbusArguments);
-
-    const QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(message);
-    if (callback.isUndefined()) {
-        return;
-    }
-
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, callback](QDBusPendingCallWatcher *self) {
-        self->deleteLater();
-
-        if (self->isError()) {
-            qCWarning(KWIN_SCRIPTING) << "Received D-Bus message is error:" << self->error().message();
-            return;
-        }
-
-        QJSValueList arguments;
-        const QVariantList reply = self->reply().arguments();
-        for (const QVariant &variant : reply) {
-            arguments << m_engine->toScriptValue(dbusToVariant(variant));
-        }
-
-        QJSValue(callback).call(arguments);
-    });
 }
 
 bool KWin::Script::registerShortcut(const QString &objectName, const QString &text, const QString &keySequence, const QJSValue &callback)
@@ -646,7 +595,6 @@ void KWin::Scripting::init()
 
     qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackground");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
-    qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeHandler>("org.kde.kwin", 3, 0, "ScreenEdgeHandler");
     qmlRegisterType<ShortcutHandler>("org.kde.kwin", 3, 0, "ShortcutHandler");
     qmlRegisterType<SwipeGestureHandler>("org.kde.kwin", 3, 0, "SwipeGestureHandler");
