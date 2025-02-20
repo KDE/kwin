@@ -378,7 +378,7 @@ size_t DrmBackend::gpuCount() const
     return m_gpus.size();
 }
 
-bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
+OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     QList<DrmOutput *> toBeEnabled;
     QList<DrmOutput *> toBeDisabled;
@@ -397,14 +397,20 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
                 }
             }
         }
-        if (gpu->testPendingConfiguration() != DrmPipeline::Error::None) {
+        const auto error = gpu->testPendingConfiguration();
+        if (error != DrmPipeline::Error::None) {
             for (const auto &output : std::as_const(toBeEnabled)) {
                 output->revertQueuedChanges();
             }
             for (const auto &output : std::as_const(toBeDisabled)) {
                 output->revertQueuedChanges();
             }
-            return false;
+            if (error == DrmPipeline::Error::NotEnoughCrtcs) {
+                // TODO make this more specific, this is per GPU!
+                return OutputConfigurationError::TooManyEnabledOutputs;
+            } else {
+                return OutputConfigurationError::Unknown;
+            }
         }
     }
     // first, apply changes to drm outputs.
@@ -423,7 +429,7 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
     for (const auto &output : std::as_const(m_virtualOutputs)) {
         output->applyChanges(config);
     }
-    return true;
+    return OutputConfigurationError::None;
 }
 
 void DrmBackend::setRenderBackend(DrmRenderBackend *backend)

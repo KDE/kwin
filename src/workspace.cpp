@@ -499,10 +499,11 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
+OutputConfigurationError Workspace::applyOutputConfiguration(const OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
 {
-    if (!kwinApp()->outputBackend()->applyOutputChanges(config)) {
-        return false;
+    auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
+    if (error != OutputConfigurationError::None) {
+        return error;
     }
     updateOutputs(outputOrder);
     m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder);
@@ -525,7 +526,7 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
         output->renderLoop()->scheduleRepaint();
     }
 
-    return true;
+    return OutputConfigurationError::None;
 }
 
 void Workspace::updateOutputConfiguration()
@@ -542,6 +543,12 @@ void Workspace::updateOutputConfiguration()
         return;
     }
 
+    assignBrightnessDevices();
+
+    const bool alreadyHaveEnabledOutputs = std::ranges::any_of(outputs, [](Output *o) {
+        return o->isEnabled();
+    });
+
     // Update the output order to a fallback list, to avoid dangling pointers
     const auto setFallbackOutputOrder = [this, &outputs]() {
         auto newOrder = outputs;
@@ -555,39 +562,61 @@ void Workspace::updateOutputConfiguration()
         setOutputOrder(newOrder);
     };
 
-    auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
-    if (!opt) {
-        return;
-    }
-    auto &[cfg, order, type] = *opt;
-
-    assignBrightnessDevices();
-    for (Output *output : outputs) {
-        if (output->brightnessDevice()) {
-            cfg.changeSet(output)->allowSdrSoftwareBrightness = false;
-            cfg.changeSet(output)->brightness = output->brightnessSetting();
+    QList<Output *> toEnable = outputs;
+    OutputConfigurationError error = OutputConfigurationError::None;
+    do {
+        auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        if (!opt) {
+            return;
         }
-    }
+        auto &[cfg, order, type] = *opt;
 
-    if (!applyOutputConfiguration(cfg, order)) {
-        qCWarning(KWIN_CORE) << "Applying output config failed!";
-        setFallbackOutputOrder();
-        return;
-    }
-    setOutputOrder(order);
-    if (type == OutputConfigurationStore::ConfigType::Generated) {
-        const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](Output *o) {
-            return o->isInternal();
-        });
-        if (hasInternal && outputs.size() == 2) {
-            // show the OSD with output configuration presets
-            QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kscreen.osdService"),
-                                                                  QStringLiteral("/org/kde/kscreen/osdService"),
-                                                                  QStringLiteral("org.kde.kscreen.osdService"),
-                                                                  QStringLiteral("showActionSelector"));
-            QDBusConnection::sessionBus().asyncCall(message);
+        for (const auto &output : outputs) {
+            if (!toEnable.contains(output)) {
+                cfg.changeSet(output)->enabled = false;
+            }
         }
-    }
+        for (Output *output : std::as_const(toEnable)) {
+            if (output->brightnessDevice()) {
+                cfg.changeSet(output)->allowSdrSoftwareBrightness = false;
+                cfg.changeSet(output)->brightness = output->brightnessSetting();
+            }
+        }
+
+        error = applyOutputConfiguration(cfg, order);
+        switch (error) {
+        case OutputConfigurationError::None:
+            setOutputOrder(order);
+            if (type == OutputConfigurationStore::ConfigType::Generated) {
+                const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](Output *o) {
+                    return o->isInternal();
+                });
+                if (hasInternal && outputs.size() == 2) {
+                    // show the OSD with output configuration presets
+                    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kscreen.osdService"),
+                                                                          QStringLiteral("/org/kde/kscreen/osdService"),
+                                                                          QStringLiteral("org.kde.kscreen.osdService"),
+                                                                          QStringLiteral("showActionSelector"));
+                    QDBusConnection::sessionBus().asyncCall(message);
+                }
+            }
+            return;
+        case OutputConfigurationError::Unknown:
+            qCWarning(KWIN_CORE) << "Applying output config failed!";
+            setFallbackOutputOrder();
+            return;
+        case OutputConfigurationError::TooManyEnabledOutputs:
+            if (alreadyHaveEnabledOutputs) {
+                // just keeping the old output configuration is preferable
+                break;
+            }
+            toEnable.removeLast();
+            break;
+        }
+    } while (error == OutputConfigurationError::TooManyEnabledOutputs && !toEnable.isEmpty());
+
+    qCCritical(KWIN_CORE, "Applying output configuration failed!");
+    setFallbackOutputOrder();
 }
 
 void Workspace::setupWindowConnections(Window *window)

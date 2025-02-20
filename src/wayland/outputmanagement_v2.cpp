@@ -487,11 +487,15 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
             return pair.second->handle();
         });
     }
-    if (workspace()->applyOutputConfiguration(config, sortedOrder)) {
+    switch (workspace()->applyOutputConfiguration(config, sortedOrder)) {
+    case OutputConfigurationError::None:
         send_applied();
-    } else {
+        break;
+    case OutputConfigurationError::Unknown:
+    case OutputConfigurationError::TooManyEnabledOutputs:
         // TODO provide a more accurate error reason once the driver actually gives us anything
         sendFailure(resource, i18n("The driver rejected the output configuration"));
+        break;
     }
 }
 

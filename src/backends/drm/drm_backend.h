@@ -73,7 +73,7 @@ Q_SIGNALS:
     void gpuRemoved(DrmGpu *gpu);
 
 protected:
-    bool applyOutputChanges(const OutputConfiguration &config) override;
+    OutputConfigurationError applyOutputChanges(const OutputConfiguration &config) override;
 
 private:
     friend class DrmGpu;
