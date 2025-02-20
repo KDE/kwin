@@ -31,6 +31,7 @@ class ColorSurfaceV1;
 class ColorFeedbackSurfaceV1;
 class LinuxDrmSyncObjSurfaceV1;
 class AlphaModifierSurfaceV1;
+class ColorRepresentationV1;
 
 struct SurfaceState
 {
@@ -186,6 +187,7 @@ public:
     QList<ColorFeedbackSurfaceV1 *> colorFeedbackSurfaces;
     LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
+    ColorRepresentationV1 *colorRepresentation = nullptr;
 
     struct
     {
