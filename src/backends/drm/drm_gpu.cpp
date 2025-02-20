@@ -350,10 +350,9 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             // nothing to do
             return DrmPipeline::Error::None;
         }
-        // remaining connectors can't be powered
-        for (const auto &conn : std::as_const(connectors)) {
-            qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
-            conn->pipeline()->setCrtc(nullptr);
+        if (!connectors.empty()) {
+            // we have no crtcs left to drive the remaining connectors
+            return DrmPipeline::Error::InvalidArguments;
         }
         return testPipelines();
     }
