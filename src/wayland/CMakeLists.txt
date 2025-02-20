@@ -47,6 +47,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
         ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
         ${WaylandProtocols_DATADIR}/staging/color-management/color-management-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/color-representation/color-representation-v1.xml
         ${WaylandProtocols_DATADIR}/staging/content-type/content-type-v1.xml
         ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
         ${WaylandProtocols_DATADIR}/staging/drm-lease/drm-lease-v1.xml
@@ -89,6 +90,7 @@ target_sources(kwin PRIVATE
     blur.cpp
     clientconnection.cpp
     colormanagement_v1.cpp
+    colorrepresentation_v1.cpp
     compositor.cpp
     contenttype_v1.cpp
     contrast.cpp
@@ -181,6 +183,7 @@ install(FILES
     blur.h
     clientconnection.h
     colormanagement_v1.h
+    colorrepresentation_v1.h
     compositor.h
     contenttype_v1.h
     contrast.h
@@ -260,6 +263,7 @@ install(FILES
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-alpha-modifier-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-management-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-representation-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-fifo-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
@@ -270,6 +274,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xdg-toplevel-tag-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-management-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-representation-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-fifo-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h

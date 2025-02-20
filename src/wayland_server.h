@@ -68,6 +68,7 @@ class RenderBackend;
 class AlphaModifierManagerV1;
 class FifoManagerV1;
 class SinglePixelBufferManagerV1;
+class ColorRepresentationManagerV1;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -297,6 +298,7 @@ private:
     FifoManagerV1 *m_fifoManager = nullptr;
     SinglePixelBufferManagerV1 *m_singlePixelBuffer = nullptr;
     XdgToplevelTagManagerV1 *m_toplevelTag = nullptr;
+    ColorRepresentationManagerV1 *m_colorRepresentation = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 
