@@ -602,9 +602,6 @@ void Workspace::updateOutputConfiguration()
             }
             return;
         case OutputConfigurationError::Unknown:
-            qCWarning(KWIN_CORE) << "Applying output config failed!";
-            setFallbackOutputOrder();
-            return;
         case OutputConfigurationError::TooManyEnabledOutputs:
             if (alreadyHaveEnabledOutputs) {
                 // just keeping the old output configuration is preferable
