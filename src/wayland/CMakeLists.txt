@@ -307,11 +307,15 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-system-bell/xdg-system-bell-v1.xml
     BASENAME xdg-system-bell-v1
 )
-
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-toplevel-icon/xdg-toplevel-icon-v1.xml
     BASENAME xdg-toplevel-icon-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/color-representation-v1.xml
+    BASENAME color-representation-v1
 )
 
 target_sources(kwin PRIVATE
@@ -322,6 +326,7 @@ target_sources(kwin PRIVATE
     blur.cpp
     clientconnection.cpp
     colormanagement_v1.cpp
+    colorrepresentation_v1.cpp
     compositor.cpp
     contenttype_v1.cpp
     contrast.cpp
@@ -410,6 +415,7 @@ install(FILES
     blur.h
     clientconnection.h
     colormanagement_v1.h
+    colorrepresentation_v1.h
     compositor.h
     contenttype_v1.h
     contrast.h
@@ -485,6 +491,7 @@ install(FILES
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-alpha-modifier-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-management-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-representation-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-external-brightness-v1.h
@@ -492,6 +499,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-management-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-representation-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-external-brightness-v1-server-protocol.h

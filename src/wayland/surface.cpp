@@ -352,35 +352,44 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
     // matrix and color space to be attached to YUV formats
     const bool hasColorManagementProtocol = colorSurface || frogColorManagement;
+    const bool hasColorRepresentation = colorRepresentation != nullptr;
     if (bufferRef && bufferRef->dmabufAttributes()) {
         switch (bufferRef->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
-            pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
-            pending->yuvCoefficientsIsSet = true;
+            if (!hasColorRepresentation) {
+                pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
+                pending->yuvCoefficientsIsSet = true;
+            }
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription::sRGB;
                 pending->colorDescriptionIsSet = true;
             }
             break;
         case DRM_FORMAT_P010:
-            pending->yuvCoefficients = YUVMatrixCoefficients::BT2020;
-            pending->yuvCoefficientsIsSet = true;
+            if (!hasColorRepresentation) {
+                pending->yuvCoefficients = YUVMatrixCoefficients::BT2020;
+                pending->yuvCoefficientsIsSet = true;
+            }
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer));
                 pending->colorDescriptionIsSet = true;
             }
             break;
         default:
-            pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
-            pending->yuvCoefficientsIsSet = true;
+            if (!hasColorRepresentation) {
+                pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+                pending->yuvCoefficientsIsSet = true;
+            }
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription::sRGB;
                 pending->colorDescriptionIsSet = true;
             }
         }
     } else {
-        pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
-        pending->yuvCoefficientsIsSet = true;
+        if (!hasColorRepresentation) {
+            pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+            pending->yuvCoefficientsIsSet = true;
+        }
         if (!hasColorManagementProtocol) {
             pending->colorDescription = ColorDescription::sRGB;
             pending->colorDescriptionIsSet = true;
