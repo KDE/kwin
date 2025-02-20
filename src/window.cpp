@@ -1445,7 +1445,8 @@ static std::optional<QPointF> confineInteractiveMove(const RectF &geometry, int 
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gravity gravity, int minVisibleWidth, int minVisibleHeight)
+static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gravity gravity, int minVisibleWidth, int minVisibleHeight,
+                                                       const QSizeF &minSize, const QSizeF &maxSize)
 {
     if (gravity == Gravity::Bottom) {
         QPointF candidate = geometry.bottomLeft();
@@ -1507,16 +1508,57 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
         return QLineF(source, dest).length();
     };
 
+    const auto applyMinSizeMaxSizeConstraints = [gravity, geometry, minSize, maxSize](QRectF rect) {
+        // in applying minSize and maxSize constraints, add slackness of 1 to avoid invalid rectangles when minSize is equal to maxSize
+        switch (gravity) {
+        case Gravity::Top:
+            rect.setBottom(std::min(rect.bottom(), geometry.bottom() - minSize.height()));
+            rect.setTop(std::max(rect.top(), geometry.bottom() - maxSize.height() - 1));
+            break;
+        case Gravity::TopLeft:
+            rect.setRight(std::min(rect.right(), geometry.right() - minSize.width()));
+            rect.setBottom(std::min(rect.bottom(), geometry.bottom() - minSize.height()));
+            rect.setLeft(std::max(rect.left(), geometry.right() - maxSize.width() - 1));
+            rect.setTop(std::max(rect.top(), geometry.bottom() - maxSize.height() - 1));
+            break;
+        case Gravity::TopRight:
+            rect.setLeft(std::max(rect.left(), geometry.left() + minSize.width()));
+            rect.setBottom(std::min(rect.bottom(), geometry.bottom() - minSize.height()));
+            rect.setRight(std::min(rect.right(), geometry.left() + maxSize.width() + 1));
+            rect.setTop(std::max(rect.top(), geometry.bottom() - maxSize.height() - 1));
+            break;
+        case Gravity::Left:
+        case Gravity::BottomLeft:
+            rect.setRight(std::min(rect.right(), geometry.right() - minSize.width()));
+            rect.setLeft(std::max(rect.left(), geometry.right() - maxSize.width() - 1));
+            break;
+        case Gravity::Right:
+        case Gravity::BottomRight:
+            rect.setLeft(std::max(rect.left(), geometry.left() + minSize.width()));
+            rect.setRight(std::min(rect.right(), geometry.left() + maxSize.width() + 1));
+            break;
+        default:
+            Q_UNREACHABLE();
+        }
+        return rect;
+    };
+
     std::optional<QPointF> candidate;
     qreal bestScore;
     const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput(), VirtualDesktopManager::self()->currentDesktop());
 
     switch (gravity) {
+    // QRectF is used because QRect::right() returns left() + width() - 1; QRectF::right() returns left() + width()
     case Gravity::Top:
         // resizing from the top is handled like moving the window to avoid zero width rectangles when window width is equal to minVisibleWidth
-        for (Rect rect : visibleSubrectRegion.rects()) {
+        for (RectF rect : visibleSubrectRegion.rects()) {
             // convert top-left of visible titlebar subrect to top-left of the window
             rect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
+
+            rect = applyMinSizeMaxSizeConstraints(rect);
+            if (!rect.isValid()) {
+                continue;
+            }
 
             const QPointF closest = clampPoint(rect, anchor);
             const qreal score = calcDistance(anchor, closest);
@@ -1529,9 +1571,14 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     case Gravity::Left:
     case Gravity::TopLeft:
     case Gravity::BottomLeft:
-        for (Rect rect : visibleSubrectRegion.rects()) {
+        for (RectF rect : visibleSubrectRegion.rects()) {
             // convert top-left of visible titlebar subrect to top-left of the window
             rect.setLeft(availableArea.left());
+
+            rect = applyMinSizeMaxSizeConstraints(rect);
+            if (!rect.isValid()) {
+                continue;
+            }
 
             const QPointF closest = clampPoint(rect, anchor);
             const qreal score = calcDistance(anchor, closest);
@@ -1547,6 +1594,11 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
         for (RectF rect : visibleSubrectRegion.rects()) {
             // convert top-right of visible titlebar subrect to top-right of the window
             rect.setRight(availableArea.left() + availableArea.width());
+
+            rect = applyMinSizeMaxSizeConstraints(rect);
+            if (!rect.isValid()) {
+                continue;
+            }
 
             const QPointF closest = clampPoint(rect, anchor);
             const qreal score = calcDistance(anchor, closest);
@@ -1623,7 +1675,8 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     nextMoveResizeGeom = workspace()->adjustWindowSize(this, nextMoveResizeGeom, gravity);
 
     if (!isUnrestrictedInteractiveMoveResize()) {
-        if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity, 100, titlebarThickness())) {
+        if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity, 100, titlebarThickness(),
+                                                         nextClientSizeToFrameSize(minSize()), nextClientSizeToFrameSize(maxSize()))) {
             switch (gravity) {
             case Gravity::TopLeft:
                 nextMoveResizeGeom.setTopLeft(*anchor);

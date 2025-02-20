@@ -65,6 +65,8 @@ private Q_SLOTS:
     void testRestrictedMoveMultiMonitor();
     void testRestrictedResizeUp();
     void testRestrictedResizeRight();
+    void testRestrictedResizeMinSize();
+    void testRestrictedResizeMaxSize();
 
 private:
     std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> showWindow();
@@ -1250,6 +1252,158 @@ void MoveResizeWindowTest::testRestrictedResizeRight()
     Test::render(surface.get(), toplevelSize, Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry().topRight(), QPoint(1060, 50));
+
+    // let's end
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void MoveResizeWindowTest::testRestrictedResizeMinSize()
+{
+    // tests minSize is respected during restrictedResize
+
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<std::unique_ptr<Test::LayerSurfaceV1>> shellSurfaces;
+    const auto add = [this, &surfaces, &shellSurfaces](const QRect &geometry, int anchor) {
+        auto [surface, shellSurface] = addPanel(geometry, anchor);
+        QVERIFY(surface);
+        QVERIFY(shellSurface);
+        surfaces.push_back(std::move(surface));
+        shellSurfaces.push_back(std::move(shellSurface));
+    };
+    add(QRect(1080, 256, 200, 512), Test::LayerSurfaceV1::anchor_right);
+
+    auto [window, surface, shellSurface] = showWindow();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->noBorder());
+    QCOMPARE(window->titlebarPosition(), Qt::TopEdge);
+    QVERIFY(surface);
+
+    shellSurface->set_min_size(200, 300);
+
+    QCOMPARE(workspace()->activeWindow(), window);
+    RectF decorationLeft, decorationRight, decorationTop, decorationBottom;
+    window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
+    QVERIFY(!decorationTop.isEmpty());
+
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+
+    quint32 timestamp = 1;
+
+    // strut denoted by "*", border by "|" and "-"
+    // --------------------
+    // |                  *
+    // |                  *
+    // --------------------
+
+    // test minSize restriction
+    window->move(QPoint(970, 500));
+    window->resize(QSize(300, 500));
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
+    QSize toplevelSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelSize, Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRectF(970, 500, 300, 500));
+
+    MOTION(QPoint(window->frameGeometry().left(), window->frameGeometry().top()));
+    PRESS;
+    QVERIFY(!window->isInteractiveResize());
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QVERIFY(window->isInteractiveResize());
+    MOTION(QPoint(window->frameGeometry().left() + 100, 768));
+    RELEASE;
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
+    toplevelSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelSize, Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRectF(980, 700, 290, 300));
+
+    // let's end
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void MoveResizeWindowTest::testRestrictedResizeMaxSize()
+{
+    // tests minSize is respected during restrictedResize
+
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<std::unique_ptr<Test::LayerSurfaceV1>> shellSurfaces;
+    const auto add = [this, &surfaces, &shellSurfaces](const QRect &geometry, int anchor) {
+        auto [surface, shellSurface] = addPanel(geometry, anchor);
+        QVERIFY(surface);
+        QVERIFY(shellSurface);
+        surfaces.push_back(std::move(surface));
+        shellSurfaces.push_back(std::move(shellSurface));
+    };
+    add(QRect(1080, 256, 200, 512), Test::LayerSurfaceV1::anchor_right);
+
+    auto [window, surface, shellSurface] = showWindow();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->noBorder());
+    QCOMPARE(window->titlebarPosition(), Qt::TopEdge);
+    QVERIFY(surface);
+
+    shellSurface->set_min_size(300, 400);
+    shellSurface->set_max_size(300, 500);
+
+    QCOMPARE(workspace()->activeWindow(), window);
+    RectF decorationLeft, decorationRight, decorationTop, decorationBottom;
+    window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
+    QVERIFY(!decorationTop.isEmpty());
+
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+
+    quint32 timestamp = 1;
+
+    // strut denoted by "*", border by "|" and "-"
+    // --------------------
+    // |                  *
+    // |                  *
+    // --------------------
+
+    // test minSize width = maxSize width
+
+    window->move(QPoint(970, 500));
+    window->resize(QSize(300, 500));
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
+    QSize toplevelSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelSize, Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRectF(970, 500, 300, 500));
+
+    MOTION(QPoint(window->frameGeometry().left(), window->frameGeometry().top()));
+    PRESS;
+    QVERIFY(!window->isInteractiveResize());
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QVERIFY(window->isInteractiveResize());
+    MOTION(QPoint(window->frameGeometry().left() - 100, 768));
+    RELEASE;
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
+    toplevelSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelSize, Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRectF(970, 600, 300, 400));
 
     // let's end
     surface.reset();
