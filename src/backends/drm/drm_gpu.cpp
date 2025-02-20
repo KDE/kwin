@@ -323,6 +323,9 @@ bool DrmGpu::updateOutputs()
             output->updateConnectorProperties();
         }
         if (stillExists) {
+            if (conn->linkStatus.isValid() && conn->linkStatus.enumValue() == DrmConnector::LinkStatus::Bad) {
+                qCWarning(KWIN_DRM, "Bad link status detected on connector %s", qPrintable(conn->connectorName()));
+            }
             it++;
         } else {
             m_allObjects.removeOne(it->get());
