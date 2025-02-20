@@ -129,7 +129,7 @@
                 <argsstring>(QString service, QString path, QString interface, QString method, QVariant arg..., QScriptValue callback = QScriptValue())</argsstring>
                 <name>callDBus</name>
                 <read></read>
-                <detaileddescription>Call a D-Bus method at (service, path, interface and method). A variable number of arguments can be added to the method call. The D-Bus call is always performed in an async way invoking the callback provided as the last (optional) argument. The reply values of the D-Bus method call are passed to the callback.</detaileddescription>
+                <detaileddescription>Call a D-Bus method at (service, path, interface and method). A variable number of arguments can be added to the method call. The D-Bus call is always performed in an async way invoking the callback provided as the last (optional) argument. The reply values of the D-Bus method call are passed to the callback. If an argument being passed is for a number type other than plain int or double, pass instead a JavaScript object with a property of "dbusType" that maps to the desired type (eg. "uint32", "int64", etc), and a property called "value" that maps to the desired number to be passed - example: {"dbusType": "uint32", "value": 1}</detaileddescription>
             </memberdef>
             <memberdef kind="function">
                 <type>Q_SCRIPTABLE void</type>
