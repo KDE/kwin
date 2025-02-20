@@ -358,6 +358,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         case DRM_FORMAT_NV12:
             if (!hasColorRepresentation) {
                 pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
+                pending->range = EncodingRange::Limited;
                 pending->yuvCoefficientsIsSet = true;
             }
             if (!hasColorManagementProtocol) {
@@ -368,6 +369,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         case DRM_FORMAT_P010:
             if (!hasColorRepresentation) {
                 pending->yuvCoefficients = YUVMatrixCoefficients::BT2020;
+                pending->range = EncodingRange::Limited;
                 pending->yuvCoefficientsIsSet = true;
             }
             if (!hasColorManagementProtocol) {
@@ -378,6 +380,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         default:
             if (!hasColorRepresentation) {
                 pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+                pending->range = EncodingRange::Full;
                 pending->yuvCoefficientsIsSet = true;
             }
             if (!hasColorManagementProtocol) {
@@ -388,6 +391,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     } else {
         if (!hasColorRepresentation) {
             pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+            pending->range = EncodingRange::Full;
             pending->yuvCoefficientsIsSet = true;
         }
         if (!hasColorManagementProtocol) {
@@ -642,6 +646,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     }
     if (yuvCoefficientsIsSet) {
         target->yuvCoefficients = yuvCoefficients;
+        target->range = range;
         target->yuvCoefficientsIsSet = true;
     }
     target->presentationFeedback = std::move(presentationFeedback);
@@ -1271,11 +1276,6 @@ std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
 double SurfaceInterface::alphaMultiplier() const
 {
     return d->current->alphaMultiplier;
-}
-
-YUVMatrixCoefficients SurfaceInterface::yuvCoefficients() const
-{
-    return d->current->yuvCoefficients;
 }
 
 } // namespace KWin
