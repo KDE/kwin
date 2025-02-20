@@ -44,6 +44,7 @@
 #include <QDBusConnection>
 #include <QDBusPendingCallWatcher>
 #include <QDebug>
+#include <QDomDocument>
 #include <QFutureWatcher>
 #include <QMenu>
 #include <QQmlContext>
@@ -53,6 +54,9 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QtConcurrentRun>
+// QCoro
+#include <QCoroCore>
+#include <QCoroDBus>
 
 #include "scriptadaptor.h"
 
@@ -297,6 +301,167 @@ QVariant KWin::Script::readConfig(const QString &key, const QVariant &defaultVal
     return config().readEntry(key, defaultValue);
 }
 
+/**
+ * Finds the type signature for a D-Bus method.
+ *
+ * Calls Intrsospect on the service to get the type signature for the method's
+ * arguments.
+ *
+ * Example:
+ *
+ * findDBusMethodSignature("org.freedesktop.Notifications",
+ * "/org/freedesktop/Notifications", "org.freedesktop.Notifications", "Inhibit");
+ *
+ * Returns: QStringList("s", "s", "a{sv}"), where "s" is a string, and "a{sv}"
+ * is a map of string to variant.
+ *
+ * @param service The D-Bus service name.
+ * @param path The D-Bus object path.
+ * @param interface The D-Bus interface name.
+ * @param method The D-Bus method name.
+ * @return A list of type signatures for the method's arguments.
+ */
+static QCoro::Task<QStringList> findDBusMethodSignature(
+    const QString &service,
+    const QString &path,
+    const QString &interface,
+    const QString &method)
+{
+    QDBusMessage message = QDBusMessage::createMethodCall(service, path, "org.freedesktop.DBus.Introspectable", "Introspect");
+    const QDBusReply<QString> reply = co_await QDBusConnection::sessionBus().asyncCall(message);
+
+    if (!reply.isValid()) {
+        qWarning() << "Failed to introspect service" << service << "on path" << path << ":" << reply.error().message();
+        co_return QStringList();
+    }
+
+    QString xml = reply.value();
+    QXmlStreamReader reader(xml);
+    QStringList argTypes;
+    bool inMethod = false;
+
+    while (!reader.atEnd()) {
+        reader.readNext();
+
+        if (reader.isStartElement()) {
+            if (reader.name().toString() == QLatin1String("interface")) {
+                QString interfaceName = reader.attributes().value("name").toString();
+                if (interfaceName == interface) {
+                    while (!reader.atEnd()) {
+                        reader.readNext();
+
+                        if (reader.isStartElement()) {
+                            if (reader.name().toString() == QLatin1String("method")) {
+                                QString methodName = reader.attributes().value("name").toString();
+                                if (methodName == method) {
+                                    inMethod = true;
+                                }
+                            } else if (inMethod && reader.name().toString() == QLatin1String("arg")) {
+                                QString direction = reader.attributes().value("direction").toString();
+                                if (direction == QLatin1String("in")) {
+                                    argTypes.append(reader.attributes().value("type").toString());
+                                }
+                            }
+                        } else if (reader.isEndElement() && reader.name().toString() == QLatin1String("method")) {
+                            if (inMethod) {
+                                co_return argTypes;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    co_return QStringList();
+}
+
+/**
+ * Converts a list of JavaScript arguments to a list of D-Bus arguments with the
+ * proper types based on the DBus method signature.
+ *
+ * This is necessary because QJSValue::toVariant() will only convert numbers to
+ * either int or double since JavaScript doesn't properly distinguish between
+ * different numeric types, but D-Bus methods require specific type signatures.
+ *
+ * @param jsArguments The JavaScript arguments.
+ * @param dbusMethodSignature The D-Bus method signature, e.g. ["s", "i", "a{sv}"].
+ * @return The D-Bus arguments with the proper types.
+ */
+static QVariantList javascriptArgumentsToDBusArguments(
+    const QJSValueList jsArguments,
+    const QStringList dbusMethodSignature)
+{
+    QVariantList dbusArguments;
+    dbusArguments.reserve(jsArguments.count());
+
+    for (int i = 0; i < jsArguments.count(); ++i) {
+        const QJSValue &jsArgument = jsArguments.at(i);
+        const QString dbusType = dbusMethodSignature.value(i);
+
+        if (dbusType == QLatin1String("y")) { // BYTE
+            dbusArguments << QVariant::fromValue<quint8>(jsArgument.toNumber());
+        } else if (dbusType == QLatin1String("n")) { // INT16
+            dbusArguments << QVariant::fromValue<qint16>(jsArgument.toNumber());
+        } else if (dbusType == QLatin1String("q")) { // UINT16
+            dbusArguments << QVariant::fromValue<quint16>(jsArgument.toNumber());
+        } else if (dbusType == QLatin1String("i")) { // INT32
+            dbusArguments << QVariant::fromValue<qint32>(jsArgument.toNumber());
+        } else if (dbusType == QLatin1String("u")) { // UINT32
+            dbusArguments << QVariant::fromValue<quint32>(jsArgument.toNumber());
+        } else if (dbusType == QLatin1String("x")) { // INT64
+            dbusArguments << QVariant::fromValue<qint64>(jsArgument.toNumber());
+        } else if (dbusType == QLatin1String("t")) { // UINT64
+            dbusArguments << QVariant::fromValue<quint64>(jsArgument.toNumber());
+        } else if (dbusType == QLatin1String("d")) { // DOUBLE
+            dbusArguments << QVariant::fromValue<double>(jsArgument.toNumber());
+        } else {
+            // If the D-Bus method signature doesn't match any of the above
+            // types, it doesn't need special handling so we can just convert
+            // the JavaScript argument to a QVariant.
+            dbusArguments << jsArgument.toVariant();
+        }
+    }
+
+    return dbusArguments;
+}
+
+QCoro::Task<void> KWin::Script::handleCallDBus(const QString service, const QString path,
+                                               const QString interface, const QString method,
+                                               QJSValueList args)
+{
+    QJSValue callback;
+
+    if (!args.isEmpty() && args.last().isCallable()) {
+        callback = args.takeLast();
+    }
+
+    QStringList dbusMethodSignature = co_await findDBusMethodSignature(service, path, interface, method);
+    QVariantList dbusArguments = javascriptArgumentsToDBusArguments(args, dbusMethodSignature);
+
+    QDBusMessage message = QDBusMessage::createMethodCall(service, path, interface, method);
+    message.setArguments(dbusArguments);
+
+    const QDBusPendingReply<> reply = co_await QDBusConnection::sessionBus().asyncCall(message);
+
+    if (reply.isError()) {
+        qCWarning(KWIN_SCRIPTING) << "Received D-Bus message is error:" << reply.error().message();
+        co_return;
+    }
+
+    if (callback.isUndefined()) {
+        qCWarning(KWIN_SCRIPTING) << "No callback provided";
+        co_return;
+    }
+
+    QJSValueList arguments;
+    for (const QVariant &variant : reply.reply().arguments()) {
+        arguments << m_engine->toScriptValue(dbusToVariant(variant));
+    }
+
+    QJSValue(callback).call(arguments);
+}
+
 void KWin::Script::callDBus(const QString &service, const QString &path, const QString &interface,
                             const QString &method, const QJSValue &arg1, const QJSValue &arg2,
                             const QJSValue &arg3, const QJSValue &arg4, const QJSValue &arg5,
@@ -334,42 +499,7 @@ void KWin::Script::callDBus(const QString &service, const QString &path, const Q
         jsArguments << arg9;
     }
 
-    QJSValue callback;
-    if (!jsArguments.isEmpty() && jsArguments.last().isCallable()) {
-        callback = jsArguments.takeLast();
-    }
-
-    QVariantList dbusArguments;
-    dbusArguments.reserve(jsArguments.count());
-    for (const QJSValue &jsArgument : std::as_const(jsArguments)) {
-        dbusArguments << jsArgument.toVariant();
-    }
-
-    QDBusMessage message = QDBusMessage::createMethodCall(service, path, interface, method);
-    message.setArguments(dbusArguments);
-
-    const QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(message);
-    if (callback.isUndefined()) {
-        return;
-    }
-
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, callback](QDBusPendingCallWatcher *self) {
-        self->deleteLater();
-
-        if (self->isError()) {
-            qCWarning(KWIN_SCRIPTING) << "Received D-Bus message is error:" << self->error().message();
-            return;
-        }
-
-        QJSValueList arguments;
-        const QVariantList reply = self->reply().arguments();
-        for (const QVariant &variant : reply) {
-            arguments << m_engine->toScriptValue(dbusToVariant(variant));
-        }
-
-        QJSValue(callback).call(arguments);
-    });
+    handleCallDBus(service, path, interface, method, jsArguments);
 }
 
 bool KWin::Script::registerShortcut(const QString &objectName, const QString &text, const QString &keySequence, const QJSValue &callback)
