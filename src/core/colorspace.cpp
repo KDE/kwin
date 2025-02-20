@@ -441,12 +441,17 @@ const Colorimetry Colorimetry::AdobeRGB = Colorimetry{
 
 const ColorDescription ColorDescription::sRGB = ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::gamma22));
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients)
-    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::BT709, yuvCoefficients)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf,
+                                   double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance,
+                                   YUVMatrixCoefficients yuvCoefficients, EncodingRange range)
+    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::BT709, yuvCoefficients, range)
 {
 }
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf,
+                                   double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance,
+                                   std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry,
+                                   YUVMatrixCoefficients yuvCoefficients, EncodingRange range)
     : m_containerColorimetry(containerColorimetry)
     , m_masteringColorimetry(masteringColorimetry)
     , m_transferFunction(tf)
@@ -456,11 +461,12 @@ ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, Tran
     , m_maxAverageLuminance(maxAverageLuminance)
     , m_maxHdrLuminance(maxHdrLuminance)
     , m_yuvCoefficients(yuvCoefficients)
+    , m_range(range)
 {
 }
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, YUVMatrixCoefficients yuvCoefficients)
-    : ColorDescription(containerColorimetry, tf, TransferFunction::defaultReferenceLuminanceFor(tf.type), tf.minLuminance, tf.maxLuminance, tf.maxLuminance, yuvCoefficients)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, YUVMatrixCoefficients yuvCoefficients, EncodingRange range)
+    : ColorDescription(containerColorimetry, tf, TransferFunction::defaultReferenceLuminanceFor(tf.type), tf.minLuminance, tf.maxLuminance, tf.maxLuminance, yuvCoefficients, range)
 {
 }
 
@@ -512,14 +518,14 @@ YUVMatrixCoefficients ColorDescription::yuvCoefficients() const
 /**
  * @returns a matrix that converts colors in the specified YCbCr (full range: Y[0; 1] and CbCr[-0.5; 0.5]) to RGB ([0; 1])
  */
-static QMatrix4x4 calculateYuvToRgbMatrix(double kr, double kg, double kb, bool limitedRange)
+static QMatrix4x4 calculateYuvToRgbMatrix(double kr, double kg, double kb, EncodingRange range)
 {
     const QMatrix4x4 conversion(
         1, 0, 2 - 2 * kr, 0.0,
         1, -kb / kg * (2 - 2 * kb), -kr / kg * (2 - 2 * kr), 0.0,
         1, 2 - 2 * kb, 0, 0.0,
         0.0, 0.0, 0.0, 1.0);
-    if (limitedRange) {
+    if (range == EncodingRange::Limited) {
         QMatrix4x4 limitedToFullRangeYCbCr;
         limitedToFullRangeYCbCr.scale(255.0 / 219.0, 255.0 / 224.0, 255.0 / 224.0);
         limitedToFullRangeYCbCr.translate(-16.0 / 255.0, -0.5, -0.5);
@@ -531,21 +537,37 @@ static QMatrix4x4 calculateYuvToRgbMatrix(double kr, double kg, double kb, bool 
     }
 }
 
-static const QMatrix4x4 s_limitedRangeBT601 = calculateYuvToRgbMatrix(0.299, 0.587, 0.114, true);
-static const QMatrix4x4 s_limitedRangeBT709 = calculateYuvToRgbMatrix(0.2126, 0.7152, 0.0722, true);
-static const QMatrix4x4 s_limitedRangeBT2020 = calculateYuvToRgbMatrix(0.2627, 0.6780, 0.0593, true);
+static const QMatrix4x4 s_limitedRangeBT601 = calculateYuvToRgbMatrix(0.299, 0.587, 0.114, EncodingRange::Limited);
+static const QMatrix4x4 s_fullRangeBT601 = calculateYuvToRgbMatrix(0.299, 0.587, 0.114, EncodingRange::Full);
+static const QMatrix4x4 s_limitedRangeBT709 = calculateYuvToRgbMatrix(0.2126, 0.7152, 0.0722, EncodingRange::Limited);
+static const QMatrix4x4 s_fullRangeBT709 = calculateYuvToRgbMatrix(0.2126, 0.7152, 0.0722, EncodingRange::Full);
+static const QMatrix4x4 s_limitedRangeBT2020 = calculateYuvToRgbMatrix(0.2627, 0.6780, 0.0593, EncodingRange::Limited);
+static const QMatrix4x4 s_fullRangeBT2020 = calculateYuvToRgbMatrix(0.2627, 0.6780, 0.0593, EncodingRange::Full);
 
 QMatrix4x4 ColorDescription::yuvMatrix() const
 {
     switch (m_yuvCoefficients) {
     case YUVMatrixCoefficients::Identity:
+        Q_ASSERT(m_range == EncodingRange::Full);
         return QMatrix4x4();
     case YUVMatrixCoefficients::BT601:
-        return s_limitedRangeBT601;
+        if (m_range == EncodingRange::Limited) {
+            return s_limitedRangeBT601;
+        } else {
+            return s_fullRangeBT601;
+        }
     case YUVMatrixCoefficients::BT709:
-        return s_limitedRangeBT709;
+        if (m_range == EncodingRange::Limited) {
+            return s_limitedRangeBT709;
+        } else {
+            return s_fullRangeBT709;
+        }
     case YUVMatrixCoefficients::BT2020:
-        return s_limitedRangeBT2020;
+        if (m_range == EncodingRange::Limited) {
+            return s_limitedRangeBT2020;
+        } else {
+            return s_fullRangeBT2020;
+        }
     }
     Q_UNREACHABLE();
 }

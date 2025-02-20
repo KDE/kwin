@@ -199,6 +199,11 @@ enum class YUVMatrixCoefficients {
     BT2020,
 };
 
+enum class EncodingRange {
+    Limited,
+    Full,
+};
+
 /**
  * Describes the meaning of encoded color values, with additional metadata for how to convert between different encodings
  * Note that not all properties of this description are relevant in all contexts
@@ -215,9 +220,9 @@ public:
      * @param maxHdrLuminance the maximum brightness of HDR content, for a small part of the screen only
      * @param sdrColorimetry
      */
-    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity);
-    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity);
-    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity, EncodingRange range = EncodingRange::Full);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity, EncodingRange range = EncodingRange::Full);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity, EncodingRange range = EncodingRange::Full);
 
     /**
      * The primaries and whitepoint that colors are encoded for. This is used to convert between different colorspaces.
@@ -237,9 +242,10 @@ public:
     std::optional<double> maxAverageLuminance() const;
     std::optional<double> maxHdrLuminance() const;
     YUVMatrixCoefficients yuvCoefficients() const;
+    EncodingRange range() const;
 
     /**
-     * @returns the yuv->rgb matrix for the yuv coefficients of this color description
+     * @returns the matrix that converts from this ColorDescription's encoding to full range RGB
      * TODO move this to ColorPipeline, to deal with ICtCp
      */
     QMatrix4x4 yuvMatrix() const;
@@ -277,6 +283,7 @@ private:
     std::optional<double> m_maxAverageLuminance;
     std::optional<double> m_maxHdrLuminance;
     YUVMatrixCoefficients m_yuvCoefficients = YUVMatrixCoefficients::Identity;
+    EncodingRange m_range = EncodingRange::Full;
 };
 }
 

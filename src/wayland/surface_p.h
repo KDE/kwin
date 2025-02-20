@@ -92,6 +92,7 @@ struct SurfaceState
     std::shared_ptr<SyncReleasePoint> releasePoint;
     double alphaMultiplier = 1;
     YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity;
+    EncodingRange range = EncodingRange::Full;
     bool fifoBarrier = false;
     bool hasFifoWaitCondition = false;
 

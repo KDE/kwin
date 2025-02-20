@@ -358,6 +358,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         switch (bufferRef->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
             pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
+            pending->range = EncodingRange::Limited;
             pending->committed |= SurfaceState::Field::YuvCoefficients;
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription::sRGB;
@@ -366,6 +367,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
             break;
         case DRM_FORMAT_P010:
             pending->yuvCoefficients = YUVMatrixCoefficients::BT2020;
+            pending->range = EncodingRange::Limited;
             pending->committed |= SurfaceState::Field::YuvCoefficients;
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer));
@@ -374,6 +376,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
             break;
         default:
             pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+            pending->range = EncodingRange::Full;
             pending->committed |= SurfaceState::Field::YuvCoefficients;
             if (!hasColorManagementProtocol) {
                 pending->colorDescription = ColorDescription::sRGB;
@@ -382,6 +385,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         }
     } else {
         pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+        pending->range = EncodingRange::Full;
         pending->committed |= SurfaceState::Field::YuvCoefficients;
         if (!hasColorManagementProtocol) {
             pending->colorDescription = ColorDescription::sRGB;
@@ -621,6 +625,8 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->yuvCoefficients = yuvCoefficients;
     target->fifoBarrier = fifoBarrier;
     target->hasFifoWaitCondition = hasFifoWaitCondition;
+    target->yuvCoefficients = yuvCoefficients;
+    target->range = range;
     target->presentationFeedback = std::move(presentationFeedback);
 
     auto previousExtensions = std::exchange(target->extensions, {});
