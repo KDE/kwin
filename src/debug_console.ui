@@ -32,16 +32,6 @@
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="QPushButton" name="quitButton">
-       <property name="text">
-        <string>Quit Debug Console</string>
-       </property>
-       <property name="icon">
-        <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -516,9 +506,6 @@
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>quitButton</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
