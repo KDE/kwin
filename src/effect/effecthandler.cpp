@@ -450,28 +450,15 @@ bool EffectsHandler::grabKeyboard(Effect *effect)
     if (keyboard_grab_effect != nullptr) {
         return false;
     }
-    if (!doGrabKeyboard()) {
-        return false;
-    }
     keyboard_grab_effect = effect;
-    return true;
-}
-
-bool EffectsHandler::doGrabKeyboard()
-{
     return true;
 }
 
 void EffectsHandler::ungrabKeyboard()
 {
     Q_ASSERT(keyboard_grab_effect != nullptr);
-    doUngrabKeyboard();
     keyboard_grab_effect = nullptr;
     input()->keyboard()->update();
-}
-
-void EffectsHandler::doUngrabKeyboard()
-{
 }
 
 void EffectsHandler::grabbedKeyboardEvent(QKeyEvent *e)
@@ -490,11 +477,7 @@ void EffectsHandler::startMouseInterception(Effect *effect, Qt::CursorShape shap
     if (m_grabbedMouseEffects.size() != 1) {
         return;
     }
-    doStartMouseInterception(shape);
-}
 
-void EffectsHandler::doStartMouseInterception(Qt::CursorShape shape)
-{
     input()->pointer()->setEffectsOverrideCursor(shape);
 
     // We want to allow global shortcuts to be triggered when moving a
@@ -516,13 +499,8 @@ void EffectsHandler::stopMouseInterception(Effect *effect)
     }
     m_grabbedMouseEffects.removeAll(effect);
     if (m_grabbedMouseEffects.isEmpty()) {
-        doStopMouseInterception();
+        input()->pointer()->removeEffectsOverrideCursor();
     }
-}
-
-void EffectsHandler::doStopMouseInterception()
-{
-    input()->pointer()->removeEffectsOverrideCursor();
 }
 
 bool EffectsHandler::isMouseInterception() const
@@ -1103,18 +1081,6 @@ bool EffectsHandler::checkInputWindowEvent(QWheelEvent *e)
         effect->windowInputMouseEvent(e);
     }
     return true;
-}
-
-void EffectsHandler::checkInputWindowStacking()
-{
-    if (m_grabbedMouseEffects.isEmpty()) {
-        return;
-    }
-    doCheckInputWindowStacking();
-}
-
-void EffectsHandler::doCheckInputWindowStacking()
-{
 }
 
 QPointF EffectsHandler::cursorPos() const

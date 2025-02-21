@@ -183,7 +183,7 @@ public:
      * @see startMouseInterception
      * @since 4.11
      */
-    virtual void defineCursor(Qt::CursorShape shape);
+    void defineCursor(Qt::CursorShape shape);
     QPointF cursorPos() const;
     bool grabKeyboard(Effect *effect);
     void ungrabKeyboard();
@@ -212,7 +212,6 @@ public:
 
     bool checkInputWindowEvent(QMouseEvent *e);
     bool checkInputWindowEvent(QWheelEvent *e);
-    void checkInputWindowStacking();
 
     void grabbedKeyboardEvent(QKeyEvent *e);
     bool hasKeyboardGrab() const;
@@ -1072,30 +1071,6 @@ public Q_SLOTS:
 protected:
     void effectsChanged();
     void setupWindowConnections(KWin::Window *window);
-
-    /**
-     * Default implementation does nothing and returns @c true.
-     */
-    virtual bool doGrabKeyboard();
-    /**
-     * Default implementation does nothing.
-     */
-    virtual void doUngrabKeyboard();
-
-    /**
-     * Default implementation sets Effects override cursor on the PointerInputRedirection.
-     */
-    virtual void doStartMouseInterception(Qt::CursorShape shape);
-
-    /**
-     * Default implementation removes the Effects override cursor on the PointerInputRedirection.
-     */
-    virtual void doStopMouseInterception();
-
-    /**
-     * Default implementation does nothing
-     */
-    virtual void doCheckInputWindowStacking();
 
     void registerPropertyType(long atom, bool reg);
     void destroyEffect(Effect *effect);
