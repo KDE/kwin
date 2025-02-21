@@ -31,11 +31,16 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     , output(output)
 {
     compositeTimer.setSingleShot(true);
+    compositeTimer.setTimerType(Qt::PreciseTimer);
+
     QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
         dispatch();
     });
+
     delayedVrrTimer.setSingleShot(true);
     delayedVrrTimer.setInterval(1'000 / 30);
+    delayedVrrTimer.setTimerType(Qt::PreciseTimer);
+
     QObject::connect(&delayedVrrTimer, &QTimer::timeout, q, [q]() {
         q->scheduleRepaint(nullptr, nullptr);
     });
