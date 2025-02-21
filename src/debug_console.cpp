@@ -45,6 +45,7 @@
 #include <QMetaProperty>
 #include <QMetaType>
 #include <QMouseEvent>
+#include <QPushButton>
 #include <QScopeGuard>
 #include <QSortFilterProxyModel>
 #include <QWindow>
@@ -639,7 +640,6 @@ DebugConsole::DebugConsole()
 
     m_ui->tabWidget->addTab(new DebugConsoleEffectsTab(), i18nc("@label", "Effects"));
 
-    connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
     connect(m_ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
         // delay creation of input event filter until the tab is selected
         if (index == m_ui->tabWidget->indexOf(m_ui->input) && !m_inputFilter) {
