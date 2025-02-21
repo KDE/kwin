@@ -333,11 +333,6 @@ void Application::destroyInputMethod()
     m_inputMethod.reset();
 }
 
-void Application::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
-{
-    new EffectsHandler(compositor, scene);
-}
-
 #if KWIN_BUILD_X11
 void Application::registerEventFilter(X11EventFilter *filter)
 {
