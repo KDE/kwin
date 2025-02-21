@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2025-01-08 12:04+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -1781,9 +1781,7 @@ msgstr "En haut"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, kde-format
 msgid "Right"
 msgstr "Droite"
@@ -1797,9 +1795,7 @@ msgstr "En bas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, kde-format
 msgid "Left"
 msgstr "Gauche"
@@ -1864,105 +1860,6 @@ msgstr "Basculer l'effet inversé sur une fenêtre"
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Inverser les couleurs de l'écran"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "Petit"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "Normal"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "Grand"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "Très grand"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "Énorme"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "Gigantesque"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "Sur-dimensionnée"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, kde-format
-msgid "Button size:"
-msgstr "Taille de bouton :"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, kde-format
-msgid "Config Dialog"
-msgstr "Boîte de dialogue de configuration"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "A&lignement du titre"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "Centre"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"Cochez cette option si la bordure de la fenêtre doit être peinte avec la "
-"couleur de la barre de titre. Sinon, elle sera peinte avec la couleur "
-"d'arrière-plan."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, kde-format
-msgid "Colored window border"
-msgstr "Bordure colorée de fenêtre"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"Cochez cette option si vous voulez que les boutons s'atténuent lorsque le "
-"pointeur de souris les survolent et se renforcent à nouveau lorsqu'il "
-"s'éloigne."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, kde-format
-msgid "Animate buttons"
-msgstr "Animer les boutons"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4553,6 +4450,68 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland s'est planté."
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Petit"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Grand"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Très grand"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Énorme"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Gigantesque"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Sur-dimensionnée"
+
+#~ msgid "Button size:"
+#~ msgstr "Taille de bouton :"
+
+#~ msgid "Config Dialog"
+#~ msgstr "Boîte de dialogue de configuration"
+
+#~ msgid "Title &Alignment"
+#~ msgstr "A&lignement du titre"
+
+#~ msgid "Center"
+#~ msgstr "Centre"
+
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "Cochez cette option si la bordure de la fenêtre doit être peinte avec la "
+#~ "couleur de la barre de titre. Sinon, elle sera peinte avec la couleur "
+#~ "d'arrière-plan."
+
+#~ msgid "Colored window border"
+#~ msgstr "Bordure colorée de fenêtre"
+
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "Cochez cette option si vous voulez que les boutons s'atténuent lorsque le "
+#~ "pointeur de souris les survolent et se renforcent à nouveau lorsqu'il "
+#~ "s'éloigne."
+
+#~ msgid "Animate buttons"
+#~ msgstr "Animer les boutons"
 
 #~ msgid "EventType"
 #~ msgstr "EventType"

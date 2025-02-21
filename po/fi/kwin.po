@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2025-02-11 10:23+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -1752,9 +1752,7 @@ msgstr "Ylhäällä"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, kde-format
 msgid "Right"
 msgstr "Oikea"
@@ -1768,9 +1766,7 @@ msgstr "Alhaalla"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, kde-format
 msgid "Left"
 msgstr "Vasen"
@@ -1835,103 +1831,6 @@ msgstr "Vaihda Käännä värit -tehosteen tilaa ikkunalle"
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Käännä näytön värit"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "Pikkuruinen"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "Tavallinen"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "Suuri"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "Hyvin suuri"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "Valtava"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "Aivan valtava"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "Ylisuuri"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, kde-format
-msgid "Button size:"
-msgstr "Painikkeen koko:"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, kde-format
-msgid "Config Dialog"
-msgstr "Asetusikkuna"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "&Otsikon sijainti"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "Keskellä"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"Jos valittu, ikkunan koristekehykset piirretään otsikkopalkin värillä, "
-"muuten taustavärillä."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, kde-format
-msgid "Colored window border"
-msgstr "Väritetty ikkunareunus"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"Valitse tämä, jos haluat painikkeiden tulevan esiin kun hiiren osoitin "
-"koskettaa niitä ja päinvastoin."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, kde-format
-msgid "Animate buttons"
-msgstr "Animoi painikkeet"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4513,6 +4412,66 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland on kaatunut"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Pikkuruinen"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Tavallinen"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Suuri"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Hyvin suuri"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Valtava"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Aivan valtava"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Ylisuuri"
+
+#~ msgid "Button size:"
+#~ msgstr "Painikkeen koko:"
+
+#~ msgid "Config Dialog"
+#~ msgstr "Asetusikkuna"
+
+#~ msgid "Title &Alignment"
+#~ msgstr "&Otsikon sijainti"
+
+#~ msgid "Center"
+#~ msgstr "Keskellä"
+
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "Jos valittu, ikkunan koristekehykset piirretään otsikkopalkin värillä, "
+#~ "muuten taustavärillä."
+
+#~ msgid "Colored window border"
+#~ msgstr "Väritetty ikkunareunus"
+
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "Valitse tämä, jos haluat painikkeiden tulevan esiin kun hiiren osoitin "
+#~ "koskettaa niitä ja päinvastoin."
+
+#~ msgid "Animate buttons"
+#~ msgstr "Animoi painikkeet"
 
 #~ msgid "EventType"
 #~ msgstr "Tapahtumatyyppi"

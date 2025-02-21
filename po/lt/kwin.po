@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2024-10-05 22:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1745,9 +1745,7 @@ msgstr "Viršuje"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, kde-format
 msgid "Right"
 msgstr "Dešinysis"
@@ -1761,9 +1759,7 @@ msgstr "Apačioje"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, kde-format
 msgid "Left"
 msgstr "Kairysis"
@@ -1830,104 +1826,6 @@ msgstr "Perjungti invertavimo efektą langui"
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Invertuoti ekrano spalvas"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "Mažytis"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "Normalus"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "Didelis"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "Labai didelis"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "Didžiulis"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "Milžiniškas"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "Per didelis"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, kde-format
-msgid "Button size:"
-msgstr "Mygtukų dydis:"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, kde-format
-msgid "Config Dialog"
-msgstr "Konfigūracijos dialogas"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "Antraščių &lygiavimas"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "Centras"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"Pažymėkite šią parinktį jei norite, kad langų rėmeliai būtų piešiami "
-"naudojant antraštės juostos spalvas. Priešingu atveju, jie bus piešiami "
-"naudojant įprastas fono spalvas."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, kde-format
-msgid "Colored window border"
-msgstr "Spalvotas lango rėmelis"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"Pažymėkite šią parinktį jei norite, kad mygtukai, užvedus ant jų pelę, "
-"laipniškai išryškėtų, o po to, pelę patraukus, vėl laipsniškai išnyktų."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, kde-format
-msgid "Animate buttons"
-msgstr "Animuoti mygtukus"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4517,6 +4415,67 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland užstrigo"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Mažytis"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normalus"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Didelis"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Labai didelis"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Didžiulis"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Milžiniškas"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Per didelis"
+
+#~ msgid "Button size:"
+#~ msgstr "Mygtukų dydis:"
+
+#~ msgid "Config Dialog"
+#~ msgstr "Konfigūracijos dialogas"
+
+#~ msgid "Title &Alignment"
+#~ msgstr "Antraščių &lygiavimas"
+
+#~ msgid "Center"
+#~ msgstr "Centras"
+
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "Pažymėkite šią parinktį jei norite, kad langų rėmeliai būtų piešiami "
+#~ "naudojant antraštės juostos spalvas. Priešingu atveju, jie bus piešiami "
+#~ "naudojant įprastas fono spalvas."
+
+#~ msgid "Colored window border"
+#~ msgstr "Spalvotas lango rėmelis"
+
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "Pažymėkite šią parinktį jei norite, kad mygtukai, užvedus ant jų pelę, "
+#~ "laipniškai išryškėtų, o po to, pelę patraukus, vėl laipsniškai išnyktų."
+
+#~ msgid "Animate buttons"
+#~ msgstr "Animuoti mygtukus"
 
 #~ msgid "EventType"
 #~ msgstr "Įvykio tipas"

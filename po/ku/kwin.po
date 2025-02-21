@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2009-01-06 03:15+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin at lists dot sourceforge dot "
@@ -1721,9 +1721,7 @@ msgstr "Jor"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgid "Right"
@@ -1738,9 +1736,7 @@ msgstr "Jêr"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, fuzzy, kde-format
 #| msgid "Top-Left"
 msgid "Left"
@@ -1810,110 +1806,6 @@ msgstr ""
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr ""
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr ""
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr ""
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, fuzzy, kde-format
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "Mezin"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, fuzzy, kde-format
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "Mezin"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "Mezin"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, fuzzy, kde-format
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "Mezin"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "Re&size"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "Mezinahî Bi&guherîne"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, kde-format
-msgid "Button size:"
-msgstr ""
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialogs:"
-msgid "Config Dialog"
-msgstr "Diyalog:"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "&Bicihkirina Sernavê"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "Navîn"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"Heke kêleka paceyê di rengê darika sernavê de bê nexşe kirin, vê bijare yê "
-"hilbijêre. Wekî din, ev di rengê rûerdê de bê nexşe kirin."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
-msgid "Colored window border"
-msgstr "Paceyê Dade"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"Heke hûn dixwazin bişkojk ronak be dema mişk bê ser de û dema mişk ser de "
-"dûr bikeve dîsa tarî be, vê bijare yê hilbijêrin."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, kde-format
-msgid "Animate buttons"
-msgstr "Bişkojkan zindî bike"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4610,6 +4502,69 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Mezin"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Mezin"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Mezin"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Mezin"
+
+#, fuzzy
+#~| msgid "Re&size"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Mezinahî Bi&guherîne"
+
+#, fuzzy
+#~| msgid "Dialogs:"
+#~ msgid "Config Dialog"
+#~ msgstr "Diyalog:"
+
+#~ msgid "Title &Alignment"
+#~ msgstr "&Bicihkirina Sernavê"
+
+#~ msgid "Center"
+#~ msgstr "Navîn"
+
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "Heke kêleka paceyê di rengê darika sernavê de bê nexşe kirin, vê bijare "
+#~ "yê hilbijêre. Wekî din, ev di rengê rûerdê de bê nexşe kirin."
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "Colored window border"
+#~ msgstr "Paceyê Dade"
+
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "Heke hûn dixwazin bişkojk ronak be dema mişk bê ser de û dema mişk ser de "
+#~ "dûr bikeve dîsa tarî be, vê bijare yê hilbijêrin."
+
+#~ msgid "Animate buttons"
+#~ msgstr "Bişkojkan zindî bike"
 
 #, fuzzy
 #~| msgid "Maximize Window Horizontally"

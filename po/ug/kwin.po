@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -1749,9 +1749,7 @@ msgstr "ئۈستى"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, kde-format
 msgid "Right"
 msgstr "ئوڭ"
@@ -1765,9 +1763,7 @@ msgstr "ئاستى"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, kde-format
 msgid "Left"
 msgstr "سول"
@@ -1835,110 +1831,6 @@ msgstr "كۆزنەك تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
 #| msgid "Invert cursor keys"
 msgid "Invert Screen Colors"
 msgstr "نۇربەلگە كۇنۇپكىلىرىنى تەتۈر قىل"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "كىچىك"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "نورمال"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "چوڭ"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "بەك چوڭ"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "ئىنتايىن چوڭ"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "ئىنتايىن چوڭ"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "Re&size"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "چوڭلۇقىنى ئۆزگەرت(&S)"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Button size:"
-msgstr "چاشقىنەك تەقلىدلەش"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, kde-format
-msgid "Config Dialog"
-msgstr "سەپلىمە سۆزلەشكۈ"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "ماۋزۇ توغرىلاش(&A)"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "مەركەز"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"بۇ تاللانما تاللانغاندا كۆزنەك گىرۋىكى ماۋزۇ بالداق رەڭگىدە بويىلىدۇ. ئۇنداق "
-"بولمىسا تەگلىك رەڭگىدە بويايدۇ."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
-msgid "Colored window border"
-msgstr "كۆزنەك ياپ"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"ئەگەر سىز چاشقىنەكنى توپچا ئۈستىگە ئەكەلگەن ياكى ئۈستىدىن يۆتكەپ كەتكەندە "
-"تەدرىجىي ئاجىزلىشىپ كۈچەيتىشنى كۆرسەتمەكچى بولسىڭىز بۇ تاللانمىنى تاللاڭ."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, kde-format
-msgid "Animate buttons"
-msgstr "جانلاندۇرۇم توپچا"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4633,6 +4525,78 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "كىچىك"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "نورمال"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "چوڭ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "بەك چوڭ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "ئىنتايىن چوڭ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "ئىنتايىن چوڭ"
+
+#, fuzzy
+#~| msgid "Re&size"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "چوڭلۇقىنى ئۆزگەرت(&S)"
+
+#, fuzzy
+#~| msgid "Mouse Emulation"
+#~ msgid "Button size:"
+#~ msgstr "چاشقىنەك تەقلىدلەش"
+
+#~ msgid "Config Dialog"
+#~ msgstr "سەپلىمە سۆزلەشكۈ"
+
+#~ msgid "Title &Alignment"
+#~ msgstr "ماۋزۇ توغرىلاش(&A)"
+
+#~ msgid "Center"
+#~ msgstr "مەركەز"
+
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "بۇ تاللانما تاللانغاندا كۆزنەك گىرۋىكى ماۋزۇ بالداق رەڭگىدە بويىلىدۇ. "
+#~ "ئۇنداق بولمىسا تەگلىك رەڭگىدە بويايدۇ."
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "Colored window border"
+#~ msgstr "كۆزنەك ياپ"
+
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "ئەگەر سىز چاشقىنەكنى توپچا ئۈستىگە ئەكەلگەن ياكى ئۈستىدىن يۆتكەپ كەتكەندە "
+#~ "تەدرىجىي ئاجىزلىشىپ كۈچەيتىشنى كۆرسەتمەكچى بولسىڭىز بۇ تاللانمىنى تاللاڭ."
+
+#~ msgid "Animate buttons"
+#~ msgstr "جانلاندۇرۇم توپچا"
 
 #, fuzzy
 #~| msgid "Maximize Window Horizontally"

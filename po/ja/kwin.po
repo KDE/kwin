@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2021-10-03 17:31-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -1754,9 +1754,7 @@ msgstr "上"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, fuzzy, kde-format
 #| msgid "Right"
 msgid "Right"
@@ -1772,9 +1770,7 @@ msgstr "下"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, fuzzy, kde-format
 #| msgid "Left"
 msgid "Left"
@@ -1844,124 +1840,6 @@ msgstr "ウィンドウの色調反転効果をオン/オフ"
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr ""
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr ""
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Normal"
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "普通"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "大"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "より大"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "とても大"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr ""
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "リサイズ(&R)"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Button size:"
-msgid "Button size:"
-msgstr "ボタンのサイズ:"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Config Dialog"
-msgid "Config Dialog"
-msgstr "設定ダイアログ"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, fuzzy, kde-format
-#| msgid "Title &Alignment"
-msgid "Title &Alignment"
-msgstr "タイトルの配置(&A)"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, fuzzy, kde-format
-#| msgid "Center"
-msgid "Center"
-msgstr "中央"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if the window border should be painted in the titlebar "
-#| "color. Otherwise it will be painted in the background color."
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"ウィンドウの枠をタイトルバーの色で描画させるには、このオプションをチェックし"
-"てください。選択されていない場合、背景色で描画します。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
-msgid "Colored window border"
-msgstr "ウィンドウを閉じる"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if you want the buttons to fade in when the mouse "
-#| "pointer hovers over them and fade out again when it moves away."
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"マウスがボタン上に来たらフェードイン、外れたらフェードアウトさせるには、この"
-"オプションをチェックしてください。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, fuzzy, kde-format
-#| msgid "Animate buttons"
-msgid "Animate buttons"
-msgstr "ボタンのアニメーション表示"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4713,6 +4591,92 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "普通"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "大"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "より大"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "とても大"
+
+#, fuzzy
+#~| msgid "&Resize"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "リサイズ(&R)"
+
+#, fuzzy
+#~| msgid "Button size:"
+#~ msgid "Button size:"
+#~ msgstr "ボタンのサイズ:"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Config Dialog"
+#~ msgstr "設定ダイアログ"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Title &Alignment"
+#~ msgstr "タイトルの配置(&A)"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "Center"
+#~ msgstr "中央"
+
+#, fuzzy
+#~| msgid ""
+#~| "Check this option if the window border should be painted in the titlebar "
+#~| "color. Otherwise it will be painted in the background color."
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "ウィンドウの枠をタイトルバーの色で描画させるには、このオプションをチェック"
+#~ "してください。選択されていない場合、背景色で描画します。"
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "Colored window border"
+#~ msgstr "ウィンドウを閉じる"
+
+#, fuzzy
+#~| msgid ""
+#~| "Check this option if you want the buttons to fade in when the mouse "
+#~| "pointer hovers over them and fade out again when it moves away."
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "マウスがボタン上に来たらフェードイン、外れたらフェードアウトさせるには、こ"
+#~ "のオプションをチェックしてください。"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animate buttons"
+#~ msgstr "ボタンのアニメーション表示"
 
 #, fuzzy
 #~| msgid "Maximize Window Horizontally"

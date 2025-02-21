@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2010-12-17 20:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -1747,9 +1747,7 @@ msgstr "บน"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgid "Right"
@@ -1764,9 +1762,7 @@ msgstr "ล่าง"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, fuzzy, kde-format
 #| msgid "Top-Left"
 msgid "Left"
@@ -1836,118 +1832,6 @@ msgstr "เปิด/ปิด ลูกเล่นกลับค่าสี�
 #| msgid "Invert cursor keys"
 msgid "Invert Screen Colors"
 msgstr "กลับค่าสีของตัวชี้ของเมาส์"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "กะทัดรัด"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Normal"
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "ปกติ"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "ใหญ่"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "ใหญ่มาก"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "ใหญ่มหึมา"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "ใหญ่มหึมามาก"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "Re&size"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "ปรับ&ขนาด"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Button size:"
-msgstr "การจำลองเมาส์"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialogs:"
-msgid "Config Dialog"
-msgstr "กล่องโต้ตอบ:"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "การจัดตำแหน่งหัวเ&รื่อง"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "กึ่งกลาง"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"เปิดใช้ตัวเลือกนี้ หากต้องการให้วาดกรอบหน้าต่าง\n"
-"โดยใช้สีเดียวกันกับสีของแถบหัวเรื่องหน้าต่าง"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
-msgid "Colored window border"
-msgstr "ปิดหน้าต่าง"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"เปิดใช้ตัวเลือกนี้ หากต้องการให้ปุ่มมีการปรับความเลือน/ชัด\n"
-"เมื่อมีการเลื่อนตัวชี้ของเมาส์มาอยู่เหนือปุ่มเหล่านั้น"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, fuzzy, kde-format
-#| msgid "Animate desktop changes"
-msgid "Animate buttons"
-msgstr "เปลี่ยนพื้นที่ทำงานแบบเคลื่อนไหว"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4657,6 +4541,91 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "กะทัดรัด"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "ปกติ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "ใหญ่"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "ใหญ่มาก"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "ใหญ่มหึมา"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "ใหญ่มหึมามาก"
+
+#, fuzzy
+#~| msgid "Re&size"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "ปรับ&ขนาด"
+
+#, fuzzy
+#~| msgid "Mouse Emulation"
+#~ msgid "Button size:"
+#~ msgstr "การจำลองเมาส์"
+
+#, fuzzy
+#~| msgid "Dialogs:"
+#~ msgid "Config Dialog"
+#~ msgstr "กล่องโต้ตอบ:"
+
+#~ msgid "Title &Alignment"
+#~ msgstr "การจัดตำแหน่งหัวเ&รื่อง"
+
+#~ msgid "Center"
+#~ msgstr "กึ่งกลาง"
+
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "เปิดใช้ตัวเลือกนี้ หากต้องการให้วาดกรอบหน้าต่าง\n"
+#~ "โดยใช้สีเดียวกันกับสีของแถบหัวเรื่องหน้าต่าง"
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "Colored window border"
+#~ msgstr "ปิดหน้าต่าง"
+
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "เปิดใช้ตัวเลือกนี้ หากต้องการให้ปุ่มมีการปรับความเลือน/ชัด\n"
+#~ "เมื่อมีการเลื่อนตัวชี้ของเมาส์มาอยู่เหนือปุ่มเหล่านั้น"
+
+#, fuzzy
+#~| msgid "Animate desktop changes"
+#~ msgid "Animate buttons"
+#~ msgstr "เปลี่ยนพื้นที่ทำงานแบบเคลื่อนไหว"
 
 #, fuzzy
 #~| msgid "Maximize Window Horizontally"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -1741,9 +1741,7 @@ msgstr "ඉහළ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, fuzzy, kde-format
 #| msgid "To the right"
 msgid "Right"
@@ -1758,9 +1756,7 @@ msgstr "පහළ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, fuzzy, kde-format
 #| msgid "To the left"
 msgid "Left"
@@ -1831,111 +1827,6 @@ msgstr "කවුළුව මත යටිකුරය සැරසිලි �
 #| msgid "Invert cursor keys"
 msgid "Invert Screen Colors"
 msgstr "කර්සර යතුරු යටිකුරු කිරීම"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, fuzzy, kde-format
-#| msgid "Tiny"
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "ඉතා කුඩා"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, fuzzy, kde-format
-#| msgid "Normal"
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "සාමාන්‍ය"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, fuzzy, kde-format
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "විශාල"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, fuzzy, kde-format
-#| msgid "Very Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "ඉතා විශාල"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgid "Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "අති විශාල"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, fuzzy, kde-format
-#| msgid "Very Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "අතිශය විශාල"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "Re&size"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "ප්‍රමාණය යළි සකසන්න (&s)"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
-msgid "Button size:"
-msgstr "මවුස හැසිරීම්"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, kde-format
-msgid "Config Dialog"
-msgstr "සැකසුම් සංවාදය"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "මාතෘකා එල්ලය (&A)"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "මධ්‍යය"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"කවුළු දාරය මාතෘකා තීරු වර්ණයෙන්ම ඇඳීමට ඇවැසි නම් මෙය තෝරන්න. එසේ නොවේනම් පසුබිම් වර්ණයෙන්ම "
-"ඇඳේ."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
-msgid "Colored window border"
-msgstr "කවුළුව වසන්න"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"මවුසය ඒමතට ආවිට බොත්තම් අව පැහැවීමටත්, ඉවතට ගිය විට නැවත පෙර තත්වයට පත්වීමටත් මෙය තෝරන්න."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, kde-format
-msgid "Animate buttons"
-msgstr "සජීවීකරණය කල බොත්තම්"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4639,6 +4530,84 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "ඉතා කුඩා"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "සාමාන්‍ය"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "විශාල"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "ඉතා විශාල"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "අති විශාල"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "අතිශය විශාල"
+
+#, fuzzy
+#~| msgid "Re&size"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "ප්‍රමාණය යළි සකසන්න (&s)"
+
+#, fuzzy
+#~| msgid "Mouse Emulation"
+#~ msgid "Button size:"
+#~ msgstr "මවුස හැසිරීම්"
+
+#~ msgid "Config Dialog"
+#~ msgstr "සැකසුම් සංවාදය"
+
+#~ msgid "Title &Alignment"
+#~ msgstr "මාතෘකා එල්ලය (&A)"
+
+#~ msgid "Center"
+#~ msgstr "මධ්‍යය"
+
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "කවුළු දාරය මාතෘකා තීරු වර්ණයෙන්ම ඇඳීමට ඇවැසි නම් මෙය තෝරන්න. එසේ නොවේනම් පසුබිම් "
+#~ "වර්ණයෙන්ම ඇඳේ."
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "Colored window border"
+#~ msgstr "කවුළුව වසන්න"
+
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "මවුසය ඒමතට ආවිට බොත්තම් අව පැහැවීමටත්, ඉවතට ගිය විට නැවත පෙර තත්වයට පත්වීමටත් මෙය "
+#~ "තෝරන්න."
+
+#~ msgid "Animate buttons"
+#~ msgstr "සජීවීකරණය කල බොත්තම්"
 
 #, fuzzy
 #~| msgid "Maximize Window Horizontally"

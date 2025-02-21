@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1776,9 +1776,7 @@ msgstr "Sus"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -1795,9 +1793,7 @@ msgstr "Jos"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -1871,129 +1867,6 @@ msgstr "Comută efect de inversare asupra ferestrei"
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Inversează culorile ecranului"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Tiny"
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "Minusculă"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Normal"
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "Normală"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "Mare"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "Foarte mare"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "Imensă"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "Foarte imensă"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "&Redimensionează"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Buttons"
-msgid "Button size:"
-msgstr "Butoane"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
-msgid "Config Dialog"
-msgstr "Dialog"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, fuzzy, kde-format
-#| msgid "Title &Alignment"
-msgid "Title &Alignment"
-msgstr "&Aliniere titlu"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, fuzzy, kde-format
-#| msgid "Center"
-msgid "Center"
-msgstr "Centrat"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if the window border should be painted in the titlebar "
-#| "color. Otherwise it will be painted in the background color."
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"Bifați această opțiune dacă marginea ferestrei trebuie să fie pictată în "
-"culoarea barei de titlu. Altfel va fi pictată în culoarea fundalului."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Colored window border"
-msgstr "Ascunde marginea ferestrei"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if you want the buttons to fade in when the mouse "
-#| "pointer hovers over them and fade out again when it moves away."
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"Bifați această opțiune dacă doriți ca butoanele să apară gradual când "
-"indicatorul de maus planează peste ele și să se estompeze iar când este dat "
-"deoparte."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, fuzzy, kde-format
-#| msgid "Animate desktop changes"
-msgid "Animate buttons"
-msgstr "Animează schimbările biroului"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4773,6 +4646,107 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Minusculă"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normală"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Mare"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Foarte mare"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Imensă"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Foarte imensă"
+
+#, fuzzy
+#~| msgid "&Resize"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "&Redimensionează"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "Butoane"
+
+#, fuzzy
+#~| msgid "Dialog"
+#~ msgid "Config Dialog"
+#~ msgstr "Dialog"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Title &Alignment"
+#~ msgstr "&Aliniere titlu"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "Center"
+#~ msgstr "Centrat"
+
+#, fuzzy
+#~| msgid ""
+#~| "Check this option if the window border should be painted in the titlebar "
+#~| "color. Otherwise it will be painted in the background color."
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "Bifați această opțiune dacă marginea ferestrei trebuie să fie pictată în "
+#~ "culoarea barei de titlu. Altfel va fi pictată în culoarea fundalului."
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Colored window border"
+#~ msgstr "Ascunde marginea ferestrei"
+
+#, fuzzy
+#~| msgid ""
+#~| "Check this option if you want the buttons to fade in when the mouse "
+#~| "pointer hovers over them and fade out again when it moves away."
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "Bifați această opțiune dacă doriți ca butoanele să apară gradual când "
+#~ "indicatorul de maus planează peste ele și să se estompeze iar când este "
+#~ "dat deoparte."
+
+#, fuzzy
+#~| msgid "Animate desktop changes"
+#~ msgid "Animate buttons"
+#~ msgstr "Animează schimbările biroului"
 
 #~ msgid "Surfaces"
 #~ msgstr "Suprafețe"

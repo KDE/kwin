@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -1764,9 +1764,7 @@ msgstr "Atas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -1782,9 +1780,7 @@ msgstr "Bawah"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Left"
@@ -1854,117 +1850,6 @@ msgstr "Alihkan Efek Balikkan pada Jendela"
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Balik Warna Layar"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "Kecil"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "Normal"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "Besar"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "Sangat Besar"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "Besar Sekali"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, kde-format
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "Sangat Besar Sekali"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "Ubah U&kuran"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Buttons"
-msgid "Button size:"
-msgstr "Tombol"
-
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
-msgid "Config Dialog"
-msgstr "Dialog"
-
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, fuzzy, kde-format
-#| msgid "Title &Alignment"
-msgid "Title &Alignment"
-msgstr "Kesejajaran &Judul"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, fuzzy, kde-format
-#| msgid "Center"
-msgid "Center"
-msgstr "Tengah"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if the window border should be painted in the titlebar "
-#| "color. Otherwise it will be painted in the background color."
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"Centang opsi ini jika batas jendela harus digambar dengan warna bilah judul. "
-"Sebaliknya batas jendela akan digambar dengan warna latar belakang."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Colored window border"
-msgstr "Sembunyikan Bingkai Jendela"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, fuzzy, kde-format
-#| msgid ""
-#| "Check this option if you want the buttons to fade in when the mouse "
-#| "pointer hovers over them and fade out again when it moves away."
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"Centang opsi ini jika anda ingin agar tombol melesap-muncul ketika penunjuk "
-"mouse melayang di atas tombol dan melesap-hilang lagi ketika penunjuk mouse "
-"pindah."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, fuzzy, kde-format
-#| msgid "Animate buttons"
-msgid "Animate buttons"
-msgstr "Animasi tombol"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4751,6 +4636,89 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Kecil"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Besar"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Sangat Besar"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Besar Sekali"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Sangat Besar Sekali"
+
+#, fuzzy
+#~| msgid "&Resize"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Ubah U&kuran"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "Tombol"
+
+#, fuzzy
+#~| msgid "Dialog"
+#~ msgid "Config Dialog"
+#~ msgstr "Dialog"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Title &Alignment"
+#~ msgstr "Kesejajaran &Judul"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "Center"
+#~ msgstr "Tengah"
+
+#, fuzzy
+#~| msgid ""
+#~| "Check this option if the window border should be painted in the titlebar "
+#~| "color. Otherwise it will be painted in the background color."
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "Centang opsi ini jika batas jendela harus digambar dengan warna bilah "
+#~ "judul. Sebaliknya batas jendela akan digambar dengan warna latar belakang."
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Colored window border"
+#~ msgstr "Sembunyikan Bingkai Jendela"
+
+#, fuzzy
+#~| msgid ""
+#~| "Check this option if you want the buttons to fade in when the mouse "
+#~| "pointer hovers over them and fade out again when it moves away."
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "Centang opsi ini jika anda ingin agar tombol melesap-muncul ketika "
+#~ "penunjuk mouse melayang di atas tombol dan melesap-hilang lagi ketika "
+#~ "penunjuk mouse pindah."
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animate buttons"
+#~ msgstr "Animasi tombol"
 
 #~ msgid "EventType"
 #~ msgstr "Tipe Peristiwa"

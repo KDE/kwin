@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-18 00:42+0000\n"
+"POT-Creation-Date: 2025-02-21 00:42+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1742,9 +1742,7 @@ msgstr "កំពូល"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, kde-format
 msgid "Right"
 msgstr "ស្តាំ"
@@ -1758,9 +1756,7 @@ msgstr "បាត"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, kde-format
 msgid "Left"
 msgstr "ឆ្វេង"
@@ -1828,123 +1824,6 @@ msgstr "បិទ/បើក​កា​របម្លែង​បែបផែ�
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "ត្រឡប់​ពណ៌​អេក្រង់"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
-msgctxt "@item:inlistbox Button size:"
-msgid "Tiny"
-msgstr "ល្អិត"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Normal"
-msgctxt "@item:inlistbox Button size:"
-msgid "Normal"
-msgstr "ធម្មតា"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Large"
-msgstr "ធំ"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
-msgstr "ធំណាស់"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Huge"
-msgstr "ធំសម្បើម"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Huge"
-msgstr "ធំ​សម្បើម​ណាស់"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "Re&size"
-msgctxt "@item:inlistbox Button size:"
-msgid "Oversized"
-msgstr "ប្តូរ​ទំហំ"
-
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Button size:"
-msgid "Button size:"
-msgstr "ទំហំប៊ូតុង ៖"
-
-#  i18n: file ./plastik/config/configdialog.ui line 16
-#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, kde-format
-msgid "Config Dialog"
-msgstr "កំណត់​រចនា​សម្ព័ន្ធ​ប្រអប់"
-
-#  i18n: file ./plastik/config/configdialog.ui line 30
-#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
-#, kde-format
-msgid "Title &Alignment"
-msgstr "ការ​តម្រឹម​ចំណង​ជើង"
-
-#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:36
-#, kde-format
-msgid "Center"
-msgstr "កណ្តាល"
-
-#  i18n: file ./plastik/config/configdialog.ui line 73
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:53
-#, kde-format
-msgid ""
-"Check this option if the window border should be painted in the titlebar "
-"color. Otherwise it will be painted in the background color."
-msgstr ""
-"ធីក​ជម្រើស​នេះ ប្រសិន​បើ​ស៊ុម​បង្អួច​គួរ​តែ​ត្រូវ​បាន​គូរ​ក្នុង​ពណ៌​របារ​ចំណង​ជើង ។ បើ​ពុំ​នោះ​ទេ វា​នឹង​ត្រូវ​បាន​គូរ​ក្នុង​"
-"ពណ៌​ផ្ទៃ​ខាង​ក្រោយ ។"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
-msgid "Colored window border"
-msgstr "បិទ​បង្អួច"
-
-#  i18n: file ./plastik/config/configdialog.ui line 95
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
-#, kde-format
-msgid ""
-"Check this option if you want the buttons to fade in when the mouse pointer "
-"hovers over them and fade out again when it moves away."
-msgstr ""
-"ធីក​ជម្រើស​នេះ បើ​អ្នក​ចង់​ឲ្យ​ប៊ូតុង​អណ្ដែត​បន្តិច​ម្តងៗ នៅ​ពេល​ព្រួញ​កណ្តុរ​សំកាំង​លើ​ពួក​វា និង​លិច​បន្តិច​ម្តង​ទៀត​ពេល​"
-"វា​ផ្លាស់​ទី​ចេញ ។"
-
-#  i18n: file ./plastik/config/configdialog.ui line 92
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
-#: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, kde-format
-msgid "Animate buttons"
-msgstr "ធ្វើ​ឲ្យ​ប៊ូតុង​មាន​ចលនា"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
@@ -4665,6 +4544,95 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "ល្អិត"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "ធម្មតា"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "ធំ"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "ធំណាស់"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "ធំសម្បើម"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "ធំ​សម្បើម​ណាស់"
+
+#, fuzzy
+#~| msgid "Re&size"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "ប្តូរ​ទំហំ"
+
+#, fuzzy
+#~| msgid "Button size:"
+#~ msgid "Button size:"
+#~ msgstr "ទំហំប៊ូតុង ៖"
+
+#  i18n: file ./plastik/config/configdialog.ui line 16
+#~ msgid "Config Dialog"
+#~ msgstr "កំណត់​រចនា​សម្ព័ន្ធ​ប្រអប់"
+
+#  i18n: file ./plastik/config/configdialog.ui line 30
+#~ msgid "Title &Alignment"
+#~ msgstr "ការ​តម្រឹម​ចំណង​ជើង"
+
+#~ msgid "Center"
+#~ msgstr "កណ្តាល"
+
+#  i18n: file ./plastik/config/configdialog.ui line 73
+#~ msgid ""
+#~ "Check this option if the window border should be painted in the titlebar "
+#~ "color. Otherwise it will be painted in the background color."
+#~ msgstr ""
+#~ "ធីក​ជម្រើស​នេះ ប្រសិន​បើ​ស៊ុម​បង្អួច​គួរ​តែ​ត្រូវ​បាន​គូរ​ក្នុង​ពណ៌​របារ​ចំណង​ជើង ។ បើ​ពុំ​នោះ​ទេ វា​នឹង​ត្រូវ​បាន​គូរ​"
+#~ "ក្នុង​ពណ៌​ផ្ទៃ​ខាង​ក្រោយ ។"
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "Colored window border"
+#~ msgstr "បិទ​បង្អួច"
+
+#  i18n: file ./plastik/config/configdialog.ui line 95
+#~ msgid ""
+#~ "Check this option if you want the buttons to fade in when the mouse "
+#~ "pointer hovers over them and fade out again when it moves away."
+#~ msgstr ""
+#~ "ធីក​ជម្រើស​នេះ បើ​អ្នក​ចង់​ឲ្យ​ប៊ូតុង​អណ្ដែត​បន្តិច​ម្តងៗ នៅ​ពេល​ព្រួញ​កណ្តុរ​សំកាំង​លើ​ពួក​វា និង​លិច​បន្តិច​ម្តង​ទៀត​"
+#~ "ពេល​វា​ផ្លាស់​ទី​ចេញ ។"
+
+#  i18n: file ./plastik/config/configdialog.ui line 92
+#~ msgid "Animate buttons"
+#~ msgstr "ធ្វើ​ឲ្យ​ប៊ូតុង​មាន​ចលនា"
 
 #, fuzzy
 #~| msgid "Maximize Window Horizontally"
