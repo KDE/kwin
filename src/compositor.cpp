@@ -384,7 +384,7 @@ void Compositor::start()
     }
 
     // Sets also the 'effects' pointer.
-    kwinApp()->createEffectsHandler(this, m_scene.get());
+    new EffectsHandler(this, m_scene.get());
 
     Q_EMIT compositingToggled(true);
 }
