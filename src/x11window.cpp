@@ -20,7 +20,6 @@
 #include "cursor.h"
 #include "decorations/decoratedwindow.h"
 #include "decorations/decorationbridge.h"
-#include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
 #include "killprompt.h"
@@ -508,9 +507,6 @@ bool X11Window::track(xcb_window_t w)
     setupCompositing();
     if (QWindow *internalWindow = findInternalWindow()) {
         m_outline = internalWindow->property("__kwin_outline").toBool();
-    }
-    if (effects) {
-        effects->checkInputWindowStacking();
     }
 
     // The wayland surface is associated with the override-redirect window asynchronously.
