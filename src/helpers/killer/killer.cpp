@@ -7,6 +7,9 @@
 
 */
 
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #include <KAuth/Action>
 #include <KIconUtils>
 #include <KLocalizedString>
@@ -22,6 +25,7 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QStandardPaths>
+#include <QThread>
 #include <QWaylandClientExtensionTemplate>
 #include <QWindow>
 
@@ -36,6 +40,8 @@
 
 #include "debug.h"
 #include "qwayland-xdg-foreign-unstable-v2.h"
+
+using namespace std::chrono_literals;
 
 namespace
 {
@@ -89,6 +95,25 @@ void writeApplicationNotResponding(pid_t pid)
     // No content for now, simply close it once created
 }
 #endif // Q_OS_LINUX
+
+bool hasPidAborted(pid_t pid)
+{
+    constexpr auto timeout = 4000ms;
+    constexpr auto interval = 250ms;
+    constexpr auto iterations = timeout / interval;
+    for (int i = 0; i < iterations; i++) {
+        int status = 0;
+        if (waitpid(pid, &status, WNOHANG | WNOWAIT) == pid) {
+            if (WIFSIGNALED(status) || WIFEXITED(status)) {
+                // PID terminated by signal … or exited, but that should not really happen as a result of ABRT
+                return true;
+            }
+        }
+        QThread::sleep(interval);
+    }
+    return false;
+}
+
 } // namespace
 
 class XdgImported : public QtWayland::zxdg_imported_v2
@@ -268,9 +293,10 @@ int main(int argc, char *argv[])
             } else {
                 // First try to abort so KCrash (or other handlers) and/or coredumpd can kick in and record the malfunction.
                 // This specifically allows application authors to notice that something is broken.
-                if (::kill(pid, SIGABRT) == 0) {
+                if (::kill(pid, SIGABRT) == 0 && hasPidAborted(pid)) {
                     return;
                 }
+
                 // If that did not work send a kill. Kill cannot be ignored and always terminates.
                 if (::kill(pid, SIGKILL) && errno == EPERM) {
                     // If killing failed on permissions try again with the polkit helper.
