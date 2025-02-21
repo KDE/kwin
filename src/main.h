@@ -46,7 +46,6 @@ class ScreenEdges;
 class Outline;
 class OutlineVisual;
 class Compositor;
-class WorkspaceScene;
 class Window;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
@@ -262,8 +261,6 @@ public:
 
     void createAtoms();
     void destroyAtoms();
-
-    virtual void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene);
 
     static void setupMalloc();
     static void setupLocalizedString();
