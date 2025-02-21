@@ -65,7 +65,6 @@
 */
 
 #include "compositor.h"
-#include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "internalwindow.h"
 #include "rules.h"
@@ -643,9 +642,6 @@ void Workspace::blockStackingUpdates(bool block)
     } else // !block
         if (--m_blockStackingUpdates == 0) {
             updateStackingOrder(m_blockedPropagatingNewWindows);
-            if (effects) {
-                effects->checkInputWindowStacking();
-            }
         }
 }
 
