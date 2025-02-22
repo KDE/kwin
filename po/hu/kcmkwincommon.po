@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-20 02:25+0000\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
 "PO-Revision-Date: 2024-01-11 11:31+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -81,19 +81,19 @@ msgstr "Ablakbezárási és megnyitási animációk"
 msgid "KWin development team"
 msgstr "A KWin fejlesztői"
 
-#: genericscriptedconfig.cpp:71
+#: genericscriptedconfig.cpp:76
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "A csomag metaadatai nem találhatók"
 
-#: genericscriptedconfig.cpp:77
+#: genericscriptedconfig.cpp:82
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "A(z) %1 nem tartalmaz érvényes metadata.json fájlt"
 
-#: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
+#: genericscriptedconfig.cpp:88 genericscriptedconfig.cpp:94
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

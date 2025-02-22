@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-21 00:42+0000\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
 "PO-Revision-Date: 2025-02-09 17:30+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -1225,82 +1225,82 @@ msgstr "Буфер обміну"
 msgid "Primary Selection"
 msgstr "Основне позначення"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:159
 #, kde-format
 msgid "Window Manager"
 msgstr "Керування вікнами"
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID програми, яку слід завершити"
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:141
+#: helpers/killer/killer.cpp:166
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Назва вузла, на якому виконується програма"
 
-#: helpers/killer/killer.cpp:141
+#: helpers/killer/killer.cpp:166
 #, kde-format
 msgid "hostname"
 msgstr "назва вузла"
 
-#: helpers/killer/killer.cpp:143
+#: helpers/killer/killer.cpp:168
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Підпис вікна, яке слід завершити"
 
-#: helpers/killer/killer.cpp:143
+#: helpers/killer/killer.cpp:168
 #, kde-format
 msgid "caption"
 msgstr "підпис"
 
-#: helpers/killer/killer.cpp:145
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Назва програми, яку слід завершити"
 
-#: helpers/killer/killer.cpp:145
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "name"
 msgstr "назва"
 
-#: helpers/killer/killer.cpp:147
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "ІД ресурсу, який належить цій програмі"
 
-#: helpers/killer/killer.cpp:147
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "id"
 msgstr "ідентифікатор"
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:174
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Час, за який дія призводить до завершення"
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:174
 #, kde-format
 msgid "time"
 msgstr "час"
 
-#: helpers/killer/killer.cpp:151
+#: helpers/killer/killer.cpp:176
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Допоміжна утиліта KWin"
 
-#: helpers/killer/killer.cpp:187
+#: helpers/killer/killer.cpp:212
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Цю допоміжну утиліту не можна викликати напряму."
 
-#: helpers/killer/killer.cpp:209
+#: helpers/killer/killer.cpp:234
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1310,7 +1310,7 @@ msgstr ""
 "<para>Програма <application>%1</application> не відповідає на запити. Хочете "
 "перервати роботу цієї програми?</para>"
 
-#: helpers/killer/killer.cpp:211
+#: helpers/killer/killer.cpp:236
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1320,7 +1320,7 @@ msgstr ""
 "<para>«%1» програми <application>%2</application> не відповідає на запити. "
 "Хочете перервати роботу цієї програми?</para>"
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:239
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1330,31 +1330,31 @@ msgstr ""
 "<para><emphasis strong='true'>Переривання роботи програми призведе до "
 "закриття усіх її вікон. Усі незбережені дані буде втрачено.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:216
+#: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "П&ерервати %1"
 
-#: helpers/killer/killer.cpp:217
+#: helpers/killer/killer.cpp:242
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "По&чекати ще"
 
-#: helpers/killer/killer.cpp:225
+#: helpers/killer/killer.cpp:250
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "Не відповідає"
 
-#: helpers/killer/killer.cpp:241
+#: helpers/killer/killer.cpp:266
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "Ід. процесу: %1"
 
-#: helpers/killer/killer.cpp:243
+#: helpers/killer/killer.cpp:268
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -3747,7 +3747,7 @@ msgstr "Альтернативна прогулянка вікнами пото�
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Альтернативна прогулянка вікнами поточної програми (зв. порядок)"
 
-#: tabbox/tabboxhandler.cpp:247
+#: tabbox/tabboxhandler.cpp:249
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

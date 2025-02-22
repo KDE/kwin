@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-20 02:25+0000\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
 "PO-Revision-Date: 2023-07-23 21:14+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -81,19 +81,19 @@ msgstr "창 열기/닫기 애니메이션"
 msgid "KWin development team"
 msgstr "KWin 개발 팀"
 
-#: genericscriptedconfig.cpp:71
+#: genericscriptedconfig.cpp:76
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "패키지 메타데이터를 찾을 수 없음"
 
-#: genericscriptedconfig.cpp:77
+#: genericscriptedconfig.cpp:82
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1에 올바른 metadata.json 파일이 없음"
 
-#: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
+#: genericscriptedconfig.cpp:88 genericscriptedconfig.cpp:94
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

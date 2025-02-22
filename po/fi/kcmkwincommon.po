@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-20 02:25+0000\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
 "PO-Revision-Date: 2023-04-27 12:17+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -92,19 +92,19 @@ msgstr "Ikkunan avaus- ja sulkemisanimointi"
 msgid "KWin development team"
 msgstr "KWin-kehitysryhmä"
 
-#: genericscriptedconfig.cpp:71
+#: genericscriptedconfig.cpp:76
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "Paketin metatietoa ei voitu paikantaa"
 
-#: genericscriptedconfig.cpp:77
+#: genericscriptedconfig.cpp:82
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1 ei sisällä kelvollista metadata.json-tiedostoa"
 
-#: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
+#: genericscriptedconfig.cpp:88 genericscriptedconfig.cpp:94
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

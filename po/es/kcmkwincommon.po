@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincommon\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-20 02:25+0000\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
 "PO-Revision-Date: 2023-04-20 17:25+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -82,19 +82,19 @@ msgstr "Animación de apertura/cierre de ventanas"
 msgid "KWin development team"
 msgstr "El equipo de desarrollo de KWin"
 
-#: genericscriptedconfig.cpp:71
+#: genericscriptedconfig.cpp:76
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "No se han podido localizar los metadatos del paquete"
 
-#: genericscriptedconfig.cpp:77
+#: genericscriptedconfig.cpp:82
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1 no contiene un archivo metadata.json válido"
 
-#: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
+#: genericscriptedconfig.cpp:88 genericscriptedconfig.cpp:94
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

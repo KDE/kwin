@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-21 00:42+0000\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
 "PO-Revision-Date: 2024-12-26 09:07+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1205,82 +1205,82 @@ msgstr "الحافظة"
 msgid "Primary Selection"
 msgstr "الاختيار الأولي"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:159
 #, kde-format
 msgid "Window Manager"
 msgstr "مدير نوافذ"
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "معرّف عمليّة التّطبيق لإنهائه."
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "pid"
 msgstr "معرّف_العمليّة"
 
-#: helpers/killer/killer.cpp:141
+#: helpers/killer/killer.cpp:166
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "اسم المضيف الذي يعمل فيه التّطبيق"
 
-#: helpers/killer/killer.cpp:141
+#: helpers/killer/killer.cpp:166
 #, kde-format
 msgid "hostname"
 msgstr "اسم_المضيف"
 
-#: helpers/killer/killer.cpp:143
+#: helpers/killer/killer.cpp:168
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "واصفة النّافذة لإنهائها"
 
-#: helpers/killer/killer.cpp:143
+#: helpers/killer/killer.cpp:168
 #, kde-format
 msgid "caption"
 msgstr "الواصفة"
 
-#: helpers/killer/killer.cpp:145
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "اسم التّطبيق لإنهائه."
 
-#: helpers/killer/killer.cpp:145
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "name"
 msgstr "الاسم"
 
-#: helpers/killer/killer.cpp:147
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "معرّف المورد التّابع للتّطبيق"
 
-#: helpers/killer/killer.cpp:147
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "id"
 msgstr "المعرّف"
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:174
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "وقت إجراء المستخدم المسبّب للإنهاء"
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:174
 #, kde-format
 msgid "time"
 msgstr "الوقت"
 
-#: helpers/killer/killer.cpp:151
+#: helpers/killer/killer.cpp:176
 #, kde-format
 msgid "KWin helper utility"
 msgstr "أداة نوافذك للمساعدة"
 
-#: helpers/killer/killer.cpp:187
+#: helpers/killer/killer.cpp:212
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "لا يفترض طلب الأداة المساعدة هذه مباشرةً."
 
-#: helpers/killer/killer.cpp:209
+#: helpers/killer/killer.cpp:234
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1290,7 +1290,7 @@ msgstr ""
 "<para>التطبيق <application>%1</application> لا يستجيب، هل تريد أن تنهي هذا "
 "التطبيق؟</para>"
 
-#: helpers/killer/killer.cpp:211
+#: helpers/killer/killer.cpp:236
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1300,7 +1300,7 @@ msgstr ""
 "<para>نافذة \"%1\" لتطبيق <application>%2</application> لا تستجيب، هل تردي "
 "أن تنهي هذا التطبيق؟</para>"
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:239
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1310,31 +1310,31 @@ msgstr ""
 "<para><emphasis strong='true'>إنهاء التّطبيق سيغلق كلّ نوافذه التابعة له. أيّة "
 "بيانات غير محفوظة ستُفقد.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:216
+#: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "أ&نهِ %1"
 
-#: helpers/killer/killer.cpp:217
+#: helpers/killer/killer.cpp:242
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "ا&نتظر أكثر"
 
-#: helpers/killer/killer.cpp:225
+#: helpers/killer/killer.cpp:250
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "لا يستجيب"
 
-#: helpers/killer/killer.cpp:241
+#: helpers/killer/killer.cpp:266
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "رقم العملية: %1"
 
-#: helpers/killer/killer.cpp:243
+#: helpers/killer/killer.cpp:268
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -3706,7 +3706,7 @@ msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البدي�
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة (بالعكس)"
 
-#: tabbox/tabboxhandler.cpp:247
+#: tabbox/tabboxhandler.cpp:249
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

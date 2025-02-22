@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-21 00:42+0000\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1205,82 +1205,82 @@ msgstr "剪贴板"
 msgid "Primary Selection"
 msgstr "主要选择"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:159
 #, kde-format
 msgid "Window Manager"
 msgstr "窗口管理器"
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "要终止的应用程序的进程 ID (PID)"
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "pid"
 msgstr "PID"
 
-#: helpers/killer/killer.cpp:141
+#: helpers/killer/killer.cpp:166
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "应用程序所运行主机的主机名"
 
-#: helpers/killer/killer.cpp:141
+#: helpers/killer/killer.cpp:166
 #, kde-format
 msgid "hostname"
 msgstr "主机名"
 
-#: helpers/killer/killer.cpp:143
+#: helpers/killer/killer.cpp:168
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "要终止的窗口的标题"
 
-#: helpers/killer/killer.cpp:143
+#: helpers/killer/killer.cpp:168
 #, kde-format
 msgid "caption"
 msgstr "标题"
 
-#: helpers/killer/killer.cpp:145
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "要终止的应用程序的名称"
 
-#: helpers/killer/killer.cpp:145
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "name"
 msgstr "名称"
 
-#: helpers/killer/killer.cpp:147
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "属于应用程序的资源的 ID"
 
-#: helpers/killer/killer.cpp:147
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "id"
 msgstr "ID"
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:174
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "触发进程终止信号的用户操作时间"
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:174
 #, kde-format
 msgid "time"
 msgstr "时间"
 
-#: helpers/killer/killer.cpp:151
+#: helpers/killer/killer.cpp:176
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin 辅助工具程序"
 
-#: helpers/killer/killer.cpp:187
+#: helpers/killer/killer.cpp:212
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "这一辅助工具程序不应被直接调用。"
 
-#: helpers/killer/killer.cpp:209
+#: helpers/killer/killer.cpp:234
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1290,7 +1290,7 @@ msgstr ""
 "<para><application>%1</application> 没有响应。您想要强制终止此应用程序吗？</"
 "para>"
 
-#: helpers/killer/killer.cpp:211
+#: helpers/killer/killer.cpp:236
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1300,7 +1300,7 @@ msgstr ""
 "<para><application>%2</application> 的“%1”没有响应。您想要强制终止此应用程序"
 "吗？</para>"
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:239
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1310,31 +1310,31 @@ msgstr ""
 "<para><emphasis strong='true'>强制终止此应用程序将会关闭它的所有窗口。所有尚"
 "未保存的数据都将丢失。</emphasis></para>"
 
-#: helpers/killer/killer.cpp:216
+#: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "终止 %1(&T)"
 
-#: helpers/killer/killer.cpp:217
+#: helpers/killer/killer.cpp:242
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "继续等待(&W)"
 
-#: helpers/killer/killer.cpp:225
+#: helpers/killer/killer.cpp:250
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "没有响应"
 
-#: helpers/killer/killer.cpp:241
+#: helpers/killer/killer.cpp:266
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "进程 ID：%1"
 
-#: helpers/killer/killer.cpp:243
+#: helpers/killer/killer.cpp:268
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -3693,7 +3693,7 @@ msgstr "遍历当前应用程序窗口交替"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "遍历当前应用程序窗口交替 (反向)"
 
-#: tabbox/tabboxhandler.cpp:247
+#: tabbox/tabboxhandler.cpp:249
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4345,60 +4345,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "小"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "正常"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "大"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "特大"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "超大"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "超特大"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "极大"
-
-#~ msgid "Button size:"
-#~ msgstr "按钮大小："
-
-#~ msgid "Config Dialog"
-#~ msgstr "配置对话框"
-
-#~ msgid "Title &Alignment"
-#~ msgstr "标题对齐(&A)"
-
-#~ msgid "Center"
-#~ msgstr "中央"
-
-#~ msgid ""
-#~ "Check this option if the window border should be painted in the titlebar "
-#~ "color. Otherwise it will be painted in the background color."
-#~ msgstr ""
-#~ "勾选后，窗口边框将使用标题栏颜色绘制。如果不勾选，则使用背景颜色绘制。"
-
-#~ msgid "Colored window border"
-#~ msgstr "对窗口边框着色"
-
-#~ msgid ""
-#~ "Check this option if you want the buttons to fade in when the mouse "
-#~ "pointer hovers over them and fade out again when it moves away."
-#~ msgstr "勾选此项后，鼠标光标移入或移出按钮时，按钮将显示渐变过渡的效果。"
-
-#~ msgid "Animate buttons"
-#~ msgstr "按钮动效"
