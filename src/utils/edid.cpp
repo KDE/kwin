@@ -135,7 +135,7 @@ Edid::Edid(QByteArrayView data, std::optional<QByteArrayView> identifierOverride
     : Edid(data)
 {
     if (identifierOverride.has_value()) {
-        m_identifier = QByteArray(*identifierOverride);
+        m_identifier = identifierOverride->toByteArray();
     }
 }
 
