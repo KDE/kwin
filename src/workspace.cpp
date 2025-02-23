@@ -1054,7 +1054,7 @@ Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
                 continue;
             }
 
-            if (window->hitTest(Cursors::self()->mouse()->pos())) {
+            if (exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos())) {
                 if (!window->isDesktop()) {
                     return window;
                 }
