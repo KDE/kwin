@@ -106,7 +106,7 @@ QVariant RuleItem::value() const
 void RuleItem::setValue(QVariant value)
 {
     if (m_options && m_type == Option) {
-        m_options->setValue(value);
+        m_options->setValue(typedValue(value));
     }
     m_value = typedValue(value);
 }
@@ -171,6 +171,11 @@ QVariant RuleItem::typedValue(const QVariant &value) const
     switch (type()) {
     case Undefined:
     case Option:
+        if (value.typeId() == QMetaType::QStringList) {
+            // The setting is defined as a `StringList`, but we need a `QString`
+            // to check for a single option. Main case: Virtual Desktops on X11
+            return value.toString();
+        }
         return value;
     case Boolean:
         return value.toBool();
