@@ -1235,13 +1235,11 @@ void Window::checkUnrestrictedInteractiveMoveResize()
     }
     const QRectF &moveResizeGeom = moveResizeGeometry();
     QRectF desktopArea = workspace()->clientArea(WorkArea, this, moveResizeGeom.center());
-    int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
+    int left_marge, right_marge, top_marge, bottom_marge;
     // restricted move/resize - keep at least part of the titlebar always visible
     // how much must remain visible when moved away in that direction
     left_marge = std::min(100. + borderRight(), moveResizeGeom.width());
     right_marge = std::min(100. + borderLeft(), moveResizeGeom.width());
-    // width/height change with opaque resizing, use the initial ones
-    titlebar_marge = initialInteractiveMoveResizeGeometry().height();
     top_marge = borderBottom();
     bottom_marge = borderTop();
     if (isInteractiveResize()) {
@@ -1258,21 +1256,6 @@ void Window::checkUnrestrictedInteractiveMoveResize()
             setUnrestrictedInteractiveMoveResize(true);
         }
         if (!isUnrestrictedInteractiveMoveResize() && moveResizeGeom.top() < desktopArea.top()) { // titlebar mustn't go out
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-    }
-    if (isInteractiveMove()) {
-        if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge) {
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-        // no need to check top_marge, titlebar_marge already handles it
-        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge) { // titlebar mustn't go out
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-        if (moveResizeGeom.right() < desktopArea.left() + left_marge) {
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-        if (moveResizeGeom.left() > desktopArea.right() - right_marge) {
             setUnrestrictedInteractiveMoveResize(true);
         }
     }
