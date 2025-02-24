@@ -1957,10 +1957,6 @@ public:
     }
     bool touchUp(int32_t id, std::chrono::microseconds time) override
     {
-        auto seat = waylandServer()->seat();
-        if (seat->isTouchSequence()) {
-            return false;
-        }
         Window *window = input()->touch()->focus();
         if (!window || !window->isClient()) {
             return false;
