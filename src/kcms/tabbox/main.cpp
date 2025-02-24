@@ -23,7 +23,6 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QSpacerItem>
-#include <QStandardItemModel>
 #include <QStandardPaths>
 #include <QStyle>
 #include <QTabWidget>
@@ -157,9 +156,9 @@ static QList<KPackage::Package> availableLnFPackages()
 
 void KWinTabBoxConfig::initLayoutLists()
 {
-    QStandardItemModel *model = new QStandardItemModel;
+    auto model = std::make_unique<QStandardItemModel>();
 
-    auto addToModel = [model](const QString &name, const QString &pluginId, const QString &path) {
+    auto addToModel = [model = model.get()](const QString &name, const QString &pluginId, const QString &path) {
         QStandardItem *item = new QStandardItem(name);
         item->setData(pluginId, Qt::UserRole);
         item->setData(path, KWinTabBoxConfigForm::LayoutPath);
@@ -200,8 +199,10 @@ void KWinTabBoxConfig::initLayoutLists()
 
     model->sort(0);
 
-    m_primaryTabBoxUi->setEffectComboModel(model);
-    m_alternativeTabBoxUi->setEffectComboModel(model);
+    m_primaryTabBoxUi->setEffectComboModel(model.get());
+    m_alternativeTabBoxUi->setEffectComboModel(model.get());
+
+    m_switcherModel = std::move(model);
 }
 
 void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)

@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <QStandardItemModel>
+
 #include <kcmodule.h>
 #include <ksharedconfig.h>
 
@@ -47,6 +49,7 @@ private:
 private:
     KWinTabBoxConfigForm *m_primaryTabBoxUi = nullptr;
     KWinTabBoxConfigForm *m_alternativeTabBoxUi = nullptr;
+    std::unique_ptr<QStandardItemModel> m_switcherModel;
     KSharedConfigPtr m_config;
 
     TabBox::KWinTabboxData *m_data;
