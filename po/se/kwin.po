@@ -4318,20 +4318,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "&Rievdat sturrodaga"
-
-#, fuzzy
-#~ msgid "Config Dialog"
-#~ msgstr "Heivehusláseš"
-
-#, fuzzy
-#~ msgid "Colored window border"
-#~ msgstr "Gidde láse"
-
-#, fuzzy
-#~ msgid "Animate buttons"
-#~ msgstr "Animere boaluid"
