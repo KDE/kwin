@@ -53,11 +53,6 @@
 namespace KWin
 {
 
-static inline int sign(int v)
-{
-    return (v > 0) - (v < 0);
-}
-
 QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> Window::s_palettes;
 std::shared_ptr<Decoration::DecorationPalette> Window::s_defaultPalette;
 
@@ -1709,11 +1704,11 @@ QRectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
                 }
             }
 
-            int dx = sign(currentMoveResizeGeom.x() - currentTry.x()),
-                dy = sign(currentMoveResizeGeom.y() - currentTry.y());
-            if (visiblePixels && dx) { // means there's no full width cap -> favor horizontally
+            qreal dx = std::clamp(currentMoveResizeGeom.x() - currentTry.x(), -1.0, 1.0);
+            qreal dy = std::clamp(currentMoveResizeGeom.y() - currentTry.y(), -1.0, 1.0);
+            if (visiblePixels && !qFuzzyIsNull(dx)) { // means there's no full width cap -> favor horizontally
                 dy = 0;
-            } else if (dy) {
+            } else if (!qFuzzyIsNull(dy)) {
                 dx = 0;
             }
 
