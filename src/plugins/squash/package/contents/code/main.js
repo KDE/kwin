@@ -18,6 +18,8 @@ var squashEffect = {
             return;
         }
 
+        window.setData(Effect.WindowForceBlurRole, true);
+
         // If the window doesn't have an icon in the task manager,
         // don't animate it.
         var iconRect = window.iconGeometry;
@@ -41,6 +43,8 @@ var squashEffect = {
         }
 
         var windowRect = window.geometry;
+
+        window.setData(Effect.WindowForceBlurRole, true);
 
         window.minimizeAnimation = animate({
             window: window,
@@ -84,6 +88,8 @@ var squashEffect = {
             return;
         }
 
+        window.setData(Effect.WindowForceBlurRole, true);
+
         // If the window doesn't have an icon in the task manager,
         // don't animate it.
         var iconRect = window.iconGeometry;
@@ -107,6 +113,8 @@ var squashEffect = {
         }
 
         var windowRect = window.geometry;
+
+        window.setData(Effect.WindowForceBlurRole, true);
 
         window.unminimizeAnimation = animate({
             window: window,
@@ -154,8 +162,12 @@ var squashEffect = {
             }
         });
     },
+    restoreForceBlurState: function(window) {
+        window.setData(Effect.WindowForceBlurRole, null);
+    },
     init: function () {
         effect.configChanged.connect(squashEffect.loadConfig);
+        effect.animationEnded.connect(this.restoreForceBlurState.bind(this));
 
         effects.windowAdded.connect(squashEffect.slotWindowAdded);
         for (const window of effects.stackingOrder) {
