@@ -32,9 +32,11 @@ namespace KWin
 class ScreenShotWriter2 : public QRunnable
 {
 public:
-    ScreenShotWriter2(FileDescriptor &&fileDescriptor, const QImage &image)
+    ScreenShotWriter2(FileDescriptor &&fileDescriptor, const QImage &image, const QDBusMessage &successReply, const QDBusMessage &errorReply)
         : m_fileDescriptor(std::move(fileDescriptor))
         , m_image(image)
+        , m_successReply(successReply)
+        , m_errorReply(errorReply)
     {
     }
 
@@ -43,11 +45,13 @@ public:
         const int flags = fcntl(m_fileDescriptor.get(), F_GETFL, 0);
         if (flags == -1) {
             qCWarning(KWIN_SCREENSHOT) << "failed to get screenshot fd flags:" << strerror(errno);
+            QDBusConnection::sessionBus().send(m_errorReply);
             return;
         }
         if (!(flags & O_NONBLOCK)) {
             if (fcntl(m_fileDescriptor.get(), F_SETFL, flags | O_NONBLOCK) == -1) {
                 qCWarning(KWIN_SCREENSHOT) << "failed to make screenshot fd non blocking:" << strerror(errno);
+                QDBusConnection::sessionBus().send(m_errorReply);
                 return;
             }
         }
@@ -55,6 +59,7 @@ public:
         QFile file;
         if (!file.open(m_fileDescriptor.get(), QIODevice::WriteOnly)) {
             qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "failed to open pipe:" << file.errorString();
+            QDBusConnection::sessionBus().send(m_errorReply);
             return;
         }
 
@@ -70,13 +75,16 @@ public:
             if (ready < 0) {
                 if (errno != EINTR) {
                     qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "poll() failed:" << strerror(errno);
+                    QDBusConnection::sessionBus().send(m_errorReply);
                     return;
                 }
             } else if (ready == 0) {
                 qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "timed out writing to pipe";
+                QDBusConnection::sessionBus().send(m_errorReply);
                 return;
             } else if (!(pfds[0].revents & POLLOUT)) {
                 qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "pipe is broken";
+                QDBusConnection::sessionBus().send(m_errorReply);
                 return;
             } else {
                 const char *chunk = buffer.constData() + (buffer.size() - remainingSize);
@@ -84,11 +92,18 @@ public:
 
                 if (writtenCount < 0) {
                     qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "write() failed:" << file.errorString();
+                    QDBusConnection::sessionBus().send(m_errorReply);
                     return;
                 }
 
                 remainingSize -= writtenCount;
-                if (writtenCount == 0 || remainingSize == 0) {
+                if (remainingSize == 0) {
+                    file.close();
+                    QDBusConnection::sessionBus().send(m_successReply);
+                    return;
+                }
+                if (writtenCount == 0) {
+                    QDBusConnection::sessionBus().send(m_errorReply);
                     return;
                 }
             }
@@ -98,6 +113,8 @@ public:
 protected:
     FileDescriptor m_fileDescriptor;
     QImage m_image;
+    QDBusMessage m_successReply;
+    QDBusMessage m_errorReply;
 };
 
 static ScreenShotFlags screenShotFlagsFromOptions(const QVariantMap &options)
@@ -143,6 +160,8 @@ static const QString s_errorInvalidScreen = QStringLiteral("org.kde.KWin.ScreenS
 static const QString s_errorInvalidScreenMessage = QStringLiteral("Invalid screen requested");
 static const QString s_errorFileDescriptor = QStringLiteral("org.kde.KWin.ScreenShot2.Error.FileDescriptor");
 static const QString s_errorFileDescriptorMessage = QStringLiteral("No valid file descriptor");
+static const QString s_errorSavingFile = QStringLiteral("org.kde.KWin.ScreenShot2.Error.SavingFile");
+static const QString s_errorSavingFileMessage = QStringLiteral("Error saving file");
 
 class ScreenShotSource2 : public QObject
 {
@@ -300,9 +319,10 @@ void ScreenShotSinkPipe2::flush(const QImage &image, const QVariantMap &attribut
     results.insert(QStringLiteral("height"), quint32(image.height()));
     results.insert(QStringLiteral("stride"), quint32(image.bytesPerLine()));
     results.insert(QStringLiteral("scale"), double(image.devicePixelRatio()));
-    QDBusConnection::sessionBus().send(m_replyMessage.createReply(results));
 
-    auto writer = new ScreenShotWriter2(std::move(m_fileDescriptor), image);
+    auto writer = new ScreenShotWriter2(std::move(m_fileDescriptor), image,
+                                        m_replyMessage.createReply(results),
+                                        m_replyMessage.createErrorReply(s_errorSavingFile, s_errorSavingFileMessage));
     writer->setAutoDelete(true);
     QThreadPool::globalInstance()->start(writer);
 }
