@@ -1515,6 +1515,10 @@ public:
     }
     int syncAlarmNotifyEvent() const;
     QList<ExtensionData> extensions() const;
+    bool hasRes() const
+    {
+        return m_res.present;
+    }
 
     static Extensions *self();
     static void destroy();
@@ -1527,6 +1531,7 @@ private:
     void initVersion(T cookie, F f, ExtensionData *dataToFill);
     void extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill);
 
+    ExtensionData m_res;
     ExtensionData m_shape;
     ExtensionData m_randr;
     ExtensionData m_composite;

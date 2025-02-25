@@ -255,6 +255,7 @@ if (KWIN_BUILD_X11)
         PRESENT
         RANDR
         RENDER
+        RES
         SHAPE
         SHM
         SYNC

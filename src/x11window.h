@@ -26,6 +26,7 @@
 #include <QWindow>
 // X
 #include <NETWM>
+#include <xcb/res.h>
 #include <xcb/sync.h>
 
 // TODO: Cleanup the order of things in this .h file
@@ -376,6 +377,9 @@ private:
      */
     void updateShowOnScreenEdge();
 
+    xcb_res_query_client_ids_cookie_t fetchPid() const;
+    void readPid(xcb_res_query_client_ids_cookie_t cookie);
+
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void createDecoration();
     void destroyDecoration();
@@ -439,6 +443,7 @@ private:
     std::unique_ptr<KillPrompt> m_killPrompt;
     xcb_timestamp_t m_pingTimestamp;
     xcb_timestamp_t m_userTime;
+    pid_t m_pid = 0;
     NET::Actions allowed_actions;
     bool shade_geometry_change;
     SyncRequest m_syncRequest;

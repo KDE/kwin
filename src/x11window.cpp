@@ -378,6 +378,8 @@ bool X11Window::track(xcb_window_t w)
     m_wrapper.reset(w, false);
     m_client.reset(w, false);
 
+    auto pidCookie = fetchPid();
+
     Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
     m_bufferGeometry = Xcb::fromXNative(geo.rect());
     m_frameGeometry = Xcb::fromXNative(geo.rect());
@@ -386,9 +388,10 @@ bool X11Window::track(xcb_window_t w)
     m_visual = attr->visual;
     bit_depth = geo->depth;
     info = new NETWinInfo(kwinApp()->x11Connection(), w, kwinApp()->x11RootWindow(),
-                          NET::WMWindowType | NET::WMPid,
+                          NET::WMWindowType,
                           NET::WM2Opacity | NET::WM2WindowRole | NET::WM2WindowClass | NET::WM2OpaqueRegion);
     setOpacity(info->opacityF());
+    readPid(pidCookie);
     getResourceClass();
     getWmClientLeader();
     getWmClientMachine();
@@ -440,7 +443,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // SELI TODO: Order all these things in some sane manner
 
     const NET::Properties properties =
-        NET::WMDesktop | NET::WMState | NET::WMWindowType | NET::WMStrut | NET::WMName | NET::WMIconGeometry | NET::WMIcon | NET::WMPid | NET::WMIconName;
+        NET::WMDesktop | NET::WMState | NET::WMWindowType | NET::WMStrut | NET::WMName | NET::WMIconGeometry | NET::WMIcon | NET::WMIconName;
     const NET::Properties2 properties2 =
         NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2UserTime | NET::WM2StartupId | NET::WM2ExtendedStrut | NET::WM2Opacity | NET::WM2FullscreenMonitors | NET::WM2GroupLeader | NET::WM2Urgency | NET::WM2Input | NET::WM2Protocols | NET::WM2InitialMappingState | NET::WM2IconPixmap | NET::WM2OpaqueRegion | NET::WM2DesktopFileName | NET::WM2GTKFrameExtents | NET::WM2GTKApplicationId;
 
@@ -452,6 +455,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     auto activitiesCookie = fetchActivities();
     auto applicationMenuServiceNameCookie = fetchApplicationMenuServiceName();
     auto applicationMenuObjectPathCookie = fetchApplicationMenuObjectPath();
+    auto pidCookie = fetchPid();
 
     m_geometryHints.init(window());
     m_motif.init(window());
@@ -465,6 +469,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // If it's already mapped, ignore hint
     bool init_minimize = !isMapped && (info->initialMappingState() == NET::Iconic);
 
+    readPid(pidCookie);
     getResourceClass();
     readWmClientLeader(wmClientLeaderCookie);
     getWmClientMachine();
@@ -1746,18 +1751,18 @@ void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
         return;
     }
     Q_ASSERT(!ask || timestamp != XCB_TIME_CURRENT_TIME);
-    pid_t pid = info->pid();
-    if (pid <= 0 || clientMachine()->hostName().isEmpty()) { // Needed properties missing
+    pid_t processId = pid();
+    if (processId <= 0 || clientMachine()->hostName().isEmpty()) { // Needed properties missing
         return;
     }
-    qCDebug(KWIN_CORE) << "Kill process:" << pid << "(" << clientMachine()->hostName() << ")";
+    qCDebug(KWIN_CORE) << "Kill process:" << processId << "(" << clientMachine()->hostName() << ")";
     if (!ask) {
         if (!clientMachine()->isLocal()) {
             QStringList lst;
-            lst << clientMachine()->hostName() << QStringLiteral("kill") << QString::number(pid);
+            lst << clientMachine()->hostName() << QStringLiteral("kill") << QString::number(processId);
             QProcess::startDetached(QStringLiteral("xon"), lst);
         } else {
-            ::kill(pid, SIGTERM);
+            ::kill(processId, SIGTERM);
         }
     } else {
         if (!m_killPrompt) {
@@ -2505,7 +2510,7 @@ QSizeF X11Window::implicitSize() const
 
 pid_t X11Window::pid() const
 {
-    return info->pid();
+    return m_pid;
 }
 
 QString X11Window::windowRole() const
@@ -3430,6 +3435,41 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     }
 
     return QSizeF(w, h);
+}
+
+xcb_res_query_client_ids_cookie_t X11Window::fetchPid() const
+{
+    xcb_res_query_client_ids_cookie_t cookie{
+        .sequence = 0,
+    };
+
+    if (Xcb::Extensions::self()->hasRes()) {
+        const xcb_res_client_id_spec_t spec{
+            .client = m_client,
+            .mask = XCB_RES_CLIENT_ID_MASK_LOCAL_CLIENT_PID,
+        };
+        cookie = xcb_res_query_client_ids(kwinApp()->x11Connection(), 1, &spec);
+    }
+
+    return cookie;
+}
+
+void X11Window::readPid(xcb_res_query_client_ids_cookie_t cookie)
+{
+    if (!cookie.sequence) {
+        return;
+    }
+
+    if (auto clientIds = xcb_res_query_client_ids_reply(kwinApp()->x11Connection(), cookie, nullptr)) {
+        xcb_res_client_id_value_iterator_t it = xcb_res_query_client_ids_ids_iterator(clientIds);
+        while (it.rem > 0) {
+            if ((it.data->spec.mask & XCB_RES_CLIENT_ID_MASK_LOCAL_CLIENT_PID) && xcb_res_client_id_value_value_length(it.data) > 0) {
+                m_pid = *xcb_res_client_id_value_value(it.data);
+                break;
+            }
+        }
+        free(clientIds);
+    }
 }
 
 void X11Window::getResourceClass()
