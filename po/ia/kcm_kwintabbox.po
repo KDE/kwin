@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-22 00:42+0000\n"
+"POT-Creation-Date: 2025-02-25 00:42+0000\n"
 "PO-Revision-Date: 2025-01-28 11:36+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -52,22 +52,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Scriptorio 1"
 
-#: main.cpp:75
+#: main.cpp:74
 #, kde-format
 msgid "Main"
 msgstr "Principal"
 
-#: main.cpp:76
+#: main.cpp:75
 #, kde-format
 msgid "Alternative"
 msgstr "Alternative"
 
-#: main.cpp:78
+#: main.cpp:77
 #, kde-format
 msgid "Get New Task Switcher Styles…"
 msgstr "Obtene nove stilos de commutatores de carga..."
 
-#: main.cpp:96
+#: main.cpp:95
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-22 00:42+0000\n"
+"POT-Creation-Date: 2025-02-25 00:42+0000\n"
 "PO-Revision-Date: 2024-12-24 17:50+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -4319,18 +4319,18 @@ msgstr "지정한 출력 순서에 모든 출력이 포함되지 않았음"
 msgid "The provided output order is invalid"
 msgstr "지정한 출력 순서가 잘못됨"
 
-#: wayland/outputmanagement_v2.cpp:494
+#: wayland/outputmanagement_v2.cpp:497
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "드라이버에서 출력 설정을 거부함"
 
-#: window.cpp:3181
+#: window.cpp:3275
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(응답 없음)"
 
-#: workspace.cpp:1665
+#: workspace.cpp:1691
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

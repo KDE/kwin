@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-22 00:42+0000\n"
+"POT-Creation-Date: 2025-02-25 00:42+0000\n"
 "PO-Revision-Date: 2024-12-26 20:32+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -4378,18 +4378,18 @@ msgstr "El orden de salida proporcionado no contiene todas las salidas"
 msgid "The provided output order is invalid"
 msgstr "El orden de salida proporcionado no es válido"
 
-#: wayland/outputmanagement_v2.cpp:494
+#: wayland/outputmanagement_v2.cpp:497
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "El controlador ha rechazado la configuración de salida"
 
-#: window.cpp:3181
+#: window.cpp:3275
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(no responde)"
 
-#: workspace.cpp:1665
+#: workspace.cpp:1691
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

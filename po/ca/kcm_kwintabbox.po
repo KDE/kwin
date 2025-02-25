@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-22 00:42+0000\n"
+"POT-Creation-Date: 2025-02-25 00:42+0000\n"
 "PO-Revision-Date: 2025-01-28 10:21+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -57,22 +57,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Escriptori 1"
 
-#: main.cpp:75
+#: main.cpp:74
 #, kde-format
 msgid "Main"
 msgstr "Principal"
 
-#: main.cpp:76
+#: main.cpp:75
 #, kde-format
 msgid "Alternative"
 msgstr "Alternativa"
 
-#: main.cpp:78
+#: main.cpp:77
 #, kde-format
 msgid "Get New Task Switcher Styles…"
 msgstr "Obtén estils nous de commutadors de tasques…"
 
-#: main.cpp:96
+#: main.cpp:95
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

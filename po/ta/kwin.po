@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-22 00:42+0000\n"
+"POT-Creation-Date: 2025-02-25 00:42+0000\n"
 "PO-Revision-Date: 2025-01-26 19:08+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -4346,18 +4346,18 @@ msgstr "குறிப்பிட்ட வெளியீட்டு வர�
 msgid "The provided output order is invalid"
 msgstr "குறிப்பிட்ட வெளியீட்டு வரிசை செல்லுபடியாகாதது"
 
-#: wayland/outputmanagement_v2.cpp:494
+#: wayland/outputmanagement_v2.cpp:497
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "சாதனநிரல் அமைப்புகளை நிராகரித்தது"
 
-#: window.cpp:3181
+#: window.cpp:3275
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1665
+#: workspace.cpp:1691
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
