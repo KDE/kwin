@@ -21,6 +21,7 @@
 #include <xcb/glx.h>
 #include <xcb/randr.h>
 #include <xcb/render.h>
+#include <xcb/res.h>
 #include <xcb/shape.h>
 #include <xcb/sync.h>
 #include <xcb/xfixes.h>
@@ -46,6 +47,16 @@ static const int RENDER_MAX_MAJOR = 0;
 static const int RENDER_MAX_MINOR = 11;
 static const int XFIXES_MAX_MAJOR = 5;
 static const int XFIXES_MAX_MINOR = 0;
+
+QList<QByteArray> resOpCodes()
+{
+    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
+                              QByteArrayLiteral("QueryClients"),
+                              QByteArrayLiteral("QueryClientResources"),
+                              QByteArrayLiteral("QueryClientPixmapBytes"),
+                              QByteArrayLiteral("QueryClientIds"),
+                              QByteArrayLiteral("QueryResourceBytes")});
+}
 
 QList<QByteArray> shapeOpCodes()
 {
@@ -377,6 +388,7 @@ void Extensions::init()
     xcb_prefetch_extension_data(c, &xcb_xfixes_id);
     xcb_prefetch_extension_data(c, &xcb_render_id);
     xcb_prefetch_extension_data(c, &xcb_sync_id);
+    xcb_prefetch_extension_data(c, &xcb_res_id);
 
     m_shape.name = QByteArray("SHAPE");
     m_randr.name = QByteArray("RANDR");
@@ -384,6 +396,7 @@ void Extensions::init()
     m_fixes.name = QByteArray("XFIXES");
     m_render.name = QByteArray("RENDER");
     m_sync.name = QByteArray("SYNC");
+    m_res.name = QByteArray("RES");
 
     m_shape.opCodes = shapeOpCodes();
     m_randr.opCodes = randrOpCodes();
@@ -391,6 +404,7 @@ void Extensions::init()
     m_fixes.opCodes = fixesOpCodes();
     m_render.opCodes = renderOpCodes();
     m_sync.opCodes = syncOpCodes();
+    m_res.opCodes = resOpCodes();
 
     m_randr.errorCodes = randrErrorCodes();
     m_fixes.errorCodes = fixesErrorCodes();
@@ -401,6 +415,7 @@ void Extensions::init()
     extensionQueryReply(xcb_get_extension_data(c, &xcb_xfixes_id), &m_fixes);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_render_id), &m_render);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_sync_id), &m_sync);
+    extensionQueryReply(xcb_get_extension_data(c, &xcb_res_id), &m_res);
 
     // extension specific queries
     xcb_shape_query_version_cookie_t shapeVersion;
@@ -409,6 +424,7 @@ void Extensions::init()
     xcb_xfixes_query_version_cookie_t xfixesVersion;
     xcb_render_query_version_cookie_t renderVersion;
     xcb_sync_initialize_cookie_t syncVersion;
+    xcb_res_query_version_cookie_t resVersion;
     if (m_shape.present) {
         shapeVersion = xcb_shape_query_version_unchecked(c);
     }
@@ -427,6 +443,9 @@ void Extensions::init()
     }
     if (m_sync.present) {
         syncVersion = xcb_sync_initialize(c, SYNC_MAX_MAJOR, SYNC_MAX_MINOR);
+    }
+    if (m_res.present) {
+        resVersion = xcb_res_query_version(c, XCB_RES_MAJOR_VERSION, XCB_RES_MINOR_VERSION);
     }
     // handle replies
     if (m_shape.present) {
@@ -447,12 +466,19 @@ void Extensions::init()
     if (m_sync.present) {
         initVersion<xcb_sync_initialize_reply_t>(syncVersion, &xcb_sync_initialize_reply, &m_sync);
     }
+    if (m_res.present) {
+        if (auto reply = xcb_res_query_version_reply(c, resVersion, nullptr)) {
+            m_res.version = reply->server_major * 0x10 + reply->server_minor;
+            free(reply);
+        }
+    }
     qCDebug(KWIN_CORE) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
                        << " composite: 0x" << QString::number(m_composite.version, 16)
                        << " render: 0x" << QString::number(m_render.version, 16)
                        << " fixes: 0x" << QString::number(m_fixes.version, 16)
                        << " randr: 0x" << QString::number(m_randr.version, 16)
-                       << " sync: 0x" << QString::number(m_sync.version, 16);
+                       << " sync: 0x" << QString::number(m_sync.version, 16)
+                       << " res: 0x" << QString::number(m_res.version, 16);
 }
 
 void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill)
@@ -527,7 +553,8 @@ QList<ExtensionData> Extensions::extensions() const
         m_composite,
         m_render,
         m_fixes,
-        m_sync};
+        m_sync,
+        m_res};
 }
 
 //****************************************

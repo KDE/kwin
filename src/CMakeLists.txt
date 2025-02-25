@@ -288,6 +288,7 @@ if (KWIN_BUILD_X11)
             XCB::KEYSYMS
             XCB::RANDR
             XCB::RENDER
+            XCB::RES
             XCB::SHAPE
             XCB::SHM
             XCB::SYNC

@@ -2597,7 +2597,9 @@ void X11WindowTest::testGroupTransient()
     // The group transient should not act as transient for unrelated windows.
     Test::XcbConnectionPtr c1 = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200), [&c1](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c1.get(), windowId, 7, "foo\0foo");
+    });
     QVERIFY(!unrelated->hasTransient(dialog, true));
 }
 
@@ -2641,7 +2643,9 @@ void X11WindowTest::testCloseInactiveTransient()
     // Show another window.
     Test::XcbConnectionPtr c1 = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200), [&c1](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c1.get(), windowId, 7, "foo\0foo");
+    });
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the child.
@@ -2715,7 +2719,9 @@ void X11WindowTest::testCloseInactiveGroupTransient()
     // Show another window.
     Test::XcbConnectionPtr c1 = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200), [&c1](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c1.get(), windowId, 7, "foo\0foo");
+    });
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the dialog.
@@ -2772,7 +2778,9 @@ void X11WindowTest::testModal()
     // It should be okay to activate an unrelated window.
     Test::XcbConnectionPtr c1 = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200), [&c1](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c1.get(), windowId, 7, "foo\0foo");
+    });
     QCOMPARE(workspace()->activeWindow(), unrelated);
 }
 
@@ -2834,7 +2842,9 @@ void X11WindowTest::testGroupModal()
     // It should be okay to activate an unrelated window.
     Test::XcbConnectionPtr c1 = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200), [&c1](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c1.get(), windowId, 7, "foo\0foo");
+    });
     QCOMPARE(workspace()->activeWindow(), unrelated);
 }
 
@@ -2900,7 +2910,9 @@ void X11WindowTest::testCloseInactiveModal()
     // Show another window.
     Test::XcbConnectionPtr c1 = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200), [&c1](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c1.get(), windowId, 7, "foo\0foo");
+    });
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the child.
@@ -2992,7 +3004,9 @@ void X11WindowTest::testCloseInactiveGroupModal()
     // Show another window.
     Test::XcbConnectionPtr c1 = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200), [&c1](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c1.get(), windowId, 7, "foo\0foo");
+    });
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the dialog.
@@ -3012,13 +3026,19 @@ void X11WindowTest::testStackAboveFromApplication()
 
     X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
     });
     X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window1->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
     });
-    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
-    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
+    });
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
+    });
 
     // window1 and window2 belong to the same application, window1 will be raised only above window2.
     root.restackRequest(window1->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
@@ -3042,13 +3062,19 @@ void X11WindowTest::testStackAboveFromTool()
 
     X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
     });
     X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window1->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
     });
-    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
-    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
+    });
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
+    });
 
     // window1 and window2 belong to the same application, but window1 will be raised globally because of the from_tool flag.
     root.restackRequest(window1->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
@@ -3070,9 +3096,15 @@ void X11WindowTest::testStackAboveSibling()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
-    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100));
-    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
+    });
 
     // Restack window1 above window3.
     root.restackRequest(window1->window(), NET::FromApplication, window3->window(), XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
@@ -3100,15 +3132,21 @@ void X11WindowTest::testStackBelowFromApplication()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
+    });
     X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
     });
     X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window2->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
     });
-    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
+    });
 
     root.restackRequest(window3->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
     xcb_flush(c.get());
@@ -3128,15 +3166,21 @@ void X11WindowTest::testStackBelowFromTool()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
+    });
     X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
     });
     X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window2->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
     });
-    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
+    });
 
     // window2 and window3 belong to the same application, but window3 will be lowered globally because of the from_tool flag.
     root.restackRequest(window3->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
@@ -3158,9 +3202,15 @@ void X11WindowTest::testStackBelowSibling()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
-    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100));
-    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&c](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
+    });
 
     // Restack window3 below window2.
     root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
@@ -3190,6 +3240,7 @@ void X11WindowTest::testStackTopIfFromApplication()
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3198,12 +3249,14 @@ void X11WindowTest::testStackTopIfFromApplication()
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window1->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
                                            });
     });
     X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3238,18 +3291,21 @@ void X11WindowTest::testStackTopIfFromTool()
     NETRootInfo root(c.get(), NET::Properties());
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
                                            });
     });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
                                            });
     });
     X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3284,6 +3340,7 @@ void X11WindowTest::testStackBottomIfFromApplication()
     NETRootInfo root(c.get(), NET::Properties());
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3291,6 +3348,7 @@ void X11WindowTest::testStackBottomIfFromApplication()
     });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3299,6 +3357,7 @@ void X11WindowTest::testStackBottomIfFromApplication()
     X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window2->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3333,6 +3392,7 @@ void X11WindowTest::testStackBottomIfFromTool()
     NETRootInfo root(c.get(), NET::Properties());
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3340,6 +3400,7 @@ void X11WindowTest::testStackBottomIfFromTool()
     });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3348,6 +3409,7 @@ void X11WindowTest::testStackBottomIfFromTool()
     X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window2->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3383,6 +3445,7 @@ void X11WindowTest::testStackOppositeFromApplication()
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3391,12 +3454,14 @@ void X11WindowTest::testStackOppositeFromApplication()
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window1->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
                                            });
     });
     X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
         applyMotifHints(c.get(), windowId, MotifHints{
                                                .flags = MWM_HINTS_DECORATIONS,
                                                .decorations = 0,
@@ -3437,12 +3502,16 @@ void X11WindowTest::testStackOppositeFromTool()
 
     X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
     });
     X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
         xcb_window_t leaderId = window1->window();
         xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
     });
-    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
+    });
 
     // window2 is above window1, so it will be lowered
     root.restackRequest(window2->window(), NET::FromTool, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
@@ -3476,9 +3545,15 @@ void X11WindowTest::testStackOppositeNoSibling()
     QVERIFY(!xcb_connection_has_error(c.get()));
     NETRootInfo root(c.get(), NET::Properties());
 
-    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
-    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100));
-    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0foo");
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "bar\0bar");
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(c.get(), windowId, 7, "baz\0baz");
+    });
 
     root.restackRequest(window2->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
     xcb_flush(c.get());
