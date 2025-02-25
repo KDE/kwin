@@ -151,7 +151,8 @@ public:
             return false;
         }
 
-        if (client->processId() == getpid()) {
+        // allow our unit tests to access everything
+        if (QStandardPaths::isTestModeEnabled()) {
             return true;
         }
 
