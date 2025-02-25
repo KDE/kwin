@@ -574,9 +574,10 @@ void Workspace::updateOutputConfiguration()
             }
         }
         for (Output *output : std::as_const(toEnable)) {
-            if (output->brightnessDevice()) {
-                cfg.changeSet(output)->allowSdrSoftwareBrightness = false;
-                cfg.changeSet(output)->brightness = output->brightnessSetting();
+            const auto changeset = cfg.changeSet(output);
+            if (output->brightnessDevice() && changeset->allowSdrSoftwareBrightness.value_or(true)) {
+                changeset->allowSdrSoftwareBrightness = false;
+                changeset->brightness = output->brightnessDevice()->observedBrightness();
             }
         }
 
