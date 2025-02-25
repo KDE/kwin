@@ -451,12 +451,6 @@ enum WindowTypeMask {
 };
 Q_DECLARE_FLAGS(WindowTypes, WindowTypeMask)
 
-enum class OutputConfigurationError {
-    None,
-    Unknown,
-    TooManyEnabledOutputs,
-};
-
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

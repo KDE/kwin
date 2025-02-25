@@ -48,7 +48,6 @@ public:
         NoPermission,
         FramePending,
         TestBufferFailed,
-        NotEnoughCrtcs,
         Unknown,
     };
     Q_ENUM(Error)

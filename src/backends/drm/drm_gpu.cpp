@@ -352,7 +352,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
         }
         if (!connectors.empty()) {
             // we have no crtcs left to drive the remaining connectors
-            return DrmPipeline::Error::NotEnoughCrtcs;
+            return DrmPipeline::Error::InvalidArguments;
         }
         return testPipelines();
     }
@@ -441,10 +441,6 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             primary->setEnabled(true);
             output->cursorLayer()->setEnabled(false);
         }
-    }
-    if (connectors.size() > crtcs.size()) {
-        // this can't work, we can return early
-        return DrmPipeline::Error::NotEnoughCrtcs;
     }
     return checkCrtcAssignment(connectors, crtcs);
 }

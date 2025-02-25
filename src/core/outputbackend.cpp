@@ -43,7 +43,7 @@ std::unique_ptr<QPainterBackend> OutputBackend::createQPainterBackend()
     return nullptr;
 }
 
-OutputConfigurationError OutputBackend::applyOutputChanges(const OutputConfiguration &config)
+bool OutputBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     const auto availableOutputs = outputs();
     QList<Output *> toBeEnabledOutputs;
@@ -63,7 +63,7 @@ OutputConfigurationError OutputBackend::applyOutputChanges(const OutputConfigura
     for (const auto &output : toBeDisabledOutputs) {
         output->applyChanges(config);
     }
-    return OutputConfigurationError::None;
+    return true;
 }
 
 Output *OutputBackend::findOutput(const QString &name) const
