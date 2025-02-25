@@ -162,8 +162,11 @@ void TestInputCapture::testInputCapture()
     while (numDevices != 3 && eiReadableSpy.wait()) {
         ei_dispatch(ei);
         while (auto event = ei_get_event(ei)) {
-            switch (ei_event_get_type(event)) {
+            switch (const auto type = ei_event_get_type(event)) {
             case EI_EVENT_CONNECT:
+#if HAVE_EI_EVENT_SYNC
+            case EI_EVENT_SYNC:
+#endif
                 break;
             case EI_EVENT_SEAT_ADDED:
                 ei_seat_bind_capabilities(ei_event_get_seat(event), EI_DEVICE_CAP_POINTER, EI_DEVICE_CAP_POINTER_ABSOLUTE, EI_DEVICE_CAP_KEYBOARD, EI_DEVICE_CAP_TOUCH, EI_DEVICE_CAP_SCROLL, EI_DEVICE_CAP_BUTTON, nullptr);
@@ -173,8 +176,7 @@ void TestInputCapture::testInputCapture()
                 ++numDevices;
                 break;
             default:
-                QFAIL("unexpected event");
-                return;
+                qFatal() << "unexpected event:" << type;
             }
             ei_event_unref(event);
         }
@@ -336,11 +338,15 @@ void TestInputCapture::disconnectingEiRemovesCapture()
     QSocketNotifier eiNotifier(ei_get_fd(ei), QSocketNotifier::Read);
     QSignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
 
-    while (eiReadableSpy.wait()) {
+    bool connected = false;
+    while (!connected && eiReadableSpy.wait()) {
         ei_dispatch(ei);
+
         if (auto event = ei_get_event(ei)) {
-            QCOMPARE(ei_event_get_type(event), EI_EVENT_CONNECT);
-            break;
+            if (ei_event_get_type(event) == EI_EVENT_CONNECT) {
+                connected = true;
+            }
+            ei_event_unref(event);
         }
     }
 
