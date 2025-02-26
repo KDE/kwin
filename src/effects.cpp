@@ -1993,6 +1993,8 @@ EffectWindowImpl::EffectWindowImpl(Window *window)
     : m_window(window)
     , m_windowItem(nullptr)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
     // Deleted windows are not managed. So, when windowClosed signal is
     // emitted, effects can't distinguish managed windows from unmanaged
     // windows(e.g. combo box popups, popup menus, etc). Save value of the
