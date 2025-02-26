@@ -611,7 +611,7 @@ void Workspace::updateOutputConfiguration()
             toEnable.removeLast();
             break;
         }
-    } while (error == OutputConfigurationError::TooManyEnabledOutputs && !toEnable.isEmpty());
+    } while (error == OutputConfigurationError::TooManyEnabledOutputs && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
     setFallbackOutputOrder();
