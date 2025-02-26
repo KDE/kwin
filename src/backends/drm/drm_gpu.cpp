@@ -345,17 +345,12 @@ void DrmGpu::removeOutputs()
 
 DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs)
 {
-    qCDebug(KWIN_DRM) << "Attempting to match" << connectors << "with" << crtcs;
-    if (connectors.isEmpty() || crtcs.isEmpty()) {
-        if (!connectors.empty()) {
-            // we have no crtcs left to drive the remaining connectors
-            qCDebug(KWIN_DRM) << "Ran out of CRTCs";
-            return DrmPipeline::Error::InvalidArguments;
-        }
+    if (connectors.isEmpty()) {
         const auto result = testPipelines();
         qCDebug(KWIN_DRM) << "Testing CRTC assignment..." << (result == DrmPipeline::Error::None ? "passed" : "failed");
         return result;
     }
+    qCDebug(KWIN_DRM) << "Attempting to match" << connectors << "with" << crtcs;
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
     if (!pipeline->enabled() || !connector->isConnected()) {
@@ -363,6 +358,11 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
         pipeline->setCrtc(nullptr);
         qCDebug(KWIN_DRM) << "Unassigning CRTC from connector" << connector->id();
         return checkCrtcAssignment(connectors, crtcs);
+    }
+    if (crtcs.isEmpty()) {
+        // we have no crtc left to drive this connector
+        qCDebug(KWIN_DRM) << "Ran out of CRTCs";
+        return DrmPipeline::Error::InvalidArguments;
     }
     DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
