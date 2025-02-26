@@ -89,7 +89,7 @@ private:
     bool sendMouseFrame();
     bool sendTabletToolButton(quint32 button, bool pressed, std::chrono::microseconds time);
 
-    InputDevice m_inputDevice;
+    std::unique_ptr<InputDevice> m_inputDevice;
     std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton, DisabledButton>>, LastType> m_actions;
     KConfigWatcher::Ptr m_configWatcher;
     QPointer<KWin::InputDeviceTabletTool> m_tabletTool;
