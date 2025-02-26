@@ -345,15 +345,7 @@ void DrmGpu::removeOutputs()
 
 DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs)
 {
-    if (connectors.isEmpty() || crtcs.isEmpty()) {
-        if (m_pipelines.isEmpty()) {
-            // nothing to do
-            return DrmPipeline::Error::None;
-        }
-        if (!connectors.empty()) {
-            // we have no crtcs left to drive the remaining connectors
-            return DrmPipeline::Error::NotEnoughCrtcs;
-        }
+    if (connectors.isEmpty()) {
         return testPipelines();
     }
     auto connector = connectors.takeFirst();
@@ -362,6 +354,10 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
         // disabled pipelines don't need CRTCs
         pipeline->setCrtc(nullptr);
         return checkCrtcAssignment(connectors, crtcs);
+    }
+    if (crtcs.isEmpty()) {
+        // we have no crtc left to drive this connector
+        return DrmPipeline::Error::NotEnoughCrtcs;
     }
     DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
@@ -442,15 +438,15 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             output->cursorLayer()->setEnabled(false);
         }
     }
-    if (connectors.size() > crtcs.size()) {
-        // this can't work, we can return early
-        return DrmPipeline::Error::NotEnoughCrtcs;
-    }
     return checkCrtcAssignment(connectors, crtcs);
 }
 
 DrmPipeline::Error DrmGpu::testPipelines()
 {
+    if (m_pipelines.isEmpty()) {
+        // nothing to do
+        return DrmPipeline::Error::None;
+    }
     QList<DrmPipeline *> inactivePipelines;
     std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();
