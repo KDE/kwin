@@ -1,5 +1,5 @@
 # Translation of kwin.po to Catalan (Valencian)
-# Copyright (C) 1999-2024 This_file_is_part_of_KDE
+# Copyright (C) 1999-2025 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
@@ -7,13 +7,13 @@
 # Sebastià Pla i Sanz <sps@sastia.com>, 1999, 2000, 2001, 2002, 2004, 2005, 2006.
 # Albert Astals Cid <aacid@kde.org>, 2005.
 # Alfredo Vicente <alviboi@gmail.com>, 2019.
-# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-25 00:42+0000\n"
-"PO-Revision-Date: 2024-12-25 09:03+0100\n"
+"POT-Creation-Date: 2025-02-26 00:43+0000\n"
+"PO-Revision-Date: 2025-02-24 12:43+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -3719,7 +3719,7 @@ msgstr "Mostra l'escriptori"
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Sense cap finestra oberta"
+msgstr "Cap finestra oberta"
 
 #: tabbox/tabbox.cpp:358
 msgid "Walk Through Windows"
@@ -4386,7 +4386,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1691
+#: workspace.cpp:1692
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4414,63 +4414,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "Minúscul"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "Gran"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "Molt gran"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "Enorme"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "Molt enorme"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "Fora de mida"
-
-#~ msgid "Button size:"
-#~ msgstr "Mida dels botons:"
-
-#~ msgid "Config Dialog"
-#~ msgstr "Diàleg de configuració"
-
-#~ msgid "Title &Alignment"
-#~ msgstr "&Alineació del títol"
-
-#~ msgid "Center"
-#~ msgstr "Centre"
-
-#~ msgid ""
-#~ "Check this option if the window border should be painted in the titlebar "
-#~ "color. Otherwise it will be painted in the background color."
-#~ msgstr ""
-#~ "Marqueu esta opció si la vora de la finestra s'ha de pintar en el color "
-#~ "de la barra de títol. Altrament es pintarà en el color del fons."
-
-#~ msgid "Colored window border"
-#~ msgstr "Vora de la finestra acolorida"
-
-#~ msgid ""
-#~ "Check this option if you want the buttons to fade in when the mouse "
-#~ "pointer hovers over them and fade out again when it moves away."
-#~ msgstr ""
-#~ "Marqueu esta opció si voleu que els botons sobreïsquen quan el punter del "
-#~ "ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
-
-#~ msgid "Animate buttons"
-#~ msgstr "Anima els botons"
