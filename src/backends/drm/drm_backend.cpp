@@ -267,12 +267,22 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
     o->updateEnabled(true);
 }
 
+static const int s_dpmsTimeout = []() {
+    bool ok = false;
+    int ret = qEnvironmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT", &ok);
+    if (ok) {
+        return ret;
+    } else {
+        return 2000;
+    }
+}();
+
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
     if (o->dpmsMode() == Output::DpmsMode::Off) {
         const QUuid id = o->uuid();
         m_recentlyUnpluggedDpmsOffOutputs.push_back(id);
-        QTimer::singleShot(2000, this, [this, id]() {
+        QTimer::singleShot(s_dpmsTimeout, this, [this, id]() {
             m_recentlyUnpluggedDpmsOffOutputs.removeOne(id);
         });
     }
