@@ -441,7 +441,7 @@ QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
             connState = QStringLiteral("Connected");
         }
 
-        s.nospace() << "DrmConnector(id=" << obj->id() << ", gpu=" << obj->gpu() << ", name=" << obj->modelName() << ", connection=" << connState << ", countMode=" << (obj->m_conn ? obj->m_conn->count_modes : 0)
+        s.nospace() << "DrmConnector(id=" << obj->id() << ", gpu=" << obj->gpu() << ", name=" << obj->connectorName() << ", connection=" << connState << ", countMode=" << (obj->m_conn ? obj->m_conn->count_modes : 0)
                     << ')';
     } else {
         s << "DrmConnector(0x0)";
