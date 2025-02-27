@@ -345,18 +345,23 @@ void DrmGpu::removeOutputs()
 
 DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs)
 {
+    qCDebug(KWIN_DRM) << "Attempting to match" << connectors << "with" << crtcs;
     if (connectors.isEmpty()) {
-        return testPipelines();
+        const auto result = testPipelines();
+        qCDebug(KWIN_DRM) << "Testing CRTC assignment..." << (result == DrmPipeline::Error::None ? "passed" : "failed");
+        return result;
     }
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
     if (!pipeline->enabled() || !connector->isConnected()) {
         // disabled pipelines don't need CRTCs
         pipeline->setCrtc(nullptr);
+        qCDebug(KWIN_DRM) << "Unassigning CRTC from connector" << connector->id();
         return checkCrtcAssignment(connectors, crtcs);
     }
     if (crtcs.isEmpty()) {
         // we have no crtc left to drive this connector
+        qCDebug(KWIN_DRM) << "No matching CRTC for connector" << connector->id();
         return DrmPipeline::Error::NotEnoughCrtcs;
     }
     DrmCrtc *currentCrtc = nullptr;
@@ -371,6 +376,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
+            qCDebug(KWIN_DRM) << "Assigning CRTC" << currentCrtc->id() << "to connector" << connector->id();
             do {
                 DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
                 if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
@@ -384,6 +390,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
+            qCDebug(KWIN_DRM) << "Assigning CRTC" << crtc->id() << "to connector" << connector->id();
             do {
                 DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
                 if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
