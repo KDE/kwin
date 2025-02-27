@@ -345,22 +345,23 @@ void DrmGpu::removeOutputs()
 
 DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs)
 {
+    qCDebug(KWIN_DRM) << "Attempting to match" << connectors << "with" << crtcs;
     if (connectors.isEmpty() || crtcs.isEmpty()) {
-        if (m_pipelines.isEmpty()) {
-            // nothing to do
-            return DrmPipeline::Error::None;
-        }
         if (!connectors.empty()) {
             // we have no crtcs left to drive the remaining connectors
+            qCDebug(KWIN_DRM) << "Ran out of CRTCs";
             return DrmPipeline::Error::InvalidArguments;
         }
-        return testPipelines();
+        const auto result = testPipelines();
+        qCDebug(KWIN_DRM) << "Testing CRTC assignment..." << (result == DrmPipeline::Error::None ? "passed" : "failed");
+        return result;
     }
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
     if (!pipeline->enabled() || !connector->isConnected()) {
         // disabled pipelines don't need CRTCs
         pipeline->setCrtc(nullptr);
+        qCDebug(KWIN_DRM) << "Unassigning CRTC from connector" << connector->id();
         return checkCrtcAssignment(connectors, crtcs);
     }
     DrmCrtc *currentCrtc = nullptr;
@@ -375,6 +376,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
+            qCDebug(KWIN_DRM) << "Assigning CRTC" << currentCrtc->id() << "to connector" << connector->id();
             do {
                 DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
                 if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
@@ -388,6 +390,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
+            qCDebug(KWIN_DRM) << "Assigning CRTC" << crtc->id() << "to connector" << connector->id();
             do {
                 DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
                 if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
@@ -447,6 +450,10 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
 
 DrmPipeline::Error DrmGpu::testPipelines()
 {
+    if (m_pipelines.isEmpty()) {
+        // nothing to do
+        return DrmPipeline::Error::None;
+    }
     QList<DrmPipeline *> inactivePipelines;
     std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();
