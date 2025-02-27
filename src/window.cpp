@@ -3694,7 +3694,7 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
     if (!currentTile) {
         return;
     }
-    if (moveResizeGeometry() != currentTile->windowGeometry()) {
+    if (requestedTile() != currentTile) {
         requestTile(currentTile);
         return;
     }
