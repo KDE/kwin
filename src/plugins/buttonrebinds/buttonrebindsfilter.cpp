@@ -109,7 +109,6 @@ ButtonRebindsFilter::ButtonRebindsFilter()
     : KWin::InputEventFilter(KWin::InputFilterOrder::ButtonRebind)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kcminputrc")))
 {
-    KWin::input()->addInputDevice(&m_inputDevice);
     const QLatin1String groupName("ButtonRebinds");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
         if (group.parent().name() == groupName) {
@@ -124,14 +123,18 @@ ButtonRebindsFilter::ButtonRebindsFilter()
 ButtonRebindsFilter::~ButtonRebindsFilter()
 {
     // on shutdown, input is destroyed before this filter
-    if (KWin::input()) {
-        KWin::input()->removeInputDevice(&m_inputDevice);
+    if (KWin::input() && m_inputDevice) {
+        KWin::input()->removeInputDevice(m_inputDevice.get());
     }
 }
 
 void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 {
     Q_ASSERT(QLatin1String("ButtonRebinds") == group.name());
+    if (m_inputDevice) {
+        KWin::input()->removeInputDevice(m_inputDevice.get());
+        m_inputDevice.reset();
+    }
     KWin::input()->uninstallInputEventFilter(this);
     for (auto &action : m_actions) {
         action.clear();
@@ -185,6 +188,9 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 
     if (foundActions) {
         KWin::input()->installInputEventFilter(this);
+
+        m_inputDevice = std::make_unique<InputDevice>();
+        KWin::input()->addInputDevice(m_inputDevice.get());
     }
 }
 
@@ -345,7 +351,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     const auto &key = keys[0];
     auto sendKey = [this, pressed, time](xkb_keycode_t key) {
         auto state = pressed ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
-        Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
+        Q_EMIT m_inputDevice->keyChanged(key, state, time, m_inputDevice.get());
     };
 
     // handle modifier-only keys
@@ -417,7 +423,7 @@ bool ButtonRebindsFilter::sendKeyModifiers(const Qt::KeyboardModifiers &modifier
 
     auto sendKey = [this, pressed, time](xkb_keycode_t key) {
         auto state = pressed ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
-        Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
+        Q_EMIT m_inputDevice->keyChanged(key, state, time, m_inputDevice.get());
     };
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
@@ -439,21 +445,21 @@ bool ButtonRebindsFilter::sendKeyModifiers(const Qt::KeyboardModifiers &modifier
 bool ButtonRebindsFilter::sendMouseButton(quint32 button, bool pressed, std::chrono::microseconds time)
 {
     RebindScope scope;
-    Q_EMIT m_inputDevice.pointerButtonChanged(button, KWin::PointerButtonState(pressed), time, &m_inputDevice);
+    Q_EMIT m_inputDevice->pointerButtonChanged(button, KWin::PointerButtonState(pressed), time, m_inputDevice.get());
     return true;
 }
 
 bool ButtonRebindsFilter::sendMousePosition(QPointF position, std::chrono::microseconds time)
 {
     RebindScope scope;
-    Q_EMIT m_inputDevice.pointerMotionAbsolute(position, time, &m_inputDevice);
+    Q_EMIT m_inputDevice->pointerMotionAbsolute(position, time, m_inputDevice.get());
     return true;
 }
 
 bool ButtonRebindsFilter::sendMouseFrame()
 {
     RebindScope scope;
-    Q_EMIT m_inputDevice.pointerFrame(&m_inputDevice);
+    Q_EMIT m_inputDevice->pointerFrame(m_inputDevice.get());
     return true;
 }
 
@@ -463,7 +469,7 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, std
         return false;
     }
     RebindScope scope;
-    Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, m_tabletTool, time, &m_inputDevice);
+    Q_EMIT m_inputDevice->tabletToolButtonEvent(button, pressed, m_tabletTool, time, m_inputDevice.get());
     return true;
 }
 
