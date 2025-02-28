@@ -85,6 +85,7 @@ private:
     void setBrightnessDevice(BrightnessDevice *device) override;
     void updateBrightness(double newBrightness, double newArtificialHdrHeadroom);
     void setScanoutColorDescription(const ColorDescription &description);
+    uint32_t decideAutomaticBpc(ColorPowerTradeoff tradeoff) const;
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 

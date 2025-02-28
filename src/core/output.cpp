@@ -647,6 +647,10 @@ void Output::setState(const State &state)
     if (oldState.dimming != state.dimming) {
         Q_EMIT dimmingChanged();
     }
+    if (oldState.maxBitsPerColor != state.maxBitsPerColor
+        || oldState.automaticMaxBitsPerColor != state.automaticMaxBitsPerColor) {
+        Q_EMIT maxBitsPerColorChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -833,6 +837,22 @@ Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
 {
     return m_state.colorPowerTradeoff;
 }
+
+std::optional<uint32_t> Output::maxBitsPerColor() const
+{
+    return m_state.maxBitsPerColor;
+}
+
+Output::BpcRange Output::bitsPerColorRange() const
+{
+    return m_information.bitsPerColorRange;
+}
+
+uint32_t Output::automaticMaxBitsPerColor() const
+{
+    return m_state.automaticMaxBitsPerColor;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"

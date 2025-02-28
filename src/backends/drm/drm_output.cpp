@@ -69,6 +69,10 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         .maxPeakBrightness = edid->desiredMaxLuminance(),
         .maxAverageBrightness = edid->desiredMaxFrameAverageLuminance(),
         .minBrightness = edid->desiredMinLuminance(),
+        .bitsPerColorRange = BpcRange{
+            .min = uint32_t(m_connector->maxBpc.minValue()),
+            .max = uint32_t(m_connector->maxBpc.maxValue()),
+        },
     });
     updateConnectorProperties();
 
@@ -287,6 +291,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->edid()->isValid() && m_connector->edid()->colorimetry().has_value()) {
         capabilities |= Capability::BuiltInColorProfile;
     }
+    if (m_connector->maxBpc.isValid()) {
+        capabilities |= Capability::MaxBitsPerColor;
+    }
     return capabilities;
 }
 
@@ -300,6 +307,11 @@ void DrmOutput::updateInformation()
     nextInfo.maxPeakBrightness = edid->desiredMaxLuminance();
     nextInfo.maxAverageBrightness = edid->desiredMaxFrameAverageLuminance();
     nextInfo.minBrightness = edid->desiredMinLuminance();
+    // TODO narrow that down by parsing the EDID and checking what the display supports
+    nextInfo.bitsPerColorRange = BpcRange{
+        .min = uint32_t(m_connector->maxBpc.minValue()),
+        .max = uint32_t(m_connector->maxBpc.maxValue()),
+    };
     setInformation(nextInfo);
 }
 
@@ -364,6 +376,24 @@ DrmPipeline *DrmOutput::pipeline() const
     return m_pipeline;
 }
 
+uint32_t DrmOutput::decideAutomaticBpc(ColorPowerTradeoff tradeoff) const
+{
+    static bool preferreedColorDepthIsSet = false;
+    static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &preferreedColorDepthIsSet);
+    if (preferreedColorDepthIsSet) {
+        return preferred / 3;
+    }
+    if (!m_connector->mstPath().isEmpty()) {
+        // >8bpc is often broken with docks
+        return 8;
+    }
+    if (tradeoff == ColorPowerTradeoff::PreferAccuracy) {
+        return 16;
+    } else {
+        return 10;
+    }
+}
+
 bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 {
     const auto mode = props->mode.value_or(currentMode()).lock();
@@ -379,16 +409,12 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setHighDynamicRange(hdr);
     m_pipeline->setWideColorGamut(bt2020);
 
-    // TODO migrate this env var to a proper setting
-    static bool preferreedColorDepthIsSet = false;
-    static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &preferreedColorDepthIsSet);
-    if (preferreedColorDepthIsSet) {
-        m_pipeline->setMaxBpc(preferred / 3);
-    } else if (props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff) == ColorPowerTradeoff::PreferAccuracy) {
-        m_pipeline->setMaxBpc(m_connector->mstPath().isEmpty() ? 16 : 8);
+    if (auto bpcSetting = props->maxBitsPerColor.value_or(maxBitsPerColor())) {
+        m_pipeline->setMaxBpc(*bpcSetting);
     } else {
-        m_pipeline->setMaxBpc(m_connector->mstPath().isEmpty() ? 10 : 8);
+        m_pipeline->setMaxBpc(decideAutomaticBpc(props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff)));
     }
+
     if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::ICC) {
         // ICC profiles don't support HDR (yet)
         m_pipeline->setIccProfile(nullptr);
@@ -498,6 +524,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     next.colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
     next.dimming = props->dimming.value_or(m_state.dimming);
+    next.maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
+    next.automaticMaxBitsPerColor = decideAutomaticBpc(next.colorPowerTradeoff);
     setState(next);
 
     // allowSdrSoftwareBrightness might change our capabilities

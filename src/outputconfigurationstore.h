@@ -82,6 +82,7 @@ private:
         std::optional<double> brightness;
         std::optional<bool> allowSdrSoftwareBrightness;
         std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
+        std::optional<std::optional<uint32_t>> maxBitsPerColor;
     };
     struct SetupState
     {
