@@ -18,6 +18,7 @@
 #include <KDecoration3/Decoration>
 
 #include <QDebug>
+#include <QMenu>
 #include <QStyle>
 #include <QToolTip>
 
@@ -28,7 +29,7 @@ namespace Decoration
 
 DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration)
     : QObject()
-    , DecoratedWindowPrivateV2(decoratedClient, decoration)
+    , DecoratedWindowPrivateV3(decoratedClient, decoration)
     , m_window(window)
     , m_clientSize(window->clientSize())
 {
@@ -327,6 +328,20 @@ QString DecoratedWindowImpl::applicationMenuServiceName() const
 QString DecoratedWindowImpl::applicationMenuObjectPath() const
 {
     return m_window->applicationMenuObjectPath();
+}
+
+void DecoratedWindowImpl::popup(const KDecoration3::Positioner &positioner, QMenu *menu)
+{
+    const QRectF anchorRect = positioner.anchorRect().translated(m_window->pos());
+    const QPointF position = qGuiApp->layoutDirection() == Qt::RightToLeft
+        ? QPointF(anchorRect.right() - menu->width(), anchorRect.bottom())
+        : QPointF(anchorRect.left(), anchorRect.bottom());
+
+    if (menu->isVisible()) {
+        menu->move(position.toPoint());
+    } else {
+        menu->popup(position.toPoint());
+    }
 }
 }
 }

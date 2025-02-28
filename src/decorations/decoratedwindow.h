@@ -23,7 +23,7 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV2
+class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV3
 {
     Q_OBJECT
 public:
@@ -77,6 +77,8 @@ public:
     void requestToggleShade() override;
 
     void showApplicationMenu(int actionId) override;
+
+    void popup(const KDecoration3::Positioner &positioner, QMenu *menu) override;
 
     Window *window()
     {
