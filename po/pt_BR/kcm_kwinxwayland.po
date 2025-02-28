@@ -3,20 +3,21 @@
 #
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2023.
 # SPDX-FileCopyrightText: 2023, 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+# SPDX-FileCopyrightText: 2025 Guilherme Marçal Silva <guimarcalsilva@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-22 00:42+0000\n"
-"PO-Revision-Date: 2024-07-19 18:36-0300\n"
-"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
+"PO-Revision-Date: 2025-02-27 20:18-0300\n"
+"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.12.2\n"
 
 #: ui/main.qml:32
 #, kde-format
@@ -58,8 +59,8 @@ msgstr "Apenas teclas Meta, Control, Alt e Shift."
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"O mesmo que acima, mais qualquer outra tecla enquanto as teclas Meta, Ctrl,  "
-"ou Alt ou estiverem pressionadas."
+"O mesmo que acima, mais qualquer outra tecla enquanto as teclas Meta, Ctrl, "
+"ou Alt ou estiverem pressionadas"
 
 #: ui/main.qml:83
 #, kde-format
