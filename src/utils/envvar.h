@@ -25,4 +25,10 @@ inline std::optional<int> environmentVariableIntValue(const char *name)
     }
 }
 
+inline std::optional<bool> environmentVariableBoolValue(const char *name)
+{
+    return environmentVariableIntValue(name).transform([](int v) {
+        return v == 1;
+    });
+}
 }

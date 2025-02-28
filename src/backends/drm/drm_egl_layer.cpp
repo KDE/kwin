@@ -17,6 +17,7 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "scene/surfaceitem_wayland.h"
+#include "utils/envvar.h"
 #include "wayland/surface.h"
 
 #include <QRegion>
@@ -94,8 +95,7 @@ ColorDescription EglGbmLayer::colorDescription() const
 
 bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
 {
-    static bool valid;
-    static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
+    static const bool directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);
     if (directScanoutDisabled) {
         return false;
     }

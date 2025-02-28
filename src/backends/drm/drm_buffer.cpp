@@ -11,6 +11,7 @@
 
 #include "core/graphicsbuffer.h"
 #include "drm_gpu.h"
+#include "utils/envvar.h"
 
 // system
 #include <sys/mman.h>
@@ -31,8 +32,7 @@
 namespace KWin
 {
 
-static bool s_envIsSet = false;
-static bool s_disableBufferWait = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_BUFFER_READABILITY_CHECKS", &s_envIsSet) && s_envIsSet;
+static std::optional<bool> s_disableBufferWait = environmentVariableBoolValue("KWIN_DRM_DISABLE_BUFFER_READABILITY_CHECKS");
 
 DrmFramebufferData::DrmFramebufferData(DrmGpu *gpu, uint32_t fbid, GraphicsBuffer *buffer)
     : m_gpu(gpu)
@@ -64,7 +64,7 @@ DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, 
     : m_data(data)
     , m_bufferRef(buffer)
 {
-    if (s_disableBufferWait || ((data->m_gpu->isVmwgfx()) && !s_envIsSet)) {
+    if (s_disableBufferWait.value_or(data->m_gpu->isVmwgfx())) {
         // buffer readability checks cause frames to be wrongly delayed on Virtual Machines running vmwgfx
         m_readable = true;
     }
