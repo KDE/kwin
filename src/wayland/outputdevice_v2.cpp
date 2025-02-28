@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 14;
+static const quint32 s_version = 15;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -67,6 +67,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     }
     if (caps & Output::Capability::DdcCi) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_ddc_ci;
+    }
+    if (caps & Output::Capability::MaxBitsPerColor) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_max_bits_per_color;
     }
     return ret;
 }
@@ -121,6 +124,7 @@ public:
     void sendDimming(Resource *resource);
     void sendReplicationSource(Resource *resource);
     void sendDdcCiAllowed(Resource *resource);
+    void sendMaxBpc(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -163,6 +167,9 @@ public:
     uint32_t m_dimming = 10'000;
     QString m_replicationSource;
     bool m_ddcCiAllowed = true;
+    uint32_t m_maxBpc = 0;
+    Output::BpcRange m_maxBpcRange;
+    std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -254,6 +261,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateDimming();
     updateReplicationSource();
     updateDdcCiAllowed();
+    updateMaxBpc();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -290,6 +298,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::uuidChanged, this, &OutputDeviceV2Interface::updateUuid);
     connect(handle, &Output::replicationSourceChanged, this, &OutputDeviceV2Interface::updateReplicationSource);
     connect(handle, &Output::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
+    connect(handle, &Output::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -371,6 +380,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendDimming(resource);
     sendReplicationSource(resource);
     sendDdcCiAllowed(resource);
+    sendMaxBpc(resource);
     sendDone(resource);
 }
 
@@ -563,6 +573,15 @@ void OutputDeviceV2InterfacePrivate::sendDdcCiAllowed(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_DDC_CI_ALLOWED_SINCE_VERSION) {
         send_ddc_ci_allowed(resource->handle, m_ddcCiAllowed);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendMaxBpc(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_MAX_BITS_PER_COLOR_SINCE_VERSION) {
+        send_max_bits_per_color(resource->handle, m_maxBpc);
+        send_automatic_max_bits_per_color_limit(resource->handle, m_automaticMaxBitsPerColorLimit.value_or(0));
+        send_max_bits_per_color_range(resource->handle, m_maxBpcRange.min, m_maxBpcRange.max);
     }
 }
 
@@ -962,6 +981,21 @@ void OutputDeviceV2Interface::updateReplicationSource()
         const auto clientResources = d->resourceMap();
         for (auto resource : clientResources) {
             d->sendReplicationSource(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateMaxBpc()
+{
+    if (d->m_maxBpc != d->m_handle->maxBitsPerColor()
+        || d->m_maxBpcRange != d->m_handle->bitsPerColorRange()
+        || d->m_automaticMaxBitsPerColorLimit != d->m_handle->automaticMaxBitsPerColorLimit()) {
+        d->m_maxBpc = d->m_handle->maxBitsPerColor();
+        d->m_maxBpcRange = d->m_handle->bitsPerColorRange();
+        d->m_automaticMaxBitsPerColorLimit = d->m_handle->automaticMaxBitsPerColorLimit();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendMaxBpc(resource);
         }
         scheduleDone();
     }

@@ -165,6 +165,7 @@ public:
         BrightnessControl = 1 << 9,
         BuiltInColorProfile = 1 << 10,
         DdcCi = 1 << 11,
+        MaxBitsPerColor = 1 << 12,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -390,6 +391,15 @@ public:
 
     ColorPowerTradeoff colorPowerTradeoff() const;
     QString replicationSource() const;
+    uint32_t maxBitsPerColor() const;
+    struct BpcRange
+    {
+        uint32_t min = 0;
+        uint32_t max = 0;
+        auto operator<=>(const BpcRange &) const = default;
+    };
+    BpcRange bitsPerColorRange() const;
+    std::optional<uint32_t> automaticMaxBitsPerColorLimit() const;
 
 Q_SIGNALS:
     /**
@@ -460,6 +470,7 @@ Q_SIGNALS:
     void uuidChanged();
     void replicationSourceChanged();
     void allowDdcCiChanged();
+    void maxBitsPerColorChanged();
 
 protected:
     struct Information
@@ -481,6 +492,7 @@ protected:
         std::optional<double> maxPeakBrightness;
         std::optional<double> maxAverageBrightness;
         double minBrightness = 0;
+        BpcRange bitsPerColorRange;
     };
 
     struct State
@@ -527,6 +539,8 @@ protected:
         QString replicationSource;
         bool detectedDdcCi = false;
         bool allowDdcCi = true;
+        uint32_t maxBitsPerColor = 0;
+        std::optional<uint32_t> automaticMaxBitsPerColorLimit;
     };
 
     void setInformation(const Information &information);

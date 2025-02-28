@@ -83,6 +83,7 @@ private:
     void updateDimming();
     void updateReplicationSource();
     void updateDdcCiAllowed();
+    void updateMaxBpc();
 
     void scheduleDone();
 

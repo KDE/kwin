@@ -58,6 +58,7 @@ public:
     std::optional<QString> replicationSource;
     std::optional<bool> detectedDdcCi;
     std::optional<bool> allowDdcCi;
+    std::optional<uint32_t> maxBitsPerColor;
 };
 
 class KWIN_EXPORT OutputConfiguration

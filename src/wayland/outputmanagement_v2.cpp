@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 14;
+static const quint32 s_version = 15;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -74,6 +74,7 @@ protected:
     void kde_output_configuration_v2_set_dimming(Resource *resource, ::wl_resource *outputdevice, uint32_t multiplier) override;
     void kde_output_configuration_v2_set_replication_source(Resource *resource, struct ::wl_resource *outputdevice, const QString &source) override;
     void kde_output_configuration_v2_set_ddc_ci_allowed(Resource *resource, ::wl_resource *outputdevice, uint32_t allow_ddc_ci) override;
+    void kde_output_configuration_v2_set_max_bits_per_color(Resource *resource, struct ::wl_resource *outputdevice, uint32_t max_bpc) override;
 
     void sendFailure(Resource *resource, const QString &reason);
 };
@@ -427,6 +428,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_ddc_ci_allo
             changeset->allowSdrSoftwareBrightness = true;
             changeset->brightnessDevice = nullptr;
         }
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_max_bits_per_color(Resource *resource, ::wl_resource *outputdevice, uint32_t max_bpc)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->maxBitsPerColor = max_bpc;
     }
 }
 

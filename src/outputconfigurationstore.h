@@ -87,6 +87,7 @@ private:
         std::optional<QString> uuid;
         std::optional<bool> detectedDdcCi;
         std::optional<bool> allowDdcCi;
+        std::optional<uint32_t> maxBitsPerColor;
     };
     struct SetupState
     {

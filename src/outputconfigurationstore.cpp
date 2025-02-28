@@ -376,6 +376,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .uuid = existingUuid,
                 .detectedDdcCi = changeSet->detectedDdcCi.value_or(output->detectedDdcCi()),
                 .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
+                .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -424,6 +425,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .uuid = existingUuid,
                 .detectedDdcCi = output->detectedDdcCi(),
                 .allowDdcCi = output->allowDdcCi(),
+                .maxBitsPerColor = output->maxBitsPerColor(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -486,6 +488,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .replicationSource = setupState.replicationSource,
             .detectedDdcCi = state.detectedDdcCi,
             .allowDdcCi = state.allowDdcCi,
+            .maxBitsPerColor = state.maxBitsPerColor,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -615,6 +618,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .uuid = existingData.uuid,
             .detectedDdcCi = existingData.detectedDdcCi.value_or(false),
             .allowDdcCi = existingData.allowDdcCi.value_or(true),
+            .maxBitsPerColor = existingData.maxBitsPerColor,
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -994,6 +998,12 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("allowDdcCi"); it != data.end() && it->isBool()) {
             state.allowDdcCi = it->toBool();
         }
+        if (const auto it = data.find("maxBitsPerColor"); it != data.end()) {
+            uint64_t bpc = it->toInteger(0);
+            if (bpc >= 6 && bpc <= 16) {
+                state.maxBitsPerColor = bpc;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1258,6 +1268,9 @@ void OutputConfigurationStore::save()
         }
         if (output.allowDdcCi) {
             o["allowDdcCi"] = *output.allowDdcCi;
+        }
+        if (output.maxBitsPerColor.has_value()) {
+            o["maxBitsPerColor"] = int(*output.maxBitsPerColor);
         }
         outputsData.append(o);
     }

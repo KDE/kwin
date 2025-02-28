@@ -645,6 +645,10 @@ void Output::setState(const State &state)
     if (oldState.allowDdcCi != state.allowDdcCi) {
         Q_EMIT allowDdcCiChanged();
     }
+    if (oldState.maxBitsPerColor != state.maxBitsPerColor
+        || oldState.automaticMaxBitsPerColorLimit != state.automaticMaxBitsPerColorLimit) {
+        Q_EMIT maxBitsPerColorChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -848,6 +852,22 @@ bool Output::allowDdcCi() const
 {
     return m_state.allowDdcCi;
 }
+
+uint32_t Output::maxBitsPerColor() const
+{
+    return m_state.maxBitsPerColor;
+}
+
+Output::BpcRange Output::bitsPerColorRange() const
+{
+    return m_information.bitsPerColorRange;
+}
+
+std::optional<uint32_t> Output::automaticMaxBitsPerColorLimit() const
+{
+    return m_state.automaticMaxBitsPerColorLimit;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"
