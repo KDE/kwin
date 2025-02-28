@@ -18,7 +18,7 @@ namespace KDecoration3
 {
 namespace Preview
 {
-class PreviewClient : public QObject, public DecoratedWindowPrivateV2
+class PreviewClient : public QObject, public DecoratedWindowPrivateV3
 {
     Q_OBJECT
     QML_ANONYMOUS
@@ -100,6 +100,8 @@ public:
     void requestToggleOnAllDesktops() override;
 
     void showApplicationMenu(int actionId) override;
+
+    void popup(const KDecoration3::Positioner &positioner, QMenu *menu) override;
 
     void setCaption(const QString &caption);
     void setActive(bool active);

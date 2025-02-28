@@ -19,7 +19,7 @@ namespace Preview
 
 PreviewClient::PreviewClient(DecoratedWindow *c, Decoration *decoration)
     : QObject(decoration)
-    , DecoratedWindowPrivateV2(c, decoration)
+    , DecoratedWindowPrivateV3(c, decoration)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
     , m_iconName(m_icon.name())
     , m_palette(QStringLiteral("kdeglobals"))
@@ -434,6 +434,10 @@ SETTER2(setProvidesContextHelp, providesContextHelp)
 
 #undef SETTER2
 #undef SETTER
+
+void PreviewClient::popup(const KDecoration3::Positioner &positioner, QMenu *menu)
+{
+}
 
 } // namespace Preview
 } // namespace KDecoration3
