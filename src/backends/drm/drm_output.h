@@ -85,6 +85,7 @@ private:
     void updateBrightness(double newBrightness, double newArtificialHdrHeadroom);
     void setScanoutColorDescription(const ColorDescription &description);
     void setBlendingColorDescription(const ColorDescription &description);
+    std::optional<uint32_t> decideAutomaticBpcLimit() const;
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 

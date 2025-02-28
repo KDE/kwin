@@ -49,6 +49,7 @@ public:
     std::optional<bool> allowSdrSoftwareBrightness;
     std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
     std::optional<double> dimming;
+    std::optional<std::optional<uint32_t>> maxBitsPerColor;
 };
 
 class KWIN_EXPORT OutputConfiguration

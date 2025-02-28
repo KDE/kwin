@@ -291,6 +291,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .brightness = changeSet->brightness.value_or(output->brightnessSetting()),
                 .allowSdrSoftwareBrightness = changeSet->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness()),
                 .colorPowerTradeoff = changeSet->colorPowerTradeoff.value_or(output->colorPowerTradeoff()),
+                .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -335,6 +336,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .brightness = output->brightnessSetting(),
                 .allowSdrSoftwareBrightness = output->allowSdrSoftwareBrightness(),
                 .colorPowerTradeoff = output->colorPowerTradeoff(),
+                .maxBitsPerColor = output->maxBitsPerColor(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -392,6 +394,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .brightness = state.brightness,
             .allowSdrSoftwareBrightness = state.allowSdrSoftwareBrightness,
             .colorPowerTradeoff = state.colorPowerTradeoff,
+            .dimming = std::nullopt,
+            .maxBitsPerColor = state.maxBitsPerColor,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -518,6 +522,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .brightness = existingData.brightness.value_or(1.0),
             .allowSdrSoftwareBrightness = existingData.allowSdrSoftwareBrightness.value_or(output->brightnessDevice() == nullptr),
             .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(Output::ColorPowerTradeoff::PreferEfficiency),
+            .maxBitsPerColor = existingData.maxBitsPerColor.value_or(std::nullopt),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -866,6 +871,12 @@ void OutputConfigurationStore::load()
                 state.colorPowerTradeoff = Output::ColorPowerTradeoff::PreferAccuracy;
             }
         }
+        if (const auto it = data.find("maxBitsPerColor"); it != data.end()) {
+            uint64_t bpc = it->toInteger(0);
+            if (bpc >= 6 && bpc <= 16) {
+                state.maxBitsPerColor = bpc;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1109,6 +1120,13 @@ void OutputConfigurationStore::save()
             case Output::ColorPowerTradeoff::PreferAccuracy:
                 o["colorPowerTradeoff"] = "PreferAccuracy";
                 break;
+            }
+        }
+        if (output.maxBitsPerColor.has_value()) {
+            if (auto value = *output.maxBitsPerColor) {
+                o["maxBitsPerColor"] = int(*value);
+            } else {
+                o["maxBitsPerColor"] = 0;
             }
         }
         outputsData.append(o);

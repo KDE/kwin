@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 12;
+static const quint32 s_version = 13;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -64,6 +64,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     }
     if (caps & Output::Capability::BuiltInColorProfile) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_built_in_color;
+    }
+    if (caps & Output::Capability::MaxBitsPerColor) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_max_bits_per_color;
     }
     return ret;
 }
@@ -116,6 +119,7 @@ public:
     void sendBrightness(Resource *resource);
     void sendColorPowerTradeoff(Resource *resource);
     void sendDimming(Resource *resource);
+    void sendMaxBpc(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -156,6 +160,9 @@ public:
     color_power_tradeoff m_powerColorTradeoff = color_power_tradeoff_efficiency;
     QTimer m_doneTimer;
     uint32_t m_dimming = 10'000;
+    std::optional<uint32_t> m_maxBpc;
+    Output::BpcRange m_maxBpcRange;
+    std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -245,6 +252,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateBrightness();
     updateColorPowerTradeoff();
     updateDimming();
+    updateMaxBpc();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -278,6 +286,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
     connect(handle, &Output::colorPowerTradeoffChanged, this, &OutputDeviceV2Interface::updateColorPowerTradeoff);
     connect(handle, &Output::dimmingChanged, this, &OutputDeviceV2Interface::updateDimming);
+    connect(handle, &Output::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -357,6 +366,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendBrightness(resource);
     sendColorPowerTradeoff(resource);
     sendDimming(resource);
+    sendMaxBpc(resource);
     sendDone(resource);
 }
 
@@ -535,6 +545,15 @@ void OutputDeviceV2InterfacePrivate::sendDimming(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_DIMMING_SINCE_VERSION) {
         send_dimming(resource->handle, m_dimming);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendMaxBpc(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_MAX_BITS_PER_COLOR_SINCE_VERSION) {
+        send_max_bits_per_color(resource->handle, m_maxBpc.value_or(0));
+        send_automatic_max_bits_per_color_limit(resource->handle, m_automaticMaxBitsPerColorLimit.value_or(0));
+        send_max_bits_per_color_range(resource->handle, m_maxBpcRange.min, m_maxBpcRange.max);
     }
 }
 
@@ -921,6 +940,22 @@ void OutputDeviceV2Interface::updateDimming()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendDimming(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateMaxBpc()
+{
+    if (d->m_maxBpc != d->m_handle->maxBitsPerColor()
+        || d->m_maxBpcRange != d->m_handle->bitsPerColorRange()
+        || d->m_automaticMaxBitsPerColorLimit != d->m_handle->automaticMaxBitsPerColorLimit()) {
+        d->m_maxBpc = d->m_handle->maxBitsPerColor();
+        d->m_maxBpcRange = d->m_handle->bitsPerColorRange();
+        d->m_automaticMaxBitsPerColorLimit = d->m_handle->automaticMaxBitsPerColorLimit();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendMaxBpc(resource);
         }
         scheduleDone();
     }

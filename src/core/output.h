@@ -164,6 +164,7 @@ public:
         Tearing = 1 << 8,
         BrightnessControl = 1 << 9,
         BuiltInColorProfile = 1 << 10,
+        MaxBitsPerColor = 1 << 11,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -383,6 +384,15 @@ public:
     bool allowSdrSoftwareBrightness() const;
 
     ColorPowerTradeoff colorPowerTradeoff() const;
+    std::optional<uint32_t> maxBitsPerColor() const;
+    struct BpcRange
+    {
+        uint32_t min = 0;
+        uint32_t max = 0;
+        auto operator<=>(const BpcRange &) const = default;
+    };
+    BpcRange bitsPerColorRange() const;
+    std::optional<uint32_t> automaticMaxBitsPerColorLimit() const;
 
 Q_SIGNALS:
     /**
@@ -450,6 +460,7 @@ Q_SIGNALS:
     void brightnessChanged();
     void colorPowerTradeoffChanged();
     void dimmingChanged();
+    void maxBitsPerColorChanged();
 
 protected:
     struct Information
@@ -471,6 +482,7 @@ protected:
         std::optional<double> maxPeakBrightness;
         std::optional<double> maxAverageBrightness;
         double minBrightness = 0;
+        BpcRange bitsPerColorRange;
     };
 
     struct State
@@ -512,6 +524,8 @@ protected:
         double artificialHdrHeadroom = 1.0;
         ColorPowerTradeoff colorPowerTradeoff = ColorPowerTradeoff::PreferEfficiency;
         double dimming = 1.0;
+        std::optional<uint32_t> maxBitsPerColor;
+        std::optional<uint32_t> automaticMaxBitsPerColorLimit;
     };
 
     void setInformation(const Information &information);
