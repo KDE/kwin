@@ -323,13 +323,23 @@ void DrmCommitThread::clearDroppedCommits()
     m_commitsToDelete.clear();
 }
 
+static const std::chrono::microseconds s_safetyMarginMinimum = []() {
+    bool ok = false;
+    int value = qEnvironmentVariableIntValue("KWIN_DRM_OVERRIDE_SAFETY_MARGIN", &ok);
+    if (ok) {
+        return std::chrono::microseconds(value);
+    } else {
+        return 1500us;
+    }
+}();
+
 void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)
 {
     std::unique_lock lock(m_mutex);
     m_minVblankInterval = std::chrono::nanoseconds(1'000'000'000'000ull / maximum);
     // the kernel rejects commits that happen during vblank
     // the 1.5ms on top of that was chosen experimentally, for the time it takes to commit + scheduling inaccuracies
-    m_safetyMargin = vblankTime + 1500us;
+    m_safetyMargin = vblankTime + s_safetyMarginMinimum;
 }
 
 void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
