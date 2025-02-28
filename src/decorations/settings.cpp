@@ -81,6 +81,7 @@ static void initButtons()
     s_buttonNames[KDecoration3::DecorationButtonType::KeepBelow] = QChar('B');
     s_buttonNames[KDecoration3::DecorationButtonType::Shade] = QChar('L');
     s_buttonNames[KDecoration3::DecorationButtonType::Spacer] = QChar('_');
+    s_buttonNames[KDecoration3::DecorationButtonType::LocallyIntegratedMenu] = QChar('E');
 }
 
 static QString buttonsToString(const QList<KDecoration3::DecorationButtonType> &buttons)

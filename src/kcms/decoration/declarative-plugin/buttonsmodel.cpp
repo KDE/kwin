@@ -34,6 +34,7 @@ ButtonsModel::ButtonsModel(QObject *parent)
                        DecorationButtonType::KeepBelow,
                        DecorationButtonType::KeepAbove,
                        DecorationButtonType::Spacer,
+                       DecorationButtonType::LocallyIntegratedMenu,
                    }),
                    parent)
 {
@@ -74,6 +75,8 @@ static QString buttonToName(DecorationButtonType type)
         return i18n("Keep above other windows");
     case DecorationButtonType::Spacer:
         return i18n("Spacer");
+    case DecorationButtonType::LocallyIntegratedMenu:
+        return i18n("LIM");
     default:
         return QString();
     }

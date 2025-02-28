@@ -44,6 +44,7 @@ const QHash<KDecoration3::DecorationButtonType, QChar> s_buttonNames{
     {KDecoration3::DecorationButtonType::KeepBelow, QChar('B')},
     {KDecoration3::DecorationButtonType::Shade, QChar('L')},
     {KDecoration3::DecorationButtonType::Spacer, QChar('_')},
+    {KDecoration3::DecorationButtonType::LocallyIntegratedMenu, QChar('E')},
 };
 }
 
