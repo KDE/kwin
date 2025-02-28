@@ -10,6 +10,7 @@
 #include "drm_commit.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
+#include "utils/envvar.h"
 #include "utils/realtime.h"
 
 #include <span>
@@ -323,15 +324,7 @@ void DrmCommitThread::clearDroppedCommits()
     m_commitsToDelete.clear();
 }
 
-static const std::chrono::microseconds s_safetyMarginMinimum = []() {
-    bool ok = false;
-    int value = qEnvironmentVariableIntValue("KWIN_DRM_OVERRIDE_SAFETY_MARGIN", &ok);
-    if (ok) {
-        return std::chrono::microseconds(value);
-    } else {
-        return 1500us;
-    }
-}();
+static const std::chrono::microseconds s_safetyMarginMinimum{environmentVariableIntValue("KWIN_DRM_OVERRIDE_SAFETY_MARGIN").value_or(1500)};
 
 void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)
 {

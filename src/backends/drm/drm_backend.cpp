@@ -22,6 +22,7 @@
 #include "drm_qpainter_backend.h"
 #include "drm_render_backend.h"
 #include "drm_virtual_output.h"
+#include "utils/envvar.h"
 #include "utils/udev.h"
 // KF5
 #include <KCoreAddons>
@@ -267,15 +268,7 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
     o->updateEnabled(true);
 }
 
-static const int s_dpmsTimeout = []() {
-    bool ok = false;
-    int ret = qEnvironmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT", &ok);
-    if (ok) {
-        return ret;
-    } else {
-        return 2000;
-    }
-}();
+static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT").value_or(2000);
 
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
