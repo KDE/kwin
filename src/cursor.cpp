@@ -549,6 +549,18 @@ QList<QByteArray> CursorShape::alternatives(const QByteArray &name)
                 QByteArrayLiteral("right_side"),
             },
         },
+        {
+            QByteArrayLiteral("dnd-ask"),
+            {
+                QByteArrayLiteral("copy"),
+            },
+        },
+        {
+            QByteArrayLiteral("all-resize"),
+            {
+                QByteArrayLiteral("move"),
+            },
+        },
     };
 
     auto it = alternatives.find(name);
