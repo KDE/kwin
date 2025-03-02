@@ -550,11 +550,24 @@ QList<QByteArray> CursorShape::alternatives(const QByteArray &name)
             },
         },
     };
+
     auto it = alternatives.find(name);
-    if (it != alternatives.end()) {
-        return it.value();
+    if (it == alternatives.end()) {
+        return QList<QByteArray>();
     }
-    return QList<QByteArray>();
+
+    QList<QByteArray> result = it.value();
+    for (int i = 0; i < result.size(); ++i) {
+        if (auto it = alternatives.find(result[i]); it != alternatives.end()) {
+            for (const QByteArray &alternative : *it) {
+                if (!result.contains(alternative)) {
+                    result.append(alternative);
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
 QByteArray CursorShape::name() const
