@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-26 02:36+0000\n"
-"PO-Revision-Date: 2024-12-27 22:09+0100\n"
+"PO-Revision-Date: 2025-01-12 08:09+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -794,7 +794,7 @@ msgstr "Supren"
 #: debug_console.cpp:548
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr "Tablojda Ila Butono"
+msgstr "Tabuleta Ilbutono"
 
 #: debug_console.cpp:549 debug_console.cpp:563
 #, kde-format
@@ -810,7 +810,7 @@ msgstr "Premita"
 #: debug_console.cpp:593
 #, kde-format
 msgid "Tablet"
-msgstr "Tablojdo"
+msgstr "Tabuleto"
 
 #: debug_console.cpp:562
 #, kde-format
@@ -835,7 +835,7 @@ msgstr "estasFingro"
 #: debug_console.cpp:589
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr "Tablojda Panelringo"
+msgstr "Tabuleta Panelringo"
 
 #: debug_console.cpp:656
 #, kde-format
@@ -3842,17 +3842,17 @@ msgstr ""
 #: tablet_input.cpp:104
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr "Movi la tablojdon al la sekva eligo"
+msgstr "Movi la tabuleton al la sekva eligo"
 
 #: tablet_input.cpp:177
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr "Tablojdo movita al %1"
+msgstr "Tabuleto movita al %1"
 
 #: tablet_input.cpp:177
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr "Tablojdoj ŝanĝis elirojn"
+msgstr "Tabuletoj ŝanĝis elirojn"
 
 #: useractions.cpp:162
 #, kde-format
