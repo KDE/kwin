@@ -1,0 +1,99 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2025 Pongsakorn S. <kde@xerusion.me>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2025-02-22 00:42+0000\n"
+"PO-Revision-Date: 2025-03-02 00:34+0700\n"
+"Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
+"Language-Team: Thai\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 24.12.2\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Pongsakorn S."
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kde@xerusion.me"
+
+#: effectsmodel.cpp:46
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Accessibility"
+msgstr "ความสามารถเข้าถึงได้"
+
+#: effectsmodel.cpp:47
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Appearance"
+msgstr "รูปร่าง"
+
+#: effectsmodel.cpp:48
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Focus"
+msgstr "โฟกัส"
+
+#: effectsmodel.cpp:49
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Peek at Desktop Animation"
+msgstr "แอบดูภาพเคลื่อนไหวบนเดสก์ท็อป"
+
+#: effectsmodel.cpp:50
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Tools"
+msgstr "เครื่องมือ"
+
+#: effectsmodel.cpp:51
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Virtual Desktop Switching Animation"
+msgstr "แอนิเมชั่นการสลับ Virtual Desktop"
+
+#: effectsmodel.cpp:52
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Window Management"
+msgstr "การจัดการหน้าต่าง"
+
+#: effectsmodel.cpp:53
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Window Open/Close Animation"
+msgstr "แอนิเมชั่นการเปิด/ปิดหน้าต่าง"
+
+#: effectsmodel.cpp:232
+#, kde-format
+msgid "KWin development team"
+msgstr "ทีมพัฒนา KWin"
+
+#: genericscriptedconfig.cpp:76
+#, kde-format
+msgctxt "Error message"
+msgid "Could not locate package metadata"
+msgstr "ไม่พบ Metadata ของแพ็คเกจ"
+
+#: genericscriptedconfig.cpp:82
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr "%1 ไม่มีไฟล์ metadata.json ที่ถูกต้อง"
+
+#: genericscriptedconfig.cpp:88 genericscriptedconfig.cpp:94
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr "%1 ไม่ได้มีอยู่"
