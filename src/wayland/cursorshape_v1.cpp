@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-static constexpr int s_version = 1;
+static constexpr int s_version = 2;
 
 class CursorShapeManagerV1InterfacePrivate : public QtWaylandServer::wp_cursor_shape_manager_v1
 {
@@ -179,6 +179,10 @@ static QByteArray shapeName(uint32_t shape)
         return QByteArrayLiteral("zoom-in");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_zoom_out:
         return QByteArrayLiteral("zoom-out");
+    case QtWaylandServer::wp_cursor_shape_device_v1::shape_dnd_ask:
+        return QByteArrayLiteral("dnd-ask");
+    case QtWaylandServer::wp_cursor_shape_device_v1::shape_all_resize:
+        return QByteArrayLiteral("all-resize");
     default:
         return QByteArrayLiteral("default");
     }
