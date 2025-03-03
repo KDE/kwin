@@ -271,6 +271,13 @@ void Workspace::init()
 
     if (waylandServer()) {
         connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::updateOutputConfiguration);
+
+        m_kdeglobalsWatcher = KConfigWatcher::create(kwinApp()->kdeglobals());
+        connect(m_kdeglobalsWatcher.get(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
+            if (group.name() == "KScreen" && names.contains(QByteArrayLiteral("XwaylandClientsScale"))) {
+                updateXwaylandScale();
+            }
+        });
     }
 
 #if KWIN_BUILD_SCREENLOCKER
@@ -503,26 +510,30 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
     }
     updateOutputs(outputOrder);
     m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder);
-    KConfig cfg(QStringLiteral("kdeglobals"));
-    KConfigGroup kscreenGroup = cfg.group(QStringLiteral("KScreen"));
-    const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
-    if (xwaylandClientsScale && !m_outputOrder.isEmpty()) {
-        double maxScale = 0;
-        for (Output *output : m_outputOrder) {
-            const auto changeset = config.constChangeSet(output);
-            maxScale = std::max(maxScale, changeset ? changeset->scale.value_or(output->scale()) : output->scale());
-        }
-        kwinApp()->setXwaylandScale(maxScale);
-    } else {
-        kwinApp()->setXwaylandScale(1);
-    }
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+
+    updateXwaylandScale();
 
     for (Output *output : std::as_const(m_outputs)) {
         output->renderLoop()->scheduleRepaint();
     }
 
     return true;
+}
+
+void Workspace::updateXwaylandScale()
+{
+    KConfigGroup kscreenGroup = kwinApp()->kdeglobals()->group(QStringLiteral("KScreen"));
+    const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
+    if (xwaylandClientsScale && !m_outputOrder.isEmpty()) {
+        double maxScale = 0;
+        for (Output *output : m_outputOrder) {
+            maxScale = std::max(maxScale, output->scale());
+        }
+        kwinApp()->setXwaylandScale(maxScale);
+    } else {
+        kwinApp()->setXwaylandScale(1);
+    }
 }
 
 void Workspace::updateOutputConfiguration()

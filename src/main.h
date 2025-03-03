@@ -127,6 +127,11 @@ public:
         m_inputConfig = std::move(config);
     }
 
+    KSharedConfigPtr kdeglobals() const
+    {
+        return m_kdeglobals;
+    }
+
     void start();
     /**
      * @brief The operation mode used by KWin.
@@ -393,6 +398,7 @@ private:
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
     KSharedConfigPtr m_inputConfig;
+    KSharedConfigPtr m_kdeglobals;
     OperationMode m_operationMode;
 #if KWIN_BUILD_X11
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
