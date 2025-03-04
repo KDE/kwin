@@ -12,6 +12,7 @@
 #include "drm_logging.h"
 #include "utils/realtime.h"
 
+#include <ranges>
 #include <span>
 #include <thread>
 
@@ -92,26 +93,32 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 }
                 continue;
             }
-            if (m_commits.front()->isCursorOnly() && m_vrr) {
-                // wait for a primary plane commit to be in, while still enforcing
-                // a minimum cursor refresh rate of 30Hz
-                const auto cursorTarget = m_lastPageflip + std::chrono::duration_cast<std::chrono::nanoseconds>(1s) / 30;
-                const bool cursorOnly = std::ranges::all_of(m_commits, [](const auto &commit) {
-                    return commit->isCursorOnly();
+            if (m_commits.front()->allowedVrrDelay() && m_vrr) {
+                // wait for a higher priority commit to be in, or the timeout to be hit
+                const bool allDelay = std::ranges::all_of(m_commits, [](const auto &commit) {
+                    return commit->allowedVrrDelay().has_value();
                 });
-                if (cursorOnly) {
-                    // no primary plane commit, just wait until a new one gets added or the cursorTarget time is reached
-                    if (m_commitPending.wait_until(lock, cursorTarget) == std::cv_status::no_timeout) {
+                auto delays = m_commits | std::views::filter([](const auto &commit) {
+                    return commit->allowedVrrDelay().has_value();
+                }) | std::views::transform([](const auto &commit) {
+                    return *commit->allowedVrrDelay();
+                });
+                const std::chrono::nanoseconds lowestDelay = *std::ranges::min_element(delays);
+                const auto delayedTarget = m_lastPageflip + lowestDelay;
+                if (allDelay) {
+                    // all commits should be delayed, just wait for the timeout
+                    if (m_commitPending.wait_until(lock, delayedTarget) == std::cv_status::no_timeout) {
                         continue;
                     }
                 } else {
+                    // TODO replace this with polling for the buffers to be ready instead
                     bool timeout = true;
-                    while (std::chrono::steady_clock::now() < cursorTarget && timeout && m_commits.front()->isCursorOnly()) {
+                    while (std::chrono::steady_clock::now() < delayedTarget && timeout && m_commits.front()->allowedVrrDelay().has_value()) {
                         timeout = m_commitPending.wait_for(lock, 50us) == std::cv_status::timeout;
                         if (m_commits.empty()) {
                             break;
                         }
-                        optimizeCommits(cursorTarget);
+                        optimizeCommits(delayedTarget);
                     }
                     if (!timeout) {
                         // some new commit was added, process that

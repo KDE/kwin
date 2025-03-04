@@ -402,7 +402,7 @@ bool DrmPipeline::updateCursor()
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
         auto cursorOnly = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
         prepareAtomicCursor(cursorOnly.get());
-        cursorOnly->setCursorOnly(true);
+        cursorOnly->setAllowedVrrDelay(std::chrono::duration_cast<std::chrono::nanoseconds>(1s) / 30);
         m_commitThread->addCommit(std::move(cursorOnly));
         return true;
     } else {
