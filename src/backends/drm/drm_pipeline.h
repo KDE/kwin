@@ -65,7 +65,7 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool updateCursor();
+    bool updateCursor(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
 
     DrmConnector *connector() const;
     DrmGpu *gpu() const;

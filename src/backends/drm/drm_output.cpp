@@ -127,12 +127,12 @@ bool DrmOutput::shouldDisableCursorPlane() const
         || m_pipeline->amdgpuVrrWorkaroundActive();
 }
 
-bool DrmOutput::updateCursorLayer()
+bool DrmOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     if (m_pipeline->gpu()->atomicModeSetting() && shouldDisableCursorPlane() && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
         return false;
     }
-    return m_pipeline->updateCursor();
+    return m_pipeline->updateCursor(allowedVrrDelay);
 }
 
 QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const

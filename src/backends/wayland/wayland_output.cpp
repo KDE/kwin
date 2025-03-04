@@ -331,7 +331,7 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool WaylandOutput::updateCursorLayer()
+bool WaylandOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     if (m_hasPointerLock) {
         m_cursor->setEnabled(false);
@@ -455,7 +455,7 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
             updateWindowTitle();
-            updateCursorLayer();
+            updateCursorLayer(std::nullopt);
             Q_EMIT m_backend->pointerLockChanged(false);
         }
         return;
@@ -470,14 +470,14 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
     connect(m_pointerLock.get(), &LockedPointer::locked, this, [this]() {
         m_hasPointerLock = true;
         updateWindowTitle();
-        updateCursorLayer();
+        updateCursorLayer(std::nullopt);
         Q_EMIT m_backend->pointerLockChanged(true);
     });
     connect(m_pointerLock.get(), &LockedPointer::unlocked, this, [this]() {
         m_pointerLock.reset();
         m_hasPointerLock = false;
         updateWindowTitle();
-        updateCursorLayer();
+        updateCursorLayer(std::nullopt);
         Q_EMIT m_backend->pointerLockChanged(false);
     });
 }
