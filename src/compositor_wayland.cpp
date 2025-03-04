@@ -493,6 +493,7 @@ void WaylandCompositor::addOutput(Output *output)
     cursorLayer->setSuperlayer(workspaceLayer);
 
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
+    static constexpr auto s_maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / 30;
 
     auto updateCursorLayer = [this, output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
@@ -501,7 +502,7 @@ void WaylandCompositor::addOutput(Output *output)
         if (!cursor->isOnOutput(output)) {
             if (outputLayer && outputLayer->isEnabled()) {
                 outputLayer->setEnabled(false);
-                output->updateCursorLayer();
+                output->updateCursorLayer(s_maxVrrCursorDelay);
             }
             cursorLayer->setVisible(false);
             return true;
@@ -547,7 +548,7 @@ void WaylandCompositor::addOutput(Output *output)
                 return false;
             }
             outputLayer->setEnabled(true);
-            return output->updateCursorLayer();
+            return output->updateCursorLayer(s_maxVrrCursorDelay);
         };
         const bool wasHardwareCursor = outputLayer && outputLayer->isEnabled();
         if (renderHardwareCursor()) {
@@ -557,7 +558,7 @@ void WaylandCompositor::addOutput(Output *output)
             if (outputLayer) {
                 outputLayer->setEnabled(false);
                 if (wasHardwareCursor) {
-                    output->updateCursorLayer();
+                    output->updateCursorLayer(s_maxVrrCursorDelay);
                 }
             }
             cursorLayer->setVisible(cursor->isOnOutput(output));
@@ -579,11 +580,11 @@ void WaylandCompositor::addOutput(Output *output)
                     const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
                     outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
                     outputLayer->setEnabled(true);
-                    hardwareCursor = output->updateCursorLayer();
+                    hardwareCursor = output->updateCursorLayer(s_maxVrrCursorDelay);
                     if (!hardwareCursor) {
                         outputLayer->setEnabled(false);
                         if (enabledBefore) {
-                            output->updateCursorLayer();
+                            output->updateCursorLayer(s_maxVrrCursorDelay);
                         }
                     }
                 } else {
@@ -592,7 +593,7 @@ void WaylandCompositor::addOutput(Output *output)
                 }
             } else if (outputLayer->isEnabled()) {
                 outputLayer->setEnabled(false);
-                output->updateCursorLayer();
+                output->updateCursorLayer(s_maxVrrCursorDelay);
             }
         }
         cursorLayer->setVisible(shouldBeVisible && !hardwareCursor);

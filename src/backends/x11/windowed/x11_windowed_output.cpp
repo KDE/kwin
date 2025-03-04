@@ -341,7 +341,7 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
     return (pos - hostPosition() + internalPosition()) / scale();
 }
 
-bool X11WindowedOutput::updateCursorLayer()
+bool X11WindowedOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     const auto layer = Compositor::self()->backend()->cursorLayer(this);
     if (layer->isEnabled()) {

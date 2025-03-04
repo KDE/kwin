@@ -235,7 +235,7 @@ void DrmAtomicCommit::merge(DrmAtomicCommit *onTop)
     }
 }
 
-void DrmAtomicCommit::setAllowedVrrDelay(std::chrono::nanoseconds allowedDelay)
+void DrmAtomicCommit::setAllowedVrrDelay(std::optional<std::chrono::nanoseconds> allowedDelay)
 {
     m_allowedVrrDelay = allowedDelay;
 }

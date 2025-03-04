@@ -51,7 +51,7 @@ public:
     void updateDpmsMode(DpmsMode dpmsMode);
 
     bool shouldDisableCursorPlane() const;
-    bool updateCursorLayer() override;
+    bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QList<uint32_t> &objectList);

@@ -744,7 +744,7 @@ QByteArray Output::mstPath() const
     return m_information.mstPath;
 }
 
-bool Output::updateCursorLayer()
+bool Output::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     return false;
 }
