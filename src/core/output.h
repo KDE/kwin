@@ -358,7 +358,7 @@ public:
 
     virtual bool setChannelFactors(const QVector3D &rgb);
 
-    virtual bool updateCursorLayer();
+    virtual bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
 
     std::optional<double> maxPeakBrightness() const;
     std::optional<double> maxAverageBrightness() const;

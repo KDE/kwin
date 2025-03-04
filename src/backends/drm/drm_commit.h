@@ -80,7 +80,7 @@ public:
 
     void merge(DrmAtomicCommit *onTop);
 
-    void setAllowedVrrDelay(std::chrono::nanoseconds allowedDelay);
+    void setAllowedVrrDelay(std::optional<std::chrono::nanoseconds> allowedDelay);
     std::optional<std::chrono::nanoseconds> allowedVrrDelay() const;
 
     std::optional<std::chrono::steady_clock::time_point> targetPageflipTime() const;
