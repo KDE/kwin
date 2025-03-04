@@ -101,6 +101,10 @@ public:
      */
     std::chrono::nanoseconds predictedRenderTime() const;
 
+    // TODO integrate cursor updates into the render loop / frame scheduling somehow?
+    // and then remove this again
+    bool activeWindowControlsVrrRefreshRate() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the refresh rate of this RenderLoop has changed.
