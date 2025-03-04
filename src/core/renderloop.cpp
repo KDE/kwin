@@ -265,7 +265,7 @@ void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer, OutputLayer *ou
     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
     if ((vrr || tearing) && workspace()->activeWindow() && d->output) {
         Window *const activeWindow = workspace()->activeWindow();
-        if ((item || layer || outputLayer) && activeWindow->isOnOutput(d->output) && activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30) {
+        if ((item || layer || outputLayer) && activeWindowControlsVrrRefreshRate() && item != activeWindow->surfaceItem()) {
             d->delayedVrrTimer.start();
             return;
         }
@@ -277,6 +277,15 @@ void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer, OutputLayer *ou
     } else {
         d->delayScheduleRepaint();
     }
+}
+
+bool RenderLoop::activeWindowControlsVrrRefreshRate() const
+{
+    Window *const activeWindow = workspace()->activeWindow();
+    return activeWindow
+        && activeWindow->isOnOutput(d->output)
+        && activeWindow->surfaceItem()
+        && activeWindow->surfaceItem()->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30;
 }
 
 std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const
