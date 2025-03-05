@@ -24,8 +24,6 @@ public:
     HideCursorEffect();
     ~HideCursorEffect() override;
 
-    static bool supported();
-
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 

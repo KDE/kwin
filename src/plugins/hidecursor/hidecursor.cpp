@@ -32,11 +32,6 @@ HideCursorEffect::~HideCursorEffect()
     showCursor();
 }
 
-bool HideCursorEffect::supported()
-{
-    return effects->waylandDisplay();
-}
-
 void HideCursorEffect::reconfigure(ReconfigureFlags flags)
 {
     HideCursorConfig::self()->read();
