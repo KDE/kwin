@@ -312,12 +312,7 @@ QString Edid::manufacturerString() const
 QString Edid::nameString() const
 {
     if (!m_monitorName.isEmpty()) {
-        QString m = QString::fromLatin1(m_monitorName);
-        if (!m_serialNumber.isEmpty()) {
-            m.append('/');
-            m.append(QString::fromLatin1(m_serialNumber));
-        }
-        return m;
+        return QString::fromLatin1(m_monitorName);
     } else if (!m_serialNumber.isEmpty()) {
         return QString::fromLatin1(m_serialNumber);
     } else {
