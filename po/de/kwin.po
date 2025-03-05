@@ -5,32 +5,33 @@
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
 # Frederik Schwarzer <schwarzer@kde.org>, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2021, 2022, 2023.
 # Burkhard Lück <lueck@hube-lueck.de>, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
-# Frank Steinmetzger <Warp_7@gmx.de>, 2012.
+# SPDX-FileCopyrightText: 2012, 2024 Frank Steinmetzger <Warp_7@gmx.de>
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
+# SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2024-09-17 14:52+0200\n"
-"Last-Translator: Flori G <Renner03@protonmail.com>\n"
+"PO-Revision-Date: 2025-02-17 22:05+0100\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 24.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Deutsches KDE-Übersetzerteam, Thomas Diehl"
+msgstr "Deutsches KDE-Übersetzungsteam"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde-i18n-de@kde.org, thd@kde.org"
+msgstr "kde-i18n-de@kde.org"
 
 #: composite.cpp:646
 #, kde-format
@@ -63,8 +64,7 @@ msgstr ""
 "sofortigen Absturz führen kann.</b></p>"
 
 #: composite.cpp:1071
-#, fuzzy, kde-format
-#| msgid "Required X extensions (XComposite and XDamage) are not available."
+#, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Benötigte X-Erweiterungen (XComposite und XDamage) sind nicht verfügbar."
@@ -869,7 +869,7 @@ msgstr "Extra 24"
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
-msgstr ""
+msgstr "Programm"
 
 #: debug_console.cpp:1222
 #, kde-format
@@ -1372,6 +1372,7 @@ msgstr "In DRM-Knoten rendern."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Regionaleinstellungen von locale1 statt der Benutzerkonfiguration verwenden"
 
 #: main_wayland.cpp:386
 #, kde-format
