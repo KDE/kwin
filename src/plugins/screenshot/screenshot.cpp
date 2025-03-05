@@ -297,45 +297,34 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
 
 bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotAreaData *screenshot)
 {
-    if (!effects->waylandDisplay()) {
-        // On X11, all screens are painted simultaneously and there is no native HiDPI support.
-        QImage snapshot = blitScreenshot(renderTarget, viewport, screenshot->area);
+    if (!screenshot->screens.contains(m_paintedScreen)) {
+        return false;
+    }
+    screenshot->screens.removeOne(m_paintedScreen);
+
+    const QRect sourceRect = screenshot->area & m_paintedScreen->geometry();
+    qreal sourceDevicePixelRatio = 1.0;
+    if (screenshot->flags & ScreenShotNativeResolution) {
+        sourceDevicePixelRatio = m_paintedScreen->scale();
+    }
+
+    const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio);
+    const QSize nativeAreaSize = snapToPixelGrid(scaledRect(screenshot->area, screenshot->result.devicePixelRatio())).size();
+    const QRect nativeArea(screenshot->area.topLeft(), nativeAreaSize);
+
+    QPainter painter(&screenshot->result);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.setWindow(nativeArea);
+    painter.drawImage(roundedRect(sourceRect, sourceDevicePixelRatio), snapshot);
+    painter.end();
+
+    if (screenshot->screens.isEmpty()) {
         if (screenshot->flags & ScreenShotIncludeCursor) {
-            grabPointerImage(snapshot, screenshot->area.x(), screenshot->area.y());
+            grabPointerImage(screenshot->result, screenshot->area.x(), screenshot->area.y());
         }
-        screenshot->promise.addResult(snapshot);
+        screenshot->promise.addResult(screenshot->result);
         screenshot->promise.finish();
         return true;
-    } else {
-        if (!screenshot->screens.contains(m_paintedScreen)) {
-            return false;
-        }
-        screenshot->screens.removeOne(m_paintedScreen);
-
-        const QRect sourceRect = screenshot->area & m_paintedScreen->geometry();
-        qreal sourceDevicePixelRatio = 1.0;
-        if (screenshot->flags & ScreenShotNativeResolution) {
-            sourceDevicePixelRatio = m_paintedScreen->scale();
-        }
-
-        const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio);
-        const QSize nativeAreaSize = snapToPixelGrid(scaledRect(screenshot->area, screenshot->result.devicePixelRatio())).size();
-        const QRect nativeArea(screenshot->area.topLeft(), nativeAreaSize);
-
-        QPainter painter(&screenshot->result);
-        painter.setRenderHint(QPainter::SmoothPixmapTransform);
-        painter.setWindow(nativeArea);
-        painter.drawImage(roundedRect(sourceRect, sourceDevicePixelRatio), snapshot);
-        painter.end();
-
-        if (screenshot->screens.isEmpty()) {
-            if (screenshot->flags & ScreenShotIncludeCursor) {
-                grabPointerImage(screenshot->result, screenshot->area.x(), screenshot->area.y());
-            }
-            screenshot->promise.addResult(screenshot->result);
-            screenshot->promise.finish();
-            return true;
-        }
     }
 
     return false;
@@ -343,7 +332,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
 
 bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotScreenData *screenshot)
 {
-    if (effects->waylandDisplay() && screenshot->screen != m_paintedScreen) {
+    if (screenshot->screen != m_paintedScreen) {
         return false;
     }
 
