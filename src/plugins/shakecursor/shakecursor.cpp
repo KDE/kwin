@@ -62,9 +62,6 @@ ShakeCursorEffect::~ShakeCursorEffect()
 
 bool ShakeCursorEffect::supported()
 {
-    if (!effects->waylandDisplay()) {
-        return false;
-    }
     return effects->isOpenGLCompositing();
 }
 
