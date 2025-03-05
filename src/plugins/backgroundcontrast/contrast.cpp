@@ -50,19 +50,17 @@ ContrastEffect::ContrastEffect()
             m_net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         }
 #endif
-        if (effects->waylandDisplay()) {
-            if (!s_contrastManagerRemoveTimer) {
-                s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
-                s_contrastManagerRemoveTimer->setSingleShot(true);
-                s_contrastManagerRemoveTimer->callOnTimeout([]() {
-                    s_contrastManager->remove();
-                    s_contrastManager = nullptr;
-                });
-            }
-            s_contrastManagerRemoveTimer->stop();
-            if (!s_contrastManager) {
-                s_contrastManager = new ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
-            }
+        if (!s_contrastManagerRemoveTimer) {
+            s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
+            s_contrastManagerRemoveTimer->setSingleShot(true);
+            s_contrastManagerRemoveTimer->callOnTimeout([]() {
+                s_contrastManager->remove();
+                s_contrastManager = nullptr;
+            });
+        }
+        s_contrastManagerRemoveTimer->stop();
+        if (!s_contrastManager) {
+            s_contrastManager = new ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
         }
     }
 
@@ -299,7 +297,7 @@ bool ContrastEffect::enabledByDefault()
 
 bool ContrastEffect::supported()
 {
-    return effects->openglContext() && (effects->openglContext()->supportsBlits() || effects->waylandDisplay());
+    return effects->isOpenGLCompositing();
 }
 
 QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
