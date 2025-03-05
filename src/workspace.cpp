@@ -808,6 +808,7 @@ void Workspace::addUnmanaged(X11Window *window)
     Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
+    updateXStackingOrder();
     updateStackingOrder(true);
     if (window->isOutline() && m_moveResizeWindow) {
         constrain(window, m_moveResizeWindow);

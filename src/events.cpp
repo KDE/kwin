@@ -273,7 +273,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_CONFIGURE_NOTIFY: {
         const auto configureNotifyEvent = reinterpret_cast<xcb_configure_notify_event_t *>(e);
         if (configureNotifyEvent->override_redirect && configureNotifyEvent->event == kwinApp()->x11RootWindow()) {
-            updateXStackingOrder();
+            if (updateXStackingOrder()) {
+                updateStackingOrder();
+            }
         }
         break;
     }
