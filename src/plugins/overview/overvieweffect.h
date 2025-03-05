@@ -55,7 +55,6 @@ public:
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;
     void reconfigure(ReconfigureFlags flags) override;
-    void grabbedKeyboardEvent(QKeyEvent *keyEvent) override;
 
     Q_INVOKABLE void swapDesktops(KWin::VirtualDesktop *from, KWin::VirtualDesktop *to);
 
