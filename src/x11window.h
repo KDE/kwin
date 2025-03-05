@@ -202,8 +202,6 @@ public:
     void updateVisibility();
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
-    bool setupCompositing() override;
-    void finishCompositing() override;
     QString captionNormal() const override
     {
         return cap_normal;

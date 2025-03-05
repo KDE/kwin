@@ -1415,21 +1415,6 @@ void X11Window::updateInputShape()
     }
 }
 
-bool X11Window::setupCompositing()
-{
-    if (!Window::setupCompositing()) {
-        return false;
-    }
-    updateVisibility(); // for internalKeep()
-    return true;
-}
-
-void X11Window::finishCompositing()
-{
-    Window::finishCompositing();
-    updateVisibility();
-}
-
 /**
  * Returns whether the window is minimizable or not
  */
