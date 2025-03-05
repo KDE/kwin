@@ -11,8 +11,6 @@
 #include "effect/effect.h"
 #include "effect/timeline.h"
 
-#include <xcb/xcb.h>
-
 namespace KWin
 {
 
@@ -22,7 +20,6 @@ class KscreenEffect : public Effect
 
 public:
     KscreenEffect();
-    ~KscreenEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
@@ -36,11 +33,6 @@ public:
     {
         return 99;
     }
-
-#if KWIN_BUILD_X11
-private Q_SLOTS:
-    void propertyNotify(KWin::EffectWindow *window, long atom);
-#endif
 
 private:
     enum FadeOutState {
@@ -62,11 +54,7 @@ private:
     bool isScreenActive(Output *screen) const;
 
     QHash<Output *, ScreenState> m_waylandStates;
-    ScreenState m_xcbState;
     Output *m_currentScreen = nullptr;
-#if KWIN_BUILD_X11
-    xcb_atom_t m_atom;
-#endif
 };
 
 } // namespace KWin
