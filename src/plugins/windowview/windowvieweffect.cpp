@@ -225,30 +225,6 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
     }
 }
 
-void WindowViewEffect::grabbedKeyboardEvent(QKeyEvent *e)
-{
-    if (e->type() == QEvent::KeyPress && !effects->waylandDisplay()) {
-        // check for global shortcuts
-        // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
-        if (m_mode == ModeCurrentDesktop && m_shortcut.contains(e->key() | e->modifiers())) {
-            toggleMode(ModeCurrentDesktop);
-            return;
-        } else if (m_mode == ModeAllDesktops && m_shortcutAll.contains(e->key() | e->modifiers())) {
-            toggleMode(ModeAllDesktops);
-            return;
-        } else if (m_mode == ModeWindowClass && m_shortcutClass.contains(e->key() | e->modifiers())) {
-            toggleMode(ModeWindowClass);
-            return;
-        } else if (m_mode == ModeWindowClassCurrentDesktop && m_shortcutClassCurrentDesktop.contains(e->key() | e->modifiers())) {
-            toggleMode(ModeWindowClassCurrentDesktop);
-            return;
-        } else if (e->key() == Qt::Key_Escape) {
-            deactivate(animationDuration());
-        }
-    }
-    QuickSceneEffect::grabbedKeyboardEvent(e);
-}
-
 qreal WindowViewEffect::partialActivationFactor() const
 {
     return m_partialActivationFactor;
