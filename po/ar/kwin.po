@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-26 00:43+0000\n"
+"POT-Creation-Date: 2025-03-05 00:44+0000\n"
 "PO-Revision-Date: 2024-12-26 09:07+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1354,7 +1354,7 @@ msgstr ""
 "حدد نافذة لفرض الإغلاق بالنقرة اليسرى أو الضغط على زر الدخول. \n"
 "للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن."
 
-#: main.cpp:185 plugins/invert/invert_config.cpp:35
+#: main.cpp:186 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1369,67 +1369,67 @@ msgstr ""
 msgid "KWin"
 msgstr "كوين"
 
-#: main.cpp:187 main.cpp:211
+#: main.cpp:188 main.cpp:212
 #, kde-format
 msgid "KDE window manager"
 msgstr "مدير كِيدِي للنّوافذ"
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "© 1999-2019 لمطوري «كِيدِي»"
 
-#: main.cpp:191
+#: main.cpp:192
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "ماتياس إتريش"
 
-#: main.cpp:192
+#: main.cpp:193
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "كريستيان تيبيرنا"
 
-#: main.cpp:193
+#: main.cpp:194
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "دانيال م. دولي"
 
-#: main.cpp:194
+#: main.cpp:195
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "لوبوس لوناك"
 
-#: main.cpp:195
+#: main.cpp:196
 #, kde-format
 msgid "Martin Flöser"
 msgstr "مارتن فلوسر"
 
-#: main.cpp:196
+#: main.cpp:197
 #, kde-format
 msgid "David Edmundson"
 msgstr "ديفيد إدموندسون"
 
-#: main.cpp:197
+#: main.cpp:198
 #, kde-format
 msgid "Roman Gilg"
 msgstr "رومان غيلغ"
 
-#: main.cpp:198
+#: main.cpp:199
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "فلاد زاهورودني"
 
-#: main.cpp:199
+#: main.cpp:200
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "كسافير هوغل"
 
-#: main.cpp:208
+#: main.cpp:209
 #, kde-format
 msgid "Disable configuration options"
 msgstr "عطّل خيارات الضّبط"
 
-#: main.cpp:209
+#: main.cpp:210
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "يشير إلى عدد انهيارات كوين"
@@ -4334,7 +4334,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1692
+#: workspace.cpp:1703
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

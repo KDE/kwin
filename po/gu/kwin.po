@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin-gu\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-26 00:43+0000\n"
+"POT-Creation-Date: 2025-03-05 00:44+0000\n"
 "PO-Revision-Date: 2009-01-04 13:06+0530\n"
 "Last-Translator: Kartik Mistry <kartik.mistry@gmail.com>\n"
 "Language-Team: Gujarati <kde-i18n-doc@kde.org>\n"
@@ -1360,7 +1360,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:185 plugins/invert/invert_config.cpp:35
+#: main.cpp:186 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1375,69 +1375,69 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:187 main.cpp:211
+#: main.cpp:188 main.cpp:212
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE વિન્ડો વ્યવસ્થાપક"
 
-#: main.cpp:189
+#: main.cpp:190
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2008, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) ૧૯૯૯-૨૦૦૮ KDE વિકાસ કરનારાઓ"
 
-#: main.cpp:191
+#: main.cpp:192
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "મેથ્થિઆસ ઇટ્રિચ"
 
-#: main.cpp:192
+#: main.cpp:193
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "ક્રિસ્ટીન ટીબીર્ના"
 
-#: main.cpp:193
+#: main.cpp:194
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "ડેનિઅલ એમ. ડુલેય"
 
-#: main.cpp:194
+#: main.cpp:195
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "લુડોસ લુનાક"
 
-#: main.cpp:195
+#: main.cpp:196
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:196
+#: main.cpp:197
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:197
+#: main.cpp:198
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:198
+#: main.cpp:199
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:199
+#: main.cpp:200
 #, fuzzy, kde-format
 #| msgid "Very Huge"
 msgid "Xaver Hugl"
 msgstr "ખૂબ જ મોટું"
 
-#: main.cpp:208
+#: main.cpp:209
 #, kde-format
 msgid "Disable configuration options"
 msgstr "રૂપરેખાંકન વિકલ્પો અસક્રિય કરો"
 
-#: main.cpp:209
+#: main.cpp:210
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "બતાવે છે કે KWin હમણાં n વખત પડી ભાંગ્યું હતું"
@@ -4498,7 +4498,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1692
+#: workspace.cpp:1703
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

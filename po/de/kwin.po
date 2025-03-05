@@ -5,70 +5,70 @@
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
 # Frederik Schwarzer <schwarzer@kde.org>, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2021, 2022, 2023.
 # Burkhard Lück <lueck@hube-lueck.de>, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
-# Frank Steinmetzger <Warp_7@gmx.de>, 2012.
+# SPDX-FileCopyrightText: 2012, 2024 Frank Steinmetzger <Warp_7@gmx.de>
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
+# SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-26 00:43+0000\n"
-"PO-Revision-Date: 2024-09-17 14:52+0200\n"
-"Last-Translator: Flori G <Renner03@protonmail.com>\n"
+"POT-Creation-Date: 2025-03-05 00:44+0000\n"
+"PO-Revision-Date: 2025-02-17 22:05+0100\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 24.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Deutsches KDE-Übersetzerteam, Thomas Diehl"
+msgstr "Deutsches KDE-Übersetzungsteam"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde-i18n-de@kde.org, thd@kde.org"
+msgstr "kde-i18n-de@kde.org"
 
 #: backends/wayland/wayland_output.cpp:432
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Drücken sie die rechte Strg-Taste um den Zeiger freizugeben"
 
 #: backends/wayland/wayland_output.cpp:434
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Drücken sie die rechte Strg-Taste um den Zeiger einzufangen"
 
 #: backends/wayland/wayland_output.cpp:438
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE-Wayland-Compositor"
+msgstr "KDE-Wayland-Compositor %1"
 
 #: backends/wayland/wayland_output.cpp:441
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- Ausgabe deaktiviert"
 
 #: backends/wayland/wayland_output.cpp:443
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- Ausgabe abgedunkelt"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Drücken sie die rechte Strg-Taste um die Eingabe freizugeben"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Drücken sie die rechte Strg-Taste um die Eingabe einzufangen"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:499
 #, kde-format
@@ -102,8 +102,7 @@ msgstr ""
 "sofortigen Absturz führen kann.</b></p>"
 
 #: compositor_x11.cpp:573
-#, fuzzy, kde-format
-#| msgid "Required X extensions (XComposite and XDamage) are not available."
+#, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Benötigte X-Erweiterungen (XComposite und XDamage) sind nicht verfügbar."
@@ -1037,7 +1036,7 @@ msgstr "Extra 24"
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
-msgstr ""
+msgstr "Programm"
 
 #: debug_console.cpp:1268
 #, kde-format
@@ -1317,6 +1316,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> reagiert nicht. Wollen Sie diese "
+"Anwendung beenden?</para>"
 
 #: helpers/killer/killer.cpp:236
 #, kde-kuit-format
@@ -1325,35 +1326,31 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>„%1“ von <application>%2</application> reagiert nicht. Wollen Sie "
+"diese Anwendung beenden?</para>"
 
 #: helpers/killer/killer.cpp:239
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Möchten Sie diese Anwendung beenden?</para><para><warning>Beim Beenden "
-"der Anwendung werden alle zur Anwendung gehörenden Fenster geschlossen und "
-"ungespeicherte Daten gehen verloren.</warning></para>"
+"<para><emphasis strong='true'>Beim Beenden der Anwendung werden alle zur "
+"Anwendung gehörenden Fenster geschlossen und ungespeicherte Daten gehen "
+"verloren.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Anwendung %1 &beenden"
+msgstr "%1 &beenden"
 
 #: helpers/killer/killer.cpp:242
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Länger warten"
+msgstr "Länger &warten"
 
 #: helpers/killer/killer.cpp:250
 #, kde-format
@@ -1365,13 +1362,13 @@ msgstr "Reagiert nicht"
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Prozess-ID: %1"
 
 #: helpers/killer/killer.cpp:268
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "Rechnername: „%1“"
+msgstr "Rechnername: %1"
 
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
@@ -1388,7 +1385,7 @@ msgstr ""
 "das Schließen zu erzwingen. Mit der Taste ESC oder einem rechten Mausklick "
 "brechen Sie ab."
 
-#: main.cpp:185 plugins/invert/invert_config.cpp:35
+#: main.cpp:186 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1403,67 +1400,67 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:187 main.cpp:211
+#: main.cpp:188 main.cpp:212
 #, kde-format
 msgid "KDE window manager"
 msgstr "Die KDE-Fensterverwaltung"
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "Copyright 1999–2019, die KDE-Entwickler"
 
-#: main.cpp:191
+#: main.cpp:192
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:192
+#: main.cpp:193
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:193
+#: main.cpp:194
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:194
+#: main.cpp:195
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:195
+#: main.cpp:196
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:196
+#: main.cpp:197
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:197
+#: main.cpp:198
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:198
+#: main.cpp:199
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:199
+#: main.cpp:200
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:208
+#: main.cpp:209
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Einrichtungsoptionen deaktivieren"
 
-#: main.cpp:209
+#: main.cpp:210
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Anzeigen, dass KWin kürzlich n-mal abgestürzt ist"
@@ -1566,6 +1563,7 @@ msgstr "In DRM-Knoten rendern."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Regionaleinstellungen von locale1 statt der Benutzerkonfiguration verwenden"
 
 #: main_wayland.cpp:375
 #, kde-format
@@ -1813,24 +1811,23 @@ msgstr "Niemals"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " Millisekunden"
-msgstr[1] " Millisekunden"
+msgstr[0] "%1 Sekunde"
+msgstr[1] "%1 Sekunden"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "Cursor bei Inaktivität ausblenden:"
+msgstr "Zeiger nach Inaktivität ausblenden:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr "Cursor beim Tippen ausblenden"
+msgstr "Zeiger beim Tippen ausblenden"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1850,72 +1847,72 @@ msgstr "Bildschirmfarben umkehren"
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Die Feststelltaste wurde aktiviert"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Die Feststelltaste ist nun inaktiv"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Die Num-Feststelltaste wurde aktiviert"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Die Num-Feststelltaste ist nun inaktiv"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Die Rollen-Taste wurde aktiviert"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Die Rollen-Taste ist nun inaktiv"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Die Umschalt-Taste ist nun aktiv."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Die Umschalt-Taste ist nun inaktiv."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Die Strg-Taste ist nun aktiv."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Die Strg-Taste ist nun inaktiv."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Die Alt-Taste ist nun aktiv."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Die Alt-Taste ist nun inaktiv."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Die Meta-Taste ist nun aktiv."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Die Meta-Taste ist nun inaktiv."
 
 # (Wie) übersetzen KRunner-Suchstichwörter?
 # Es gibt eine ganze Reihe davon neu in dieser Datei, siehe Kontext-Spalte
@@ -2098,10 +2095,9 @@ msgstr "&Höhe:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Mausklick-Effekt ein-/ausschalten"
+msgstr "Mausklick-Animation ein-/ausschalten"
 
 #: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
@@ -2257,19 +2253,17 @@ msgstr "&Farbe:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr ""
-"Zeichnen Sie mit der Maus, indem Sie Umschalt+Meta gedrückt halten und die "
+"Zeichnen Sie mit der Maus, indem Sie Sondertasten gedrückt halten und die "
 "Maus bewegen."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Sondertasten:"
+msgstr "Sondertasten für freies Zeichnen:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2299,7 +2293,7 @@ msgstr "Strg"
 #: plugins/trackmouse/trackmouse_config.ui:79
 #, kde-format
 msgid "Shift"
-msgstr "Umschalttaste"
+msgstr "Umschalt"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawmeta)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawmeta)
@@ -2351,14 +2345,14 @@ msgstr "Unbekannt"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Durch Überblick und Rasteransicht wechseln"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Durch Rasteransicht und Überblick wechseln"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
 #, kde-format
@@ -2367,11 +2361,10 @@ msgid "Toggle Overview"
 msgstr "Übersicht umschalten"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Übersicht umschalten"
+msgstr "Rasteransicht umschalten"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2383,30 +2376,28 @@ msgstr "Minimierte Fenster ignorieren:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Fenster in Rasteransicht organisieren:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Suchergebnisse enthalten gefilterte Fenster:"
 
 #: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Durch Überblick und Rasteransicht wechseln"
 
 #: plugins/overview/overvieweffect.cpp:143
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Übersicht umschalten"
 
 #: plugins/overview/overvieweffect.cpp:151
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Übersicht umschalten"
@@ -2532,11 +2523,10 @@ msgstr ""
 "ab."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Compositing blockieren"
+msgstr "Compositing"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -2605,30 +2595,40 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Die Umschalttaste wurde eingerastet und ist nun für alle nachfolgenden "
+"Tastendrücke aktiv."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Die Strg-Taste wurde eingerastet und ist nun für alle nachfolgenden "
+"Tastendrücke aktiv."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Die Alt-Taste wurde eingerastet und ist nun für alle nachfolgenden "
+"Tastendrücke aktiv."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Die Meta-Taste wurde eingerastet und ist nun für alle nachfolgenden "
+"Tastendrücke aktiv."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Die AltGr-Taste wurde eingerastet und ist nun für alle nachfolgenden "
+"Tastendrücke aktiv."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -3100,8 +3100,7 @@ msgstr "Zentriert"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:126
-#, fuzzy, kde-format
-#| msgid "Push"
+#, kde-format
 msgid "Push"
 msgstr "Schieben"
 
@@ -4423,7 +4422,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reagiert nicht)"
 
-#: workspace.cpp:1692
+#: workspace.cpp:1703
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
