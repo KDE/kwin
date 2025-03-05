@@ -38,20 +38,17 @@ SlidingPopupsEffect::SlidingPopupsEffect()
 {
     SlidingPopupsConfig::instance(effects->config());
 
-    Display *display = effects->waylandDisplay();
-    if (display) {
-        if (!s_slideManagerRemoveTimer) {
-            s_slideManagerRemoveTimer = new QTimer(QCoreApplication::instance());
-            s_slideManagerRemoveTimer->setSingleShot(true);
-            s_slideManagerRemoveTimer->callOnTimeout([]() {
-                s_slideManager->remove();
-                s_slideManager = nullptr;
-            });
-        }
-        s_slideManagerRemoveTimer->stop();
-        if (!s_slideManager) {
-            s_slideManager = new SlideManagerInterface(display, s_slideManagerRemoveTimer);
-        }
+    if (!s_slideManagerRemoveTimer) {
+        s_slideManagerRemoveTimer = new QTimer(QCoreApplication::instance());
+        s_slideManagerRemoveTimer->setSingleShot(true);
+        s_slideManagerRemoveTimer->callOnTimeout([]() {
+            s_slideManager->remove();
+            s_slideManager = nullptr;
+        });
+    }
+    s_slideManagerRemoveTimer->stop();
+    if (!s_slideManager) {
+        s_slideManager = new SlideManagerInterface(effects->waylandDisplay(), s_slideManagerRemoveTimer);
     }
 
     m_slideLength = QFontMetrics(QGuiApplication::font()).height() * 8;
