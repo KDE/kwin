@@ -107,6 +107,7 @@ ZoomEffect::ZoomEffect()
     connect(effects, &EffectsHandler::screenRemoved, this, &ZoomEffect::slotScreenRemoved);
 
 #if HAVE_ACCESSIBILITY
+    // TODO: Decide what to do about it.
     if (!effects->waylandDisplay()) {
         // on Wayland, the accessibility integration can cause KWin to hang
         m_accessibilityIntegration = new ZoomAccessibilityIntegration(this);
@@ -261,7 +262,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 {
     const QSize nativeSize = renderTarget.size();
 
-    OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
+    OffscreenData &data = m_offscreenData[screen];
     data.viewport = viewport.renderRect();
     data.color = renderTarget.colorDescription();
 
@@ -547,16 +548,12 @@ void ZoomEffect::moveZoomDown()
 
 void ZoomEffect::moveMouseToFocus()
 {
-    if (effects->waylandDisplay() || !ZoomEffect::isActive()) {
-        const auto window = effects->activeWindow();
-        if (!window) {
-            return;
-        }
-        const auto center = window->frameGeometry().center();
-        QCursor::setPos(center.x(), center.y());
-    } else {
-        QCursor::setPos(m_focusPoint.x(), m_focusPoint.y());
+    const auto window = effects->activeWindow();
+    if (!window) {
+        return;
     }
+    const auto center = window->frameGeometry().center();
+    QCursor::setPos(center.x(), center.y());
 }
 
 void ZoomEffect::moveMouseToCenter()
