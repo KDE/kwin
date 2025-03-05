@@ -606,6 +606,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         renderInfo.framebuffers.clear();
         renderInfo.textures.clear();
 
+        glClearColor(0, 0, 0, 0);
         for (size_t i = 0; i <= m_iterationCount; ++i) {
             auto texture = GLTexture::allocate(textureFormat, backgroundRect.size() / (1 << i));
             if (!texture) {
@@ -620,6 +621,9 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
                 qCWarning(KWIN_BLUR) << "Failed to create an offscreen framebuffer";
                 return;
             }
+            OpenGlContext::currentContext()->pushFramebuffer(framebuffer.get());
+            glClear(GL_COLOR_BUFFER_BIT);
+            OpenGlContext::currentContext()->popFramebuffer();
             renderInfo.textures.push_back(std::move(texture));
             renderInfo.framebuffers.push_back(std::move(framebuffer));
         }
