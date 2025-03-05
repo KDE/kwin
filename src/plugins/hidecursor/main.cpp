@@ -9,9 +9,8 @@
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(HideCursorEffect,
-                              "metadata.json.stripped",
-                              return HideCursorEffect::supported();)
+KWIN_EFFECT_FACTORY(HideCursorEffect,
+                    "metadata.json.stripped")
 
 } // namespace KWin
 
