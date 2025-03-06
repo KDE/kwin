@@ -20,12 +20,9 @@
 #include "group.h"
 #include "input.h"
 #include "netinfo.h"
-#include "rules.h"
-#include "screenedge.h"
 #include "touch_input.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
-#include "wayland/surface.h"
 #include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -35,24 +32,7 @@
 #include "tabbox/tabbox.h"
 #endif
 
-#include <KDecoration3/Decoration>
-
-#include <QApplication>
-#include <QDebug>
-#include <QHoverEvent>
-#include <QKeyEvent>
-#include <QMouseEvent>
-#include <QStyleHints>
-#include <QWheelEvent>
-
-#include <kkeyserver.h>
-
-#include <xcb/damage.h>
-#include <xcb/sync.h>
 #include <xcb/xcb_icccm.h>
-
-#include "compositor.h"
-#include "x11eventfilter.h"
 
 namespace KWin
 {
