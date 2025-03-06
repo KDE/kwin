@@ -1322,41 +1322,28 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
 
     Output *output = client->output();
     const QRect geo = client->frameGeometry().toRect();
-    const QRect fullArea = workspace()->geometry();
 
     const QRect screen = output->geometry();
     switch (border) {
     case ElectricTop:
-        if (!waylandServer() && !isTopScreen(screen, fullArea)) {
-            return false;
-        }
         y = screen.y();
         x = geo.x();
         height = 1;
         width = geo.width();
         break;
     case ElectricBottom:
-        if (!waylandServer() && !isBottomScreen(screen, fullArea)) {
-            return false;
-        }
         y = screen.y() + screen.height() - 1;
         x = geo.x();
         height = 1;
         width = geo.width();
         break;
     case ElectricLeft:
-        if (!waylandServer() && !isLeftScreen(screen, fullArea)) {
-            return false;
-        }
         x = screen.x();
         y = geo.y();
         width = 1;
         height = geo.height();
         break;
     case ElectricRight:
-        if (!waylandServer() && !isRightScreen(screen, fullArea)) {
-            return false;
-        }
         x = screen.x() + screen.width() - 1;
         y = geo.y();
         width = 1;
