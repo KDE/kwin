@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-01 02:33+0000\n"
+"POT-Creation-Date: 2025-03-06 02:39+0000\n"
 "PO-Revision-Date: 2024-08-30 10:00+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -899,17 +899,17 @@ msgstr "Inportatu arauak"
 msgid "Export Rules"
 msgstr "Esportatu arauak"
 
-#: ui/OptionsComboBox.qml:35
+#: ui/OptionsComboBox.qml:37
 #, kde-format
 msgid "None selected"
 msgstr "Ez da ezer hautatu"
 
-#: ui/OptionsComboBox.qml:41
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "All selected"
 msgstr "Denak hautatu dira"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:45
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"

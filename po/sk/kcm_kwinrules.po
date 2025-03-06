@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-01 02:33+0000\n"
+"POT-Creation-Date: 2025-03-06 02:39+0000\n"
 "PO-Revision-Date: 2025-02-23 13:49+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -898,17 +898,17 @@ msgstr "Pravidlá importu"
 msgid "Export Rules"
 msgstr "Exportovať pravidlo"
 
-#: ui/OptionsComboBox.qml:35
+#: ui/OptionsComboBox.qml:37
 #, kde-format
 msgid "None selected"
 msgstr "Žiadne vybraté"
 
-#: ui/OptionsComboBox.qml:41
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "All selected"
 msgstr "Všetky vybraté"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:45
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"

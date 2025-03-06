@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-01 02:33+0000\n"
+"POT-Creation-Date: 2025-03-06 02:39+0000\n"
 "PO-Revision-Date: 2024-08-31 06:22+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -893,17 +893,17 @@ msgstr "Zaimportuj zasady"
 msgid "Export Rules"
 msgstr "Wyeksportuj zasady"
 
-#: ui/OptionsComboBox.qml:35
+#: ui/OptionsComboBox.qml:37
 #, kde-format
 msgid "None selected"
 msgstr "Odznaczono wszystkie"
 
-#: ui/OptionsComboBox.qml:41
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "All selected"
 msgstr "Zaznaczono wszystkie"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:45
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
