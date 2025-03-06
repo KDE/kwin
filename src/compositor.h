@@ -9,18 +9,13 @@
 */
 #pragma once
 
-#include "config-kwin.h"
 #include "effect/globals.h"
 #include "kwin_export.h"
-
-#if KWIN_BUILD_X11
-#include <xcb/xcb.h>
-#endif
 
 #include <QHash>
 #include <QObject>
 #include <QRegion>
-#include <QTimer>
+
 #include <memory>
 
 namespace KWin
@@ -80,12 +75,6 @@ public:
         return m_backend.get();
     }
 
-#if KWIN_BUILD_X11
-    // for delayed supportproperty management of effects
-    void keepSupportProperty(xcb_atom_t atom);
-    void removeSupportProperty(xcb_atom_t atom);
-#endif
-
     /**
      * Whether OpenGL compositing is broken.
      * The Platform can implement this method if it is able to detect whether OpenGL compositing
@@ -116,10 +105,6 @@ private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
 protected:
-#if KWIN_BUILD_X11
-    void deleteUnusedSupportProperties();
-#endif
-
     Output *findOutput(RenderLoop *loop) const;
 
     void addSuperLayer(RenderLayer *layer);
@@ -139,10 +124,6 @@ protected:
     CompositingType m_selectedCompositor = NoCompositing;
 
     State m_state = State::Off;
-#if KWIN_BUILD_X11
-    QList<xcb_atom_t> m_unusedSupportProperties;
-    QTimer m_unusedSupportPropertyTimer;
-#endif
     std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;

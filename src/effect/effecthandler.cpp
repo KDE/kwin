@@ -111,6 +111,15 @@ static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
     // TODO: add to _NET_SUPPORTED
     return atomReply->atom;
 }
+
+static void unregisterSupportProperty(xcb_atom_t atom)
+{
+    auto c = kwinApp()->x11Connection();
+    if (!c) {
+        return;
+    }
+    xcb_delete_property(c, kwinApp()->x11RootWindow(), atom);
+}
 #endif
 
 //****************************************
@@ -212,7 +221,6 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
             if (atom == XCB_ATOM_NONE) {
                 continue;
             }
-            m_compositor->keepSupportProperty(atom);
             m_managedProperties.insert(*it, atom);
             registerPropertyType(atom, true);
         }
@@ -683,7 +691,6 @@ xcb_atom_t EffectsHandler::announceSupportProperty(const QByteArray &propertyNam
     if (atom == XCB_ATOM_NONE) {
         return atom;
     }
-    m_compositor->keepSupportProperty(atom);
     m_managedProperties.insert(propertyName, atom);
     registerPropertyType(atom, true);
     return atom;
@@ -708,7 +715,7 @@ void EffectsHandler::removeSupportProperty(const QByteArray &propertyName, Effec
     const xcb_atom_t atom = m_managedProperties.take(propertyName);
     registerPropertyType(atom, false);
     m_propertiesForEffects.remove(propertyName);
-    m_compositor->removeSupportProperty(atom); // delayed removal
+    unregisterSupportProperty(atom);
 }
 #endif
 
