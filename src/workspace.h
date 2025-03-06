@@ -625,7 +625,7 @@ private:
     void addX11Window(X11Window *c);
     X11Window *createUnmanaged(xcb_window_t windowId);
     void addUnmanaged(X11Window *c);
-    void updateXStackingOrder();
+    bool updateXStackingOrder();
 #endif
     void setupWindowConnections(Window *window);
 

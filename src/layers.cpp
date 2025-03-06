@@ -719,12 +719,12 @@ QList<Window *> Workspace::unconstrainedStackingOrder() const
 }
 
 #if KWIN_BUILD_X11
-void Workspace::updateXStackingOrder()
+bool Workspace::updateXStackingOrder()
 {
     // we use our stacking order for managed windows, but X's for override-redirect windows
     Xcb::Tree tree(kwinApp()->x11RootWindow());
     if (tree.isNull()) {
-        return;
+        return false;
     }
     xcb_window_t *windows = tree.children();
 
@@ -738,10 +738,7 @@ void Workspace::updateXStackingOrder()
             changed = true;
         }
     }
-
-    if (changed) {
-        updateStackingOrder();
-    }
+    return changed;
 }
 #endif
 
