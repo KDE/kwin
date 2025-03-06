@@ -1383,31 +1383,6 @@ void ScreenEdges::deleteEdgeForClient(Window *window)
     m_edges.erase(it, m_edges.end());
 }
 
-void ScreenEdges::check(const QPoint &pos, const std::chrono::microseconds &now, bool forceNoPushBack)
-{
-    bool activatedForClient = false;
-    for (const auto &edge : m_edges) {
-        if (!edge->isReserved() || edge->isBlocked()) {
-            continue;
-        }
-        if (!edge->activatesForPointer()) {
-            continue;
-        }
-        if (edge->approachGeometry().contains(pos)) {
-            edge->startApproaching();
-        }
-        if (edge->client() != nullptr && activatedForClient) {
-            edge->markAsTriggered(pos, now);
-            continue;
-        }
-        if (edge->check(pos, now, forceNoPushBack)) {
-            if (edge->client()) {
-                activatedForClient = true;
-            }
-        }
-    }
-}
-
 bool ScreenEdges::inApproachGeometry(const QPoint &pos) const
 {
     for (const auto &edge : m_edges) {

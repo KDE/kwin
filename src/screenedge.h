@@ -223,14 +223,6 @@ public:
      */
     void init();
     /**
-     * Check, if a screen edge is entered and trigger the appropriate action
-     * if one is enabled for the current region and the timeout is satisfied
-     * @param pos the position of the mouse pointer
-     * @param now the time when the function is called
-     * @param forceNoPushBack needs to be called to workaround some DnD clients, don't use unless you want to chek on a DnD event
-     */
-    void check(const QPoint &pos, const std::chrono::microseconds &now, bool forceNoPushBack = false);
-    /**
      * Check, if @p pos is in the approach geometry of any edge.
      */
     bool inApproachGeometry(const QPoint &pos) const;
