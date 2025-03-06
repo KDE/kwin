@@ -275,7 +275,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    ShaderTraits baseShaderTraits = ShaderTrait::MapTexture;
+    ShaderTraits baseShaderTraits;
     if (data.brightness() != 1.0) {
         baseShaderTraits |= ShaderTrait::Modulate;
     }
@@ -342,6 +342,24 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
         ShaderTraits traits = baseShaderTraits;
+        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+            const auto texture = std::get<GLTexture *>(renderNode.texture);
+            if (texture->target() == GL_TEXTURE_EXTERNAL_OES) {
+                traits |= ShaderTrait::MapExternalTexture;
+            } else {
+                traits |= ShaderTrait::MapTexture;
+            }
+        } else {
+            const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
+            const bool external_only = std::ranges::any_of(contents.planes, [](const auto &texture) {
+                return texture->target() == GL_TEXTURE_EXTERNAL_OES;
+            });
+            if (external_only) {
+                traits |= ShaderTrait::MapExternalTexture;
+            } else {
+                traits |= ShaderTrait::MapTexture;
+            }
+        }
         if (renderNode.opacity != 1.0) {
             traits |= ShaderTrait::Modulate;
         }
