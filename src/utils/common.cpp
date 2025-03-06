@@ -81,26 +81,6 @@ void ungrabXServer()
     }
 }
 
-Qt::MouseButton x11ToQtMouseButton(int button)
-{
-    if (button == XCB_BUTTON_INDEX_1) {
-        return Qt::LeftButton;
-    }
-    if (button == XCB_BUTTON_INDEX_2) {
-        return Qt::MiddleButton;
-    }
-    if (button == XCB_BUTTON_INDEX_3) {
-        return Qt::RightButton;
-    }
-    if (button == XCB_BUTTON_INDEX_4) {
-        return Qt::XButton1;
-    }
-    if (button == XCB_BUTTON_INDEX_5) {
-        return Qt::XButton2;
-    }
-    return Qt::NoButton;
-}
-
 #endif
 #endif
 

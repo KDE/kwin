@@ -66,10 +66,6 @@ enum ShadeMode {
     ShadeActivated // "shaded", but visible due to alt+tab to the window
 };
 
-#if KWIN_BUILD_X11
-Qt::MouseButton x11ToQtMouseButton(int button);
-#endif
-
 KWIN_EXPORT QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity);
 
 } // namespace
