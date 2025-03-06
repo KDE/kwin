@@ -68,15 +68,6 @@ Compositor *Compositor::self()
 Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
 {
-#if KWIN_BUILD_X11
-    // 2 sec which should be enough to restart the compositor.
-    static const int compositorLostMessageDelay = 2000;
-    m_unusedSupportPropertyTimer.setInterval(compositorLostMessageDelay);
-    m_unusedSupportPropertyTimer.setSingleShot(true);
-    connect(&m_unusedSupportPropertyTimer, &QTimer::timeout,
-            this, &Compositor::deleteUnusedSupportProperties);
-#endif
-
     // register DBus
     new CompositorDBusInterface(this);
     FTraceLogger::create();
@@ -84,9 +75,6 @@ Compositor::Compositor(QObject *workspace)
 
 Compositor::~Compositor()
 {
-#if KWIN_BUILD_X11
-    deleteUnusedSupportProperties();
-#endif
     Q_EMIT aboutToDestroy();
     stop(); // this can't be called in the destructor of Compositor
     s_compositor = nullptr;
@@ -115,35 +103,6 @@ void Compositor::removeSuperLayer(RenderLayer *layer)
     disconnect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     delete layer;
 }
-
-#if KWIN_BUILD_X11
-void Compositor::keepSupportProperty(xcb_atom_t atom)
-{
-    m_unusedSupportProperties.removeAll(atom);
-}
-
-void Compositor::removeSupportProperty(xcb_atom_t atom)
-{
-    m_unusedSupportProperties << atom;
-    m_unusedSupportPropertyTimer.start();
-}
-
-void Compositor::deleteUnusedSupportProperties()
-{
-    if (m_state == State::Starting || m_state == State::Stopping) {
-        // Currently still maybe restarting the compositor.
-        m_unusedSupportPropertyTimer.start();
-        return;
-    }
-    if (auto *con = kwinApp()->x11Connection()) {
-        for (const xcb_atom_t &atom : std::as_const(m_unusedSupportProperties)) {
-            // remove property from root window
-            xcb_delete_property(con, kwinApp()->x11RootWindow(), atom);
-        }
-        m_unusedSupportProperties.clear();
-    }
-}
-#endif
 
 void Compositor::reinitialize()
 {
