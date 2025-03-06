@@ -10,13 +10,13 @@
 // own
 #include "x11window.h"
 // kwin
-#include "core/output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "atoms.h"
 #include "client_machine.h"
 #include "compositor.h"
+#include "core/output.h"
 #include "cursor.h"
 #include "decorations/decoratedwindow.h"
 #include "decorations/decorationbridge.h"
@@ -28,7 +28,6 @@
 #include "scene/windowitem.h"
 #include "screenedge.h"
 #include "shadow.h"
-#include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
@@ -37,16 +36,9 @@
 #include <KDecoration3/Decoration>
 // KDE
 #include <KApplicationTrader>
-#include <KLocalizedString>
 #include <KStartupInfo>
 #include <KX11Extras>
 // Qt
-#include <QApplication>
-#include <QDebug>
-#include <QDir>
-#include <QFile>
-#include <QFileInfo>
-#include <QMouseEvent>
 #include <QProcess>
 // xcb
 #include <xcb/xcb_icccm.h>
@@ -55,9 +47,6 @@
 // c++
 #include <cmath>
 #include <csignal>
-
-// Put all externs before the namespace statement to allow the linker
-// to resolve them properly
 
 namespace KWin
 {
