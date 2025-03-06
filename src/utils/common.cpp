@@ -81,8 +81,6 @@ void ungrabXServer()
     }
 }
 
-// converting between X11 mouse/keyboard state mask and Qt button/keyboard states
-
 Qt::MouseButton x11ToQtMouseButton(int button)
 {
     if (button == XCB_BUTTON_INDEX_1) {
@@ -101,27 +99,6 @@ Qt::MouseButton x11ToQtMouseButton(int button)
         return Qt::XButton2;
     }
     return Qt::NoButton;
-}
-
-Qt::MouseButtons x11ToQtMouseButtons(int state)
-{
-    Qt::MouseButtons ret = {};
-    if (state & XCB_KEY_BUT_MASK_BUTTON_1) {
-        ret |= Qt::LeftButton;
-    }
-    if (state & XCB_KEY_BUT_MASK_BUTTON_2) {
-        ret |= Qt::MiddleButton;
-    }
-    if (state & XCB_KEY_BUT_MASK_BUTTON_3) {
-        ret |= Qt::RightButton;
-    }
-    if (state & XCB_KEY_BUT_MASK_BUTTON_4) {
-        ret |= Qt::XButton1;
-    }
-    if (state & XCB_KEY_BUT_MASK_BUTTON_5) {
-        ret |= Qt::XButton2;
-    }
-    return ret;
 }
 
 #endif
