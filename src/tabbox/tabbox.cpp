@@ -13,14 +13,9 @@
 // own
 #include "tabbox.h"
 // tabbox
-#include "tabbox/clientmodel.h"
 #include "tabbox/tabbox_logging.h"
 #include "tabbox/tabboxconfig.h"
 // kwin
-#if KWIN_BUILD_ACTIVITIES
-#include "activities.h"
-#endif
-#include "compositor.h"
 #include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "input.h"
@@ -38,8 +33,6 @@
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLazyLocalizedString>
-#include <KLocalizedString>
-#include <kkeyserver.h>
 
 namespace KWin
 {
