@@ -188,9 +188,6 @@ public:
         return cap_suffix;
     }
 
-    using Window::keyPressEvent;
-    void keyPressEvent(uint key_code, xcb_timestamp_t time); // FRAME ??
-
     QPointF gravityAdjustment(xcb_gravity_t gravity) const;
     const QPointF calculateGravitation(bool invert) const;
 
