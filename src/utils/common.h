@@ -67,10 +67,7 @@ enum ShadeMode {
 };
 
 #if KWIN_BUILD_X11
-// converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 Qt::MouseButton x11ToQtMouseButton(int button);
-Qt::MouseButton KWIN_EXPORT x11ToQtMouseButton(int button);
-Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
 #endif
 
 KWIN_EXPORT QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity);
