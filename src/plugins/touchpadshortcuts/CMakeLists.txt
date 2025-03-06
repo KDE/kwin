@@ -11,5 +11,5 @@ target_sources(TouchpadShortcutsPlugin PRIVATE
     main.cpp
     touchpadshortcuts.cpp
 )
-target_link_libraries(TouchpadShortcutsPlugin PRIVATE kwin KF6::GlobalAccel KF6::I18n)
+target_link_libraries(TouchpadShortcutsPlugin PRIVATE kwin)
 

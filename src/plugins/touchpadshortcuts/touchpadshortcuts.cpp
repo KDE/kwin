@@ -8,45 +8,20 @@
 
 #include "input.h"
 
-#include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
 
-#include <KGlobalAccel>
-#include <KLocalizedString>
-
 namespace KWin
 {
 
-static const QString s_touchpadComponent = QStringLiteral("kcm_touchpad");
-
 TouchpadShortcuts::TouchpadShortcuts()
 {
-    QAction *touchpadToggleAction = new QAction(this);
-    QAction *touchpadOnAction = new QAction(this);
-    QAction *touchpadOffAction = new QAction(this);
-
-    const QString touchpadDisplayName = i18n("Touchpad");
-
-    touchpadToggleAction->setObjectName(QStringLiteral("Toggle Touchpad"));
-    touchpadToggleAction->setProperty("componentName", s_touchpadComponent);
-    touchpadToggleAction->setProperty("componentDisplayName", touchpadDisplayName);
-    touchpadOnAction->setObjectName(QStringLiteral("Enable Touchpad"));
-    touchpadOnAction->setProperty("componentName", s_touchpadComponent);
-    touchpadOnAction->setProperty("componentDisplayName", touchpadDisplayName);
-    touchpadOffAction->setObjectName(QStringLiteral("Disable Touchpad"));
-    touchpadOffAction->setProperty("componentName", s_touchpadComponent);
-    touchpadOffAction->setProperty("componentDisplayName", touchpadDisplayName);
-    KGlobalAccel::self()->setGlobalShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle, Qt::ControlModifier | Qt::MetaModifier | Qt::Key_TouchpadToggle, Qt::ControlModifier | Qt::MetaModifier | Qt::Key_Zenkaku_Hankaku});
-    KGlobalAccel::self()->setGlobalShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
-    KGlobalAccel::self()->setGlobalShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
-    connect(touchpadToggleAction, &QAction::triggered, this, &TouchpadShortcuts::toggleTouchpads);
-    connect(touchpadOnAction, &QAction::triggered, this, &TouchpadShortcuts::enableTouchpads);
-    connect(touchpadOffAction, &QAction::triggered, this, &TouchpadShortcuts::disableTouchpads);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/modules/kded_touchpad"), this, QDBusConnection::ExportScriptableContents);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.touchpad"));
 }
 
-void TouchpadShortcuts::toggleTouchpads()
+void TouchpadShortcuts::toggle()
 {
     bool enabled = true;
     const auto devices = input()->devices();
@@ -64,12 +39,12 @@ void TouchpadShortcuts::toggleTouchpads()
     enableOrDisableTouchpads(!enabled);
 }
 
-void TouchpadShortcuts::enableTouchpads()
+void TouchpadShortcuts::enable()
 {
     enableOrDisableTouchpads(true);
 }
 
-void TouchpadShortcuts::disableTouchpads()
+void TouchpadShortcuts::disable()
 {
     enableOrDisableTouchpads(false);
 }
