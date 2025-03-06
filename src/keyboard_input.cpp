@@ -273,6 +273,11 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         return;
     }
 
+    const bool ret = m_a11yKeyboardMonitor.processKey(key, state, time);
+    if (ret) {
+        return;
+    }
+
     if (state == KeyboardKeyState::Pressed) {
         if (!m_pressedKeys.contains(key)) {
             m_pressedKeys.append(key);

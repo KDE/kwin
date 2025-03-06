@@ -29,6 +29,7 @@ target_compile_definitions(kwin PRIVATE
 
 target_sources(kwin PRIVATE
     3rdparty/xcursor.c
+    a11ykeyboardmonitor.cpp
     activation.cpp
     appmenu.cpp
     client_machine.cpp
