@@ -176,9 +176,9 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(GraphicsBuffer *buffer)
         return;
     }
 
-    const GLint target = GL_TEXTURE_2D;
-    if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
-        Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
+    const auto attributes = buffer->dmabufAttributes();
+    if (auto itConv = s_drmConversions.find(attributes->format); itConv != s_drmConversions.end()) {
+        Q_ASSERT(itConv->plane.count() == uint(attributes->planeCount));
         for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
             const auto &currentPlane = itConv->plane[plane];
             QSize size = buffer->size();
@@ -186,12 +186,14 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(GraphicsBuffer *buffer)
             size.rheight() /= currentPlane.heightDivisor;
 
             m_texture.planes[plane]->bind();
+            const GLint target = backend()->eglDisplayObject()->isExternalOnly(currentPlane.format, attributes->modifier) ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
             glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(backend()->importBufferAsImage(buffer, plane, currentPlane.format, size)));
             m_texture.planes[plane]->unbind();
         }
     } else {
         Q_ASSERT(m_texture.planes.count() == 1);
         m_texture.planes[0]->bind();
+        const GLint target = backend()->eglDisplayObject()->isExternalOnly(attributes->format, attributes->modifier) ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
         glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(backend()->importBufferAsImage(buffer)));
         m_texture.planes[0]->unbind();
     }
