@@ -42,11 +42,12 @@
 #include "window.h"
 #include "workspace.h"
 
-#include <KLocalizedString>
-#include <QQuickWindow>
 #if KWIN_BUILD_NOTIFICATIONS
+#include <KLocalizedString>
 #include <KNotification>
 #endif
+
+#include <QQuickWindow>
 
 namespace KWin
 {
