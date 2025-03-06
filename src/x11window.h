@@ -16,7 +16,6 @@
 #endif
 
 // kwin
-#include "scene/decorationitem.h"
 #include "utils/xcbutils.h"
 #include "window.h"
 // Qt
@@ -49,28 +48,6 @@ enum class Predicate {
     WindowMatch,
     WrapperIdMatch,
     FrameIdMatch,
-};
-
-/**
- * @todo Remove when the X11 platform support is dropped. This decoration renderer
- * will be used if compositing is off.
- */
-class X11DecorationRenderer : public DecorationRenderer
-{
-    Q_OBJECT
-
-public:
-    explicit X11DecorationRenderer(Decoration::DecoratedWindowImpl *client);
-    ~X11DecorationRenderer() override;
-
-protected:
-    void render(const QRegion &region) override;
-
-private:
-    void update();
-
-    QTimer *m_scheduleTimer;
-    xcb_gcontext_t m_gc;
 };
 
 class KWIN_EXPORT X11Window : public Window
