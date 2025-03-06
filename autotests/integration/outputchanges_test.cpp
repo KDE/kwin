@@ -22,6 +22,8 @@
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
 
+#include <ranges>
+
 using namespace std::chrono_literals;
 
 namespace KWin

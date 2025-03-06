@@ -47,7 +47,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMouseEvent>
-#include <QPainter>
 #include <QProcess>
 // xcb
 #include <xcb/xcb_icccm.h>
@@ -120,98 +119,6 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask
     | NET::DNDIconMask
     | NET::OnScreenDisplayMask
     | NET::CriticalNotificationMask;
-
-X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedWindowImpl *client)
-    : DecorationRenderer(client)
-    , m_scheduleTimer(new QTimer(this))
-    , m_gc(XCB_NONE)
-{
-    // Delay any rendering to end of event cycle to catch multiple updates per cycle.
-    m_scheduleTimer->setSingleShot(true);
-    m_scheduleTimer->setInterval(0);
-    connect(m_scheduleTimer, &QTimer::timeout, this, &X11DecorationRenderer::update);
-    connect(this, &X11DecorationRenderer::damaged, m_scheduleTimer, static_cast<void (QTimer::*)()>(&QTimer::start));
-}
-
-X11DecorationRenderer::~X11DecorationRenderer()
-{
-    if (m_gc != XCB_NONE) {
-        xcb_free_gc(kwinApp()->x11Connection(), m_gc);
-    }
-}
-
-void X11DecorationRenderer::update()
-{
-    if (!damage().isEmpty()) {
-        render(damage());
-        resetDamage();
-    }
-}
-
-void X11DecorationRenderer::render(const QRegion &region)
-{
-    if (!client()) {
-        return;
-    }
-    xcb_connection_t *c = kwinApp()->x11Connection();
-    X11Window *window = static_cast<X11Window *>(client()->window());
-
-    if (m_gc == XCB_NONE) {
-        m_gc = xcb_generate_id(c);
-        xcb_create_gc(c, m_gc, window->frameId(), 0, nullptr);
-    }
-
-    QRectF left, top, right, bottom;
-    window->layoutDecorationRects(left, top, right, bottom);
-
-    const QRect geometry = region.boundingRect();
-    left = left.intersected(geometry);
-    top = top.intersected(geometry);
-    right = right.intersected(geometry);
-    bottom = bottom.intersected(geometry);
-
-    auto renderPart = [this, c, window](const QRect &geo) {
-        if (!geo.isValid()) {
-            return;
-        }
-
-        // Guess the pixel format of the X pixmap into which the QImage will be copied.
-        QImage::Format format;
-        const int depth = window->depth();
-        switch (depth) {
-        case 30:
-            format = QImage::Format_A2RGB30_Premultiplied;
-            break;
-        case 24:
-        case 32:
-            format = QImage::Format_ARGB32_Premultiplied;
-            break;
-        default:
-            qCCritical(KWIN_CORE) << "Unsupported client depth" << depth;
-            format = QImage::Format_ARGB32_Premultiplied;
-            break;
-        };
-
-        QImage image(geo.width(), geo.height(), format);
-        image.fill(Qt::transparent);
-        QPainter p(&image);
-        p.setRenderHint(QPainter::Antialiasing);
-        p.setWindow(geo);
-        p.setClipRect(geo);
-        renderToPainter(&p, geo);
-
-        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, window->frameId(), m_gc,
-                      image.width(), image.height(), geo.x(), geo.y(), 0, window->depth(),
-                      image.sizeInBytes(), image.constBits());
-    };
-    renderPart(left.toRect());
-    renderPart(top.toRect());
-    renderPart(right.toRect());
-    renderPart(bottom.toRect());
-
-    xcb_flush(c);
-    resetImageSizesDirty();
-}
 
 // Creating a client:
 //  - only by calling Workspace::createClient()
