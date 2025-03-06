@@ -155,7 +155,7 @@ bool WindowItem::computeVisibility() const
     if (!m_window->readyForPainting()) {
         return false;
     }
-    if (waylandServer() && waylandServer()->isScreenLocked()) {
+    if (waylandServer()->isScreenLocked()) {
         return m_window->isLockScreen() || m_window->isInputMethod() || m_window->isLockScreenOverlay();
     }
     if (!m_window->isOnCurrentDesktop()) {

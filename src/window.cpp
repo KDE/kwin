@@ -1852,7 +1852,7 @@ void Window::setupWindowManagementInterface()
         // already setup
         return;
     }
-    if (!waylandServer() || !waylandServer()->windowManagement()) {
+    if (!waylandServer()->windowManagement()) {
         return;
     }
     auto w = waylandServer()->windowManagement()->createWindow(this, internalId());
