@@ -766,9 +766,6 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
         // SELI check all this
         return; // hack for motif apps like netscape
     }
-    if (QApplication::activePopupWidget()) {
-        return;
-    }
 
     // When a window loses focus, FocusOut events are usually immediatelly
     // followed by FocusIn events for another window that gains the focus
