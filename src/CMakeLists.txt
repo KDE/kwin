@@ -363,10 +363,6 @@ if (KWIN_BUILD_TABBOX)
         tabbox/tabboxhandler.cpp
     )
     add_subdirectory(tabbox/switchers)
-
-    if (KWIN_BUILD_X11)
-        target_sources(kwin PRIVATE tabbox/x11_filter.cpp)
-    endif()
 endif()
 
 qt_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
