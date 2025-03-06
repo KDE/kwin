@@ -319,8 +319,6 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
             destroyWindow();
             break;
         case XCB_UNMAP_NOTIFY: {
-            workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
-
             // unmap notify might have been emitted due to a destroy notify
             // but unmap notify gets emitted before the destroy notify, nevertheless at this
             // point the window is already destroyed. This means any XCB request with the window
