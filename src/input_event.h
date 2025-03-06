@@ -72,6 +72,14 @@ struct KeyboardKeyEvent
     std::chrono::microseconds timestamp;
 };
 
+struct KeyboardKeyEventPreXkb
+{
+    InputDevice *device;
+    KeyboardKeyState state;
+    quint32 scanCode;
+    std::chrono::microseconds timestamp;
+};
+
 struct SwitchEvent
 {
     InputDevice *device;

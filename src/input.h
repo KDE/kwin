@@ -48,6 +48,7 @@ struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
 struct KeyboardKeyEvent;
+struct KeyboardKeyEventPreXkb;
 struct TabletToolProximityEvent;
 struct TabletToolTipEvent;
 struct TabletToolButtonEvent;
@@ -146,6 +147,17 @@ public:
                 return;
             }
         }
+    }
+
+    template<class UnaryPredicate>
+    bool processFiltersPreXkb(UnaryPredicate function)
+    {
+        for (const auto filter : std::as_const(m_filters)) {
+            if (function(filter)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -318,6 +330,7 @@ private:
 namespace InputFilterOrder
 {
 enum Order {
+    A11yKeyboardMonitor,
     PlaceholderOutput,
     Dpms,
     ButtonRebind,
@@ -400,6 +413,7 @@ public:
      * @return @c true to stop further event processing, @c false to pass to next filter.
      */
     virtual bool keyboardKey(KeyboardKeyEvent *event);
+    virtual bool keyboardKeyPreXkb(KeyboardKeyEventPreXkb *event);
     virtual bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     virtual bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     virtual bool touchUp(qint32 id, std::chrono::microseconds time);
