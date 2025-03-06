@@ -152,6 +152,13 @@ Item *WorkspaceScene::overlayItem() const
     return m_overlayItem.get();
 }
 
+static bool regionActuallyContains(const QRegion &region, const QRect &rect)
+{
+    // QRegion::contains does **not** actually check if the region contains the rect
+    // so this helper function has to be used instead...
+    return (region & rect) == rect;
+}
+
 static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded)
 {
     const QList<Item *> children = item->sortedChildItems();
@@ -161,7 +168,7 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
         if (child->z() < 0) {
             break;
         }
-        if (child->isVisible() && !occluded.contains(child->mapToScene(child->boundingRect()).toAlignedRect())) {
+        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
             if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
                 return false;
             }
@@ -170,14 +177,14 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
     if (candidates.size() >= maxCount || item->hasEffects()) {
         return false;
     }
-    if (occluded.contains(item->mapToScene(item->boundingRect()).toAlignedRect())) {
+    if (regionActuallyContains(occluded, item->mapToScene(item->boundingRect()).toAlignedRect())) {
         return true;
     }
     candidates.push_back(item);
     occluded += item->mapToScene(item->opaque());
     for (; it != children.rend(); it++) {
         Item *const child = *it;
-        if (child->isVisible() && !occluded.contains(child->mapToScene(child->boundingRect()).toAlignedRect())) {
+        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
             if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
                 return false;
             }
