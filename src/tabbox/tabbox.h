@@ -30,7 +30,6 @@ namespace KWin
 
 class Workspace;
 class Window;
-class X11EventFilter;
 
 namespace TabBox
 {
