@@ -118,13 +118,6 @@ void EglBackend::updateDmabufTranches()
             }
 
             ModifierList modifiers = *it;
-            // Work around Xwayland breaking with the Nvidia driver
-            // if linear is advertised by the compositor, since it uses
-            // all advertised modifiers (for 8 bpc rgb formats) for rendering
-            if (info && !info->yuv && !nonExternalOnly[it.key()].contains(DRM_FORMAT_MOD_LINEAR)) {
-                modifiers.removeOne(DRM_FORMAT_MOD_LINEAR);
-            }
-
             for (const auto &tranche : std::as_const(m_tranches)) {
                 if (modifiers.empty()) {
                     break;
