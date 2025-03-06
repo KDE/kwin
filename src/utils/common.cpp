@@ -19,7 +19,6 @@
 
 #if KWIN_BUILD_X11
 #include "effect/xcb.h"
-#include <kkeyserver.h>
 #endif
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
@@ -121,24 +120,6 @@ Qt::MouseButtons x11ToQtMouseButtons(int state)
     }
     if (state & XCB_KEY_BUT_MASK_BUTTON_5) {
         ret |= Qt::XButton2;
-    }
-    return ret;
-}
-
-Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
-{
-    Qt::KeyboardModifiers ret = {};
-    if (state & XCB_KEY_BUT_MASK_SHIFT) {
-        ret |= Qt::ShiftModifier;
-    }
-    if (state & XCB_KEY_BUT_MASK_CONTROL) {
-        ret |= Qt::ControlModifier;
-    }
-    if (state & KKeyServer::modXAlt()) {
-        ret |= Qt::AltModifier;
-    }
-    if (state & KKeyServer::modXMeta()) {
-        ret |= Qt::MetaModifier;
     }
     return ret;
 }
