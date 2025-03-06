@@ -377,9 +377,6 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         if ((dirtyProperties & NET::WMIcon) != 0) {
             getIcons();
         }
-        // Note there's a difference between userTime() and info->userTime()
-        // info->userTime() is the value of the property, userTime() also includes
-        // updates of the time done by KWin (ButtonPress on windowrapper etc.).
         if ((dirtyProperties2 & NET::WM2UserTime) != 0) {
             updateUserTime(info->userTime());
         }
@@ -430,51 +427,6 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
     case XCB_PROPERTY_NOTIFY:
         propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t *>(e));
         break;
-    case XCB_KEY_PRESS:
-        updateUserTime(reinterpret_cast<xcb_key_press_event_t *>(e)->time);
-        break;
-    case XCB_BUTTON_PRESS: {
-        const auto *event = reinterpret_cast<xcb_button_press_event_t *>(e);
-        updateUserTime(event->time);
-        break;
-    }
-    case XCB_KEY_RELEASE:
-        // don't update user time on releases
-        // e.g. if the user presses Alt+F2, the Alt release
-        // would appear as user input to the currently active window
-        break;
-    case XCB_BUTTON_RELEASE: {
-        // don't update user time on releases
-        // e.g. if the user presses Alt+F2, the Alt release
-        // would appear as user input to the currently active window
-        break;
-    }
-    case XCB_MOTION_NOTIFY: {
-        const auto *event = reinterpret_cast<xcb_motion_notify_event_t *>(e);
-
-        int x = Xcb::fromXNative(event->event_x);
-        int y = Xcb::fromXNative(event->event_y);
-        int root_x = Xcb::fromXNative(event->root_x);
-        int root_y = Xcb::fromXNative(event->root_y);
-
-        workspace()->updateFocusMousePosition(QPointF(root_x, root_y));
-        break;
-    }
-    case XCB_ENTER_NOTIFY: {
-        auto *event = reinterpret_cast<xcb_enter_notify_event_t *>(e);
-        // MotionNotify is guaranteed to be generated only if the mouse
-        // move start and ends in the window; for cases when it only
-        // starts or only ends there, Enter/LeaveNotify are generated.
-        // Fake a MotionEvent in such cases to make handle of mouse
-        // events simpler (Qt does that too).
-        int x = Xcb::fromXNative(event->event_x);
-        int y = Xcb::fromXNative(event->event_y);
-        int root_x = Xcb::fromXNative(event->root_x);
-        int root_y = Xcb::fromXNative(event->root_y);
-
-        workspace()->updateFocusMousePosition(QPointF(root_x, root_y));
-        break;
-    }
     case XCB_FOCUS_IN:
         focusInEvent(reinterpret_cast<xcb_focus_in_event_t *>(e));
         break;
@@ -850,12 +802,6 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
         Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
         performMousePressCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
     }
-}
-
-void X11Window::keyPressEvent(uint key_code, xcb_timestamp_t time)
-{
-    updateUserTime(time);
-    Window::keyPressEvent(key_code);
 }
 
 } // namespace
