@@ -373,7 +373,6 @@ void Workspace::cleanupX11()
     RootInfo::destroy();
     Xcb::Extensions::destroy();
 
-    m_movingClientFilter.reset();
     m_startup.reset();
     m_nullFocus.reset();
     m_syncAlarmFilter.reset();
