@@ -71,7 +71,6 @@ enum ShadeMode {
 Qt::MouseButton x11ToQtMouseButton(int button);
 Qt::MouseButton KWIN_EXPORT x11ToQtMouseButton(int button);
 Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
-Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 #endif
 
 KWIN_EXPORT QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity);
