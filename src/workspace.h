@@ -692,7 +692,6 @@ private:
     bool was_user_interaction;
 #if KWIN_BUILD_X11
     QList<xcb_window_t> manual_overlays; // Topmost last
-    std::unique_ptr<X11EventFilter> m_wasUserInteractionFilter;
     std::unique_ptr<Xcb::Window> m_nullFocus;
     std::unique_ptr<X11EventFilter> m_movingClientFilter;
     std::unique_ptr<X11EventFilter> m_syncAlarmFilter;
