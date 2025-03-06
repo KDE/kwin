@@ -124,7 +124,7 @@ void AbstractEglBackend::initWayland()
         }
 
         const auto formats = m_display->allSupportedDrmFormats();
-        auto filterFormats = [this, &formats](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
+        auto filterFormats = [this, &formats](std::optional<uint32_t> bpc, bool withExternalOnly) {
             QHash<uint32_t, QList<uint64_t>> set;
             for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
                 const auto info = FormatInfo::get(it.key());
@@ -132,7 +132,8 @@ void AbstractEglBackend::initWayland()
                     continue;
                 }
 
-                const bool externalOnlySupported = withExternalOnlyYUV && info && info->yuvConversion();
+                // all formats we have FormatInfo for either aren't YUV, or we have a conversion sampler for it
+                const bool externalOnlySupported = withExternalOnly && info;
                 QList<uint64_t> modifiers = externalOnlySupported ? it->allModifiers : it->nonExternalOnlyModifiers;
 
                 if (externalOnlySupported && !modifiers.isEmpty()) {
@@ -309,15 +310,19 @@ std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBu
 
 bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
-    const auto nonExternalOnly = m_display->nonExternalOnlySupportedDrmFormats();
-    if (auto it = nonExternalOnly.find(buffer->dmabufAttributes()->format); it != nonExternalOnly.end() && it->contains(buffer->dmabufAttributes()->modifier)) {
-        return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
-    }
-    // external_only buffers aren't used as a single EGLImage, import them separately
-    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
-    if (!info || !info->yuvConversion()) {
+    const auto formats = m_display->allSupportedDrmFormats();
+    const auto it = formats.find(buffer->dmabufAttributes()->format);
+    if (it == formats.end()) {
         return false;
     }
+    if (!it->allModifiers.contains(buffer->dmabufAttributes()->modifier)) {
+        return false;
+    }
+    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
+    if (!info || !info->yuvConversion()) {
+        return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
+    }
+    // YUV buffers aren't used as a single EGLImage, import their planes separately
     const auto planes = info->yuvConversion()->plane;
     if (buffer->dmabufAttributes()->planeCount != planes.size()) {
         return false;
