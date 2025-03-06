@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-01 00:42+0000\n"
+"POT-Creation-Date: 2025-03-06 00:43+0000\n"
 "PO-Revision-Date: 2024-09-17 13:42+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -918,17 +918,17 @@ msgstr "Импорт правил"
 msgid "Export Rules"
 msgstr "Экспорт правил"
 
-#: ui/OptionsComboBox.qml:35
+#: ui/OptionsComboBox.qml:37
 #, kde-format
 msgid "None selected"
 msgstr "Ничего не выбрано"
 
-#: ui/OptionsComboBox.qml:41
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "All selected"
 msgstr "Выбрано всё"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:45
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
