@@ -281,6 +281,19 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         m_pressedKeys.removeOne(key);
     }
 
+    KeyboardKeyEventPreXkb eventBefore{
+        .device = device,
+        .state = state,
+        .scanCode = key,
+        .timestamp = time,
+    };
+
+    bool ret = m_input->processFiltersPreXkb(std::bind(&InputEventFilter::keyboardKeyPreXkb, std::placeholders::_1, &eventBefore));
+
+    if (ret) {
+        return;
+    }
+
     const quint32 previousLayout = m_xkb->currentLayout();
     if (state != KeyboardKeyState::Repeated) {
         m_xkb->updateKey(key, state);

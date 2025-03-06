@@ -47,6 +47,7 @@ endfunction()
 
 add_subdirectory(private)
 
+add_subdirectory(a11ykeyboardmonitor)
 add_subdirectory(backgroundcontrast)
 add_subdirectory(blendchanges)
 add_subdirectory(blur)

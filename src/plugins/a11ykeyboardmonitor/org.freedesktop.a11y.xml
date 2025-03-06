@@ -1,0 +1,119 @@
+<!DOCTYPE node PUBLIC
+'-//freedesktop//DTD D-BUS Object Introspection 1.0//EN'
+'http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd'>
+<node>
+  <!--
+      org.freedesktop.a11y.KeyboardMonitor:
+      @short_description: interface for monitoring of keyboard input by assistive technologies
+
+      This interface is used by assistive technologies to monitor keyboard
+      input of the compositor. The compositor is expected to listen on
+      the well-known bus name "org.freedesktop.a11y.Manager" at the object
+      path "/org/freedesktop/a11y/Manager".
+  -->
+  <interface name="org.freedesktop.a11y.KeyboardMonitor">
+    <!--
+        GrabKeyboard:
+
+        Starts grabbing all key events. The client receives the events
+        through the KeyEvent signal, and in addition, the events aren't handled
+        normally by the compositor. This includes changes to the state
+        of toggles like Caps Lock, Num Lock, and Scroll Lock.
+
+        This behavior stays in effect until the same client calls
+        UngrabKeyboard or closes its D-Bus connection.
+    -->
+    <method name="GrabKeyboard" />
+
+    <!--
+        UngrabKeyboard:
+
+        Reverses the effect of calling GrabKeyboard. If GrabKeyboard wasn't
+        previously called, this method does nothing.
+
+        After calling this method, the key grabs specified in the last call
+        to SetKeyGrabs, if any, are still in effect.
+        Also, the client will still receive key events through the KeyEvent
+        signal, if it has called WatchKeyboard.
+    -->
+    <method name="UngrabKeyboard" />
+
+    <!--
+        WatchKeyboard:
+
+        Starts watching all key events. The client receives the events
+        through the KeyEvent signal, but the events are still handled
+        normally by the compositor. This includes changes to the state
+        of toggles like Caps Lock, Num Lock, and Scroll Lock.
+
+        This behavior stays in effect until the same client calls
+        UnwatchKeyboard or closes its D-Bus connection.
+    -->
+    <method name="WatchKeyboard" />
+
+    <!--
+        UnwatchKeyboard:
+
+        Reverses the effect of calling WatchKeyboard. If WatchKeyboard wasn't
+        previously called, this method does nothing.
+
+        After calling this method, the key grabs specified in the last call
+        to SetKeyGrabs, if any, are still in effect,
+        but other key events are no longer reported to this client.
+    -->
+    <method name="UnwatchKeyboard" />
+
+    <!--
+        SetKeyGrabs:
+        @modifiers: set of custom modifiers to grab
+        @keystrokes: set of keystrokes without custom modifiers to grab
+
+        Sets the current key grabs for the calling client, overriding
+        any previous call to this method. For grabbed key events, the
+        KeyEvent signal is emitted, and normal key event handling
+        is suppressed, including state changes for toggles like Caps Lock
+        and Num Lock.
+
+        The grabs set by this method stay in effect until the same client
+        calls this method again, or until that client closes its D-Bus
+        connection.
+
+        Each item in @modifiers is an XKB keysym. All keys in this list
+        will be grabbed, and keys pressed while any of these keys are down
+        will also be grabbed.
+
+        Each item in @keystrokes is a struct with the following fields:
+
+        - the XKB keysym of the non-modifier key
+        - the XKB modifier mask of the modifiers, if any, for this keystroke
+
+        If any of the keys in @modifiers is pressed alone, the compositor
+        is required to ignore the key press and release event if a second
+        key press of the same modifier is not received within a reasonable
+        time frame, for example, the key repeat delay.
+        If such event is received, this second event is processed normally.
+    -->
+    <method name="SetKeyGrabs">
+      <arg type="au" name="modifiers" direction="in" />
+      <arg type="a(uu)" name="keystrokes" direction="in" />
+    </method>
+
+    <!--
+        KeyEvent:
+        @released: whether this is a key-up event
+        @state: XKB modifier mask for currently pressed modifiers
+        @keysym: XKB keysym for this key
+        @unichar: Unicode character for this key, or 0 if none
+        @keycode: hardware-dependent keycode for this key
+
+        The compositor emits this signal for each key press or release.
+    -->
+    <signal name="KeyEvent">
+      <arg type="b" name="released" direction="in" />
+      <arg type="u" name="state" direction="in" />
+      <arg type="u" name="keysym" direction="in" />
+      <arg type="u" name="unichar" direction="in" />
+      <arg type="q" name="keycode" direction="in" />
+    </signal>
+  </interface>
+</node>

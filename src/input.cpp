@@ -122,6 +122,11 @@ bool InputEventFilter::keyboardKey(KeyboardKeyEvent *event)
     return false;
 }
 
+bool InputEventFilter::keyboardKeyPreXkb(KeyboardKeyEventPreXkb *event)
+{
+    return false;
+}
+
 bool InputEventFilter::touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time)
 {
     return false;
