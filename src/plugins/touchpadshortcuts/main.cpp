@@ -9,7 +9,7 @@
 
 #include "touchpadshortcuts.h"
 
-class KWIN_EXPORT KeyNotificationFactory : public KWin::PluginFactory
+class KWIN_EXPORT TouchpadShortcutsFactory : public KWin::PluginFactory
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID PluginFactory_iid FILE "metadata.json")
