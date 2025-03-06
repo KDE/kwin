@@ -2942,6 +2942,7 @@ public:
             return;
         }
         window->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        workspace()->setWasUserInteraction();
     }
 };
 
