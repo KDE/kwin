@@ -15,7 +15,6 @@
 #endif
 #include "atoms.h"
 #include "client_machine.h"
-#include "compositor.h"
 #include "core/output.h"
 #include "cursor.h"
 #include "decorations/decoratedwindow.h"
@@ -996,18 +995,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     readShowOnScreenEdge(showOnScreenEdgeCookie);
 
     setupWindowManagementInterface();
-
-    // Forward all opacity values to the frame in case there'll be other CM running.
-    connect(Compositor::self(), &Compositor::compositingToggled, this, [this](bool active) {
-        if (active) {
-            return;
-        }
-        if (opacity() == 1.0) {
-            return;
-        }
-        NETWinInfo info(kwinApp()->x11Connection(), frameId(), kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
-        info.setOpacityF(opacity());
-    });
 
     // The wayland surface is associated with the window asynchronously.
     if (surface()) {
