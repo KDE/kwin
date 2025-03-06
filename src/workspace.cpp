@@ -377,7 +377,6 @@ void Workspace::cleanupX11()
     m_startup.reset();
     m_nullFocus.reset();
     m_syncAlarmFilter.reset();
-    m_wasUserInteractionFilter.reset();
 }
 #endif
 
@@ -1957,17 +1956,7 @@ Window *Workspace::findInternal(QWindow *w) const
 
 void Workspace::setWasUserInteraction()
 {
-    if (was_user_interaction) {
-        return;
-    }
     was_user_interaction = true;
-    // might be called from within the filter, so delay till we now the filter returned
-#if KWIN_BUILD_X11
-    QTimer::singleShot(0, this,
-                       [this] {
-        m_wasUserInteractionFilter.reset();
-    });
-#endif
 }
 
 void Workspace::updateTabbox()

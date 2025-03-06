@@ -383,7 +383,6 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         // info->userTime() is the value of the property, userTime() also includes
         // updates of the time done by KWin (ButtonPress on windowrapper etc.).
         if ((dirtyProperties2 & NET::WM2UserTime) != 0) {
-            workspace()->setWasUserInteraction();
             updateUserTime(info->userTime());
         }
         if ((dirtyProperties2 & NET::WM2StartupId) != 0) {
