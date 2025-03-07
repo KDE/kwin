@@ -162,6 +162,7 @@ private:
     std::vector<std::unique_ptr<DrmPlane>> m_planes;
     std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;
     std::vector<std::shared_ptr<DrmConnector>> m_connectors;
+    std::unordered_map<DrmConnector *, std::unique_ptr<DrmPipeline>> m_pipelineMap;
     QList<DrmObject *> m_allObjects;
     QList<DrmPipeline *> m_pipelines;
 
