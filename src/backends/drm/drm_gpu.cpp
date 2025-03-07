@@ -245,7 +245,6 @@ bool DrmGpu::updateOutputs()
     if (!m_isActive) {
         return false;
     }
-    waitIdle();
     DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed:" << strerror(errno);
@@ -486,42 +485,6 @@ DrmOutput *DrmGpu::findOutput(quint32 connector)
         return *it;
     }
     return nullptr;
-}
-
-void DrmGpu::waitIdle()
-{
-    m_socketNotifier->setEnabled(false);
-
-    // CLOCK_MONOTONIC should not count the time when the system is suspended, however the Linux kernel
-    // does not follow this part of the POSIX standard. So a timeout can be reported when it must not be.
-    // As a workaround, multiple poll() attempts are made.
-    int attempt = 0;
-    while (attempt < 5) {
-        const bool hasPendingCommit = std::ranges::any_of(m_pipelines, [](DrmPipeline *pipeline) {
-            return pipeline->commitThread()->drain();
-        });
-        if (!hasPendingCommit) {
-            break;
-        }
-        pollfd pfds[1];
-        pfds[0].fd = m_fd;
-        pfds[0].events = POLLIN;
-
-        const int ready = poll(pfds, 1, s_pageflipTimeout.count());
-        if (ready < 0) {
-            if (errno != EINTR) {
-                qCWarning(KWIN_DRM) << Q_FUNC_INFO << "poll() failed:" << strerror(errno);
-                break;
-            }
-        } else if (ready == 0) {
-            qCWarning(KWIN_DRM) << "No drm events for gpu" << this << "within last 1 second";
-            attempt++;
-        } else {
-            dispatchEvents();
-        }
-    };
-
-    m_socketNotifier->setEnabled(true);
 }
 
 bool DrmGpu::isIdle() const
