@@ -1074,17 +1074,23 @@ Xkb::Modifiers Xkb::depressedModifiers() const
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Mod1;
-    } else if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Control;
-    } else if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Shift;
-    } else if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Mod4;
-    } else if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Mod5;
-    } else if (xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Lock;
-    } else if (xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
         result |= Modifier::Num;
     }
 
@@ -1097,17 +1103,23 @@ Xkb::Modifiers Xkb::latchedModifiers() const
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Mod1;
-    } else if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_LATCHED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Control;
-    } else if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_LATCHED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Shift;
-    } else if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_LATCHED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Mod4;
-    } else if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_LATCHED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Mod5;
-    } else if (xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_LATCHED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Lock;
-    } else if (xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LATCHED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LATCHED) == 1) {
         result |= Modifier::Num;
     }
 
@@ -1120,17 +1132,23 @@ Xkb::Modifiers Xkb::lockedModifiers() const
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Mod1;
-    } else if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_LOCKED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Control;
-    } else if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_LOCKED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Shift;
-    } else if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_LOCKED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Mod4;
-    } else if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_LOCKED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Mod5;
-    } else if (xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_LOCKED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Lock;
-    } else if (xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LOCKED) == 1) {
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_LOCKED) == 1) {
         result |= Modifier::Num;
     }
 
