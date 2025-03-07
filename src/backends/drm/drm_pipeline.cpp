@@ -262,6 +262,21 @@ void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
     }
 }
 
+static const auto s_forceScalingMode = []() -> std::optional<DrmConnector::ScalingMode> {
+    const auto env = qEnvironmentVariable("KWIN_DRM_FORCE_SCALING_MODE");
+    if (env == "NONE") {
+        return DrmConnector::ScalingMode::None;
+    } else if (env == "FULL") {
+        return DrmConnector::ScalingMode::Full;
+    } else if (env == "CENTER") {
+        return DrmConnector::ScalingMode::Center;
+    } else if (env == "FULL_ASPECT") {
+        return DrmConnector::ScalingMode::Full_Aspect;
+    } else {
+        return std::nullopt;
+    }
+}();
+
 bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 {
     commit->addProperty(m_connector->crtcId, m_pending.crtc->id());
@@ -296,7 +311,13 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addEnum(m_connector->colorspace, DrmConnector::Colorspace::Default);
     }
     if (m_connector->scalingMode.isValid()) {
-        if (m_connector->isInternal() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::Full_Aspect) && (m_pending.mode->flags() & OutputMode::Flag::Generated)) {
+        if (s_forceScalingMode.has_value()) {
+            if (m_connector->scalingMode.hasEnum(*s_forceScalingMode)) {
+                commit->addEnum(m_connector->scalingMode, *s_forceScalingMode);
+            } else if (m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
+                commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
+            }
+        } else if (m_connector->isInternal() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::Full_Aspect) && (m_pending.mode->flags() & OutputMode::Flag::Generated)) {
             commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::Full_Aspect);
         } else if (m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
             commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
