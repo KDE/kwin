@@ -157,7 +157,6 @@ bool DrmConnector::init()
     }
 
     m_possibleCrtcs = drmModeConnectorGetPossibleCrtcs(gpu()->fd(), m_conn.get());
-    m_pipeline = std::make_unique<DrmPipeline>(this);
 
     return true;
 }
@@ -341,11 +340,6 @@ bool DrmConnector::isNonDesktop() const
 const Edid *DrmConnector::edid() const
 {
     return &m_edid;
-}
-
-DrmPipeline *DrmConnector::pipeline() const
-{
-    return m_pipeline.get();
 }
 
 void DrmConnector::disable(DrmAtomicCommit *commit)
