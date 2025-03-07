@@ -118,7 +118,6 @@ public:
 
     FileDescriptor createNonMasterFd() const;
     std::unique_ptr<DrmLease> leaseOutputs(const QList<DrmOutput *> &outputs);
-    void waitIdle();
     bool isIdle() const;
     void dispatchEvents();
 
