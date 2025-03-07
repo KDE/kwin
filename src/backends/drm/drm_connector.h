@@ -23,7 +23,6 @@
 namespace KWin
 {
 
-class DrmPipeline;
 class DrmConnector;
 class DrmCrtc;
 
@@ -62,7 +61,6 @@ public:
     bool isConnected() const;
     bool isNonDesktop() const;
     bool isInternal() const;
-    DrmPipeline *pipeline() const;
 
     const Edid *edid() const;
     QString connectorName() const;
@@ -148,7 +146,6 @@ private:
     std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate);
 
     DrmUniquePtr<drmModeConnector> m_conn;
-    std::unique_ptr<DrmPipeline> m_pipeline;
     Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
     QList<std::shared_ptr<DrmConnectorMode>> m_driverModes;

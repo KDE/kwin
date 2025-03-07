@@ -35,8 +35,7 @@ class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    explicit DrmOutput(const std::shared_ptr<DrmConnector> &connector);
-    ~DrmOutput() override;
+    explicit DrmOutput(const std::shared_ptr<DrmConnector> &connector, DrmPipeline *pipeline);
 
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
