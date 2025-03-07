@@ -179,11 +179,8 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         updateDpmsMode(mode);
         return true;
     }
-    if (!active) {
-        m_gpu->waitIdle();
-    }
     m_pipeline->setActive(active);
-    if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::TestAllowModeset : DrmPipeline::CommitMode::CommitModeset) == DrmPipeline::Error::None) {
+    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::TestAllowModeset) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
         updateDpmsMode(mode);
         if (active) {
@@ -193,6 +190,9 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
             tryKmsColorOffloading();
         } else {
             m_renderLoop->inhibit();
+            // with the renderloop inhibited, there won't be a new frame
+            // to trigger this automatically
+            m_gpu->maybeModeset(m_pipeline, nullptr);
         }
         return true;
     } else {
