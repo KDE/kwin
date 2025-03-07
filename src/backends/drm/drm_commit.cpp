@@ -39,6 +39,11 @@ DrmGpu *DrmCommit::gpu() const
     return m_gpu;
 }
 
+void DrmCommit::setDefunct()
+{
+    m_defunct = true;
+}
+
 DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
     : DrmCommit(gpu)
 {
@@ -165,6 +170,9 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     for (const auto &[plane, buffer] : m_buffers) {
         plane->setCurrentBuffer(buffer);
+    }
+    if (m_defunct) {
+        return;
     }
     for (const auto &[plane, frame] : m_frames) {
         if (frame) {
@@ -295,6 +303,9 @@ void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     m_crtc->setCurrent(m_buffer);
+    if (m_defunct) {
+        return;
+    }
     if (m_frame) {
         m_frame->presented(timestamp, m_mode);
         m_frame.reset();
