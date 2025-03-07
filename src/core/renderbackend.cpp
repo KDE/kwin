@@ -55,9 +55,14 @@ OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDurat
 OutputFrame::~OutputFrame()
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
-    if (!m_presented && m_loop) {
+    if (!m_presented && m_loop && !m_defunct) {
         RenderLoopPrivate::get(m_loop)->notifyFrameDropped();
     }
+}
+
+void OutputFrame::setDefunct()
+{
+    m_defunct = true;
 }
 
 void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)

@@ -41,11 +41,13 @@ public:
 
     DrmGpu *gpu() const;
     virtual void pageFlipped(std::chrono::nanoseconds timestamp) = 0;
+    virtual void setDefunct();
 
 protected:
     DrmCommit(DrmGpu *gpu);
 
     DrmGpu *const m_gpu;
+    bool m_defunct = false;
 };
 
 class DrmAtomicCommit : public DrmCommit
@@ -54,6 +56,8 @@ public:
     explicit DrmAtomicCommit(DrmGpu *gpu);
     explicit DrmAtomicCommit(const QList<DrmPipeline *> &pipelines);
     explicit DrmAtomicCommit(const DrmAtomicCommit &copy) = default;
+
+    void setDefunct() override;
 
     void addProperty(const DrmProperty &prop, uint64_t value);
     template<typename T>
@@ -107,6 +111,8 @@ class DrmLegacyCommit : public DrmCommit
 {
 public:
     DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame);
+
+    void setDefunct() override;
 
     bool doModeset(DrmConnector *connector, DrmConnectorMode *mode);
     bool doPageflip(PresentationMode mode);

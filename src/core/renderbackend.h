@@ -78,6 +78,8 @@ public:
     explicit OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration);
     ~OutputFrame();
 
+    void setDefunct();
+
     void presented(std::chrono::nanoseconds timestamp, PresentationMode mode);
 
     void addFeedback(std::unique_ptr<PresentationFeedback> &&feedback);
@@ -117,6 +119,7 @@ private:
     bool m_presented = false;
     std::optional<double> m_brightness;
     std::optional<double> m_artificialHdrHeadroom;
+    bool m_defunct = false;
 };
 
 /**

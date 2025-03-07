@@ -46,6 +46,9 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
 
 DrmPipeline::~DrmPipeline()
 {
+    // the commit thread may still access the pipeline until it's stopped
+    // so it must be deleted before everything else
+    m_commitThread.reset();
 }
 
 DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &frame)
