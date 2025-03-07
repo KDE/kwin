@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-05 00:44+0000\n"
+"POT-Creation-Date: 2025-03-07 00:43+0000\n"
 "PO-Revision-Date: 2025-01-26 19:08+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -4281,7 +4281,7 @@ msgstr "சாளரத்தை கட்டாயமாக மூடு"
 msgid "Activate Window (%1)"
 msgstr "சாளரத்தை செயல்படுத்து (%1)"
 
-#: utils/edid.cpp:324
+#: utils/edid.cpp:319
 #, kde-format
 msgid "unknown"
 msgstr "தெரியாதது"
@@ -4357,7 +4357,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1703
+#: workspace.cpp:1704
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-05 00:44+0000\n"
+"POT-Creation-Date: 2025-03-07 00:43+0000\n"
 "PO-Revision-Date: 2025-02-17 22:05+0100\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -4346,7 +4346,7 @@ msgstr "Fenster beseitigen"
 msgid "Activate Window (%1)"
 msgstr "Fenster aktivieren (%1)"
 
-#: utils/edid.cpp:324
+#: utils/edid.cpp:319
 #, kde-format
 msgid "unknown"
 msgstr "unbekannt"
@@ -4422,7 +4422,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reagiert nicht)"
 
-#: workspace.cpp:1703
+#: workspace.cpp:1704
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
