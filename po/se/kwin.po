@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-05 03:13+0000\n"
+"POT-Creation-Date: 2025-03-07 02:40+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -4321,7 +4321,7 @@ msgstr "Gotte láse"
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:335
 #, kde-format
 msgid "unknown"
 msgstr "amas"
@@ -4391,13 +4391,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3168
+#: window.cpp:3262
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1671
+#: workspace.cpp:1672
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

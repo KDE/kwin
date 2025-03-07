@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-05 03:13+0000\n"
+"POT-Creation-Date: 2025-03-07 02:40+0000\n"
 "PO-Revision-Date: 2025-01-26 19:08+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -4383,7 +4383,7 @@ msgstr "சாளரத்தை கட்டாயமாக மூடு"
 msgid "Activate Window (%1)"
 msgstr "சாளரத்தை செயல்படுத்து (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:335
 #, kde-format
 msgid "unknown"
 msgstr "தெரியாதது"
@@ -4453,13 +4453,13 @@ msgstr "குறிப்பிட்ட வெளியீட்டு வர�
 msgid "The driver rejected the output configuration"
 msgstr "சாதனநிரல் அமைப்புகளை நிராகரித்தது"
 
-#: window.cpp:3168
+#: window.cpp:3262
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1671
+#: workspace.cpp:1672
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

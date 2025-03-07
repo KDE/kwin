@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-05 03:13+0000\n"
+"POT-Creation-Date: 2025-03-07 02:40+0000\n"
 "PO-Revision-Date: 2024-12-25 08:11+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -4404,7 +4404,7 @@ msgstr "Akabatu leihoa"
 msgid "Activate Window (%1)"
 msgstr "Aktibatu leihoa (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:335
 #, kde-format
 msgid "unknown"
 msgstr "ezezaguna"
@@ -4474,13 +4474,13 @@ msgstr "Emandako irteera-hurrenkera baliogabea da"
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
 
-#: window.cpp:3168
+#: window.cpp:3262
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ez du erantzuten)"
 
-#: workspace.cpp:1671
+#: workspace.cpp:1672
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

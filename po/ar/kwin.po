@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-05 03:13+0000\n"
+"POT-Creation-Date: 2025-03-07 02:40+0000\n"
 "PO-Revision-Date: 2024-12-26 09:07+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -4360,7 +4360,7 @@ msgstr "اقتل النّافذة"
 msgid "Activate Window (%1)"
 msgstr "فعّل النّافذة (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:335
 #, kde-format
 msgid "unknown"
 msgstr "مجهول"
@@ -4430,13 +4430,13 @@ msgstr "ترتيب الإخراج المقدم غير صالح"
 msgid "The driver rejected the output configuration"
 msgstr "رفض السائق ضبط الإخراج"
 
-#: window.cpp:3168
+#: window.cpp:3262
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1671
+#: workspace.cpp:1672
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

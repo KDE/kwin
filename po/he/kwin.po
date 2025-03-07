@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-05 03:13+0000\n"
+"POT-Creation-Date: 2025-03-07 02:40+0000\n"
 "PO-Revision-Date: 2024-12-25 09:30+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -4367,7 +4367,7 @@ msgstr "חיסול חלון"
 msgid "Activate Window (%1)"
 msgstr "הפעלת חלון (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:335
 #, kde-format
 msgid "unknown"
 msgstr "לא ידוע"
@@ -4437,13 +4437,13 @@ msgstr "סדר הפלט שסופק שגוי"
 msgid "The driver rejected the output configuration"
 msgstr "מנהל ההתקן דחה את הגדרות הפלט"
 
-#: window.cpp:3168
+#: window.cpp:3262
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1671
+#: workspace.cpp:1672
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
