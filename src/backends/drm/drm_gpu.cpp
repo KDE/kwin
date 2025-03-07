@@ -557,6 +557,12 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
 {
     const auto commit = static_cast<DrmCommit *>(user_data);
     const auto gpu = commit->gpu();
+    const bool defunct = std::erase_if(gpu->m_defunctCommits, [commit](const auto &defunct) {
+        return defunct.get() == commit;
+    }) != 0;
+    if (defunct) {
+        return;
+    }
 
     // The static_cast<> here are for a 32-bit environment where
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec
@@ -579,6 +585,11 @@ void DrmGpu::dispatchEvents()
     context.version = 3;
     context.page_flip_handler2 = pageFlipHandler;
     drmHandleEvent(m_fd, &context);
+}
+
+void DrmGpu::addDefunctCommit(std::unique_ptr<DrmCommit> &&commit)
+{
+    m_defunctCommits.push_back(std::move(commit));
 }
 
 void DrmGpu::removeOutput(DrmOutput *output)

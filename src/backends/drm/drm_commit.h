@@ -41,11 +41,13 @@ public:
 
     DrmGpu *gpu() const;
     virtual void pageFlipped(std::chrono::nanoseconds timestamp) = 0;
+    void setDefunct();
 
 protected:
     DrmCommit(DrmGpu *gpu);
 
     DrmGpu *const m_gpu;
+    bool m_defunct = false;
 };
 
 class DrmAtomicCommit : public DrmCommit
