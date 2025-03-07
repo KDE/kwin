@@ -41,9 +41,9 @@ namespace KWin
 static bool s_disableTripleBufferingSet = false;
 static const bool s_disableTripleBuffering = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_TRIPLE_BUFFERING", &s_disableTripleBufferingSet) == 1;
 
-DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
+DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, DrmPipeline *pipeline)
     : m_gpu(conn->gpu())
-    , m_pipeline(conn->pipeline())
+    , m_pipeline(pipeline)
     , m_connector(conn)
 {
     m_pipeline->setOutput(this);
@@ -81,11 +81,6 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         }
         m_sleepInhibitor.reset();
     });
-}
-
-DrmOutput::~DrmOutput()
-{
-    m_pipeline->setOutput(nullptr);
 }
 
 bool DrmOutput::addLeaseObjects(QList<uint32_t> &objectList)
