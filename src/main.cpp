@@ -252,7 +252,6 @@ void Application::createInput()
 #endif
     auto input = InputRedirection::create(this);
     input->init();
-    m_platformCursor = std::make_unique<InputRedirectionCursor>();
 }
 
 void Application::createAtoms()

@@ -40,7 +40,6 @@ class ColorManager;
 class ScreenLockerWatcher;
 class TabletModeManager;
 class XwaylandInterface;
-class Cursor;
 class Edge;
 class ScreenEdges;
 class Outline;
@@ -390,7 +389,6 @@ private:
 #if KWIN_BUILD_SCREENLOCKER
     std::unique_ptr<ScreenLockerWatcher> m_screenLockerWatcher;
 #endif
-    std::unique_ptr<Cursor> m_platformCursor;
 };
 
 inline bool Application::initiallyLocked() const
