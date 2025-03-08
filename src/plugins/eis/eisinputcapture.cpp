@@ -10,10 +10,10 @@
 #include "inputcapture_logging.h"
 
 #include "core/output.h"
-#include "cursor.h"
 #include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "pointer_input.h"
 #include "workspace.h"
 
 #include <QDBusConnection>
@@ -219,7 +219,7 @@ void EisInputCapture::release(const QPointF &cursorPosition, bool applyPosition)
         return;
     }
     if (applyPosition) {
-        Cursors::self()->mouse()->setPos(cursorPosition);
+        input()->pointer()->warp(cursorPosition);
     }
     deactivate();
 }

@@ -20,6 +20,7 @@
 #include "group.h"
 #include "input.h"
 #include "netinfo.h"
+#include "pointer_input.h"
 #include "touch_input.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
@@ -764,7 +765,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
             // move cursor to the provided position to prevent the window jumping there on first movement
             // the expectation is that the cursor is already at the provided position,
             // thus it's more a safety measurement
-            Cursors::self()->mouse()->setPos(QPointF(x_root, y_root));
+            input()->pointer()->warp(QPointF(x_root, y_root));
             performMousePressCommand(Options::MouseMove, QPointF(x_root, y_root));
         } else {
             static const Gravity convert[] = {
@@ -795,11 +796,11 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
         }
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
-        Cursors::self()->mouse()->setPos(frameGeometry().center());
+        input()->pointer()->warp(frameGeometry().center());
         performMousePressCommand(Options::MouseUnrestrictedMove, frameGeometry().center());
     } else if (direction == NET::KeyboardSize) {
         // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
-        Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
+        input()->pointer()->warp(frameGeometry().bottomRight());
         performMousePressCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
     }
 }

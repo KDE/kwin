@@ -31,6 +31,7 @@
 #include "outline.h"
 #include "placement.h"
 #include "pluginmanager.h"
+#include "pointer_input.h"
 #include "rules.h"
 #include "screenedge.h"
 #include "scripting/scripting.h"
@@ -2171,7 +2172,7 @@ void Workspace::desktopResized()
             const QRect newGeometry = cursorOutput->geometry();
             const QPointF relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
             const QPointF newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
-            Cursors::self()->mouse()->setPos(newGeometry.topLeft() + newRelativePosition);
+            input()->pointer()->warp(newGeometry.topLeft() + newRelativePosition);
         }
     }
 
