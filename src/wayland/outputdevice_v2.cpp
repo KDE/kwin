@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 12;
+static const quint32 s_version = 13;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -64,6 +64,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     }
     if (caps & Output::Capability::BuiltInColorProfile) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_built_in_color;
+    }
+    if (caps & Output::Capability::DdcCi) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_ddc_ci;
     }
     return ret;
 }
@@ -116,6 +119,7 @@ public:
     void sendBrightness(Resource *resource);
     void sendColorPowerTradeoff(Resource *resource);
     void sendDimming(Resource *resource);
+    void sendDdcCiAllowed(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -156,6 +160,7 @@ public:
     color_power_tradeoff m_powerColorTradeoff = color_power_tradeoff_efficiency;
     QTimer m_doneTimer;
     uint32_t m_dimming = 10'000;
+    bool m_ddcCiAllowed = true;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -245,6 +250,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateBrightness();
     updateColorPowerTradeoff();
     updateDimming();
+    updateDdcCiAllowed();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -278,6 +284,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
     connect(handle, &Output::colorPowerTradeoffChanged, this, &OutputDeviceV2Interface::updateColorPowerTradeoff);
     connect(handle, &Output::dimmingChanged, this, &OutputDeviceV2Interface::updateDimming);
+    connect(handle, &Output::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -357,6 +364,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendBrightness(resource);
     sendColorPowerTradeoff(resource);
     sendDimming(resource);
+    sendDdcCiAllowed(resource);
     sendDone(resource);
 }
 
@@ -535,6 +543,13 @@ void OutputDeviceV2InterfacePrivate::sendDimming(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_DIMMING_SINCE_VERSION) {
         send_dimming(resource->handle, m_dimming);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendDdcCiAllowed(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_DDC_CI_ALLOWED_SINCE_VERSION) {
+        send_ddc_ci_allowed(resource->handle, m_ddcCiAllowed);
     }
 }
 
@@ -921,6 +936,19 @@ void OutputDeviceV2Interface::updateDimming()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendDimming(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateDdcCiAllowed()
+{
+    const bool newDdcCiAllowed = d->m_handle->allowDdcCi();
+    if (d->m_ddcCiAllowed != newDdcCiAllowed) {
+        d->m_ddcCiAllowed = newDdcCiAllowed;
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendDdcCiAllowed(resource);
         }
         scheduleDone();
     }

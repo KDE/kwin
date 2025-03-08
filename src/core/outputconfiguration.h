@@ -49,6 +49,8 @@ public:
     std::optional<bool> allowSdrSoftwareBrightness;
     std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
     std::optional<double> dimming;
+    std::optional<bool> detectedDdcCi;
+    std::optional<bool> allowDdcCi;
 };
 
 class KWIN_EXPORT OutputConfiguration
