@@ -24,6 +24,7 @@
 #include "input.h"
 #include "outline.h"
 #include "placement.h"
+#include "pointer_input.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "screenedge.h"
@@ -1942,11 +1943,11 @@ void Window::setupWindowManagementInterface()
         closeWindow();
     });
     connect(w, &PlasmaWindowInterface::moveRequested, this, [this]() {
-        Cursors::self()->mouse()->setPos(frameGeometry().center());
+        input()->pointer()->warp(frameGeometry().center());
         performMousePressCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
     });
     connect(w, &PlasmaWindowInterface::resizeRequested, this, [this]() {
-        Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
+        input()->pointer()->warp(frameGeometry().bottomRight());
         performMousePressCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
     });
     connect(w, &PlasmaWindowInterface::fullscreenRequested, this, [this](bool set) {
@@ -2685,7 +2686,7 @@ void Window::keyPressEvent(uint key_code)
     default:
         return;
     }
-    Cursors::self()->mouse()->setPos(pos);
+    input()->pointer()->warp(pos);
 }
 
 QSizeF Window::resizeIncrements() const
