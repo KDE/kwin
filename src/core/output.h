@@ -164,6 +164,7 @@ public:
         Tearing = 1 << 8,
         BrightnessControl = 1 << 9,
         BuiltInColorProfile = 1 << 10,
+        DdcCi = 1 << 11,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -376,6 +377,9 @@ public:
     double artificialHdrHeadroom() const;
     double dimming() const;
 
+    bool detectedDdcCi() const;
+    bool allowDdcCi() const;
+
     const ColorDescription &colorDescription() const;
 
     BrightnessDevice *brightnessDevice() const;
@@ -450,6 +454,7 @@ Q_SIGNALS:
     void brightnessChanged();
     void colorPowerTradeoffChanged();
     void dimmingChanged();
+    void allowDdcCiChanged();
 
 protected:
     struct Information
@@ -513,6 +518,8 @@ protected:
         ColorPowerTradeoff colorPowerTradeoff = ColorPowerTradeoff::PreferEfficiency;
         double dimming = 1.0;
         BrightnessDevice *brightnessDevice = nullptr;
+        bool detectedDdcCi = false;
+        bool allowDdcCi = true;
     };
 
     void setInformation(const Information &information);

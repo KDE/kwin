@@ -644,6 +644,10 @@ void Output::setState(const State &state)
     if (oldState.dimming != state.dimming) {
         Q_EMIT dimmingChanged();
     }
+    // detectedDdcCi is ignored here, it should result in capabilitiesChanged() instead
+    if (oldState.allowDdcCi != state.allowDdcCi) {
+        Q_EMIT allowDdcCiChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -831,6 +835,16 @@ bool Output::allowSdrSoftwareBrightness() const
 Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
 {
     return m_state.colorPowerTradeoff;
+}
+
+bool Output::detectedDdcCi() const
+{
+    return m_state.detectedDdcCi;
+}
+
+bool Output::allowDdcCi() const
+{
+    return m_state.allowDdcCi;
 }
 } // namespace KWin
 
