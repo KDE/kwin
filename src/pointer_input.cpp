@@ -866,6 +866,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::mi
 
     workspace()->setActiveOutput(m_pos);
     m_cursor->updateCursorOutputs(m_pos);
+    Cursors::self()->mouse()->setPos(m_pos);
 
     Q_EMIT input()->globalPointerChanged(m_pos);
 }
@@ -1249,55 +1250,6 @@ void CursorImage::setSource(CursorSource *source)
 CursorTheme CursorImage::theme() const
 {
     return m_waylandImage.theme();
-}
-
-InputRedirectionCursor::InputRedirectionCursor()
-    : Cursor()
-    , m_currentButtons(Qt::NoButton)
-{
-    Cursors::self()->setMouse(this);
-    connect(input(), &InputRedirection::globalPointerChanged,
-            this, &InputRedirectionCursor::slotPosChanged);
-    connect(input(), &InputRedirection::pointerButtonStateChanged,
-            this, &InputRedirectionCursor::slotPointerButtonChanged);
-#ifndef KCMRULES
-    connect(input(), &InputRedirection::keyboardModifiersChanged,
-            this, &InputRedirectionCursor::slotModifiersChanged);
-#endif
-}
-
-InputRedirectionCursor::~InputRedirectionCursor()
-{
-}
-
-void InputRedirectionCursor::doSetPos()
-{
-    if (input()->supportsPointerWarping()) {
-        input()->warpPointer(currentPos());
-    }
-    slotPosChanged(input()->globalPointer());
-    Q_EMIT posChanged(currentPos());
-}
-
-void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
-{
-    const QPointF oldPos = currentPos();
-    updatePos(pos);
-    Q_EMIT mouseChanged(pos, oldPos, m_currentButtons, m_currentButtons,
-                        input()->keyboardModifiers(), input()->keyboardModifiers());
-}
-
-void InputRedirectionCursor::slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods)
-{
-    Q_EMIT mouseChanged(currentPos(), currentPos(), m_currentButtons, m_currentButtons, mods, oldMods);
-}
-
-void InputRedirectionCursor::slotPointerButtonChanged()
-{
-    const Qt::MouseButtons oldButtons = m_currentButtons;
-    m_currentButtons = input()->qtButtonStates();
-    const QPointF pos = currentPos();
-    Q_EMIT mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 
 }

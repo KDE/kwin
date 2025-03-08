@@ -272,28 +272,4 @@ private:
     } m_serverCursor;
 };
 
-/**
- * @brief Implementation using the InputRedirection framework to get pointer positions.
- *
- * Does not support warping of cursor.
- */
-class InputRedirectionCursor : public KWin::Cursor
-{
-    Q_OBJECT
-public:
-    explicit InputRedirectionCursor();
-    ~InputRedirectionCursor() override;
-
-protected:
-    void doSetPos() override;
-
-private Q_SLOTS:
-    void slotPosChanged(const QPointF &pos);
-    void slotPointerButtonChanged();
-    void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
-
-private:
-    Qt::MouseButtons m_currentButtons;
-};
-
 }

@@ -43,30 +43,33 @@ Cursors *Cursors::self()
     return s_self;
 }
 
+Cursors::Cursors()
+    : m_mouse(std::make_unique<Cursor>())
+{
+    addCursor(m_mouse.get());
+    setCurrentCursor(m_mouse.get());
+}
+
 void Cursors::addCursor(Cursor *cursor)
 {
     Q_ASSERT(!m_cursors.contains(cursor));
     m_cursors += cursor;
 
+    connect(cursor, &Cursor::destroyed, this, [this, cursor]() {
+        m_cursors.removeOne(cursor);
+        if (m_currentCursor == cursor) {
+            if (m_cursors.isEmpty()) {
+                m_currentCursor = nullptr;
+            } else {
+                setCurrentCursor(m_cursors.constFirst());
+            }
+        }
+    });
+
     connect(cursor, &Cursor::posChanged, this, [this, cursor](const QPointF &pos) {
         setCurrentCursor(cursor);
         Q_EMIT positionChanged(cursor, pos);
     });
-}
-
-void Cursors::removeCursor(Cursor *cursor)
-{
-    m_cursors.removeOne(cursor);
-    if (m_currentCursor == cursor) {
-        if (m_cursors.isEmpty()) {
-            m_currentCursor = nullptr;
-        } else {
-            setCurrentCursor(m_cursors.constFirst());
-        }
-    }
-    if (m_mouse == cursor) {
-        m_mouse = nullptr;
-    }
 }
 
 void Cursors::hideCursor()
@@ -123,11 +126,6 @@ Cursor::Cursor()
     connect(kwinApp(), &Application::x11ConnectionChanged, this, [this]() {
         m_cursors.clear();
     });
-}
-
-Cursor::~Cursor()
-{
-    Cursors::self()->removeCursor(this);
 }
 
 void Cursor::loadThemeSettings()
@@ -202,18 +200,16 @@ QRectF Cursor::rect() const
 
 QPointF Cursor::pos()
 {
-    doGetPos();
     return m_pos;
 }
 
 void Cursor::setPos(const QPointF &pos)
 {
-    // first query the current pos to not warp to the already existing pos
-    if (pos == m_pos) {
+    if (m_pos == pos) {
         return;
     }
     m_pos = pos;
-    doSetPos();
+    Q_EMIT posChanged(m_pos);
 }
 
 #if KWIN_BUILD_X11
@@ -257,24 +253,6 @@ xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
     return cursor;
 }
 #endif
-
-void Cursor::doSetPos()
-{
-    Q_EMIT posChanged(m_pos);
-}
-
-void Cursor::doGetPos()
-{
-}
-
-void Cursor::updatePos(const QPointF &pos)
-{
-    if (m_pos == pos) {
-        return;
-    }
-    m_pos = pos;
-    Q_EMIT posChanged(m_pos);
-}
 
 QString Cursor::defaultThemeName()
 {

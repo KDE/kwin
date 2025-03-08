@@ -81,29 +81,14 @@ private:
 };
 
 /**
- * @short Replacement for QCursor.
- *
- * This class provides a similar API to QCursor and should be preferred inside KWin. It allows to
- * get the position and warp the mouse cursor with static methods just like QCursor. It also provides
- * the possibility to get an X11 cursor for a Qt::CursorShape - a functionality lost in Qt 5's QCursor
- * implementation.
- *
- * In addition the class provides a mouse polling facility as required by e.g. Effects and ScreenEdges
- * and emits signals when the mouse position changes. In opposite to QCursor this class is a QObject
- * and cannot be constructed. Instead it provides a singleton getter, though the most important
- * methods are wrapped in a static method, just like QCursor.
- *
- * The actual implementation is split into two parts: a system independent interface and a windowing
- * system specific subclass. So far only an X11 backend is implemented which uses query pointer to
- * fetch the position and warp pointer to set the position. It uses a timer based mouse polling and
- * can provide X11 cursors through the XCursor library.
+ * The Cursor type represents a pointer or a tablet cursor on the screen.
  */
 class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
+
 public:
     Cursor();
-    ~Cursor() override;
 
     /**
      * @brief The name of the currently used Cursor theme.
@@ -130,18 +115,9 @@ public:
      */
     static QString fallbackThemeName();
 
-    /**
-     * Returns the current cursor position. This method does an update of the mouse position if
-     * needed. It's save to call it multiple times.
-     *
-     * Implementing subclasses should prefer to use currentPos which is not performing a check
-     * for update.
-     */
     QPointF pos();
-    /**
-     * Warps the mouse cursor to new @p pos.
-     */
     void setPos(const QPointF &pos);
+
     xcb_cursor_t x11Cursor(CursorShape shape);
     /**
      * Notice: if available always use the CursorShape variant to avoid cache duplicates for
@@ -163,41 +139,8 @@ public:
 
 Q_SIGNALS:
     void posChanged(const QPointF &pos);
-    void mouseChanged(const QPointF &pos, const QPointF &oldpos,
-                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
-    /**
-     * @brief Signal emitted when the cursor image changes.
-     *
-     * To enable these signals use startCursorTracking.
-     *
-     * @see startCursorTracking
-     * @see stopCursorTracking
-     */
     void cursorChanged();
     void themeChanged();
-
-protected:
-    /**
-     * Performs the actual warping of the cursor.
-     */
-    virtual void doSetPos();
-    /**
-     * Called from @ref pos() to allow syncing the internal position with the underlying
-     * system's cursor position.
-     */
-    virtual void doGetPos();
-    /**
-     * Provides the actual internal cursor position to inheriting classes. If an inheriting class needs
-     * access to the cursor position this method should be used instead of the static @ref pos, as
-     * the static method syncs with the underlying system's cursor.
-     */
-    const QPointF &currentPos() const;
-    /**
-     * Updates the internal position to @p pos without warping the pointer as
-     * setPos does.
-     */
-    void updatePos(const QPointF &pos);
 
 private Q_SLOTS:
     void loadThemeSettings();
@@ -217,23 +160,14 @@ class KWIN_EXPORT Cursors : public QObject
 {
     Q_OBJECT
 public:
+    Cursors();
+
     Cursor *mouse() const
     {
-        return m_mouse;
-    }
-
-    void setMouse(Cursor *mouse)
-    {
-        if (m_mouse != mouse) {
-            m_mouse = mouse;
-
-            addCursor(m_mouse);
-            setCurrentCursor(m_mouse);
-        }
+        return m_mouse.get();
     }
 
     void addCursor(Cursor *cursor);
-    void removeCursor(Cursor *cursor);
 
     ///@returns the last cursor that moved
     Cursor *currentCursor() const
@@ -257,16 +191,11 @@ private:
     void setCurrentCursor(Cursor *cursor);
 
     static Cursors *s_self;
+    std::unique_ptr<Cursor> m_mouse;
     Cursor *m_currentCursor = nullptr;
-    Cursor *m_mouse = nullptr;
     QList<Cursor *> m_cursors;
     int m_cursorHideCounter = 0;
 };
-
-inline const QPointF &Cursor::currentPos() const
-{
-    return m_pos;
-}
 
 inline const QString &Cursor::themeName() const
 {
