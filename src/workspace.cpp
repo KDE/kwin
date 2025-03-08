@@ -499,6 +499,9 @@ void Workspace::updateOutputConfiguration()
         }
         for (Output *output : std::as_const(toEnable)) {
             const auto changeset = cfg.changeSet(output);
+            if (output->brightnessDevice() && output->brightnessDevice()->usesDdcCi()) {
+                changeset->detectedDdcCi = true;
+            }
             if (output->brightnessDevice() && changeset->allowSdrSoftwareBrightness.value_or(true)) {
                 changeset->allowSdrSoftwareBrightness = false;
                 changeset->brightness = output->brightnessDevice()->observedBrightness();
@@ -1363,6 +1366,9 @@ void Workspace::assignBrightnessDevices()
         // assign the device to the most fitting output
         const auto it = std::ranges::find_if(candidates, [device](Output *output) {
             if (output->isInternal() != device->isInternal()) {
+                return false;
+            }
+            if (!output->allowDdcCi() && device->usesDdcCi()) {
                 return false;
             }
             if (output->isInternal()) {

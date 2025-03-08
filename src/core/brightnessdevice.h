@@ -29,6 +29,7 @@ public:
     virtual std::optional<double> observedBrightness() const = 0;
     virtual bool isInternal() const = 0;
     virtual QByteArray edidBeginning() const = 0;
+    virtual bool usesDdcCi() const = 0;
     virtual int brightnessSteps() const = 0;
 
 private:
