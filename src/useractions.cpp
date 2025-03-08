@@ -29,6 +29,7 @@
 #include "cursor.h"
 #include "input.h"
 #include "options.h"
+#include "pointer_input.h"
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -1140,10 +1141,10 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         return;
     }
     if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp) {
-        Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+        input()->pointer()->warp(window->frameGeometry().center());
     }
     if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp) {
-        Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight());
+        input()->pointer()->warp(window->frameGeometry().bottomRight());
     }
     switch (op) {
     case Options::MoveOp:

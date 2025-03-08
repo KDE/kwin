@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "platformcursor.h"
-#include "cursor.h"
+#include "pointer_input.h"
 
 namespace KWin
 {
@@ -23,12 +23,12 @@ PlatformCursor::~PlatformCursor() = default;
 
 QPoint PlatformCursor::pos() const
 {
-    return Cursors::self()->mouse()->pos().toPoint();
+    return input()->pointer()->pos().toPoint();
 }
 
 void PlatformCursor::setPos(const QPoint &pos)
 {
-    Cursors::self()->mouse()->setPos(pos);
+    input()->pointer()->warp(pos);
 }
 
 void PlatformCursor::changeCursor(QCursor *windowCursor, QWindow *window)

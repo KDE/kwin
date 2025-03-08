@@ -529,7 +529,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
     vds->setCurrent(desktop);
     if (vds->currentDesktop() != oldDesktop) {
         m_pushBackBlocked = true;
-        Cursors::self()->mouse()->setPos(pos);
+        input()->pointer()->warp(pos);
         auto unblockPush = [this] {
             m_pushBackBlocked = false;
         };
@@ -561,7 +561,7 @@ void Edge::pushCursorBack(const QPoint &cursorPos)
     if (isBottom()) {
         y -= distance.height();
     }
-    Cursors::self()->mouse()->setPos(QPoint(x, y));
+    input()->pointer()->warp(QPoint(x, y));
 }
 
 void Edge::setGeometry(const QRect &geometry)
