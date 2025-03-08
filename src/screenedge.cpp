@@ -339,7 +339,7 @@ bool Edge::check(const QPoint &cursorPos, const std::chrono::microseconds &trigg
         return false;
     }
     // no pushback so we have to activate at once
-    bool directActivate = forceNoPushBack || edges()->cursorPushBackDistance().isNull();
+    bool directActivate = forceNoPushBack || edges()->cursorPushBackDistance().isEmpty();
     if (directActivate || canActivate(cursorPos, triggerTime)) {
         markAsTriggered(cursorPos, triggerTime);
         handle(cursorPos);
@@ -542,9 +542,13 @@ void Edge::pushCursorBack(const QPoint &cursorPos)
     if (m_pushBackBlocked) {
         return;
     }
+    const QSize &distance = edges()->cursorPushBackDistance();
+    if (distance.isEmpty()) {
+        return;
+    }
+
     int x = cursorPos.x();
     int y = cursorPos.y();
-    const QSize &distance = edges()->cursorPushBackDistance();
     if (isLeft()) {
         x += distance.width();
     }
