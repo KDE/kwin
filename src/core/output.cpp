@@ -641,6 +641,10 @@ void Output::setState(const State &state)
     if (oldState.replicationSource != state.replicationSource) {
         Q_EMIT replicationSourceChanged();
     }
+    // detectedDdcCi is ignored here, it should result in capabilitiesChanged() instead
+    if (oldState.allowDdcCi != state.allowDdcCi) {
+        Q_EMIT allowDdcCiChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -833,6 +837,16 @@ Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
 QString Output::replicationSource() const
 {
     return m_state.replicationSource;
+}
+
+bool Output::detectedDdcCi() const
+{
+    return m_state.detectedDdcCi;
+}
+
+bool Output::allowDdcCi() const
+{
+    return m_state.allowDdcCi;
 }
 } // namespace KWin
 

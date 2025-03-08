@@ -56,6 +56,8 @@ public:
     std::optional<BrightnessDevice *> brightnessDevice;
     std::optional<QString> uuid;
     std::optional<QString> replicationSource;
+    std::optional<bool> detectedDdcCi;
+    std::optional<bool> allowDdcCi;
 };
 
 class KWIN_EXPORT OutputConfiguration

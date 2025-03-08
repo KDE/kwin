@@ -418,6 +418,8 @@ Workspace::~Workspace()
 
 OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
 {
+    assignBrightnessDevices(config);
+
     m_outputConfigStore->applyMirroring(config, kwinApp()->outputBackend()->outputs());
     auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
     if (error != OutputConfigurationError::None) {
@@ -485,18 +487,10 @@ void Workspace::updateOutputConfiguration()
             return;
         }
         auto &[cfg, order, type] = *opt;
-        assignBrightnessDevices(cfg);
 
         for (const auto &output : outputs) {
             if (!toEnable.contains(output)) {
                 cfg.changeSet(output)->enabled = false;
-            }
-        }
-        for (Output *output : std::as_const(toEnable)) {
-            const auto changeset = cfg.changeSet(output);
-            if (output->brightnessDevice() && changeset->allowSdrSoftwareBrightness.value_or(true)) {
-                changeset->allowSdrSoftwareBrightness = false;
-                changeset->brightness = output->brightnessDevice()->observedBrightness();
             }
         }
 
@@ -1349,8 +1343,14 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
-        const auto it = std::ranges::find_if(candidates, [device](Output *output) {
+        const auto it = std::ranges::find_if(candidates, [device, &outputConfig](Output *output) {
             if (output->isInternal() != device->isInternal()) {
+                return false;
+            }
+            const auto changeset = outputConfig.constChangeSet(output);
+            const bool disallowDdcCi = (changeset && !changeset->allowDdcCi.value_or(output->allowDdcCi()))
+                || (!changeset && !output->allowDdcCi());
+            if (disallowDdcCi && device->usesDdcCi()) {
                 return false;
             }
             if (output->isInternal()) {
@@ -1364,6 +1364,9 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
             candidates.erase(it);
             const auto changeset = outputConfig.changeSet(output);
             changeset->brightnessDevice = device;
+            if (device->usesDdcCi()) {
+                changeset->detectedDdcCi = true;
+            }
             if (changeset->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness())) {
                 changeset->allowSdrSoftwareBrightness = false;
                 changeset->brightness = device->observedBrightness();

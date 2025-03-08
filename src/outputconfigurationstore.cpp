@@ -374,6 +374,8 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowSdrSoftwareBrightness = changeSet->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness()),
                 .colorPowerTradeoff = changeSet->colorPowerTradeoff.value_or(output->colorPowerTradeoff()),
                 .uuid = existingUuid,
+                .detectedDdcCi = changeSet->detectedDdcCi.value_or(output->detectedDdcCi()),
+                .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -420,6 +422,8 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowSdrSoftwareBrightness = output->allowSdrSoftwareBrightness(),
                 .colorPowerTradeoff = output->colorPowerTradeoff(),
                 .uuid = existingUuid,
+                .detectedDdcCi = output->detectedDdcCi(),
+                .allowDdcCi = output->allowDdcCi(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -480,6 +484,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .colorPowerTradeoff = state.colorPowerTradeoff,
             .uuid = state.uuid,
             .replicationSource = setupState.replicationSource,
+            .detectedDdcCi = state.detectedDdcCi,
+            .allowDdcCi = state.allowDdcCi,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -607,6 +613,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .allowSdrSoftwareBrightness = existingData.allowSdrSoftwareBrightness.value_or(output->brightnessDevice() == nullptr),
             .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(Output::ColorPowerTradeoff::PreferEfficiency),
             .uuid = existingData.uuid,
+            .detectedDdcCi = existingData.detectedDdcCi.value_or(false),
+            .allowDdcCi = existingData.allowDdcCi.value_or(true),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -980,6 +988,12 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("uuid"); it != data.end() && !it->toString().isEmpty()) {
             state.uuid = it->toString();
         }
+        if (const auto it = data.find("detectedDdcCi"); it != data.end() && it->isBool()) {
+            state.detectedDdcCi = it->toBool();
+        }
+        if (const auto it = data.find("allowDdcCi"); it != data.end() && it->isBool()) {
+            state.allowDdcCi = it->toBool();
+        }
         outputDatas.push_back(state);
     }
 
@@ -1238,6 +1252,12 @@ void OutputConfigurationStore::save()
         }
         if (output.uuid.has_value()) {
             o["uuid"] = *output.uuid;
+        }
+        if (output.detectedDdcCi) {
+            o["detectedDdcCi"] = *output.detectedDdcCi;
+        }
+        if (output.allowDdcCi) {
+            o["allowDdcCi"] = *output.allowDdcCi;
         }
         outputsData.append(o);
     }

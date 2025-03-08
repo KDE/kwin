@@ -285,6 +285,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->edid()->isValid() && m_connector->edid()->colorimetry().has_value()) {
         capabilities |= Capability::BuiltInColorProfile;
     }
+    if (m_state.detectedDdcCi) {
+        capabilities |= Capability::DdcCi;
+    }
     return capabilities;
 }
 
@@ -521,9 +524,15 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
+    next.detectedDdcCi = props->detectedDdcCi.value_or(m_state.detectedDdcCi);
+    next.allowDdcCi = props->allowDdcCi.value_or(m_state.allowDdcCi);
+    if (next.allowSdrSoftwareBrightness != m_state.allowSdrSoftwareBrightness) {
+        // make sure that we set the brightness again next frame
+        next.currentBrightness.reset();
+    }
     setState(next);
 
-    // allowSdrSoftwareBrightness might change our capabilities
+    // allowSdrSoftwareBrightness, the brightness device or detectedDdcCi might change our capabilities
     Information newInfo = m_information;
     newInfo.capabilities = computeCapabilities();
     setInformation(newInfo);

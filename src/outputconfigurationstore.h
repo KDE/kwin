@@ -85,6 +85,8 @@ private:
         std::optional<bool> allowSdrSoftwareBrightness;
         std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
         std::optional<QString> uuid;
+        std::optional<bool> detectedDdcCi;
+        std::optional<bool> allowDdcCi;
     };
     struct SetupState
     {
