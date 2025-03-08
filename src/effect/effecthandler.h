@@ -1079,6 +1079,13 @@ protected:
     typedef QList<Effect *> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
 
+    struct
+    {
+        QPointF position;
+        Qt::MouseButtons buttons;
+        Qt::KeyboardModifiers modifiers;
+    } m_cursor;
+
     Effect *keyboard_grab_effect;
     Effect *fullscreen_effect;
     QMultiMap<int, EffectPair> effect_order;
