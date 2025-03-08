@@ -188,7 +188,6 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
     });
     connect(vds, &VirtualDesktopManager::desktopAdded, this, &EffectsHandler::desktopAdded);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &EffectsHandler::desktopRemoved);
-    connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #if KWIN_BUILD_ACTIVITIES
@@ -212,6 +211,37 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
     connect(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
     connect(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::aboutToLock, this, &EffectsHandler::screenAboutToLock);
 #endif
+
+    m_cursor.position = input()->globalPointer();
+    m_cursor.buttons = input()->qtButtonStates();
+    m_cursor.modifiers = input()->keyboardModifiers();
+
+    connect(input(), &InputRedirection::globalPointerChanged, this, [this]() {
+        const QPointF oldPos = m_cursor.position;
+        m_cursor.position = input()->globalPointer();
+
+        Q_EMIT mouseChanged(m_cursor.position, oldPos,
+                            m_cursor.buttons, m_cursor.buttons,
+                            m_cursor.modifiers, m_cursor.modifiers);
+    });
+
+    connect(input(), &InputRedirection::pointerButtonStateChanged, this, [this]() {
+        const Qt::MouseButtons oldButtons = m_cursor.buttons;
+        m_cursor.buttons = input()->qtButtonStates();
+
+        Q_EMIT mouseChanged(m_cursor.position, m_cursor.position,
+                            m_cursor.buttons, oldButtons,
+                            m_cursor.modifiers, m_cursor.modifiers);
+    });
+
+    connect(input(), &InputRedirection::keyboardModifiersChanged, this, [this]() {
+        const Qt::KeyboardModifiers oldModifiers = m_cursor.modifiers;
+        m_cursor.modifiers = input()->keyboardModifiers();
+
+        Q_EMIT mouseChanged(m_cursor.position, m_cursor.position,
+                            m_cursor.buttons, m_cursor.buttons,
+                            m_cursor.modifiers, oldModifiers);
+    });
 
 #if KWIN_BUILD_X11
     connect(kwinApp(), &Application::x11ConnectionChanged, this, [this]() {
