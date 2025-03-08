@@ -291,6 +291,8 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .brightness = changeSet->brightness.value_or(output->brightnessSetting()),
                 .allowSdrSoftwareBrightness = changeSet->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness()),
                 .colorPowerTradeoff = changeSet->colorPowerTradeoff.value_or(output->colorPowerTradeoff()),
+                .detectedDdcCi = changeSet->detectedDdcCi.value_or(output->detectedDdcCi()),
+                .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -335,6 +337,8 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .brightness = output->brightnessSetting(),
                 .allowSdrSoftwareBrightness = output->allowSdrSoftwareBrightness(),
                 .colorPowerTradeoff = output->colorPowerTradeoff(),
+                .detectedDdcCi = output->detectedDdcCi(),
+                .allowDdcCi = output->allowDdcCi(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -392,6 +396,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .brightness = state.brightness,
             .allowSdrSoftwareBrightness = state.allowSdrSoftwareBrightness,
             .colorPowerTradeoff = state.colorPowerTradeoff,
+            .detectedDdcCi = state.detectedDdcCi,
+            .allowDdcCi = state.allowDdcCi,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -518,6 +524,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .brightness = existingData.brightness.value_or(1.0),
             .allowSdrSoftwareBrightness = existingData.allowSdrSoftwareBrightness.value_or(output->brightnessDevice() == nullptr),
             .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(Output::ColorPowerTradeoff::PreferEfficiency),
+            .detectedDdcCi = existingData.detectedDdcCi.value_or(false),
+            .allowDdcCi = existingData.allowDdcCi.value_or(true),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -866,6 +874,12 @@ void OutputConfigurationStore::load()
                 state.colorPowerTradeoff = Output::ColorPowerTradeoff::PreferAccuracy;
             }
         }
+        if (const auto it = data.find("detectedDdcCi"); it != data.end() && it->isBool()) {
+            state.detectedDdcCi = it->toBool();
+        }
+        if (const auto it = data.find("allowDdcCi"); it != data.end() && it->isBool()) {
+            state.allowDdcCi = it->toBool();
+        }
         outputDatas.push_back(state);
     }
 
@@ -1110,6 +1124,12 @@ void OutputConfigurationStore::save()
                 o["colorPowerTradeoff"] = "PreferAccuracy";
                 break;
             }
+        }
+        if (output.detectedDdcCi) {
+            o["detectedDdcCi"] = *output.detectedDdcCi;
+        }
+        if (output.allowDdcCi) {
+            o["allowDdcCi"] = *output.allowDdcCi;
         }
         outputsData.append(o);
     }
