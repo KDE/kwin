@@ -115,6 +115,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     if (!checkSurface(bufferSize, formats, tradeoff)) {
         return std::nullopt;
     }
+    m_oldSurface.reset();
 
     if (!m_eglBackend->openglContext()->makeCurrent()) {
         return std::nullopt;
