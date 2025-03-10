@@ -126,27 +126,3 @@ msgstr "Sempre"
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Torna a activar la detecció de l'OpenGL"
-
-#~ msgid "Latency:"
-#~ msgstr "Latència:"
-
-#~ msgid "Force lowest latency (may cause dropped frames)"
-#~ msgstr "Força una latència més baixa (pot provocar la pèrdua de fotogrames)"
-
-#~ msgid "Prefer lower latency"
-#~ msgstr "Prefereix una latència baixa"
-
-#~ msgid "Balance of latency and smoothness"
-#~ msgstr "Equilibri entre latència i suavitat"
-
-#~ msgid "Prefer smoother animations"
-#~ msgstr "Prefereix animacions més suaus"
-
-#~ msgid "Force smoothest animations"
-#~ msgstr "Força animacions més suaus"
-
-#~ msgid ""
-#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-#~ msgstr ""
-#~ "Redueix la latència permetent defectes d'esquinçament pantalla en "
-#~ "finestres a pantalla completa"

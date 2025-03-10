@@ -28,6 +28,3 @@ msgstr "Sense"
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "No usar cap teclat virtual"
-
-#~ msgid "This module lets you choose the virtual keyboard to use."
-#~ msgstr "Aquest mòdul permet triar el teclat virtual a usar."
