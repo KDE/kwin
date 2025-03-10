@@ -101,7 +101,7 @@ void KeyNotificationPlugin::modifiersChanged()
             sendNotification("modifierkey-latched", i18n("The Meta key is now active."));
         }
 
-        if (m_currentModifiers.testFlag(Qt::MetaModifier) && !mods.testFlag(Qt::AltModifier)) {
+        if (m_currentModifiers.testFlag(Qt::MetaModifier) && !mods.testFlag(Qt::MetaModifier)) {
             sendNotification("modifierkey-unlatched", i18n("The Meta key is now inactive."));
         }
     }
