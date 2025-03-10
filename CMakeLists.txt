@@ -166,7 +166,7 @@ set_package_properties(Plasma PROPERTIES
 
 find_package(KDecoration3 ${PROJECT_DEP_VERSION} CONFIG REQUIRED)
 
-find_package(Breeze 5.9.0 CONFIG)
+find_package(Breeze ${PROJECT_DEP_VERSION} CONFIG)
 set_package_properties(Breeze PROPERTIES
     TYPE OPTIONAL
     PURPOSE "For setting the default window decoration plugin"
