@@ -399,14 +399,12 @@ void Edge::handle(const QPoint &cursorPos)
     }
 
     if (m_client) {
-        pushCursorBack(cursorPos);
         m_client->showOnScreenEdge();
         unreserve();
         return;
     }
 
     if (handlePointerAction() || handleByCallback()) {
-        pushCursorBack(cursorPos);
         return;
     }
     if (edges()->isDesktopSwitching() && isCorner()) {
@@ -1380,7 +1378,7 @@ bool ScreenEdges::inApproachGeometry(const QPoint &pos) const
     return false;
 }
 
-bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timestamp)
+bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timestamp, bool tabletToolEvent)
 {
     bool activated = false;
     bool activatedForClient = false;
@@ -1400,19 +1398,21 @@ bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timest
             }
             continue;
         }
-        if (edge->approachGeometry().contains(pos.toPoint())) {
-            if (!edge->isApproaching()) {
-                edge->startApproaching();
+        if (!edge->triggersFor(pos.toPoint()) || !tabletToolEvent) {
+            if (edge->approachGeometry().contains(pos.toPoint())) {
+                if (!edge->isApproaching()) {
+                    edge->startApproaching();
+                } else {
+                    edge->updateApproaching(pos);
+                }
             } else {
-                edge->updateApproaching(pos);
-            }
-        } else {
-            if (edge->isApproaching()) {
-                edge->stopApproaching();
+                if (edge->isApproaching()) {
+                    edge->stopApproaching();
+                }
             }
         }
         // always send event to all edges so that they can update their state
-        if (edge->check(pos.toPoint(), timestamp)) {
+        if (edge->isApproaching() && edge->check(pos.toPoint(), timestamp, tabletToolEvent)) {
             if (edge->client()) {
                 activatedForClient = true;
             }

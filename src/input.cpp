@@ -1844,6 +1844,27 @@ public:
         // always forward
         return false;
     }
+    bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
+    {
+        if (event->type == TabletToolProximityEvent::EnterProximity) {
+            workspace()->screenEdges()->isEntered(event->position, event->timestamp, true);
+        }
+        return false;
+    }
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
+    {
+        if (event->buttons == Qt::NoButton) {
+            workspace()->screenEdges()->isEntered(event->position, event->timestamp, true);
+        }
+        return false;
+    }
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
+    {
+        if (event->buttons == Qt::NoButton) {
+            workspace()->screenEdges()->isEntered(event->position, event->timestamp, true);
+        }
+        return false;
+    }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
         // TODO: better check whether a touch sequence is in progress
