@@ -240,6 +240,7 @@ void OffscreenQuickView::update()
             if (!d->m_fbo->isValid()) {
                 d->m_fbo.reset();
                 d->m_glcontext->doneCurrent();
+                qCWarning(LIBKWINEFFECTS, "Creating FBO for OffscreenQuickView failed!");
                 return;
             }
         }
@@ -473,8 +474,12 @@ GLTexture *OffscreenQuickView::bufferAsTexture()
 {
     if (d->m_useBlit) {
         d->m_textureExport = GLTexture::upload(d->m_image);
+        if (!d->m_textureExport) {
+            qCWarning(LIBKWINEFFECTS, "Uploading texture for OffscreenQuickView failed!");
+        }
     } else {
         if (!d->m_fbo) {
+            qCWarning(LIBKWINEFFECTS, "OffscreenQuickView has no fbo!");
             return nullptr;
         }
         if (!d->m_textureExport) {
