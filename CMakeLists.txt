@@ -182,6 +182,12 @@ else()
 endif()
 add_feature_info("Breeze-Decoration" HAVE_BREEZE_DECO "Default decoration plugin Breeze")
 
+find_package(Aurorae ${PROJECT_DEP_VERSION} CONFIG)
+set_package_properties(Aurorae PROPERTIES
+    TYPE RUNTIME
+    PURPOSE "Provides support for decorations downloaded from the internet"
+)
+
 find_package(EGL)
 set_package_properties(EGL PROPERTIES
     TYPE REQUIRED
