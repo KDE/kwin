@@ -388,7 +388,17 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, Q
     if (auto newSurface = createSurface(size, formats, tradeoff)) {
         m_oldSurface = std::move(m_surface);
         if (m_oldSurface) {
-            m_oldSurface->damageJournal.clear(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal
+            // FIXME: Use absolute frame sequence numbers for indexing the DamageJournal
+            m_oldSurface->damageJournal.clear();
+            m_oldSurface->shadowDamageJournal.clear();
+            m_oldSurface->gbmSwapchain->resetBufferAge();
+            if (m_oldSurface->shadowSwapchain) {
+                m_oldSurface->shadowSwapchain->resetBufferAge();
+            }
+            if (m_oldSurface->importGbmSwapchain) {
+                m_oldSurface->importGbmSwapchain->resetBufferAge();
+                m_oldSurface->importDamageJournal.clear();
+            }
         }
         m_surface = std::move(newSurface);
         return true;
