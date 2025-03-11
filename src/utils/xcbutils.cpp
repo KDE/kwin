@@ -383,7 +383,6 @@ void Extensions::init()
     Q_ASSERT(c);
     xcb_prefetch_extension_data(c, &xcb_shape_id);
     xcb_prefetch_extension_data(c, &xcb_randr_id);
-    xcb_prefetch_extension_data(c, &xcb_damage_id);
     xcb_prefetch_extension_data(c, &xcb_composite_id);
     xcb_prefetch_extension_data(c, &xcb_xfixes_id);
     xcb_prefetch_extension_data(c, &xcb_render_id);

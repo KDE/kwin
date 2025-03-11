@@ -283,7 +283,6 @@ if (KWIN_BUILD_X11)
         PRIVATE
             XCB::COMPOSITE
             XCB::CURSOR
-            XCB::DAMAGE
             XCB::ICCCM
             XCB::KEYSYMS
             XCB::RANDR
