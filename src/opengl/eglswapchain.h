@@ -64,6 +64,8 @@ public:
     std::shared_ptr<EglSwapchainSlot> acquire();
     void release(std::shared_ptr<EglSwapchainSlot> slot, FileDescriptor &&releaseFence);
 
+    void resetBufferAge();
+
     static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers);
 
 private:
