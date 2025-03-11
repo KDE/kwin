@@ -686,6 +686,7 @@ public:
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
+    static std::unique_ptr<Connection> setup(int socket, AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
     ~Connection();
 
     KWayland::Client::ConnectionThread *connection = nullptr;
@@ -754,6 +755,7 @@ void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qrea
  * @see destroyWaylandConnection
  */
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags = AdditionalWaylandInterfaces());
+bool setupWaylandConnection(int socket, AdditionalWaylandInterfaces flags = AdditionalWaylandInterfaces());
 
 /**
  * Destroys the Wayland Connection created with @link{setupWaylandConnection}.

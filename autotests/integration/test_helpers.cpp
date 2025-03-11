@@ -353,6 +353,15 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
     return bool(s_waylandConnection);
 }
 
+bool setupWaylandConnection(int socket, AdditionalWaylandInterfaces flags)
+{
+    if (s_waylandConnection) {
+        return false;
+    }
+    s_waylandConnection = Connection::setup(socket, flags);
+    return bool(s_waylandConnection);
+}
+
 void destroyWaylandConnection()
 {
     s_waylandConnection.reset();
@@ -364,15 +373,20 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
         return nullptr;
     }
-    KWin::waylandServer()->display()->createClient(sx[0]);
-    // setup connection
+    waylandServer()->display()->createClient(sx[0]);
+
+    return Connection::setup(sx[1], flags);
+}
+
+std::unique_ptr<Connection> Connection::setup(int socket, AdditionalWaylandInterfaces flags)
+{
     auto connection = std::make_unique<Connection>();
     connection->connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(connection->connection, &KWayland::Client::ConnectionThread::connected);
     if (!connectedSpy.isValid()) {
         return nullptr;
     }
-    connection->connection->setSocketFd(sx[1]);
+    connection->connection->setSocketFd(socket);
 
     connection->thread = new QThread(kwinApp());
     connection->connection->moveToThread(connection->thread);
