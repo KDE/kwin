@@ -28,11 +28,6 @@ namespace Decoration
 class DecoratedWindowImpl;
 }
 
-namespace LibInput
-{
-class Device;
-}
-
 class TabletInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
