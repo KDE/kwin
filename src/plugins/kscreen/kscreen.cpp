@@ -127,6 +127,7 @@ void KscreenEffect::postPaintScreen()
         }
     }
     m_currentScreen = nullptr;
+    effects->postPaintScreen();
 }
 
 void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
