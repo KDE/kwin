@@ -57,13 +57,3 @@ msgstr "Configura el filtre"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Exclou els efectes no admesos"
-
-#~ msgid ""
-#~ "Hint: To find out or configure how to activate an effect, look at the "
-#~ "effect's settings."
-#~ msgstr ""
-#~ "Consell: per a trobar els detalls o configurar la manera d'activar un "
-#~ "efecte, examineu la configuració de l'efecte."
-
-#~ msgid "Exclude internal effects"
-#~ msgstr "Exclou els efectes interns"

@@ -1576,7 +1576,7 @@ msgstr "Inicia la sessió en mode bloquejat."
 #: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr "Inicia la sessió sense el suport del bloqueig de pantalla."
+msgstr "Inicia la sessió sense el suport del bloqueig de la pantalla."
 
 #: main_wayland.cpp:390
 #, kde-format
