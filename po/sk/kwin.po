@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-07 00:43+0000\n"
+"POT-Creation-Date: 2025-03-11 00:42+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -66,53 +66,25 @@ msgstr "- Výstup zakázaný"
 msgid "- Output dimmed"
 msgstr "- Výstup stmavený"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:498
+#: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Stlačením pravého klávesu Control zrušíte zachytenie vstupu"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:498
+#: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Stlačením pravého klávesu Control zachytíte vstup"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:499
+#: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor_wayland.cpp:323 compositor_x11.cpp:457
+#: compositor.cpp:443
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efekty plochy boli reštartované kvôli grafickému vynulovaniu"
-
-#: compositor_x11.cpp:103
-#, kde-format
-msgid "Suspend Compositing"
-msgstr "Pozastaviť kompozíciu"
-
-#: compositor_x11.cpp:566
-#, kde-format
-msgid ""
-"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-"b><br>This was most likely due to a driver bug.<p>If you think that you have "
-"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
-"<b>be aware that this might result in an immediate crash!</b></p>"
-msgstr ""
-"<b>Kompozícia OpenGL (predvolené) zhodila KWin niekedy v minulosti.</"
-"b><br>Je to pravdepodobne kvôli chybe ovládača.<p>Ak si myslíte, že ste "
-"medzitým prešli na stabilný ovládač,<br>môžete vynulovať túto ochranu, ale "
-"<b>môže to spôsobiť okamžitý pád!</b></p>"
-
-#: compositor_x11.cpp:573
-#, kde-format
-msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr "Požadované X rozšírenia (XComposite a XDamage) nie sú dostupné."
-
-#: compositor_x11.cpp:576
-#, kde-format
-msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL nie je dostupný."
 
 #: core/iccprofile.cpp:252
 #, kde-format
@@ -187,274 +159,274 @@ msgstr ""
 msgid "Color profile is missing TRC tags"
 msgstr ""
 
-#: debug_console.cpp:79
+#: debug_console.cpp:80
 #, kde-format
 msgid "Timestamp"
 msgstr "Časová značka"
 
-#: debug_console.cpp:84
+#: debug_console.cpp:85
 #, kde-format
 msgid "Timestamp (µsec)"
 msgstr "Časová značka (µsec)"
 
-#: debug_console.cpp:91
+#: debug_console.cpp:92
 #, kde-format
 msgctxt "A mouse button"
 msgid "Left"
 msgstr "Vľavo"
 
-#: debug_console.cpp:93
+#: debug_console.cpp:94
 #, kde-format
 msgctxt "A mouse button"
 msgid "Right"
 msgstr "Vpravo"
 
-#: debug_console.cpp:95
+#: debug_console.cpp:96
 #, kde-format
 msgctxt "A mouse button"
 msgid "Middle"
 msgstr "Stred"
 
-#: debug_console.cpp:97
+#: debug_console.cpp:98
 #, kde-format
 msgctxt "A mouse button"
 msgid "Back"
 msgstr "Späť"
 
-#: debug_console.cpp:99
+#: debug_console.cpp:100
 #, kde-format
 msgctxt "A mouse button"
 msgid "Forward"
 msgstr "Dopredu"
 
-#: debug_console.cpp:101
+#: debug_console.cpp:102
 #, kde-format
 msgctxt "A mouse button"
 msgid "Task"
 msgstr "Úloha"
 
-#: debug_console.cpp:103
+#: debug_console.cpp:104
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
 msgstr "Extra tlačidlo 4"
 
-#: debug_console.cpp:105
+#: debug_console.cpp:106
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
 msgstr "Extra tlačidlo 5"
 
-#: debug_console.cpp:107
+#: debug_console.cpp:108
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
 msgstr "Extra tlačidlo 6"
 
-#: debug_console.cpp:109
+#: debug_console.cpp:110
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
 msgstr "Extra tlačidlo 7"
 
-#: debug_console.cpp:111
+#: debug_console.cpp:112
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
 msgstr "Extra tlačidlo 8"
 
-#: debug_console.cpp:113
+#: debug_console.cpp:114
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
 msgstr "Extra tlačidlo 9"
 
-#: debug_console.cpp:115
+#: debug_console.cpp:116
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
 msgstr "Extra tlačidlo 10"
 
-#: debug_console.cpp:117
+#: debug_console.cpp:118
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
 msgstr "Extra tlačidlo 11"
 
-#: debug_console.cpp:119
+#: debug_console.cpp:120
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
 msgstr "Extra tlačidlo 12"
 
-#: debug_console.cpp:121
+#: debug_console.cpp:122
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
 msgstr "Extra tlačidlo 13"
 
-#: debug_console.cpp:123
+#: debug_console.cpp:124
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
 msgstr "Extra tlačidlo 14"
 
-#: debug_console.cpp:125
+#: debug_console.cpp:126
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
 msgstr "Extra tlačidlo 15"
 
-#: debug_console.cpp:127
+#: debug_console.cpp:128
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
 msgstr "Extra tlačidlo 16"
 
-#: debug_console.cpp:129
+#: debug_console.cpp:130
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
 msgstr "Extra tlačidlo 17"
 
-#: debug_console.cpp:131
+#: debug_console.cpp:132
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
 msgstr "Extra tlačidlo 18"
 
-#: debug_console.cpp:133
+#: debug_console.cpp:134
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
 msgstr "Extra tlačidlo 19"
 
-#: debug_console.cpp:135
+#: debug_console.cpp:136
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
 msgstr "Extra tlačidlo 20"
 
-#: debug_console.cpp:137
+#: debug_console.cpp:138
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
 msgstr "Extra tlačidlo 21"
 
-#: debug_console.cpp:139
+#: debug_console.cpp:140
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
 msgstr "Extra tlačidlo 22"
 
-#: debug_console.cpp:141
+#: debug_console.cpp:142
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
 msgstr "Extra tlačidlo 23"
 
-#: debug_console.cpp:143
+#: debug_console.cpp:144
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
 msgstr "Extra tlačidlo 24"
 
-#: debug_console.cpp:152 debug_console.cpp:154
+#: debug_console.cpp:153 debug_console.cpp:155
 #, kde-format
 msgid "Input Device"
 msgstr "Vstupné zariadenie"
 
-#: debug_console.cpp:152
+#: debug_console.cpp:153
 #, kde-format
 msgctxt "The input device of the event is not known"
 msgid "Unknown"
 msgstr "Neznáme"
 
-#: debug_console.cpp:187
+#: debug_console.cpp:188
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
 msgstr "Pohyb kurzora"
 
-#: debug_console.cpp:192
+#: debug_console.cpp:193
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta"
 msgstr "Delta"
 
-#: debug_console.cpp:196
+#: debug_console.cpp:197
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
 msgstr "Delta (neakcelerované)"
 
-#: debug_console.cpp:199
+#: debug_console.cpp:200
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
 msgstr "Globálna pozícia"
 
-#: debug_console.cpp:213
+#: debug_console.cpp:214
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
 msgstr "Stlačenie tlačidla ukazovateľa"
 
-#: debug_console.cpp:216 debug_console.cpp:223
+#: debug_console.cpp:217 debug_console.cpp:224
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Button"
 msgstr "Tlačidlo"
 
-#: debug_console.cpp:217 debug_console.cpp:224
+#: debug_console.cpp:218 debug_console.cpp:225
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
 msgstr "Kód natívneho tlačidla"
 
-#: debug_console.cpp:218 debug_console.cpp:225
+#: debug_console.cpp:219 debug_console.cpp:226
 #, kde-format
 msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
 msgstr "Stlačené tlačidlá"
 
-#: debug_console.cpp:220
+#: debug_console.cpp:221
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
 msgstr "Uvoľnenie tlačidla ukazovateľa"
 
-#: debug_console.cpp:237
+#: debug_console.cpp:238
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
 msgstr "Os ukazovateľa"
 
-#: debug_console.cpp:240
+#: debug_console.cpp:241
 #, kde-format
 msgctxt "The orientation of a pointer axis event"
 msgid "Orientation"
 msgstr "Orientácia"
 
-#: debug_console.cpp:241
+#: debug_console.cpp:242
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Horizontal"
 msgstr "Vodorovne"
 
-#: debug_console.cpp:242
+#: debug_console.cpp:243
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Vertical"
 msgstr "Zvislo"
 
-#: debug_console.cpp:243
+#: debug_console.cpp:244
 #, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
 msgstr "Delta"
 
-#: debug_console.cpp:244
+#: debug_console.cpp:245
 #, fuzzy, kde-format
 #| msgctxt "Current delta in pinch gesture"
 #| msgid "Delta x"
@@ -464,61 +436,61 @@ msgctxt ""
 msgid "Delta (V120)"
 msgstr "Delta x"
 
-#: debug_console.cpp:259
+#: debug_console.cpp:260
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
 msgstr "Stlačenie klávesy"
 
-#: debug_console.cpp:262
+#: debug_console.cpp:263
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
 msgstr "Uvoľnenie klávesy"
 
-#: debug_console.cpp:271
+#: debug_console.cpp:272
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
 msgstr "Shift"
 
-#: debug_console.cpp:275
+#: debug_console.cpp:276
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
 msgstr "Ovládanie"
 
-#: debug_console.cpp:279
+#: debug_console.cpp:280
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
 msgstr "Alt"
 
-#: debug_console.cpp:283
+#: debug_console.cpp:284
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
 msgstr "Meta"
 
-#: debug_console.cpp:287
+#: debug_console.cpp:288
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
 msgstr "Klávesnica"
 
-#: debug_console.cpp:291
+#: debug_console.cpp:292
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
 msgstr "Prepínač skupín"
 
-#: debug_console.cpp:297
+#: debug_console.cpp:298
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
 msgstr "Opakovanie"
 
-#: debug_console.cpp:301
+#: debug_console.cpp:302
 #, fuzzy, kde-format
 #| msgctxt "Key according to Qt"
 #| msgid "Qt::Key code"
@@ -526,538 +498,538 @@ msgctxt "The code reported by the kernel"
 msgid "Keycode"
 msgstr "Qt::Key kód"
 
-#: debug_console.cpp:302
+#: debug_console.cpp:303
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
 msgstr "Qt::Key kód"
 
-#: debug_console.cpp:303
+#: debug_console.cpp:304
 #, kde-format
 msgctxt "The translated code to an Xkb symbol"
 msgid "Xkb symbol"
 msgstr "Xkb symbol"
 
-#: debug_console.cpp:304
+#: debug_console.cpp:305
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
 msgstr "Utf8"
 
-#: debug_console.cpp:305
+#: debug_console.cpp:306
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
 msgstr "Modifikátory"
 
-#: debug_console.cpp:317
+#: debug_console.cpp:318
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
 msgstr "Stlačenie"
 
-#: debug_console.cpp:319 debug_console.cpp:334 debug_console.cpp:349
+#: debug_console.cpp:320 debug_console.cpp:335 debug_console.cpp:350
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
 msgstr "Identifikátor bodu"
 
-#: debug_console.cpp:320 debug_console.cpp:335
+#: debug_console.cpp:321 debug_console.cpp:336
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
 msgstr "Globálna pozícia"
 
-#: debug_console.cpp:332
+#: debug_console.cpp:333
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
 msgstr "Pohyb dotyku"
 
-#: debug_console.cpp:347
+#: debug_console.cpp:348
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
 msgstr "Uvoľnenie"
 
-#: debug_console.cpp:360
+#: debug_console.cpp:361
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
 msgstr "Začiatok štipky"
 
-#: debug_console.cpp:362
+#: debug_console.cpp:363
 #, kde-format
 msgctxt "Number of fingers in this pinch gesture"
 msgid "Finger count"
 msgstr "Počet prstov"
 
-#: debug_console.cpp:373
+#: debug_console.cpp:374
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
 msgstr "Aktualizácia štipky"
 
-#: debug_console.cpp:375
+#: debug_console.cpp:376
 #, kde-format
 msgctxt "Current scale in pinch gesture"
 msgid "Scale"
 msgstr "Mierka"
 
-#: debug_console.cpp:376
+#: debug_console.cpp:377
 #, kde-format
 msgctxt "Current angle in pinch gesture"
 msgid "Angle delta"
 msgstr "Uhol delta"
 
-#: debug_console.cpp:377
+#: debug_console.cpp:378
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta x"
 msgstr "Delta x"
 
-#: debug_console.cpp:378
+#: debug_console.cpp:379
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta y"
 msgstr "Delta y"
 
-#: debug_console.cpp:389
+#: debug_console.cpp:390
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
 msgstr "Koniec štipky"
 
-#: debug_console.cpp:401
+#: debug_console.cpp:402
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
 msgstr "Štipka zrušená"
 
-#: debug_console.cpp:413
+#: debug_console.cpp:414
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
 msgstr "Začiatok potiahnutia"
 
-#: debug_console.cpp:415
+#: debug_console.cpp:416
 #, kde-format
 msgctxt "Number of fingers in this swipe gesture"
 msgid "Finger count"
 msgstr "Počet prstov"
 
-#: debug_console.cpp:426
+#: debug_console.cpp:427
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
 msgstr "Aktualizácia potiahnutia"
 
-#: debug_console.cpp:428
+#: debug_console.cpp:429
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta x"
 msgstr "Delta x"
 
-#: debug_console.cpp:429
+#: debug_console.cpp:430
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta y"
 msgstr "Delta y"
 
-#: debug_console.cpp:440
+#: debug_console.cpp:441
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
 msgstr "Koniec potiahnutia"
 
-#: debug_console.cpp:452
+#: debug_console.cpp:453
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
 msgstr "Potiahnutie zrušené"
 
-#: debug_console.cpp:464
+#: debug_console.cpp:465
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
 msgstr "Spínač prepnutý"
 
-#: debug_console.cpp:470
+#: debug_console.cpp:471
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
 msgstr "Veko notebooku"
 
-#: debug_console.cpp:472
+#: debug_console.cpp:473
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
 msgstr "Režim tabletu"
 
-#: debug_console.cpp:474
+#: debug_console.cpp:475
 #, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
 msgstr "Prepnúť"
 
-#: debug_console.cpp:478
+#: debug_console.cpp:479
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
 msgstr "Vypnuté"
 
-#: debug_console.cpp:481
+#: debug_console.cpp:482
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
 msgstr "Zapnuté"
 
-#: debug_console.cpp:486
+#: debug_console.cpp:487
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
 msgstr "Stav"
 
-#: debug_console.cpp:495
+#: debug_console.cpp:496
 #, fuzzy, kde-format
 #| msgid "Tablet Tool"
 msgid "Tablet Tool Proximity"
 msgstr "Nástroj tabletu"
 
-#: debug_console.cpp:496
+#: debug_console.cpp:497
 #, kde-format
 msgid "Proximity"
 msgstr ""
 
-#: debug_console.cpp:496
+#: debug_console.cpp:497
 #, kde-format
 msgid "In"
 msgstr ""
 
-#: debug_console.cpp:496
+#: debug_console.cpp:497
 #, kde-format
 msgid "Out"
 msgstr ""
 
-#: debug_console.cpp:497 debug_console.cpp:511 debug_console.cpp:528
-#: debug_console.cpp:572 debug_console.cpp:586
+#: debug_console.cpp:498 debug_console.cpp:512 debug_console.cpp:529
+#: debug_console.cpp:573 debug_console.cpp:587
 #, kde-format
 msgid "Position"
 msgstr "Pozícia"
 
-#: debug_console.cpp:499 debug_console.cpp:513 debug_console.cpp:530
+#: debug_console.cpp:500 debug_console.cpp:514 debug_console.cpp:531
 #, kde-format
 msgid "Tilt"
 msgstr "Naklonenie"
 
-#: debug_console.cpp:501 debug_console.cpp:515 debug_console.cpp:532
+#: debug_console.cpp:502 debug_console.cpp:516 debug_console.cpp:533
 #, kde-format
 msgid "Rotation"
 msgstr "Otočenie"
 
-#: debug_console.cpp:510
+#: debug_console.cpp:511
 #, fuzzy, kde-format
 #| msgid "Tablet Tool"
 msgid "Tablet Tool Axis"
 msgstr "Nástroj tabletu"
 
-#: debug_console.cpp:516 debug_console.cpp:533
+#: debug_console.cpp:517 debug_console.cpp:534
 #, kde-format
 msgid "Pressure"
 msgstr "Tlak"
 
-#: debug_console.cpp:517 debug_console.cpp:534
+#: debug_console.cpp:518 debug_console.cpp:535
 #, kde-format
 msgid "Buttons"
 msgstr "Tlačidlá"
 
-#: debug_console.cpp:526
+#: debug_console.cpp:527
 #, fuzzy, kde-format
 #| msgid "Tablet Tool"
 msgid "Tablet Tool Tip"
 msgstr "Nástroj tabletu"
 
-#: debug_console.cpp:527
+#: debug_console.cpp:528
 #, fuzzy, kde-format
 #| msgid "Top"
 msgid "Tip"
 msgstr "Hore"
 
-#: debug_console.cpp:527
+#: debug_console.cpp:528
 #, fuzzy, kde-format
 #| msgid "Move Down"
 msgid "Down"
 msgstr "Posunúť dolu"
 
-#: debug_console.cpp:527
+#: debug_console.cpp:528
 #, kde-format
 msgid "Up"
 msgstr ""
 
-#: debug_console.cpp:543
+#: debug_console.cpp:544
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr "Tlačidlo na styluse"
 
-#: debug_console.cpp:544 debug_console.cpp:558
+#: debug_console.cpp:545 debug_console.cpp:559
 #, kde-format
 msgid "Button"
 msgstr "Tlačidlo"
 
-#: debug_console.cpp:545 debug_console.cpp:559
+#: debug_console.cpp:546 debug_console.cpp:560
 #, kde-format
 msgid "Pressed"
 msgstr "Stlačené"
 
-#: debug_console.cpp:546 debug_console.cpp:560 debug_console.cpp:574
-#: debug_console.cpp:588
+#: debug_console.cpp:547 debug_console.cpp:561 debug_console.cpp:575
+#: debug_console.cpp:589
 #, kde-format
 msgid "Tablet"
 msgstr "Tablet"
 
-#: debug_console.cpp:557
+#: debug_console.cpp:558
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr "Tlačidlo na tablete"
 
-#: debug_console.cpp:570
+#: debug_console.cpp:571
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr "Pás na tablete"
 
-#: debug_console.cpp:571 debug_console.cpp:585
+#: debug_console.cpp:572 debug_console.cpp:586
 #, kde-format
 msgid "Number"
 msgstr "Číslo"
 
-#: debug_console.cpp:573 debug_console.cpp:587
+#: debug_console.cpp:574 debug_console.cpp:588
 #, kde-format
 msgid "isFinger"
 msgstr "isFinger"
 
-#: debug_console.cpp:584
+#: debug_console.cpp:585
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr "Koliesko na tablete"
 
-#: debug_console.cpp:651
+#: debug_console.cpp:641
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr ""
 
-#: debug_console.cpp:825
+#: debug_console.cpp:814
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Žiadne tlačidlá myši"
 
-#: debug_console.cpp:829
+#: debug_console.cpp:818
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "vľavo"
 
-#: debug_console.cpp:832
+#: debug_console.cpp:821
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "vpravo"
 
-#: debug_console.cpp:835
+#: debug_console.cpp:824
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "stred"
 
-#: debug_console.cpp:838
+#: debug_console.cpp:827
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "späť"
 
-#: debug_console.cpp:841
+#: debug_console.cpp:830
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "forward"
 
-#: debug_console.cpp:844
+#: debug_console.cpp:833
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "navyše 1"
 
-#: debug_console.cpp:847
+#: debug_console.cpp:836
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "navyše 2"
 
-#: debug_console.cpp:850
+#: debug_console.cpp:839
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "navyše 3"
 
-#: debug_console.cpp:853
+#: debug_console.cpp:842
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "navyše 4"
 
-#: debug_console.cpp:856
+#: debug_console.cpp:845
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "navyše 5"
 
-#: debug_console.cpp:859
+#: debug_console.cpp:848
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "navyše 6"
 
-#: debug_console.cpp:862
+#: debug_console.cpp:851
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "navyše 7"
 
-#: debug_console.cpp:865
+#: debug_console.cpp:854
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "navyše 8"
 
-#: debug_console.cpp:868
+#: debug_console.cpp:857
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "navyše 9"
 
-#: debug_console.cpp:871
+#: debug_console.cpp:860
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "navyše 10"
 
-#: debug_console.cpp:874
+#: debug_console.cpp:863
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "navyše 11"
 
-#: debug_console.cpp:877
+#: debug_console.cpp:866
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "navyše 12"
 
-#: debug_console.cpp:880
+#: debug_console.cpp:869
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "navyše 13"
 
-#: debug_console.cpp:883
+#: debug_console.cpp:872
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "navyše 14"
 
-#: debug_console.cpp:886
+#: debug_console.cpp:875
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "navyše 15"
 
-#: debug_console.cpp:889
+#: debug_console.cpp:878
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "navyše 16"
 
-#: debug_console.cpp:892
+#: debug_console.cpp:881
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "navyše 17"
 
-#: debug_console.cpp:895
+#: debug_console.cpp:884
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "navyše 18"
 
-#: debug_console.cpp:898
+#: debug_console.cpp:887
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "navyše 19"
 
-#: debug_console.cpp:901
+#: debug_console.cpp:890
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "navyše 20"
 
-#: debug_console.cpp:904
+#: debug_console.cpp:893
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "navyše 21"
 
-#: debug_console.cpp:907
+#: debug_console.cpp:896
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "navyše 22"
 
-#: debug_console.cpp:910
+#: debug_console.cpp:899
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "navyše 23"
 
-#: debug_console.cpp:913
+#: debug_console.cpp:902
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "navyše 24"
 
-#: debug_console.cpp:916
+#: debug_console.cpp:905
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "úloha"
 
-#: debug_console.cpp:1268
+#: debug_console.cpp:1257
 #, kde-format
 msgid "X11 Windows"
 msgstr "Okná X11"
 
-#: debug_console.cpp:1270
+#: debug_console.cpp:1259
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Nespravované okná X11"
 
-#: debug_console.cpp:1272
+#: debug_console.cpp:1261
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland okná"
 
-#: debug_console.cpp:1274
+#: debug_console.cpp:1263
 #, kde-format
 msgid "Internal Windows"
 msgstr "Vnútorné okná"
 
-#: debug_console.cpp:1614 debug_console.cpp:1628
+#: debug_console.cpp:1603 debug_console.cpp:1617
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr ""
 
-#: debug_console.cpp:1616 debug_console.cpp:1630
+#: debug_console.cpp:1605 debug_console.cpp:1619
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1070,159 +1042,153 @@ msgstr ""
 msgid "Debug Console"
 msgstr "Zatvoriť Konzolu ladenia"
 
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:38
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "Zatvoriť Konzolu ladenia"
-
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:54
+#: debug_console.ui:44
 #, kde-format
 msgid "Windows"
 msgstr "Okná"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:68
+#: debug_console.ui:58
 #, kde-format
 msgid "Input Events"
 msgstr "Vstupné udalosti"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:85
+#: debug_console.ui:75
 #, kde-format
 msgid "Input Devices"
 msgstr "Vstupné zariadenia"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:95
+#: debug_console.ui:85
 #, kde-format
 msgid "OpenGL"
 msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:101
+#: debug_console.ui:91
 #, kde-format
 msgid "No OpenGL compositor running"
 msgstr "Nebeží žiadny OpenGL kompozítor"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:129
+#: debug_console.ui:119
 #, kde-format
 msgid "OpenGL (ES) driver information"
 msgstr "Informácie o ovládači OpenGL (ES)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:135
+#: debug_console.ui:125
 #, kde-format
 msgid "Vendor:"
 msgstr "Výrobca:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:142
+#: debug_console.ui:132
 #, kde-format
 msgid "Renderer:"
 msgstr "Renderer:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:149
+#: debug_console.ui:139
 #, kde-format
 msgid "Version:"
 msgstr "Verzia:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:156
+#: debug_console.ui:146
 #, kde-format
 msgid "Shading Language Version:"
 msgstr "Verzia Shading Language:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:163
+#: debug_console.ui:153
 #, kde-format
 msgid "Driver:"
 msgstr "Ovládač:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:170
+#: debug_console.ui:160
 #, kde-format
 msgid "GPU class:"
 msgstr "Trieda GPU:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:177
+#: debug_console.ui:167
 #, kde-format
 msgid "OpenGL Version:"
 msgstr "Verzia OpenGL:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:184
+#: debug_console.ui:174
 #, kde-format
 msgid "GLSL Version:"
 msgstr "Verzia GLSL:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:250
+#: debug_console.ui:240
 #, kde-format
 msgid "Platform Extensions"
 msgstr "Rozšírenia Platformy"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:266
+#: debug_console.ui:256
 #, kde-format
 msgid "OpenGL (ES) Extensions"
 msgstr "Rozšírenia OpenGL (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:287
+#: debug_console.ui:277
 #, kde-format
 msgid "Keyboard"
 msgstr "Klávesnica"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:314
+#: debug_console.ui:304
 #, kde-format
 msgid "Keymap Layouts"
 msgstr "Rozloženia klávesnice"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:336
+#: debug_console.ui:326
 #, kde-format
 msgid "Current Layout:"
 msgstr "Aktuálne rozloženie:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.ui:355
+#: debug_console.ui:345
 #, kde-format
 msgid "Modifiers"
 msgstr "Modifikátory"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:371
+#: debug_console.ui:361
 #, kde-format
 msgid "Active Modifiers"
 msgstr "Aktívne Modifikátory"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:387
+#: debug_console.ui:377
 #, kde-format
 msgid "LEDs"
 msgstr "LEDky"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:403
+#: debug_console.ui:393
 #, kde-format
 msgid "Active LEDs"
 msgstr "Aktívne LEDky"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: debug_console.ui:424 debug_console.ui:444
+#: debug_console.ui:414 debug_console.ui:434
 #, kde-format
 msgid "Clipboard"
 msgstr "Schránka"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#: debug_console.ui:490
+#: debug_console.ui:480
 #, kde-format
 msgid "Primary Selection"
 msgstr "Hlavný výber"
@@ -1378,7 +1344,7 @@ msgstr ""
 "Vyberte okno na vynútenie zatvorenia ľavým tlačidlom alebo enterom.\n"
 "Escape alebo pravé tlačidlo na zrušenie."
 
-#: main.cpp:186 plugins/invert/invert_config.cpp:35
+#: main.cpp:175 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1388,72 +1354,72 @@ msgstr ""
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:48
+#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:188 main.cpp:212
+#: main.cpp:177 main.cpp:201
 #, kde-format
 msgid "KDE window manager"
 msgstr "Správca okien KDE"
 
-#: main.cpp:190
+#: main.cpp:179
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Vývojári KDE"
 
-#: main.cpp:192
+#: main.cpp:181
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:193
+#: main.cpp:182
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:194
+#: main.cpp:183
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:195
+#: main.cpp:184
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:196
+#: main.cpp:185
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:197
+#: main.cpp:186
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:198
+#: main.cpp:187
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:199
+#: main.cpp:188
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:200
+#: main.cpp:189
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:209
+#: main.cpp:198
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Zakázať možnosti nastavenia"
 
-#: main.cpp:210
+#: main.cpp:199
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Zdá sa, že KWin v poslednej dobe n-krát spadol"
@@ -1575,7 +1541,7 @@ msgstr "Spustí sedenie bez podpory zaknutia obrazovky."
 msgid "Starts the session without global shortcuts support."
 msgstr "Spustí sedenie bez podpory globálnych skratiek."
 
-#: main_wayland.cpp:395 main_x11.cpp:438
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Zakázať integrácoi KActivities."
@@ -1589,36 +1555,6 @@ msgstr "Ukončiť po použití sedenia, ktoré je spustené Kwin, zatvorené."
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikácie na jedno spustenie servera Wayland a Xwayland sú spustené"
-
-#: main_x11.cpp:66
-#, kde-format
-msgid ""
-"KWin is unstable.\n"
-"It seems to have crashed several times in a row.\n"
-"You can select another window manager to run:"
-msgstr ""
-"KWin je nestabilný.\n"
-"Zdá sa, že spadol viackrát po sebe.\n"
-"Vybrať si môžete iného správcu okien, ktorý sa spustí:"
-
-#: main_x11.cpp:266
-#, kde-format
-msgid ""
-"kwin: unable to claim manager selection, another wm running? (try using --"
-"replace)\n"
-msgstr ""
-"kwin: nie je možné získať výber správcu okien, beží už nejaké wm? (skúste "
-"použiť --replace)\n"
-
-#: main_x11.cpp:286
-#, kde-format
-msgid "kwin: another window manager is running (try using --replace)\n"
-msgstr "kwin: beží iný správca okien (skúste použiť --replace)\n"
-
-#: main_x11.cpp:431
-#, kde-format
-msgid "Replace already-running ICCCM2.0-compliant window manager"
-msgstr "Nahradiť už bežiaceho ICCCM2.0 kompatibilného správcu okien"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
@@ -2948,55 +2884,66 @@ msgstr "Menej"
 msgid "More"
 msgstr "Viac"
 
-#: plugins/zoom/zoom.cpp:62
+#: plugins/zoom/zoom.cpp:60
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Presunúť priblíženú oblasť vľavo"
 
-#: plugins/zoom/zoom.cpp:69
+#: plugins/zoom/zoom.cpp:67
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Presunúť priblíženú oblasť vpravo"
 
-#: plugins/zoom/zoom.cpp:76
+#: plugins/zoom/zoom.cpp:74
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Presunúť priblíženú oblasť hore"
 
-#: plugins/zoom/zoom.cpp:83
+#: plugins/zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Presunúť priblíženú oblasť dolu"
 
-#: plugins/zoom/zoom.cpp:91 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:89 plugins/zoom/zoom_config.cpp:195
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Posunúť myš na zameranie"
 
-#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:96 plugins/zoom/zoom_config.cpp:202
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Posunúť myš na stred"
 
-#: plugins/zoom/zoom_config.cpp:70
+#: plugins/zoom/zoom_config.cpp:167
 #, kde-format
 msgid "Move Left"
 msgstr "Posunúť doľava"
 
-#: plugins/zoom/zoom_config.cpp:77
+#: plugins/zoom/zoom_config.cpp:174
 #, kde-format
 msgid "Move Right"
 msgstr "Posunúť doprava"
 
-#: plugins/zoom/zoom_config.cpp:84
+#: plugins/zoom/zoom_config.cpp:181
 #, kde-format
 msgid "Move Up"
 msgstr "Posunúť hore"
 
-#: plugins/zoom/zoom_config.cpp:91
+#: plugins/zoom/zoom_config.cpp:188
 #, kde-format
 msgid "Move Down"
 msgstr "Posunúť dolu"
+
+#: plugins/zoom/zoom_config.cpp:210
+#, fuzzy, kde-format
+#| msgid "Modifier keys:"
+msgid "Scroll gesture modifier keys:"
+msgstr "Modifikačné klávesy:"
+
+#: plugins/zoom/zoom_config.cpp:212
+#, kde-format
+msgid "Scroll while the modifier keys are pressed to zoom"
+msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3724,35 +3671,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Žiadne okná"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:338
 msgid "Walk Through Windows"
 msgstr "Prepínať medzi oknami"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:339
 msgid "Walk Through Windows (Reverse)"
 msgstr "Prepínať medzi oknami (opačne)"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:340
 msgid "Walk Through Windows Alternative"
 msgstr "Prepínať medzi oknami alternatívne"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:341
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Prepínať medzi oknami alternatívne (opačne)"
 
-#: tabbox/tabbox.cpp:362
+#: tabbox/tabbox.cpp:342
 msgid "Walk Through Windows of Current Application"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie"
 
-#: tabbox/tabbox.cpp:363
+#: tabbox/tabbox.cpp:343
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie (opačne)"
 
-#: tabbox/tabbox.cpp:364
+#: tabbox/tabbox.cpp:344
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie alternatívne"
 
-#: tabbox/tabbox.cpp:365
+#: tabbox/tabbox.cpp:345
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie alternatívne (opačne)"
 
@@ -3880,60 +3827,55 @@ msgstr "&Zavrieť"
 msgid "&Extensions"
 msgstr "Rozšírenia"
 
-#: useractions.cpp:413
+#: useractions.cpp:412
 #, kde-format
 msgid "&Desktops"
 msgstr "&Plochy"
 
-#: useractions.cpp:427
-#, kde-format
-msgid "Move to &Desktop"
-msgstr "Presunúť na &plochu"
-
-#: useractions.cpp:444
+#: useractions.cpp:428
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Presunúť na &obrazovku"
 
-#: useractions.cpp:460
+#: useractions.cpp:444
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Zobraziť v ak&tivitách"
 
-#: useractions.cpp:477
+#: useractions.cpp:461
 #, kde-format
 msgid "Move &To Current Desktop"
 msgstr "Presunúť na aktuálnu plochu"
 
-#: useractions.cpp:487 useractions.cpp:546
+#: useractions.cpp:471 useractions.cpp:530
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Všetky plochy"
 
-#: useractions.cpp:519
+#: useractions.cpp:503
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Nová plocha"
 
-#: useractions.cpp:580 useractions.cpp:710
+#: useractions.cpp:564 useractions.cpp:694
 #, kde-format
 msgid "Move to %1"
 msgstr "Presunúť na %1"
 
-#: useractions.cpp:593
+#: useractions.cpp:577
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Pridať novú na novú plochu"
 
-#: useractions.cpp:605
+#: useractions.cpp:589
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Presunúť na novú plochu"
 
-#: useractions.cpp:636
+#: useractions.cpp:620
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3941,373 +3883,373 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Obrazovka &%1 (%2)"
 
-#: useractions.cpp:662
+#: useractions.cpp:646
 #, kde-format
 msgid "&All Activities"
 msgstr "Všetky &aktivity"
 
-#: useractions.cpp:829
+#: useractions.cpp:813
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> sa už používa"
 
-#: useractions.cpp:831
+#: useractions.cpp:815
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> už používa %2 v %3"
 
-#: useractions.cpp:911
+#: useractions.cpp:895
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Ponuka operácií okna"
 
-#: useractions.cpp:913
+#: useractions.cpp:897
 #, kde-format
 msgid "Close Window"
 msgstr "Zavrieť okno"
 
-#: useractions.cpp:915
+#: useractions.cpp:899
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maximalizovať okno"
 
-#: useractions.cpp:917
+#: useractions.cpp:901
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maximalizovať okno zvislo"
 
-#: useractions.cpp:919
+#: useractions.cpp:903
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maximalizovať okno vodorovne"
 
-#: useractions.cpp:921
+#: useractions.cpp:905
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimalizovať okno"
 
-#: useractions.cpp:923
+#: useractions.cpp:907
 #, kde-format
 msgid "Shade Window"
 msgstr "Zabaliť okno"
 
-#: useractions.cpp:925
+#: useractions.cpp:909
 #, kde-format
 msgid "Move Window"
 msgstr "Presunúť okno"
 
-#: useractions.cpp:927
+#: useractions.cpp:911
 #, kde-format
 msgid "Resize Window"
 msgstr "Zmeniť veľkosť okna"
 
-#: useractions.cpp:929
+#: useractions.cpp:913
 #, kde-format
 msgid "Raise Window"
 msgstr "Presunúť okno dopredu"
 
-#: useractions.cpp:931
+#: useractions.cpp:915
 #, kde-format
 msgid "Lower Window"
 msgstr "Presunúť okno dozadu"
 
-#: useractions.cpp:933
+#: useractions.cpp:917
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Prepnúť okno dopredu/dozadu"
 
-#: useractions.cpp:935
+#: useractions.cpp:919
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Okno na celú obrazovku"
 
-#: useractions.cpp:937
+#: useractions.cpp:921
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Prepnúť titulný pruh a rám okna"
 
-#: useractions.cpp:939
+#: useractions.cpp:923
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Držať okno nad ostatnými"
 
-#: useractions.cpp:941
+#: useractions.cpp:925
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Držať okno pod ostatnými"
 
-#: useractions.cpp:943
+#: useractions.cpp:927
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktivovať okno vyžadujúce pozornosť"
 
-#: useractions.cpp:945
+#: useractions.cpp:929
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Nastaviť skratku okna"
 
-#: useractions.cpp:947
+#: useractions.cpp:931
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Presunúť okno do stredu"
 
-#: useractions.cpp:949
+#: useractions.cpp:933
 #, kde-format
 msgid "Move Window Right"
 msgstr "Presunúť okno doprava"
 
-#: useractions.cpp:951
+#: useractions.cpp:935
 #, kde-format
 msgid "Move Window Left"
 msgstr "Presunúť okno doľava"
 
-#: useractions.cpp:953
+#: useractions.cpp:937
 #, kde-format
 msgid "Move Window Up"
 msgstr "Presunúť okno nahor"
 
-#: useractions.cpp:955
+#: useractions.cpp:939
 #, kde-format
 msgid "Move Window Down"
 msgstr "Presunúť okno nadol"
 
-#: useractions.cpp:957
+#: useractions.cpp:941
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Rozbaliť okno vodorovne"
 
-#: useractions.cpp:959
+#: useractions.cpp:943
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Rozbaliť okno zvislo"
 
-#: useractions.cpp:961
+#: useractions.cpp:945
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Zbaliť okno vodorovne"
 
-#: useractions.cpp:963
+#: useractions.cpp:947
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Zbaliť okno zvislo"
 
-#: useractions.cpp:965
+#: useractions.cpp:949
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Usporiadať okno vedľa seba doľava"
 
-#: useractions.cpp:967
+#: useractions.cpp:951
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Usporiadať okno vedľa seba doprava"
 
-#: useractions.cpp:969
+#: useractions.cpp:953
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Okno rýchlej dlaždice na vrch"
 
-#: useractions.cpp:971
+#: useractions.cpp:955
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Okno rýchlej dlaždice na spodok"
 
-#: useractions.cpp:973
+#: useractions.cpp:957
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Rýchla dlaždica okna hore vľavo"
 
-#: useractions.cpp:975
+#: useractions.cpp:959
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Rýchla dlaždica okna dolu vľavo"
 
-#: useractions.cpp:977
+#: useractions.cpp:961
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Rýchla dlaždica okna hore vpravo"
 
-#: useractions.cpp:979
+#: useractions.cpp:963
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Rýchla dlaždica okna dolu vpravo"
 
-#: useractions.cpp:981
+#: useractions.cpp:965
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Prepnúť na okno nad"
 
-#: useractions.cpp:983
+#: useractions.cpp:967
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Prepnúť na okno pod"
 
-#: useractions.cpp:985
+#: useractions.cpp:969
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Prepnúť na okno doprava"
 
-#: useractions.cpp:987
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Prepnúť na okno doľava"
 
-#: useractions.cpp:989
+#: useractions.cpp:973
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Zvýšiť nepriehľadnosť aktívneho okna o 5 %"
 
-#: useractions.cpp:991
+#: useractions.cpp:975
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Znížiť nepriehľadnosť aktívneho okna o 5 %"
 
-#: useractions.cpp:994
+#: useractions.cpp:978
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Okno na všetkých plochách"
 
-#: useractions.cpp:997
+#: useractions.cpp:981
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Usporiadať okno vedľa seba doľava"
 
-#: useractions.cpp:999
+#: useractions.cpp:983
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Usporiadať okno vedľa seba doprava"
 
-#: useractions.cpp:1001
+#: useractions.cpp:985
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Okno rýchlej dlaždice na vrch"
 
-#: useractions.cpp:1003
+#: useractions.cpp:987
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Okno rýchlej dlaždice na spodok"
 
-#: useractions.cpp:1014
+#: useractions.cpp:998
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Okno na plochu %1"
 
-#: useractions.cpp:1016
+#: useractions.cpp:1000
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Okno na nasledujúcu plochu"
 
-#: useractions.cpp:1017
+#: useractions.cpp:1001
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Okno na predchádzajúcu plochu"
 
-#: useractions.cpp:1018
+#: useractions.cpp:1002
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Okno o jednu pracovnú plochu doprava"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1004
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Okno o jednu pracovnú plochu doľava"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1006
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Okno o jednu pracovnú plochu hore"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1008
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Okno o jednu pracovnú plochu dolu"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1012
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Presunúť okno na obrazovku %1"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1019
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Presunúť okno na nasledujúcu obrazovku"
 
-#: useractions.cpp:1037
+#: useractions.cpp:1021
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Presunúť okno na predošlú obrazovku"
 
-#: useractions.cpp:1039
+#: useractions.cpp:1023
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Presunúť okno o jednu obrazovku doprava"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1025
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Presunúť okno o jednu obrazovku doľava"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1027
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Presunúť okno o jednu obrazovku nahor"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1029
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Presunúť okno o jednu obrazovku nadol"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1033
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Prepnúť na obrazovku %1"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1040
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Prepnúť na nasledujúcu obrazovku"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1041
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Prepnúť na predošlú obrazovku"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1042
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Prepnúť na obrazovku napravo"
 
-#: useractions.cpp:1060
+#: useractions.cpp:1044
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Prepnúť na obrazovku naľavo"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1046
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Prepnúť na obrazovku hore"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1048
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Prepnúť na obrazovku dole"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1051
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Nazrieť na plochu"
 
-#: useractions.cpp:1070
+#: useractions.cpp:1054
 #, kde-format
 msgid "Kill Window"
 msgstr "Zabiť okno"
 
-#: useractions.cpp:1138
+#: useractions.cpp:1122
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivovať okno (%1)"
@@ -4382,13 +4324,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3275
+#: window.cpp:3236
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovedá)"
 
-#: workspace.cpp:1704
+#: workspace.cpp:1609
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4415,6 +4357,55 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadol"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Pozastaviť kompozíciu"
+
+#~ msgid ""
+#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#~ "protection but <b>be aware that this might result in an immediate crash!</"
+#~ "b></p>"
+#~ msgstr ""
+#~ "<b>Kompozícia OpenGL (predvolené) zhodila KWin niekedy v minulosti.</"
+#~ "b><br>Je to pravdepodobne kvôli chybe ovládača.<p>Ak si myslíte, že ste "
+#~ "medzitým prešli na stabilný ovládač,<br>môžete vynulovať túto ochranu, "
+#~ "ale <b>môže to spôsobiť okamžitý pád!</b></p>"
+
+#~ msgid "Required X extensions (XComposite and XDamage) are not available."
+#~ msgstr "Požadované X rozšírenia (XComposite a XDamage) nie sú dostupné."
+
+#~ msgid "GLX/OpenGL is not available."
+#~ msgstr "GLX/OpenGL nie je dostupný."
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "Zatvoriť Konzolu ladenia"
+
+#~ msgid ""
+#~ "KWin is unstable.\n"
+#~ "It seems to have crashed several times in a row.\n"
+#~ "You can select another window manager to run:"
+#~ msgstr ""
+#~ "KWin je nestabilný.\n"
+#~ "Zdá sa, že spadol viackrát po sebe.\n"
+#~ "Vybrať si môžete iného správcu okien, ktorý sa spustí:"
+
+#~ msgid ""
+#~ "kwin: unable to claim manager selection, another wm running? (try using --"
+#~ "replace)\n"
+#~ msgstr ""
+#~ "kwin: nie je možné získať výber správcu okien, beží už nejaké wm? (skúste "
+#~ "použiť --replace)\n"
+
+#~ msgid "kwin: another window manager is running (try using --replace)\n"
+#~ msgstr "kwin: beží iný správca okien (skúste použiť --replace)\n"
+
+#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
+#~ msgstr "Nahradiť už bežiaceho ICCCM2.0 kompatibilného správcu okien"
+
+#~ msgid "Move to &Desktop"
+#~ msgstr "Presunúť na &plochu"
 
 #~ msgctxt "@item:inlistbox Button size:"
 #~ msgid "Tiny"
