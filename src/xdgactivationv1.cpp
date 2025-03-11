@@ -23,11 +23,20 @@
 namespace KWin
 {
 
+static QStringView extractFileName(const QStringView filePath)
+{
+    const int lastSeparator = filePath.lastIndexOf(QLatin1Char('/'));
+    if (lastSeparator == -1) {
+        return filePath;
+    } else {
+        return filePath.mid(lastSeparator + 1);
+    }
+}
+
 static bool isPrivilegedInWindowManagement(const ClientConnection *client)
 {
-    Q_ASSERT(client);
-    auto requestedInterfaces = client->property("requestedInterfaces").toStringList();
-    return requestedInterfaces.contains(QLatin1String("org_kde_plasma_window_management")) || requestedInterfaces.contains(QLatin1String("kde_lockscreen_overlay_v1"));
+    // TODO: check whether user has interacted with any surface owned by the client instead
+    return extractFileName(client->executablePath()) == QLatin1String("plasmashell");
 }
 
 XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent)
