@@ -49,15 +49,9 @@ public:
     void resetDamage();
     QRegion damage() const;
 
-    void discardPixmap();
-    void updatePixmap();
     void destroyPixmap();
 
     SurfacePixmap *pixmap() const;
-    SurfacePixmap *previousPixmap() const;
-
-    void referencePreviousPixmap();
-    void unreferencePreviousPixmap();
 
     virtual ContentType contentType() const;
     virtual void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats);
@@ -84,8 +78,6 @@ protected:
     QSize m_bufferSize;
     QSizeF m_destinationSize;
     std::unique_ptr<SurfacePixmap> m_pixmap;
-    std::unique_ptr<SurfacePixmap> m_previousPixmap;
-    int m_referencePixmapCounter = 0;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
     std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
@@ -119,9 +111,6 @@ public:
     bool hasAlphaChannel() const;
     QSize size() const;
 
-    bool isDiscarded() const;
-    void markAsDiscarded();
-
     virtual void create() = 0;
     virtual void update();
 
@@ -134,7 +123,6 @@ protected:
 
 private:
     std::unique_ptr<SurfaceTexture> m_texture;
-    bool m_isDiscarded = false;
 };
 
 } // namespace KWin

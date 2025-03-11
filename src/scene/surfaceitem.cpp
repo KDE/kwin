@@ -84,7 +84,6 @@ void SurfaceItem::setBufferSize(const QSize &size)
 {
     if (m_bufferSize != size) {
         m_bufferSize = size;
-        discardPixmap();
         discardQuads();
     }
 }
@@ -166,62 +165,7 @@ SurfacePixmap *SurfaceItem::pixmap() const
     if (m_pixmap && m_pixmap->isValid()) {
         return m_pixmap.get();
     }
-    if (m_previousPixmap && m_previousPixmap->isValid()) {
-        return m_previousPixmap.get();
-    }
     return nullptr;
-}
-
-SurfacePixmap *SurfaceItem::previousPixmap() const
-{
-    return m_previousPixmap.get();
-}
-
-void SurfaceItem::referencePreviousPixmap()
-{
-    if (m_previousPixmap && m_previousPixmap->isDiscarded()) {
-        m_referencePixmapCounter++;
-    }
-}
-
-void SurfaceItem::unreferencePreviousPixmap()
-{
-    if (!m_previousPixmap || !m_previousPixmap->isDiscarded()) {
-        return;
-    }
-    m_referencePixmapCounter--;
-    if (m_referencePixmapCounter == 0) {
-        m_previousPixmap.reset();
-    }
-}
-
-void SurfaceItem::updatePixmap()
-{
-    if (!m_pixmap) {
-        m_pixmap = createPixmap();
-    }
-    if (m_pixmap->isValid()) {
-        m_pixmap->update();
-    } else {
-        m_pixmap->create();
-        if (m_pixmap->isValid()) {
-            unreferencePreviousPixmap();
-            discardQuads();
-        }
-    }
-}
-
-void SurfaceItem::discardPixmap()
-{
-    if (m_pixmap) {
-        if (m_pixmap->isValid()) {
-            m_previousPixmap = std::move(m_pixmap);
-            m_previousPixmap->markAsDiscarded();
-            referencePreviousPixmap();
-        } else {
-            m_pixmap.reset();
-        }
-    }
 }
 
 void SurfaceItem::destroyPixmap()
@@ -231,17 +175,25 @@ void SurfaceItem::destroyPixmap()
 
 void SurfaceItem::preprocess()
 {
-    updatePixmap();
+    if (!m_pixmap || m_pixmap->size() != m_bufferSize) {
+        m_pixmap = createPixmap();
+    }
 
-    if (SurfacePixmap *surfacePixmap = pixmap(); surfacePixmap && !surfacePixmap->isDiscarded()) {
-        SurfaceTexture *surfaceTexture = surfacePixmap->texture();
+    if (m_pixmap->isValid()) {
+        m_pixmap->update();
+    } else {
+        m_pixmap->create();
+    }
+
+    if (m_pixmap->isValid()) {
+        SurfaceTexture *surfaceTexture = m_pixmap->texture();
         if (surfaceTexture->isValid()) {
             const QRegion region = damage();
             if (!region.isEmpty()) {
                 surfaceTexture->update(region);
                 resetDamage();
             }
-        } else if (surfacePixmap->isValid()) {
+        } else {
             if (surfaceTexture->create()) {
                 resetDamage();
             }
@@ -251,10 +203,6 @@ void SurfaceItem::preprocess()
 
 WindowQuadList SurfaceItem::buildQuads() const
 {
-    if (!pixmap()) {
-        return {};
-    }
-
     const QList<QRectF> region = shape();
     WindowQuadList quads;
     quads.reserve(region.count());
@@ -342,16 +290,6 @@ bool SurfacePixmap::hasAlphaChannel() const
 QSize SurfacePixmap::size() const
 {
     return m_size;
-}
-
-bool SurfacePixmap::isDiscarded() const
-{
-    return m_isDiscarded;
-}
-
-void SurfacePixmap::markAsDiscarded()
-{
-    m_isDiscarded = true;
 }
 
 } // namespace KWin
