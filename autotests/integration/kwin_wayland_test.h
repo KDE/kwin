@@ -1140,6 +1140,7 @@ public:
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
+    static std::unique_ptr<Connection> setup(int socket, AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
     ~Connection();
 
     bool sync();
@@ -1229,6 +1230,7 @@ void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal y
  * @see destroyWaylandConnection
  */
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags = AdditionalWaylandInterfaces());
+bool setupWaylandConnection(int socket, AdditionalWaylandInterfaces flags = AdditionalWaylandInterfaces());
 
 /**
  * Destroys the Wayland Connection created with @link{setupWaylandConnection}.

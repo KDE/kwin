@@ -115,7 +115,7 @@ void InputMethodTest::init()
 
     touchNow();
 
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::TextInputManagerV2 | Test::AdditionalWaylandInterface::InputMethodV1 | Test::AdditionalWaylandInterface::TextInputManagerV3));
+    QVERIFY(Test::setupWaylandConnection(waylandServer()->createInputMethodConnection(), Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::TextInputManagerV2 | Test::AdditionalWaylandInterface::InputMethodV1 | Test::AdditionalWaylandInterface::TextInputManagerV3));
 
     kwinApp()->inputMethod()->setMode(InputMethod::VirtualKeyboardVisibility::NonMouseInput);
 }
