@@ -7,6 +7,7 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
+#include "core/pixelgrid.h"
 #include "cursor.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
@@ -93,7 +94,7 @@ void RegionScreenCastSource::blit(Output *output)
 
     if (m_renderedTexture) {
         const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(output);
-        const auto outputGeometry = output->geometry();
+        const auto outputGeometry = snapToPixelGridF(scaledRect(output->geometryF(), m_scale));
         if (!outputTexture) {
             return;
         }
@@ -103,7 +104,7 @@ void RegionScreenCastSource::blit(Output *output)
         ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         QMatrix4x4 projectionMatrix;
         projectionMatrix.scale(1, -1);
-        projectionMatrix.ortho(m_region);
+        projectionMatrix.ortho(snapToPixelGridF(scaledRect(m_region, m_scale)));
         projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
 
         shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
