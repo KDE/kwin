@@ -248,7 +248,7 @@ public:
     /**
      * @returns List of all windows (either X11 or Wayland) currently managed by Workspace
      */
-    const QList<Window *> windows() const
+    QList<Window *> windows() const
     {
         return m_windows;
     }
