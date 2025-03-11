@@ -155,10 +155,13 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
             m_sleepInhibitor = m_gpu->platform()->session()->delaySleep("dpms animation");
         }
     } else {
-        if (m_turnOffTimer.isActive() || (mode != dpmsMode() && setDrmDpmsMode(mode))) {
+        if (m_turnOffTimer.isActive()) {
+            updateDpmsMode(mode);
+            m_turnOffTimer.stop();
+            Q_EMIT wakeUp();
+        } else if (setDrmDpmsMode(mode)) {
             Q_EMIT wakeUp();
         }
-        m_turnOffTimer.stop();
         m_sleepInhibitor.reset();
     }
 }
