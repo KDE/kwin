@@ -215,6 +215,20 @@ void SurfaceItemWayland::handleAlphaMultiplierChanged()
     setOpacity(m_surface->alphaMultiplier());
 }
 
+void SurfaceItemWayland::handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+{
+    if (!m_surface) {
+        return;
+    }
+    m_surface->frameRendered(timestamp.count());
+    if (frame) {
+        // FIXME make frame always valid
+        if (auto feedback = m_surface->takePresentationFeedback(output)) {
+            frame->addFeedback(std::move(feedback));
+        }
+    }
+}
+
 #if KWIN_BUILD_X11
 SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Item *parent)
     : SurfaceItemWayland(window->surface(), parent)

@@ -4604,15 +4604,9 @@ bool Window::isOffscreenRendering() const
 
 void Window::maybeSendFrameCallback()
 {
-    if (m_surface && !m_windowItem->isVisible()) {
-        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-        m_surface->traverseTree([this, &timestamp](SurfaceInterface *surface) {
-            surface->frameRendered(timestamp);
-            const auto feedback = surface->takePresentationFeedback(nullptr);
-            if (feedback) {
-                feedback->presented(std::chrono::nanoseconds(1'000'000'000'000 / output()->refreshRate()), std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
-            }
-        });
+    if (m_windowItem && !m_windowItem->isVisible()) {
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch());
+        m_windowItem->framePainted(output(), nullptr, timestamp);
         // update refresh rate, it might have changed
         m_offscreenFramecallbackTimer.start(1'000'000 / output()->refreshRate());
     }

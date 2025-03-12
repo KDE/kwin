@@ -631,6 +631,21 @@ void Item::removeEffect()
     m_effectCount--;
 }
 
+void Item::framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+{
+    if (!isVisible() || !boundingRect().intersects(mapFromScene(output->geometryF()))) {
+        return;
+    }
+    handleFramePainted(output, frame, timestamp);
+    for (const auto child : std::as_const(m_childItems)) {
+        child->framePainted(output, frame, timestamp);
+    }
+}
+
+void Item::handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+{
+}
+
 } // namespace KWin
 
 #include "moc_item.cpp"

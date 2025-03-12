@@ -70,9 +70,7 @@
 #include "scene/windowitem.h"
 #include "shadow.h"
 #include "wayland/seat.h"
-#include "wayland/surface.h"
 #include "wayland_server.h"
-#include "waylandwindow.h"
 #include "window.h"
 #include "workspace.h"
 #if KWIN_BUILD_X11
@@ -260,37 +258,10 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
 {
     if (waylandServer()) {
         Output *output = delegate->output();
-        const std::chrono::milliseconds frameTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
-
-        const QList<Item *> items = m_containerItem->sortedChildItems();
-        for (Item *item : items) {
-            if (!item->isVisible()) {
-                continue;
-            }
-            Window *window = static_cast<WindowItem *>(item)->window();
-            if (!window->isOnOutput(output)) {
-                continue;
-            }
-            if (auto surface = window->surface()) {
-                surface->traverseTree([&frameTime, &frame, &output](SurfaceInterface *surface) {
-                    surface->frameRendered(frameTime.count());
-                    if (auto feedback = surface->takePresentationFeedback(output)) {
-                        frame->addFeedback(std::move(feedback));
-                    }
-                });
-            }
-        }
-
+        const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+        m_containerItem->framePainted(output, frame, frameTime);
         if (m_dndIcon) {
-            if (auto surface = m_dndIcon->surface()) {
-                surface->traverseTree([&frameTime, &frame, &output](SurfaceInterface *surface) {
-                    surface->frameRendered(frameTime.count());
-                    if (auto feedback = surface->takePresentationFeedback(output)) {
-                        frame->addFeedback(std::move(feedback));
-                    }
-                });
-            }
+            m_dndIcon->framePainted(output, frame, frameTime);
         }
     }
 }

@@ -25,6 +25,8 @@ class Scene;
 class SyncReleasePoint;
 class DrmDevice;
 class Item;
+class Output;
+class OutputFrame;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -142,6 +144,8 @@ public:
     void addEffect();
     void removeEffect();
 
+    void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+
 Q_SIGNALS:
     void childAdded(Item *item);
     /**
@@ -180,6 +184,8 @@ private:
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
     void removeRepaints(SceneDelegate *delegate);
+
+    virtual void handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     Scene *m_scene = nullptr;
     QPointer<Item> m_parentItem;
