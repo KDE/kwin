@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-11 00:42+0000\n"
-"PO-Revision-Date: 2025-02-24 12:43+0100\n"
+"PO-Revision-Date: 2025-03-11 09:54+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -2936,15 +2936,14 @@ msgid "Move Down"
 msgstr "Mou avall"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Tecles modificadores de dibuix amb fletxes:"
+msgstr "Tecles modificadores de gestos de desplaçament:"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "Desplaceu mentre es premen les tecles modificadores per a fer zoom"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -4351,209 +4350,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Suspèn la composició"
-
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p>"
-#~ msgstr ""
-#~ "<b>La composició OpenGL (predeterminada) ha trencat el KWin en el passat."
-#~ "</b><br>Probablement era degut a una fallada en el controlador.<p>Si "
-#~ "penseu que mentrestant l'heu actualitzat a un controlador estable,"
-#~ "<br>podeu reiniciar aquesta protecció però <b>cal tenir present que "
-#~ "podria produir-se una fallada immediata!</b></p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Les extensions X requerides (XComposite i XDamage) no són disponibles."
-
-#~ msgid "GLX/OpenGL is not available."
-#~ msgstr "No és disponible el GLX/OpenGL."
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Surt de la consola de depuració"
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "El KWin no està estabilitzat.\n"
-#~ "Sembla que ha fallat diverses vegades seguides.\n"
-#~ "Podeu seleccionar un altre gestor de finestres a executar:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "kwin: no s'ha pogut reclamar la selecció del gestor, hi ha un altre wm "
-#~ "executant-se? (proveu l'ús de --replace)\n"
-
-#~ msgid "kwin: another window manager is running (try using --replace)\n"
-#~ msgstr ""
-#~ "kwin: hi ha un altre gestor de finestres executant-se (proveu l'ús de --"
-#~ "replace)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr ""
-#~ "Substitueix el gestor de finestres conforme amb ICCCM2.0 que ja s'executa"
-
-#~ msgid "Move to &Desktop"
-#~ msgstr "Mou a l'&escriptori"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "Minúscul"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "Gran"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "Molt gran"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "Enorme"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "Molt enorme"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "Fora de mida"
-
-#~ msgid "Button size:"
-#~ msgstr "Mida dels botons:"
-
-#~ msgid "Config Dialog"
-#~ msgstr "Diàleg de configuració"
-
-#~ msgid "Title &Alignment"
-#~ msgstr "&Alineació del títol"
-
-#~ msgid "Center"
-#~ msgstr "Centre"
-
-#~ msgid ""
-#~ "Check this option if the window border should be painted in the titlebar "
-#~ "color. Otherwise it will be painted in the background color."
-#~ msgstr ""
-#~ "Marqueu aquesta opció si la vora de la finestra s'ha de pintar en el "
-#~ "color de la barra de títol. Altrament es pintarà en el color del fons."
-
-#~ msgid "Colored window border"
-#~ msgstr "Vora de la finestra acolorida"
-
-#~ msgid ""
-#~ "Check this option if you want the buttons to fade in when the mouse "
-#~ "pointer hovers over them and fade out again when it moves away."
-#~ msgstr ""
-#~ "Marqueu aquesta opció si desitgeu que els botons sobresurtin quan el "
-#~ "punter del ratolí passi per sobre i tornin a l'estat normal quan "
-#~ "s'allunyi."
-
-#~ msgid "Animate buttons"
-#~ msgstr "Anima els botons"
-
-#~ msgid "EventType"
-#~ msgstr "Tipus d'esdeveniment"
-
-#~ msgid "Red"
-#~ msgstr "Vermell"
-
-#~ msgid "Green"
-#~ msgstr "Verd"
-
-#~ msgid "Blue"
-#~ msgstr "Blau"
-
-#~ msgid "Purple"
-#~ msgstr "Púrpura"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "Mode:"
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "Protanopia (vermell dèbil)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "Deuteranopia (verd dèbil)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "Tritanopia (blau-groc)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "Intensitat:"
-
-#~ msgctxt "The code as read from the input device"
-#~ msgid "Scan code"
-#~ msgstr "Codi escanejat"
-
-#~ msgid "Surfaces"
-#~ msgstr "Superfícies"
-
-#~ msgid "Inactivity duration (seconds):"
-#~ msgstr "Durada de la inactivitat (segons):"
-
-#~ msgid "Split Horizontally"
-#~ msgstr "Divideix horitzontalment"
-
-#~ msgid "Split Vertically"
-#~ msgstr "Divideix verticalment"
-
-#~ msgctxt "Night Light was disabled"
-#~ msgid "Night Light Off"
-#~ msgstr "Llum de nit desactivada"
-
-#~ msgid "Toggle Night Light"
-#~ msgstr "Commuta la llum de nit"
-
-#~ msgid ""
-#~ "The window manager is configured to consider the screen with the mouse on "
-#~ "it as active one.\n"
-#~ "Therefore it is not possible to switch to a screen explicitly."
-#~ msgstr ""
-#~ "El gestor de finestres està configurat per a considerar com a activa la "
-#~ "pantalla amb el cursor del ratolí.\n"
-#~ "Per tant, no es pot commutar explícitament a una pantalla."
-
-#~ msgid "Region outside the workspace"
-#~ msgstr "Regió situada fora de l'espai de treball"
-
-#~ msgid "Move to %1 %2"
-#~ msgstr "Mou a %1 %2"
-
-#~ msgid "Layout mode:"
-#~ msgstr "Mode de disposició:"
-
-#~ msgid "Closest"
-#~ msgstr "El més proper"
-
-#~ msgid "Natural"
-#~ msgstr "Natural"
-
-#~ msgid "Set window type to"
-#~ msgstr "Estableix el tipus de finestra a"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "Tipus de regla d'establir el tipus de finestra"
-
-#~ msgid "milliseconds"
-#~ msgstr "mil·lisegons"
