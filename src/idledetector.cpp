@@ -12,9 +12,10 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-IdleDetector::IdleDetector(std::chrono::milliseconds timeout, QObject *parent)
+IdleDetector::IdleDetector(std::chrono::milliseconds timeout, OperatingMode mode, QObject *parent)
     : QObject(parent)
     , m_timeout(timeout)
+    , m_mode(mode)
 {
     Q_ASSERT(timeout >= 0ms);
     m_timer.start(timeout, this);
@@ -37,6 +38,11 @@ void IdleDetector::timerEvent(QTimerEvent *event)
     }
 }
 
+IdleDetector::OperatingMode IdleDetector::mode() const
+{
+    return m_mode;
+}
+
 bool IdleDetector::isInhibited() const
 {
     return m_isInhibited;
@@ -44,6 +50,10 @@ bool IdleDetector::isInhibited() const
 
 void IdleDetector::setInhibited(bool inhibited)
 {
+    if (m_mode == OperatingMode::IgnoresInhibitors) {
+        return;
+    };
+
     if (m_isInhibited == inhibited) {
         return;
     }
