@@ -18,6 +18,7 @@
 #include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/rendertarget.h"
+#include "core/renderviewport.h"
 #include "core/session.h"
 #include "cursor.h"
 #include "cursorsource.h"
@@ -30,7 +31,8 @@
 #include "outline.h"
 #include "pluginmanager.h"
 #include "pointer_input.h"
-#include "scene/cursorscene.h"
+#include "scene/itemrenderer.h"
+#include "scene/workspacescene.h"
 #include "screenedge.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
@@ -643,11 +645,10 @@ ScreenLockerWatcher *Application::screenLockerWatcher() const
 
 static PlatformCursorImage grabCursorOpenGL()
 {
-    CursorScene *scene = Compositor::self()->cursorScene();
-    if (!scene) {
-        return PlatformCursorImage();
+    WorkspaceScene *scene = Compositor::self()->scene();
+    if (!scene->cursorItem()) {
+        return PlatformCursorImage{};
     }
-
     Cursor *cursor = Cursors::self()->currentCursor();
     Output *output = workspace()->outputAt(cursor->pos());
 
@@ -658,11 +659,12 @@ static PlatformCursorImage grabCursorOpenGL()
     texture->setContentTransform(OutputTransform::FlipY);
     GLFramebuffer framebuffer(texture.get());
     RenderTarget renderTarget(&framebuffer);
+    RenderViewport viewport(cursor->geometry(), 1, renderTarget);
 
-    SceneDelegate delegate(scene, output);
-    scene->prePaint(&delegate);
-    scene->paint(renderTarget, infiniteRegion());
-    scene->postPaint();
+    scene->renderer()->beginFrame(renderTarget, viewport);
+    scene->renderer()->renderBackground(renderTarget, viewport, infiniteRegion());
+    scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{});
+    scene->renderer()->endFrame();
 
     QImage image = texture->toImage();
     image.setDevicePixelRatio(output->scale());
@@ -672,8 +674,8 @@ static PlatformCursorImage grabCursorOpenGL()
 
 static PlatformCursorImage grabCursorSoftware()
 {
-    CursorScene *scene = Compositor::self()->cursorScene();
-    if (!scene) {
+    WorkspaceScene *scene = Compositor::self()->scene();
+    if (!scene->cursorItem()) {
         return PlatformCursorImage();
     }
 
@@ -682,11 +684,12 @@ static PlatformCursorImage grabCursorSoftware()
 
     QImage image((cursor->geometry().size() * output->scale()).toSize(), QImage::Format_ARGB32_Premultiplied);
     RenderTarget renderTarget(&image);
+    RenderViewport viewport(cursor->geometry(), 1, renderTarget);
 
-    SceneDelegate delegate(scene, output);
-    scene->prePaint(&delegate);
-    scene->paint(renderTarget, infiniteRegion());
-    scene->postPaint();
+    scene->renderer()->beginFrame(renderTarget, viewport);
+    scene->renderer()->renderBackground(renderTarget, viewport, infiniteRegion());
+    scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{});
+    scene->renderer()->endFrame();
 
     image.setDevicePixelRatio(output->scale());
     return PlatformCursorImage(image, cursor->hotspot());

@@ -59,6 +59,7 @@
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
+#include "cursoritem.h"
 #include "effect/effecthandler.h"
 #include "internalwindow.h"
 #include "scene/decorationitem.h"
@@ -96,10 +97,11 @@ WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
         setGeometry(workspace()->geometry());
     });
 
-    if (waylandServer()) {
-        connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
-        connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
-    }
+    connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
+    connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
+    connect(Cursors::self(), &Cursors::hiddenChanged, this, &WorkspaceScene::updateCursor);
+    connect(Cursors::self(), &Cursors::positionChanged, this, &WorkspaceScene::updateCursor);
+    updateCursor();
 }
 
 WorkspaceScene::~WorkspaceScene()
@@ -140,6 +142,19 @@ void WorkspaceScene::destroyDndIconItem()
     m_dndIcon.reset();
 }
 
+void WorkspaceScene::updateCursor()
+{
+    if (Cursors::self()->isCursorHidden()) {
+        m_cursorItem.reset();
+        return;
+    } else if (!m_cursorItem) {
+        m_cursorItem = std::make_unique<CursorItem>(m_overlayItem.get());
+        // make sure it's over the dnd icon
+        m_cursorItem->setZ(1);
+    }
+    m_cursorItem->setPosition(Cursors::self()->currentCursor()->pos());
+}
+
 Item *WorkspaceScene::containerItem() const
 {
     return m_containerItem.get();
@@ -148,6 +163,11 @@ Item *WorkspaceScene::containerItem() const
 Item *WorkspaceScene::overlayItem() const
 {
     return m_overlayItem.get();
+}
+
+Item *WorkspaceScene::cursorItem() const
+{
+    return m_cursorItem.get();
 }
 
 static bool regionActuallyContains(const QRegion &region, const QRect &rect)

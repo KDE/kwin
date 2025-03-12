@@ -22,7 +22,6 @@ namespace KWin
 {
 
 class Output;
-class CursorScene;
 class RenderBackend;
 class RenderLayer;
 class RenderLoop;
@@ -65,10 +64,6 @@ public:
     WorkspaceScene *scene() const
     {
         return m_scene.get();
-    }
-    CursorScene *cursorScene() const
-    {
-        return m_cursorScene.get();
     }
     RenderBackend *backend() const
     {
@@ -115,7 +110,6 @@ protected:
 
     State m_state = State::Off;
     std::unique_ptr<WorkspaceScene> m_scene;
-    std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
 };
