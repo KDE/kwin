@@ -15,7 +15,7 @@
 
 namespace KWin
 {
-static int s_version = 4;
+static int s_version = 5;
 
 class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screencast_stream_unstable_v1
 {

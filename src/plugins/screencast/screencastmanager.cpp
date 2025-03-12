@@ -95,11 +95,29 @@ static QString rectToString(const QRect &rect)
     return QStringLiteral("%1,%2 %3x%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
 }
 
+static qreal devicePixelRatioForRegion(const QRect &region)
+{
+    qreal devicePixelRatio = 1.0;
+
+    const auto outputs = workspace()->outputs();
+    for (const Output *output : outputs) {
+        if (output->geometry().intersects(region)) {
+            devicePixelRatio = std::max(devicePixelRatio, output->scale());
+        }
+    }
+
+    return devicePixelRatio;
+}
+
 void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream, const QRect &geometry, qreal scale, ScreencastV1Interface::CursorMode mode)
 {
     if (!geometry.isValid()) {
         waylandStream->sendFailed(i18n("Invalid region"));
         return;
+    }
+
+    if (scale == 0) {
+        scale = devicePixelRatioForRegion(geometry);
     }
 
     auto source = new RegionScreenCastSource(geometry, scale);
