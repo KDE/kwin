@@ -232,6 +232,11 @@ public:
      */
     QRectF mapToGlobal(const QRectF &rect) const;
 
+    /**
+     * Maps a @a region in this output coordinates to the global coordinate system.
+     */
+    QRegion mapToGlobal(const QRegion &region) const;
+
     Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
     Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;
 

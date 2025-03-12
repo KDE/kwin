@@ -26,12 +26,13 @@ class GLTexture;
 class Output;
 class CursorScene;
 class RenderBackend;
-class RenderLayer;
+class OutputLayer;
 class RenderLoop;
 class RenderTarget;
 class WorkspaceScene;
 class Window;
 class OutputFrame;
+class SceneView;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -101,14 +102,6 @@ private Q_SLOTS:
 protected:
     Output *findOutput(RenderLoop *loop) const;
 
-    void addSuperLayer(RenderLayer *layer);
-    void removeSuperLayer(RenderLayer *layer);
-
-    void prePaintPass(RenderLayer *layer, QRegion *damage);
-    void postPaintPass(RenderLayer *layer);
-    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
-    void framePass(RenderLayer *layer, OutputFrame *frame);
-
     void createScene();
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
@@ -121,7 +114,7 @@ protected:
     std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;
-    QHash<RenderLoop *, RenderLayer *> m_superlayers;
+    std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;
 };
 
 } // namespace KWin

@@ -34,7 +34,7 @@ CursorScene::~CursorScene()
     m_rootItem.reset();
 }
 
-static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
+static void resetRepaintsHelper(Item *item, SceneView *delegate)
 {
     item->resetRepaints(delegate);
 
@@ -44,7 +44,7 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
     }
 }
 
-QRegion CursorScene::prePaint(SceneDelegate *delegate)
+QRegion CursorScene::prePaint(SceneView *delegate)
 {
     resetRepaintsHelper(m_rootItem.get(), delegate);
     m_paintedOutput = delegate->output();

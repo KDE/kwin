@@ -659,7 +659,7 @@ static PlatformCursorImage grabCursorOpenGL()
     GLFramebuffer framebuffer(texture.get());
     RenderTarget renderTarget(&framebuffer);
 
-    SceneDelegate delegate(scene, output);
+    SceneView delegate(scene, output, nullptr);
     scene->prePaint(&delegate);
     scene->paint(renderTarget, infiniteRegion());
     scene->postPaint();
@@ -683,7 +683,7 @@ static PlatformCursorImage grabCursorSoftware()
     QImage image((cursor->geometry().size() * output->scale()).toSize(), QImage::Format_ARGB32_Premultiplied);
     RenderTarget renderTarget(&image);
 
-    SceneDelegate delegate(scene, output);
+    SceneView delegate(scene, output, nullptr);
     scene->prePaint(&delegate);
     scene->paint(renderTarget, infiniteRegion());
     scene->postPaint();

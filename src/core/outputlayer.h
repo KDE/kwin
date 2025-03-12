@@ -46,6 +46,10 @@ public:
 
     QRegion repaints() const;
     void resetRepaints();
+    void scheduleRepaint(Item *item);
+    /**
+     * adds a repaint in layer-local logical coordinates
+     */
     void addRepaint(const QRegion &region);
     bool needsRepaint() const;
 
@@ -108,6 +112,7 @@ protected:
     OutputTransform m_bufferTransform = OutputTransform::Kind::Normal;
     QPointer<SurfaceItem> m_scanoutCandidate;
     Output *const m_output;
+    bool m_repaintScheduled = false;
 };
 
 } // namespace KWin

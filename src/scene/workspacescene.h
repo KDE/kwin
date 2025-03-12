@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "core/renderviewport.h"
 #include "scene/scene.h"
 
 namespace KWin
@@ -38,10 +39,10 @@ public:
     Item *cursorItem() const;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    QRegion prePaint(SceneDelegate *delegate) override;
+    QRegion prePaint(SceneView *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
-    void frame(SceneDelegate *delegate, OutputFrame *frame) override;
+    void frame(SceneView *delegate, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 
     EglContext *openglContext() const;
@@ -96,7 +97,7 @@ protected:
 
     // The screen that is being currently painted
     Output *painted_screen = nullptr;
-    SceneDelegate *painted_delegate = nullptr;
+    SceneView *painted_delegate = nullptr;
 
     // windows in their stacking order
     QList<WindowItem *> stacking_order;

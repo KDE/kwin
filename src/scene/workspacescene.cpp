@@ -56,7 +56,6 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
-#include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
 #include "cursoritem.h"
@@ -174,7 +173,7 @@ static bool regionActuallyContains(const QRegion &region, const QRect &rect)
     return (region & rect) == rect;
 }
 
-static bool addCandidates(SceneDelegate *delegate, SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded)
+static bool addCandidates(SceneView *delegate, SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded)
 {
     const QList<Item *> children = item->sortedChildItems();
     auto it = children.rbegin();
@@ -289,7 +288,7 @@ double WorkspaceScene::desiredHdrHeadroom() const
     return maxHeadroom;
 }
 
-void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
+void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 {
     if (waylandServer()) {
         Output *output = delegate->output();
@@ -301,7 +300,7 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
     }
 }
 
-QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
+QRegion WorkspaceScene::prePaint(SceneView *delegate)
 {
     createStackingOrder();
 
@@ -340,7 +339,7 @@ QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
     return m_paintContext.damage.translated(-delegate->viewport().topLeft());
 }
 
-static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
+static void resetRepaintsHelper(Item *item, SceneView *delegate)
 {
     if (!delegate->shouldRenderItem(item)) {
         return;
@@ -353,7 +352,7 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
     }
 }
 
-static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints)
+static void accumulateRepaints(Item *item, SceneView *delegate, QRegion *repaints)
 {
     if (!delegate->shouldRenderItem(item)) {
         return;

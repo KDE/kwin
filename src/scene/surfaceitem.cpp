@@ -146,17 +146,17 @@ void SurfaceItem::addDamage(const QRegion &region)
     const qreal yScale = sourceBox.height() / m_destinationSize.height();
     const QRegion logicalDamage = mapFromBuffer(region);
 
-    const auto delegates = scene()->delegates();
-    for (SceneDelegate *delegate : delegates) {
-        QRegion delegateDamage = logicalDamage;
-        const qreal delegateScale = delegate->scale();
-        if (xScale != delegateScale || yScale != delegateScale) {
+    const auto views = scene()->views();
+    for (SceneView *view : views) {
+        QRegion viewDamage = logicalDamage;
+        const qreal viewScale = view->scale();
+        if (xScale != viewScale || yScale != viewScale) {
             // Simplified version of ceil(ceil(0.5 * output_scale / surface_scale) / output_scale)
             const int xPadding = std::ceil(0.5 / xScale);
             const int yPadding = std::ceil(0.5 / yScale);
-            delegateDamage = expandRegion(delegateDamage, QMargins(xPadding, yPadding, xPadding, yPadding));
+            viewDamage = expandRegion(viewDamage, QMargins(xPadding, yPadding, xPadding, yPadding));
         }
-        scheduleRepaint(delegate, delegateDamage);
+        scheduleRepaint(view, viewDamage);
     }
 
     Q_EMIT damaged();
