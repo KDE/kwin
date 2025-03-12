@@ -71,6 +71,10 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, 
         buffer->drop();
         return nullptr;
     }
+
+    texture->setFilter(GL_LINEAR);
+    texture->setWrapMode(GL_CLAMP_TO_EDGE);
+
     return std::make_shared<EglSwapchainSlot>(buffer, std::move(framebuffer), texture);
 }
 
