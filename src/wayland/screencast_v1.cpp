@@ -15,7 +15,7 @@
 
 namespace KWin
 {
-static int s_version = 4;
+static int s_version = 5;
 
 class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screencast_stream_unstable_v1
 {
@@ -74,7 +74,7 @@ class ScreencastV1InterfacePrivate : public QtWaylandServer::zkde_screencast_uns
 {
 public:
     ScreencastV1InterfacePrivate(Display *display, ScreencastV1Interface *q)
-        : QtWaylandServer::zkde_screencast_unstable_v1(*display, s_version)
+        : QtWaylandServer::zkde_screencast_unstable_v1(*display, std::min(s_version, interfaceVersion())) // plasma-wayland-protocols 1.17.0 is not a hard dependency
         , q(q)
     {
     }
