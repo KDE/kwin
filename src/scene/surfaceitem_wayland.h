@@ -33,6 +33,7 @@ public:
     ContentType contentType() const override;
     void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats) override;
     void freeze() override;
+    void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp) override;
 
     SurfaceInterface *surface() const;
 

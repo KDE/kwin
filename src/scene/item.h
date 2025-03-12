@@ -25,6 +25,8 @@ class Scene;
 class SyncReleasePoint;
 class DrmDevice;
 class Item;
+class Output;
+class OutputFrame;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -141,6 +143,8 @@ public:
     bool hasEffects() const;
     void addEffect();
     void removeEffect();
+
+    virtual void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
     void childAdded(Item *item);

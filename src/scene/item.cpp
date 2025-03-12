@@ -631,6 +631,13 @@ void Item::removeEffect()
     m_effectCount--;
 }
 
+void Item::framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+{
+    for (const auto child : m_childItems) {
+        child->framePainted(output, frame, timestamp);
+    }
+}
+
 } // namespace KWin
 
 #include "moc_item.cpp"
