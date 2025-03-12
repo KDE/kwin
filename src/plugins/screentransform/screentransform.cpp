@@ -9,7 +9,7 @@
 // own
 #include "screentransform.h"
 #include "core/outputconfiguration.h"
-#include "core/renderlayer.h"
+#include "core/outputlayer.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -78,36 +78,35 @@ void ScreenTransformEffect::addScreen(Output *screen)
             return;
         }
 
-        Scene *scene = effects->scene();
-        RenderLayer layer(screen->renderLoop());
-        SceneDelegate delegate(scene, screen);
-        delegate.setLayer(&layer);
-
         // Avoid including this effect while capturing previous screen state.
         m_capturing = true;
         auto resetCapturing = qScopeGuard([this]() {
             m_capturing = false;
         });
 
+        effects->makeOpenGLContextCurrent();
+        auto texture = GLTexture::allocate(GL_RGBA8, screen->pixelSize());
+        if (!texture) {
+            m_states.remove(screen);
+            return;
+        }
+        auto &state = m_states[screen];
+        state.m_oldTransform = screen->transform();
+        state.m_oldGeometry = screen->geometry();
+        state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250ms))));
+        state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
+        state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
+        state.m_prev.texture = std::move(texture);
+        state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
+        RenderTarget renderTarget(state.m_prev.framebuffer.get());
+
+        Scene *scene = effects->scene();
+        SceneDelegate delegate(scene, screen);
+        VirtualOutputLayer outputLayer{screen, renderTarget};
+        delegate.setLayer(&outputLayer);
         scene->prePaint(&delegate);
 
-        effects->makeOpenGLContextCurrent();
-        if (auto texture = GLTexture::allocate(GL_RGBA8, screen->pixelSize())) {
-            auto &state = m_states[screen];
-            state.m_oldTransform = screen->transform();
-            state.m_oldGeometry = screen->geometry();
-            state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250ms))));
-            state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
-            state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
-            state.m_prev.texture = std::move(texture);
-            state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
-
-            RenderTarget renderTarget(state.m_prev.framebuffer.get());
-            scene->paint(renderTarget, screen->geometry());
-        } else {
-            m_states.remove(screen);
-        }
-
+        scene->paint(renderTarget, screen->geometry());
         scene->postPaint();
     });
 }

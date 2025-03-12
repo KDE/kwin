@@ -5,8 +5,8 @@
 */
 
 #include "scene/item.h"
+#include "core/outputlayer.h"
 #include "core/pixelgrid.h"
-#include "core/renderlayer.h"
 #include "scene/scene.h"
 #include "utils/common.h"
 

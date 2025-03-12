@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "core/renderlayerdelegate.h"
+#include "core/outputlayerdelegate.h"
 
 #include <QObject>
 
@@ -19,7 +19,7 @@ class ItemRenderer;
 class Output;
 class Scene;
 
-class KWIN_EXPORT SceneDelegate : public RenderLayerDelegate
+class KWIN_EXPORT SceneDelegate : public OutputLayerDelegate
 {
 public:
     explicit SceneDelegate(Scene *scene, Output *output);

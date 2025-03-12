@@ -49,6 +49,7 @@ public:
 
     QRegion repaints() const;
     void resetRepaints();
+    void scheduleRepaint(Item *item);
     void addRepaint(const QRegion &region);
     bool needsRepaint() const;
 
@@ -110,6 +111,26 @@ protected:
     OutputTransform m_bufferTransform = OutputTransform::Kind::Normal;
     QPointer<SurfaceItem> m_scanoutCandidate;
     Output *const m_output;
+    bool m_repaintScheduled = false;
+};
+
+/**
+ * an output layer that's only meant to render an output outside of the normal compositing process,
+ * and then be discarded afterwards
+ */
+class KWIN_EXPORT VirtualOutputLayer : public OutputLayer
+{
+public:
+    explicit VirtualOutputLayer(Output *output, RenderTarget &renderTarget);
+
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+
+private:
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
+
+    RenderTarget m_renderTarget;
 };
 
 } // namespace KWin

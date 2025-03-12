@@ -17,7 +17,6 @@
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
-#include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "cursor.h"
 #include "cursorsource.h"
@@ -91,19 +90,6 @@ Output *Compositor::findOutput(RenderLoop *loop) const
     return nullptr;
 }
 
-void Compositor::addSuperLayer(RenderLayer *layer)
-{
-    m_superlayers.insert(layer->loop(), layer);
-    connect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-}
-
-void Compositor::removeSuperLayer(RenderLayer *layer)
-{
-    m_superlayers.remove(layer->loop());
-    disconnect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    delete layer;
-}
-
 void Compositor::reinitialize()
 {
     // Restart compositing
@@ -114,58 +100,6 @@ void Compositor::reinitialize()
 void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 {
     composite(renderLoop);
-}
-
-void Compositor::framePass(RenderLayer *layer, OutputFrame *frame)
-{
-    layer->delegate()->frame(frame);
-    const auto sublayers = layer->sublayers();
-    for (RenderLayer *sublayer : sublayers) {
-        framePass(sublayer, frame);
-    }
-}
-
-void Compositor::prePaintPass(RenderLayer *layer, QRegion *damage)
-{
-    if (const QRegion repaints = layer->repaints(); !repaints.isEmpty()) {
-        *damage += layer->mapToGlobal(repaints);
-        layer->resetRepaints();
-    }
-
-    const QRegion repaints = layer->delegate()->prePaint();
-    if (!repaints.isEmpty()) {
-        *damage += layer->mapToGlobal(repaints);
-    }
-
-    const auto sublayers = layer->sublayers();
-    for (RenderLayer *sublayer : sublayers) {
-        if (sublayer->isVisible()) {
-            prePaintPass(sublayer, damage);
-        }
-    }
-}
-
-void Compositor::postPaintPass(RenderLayer *layer)
-{
-    layer->delegate()->postPaint();
-    const auto sublayers = layer->sublayers();
-    for (RenderLayer *sublayer : sublayers) {
-        if (sublayer->isVisible()) {
-            postPaintPass(sublayer);
-        }
-    }
-}
-
-void Compositor::paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region)
-{
-    layer->delegate()->paint(renderTarget, region);
-
-    const auto sublayers = layer->sublayers();
-    for (RenderLayer *sublayer : sublayers) {
-        if (sublayer->isVisible()) {
-            paintPass(sublayer, renderTarget, region);
-        }
-    }
 }
 
 bool Compositor::isActive()
@@ -389,9 +323,8 @@ void Compositor::stop()
         static_cast<OpenGLBackend *>(m_backend.get())->makeCurrent();
     }
 
-    const auto superlayers = m_superlayers;
-    for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
-        removeSuperLayer(*it);
+    for (auto &[loop, layer] : m_primaryDelegates) {
+        disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     }
 
     m_scene.reset();
@@ -459,10 +392,8 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     Output *output = findOutput(renderLoop);
     OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    const auto &primaryDelegate = m_primaryDelegates[renderLoop];
     fTraceDuration("Paint (", output->name(), ")");
-
-    RenderLayer *superLayer = m_superlayers[renderLoop];
-    superLayer->setOutputLayer(primaryLayer);
 
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
@@ -485,18 +416,21 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting() * output->dimming(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
 
-    if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
+    if (primaryLayer->needsRepaint()) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
 
-        QRegion surfaceDamage = primaryLayer->repaints();
+        // TODO leave this output-local, and make it use device pixels
+        QRegion surfaceDamage = output->mapToGlobal(primaryLayer->repaints());
         primaryLayer->resetRepaints();
-        prePaintPass(superLayer, &surfaceDamage);
+        if (const QRegion repaints = primaryDelegate->prePaint(); !repaints.isEmpty()) {
+            surfaceDamage += output->mapToGlobal(repaints);
+        }
         frame->setDamage(surfaceDamage);
 
         // slowly adjust the artificial HDR headroom for the next frame
         // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
         if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->artificialHdrHeadroom() && output->isInternal() && output->colorProfileSource() != Output::ColorProfileSource::ICC) {
-            const auto desiredHdrHeadroom = superLayer->delegate()->desiredHdrHeadroom();
+            const auto desiredHdrHeadroom = primaryDelegate->desiredHdrHeadroom();
             // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
             constexpr double relativeLuminanceAtZeroBrightness = 0.04;
             // the higher this is, the more likely the user is to notice the change in backlight brightness
@@ -529,14 +463,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
 
         const uint32_t planeCount = 1;
-        if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
-            const auto sublayers = superLayer->sublayers();
-            bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
-                return sublayer->isVisible();
-            });
-            if (scanoutCandidates.size() > planeCount) {
-                scanoutPossible &= checkForBlackBackground(scanoutCandidates.back());
-            }
+        if (const auto scanoutCandidates = primaryDelegate->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
+            bool scanoutPossible = scanoutCandidates.size() < planeCount || checkForBlackBackground(scanoutCandidates.back());
             if (scanoutPossible) {
                 primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.front()->size()), output->modeSize()));
                 directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
@@ -559,14 +487,14 @@ void Compositor::composite(RenderLoop *renderLoop)
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 
-                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
+                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(output->geometry());
 
-                paintPass(superLayer, renderTarget, bufferDamage);
+                primaryDelegate->paint(renderTarget, bufferDamage);
                 primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
             }
         }
 
-        postPaintPass(superLayer);
+        primaryDelegate->postPaint();
         if (!directScanout) {
             totalTimeQuery->end();
             frame->addRenderTimeQuery(std::move(totalTimeQuery));
@@ -579,7 +507,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    framePass(superLayer, frame.get());
+    primaryDelegate->frame(frame.get());
 
     if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
@@ -604,14 +532,10 @@ void Compositor::addOutput(Output *output)
     if (output->isPlaceholder()) {
         return;
     }
-    auto workspaceLayer = new RenderLayer(output->renderLoop());
-    workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), output));
-    workspaceLayer->setGeometry(output->rectF());
-    connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
-        workspaceLayer->setGeometry(output->rectF());
-    });
-
-    addSuperLayer(workspaceLayer);
+    auto delegate = std::make_unique<SceneDelegate>(m_scene.get(), output);
+    delegate->setLayer(m_backend->primaryLayer(output));
+    m_primaryDelegates[output->renderLoop()] = std::move(delegate);
+    connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
 
 void Compositor::removeOutput(Output *output)
@@ -619,7 +543,8 @@ void Compositor::removeOutput(Output *output)
     if (output->isPlaceholder()) {
         return;
     }
-    removeSuperLayer(m_superlayers[output->renderLoop()]);
+    disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    m_primaryDelegates.erase(output->renderLoop());
 }
 
 } // namespace KWin

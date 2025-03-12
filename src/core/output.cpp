@@ -434,6 +434,11 @@ QRectF Output::mapToGlobal(const QRectF &rect) const
     return rect.translated(geometry().topLeft());
 }
 
+QRegion Output::mapToGlobal(const QRegion &region) const
+{
+    return region.translated(geometry().topLeft());
+}
+
 QPointF Output::mapToGlobal(const QPointF &pos) const
 {
     return pos + geometry().topLeft();

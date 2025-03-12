@@ -47,20 +47,30 @@ QRegion OutputLayer::repaints() const
     return m_repaints;
 }
 
+void OutputLayer::scheduleRepaint(Item *item)
+{
+    m_repaintScheduled = true;
+    m_output->renderLoop()->scheduleRepaint(item, this);
+}
+
 void OutputLayer::addRepaint(const QRegion &region)
 {
+    if (region.isEmpty()) {
+        return;
+    }
     m_repaints += region;
-    m_output->renderLoop()->scheduleRepaint(nullptr, nullptr, this);
+    m_output->renderLoop()->scheduleRepaint(nullptr, this);
 }
 
 void OutputLayer::resetRepaints()
 {
+    m_repaintScheduled = false;
     m_repaints = QRegion();
 }
 
 bool OutputLayer::needsRepaint() const
 {
-    return !m_repaints.isEmpty();
+    return m_repaintScheduled || !m_repaints.isEmpty();
 }
 
 bool OutputLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
@@ -163,6 +173,35 @@ QRect OutputLayer::targetRect() const
 void OutputLayer::setTargetRect(const QRect &rect)
 {
     m_targetRect = rect;
+}
+
+VirtualOutputLayer::VirtualOutputLayer(Output *output, RenderTarget &renderTarget)
+    : OutputLayer(output)
+    , m_renderTarget(renderTarget)
+{
+}
+
+DrmDevice *VirtualOutputLayer::scanoutDevice() const
+{
+    return nullptr;
+}
+
+QHash<uint32_t, QList<uint64_t>> VirtualOutputLayer::supportedDrmFormats() const
+{
+    return {};
+}
+
+std::optional<OutputLayerBeginFrameInfo> VirtualOutputLayer::doBeginFrame()
+{
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = m_renderTarget,
+        .repaint = infiniteRegion(),
+    };
+}
+
+bool VirtualOutputLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+{
+    return true;
 }
 
 } // namespace KWin

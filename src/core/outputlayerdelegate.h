@@ -15,22 +15,22 @@
 namespace KWin
 {
 
-class RenderLayer;
+class OutputLayer;
 class RenderTarget;
 class RenderViewport;
 class SurfaceItem;
 class OutputFrame;
 
 /**
- * The RenderLayerDelegate class represents a render layer's contents.
+ * The OutputLayerDelegate class represents an output layer's contents.
  */
-class KWIN_EXPORT RenderLayerDelegate
+class KWIN_EXPORT OutputLayerDelegate
 {
 public:
-    virtual ~RenderLayerDelegate() = default;
+    virtual ~OutputLayerDelegate() = default;
 
-    RenderLayer *layer() const;
-    void setLayer(RenderLayer *layer);
+    OutputLayer *layer() const;
+    void setLayer(OutputLayer *layer);
 
     /**
      * This function is called by the compositor after compositing the frame.
@@ -64,7 +64,7 @@ public:
     virtual double desiredHdrHeadroom() const;
 
 private:
-    RenderLayer *m_layer = nullptr;
+    OutputLayer *m_layer = nullptr;
 };
 
 } // namespace KWin
