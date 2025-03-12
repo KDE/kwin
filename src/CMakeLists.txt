@@ -61,7 +61,6 @@ target_sources(kwin PRIVATE
     core/outputlayer.cpp
     core/renderbackend.cpp
     core/renderjournal.cpp
-    core/outputlayerdelegate.cpp
     core/renderloop.cpp
     core/rendertarget.cpp
     core/renderviewport.cpp
@@ -542,7 +541,6 @@ install(FILES
     core/pixelgrid.h
     core/renderbackend.h
     core/renderjournal.h
-    core/outputlayerdelegate.h
     core/renderloop.h
     core/renderloop_p.h
     core/rendertarget.h

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "core/colorspace.h"
+#include "core/renderviewport.h"
 #include "scene/scene.h"
 
 namespace KWin

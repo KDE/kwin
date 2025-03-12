@@ -12,6 +12,39 @@
 namespace KWin
 {
 
+OutputLayer *SceneView::layer() const
+{
+    return m_layer;
+}
+
+void SceneView::setLayer(OutputLayer *layer)
+{
+    m_layer = layer;
+}
+
+void SceneView::frame(OutputFrame *frame)
+{
+}
+
+QRegion SceneView::prePaint()
+{
+    return QRegion();
+}
+
+void SceneView::postPaint()
+{
+}
+
+QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
+{
+    return {};
+}
+
+double SceneView::desiredHdrHeadroom() const
+{
+    return 1;
+}
+
 SceneDelegate::SceneDelegate(Scene *scene, Output *output)
     : m_scene(scene)
     , m_output(output)

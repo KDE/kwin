@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include "core/outputlayerdelegate.h"
+#include "kwin_export.h"
 
 #include <QObject>
+#include <QRegion>
 
 #include <memory>
 
@@ -18,8 +19,55 @@ namespace KWin
 class ItemRenderer;
 class Output;
 class Scene;
+class OutputFrame;
+class OutputLayer;
+class SurfaceItem;
+class RenderTarget;
 
-class KWIN_EXPORT SceneDelegate : public OutputLayerDelegate
+class KWIN_EXPORT SceneView
+{
+public:
+    virtual ~SceneView() = default;
+
+    OutputLayer *layer() const;
+    void setLayer(OutputLayer *layer);
+
+    /**
+     * This function is called by the compositor after compositing the frame.
+     */
+    virtual void frame(OutputFrame *frame);
+
+    /**
+     * This function is called by the compositor before starting painting. Reimplement
+     * this function to do frame initialization.
+     */
+    virtual QRegion prePaint();
+
+    /**
+     * This function is called by the compositor after finishing painting. Reimplement
+     * this function to do post frame cleanup.
+     */
+    virtual void postPaint();
+
+    /**
+     * Returns the direct scanout candidate hint. It can be used to avoid compositing the
+     * render layer.
+     */
+    virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
+
+    /**
+     * This function is called when the compositor wants the render layer delegate
+     * to repaint its contents.
+     */
+    virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+
+    virtual double desiredHdrHeadroom() const;
+
+private:
+    OutputLayer *m_layer = nullptr;
+};
+
+class KWIN_EXPORT SceneDelegate : public SceneView
 {
 public:
     explicit SceneDelegate(Scene *scene, Output *output);
