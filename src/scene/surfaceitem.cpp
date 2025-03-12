@@ -137,7 +137,7 @@ void SurfaceItem::addDamage(const QRegion &region)
     const QRegion logicalDamage = mapFromBuffer(region);
 
     const auto delegates = scene()->delegates();
-    for (SceneDelegate *delegate : delegates) {
+    for (MainSceneView *delegate : delegates) {
         QRegion delegateDamage = logicalDamage;
         const qreal delegateScale = delegate->scale();
         if (xScale != delegateScale || yScale != delegateScale) {

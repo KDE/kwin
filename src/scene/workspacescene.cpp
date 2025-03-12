@@ -273,7 +273,7 @@ double WorkspaceScene::desiredHdrHeadroom() const
     return maxHeadroom;
 }
 
-void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
+void WorkspaceScene::frame(MainSceneView *delegate, OutputFrame *frame)
 {
     if (waylandServer()) {
         Output *output = delegate->output();
@@ -285,7 +285,7 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
     }
 }
 
-QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
+QRegion WorkspaceScene::prePaint(MainSceneView *delegate)
 {
     createStackingOrder();
 
@@ -324,7 +324,7 @@ QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
     return m_paintContext.damage.translated(-delegate->viewport().topLeft());
 }
 
-static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
+static void resetRepaintsHelper(Item *item, MainSceneView *delegate)
 {
     item->resetRepaints(delegate);
 
@@ -334,7 +334,7 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
     }
 }
 
-static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints)
+static void accumulateRepaints(Item *item, MainSceneView *delegate, QRegion *repaints)
 {
     *repaints += item->takeRepaints(delegate);
 

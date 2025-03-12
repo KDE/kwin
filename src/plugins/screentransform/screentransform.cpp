@@ -101,7 +101,7 @@ void ScreenTransformEffect::addScreen(Output *screen)
         RenderTarget renderTarget(state.m_prev.framebuffer.get());
 
         Scene *scene = effects->scene();
-        SceneDelegate delegate(scene, screen);
+        MainSceneView delegate(scene, screen);
         VirtualOutputLayer outputLayer{screen, renderTarget};
         delegate.setLayer(&outputLayer);
         scene->prePaint(&delegate);

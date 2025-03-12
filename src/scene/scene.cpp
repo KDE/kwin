@@ -45,59 +45,59 @@ double SceneView::desiredHdrHeadroom() const
     return 1;
 }
 
-SceneDelegate::SceneDelegate(Scene *scene, Output *output)
+MainSceneView::MainSceneView(Scene *scene, Output *output)
     : m_scene(scene)
     , m_output(output)
 {
     m_scene->addDelegate(this);
 }
 
-SceneDelegate::~SceneDelegate()
+MainSceneView::~MainSceneView()
 {
     m_scene->removeDelegate(this);
 }
 
-QList<SurfaceItem *> SceneDelegate::scanoutCandidates(ssize_t maxCount) const
+QList<SurfaceItem *> MainSceneView::scanoutCandidates(ssize_t maxCount) const
 {
     return m_scene->scanoutCandidates(maxCount);
 }
 
-QRegion SceneDelegate::prePaint()
+QRegion MainSceneView::prePaint()
 {
     return m_scene->prePaint(this);
 }
 
-void SceneDelegate::postPaint()
+void MainSceneView::postPaint()
 {
     m_scene->postPaint();
 }
 
-void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &region)
+void MainSceneView::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
     m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft()));
 }
 
-double SceneDelegate::desiredHdrHeadroom() const
+double MainSceneView::desiredHdrHeadroom() const
 {
     return m_scene->desiredHdrHeadroom();
 }
 
-void SceneDelegate::frame(OutputFrame *frame)
+void MainSceneView::frame(OutputFrame *frame)
 {
     m_scene->frame(this, frame);
 }
 
-Output *SceneDelegate::output() const
+Output *MainSceneView::output() const
 {
     return m_output;
 }
 
-qreal SceneDelegate::scale() const
+qreal MainSceneView::scale() const
 {
     return m_output ? m_output->scale() : 1.0;
 }
 
-QRect SceneDelegate::viewport() const
+QRect MainSceneView::viewport() const
 {
     return m_output ? m_output->geometry() : m_scene->geometry();
 }
@@ -138,7 +138,7 @@ void Scene::addRepaint(const QRegion &region)
     }
 }
 
-void Scene::addRepaint(SceneDelegate *delegate, const QRegion &region)
+void Scene::addRepaint(MainSceneView *delegate, const QRegion &region)
 {
     delegate->layer()->addRepaint(region.translated(-delegate->viewport().topLeft()));
 }
@@ -161,17 +161,17 @@ void Scene::setGeometry(const QRect &rect)
     }
 }
 
-QList<SceneDelegate *> Scene::delegates() const
+QList<MainSceneView *> Scene::delegates() const
 {
     return m_delegates;
 }
 
-void Scene::addDelegate(SceneDelegate *delegate)
+void Scene::addDelegate(MainSceneView *delegate)
 {
     m_delegates.append(delegate);
 }
 
-void Scene::removeDelegate(SceneDelegate *delegate)
+void Scene::removeDelegate(MainSceneView *delegate)
 {
     m_delegates.removeOne(delegate);
     Q_EMIT delegateRemoved(delegate);
@@ -182,7 +182,7 @@ QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
     return {};
 }
 
-void Scene::frame(SceneDelegate *delegate, OutputFrame *frame)
+void Scene::frame(MainSceneView *delegate, OutputFrame *frame)
 {
 }
 

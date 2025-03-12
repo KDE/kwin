@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-class SceneDelegate;
+class MainSceneView;
 class Scene;
 class SyncReleasePoint;
 class DrmDevice;
@@ -122,17 +122,17 @@ public:
     bool isVisible() const;
     void setVisible(bool visible);
 
-    QRect paintedArea(SceneDelegate *delegate, const QRectF &rect) const;
-    QRegion paintedArea(SceneDelegate *delegate, const QRegion &region) const;
+    QRect paintedArea(MainSceneView *delegate, const QRectF &rect) const;
+    QRegion paintedArea(MainSceneView *delegate, const QRegion &region) const;
 
     void scheduleRepaint(const QRectF &region);
     void scheduleSceneRepaint(const QRectF &region);
     void scheduleRepaint(const QRegion &region);
     void scheduleSceneRepaint(const QRegion &region);
-    void scheduleRepaint(SceneDelegate *delegate, const QRegion &region);
+    void scheduleRepaint(MainSceneView *delegate, const QRegion &region);
     void scheduleFrame();
-    QRegion takeRepaints(SceneDelegate *delegate);
-    void resetRepaints(SceneDelegate *delegate);
+    QRegion takeRepaints(MainSceneView *delegate);
+    void resetRepaints(MainSceneView *delegate);
 
     WindowQuadList quads() const;
     virtual void preprocess();
@@ -177,13 +177,13 @@ private:
     void updateBoundingRect();
     void updateItemToSceneTransform();
     void scheduleRepaintInternal(const QRegion &region);
-    void scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &region);
+    void scheduleRepaintInternal(MainSceneView *delegate, const QRegion &region);
     void scheduleSceneRepaintInternal(const QRegion &region);
     void markSortedChildItemsDirty();
 
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
-    void removeRepaints(SceneDelegate *delegate);
+    void removeRepaints(MainSceneView *delegate);
 
     virtual void handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
@@ -200,7 +200,7 @@ private:
     int m_z = 0;
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
-    QMap<SceneDelegate *, QRegion> m_repaints;
+    QMap<MainSceneView *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     ColorDescription m_colorDescription = ColorDescription::sRGB;

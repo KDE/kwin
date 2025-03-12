@@ -532,7 +532,7 @@ void Compositor::addOutput(Output *output)
     if (output->isPlaceholder()) {
         return;
     }
-    auto delegate = std::make_unique<SceneDelegate>(m_scene.get(), output);
+    auto delegate = std::make_unique<MainSceneView>(m_scene.get(), output);
     delegate->setLayer(m_backend->primaryLayer(output));
     m_primaryDelegates[output->renderLoop()] = std::move(delegate);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);

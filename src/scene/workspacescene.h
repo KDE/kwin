@@ -53,10 +53,10 @@ public:
     Item *cursorItem() const;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    QRegion prePaint(SceneDelegate *delegate) override;
+    QRegion prePaint(MainSceneView *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
-    void frame(SceneDelegate *delegate, OutputFrame *frame) override;
+    void frame(MainSceneView *delegate, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 
     virtual bool makeOpenGLContextCurrent();
@@ -122,7 +122,7 @@ protected:
 
     // The screen that is being currently painted
     Output *painted_screen = nullptr;
-    SceneDelegate *painted_delegate = nullptr;
+    MainSceneView *painted_delegate = nullptr;
 
     // windows in their stacking order
     QList<WindowItem *> stacking_order;

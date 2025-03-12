@@ -67,11 +67,14 @@ private:
     OutputLayer *m_layer = nullptr;
 };
 
-class KWIN_EXPORT SceneDelegate : public SceneView
+/**
+ * View for the main scene with items and effects
+ */
+class KWIN_EXPORT MainSceneView : public SceneView
 {
 public:
-    explicit SceneDelegate(Scene *scene, Output *output);
-    ~SceneDelegate() override;
+    explicit MainSceneView(Scene *scene, Output *output);
+    ~MainSceneView() override;
 
     Output *output() const;
     qreal scale() const;
@@ -119,7 +122,7 @@ public:
     ItemRenderer *renderer() const;
 
     void addRepaint(const QRegion &region);
-    void addRepaint(SceneDelegate *delegate, const QRegion &region);
+    void addRepaint(MainSceneView *delegate, const QRegion &region);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     virtual QRegion damage() const;
@@ -127,23 +130,23 @@ public:
     QRect geometry() const;
     void setGeometry(const QRect &rect);
 
-    QList<SceneDelegate *> delegates() const;
-    void addDelegate(SceneDelegate *delegate);
-    void removeDelegate(SceneDelegate *delegate);
+    QList<MainSceneView *> delegates() const;
+    void addDelegate(MainSceneView *delegate);
+    void removeDelegate(MainSceneView *delegate);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
-    virtual QRegion prePaint(SceneDelegate *delegate) = 0;
+    virtual QRegion prePaint(MainSceneView *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
-    virtual void frame(SceneDelegate *delegate, OutputFrame *frame);
+    virtual void frame(MainSceneView *delegate, OutputFrame *frame);
     virtual double desiredHdrHeadroom() const;
 
 Q_SIGNALS:
-    void delegateRemoved(SceneDelegate *delegate);
+    void delegateRemoved(MainSceneView *delegate);
 
 protected:
     std::unique_ptr<ItemRenderer> m_renderer;
-    QList<SceneDelegate *> m_delegates;
+    QList<MainSceneView *> m_delegates;
     QRect m_geometry;
 };
 

@@ -29,7 +29,7 @@ class RenderTarget;
 class WorkspaceScene;
 class Window;
 class OutputFrame;
-class SceneDelegate;
+class MainSceneView;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -104,7 +104,7 @@ protected:
     State m_state = State::Off;
     std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<RenderBackend> m_backend;
-    std::unordered_map<RenderLoop *, std::unique_ptr<SceneDelegate>> m_primaryDelegates;
+    std::unordered_map<RenderLoop *, std::unique_ptr<MainSceneView>> m_primaryDelegates;
 };
 
 } // namespace KWin
