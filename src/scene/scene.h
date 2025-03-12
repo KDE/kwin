@@ -24,6 +24,7 @@ class OutputLayer;
 class SurfaceItem;
 class RenderTarget;
 class Item;
+class ItemTreeView;
 
 class KWIN_EXPORT SceneView
 {
@@ -97,9 +98,46 @@ public:
     void addRepaint(const QRegion &region) override;
     void scheduleRepaint(Item *item) override;
 
+    void addItemView(ItemTreeView *view);
+    void removeItemView(ItemTreeView *view);
+    bool hasItemViewFor(Item *item) const;
+
+    Scene *scene() const;
+
 private:
     Scene *m_scene;
     Output *m_output = nullptr;
+    QList<ItemTreeView *> m_itemViews;
+};
+
+/**
+ * View for an item tree taken out of a MainSceneView
+ */
+class KWIN_EXPORT ItemTreeView : public SceneView
+{
+public:
+    explicit ItemTreeView(MainSceneView *mainView, Item *item, OutputLayer *layer);
+    ~ItemTreeView() override;
+
+    void setViewport(const QRect &rect);
+
+    QRect viewport() const override;
+    void addRepaint(const QRegion &region) override;
+    void scheduleRepaint(Item *item) override;
+
+    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    QRegion prePaint() override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void postPaint() override;
+    void frame(OutputFrame *frame) override;
+    double desiredHdrHeadroom() const override;
+
+    Item *item() const;
+
+private:
+    MainSceneView *const m_mainView;
+    Item *const m_item;
+    QRect m_viewport;
 };
 
 class KWIN_EXPORT Scene : public QObject

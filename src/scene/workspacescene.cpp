@@ -279,8 +279,8 @@ void WorkspaceScene::frame(MainSceneView *delegate, OutputFrame *frame)
         Output *output = delegate->output();
         const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
         m_containerItem->framePainted(output, frame, frameTime);
-        if (m_dndIcon) {
-            m_dndIcon->framePainted(output, frame, frameTime);
+        if (!painted_delegate->hasItemViewFor(m_overlayItem.get())) {
+            m_overlayItem->framePainted(output, frame, frameTime);
         }
     }
 }
@@ -316,6 +316,8 @@ QRegion WorkspaceScene::prePaint(MainSceneView *delegate)
     m_paintContext.phase2Data.clear();
 
     if (m_paintContext.mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
+        // FIXME ensure that no (non-cursor?) KMS overlay planes are used with this!
+        // Maybe add a return value for whether or not it's allowed
         preparePaintGenericScreen();
     } else {
         preparePaintSimpleScreen();
@@ -396,7 +398,9 @@ void WorkspaceScene::preparePaintSimpleScreen()
         }
     }
 
-    painted_delegate->accumulateRepaints(m_overlayItem.get(), &m_paintContext.damage);
+    if (!painted_delegate->hasItemViewFor(m_overlayItem.get())) {
+        painted_delegate->accumulateRepaints(m_overlayItem.get(), &m_paintContext.damage);
+    }
 }
 
 void WorkspaceScene::postPaint()
@@ -419,7 +423,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
     effects->paintScreen(renderTarget, viewport, m_paintContext.mask, region, painted_screen);
     m_paintScreenCount = 0;
 
-    if (m_overlayItem) {
+    if (!painted_delegate->hasItemViewFor(m_overlayItem.get())) {
         const QRegion repaint = region & m_overlayItem->mapToScene(m_overlayItem->boundingRect()).toRect();
         if (!repaint.isEmpty()) {
             m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, repaint, WindowPaintData{});
