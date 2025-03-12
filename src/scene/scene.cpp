@@ -7,6 +7,7 @@
 #include "scene/scene.h"
 #include "core/output.h"
 #include "core/outputlayer.h"
+#include "scene/item.h"
 #include "scene/itemrenderer.h"
 
 namespace KWin
@@ -43,6 +44,16 @@ QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
 double SceneView::desiredHdrHeadroom() const
 {
     return 1;
+}
+
+void SceneView::accumulateRepaints(Item *item, QRegion *repaints)
+{
+    *repaints += item->takeRepaints(this);
+
+    const auto childItems = item->childItems();
+    for (Item *childItem : childItems) {
+        accumulateRepaints(childItem, repaints);
+    }
 }
 
 MainSceneView::MainSceneView(Scene *scene, Output *output)
@@ -99,7 +110,7 @@ qreal MainSceneView::scale() const
 
 QRect MainSceneView::viewport() const
 {
-    return m_output ? m_output->geometry() : m_scene->geometry();
+    return m_output->geometry();
 }
 
 void MainSceneView::addRepaint(const QRegion &region)
@@ -154,7 +165,7 @@ void Scene::addRepaint(const QRegion &region)
     }
 }
 
-void Scene::addRepaint(MainSceneView *delegate, const QRegion &region)
+void Scene::addRepaint(SceneView *delegate, const QRegion &region)
 {
     delegate->addRepaint(region.translated(-delegate->viewport().topLeft()));
 }

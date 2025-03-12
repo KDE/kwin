@@ -145,7 +145,7 @@ void Item::setScene(Scene *scene)
     }
     if (m_scene) {
         for (auto it = m_repaints.constBegin(); it != m_repaints.constEnd(); ++it) {
-            MainSceneView *delegate = it.key();
+            SceneView *delegate = it.key();
             const QRegion &dirty = it.value();
             if (!dirty.isEmpty()) {
                 m_scene->addRepaint(delegate, dirty);
@@ -488,7 +488,7 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
-QRegion Item::takeRepaints(MainSceneView *delegate)
+QRegion Item::takeRepaints(SceneView *delegate)
 {
     auto &repaints = m_repaints[delegate];
     QRegion reg;
@@ -496,12 +496,12 @@ QRegion Item::takeRepaints(MainSceneView *delegate)
     return reg;
 }
 
-void Item::resetRepaints(MainSceneView *delegate)
+void Item::resetRepaints(SceneView *delegate)
 {
     m_repaints.insert(delegate, QRegion());
 }
 
-void Item::removeRepaints(MainSceneView *delegate)
+void Item::removeRepaints(SceneView *delegate)
 {
     m_repaints.remove(delegate);
 }

@@ -334,16 +334,6 @@ static void resetRepaintsHelper(Item *item, MainSceneView *delegate)
     }
 }
 
-static void accumulateRepaints(Item *item, MainSceneView *delegate, QRegion *repaints)
-{
-    *repaints += item->takeRepaints(delegate);
-
-    const auto childItems = item->childItems();
-    for (Item *childItem : childItems) {
-        accumulateRepaints(childItem, delegate, repaints);
-    }
-}
-
 void WorkspaceScene::preparePaintGenericScreen()
 {
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
@@ -372,7 +362,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
         Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        accumulateRepaints(windowItem, painted_delegate, &data.paint);
+        painted_delegate->accumulateRepaints(windowItem, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
@@ -406,7 +396,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
         }
     }
 
-    accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.damage);
+    painted_delegate->accumulateRepaints(m_overlayItem.get(), &m_paintContext.damage);
 }
 
 void WorkspaceScene::postPaint()

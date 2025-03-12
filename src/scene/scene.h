@@ -64,6 +64,12 @@ public:
 
     virtual double desiredHdrHeadroom() const;
 
+    virtual QRect viewport() const = 0;
+    virtual void addRepaint(const QRegion &region) = 0;
+    virtual void scheduleRepaint(Item *item) = 0;
+
+    void accumulateRepaints(Item *item, QRegion *repaints);
+
 protected:
     OutputLayer *m_layer = nullptr;
 };
@@ -79,7 +85,7 @@ public:
 
     Output *output() const;
     qreal scale() const;
-    QRect viewport() const;
+    QRect viewport() const override;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
@@ -88,8 +94,8 @@ public:
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     double desiredHdrHeadroom() const override;
 
-    void addRepaint(const QRegion &region);
-    void scheduleRepaint(Item *item);
+    void addRepaint(const QRegion &region) override;
+    void scheduleRepaint(Item *item) override;
 
 private:
     Scene *m_scene;
@@ -126,7 +132,7 @@ public:
     ItemRenderer *renderer() const;
 
     void addRepaint(const QRegion &region);
-    void addRepaint(MainSceneView *delegate, const QRegion &region);
+    void addRepaint(SceneView *delegate, const QRegion &region);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     virtual QRegion damage() const;

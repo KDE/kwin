@@ -20,6 +20,7 @@
 namespace KWin
 {
 
+class SceneView;
 class MainSceneView;
 class Scene;
 class SyncReleasePoint;
@@ -131,8 +132,8 @@ public:
     void scheduleSceneRepaint(const QRegion &region);
     void scheduleRepaint(MainSceneView *delegate, const QRegion &region);
     void scheduleFrame();
-    QRegion takeRepaints(MainSceneView *delegate);
-    void resetRepaints(MainSceneView *delegate);
+    QRegion takeRepaints(SceneView *delegate);
+    void resetRepaints(SceneView *delegate);
 
     WindowQuadList quads() const;
     virtual void preprocess();
@@ -183,7 +184,7 @@ private:
 
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
-    void removeRepaints(MainSceneView *delegate);
+    void removeRepaints(SceneView *delegate);
 
     virtual void handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
@@ -200,7 +201,7 @@ private:
     int m_z = 0;
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
-    QMap<MainSceneView *, QRegion> m_repaints;
+    QMap<SceneView *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     ColorDescription m_colorDescription = ColorDescription::sRGB;
