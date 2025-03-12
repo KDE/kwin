@@ -11,8 +11,6 @@ import QtQuick.Controls as QQC2
 import org.kde.kirigami 2.10 as Kirigami
 import org.kde.kcms.kwinrules
 
-pragma ComponentBehavior: Bound
-
 
 QQC2.ComboBox {
     id: optionsCombo
