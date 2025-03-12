@@ -102,6 +102,22 @@ QRect MainSceneView::viewport() const
     return m_output ? m_output->geometry() : m_scene->geometry();
 }
 
+void MainSceneView::addRepaint(const QRegion &region)
+{
+    if (!m_layer) {
+        return;
+    }
+    m_layer->addRepaint(region);
+}
+
+void MainSceneView::scheduleRepaint(Item *item)
+{
+    if (!m_layer) {
+        return;
+    }
+    m_layer->scheduleRepaint(item);
+}
+
 Scene::Scene(std::unique_ptr<ItemRenderer> &&renderer)
     : m_renderer(std::move(renderer))
 {
@@ -133,14 +149,14 @@ void Scene::addRepaint(const QRegion &region)
         QRegion dirtyRegion = region & viewport;
         dirtyRegion.translate(-viewport.topLeft());
         if (!dirtyRegion.isEmpty()) {
-            delegate->layer()->addRepaint(dirtyRegion);
+            delegate->addRepaint(dirtyRegion);
         }
     }
 }
 
 void Scene::addRepaint(MainSceneView *delegate, const QRegion &region)
 {
-    delegate->layer()->addRepaint(region.translated(-delegate->viewport().topLeft()));
+    delegate->addRepaint(region.translated(-delegate->viewport().topLeft()));
 }
 
 QRegion Scene::damage() const

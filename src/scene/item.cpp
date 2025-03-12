@@ -418,7 +418,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
         const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
         if (!dirtyRegion.isEmpty()) {
             m_repaints[delegate] += dirtyRegion;
-            delegate->layer()->scheduleRepaint(this);
+            delegate->scheduleRepaint(this);
         }
     }
 }
@@ -431,7 +431,7 @@ void Item::scheduleRepaintInternal(MainSceneView *delegate, const QRegion &regio
     const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
     if (!dirtyRegion.isEmpty()) {
         m_repaints[delegate] += dirtyRegion;
-        delegate->layer()->scheduleRepaint(this);
+        delegate->scheduleRepaint(this);
     }
 }
 
@@ -447,7 +447,7 @@ void Item::scheduleFrame()
     for (MainSceneView *delegate : delegates) {
         const QRect geometry = paintedArea(delegate, rect());
         if (delegate->viewport().intersects(geometry)) {
-            delegate->layer()->scheduleRepaint(this);
+            delegate->scheduleRepaint(this);
         }
     }
 }

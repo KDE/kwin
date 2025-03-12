@@ -175,35 +175,6 @@ void OutputLayer::setTargetRect(const QRect &rect)
     m_targetRect = rect;
 }
 
-VirtualOutputLayer::VirtualOutputLayer(Output *output, RenderTarget &renderTarget)
-    : OutputLayer(output)
-    , m_renderTarget(renderTarget)
-{
-}
-
-DrmDevice *VirtualOutputLayer::scanoutDevice() const
-{
-    return nullptr;
-}
-
-QHash<uint32_t, QList<uint64_t>> VirtualOutputLayer::supportedDrmFormats() const
-{
-    return {};
-}
-
-std::optional<OutputLayerBeginFrameInfo> VirtualOutputLayer::doBeginFrame()
-{
-    return OutputLayerBeginFrameInfo{
-        .renderTarget = m_renderTarget,
-        .repaint = infiniteRegion(),
-    };
-}
-
-bool VirtualOutputLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
-{
-    return true;
-}
-
 } // namespace KWin
 
 #include "moc_outputlayer.cpp"

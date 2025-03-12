@@ -23,6 +23,7 @@ class OutputFrame;
 class OutputLayer;
 class SurfaceItem;
 class RenderTarget;
+class Item;
 
 class KWIN_EXPORT SceneView
 {
@@ -63,7 +64,7 @@ public:
 
     virtual double desiredHdrHeadroom() const;
 
-private:
+protected:
     OutputLayer *m_layer = nullptr;
 };
 
@@ -86,6 +87,9 @@ public:
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     double desiredHdrHeadroom() const override;
+
+    void addRepaint(const QRegion &region);
+    void scheduleRepaint(Item *item);
 
 private:
     Scene *m_scene;
