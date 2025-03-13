@@ -98,11 +98,6 @@ public:
 
     QImage toImage();
 
-    /**
-     * @deprecated track modifications to the texture yourself
-     */
-    void setDirty();
-    bool isDirty() const;
     void setFilter(GLenum filter);
     void setWrapMode(GLenum mode);
 
@@ -135,8 +130,6 @@ protected:
     explicit GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, OutputTransform transform);
 
     const std::unique_ptr<GLTexturePrivate> d;
-
-    virtual void onDamage();
 };
 
 } // namespace

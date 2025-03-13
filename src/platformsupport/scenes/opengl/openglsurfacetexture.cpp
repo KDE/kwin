@@ -34,11 +34,4 @@ OpenGLSurfaceContents OpenGLSurfaceTexture::texture() const
     return m_texture;
 }
 
-void OpenGLSurfaceContents::setDirty()
-{
-    for (auto &plane : planes) {
-        plane->setDirty();
-    }
-}
-
 } // namespace KWin

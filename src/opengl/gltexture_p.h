@@ -43,7 +43,6 @@ public:
     QMatrix4x4 m_matrix[2];
     OutputTransform m_textureToBufferTransform;
     bool m_canUseMipmaps;
-    bool m_markedDirty;
     bool m_filterChanged;
     bool m_wrapModeChanged;
     bool m_owning;

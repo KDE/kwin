@@ -110,7 +110,6 @@ GLTexturePrivate::GLTexturePrivate()
     , m_filter(GL_NEAREST)
     , m_wrapMode(GL_REPEAT)
     , m_canUseMipmaps(false)
-    , m_markedDirty(false)
     , m_filterChanged(true)
     , m_wrapModeChanged(false)
     , m_owning(true)
@@ -215,9 +214,6 @@ void GLTexture::bind()
 
     glBindTexture(d->m_target, d->m_texture);
 
-    if (d->m_markedDirty) {
-        onDamage();
-    }
     if (d->m_filterChanged) {
         GLenum minFilter = GL_NEAREST;
         GLenum magFilter = GL_NEAREST;
@@ -357,11 +353,6 @@ GLenum GLTexture::internalFormat() const
     return d->m_internalFormat;
 }
 
-bool GLTexture::isDirty() const
-{
-    return d->m_markedDirty;
-}
-
 void GLTexture::setFilter(GLenum filter)
 {
     if (filter != d->m_filter) {
@@ -376,15 +367,6 @@ void GLTexture::setWrapMode(GLenum mode)
         d->m_wrapMode = mode;
         d->m_wrapModeChanged = true;
     }
-}
-
-void GLTexture::setDirty()
-{
-    d->m_markedDirty = true;
-}
-
-void GLTexture::onDamage()
-{
 }
 
 void GLTexturePrivate::updateMatrix()

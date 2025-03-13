@@ -30,7 +30,6 @@ public:
     {
     }
 
-    void setDirty();
     void reset()
     {
         planes.clear();
