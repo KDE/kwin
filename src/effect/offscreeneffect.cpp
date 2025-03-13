@@ -6,6 +6,7 @@
 
 #include "effect/offscreeneffect.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -107,8 +108,8 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
 
 void OffscreenData::maybeRender(EffectWindow *window)
 {
-    const QRectF logicalGeometry = window->expandedGeometry();
     const qreal scale = window->screen()->scale();
+    const QRectF logicalGeometry = snapToPixels(window->expandedGeometry(), scale);
     const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
     if (!m_texture || m_texture->size() != textureSize) {
@@ -233,8 +234,8 @@ void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     }
     OffscreenData *offscreenData = it->second.get();
 
-    const QRectF expandedGeometry = window->expandedGeometry();
-    const QRectF frameGeometry = window->frameGeometry();
+    const QRectF expandedGeometry = snapToPixels(window->expandedGeometry(), viewport.scale());
+    const QRectF frameGeometry = snapToPixels(window->frameGeometry(), viewport.scale());
 
     QRectF visibleRect = expandedGeometry;
     visibleRect.moveTopLeft(expandedGeometry.topLeft() - frameGeometry.topLeft());
@@ -329,8 +330,8 @@ void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     WindowPaintData previousWindowData = data;
     previousWindowData.setOpacity((1.0 - data.crossFadeProgress()) * data.opacity());
 
-    const QRectF expandedGeometry = window->expandedGeometry();
-    const QRectF frameGeometry = window->frameGeometry();
+    const QRectF expandedGeometry = snapToPixels(window->expandedGeometry(), viewport.scale());
+    const QRectF frameGeometry = snapToPixels(window->frameGeometry(), viewport.scale());
 
     // This is for the case of *non* live effect, when the window buffer we saved has a different size
     // compared to the size the window has now. The "old" window will be rendered scaled to the current
