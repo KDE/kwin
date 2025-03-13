@@ -33,7 +33,11 @@
 
 #include <QtGui/private/qgenericunixeventdispatcher_p.h>
 #include <QtGui/private/qgenericunixfontdatabase_p.h>
+#if __has_include(<QtGui/private/qgenericunixtheme_p.h>)
+#include <QtGui/private/qgenericunixtheme_p.h>
+#else
 #include <QtGui/private/qgenericunixthemes_p.h>
+#endif
 #include <QtGui/private/qunixeventdispatcher_qpa_p.h>
 
 #if !defined(QT_NO_ACCESSIBILITY_ATSPI_BRIDGE)
