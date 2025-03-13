@@ -9,14 +9,26 @@
 namespace KWin
 {
 
-QPainterSurfaceTexture::QPainterSurfaceTexture(QPainterBackend *backend)
+QPainterSurfaceTexture::QPainterSurfaceTexture(QPainterBackend *backend, SurfacePixmap *pixmap)
     : m_backend(backend)
+    , m_pixmap(pixmap)
 {
 }
 
 bool QPainterSurfaceTexture::isValid() const
 {
-    return !m_image.isNull();
+    return !m_view.isNull();
+}
+
+bool QPainterSurfaceTexture::create()
+{
+    m_view = GraphicsBufferView(m_pixmap->item()->buffer());
+    return !m_view.isNull();
+}
+
+void QPainterSurfaceTexture::update(const QRegion &region)
+{
+    m_view = GraphicsBufferView(m_pixmap->item()->buffer());
 }
 
 QPainterBackend *QPainterSurfaceTexture::backend() const
@@ -24,9 +36,9 @@ QPainterBackend *QPainterSurfaceTexture::backend() const
     return m_backend;
 }
 
-QImage QPainterSurfaceTexture::image() const
+const GraphicsBufferView &QPainterSurfaceTexture::view() const
 {
-    return m_image;
+    return m_view;
 }
 
 } // namespace KWin

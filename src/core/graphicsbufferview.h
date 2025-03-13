@@ -16,6 +16,7 @@ namespace KWin
 class KWIN_EXPORT GraphicsBufferView
 {
 public:
+    GraphicsBufferView();
     explicit GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::MapFlags accessFlags = GraphicsBuffer::Read);
     ~GraphicsBufferView();
 
@@ -24,7 +25,7 @@ public:
     const QImage *image() const;
 
 private:
-    GraphicsBuffer *m_buffer;
+    GraphicsBuffer *m_buffer = nullptr;
     QImage m_image;
 };
 

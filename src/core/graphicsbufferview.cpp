@@ -44,6 +44,10 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
     }
 }
 
+GraphicsBufferView::GraphicsBufferView()
+{
+}
+
 GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::MapFlags accessFlags)
     : m_buffer(buffer)
 {

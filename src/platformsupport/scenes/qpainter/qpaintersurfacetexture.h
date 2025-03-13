@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include "core/graphicsbufferview.h"
 #include "scene/surfaceitem.h"
-
-#include <QImage>
 
 namespace KWin
 {
@@ -18,16 +17,19 @@ class QPainterBackend;
 class KWIN_EXPORT QPainterSurfaceTexture : public SurfaceTexture
 {
 public:
-    explicit QPainterSurfaceTexture(QPainterBackend *backend);
+    explicit QPainterSurfaceTexture(QPainterBackend *backend, SurfacePixmap *pixmap);
 
     bool isValid() const override;
+    bool create() override;
+    void update(const QRegion &region) override;
 
     QPainterBackend *backend() const;
-    QImage image() const;
+    const GraphicsBufferView &view() const;
 
 protected:
     QPainterBackend *m_backend;
-    QImage m_image;
+    SurfacePixmap *m_pixmap;
+    GraphicsBufferView m_view;
 };
 
 } // namespace KWin

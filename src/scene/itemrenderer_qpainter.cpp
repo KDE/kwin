@@ -184,7 +184,7 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
                             target.width() * xSourceBoxScale,
                             target.height() * ySourceBoxScale);
 
-        painter->drawImage(target, platformSurfaceTexture->image(), source);
+        painter->drawImage(target, *platformSurfaceTexture->view().image(), source);
     }
 
     painter->restore();
