@@ -139,6 +139,16 @@ Edid::Edid(QByteArrayView data, std::optional<QByteArrayView> identifierOverride
     }
 }
 
+static const auto s_forceHdrSupport = []() -> std::optional<bool> {
+    bool ok = false;
+    int ret = qEnvironmentVariableIntValue("KWIN_FORCE_ASSUME_HDR_SUPPORT", &ok);
+    if (ok) {
+        return ret == 1;
+    } else {
+        return std::nullopt;
+    }
+}();
+
 Edid::Edid(QByteArrayView data)
 {
     m_raw = QByteArray(data.data(), data.size());
@@ -224,6 +234,20 @@ Edid::Edid(QByteArrayView data)
                 .supportsPQ = hdr_static_metadata->eotfs->pq,
                 .supportsBT2020 = colorimetry && colorimetry->bt2020_rgb,
             };
+        }
+    }
+    if (s_forceHdrSupport.has_value()) {
+        if (!m_hdrMetadata) {
+            m_hdrMetadata = HDRMetadata{
+                .desiredContentMinLuminance = 0,
+                .desiredContentMaxLuminance = std::nullopt,
+                .desiredMaxFrameAverageLuminance = std::nullopt,
+                .supportsPQ = *s_forceHdrSupport,
+                .supportsBT2020 = *s_forceHdrSupport,
+            };
+        } else {
+            m_hdrMetadata->supportsPQ = *s_forceHdrSupport;
+            m_hdrMetadata->supportsBT2020 = *s_forceHdrSupport;
         }
     }
     if (displayid) {
