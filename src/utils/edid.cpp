@@ -13,6 +13,7 @@
 
 #include "c_ptr.h"
 #include "common.h"
+#include "envvar.h"
 
 #include <QFile>
 #include <QStandardPaths>
@@ -139,6 +140,8 @@ Edid::Edid(QByteArrayView data, std::optional<QByteArrayView> identifierOverride
     }
 }
 
+static const std::optional<bool> s_forceHdrSupport = environmentVariableBoolValue("KWIN_FORCE_ASSUME_HDR_SUPPORT");
+
 Edid::Edid(QByteArrayView data)
 {
     m_raw = QByteArray(data.data(), data.size());
@@ -202,6 +205,10 @@ Edid::Edid(QByteArrayView data)
         .supportsPQ = metadata->pq,
         .supportsBT2020 = colorimetry->bt2020_rgb || colorimetry->bt2020_ycc || colorimetry->bt2020_cycc,
     };
+    if (s_forceHdrSupport.has_value()) {
+        m_hdrMetadata->supportsPQ = *s_forceHdrSupport;
+        m_hdrMetadata->supportsBT2020 = *s_forceHdrSupport;
+    }
 
     const di_displayid *displayid = nullptr;
     const di_edid_ext *const *exts = di_edid_get_extensions(edid);
