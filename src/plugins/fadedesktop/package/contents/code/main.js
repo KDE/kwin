@@ -12,9 +12,8 @@
 "use strict";
 
 var fadeDesktopEffect = {
-    duration: animationTime(250),
     loadConfig: function () {
-        fadeDesktopEffect.duration = animationTime(250);
+        fadeDesktopEffect.duration = animationTime(effect.readConfig("AnimationDuration", 250));
     },
     fadeInWindow: function (window) {
         if (window.fadeOutAnimation) {
@@ -114,6 +113,7 @@ var fadeDesktopEffect = {
         }
     },
     init: function () {
+        fadeDesktopEffect.loadConfig();
         effect.configChanged.connect(fadeDesktopEffect.loadConfig);
         effect.isActiveFullScreenEffectChanged.connect(
             fadeDesktopEffect.slotIsActiveFullScreenEffectChanged);
