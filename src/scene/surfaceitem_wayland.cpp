@@ -5,10 +5,7 @@
 */
 
 #include "scene/surfaceitem_wayland.h"
-#include "compositor.h"
 #include "core/drmdevice.h"
-#include "core/graphicsbuffer.h"
-#include "core/renderbackend.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
@@ -155,11 +152,6 @@ void SurfaceItemWayland::handleSubSurfaceMappedChanged()
     setVisible(m_surface->isMapped());
 }
 
-std::unique_ptr<SurfacePixmap> SurfaceItemWayland::createPixmap()
-{
-    return std::make_unique<SurfacePixmapWayland>(this);
-}
-
 ContentType SurfaceItemWayland::contentType() const
 {
     return m_surface ? m_surface->contentType() : ContentType::None;
@@ -221,30 +213,6 @@ void SurfaceItemWayland::handleReleasePointChanged()
 void SurfaceItemWayland::handleAlphaMultiplierChanged()
 {
     setOpacity(m_surface->alphaMultiplier());
-}
-
-SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item)
-    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), item)
-{
-}
-
-void SurfacePixmapWayland::create()
-{
-    update();
-}
-
-void SurfacePixmapWayland::update()
-{
-    if (GraphicsBuffer *buffer = m_item->buffer()) {
-        m_size = buffer->size();
-        m_hasAlphaChannel = buffer->hasAlphaChannel();
-        m_valid = true;
-    }
-}
-
-bool SurfacePixmapWayland::isValid() const
-{
-    return m_valid;
 }
 
 #if KWIN_BUILD_X11

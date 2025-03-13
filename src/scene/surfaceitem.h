@@ -66,7 +66,6 @@ Q_SIGNALS:
 protected:
     explicit SurfaceItem(Item *parent = nullptr);
 
-    virtual std::unique_ptr<SurfacePixmap> createPixmap() = 0;
     void preprocess() override;
     WindowQuadList buildQuads() const override;
 
@@ -103,7 +102,7 @@ class KWIN_EXPORT SurfacePixmap : public QObject
     Q_OBJECT
 
 public:
-    SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, SurfaceItem *item);
+    explicit SurfacePixmap(SurfaceItem *item);
 
     SurfaceItem *item() const;
     SurfaceTexture *texture() const;
@@ -111,14 +110,14 @@ public:
     bool hasAlphaChannel() const;
     QSize size() const;
 
-    virtual void create() = 0;
-    virtual void update();
-
-    virtual bool isValid() const = 0;
+    void create();
+    void update();
+    bool isValid() const;
 
 protected:
     SurfaceItem *m_item;
     QSize m_size;
+    bool m_valid = false;
     bool m_hasAlphaChannel = false;
 
 private:

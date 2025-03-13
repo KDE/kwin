@@ -5,7 +5,9 @@
 */
 
 #include "scene/surfaceitem.h"
+#include "compositor.h"
 #include "core/pixelgrid.h"
+#include "core/renderbackend.h"
 #include "scene/scene.h"
 
 using namespace std::chrono_literals;
@@ -176,7 +178,7 @@ void SurfaceItem::destroyPixmap()
 void SurfaceItem::preprocess()
 {
     if (!m_pixmap || m_pixmap->size() != m_bufferSize) {
-        m_pixmap = createPixmap();
+        m_pixmap = std::make_unique<SurfacePixmap>(this);
     }
 
     if (m_pixmap->isValid()) {
@@ -262,14 +264,29 @@ SurfaceTexture::~SurfaceTexture()
 {
 }
 
-SurfacePixmap::SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, SurfaceItem *item)
+SurfacePixmap::SurfacePixmap(SurfaceItem *item)
     : m_item(item)
-    , m_texture(std::move(texture))
+    , m_texture(Compositor::self()->backend()->createSurfaceTextureWayland(this))
 {
+}
+
+void SurfacePixmap::create()
+{
+    update();
 }
 
 void SurfacePixmap::update()
 {
+    if (GraphicsBuffer *buffer = m_item->buffer()) {
+        m_size = buffer->size();
+        m_hasAlphaChannel = buffer->hasAlphaChannel();
+        m_valid = true;
+    }
+}
+
+bool SurfacePixmap::isValid() const
+{
+    return m_valid;
 }
 
 SurfaceItem *SurfacePixmap::item() const

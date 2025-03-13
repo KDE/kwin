@@ -52,9 +52,6 @@ private Q_SLOTS:
     void handleReleasePointChanged();
     void handleAlphaMultiplierChanged();
 
-protected:
-    std::unique_ptr<SurfacePixmap> createPixmap() override;
-
 private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(SubSurfaceInterface *s);
 
@@ -66,21 +63,6 @@ private:
     };
     std::optional<ScanoutFeedback> m_scanoutFeedback;
     std::unordered_map<SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
-};
-
-class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap
-{
-    Q_OBJECT
-
-public:
-    explicit SurfacePixmapWayland(SurfaceItemWayland *item);
-
-    void create() override;
-    void update() override;
-    bool isValid() const override;
-
-private:
-    bool m_valid = false;
 };
 
 #if KWIN_BUILD_X11

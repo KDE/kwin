@@ -31,26 +31,8 @@ public:
 private Q_SLOTS:
     void handlePresented(const InternalWindowFrame &frame);
 
-protected:
-    std::unique_ptr<SurfacePixmap> createPixmap() override;
-
 private:
     InternalWindow *m_window;
-};
-
-class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap
-{
-    Q_OBJECT
-
-public:
-    explicit SurfacePixmapInternal(SurfaceItemInternal *item);
-
-    void create() override;
-    void update() override;
-    bool isValid() const override;
-
-private:
-    bool m_valid = false;
 };
 
 } // namespace KWin
