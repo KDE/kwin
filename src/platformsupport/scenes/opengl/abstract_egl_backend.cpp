@@ -12,6 +12,7 @@
 #include "core/outputbackend.h"
 #include "main.h"
 #include "opengl/egl_context_attribute_builder.h"
+#include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "utils/common.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/linux_drm_syncobj_v1.h"
@@ -353,6 +354,11 @@ EglContext *AbstractEglBackend::openglContext() const
 std::shared_ptr<EglContext> AbstractEglBackend::openglContextRef() const
 {
     return m_context;
+}
+
+std::unique_ptr<SurfaceTexture> AbstractEglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
+{
+    return std::make_unique<OpenGLSurfaceTexture>(this, pixmap);
 }
 }
 

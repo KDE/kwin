@@ -14,7 +14,6 @@
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/surface.h"
 #include "wayland_backend.h"
@@ -329,11 +328,6 @@ bool WaylandEglBackend::initRenderingContext()
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
     return std::make_pair(m_outputs.at(output).primaryLayer->texture(), ColorDescription::sRGB);
-}
-
-std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
-{
-    return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
 bool WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)

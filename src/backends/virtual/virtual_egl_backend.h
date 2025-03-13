@@ -54,7 +54,6 @@ class VirtualEglBackend : public AbstractEglBackend
 public:
     VirtualEglBackend(VirtualBackend *b);
     ~VirtualEglBackend() override;
-    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
     std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
     OutputLayer *primaryLayer(Output *output) override;
     bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;

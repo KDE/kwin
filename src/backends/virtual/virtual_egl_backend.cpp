@@ -12,7 +12,6 @@
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_logging.h"
@@ -166,11 +165,6 @@ void VirtualEglBackend::removeOutput(Output *output)
 {
     makeCurrent();
     m_outputs.erase(output);
-}
-
-std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
-{
-    return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
 OutputLayer *VirtualEglBackend::primaryLayer(Output *output)

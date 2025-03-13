@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_egl_backend.h"
-#include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
 // kwin
 #include "core/syncobjtimeline.h"
 #include "drm_abstract_output.h"
@@ -130,11 +129,6 @@ std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
     const auto ret = std::shared_ptr<EglContext>(EglContext::create(display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT));
     context = ret;
     return ret;
-}
-
-std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
-{
-    return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
 DrmDevice *EglGbmBackend::drmDevice() const

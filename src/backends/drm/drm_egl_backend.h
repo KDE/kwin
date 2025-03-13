@@ -42,8 +42,6 @@ public:
     EglGbmBackend(DrmBackend *drmBackend);
     ~EglGbmBackend() override;
 
-    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
-
     DrmDevice *drmDevice() const override;
 
     bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;

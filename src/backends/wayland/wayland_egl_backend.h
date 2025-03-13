@@ -99,8 +99,6 @@ public:
     WaylandBackend *backend() const;
     DrmDevice *drmDevice() const override;
 
-    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
-
     void init() override;
     bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
