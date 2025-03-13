@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-06 02:39+0000\n"
+"POT-Creation-Date: 2025-03-13 02:35+0000\n"
 "PO-Revision-Date: 2013-10-04 02:07+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -891,17 +891,17 @@ msgstr "Ережені импорттау"
 msgid "Export Rules"
 msgstr "Ережені экспорттау"
 
-#: ui/OptionsComboBox.qml:37
+#: ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
 msgstr ""
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
 msgstr ""
 
-#: ui/OptionsComboBox.qml:45
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-06 02:39+0000\n"
+"POT-Creation-Date: 2025-03-13 02:35+0000\n"
 "PO-Revision-Date: 2024-08-30 06:35+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -888,17 +888,17 @@ msgstr "Uvoz pravil"
 msgid "Export Rules"
 msgstr "Izvozi pravila"
 
-#: ui/OptionsComboBox.qml:37
+#: ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
 msgstr "Nobene izbrane"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
 msgstr "Vse izbrane"
 
-#: ui/OptionsComboBox.qml:45
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"

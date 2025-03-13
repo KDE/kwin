@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-06 02:39+0000\n"
+"POT-Creation-Date: 2025-03-13 02:35+0000\n"
 "PO-Revision-Date: 2024-10-16 21:14+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -891,17 +891,17 @@ msgstr "Tuontisäännöt"
 msgid "Export Rules"
 msgstr "Vientisäännöt"
 
-#: ui/OptionsComboBox.qml:37
+#: ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
 msgstr "Mitään ei ole valittu"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
 msgstr "Kaikki valittu"
 
-#: ui/OptionsComboBox.qml:45
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.1\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-06 02:39+0000\n"
+"POT-Creation-Date: 2025-03-13 02:35+0000\n"
 "PO-Revision-Date: 2024-09-26 14:33+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -897,17 +897,17 @@ msgstr "Szabályok importálása"
 msgid "Export Rules"
 msgstr "Szabályok exportálása"
 
-#: ui/OptionsComboBox.qml:37
+#: ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
 msgstr "Nincs kijelölés"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
 msgstr "Összes kijelölve"
 
-#: ui/OptionsComboBox.qml:45
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
