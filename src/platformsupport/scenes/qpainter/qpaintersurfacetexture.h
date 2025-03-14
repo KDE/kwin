@@ -18,8 +18,10 @@ class QPainterBackend;
 class KWIN_EXPORT QPainterSurfaceTexture : public SurfaceTexture
 {
 public:
-    explicit QPainterSurfaceTexture(QPainterBackend *backend);
+    QPainterSurfaceTexture(QPainterBackend *backend, SurfacePixmap *pixmap);
 
+    bool create() override;
+    void update(const QRegion &region) override;
     bool isValid() const override;
 
     QPainterBackend *backend() const;
@@ -27,6 +29,7 @@ public:
 
 protected:
     QPainterBackend *m_backend;
+    SurfacePixmap *m_pixmap;
     QImage m_image;
 };
 

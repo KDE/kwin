@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
-#include "qpaintersurfacetexture_wayland.h"
+#include "qpaintersurfacetexture.h"
 #include "utils/common.h"
 
 #include <QtGlobal>
@@ -31,7 +31,7 @@ CompositingType QPainterBackend::compositingType() const
 
 std::unique_ptr<SurfaceTexture> QPainterBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
 {
-    return std::make_unique<QPainterSurfaceTextureWayland>(this, pixmap);
+    return std::make_unique<QPainterSurfaceTexture>(this, pixmap);
 }
 
 void QPainterBackend::setFailed(const QString &reason)
