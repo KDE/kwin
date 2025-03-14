@@ -335,6 +335,11 @@ QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
     return {};
 }
 
+Item *Scene::overlayCandidate() const
+{
+    return nullptr;
+}
+
 void Scene::frame(MainSceneView *delegate, OutputFrame *frame)
 {
 }

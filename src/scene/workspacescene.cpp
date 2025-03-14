@@ -243,6 +243,14 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     return ret;
 }
 
+Item *WorkspaceScene::overlayCandidate() const
+{
+    if (m_overlayItem->boundingRect().isEmpty()) {
+        return nullptr;
+    }
+    return m_overlayItem.get();
+}
+
 static double getDesiredHdrHeadroom(Item *item)
 {
     if (!item->isVisible()) {

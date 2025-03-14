@@ -67,6 +67,8 @@ DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &fram
         if (m_pending.needsModesetProperties && !prepareAtomicModeset(primaryPlaneUpdate.get())) {
             return Error::InvalidArguments;
         }
+        // TODO add infrastructure again to make it possible to asynchronously update planes
+        prepareAtomicCursor(primaryPlaneUpdate.get());
         m_next.needsModesetProperties = m_pending.needsModesetProperties = false;
         m_commitThread->addCommit(std::move(primaryPlaneUpdate));
         return Error::None;

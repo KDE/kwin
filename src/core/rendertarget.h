@@ -34,8 +34,8 @@ public:
 private:
     QImage *m_image = nullptr;
     GLFramebuffer *m_framebuffer = nullptr;
-    const OutputTransform m_transform;
-    const ColorDescription m_colorDescription;
+    OutputTransform m_transform;
+    ColorDescription m_colorDescription;
 };
 
 } // namespace KWin

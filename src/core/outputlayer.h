@@ -46,6 +46,7 @@ public:
      * This returns those specific sizes, if present
      */
     virtual QList<QSize> recommendedSizes() const;
+    std::optional<QSize> recommendedSize(const QSize &desired) const;
 
     QRegion repaints() const;
     void resetRepaints();

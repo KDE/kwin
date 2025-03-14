@@ -42,6 +42,26 @@ QList<QSize> OutputLayer::recommendedSizes() const
     return {};
 }
 
+std::optional<QSize> OutputLayer::recommendedSize(const QSize &desired) const
+{
+    const auto recommended = recommendedSizes();
+    if (recommended.empty()) {
+        return desired;
+    }
+    auto bigEnough = recommended | std::views::filter([desired](const auto &size) {
+        return size.width() >= desired.width() && size.height() >= desired.height();
+    });
+    const auto it = std::ranges::min_element(bigEnough, [](const auto &left, const auto &right) {
+        return left.width() * left.height() < right.width() * right.height();
+    });
+    if (it == bigEnough.end()) {
+        // no size found, this most likely won't work
+        return std::nullopt;
+    } else {
+        return *it;
+    }
+}
+
 QRegion OutputLayer::repaints() const
 {
     return m_repaints;

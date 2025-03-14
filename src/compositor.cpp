@@ -16,6 +16,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
+#include "core/pixelgrid.h"
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "cursor.h"
@@ -346,21 +347,6 @@ static bool isTearingRequested(const Item *item)
     });
 }
 
-static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
-{
-    const double widthScale = bufferSize.width() / double(modeSize.width());
-    const double heightScale = bufferSize.height() / double(modeSize.height());
-    if (widthScale > heightScale) {
-        const QSize size = (bufferSize / widthScale).toSize();
-        const uint32_t yOffset = (modeSize.height() - size.height()) / 2;
-        return QRect(QPoint(0, yOffset), size);
-    } else {
-        const QSize size = (bufferSize / heightScale).toSize();
-        const uint32_t xOffset = (modeSize.width() - size.width()) / 2;
-        return QRect(QPoint(xOffset, 0), size);
-    }
-}
-
 static bool checkForBlackBackground(SurfaceItem *background)
 {
     if (!background->buffer()
@@ -392,12 +378,12 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     Output *output = findOutput(renderLoop);
     OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    OutputLayer *cursorLayer = m_backend->cursorLayer(output);
     const auto &primaryDelegate = m_primaryDelegates[renderLoop];
     fTraceDuration("Paint (", output->name(), ")");
 
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
-    bool directScanout = false;
     std::optional<double> desiredArtificalHdrHeadroom;
 
     // brightness animations should be skipped when
@@ -416,16 +402,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting() * output->dimming(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
 
-    if (primaryLayer->needsRepaint()) {
+    if (primaryLayer->needsRepaint() || (cursorLayer && cursorLayer->needsRepaint())) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
-
-        // TODO leave this output-local, and make it use device pixels
-        QRegion surfaceDamage = output->mapToGlobal(primaryLayer->repaints());
-        primaryLayer->resetRepaints();
-        if (const QRegion repaints = primaryDelegate->prePaint(); !repaints.isEmpty()) {
-            surfaceDamage += output->mapToGlobal(repaints);
-        }
-        frame->setDamage(surfaceDamage);
 
         // slowly adjust the artificial HDR headroom for the next frame
         // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
@@ -462,49 +440,93 @@ void Compositor::composite(RenderLoop *renderLoop)
             frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
         }
 
-        const uint32_t planeCount = 1;
-        if (const auto scanoutCandidates = primaryDelegate->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
-            bool scanoutPossible = scanoutCandidates.size() < planeCount || checkForBlackBackground(scanoutCandidates.back());
-            if (scanoutPossible) {
-                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.front()->size()), output->modeSize()));
-                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
-                if (directScanout) {
-                    // if present works, we don't want to touch the frame object again afterwards,
-                    // so end the time query here instead of later
-                    totalTimeQuery->end();
-                    frame->addRenderTimeQuery(std::move(totalTimeQuery));
-                    totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
+        // TODO re-add direct scanout. It's left out for simplicity only
 
-                    directScanout &= m_backend->present(output, frame);
-                }
+        primaryLayer->setEnabled(true);
+        primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
+        auto primaryBeginInfo = primaryLayer->beginFrame();
+        // TODO can this be handled better in any way?
+        Q_ASSERT(primaryBeginInfo.has_value());
+
+        Item *candidate = primaryDelegate->scene()->overlayCandidate();
+        std::optional<OutputLayerBeginFrameInfo> cursorBeginInfo;
+        if (cursorLayer && candidate) {
+            const QRect geometry = snapToPixelGridF(scaledRect(candidate->mapToScene(candidate->boundingRect()), output->scale())).toRect();
+            const auto size = cursorLayer->recommendedSize(geometry.size());
+            if (size.has_value()) {
+                cursorLayer->setTargetRect(QRect(geometry.topLeft(), *size));
+                cursorBeginInfo = cursorLayer->beginFrame();
+            }
+        }
+        if (cursorLayer) {
+            cursorLayer->setEnabled(cursorBeginInfo.has_value());
+        }
+
+        // TODO now that the layers are set up, do an atomic test
+
+        // atomic test successful, we can use this configuration without changes
+
+        // first create the overlay view(s),
+        // so that the relevant items aren't rendered on the primary plane
+        if (cursorBeginInfo.has_value()) {
+            auto &cursorView = m_overlayViews[renderLoop];
+            if (!cursorView || cursorView->item() != candidate) {
+                cursorView = std::make_unique<ItemTreeView>(primaryDelegate.get(), candidate, cursorLayer);
             }
         } else {
-            primaryLayer->notifyNoScanoutCandidate();
+            m_overlayViews.erase(renderLoop);
         }
 
-        if (!directScanout) {
-            primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
-            if (auto beginInfo = primaryLayer->beginFrame()) {
-                auto &[renderTarget, repaint] = beginInfo.value();
+        // now actually render everything
+        {
+            // primary plane
+            auto &[renderTarget, repaint] = *primaryBeginInfo;
 
-                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(output->geometry());
-
-                primaryDelegate->paint(renderTarget, bufferDamage);
-                primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
+            QRegion surfaceDamage = output->mapToGlobal(primaryLayer->repaints());
+            primaryLayer->resetRepaints();
+            if (const QRegion repaints = primaryDelegate->prePaint(); !repaints.isEmpty()) {
+                surfaceDamage += output->mapToGlobal(repaints);
             }
+            frame->setDamage(surfaceDamage);
+
+            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(output->geometry());
+
+            primaryDelegate->paint(renderTarget, bufferDamage);
+            primaryDelegate->postPaint();
+            // same here, could this be gracefully handled?
+            const bool success = primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
+            Q_ASSERT(success);
+        }
+        if (cursorBeginInfo.has_value()) {
+            // cursor plane
+            // FIXME make damage tracking work
+            const auto &[renderTarget, repaint] = *cursorBeginInfo;
+            const auto &view = m_overlayViews[renderLoop];
+            const QRect deviceRect = cursorLayer->targetRect();
+            const QRectF geometry = scaledRect(deviceRect, 1.0 / output->scale());
+            // FIXME this viewport has to become floating point (or device pixels)
+            view->setViewport(geometry.toRect());
+            view->prePaint();
+            view->paint(renderTarget, infiniteRegion());
+            view->postPaint();
+            // TODO this one can definitely be dealt with (mostly) gracefully
+            const bool success = cursorLayer->endFrame(infiniteRegion(), infiniteRegion(), frame.get());
+            Q_ASSERT(success);
         }
 
-        primaryDelegate->postPaint();
-        if (!directScanout) {
-            totalTimeQuery->end();
-            frame->addRenderTimeQuery(std::move(totalTimeQuery));
-        }
-    }
+        totalTimeQuery->end();
+        frame->addRenderTimeQuery(std::move(totalTimeQuery));
 
-    if (!directScanout) {
-        if (!m_backend->present(output, frame)) {
-            m_backend->repairPresentation(output);
-        }
+        // TODO for legacy modesetting,
+        // - set the cursor in "present"
+        // - blacklist the cursor (in the backend) when setting it ever fails (with something other than EACCESS)
+
+        // TODO when this fails, because of driver bugs or because legacy modesetting,
+        // turn off direct scanout and overlays, and try again
+        m_backend->present(output, frame);
+
+    } else if (!m_backend->present(output, frame)) {
+        m_backend->repairPresentation(output);
     }
 
     primaryDelegate->frame(frame.get());
@@ -513,17 +535,6 @@ void Compositor::composite(RenderLoop *renderLoop)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
-    }
-
-    // TODO: move this into the cursor layer
-    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
-    if (!Cursors::self()->isCursorHidden()) {
-        Cursor *cursor = Cursors::self()->currentCursor();
-        if (cursor->geometry().intersects(output->geometry())) {
-            if (CursorSource *source = cursor->source()) {
-                source->frame(frameTime);
-            }
-        }
     }
 }
 

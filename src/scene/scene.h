@@ -183,6 +183,7 @@ public:
     void removeDelegate(MainSceneView *delegate);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
+    virtual Item *overlayCandidate() const;
     virtual QRegion prePaint(MainSceneView *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;

@@ -30,6 +30,7 @@ class WorkspaceScene;
 class Window;
 class OutputFrame;
 class MainSceneView;
+class ItemTreeView;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -105,6 +106,8 @@ protected:
     std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<MainSceneView>> m_primaryDelegates;
+    // for a start, only one overlay per screen
+    std::unordered_map<RenderLoop *, std::unique_ptr<ItemTreeView>> m_overlayViews;
 };
 
 } // namespace KWin
