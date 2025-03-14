@@ -134,7 +134,9 @@ void SurfaceCursorSource::frame(std::chrono::milliseconds timestamp)
 {
     if (m_surface) {
         m_surface->traverseTree([&timestamp](SurfaceInterface *surface) {
-            surface->frameRendered(timestamp.count());
+            if (surface->isMapped()) {
+                surface->frameRendered(timestamp.count());
+            }
         });
     }
 }

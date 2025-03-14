@@ -274,6 +274,9 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
             }
             if (auto surface = window->surface()) {
                 surface->traverseTree([&frameTime, &frame, &output](SurfaceInterface *surface) {
+                    if (!surface->isMapped()) {
+                        return;
+                    }
                     surface->frameRendered(frameTime.count());
                     if (auto feedback = surface->takePresentationFeedback(output)) {
                         frame->addFeedback(std::move(feedback));
@@ -285,6 +288,9 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
         if (m_dndIcon) {
             if (auto surface = m_dndIcon->surface()) {
                 surface->traverseTree([&frameTime, &frame, &output](SurfaceInterface *surface) {
+                    if (!surface->isMapped()) {
+                        return;
+                    }
                     surface->frameRendered(frameTime.count());
                     if (auto feedback = surface->takePresentationFeedback(output)) {
                         frame->addFeedback(std::move(feedback));
