@@ -441,7 +441,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // SELI TODO: Order all these things in some sane manner
 
     const NET::Properties properties =
-        NET::WMDesktop | NET::WMState | NET::WMWindowType | NET::WMStrut | NET::WMName | NET::WMIconGeometry | NET::WMIcon | NET::WMIconName;
+        NET::WMDesktop | NET::WMState | NET::WMWindowType | NET::WMStrut | NET::WMName | NET::WMIcon | NET::WMIconName;
     const NET::Properties2 properties2 =
         NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2UserTime | NET::WM2StartupId | NET::WM2ExtendedStrut | NET::WM2Opacity | NET::WM2FullscreenMonitors | NET::WM2GroupLeader | NET::WM2Urgency | NET::WM2Input | NET::WM2Protocols | NET::WM2InitialMappingState | NET::WM2IconPixmap | NET::WM2OpaqueRegion | NET::WM2DesktopFileName | NET::WM2GTKFrameExtents | NET::WM2GTKApplicationId;
 
@@ -1358,30 +1358,6 @@ void X11Window::doMinimize()
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
-}
-
-QRectF X11Window::iconGeometry() const
-{
-    NETRect r = info->iconGeometry();
-    QRectF geom = Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height));
-    if (geom.isValid()) {
-        return geom;
-    } else {
-        // Check all mainwindows of this window (recursively)
-        const auto &clients = mainWindows();
-        for (Window *amainwin : clients) {
-            X11Window *mainwin = dynamic_cast<X11Window *>(amainwin);
-            if (!mainwin) {
-                continue;
-            }
-            geom = mainwin->iconGeometry();
-            if (geom.isValid()) {
-                return geom;
-            }
-        }
-        // No mainwindow (or their parents) with icon geometry was found
-        return Window::iconGeometry();
-    }
 }
 
 bool X11Window::isShadeable() const

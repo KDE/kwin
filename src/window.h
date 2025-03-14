@@ -1012,7 +1012,7 @@ public:
     }
     void setShortcut(const QString &cut);
 
-    virtual QRectF iconGeometry() const;
+    QRectF iconGeometry() const;
 
     void setMinimized(bool set);
     bool isMinimized() const

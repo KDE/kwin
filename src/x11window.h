@@ -134,7 +134,6 @@ public:
     void maximize(MaximizeMode mode, const QRectF &restore = QRectF()) override;
 
     bool isMinimizable() const override;
-    QRectF iconGeometry() const override;
 
     bool isFullScreenable() const override;
     void setFullScreen(bool set) override;
