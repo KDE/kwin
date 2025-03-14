@@ -3003,8 +3003,7 @@ void Window::pointerLeaveEvent()
 
 QRectF Window::iconGeometry() const
 {
-    if (!windowManagementInterface() || !waylandServer()) {
-        // window management interface is only available if the surface is mapped
+    if (!windowManagementInterface()) {
         return QRectF();
     }
 
