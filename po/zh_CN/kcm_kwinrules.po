@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-06 00:43+0000\n"
+"POT-Creation-Date: 2025-03-13 00:43+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -858,17 +858,17 @@ msgstr "导入规则"
 msgid "Export Rules"
 msgstr "导出规则"
 
-#: ui/OptionsComboBox.qml:37
+#: ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
 msgstr "没有选中的项"
 
-#: ui/OptionsComboBox.qml:43
+#: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
 msgstr "选中所有项"
 
-#: ui/OptionsComboBox.qml:45
+#: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"

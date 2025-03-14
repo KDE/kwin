@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:43+0000\n"
-"PO-Revision-Date: 2025-01-08 12:04+0100\n"
+"POT-Creation-Date: 2025-03-14 00:44+0000\n"
+"PO-Revision-Date: 2025-03-12 08:45+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.3\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -2964,15 +2964,15 @@ msgid "Move Down"
 msgstr "Déplacer vers le bas"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Touches de la flèche modificatrices du tracé :"
+msgstr "Touches modificatrices de geste de défilement :"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
 msgstr ""
+"Faites défiler tant que les touches modificatrices sont enfoncées pour zoomer"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3686,7 +3686,7 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Afficher un bureau"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"

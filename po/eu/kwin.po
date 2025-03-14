@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:43+0000\n"
+"POT-Creation-Date: 2025-03-14 00:44+0000\n"
 "PO-Revision-Date: 2024-12-25 08:11+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -3652,7 +3652,7 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Erakutsi mahaigaina"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"

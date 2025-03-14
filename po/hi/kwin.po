@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:43+0000\n"
+"POT-Creation-Date: 2025-03-14 00:44+0000\n"
 "PO-Revision-Date: 2024-12-15 19:31+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -3748,7 +3748,7 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "डेस्कटॉप ग्रिड दिखाएँ"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgctxt "@info:placeholder no entries in the task switcher"

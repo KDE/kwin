@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-13 00:43+0000\n"
-"PO-Revision-Date: 2024-12-26 09:07+0400\n"
+"POT-Creation-Date: 2025-03-14 00:44+0000\n"
+"PO-Revision-Date: 2025-03-13 11:36+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -2895,15 +2895,14 @@ msgid "Move Down"
 msgstr "انقل لأسفل"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "المفاتيح المغيِّرة لرسم السهم:"
+msgstr "المفاتيح المغيِّرة لإيماءة التمرير:"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "مرر أثناء الضغط على مفاتيح التعديل للتكبير"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3615,7 +3614,7 @@ msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "أظهر سطح المكتب"
 
-#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
