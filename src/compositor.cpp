@@ -174,11 +174,6 @@ bool Compositor::isActive()
     return m_state == State::On;
 }
 
-bool Compositor::openGLCompositingIsBroken() const
-{
-    return false;
-}
-
 bool Compositor::attemptOpenGLCompositing()
 {
     std::unique_ptr<OpenGLBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();

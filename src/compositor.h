@@ -75,16 +75,6 @@ public:
         return m_backend.get();
     }
 
-    /**
-     * Whether OpenGL compositing is broken.
-     * The Platform can implement this method if it is able to detect whether OpenGL compositing
-     * broke (e.g. triggered a crash in a previous run).
-     *
-     * Default implementation returns @c false.
-     * @see createOpenGLSafePoint
-     */
-    bool openGLCompositingIsBroken() const;
-
     void createRenderer();
 
 Q_SIGNALS:

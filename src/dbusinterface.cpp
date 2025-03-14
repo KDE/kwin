@@ -303,7 +303,7 @@ QString CompositorDBusInterface::compositingNotPossibleReason() const
 
 bool CompositorDBusInterface::isOpenGLBroken() const
 {
-    return m_compositor->openGLCompositingIsBroken();
+    return false;
 }
 
 bool CompositorDBusInterface::platformRequiresCompositing() const
