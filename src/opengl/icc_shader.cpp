@@ -190,7 +190,7 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const Co
     m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor.transferFunction().minLuminance, inputColor.transferFunction().maxLuminance - inputColor.transferFunction().minLuminance));
     m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor.referenceLuminance());
     m_shader->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, inputColor.referenceLuminance());
-    m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, inputColor.referenceLuminance());
+    m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, inputColor.transferFunction().maxLuminance);
 
     glActiveTexture(GL_TEXTURE1);
     if (m_B) {

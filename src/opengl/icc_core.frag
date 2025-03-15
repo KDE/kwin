@@ -43,7 +43,7 @@ void main()
     vec4 tex = texture(src, texcoord0);
     tex = encodingToNits(tex, sourceNamedTransferFunction, sourceTransferFunctionParams.x, sourceTransferFunctionParams.y);
     tex.rgb /= max(tex.a, 0.001);
-    tex.rgb /= destinationReferenceLuminance;
+    tex.rgb /= maxDestinationLuminance;
     tex.rgb = (toXYZD50 * vec4(tex.rgb, 1.0)).rgb;
     if (Bsize > 0) {
         tex.rgb = sample1DLut(tex.rgb, Bsampler, Bsize);
