@@ -35,7 +35,9 @@ class TabletPadV2InterfacePrivate;
 class TabletPadRingV2Interface;
 class TabletPadRingV2InterfacePrivate;
 class TabletPadStripV2Interface;
+class TabletPadDialV2Interface;
 class TabletPadStripV2InterfacePrivate;
+class TabletPadDialV2InterfacePrivate;
 class TabletPadGroupV2Interface;
 class TabletPadGroupV2InterfacePrivate;
 
@@ -230,6 +232,23 @@ private:
     std::unique_ptr<TabletPadStripV2InterfacePrivate> d;
 };
 
+class KWIN_EXPORT TabletPadDialV2Interface : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~TabletPadDialV2Interface();
+
+    void sendDelta(qreal delta);
+    void sendFrame(quint32 time);
+
+private:
+    friend class TabletPadGroupV2Interface;
+    friend class TabletPadGroupV2InterfacePrivate;
+    friend class TabletSeatV2InterfacePrivate;
+    explicit TabletPadDialV2Interface(TabletPadV2Interface *parent);
+    std::unique_ptr<TabletPadDialV2InterfacePrivate> d;
+};
+
 class KWIN_EXPORT TabletPadGroupV2Interface : public QObject
 {
     Q_OBJECT
@@ -241,12 +260,13 @@ public:
 
     TabletPadRingV2Interface *ring(uint at) const;
     TabletPadStripV2Interface *strip(uint at) const;
+    TabletPadDialV2Interface *dial(uint at) const;
 
 private:
     friend class TabletPadV2Interface;
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, Display *display, TabletPadV2Interface *parent);
+    explicit TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, Display *display, TabletPadV2Interface *parent);
     std::unique_ptr<TabletPadGroupV2InterfacePrivate> d;
 };
 
