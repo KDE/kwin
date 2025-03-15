@@ -65,6 +65,8 @@ std::unique_ptr<Event> Event::create(libinput_event *event)
         return std::make_unique<TabletPadButtonEvent>(event, t);
     case LIBINPUT_EVENT_SWITCH_TOGGLE:
         return std::make_unique<SwitchEvent>(event, t);
+    case LIBINPUT_EVENT_TABLET_PAD_DIAL:
+        return std::make_unique<TabletPadDialEvent>(event, t);
     default:
         return std::unique_ptr<Event>{new Event(event, t)};
     }
@@ -366,6 +368,12 @@ TabletPadStripEvent::TabletPadStripEvent(libinput_event *event, libinput_event_t
 }
 
 TabletPadRingEvent::TabletPadRingEvent(libinput_event *event, libinput_event_type type)
+    : Event(event, type)
+    , m_tabletPadEvent(libinput_event_get_tablet_pad_event(event))
+{
+}
+
+TabletPadDialEvent::TabletPadDialEvent(libinput_event *event, libinput_event_type type)
     : Event(event, type)
     , m_tabletPadEvent(libinput_event_get_tablet_pad_event(event))
 {

@@ -664,6 +664,17 @@ bool EffectsHandler::tabletPadRingEvent(int number, int position, bool isFinger,
     return false;
 }
 
+bool EffectsHandler::tabletPadDialEvent(int number, double delta, std::chrono::microseconds time, InputDevice *device)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->tabletPadDialEvent(number, delta, device)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void EffectsHandler::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
 {
     input()->registerPointerShortcut(modifiers, pointerButtons, action);

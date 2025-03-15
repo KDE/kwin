@@ -647,11 +647,20 @@ QList<InputDeviceTabletPadModeGroup> Device::modeGroups() const
             }
         }
 
+        QList<int> dials;
+        int totalDials = libinput_device_tablet_pad_get_num_dials(m_device);
+        for (int dialIndex = 0; dialIndex < totalDials; ++dialIndex) {
+            if (libinput_tablet_pad_mode_group_has_dial(group, dialIndex)) {
+                dials << dialIndex;
+            }
+        }
+
         result << InputDeviceTabletPadModeGroup{
             .modeCount = modeCount,
             .buttons = buttons,
             .rings = rings,
             .strips = strips,
+            .dials = dials,
         };
     }
     return result;

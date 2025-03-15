@@ -432,6 +432,22 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
     input()->setLastInputHandler(this);
 }
 
+void KWin::TabletInputRedirection::tabletPadDialEvent(int number, double delta, quint32 group, std::chrono::microseconds time, InputDevice *device)
+{
+
+    TabletPadDialEvent event{
+        .device = device,
+        .number = number,
+        .delta = delta,
+        .group = group,
+        .time = time,
+    };
+
+    input()->processSpies(std::bind(&InputEventSpy::tabletPadDialEvent, std::placeholders::_1, &event));
+    input()->processFilters(std::bind(&InputEventFilter::tabletPadDialEvent, std::placeholders::_1, &event));
+    input()->setLastInputHandler(this);
+}
+
 bool TabletInputRedirection::focusUpdatesBlocked()
 {
     return input()->isSelectingWindow() || m_tipDown || m_buttonDown;

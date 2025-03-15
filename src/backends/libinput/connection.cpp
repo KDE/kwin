@@ -578,6 +578,11 @@ void Connection::processEvents()
                                                         tabletEvent->time(), tabletEvent->device());
             break;
         }
+        case LIBINPUT_EVENT_TABLET_PAD_DIAL: {
+            auto *tabletEvent = static_cast<TabletPadDialEvent *>(event.get());
+            Q_EMIT event->device()->tabletPadDialEvent(tabletEvent->number(), tabletEvent->delta(), tabletEvent->group(), tabletEvent->time(), tabletEvent->device());
+            break;
+        }
         default:
             // nothing
             break;

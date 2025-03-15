@@ -55,6 +55,7 @@ struct TabletToolButtonEvent;
 struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
 struct TabletPadRingEvent;
+struct TabletPadDialEvent;
 
 namespace Decoration
 {
@@ -433,6 +434,7 @@ public:
     virtual bool tabletPadButtonEvent(TabletPadButtonEvent *event);
     virtual bool tabletPadStripEvent(TabletPadStripEvent *event);
     virtual bool tabletPadRingEvent(TabletPadRingEvent *event);
+    virtual bool tabletPadDialEvent(TabletPadDialEvent *event);
 
 protected:
     bool passToInputMethod(KeyboardKeyEvent *event);

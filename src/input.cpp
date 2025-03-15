@@ -242,6 +242,11 @@ bool InputEventFilter::tabletPadRingEvent(TabletPadRingEvent *event)
     return false;
 }
 
+bool InputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
+{
+    return false;
+}
+
 bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
 {
     if (!kwinApp()->inputMethod()) {
@@ -667,6 +672,13 @@ public:
             return false;
         }
         return effects->tabletPadRingEvent(event->number, event->position, event->isFinger, event->time, event->device);
+    }
+    bool tabletPadDialEvent(TabletPadDialEvent *event) override
+    {
+        if (!effects) {
+            return false;
+        }
+        return effects->tabletPadDialEvent(event->number, event->delta, event->time, event->device);
     }
 };
 
@@ -3087,6 +3099,10 @@ public:
     {
         notifyActivity();
     }
+    void tabletPadDialEvent(TabletPadDialEvent *event) override
+    {
+        notifyActivity();
+    }
 
 private:
     void notifyActivity()
@@ -3250,6 +3266,8 @@ void InputRedirection::addInputDevice(InputDevice *device)
             m_tablet, &TabletInputRedirection::tabletPadRingEvent);
     connect(device, &InputDevice::tabletPadStripEvent,
             m_tablet, &TabletInputRedirection::tabletPadStripEvent);
+    connect(device, &InputDevice::tabletPadDialEvent,
+            m_tablet, &TabletInputRedirection::tabletPadDialEvent);
 
     device->setLeds(m_leds);
 
