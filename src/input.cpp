@@ -2525,6 +2525,20 @@ public:
         strip->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->time).count());
         return true;
     }
+
+    bool tabletPadDialEvent(TabletPadDialEvent *event) override
+    {
+        auto pad = findAndAdoptPad(event->device);
+        if (!pad) {
+            return false;
+        }
+        auto dial = pad->group(event->group)->dial(event->number);
+
+        dial->sendDelta(event->delta);
+
+        dial->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->time).count());
+        return true;
+    }
 };
 
 static AbstractDropHandler *dropHandler(Window *window)

@@ -535,10 +535,57 @@ void TabletPadStripV2Interface::sendStop()
     }
 }
 
+class TabletPadDialV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_dial_v2
+{
+public:
+    TabletPadDialV2InterfacePrivate(TabletPadDialV2Interface *q)
+        : zwp_tablet_pad_dial_v2()
+        , q(q)
+    {
+    }
+
+    std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const
+    {
+        ClientConnection *client = surface->client();
+        const auto [start, end] = resourceMap().equal_range(*client);
+        return std::ranges::subrange(start, end);
+    }
+
+    void zwp_tablet_pad_dial_v2_destroy(Resource *resource) override
+    {
+        wl_resource_destroy(resource->handle);
+    }
+    TabletPadDialV2Interface *const q;
+    TabletPadV2Interface *m_pad;
+};
+
+TabletPadDialV2Interface::TabletPadDialV2Interface(TabletPadV2Interface *parent)
+    : QObject(parent)
+    , d(new TabletPadDialV2InterfacePrivate(this))
+{
+    d->m_pad = parent;
+}
+
+TabletPadDialV2Interface::~TabletPadDialV2Interface() = default;
+
+void TabletPadDialV2Interface::sendDelta(qreal delta)
+{
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_delta(resource->handle, wl_fixed_from_double(delta));
+    }
+}
+
+void TabletPadDialV2Interface::sendFrame(quint32 time)
+{
+    for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
+        d->send_frame(resource->handle, time);
+    }
+}
+
 class TabletPadGroupV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_group_v2
 {
 public:
-    TabletPadGroupV2InterfacePrivate(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, TabletPadV2Interface *pad, Display *display, TabletPadGroupV2Interface *q)
+    TabletPadGroupV2InterfacePrivate(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, TabletPadV2Interface *pad, Display *display, TabletPadGroupV2Interface *q)
         : zwp_tablet_pad_group_v2()
         , q(q)
         , m_modeCount(modeCount)
@@ -552,12 +599,17 @@ public:
         for (int strip : strips) {
             m_strips[strip] = new TabletPadStripV2Interface(pad);
         }
+
+        for (int dial : dials) {
+            m_dials[dial] = new TabletPadDialV2Interface(pad);
+        }
     }
 
     ~TabletPadGroupV2InterfacePrivate()
     {
         qDeleteAll(m_rings);
         qDeleteAll(m_strips);
+        qDeleteAll(m_dials);
     }
 
     std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const
@@ -579,12 +631,13 @@ public:
     QList<int> m_buttons;
     QHash<int, TabletPadRingV2Interface *> m_rings;
     QHash<int, TabletPadStripV2Interface *> m_strips;
+    QHash<int, TabletPadDialV2Interface *> m_dials;
     Display *const m_display;
 };
 
-TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, Display *display, TabletPadV2Interface *parent)
+TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, Display *display, TabletPadV2Interface *parent)
     : QObject(parent)
-    , d(new TabletPadGroupV2InterfacePrivate(modeCount, buttons, rings, strips, parent, display, this))
+    , d(new TabletPadGroupV2InterfacePrivate(modeCount, buttons, rings, strips, dials, parent, display, this))
 {
     d->m_pad = parent;
 }
@@ -613,6 +666,11 @@ TabletPadStripV2Interface *TabletPadGroupV2Interface::strip(uint at) const
     return d->m_strips.value(at);
 }
 
+TabletPadDialV2Interface *TabletPadGroupV2Interface::dial(uint at) const
+{
+    return d->m_dials.value(at);
+}
+
 class TabletPadV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_v2
 {
 public:
@@ -629,7 +687,7 @@ public:
     {
         m_groups.reserve(groups.size());
         for (const InputDeviceTabletPadModeGroup &group : std::as_const(groups)) {
-            m_groups += new TabletPadGroupV2Interface(group.modeCount, group.buttons, group.rings, group.strips, m_display, q);
+            m_groups += new TabletPadGroupV2Interface(group.modeCount, group.buttons, group.rings, group.strips, group.dials, m_display, q);
         }
     }
 
@@ -822,6 +880,14 @@ public:
                 auto stripResource = strip->d->add(resource->client(), resource->version());
                 group->d->send_strip(groupResource->handle, stripResource->handle);
             }
+
+            for (auto dial : std::as_const(group->d->m_dials)) {
+                if (resource->version() >= ZWP_TABLET_PAD_GROUP_V2_DIAL_SINCE_VERSION) {
+                    auto dialResource = dial->d->add(resource->client(), resource->version());
+                    group->d->send_dial(groupResource->handle, dialResource->handle);
+                }
+            }
+
             group->d->send_done(groupResource->handle);
         }
         pad->d->send_done(tabletResource);
