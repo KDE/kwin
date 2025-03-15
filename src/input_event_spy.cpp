@@ -126,4 +126,8 @@ void InputEventSpy::tabletPadStripEvent(TabletPadStripEvent *event)
 void InputEventSpy::tabletPadRingEvent(TabletPadRingEvent *event)
 {
 }
+
+void InputEventSpy::tabletPadDialEvent(TabletPadDialEvent *event)
+{
+}
 }

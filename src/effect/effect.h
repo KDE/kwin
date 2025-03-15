@@ -859,6 +859,17 @@ public:
      */
     virtual bool tabletPadRingEvent(int number, int position, bool isFinger, void *device);
 
+    /**
+     * There has been an event from a input dial on a drawing tablet pad
+     *
+     * @param number which dial
+     * @param delta the delta value
+     * @param device the identifier of the tool id
+     *
+     * @since 6.4
+     */
+    virtual bool tabletPadDialEvent(int number, double delta, void *device);
+
     static QPointF cursorPos();
 
     /**

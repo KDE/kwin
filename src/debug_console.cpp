@@ -594,6 +594,19 @@ void DebugConsoleFilter::tabletPadRingEvent(TabletPadRingEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
+void DebugConsoleFilter::tabletPadDialEvent(TabletPadDialEvent *event)
+{
+    QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Dial"))
+        + tableRow(i18n("Number"), event->number)
+        + tableRow(i18n("Delta"), event->delta)
+        + tableRow(i18n("Tablet"), event->device->name())
+        + timestampRow(event->time)
+        + s_tableEnd;
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
 static QString sourceString(const AbstractDataSource *const source)
 {
     if (!source) {
