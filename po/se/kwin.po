@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:44+0000\n"
+"POT-Creation-Date: 2025-03-15 00:43+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -4238,7 +4238,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3236
+#: window.cpp:3235
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4263,26 +4263,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Gáibiduvvon X-viiddádusat (XComposite and XDamage) eai leat olámuttus."
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "KWin ii leat starga.\n"
-#~ "Lea riekčanan moddii maŋŋálága.\n"
-#~ "Sáhtát válljet vuodjit muhttin eará lásegieđahalli:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "kwin: Ii sáhttán gieđahallat lásiid. Leago eará lásegieđahalli jođus? "
-#~ "(Geahččal --replace molssaeavttuin)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr "Buhtte ICCCM2.0-heivvolaš lásegieđahalli mii juo lea jođus"

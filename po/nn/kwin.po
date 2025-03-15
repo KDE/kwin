@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:44+0000\n"
+"POT-Creation-Date: 2025-03-15 00:43+0000\n"
 "PO-Revision-Date: 2024-09-22 16:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -4282,7 +4282,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3236
+#: window.cpp:3235
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4316,57 +4316,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Slå av skrivebordseffektar"
-
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p>"
-#~ msgstr ""
-#~ "<b>OpenGL-samansetjing (som er standard) har krasja KWin tidlegare.</"
-#~ "b><br>Dette kjem truleg av ein feil i skjermkortdrivaren.<p>Viss du "
-#~ "meiner at du i mellomtida har oppgradert til ein stabil drivar,<br>kan du "
-#~ "slå av dette vernet, men <b>ver merksam på at det kan føra til krasj med "
-#~ "ein gong</b>.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Dei nødvendige X-utvidingane (XComposite og XDamage) er ikkje "
-#~ "tilgjengelege."
-
-#~ msgid "GLX/OpenGL is not available."
-#~ msgstr "GLX/OpenGL er ikkje tilgjengeleg."
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Avslutt feilsøkingskonsoll"
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "KWin er ustabil.\n"
-#~ "Det ser ut til at programmet har krasja fleire gongar på rad.\n"
-#~ "Du kan velja ein annan vindaugshandsamar:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "KWin: Klarte ikkje ta over som vindaugshandsamar. Køyrer ein annan "
-#~ "vindaugshandsamar? (Du kan prøva med kommandolinjevalet «--replace».)\n"
-
-#~ msgid "kwin: another window manager is running (try using --replace)\n"
-#~ msgstr ""
-#~ "KWin: Ein annan vindaugshandsamar køyrer. (Du kan prøva med "
-#~ "kommandolinjevalet «--replace».)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr "Overta etter ein ICCCM2.0-vindaugshandsamar som køyrer"
-
-#~ msgid "Move to &Desktop"
-#~ msgstr "Flytt til s&krivebord"

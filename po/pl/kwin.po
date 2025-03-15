@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1705100 $
+# Version: $Revision: 1705165 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:44+0000\n"
+"POT-Creation-Date: 2025-03-15 00:43+0000\n"
 "PO-Revision-Date: 2025-01-11 11:58+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -4314,7 +4314,7 @@ msgstr "Podany porządek wyjść jest nieprawidłowy"
 msgid "The driver rejected the output configuration"
 msgstr "Sterownik odrzucił ustawienia wyjść"
 
-#: window.cpp:3236
+#: window.cpp:3235
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

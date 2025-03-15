@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-14 00:44+0000\n"
+"POT-Creation-Date: 2025-03-15 00:43+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -4250,7 +4250,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3236
+#: window.cpp:3235
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4275,28 +4275,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Opphev sammensetting"
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "KWin er ustabilt.\n"
-#~ "Det ser ut til at det har krasjet flere ganger etter hverandre.\n"
-#~ "Du kan velge en annen vindusbehandler å kjøre:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "kwin: klarte ikke kreve kontroll over vindusbehandleren, er det en annen "
-#~ "vindusbehandler som kjører? (prøv å bruke --replace)\n"
-
-#~ msgid "kwin: another window manager is running (try using --replace)\n"
-#~ msgstr "kwin: en annen vindusbehandler kjører (prøv å bruke --replace)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr "Bytt ut en ICCCM2.0 vindusbehandler som allerede kjører"
