@@ -24,6 +24,10 @@
 
 #include <canberra.h>
 
+#include <chrono>
+
+using namespace std::literals;
+
 Q_LOGGING_CATEGORY(KWIN_SYSTEMBELL, "kwin_effect_systembell", QtWarningMsg)
 
 static void ensureResources()
@@ -99,6 +103,9 @@ SystemBellEffect::SystemBellEffect()
             });
         }
     }
+
+    m_audioThrottleTimer.setInterval(100ms);
+    m_audioThrottleTimer.setSingleShot(true);
 }
 
 SystemBellEffect::~SystemBellEffect()
@@ -253,6 +260,12 @@ bool SystemBellEffect::perform(Feature feature, const QVariantList &arguments)
 
 void SystemBellEffect::playAudibleBell()
 {
+    if (m_audioThrottleTimer.isActive()) {
+        return;
+    }
+
+    m_audioThrottleTimer.start();
+
     if (m_customBell) {
         ca_context_play(m_caContext,
                         0,
