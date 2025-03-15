@@ -920,6 +920,11 @@ int libinput_device_tablet_pad_get_num_rings(struct libinput_device *device)
     return device->ringCount;
 }
 
+int libinput_device_tablet_pad_get_num_dials(struct libinput_device *device)
+{
+    return device->dialCount;
+}
+
 int libinput_device_tablet_pad_get_num_buttons(struct libinput_device *device)
 {
     return device->buttonCount;
@@ -962,6 +967,12 @@ int libinput_tablet_pad_mode_group_has_ring(struct libinput_tablet_pad_mode_grou
 
 int libinput_tablet_pad_mode_group_has_strip(struct libinput_tablet_pad_mode_group *group,
                                              unsigned int strip)
+{
+    return 1;
+}
+
+int libinput_tablet_pad_mode_group_has_dial(struct libinput_tablet_pad_mode_group *group,
+                                            unsigned int dial)
 {
     return 1;
 }

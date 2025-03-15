@@ -371,6 +371,33 @@ private:
     libinput_event_tablet_pad *m_tabletPadEvent;
 };
 
+class TabletPadDialEvent : public Event
+{
+public:
+    TabletPadDialEvent(libinput_event *event, libinput_event_type type);
+
+    double delta() const
+    {
+        return libinput_event_tablet_pad_get_dial_delta_v120(m_tabletPadEvent);
+    }
+    int number() const
+    {
+        return libinput_event_tablet_pad_get_dial_number(m_tabletPadEvent);
+    }
+    int group() const
+    {
+        auto mode_group = libinput_event_tablet_pad_get_mode_group(m_tabletPadEvent);
+        return libinput_tablet_pad_mode_group_get_index(mode_group);
+    }
+    std::chrono::microseconds time() const
+    {
+        return std::chrono::microseconds(libinput_event_tablet_pad_get_time_usec(m_tabletPadEvent));
+    }
+
+private:
+    libinput_event_tablet_pad *m_tabletPadEvent;
+};
+
 class TabletPadStripEvent : public Event
 {
 public:

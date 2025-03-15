@@ -165,6 +165,12 @@ bool DpmsInputEventFilter::tabletPadRingEvent(TabletPadRingEvent *event)
     return true;
 }
 
+bool DpmsInputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
+{
+    notify();
+    return true;
+}
+
 void DpmsInputEventFilter::notify()
 {
     const QList<Output *> outputs = workspace()->outputs();

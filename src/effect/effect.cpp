@@ -520,6 +520,11 @@ bool Effect::tabletPadRingEvent(int number, int position, bool isFinger, void *d
     return false;
 }
 
+bool Effect::tabletPadDialEvent(int number, double delta, void *device)
+{
+    return false;
+}
+
 bool Effect::blocksDirectScanout() const
 {
     return true;

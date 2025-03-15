@@ -177,4 +177,13 @@ struct TabletPadRingEvent
     std::chrono::microseconds time;
 };
 
+struct TabletPadDialEvent
+{
+    InputDevice *device;
+    int number;
+    double delta;
+    quint32 group;
+    std::chrono::microseconds time;
+};
+
 } // namespace KWin

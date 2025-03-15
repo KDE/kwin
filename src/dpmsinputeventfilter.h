@@ -40,6 +40,7 @@ public:
     bool tabletPadButtonEvent(TabletPadButtonEvent *event) override;
     bool tabletPadStripEvent(TabletPadStripEvent *event) override;
     bool tabletPadRingEvent(TabletPadRingEvent *event) override;
+    bool tabletPadDialEvent(TabletPadDialEvent *event) override;
 
 private:
     void notify();
