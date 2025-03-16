@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-15 00:43+0000\n"
-"PO-Revision-Date: 2025-01-12 08:09+0100\n"
+"PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -2915,15 +2915,14 @@ msgid "Move Down"
 msgstr "Movu Malsupren"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Modifilaj klavoj por sagdesegnado:"
+msgstr "Modifilaj klavoj por rulumgestoj:"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "Por zomi, rulumi dum kiam la modifilaj klavoj estas premataj"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -4325,114 +4324,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Kunmetitaĵo paŭziĝas"
-
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p>"
-#~ msgstr ""
-#~ "<b>OpenGL-komponado (la defaŭlta) paneis KWin en la pasinteco.</b><br>Ĉi "
-#~ "tio estis plej verŝajne pro pelila cimo.<p>Se vi pensas, ke vi dume "
-#~ "ĝisdatigis al stabila pelilo,<br>vi povas restarigi ĉi tiun protekton, "
-#~ "sed <b>konsciu, ke tio povus rezultigi tujan paneon!</b></p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "X-kromprogramoj XComposite kaj XDamage estas bezonitaj sed ne estas "
-#~ "haveblaj."
-
-#~ msgid "GLX/OpenGL is not available."
-#~ msgstr "GLX/OpenGL ne disponeblas."
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Forlasu Sencimigan Konzolon"
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "KWin estas nestabila.\n"
-#~ "Ŝajne, ĝi kolapsis plurajn fojojn sinsekve.\n"
-#~ "Vi povas elekti alian fenestroadministrilon:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "kwin: Ne eblas regi la administradon, ĉu alia fenestroadministrilo "
-#~ "ruliĝas? (Provu --replace)\n"
-
-#~ msgid "kwin: another window manager is running (try using --replace)\n"
-#~ msgstr "kwin: alia fenestra administranto funkcias (provu uzi --replace)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr "Anstataŭigi rulantan ICCCM2.0-konforman fenestroadministrilon"
-
-#~ msgid "Move to &Desktop"
-#~ msgstr "Movu al &Tablo"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "Eta"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "Normala"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "Granda"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "Grandega"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "Grandega"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "Tre Grandega"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "Trogranda"
-
-#~ msgid "Button size:"
-#~ msgstr "Butongrandeco:"
-
-#~ msgid "Config Dialog"
-#~ msgstr "Agorda Dialogo"
-
-#~ msgid "Title &Alignment"
-#~ msgstr "&Aligiĝo de titolo"
-
-#~ msgid "Center"
-#~ msgstr "Centro"
-
-#~ msgid ""
-#~ "Check this option if the window border should be painted in the titlebar "
-#~ "color. Otherwise it will be painted in the background color."
-#~ msgstr ""
-#~ "Marku ĉi tiun elekteblon se la fenestra rando devus esti pentrita en la "
-#~ "titolbretokoloro. Alie ĝi estos pentrita en la fonkoloro."
-
-#~ msgid "Colored window border"
-#~ msgstr "Kolora fenestrobordo"
-
-#~ msgid ""
-#~ "Check this option if you want the buttons to fade in when the mouse "
-#~ "pointer hovers over them and fade out again when it moves away."
-#~ msgstr ""
-#~ "Marku ĉi tiun elekteblon, se vi volas, ke la butonoj paliĝas kiam la "
-#~ "musmontrilo ŝvebas super ili kaj denove malaperu kiam ĝi malproksimiĝas."
-
-#~ msgid "Animate buttons"
-#~ msgstr "Anigi butonojn"
