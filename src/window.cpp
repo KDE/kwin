@@ -54,11 +54,6 @@
 namespace KWin
 {
 
-static inline int sign(int v)
-{
-    return (v > 0) - (v < 0);
-}
-
 QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> Window::s_palettes;
 std::shared_ptr<Decoration::DecorationPalette> Window::s_defaultPalette;
 

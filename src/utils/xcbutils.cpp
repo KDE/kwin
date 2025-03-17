@@ -37,8 +37,6 @@ namespace Xcb
 
 static const int COMPOSITE_MAX_MAJOR = 0;
 static const int COMPOSITE_MAX_MINOR = 4;
-static const int DAMAGE_MAX_MAJOR = 1;
-static const int DAMAGE_MIN_MAJOR = 1;
 static const int SYNC_MAX_MAJOR = 3;
 static const int SYNC_MAX_MINOR = 0;
 static const int RANDR_MAX_MAJOR = 1;
@@ -271,69 +269,6 @@ QList<QByteArray> syncOpCodes()
                               QByteArrayLiteral("DestroyFence"),
                               QByteArrayLiteral("QueryFence"),
                               QByteArrayLiteral("AwaitFence")});
-}
-
-static QList<QByteArray> glxOpCodes()
-{
-    return QList<QByteArray>{
-        QByteArrayLiteral(""),
-        QByteArrayLiteral("Render"),
-        QByteArrayLiteral("RenderLarge"),
-        QByteArrayLiteral("CreateContext"),
-        QByteArrayLiteral("DestroyContext"),
-        QByteArrayLiteral("MakeCurrent"),
-        QByteArrayLiteral("IsDirect"),
-        QByteArrayLiteral("QueryVersion"),
-        QByteArrayLiteral("WaitGL"),
-        QByteArrayLiteral("WaitX"),
-        QByteArrayLiteral("CopyContext"),
-        QByteArrayLiteral("SwapBuffers"),
-        QByteArrayLiteral("UseXFont"),
-        QByteArrayLiteral("CreateGLXPixmap"),
-        QByteArrayLiteral("GetVisualConfigs"),
-        QByteArrayLiteral("DestroyGLXPixmap"),
-        QByteArrayLiteral("VendorPrivate"),
-        QByteArrayLiteral("VendorPrivateWithReply"),
-        QByteArrayLiteral("QueryExtensionsString"),
-        QByteArrayLiteral("QueryServerString"),
-        QByteArrayLiteral("ClientInfo"),
-        QByteArrayLiteral("GetFBConfigs"),
-        QByteArrayLiteral("CreatePixmap"),
-        QByteArrayLiteral("DestroyPixmap"),
-        QByteArrayLiteral("CreateNewContext"),
-        QByteArrayLiteral("QueryContext"),
-        QByteArrayLiteral("MakeContextCurrent"),
-        QByteArrayLiteral("CreatePbuffer"),
-        QByteArrayLiteral("DestroyPbuffer"),
-        QByteArrayLiteral("GetDrawableAttributes"),
-        QByteArrayLiteral("ChangeDrawableAttributes"),
-        QByteArrayLiteral("CreateWindow"),
-        QByteArrayLiteral("DeleteWindow"),
-        QByteArrayLiteral("SetClientInfoARB"),
-        QByteArrayLiteral("CreateContextAttribsARB"),
-        QByteArrayLiteral("SetClientInfo2ARB")
-        // Opcodes 36-100 are unused
-        // The GL single commands begin at opcode 101
-    };
-}
-
-static QList<QByteArray> glxErrorCodes()
-{
-    return QList<QByteArray>{
-        QByteArrayLiteral("BadContext"),
-        QByteArrayLiteral("BadContextState"),
-        QByteArrayLiteral("BadDrawable"),
-        QByteArrayLiteral("BadPixmap"),
-        QByteArrayLiteral("BadContextTag"),
-        QByteArrayLiteral("BadCurrentWindow"),
-        QByteArrayLiteral("BadRenderRequest"),
-        QByteArrayLiteral("BadLargeRequest"),
-        QByteArrayLiteral("UnsupportedPrivateRequest"),
-        QByteArrayLiteral("BadFBConfig"),
-        QByteArrayLiteral("BadPbuffer"),
-        QByteArrayLiteral("BadCurrentDrawable"),
-        QByteArrayLiteral("BadWindow"),
-        QByteArrayLiteral("GLXBadProfileARB")};
 }
 
 ExtensionData::ExtensionData()

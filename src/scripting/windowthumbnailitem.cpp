@@ -389,14 +389,6 @@ QImage WindowThumbnailItem::fallbackImage() const
     return QImage();
 }
 
-static QRectF centeredSize(const QRectF &boundingRect, const QSizeF &size)
-{
-    const QSizeF scaled = size.scaled(boundingRect.size(), Qt::KeepAspectRatio);
-    const qreal x = boundingRect.x() + (boundingRect.width() - scaled.width()) / 2;
-    const qreal y = boundingRect.y() + (boundingRect.height() - scaled.height()) / 2;
-    return QRectF(QPointF(x, y), scaled);
-}
-
 QRectF WindowThumbnailItem::paintedRect() const
 {
     if (!m_client) {

@@ -47,7 +47,6 @@ public:
 
 private:
     OpenGLBackend *m_backend;
-    GLuint vao = 0;
 };
 
 /**
