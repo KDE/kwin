@@ -281,7 +281,7 @@ void TileManager::readSettings(RootTile *rootTile)
 
     Q_ASSERT(m_rootTiles.contains(desk));
 
-    auto createDefaultSetup = [this](RootTile *rootTile) {
+    auto createDefaultSetup = [](RootTile *rootTile) {
         Q_ASSERT(rootTile->childCount() == 0);
         // If empty create an horizontal 3 columns layout
         rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);

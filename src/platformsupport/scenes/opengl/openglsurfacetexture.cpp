@@ -118,7 +118,7 @@ void OpenGLSurfaceTexture::updateShmTexture(GraphicsBuffer *buffer, const QRegio
 
 bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
 {
-    auto createTexture = [this](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::shared_ptr<GLTexture> {
+    auto createTexture = [](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::shared_ptr<GLTexture> {
         if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
             qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
             return nullptr;
