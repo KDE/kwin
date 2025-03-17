@@ -257,9 +257,6 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->broadcastRGB.isValid()) {
         capabilities |= Capability::RgbRange;
     }
-    if (m_connector->hdrMetadata.isValid() && m_connector->edid()->supportsPQ()) {
-        capabilities |= Capability::HighDynamicRange;
-    }
     if (m_connector->colorspace.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC)) && m_connector->edid()->supportsBT2020()) {
         bool allowColorspace = true;
         if (m_gpu->isI915()) {
@@ -270,6 +267,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
         if (allowColorspace) {
             capabilities |= Capability::WideColorGamut;
         }
+    }
+    if (m_connector->hdrMetadata.isValid() && m_connector->edid()->supportsPQ() && (capabilities & Capability::WideColorGamut)) {
+        capabilities |= Capability::HighDynamicRange;
     }
     if (m_connector->isInternal()) {
         // TODO only set this if an orientation sensor is available?
