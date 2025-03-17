@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-07 02:40+0000\n"
-"PO-Revision-Date: 2025-01-26 19:08+0530\n"
+"PO-Revision-Date: 2025-03-16 15:06+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.1\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -154,12 +154,16 @@ msgstr ""
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் நிறமாற்ற அணியை (chromatic "
+"adaptation matrix-ஐ) புரிந்துகொள்ள முடியவில்லை."
 
 #: core/iccprofile.cpp:304
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் நிறமாற்ற அணியின் (chromatic "
+"adaptation matrix-இன்) நேர்மாறு அணியைக் கணிக்க முடியவில்லை."
 
 #: core/iccprofile.cpp:317
 #, kde-format
@@ -183,7 +187,7 @@ msgstr ""
 #: core/iccprofile.cpp:357
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "BToD குறிச்சொற்களை மட்டும் கொண்ட \"%1\" எனும் ICC பயன்முறை ஆதரிக்கப்படாதது"
 
 #: core/iccprofile.cpp:396
 #, kde-format
@@ -1697,11 +1701,10 @@ msgid "Fullscreen windows"
 msgstr "முழுத்திரை சாளரங்கள்"
 
 #: plugins/eis/eisinputcapturemanager.cpp:124
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "KActivities ஒருங்கிணைப்பை முடக்கு."
+msgstr "செயலிலுள்ள உள்ளீட்டுப்பிடிப்பை நிறுத்து"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
@@ -3164,7 +3167,7 @@ msgstr "முடக்கு"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:142
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
