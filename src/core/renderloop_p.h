@@ -50,7 +50,6 @@ public:
     int pendingFrameCount = 0;
     int inhibitCount = 0;
     bool pendingReschedule = false;
-    bool pendingRepaint = false;
     std::chrono::nanoseconds safetyMargin{0};
 
     PresentationMode presentationMode = PresentationMode::VSync;

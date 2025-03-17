@@ -471,7 +471,6 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
-        renderLoop->beginPaint();
 
         QRegion surfaceDamage = primaryLayer->repaints();
         primaryLayer->resetRepaints();

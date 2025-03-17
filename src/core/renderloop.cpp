@@ -188,15 +188,7 @@ void RenderLoopPrivate::notifyVblank(std::chrono::nanoseconds timestamp)
 
 void RenderLoopPrivate::dispatch()
 {
-    // On X11, we want to ignore repaints that are scheduled by windows right before
-    // the Compositor starts repainting.
-    pendingRepaint = true;
-
     Q_EMIT q->frameRequested(q);
-
-    // The Compositor may decide to not repaint when the frameRequested() signal is
-    // emitted, in which case the pending repaint flag has to be reset manually.
-    pendingRepaint = false;
 }
 
 RenderLoop::RenderLoop(Output *output)
@@ -232,11 +224,6 @@ void RenderLoop::prepareNewFrame()
     d->pendingFrameCount++;
 }
 
-void RenderLoop::beginPaint()
-{
-    d->pendingRepaint = false;
-}
-
 int RenderLoop::refreshRate() const
 {
     return d->refreshRate;
@@ -258,9 +245,6 @@ void RenderLoop::setPresentationSafetyMargin(std::chrono::nanoseconds safetyMarg
 
 void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer, OutputLayer *outputLayer)
 {
-    if (d->pendingRepaint) {
-        return;
-    }
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
     if ((vrr || tearing) && workspace()->activeWindow() && d->output) {
