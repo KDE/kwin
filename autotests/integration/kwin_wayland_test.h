@@ -1449,6 +1449,18 @@ public:
     std::unique_ptr<XdgToplevel> m_toplevel;
     Window *m_window = nullptr;
 };
+
+class XdgPopupWindow
+{
+public:
+    explicit XdgPopupWindow();
+
+    bool show(XdgToplevelWindow *parent, const QPoint &relativePosition, const QSize &popupSize);
+
+    std::unique_ptr<KWayland::Client::Surface> m_surface;
+    std::unique_ptr<XdgPopup> m_popup;
+    Window *m_window = nullptr;
+};
 }
 
 }

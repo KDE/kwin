@@ -2558,6 +2558,23 @@ std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
     }
     return ret;
 }
+
+XdgPopupWindow::XdgPopupWindow()
+    : m_surface(createSurface())
+{
+}
+
+bool XdgPopupWindow::show(XdgToplevelWindow *parent, const QPoint &relativePosition, const QSize &popupSize)
+{
+    std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    positioner->set_size(popupSize.width(), popupSize.height());
+    positioner->set_anchor_rect(relativePosition.x(), relativePosition.y(), 1, 1);
+    positioner->set_anchor(Test::XdgPositioner::anchor_top_left);
+    positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
+    m_popup = Test::createXdgPopupSurface(m_surface.get(), parent->m_toplevel->xdgSurface(), positioner.get());
+    m_window = renderAndWaitForShown(m_surface.get(), popupSize, Qt::blue);
+    return m_window != nullptr;
+}
 }
 }
 

@@ -97,6 +97,7 @@ private Q_SLOTS:
     void testPopup();
     void testDecoCancelsPopup();
     void testWindowUnderCursorWhileButtonPressed();
+    void testPopupUnderCursorWhileButtonPressed();
     void testConfineToScreenGeometry_data();
     void testConfineToScreenGeometry();
     void testEdgeBarrier_data();
@@ -1417,57 +1418,70 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     // trigger a leave event if a button is pressed
     // see BUG: 372876
 
-    // first create a parent surface
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
     QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
     QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
 
-    input()->pointer()->warp(QPointF(800, 800));
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
-    QVERIFY(surface);
-    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
-    QVERIFY(shellSurface);
-    render(surface.get());
-    QVERIFY(windowAddedSpy.wait());
-    Window *window = workspace()->activeWindow();
-    QVERIFY(window);
+    Test::XdgToplevelWindow window1;
+    QVERIFY(window1.show());
 
-    // move cursor over window
-    QVERIFY(!window->frameGeometry().contains(QPoint(800, 800)));
-    input()->pointer()->warp(window->frameGeometry().center());
-    QVERIFY(enteredSpy.wait());
-    // click inside window
+    // move the cursor over the window
+    input()->pointer()->warp(window1.m_window->frameGeometry().center());
+    QVERIFY(enteredSpy.count() || enteredSpy.wait());
+
+    // click inside the window and keep the button pressed
     quint32 timestamp = 0;
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
 
-    // now create a second window as transient
-    std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
-    positioner->set_size(99, 49);
-    positioner->set_anchor_rect(0, 0, 1, 1);
-    positioner->set_anchor(Test::XdgPositioner::anchor_bottom_right);
-    positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
-    std::unique_ptr<KWayland::Client::Surface> popupSurface = Test::createSurface();
-    QVERIFY(popupSurface);
-    std::unique_ptr<Test::XdgPopup> popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
-    QVERIFY(popupShellSurface);
-    render(popupSurface.get(), QSize(99, 49));
-    QVERIFY(windowAddedSpy.wait());
-    auto popupWindow = windowAddedSpy.last().first().value<Window *>();
-    QVERIFY(popupWindow);
-    QVERIFY(popupWindow != window);
-    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
-    QVERIFY(popupWindow->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    // now create a second window (*not* a popup) and place it below the cursor
+    Test::XdgToplevelWindow window2;
+    QVERIFY(window2.show());
+    window2.m_window->move(window1.m_window->frameGeometry().topLeft());
     QVERIFY(Test::waylandSync());
     QCOMPARE(leftSpy.count(), 0);
 
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
-    // now that the button is no longer pressed we should get the leave event
+    // now that the button is no longer pressed, we should get the leave event
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(enteredSpy.count(), 2);
+}
+
+void PointerInputTest::testPopupUnderCursorWhileButtonPressed()
+{
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 100)));
+
+    // the window should get pointer focus
+    uint32_t time = 0;
+    Test::pointerMotion(window.m_window->frameGeometry().topLeft() + QPoint(10, 10), time++);
+    QVERIFY(enteredSpy.count() || enteredSpy.wait());
+    QCOMPARE(pointer->enteredSurface(), window.m_surface.get());
+
+    // press a button, and keep it pressed
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+
+    Test::XdgPopupWindow popup;
+    QVERIFY(popup.show(&window, QPoint(50, 50), QSize(50, 50)));
+
+    // the window should still have pointer focus
+    QCOMPARE(pointer->enteredSurface(), window.m_surface.get());
+
+    // moving the pointer over the popup should transfer focus to it
+    Test::pointerMotion(popup.m_window->frameGeometry().topLeft() + QPoint(10, 10), time++);
+    QVERIFY(leftSpy.wait());
+    QVERIFY(enteredSpy.count() == 2 || enteredSpy.wait());
+    QCOMPARE(pointer->enteredSurface(), popup.m_surface.get());
+
+    Test::pointerButtonReleased(BTN_LEFT, time++);
 }
 
 void PointerInputTest::testConfineToScreenGeometry_data()
