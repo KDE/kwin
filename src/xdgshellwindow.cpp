@@ -967,7 +967,7 @@ void XdgToplevelWindow::handleWindowClassChanged()
     if (shellSurface()->isConfigured()) {
         evaluateWindowRules();
     }
-    setDesktopFileName(applicationId);
+    setDesktopFileName(rules()->checkDesktopFile(applicationId));
 }
 
 void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPoint &surfacePos,
