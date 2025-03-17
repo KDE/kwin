@@ -361,8 +361,8 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     if (!mode) {
         return false;
     }
-    const bool bt2020 = props->wideColorGamut.value_or(m_state.wideColorGamut);
-    const bool hdr = props->highDynamicRange.value_or(m_state.highDynamicRange);
+    const bool bt2020 = props->wideColorGamut.value_or(m_state.wideColorGamut) && (capabilities() & Capability::WideColorGamut);
+    const bool hdr = props->highDynamicRange.value_or(m_state.highDynamicRange) && (capabilities() & Capability::HighDynamicRange);
     m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(mode));
     m_pipeline->setOverscan(props->overscan.value_or(m_pipeline->overscan()));
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
@@ -417,11 +417,11 @@ static std::pair<ColorDescription, QVector3D> applyNightLight(const ColorDescrip
 std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props, double brightness) const
 {
     const auto colorSource = props->colorProfileSource.value_or(colorProfileSource());
-    const bool hdr = props->highDynamicRange.value_or(m_state.highDynamicRange);
-    const bool wcg = props->wideColorGamut.value_or(m_state.wideColorGamut);
+    const bool effectiveHdr = props->highDynamicRange.value_or(m_state.highDynamicRange) && (capabilities() & Capability::HighDynamicRange);
+    const bool effectiveWcg = props->wideColorGamut.value_or(m_state.wideColorGamut) && (capabilities() & Capability::WideColorGamut);
     const double sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     const auto iccProfile = props->iccProfile.value_or(m_state.iccProfile);
-    if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
+    if (colorSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && iccProfile) {
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
         const auto sdrColor = Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(iccProfile->colorimetry(), sdrGamutWideness);
@@ -430,9 +430,6 @@ std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const s
         const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
         return applyNightLight(ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxBrightness), effectiveReferenceLuminance, minBrightness, maxBrightness, maxBrightness, iccProfile->colorimetry(), sdrColor), m_channelFactors);
     }
-    const bool supportsHdr = (capabilities() & Capability::HighDynamicRange) && (capabilities() & Capability::WideColorGamut);
-    const bool effectiveHdr = hdr && supportsHdr;
-    const bool effectiveWcg = wcg && supportsHdr;
     const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
 
     const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT2020) : (colorSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709));
@@ -568,8 +565,10 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 void DrmOutput::tryKmsColorOffloading()
 {
     constexpr TransferFunction::Type blendingSpace = TransferFunction::gamma22;
+    const bool hdr = m_state.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
+    const bool wcg = m_state.wideColorGamut && (capabilities() & Capability::WideColorGamut);
     // offloading color operations doesn't make sense when we have to apply the icc shader anyways
-    const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !m_state.highDynamicRange && !m_state.wideColorGamut;
+    const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !hdr && !wcg;
     const QVector3D channelFactors = adaptedChannelFactors();
     if (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy) {
         setScanoutColorDescription(colorDescription());
