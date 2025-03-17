@@ -68,7 +68,12 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
                 // -(relative colorimetric)-> XYZ D50 -(BToA1, also relative colorimetric)-> display white point
 
                 // First, transform from the input color to the display color space in absolute colorimetric mode
-                const QMatrix4x4 toLinearDisplay = linearizedInput.toOther(linearizedProfile, RenderingIntent::AbsoluteColorimetric);
+                QMatrix4x4 toLinearDisplay = linearizedInput.toOther(linearizedProfile, RenderingIntent::AbsoluteColorimetric);
+
+                // Compensate for one of the channels potentially going beyond 1.0
+                // applyNightLight in drm_output.cpp is supposed to apply this, but it gets the brightness wrong for this code path (fixed in 6.4)
+                const float brightness = 1.0 / std::max({toLinearDisplay(0, 0), toLinearDisplay(1, 1), toLinearDisplay(2, 2), 1.0f});
+                toLinearDisplay.scale(brightness, brightness, brightness);
 
                 // Now transform that display color space to XYZ D50 in relative colorimetric mode.
                 // the BToA1 tag goes from XYZ D50 to the native white point of the display,
@@ -147,6 +152,10 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
             }
         } else {
             toXYZD50 = linearizedInput.toOther(linearizedProfile, intent);
+            // Compensate for one of the channels potentially going beyond 1.0
+            // applyNightLight in drm_output.cpp is supposed to apply this, but it gets the brightness wrong for this code path (fixed in 6.4)
+            const float brightness = 1.0 / std::max({toXYZD50(0, 0), toXYZD50(1, 1), toXYZD50(2, 2), 1.0f});
+            toXYZD50.scale(brightness, brightness, brightness);
             const auto inverseEOTF = profile->inverseTransferFunction();
             const auto sample = [inverseEOTF, vcgt](size_t x) {
                 const float relativeX = x / double(lutSize - 1);
