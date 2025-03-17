@@ -1108,7 +1108,7 @@ public:
     void checkWorkspacePosition(QRectF oldGeometry = QRectF(), const VirtualDesktop *oldDesktop = nullptr);
     virtual xcb_timestamp_t userTime() const;
 
-    void keyPressEvent(uint key_code);
+    void keyPressEvent(QKeyCombination key_code);
 
     virtual void pointerEnterEvent(const QPointF &globalPos);
     virtual void pointerLeaveEvent();

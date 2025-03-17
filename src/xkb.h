@@ -131,7 +131,7 @@ public:
      *
      * Internally filters the results based on whether keyQt has the numlock modifier.
      */
-    static QList<xkb_keysym_t> keysymsFromQtKey(int keyQt);
+    static QList<xkb_keysym_t> keysymsFromQtKey(QKeyCombination keyQt);
 
 public Q_SLOTS:
     void reconfigure();

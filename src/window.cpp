@@ -2624,18 +2624,17 @@ void Window::resetQuickTilingMaximizationZones()
     }
 }
 
-void Window::keyPressEvent(uint key_code)
+void Window::keyPressEvent(QKeyCombination key_combination)
 {
     if (!isInteractiveMove() && !isInteractiveResize()) {
         return;
     }
-    bool is_control = key_code & Qt::CTRL;
-    bool is_alt = key_code & Qt::ALT;
-    key_code = key_code & ~Qt::KeyboardModifierMask;
+    bool is_control = key_combination.keyboardModifiers() & Qt::CTRL;
+    bool is_alt = key_combination.keyboardModifiers() & Qt::ALT;
     int delta = is_control ? 1 : is_alt ? 32
                                         : 8;
     QPointF pos = interactiveMoveResizeAnchor();
-    switch (key_code) {
+    switch (key_combination.key()) {
     case Qt::Key_Left:
         pos.rx() -= delta;
         break;
