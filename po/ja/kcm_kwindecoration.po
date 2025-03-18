@@ -1,5 +1,5 @@
 # Translation of kcmkwindecoration into Japanese.
-# SPDX-FileCopyrightText: 2023, 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # This file is distributed under the same license as the kdebase package.
 # Taiki Komoda <kom@kde.gr.jp>, 2002, 2010.
 # Toyohiro Asukai <toyohiro@ksmplus.com>, 2004.
@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-18 00:41+0000\n"
-"PO-Revision-Date: 2024-01-09 16:05+0900\n"
+"PO-Revision-Date: 2025-03-15 16:17+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -80,12 +80,10 @@ msgstr "他のウィンドウより上に表示"
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
 msgid "Spacer"
-msgstr ""
+msgstr "スペーサー"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "テーマのデフォルト (%1)"
@@ -199,7 +197,7 @@ msgstr "メニューボタンをダブルクリックしてウィンドウを閉
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr "メニューボタンを長押ししてメニューを表示する。"
+msgstr "メニューボタンを長押ししてメニューを表示。"
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
@@ -226,61 +224,51 @@ msgid "Get New…"
 msgstr "新規入手..."
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "テーマ %1 を編集"
+msgstr "テーマ %1 を編集..."
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
 msgstr "ウィンドウの枠なし"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
 msgstr "横の枠なし"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
 msgstr "小さいウィンドウの枠"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
 msgstr "普通のウィンドウの枠"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
 msgstr "大きいウィンドウの枠"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
 msgstr "より大きいウィンドウの枠"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
 msgstr "とても大きいウィンドウの枠"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
 msgstr "さらに大きいウィンドウの枠"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
 msgstr "特大のウィンドウの枠"
