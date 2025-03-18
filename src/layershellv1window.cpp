@@ -55,8 +55,8 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &LayerShellV1Window::destroyWindow);
 
-    connect(output, &Output::enabledChanged,
-            this, &LayerShellV1Window::handleOutputEnabledChanged);
+    connect(workspace(), &Workspace::outputRemoved,
+            this, &LayerShellV1Window::handleOutputRemoved);
 
     connect(shellSurface->surface(), &SurfaceInterface::sizeChanged,
             this, &LayerShellV1Window::handleSizeChanged);
@@ -333,9 +333,9 @@ void LayerShellV1Window::handleAcceptsFocusChanged()
     }
 }
 
-void LayerShellV1Window::handleOutputEnabledChanged()
+void LayerShellV1Window::handleOutputRemoved(Output *output)
 {
-    if (!m_desiredOutput->isEnabled()) {
+    if (output == m_desiredOutput) {
         closeWindow();
         destroyWindow();
     }
