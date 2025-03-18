@@ -61,7 +61,7 @@ static QString locateMainScript(const QString &pluginName)
 {
     const QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->findPackages(
         QStringLiteral("KWin/Script"),
-        KWIN_DATADIR + QStringLiteral("/scripts"),
+        QStringLiteral("kwin-wayland/scripts"),
         [&](const KPluginMetaData &metaData) {
         return metaData.pluginId() == pluginName;
     });

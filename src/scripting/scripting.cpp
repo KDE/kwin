@@ -709,7 +709,7 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
     QMap<QString, QString> pluginStates = KConfigGroup(_config, QStringLiteral("Plugins")).entryMap();
 
     const QStringList scriptFolders{
-        KWIN_DATADIR + QStringLiteral("/scripts/"),
+        QStringLiteral("kwin-wayland/scripts/"),
         QStringLiteral("kwin/scripts/"),
     };
 

@@ -158,7 +158,7 @@ static KWin::FPx2 fpx2FromScriptValue(const QJSValue &value)
 ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
 {
     const QString name = effect.pluginId();
-    QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + name + QLatin1String("/contents/code/main.js"));
+    QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin-wayland/effects/") + name + QLatin1String("/contents/code/main.js"));
     if (scriptFile.isEmpty()) {
         QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + name + QLatin1String("/contents/code/main.js"));
         if (scriptFile.isEmpty()) {
@@ -224,7 +224,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_scriptFile = pathToScript;
 
     // does the effect contain an KConfigXT file?
-    QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
+    QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin-wayland/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
     if (kconfigXTFile.isNull()) {
         QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
     }
@@ -800,7 +800,7 @@ uint ScriptedEffect::addFragmentShader(ShaderTrait traits, const QString &fragme
 
     QString fragment;
     if (!fragmentShaderFile.isEmpty()) {
-        fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + QLatin1String("/effects/") + m_effectName + QLatin1String("/contents/shaders/") + fragmentShaderFile);
+        fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin-wayland/effects/") + m_effectName + QLatin1String("/contents/shaders/") + fragmentShaderFile);
         if (fragment.isEmpty()) {
             fragment = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + m_effectName + QLatin1String("/contents/shaders/") + fragmentShaderFile);
         }

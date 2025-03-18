@@ -45,21 +45,21 @@ void WindowThumbnailItem::findImage()
     QString imagePath;
     switch (m_wId) {
     case Konqueror:
-        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + "/kcm_kwintabbox/falkon.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin-wayland/kcm_kwintabbox/falkon.png");
         break;
     case Systemsettings:
-        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + "/kcm_kwintabbox/systemsettings.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin-wayland/kcm_kwintabbox/systemsettings.png");
         break;
     case KMail:
-        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + "/kcm_kwintabbox/kmail.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin-wayland/kcm_kwintabbox/kmail.png");
         break;
     case Dolphin:
-        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + "/kcm_kwintabbox/dolphin.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin-wayland/kcm_kwintabbox/dolphin.png");
         break;
     case Desktop:
         imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "wallpapers/Next/contents/images/1280x800.png");
         if (imagePath.isNull()) {
-            imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, KWIN_DATADIR + "/kcm_kwintabbox/desktop.png");
+            imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin-wayland/kcm_kwintabbox/desktop.png");
         }
         break;
     default:

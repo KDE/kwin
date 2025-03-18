@@ -22,7 +22,7 @@ KWinScriptsData::KWinScriptsData(QObject *parent)
 
 QList<KPluginMetaData> KWinScriptsData::pluginMetaDataList() const
 {
-    return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), KWIN_DATADIR + QStringLiteral("/scripts/"))
+    return KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin-wayland/scripts/"))
         + KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/scripts/"));
 }
 

@@ -179,7 +179,7 @@ void KWinTabBoxConfig::initLayoutLists()
     }
 
     const QStringList packageRoots{
-        KWIN_DATADIR + QStringLiteral("/tabbox"),
+        QStringLiteral("kwin-wayland/tabbox"),
         QStringLiteral("kwin/tabbox"),
     };
     for (const QString &packageRoot : packageRoots) {
