@@ -29,8 +29,6 @@ public:
     virtual DrmOutputLayer *primaryLayer() const = 0;
     virtual DrmOutputLayer *cursorLayer() const = 0;
 
-    void updateEnabled(bool enabled);
-
 protected:
     friend class DrmGpu;
 

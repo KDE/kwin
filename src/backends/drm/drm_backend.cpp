@@ -278,7 +278,6 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
             m_recentlyUnpluggedDpmsOffOutputs.removeOne(id);
         });
     }
-    o->updateEnabled(false);
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);
 }

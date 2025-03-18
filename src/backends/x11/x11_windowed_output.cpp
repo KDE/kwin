@@ -353,13 +353,6 @@ bool X11WindowedOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds
     return true;
 }
 
-void X11WindowedOutput::updateEnabled(bool enabled)
-{
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
-}
-
 xcb_pixmap_t X11WindowedOutput::importDmaBufBuffer(const DmaBufAttributes *attributes)
 {
     uint8_t depth;

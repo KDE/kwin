@@ -24,13 +24,6 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
 {
     return m_renderLoop.get();
 }
-
-void DrmAbstractOutput::updateEnabled(bool enabled)
-{
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
-}
 }
 
 #include "moc_drm_abstract_output.cpp"

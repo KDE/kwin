@@ -83,7 +83,6 @@ public:
     void resize(const QSize &pixelSize);
     void setDpmsMode(DpmsMode mode) override;
     void updateDpmsMode(DpmsMode dpmsMode);
-    void updateEnabled(bool enabled);
 
     void present(const std::shared_ptr<OutputFrame> &frame);
     void setPrimaryBuffer(wl_buffer *buffer);

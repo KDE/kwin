@@ -32,7 +32,6 @@ public:
     void present(const std::shared_ptr<OutputFrame> &frame);
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes);
-    void updateEnabled(bool enabled);
 
     void applyChanges(const OutputConfiguration &config) override;
 
