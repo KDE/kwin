@@ -488,7 +488,6 @@ void WaylandBackend::destroyOutputs()
 {
     while (!m_outputs.isEmpty()) {
         WaylandOutput *output = m_outputs.takeLast();
-        output->updateEnabled(false);
         Q_EMIT outputRemoved(output);
         delete output;
     }
@@ -570,7 +569,6 @@ void WaylandBackend::removeVirtualOutput(Output *output)
 {
     WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {
-        waylandOutput->updateEnabled(false);
         Q_EMIT outputRemoved(waylandOutput);
         Q_EMIT outputsQueried();
         waylandOutput->unref();

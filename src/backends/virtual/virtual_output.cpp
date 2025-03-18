@@ -102,13 +102,6 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
-void VirtualOutput::updateEnabled(bool enabled)
-{
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
-}
-
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     if (m_frame) {

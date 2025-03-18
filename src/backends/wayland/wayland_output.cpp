@@ -393,13 +393,6 @@ void WaylandOutput::updateDpmsMode(DpmsMode dpmsMode)
     setState(next);
 }
 
-void WaylandOutput::updateEnabled(bool enabled)
-{
-    State next = m_state;
-    next.enabled = enabled;
-    setState(next);
-}
-
 void WaylandOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
 {
     if (!m_ready) {

@@ -521,7 +521,6 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                 auto removedOutput = *it;
                 it = m_outputs.erase(it);
 
-                removedOutput->updateEnabled(false);
                 Q_EMIT outputRemoved(removedOutput);
                 removedOutput->unref();
                 Q_EMIT outputsQueried();
@@ -783,7 +782,6 @@ void X11WindowedBackend::destroyOutputs()
 {
     while (!m_outputs.isEmpty()) {
         auto output = m_outputs.takeLast();
-        output->updateEnabled(false);
         Q_EMIT outputRemoved(output);
         delete output;
     }

@@ -109,8 +109,6 @@ public:
     void addExposedArea(const QRect &rect);
     void clearExposedArea();
 
-    void updateEnabled(bool enabled);
-
     void handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event);
     void handlePresentIdleNotify(xcb_present_idle_notify_event_t *event);
     void framePending(const std::shared_ptr<OutputFrame> &frame);

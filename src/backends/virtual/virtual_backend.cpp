@@ -125,7 +125,6 @@ void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
     }
 
     for (VirtualOutput *output : removed) {
-        output->updateEnabled(false);
         m_outputs.removeOne(output);
         Q_EMIT outputRemoved(output);
         output->unref();
