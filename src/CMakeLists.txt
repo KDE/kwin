@@ -397,7 +397,7 @@ endif()
 target_compile_definitions(kwin_wayland PRIVATE
     -DTRANSLATION_DOMAIN=\"kwin\"
 )
-kcoreaddons_target_static_plugins(kwin_wayland NAMESPACE "${KWIN_PLUGINDIR}/effects/plugins")
+kcoreaddons_target_static_plugins(kwin_wayland NAMESPACE "kwin/effects/plugins")
 
 install(TARGETS kwin_wayland ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if (HAVE_LIBCAP)

@@ -1,4 +1,4 @@
-kcoreaddons_add_plugin(screencast INSTALL_NAMESPACE "${KWIN_PLUGINDIR}/plugins")
+kcoreaddons_add_plugin(screencast INSTALL_NAMESPACE "kwin/plugins")
 target_sources(screencast PRIVATE
     main.cpp
     outputscreencastsource.cpp

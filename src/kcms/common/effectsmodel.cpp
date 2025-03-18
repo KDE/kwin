@@ -323,7 +323,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 {
-    const auto pluginEffects = KPluginMetaData::findPlugins(KWIN_PLUGINDIR + QStringLiteral("/effects/plugins"));
+    const auto pluginEffects = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/plugins"));
     for (const KPluginMetaData &pluginEffect : pluginEffects) {
         if (!pluginEffect.isValid()) {
             continue;
@@ -597,7 +597,7 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     Q_ASSERT(!effect.configModule.isEmpty());
 
     KCMultiDialog *dialog = new KCMultiDialog();
-    dialog->addModule(KPluginMetaData(KWIN_PLUGINDIR + QStringLiteral("/effects/configs/") + effect.configModule), effect.configArgs);
+    dialog->addModule(KPluginMetaData(QStringLiteral("kwin/effects/configs/") + effect.configModule), effect.configArgs);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->winId();
     dialog->windowHandle()->setTransientParent(transientParent);
