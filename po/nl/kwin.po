@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-15 00:43+0000\n"
+"POT-Creation-Date: 2025-03-18 00:43+0000\n"
 "PO-Revision-Date: 2025-03-11 17:33+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -83,7 +83,7 @@ msgstr "Rechter Ctrl indrukken om invoer vast te pakken"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor.cpp:443
+#: compositor.cpp:438
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Bureaubladeffecten zijn opnieuw gestart vanwege een grafische reset"
@@ -4313,7 +4313,7 @@ msgstr "De geleverde uitvoervolgorde is ongeldig"
 msgid "The driver rejected the output configuration"
 msgstr "Het apparaatstuurprogramma verwierp de uitvoerconfiguratie"
 
-#: window.cpp:3235
+#: window.cpp:3229
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
