@@ -1,5 +1,5 @@
 # Translation of kcmkwindecoration into Japanese.
-# SPDX-FileCopyrightText: 2023, 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # This file is distributed under the same license as the kdebase package.
 # Taiki Komoda <kom@kde.gr.jp>, 2002, 2010.
 # Toyohiro Asukai <toyohiro@ksmplus.com>, 2004.
@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2024-01-09 16:05+0900\n"
+"PO-Revision-Date: 2025-03-15 16:17+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -207,7 +207,7 @@ msgstr "ボタンをここからタイトルバーへドラッグ"
 #: package/contents/ui/main.qml:18
 #, kde-format
 msgid "This module lets you configure the window decorations."
-msgstr "このモジュールでウィンドウ装飾を設定できます。"
+msgstr "このモジュールでウィンドウの装飾を設定できます。"
 
 #: package/contents/ui/main.qml:52
 #, kde-format
@@ -231,7 +231,7 @@ msgstr "ウィンドウの枠のサイズ:"
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
-msgstr "新しいウィンドウの装飾を取得..."
+msgstr "新しいウィンドウの装飾を入手..."
 
 #: package/contents/ui/main.qml:139
 #, kde-format
@@ -243,7 +243,7 @@ msgstr "メニューボタンをダブルクリックしてウィンドウを閉
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr "メニューボタンを長押ししてメニューを表示する。"
+msgstr "メニューボタンを長押ししてメニューを表示。"
 
 #: package/contents/ui/main.qml:163
 #, kde-format
