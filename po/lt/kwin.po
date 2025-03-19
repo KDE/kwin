@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-18 00:43+0000\n"
+"POT-Creation-Date: 2025-03-19 00:43+0000\n"
 "PO-Revision-Date: 2024-10-05 22:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2401,7 +2401,7 @@ msgstr "Nepavyko rasti lango id %1"
 msgid "Could not find output"
 msgstr "Nepavyko rasti išvesties"
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr "Neteisinga sritis"
@@ -4252,7 +4252,7 @@ msgstr "Nutraukti lango darbą"
 msgid "Activate Window (%1)"
 msgstr "Aktyvuoti langą (%1)"
 
-#: utils/edid.cpp:319
+#: utils/edid.cpp:326
 #, kde-format
 msgid "unknown"
 msgstr "nežinoma"

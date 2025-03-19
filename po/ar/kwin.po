@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-18 00:43+0000\n"
+"POT-Creation-Date: 2025-03-19 00:43+0000\n"
 "PO-Revision-Date: 2025-03-13 11:36+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -2376,7 +2376,7 @@ msgstr "لا يمكن العثور النافذة ذات المعرف  %1"
 msgid "Could not find output"
 msgstr "تعذر العثور على الخرج"
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr "منطقة غير صالحة"
@@ -4199,7 +4199,7 @@ msgstr "اقتل النّافذة"
 msgid "Activate Window (%1)"
 msgstr "فعّل النّافذة (%1)"
 
-#: utils/edid.cpp:319
+#: utils/edid.cpp:326
 #, kde-format
 msgid "unknown"
 msgstr "مجهول"

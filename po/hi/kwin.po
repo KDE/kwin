@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-18 00:43+0000\n"
+"POT-Creation-Date: 2025-03-19 00:43+0000\n"
 "PO-Revision-Date: 2024-12-15 19:31+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -2452,7 +2452,7 @@ msgstr ""
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4398,7 +4398,7 @@ msgstr "विंडो ख़त्म करें"
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: utils/edid.cpp:319
+#: utils/edid.cpp:326
 #, kde-format
 msgid "unknown"
 msgstr ""

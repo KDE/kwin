@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-18 00:43+0000\n"
+"POT-Creation-Date: 2025-03-19 00:43+0000\n"
 "PO-Revision-Date: 2025-01-04 15:58+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -2386,7 +2386,7 @@ msgstr "Neizdevās atrast loga id %1"
 msgid "Could not find output"
 msgstr "Neizdevās atrast izvadi"
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr "Nederīgs reģions"
@@ -4223,7 +4223,7 @@ msgstr "Nobeigt logu"
 msgid "Activate Window (%1)"
 msgstr "Aktivizēt logu (%1)"
 
-#: utils/edid.cpp:319
+#: utils/edid.cpp:326
 #, kde-format
 msgid "unknown"
 msgstr "nezināms"

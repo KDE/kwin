@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-18 00:43+0000\n"
+"POT-Creation-Date: 2025-03-19 00:43+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2429,7 +2429,7 @@ msgstr ""
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4357,7 +4357,7 @@ msgstr "សម្លាប់​បង្អួច"
 msgid "Activate Window (%1)"
 msgstr "ធ្វើ​ឲ្យ​បង្អួច​សកម្ម (%1)"
 
-#: utils/edid.cpp:319
+#: utils/edid.cpp:326
 #, kde-format
 msgid "unknown"
 msgstr ""
