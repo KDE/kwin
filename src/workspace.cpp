@@ -1611,12 +1611,14 @@ void Workspace::disableGlobalShortcutsForClient(bool disable)
     if (m_globalShortcutsDisabledForWindow == disable) {
         return;
     }
+#ifdef KWIN_BUILD_GLOBALSHORTCUTS
     QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kglobalaccel"),
                                                           QStringLiteral("/kglobalaccel"),
                                                           QStringLiteral("org.kde.KGlobalAccel"),
                                                           QStringLiteral("blockGlobalShortcuts"));
     message.setArguments(QList<QVariant>() << disable);
     QDBusConnection::sessionBus().asyncCall(message);
+#endif
 
     m_globalShortcutsDisabledForWindow = disable;
 }
