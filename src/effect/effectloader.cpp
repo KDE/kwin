@@ -168,7 +168,7 @@ bool ScriptedEffectLoader::loadDeclarativeEffect(const KPluginMetaData &metadata
     const QString name = metadata.pluginId();
     QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin-wayland/effects/") + name + QLatin1String("/contents/ui/main.qml"));
     if (scriptFile.isNull()) {
-        QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + name + QLatin1String("/contents/ui/main.qml"));
+        scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/effects/") + name + QLatin1String("/contents/ui/main.qml"));
         if (scriptFile.isNull()) {
             qCWarning(KWIN_CORE) << "Could not locate the effect script";
             return false;
