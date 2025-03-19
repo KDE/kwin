@@ -466,7 +466,6 @@ void WaylandBackend::createOutputs()
         WaylandOutput *output = createOutput(QStringLiteral("WL-%1").arg(i), pixelSize, m_options.outputScale);
         m_outputs << output;
         Q_EMIT outputAdded(output);
-        output->updateEnabled(true);
     }
 
     Q_EMIT outputsQueried();

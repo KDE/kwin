@@ -366,7 +366,6 @@ void X11WindowedBackend::createOutputs()
 
         m_outputs << output;
         Q_EMIT outputAdded(output);
-        output->updateEnabled(true);
     }
 
     updateWindowTitle();
