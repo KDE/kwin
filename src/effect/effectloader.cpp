@@ -305,7 +305,7 @@ EffectPluginFactory *PluginEffectLoader::factory(const KPluginMetaData &info) co
     } else {
         QPluginLoader loader(info.fileName());
         if (loader.metaData().value("IID").toString() != QLatin1String(EffectPluginFactory_iid)) {
-            qCDebug(KWIN_CORE) << info.pluginId() << " has not matching plugin version, expected " << PluginFactory_iid << "got "
+            qCDebug(KWIN_CORE) << info.pluginId() << " has not matching plugin version, expected " << EffectPluginFactory_iid << "got "
                                << loader.metaData().value("IID");
             return nullptr;
         }
