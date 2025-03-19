@@ -26,8 +26,8 @@ RegionScreenCastScrapper::RegionScreenCastScrapper(RegionScreenCastSource *sourc
     : m_source(source)
     , m_output(output)
 {
-    connect(output, &Output::enabledChanged, this, [this]() {
-        if (!m_output->isEnabled()) {
+    connect(workspace(), &Workspace::outputRemoved, this, [this](Output *output) {
+        if (m_output == output) {
             m_source->close();
         }
     });
