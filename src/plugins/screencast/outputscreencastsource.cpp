@@ -14,6 +14,7 @@
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
+#include "workspace.h"
 
 #include <drm_fourcc.h>
 
@@ -24,9 +25,8 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     : ScreenCastSource(parent)
     , m_output(output)
 {
-    connect(m_output, &QObject::destroyed, this, &ScreenCastSource::closed);
-    connect(m_output, &Output::enabledChanged, this, [this] {
-        if (!m_output->isEnabled()) {
+    connect(workspace(), &Workspace::outputRemoved, this, [this](Output *output) {
+        if (m_output == output) {
             Q_EMIT closed();
         }
     });
