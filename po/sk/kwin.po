@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-07 02:40+0000\n"
+"POT-Creation-Date: 2025-03-19 02:33+0000\n"
 "PO-Revision-Date: 2025-02-23 13:55+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -2577,7 +2577,7 @@ msgstr "Nepodarilo sa nájsť id okna %1"
 msgid "Could not find output"
 msgstr "Nepodarilo sa nájsť výstup"
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr "Neplatná oblasť"
@@ -4408,7 +4408,7 @@ msgstr "Zabiť okno"
 msgid "Activate Window (%1)"
 msgstr "Aktivovať okno (%1)"
 
-#: utils/edid.cpp:335
+#: utils/edid.cpp:359
 #, kde-format
 msgid "unknown"
 msgstr "neznáme"

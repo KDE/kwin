@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-07 02:40+0000\n"
+"POT-Creation-Date: 2025-03-19 02:33+0000\n"
 "PO-Revision-Date: 2025-01-28 21:27+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2560,7 +2560,7 @@ msgstr "A(z) %1 ablakazonosító nem található"
 msgid "Could not find output"
 msgstr "A kimenet nem található"
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr "Érvénytelen terület"
@@ -4381,7 +4381,7 @@ msgstr "Ablak kilövése"
 msgid "Activate Window (%1)"
 msgstr "Ablak aktiválása (%1)"
 
-#: utils/edid.cpp:335
+#: utils/edid.cpp:359
 #, kde-format
 msgid "unknown"
 msgstr "ismeretlen"

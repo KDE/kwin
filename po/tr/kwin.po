@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-07 02:40+0000\n"
+"POT-Creation-Date: 2025-03-19 02:33+0000\n"
 "PO-Revision-Date: 2025-01-26 13:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -2558,7 +2558,7 @@ msgstr "%1 pencere kimliği bulunamadı"
 msgid "Could not find output"
 msgstr "Çıktı bulunamadı"
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr "Geçersiz bölge"
@@ -4382,7 +4382,7 @@ msgstr "Pencereyi Öldür"
 msgid "Activate Window (%1)"
 msgstr "Pencereyi Etkinleştir (%1)"
 
-#: utils/edid.cpp:335
+#: utils/edid.cpp:359
 #, kde-format
 msgid "unknown"
 msgstr "bilinmiyor"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-07 02:40+0000\n"
+"POT-Creation-Date: 2025-03-19 02:33+0000\n"
 "PO-Revision-Date: 2024-12-26 20:32+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -2581,7 +2581,7 @@ msgstr "No se ha encontrado el identificador de ventana %1"
 msgid "Could not find output"
 msgstr "No se ha encontrado la salida"
 
-#: plugins/screencast/screencastmanager.cpp:101
+#: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
 msgid "Invalid region"
 msgstr "Región no válida"
@@ -4413,7 +4413,7 @@ msgstr "Matar la ventana"
 msgid "Activate Window (%1)"
 msgstr "Activar ventana (%1)"
 
-#: utils/edid.cpp:335
+#: utils/edid.cpp:359
 #, kde-format
 msgid "unknown"
 msgstr "desconocida"
