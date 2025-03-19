@@ -106,7 +106,6 @@ VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
     output->init(info.geometry.topLeft(), info.geometry.size() * info.scale, info.scale, info.modes);
     m_outputs.append(output);
     Q_EMIT outputAdded(output);
-    output->updateEnabled(true);
     return output;
 }
 
