@@ -651,8 +651,6 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
             checkActivities();
         } else if (e->atom == atoms->kde_color_sheme) {
             updateColorScheme();
-        } else if (e->atom == atoms->kde_screen_edge_show) {
-            updateShowOnScreenEdge();
         } else if (e->atom == atoms->kde_net_wm_appmenu_service_name) {
             checkApplicationMenuServiceName();
         } else if (e->atom == atoms->kde_net_wm_appmenu_object_path) {

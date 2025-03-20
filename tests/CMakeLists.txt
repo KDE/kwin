@@ -3,11 +3,6 @@ if(KWIN_BUILD_X11)
     add_executable(normalhintsbasesizetest ${normalhintsbasesizetest_SRCS})
     target_link_libraries(normalhintsbasesizetest XCB::XCB XCB::ICCCM KF6::WindowSystem)
 
-    # next target
-    set(screenedgeshowtest_SRCS screenedgeshowtest.cpp)
-    add_executable(screenedgeshowtest ${screenedgeshowtest_SRCS})
-    target_link_libraries(screenedgeshowtest Qt::GuiPrivate Qt::Widgets KF6::ConfigCore KF6::WindowSystem Plasma::KWaylandClient ${XCB_XCB_LIBRARY})
-
     add_executable(x11shadowreader x11shadowreader.cpp)
     target_link_libraries(x11shadowreader XCB::XCB Qt::GuiPrivate Qt::Widgets KF6::ConfigCore KF6::WindowSystem)
 

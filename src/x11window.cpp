@@ -25,7 +25,6 @@
 #include "netinfo.h"
 #include "placement.h"
 #include "scene/windowitem.h"
-#include "screenedge.h"
 #include "shadow.h"
 #include "virtualdesktops.h"
 #include "wayland/surface.h"
@@ -447,7 +446,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
-    auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
     auto colorSchemeCookie = fetchPreferredColorScheme();
     auto transientCookie = fetchTransient();
     auto activitiesCookie = fetchActivities();
@@ -994,8 +992,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     applyWindowRules(); // Just in case
     workspace()->rulebook()->discardUsed(this, false); // Remove ApplyNow rules
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
-
-    readShowOnScreenEdge(showOnScreenEdgeCookie);
 
     setupWindowManagementInterface();
 
@@ -2490,68 +2486,6 @@ pid_t X11Window::pid() const
 QString X11Window::windowRole() const
 {
     return QString::fromLatin1(info->windowRole());
-}
-
-Xcb::Property X11Window::fetchShowOnScreenEdge() const
-{
-    return Xcb::Property(false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
-}
-
-void X11Window::readShowOnScreenEdge(Xcb::Property &property)
-{
-    const uint32_t value = property.value<uint32_t>(ElectricNone);
-    ElectricBorder border = ElectricNone;
-    switch (value & 0xFF) {
-    case 0:
-        border = ElectricTop;
-        break;
-    case 1:
-        border = ElectricRight;
-        break;
-    case 2:
-        border = ElectricBottom;
-        break;
-    case 3:
-        border = ElectricLeft;
-        break;
-    }
-    if (border != ElectricNone) {
-        disconnect(m_edgeGeometryTrackingConnection);
-
-        auto reserveScreenEdge = [this, border]() {
-            if (workspace()->screenEdges()->reserve(this, border)) {
-                setHidden(true);
-            } else {
-                setHidden(false);
-            }
-        };
-
-        reserveScreenEdge();
-        m_edgeGeometryTrackingConnection = connect(this, &X11Window::frameGeometryChanged, this, reserveScreenEdge);
-    } else if (!property.isNull() && property->type != XCB_ATOM_NONE) {
-        // property value is incorrect, delete the property
-        // so that the client knows that it is not hidden
-        xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
-    } else {
-        // restore
-        disconnect(m_edgeGeometryTrackingConnection);
-
-        setHidden(false);
-
-        workspace()->screenEdges()->reserve(this, ElectricNone);
-    }
-}
-
-void X11Window::updateShowOnScreenEdge()
-{
-    Xcb::Property property = fetchShowOnScreenEdge();
-    readShowOnScreenEdge(property);
-}
-
-void X11Window::showOnScreenEdge()
-{
-    setHidden(false);
-    xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
 }
 
 bool X11Window::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const

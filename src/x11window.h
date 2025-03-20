@@ -229,12 +229,6 @@ public:
 
     void cancelFocusOutTimer();
 
-    /**
-     * Restores the Client after it had been hidden due to show on screen edge functionality.
-     * In addition the property gets deleted so that the Client knows that it is visible again.
-     */
-    void showOnScreenEdge() override;
-
     Xcb::StringProperty fetchApplicationMenuServiceName() const;
     void readApplicationMenuServiceName(Xcb::StringProperty &property);
     void checkApplicationMenuServiceName();
@@ -367,14 +361,6 @@ private:
                                              bool session) const;
     xcb_timestamp_t readUserCreationTime() const;
     void startupIdChanged();
-
-    Xcb::Property fetchShowOnScreenEdge() const;
-    void readShowOnScreenEdge(Xcb::Property &property);
-    /**
-     * Reads the property and creates/destroys the screen edge if required
-     * and shows/hides the client.
-     */
-    void updateShowOnScreenEdge();
 
     xcb_res_query_client_ids_cookie_t fetchPid() const;
     void readPid(xcb_res_query_client_ids_cookie_t cookie);
