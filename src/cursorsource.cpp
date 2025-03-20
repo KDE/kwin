@@ -135,6 +135,8 @@ void SurfaceCursorSource::frame(std::chrono::milliseconds timestamp)
     if (m_surface) {
         m_surface->traverseTree([&timestamp](SurfaceInterface *surface) {
             surface->frameRendered(timestamp.count());
+            // FIXME also handle presentation feedback!
+            surface->clearFifoBarrier();
         });
     }
 }

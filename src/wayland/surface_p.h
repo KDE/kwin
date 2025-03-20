@@ -31,6 +31,8 @@ class ColorSurfaceV1;
 class ColorFeedbackSurfaceV1;
 class LinuxDrmSyncObjSurfaceV1;
 class AlphaModifierSurfaceV1;
+class FifoV1Surface;
+class FifoBarrier;
 
 struct SurfaceState
 {
@@ -85,6 +87,8 @@ struct SurfaceState
     std::shared_ptr<SyncReleasePoint> releasePoint;
     double alphaMultiplier = 1;
     YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity;
+    bool fifoBarrier = false;
+    bool hasFifoWaitCondition = false;
 
     struct
     {
@@ -186,6 +190,7 @@ public:
     QList<ColorFeedbackSurfaceV1 *> colorFeedbackSurfaces;
     LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
+    FifoV1Surface *fifoSurface = nullptr;
 
     struct
     {
@@ -194,6 +199,8 @@ public:
     } subsurface;
 
     std::vector<std::unique_ptr<PresentationTimeFeedback>> pendingPresentationFeedbacks;
+
+    bool m_tearingDown = false;
 
 protected:
     void surface_destroy_resource(Resource *resource) override;

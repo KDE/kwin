@@ -110,9 +110,10 @@ public:
      */
     void commit();
 
+    bool tryApply();
+
 private:
     void apply();
-    bool tryApply();
 
     std::vector<TransactionEntry> m_entries;
     int m_locks = 0;

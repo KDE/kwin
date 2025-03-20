@@ -25,6 +25,7 @@
 #include "subcompositor.h"
 #include "surface_p.h"
 #include "transaction.h"
+#include "transaction_p.h"
 #include "utils/resource.h"
 
 #include <algorithm>
@@ -389,6 +390,9 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 
     Transaction *transaction;
     if (sync) {
+        // if the surface is in effectively synchronized mode at commit time,
+        // the fifo wait condition must be ignored
+        pending->hasFifoWaitCondition = false;
         if (!subsurface.transaction) {
             subsurface.transaction = std::make_unique<Transaction>();
         }
@@ -467,6 +471,9 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 
 SurfaceInterface::~SurfaceInterface()
 {
+    // ensure that we won't wait on pending transactions because of fifo
+    d->m_tearingDown = true;
+    clearFifoBarrier();
 }
 
 SurfaceRole *SurfaceInterface::role() const
@@ -635,6 +642,8 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->yuvCoefficients = yuvCoefficients;
         target->yuvCoefficientsIsSet = true;
     }
+    target->fifoBarrier = fifoBarrier;
+    target->hasFifoWaitCondition = hasFifoWaitCondition;
     target->presentationFeedback = std::move(presentationFeedback);
 
     *this = SurfaceState{};
@@ -1262,6 +1271,21 @@ std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
 double SurfaceInterface::alphaMultiplier() const
 {
     return d->current->alphaMultiplier;
+}
+
+void SurfaceInterface::clearFifoBarrier()
+{
+    if (d->current->fifoBarrier) {
+        d->current->fifoBarrier = false;
+        if (d->firstTransaction) {
+            d->firstTransaction->tryApply();
+        }
+    }
+}
+
+bool SurfaceInterface::hasFifoBarrier() const
+{
+    return d->current->fifoBarrier && !d->m_tearingDown;
 }
 
 } // namespace KWin

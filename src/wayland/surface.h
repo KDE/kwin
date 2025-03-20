@@ -358,6 +358,14 @@ public:
      */
     SurfaceInterface *mainSurface();
 
+    /**
+     * Should be called immediately after compositing a non-tearing frame
+     * but always at a minimum rate that guarantees forward progress for the application
+     * (for example 30Hz)
+     */
+    void clearFifoBarrier();
+    bool hasFifoBarrier() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.

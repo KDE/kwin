@@ -121,7 +121,7 @@ bool Transaction::isReady() const
     }
 
     return std::none_of(m_entries.cbegin(), m_entries.cend(), [](const TransactionEntry &entry) {
-        return entry.previousTransaction;
+        return entry.previousTransaction || (entry.surface && entry.state->hasFifoWaitCondition && entry.surface->hasFifoBarrier());
     });
 }
 

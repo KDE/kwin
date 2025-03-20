@@ -8,6 +8,7 @@
 
 #include "scene/surfaceitem.h"
 
+#include <QTimer>
 #include <unordered_map>
 
 namespace KWin
@@ -52,6 +53,8 @@ private Q_SLOTS:
     void handleReleasePointChanged();
     void handleAlphaMultiplierChanged();
 
+    void handleFifoFallback();
+
 private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(SubSurfaceInterface *s);
     void handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp) override;
@@ -64,6 +67,7 @@ private:
     };
     std::optional<ScanoutFeedback> m_scanoutFeedback;
     std::unordered_map<SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
+    QTimer m_fifoFallbackTimer;
 };
 
 #if KWIN_BUILD_X11
