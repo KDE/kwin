@@ -465,7 +465,7 @@ Xkb::Xkb(bool followLocale1)
 {
     qRegisterMetaType<KWin::LEDs>();
     if (!m_context) {
-        qCDebug(KWIN_XKB) << "Could not create xkb context";
+        qCWarning(KWIN_XKB) << "Could not create xkb context";
     } else {
         xkb_context_set_log_level(m_context, XKB_LOG_LEVEL_DEBUG);
         xkb_context_set_log_fn(m_context, &xkbLogHandler);
@@ -534,13 +534,13 @@ void Xkb::reconfigure()
         }
     }
     if (!keymap) {
-        qCDebug(KWIN_XKB) << "Could not create xkb keymap from configuration";
+        qCWarning(KWIN_XKB) << "Could not create xkb keymap from configuration";
         keymap = loadDefaultKeymap();
     }
     if (keymap) {
         updateKeymap(keymap);
     } else {
-        qCDebug(KWIN_XKB) << "Could not create default xkb keymap";
+        qCWarning(KWIN_XKB) << "Could not create default xkb keymap";
     }
 }
 
@@ -642,7 +642,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     Q_ASSERT(keymap);
     xkb_state *state = xkb_state_new(keymap);
     if (!state) {
-        qCDebug(KWIN_XKB) << "Could not create XKB state";
+        qCWarning(KWIN_XKB) << "Could not create XKB state";
         xkb_keymap_unref(keymap);
         return;
     }
