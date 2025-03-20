@@ -998,8 +998,8 @@ struct OutputInfo
     std::optional<QString> connectorName;
     std::optional<QByteArray> mstPath;
 };
-void setOutputConfig(const QList<QRect> &geometries);
-void setOutputConfig(const QList<OutputInfo> &infos);
+void setOutputConfig(const QList<QRect> &geometries, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup = nullptr);
+void setOutputConfig(const QList<OutputInfo> &infos, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup = nullptr);
 }
 
 }

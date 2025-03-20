@@ -10,6 +10,7 @@
 
 #include "backends/virtual/virtual_backend.h"
 #include "compositor.h"
+#include "core/outputconfiguration.h"
 #include "core/session.h"
 #include "effect/effecthandler.h"
 #include "input.h"
@@ -273,18 +274,18 @@ void Test::FractionalScaleV1::wp_fractional_scale_v1_preferred_scale(uint32_t sc
     Q_EMIT preferredScaleChanged();
 }
 
-void Test::setOutputConfig(const QList<QRect> &geometries)
+void Test::setOutputConfig(const QList<QRect> &geometries, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup)
 {
-    QList<VirtualBackend::OutputInfo> converted;
+    QList<OutputInfo> converted;
     std::transform(geometries.begin(), geometries.end(), std::back_inserter(converted), [](const auto &geometry) {
-        return VirtualBackend::OutputInfo{
+        return OutputInfo{
             .geometry = geometry,
         };
     });
-    static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
+    setOutputConfig(converted, setup);
 }
 
-void Test::setOutputConfig(const QList<OutputInfo> &infos)
+void Test::setOutputConfig(const QList<OutputInfo> &infos, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup)
 {
     QList<VirtualBackend::OutputInfo> converted;
     std::transform(infos.begin(), infos.end(), std::back_inserter(converted), [](const auto &info) {
@@ -302,6 +303,12 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
         };
     });
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
+
+    if (setup) {
+        OutputConfiguration configuration;
+        setup(workspace()->outputs(), configuration);
+        workspace()->applyOutputConfiguration(configuration);
+    }
 }
 }
 
