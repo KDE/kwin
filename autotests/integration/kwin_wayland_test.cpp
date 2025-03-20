@@ -285,6 +285,17 @@ void Test::setOutputConfig(const QList<QRect> &geometries, std::function<void(co
     setOutputConfig(converted, setup);
 }
 
+void Test::setOutputConfig(const QList<QSize> &sizes, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup)
+{
+    QList<OutputInfo> converted;
+    std::transform(sizes.begin(), sizes.end(), std::back_inserter(converted), [](const auto &size) {
+        return OutputInfo{
+            .modes = {{size, 60000, OutputMode::Flag::Preferred}},
+        };
+    });
+    setOutputConfig(converted, setup);
+}
+
 void Test::setOutputConfig(const QList<OutputInfo> &infos, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup)
 {
     QList<VirtualBackend::OutputInfo> converted;

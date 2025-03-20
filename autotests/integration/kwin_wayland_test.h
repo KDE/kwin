@@ -999,6 +999,7 @@ struct OutputInfo
     std::optional<QByteArray> mstPath;
 };
 void setOutputConfig(const QList<QRect> &geometries, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup = nullptr);
+void setOutputConfig(const QList<QSize> &sizes, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup = nullptr);
 void setOutputConfig(const QList<OutputInfo> &infos, std::function<void(const QList<Output *> &outputs, OutputConfiguration &configuration)> setup = nullptr);
 }
 
