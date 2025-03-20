@@ -3696,9 +3696,21 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(quickTileGeometryRestore());
         } else {
+            // If the window is asked to be tiled in a screen corner, don't combine the new mode with the old one.
+            QuickTileMode combined;
+            switch (mode) {
+            case QuickTileMode(QuickTileFlag::Left):
+            case QuickTileMode(QuickTileFlag::Top):
+            case QuickTileMode(QuickTileFlag::Right):
+            case QuickTileMode(QuickTileFlag::Bottom):
+                combined = combineQuickTileMode(mode, oldMode);
+                break;
+            default:
+                combined = mode;
+            }
+
             // If trying to tile to the side that the window is already tiled to move the window to the next
             // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
-            QuickTileMode combined = combineQuickTileMode(mode, oldMode);
             if (combined == oldMode) {
                 Output *currentOutput = moveResizeOutput();
                 Output *nextOutput = currentOutput;
