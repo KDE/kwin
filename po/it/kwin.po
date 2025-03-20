@@ -1,5 +1,5 @@
 # translation of kwin.po to Italian
-# SPDX-FileCopyrightText: 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Vincenzo Reale <smart2128vr@gmail.com>
+# SPDX-FileCopyrightText: 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Vincenzo Reale <smart2128vr@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2003, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011, 2012.
@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-19 00:43+0000\n"
-"PO-Revision-Date: 2024-12-25 17:41+0100\n"
+"POT-Creation-Date: 2025-03-20 00:43+0000\n"
+"PO-Revision-Date: 2025-03-11 16:38+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2938,15 +2938,14 @@ msgid "Move Down"
 msgstr "Sposta in basso"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Tasti modificatori per disegnare le frecce:"
+msgstr "Tasti modificatori del gesto di scorrimento:"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "Scorri mentre tasti modificatori sono premuti per ingrandire"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -4332,7 +4331,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Non risponde)"
 
-#: workspace.cpp:1631
+#: workspace.cpp:1633
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
