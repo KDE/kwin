@@ -452,11 +452,6 @@ void Workspace::updateXwaylandScale()
 
 void Workspace::updateOutputConfiguration()
 {
-    // There's conflict between this code and setVirtualOutputs(), need to adjust the tests.
-    if (QStandardPaths::isTestModeEnabled()) {
-        return;
-    }
-
     const auto outputs = kwinApp()->outputBackend()->outputs();
     if (outputs.empty()) {
         // nothing to do
