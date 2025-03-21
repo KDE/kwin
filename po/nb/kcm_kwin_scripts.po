@@ -6,14 +6,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-09-20 00:47+0000\n"
-"PO-Revision-Date: 2013-10-27 18:01+0100\n"
-"Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
+"PO-Revision-Date: 2025-03-15 17:50+0100\n"
+"Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -22,12 +22,12 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Bjørn Steensrud"
+msgstr "Bjørn Steensrud,Martin Hansen"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "bjornst@skogkatt.homelinux.org"
+msgstr "bjornst@skogkatt.homelinux.org,mh306602@gmail.com"
 
 #: module.cpp:57
 #, kde-format
@@ -46,30 +46,32 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
+"Klarte ikke importere det valgte skriptet.\n"
+"%1"
 
 #: module.cpp:108
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr ""
+msgstr "Skriptet «%1» er nå importert."
 
 #: module.cpp:148
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "Feil ved avinstallering av KWin-skript: %1"
 
 #: package/contents/ui/main.qml:47
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete..."
-msgstr ""
+msgstr "Slett …"
 
 #: package/contents/ui/main.qml:60
 #, kde-format
 msgid "Install from File..."
-msgstr ""
+msgstr "Installer fra fil ..."
 
 #: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Get New Scripts..."
-msgstr ""
+msgstr "Hent nytt skript …"
