@@ -650,14 +650,14 @@ void QuickTilingTest::testShortcut_data()
     // oldMode2     newMode1    newMode2    newMode3...
     const QuickTileMode quickTileTransition[][9] = {
         {N, L, R, T, B, TL, TR, BL, BR}, // transition from N
-        {L, L, R, TL, BL, TL, T, BL, B}, // transition from L
-        {R, L, R, TR, BR, T, TR, B, BR},
-        {T, TL, TR, T, B, TL, TR, L, R},
-        {B, BL, BR, T, B, L, R, BL, BR},
-        {TL, TL, T, TL, L, TL, T, L, N},
-        {TR, T, TR, TR, R, T, TR, N, R},
-        {BL, BL, B, L, BL, L, N, BL, B},
-        {BR, B, BR, R, BR, N, R, B, BR},
+        {L, L, R, TL, BL, TL, TR, BL, BR}, // transition from L
+        {R, L, R, TR, BR, TL, TR, BL, BR},
+        {T, TL, TR, T, B, TL, TR, BL, BR},
+        {B, BL, BR, T, B, TL, TR, BL, BR},
+        {TL, TL, T, TL, L, TL, TR, BL, BR},
+        {TR, T, TR, TR, R, TL, TR, BL, BR},
+        {BL, BL, B, L, BL, TL, TR, BL, BR},
+        {BR, B, BR, R, BR, TL, TR, BL, BR},
     };
 
     const QHash<QuickTileMode, QRect> geometries = {
