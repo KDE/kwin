@@ -17,14 +17,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-19 02:33+0000\n"
-"PO-Revision-Date: 2025-02-23 13:55+0100\n"
+"PO-Revision-Date: 2025-03-20 13:36+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #, kde-format
@@ -456,14 +456,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:244
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:259
 #, kde-format
@@ -520,12 +518,10 @@ msgid "Repeat"
 msgstr "Opakovanie"
 
 #: debug_console.cpp:301
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key kód"
+msgstr "Kód klávesy"
 
 #: debug_console.cpp:302
 #, kde-format
@@ -799,7 +795,7 @@ msgstr "Dolu"
 #: debug_console.cpp:531
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Hore"
 
 #: debug_console.cpp:548
 #, kde-format
@@ -3754,14 +3750,13 @@ msgstr "Zrolovaný typ pravidla"
 #: rulesettings.kcfg:450
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "AdaptiveSync"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:454
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Typ pravidla pre aktivitu"
+msgstr "Typ pravidla AdaptiveSync"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
