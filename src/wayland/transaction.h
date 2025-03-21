@@ -115,6 +115,9 @@ public:
 private:
     void apply();
 
+    void watchSyncObj(const TransactionEntry &entry);
+    void watchDmaBuf(const TransactionEntry &entry);
+
     std::vector<TransactionEntry> m_entries;
     int m_locks = 0;
 };

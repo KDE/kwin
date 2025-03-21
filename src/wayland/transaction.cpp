@@ -273,12 +273,9 @@ void Transaction::commit()
         if (entry.state->bufferIsSet && entry.state->buffer) {
             // Avoid applying the transaction until all graphics buffers have become idle.
             if (entry.state->acquirePoint.timeline) {
-                auto eventFd = entry.state->acquirePoint.timeline->eventFd(entry.state->acquirePoint.point);
-                if (entry.surface && eventFd.isValid()) {
-                    new TransactionEventFdLocker(this, std::move(eventFd), entry.surface->client());
-                }
-            } else if (auto locker = TransactionDmaBufLocker::get(entry.state->buffer)) {
-                locker->add(this);
+                watchSyncObj(entry);
+            } else {
+                watchDmaBuf(entry);
             }
         }
 
@@ -301,6 +298,27 @@ void Transaction::commit()
         for (const TransactionEntry &entry : m_entries) {
             Q_EMIT entry.surface->stateStashed(entry.state->serial);
         }
+    }
+}
+
+void Transaction::watchSyncObj(const TransactionEntry &entry)
+{
+    auto eventFd = entry.state->acquirePoint.timeline->eventFd(entry.state->acquirePoint.point);
+    if (!eventFd.isValid()) {
+        return;
+    }
+
+    if (FileDescriptor::isReadable(eventFd.get())) {
+        return;
+    }
+
+    new TransactionEventFdLocker(this, std::move(eventFd), entry.surface->client());
+}
+
+void Transaction::watchDmaBuf(const TransactionEntry &entry)
+{
+    if (auto locker = TransactionDmaBufLocker::get(entry.state->buffer)) {
+        locker->add(this);
     }
 }
 
