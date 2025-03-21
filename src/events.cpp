@@ -153,7 +153,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     switch (eventType) {
     case XCB_CREATE_NOTIFY: {
         const auto *event = reinterpret_cast<xcb_create_notify_event_t *>(e);
-        if (event->parent == kwinApp()->x11RootWindow() && !QWidget::find(event->window) && !event->override_redirect) {
+        if (event->parent == kwinApp()->x11RootWindow() && !event->override_redirect) {
             // see comments for allowWindowActivation()
             kwinApp()->updateXTime();
             const xcb_timestamp_t t = xTime();
