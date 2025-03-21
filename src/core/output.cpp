@@ -349,9 +349,6 @@ Output::Output(QObject *parent)
 
 Output::~Output()
 {
-    if (m_brightnessDevice) {
-        m_brightnessDevice->setOutput(nullptr);
-    }
 }
 
 void Output::ref()
@@ -538,6 +535,8 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
 
     setState(next);
+
+    m_brightnessDevice = props->brightnessDevice.value_or(m_brightnessDevice);
 
     Q_EMIT changed();
 }
@@ -823,9 +822,9 @@ BrightnessDevice *Output::brightnessDevice() const
     return m_brightnessDevice;
 }
 
-void Output::setBrightnessDevice(BrightnessDevice *device)
+void Output::unsetBrightnessDevice()
 {
-    m_brightnessDevice = device;
+    m_brightnessDevice = nullptr;
 }
 
 bool Output::allowSdrSoftwareBrightness() const

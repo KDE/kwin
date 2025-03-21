@@ -503,7 +503,9 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.allowDdcCi = props->allowDdcCi.value_or(m_state.allowDdcCi);
     setState(next);
 
-    // allowSdrSoftwareBrightness or detectedDdcCi might change our capabilities
+    m_brightnessDevice = props->brightnessDevice.value_or(m_brightnessDevice);
+
+    // allowSdrSoftwareBrightness, the brightness device or detectedDdcCi might change our capabilities
     Information newInfo = m_information;
     newInfo.capabilities = computeCapabilities();
     setInformation(newInfo);
@@ -519,20 +521,10 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     Q_EMIT changed();
 }
 
-void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
+void DrmOutput::unsetBrightnessDevice()
 {
-    Output::setBrightnessDevice(device);
-
-    if (device && m_state.allowSdrSoftwareBrightness && device->observedBrightness().has_value()) {
-        // adopt the screen's initial brightness value if this brightness device is seen for the first time.
-        // This can't be done in output configuration store as we're not necessarily aware of the brightness device
-        // at that point
-        State next = m_state;
-        next.currentBrightness = device->observedBrightness();
-        next.brightnessSetting = *next.currentBrightness;
-        setState(next);
-    }
-    updateBrightness(m_state.currentBrightness.value_or(m_state.brightnessSetting), m_state.artificialHdrHeadroom);
+    m_brightnessDevice = nullptr;
+    updateInformation();
 }
 
 void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom)
