@@ -440,9 +440,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // SELI TODO: Order all these things in some sane manner
 
     const NET::Properties properties =
-        NET::WMDesktop | NET::WMState | NET::WMWindowType | NET::WMStrut | NET::WMName | NET::WMIcon | NET::WMIconName;
+        NET::WMDesktop | NET::WMState | NET::WMWindowType | NET::WMName | NET::WMIcon | NET::WMIconName;
     const NET::Properties2 properties2 =
-        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2UserTime | NET::WM2StartupId | NET::WM2ExtendedStrut | NET::WM2Opacity | NET::WM2FullscreenMonitors | NET::WM2GroupLeader | NET::WM2Urgency | NET::WM2Input | NET::WM2Protocols | NET::WM2InitialMappingState | NET::WM2IconPixmap | NET::WM2OpaqueRegion | NET::WM2DesktopFileName | NET::WM2GTKFrameExtents | NET::WM2GTKApplicationId;
+        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2UserTime | NET::WM2StartupId | NET::WM2Opacity | NET::WM2FullscreenMonitors | NET::WM2GroupLeader | NET::WM2Urgency | NET::WM2Input | NET::WM2Protocols | NET::WM2InitialMappingState | NET::WM2IconPixmap | NET::WM2OpaqueRegion | NET::WM2DesktopFileName | NET::WM2GTKFrameExtents | NET::WM2GTKApplicationId;
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
@@ -3659,13 +3659,6 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         }
 
         moveResize(geometry);
-
-        // this is part of the kicker-xinerama-hack... it should be
-        // safe to remove when kicker gets proper ExtendedStrut support;
-        // see Workspace::rearrange() and X11Window::adjustedClientArea()
-        if (hasStrut()) {
-            workspace()->rearrange();
-        }
     }
 
     if (value_mask & configureSizeMask && !(value_mask & configurePositionMask)) { // pure resize
@@ -4330,91 +4323,6 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
         sendSyncRequest();
         configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
     }
-}
-
-NETExtendedStrut X11Window::strut() const
-{
-    NETExtendedStrut ext = info->extendedStrut();
-    NETStrut str = info->strut();
-    const QSize displaySize = workspace()->geometry().size();
-    if (ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0
-        && (str.left != 0 || str.right != 0 || str.top != 0 || str.bottom != 0)) {
-        // build extended from simple
-        if (str.left != 0) {
-            ext.left_width = str.left;
-            ext.left_start = 0;
-            ext.left_end = displaySize.height();
-        }
-        if (str.right != 0) {
-            ext.right_width = str.right;
-            ext.right_start = 0;
-            ext.right_end = displaySize.height();
-        }
-        if (str.top != 0) {
-            ext.top_width = str.top;
-            ext.top_start = 0;
-            ext.top_end = displaySize.width();
-        }
-        if (str.bottom != 0) {
-            ext.bottom_width = str.bottom;
-            ext.bottom_start = 0;
-            ext.bottom_end = displaySize.width();
-        }
-    }
-    return ext;
-}
-
-StrutRect X11Window::strutRect(StrutArea area) const
-{
-    Q_ASSERT(area != StrutAreaAll); // Not valid
-    const QSize displaySize = workspace()->geometry().size();
-    NETExtendedStrut strutArea = strut();
-    switch (area) {
-    case StrutAreaTop:
-        if (strutArea.top_width != 0) {
-            return StrutRect(QRect(
-                                 strutArea.top_start, 0,
-                                 strutArea.top_end - strutArea.top_start, strutArea.top_width),
-                             StrutAreaTop);
-        }
-        break;
-    case StrutAreaRight:
-        if (strutArea.right_width != 0) {
-            return StrutRect(QRect(
-                                 displaySize.width() - strutArea.right_width, strutArea.right_start,
-                                 strutArea.right_width, strutArea.right_end - strutArea.right_start),
-                             StrutAreaRight);
-        }
-        break;
-    case StrutAreaBottom:
-        if (strutArea.bottom_width != 0) {
-            return StrutRect(QRect(
-                                 strutArea.bottom_start, displaySize.height() - strutArea.bottom_width,
-                                 strutArea.bottom_end - strutArea.bottom_start, strutArea.bottom_width),
-                             StrutAreaBottom);
-        }
-        break;
-    case StrutAreaLeft:
-        if (strutArea.left_width != 0) {
-            return StrutRect(QRect(
-                                 0, strutArea.left_start,
-                                 strutArea.left_width, strutArea.left_end - strutArea.left_start),
-                             StrutAreaLeft);
-        }
-        break;
-    default:
-        Q_UNREACHABLE(); // Not valid
-    }
-    return StrutRect(); // Null rect
-}
-
-bool X11Window::hasStrut() const
-{
-    NETExtendedStrut ext = strut();
-    if (ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0) {
-        return false;
-    }
-    return true;
 }
 
 void X11Window::applyWindowRules()

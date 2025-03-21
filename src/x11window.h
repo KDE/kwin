@@ -212,9 +212,6 @@ public:
     void showContextHelp() override;
     void checkActiveModal();
 
-    StrutRect strutRect(StrutArea area) const override;
-    bool hasStrut() const override;
-
     bool isClientSideDecorated() const;
 
     Xcb::StringProperty fetchPreferredColorScheme() const;
@@ -331,7 +328,6 @@ private:
     void getSkipCloseAnimation();
 
     void configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool);
-    NETExtendedStrut strut() const;
     int checkShadeGeometry(int w, int h);
     void getSyncCounter();
     void sendSyncRequest();
