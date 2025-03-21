@@ -29,10 +29,6 @@
 #include "workspace.h"
 #include "x11window.h"
 
-#if KWIN_BUILD_TABBOX
-#include "tabbox/tabbox.h"
-#endif
-
 #include <xcb/xcb_icccm.h>
 
 namespace KWin
