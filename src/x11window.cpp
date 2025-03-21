@@ -3528,7 +3528,7 @@ QPointF X11Window::gravityAdjustment(xcb_gravity_t gravity) const
         dy = Xcb::nativeRound(borderTop());
         break;
     case XCB_GRAVITY_WEST: // move right
-        dx = borderLeft();
+        dx = Xcb::nativeRound(borderLeft());
         dy = 0;
         break;
     case XCB_GRAVITY_CENTER:
