@@ -35,6 +35,11 @@ public:
     virtual ~ClientConnection();
 
     /**
+     * Returns @c true if the client connection has been terminated; otherwise returns @c false.
+     */
+    bool isTerminated() const;
+
+    /**
      * Flushes the connection to this client. Ensures that all events are pushed to the client.
      */
     void flush();
@@ -130,6 +135,8 @@ public:
 Q_SIGNALS:
     /**
      * This signal is emitted when the client is about to be destroyed.
+     *
+     * isTerminated() will return @c true when the signal is emitted.
      */
     void aboutToBeDestroyed();
     /**

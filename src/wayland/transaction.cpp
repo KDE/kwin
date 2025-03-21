@@ -15,6 +15,11 @@
 namespace KWin
 {
 
+bool TransactionEntry::isValid() const
+{
+    return surface && !surface->client()->isTerminated();
+}
+
 TransactionDmaBufLocker *TransactionDmaBufLocker::get(GraphicsBuffer *buffer)
 {
     static QHash<GraphicsBuffer *, TransactionDmaBufLocker *> lockers;
@@ -225,7 +230,7 @@ void Transaction::apply()
     });
 
     for (TransactionEntry &entry : m_entries) {
-        if (entry.surface) {
+        if (entry.isValid()) {
             SurfaceInterfacePrivate::get(entry.surface)->applyState(entry.state.get());
         }
     }

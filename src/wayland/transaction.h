@@ -27,6 +27,14 @@ class Transaction;
 struct TransactionEntry
 {
     /**
+     * Returns \c true if the entry is valid; otherwise returns \c false.
+     *
+     * A transaction entry is considered to be valid if the corresponding surface object is
+     * still alive and the client connection object has not been terminated yet.
+     */
+    bool isValid() const;
+
+    /**
      * The surface that is going to be affected by the transaction. Might be
      * \c null if the surface has been destroyed while the transaction is still
      * not ready.
