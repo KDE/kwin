@@ -338,9 +338,16 @@ XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *t
 void XdgToplevelInterfacePrivate::apply(XdgToplevelCommit *commit)
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    if (xdgSurfacePrivate->firstBufferAttached && !xdgSurfacePrivate->surface->buffer()) {
-        reset();
-        return;
+    if (xdgSurfacePrivate->surface->buffer()) {
+        if (!xdgSurfacePrivate->isConfigured) {
+            wl_resource_post_error(xdgSurfacePrivate->resource()->handle, XDG_SURFACE_ERROR_UNCONFIGURED_BUFFER, "attached a buffer before configure event");
+            return;
+        }
+    } else {
+        if (xdgSurfacePrivate->firstBufferAttached) {
+            reset();
+            return;
+        }
     }
 
     xdgSurfacePrivate->apply(commit);
@@ -715,9 +722,16 @@ void XdgPopupInterfacePrivate::apply(XdgPopupCommit *commit)
     }
 
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    if (xdgSurfacePrivate->firstBufferAttached && !xdgSurfacePrivate->surface->buffer()) {
-        reset();
-        return;
+    if (xdgSurfacePrivate->surface->buffer()) {
+        if (!xdgSurfacePrivate->isConfigured) {
+            wl_resource_post_error(xdgSurfacePrivate->resource()->handle, XDG_SURFACE_ERROR_UNCONFIGURED_BUFFER, "attached a buffer before configure event");
+            return;
+        }
+    } else {
+        if (xdgSurfacePrivate->firstBufferAttached) {
+            reset();
+            return;
+        }
     }
 
     xdgSurfacePrivate->apply(commit);
