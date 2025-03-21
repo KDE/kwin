@@ -467,6 +467,9 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 
 SurfaceInterface::~SurfaceInterface()
 {
+    if (d->firstTransaction) {
+        d->firstTransaction->tryApplyLater();
+    }
 }
 
 SurfaceRole *SurfaceInterface::role() const

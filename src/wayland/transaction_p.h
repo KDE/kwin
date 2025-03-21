@@ -37,13 +37,12 @@ class TransactionEventFdLocker : public QObject
 {
     Q_OBJECT
 public:
-    TransactionEventFdLocker(Transaction *transaction, FileDescriptor &&eventFd, ClientConnection *client);
+    TransactionEventFdLocker(Transaction *transaction, FileDescriptor &&eventFd);
 
 private:
     void unlock();
 
     Transaction *const m_transaction;
-    const QPointer<ClientConnection> m_client;
     const FileDescriptor m_eventFd;
     QSocketNotifier m_notifier;
 };

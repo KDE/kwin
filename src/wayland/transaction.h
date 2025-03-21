@@ -8,6 +8,7 @@
 
 #include "core/graphicsbuffer.h"
 
+#include <QObject>
 #include <QPointer>
 
 #include <functional>
@@ -57,8 +58,10 @@ struct TransactionEntry
 /**
  * The Transaction type provides a way to commit the pending state of one or more surfaces atomically.
  */
-class KWIN_EXPORT Transaction
+class KWIN_EXPORT Transaction : public QObject
 {
+    Q_OBJECT
+
 public:
     Transaction();
 
@@ -109,6 +112,11 @@ public:
      * when it is applied.
      */
     void commit();
+
+    /**
+     * blah blah
+     */
+    void tryApplyLater();
 
 private:
     void apply();
