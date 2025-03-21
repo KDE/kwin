@@ -10,9 +10,6 @@
 
 #pragma once
 
-// Include with base class for effects.
-#include "config-kwin.h"
-
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
 #include "effect/timeline.h"
@@ -56,9 +53,6 @@ private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
     void slotWindowDeleted(EffectWindow *w);
-#if KWIN_BUILD_X11
-    void slotPropertyNotify(EffectWindow *w, long atom);
-#endif
     void slotWaylandSlideOnShowChanged(EffectWindow *w);
     void slotWindowHiddenChanged(EffectWindow *w);
 
@@ -74,9 +68,6 @@ private:
 
     static SlideManagerInterface *s_slideManager;
     static QTimer *s_slideManagerRemoveTimer;
-#if KWIN_BUILD_X11
-    long m_atom = 0;
-#endif
 
     int m_slideLength;
     std::chrono::milliseconds m_slideInDuration;
