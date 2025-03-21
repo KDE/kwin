@@ -19,6 +19,7 @@ namespace KWin
 {
 
 class IccProfile;
+class BrightnessDevice;
 
 class KWIN_EXPORT OutputChangeSet
 {
@@ -51,6 +52,7 @@ public:
     std::optional<double> dimming;
     std::optional<bool> detectedDdcCi;
     std::optional<bool> allowDdcCi;
+    std::optional<BrightnessDevice *> brightnessDevice;
 };
 
 class KWIN_EXPORT OutputConfiguration
