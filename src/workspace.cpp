@@ -696,9 +696,6 @@ void Workspace::addX11Window(X11Window *window)
     Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
-    if (window->hasStrut()) {
-        rearrange(); // This cannot be in manage(), because the window got added only now
-    }
     window->updateLayer();
     if (window->isDesktop()) {
         raiseWindow(window);
@@ -2196,35 +2193,6 @@ void Workspace::saveOldScreenSizes()
     }
 }
 
-#if KWIN_BUILD_X11
-/**
- * Whether or not the window has a strut that expands through the invisible area of
- * an xinerama setup where the monitors are not the same resolution.
- */
-static bool hasOffscreenXineramaStrut(Window *window)
-{
-    if (qobject_cast<X11Window *>(window)) {
-        // Get strut as a QRegion
-        QRegion region;
-        region += window->strutRect(StrutAreaTop);
-        region += window->strutRect(StrutAreaRight);
-        region += window->strutRect(StrutAreaBottom);
-        region += window->strutRect(StrutAreaLeft);
-
-        // Remove all visible areas so that only the invisible remain
-        const auto outputs = workspace()->outputs();
-        for (const Output *output : outputs) {
-            region -= output->geometry();
-        }
-
-        // If there's anything left then we have an offscreen strut
-        return !region.isEmpty();
-    }
-
-    return false;
-}
-#endif
-
 QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
 {
     QRectF adjustedArea = area;
@@ -2234,32 +2202,10 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     QRectF strutTop = window->strutRect(StrutAreaTop);
     QRectF strutBottom = window->strutRect(StrutAreaBottom);
 
-    QRectF screenArea = clientArea(ScreenArea, window);
-#if KWIN_BUILD_X11
-    if (qobject_cast<X11Window *>(window)) {
-        // HACK: workarea handling is not xinerama aware, so if this strut
-        // reserves place at a xinerama edge that's inside the virtual screen,
-        // ignore the strut for workspace setting.
-        if (area == QRect(QPoint(0, 0), m_geometry.size())) {
-            if (strutLeft.left() < screenArea.left()) {
-                strutLeft = QRect();
-            }
-            if (strutRight.right() > screenArea.right()) {
-                strutRight = QRect();
-            }
-            if (strutTop.top() < screenArea.top()) {
-                strutTop = QRect();
-            }
-            if (strutBottom.bottom() < screenArea.bottom()) {
-                strutBottom = QRect();
-            }
-        }
-    }
-#endif
-
     // Handle struts at xinerama edges that are inside the virtual screen.
     // They're given in virtual screen coordinates, make them affect only
     // their xinerama screen.
+    QRectF screenArea = clientArea(ScreenArea, window);
     strutLeft.setLeft(std::max(strutLeft.left(), screenArea.left()));
     strutRight.setRight(std::min(strutRight.right(), screenArea.right()));
     strutTop.setTop(std::max(strutTop.top(), screenArea.top()));
@@ -2336,22 +2282,9 @@ void Workspace::rearrange()
             }
         }
 
-        // Ignore offscreen xinerama struts. These interfere with the larger monitors on the setup
-        // and should be ignored so that applications that use the work area to work out where
-        // windows can go can use the entire visible area of the larger monitors.
-        // This goes against the EWMH description of the work area but it is a toss up between
-        // having unusable sections of the screen (Which can be quite large with newer monitors)
-        // or having some content appear offscreen (Relatively rare compared to other).
-        bool hasOffscreenStrut = false;
-#if KWIN_BUILD_X11
-        hasOffscreenStrut = hasOffscreenXineramaStrut(window);
-#endif
-
         const auto vds = window->isOnAllDesktops() ? desktops : window->desktops();
         for (VirtualDesktop *vd : vds) {
-            if (!hasOffscreenStrut) {
-                workAreas[vd] &= r;
-            }
+            workAreas[vd] &= r;
             restrictedAreas[vd] += strutRegion;
             for (Output *output : std::as_const(m_outputs)) {
                 const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometryF()));
