@@ -65,6 +65,24 @@ bool DrmDevice::supportsSyncObjTimelines() const
     return m_supportsSyncObjTimelines;
 }
 
+std::optional<drmPciDeviceInfo> DrmDevice::pciDeviceInfo() const
+{
+    drmDevice *nativeDevice = nullptr;
+    auto nativeDeviceCleanup = qScopeGuard([&nativeDevice]() {
+        drmFreeDevice(&nativeDevice);
+    });
+
+    if (drmGetDeviceFromDevId(deviceId(), 0, &nativeDevice) != 0) {
+        return std::nullopt;
+    }
+
+    if (nativeDevice->bustype != DRM_BUS_PCI) {
+        return std::nullopt;
+    }
+
+    return *nativeDevice->deviceinfo.pci;
+}
+
 std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)
 {
     return openWithAuthentication(path, -1);

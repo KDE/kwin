@@ -8,12 +8,14 @@
 */
 #pragma once
 
-#include <QString>
-#include <sys/types.h>
-
 #include "graphicsbufferallocator.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
+
+#include <QString>
+
+#include <sys/types.h>
+#include <xf86drm.h>
 
 struct gbm_device;
 
@@ -31,6 +33,7 @@ public:
     GraphicsBufferAllocator *allocator() const;
     int fileDescriptor() const;
     bool supportsSyncObjTimelines() const;
+    std::optional<drmPciDeviceInfo> pciDeviceInfo() const;
 
     static std::unique_ptr<DrmDevice> open(const QString &path);
     static std::unique_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);

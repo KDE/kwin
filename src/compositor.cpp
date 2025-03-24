@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "core/brightnessdevice.h"
+#include "core/drmdevice.h"
 #include "core/graphicsbufferview.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
@@ -42,6 +43,7 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <KCrash>
 #if KWIN_BUILD_NOTIFICATIONS
 #include <KLocalizedString>
 #include <KNotification>
@@ -174,6 +176,24 @@ bool Compositor::isActive()
     return m_state == State::On;
 }
 
+static QVariantHash collectCrashInformation(const OpenGLBackend *backend)
+{
+    const GLPlatform *glPlatform = backend->openglContext()->glPlatform();
+
+    QVariantHash gpuInformation;
+    gpuInformation[QStringLiteral("api_type")] = QStringLiteral("OpenGL");
+    gpuInformation[QStringLiteral("name")] = QString::fromUtf8(glPlatform->glRendererString());
+    if (const auto pciInfo = backend->drmDevice()->pciDeviceInfo()) {
+        gpuInformation[QStringLiteral("id")] = QString::number(pciInfo->device_id, 16);
+        gpuInformation[QStringLiteral("vendor_id")] = QString::number(pciInfo->vendor_id, 16);
+    }
+    if (glPlatform->driverVersion().isValid()) {
+        gpuInformation[QStringLiteral("version")] = glPlatform->driverVersion().toString();
+    }
+
+    return gpuInformation;
+}
+
 bool Compositor::attemptOpenGLCompositing()
 {
     std::unique_ptr<OpenGLBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
@@ -186,6 +206,8 @@ bool Compositor::attemptOpenGLCompositing()
     if (backend->isFailed()) {
         return false;
     }
+
+    KCrash::setGPUData(collectCrashInformation(backend.get()));
 
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {

@@ -232,6 +232,7 @@ target_link_libraries(kwin
         KF6::CoreAddons
         KF6::WindowSystem
         epoxy::epoxy
+        Libdrm::Libdrm
 
     PRIVATE
         Qt::Concurrent
