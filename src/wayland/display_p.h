@@ -32,6 +32,8 @@ public:
 
     void registerSocketName(const QString &socketName);
 
+    static void clientCreatedCallback(wl_listener *listener, void *data);
+
     Display *q;
     QSocketNotifier *socketNotifier = nullptr;
     wl_display *display = nullptr;
@@ -40,8 +42,8 @@ public:
     QList<OutputInterface *> outputs;
     QList<OutputDeviceV2Interface *> outputdevicesV2;
     QList<SeatInterface *> seats;
-    QList<ClientConnection *> clients;
     QStringList socketNames;
+    wl_listener clientCreatedListener;
 };
 
 /**

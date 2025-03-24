@@ -14,6 +14,7 @@
 #include "output.h"
 #include "shmclientbuffer_p.h"
 #include "utils/common.h"
+#include "utils/containerof.h"
 
 #include <poll.h>
 #include <string.h>
@@ -42,16 +43,35 @@ void DisplayPrivate::registerSocketName(const QString &socketName)
     Q_EMIT q->socketNamesChanged();
 }
 
+void DisplayPrivate::clientCreatedCallback(wl_listener *listener, void *data)
+{
+    DisplayPrivate *displayPrivate = containerOf(listener, &DisplayPrivate::clientCreatedListener);
+    Display *display = displayPrivate->q;
+
+    wl_client *client = static_cast<wl_client *>(data);
+    ClientConnection *connection = new ClientConnection(client, display);
+
+    QObject::connect(connection, &ClientConnection::disconnected, display, [display](ClientConnection *c) {
+        Q_EMIT display->clientDisconnected(c);
+    });
+    Q_EMIT display->clientConnected(connection);
+}
+
 Display::Display(QObject *parent)
     : QObject(parent)
     , d(new DisplayPrivate(this))
 {
     d->display = wl_display_create();
     d->loop = wl_display_get_event_loop(d->display);
+
+    d->clientCreatedListener.notify = DisplayPrivate::clientCreatedCallback;
+    wl_display_add_client_created_listener(d->display, &d->clientCreatedListener);
 }
 
 Display::~Display()
 {
+    wl_list_remove(&d->clientCreatedListener.link);
+
     wl_display_destroy_clients(d->display);
     wl_display_destroy(d->display);
 }
@@ -202,25 +222,7 @@ QList<SeatInterface *> Display::seats() const
 
 ClientConnection *Display::getConnection(wl_client *client)
 {
-    // TODO: Use wl_client_set_user_data() when we start requiring libwayland-server that has it, and remove client lists here and in ClientConnection.
-    Q_ASSERT(client);
-    auto it = std::find_if(d->clients.constBegin(), d->clients.constEnd(), [client](ClientConnection *c) {
-        return c->client() == client;
-    });
-    if (it != d->clients.constEnd()) {
-        return *it;
-    }
-    // no ConnectionData yet, create it
-    auto c = new ClientConnection(client, this);
-    d->clients << c;
-    connect(c, &ClientConnection::disconnected, this, [this](ClientConnection *c) {
-        Q_EMIT clientDisconnected(c);
-    });
-    connect(c, &ClientConnection::destroyed, this, [this, c]() {
-        d->clients.removeOne(c);
-    });
-    Q_EMIT clientConnected(c);
-    return c;
+    return ClientConnection::get(client);
 }
 
 ClientConnection *Display::createClient(int fd)

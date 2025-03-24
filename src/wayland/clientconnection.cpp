@@ -18,7 +18,6 @@ class ClientConnectionPrivate
 {
 public:
     ClientConnectionPrivate(wl_client *c, Display *display, ClientConnection *q);
-    ~ClientConnectionPrivate();
 
     wl_client *client;
     Display *display;
@@ -31,64 +30,33 @@ public:
 
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
-    static void destroyLateListenerCallback(wl_listener *listener, void *data);
-    ClientConnection *q;
-    wl_listener destroyListener;
-    wl_listener destroyLateListener;
-    static QList<ClientConnectionPrivate *> s_allClients;
-};
 
-QList<ClientConnectionPrivate *> ClientConnectionPrivate::s_allClients;
+    wl_listener destroyListener;
+};
 
 ClientConnectionPrivate::ClientConnectionPrivate(wl_client *c, Display *display, ClientConnection *q)
     : client(c)
     , display(display)
-    , q(q)
 {
-    s_allClients << this;
+    wl_client_set_user_data(c, q, [](void *userData) {
+        ClientConnection *q = static_cast<ClientConnection *>(userData);
+        delete q;
+    });
 
     destroyListener.notify = destroyListenerCallback;
     wl_client_add_destroy_listener(c, &destroyListener);
-
-    destroyLateListener.notify = destroyLateListenerCallback;
-    wl_client_add_destroy_late_listener(c, &destroyLateListener);
 
     wl_client_get_credentials(client, &pid, &user, &group);
     executablePath = executablePathFromPid(pid);
 }
 
-ClientConnectionPrivate::~ClientConnectionPrivate()
-{
-    s_allClients.removeAt(s_allClients.indexOf(this));
-}
-
 void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, void *data)
 {
-    wl_client *client = reinterpret_cast<wl_client *>(data);
-    auto it = std::find_if(s_allClients.constBegin(), s_allClients.constEnd(), [client](ClientConnectionPrivate *c) {
-        return c->client == client;
-    });
-    Q_ASSERT(it != s_allClients.constEnd());
-    auto p = (*it);
-    auto q = p->q;
+    ClientConnection *q = ClientConnection::get(reinterpret_cast<wl_client *>(data));
 
     Q_EMIT q->aboutToBeDestroyed();
-    wl_list_remove(&p->destroyListener.link);
+    wl_list_remove(&q->d->destroyListener.link);
     Q_EMIT q->disconnected(q);
-}
-
-void ClientConnectionPrivate::destroyLateListenerCallback(wl_listener *listener, void *data)
-{
-    wl_client *client = reinterpret_cast<wl_client *>(data);
-    auto it = std::find_if(s_allClients.constBegin(), s_allClients.constEnd(), [client](ClientConnectionPrivate *c) {
-        return c->client == client;
-    });
-    Q_ASSERT(it != s_allClients.constEnd());
-    auto p = (*it);
-    auto q = p->q;
-
-    wl_list_remove(&p->destroyLateListener.link);
-    delete q;
 }
 
 ClientConnection::ClientConnection(wl_client *c, Display *parent)
@@ -170,6 +138,12 @@ QString ClientConnection::securityContextAppId() const
 {
     return d->securityContextAppId;
 }
+
+ClientConnection *ClientConnection::get(wl_client *native)
+{
+    return static_cast<ClientConnection *>(wl_client_get_user_data(native));
+}
+
 }
 
 #include "moc_clientconnection.cpp"

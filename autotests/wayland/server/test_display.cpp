@@ -79,10 +79,11 @@ void TestWaylandServerDisplay::testClientConnection()
 
     auto client = wl_client_create(display, sv[0]);
     QVERIFY(client);
+    QCOMPARE(connectedSpy.count(), 1);
 
-    QVERIFY(connectedSpy.isEmpty());
     ClientConnection *connection = display.getConnection(client);
     QVERIFY(connection);
+    QCOMPARE(connectedSpy.first().first().value<ClientConnection *>(), connection);
     QCOMPARE(connection->client(), client);
     if (getuid() == 0) {
         QEXPECT_FAIL("", "Please don't run test as root", Continue);
@@ -98,8 +99,6 @@ void TestWaylandServerDisplay::testClientConnection()
     QCOMPARE((wl_client *)*connection, client);
     const ClientConnection &constRef = *connection;
     QCOMPARE((wl_client *)constRef, client);
-    QCOMPARE(connectedSpy.count(), 1);
-    QCOMPARE(connectedSpy.first().first().value<ClientConnection *>(), connection);
 
     QCOMPARE(connection, display.getConnection(client));
     QCOMPARE(connectedSpy.count(), 1);

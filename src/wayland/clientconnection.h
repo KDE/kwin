@@ -122,6 +122,11 @@ public:
     void setSecurityContextAppId(const QString &appId);
     QString securityContextAppId() const;
 
+    /**
+     * Returns the associated client connection object for the specified @a native wl_client object.
+     */
+    static ClientConnection *get(wl_client *native);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the client is about to be destroyed.
@@ -135,7 +140,8 @@ Q_SIGNALS:
     void scaleOverrideChanged();
 
 private:
-    friend class Display;
+    friend class ClientConnectionPrivate;
+    friend class DisplayPrivate;
     explicit ClientConnection(wl_client *c, Display *parent);
     std::unique_ptr<ClientConnectionPrivate> d;
 };
