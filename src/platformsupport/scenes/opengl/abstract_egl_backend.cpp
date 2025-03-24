@@ -119,7 +119,9 @@ void AbstractEglBackend::initWayland()
         }
 
         if (!renderNode.isEmpty()) {
-            waylandServer()->drm()->setDevice(renderNode);
+            if (waylandServer()->drm()) {
+                waylandServer()->drm()->setDevice(renderNode);
+            }
         } else {
             qCWarning(KWIN_OPENGL) << "No render node have been found, not initializing wl-drm";
         }

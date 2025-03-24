@@ -21,6 +21,7 @@
 #include "layershellv1window.h"
 #include "main.h"
 #include "options.h"
+#include "utils/envvar.h"
 #include "utils/kernel.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
@@ -515,9 +516,11 @@ bool WaylandServer::init()
     return true;
 }
 
+static const bool s_reenableWlDrm = environmentVariableBoolValue("KWIN_WAYLAND_REENABLE_WL_DRM").value_or(false);
+
 DrmClientBufferIntegration *WaylandServer::drm()
 {
-    if (!m_drm) {
+    if (!m_drm && s_reenableWlDrm) {
         m_drm = new DrmClientBufferIntegration(m_display);
     }
     return m_drm;
