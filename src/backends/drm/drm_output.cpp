@@ -435,8 +435,8 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
         const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(iccProfile->colorimetry(), sdrGamutWideness);
-        const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
-        const double brightnessFactor = (!m_brightnessDevice && allowSdrSoftwareBrightness) ? brightness : 1.0;
+        const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness) && props->brightnessDevice.value_or(m_brightnessDevice) == nullptr;
+        const double brightnessFactor = allowSdrSoftwareBrightness ? brightness : 1.0;
         const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
         return ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxBrightness), effectiveReferenceLuminance, minBrightness, maxBrightness, maxBrightness, iccProfile->colorimetry(), sdrColor);
     }
@@ -454,8 +454,8 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
 
-    const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
-    const double brightnessFactor = (!m_brightnessDevice && allowSdrSoftwareBrightness) || effectiveHdr ? brightness : 1.0;
+    const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness) && props->brightnessDevice.value_or(m_brightnessDevice) == nullptr;
+    const double brightnessFactor = allowSdrSoftwareBrightness || effectiveHdr ? brightness : 1.0;
     const double effectiveReferenceLuminance = 5 + (referenceLuminance - 5) * brightnessFactor;
     return ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
 }
@@ -467,6 +467,9 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     }
     Q_EMIT aboutToChange(props.get());
     m_pipeline->applyPendingChanges();
+
+    const bool hasNewBrightnessDevice = !(props->brightnessDevice == nullptr || props->brightnessDevice == m_brightnessDevice);
+    const auto currentBrightnessReset = hasNewBrightnessDevice ? (*props->brightnessDevice)->observedBrightness() : std::nullopt;
 
     State next = m_state;
     next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
@@ -485,13 +488,14 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.maxAverageBrightnessOverride = props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride);
     next.minBrightnessOverride = props->minBrightnessOverride.value_or(m_state.minBrightnessOverride);
     next.sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
+    next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
+    next.currentBrightness = currentBrightnessReset ? currentBrightnessReset : m_state.currentBrightness;
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
-    next.originalColorDescription = createColorDescription(props, m_state.currentBrightness.value_or(m_state.brightnessSetting));
+    next.originalColorDescription = createColorDescription(props, next.currentBrightness.value_or(next.brightnessSetting));
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
-    next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
