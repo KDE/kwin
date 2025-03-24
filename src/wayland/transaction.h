@@ -110,6 +110,11 @@ public:
      */
     void commit();
 
+    /**
+     * Attempts to apply the transaction. The transaction won't be applied if it has unresolved
+     * dependencies, for example previous transactions have not been applied yet, or one of the
+     * graphics buffers in the transaction is not ready to be used yet.
+     */
     bool tryApply();
 
 private:
