@@ -40,7 +40,6 @@ class OutputManagementV2Interface;
 class XdgExportedSurface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
-class DrmClientBufferIntegration;
 class LinuxDmaBufV1ClientBufferIntegration;
 class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
@@ -137,7 +136,6 @@ public:
 
     bool isKeyboardShortcutsInhibited() const;
 
-    DrmClientBufferIntegration *drm();
     LinuxDmaBufV1ClientBufferIntegration *linuxDmabuf();
 
     InputMethodV1Interface *inputMethod() const
@@ -275,7 +273,6 @@ private:
     IdleInterface *m_idle = nullptr;
     XdgOutputManagerV1Interface *m_xdgOutputManagerV1 = nullptr;
     XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
-    DrmClientBufferIntegration *m_drm = nullptr;
     LinuxDmaBufV1ClientBufferIntegration *m_linuxDmabuf = nullptr;
     KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QPointer<ClientConnection> m_xwaylandConnection;

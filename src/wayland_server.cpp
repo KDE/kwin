@@ -38,7 +38,6 @@
 #include "wayland/datadevicemanager.h"
 #include "wayland/display.h"
 #include "wayland/dpms.h"
-#include "wayland/drmclientbuffer.h"
 #include "wayland/drmlease_v1.h"
 #include "wayland/externalbrightness_v1.h"
 #include "wayland/fifo_v1.h"
@@ -536,16 +535,6 @@ bool WaylandServer::init()
     m_pointerWarp = new PointerWarpV1(m_display, m_display);
     m_backgroundEffect = new ExtBackgroundEffectManagerV1(m_display, m_display);
     return true;
-}
-
-static const bool s_reenableWlDrm = environmentVariableBoolValue("KWIN_WAYLAND_REENABLE_WL_DRM").value_or(false);
-
-DrmClientBufferIntegration *WaylandServer::drm()
-{
-    if (!m_drm && s_reenableWlDrm) {
-        m_drm = new DrmClientBufferIntegration(m_display);
-    }
-    return m_drm;
 }
 
 LinuxDmaBufV1ClientBufferIntegration *WaylandServer::linuxDmabuf()

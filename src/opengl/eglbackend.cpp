@@ -18,7 +18,6 @@
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
 #include "utils/common.h"
-#include "wayland/drmclientbuffer.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
 
@@ -132,30 +131,6 @@ void EglBackend::initWayland()
     }
     DrmDevice *scanoutDevice = drmDevice();
     Q_ASSERT(scanoutDevice);
-
-    QString renderNode = m_renderDevice->eglDisplay()->renderNode();
-    if (renderNode.isEmpty()) {
-        ::drmDevice *device = nullptr;
-        if (drmGetDeviceFromDevId(scanoutDevice->deviceId(), 0, &device) != 0) {
-            qCWarning(KWIN_OPENGL) << "drmGetDeviceFromDevId() failed:" << strerror(errno);
-        } else {
-            if (device->available_nodes & (1 << DRM_NODE_RENDER)) {
-                renderNode = QString::fromLocal8Bit(device->nodes[DRM_NODE_RENDER]);
-            } else if (device->available_nodes & (1 << DRM_NODE_PRIMARY)) {
-                qCWarning(KWIN_OPENGL) << "No render nodes have been found, falling back to primary node";
-                renderNode = QString::fromLocal8Bit(device->nodes[DRM_NODE_PRIMARY]);
-            }
-            drmFreeDevice(&device);
-        }
-    }
-
-    if (!renderNode.isEmpty()) {
-        if (waylandServer()->drm()) {
-            waylandServer()->drm()->setDevice(renderNode);
-        }
-    } else {
-        qCWarning(KWIN_OPENGL) << "No render node have been found, not initializing wl-drm";
-    }
 
     auto filterFormats = [this](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
         FormatModifierMap set;

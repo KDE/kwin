@@ -33,7 +33,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input-unstable-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
 
-        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/drm.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-color-management-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
@@ -104,7 +103,6 @@ target_sources(kwin PRIVATE
     datasource.cpp
     display.cpp
     dpms.cpp
-    drmclientbuffer.cpp
     drmlease_v1.cpp
     externalbrightness_v1.cpp
     fifo_v1.cpp
