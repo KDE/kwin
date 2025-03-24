@@ -713,7 +713,7 @@ void Workspace::addUnmanaged(X11Window *window)
     updateXStackingOrder();
     updateStackingOrder(true);
     if (window->isOutline() && m_moveResizeWindow) {
-        constrain(window, m_moveResizeWindow);
+        constrain(m_moveResizeWindow, window);
     }
     Q_EMIT windowAdded(window);
 }
@@ -1999,7 +1999,7 @@ void Workspace::addInternalWindow(InternalWindow *window)
 
     updateStackingOrder(true);
     if (window->isOutline() && moveResizeWindow()) {
-        constrain(window, moveResizeWindow());
+        constrain(moveResizeWindow(), window);
     }
     Q_EMIT windowAdded(window);
 }
