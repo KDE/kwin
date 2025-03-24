@@ -39,6 +39,7 @@ Rules::Rules()
     , windowrolematch(UnimportantMatch)
     , titlematch(UnimportantMatch)
     , clientmachinematch(UnimportantMatch)
+    , tagmatch(UnimportantMatch)
     , types(NET::AllTypesMask)
     , placementrule(UnusedForceRule)
     , positionrule(UnusedSetRule)
@@ -110,6 +111,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_MATCH_STRING(windowrole, );
     READ_MATCH_STRING(title, );
     READ_MATCH_STRING(clientmachine, .toLower());
+    READ_MATCH_STRING(tag, );
     types = WindowTypes(settings->types());
     READ_FORCE_RULE(placement, );
     READ_SET_RULE(position);
@@ -205,6 +207,7 @@ void Rules::write(RuleSettings *settings) const
     WRITE_MATCH_STRING(windowrole, Windowrole, false);
     WRITE_MATCH_STRING(title, Title, false);
     WRITE_MATCH_STRING(clientmachine, Clientmachine, false);
+    WRITE_MATCH_STRING(tag, Tag, false);
     settings->setTypes(types);
     WRITE_FORCE_RULE(placement, Placement, );
     WRITE_SET_RULE(position, Position, );
@@ -442,6 +445,22 @@ bool Rules::matchClientMachine(const QString &match_machine, bool local) const
     return true;
 }
 
+bool Rules::matchTag(const QString &match_tag) const
+{
+    if (tagmatch != UnimportantMatch) {
+        if (tagmatch == RegExpMatch && !QRegularExpression(tag).match(match_tag).hasMatch()) {
+            return false;
+        }
+        if (tagmatch == ExactMatch && tag != match_tag) {
+            return false;
+        }
+        if (tagmatch == SubstringMatch && !match_tag.contains(tag)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 #ifndef KCMRULES
 bool Rules::match(const Window *c) const
 {
@@ -464,6 +483,9 @@ bool Rules::match(const Window *c) const
         QObject::connect(c, &Window::captionNormalChanged, c, &Window::evaluateWindowRules, Qt::UniqueConnection);
     }
     if (!matchTitle(c->captionNormal())) {
+        return false;
+    }
+    if (!matchTag(c->tag())) {
         return false;
     }
     return true;

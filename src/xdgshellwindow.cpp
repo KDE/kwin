@@ -488,6 +488,9 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
         }
         m_tag = m_shellSurface->tag();
         Q_EMIT tagChanged();
+        if (m_isInitialized) {
+            evaluateWindowRules();
+        }
     });
     connect(shellSurface, &XdgToplevelInterface::descriptionChanged, this, [this]() {
         setDescription(m_shellSurface->description());

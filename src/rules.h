@@ -199,6 +199,7 @@ private:
     bool matchRole(const QString &match_role) const;
     bool matchTitle(const QString &match_title) const;
     bool matchClientMachine(const QString &match_machine, bool local) const;
+    bool matchTag(const QString &match_tag) const;
 #ifdef KCMRULES
 private:
 #endif
@@ -225,6 +226,8 @@ private:
     StringMatch titlematch;
     QString clientmachine;
     StringMatch clientmachinematch;
+    QString tag;
+    StringMatch tagmatch;
     WindowTypes types; // types for matching
     PlacementPolicy placement;
     ForceRule placementrule;
