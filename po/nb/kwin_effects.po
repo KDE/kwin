@@ -6,14 +6,14 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-26 02:49+0000\n"
-"PO-Revision-Date: 2015-08-27 20:55+0200\n"
-"Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
+"PO-Revision-Date: 2025-03-22 18:14+0100\n"
+"Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 24.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -23,27 +23,27 @@ msgstr ""
 #: blur/blur_config.ui:17
 #, kde-format
 msgid "Blur strength:"
-msgstr ""
+msgstr "Sløringsstyrke:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: blur/blur_config.ui:42 blur/blur_config.ui:108
 #, kde-format
 msgid "Light"
-msgstr "Lys"
+msgstr "Lett"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: blur/blur_config.ui:74 blur/blur_config.ui:137
 #, kde-format
 msgid "Strong"
-msgstr "Sterkt uthevet"
+msgstr "Sterk"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: blur/blur_config.ui:83
 #, kde-format
 msgid "Noise strength:"
-msgstr ""
+msgstr "Støystyrke:"
 
 #: colorpicker/colorpicker.cpp:101
 #, kde-format
@@ -51,6 +51,8 @@ msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Velg plassering å hente farge fra med venstreklikk eller «Enter».\n"
+"Høyreklikk eller trykk «Escape» for å avbryte."
 
 #: desktopgrid/desktopgrid_config.cpp:49 invert/invert_config.cpp:35
 #: magnifier/magnifier_config.cpp:55 mouseclick/mouseclick_config.cpp:48
@@ -67,7 +69,7 @@ msgstr "KWin"
 #: desktopgrid/desktopgrid_config.cpp:54 desktopgrid/desktopgrideffect.cpp:35
 #, kde-format
 msgid "Show Desktop Grid"
-msgstr "Vis rutenett på skrivebordet"
+msgstr "Vis skrivebordsoversikt"
 
 #: desktopgrid/desktopgrid_config.cpp:61
 #, kde-format
@@ -130,7 +132,7 @@ msgstr "Øverst til venstre"
 #: desktopgrid/desktopgrid_config.cpp:70
 #, kde-format
 msgid "Center"
-msgstr "Senter"
+msgstr "Midtstilt"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: desktopgrid/desktopgrid_config.ui:17 mousemark/mousemark_config.ui:17
@@ -143,7 +145,7 @@ msgstr "Utseende"
 #: desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr "Sideveksler"
+msgstr "Skrivebordsvisning"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: desktopgrid/desktopgrid_config.ui:35
@@ -155,38 +157,38 @@ msgstr "Automatisk"
 #: desktopgrid/desktopgrid_config.ui:40
 #, kde-format
 msgid "Custom"
-msgstr "Selvvalgt"
+msgstr "Tilpasset"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: desktopgrid/desktopgrid_config.ui:48
 #, kde-format
 msgid "N&umber of rows:"
-msgstr "A&ntall rader:"
+msgstr "A&ntall på rader:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: desktopgrid/desktopgrid_config.ui:103
 #, kde-format
 msgid "Desktop &name alignment:"
-msgstr "Innretting av skrivebordnavn:"
+msgstr "Innretting av skrivebords&navn:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
 #: desktopgrid/desktopgrid_config.ui:116
 #, kde-format
 msgid "Show buttons to alter count of virtual desktops"
-msgstr ""
+msgstr "Vis knapper for å endre tallet på virtuelle skrivebord"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: desktopgrid/desktopgrid_config.ui:123
 #, kde-format
 msgid "&Grid layout mode:"
-msgstr ""
+msgstr "&Rutenett-utforming:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
 #: windowview/kcm/windowvieweffectkcm.ui:30
 #, kde-format
 msgid "Closest"
-msgstr ""
+msgstr "Nærmeste"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
@@ -199,13 +201,13 @@ msgstr "Naturlig"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
 #, kde-format
 msgid "Windows layout:"
-msgstr ""
+msgstr "Vindusutforminger:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -217,49 +219,49 @@ msgstr "Aktivering"
 #: diminactive/diminactive_config.ui:17
 #, kde-format
 msgid "Strength:"
-msgstr ""
+msgstr "Styrke:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: diminactive/diminactive_config.ui:40
 #, kde-format
 msgid "Dim:"
-msgstr ""
+msgstr "Mørklegg:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: diminactive/diminactive_config.ui:47
 #, kde-format
 msgid "Docks and panels"
-msgstr ""
+msgstr "Dokkpaneler og andre paneler"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: diminactive/diminactive_config.ui:54
 #, kde-format
 msgid "Desktop"
-msgstr ""
+msgstr "Skrivebord"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: diminactive/diminactive_config.ui:61
 #, kde-format
 msgid "Keep above windows"
-msgstr ""
+msgstr "Hold over vinduer"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: diminactive/diminactive_config.ui:68
 #, kde-format
 msgid "By window group"
-msgstr ""
+msgstr "Etter vindusgruppe"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: diminactive/diminactive_config.ui:75
 #, kde-format
 msgid "Fullscreen windows"
-msgstr ""
+msgstr "Fullskjermsvinduer"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Duration:"
-msgstr ""
+msgstr "Varighet:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
@@ -277,21 +279,21 @@ msgstr " millisekunder"
 #: glide/glide_config.ui:50
 #, kde-format
 msgid "Window Open Animation"
-msgstr ""
+msgstr "Animasjon ved vindusåpning"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: glide/glide_config.ui:56 glide/glide_config.ui:154
 #, kde-format
 msgid "Rotation edge:"
-msgstr ""
+msgstr "Roteringskant:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: glide/glide_config.ui:93 glide/glide_config.ui:191
 #, kde-format
 msgid "Rotation angle:"
-msgstr ""
+msgstr "Roteringsvinkel:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -304,7 +306,7 @@ msgstr "Avstand:"
 #: glide/glide_config.ui:148
 #, kde-format
 msgid "Window Close Animation"
-msgstr ""
+msgstr "Animasjon ved vinduslukking"
 
 #: invert/invert.cpp:42 invert/invert_config.cpp:38
 #, kde-format
@@ -319,7 +321,7 @@ msgstr "Slå av/på omsnuingseffekt på vindu"
 #: invert/invert.cpp:56
 #, kde-format
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "Snu om skjermfarger"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -364,7 +366,7 @@ msgstr "&Bredde:"
 #: magnifier/magnifier_config.ui:42 magnifier/magnifier_config.ui:74
 #, kde-format
 msgid " px"
-msgstr "px"
+msgstr " piksler"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: magnifier/magnifier_config.ui:55
@@ -375,7 +377,7 @@ msgstr "&Høyde:"
 #: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
 #, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "Slå museklikk-effekt av/på "
+msgstr "Slå av/på museklikk-effekt"
 
 #: mouseclick/mouseclick.cpp:41
 #, kde-format
@@ -387,7 +389,7 @@ msgstr "Venstre"
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr "Midtre"
+msgstr "Midt"
 
 #: mouseclick/mouseclick.cpp:43
 #, kde-format
@@ -398,12 +400,12 @@ msgstr "Høyre"
 #: mouseclick/mouseclick.h:60
 #, kde-format
 msgid "↓"
-msgstr ""
+msgstr "↓"
 
 #: mouseclick/mouseclick.h:61
 #, kde-format
 msgid "↑"
-msgstr ""
+msgstr "↑"
 
 #. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
 #: mouseclick/mouseclick_config.ui:21
@@ -450,7 +452,7 @@ msgstr "Linjebredde:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
+#, kde-format
 msgid " pixel"
 msgstr " piksel"
 
@@ -476,7 +478,7 @@ msgstr "Ringradius:"
 #: mouseclick/mouseclick_config.ui:184
 #, kde-format
 msgid "Ring Count:"
-msgstr "Antall ringer:"
+msgstr "Antall på ringer:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: mouseclick/mouseclick_config.ui:210
@@ -499,31 +501,31 @@ msgstr "Vis tekst:"
 #: mousemark/mousemark.cpp:39
 #, kde-format
 msgid "Clear All Mouse Marks"
-msgstr "Fjern alle musemerker"
+msgstr "Fjern alle muselinjer"
 
 #: mousemark/mousemark.cpp:45 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
-msgstr "Fjern siste musemerke"
+msgstr "Fjern siste muselinje"
 
 #: mousemark/mousemark_config.cpp:53
 #, kde-format
 msgid "Clear Mouse Marks"
-msgstr "Fjern musemerker"
+msgstr "Fjern muselinjer"
 
 #: mousemark/mousemark_config.cpp:100
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " piksel"
+msgstr[1] " piksler"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: mousemark/mousemark_config.ui:23
 #, kde-format
 msgid "Wid&th:"
-msgstr ""
+msgstr "&Bredde:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: mousemark/mousemark_config.ui:36
@@ -535,87 +537,87 @@ msgstr "&Farge:"
 #: mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
-msgstr "Tegn med musa ved å holde Shift + Meta og flytte musa."
+msgstr "Tegn med musa ved å holde «Shift + Meta-tast» og flytte musa."
 
 #: outputlocator/outputlocator.cpp:48
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "Ukjent"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
 msgid "Toggle Overview"
-msgstr ""
+msgstr "Slå av/på oversikt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: overview/kcm/overvieweffectkcm.ui:22
 #: windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Layout mode:"
-msgstr "Utformingsmåte:"
+msgstr "Utformingsmetode:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
 #: overview/kcm/overvieweffectkcm.ui:56
 #, kde-format
 msgid "Blur background:"
-msgstr ""
+msgstr "Uklar bakgrunn:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: overview/kcm/overvieweffectkcm.ui:73
 #, kde-format
 msgid "Ignore minimized windows:"
-msgstr ""
+msgstr "Ignorer minimerte vinduer:"
 
 #: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
-msgstr ""
+msgstr "Slett virtuelt skrivebord"
 
 #: overview/qml/DesktopBar.qml:283
 #, kde-format
 msgid "Add Virtual Desktop"
-msgstr ""
+msgstr "Legg til virtuelt skrivebord"
 
 #: overview/qml/ScreenView.qml:226
 #, kde-format
 msgid "No matching windows"
-msgstr ""
+msgstr "Ingen samsvarende vinduer"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Dra ned for å lukke"
 
 #: private/qml/WindowHeapDelegate.qml:461
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
-msgstr ""
+msgstr "Lukk vinduet"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: scale/package/contents/ui/config.ui:46
 #, kde-format
 msgid "Window open scale:"
-msgstr ""
+msgstr "Skalering ved vindusåpning:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: scale/package/contents/ui/config.ui:53
 #, kde-format
 msgid "Window close scale:"
-msgstr ""
+msgstr "Skalering ved vinduslukking:"
 
 #: screenshot/screenshotdbusinterface1.cpp:478
 #, kde-format
 msgctxt "Notification caption that a screenshot got saved to file"
 msgid "Screenshot"
-msgstr ""
+msgstr "Skjermbilde"
 
 #: screenshot/screenshotdbusinterface1.cpp:479
 #, kde-format
 msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
-msgstr ""
+msgstr "Skjermbildet er lagret til %1"
 
 #: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:512
@@ -624,6 +626,8 @@ msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Velg vinduet å ta skjermbilde av med venstreklikk eller «Enter».\n"
+"Høyreklikk eller trykk «Escape» for å avbryte."
 
 #: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:530
@@ -632,47 +636,49 @@ msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Ta skjermbilde med venstreklikk eller «Enter».\n"
+"Høyreklikk eller trykk «Escape» for å avbryte."
 
 #: showfps/qml/main.qml:110
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr ""
+msgstr "Opptegningsvarighet:"
 
 #: showfps/qml/main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr ""
+msgstr "Opptegningsmengde"
 
 #: showfps/qml/main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "Gjeldende tall for bilde per sekund"
 
 #: showfps/qml/main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr ""
+msgstr "Maksgrense for bilde per sekund"
 
 #: showfps/qml/main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr ""
+msgstr "Denne effekten er ikke en ytelsestest"
 
 #: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
 #, kde-format
 msgid "Toggle Show Paint"
-msgstr ""
+msgstr "Vis/skjul opptegning"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: slide/slide_config.ui:17
 #, kde-format
 msgid "Gap between desktops"
-msgstr ""
+msgstr "Avstand mellom skrivebord"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: slide/slide_config.ui:23
@@ -690,25 +696,25 @@ msgstr "Loddrett:"
 #: slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
-msgstr ""
+msgstr "Glid skrivebordsbakgrunn"
 
 #: thumbnailaside/thumbnailaside.cpp:29
 #: thumbnailaside/thumbnailaside_config.cpp:59
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Slå av/på minibilde for gjeldende vindu"
+msgstr "Slå av/på miniatyrbilde for gjeldende vindu"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: thumbnailaside/thumbnailaside_config.ui:23
 #, kde-format
 msgid "Maximum &width:"
-msgstr "Maksimal &bredde:"
+msgstr "Maks&bredde:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: thumbnailaside/thumbnailaside_config.ui:36
 #, kde-format
 msgid "&Spacing:"
-msgstr "Mellom&rom:"
+msgstr "&Mellomrom:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
@@ -722,54 +728,54 @@ msgstr " piksler"
 #: thumbnailaside/thumbnailaside_config.ui:68
 #, kde-format
 msgid "&Opacity:"
-msgstr "&Tetthet:"
+msgstr "&Ugjennomsiktighet:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: thumbnailaside/thumbnailaside_config.ui:87
 #, no-c-format, kde-format
 msgid " %"
-msgstr " %"
+msgstr " %"
 
 #: tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Start/avslutt flisredigering"
 
 #: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Luft:"
 
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Åpne utforming …"
 
 #: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Lukk"
 
 #: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
-msgstr ""
+msgstr "Del vannrett"
 
 #: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
-msgstr ""
+msgstr "Del loddrett"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Legg til flytende fliser"
 
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -780,19 +786,19 @@ msgstr "Følg musa"
 #: trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr ""
+msgstr "Utløs effekt med:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: trackmouse/trackmouse_config.ui:33
 #, kde-format
 msgid "Keyboard shortcut:"
-msgstr ""
+msgstr "Hurtigtast:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: trackmouse/trackmouse_config.ui:43
 #, kde-format
 msgid "Modifier keys:"
-msgstr ""
+msgstr "Valgtast:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
 #: trackmouse/trackmouse_config.ui:65
@@ -822,13 +828,13 @@ msgstr "Meta"
 #: translucency/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Translucency"
-msgstr "Gjennomskinnelighet"
+msgstr "Gjennomsiktighet"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr "Generelle innstillinger for gjennomskinnelighet"
+msgstr "Generelle gjennomsiktighetsinnstillinger"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: translucency/package/contents/ui/config.ui:64
@@ -880,7 +886,7 @@ msgstr "Inaktive vinduer:"
 #: translucency/package/contents/ui/config.ui:267
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr "Sett opp uavhengig gjennomskinnelighet for menyer"
+msgstr "Velg menygjennomsiktighet uavhengig"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: translucency/package/contents/ui/config.ui:285
@@ -903,22 +909,22 @@ msgstr "Avrevne menyer:"
 #: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr "Slå av/på nærværende vinduer (gjeldende skrivebord)"
+msgstr "Vis/skjul vinduer (på det gjeldende skrivebordet)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:54
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Slå av/på nærværende vinduer  (alle skrivebord) "
+msgstr "Vis/skjul vinduer (på alle skrivebordene)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "Slå av/på nærværende vinduer (Vindusklasse) "
+msgstr "Vis/skjul vinduer (i vindusklassen)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr ""
+msgstr "Vis/skjul vinduer (vindusklasse på gjeldende skrivebordet)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -929,17 +935,17 @@ msgstr "Ignorer &minimerte vinduer"
 #: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Ingen treff"
 
 #: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Windows"
-msgstr ""
+msgstr "Ingen vinduer"
 
 #: windowview/qml/main.qml:123
 #, kde-format
 msgid "Filter windows…"
-msgstr ""
+msgstr "Filtrer vinduer …"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
@@ -957,25 +963,25 @@ msgstr "&Stivhet:"
 #: wobblywindows/wobblywindows_config.ui:68
 #, kde-format
 msgid "Dra&g:"
-msgstr "B&rems:"
+msgstr "&Dra:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: wobblywindows/wobblywindows_config.ui:81
 #, kde-format
 msgid "&Move factor:"
-msgstr "Fl&yttefaktor:"
+msgstr "&Flyttefaktor:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: wobblywindows/wobblywindows_config.ui:155
 #, kde-format
 msgid "Wo&bble when moving"
-msgstr "Vingle under &flytting"
+msgstr "Vingle ved &flytting"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
 #: wobblywindows/wobblywindows_config.ui:162
 #, kde-format
 msgid "Wobble when &resizing"
-msgstr "Vingle når &størrelsen endres"
+msgstr "Vingle ved &størrelsesendring"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
 #: wobblywindows/wobblywindows_config.ui:182
@@ -987,7 +993,7 @@ msgstr "Slå på &avansert modus"
 #: wobblywindows/wobblywindows_config.ui:192
 #, kde-format
 msgid "&Wobbliness"
-msgstr "&Vinglethet"
+msgstr "&Vinglehet"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: wobblywindows/wobblywindows_config.ui:201
@@ -1024,12 +1030,12 @@ msgstr "Flytt forstørret område nedover"
 #: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Flytt mus til fokus"
+msgstr "Flytt peker til fokus"
 
 #: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
-msgstr "Flytt mus til senter"
+msgstr "Flytt peker til midten"
 
 #: zoom/zoom_config.cpp:80
 #, kde-format
@@ -1056,13 +1062,13 @@ msgstr "Flytt ned"
 #: zoom/zoom_config.ui:25 zoom/zoom_config.ui:41
 #, kde-format
 msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "Ved forstørring/forminsking, endre med definert faktor."
+msgstr "Ved forstørring/forminsking, endre med valgt størrelsesfaktor."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: zoom/zoom_config.ui:28
 #, kde-format
 msgid "Zoom Factor:"
-msgstr "«Zoom»-faktor:"
+msgstr "Størrelsesfaktor:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: zoom/zoom_config.ui:66
@@ -1071,12 +1077,14 @@ msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
+"Slå på fokusfølging. For dette må QAccessible være slått på for programmet "
+"(«export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1»)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: zoom/zoom_config.ui:69
 #, kde-format
 msgid "Enable Focus Tracking"
-msgstr "Slå på fokus-følging"
+msgstr "Slå på fokusfølging"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: zoom/zoom_config.ui:76
@@ -1085,12 +1093,14 @@ msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
+"Slå på fokusfølging av skrivemerket. For dette må QAccessible være slått på "
+"for programmet («export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1»)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: zoom/zoom_config.ui:79
 #, kde-format
 msgid "Enable Text Cursor Tracking"
-msgstr ""
+msgstr "Slå på følging av skrivemerke"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: zoom/zoom_config.ui:86
@@ -1108,7 +1118,7 @@ msgstr "Synlighet for musepekeren."
 #: zoom/zoom_config.ui:103
 #, kde-format
 msgid "Scale"
-msgstr "Skala"
+msgstr "Skalering"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: zoom/zoom_config.ui:108
@@ -1138,7 +1148,7 @@ msgstr "Proporsjonal"
 #: zoom/zoom_config.ui:130
 #, kde-format
 msgid "Centered"
-msgstr "Sentrert"
+msgstr "Midtstilt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: zoom/zoom_config.ui:135
@@ -1156,4 +1166,4 @@ msgstr "Slått av"
 #: zoom/zoom_config.ui:148
 #, kde-format
 msgid "Mouse Tracking:"
-msgstr "Musesporing"
+msgstr "Musesporing:"

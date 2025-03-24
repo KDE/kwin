@@ -1,6 +1,5 @@
 # Translation of kcm_kwin_effects to Norwegian Bokmål
 #
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
