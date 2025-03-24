@@ -11,45 +11,28 @@
 #include "wayland/subcompositor.h"
 #include "wayland/surface_p.h"
 
+#if defined(Q_OS_LINUX)
+#include <linux/dma-buf.h>
+#include <xf86drm.h>
+#endif
+
 namespace KWin
 {
 
-TransactionFence::TransactionFence(Transaction *transaction, int fileDescriptor)
-    : m_transaction(transaction)
-    , m_fileDescriptor(fileDescriptor)
-    , m_ownsFileDescriptor(false)
-{
-    insert();
-}
-
 TransactionFence::TransactionFence(Transaction *transaction, FileDescriptor &&fileDescriptor)
     : m_transaction(transaction)
-    , m_fileDescriptor(fileDescriptor.take())
-    , m_ownsFileDescriptor(true)
+    , m_fileDescriptor(std::move(fileDescriptor))
 {
-    insert();
-}
-
-TransactionFence::~TransactionFence()
-{
-    delete m_notifier;
-    if (m_ownsFileDescriptor) {
-        close(m_fileDescriptor);
-    }
+    m_notifier = std::make_unique<QSocketNotifier>(m_fileDescriptor.get(), QSocketNotifier::Read);
+    QObject::connect(m_notifier.get(), &QSocketNotifier::activated, [this]() {
+        m_notifier->setEnabled(false);
+        m_transaction->tryApply();
+    });
 }
 
 bool TransactionFence::isWaiting() const
 {
     return m_notifier->isEnabled();
-}
-
-void TransactionFence::insert()
-{
-    m_notifier = new QSocketNotifier(m_fileDescriptor, QSocketNotifier::Read);
-    QObject::connect(m_notifier, &QSocketNotifier::activated, [this]() {
-        m_notifier->setEnabled(false);
-        m_transaction->tryApply();
-    });
 }
 
 bool TransactionEntry::isDiscarded() const
@@ -272,8 +255,24 @@ void Transaction::watchSyncObj(TransactionEntry *entry)
     entry->fences.emplace_back(std::make_unique<TransactionFence>(this, std::move(eventFd)));
 }
 
+#if defined(Q_OS_LINUX)
+static FileDescriptor exportWaitSyncFile(const FileDescriptor &fileDescriptor)
+{
+    dma_buf_export_sync_file request{
+        .flags = DMA_BUF_SYNC_READ,
+        .fd = -1,
+    };
+    if (drmIoctl(fileDescriptor.get(), DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &request) == 0) {
+        return FileDescriptor(request.fd);
+    }
+
+    return FileDescriptor{};
+}
+#endif
+
 void Transaction::watchDmaBuf(TransactionEntry *entry)
 {
+#if defined(Q_OS_LINUX)
     const DmaBufAttributes *attributes = entry->buffer->dmabufAttributes();
     if (!attributes) {
         return;
@@ -285,8 +284,12 @@ void Transaction::watchDmaBuf(TransactionEntry *entry)
             continue;
         }
 
-        entry->fences.emplace_back(std::make_unique<TransactionFence>(this, fileDescriptor.get()));
+        auto syncFile = exportWaitSyncFile(fileDescriptor);
+        if (syncFile.isValid()) {
+            entry->fences.emplace_back(std::make_unique<TransactionFence>(this, std::move(syncFile)));
+        }
     }
+#endif
 }
 
 } // namespace KWin

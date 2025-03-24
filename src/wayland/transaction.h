@@ -31,19 +31,14 @@ class Transaction;
 class TransactionFence
 {
 public:
-    TransactionFence(Transaction *transaction, int fileDescriptor);
     TransactionFence(Transaction *transaction, FileDescriptor &&fileDescriptor);
-    ~TransactionFence();
 
     bool isWaiting() const;
 
 private:
-    void insert();
-
     Transaction *m_transaction;
-    QSocketNotifier *m_notifier;
-    int m_fileDescriptor;
-    bool m_ownsFileDescriptor;
+    std::unique_ptr<QSocketNotifier> m_notifier;
+    FileDescriptor m_fileDescriptor;
 };
 
 /**
