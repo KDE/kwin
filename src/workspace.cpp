@@ -504,16 +504,6 @@ void Workspace::updateOutputConfiguration()
                 cfg.changeSet(output)->enabled = false;
             }
         }
-        for (Output *output : std::as_const(toEnable)) {
-            const auto changeset = cfg.changeSet(output);
-            if (output->brightnessDevice() && output->brightnessDevice()->usesDdcCi()) {
-                changeset->detectedDdcCi = true;
-            }
-            if (output->brightnessDevice() && changeset->allowSdrSoftwareBrightness.value_or(true)) {
-                changeset->allowSdrSoftwareBrightness = false;
-                changeset->brightness = output->brightnessDevice()->observedBrightness();
-            }
-        }
 
         error = applyOutputConfiguration(cfg, order);
         switch (error) {
@@ -1395,7 +1385,16 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
         if (it != candidates.end()) {
             Output *const output = *it;
             candidates.erase(it);
-            outputConfig.changeSet(output)->brightnessDevice = device;
+
+            auto changeset = outputConfig.changeSet(output);
+            changeset->brightnessDevice = device;
+            if (device->usesDdcCi()) {
+                changeset->detectedDdcCi = true;
+            }
+            if (changeset->allowSdrSoftwareBrightness.value_or(true)) {
+                changeset->allowSdrSoftwareBrightness = false;
+                changeset->brightness = device->observedBrightness();
+            }
         }
     }
     for (Output *output : candidates) {
