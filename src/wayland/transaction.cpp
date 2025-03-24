@@ -308,7 +308,7 @@ void Transaction::watchSyncObj(const TransactionEntry &entry)
         return;
     }
 
-    if (FileDescriptor::isReadable(eventFd.get())) {
+    if (eventFd.isReadable()) {
         return;
     }
 
