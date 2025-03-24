@@ -7,7 +7,6 @@
 
 #include "display.h"
 #include "surface_p.h"
-#include "transaction_p.h"
 
 namespace KWin
 {

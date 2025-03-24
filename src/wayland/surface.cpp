@@ -25,7 +25,6 @@
 #include "subcompositor.h"
 #include "surface_p.h"
 #include "transaction.h"
-#include "transaction_p.h"
 #include "utils/resource.h"
 
 #include <algorithm>
@@ -471,9 +470,15 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 
 SurfaceInterface::~SurfaceInterface()
 {
-    // ensure that we won't wait on pending transactions because of fifo
     d->m_tearingDown = true;
-    clearFifoBarrier();
+    if (d->firstTransaction) {
+        d->firstTransaction->tryApply();
+    }
+}
+
+bool SurfaceInterface::tearingDown() const
+{
+    return d->m_tearingDown;
 }
 
 SurfaceRole *SurfaceInterface::role() const
@@ -1278,7 +1283,7 @@ void SurfaceInterface::clearFifoBarrier()
 
 bool SurfaceInterface::hasFifoBarrier() const
 {
-    return d->current->fifoBarrier && !d->m_tearingDown;
+    return d->current->fifoBarrier;
 }
 
 } // namespace KWin

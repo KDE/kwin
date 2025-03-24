@@ -27,6 +27,7 @@ public:
     QString executablePath;
     QString securityContextAppId;
     qreal scaleOverride = 1.0;
+    bool tearingDown = false;
 
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
@@ -56,6 +57,7 @@ void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, voi
 
     Q_EMIT q->aboutToBeDestroyed();
     wl_list_remove(&q->d->destroyListener.link);
+    q->d->tearingDown = true;
 }
 
 ClientConnection::ClientConnection(wl_client *c, Display *parent)
@@ -65,6 +67,11 @@ ClientConnection::ClientConnection(wl_client *c, Display *parent)
 }
 
 ClientConnection::~ClientConnection() = default;
+
+bool ClientConnection::tearingDown() const
+{
+    return d->tearingDown;
+}
 
 void ClientConnection::flush()
 {

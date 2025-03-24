@@ -94,6 +94,13 @@ public:
     ~SurfaceInterface() override;
 
     /**
+     * Returns @c true if the surface is being destroyed; otherwise returns @c false.
+     *
+     * The surface will be marked as tearing down after the aboutToBeDestroyed() signal is emitted.
+     */
+    bool tearingDown() const;
+
+    /**
      * Returns the object id for this Wayland surface.
      */
     uint32_t id() const;
