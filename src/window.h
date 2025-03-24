@@ -1785,7 +1785,6 @@ protected:
     void updatePreferredColorDescription();
     void setTargetScale(qreal scale);
 
-    void setTag(const QString &tag);
     void setDescription(const QString &description);
 
     Output *m_output = nullptr;

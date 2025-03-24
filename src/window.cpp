@@ -4790,14 +4790,6 @@ QString Window::tag() const
     return m_tag;
 }
 
-void Window::setTag(const QString &tag)
-{
-    if (m_tag != tag) {
-        m_tag = tag;
-        Q_EMIT tagChanged();
-    }
-}
-
 QString Window::description() const
 {
     return m_description;
