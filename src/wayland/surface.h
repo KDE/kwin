@@ -282,10 +282,6 @@ public:
      * @returns The SurfaceInterface for the @p native resource.
      */
     static SurfaceInterface *get(wl_resource *native);
-    /**
-     * @returns The SurfaceInterface with given @p id for @p client, if it exists, otherwise @c nullptr.
-     */
-    static SurfaceInterface *get(quint32 id, const ClientConnection *client);
 
     /**
      * @see ClientConnection::setScaleOverride

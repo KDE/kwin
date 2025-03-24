@@ -13,7 +13,6 @@
 #include <memory>
 
 struct wl_client;
-struct wl_resource;
 
 namespace KWin
 {
@@ -38,10 +37,6 @@ public:
      * Flushes the connection to this client. Ensures that all events are pushed to the client.
      */
     void flush();
-    /**
-     * Get the wl_resource associated with the given @p id.
-     */
-    wl_resource *getResource(quint32 id) const;
 
     /**
      * @returns the native wl_client this ClientConnection represents.

@@ -897,14 +897,6 @@ SurfaceInterface *SurfaceInterface::get(wl_resource *native)
     return nullptr;
 }
 
-SurfaceInterface *SurfaceInterface::get(quint32 id, const ClientConnection *client)
-{
-    if (client) {
-        return get(client->getResource(id));
-    }
-    return nullptr;
-}
-
 QList<SubSurfaceInterface *> SurfaceInterface::below() const
 {
     return d->current->subsurface.below;

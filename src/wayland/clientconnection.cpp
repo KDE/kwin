@@ -109,11 +109,6 @@ void ClientConnection::destroy()
     wl_client_destroy(d->client);
 }
 
-wl_resource *ClientConnection::getResource(quint32 id) const
-{
-    return wl_client_get_object(d->client, id);
-}
-
 wl_client *ClientConnection::client() const
 {
     return d->client;

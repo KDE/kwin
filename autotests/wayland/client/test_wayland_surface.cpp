@@ -185,7 +185,6 @@ void TestWaylandSurface::testStaticAccessor()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
 
     QVERIFY(!KWin::SurfaceInterface::get(nullptr));
-    QVERIFY(!KWin::SurfaceInterface::get(1, nullptr));
     QVERIFY(KWayland::Client::Surface::all().isEmpty());
     std::unique_ptr<KWayland::Client::Surface> s1(m_compositor->createSurface());
     QVERIFY(s1->isValid());
@@ -196,7 +195,6 @@ void TestWaylandSurface::testStaticAccessor()
     auto serverSurface1 = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
     QVERIFY(serverSurface1);
     QCOMPARE(KWin::SurfaceInterface::get(serverSurface1->resource()), serverSurface1);
-    QCOMPARE(KWin::SurfaceInterface::get(serverSurface1->id(), serverSurface1->client()), serverSurface1);
 
     QVERIFY(!s1->size().isValid());
     QSignalSpy sizeChangedSpy(s1.get(), &KWayland::Client::Surface::sizeChanged);
@@ -219,9 +217,7 @@ void TestWaylandSurface::testStaticAccessor()
     auto serverSurface2 = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
     QVERIFY(serverSurface2);
     QCOMPARE(KWin::SurfaceInterface::get(serverSurface1->resource()), serverSurface1);
-    QCOMPARE(KWin::SurfaceInterface::get(serverSurface1->id(), serverSurface1->client()), serverSurface1);
     QCOMPARE(KWin::SurfaceInterface::get(serverSurface2->resource()), serverSurface2);
-    QCOMPARE(KWin::SurfaceInterface::get(serverSurface2->id(), serverSurface2->client()), serverSurface2);
 
     const quint32 surfaceId1 = serverSurface1->id();
     const quint32 surfaceId2 = serverSurface2->id();
@@ -239,8 +235,6 @@ void TestWaylandSurface::testStaticAccessor()
     QSignalSpy destroyedSpy(serverSurface1, &KWin::SurfaceInterface::destroyed);
     QVERIFY(destroyedSpy.wait());
     QVERIFY(!KWin::SurfaceInterface::get(nullptr));
-    QVERIFY(!KWin::SurfaceInterface::get(surfaceId1, nullptr));
-    QVERIFY(!KWin::SurfaceInterface::get(surfaceId2, nullptr));
 }
 
 void TestWaylandSurface::testDamage()
