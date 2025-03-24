@@ -137,6 +137,10 @@ void XdgSurfaceWindow::handleConfigureAcknowledged(quint32 serial)
 
 void XdgSurfaceWindow::handleCommit()
 {
+    if (!m_shellSurface->isConfigured()) {
+        return;
+    }
+
     if (!surface()->buffer()) {
         return;
     }

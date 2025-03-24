@@ -115,6 +115,8 @@ private Q_SLOTS:
     void testNoMinimumSize();
     void testMaximumSize();
     void testNoMaximumSize();
+    void testUnconfiguredBufferToplevel();
+    void testUnconfiguredBufferPopup();
 };
 
 void TestXdgShellWindow::testXdgPopupReactive_data()
@@ -2499,6 +2501,40 @@ void TestXdgShellWindow::testNoMaximumSize()
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(300, 300), Qt::cyan);
     QCOMPARE(window->maxSize(), QSizeF(INT_MAX, INT_MAX));
+}
+
+void TestXdgShellWindow::testUnconfiguredBufferToplevel()
+{
+    // This test verifies that a protocol error is posted when a client attaches a buffer to
+    // the initial xdg-toplevel commit.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+    Test::render(surface.get(), QSize(100, 50), Qt::blue);
+
+    QSignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    QVERIFY(connectionErrorSpy.wait());
+}
+
+void TestXdgShellWindow::testUnconfiguredBufferPopup()
+{
+    // This test verifies that a protocol error is posted when a client attaches a buffer to
+    // the initial xdg-popup commit.
+
+    std::unique_ptr<KWayland::Client::Surface> parentSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
+    Test::renderAndWaitForShown(parentSurface.get(), QSize(200, 200), Qt::cyan);
+
+    std::unique_ptr<Test::XdgPositioner> positioner = Test::createXdgPositioner();
+    positioner->set_size(10, 10);
+    positioner->set_anchor_rect(10, 10, 10, 10);
+
+    std::unique_ptr<KWayland::Client::Surface> childSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgPopup> popup = Test::createXdgPopupSurface(childSurface.get(), parentToplevel->xdgSurface(), positioner.get(), Test::CreationSetup::CreateOnly);
+    Test::render(childSurface.get(), QSize(100, 50), Qt::blue);
+
+    QSignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    QVERIFY(connectionErrorSpy.wait());
 }
 
 WAYLANDTEST_MAIN(TestXdgShellWindow)
