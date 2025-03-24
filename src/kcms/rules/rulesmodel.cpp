@@ -220,6 +220,9 @@ QString RulesModel::defaultDescription() const
     if (!title.isEmpty()) {
         return i18n("Window settings for %1", title);
     }
+    if (m_rules["tag"]->isEnabled()) {
+        return i18n("Window settings for %1", m_rules["tag"]->value().toString());
+    }
     if (!wmclass.isEmpty()) {
         return i18n("Settings for %1", wmclass);
     }
@@ -431,6 +434,12 @@ void RulesModel::populateRuleList()
                          RulePolicy::StringMatch, RuleItem::String,
                          i18n("Machine (hostname)"), i18n("Window matching"),
                          QIcon::fromTheme("computer")));
+
+    auto tag = addRule(new RuleItem(QLatin1String("tag"),
+                                    RulePolicy::StringMatch, RuleItem::String,
+                                    i18n("Window tag"), i18n("Window matching"),
+                                    QIcon::fromTheme("edit-comment")));
+    tag->setFlag(RuleItem::AffectsDescription);
 
     // Size & Position
     auto position = addRule(new RuleItem(QLatin1String("position"),

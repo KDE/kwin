@@ -64,6 +64,16 @@
       <max code="true">Rules::LastStringMatch</max>
     </entry>
 
+    <entry name="tag" type="String">
+      <label>Window tag</label>
+    </entry>
+    <entry name="tagmatch" type="Int">
+      <label>Window tag string match type</label>
+      <default code="true">Rules::UnimportantMatch</default>
+      <min code="true">Rules::FirstStringMatch</min>
+      <max code="true">Rules::LastStringMatch</max>
+    </entry>
+
     <entry name="types" type="UInt">
       <label>Window types that match</label>
       <default>NET::AllTypesMask</default>
