@@ -244,11 +244,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
-    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wayland-drm.xml
-    BASENAME drm
-)
-ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PRIVATE_CODE
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screen-edge-v1.xml
     BASENAME kde-screen-edge-v1
 )
@@ -340,7 +335,6 @@ target_sources(kwin PRIVATE
     datasource.cpp
     display.cpp
     dpms.cpp
-    drmclientbuffer.cpp
     drmlease_v1.cpp
     externalbrightness_v1.cpp
     fifo_v1.cpp
