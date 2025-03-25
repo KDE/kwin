@@ -934,12 +934,7 @@ bool XdgToplevelWindow::wantsInput() const
 
 bool XdgToplevelWindow::dockWantsInput() const
 {
-    if (m_plasmaShellSurface) {
-        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Panel) {
-            return m_plasmaShellSurface->panelTakesFocus();
-        }
-    }
-    return false;
+    return wantsInput();
 }
 
 bool XdgToplevelWindow::acceptsFocus() const
@@ -951,6 +946,7 @@ bool XdgToplevelWindow::acceptsFocus() const
         switch (m_plasmaShellSurface->role()) {
         case PlasmaShellSurfaceInterface::Role::Notification:
         case PlasmaShellSurfaceInterface::Role::CriticalNotification:
+        case PlasmaShellSurfaceInterface::Role::Panel:
             return m_plasmaShellSurface->panelTakesFocus();
         default:
             break;

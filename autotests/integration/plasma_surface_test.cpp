@@ -140,7 +140,7 @@ void PlasmaSurfaceTest::testAcceptsFocus_data()
     QTest::addColumn<bool>("active");
 
     QTest::newRow("Desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << true << true;
-    QTest::newRow("Panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << true << false;
+    QTest::newRow("Panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << false << false;
     QTest::newRow("OSD") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << false << false;
     QTest::newRow("Normal") << KWayland::Client::PlasmaShellSurface::Role::Normal << true << true;
     QTest::newRow("Notification") << KWayland::Client::PlasmaShellSurface::Role::Notification << false << false;
