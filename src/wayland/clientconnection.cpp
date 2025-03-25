@@ -56,7 +56,6 @@ void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, voi
 
     Q_EMIT q->aboutToBeDestroyed();
     wl_list_remove(&q->d->destroyListener.link);
-    Q_EMIT q->disconnected(q);
 }
 
 ClientConnection::ClientConnection(wl_client *c, Display *parent)

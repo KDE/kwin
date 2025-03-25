@@ -129,7 +129,6 @@ Q_SIGNALS:
     void socketNamesChanged();
     void runningChanged(bool);
     void clientConnected(KWin::ClientConnection *);
-    void clientDisconnected(KWin::ClientConnection *);
 
 private:
     friend class DisplayPrivate;

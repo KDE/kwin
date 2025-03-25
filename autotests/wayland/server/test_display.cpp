@@ -72,7 +72,6 @@ void TestWaylandServerDisplay::testClientConnection()
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
     QSignalSpy connectedSpy(&display, &KWin::Display::clientConnected);
-    QSignalSpy disconnectedSpy(&display, &KWin::Display::clientDisconnected);
 
     int sv[2];
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
@@ -117,13 +116,12 @@ void TestWaylandServerDisplay::testClientConnection()
     QCOMPARE(connectedSpy.last().first().value<ClientConnection *>(), client2);
 
     // and destroy
-    QVERIFY(disconnectedSpy.isEmpty());
+    QSignalSpy clientDestroyedSpy(connection, &QObject::destroyed);
     wl_client_destroy(client);
-    QCOMPARE(disconnectedSpy.count(), 1);
-    QSignalSpy clientDestroyedSpy(client2, &QObject::destroyed);
-    client2->destroy();
     QCOMPARE(clientDestroyedSpy.count(), 1);
-    QCOMPARE(disconnectedSpy.count(), 2);
+    QSignalSpy client2DestroyedSpy(client2, &QObject::destroyed);
+    client2->destroy();
+    QCOMPARE(client2DestroyedSpy.count(), 1);
     close(sv[0]);
     close(sv[1]);
     close(sv2[0]);

@@ -802,14 +802,14 @@ void TestWaylandSurface::testDisconnect()
     QVERIFY(serverSurface);
 
     // destroy client
-    QSignalSpy clientDisconnectedSpy(serverSurface->client(), &ClientConnection::disconnected);
+    QSignalSpy clientDestroyedSpy(serverSurface->client(), &ClientConnection::destroyed);
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
     if (m_connection) {
         m_connection->deleteLater();
         m_connection = nullptr;
     }
-    QVERIFY(clientDisconnectedSpy.wait());
-    QCOMPARE(clientDisconnectedSpy.count(), 1);
+    QVERIFY(clientDestroyedSpy.wait());
+    QCOMPARE(clientDestroyedSpy.count(), 1);
     if (surfaceDestroyedSpy.isEmpty()) {
         QVERIFY(surfaceDestroyedSpy.wait());
     }

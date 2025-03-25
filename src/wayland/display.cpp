@@ -50,10 +50,6 @@ void DisplayPrivate::clientCreatedCallback(wl_listener *listener, void *data)
 
     wl_client *client = static_cast<wl_client *>(data);
     ClientConnection *connection = new ClientConnection(client, display);
-
-    QObject::connect(connection, &ClientConnection::disconnected, display, [display](ClientConnection *c) {
-        Q_EMIT display->clientDisconnected(c);
-    });
     Q_EMIT display->clientConnected(connection);
 }
 

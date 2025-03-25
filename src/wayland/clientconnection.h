@@ -132,10 +132,6 @@ Q_SIGNALS:
      * This signal is emitted when the client is about to be destroyed.
      */
     void aboutToBeDestroyed();
-    /**
-     * Signal emitted when the ClientConnection got disconnected from the server.
-     */
-    void disconnected(KWin::ClientConnection *);
 
     void scaleOverrideChanged();
 
