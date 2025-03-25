@@ -67,7 +67,7 @@ void ColorManagerV1::wp_color_manager_v1_get_surface(Resource *resource, uint32_
 {
     const auto surf = SurfaceInterface::get(surface);
     const auto priv = SurfaceInterfacePrivate::get(surf);
-    if (priv->frogColorManagement || priv->colorSurface) {
+    if (priv->colorSurface) {
         wl_resource_post_error(resource->handle, error_surface_exists, "there's already a color management surface for this wl_surface");
         return;
     }
