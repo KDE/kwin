@@ -230,6 +230,11 @@ ClientConnection *WaylandServer::inputMethodConnection() const
     return m_inputMethodServerConnection;
 }
 
+ClientConnection *WaylandServer::screenLockerClientConnection() const
+{
+    return m_screenLockerClientConnection;
+}
+
 void WaylandServer::registerWindow(Window *window)
 {
     if (window->readyForPainting()) {
@@ -686,9 +691,6 @@ int WaylandServer::createScreenLockerConnection()
         return -1;
     }
     m_screenLockerClientConnection = socket.connection;
-    connect(m_screenLockerClientConnection, &ClientConnection::disconnected, this, [this]() {
-        m_screenLockerClientConnection = nullptr;
-    });
     return socket.fd;
 }
 

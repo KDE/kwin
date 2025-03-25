@@ -184,10 +184,7 @@ public:
 
     ClientConnection *xWaylandConnection() const;
     ClientConnection *inputMethodConnection() const;
-    ClientConnection *screenLockerClientConnection() const
-    {
-        return m_screenLockerClientConnection;
-    }
+    ClientConnection *screenLockerClientConnection() const;
 
     /**
      * Struct containing information for a created Wayland connection through a
@@ -275,7 +272,7 @@ private:
     QPointer<ClientConnection> m_xwaylandConnection;
     InputMethodV1Interface *m_inputMethod = nullptr;
     QPointer<ClientConnection> m_inputMethodServerConnection;
-    ClientConnection *m_screenLockerClientConnection = nullptr;
+    QPointer<ClientConnection> m_screenLockerClientConnection;
     XdgForeignV2Interface *m_XdgForeign = nullptr;
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
 #if KWIN_BUILD_X11
