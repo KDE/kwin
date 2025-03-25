@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-20 00:43+0000\n"
+"POT-Creation-Date: 2025-03-25 00:43+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -76,7 +76,7 @@ msgstr "Каб захапіць увод, націсніце правую кла
 msgid "KDE Wayland Compositor"
 msgstr "Сродак кампазітынгу KDE Wayland"
 
-#: compositor.cpp:438
+#: compositor.cpp:460
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Эфекты працоўнага стала перазапушчаныя праз скід графікі"
@@ -4330,7 +4330,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не адказвае)"
 
-#: workspace.cpp:1633
+#: workspace.cpp:1630
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
