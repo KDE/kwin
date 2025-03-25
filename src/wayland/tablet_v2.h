@@ -19,7 +19,7 @@ class ClientConnection;
 class Display;
 class InputDevice;
 class InputDeviceTabletTool;
-class InputDeviceTabletPadModeGroup;
+struct InputDeviceTabletPadModeGroup;
 class SeatInterface;
 class SurfaceInterface;
 class TabletSurfaceCursorV2;
