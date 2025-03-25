@@ -5,6 +5,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "output.h"
+#include "clientconnection.h"
 #include "display.h"
 #include "display_p.h"
 #include "utils/resource.h"
@@ -167,7 +168,7 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     sendGeometry(resource);
     sendDone(resource);
 
-    Q_EMIT q->bound(display->getConnection(resource->client()), resource->handle);
+    Q_EMIT q->bound(ClientConnection::get(resource->client()), resource->handle);
 }
 
 OutputInterface::OutputInterface(Display *display, Output *handle, QObject *parent)

@@ -643,7 +643,7 @@ public:
 
     void zwp_tablet_pad_v2_set_feedback(Resource *resource, quint32 button, const QString &description, quint32 serial) override
     {
-        Q_EMIT q->feedback(m_display->getConnection(resource->client()), button, description, serial);
+        Q_EMIT q->feedback(ClientConnection::get(resource->client()), button, description, serial);
     }
 
     std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> resourcesForSurface(SurfaceInterface *surface) const

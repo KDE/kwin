@@ -601,7 +601,7 @@ static QString sourceString(const AbstractDataSource *const source)
     }
 
     if (source->client()) {
-        const QString executable = waylandServer()->display()->getConnection(source->client())->executablePath();
+        const QString executable = ClientConnection::get(source->client())->executablePath();
 
         if (auto dataSource = qobject_cast<const DataSourceInterface *const>(source)) {
             return QStringLiteral("wl_data_source@%1 of %2").arg(wl_resource_get_id(dataSource->resource())).arg(executable);

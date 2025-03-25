@@ -49,7 +49,7 @@ void XdgSystemBellV1InterfacePrivate::xdg_system_bell_v1_ring(Resource *resource
         Q_EMIT q->ringSurface(surface);
         return;
     }
-    Q_EMIT q->ring(display->getConnection(resource->client()));
+    Q_EMIT q->ring(ClientConnection::get(resource->client()));
 }
 
 XdgSystemBellV1Interface::XdgSystemBellV1Interface(Display *display, QObject *parent)

@@ -80,7 +80,7 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(client);
     QCOMPARE(connectedSpy.count(), 1);
 
-    ClientConnection *connection = display.getConnection(client);
+    ClientConnection *connection = ClientConnection::get(client);
     QVERIFY(connection);
     QCOMPARE(connectedSpy.first().first().value<ClientConnection *>(), connection);
     QCOMPARE(connection->client(), client);
@@ -99,7 +99,7 @@ void TestWaylandServerDisplay::testClientConnection()
     const ClientConnection &constRef = *connection;
     QCOMPARE((wl_client *)constRef, client);
 
-    QCOMPARE(connection, display.getConnection(client));
+    QCOMPARE(connection, ClientConnection::get(client));
     QCOMPARE(connectedSpy.count(), 1);
 
     // create a second client
@@ -107,7 +107,7 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv2) >= 0);
     auto client2 = display.createClient(sv2[0]);
     QVERIFY(client2);
-    ClientConnection *connection2 = display.getConnection(client2->client());
+    ClientConnection *connection2 = ClientConnection::get(client2->client());
     QVERIFY(connection2);
     QCOMPARE(connection2, client2);
     QCOMPARE(connectedSpy.count(), 2);

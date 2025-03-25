@@ -168,13 +168,13 @@ void XdgOutputV1Interface::zxdg_output_v1_bind_resource(Resource *resource)
 
     sendDone(resource);
 
-    ClientConnection *connection = output->display()->getConnection(resource->client());
+    ClientConnection *connection = ClientConnection::get(resource->client());
     connect(connection, &ClientConnection::scaleOverrideChanged, this, &XdgOutputV1Interface::resend, Qt::UniqueConnection);
 }
 
 void XdgOutputV1Interface::sendLogicalSize(Resource *resource)
 {
-    ClientConnection *connection = output->display()->getConnection(resource->client());
+    ClientConnection *connection = ClientConnection::get(resource->client());
     qreal scaleOverride = connection->scaleOverride();
 
     send_logical_size(resource->handle, std::round(size.width() * scaleOverride), std::round(size.height() * scaleOverride));
@@ -182,7 +182,7 @@ void XdgOutputV1Interface::sendLogicalSize(Resource *resource)
 
 void XdgOutputV1Interface::sendLogicalPosition(Resource *resource)
 {
-    ClientConnection *connection = output->display()->getConnection(resource->client());
+    ClientConnection *connection = ClientConnection::get(resource->client());
     qreal scaleOverride = connection->scaleOverride();
 
     send_logical_position(resource->handle, pos.x() * scaleOverride, pos.y() * scaleOverride);
@@ -206,7 +206,7 @@ void XdgOutputV1Interface::resend()
     auto changedConnection = qobject_cast<ClientConnection *>(sender());
     const auto outputResources = resourceMap();
     for (auto resource : outputResources) {
-        ClientConnection *connection = output->display()->getConnection(resource->client());
+        ClientConnection *connection = ClientConnection::get(resource->client());
         if (connection == changedConnection) {
             sendLogicalPosition(resource);
             sendLogicalSize(resource);

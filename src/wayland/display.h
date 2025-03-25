@@ -11,7 +11,6 @@
 #include <QList>
 #include <QObject>
 
-struct wl_client;
 struct wl_display;
 struct wl_resource;
 
@@ -102,14 +101,6 @@ public:
     QList<OutputInterface *> outputs() const;
     QList<OutputInterface *> outputsIntersecting(const QRect &rect) const;
     OutputInterface *largestIntersectingOutput(const QRect &rect) const;
-
-    /**
-     * Gets the ClientConnection for the given @p client.
-     * If there is no ClientConnection yet for the given @p client, it will be created.
-     * @param client The native client for which the ClientConnection is retrieved
-     * @return The ClientConnection for the given native client
-     */
-    ClientConnection *getConnection(wl_client *client);
 
     /**
      * Returns the graphics buffer for the given @a resource, or @c null if there's no buffer.

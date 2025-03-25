@@ -216,11 +216,6 @@ QList<SeatInterface *> Display::seats() const
     return d->seats;
 }
 
-ClientConnection *Display::getConnection(wl_client *client)
-{
-    return ClientConnection::get(client);
-}
-
 ClientConnection *Display::createClient(int fd)
 {
     Q_ASSERT(fd != -1);
@@ -229,7 +224,7 @@ ClientConnection *Display::createClient(int fd)
     if (!c) {
         return nullptr;
     }
-    return getConnection(c);
+    return ClientConnection::get(c);
 }
 
 GraphicsBuffer *Display::bufferForResource(wl_resource *resource)

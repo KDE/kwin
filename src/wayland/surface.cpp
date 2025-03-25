@@ -460,7 +460,7 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 {
     d->compositor = compositor;
     d->init(resource);
-    d->client = compositor->display()->getConnection(d->resource()->client());
+    d->client = ClientConnection::get(d->resource()->client());
 
     d->pendingScaleOverride = d->client->scaleOverride();
     d->scaleOverride = d->pendingScaleOverride;
