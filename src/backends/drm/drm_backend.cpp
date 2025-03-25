@@ -253,7 +253,6 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
     }
     m_outputs.append(o);
     Q_EMIT outputAdded(o);
-    o->updateEnabled(true);
 }
 
 static const int s_dpmsTimeout = []() {
