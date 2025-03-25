@@ -22,6 +22,8 @@ public:
     FileDescriptor &operator=(FileDescriptor &&);
     ~FileDescriptor();
 
+    explicit operator bool() const;
+
     bool isValid() const;
     int get() const;
     int take();
@@ -37,5 +39,10 @@ public:
 private:
     int m_fd = -1;
 };
+
+inline FileDescriptor::operator bool() const
+{
+    return isValid();
+}
 
 }
