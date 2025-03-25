@@ -932,11 +932,6 @@ bool XdgToplevelWindow::wantsInput() const
     return rules()->checkAcceptFocus(acceptsFocus());
 }
 
-bool XdgToplevelWindow::dockWantsInput() const
-{
-    return wantsInput();
-}
-
 bool XdgToplevelWindow::acceptsFocus() const
 {
     if (m_plasmaShellSurface) {

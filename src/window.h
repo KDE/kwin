@@ -1093,18 +1093,6 @@ public:
     bool wantsTabFocus() const;
     virtual bool takeFocus() = 0;
     virtual bool wantsInput() const = 0;
-    /**
-     * Whether a dock window wants input.
-     *
-     * By default KWin doesn't pass focus to a dock window unless a force activate
-     * request is provided.
-     *
-     * This method allows to have dock windows take focus also through flags set on
-     * the window.
-     *
-     * The default implementation returns @c false.
-     */
-    virtual bool dockWantsInput() const;
     void checkWorkspacePosition(QRectF oldGeometry = QRectF(), const VirtualDesktop *oldDesktop = nullptr);
     virtual xcb_timestamp_t userTime() const;
 

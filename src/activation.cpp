@@ -401,12 +401,8 @@ bool Workspace::takeActivity(Window *window, ActivityFlags flags)
         }
         cancelDelayFocus();
     }
-    if (!flags.testFlag(ActivityFocusForce) && (window->isDock() || window->isSplash())) {
-        // toplevel menus and dock windows don't take focus if not forced
-        // and don't have a flag that they take focus
-        if (!window->dockWantsInput()) {
-            flags &= ~ActivityFocus;
-        }
+    if (!flags.testFlag(ActivityFocusForce) && window->isSplash()) {
+        flags &= ~ActivityFocus; // toplevel menus don't take focus if not forced
     }
     if (window->isShade()) {
         if (window->wantsInput() && (flags & ActivityFocus)) {

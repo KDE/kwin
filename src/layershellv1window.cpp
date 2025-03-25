@@ -143,11 +143,6 @@ bool LayerShellV1Window::wantsInput() const
     return acceptsFocus() && readyForPainting();
 }
 
-bool LayerShellV1Window::dockWantsInput() const
-{
-    return wantsInput();
-}
-
 StrutRect LayerShellV1Window::strutRect(StrutArea area) const
 {
     switch (area) {

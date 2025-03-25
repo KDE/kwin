@@ -3081,11 +3081,6 @@ void Window::setKeyboardGeometryRestore(const QRectF &geom)
     m_keyboardGeometryRestore = geom;
 }
 
-bool Window::dockWantsInput() const
-{
-    return false;
-}
-
 void Window::setDesktopFileName(const QString &name)
 {
     const QString effectiveName = rules()->checkDesktopFile(name);

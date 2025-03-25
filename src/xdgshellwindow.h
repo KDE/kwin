@@ -161,7 +161,6 @@ public:
     void applyWindowRules() override;
     bool takeFocus() override;
     bool wantsInput() const override;
-    bool dockWantsInput() const override;
     void setFullScreen(bool set) override;
     void closeWindow() override;
     void maximize(MaximizeMode mode, const QRectF &restore = QRectF()) override;

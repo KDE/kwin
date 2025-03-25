@@ -255,7 +255,7 @@ void PlasmaSurfaceTest::testPanelActivate()
     QCOMPARE(panel->windowType(), WindowType::Dock);
     QVERIFY(panel->isDock());
     QFETCH(bool, active);
-    QCOMPARE(panel->dockWantsInput(), active);
+    QCOMPARE(panel->wantsInput(), active);
     QCOMPARE(panel->isActive(), active);
 }
 
