@@ -140,12 +140,13 @@ void OutputChangesTest::initTestCase()
     qRegisterMetaType<Window *>();
 
     QVERIFY(waylandServer()->init(s_socketName));
+
+    kwinApp()->start();
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
 
-    kwinApp()->start();
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
@@ -218,8 +219,11 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     {
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->pos = QPoint(0, 0);
+        changeSet->enabled = true;
     }
     workspace()->applyOutputConfiguration(config);
+
+    QCOMPARE(workspace()->outputs().front()->geometry(), QRect(0, 0, 1280, 1024));
 
     // The position of the window relative to its output should remain the same.
     QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
@@ -1439,9 +1443,6 @@ void OutputChangesTest::testGenerateConfigs_data()
 
 void OutputChangesTest::testGenerateConfigs()
 {
-    // delete the previous config to avoid clashes between test runs
-    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
-
     // Whether there is a lid switch input device is not a totally reliable way to determine if it's
     // a laptop, but on the other hand, we don't have any other better hints.
     QFETCH(DeviceType, deviceType);
@@ -1457,6 +1458,10 @@ void OutputChangesTest::testGenerateConfigs()
 
     QFETCH(Test::OutputInfo, outputInfo);
     Test::setOutputConfig({outputInfo});
+
+    // delete the previous config to avoid loading the config from workspace
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
     const auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
     auto cfg = configs.queryConfig(outputs, false, nullptr, false);
@@ -1708,9 +1713,6 @@ void OutputChangesTest::testSettingRestoration()
     // this test verifies that we restore configs correctly,
     // even if there's no unique EDID ID to match them with
 
-    // delete the previous config to avoid clashes between test runs
-    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
-
     QFETCH(QList<IdentificationData>, outputData);
 
     Test::setOutputConfig(outputData | std::views::transform([](const IdentificationData &data) {
@@ -1725,6 +1727,9 @@ void OutputChangesTest::testSettingRestoration()
             .mstPath = data.mstPath,
         };
     }) | std::ranges::to<QList>());
+
+    // delete the previous config to avoid loading the config from workspace
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
 
     auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
@@ -1803,9 +1808,6 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     // this test checks that when libdisplay-info fails to parse an EDID
     // and gets fixed later, we still pick the same settings as before
 
-    // delete the previous config to avoid clashes between test runs
-    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
-
     QFile file(QFINDTESTDATA("data/same serial number/edid.bin"));
     file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
     const auto edid = file.readAll();
@@ -1841,6 +1843,9 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
             .mstPath = QByteArrayLiteral("MST-1-2"),
         },
     });
+
+    // delete the previous config to avoid loading the config from workspace
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
 
     auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;

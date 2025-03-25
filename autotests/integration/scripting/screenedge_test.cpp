@@ -49,7 +49,6 @@ private:
 void ScreenEdgeTest::initTestCase()
 {
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     // empty config to have defaults
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -69,6 +68,7 @@ void ScreenEdgeTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
     QVERIFY(Scripting::self());
 
     workspace()->screenEdges()->setTimeThreshold(0ms);

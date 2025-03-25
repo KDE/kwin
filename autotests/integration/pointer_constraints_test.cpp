@@ -57,10 +57,6 @@ void TestPointerConstraints::initTestCase()
     qRegisterMetaType<PointerFunc>();
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     // set custom config which disables the OnScreenNotification
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -71,6 +67,10 @@ void TestPointerConstraints::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));

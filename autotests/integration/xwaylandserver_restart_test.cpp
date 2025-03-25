@@ -34,10 +34,6 @@ private Q_SLOTS:
 void XwaylandServerRestartTest::initTestCase()
 {
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup xwaylandGroup = config->group(QStringLiteral("Xwayland"));
@@ -46,6 +42,10 @@ void XwaylandServerRestartTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 }
 
 static void kwin_safe_kill(QProcess *process)

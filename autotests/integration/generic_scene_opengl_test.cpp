@@ -44,10 +44,6 @@ void GenericSceneOpenGLTest::initTestCase()
     }
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     // disable all effects - we don't want to have it interact with the rendering
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -65,6 +61,10 @@ void GenericSceneOpenGLTest::initTestCase()
     qputenv("KWIN_COMPOSE", m_envVariable);
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
     QVERIFY(Compositor::self());
 
     QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);

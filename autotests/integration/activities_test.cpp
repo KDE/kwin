@@ -45,13 +45,12 @@ void ActivitiesTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
+    kwinApp()->setUseKActivities(true);
+    kwinApp()->start();
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
-
-    kwinApp()->setUseKActivities(true);
-    kwinApp()->start();
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));

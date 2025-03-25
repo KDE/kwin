@@ -60,10 +60,6 @@ void GlobalShortcutsTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
     qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");
@@ -71,6 +67,10 @@ void GlobalShortcutsTest::initTestCase()
     qputenv("XKB_DEFAULT_LAYOUT", "us,ru");
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 }
 
 void GlobalShortcutsTest::init()

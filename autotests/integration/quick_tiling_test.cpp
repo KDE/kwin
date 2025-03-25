@@ -122,10 +122,6 @@ void QuickTilingTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     // set custom config which disables the Outline
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -138,6 +134,10 @@ void QuickTilingTest::initTestCase()
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);

@@ -40,12 +40,11 @@ void TestIdleInhibition::initTestCase()
     qRegisterMetaType<KWin::Window *>();
 
     QVERIFY(waylandServer()->init(s_socketName));
+    kwinApp()->start();
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
-
-    kwinApp()->start();
 }
 
 void TestIdleInhibition::init()

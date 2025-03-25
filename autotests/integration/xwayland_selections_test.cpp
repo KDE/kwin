@@ -55,12 +55,12 @@ void XwaylandSelectionsTest::initTestCase()
     //    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
     //    QVERIFY(clipboardSyncDevicedCreated.isValid());
     QVERIFY(waylandServer()->init(s_socketName));
+
+    kwinApp()->start();
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
-
-    kwinApp()->start();
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));

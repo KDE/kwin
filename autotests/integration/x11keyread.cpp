@@ -74,14 +74,14 @@ void X11KeyReadTest::initTestCase_data()
 void X11KeyReadTest::initTestCase()
 {
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-    });
 
     qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+    });
 
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));

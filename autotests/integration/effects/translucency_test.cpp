@@ -46,10 +46,6 @@ void TranslucencyTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Effect *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     // disable all effects - we don't want to have it interact with the rendering
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -67,6 +63,10 @@ void TranslucencyTest::initTestCase()
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
     QVERIFY(Compositor::self());
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 }
 
 void TranslucencyTest::init()

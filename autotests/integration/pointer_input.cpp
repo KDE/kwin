@@ -9,6 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "core/outputconfiguration.h"
 #include "cursor.h"
 #include "cursorsource.h"
 #include "effect/effecthandler.h"
@@ -114,10 +115,6 @@ void PointerInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
@@ -126,6 +123,10 @@ void PointerInputTest::initTestCase()
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));

@@ -43,13 +43,13 @@ void VirtualKeyboardDBusTest::initTestCase()
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.testvirtualkeyboard"));
     QVERIFY(waylandServer()->init(s_socketName));
+
+    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("internal");
+    kwinApp()->start();
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
-
-    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("internal");
-    kwinApp()->start();
 
     QVERIFY(setupWaylandConnection(AdditionalWaylandInterface::Seat | AdditionalWaylandInterface::InputMethodV1 | AdditionalWaylandInterface::TextInputManagerV2 | AdditionalWaylandInterface::TextInputManagerV3));
 }

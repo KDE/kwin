@@ -75,7 +75,6 @@ void ScreenEdgesTest::initTestCase()
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
 
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     // Disable effects, in particular present windows, which reserves a screen edge.
     auto config = kwinApp()->config();
@@ -89,6 +88,7 @@ void ScreenEdgesTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 }
 
 void ScreenEdgesTest::init()

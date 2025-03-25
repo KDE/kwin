@@ -141,10 +141,10 @@ void X11WindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
     QVERIFY(KWin::Compositor::self());
 }
 

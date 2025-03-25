@@ -55,14 +55,14 @@ void StickyKeysTest::initTestCase()
 
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-    });
 
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
 }
 
 void StickyKeysTest::init()

@@ -39,11 +39,11 @@ void MouseActionsTest::initTestCase()
     qRegisterMetaType<Window *>();
 
     QVERIFY(waylandServer()->init(s_socketName));
+
+    kwinApp()->start();
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
     });
-
-    kwinApp()->start();
 }
 
 void MouseActionsTest::init()

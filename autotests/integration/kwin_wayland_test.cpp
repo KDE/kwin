@@ -10,6 +10,7 @@
 
 #include "backends/virtual/virtual_backend.h"
 #include "compositor.h"
+#include "core/outputconfiguration.h"
 #include "core/session.h"
 #include "effect/effecthandler.h"
 #include "input.h"
@@ -35,6 +36,7 @@
 
 // system
 #include <iostream>
+#include <ranges>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -57,6 +59,7 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
         QStringLiteral("kaccessrc"),
         QStringLiteral("kglobalshortcutsrc"),
         QStringLiteral("kcminputrc"),
+        QStringLiteral("kwinoutputconfig.json"),
     };
     for (const QString &config : configs) {
         if (const QString &fileName = QStandardPaths::locate(QStandardPaths::ConfigLocation, config); !fileName.isEmpty()) {
@@ -275,13 +278,11 @@ void Test::FractionalScaleV1::wp_fractional_scale_v1_preferred_scale(uint32_t sc
 
 void Test::setOutputConfig(const QList<QRect> &geometries)
 {
-    QList<VirtualBackend::OutputInfo> converted;
-    std::transform(geometries.begin(), geometries.end(), std::back_inserter(converted), [](const auto &geometry) {
-        return VirtualBackend::OutputInfo{
+    setOutputConfig(geometries | std::views::transform([](const QRect &geometry) {
+        return OutputInfo{
             .geometry = geometry,
         };
-    });
-    static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
+    }) | std::ranges::to<QList>());
 }
 
 void Test::setOutputConfig(const QList<OutputInfo> &infos)
@@ -302,6 +303,19 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
         };
     });
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);
+
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    OutputConfiguration config;
+    for (int i = 0; i < outputs.size(); i++) {
+        const auto &info = infos[i];
+        *config.changeSet(outputs[i]) = OutputChangeSet{
+            .desiredModeSize = info.geometry.size() * info.scale,
+            .enabled = true,
+            .pos = info.geometry.topLeft(),
+            .scale = info.scale,
+        };
+    }
+    workspace()->applyOutputConfiguration(config, outputs);
 }
 }
 

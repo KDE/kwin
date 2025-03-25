@@ -128,7 +128,6 @@ void ScriptedEffectsTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Effect *>();
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     // disable all effects - we don't want to have it interact with the rendering
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -144,6 +143,7 @@ void ScriptedEffectsTest::initTestCase()
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     KWin::VirtualDesktopManager::self()->setCount(2);
 }

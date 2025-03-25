@@ -36,9 +36,9 @@ private Q_SLOTS:
 void ScreenChangesTest::initTestCase()
 {
     QVERIFY(waylandServer()->init(s_socketName));
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     kwinApp()->start();
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
     setenv("QT_QPA_PLATFORM", "wayland", true);
 }
 
