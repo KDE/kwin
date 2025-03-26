@@ -15,6 +15,7 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/surface.h>
 
@@ -56,6 +57,7 @@ private Q_SLOTS:
     void testUnmap();
     void testScreenEdge_data();
     void testScreenEdge();
+    void testUnconfiguredBuffer();
 };
 
 void LayerShellV1WindowTest::initTestCase()
@@ -841,6 +843,21 @@ void LayerShellV1WindowTest::testScreenEdge()
         QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
     }
+}
+
+void LayerShellV1WindowTest::testUnconfiguredBuffer()
+{
+    // This test verifies that a protocol error is posted when a client attaches a buffer to
+    // the initial commit.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("test")));
+    shellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
+    shellSurface->set_size(100, 50);
+    Test::render(surface.get(), QSize(100, 50), Qt::blue);
+
+    QSignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    QVERIFY(connectionErrorSpy.wait());
 }
 
 } // namespace KWin
