@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-25 00:43+0000\n"
+"POT-Creation-Date: 2025-03-26 00:43+0000\n"
 "PO-Revision-Date: 2025-03-11 10:17+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -29,44 +29,44 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "g.sora@tiscali.it"
 
-#: backends/wayland/wayland_output.cpp:432
+#: backends/wayland/wayland_output.cpp:425
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pressa controlo dextere per lassar punctator"
 
-#: backends/wayland/wayland_output.cpp:434
+#: backends/wayland/wayland_output.cpp:427
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pressa controlo dextere per prender punctator"
 
-#: backends/wayland/wayland_output.cpp:438
+#: backends/wayland/wayland_output.cpp:431
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
-#: backends/wayland/wayland_output.cpp:441
+#: backends/wayland/wayland_output.cpp:434
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Sortita dishabilitate"
 
-#: backends/wayland/wayland_output.cpp:443
+#: backends/wayland/wayland_output.cpp:436
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Sortita obscurate"
 
-#: backends/x11/x11_windowed_backend.cpp:498
+#: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Pressa controlo dextere per lassar entrata"
 
-#: backends/x11/x11_windowed_backend.cpp:498
+#: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Pressa clave de controlo dextere per prender entrata"
 
-#: backends/x11/x11_windowed_backend.cpp:499
+#: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
@@ -1632,6 +1632,14 @@ msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
 msgstr "Disactiva Captura de Ingresso Active"
 
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: plugins/fadedesktop/package/contents/ui/config.ui:17
+#: plugins/magiclamp/magiclamp_config.ui:17
+#, kde-format
+msgid "Animation duration:"
+msgstr "Duration de animation:"
+
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
@@ -1962,12 +1970,6 @@ msgstr "Activa fenestra executante sur %1"
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
 msgstr "Pallide a nigre (solmente pro splash screens a schermo plen)"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/magiclamp/magiclamp_config.ui:17
-#, kde-format
-msgid "Animation duration:"
-msgstr "Duration de animation:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:36
@@ -4302,13 +4304,13 @@ msgstr "Leordine de exito fornite es invalide"
 msgid "The driver rejected the output configuration"
 msgstr "Le driver refusava le configuration de exito"
 
-#: window.cpp:3229
+#: window.cpp:3224
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non respondente)"
 
-#: workspace.cpp:1630
+#: workspace.cpp:1625
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
