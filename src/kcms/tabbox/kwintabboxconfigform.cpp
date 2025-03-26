@@ -64,11 +64,7 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *conf
     auto initShortcutWidget = [this](KKeySequenceWidget *primary, KKeySequenceWidget *alternate, const QString &name) {
         primary->setCheckActionCollections({m_shortcuts->actionCollection()});
         primary->setProperty("shortcutAction", name);
-        connect(primary, &KKeySequenceWidget::recordingChanged, this, [this, name, primary]() {
-            if (primary->isRecording()) {
-                return;
-            }
-            const QKeySequence seq = primary->keySequence();
+        connect(primary, &KKeySequenceWidget::keySequenceChanged, this, [this, name](const QKeySequence &seq) {
             if (m_shortcuts->primaryShortcut(name) != seq) {
                 m_shortcuts->setShortcuts(name, {seq, m_shortcuts->alternateShortcut(name)});
                 Q_EMIT configChanged();
@@ -77,11 +73,7 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *conf
 
         alternate->setCheckActionCollections({m_shortcuts->actionCollection()});
         alternate->setProperty("shortcutAction", name);
-        connect(alternate, &KKeySequenceWidget::recordingChanged, this, [this, name, alternate]() {
-            if (alternate->isRecording()) {
-                return;
-            }
-            const QKeySequence seq = alternate->keySequence();
+        connect(alternate, &KKeySequenceWidget::keySequenceChanged, this, [this, name](const QKeySequence &seq) {
             if (m_shortcuts->alternateShortcut(name) != seq) {
                 m_shortcuts->setShortcuts(name, {m_shortcuts->primaryShortcut(name), seq});
                 Q_EMIT configChanged();
