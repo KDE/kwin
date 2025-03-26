@@ -236,12 +236,10 @@ void X11Window::releaseWindow(bool on_shutdown)
 
     if (isUnmanaged()) {
         m_releaseTimer.stop();
-        if (!findInternalWindow()) { // don't affect our own windows
-            if (Xcb::Extensions::self()->isShapeAvailable()) {
-                xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
-            }
-            Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
+        if (Xcb::Extensions::self()->isShapeAvailable()) {
+            xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
         }
+        Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
         workspace()->removeUnmanaged(this);
     } else {
         cleanTabBox();
@@ -400,9 +398,6 @@ bool X11Window::track(xcb_window_t w)
     getSkipCloseAnimation();
     updateShadow();
     setupCompositing();
-    if (QWindow *internalWindow = findInternalWindow()) {
-        m_outline = internalWindow->property("__kwin_outline").toBool();
-    }
 
     // The wayland surface is associated with the override-redirect window asynchronously.
     if (surface()) {
@@ -4357,17 +4352,6 @@ void X11Window::associate()
     }
 
     connect(surface(), &SurfaceInterface::committed, this, &X11Window::handleCommitted);
-}
-
-QWindow *X11Window::findInternalWindow() const
-{
-    const QWindowList windows = kwinApp()->topLevelWindows();
-    for (QWindow *w : windows) {
-        if (w->handle() && w->winId() == window()) {
-            return w;
-        }
-    }
-    return nullptr;
 }
 
 void X11Window::checkOutput()

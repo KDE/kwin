@@ -23,7 +23,6 @@
 #include <QFlags>
 #include <QPixmap>
 #include <QPointer>
-#include <QWindow>
 // X
 #include <NETWM>
 #include <xcb/res.h>
@@ -365,7 +364,6 @@ private:
     void createDecoration();
     void destroyDecoration();
 
-    QWindow *findInternalWindow() const;
     void checkOutput();
     void associate();
     void handleXwaylandScaleChanged();
