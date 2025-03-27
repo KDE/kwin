@@ -74,6 +74,8 @@ public:
      */
     bool needsShadowBuffer() const;
 
+    void removePipeline();
+
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;

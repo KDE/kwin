@@ -558,11 +558,11 @@ void DrmGpu::addDefunctCommit(std::unique_ptr<DrmCommit> &&commit)
 void DrmGpu::removeOutput(DrmOutput *output)
 {
     qCDebug(KWIN_DRM) << "Removing output" << output;
-    m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->setLayers(nullptr, nullptr);
     m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
+    m_pipelines.removeOne(output->pipeline());
     m_pipelineMap.erase(output->connector());
+    output->removePipeline();
     output->unref();
     // force a modeset to make sure unused objects are cleaned up
     m_forceModeset = true;

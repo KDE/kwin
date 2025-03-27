@@ -530,6 +530,11 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 
 void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom)
 {
+    if (!m_pipeline) {
+        // this can happen when the output gets hot-unplugged
+        // FIXME fix output lifetimes so that this doesn't happen anymore...
+        return;
+    }
     if (m_brightnessDevice && !m_state.highDynamicRange) {
         constexpr double minLuminance = 0.04;
         const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
@@ -678,6 +683,11 @@ const ColorDescription &DrmOutput::scanoutColorDescription() const
 const ColorDescription &DrmOutput::blendingColorDescription() const
 {
     return m_blendingColorDescription;
+}
+
+void DrmOutput::removePipeline()
+{
+    m_pipeline = nullptr;
 }
 }
 
