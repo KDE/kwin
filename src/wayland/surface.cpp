@@ -717,9 +717,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     if (bufferChanged) {
         if (current->buffer && (!current->damage.isEmpty() || !current->bufferDamage.isEmpty())) {
+            const QRect surfaceRect = QRectF(QPointF(0, 0), surfaceSize).toAlignedRect();
             const QRect bufferRect = QRect(QPoint(0, 0), current->buffer->size());
             bufferDamage = current->bufferDamage
-                               .united(mapToBuffer(current->damage))
+                               .united(mapToBuffer(current->damage.intersected(surfaceRect)))
                                .intersected(bufferRect);
             Q_EMIT q->damaged(bufferDamage);
         }
