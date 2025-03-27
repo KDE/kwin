@@ -379,7 +379,7 @@ public:
     const ColorDescription &colorDescription() const;
 
     BrightnessDevice *brightnessDevice() const;
-    virtual void setBrightnessDevice(BrightnessDevice *device);
+    virtual void unsetBrightnessDevice();
     bool allowSdrSoftwareBrightness() const;
 
     ColorPowerTradeoff colorPowerTradeoff() const;

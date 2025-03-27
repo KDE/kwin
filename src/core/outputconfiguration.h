@@ -19,6 +19,7 @@ namespace KWin
 {
 
 class IccProfile;
+class BrightnessDevice;
 
 class KWIN_EXPORT OutputChangeSet
 {
@@ -46,9 +47,13 @@ public:
     std::optional<double> sdrGamutWideness;
     std::optional<Output::ColorProfileSource> colorProfileSource;
     std::optional<double> brightness;
+    // setting "brightness" may trigger animations;
+    // setting the current brightness doesn't
+    std::optional<double> currentBrightness;
     std::optional<bool> allowSdrSoftwareBrightness;
     std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
     std::optional<double> dimming;
+    std::optional<BrightnessDevice *> brightnessDevice;
 };
 
 class KWIN_EXPORT OutputConfiguration
