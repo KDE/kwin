@@ -668,6 +668,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool bufferReleasePointChanged = next->bufferIsSet && current->releasePoint != next->releasePoint;
     const bool alphaMultiplierChanged = next->alphaMultiplierIsSet;
     const bool yuvCoefficientsChanged = next->yuvCoefficientsIsSet && (current->yuvCoefficients != next->yuvCoefficients);
+    const bool damageIsSet = (next->bufferIsSet && next->buffer) && (!next->damage.isEmpty() || !next->bufferDamage.isEmpty());
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QRectF oldBufferSourceBox = bufferSourceBox;
@@ -681,8 +682,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     scaleOverride = pendingScaleOverride;
 
     if (current->buffer) {
-        bufferSourceBox = computeBufferSourceBox();
-
         if (current->viewport.destinationSize.isValid()) {
             surfaceSize = current->viewport.destinationSize;
         } else if (current->viewport.sourceGeometry.isValid()) {
@@ -691,14 +690,21 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
             surfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
         }
 
-        const QRectF surfaceRect(QPoint(0, 0), surfaceSize);
-        inputRegion = current->input & surfaceRect.toAlignedRect();
+        const QRect surfaceRect = QRectF(QPointF(0, 0), surfaceSize).toAlignedRect();
+        const QRect bufferRect = QRect(QPoint(0, 0), current->buffer->size());
+
+        inputRegion = current->input & surfaceRect;
 
         if (!current->buffer->hasAlphaChannel()) {
-            opaqueRegion = surfaceRect.toAlignedRect();
+            opaqueRegion = surfaceRect;
         } else {
-            opaqueRegion = current->opaque & surfaceRect.toAlignedRect();
+            opaqueRegion = current->opaque & surfaceRect;
         }
+
+        bufferSourceBox = computeBufferSourceBox();
+        bufferDamage = current->bufferDamage
+                           .united(mapToBuffer(current->damage.intersected(surfaceRect)))
+                           .intersected(bufferRect);
 
         QMatrix4x4 scaleOverrideMatrix;
         if (scaleOverride != 1.) {
@@ -711,6 +717,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     } else {
         surfaceSize = QSizeF(0, 0);
         bufferSourceBox = QRectF();
+        bufferDamage = QRegion();
         inputRegion = QRegion();
         opaqueRegion = QRegion();
     }
@@ -764,16 +771,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (alphaMultiplierChanged) {
         Q_EMIT q->alphaMultiplierChanged();
     }
-
-    if (bufferChanged) {
-        if (current->buffer && (!current->damage.isEmpty() || !current->bufferDamage.isEmpty())) {
-            const QRect surfaceRect = QRectF(QPointF(0, 0), surfaceSize).toAlignedRect();
-            const QRect bufferRect = QRect(QPoint(0, 0), current->buffer->size());
-            bufferDamage = current->bufferDamage
-                               .united(mapToBuffer(current->damage.intersected(surfaceRect)))
-                               .intersected(bufferRect);
-            Q_EMIT q->damaged(bufferDamage);
-        }
+    if (damageIsSet) {
+        Q_EMIT q->damaged(bufferDamage);
     }
 
     // The position of a sub-surface is applied when its parent is committed.
