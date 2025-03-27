@@ -278,7 +278,7 @@ bool DrmConnector::updateProperties()
     } else {
         m_edid = Edid{};
         if (m_conn->connection == DRM_MODE_CONNECTED) {
-            qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
+            qCWarning(KWIN_DRM) << "Could not find edid for connector" << this;
         }
     }
 

@@ -366,7 +366,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
     }
     if (crtcs.isEmpty()) {
         // we have no crtc left to drive this connector
-        qCDebug(KWIN_DRM) << "No matching CRTC for connector" << connector->id();
+        qCWarning(KWIN_DRM) << "No matching CRTC for connector" << connector->id();
         return DrmPipeline::Error::NotEnoughCrtcs;
     }
     DrmCrtc *currentCrtc = nullptr;
