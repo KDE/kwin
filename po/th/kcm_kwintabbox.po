@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-25 00:42+0000\n"
+"POT-Creation-Date: 2025-03-27 00:43+0000\n"
 "PO-Revision-Date: 2010-03-27 23:18+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -232,28 +232,37 @@ msgstr "รายการของหน้าต่างต่าง ๆ:"
 msgid "Reverse"
 msgstr ""
 
+#. i18n: ectx: property (text), widget (QLabel, scCurrentReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scCurrentOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllOr)
+#: main.ui:474 main.ui:506 main.ui:554 main.ui:586
+#, kde-format
+msgid "or"
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: main.ui:480
+#: main.ui:538
 #, fuzzy, kde-format
 #| msgid "Current Desktop Grouped by Applications"
 msgid "Current application"
 msgstr "หน้าต่างที่อยู่บนพื้นที่ทำงานปัจจุบัน โดยจัดกลุ่มตามโปรแกรม"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: main.ui:499
+#: main.ui:615
 #, fuzzy, kde-format
 #| msgid "Navigation"
 msgid "Visualization"
 msgstr "การนำทาง"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:529
+#: main.ui:645
 #, kde-format
 msgid "The effect to replace the list window when desktop effects are active."
 msgstr "ลูกเล่นที่จะใช้แทนที่รายการหน้าต่างเมื่อมีการเปิดใช้งานลูกเล่นของพื้นที่ทำงาน"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:678
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -263,51 +272,51 @@ msgstr ""
 "ตัวเลือกนี้ต้องการการเปิดใช้งานลูกเล่นของพื้นที่ทำงานด้วย"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:565
+#: main.ui:681
 #, fuzzy, kde-format
 #| msgid "Show outline of selected window"
 msgid "Show selected window"
 msgstr "แสดงเส้นโดยรอบของหน้าต่างที่ถูกเลือก"
 
-#: shortcutsettings.cpp:132
+#: shortcutsettings.cpp:131
 #, kde-format
 msgid "Walk Through Windows"
 msgstr "วนสลับหน้าต่าง"
 
-#: shortcutsettings.cpp:133
+#: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
 msgstr "วนสลับหน้าต่าง (ย้อนกลับ)"
 
-#: shortcutsettings.cpp:134
+#: shortcutsettings.cpp:133
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
 
-#: shortcutsettings.cpp:135
+#: shortcutsettings.cpp:134
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
 
-#: shortcutsettings.cpp:137
+#: shortcutsettings.cpp:136
 #, kde-format
 msgid "Walk Through Windows Alternative"
 msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
 
-#: shortcutsettings.cpp:138
+#: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
 
-#: shortcutsettings.cpp:139
+#: shortcutsettings.cpp:138
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
 
-#: shortcutsettings.cpp:140
+#: shortcutsettings.cpp:139
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"

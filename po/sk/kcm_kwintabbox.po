@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-25 00:42+0000\n"
+"POT-Creation-Date: 2025-03-27 00:43+0000\n"
 "PO-Revision-Date: 2023-05-06 17:53+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -226,26 +226,35 @@ msgstr "Všetky okná"
 msgid "Reverse"
 msgstr "Opačne"
 
+#. i18n: ectx: property (text), widget (QLabel, scCurrentReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scCurrentOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllOr)
+#: main.ui:474 main.ui:506 main.ui:554 main.ui:586
+#, kde-format
+msgid "or"
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: main.ui:480
+#: main.ui:538
 #, kde-format
 msgid "Current application"
 msgstr "Aktuálna aplikácia"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: main.ui:499
+#: main.ui:615
 #, kde-format
 msgid "Visualization"
 msgstr "Vizualizácia"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:529
+#: main.ui:645
 #, kde-format
 msgid "The effect to replace the list window when desktop effects are active."
 msgstr "Efekt, ktorý nahradí zoznam okien, ak sú aktívne efekty plochy."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:678
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -255,47 +264,47 @@ msgstr ""
 "Táto možnosť vyžaduje, aby boli aktívne efekty plochy."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:565
+#: main.ui:681
 #, kde-format
 msgid "Show selected window"
 msgstr "Zobraziť vybrané okno"
 
-#: shortcutsettings.cpp:132
+#: shortcutsettings.cpp:131
 #, kde-format
 msgid "Walk Through Windows"
 msgstr "Prepínať medzi oknami"
 
-#: shortcutsettings.cpp:133
+#: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
 msgstr "Prepínať medzi oknami (opačne)"
 
-#: shortcutsettings.cpp:134
+#: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows of Current Application"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie"
 
-#: shortcutsettings.cpp:135
+#: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie (opačne)"
 
-#: shortcutsettings.cpp:137
+#: shortcutsettings.cpp:136
 #, kde-format
 msgid "Walk Through Windows Alternative"
 msgstr "Prepínať medzi oknami alternatívne"
 
-#: shortcutsettings.cpp:138
+#: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Prepínať medzi oknami alternatívne (opačne)"
 
-#: shortcutsettings.cpp:139
+#: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie alternatívne"
 
-#: shortcutsettings.cpp:140
+#: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie alternatívne (opačne)"

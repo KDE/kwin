@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-25 00:42+0000\n"
+"POT-Creation-Date: 2025-03-27 00:43+0000\n"
 "PO-Revision-Date: 2010-01-15 13:41+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -234,28 +234,37 @@ msgstr "ಕಿಟಕಿಗಳ ಪಟ್ಟಿ:"
 msgid "Reverse"
 msgstr ""
 
+#. i18n: ectx: property (text), widget (QLabel, scCurrentReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scCurrentOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllOr)
+#: main.ui:474 main.ui:506 main.ui:554 main.ui:586
+#, kde-format
+msgid "or"
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: main.ui:480
+#: main.ui:538
 #, fuzzy, kde-format
 #| msgid "Current Desktop Grouped by Applications"
 msgid "Current application"
 msgstr "ಪ್ರಸ್ತುತ ಗಣಕತೆರೆಯನ್ನು ಅನ್ವಯಿಕದಿಂದ ಗುಂಪಾಗೂಡಿಸಲಾಗಿದೆ."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: main.ui:499
+#: main.ui:615
 #, fuzzy, kde-format
 #| msgid "Navigation"
 msgid "Visualization"
 msgstr "ಸಂಚಾರ"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:529
+#: main.ui:645
 #, kde-format
 msgid "The effect to replace the list window when desktop effects are active."
 msgstr "ಗಣಕತೆರೆ ಪರಿಣಾಮಗಳು ಸಕ್ರಿಯವಾಗಿದ್ದಾಗ ಪಟ್ಟಿ ಕಿಟಕಿಯನ್ನು ಬದಲಾಯಿಸಬೇಕಿರುವ ಪರಿಣಾಮ."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:678
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -265,51 +274,51 @@ msgstr ""
 "ಮಾಡಲು ಗಣಕತೆರೆ ಪರಿಣಾಮ ಸಕ್ರಿಯವಾಗಿರಬೇಕು."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:565
+#: main.ui:681
 #, fuzzy, kde-format
 #| msgid "Show outline of selected window"
 msgid "Show selected window"
 msgstr "ಆಯ್ದ ವಿಂಡೋವಿನ ಹೊರನಕಾಶೆಯನ್ನು ತೋರಿಸು"
 
-#: shortcutsettings.cpp:132
+#: shortcutsettings.cpp:131
 #, kde-format
 msgid "Walk Through Windows"
 msgstr "ಕಿಟಕಿಗಳ ಅವಲೋಕನ"
 
-#: shortcutsettings.cpp:133
+#: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
 msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ ( ಹಿಮ್ಮುಖ)"
 
-#: shortcutsettings.cpp:134
+#: shortcutsettings.cpp:133
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: shortcutsettings.cpp:135
+#: shortcutsettings.cpp:134
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: shortcutsettings.cpp:137
+#: shortcutsettings.cpp:136
 #, kde-format
 msgid "Walk Through Windows Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: shortcutsettings.cpp:138
+#: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
 
-#: shortcutsettings.cpp:139
+#: shortcutsettings.cpp:138
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
 
-#: shortcutsettings.cpp:140
+#: shortcutsettings.cpp:139
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"

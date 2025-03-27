@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-25 00:42+0000\n"
+"POT-Creation-Date: 2025-03-27 00:43+0000\n"
 "PO-Revision-Date: 2022-09-27 18:12+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -226,27 +226,36 @@ msgstr "Semua jendela"
 msgid "Reverse"
 msgstr "Mundur"
 
+#. i18n: ectx: property (text), widget (QLabel, scCurrentReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scCurrentOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllReverseOr)
+#. i18n: ectx: property (text), widget (QLabel, scAllOr)
+#: main.ui:474 main.ui:506 main.ui:554 main.ui:586
+#, kde-format
+msgid "or"
+msgstr ""
+
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: main.ui:480
+#: main.ui:538
 #, kde-format
 msgid "Current application"
 msgstr "Aplikasi saat ini"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: main.ui:499
+#: main.ui:615
 #, kde-format
 msgid "Visualization"
 msgstr "Visualisasi"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:529
+#: main.ui:645
 #, kde-format
 msgid "The effect to replace the list window when desktop effects are active."
 msgstr ""
 "Efek untuk menggantikan senarai jendela ketika efek desktop tidak aktif."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:562
+#: main.ui:678
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -256,54 +265,54 @@ msgstr ""
 "lainnya. Opsi ini memerlukan efek desktop supaya aktif."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:565
+#: main.ui:681
 #, kde-format
 msgid "Show selected window"
 msgstr "Tampilkan jendela terpilih"
 
-#: shortcutsettings.cpp:132
+#: shortcutsettings.cpp:131
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows"
 msgid "Walk Through Windows"
 msgstr "Berjalan Antar Jendela"
 
-#: shortcutsettings.cpp:133
+#: shortcutsettings.cpp:132
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows (Reverse)"
 msgstr "Berjalan Antar Jendela (Kebalikan)"
 
-#: shortcutsettings.cpp:134
+#: shortcutsettings.cpp:133
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "Berjalan Antar Alternatif Jendela"
 
-#: shortcutsettings.cpp:135
+#: shortcutsettings.cpp:134
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Berjalan Antar Alternatif Jendela (Kebalikan)"
 
-#: shortcutsettings.cpp:137
+#: shortcutsettings.cpp:136
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows Alternative"
 msgstr "Berjalan Antar Alternatif Jendela"
 
-#: shortcutsettings.cpp:138
+#: shortcutsettings.cpp:137
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Berjalan Antar Alternatif Jendela (Kebalikan)"
 
-#: shortcutsettings.cpp:139
+#: shortcutsettings.cpp:138
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Berjalan Antar Alternatif Jendela"
 
-#: shortcutsettings.cpp:140
+#: shortcutsettings.cpp:139
 #, fuzzy, kde-format
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
