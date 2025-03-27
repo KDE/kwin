@@ -700,9 +700,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
             opaqueRegion = current->opaque & surfaceRect.toAlignedRect();
         }
 
-        if (scaleOverride != 1.) {
+        if (scaleOverride != 1.0) {
             QMatrix4x4 scaleOverrideMatrix;
-            scaleOverrideMatrix.scale(1. / scaleOverride, 1. / scaleOverride);
+            scaleOverrideMatrix.scale(1.0 / scaleOverride, 1.0 / scaleOverride);
 
             opaqueRegion = map_helper(scaleOverrideMatrix, opaqueRegion);
             inputRegion = map_helper(scaleOverrideMatrix, inputRegion);
