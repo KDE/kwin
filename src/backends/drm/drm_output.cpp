@@ -522,6 +522,11 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 
 void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom)
 {
+    if (!m_pipeline) {
+        // this can happen when the output gets hot-unplugged
+        // FIXME fix output lifetimes so that this doesn't happen anymore...
+        return;
+    }
     if (m_brightnessDevice && !m_state.highDynamicRange) {
         constexpr double minLuminance = 0.04;
         const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
@@ -652,6 +657,11 @@ QVector3D DrmOutput::adaptedChannelFactors() const
 const ColorDescription &DrmOutput::scanoutColorDescription() const
 {
     return m_scanoutColorDescription;
+}
+
+void DrmOutput::removePipeline()
+{
+    m_pipeline = nullptr;
 }
 }
 
