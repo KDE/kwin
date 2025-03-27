@@ -465,6 +465,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     Q_EMIT aboutToChange(props.get());
     m_pipeline->applyPendingChanges();
 
+    m_brightnessDevice = props->brightnessDevice.value_or(m_brightnessDevice);
+
     State next = m_state;
     next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
     next.position = props->pos.value_or(m_state.position);
@@ -489,6 +491,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
+    next.currentBrightness = props->currentBrightness.has_value() ? props->currentBrightness : m_state.currentBrightness;
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
@@ -512,29 +515,14 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     Q_EMIT changed();
 }
 
-void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
+void DrmOutput::unsetBrightnessDevice()
 {
-    Output::setBrightnessDevice(device);
-
-    if (device && m_state.allowSdrSoftwareBrightness && device->observedBrightness().has_value()) {
-        // adopt the screen's initial brightness value if this brightness device is seen for the first time.
-        // This can't be done in output configuration store as we're not necessarily aware of the brightness device
-        // at that point
-        State next = m_state;
-        next.currentBrightness = device->observedBrightness();
-        next.brightnessSetting = *next.currentBrightness;
-        setState(next);
-    }
-    updateBrightness(m_state.currentBrightness.value_or(m_state.brightnessSetting), m_state.artificialHdrHeadroom);
+    m_brightnessDevice = nullptr;
+    updateInformation();
 }
 
 void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom)
 {
-    if (!m_pipeline) {
-        // this can happen when the output gets hot-unplugged
-        // FIXME fix output lifetimes so that this doesn't happen anymore...
-        return;
-    }
     if (m_brightnessDevice && !m_state.highDynamicRange) {
         constexpr double minLuminance = 0.04;
         const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;

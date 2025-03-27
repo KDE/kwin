@@ -83,7 +83,7 @@ private:
     ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props, double brightness) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
-    void setBrightnessDevice(BrightnessDevice *device) override;
+    void unsetBrightnessDevice() override;
     void updateBrightness(double newBrightness, double newArtificialHdrHeadroom);
     void setScanoutColorDescription(const ColorDescription &description);
     void setBlendingColorDescription(const ColorDescription &description);

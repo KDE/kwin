@@ -349,9 +349,6 @@ Output::Output(QObject *parent)
 
 Output::~Output()
 {
-    if (m_brightnessDevice) {
-        m_brightnessDevice->setOutput(nullptr);
-    }
 }
 
 void Output::ref()
@@ -819,9 +816,9 @@ BrightnessDevice *Output::brightnessDevice() const
     return m_brightnessDevice;
 }
 
-void Output::setBrightnessDevice(BrightnessDevice *device)
+void Output::unsetBrightnessDevice()
 {
-    m_brightnessDevice = device;
+    m_brightnessDevice = nullptr;
 }
 
 bool Output::allowSdrSoftwareBrightness() const

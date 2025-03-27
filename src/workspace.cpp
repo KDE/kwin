@@ -459,8 +459,6 @@ void Workspace::updateOutputConfiguration()
         return;
     }
 
-    assignBrightnessDevices();
-
     const bool alreadyHaveEnabledOutputs = std::ranges::any_of(outputs, [](Output *o) {
         return o->isEnabled();
     });
@@ -486,6 +484,7 @@ void Workspace::updateOutputConfiguration()
             return;
         }
         auto &[cfg, order, type] = *opt;
+        assignBrightnessDevices(cfg);
 
         for (const auto &output : outputs) {
             if (!toEnable.contains(output)) {
@@ -531,6 +530,14 @@ void Workspace::updateOutputConfiguration()
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
     setFallbackOutputOrder();
+    // If applying the output configuration failed, brightness devices weren't assigned either.
+    // To prevent dangling pointers, unset removed brightness brightness devices here
+    const auto devices = waylandServer()->externalBrightness()->devices();
+    for (Output *output : outputs) {
+        if (output->brightnessDevice() && !devices.contains(output->brightnessDevice())) {
+            output->unsetBrightnessDevice();
+        }
+    }
 }
 
 void Workspace::setupWindowConnections(Window *window)
@@ -1341,11 +1348,8 @@ void Workspace::maybeDestroyDpmsFilter()
     }
 }
 
-void Workspace::assignBrightnessDevices()
+void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
 {
-    if (!waylandServer()) {
-        return;
-    }
     QList<Output *> candidates = kwinApp()->outputBackend()->outputs();
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
@@ -1360,24 +1364,20 @@ void Workspace::assignBrightnessDevices()
                 return output->edid().isValid() && !device->edidBeginning().isEmpty() && output->edid().raw().startsWith(device->edidBeginning());
             }
         });
-        Output *const oldOutput = device->output();
         if (it != candidates.end()) {
             Output *const output = *it;
-            if (oldOutput && oldOutput != output) {
-                oldOutput->setBrightnessDevice(nullptr);
-            }
-            output->setBrightnessDevice(device);
-            device->setOutput(output);
             candidates.erase(it);
-        } else if (oldOutput) {
-            device->setOutput(nullptr);
-            if (oldOutput->brightnessDevice() == device) {
-                oldOutput->setBrightnessDevice(nullptr);
+            const auto changeset = outputConfig.changeSet(output);
+            changeset->brightnessDevice = device;
+            if (changeset->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness())) {
+                changeset->allowSdrSoftwareBrightness = false;
+                changeset->brightness = output->brightnessDevice()->observedBrightness();
+                changeset->currentBrightness = output->brightnessDevice()->observedBrightness();
             }
         }
     }
     for (Output *output : candidates) {
-        output->setBrightnessDevice(nullptr);
+        outputConfig.changeSet(output)->brightnessDevice = nullptr;
     }
 }
 
