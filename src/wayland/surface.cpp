@@ -698,14 +698,22 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
             surfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
         }
 
-        const QRectF surfaceRect(QPoint(0, 0), surfaceSize);
-        inputRegion = current->input & surfaceRect.toAlignedRect();
+        const QRect surfaceRect = QRectF(QPointF(0, 0), surfaceSize).toAlignedRect();
+        const QRect bufferRect = QRect(QPoint(0, 0), current->buffer->size());
+
+        inputRegion = current->input & surfaceRect;
 
         if (!current->buffer->hasAlphaChannel()) {
-            opaqueRegion = surfaceRect.toAlignedRect();
+            opaqueRegion = surfaceRect;
         } else {
-            opaqueRegion = current->opaque & surfaceRect.toAlignedRect();
+            opaqueRegion = current->opaque & surfaceRect;
         }
+
+        bufferDamage = current->bufferDamage
+                           .united(mapToBuffer(current->damage.intersected(surfaceRect)))
+                           .intersected(bufferRect);
+        current->damage = QRegion();
+        current->bufferDamage = QRegion();
 
         if (scaleOverride != 1.0) {
             QMatrix4x4 scaleOverrideMatrix;
@@ -718,6 +726,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     } else {
         surfaceSize = QSizeF(0, 0);
         bufferSourceBox = QRectF();
+        bufferDamage = QRegion();
         inputRegion = QRegion();
         opaqueRegion = QRegion();
     }
@@ -771,16 +780,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (alphaMultiplierChanged) {
         Q_EMIT q->alphaMultiplierChanged();
     }
-
-    if (bufferChanged) {
-        if (current->buffer && (!current->damage.isEmpty() || !current->bufferDamage.isEmpty())) {
-            const QRect surfaceRect = QRectF(QPointF(0, 0), surfaceSize).toAlignedRect();
-            const QRect bufferRect = QRect(QPoint(0, 0), current->buffer->size());
-            bufferDamage = current->bufferDamage
-                               .united(mapToBuffer(current->damage.intersected(surfaceRect)))
-                               .intersected(bufferRect);
-            Q_EMIT q->damaged(bufferDamage);
-        }
+    if (!bufferDamage.isEmpty()) {
+        Q_EMIT q->damaged(bufferDamage);
     }
 
     // The position of a sub-surface is applied when its parent is committed.
