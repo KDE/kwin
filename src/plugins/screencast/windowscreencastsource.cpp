@@ -40,13 +40,12 @@ WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
             }
         });
         for (const auto child : window->transients()) {
-            if (window->isPopupWindow())
-                addWindowWithChildren(child);
+            addWindowWithChildren(child);
         }
     };
     addWindowWithChildren(window);
     connect(workspace(), &Workspace::windowAdded, this, [this](Window *window) {
-        if (window->isPopupWindow() && m_windows.contains(window->transientFor())) {
+        if (m_windows.contains(window->transientFor())) {
             connect(window, &Window::closed, this, [this, window] {
                 m_windows.removeOne(window);
                 if (m_windows.empty()) {
