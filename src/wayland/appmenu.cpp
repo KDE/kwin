@@ -14,20 +14,29 @@
 
 namespace KWin
 {
-static const quint32 s_version = 2;
+static const quint32 s_version = 3;
 
 class AppMenuManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_appmenu_manager
 {
 public:
     AppMenuManagerInterfacePrivate(AppMenuManagerInterface *q, Display *d);
 
+    void sendAvailable(Resource *resource);
+
     QList<AppMenuInterface *> appmenus;
     AppMenuManagerInterface *q;
+    bool available = false;
 
 protected:
+    void org_kde_kwin_appmenu_manager_bind_resource(Resource *resource) override;
     void org_kde_kwin_appmenu_manager_release(Resource *resource) override;
     void org_kde_kwin_appmenu_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
 };
+
+void AppMenuManagerInterfacePrivate::org_kde_kwin_appmenu_manager_bind_resource(Resource *resource)
+{
+    sendAvailable(resource);
+}
 
 void AppMenuManagerInterfacePrivate::org_kde_kwin_appmenu_manager_release(Resource *resource)
 {
@@ -59,6 +68,13 @@ AppMenuManagerInterfacePrivate::AppMenuManagerInterfacePrivate(AppMenuManagerInt
     : QtWaylandServer::org_kde_kwin_appmenu_manager(*d, s_version)
     , q(_q)
 {
+}
+
+void AppMenuManagerInterfacePrivate::sendAvailable(Resource *resource)
+{
+    if (resource->version() >= ORG_KDE_KWIN_APPMENU_MANAGER_AVAILABLE_SINCE_VERSION) {
+        send_available(resource->handle, available);
+    }
 }
 
 class AppMenuInterfacePrivate : public QtWaylandServer::org_kde_kwin_appmenu
@@ -122,6 +138,18 @@ AppMenuInterface *AppMenuManagerInterface::appMenuForSurface(SurfaceInterface *s
         }
     }
     return nullptr;
+}
+
+void AppMenuManagerInterface::setAvailable(bool available)
+{
+    if (d->available != available) {
+        d->available = available;
+
+        const auto resources = d->resourceMap();
+        for (auto resource : resources) {
+            d->sendAvailable(resource);
+        }
+    }
 }
 
 AppMenuInterface::AppMenuInterface(SurfaceInterface *surface, wl_resource *resource)

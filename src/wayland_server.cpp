@@ -10,6 +10,7 @@
 
 #include "config-kwin.h"
 
+#include "appmenu.h"
 #include "backends/drm/drm_backend.h"
 #include "core/drmdevice.h"
 #include "core/output.h"
@@ -408,12 +409,6 @@ bool WaylandServer::init()
             window->installPlasmaShellSurface(surface);
         }
     });
-    m_appMenuManager = new AppMenuManagerInterface(m_display, m_display);
-    connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated, this, [this](AppMenuInterface *appMenu) {
-        if (XdgToplevelWindow *window = findXdgToplevelWindow(appMenu->surface())) {
-            window->installAppMenu(appMenu);
-        }
-    });
     m_paletteManager = new ServerSideDecorationPaletteManagerInterface(m_display, m_display);
     connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated, this, [this](ServerSideDecorationPaletteInterface *palette) {
         if (XdgToplevelWindow *window = findXdgToplevelWindow(palette->surface())) {
@@ -568,6 +563,18 @@ void WaylandServer::initWorkspace()
     auto layerShellV1Integration = new LayerShellV1Integration(this);
     connect(layerShellV1Integration, &LayerShellV1Integration::windowCreated,
             this, &WaylandServer::registerWindow);
+
+    m_appMenuManager = new AppMenuManagerInterface(m_display, m_display);
+    connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated, this, [this](AppMenuInterface *appMenu) {
+        if (XdgToplevelWindow *window = findXdgToplevelWindow(appMenu->surface())) {
+            window->installAppMenu(appMenu);
+        }
+    });
+
+    m_appMenuManager->setAvailable(workspace()->applicationMenu()->applicationMenuEnabled());
+    connect(workspace()->applicationMenu(), &ApplicationMenu::applicationMenuEnabledChanged, m_appMenuManager, [this]() {
+        m_appMenuManager->setAvailable(workspace()->applicationMenu()->applicationMenuEnabled());
+    });
 
     new KeyStateInterface(m_display, m_display);
 

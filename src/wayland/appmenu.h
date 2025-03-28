@@ -40,6 +40,8 @@ public:
      */
     AppMenuInterface *appMenuForSurface(SurfaceInterface *);
 
+    void setAvailable(bool available);
+
 Q_SIGNALS:
     /**
      * Emitted whenever a new AppmenuInterface is created.
