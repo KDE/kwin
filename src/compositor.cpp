@@ -327,6 +327,8 @@ void Compositor::stop()
     for (auto &[loop, layer] : m_primaryDelegates) {
         disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     }
+    m_primaryDelegates.clear();
+    m_overlayViews.clear();
 
     m_scene.reset();
     m_backend.reset();
