@@ -42,8 +42,9 @@ public:
 
 private:
     void report();
+    QRectF boundingRect() const;
 
-    QPointer<Window> m_window;
+    QList<QPointer<Window>> m_windows;
     QTimer m_timer;
     bool m_active = false;
 };
