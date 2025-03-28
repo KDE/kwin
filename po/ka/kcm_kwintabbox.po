@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-27 00:43+0000\n"
-"PO-Revision-Date: 2025-01-28 05:25+0100\n"
+"PO-Revision-Date: 2025-03-27 04:05+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -228,7 +228,7 @@ msgstr "რევერსი"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "ან"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538

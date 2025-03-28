@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-27 00:43+0000\n"
-"PO-Revision-Date: 2025-01-28 07:23+0100\n"
+"PO-Revision-Date: 2025-03-27 07:03+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -232,7 +232,7 @@ msgstr "Nazaj"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "ali"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
