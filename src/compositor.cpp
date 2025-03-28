@@ -569,6 +569,9 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     primaryDelegate->frame(frame.get());
+    if (const auto &overlay = m_overlayViews[output->renderLoop()]) {
+        overlay->frame(frame.get());
+    }
 
     if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
