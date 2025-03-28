@@ -30,6 +30,7 @@ class ColorTransformation;
 class IccProfile;
 class OutputChangeSet;
 class BrightnessDevice;
+class OutputFrame;
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
@@ -370,8 +371,6 @@ public:
 
     virtual bool setChannelFactors(const QVector3D &rgb);
 
-    virtual bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
-
     std::optional<double> maxPeakBrightness() const;
     std::optional<double> maxAverageBrightness() const;
     double minBrightness() const;
@@ -411,6 +410,10 @@ public:
     std::optional<uint32_t> minVrrRefreshRateHz() const;
 
     virtual void setAutoRotateAvailable(bool isAvailable);
+
+    virtual bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
+    virtual bool present(const std::shared_ptr<OutputFrame> &frame) = 0;
+    virtual void repairPresentation();
 
 Q_SIGNALS:
     /**

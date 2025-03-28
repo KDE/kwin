@@ -111,7 +111,9 @@ public:
 
     void handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event);
     void handlePresentIdleNotify(xcb_present_idle_notify_event_t *event);
-    void framePending(const std::shared_ptr<OutputFrame> &frame);
+
+    void setPrimaryBuffer(GraphicsBuffer *buffer);
+    bool present(const std::shared_ptr<OutputFrame> &frame) override;
 
 private:
     void initXInputForWindow();
@@ -121,6 +123,7 @@ private:
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_present_event_t m_presentEvent = XCB_NONE;
+    xcb_pixmap_t m_pendingBuffer = XCB_PIXMAP_NONE;
     std::unique_ptr<NETWinInfo> m_winInfo;
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<X11WindowedCursor> m_cursor;

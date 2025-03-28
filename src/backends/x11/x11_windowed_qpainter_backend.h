@@ -39,8 +39,6 @@ public:
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
-    void present();
-
 private:
     X11WindowedOutput *const m_output;
     X11WindowedQPainterBackend *const m_backend;
@@ -76,7 +74,6 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 

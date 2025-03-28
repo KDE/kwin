@@ -89,7 +89,7 @@ public:
     void setDpmsMode(DpmsMode mode) override;
     void updateDpmsMode(DpmsMode dpmsMode);
 
-    void present(const std::shared_ptr<OutputFrame> &frame);
+    bool present(const std::shared_ptr<OutputFrame> &frame) override;
     void setPrimaryBuffer(wl_buffer *buffer);
 
     void frameDiscarded();

@@ -30,8 +30,6 @@ public:
 
     DrmDevice *drmDevice() const override;
 
-    bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
-    void repairPresentation(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 

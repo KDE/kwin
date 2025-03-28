@@ -271,10 +271,10 @@ static constexpr struct wp_presentation_feedback_listener s_presentationListener
     .discarded = handleDiscarded,
 };
 
-void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
+bool WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     if (!m_presentationBuffer) {
-        return;
+        return false;
     }
     if (m_tearingControl) {
         if (frame->presentationMode() == PresentationMode::Async) {
@@ -300,6 +300,7 @@ void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
     }
     m_frame = frame;
     Q_EMIT outputChange(frame->damage());
+    return true;
 }
 
 void WaylandOutput::frameDiscarded()

@@ -329,12 +329,6 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> WaylandEglBackend:
     return std::make_pair(m_outputs.at(output).primaryLayer->texture(), ColorDescription::sRGB);
 }
 
-bool WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
-{
-    static_cast<WaylandOutput *>(output)->present(frame);
-    return true;
-}
-
 OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].primaryLayer.get();

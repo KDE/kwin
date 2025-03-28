@@ -13,6 +13,11 @@ FakeOutput::FakeOutput()
     setMode(QSize(1024, 720), 60000);
 }
 
+bool FakeOutput::present(const std::shared_ptr<KWin::OutputFrame> &frame)
+{
+    return false;
+}
+
 KWin::RenderLoop *FakeOutput::renderLoop() const
 {
     return nullptr;

@@ -193,10 +193,6 @@ QHash<uint32_t, QList<uint64_t>> RenderBackend::supportedFormats() const
     return QHash<uint32_t, QList<uint64_t>>{{DRM_FORMAT_XRGB8888, QList<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
 }
 
-void RenderBackend::repairPresentation(Output *output)
-{
-}
-
 } // namespace KWin
 
 #include "moc_renderbackend.cpp"

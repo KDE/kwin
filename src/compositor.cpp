@@ -536,7 +536,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                     frame->addRenderTimeQuery(std::move(totalTimeQuery));
                     totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
 
-                    directScanout &= m_backend->present(output, frame);
+                    directScanout &= output->present(frame);
                 }
             }
         } else {
@@ -563,8 +563,8 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     if (!directScanout) {
-        if (!m_backend->present(output, frame)) {
-            m_backend->repairPresentation(output);
+        if (!output->present(frame)) {
+            output->repairPresentation();
         }
     }
 

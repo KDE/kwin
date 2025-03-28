@@ -375,6 +375,13 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     return true;
 }
 
+void DrmOutput::repairPresentation()
+{
+    // read back drm properties, most likely our info is out of date somehow
+    // or we need a modeset
+    QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
+}
+
 DrmConnector *DrmOutput::connector() const
 {
     return m_connector.get();

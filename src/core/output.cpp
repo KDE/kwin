@@ -749,11 +749,6 @@ QByteArray Output::mstPath() const
     return m_information.mstPath;
 }
 
-bool Output::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
-{
-    return false;
-}
-
 const ColorDescription &Output::colorDescription() const
 {
     return m_state.colorDescription;
@@ -883,6 +878,15 @@ void Output::setAutoRotateAvailable(bool isAvailable)
 std::optional<uint32_t> Output::minVrrRefreshRateHz() const
 {
     return m_information.minVrrRefreshRateHz;
+}
+
+bool Output::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+{
+    return false;
+}
+
+void Output::repairPresentation()
+{
 }
 
 } // namespace KWin
