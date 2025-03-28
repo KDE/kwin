@@ -484,13 +484,19 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
 
         if (!output->testPresentation(frame.get())) {
-            // this definitely won't work, fall back to no-direct scanout primary-plane only
-            // TODO this fallback should be more granular and still allow using the cursor plane when direct scanout fails
+            // this definitely won't work, fall back to primary-plane-only compositing
+            // TODO generalize this logic a bit?
             if (!primaryBeginInfo.has_value()) {
+                // direct scanout was attempted -> try again with compositing
                 primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
                 primaryBeginInfo = primaryLayer->beginFrame();
+                if (!output->testPresentation(frame.get())) {
+                    // didn't work, we still need to fall back to primary plane only
+                    cursorBeginInfo.reset();
+                }
+            } else {
+                cursorBeginInfo.reset();
             }
-            cursorBeginInfo.reset();
         }
 
         // atomic test successful or fallback applied, now use this configuration
@@ -537,9 +543,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         totalTimeQuery->end();
         frame->addRenderTimeQuery(std::move(totalTimeQuery));
 
-        // TODO for legacy modesetting,
-        // - set the cursor in "present"
-        // - blacklist the cursor (in the backend) when setting it ever fails (with something other than EACCESS)
+        // TODO for legacy modesetting, blacklist the cursor (in the backend) when setting it ever fails (with something other than EACCESS)
 
         const bool presentation = output->present(frame);
         if (!presentation && (cursorBeginInfo.has_value() || !primaryBeginInfo.has_value())) {
