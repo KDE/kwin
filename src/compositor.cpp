@@ -365,6 +365,19 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
+static bool tryDirectScanout(Output *output, SceneView *view, OutputLayer *layer, const std::shared_ptr<OutputFrame> &frame)
+{
+    const auto scanoutCandidates = view->scanoutCandidates(2);
+    if (scanoutCandidates.empty()) {
+        return false;
+    }
+    if (scanoutCandidates.size() > 1 && !checkForBlackBackground(scanoutCandidates.back())) {
+        return false;
+    }
+    layer->setTargetRect(scaledRect(scanoutCandidates.front()->mapToScene(scanoutCandidates.front()->boundingRect()), output->scale()).toRect());
+    return layer->importScanoutBuffer(scanoutCandidates.front(), frame);
+}
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -440,13 +453,21 @@ void Compositor::composite(RenderLoop *renderLoop)
             frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
         }
 
-        // TODO re-add direct scanout. It's left out for simplicity only
+        // TODO split up scene preparation (which may unset the OpenGL context!) and per-surface damage accumulation
+        QRegion primarySurfaceDamage = output->mapToGlobal(primaryLayer->repaints());
+        primaryLayer->resetRepaints();
+        if (const QRegion repaints = primaryDelegate->prePaint(); !repaints.isEmpty()) {
+            primarySurfaceDamage += output->mapToGlobal(repaints);
+        }
+        frame->setDamage(primarySurfaceDamage);
 
         primaryLayer->setEnabled(true);
-        primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
-        auto primaryBeginInfo = primaryLayer->beginFrame();
-        // TODO can this be handled better in any way?
-        Q_ASSERT(primaryBeginInfo.has_value());
+
+        std::optional<OutputLayerBeginFrameInfo> primaryBeginInfo;
+        if (!tryDirectScanout(output, primaryDelegate.get(), primaryLayer, frame)) {
+            primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
+            primaryBeginInfo = primaryLayer->beginFrame();
+        }
 
         Item *candidate = primaryDelegate->scene()->overlayCandidate();
         std::optional<OutputLayerBeginFrameInfo> cursorBeginInfo;
@@ -462,12 +483,20 @@ void Compositor::composite(RenderLoop *renderLoop)
             cursorLayer->setEnabled(cursorBeginInfo.has_value());
         }
 
-        // TODO now that the layers are set up, do an atomic test
+        if (!m_backend->testPresentation(output, frame.get())) {
+            // this definitely won't work, fall back to no-direct scanout primary-plane only
+            // TODO this fallback should be more granular and still allow using the cursor plane when direct scanout fails
+            if (!primaryBeginInfo.has_value()) {
+                primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
+                primaryBeginInfo = primaryLayer->beginFrame();
+            }
+            cursorBeginInfo.reset();
+        }
 
-        // atomic test successful, we can use this configuration without changes
+        // atomic test successful or fallback applied, now use this configuration
 
-        // first create the overlay view(s),
-        // so that the relevant items aren't rendered on the primary plane
+        // before rendering, create the overlay view(s),
+        // so that the relevant items aren't put on the primary plane too
         if (cursorBeginInfo.has_value()) {
             auto &cursorView = m_overlayViews[renderLoop];
             if (!cursorView || cursorView->item() != candidate) {
@@ -478,27 +507,15 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
 
         // now actually render everything
-        {
-            // primary plane
+        if (primaryBeginInfo.has_value()) {
             auto &[renderTarget, repaint] = *primaryBeginInfo;
-
-            QRegion surfaceDamage = output->mapToGlobal(primaryLayer->repaints());
-            primaryLayer->resetRepaints();
-            if (const QRegion repaints = primaryDelegate->prePaint(); !repaints.isEmpty()) {
-                surfaceDamage += output->mapToGlobal(repaints);
-            }
-            frame->setDamage(surfaceDamage);
-
-            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(output->geometry());
-
+            const QRegion bufferDamage = primarySurfaceDamage.united(repaint).intersected(output->geometry());
             primaryDelegate->paint(renderTarget, bufferDamage);
-            primaryDelegate->postPaint();
-            // same here, could this be gracefully handled?
-            const bool success = primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
+            // TODO can anything be done if this fails?
+            const bool success = primaryLayer->endFrame(bufferDamage, primarySurfaceDamage, frame.get());
             Q_ASSERT(success);
         }
         if (cursorBeginInfo.has_value()) {
-            // cursor plane
             // FIXME make damage tracking work
             const auto &[renderTarget, repaint] = *cursorBeginInfo;
             const auto &view = m_overlayViews[renderLoop];
@@ -510,9 +527,12 @@ void Compositor::composite(RenderLoop *renderLoop)
             view->paint(renderTarget, infiniteRegion());
             view->postPaint();
             // TODO this one can definitely be dealt with (mostly) gracefully
+            // instead of asserting
             const bool success = cursorLayer->endFrame(infiniteRegion(), infiniteRegion(), frame.get());
             Q_ASSERT(success);
         }
+
+        primaryDelegate->postPaint();
 
         totalTimeQuery->end();
         frame->addRenderTimeQuery(std::move(totalTimeQuery));
@@ -522,7 +542,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         // - blacklist the cursor (in the backend) when setting it ever fails (with something other than EACCESS)
 
         // TODO when this fails, because of driver bugs or because legacy modesetting,
-        // turn off direct scanout and overlays, and try again
+        // turn off direct scanout and overlays, re-render the primary plane, and try again once more
         m_backend->present(output, frame);
 
     } else if (!m_backend->present(output, frame)) {

@@ -203,6 +203,11 @@ void RenderBackend::repairPresentation(Output *output)
 {
 }
 
+bool RenderBackend::testPresentation(Output *output, OutputFrame *frame)
+{
+    return true;
+}
+
 } // namespace KWin
 
 #include "moc_renderbackend.cpp"

@@ -308,6 +308,39 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
     setState(next);
 }
 
+bool DrmOutput::testPresentation(OutputFrame *frame)
+{
+    if (!m_gpu->atomicModeSetting()) {
+        // this is where the drm pipeline abstractions fall apart
+        // legacy doesn't have an actual test_only "commit" or anything like that
+        // we just have to assume it works, and if the real present call fails,
+        // do potential fallbacks afterwards
+        return true;
+    }
+    // TODO refactor test commits, so that setting this state here isn't necessary?
+    m_pipeline->setPresentationMode(frame->presentationMode());
+    m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
+    const auto testMode = m_gpu->needsModeset() ? DrmPipeline::CommitMode::TestAllowModeset : DrmPipeline::CommitMode::Test;
+    if (DrmPipeline::commitPipelines({m_pipeline}, testMode) == DrmPipeline::Error::None) {
+        return true;
+    }
+    if (frame->presentationMode() == PresentationMode::AdaptiveAsync) {
+        // tearing can fail in various circumstances, but vrr on its own shouldn't
+        m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
+        if (DrmPipeline::commitPipelines({m_pipeline}, testMode) == DrmPipeline::Error::None) {
+            return true;
+        }
+    }
+    if (frame->presentationMode() != PresentationMode::VSync) {
+        // retry with the most basic presentation mode, VSync
+        m_pipeline->setPresentationMode(PresentationMode::VSync);
+        if (DrmPipeline::commitPipelines({m_pipeline}, testMode) == DrmPipeline::Error::None) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     m_desiredPresentationMode = frame->presentationMode();

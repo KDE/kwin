@@ -131,6 +131,7 @@ public:
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
     virtual OutputLayer *cursorLayer(Output *output);
+    virtual bool testPresentation(Output *output, OutputFrame *frame);
     virtual bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual void repairPresentation(Output *output);
 

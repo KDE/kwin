@@ -47,6 +47,11 @@ DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
+bool DrmVirtualOutput::testPresentation(OutputFrame *frame)
+{
+    return true;
+}
+
 bool DrmVirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;

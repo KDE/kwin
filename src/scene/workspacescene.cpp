@@ -215,6 +215,9 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     if (!waylandServer()) {
         return {};
     }
+    if (!m_overlayItem->boundingRect().isEmpty() && !painted_delegate->hasItemViewFor(m_overlayItem.get())) {
+        return {};
+    }
     QList<SurfaceItem *> ret;
     if (!effects->blocksDirectScanout()) {
         QRegion occlusion;
