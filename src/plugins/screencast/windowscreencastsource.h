@@ -41,9 +41,13 @@ public:
     QRectF mapFromGlobal(const QRectF &rect) const override;
 
 private:
+    void add(Window *window);
+    void watch(Window *window);
+    void unwatch(Window *window);
     void report();
+    QRectF boundingRect() const;
 
-    QPointer<Window> m_window;
+    QList<Window *> m_windows;
     QTimer m_timer;
     bool m_active = false;
 };
