@@ -216,11 +216,18 @@ static constexpr struct wp_presentation_feedback_listener s_presentationListener
     .discarded = handleDiscarded,
 };
 
-void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
+bool WaylandOutput::testPresentation(OutputFrame *frame)
+{
+    return !m_pointerLock || !Compositor::self()->backend()->cursorLayer(this)->isEnabled();
+}
+
+bool WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     if (!m_presentationBuffer) {
-        return;
+        return false;
     }
+    // the layer updates the image itself
+    m_cursor->setEnabled(Compositor::self()->backend()->cursorLayer(this)->isEnabled());
     if (m_tearingControl) {
         if (frame->presentationMode() == PresentationMode::Async) {
             wp_tearing_control_v1_set_presentation_hint(m_tearingControl, WP_TEARING_CONTROL_V1_PRESENTATION_HINT_ASYNC);
@@ -242,6 +249,7 @@ void WaylandOutput::present(const std::shared_ptr<OutputFrame> &frame)
     }
     m_frame = frame;
     Q_EMIT outputChange(frame->damage());
+    return true;
 }
 
 void WaylandOutput::frameDiscarded()
@@ -329,18 +337,6 @@ WaylandBackend *WaylandOutput::backend() const
 RenderLoop *WaylandOutput::renderLoop() const
 {
     return m_renderLoop.get();
-}
-
-bool WaylandOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
-{
-    if (m_hasPointerLock) {
-        m_cursor->setEnabled(false);
-        return false;
-    } else {
-        m_cursor->setEnabled(Compositor::self()->backend()->cursorLayer(this)->isEnabled());
-        // the layer already takes care of updating the image
-        return true;
-    }
 }
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale)
@@ -448,7 +444,6 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
             updateWindowTitle();
-            updateCursorLayer(std::nullopt);
             Q_EMIT m_backend->pointerLockChanged(false);
         }
         return;
@@ -463,14 +458,12 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
     connect(m_pointerLock.get(), &LockedPointer::locked, this, [this]() {
         m_hasPointerLock = true;
         updateWindowTitle();
-        updateCursorLayer(std::nullopt);
         Q_EMIT m_backend->pointerLockChanged(true);
     });
     connect(m_pointerLock.get(), &LockedPointer::unlocked, this, [this]() {
         m_pointerLock.reset();
         m_hasPointerLock = false;
         updateWindowTitle();
-        updateCursorLayer(std::nullopt);
         Q_EMIT m_backend->pointerLockChanged(false);
     });
 }

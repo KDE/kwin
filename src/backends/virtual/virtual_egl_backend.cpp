@@ -172,12 +172,6 @@ OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
-bool VirtualEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
-{
-    static_cast<VirtualOutput *>(output)->present(frame);
-    return true;
-}
-
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> VirtualEglBackend::textureForOutput(Output *output) const
 {
     auto it = m_outputs.find(output);

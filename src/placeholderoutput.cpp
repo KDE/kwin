@@ -42,6 +42,16 @@ RenderLoop *PlaceholderOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
+bool PlaceholderOutput::testPresentation(OutputFrame *frame)
+{
+    return false;
+}
+
+bool PlaceholderOutput::present(const std::shared_ptr<OutputFrame> &frame)
+{
+    return false;
+}
+
 } // namespace KWin
 
 #include "moc_placeholderoutput.cpp"

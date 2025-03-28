@@ -70,7 +70,6 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
     void init(const QSize &pixelSize, qreal scale);
 
@@ -84,7 +83,8 @@ public:
     void setDpmsMode(DpmsMode mode) override;
     void updateDpmsMode(DpmsMode dpmsMode);
 
-    void present(const std::shared_ptr<OutputFrame> &frame);
+    bool testPresentation(OutputFrame *frame) override;
+    bool present(const std::shared_ptr<OutputFrame> &frame) override;
     void setPrimaryBuffer(wl_buffer *buffer);
 
     void frameDiscarded();

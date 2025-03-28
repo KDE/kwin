@@ -122,14 +122,6 @@ bool DrmOutput::shouldDisableCursorPlane() const
         || m_pipeline->amdgpuVrrWorkaroundActive();
 }
 
-bool DrmOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
-{
-    if (m_pipeline->gpu()->atomicModeSetting() && shouldDisableCursorPlane() && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
-        return false;
-    }
-    return m_pipeline->updateCursor(allowedVrrDelay);
-}
-
 QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
 {
     const auto drmModes = m_pipeline->connector()->modes();
@@ -317,6 +309,9 @@ bool DrmOutput::testPresentation(OutputFrame *frame)
         // do potential fallbacks afterwards
         return true;
     }
+    if (shouldDisableCursorPlane() && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
+        return false;
+    }
     // TODO refactor test commits, so that setting this state here isn't necessary?
     m_pipeline->setPresentationMode(frame->presentationMode());
     m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
@@ -383,6 +378,13 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         updateBrightness(frame->brightness().value_or(m_state.currentBrightness.value_or(m_state.brightnessSetting)), frame->artificialHdrHeadroom().value_or(m_state.artificialHdrHeadroom));
     }
     return true;
+}
+
+void DrmOutput::repairPresentation()
+{
+    // read back drm properties, most likely our info is out of date somehow
+    // or we need a modeset
+    QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
 }
 
 DrmConnector *DrmOutput::connector() const

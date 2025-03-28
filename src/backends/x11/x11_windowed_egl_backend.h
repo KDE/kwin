@@ -34,7 +34,6 @@ public:
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
     std::shared_ptr<GLTexture> texture() const;
-    void present();
 
 private:
     std::shared_ptr<EglSwapchain> m_swapchain;
@@ -81,7 +80,6 @@ public:
     std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
     void init() override;
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
-    bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 

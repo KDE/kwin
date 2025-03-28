@@ -59,37 +59,8 @@ bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, 
 {
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
+    m_output->setPrimaryBuffer(m_current->buffer());
     return true;
-}
-
-void X11WindowedQPainterPrimaryLayer::present()
-{
-    xcb_pixmap_t pixmap = m_output->importBuffer(m_current->buffer());
-    Q_ASSERT(pixmap != XCB_PIXMAP_NONE);
-
-    xcb_xfixes_region_t valid = 0;
-    xcb_xfixes_region_t update = 0;
-    uint32_t serial = 0;
-    uint32_t options = 0;
-    uint64_t targetMsc = 0;
-
-    xcb_present_pixmap(m_output->backend()->connection(),
-                       m_output->window(),
-                       pixmap,
-                       serial,
-                       valid,
-                       update,
-                       0,
-                       0,
-                       XCB_NONE,
-                       XCB_NONE,
-                       XCB_NONE,
-                       options,
-                       targetMsc,
-                       0,
-                       0,
-                       0,
-                       nullptr);
 }
 
 DrmDevice *X11WindowedQPainterPrimaryLayer::scanoutDevice() const
@@ -179,13 +150,6 @@ void X11WindowedQPainterBackend::removeOutput(Output *output)
 GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() const
 {
     return m_allocator.get();
-}
-
-bool X11WindowedQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
-{
-    m_outputs[output].primaryLayer->present();
-    static_cast<X11WindowedOutput *>(output)->framePending(frame);
-    return true;
 }
 
 OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)

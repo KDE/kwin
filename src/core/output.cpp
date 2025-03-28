@@ -749,11 +749,6 @@ QByteArray Output::mstPath() const
     return m_information.mstPath;
 }
 
-bool Output::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
-{
-    return false;
-}
-
 const ColorDescription &Output::colorDescription() const
 {
     return m_state.colorDescription;
@@ -837,6 +832,10 @@ bool Output::allowSdrSoftwareBrightness() const
 Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
 {
     return m_state.colorPowerTradeoff;
+}
+
+void Output::repairPresentation()
+{
 }
 } // namespace KWin
 

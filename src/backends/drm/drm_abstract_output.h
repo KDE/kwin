@@ -25,8 +25,6 @@ public:
 
     RenderLoop *renderLoop() const override;
 
-    virtual bool testPresentation(OutputFrame *frame) = 0;
-    virtual bool present(const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual DrmOutputLayer *primaryLayer() const = 0;
     virtual DrmOutputLayer *cursorLayer() const = 0;
 

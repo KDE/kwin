@@ -30,6 +30,7 @@ class ColorTransformation;
 class IccProfile;
 class OutputChangeSet;
 class BrightnessDevice;
+class OutputFrame;
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
@@ -364,8 +365,6 @@ public:
 
     virtual bool setChannelFactors(const QVector3D &rgb);
 
-    virtual bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
-
     std::optional<double> maxPeakBrightness() const;
     std::optional<double> maxAverageBrightness() const;
     double minBrightness() const;
@@ -388,6 +387,10 @@ public:
     bool allowSdrSoftwareBrightness() const;
 
     ColorPowerTradeoff colorPowerTradeoff() const;
+
+    virtual bool testPresentation(OutputFrame *frame) = 0;
+    virtual bool present(const std::shared_ptr<OutputFrame> &frame) = 0;
+    virtual void repairPresentation();
 
 Q_SIGNALS:
     /**

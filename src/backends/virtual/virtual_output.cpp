@@ -48,11 +48,17 @@ RenderLoop *VirtualOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-void VirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
+bool VirtualOutput::testPresentation(OutputFrame *frame)
+{
+    return true;
+}
+
+bool VirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
     m_vsyncMonitor->arm();
     Q_EMIT outputChange(frame->damage());
+    return true;
 }
 
 void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes)

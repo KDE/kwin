@@ -483,7 +483,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             cursorLayer->setEnabled(cursorBeginInfo.has_value());
         }
 
-        if (!m_backend->testPresentation(output, frame.get())) {
+        if (!output->testPresentation(frame.get())) {
             // this definitely won't work, fall back to no-direct scanout primary-plane only
             // TODO this fallback should be more granular and still allow using the cursor plane when direct scanout fails
             if (!primaryBeginInfo.has_value()) {
@@ -543,10 +543,11 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         // TODO when this fails, because of driver bugs or because legacy modesetting,
         // turn off direct scanout and overlays, re-render the primary plane, and try again once more
-        m_backend->present(output, frame);
+        // if even that fails, call repairPresentation()
+        output->present(frame);
 
-    } else if (!m_backend->present(output, frame)) {
-        m_backend->repairPresentation(output);
+    } else if (!output->present(frame)) {
+        output->repairPresentation();
     }
 
     primaryDelegate->frame(frame.get());

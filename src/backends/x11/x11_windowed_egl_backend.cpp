@@ -70,44 +70,10 @@ bool X11WindowedEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));
-    return true;
-}
-
-void X11WindowedEglPrimaryLayer::present()
-{
-    if (!m_buffer) {
-        return;
-    }
-
-    xcb_pixmap_t pixmap = m_output->importBuffer(m_buffer->buffer());
-    Q_ASSERT(pixmap != XCB_PIXMAP_NONE);
-
-    xcb_xfixes_region_t valid = 0;
-    xcb_xfixes_region_t update = 0;
-    uint32_t serial = 0;
-    uint32_t options = 0;
-    uint64_t targetMsc = 0;
-
-    xcb_present_pixmap(m_output->backend()->connection(),
-                       m_output->window(),
-                       pixmap,
-                       serial,
-                       valid,
-                       update,
-                       0,
-                       0,
-                       XCB_NONE,
-                       XCB_NONE,
-                       XCB_NONE,
-                       options,
-                       targetMsc,
-                       0,
-                       0,
-                       0,
-                       nullptr);
-
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
     m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
+    m_output->setPrimaryBuffer(m_buffer->buffer());
+    return true;
 }
 
 std::shared_ptr<GLTexture> X11WindowedEglPrimaryLayer::texture() const
@@ -267,14 +233,6 @@ void X11WindowedEglBackend::init()
             .cursorLayer = std::make_unique<X11WindowedEglCursorLayer>(this, x11Output),
         };
     }
-}
-
-bool X11WindowedEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
-{
-    m_outputs[output].primaryLayer->present();
-    Q_EMIT static_cast<X11WindowedOutput *>(output)->outputChange(frame->damage());
-    static_cast<X11WindowedOutput *>(output)->framePending(frame);
-    return true;
 }
 
 OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)
