@@ -33,6 +33,9 @@ DrmPipeline::Error DrmPipeline::presentLegacy(const std::shared_ptr<OutputFrame>
     if (m_primaryLayer->sourceRect() != m_primaryLayer->targetRect() || m_primaryLayer->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
+    if (!setCursorLegacy()) {
+        return Error::InvalidArguments;
+    }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
     if (!commit->doPageflip(m_pending.presentationMode)) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
