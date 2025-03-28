@@ -541,10 +541,22 @@ void Compositor::composite(RenderLoop *renderLoop)
         // - set the cursor in "present"
         // - blacklist the cursor (in the backend) when setting it ever fails (with something other than EACCESS)
 
-        // TODO when this fails, because of driver bugs or because legacy modesetting,
-        // turn off direct scanout and overlays, re-render the primary plane, and try again once more
-        // if even that fails, call repairPresentation()
-        output->present(frame);
+        const bool presentation = output->present(frame);
+        if (!presentation && (cursorBeginInfo.has_value() || !primaryBeginInfo.has_value())) {
+            // fall back to primary-plane only compositing
+            cursorBeginInfo.reset();
+            m_overlayViews.erase(renderLoop);
+            primaryBeginInfo = primaryLayer->beginFrame();
+            if (primaryBeginInfo) {
+                auto &[renderTarget, repaint] = *primaryBeginInfo;
+                const QRegion bufferDamage = primarySurfaceDamage.united(repaint).intersected(output->geometry());
+                primaryDelegate->paint(renderTarget, bufferDamage);
+                primaryLayer->endFrame(bufferDamage, primarySurfaceDamage, frame.get());
+            }
+            if (!output->present(frame)) {
+                output->repairPresentation();
+            }
+        }
 
     } else if (!output->present(frame)) {
         output->repairPresentation();
