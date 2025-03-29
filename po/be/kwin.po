@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-27 00:43+0000\n"
+"POT-Creation-Date: 2025-03-29 00:43+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -2624,11 +2624,6 @@ msgstr "Дадаць элемент, які плавае"
 msgid "Delete"
 msgstr "Выдаліць"
 
-#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
-#, kde-format
-msgid "Touchpad"
-msgstr "Сэнсарная панэль"
-
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
@@ -4359,6 +4354,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Адбыўся збой Xwayland"
+
+#~ msgid "Touchpad"
+#~ msgstr "Сэнсарная панэль"
 
 #~ msgid "Suspend Compositing"
 #~ msgstr "Прыпыніць кампазітынг"

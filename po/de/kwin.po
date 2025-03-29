@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-27 00:43+0000\n"
+"POT-Creation-Date: 2025-03-29 00:43+0000\n"
 "PO-Revision-Date: 2025-02-17 22:05+0100\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2643,11 +2643,6 @@ msgstr "Schwebende Kachel hinzufügen"
 msgid "Delete"
 msgstr "Löschen"
 
-#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
-#, kde-format
-msgid "Touchpad"
-msgstr "Touchpad"
-
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
@@ -4389,6 +4384,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ist abgestürzt"
+
+#~ msgid "Touchpad"
+#~ msgstr "Touchpad"
 
 #~ msgid "Suspend Compositing"
 #~ msgstr "Compositing aussetzen"

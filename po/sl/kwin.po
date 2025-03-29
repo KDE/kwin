@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1705914 2025-03-27 01:21:14Z scripty $
+# $Id: kwin.po 1706112 2025-03-29 01:21:28Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-27 00:43+0000\n"
+"POT-Creation-Date: 2025-03-29 00:43+0000\n"
 "PO-Revision-Date: 2025-03-11 09:30+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2622,11 +2622,6 @@ msgstr "Dodaj plavajočo ploščico"
 msgid "Delete"
 msgstr "Zbriši"
 
-#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
-#, kde-format
-msgid "Touchpad"
-msgstr "Drsna ploščica"
-
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
@@ -4340,6 +4335,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland se je sesul"
+
+#~ msgid "Touchpad"
+#~ msgstr "Drsna ploščica"
 
 #~ msgid "Suspend Compositing"
 #~ msgstr "Skladnja 3D v pripravljenost"

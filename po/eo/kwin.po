@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-27 00:43+0000\n"
+"POT-Creation-Date: 2025-03-29 00:43+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2606,11 +2606,6 @@ msgstr "Aldoni Flosantan Kahelon"
 msgid "Delete"
 msgstr "Forigi"
 
-#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
-#, kde-format
-msgid "Touchpad"
-msgstr "Tuŝplato"
-
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
@@ -4326,3 +4321,6 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
+
+#~ msgid "Touchpad"
+#~ msgstr "Tuŝplato"

@@ -1,4 +1,5 @@
-# Copyright (C) YEAR This_file_is_part_of_KDE
+# Spanish translations for kcm_kwintabbox.po package.
+# Copyright (C) 2010-2025 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kwin package.
 #
 # SPDX-FileCopyrightText: 2010, 2012, 2018, 2021, 2022, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
@@ -9,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-27 00:43+0000\n"
-"PO-Revision-Date: 2025-01-28 22:12+0100\n"
+"PO-Revision-Date: 2025-03-28 02:15+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -19,7 +20,7 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: SPAIN\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.1\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #: layoutpreview.cpp:113
 #, kde-format
@@ -69,7 +70,7 @@ msgstr "Alternativo"
 #: main.cpp:77
 #, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Obtener nuevos estilos de selectores de tareas..."
+msgstr "Obtener nuevos estilos de selectores de tareas…"
 
 #: main.cpp:95
 #, kde-format
@@ -233,7 +234,7 @@ msgstr "Invertir"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
@@ -312,9 +313,3 @@ msgstr "Recorrer las ventanas de la aplicación actual alternativo"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Recorrer las ventanas de la aplicación actual alternativo (en orden inverso)"
-
-#~ msgid "KWin"
-#~ msgstr "KWin"
-
-#~ msgid "Tabbox layout preview"
-#~ msgstr "Vista previa de la disposición de la barra de pestañas"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-27 00:43+0000\n"
+"POT-Creation-Date: 2025-03-29 00:43+0000\n"
 "PO-Revision-Date: 2025-03-11 09:54+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2626,11 +2626,6 @@ msgstr "Afegeix un mosaic flotant"
 msgid "Delete"
 msgstr "Suprimeix"
 
-#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
-#, kde-format
-msgid "Touchpad"
-msgstr "Ratolí tàctil"
-
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
@@ -4352,3 +4347,6 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
+
+#~ msgid "Touchpad"
+#~ msgstr "Ratolí tàctil"

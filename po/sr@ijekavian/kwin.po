@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-27 00:43+0000\n"
+"POT-Creation-Date: 2025-03-29 00:43+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2871,14 +2871,6 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-# >> @item
-#: plugins/touchpadshortcuts/touchpadshortcuts.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "A touch up event"
-#| msgid "Touch Up"
-msgid "Touchpad"
-msgstr "додир уклоњен"
-
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
@@ -4729,6 +4721,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+# >> @item
+#, fuzzy
+#~| msgctxt "A touch up event"
+#~| msgid "Touch Up"
+#~ msgid "Touchpad"
+#~ msgstr "додир уклоњен"
 
 #~ msgid "Suspend Compositing"
 #~ msgstr "Суспендуј слагање"
