@@ -25,9 +25,6 @@
 #include <unistd.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-#ifdef Q_OS_LINUX
-#include <linux/dma-buf.h>
-#endif
 
 namespace KWin
 {
@@ -69,7 +66,7 @@ DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, 
         m_readable = true;
     }
     m_syncFd = std::move(readFence);
-#ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
+#if defined(Q_OS_LINUX)
     if (!m_syncFd.isValid()) {
         dma_buf_export_sync_file req{
             .flags = DMA_BUF_SYNC_READ,
