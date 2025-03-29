@@ -40,20 +40,10 @@ DrmFramebufferData::DrmFramebufferData(DrmGpu *gpu, uint32_t fbid, GraphicsBuffe
 
 DrmFramebufferData::~DrmFramebufferData()
 {
-    uint32_t nonConstFb = m_framebufferId;
-
-#ifdef DRM_IOCTL_MODE_CLOSEFB
-    struct drm_mode_closefb closeArgs
-    {
-        .fb_id = m_framebufferId,
-        .pad = 0,
-    };
-    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CLOSEFB, &closeArgs) != 0) {
-        drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
+    if (drmModeCloseFB(m_gpu->fd(), m_framebufferId) != 0) {
+        drmModeRmFB(m_gpu->fd(), m_framebufferId);
     }
-#else
-    drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
-#endif
+
     m_gpu->forgetBuffer(m_buffer);
 }
 
