@@ -1,3 +1,4 @@
+
 /*
     SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
@@ -31,6 +32,8 @@ static WindowType scopeToType(const QString &scope)
         {QStringLiteral("dialog"), WindowType::Dialog},
         {QStringLiteral("splash"), WindowType::Splash},
         {QStringLiteral("utility"), WindowType::Utility},
+        {QStringLiteral("spectacle-capture"), WindowType::Spectacle},
+
     };
     return scopeToType.value(scope.toLower(), WindowType::Normal);
 }

@@ -113,7 +113,7 @@ PointerAxisGestureModifiersWidget::PointerAxisGestureModifiersWidget(QWidget *pa
 {
     setProperty("kcfg_property", QStringLiteral("modifiers"));
     setCheckForConflictsAgainst(None);
-    setPatterns(KKeySequenceRecorder::Pattern::Modifier);
+    // setPatterns(KKeySequenceRecorder::Pattern::Modifier);
     connect(this, &KKeySequenceWidget::keySequenceChanged, this, &PointerAxisGestureModifiersWidget::modifiersChanged);
 }
 

@@ -413,6 +413,8 @@ enum class WindowType {
      * indicates that this window is an applet.
      */
     AppletPopup = 18, // NON STANDARD
+
+    Spectacle = 19,
 };
 Q_ENUM_NS(WindowType);
 

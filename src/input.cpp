@@ -3400,6 +3400,9 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
                 continue;
             }
         }
+        if (window->windowType() == WindowType::Spectacle) {
+            continue;
+        }
         if (window->hitTest(pos)) {
             return window;
         }
