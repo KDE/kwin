@@ -226,7 +226,7 @@ msgstr "反向"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538

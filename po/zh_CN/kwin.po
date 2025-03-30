@@ -4283,6 +4283,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Touchpad"
-#~ msgstr "触摸板"
