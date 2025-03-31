@@ -1386,9 +1386,8 @@ bool ScreenEdges::inApproachGeometry(const QPoint &pos) const
     return false;
 }
 
-bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timestamp)
+void ScreenEdges::handlePointerMotion(const QPointF &pos, std::chrono::microseconds timestamp)
 {
-    bool activated = false;
     bool activatedForClient = false;
     for (const auto &edge : m_edges) {
         if (!edge->isReserved() || edge->isBlocked()) {
@@ -1431,7 +1430,6 @@ bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timest
             }
         }
     }
-    return activated;
 }
 
 void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)

@@ -299,7 +299,7 @@ public:
      * @param o Qt orientations
      */
     void reserveDesktopSwitching(bool isToReserve, Qt::Orientations o);
-    bool isEntered(const QPointF &pos, std::chrono::microseconds timestamp);
+    void handlePointerMotion(const QPointF &pos, std::chrono::microseconds timestamp);
 
     bool isDesktopSwitching() const;
     bool isDesktopSwitchingMovingClients() const;

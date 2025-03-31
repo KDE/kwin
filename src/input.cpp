@@ -1841,7 +1841,7 @@ public:
     }
     bool pointerMotion(PointerMotionEvent *event) override
     {
-        workspace()->screenEdges()->isEntered(event->position, event->timestamp);
+        workspace()->screenEdges()->handlePointerMotion(event->position, event->timestamp);
         // always forward
         return false;
     }
