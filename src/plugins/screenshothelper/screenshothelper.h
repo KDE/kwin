@@ -39,17 +39,17 @@ public:
 
 public Q_SLOTS:
     /**
-     * Called from DBus, this freezes all windows except the caller
+     * Called from DBus
      */
     void start();
     void stop();
+    void showFrozenMode(bool show);
 
 private:
-    TimeLine m_timeline;
     enum State {
         Off,
-        ShowingCache,
-        Blending
+        Captured, // screenshot taken, but showing live
+        ShowingCache, // showing the screenshot
     };
     State m_state = Off;
     QSet<Window *> m_spectacleWindows;
