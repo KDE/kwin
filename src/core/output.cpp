@@ -813,12 +813,14 @@ double Output::artificialHdrHeadroom() const
 
 BrightnessDevice *Output::brightnessDevice() const
 {
-    return m_brightnessDevice;
+    return m_state.brightnessDevice;
 }
 
 void Output::unsetBrightnessDevice()
 {
-    m_brightnessDevice = nullptr;
+    State next;
+    next.brightnessDevice = nullptr;
+    setState(next);
 }
 
 bool Output::allowSdrSoftwareBrightness() const

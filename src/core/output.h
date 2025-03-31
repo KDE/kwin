@@ -512,6 +512,7 @@ protected:
         double artificialHdrHeadroom = 1.0;
         ColorPowerTradeoff colorPowerTradeoff = ColorPowerTradeoff::PreferEfficiency;
         double dimming = 1.0;
+        BrightnessDevice *brightnessDevice = nullptr;
     };
 
     void setInformation(const Information &information);
@@ -521,7 +522,6 @@ protected:
     Information m_information;
     QUuid m_uuid;
     int m_refCount = 1;
-    BrightnessDevice *m_brightnessDevice = nullptr;
 };
 
 inline QRect Output::rect() const
