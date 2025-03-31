@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-29 00:43+0000\n"
-"PO-Revision-Date: 2025-03-25 22:17+0100\n"
+"PO-Revision-Date: 2025-03-30 16:25+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -3772,7 +3772,7 @@ msgstr "&Bildu"
 #: useractions.cpp:251
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Titulu-barrarik eta markorik &gabe"
+msgstr "Titulu-barrarik eta markorik e&z"
 
 #: useractions.cpp:259
 #, kde-format
