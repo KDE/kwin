@@ -295,13 +295,10 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
 
     pending->bufferIsSet = true;
     if (!buffer) {
-        // got a null buffer, deletes content in next frame
         pending->buffer = nullptr;
-        pending->damage = QRegion();
-        pending->bufferDamage = QRegion();
-        return;
+    } else {
+        pending->buffer = Display::bufferForResource(buffer);
     }
-    pending->buffer = Display::bufferForResource(buffer);
 }
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
@@ -347,6 +344,11 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 
     if (syncObjV1 && syncObjV1->maybeEmitProtocolErrors()) {
         return;
+    }
+
+    if (pending->bufferIsSet && !pending->buffer) {
+        pending->damage = QRegion();
+        pending->bufferDamage = QRegion();
     }
 
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
