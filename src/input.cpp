@@ -1298,11 +1298,7 @@ std::optional<bool> performWindowMouseAction(PointerButtonEvent *event, Window *
     }
 }
 
-/**
- * @returns if a command was performed, whether or not the event should be filtered out
- *          if no command was performed, std::nullopt
- */
-std::optional<bool> performModifierWindowWheelAction(PointerAxisEvent *event, Window *window)
+std::optional<Options::MouseCommand> globalWindowWheelAction(PointerAxisEvent *event)
 {
     if (event->orientation != Qt::Vertical) {
         return std::nullopt;
@@ -1313,18 +1309,20 @@ std::optional<bool> performModifierWindowWheelAction(PointerAxisEvent *event, Wi
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    return window->performMousePressCommand(options->operationWindowMouseWheel(-1 * event->delta), event->position);
+    const auto ret = options->operationWindowMouseWheel(-1 * event->delta);
+    if (ret == Options::MouseCommand::MouseNothing) {
+        return std::nullopt;
+    } else {
+        return ret;
+    }
 }
-/**
- * @returns if a command was performed, whether or not the event should be filtered out
- *          if no command was performed, std::nullopt
- */
-std::optional<bool> performWindowWheelAction(PointerAxisEvent *event, Window *window)
+
+std::optional<Options::MouseCommand> windowWheelCommand(PointerAxisEvent *event, Window *window)
 {
-    if (const auto globalAction = performModifierWindowWheelAction(event, window)) {
-        return globalAction;
-    } else if (const auto command = window->getWheelCommand(Qt::Vertical)) {
-        return window->performMousePressCommand(*command, event->position);
+    if (const auto globalCommand = globalWindowWheelAction(event)) {
+        return globalCommand;
+    } else if (const auto command = window->getWheelCommand(event->orientation)) {
+        return command;
     } else {
         return std::nullopt;
     }
@@ -1581,11 +1579,13 @@ public:
         if (!decoration) {
             return false;
         }
-        if (event->orientation == Qt::Vertical) {
-            // client window action only on vertical scrolling
-            const auto actionResult = performModifierWindowWheelAction(event, decoration->window());
-            if (actionResult) {
-                return *actionResult;
+        if (const auto command = globalWindowWheelAction(event)) {
+            if (m_accumulator.accumulate(event)) {
+                if (decoration->window()->performMousePressCommand(*command, event->position)) {
+                    return true;
+                }
+            } else if (decoration->window()->mousePressCommandConsumesEvent(*command)) {
+                return true;
             }
         }
         const QPointF localPos = event->position - decoration->window()->pos();
@@ -1932,7 +1932,14 @@ public:
         if (!window || !window->isClient()) {
             return false;
         }
-        return performWindowWheelAction(event, window).value_or(false);
+        const auto command = windowWheelCommand(event, window);
+        if (!command) {
+            return false;
+        }
+        if (!m_accumulator.accumulate(event)) {
+            return window->mousePressCommandConsumesEvent(*command);
+        }
+        return window->performMousePressCommand(*command, event->position);
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
@@ -2004,6 +2011,9 @@ public:
 
         return false;
     }
+
+private:
+    MouseWheelAccumulator m_accumulator;
 };
 
 class InputMethodEventFilter : public InputEventFilter
