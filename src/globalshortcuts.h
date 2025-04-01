@@ -98,7 +98,7 @@ public:
      * @param axis The axis direction which has triggered this event
      * @return @c true if a shortcut triggered, @c false otherwise
      */
-    bool processAxis(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
+    bool processAxis(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, qreal delta);
 
     void processSwipeStart(DeviceType device, uint fingerCount);
     void processSwipeUpdate(DeviceType device, const QPointF &delta);

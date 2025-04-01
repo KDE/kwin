@@ -238,17 +238,16 @@ bool GlobalShortcutsManager::processKeyRelease(Qt::KeyboardModifiers mods, int k
 }
 
 template<typename ShortcutKind, typename... Args>
-bool match(QList<GlobalShortcut> &shortcuts, Args... args)
+GlobalShortcut *match(QList<GlobalShortcut> &shortcuts, Args... args)
 {
     for (auto &sc : shortcuts) {
         if (std::holds_alternative<ShortcutKind>(sc.shortcut())) {
             if (std::get<ShortcutKind>(sc.shortcut()) == ShortcutKind{args...}) {
-                sc.invoke();
-                return true;
+                return &sc;
             }
         }
     }
-    return false;
+    return nullptr;
 }
 
 // TODO(C++20): use ranges for a nicer way of filtering by shortcut type
@@ -264,10 +263,14 @@ bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Q
                                   Q_ARG(Qt::MouseButtons, pointerButtons));
     }
 #endif
-    return match<PointerButtonShortcut>(m_shortcuts, mods, pointerButtons);
+    GlobalShortcut *shortcut = match<PointerButtonShortcut>(m_shortcuts, mods, pointerButtons);
+    if (shortcut) {
+        shortcut->invoke();
+    }
+    return shortcut != nullptr;
 }
 
-bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxisDirection axis)
+bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxisDirection axis, qreal delta)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
     // currently only used to better support modifier only shortcuts
@@ -279,7 +282,11 @@ bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxis
                                   Q_ARG(int, axis));
     }
 #endif
-    return match<PointerAxisShortcut>(m_shortcuts, mods, axis);
+    GlobalShortcut *shortcut = match<PointerAxisShortcut>(m_shortcuts, mods, axis);
+    if (shortcut && std::abs(delta) >= 1.0f) {
+        shortcut->invoke();
+    }
+    return shortcut != nullptr;
 }
 
 void GlobalShortcutsManager::processSwipeStart(DeviceType device, uint fingerCount)

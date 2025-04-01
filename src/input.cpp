@@ -974,6 +974,29 @@ private:
     QMap<quint32, QPointF> m_touchPoints;
 };
 
+class MouseWheelAccumulator
+{
+public:
+    qreal accumulate(PointerAxisEvent *event)
+    {
+        const qreal delta = event->deltaV120 != 0 ? event->deltaV120 / 120.0 : event->delta / 15.0;
+        if (std::signbit(m_scrollDistance) != std::signbit(delta)) {
+            m_scrollDistance = 0;
+        }
+        m_scrollDistance += delta;
+        if (std::abs(m_scrollDistance) >= 1.0) {
+            const qreal ret = m_scrollDistance;
+            m_scrollDistance = std::fmod(m_scrollDistance, 1.0f);
+            return ret - m_scrollDistance;
+        } else {
+            return 0;
+        }
+    }
+
+private:
+    qreal m_scrollDistance = 0;
+};
+
 #if KWIN_BUILD_GLOBALSHORTCUTS
 class GlobalShortcutFilter : public InputEventFilter
 {
@@ -1006,15 +1029,15 @@ public:
             } else if (event->delta < 0) {
                 direction = PointerAxisLeft;
             }
+            return input()->shortcuts()->processAxis(event->modifiers, direction, m_horizontalAccumulator.accumulate(event));
         } else {
             if (event->delta > 0) {
                 direction = PointerAxisDown;
             } else if (event->delta < 0) {
                 direction = PointerAxisUp;
             }
+            return input()->shortcuts()->processAxis(event->modifiers, direction, m_verticalAccumulator.accumulate(event));
         }
-
-        return input()->shortcuts()->processAxis(event->modifiers, direction);
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
@@ -1227,6 +1250,8 @@ private:
     QPointF m_lastAverageDistance;
     QMap<int32_t, QPointF> m_touchPoints;
     int m_touchpadGestureFingerCount = 0;
+    MouseWheelAccumulator m_horizontalAccumulator;
+    MouseWheelAccumulator m_verticalAccumulator;
 
     QTimer m_powerDown;
 };
@@ -1505,28 +1530,6 @@ private:
     std::unique_ptr<QPointingDevice> m_touchDevice;
     std::unique_ptr<QPointingDevice> m_tabletDevice;
     QList<QWindowSystemInterface::TouchPoint> m_touchPoints;
-};
-
-class MouseWheelAccumulator
-{
-public:
-    float accumulate(PointerAxisEvent *event)
-    {
-        m_scrollV120 += event->deltaV120;
-        m_scrollDistance += event->delta;
-        if (std::abs(m_scrollV120) >= 120 || (!event->deltaV120 && std::abs(m_scrollDistance) >= 15)) {
-            float ret = m_scrollDistance;
-            m_scrollV120 = 0;
-            m_scrollDistance = 0;
-            return ret;
-        } else {
-            return 0;
-        }
-    }
-
-private:
-    float m_scrollDistance = 0;
-    int m_scrollV120 = 0;
 };
 
 class DecorationEventFilter : public InputEventFilter

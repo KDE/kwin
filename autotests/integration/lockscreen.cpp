@@ -665,18 +665,18 @@ void LockScreenTest::testAxisShortcut()
 
     // try to trigger the shortcut
     quint32 timestamp = 1;
-#define PERFORM(expectedCount)                                    \
-    do {                                                          \
-        Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);      \
-        if (direction == Qt::Vertical)                            \
-            Test::pointerAxisVertical(sign * 5.0, timestamp++);   \
-        else                                                      \
-            Test::pointerAxisHorizontal(sign * 5.0, timestamp++); \
-        QCoreApplication::instance()->processEvents();            \
-        QCOMPARE(actionSpy.count(), expectedCount);               \
-        Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);     \
-        QCoreApplication::instance()->processEvents();            \
-        QCOMPARE(actionSpy.count(), expectedCount);               \
+#define PERFORM(expectedCount)                                     \
+    do {                                                           \
+        Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);       \
+        if (direction == Qt::Vertical)                             \
+            Test::pointerAxisVertical(sign * 15.0, timestamp++);   \
+        else                                                       \
+            Test::pointerAxisHorizontal(sign * 15.0, timestamp++); \
+        QCoreApplication::instance()->processEvents();             \
+        QCOMPARE(actionSpy.count(), expectedCount);                \
+        Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);      \
+        QCoreApplication::instance()->processEvents();             \
+        QCOMPARE(actionSpy.count(), expectedCount);                \
     } while (false)
 
     PERFORM(1);
