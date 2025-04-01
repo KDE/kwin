@@ -51,10 +51,16 @@ EisBackend::~EisBackend()
 void EisBackend::initialize()
 {
     const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
-    m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
+    if (!keyMap.isEmpty()) {
+        m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
+    }
     connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutsReconfigured, this, [this] {
         const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
-        m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
+        if (!keyMap.isEmpty()) {
+            m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
+        } else {
+            m_keymapFile = RamFile();
+        }
         for (const auto &context : m_contexts) {
             context->updateKeymap();
         }
