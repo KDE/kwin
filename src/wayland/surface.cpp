@@ -423,6 +423,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     }
 
     pending->serial++;
+    Q_EMIT q->pendingStateAdvanced(pending->serial);
 }
 
 void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, int32_t transform)
@@ -1287,6 +1288,11 @@ void SurfaceInterface::clearFifoBarrier()
 bool SurfaceInterface::hasFifoBarrier() const
 {
     return d->current->fifoBarrier;
+}
+
+quint32 SurfaceInterface::pendingStateSerial() const
+{
+    return d->pending->serial;
 }
 
 } // namespace KWin

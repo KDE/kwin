@@ -369,6 +369,11 @@ public:
     void clearFifoBarrier();
     bool hasFifoBarrier() const;
 
+    /**
+     * This properties indicates the serial of the pending state.
+     */
+    quint32 pendingStateSerial() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
@@ -468,6 +473,12 @@ Q_SIGNALS:
      */
     void stateApplied(quint32 serial);
 
+    /**
+     * This signal is emitted when the pending state advances to the next generation. The
+     * \a serial indicates the serial of the next pending state.
+     */
+    void pendingStateAdvanced(quint32 serial);
+
 private:
     std::unique_ptr<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
@@ -482,9 +493,11 @@ class SurfaceExtension : public QObject
 {
 public:
     explicit SurfaceExtension(SurfaceInterface *surface)
+        : pendingSerial(surface->pendingStateSerial())
     {
         connect(surface, &SurfaceInterface::stateStashed, this, &SurfaceExtension::stashState);
         connect(surface, &SurfaceInterface::stateApplied, this, &SurfaceExtension::applyState);
+        connect(surface, &SurfaceInterface::pendingStateAdvanced, this, &SurfaceExtension::advanceState);
     }
 
     virtual void apply(Commit *commit) = 0;
@@ -509,9 +522,18 @@ private:
             return;
         }
 
-        apply(&pending);
-        pending = Commit{};
+        if (pendingSerial == serial) {
+            apply(&pending);
+            pending = Commit{};
+        }
     }
+
+    void advanceState(quint32 serial)
+    {
+        pendingSerial = serial;
+    }
+
+    quint32 pendingSerial;
 };
 
 } // namespace KWin
