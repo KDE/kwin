@@ -2073,7 +2073,7 @@ std::optional<Options::MouseCommand> Window::getWheelCommand(Qt::Orientation ori
     return options->commandWindowWheel();
 }
 
-bool Window::mousePressCommandReplay(Options::MouseCommand command) const
+bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
 {
     switch (command) {
     case Options::MouseRaise:
@@ -2095,16 +2095,16 @@ bool Window::mousePressCommandReplay(Options::MouseCommand command) const
     case Options::MouseShade:
     case Options::MouseSetShade:
     case Options::MouseUnsetShade:
-        return false;
+        return true;
     case Options::MouseActivateRaiseAndPassClick:
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
     case Options::MouseActivateAndPassClick:
     case Options::MouseNothing:
-        return true;
+        return false;
     case Options::MouseActivateAndRaise:
         if (isActive()) {
             // for clickraise mode
-            return true;
+            return false;
         }
         if (!rules()->checkAcceptFocus(acceptsFocus())) {
             const auto stackingOrder = workspace()->stackingOrder();
@@ -2115,28 +2115,30 @@ bool Window::mousePressCommandReplay(Options::MouseCommand command) const
                     continue; // can never raise above "window"
                 }
                 if (window->isOnCurrentDesktop() && window->isOnCurrentActivity() && window->frameGeometry().intersects(frameGeometry())) {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
-        return false;
+        return true;
     case Options::MouseActivateAndLower:
-        return !rules()->checkAcceptFocus(acceptsFocus());
+        return rules()->checkAcceptFocus(acceptsFocus());
     case Options::MouseActivate:
-        return isActive() || !rules()->checkAcceptFocus(acceptsFocus());
+        return !isActive() || rules()->checkAcceptFocus(acceptsFocus());
     case Options::MouseActivateRaiseAndMove:
     case Options::MouseActivateRaiseAndUnrestrictedMove:
     case Options::MouseMove:
     case Options::MouseUnrestrictedMove:
-        return !isMovableAcrossScreens();
+        return isMovableAcrossScreens();
     }
-    return true;
+    return false;
 }
 
 bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &globalPos)
 {
-    const bool replay = mousePressCommandReplay(cmd);
+    // NOTE that this has to be checked before running the command
+    // as raising the window may change the return value
+    const bool consumes = mousePressCommandConsumesEvent(cmd);
     switch (cmd) {
     case Options::MouseRaise:
         workspace()->raiseWindow(this);
@@ -2310,7 +2312,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
     case Options::MouseNothing:
         break;
     }
-    return replay;
+    return consumes;
 }
 
 bool Window::performMouseReleaseCommand(Options::MouseCommand command, const QPointF &globalPos)

@@ -1274,11 +1274,11 @@ std::optional<bool> performModifierWindowMouseAction(PointerButtonEvent *event, 
     }
     switch (event->button) {
     case Qt::LeftButton:
-        return !window->performMousePressCommand(options->commandAll1(), event->position);
+        return window->performMousePressCommand(options->commandAll1(), event->position);
     case Qt::MiddleButton:
-        return !window->performMousePressCommand(options->commandAll2(), event->position);
+        return window->performMousePressCommand(options->commandAll2(), event->position);
     case Qt::RightButton:
-        return !window->performMousePressCommand(options->commandAll3(), event->position);
+        return window->performMousePressCommand(options->commandAll3(), event->position);
     default:
         return std::nullopt;
     }
@@ -1292,7 +1292,7 @@ std::optional<bool> performWindowMouseAction(PointerButtonEvent *event, Window *
     if (const auto globalAction = performModifierWindowMouseAction(event, window)) {
         return globalAction;
     } else if (const auto command = window->getMousePressCommand(event->button)) {
-        return !window->performMousePressCommand(*command, event->position);
+        return window->performMousePressCommand(*command, event->position);
     } else {
         return std::nullopt;
     }
@@ -1313,7 +1313,7 @@ std::optional<bool> performModifierWindowWheelAction(PointerAxisEvent *event, Wi
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    return !window->performMousePressCommand(options->operationWindowMouseWheel(-1 * event->delta), event->position);
+    return window->performMousePressCommand(options->operationWindowMouseWheel(-1 * event->delta), event->position);
 }
 /**
  * @returns if a command was performed, whether or not the event should be filtered out
@@ -1324,7 +1324,7 @@ std::optional<bool> performWindowWheelAction(PointerAxisEvent *event, Window *wi
     if (const auto globalAction = performModifierWindowWheelAction(event, window)) {
         return globalAction;
     } else if (const auto command = window->getWheelCommand(Qt::Vertical)) {
-        return !window->performMousePressCommand(*command, event->position);
+        return window->performMousePressCommand(*command, event->position);
     } else {
         return std::nullopt;
     }
@@ -1946,7 +1946,7 @@ public:
         }
         const auto command = window->getMousePressCommand(Qt::LeftButton);
         if (command) {
-            return !window->performMousePressCommand(*command, pos);
+            return window->performMousePressCommand(*command, pos);
         }
         return false;
     }
@@ -1972,7 +1972,7 @@ public:
         if (event->type == TabletToolTipEvent::Press) {
             const auto command = window->getMousePressCommand(Qt::LeftButton);
             if (command) {
-                return !window->performMousePressCommand(*command, event->position);
+                return window->performMousePressCommand(*command, event->position);
             }
         } else {
             const auto command = window->getMouseReleaseCommand(Qt::LeftButton);
@@ -1993,7 +1993,7 @@ public:
         if (event->pressed) {
             const auto command = window->getMousePressCommand(event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton);
             if (command) {
-                return !window->performMousePressCommand(*command, input()->tablet()->position());
+                return window->performMousePressCommand(*command, input()->tablet()->position());
             }
         } else {
             const auto command = window->getMouseReleaseCommand(event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton);
