@@ -45,7 +45,7 @@ FrogColorManagementSurfaceV1::~FrogColorManagementSurfaceV1()
     if (m_surface) {
         const auto priv = SurfaceInterfacePrivate::get(m_surface);
         priv->pending->colorDescription = ColorDescription::sRGB;
-        priv->pending->colorDescriptionIsSet = true;
+        priv->pending->committed |= SurfaceState::Field::ColorDescription;
         priv->frogColorManagement = nullptr;
     }
 }
@@ -199,7 +199,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
             m_masteringColorimetry,
             Colorimetry::BT709,
         };
-        priv->pending->colorDescriptionIsSet = true;
+        priv->pending->committed |= SurfaceState::Field::ColorDescription;
     }
 }
 

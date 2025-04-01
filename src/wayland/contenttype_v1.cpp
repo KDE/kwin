@@ -63,7 +63,7 @@ void ContentTypeV1Interface::wp_content_type_v1_set_content_type(Resource *, uin
     }
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
     surfacePrivate->pending->contentType = waylandToKwinContentType(content_type);
-    surfacePrivate->pending->contentTypeIsSet = true;
+    surfacePrivate->pending->committed |= SurfaceState::Field::ContentType;
 }
 
 void ContentTypeV1Interface::wp_content_type_v1_destroy(Resource *resource)
@@ -71,7 +71,7 @@ void ContentTypeV1Interface::wp_content_type_v1_destroy(Resource *resource)
     if (m_surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
         surfacePrivate->pending->contentType = ContentType::None;
-        surfacePrivate->pending->contentTypeIsSet = true;
+        surfacePrivate->pending->committed |= SurfaceState::Field::ContentType;
     }
     wl_resource_destroy(resource->handle);
 }

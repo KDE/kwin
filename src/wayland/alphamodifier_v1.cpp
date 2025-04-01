@@ -47,7 +47,7 @@ AlphaModifierSurfaceV1::~AlphaModifierSurfaceV1()
     if (m_surface) {
         const auto priv = SurfaceInterfacePrivate::get(m_surface);
         priv->pending->alphaMultiplier = 1;
-        priv->pending->alphaMultiplierIsSet = true;
+        priv->pending->committed |= SurfaceState::Field::AlphaMultiplier;
     }
 }
 
@@ -69,7 +69,7 @@ void AlphaModifierSurfaceV1::wp_alpha_modifier_surface_v1_set_multiplier(Resourc
     }
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
     priv->pending->alphaMultiplier = factor / double(std::numeric_limits<uint32_t>::max());
-    priv->pending->alphaMultiplierIsSet = true;
+    priv->pending->committed |= SurfaceState::Field::AlphaMultiplier;
 }
 
 }

@@ -75,7 +75,7 @@ TearingControlV1Interface::~TearingControlV1Interface()
     if (m_surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
         surfacePrivate->pending->presentationHint = PresentationModeHint::VSync;
-        surfacePrivate->pending->presentationModeHintIsSet = true;
+        surfacePrivate->pending->committed |= SurfaceState::Field::PresentationModeHint;
         surfacePrivate->tearing = nullptr;
     }
 }
@@ -89,7 +89,7 @@ void TearingControlV1Interface::wp_tearing_control_v1_set_presentation_hint(Reso
         } else {
             surfacePrivate->pending->presentationHint = PresentationModeHint::VSync;
         }
-        surfacePrivate->pending->presentationModeHintIsSet = true;
+        surfacePrivate->pending->committed |= SurfaceState::Field::PresentationModeHint;
     }
 }
 

@@ -81,7 +81,7 @@ void Transaction::add(SurfaceInterface *surface)
 
     for (TransactionEntry &entry : m_entries) {
         if (entry.surface == surface) {
-            if (pending->bufferIsSet) {
+            if (pending->committed & SurfaceState::Field::Buffer) {
                 entry.buffer = GraphicsBufferRef(pending->buffer);
             }
             pending->mergeInto(entry.state.get());
@@ -210,7 +210,7 @@ void Transaction::commit()
             continue;
         }
 
-        if (entry.state->bufferIsSet && entry.state->buffer) {
+        if ((entry.state->committed & SurfaceState::Field::Buffer) && entry.state->buffer) {
             // Avoid applying the transaction until all graphics buffers have become idle.
             if (entry.state->acquirePoint.timeline) {
                 watchSyncObj(&entry);

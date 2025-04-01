@@ -113,7 +113,7 @@ void SubSurfaceInterfacePrivate::subsurface_set_position(Resource *resource, int
     SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
 
     parentPrivate->pending->subsurface.position[q] = QPoint(x, y);
-    parentPrivate->pending->subsurfacePositionChanged = true;
+    parentPrivate->pending->committed |= SurfaceState::Field::SubsurfacePosition;
 }
 
 void SubSurfaceInterfacePrivate::subsurface_place_above(Resource *resource, struct ::wl_resource *sibling_resource)
@@ -280,7 +280,7 @@ void SubSurfaceInterface::parentDesynchronized()
 void SubSurfaceInterface::parentApplyState(quint32 serial)
 {
     auto parentPrivate = SurfaceInterfacePrivate::get(d->parent);
-    if (parentPrivate->current->subsurfacePositionChanged) {
+    if (parentPrivate->current->committed & SurfaceState::Field::SubsurfacePosition) {
         const QPoint &pos = parentPrivate->current->subsurface.position[this];
         if (d->position != pos) {
             d->position = pos;

@@ -159,7 +159,7 @@ ColorSurfaceV1::~ColorSurfaceV1()
     if (m_surface) {
         const auto priv = SurfaceInterfacePrivate::get(m_surface);
         priv->pending->colorDescription = ColorDescription::sRGB;
-        priv->pending->colorDescriptionIsSet = true;
+        priv->pending->committed |= SurfaceState::Field::ColorDescription;
         priv->colorSurface = nullptr;
     }
 }
@@ -209,7 +209,7 @@ void ColorSurfaceV1::wp_color_management_surface_v1_set_image_description(Resour
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
     priv->pending->colorDescription = *ImageDescriptionV1::get(image_description)->description();
     priv->pending->renderingIntent = *intent;
-    priv->pending->colorDescriptionIsSet = true;
+    priv->pending->committed |= SurfaceState::Field::ColorDescription;
 }
 
 void ColorSurfaceV1::wp_color_management_surface_v1_unset_image_description(Resource *resource)
@@ -219,7 +219,7 @@ void ColorSurfaceV1::wp_color_management_surface_v1_unset_image_description(Reso
     }
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
     priv->pending->colorDescription = ColorDescription::sRGB;
-    priv->pending->colorDescriptionIsSet = true;
+    priv->pending->committed |= SurfaceState::Field::ColorDescription;
 }
 
 ColorParametricCreatorV1::ColorParametricCreatorV1(wl_client *client, uint32_t id, uint32_t version)
