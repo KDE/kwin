@@ -2073,9 +2073,70 @@ std::optional<Options::MouseCommand> Window::getWheelCommand(Qt::Orientation ori
     return options->commandWindowWheel();
 }
 
+bool Window::mousePressCommandReplay(Options::MouseCommand command) const
+{
+    switch (command) {
+    case Options::MouseRaise:
+    case Options::MouseLower:
+    case Options::MouseOperationsMenu:
+    case Options::MouseToggleRaiseAndLower:
+    case Options::MouseMaximize:
+    case Options::MouseRestore:
+    case Options::MouseMinimize:
+    case Options::MouseAbove:
+    case Options::MouseBelow:
+    case Options::MousePreviousDesktop:
+    case Options::MouseNextDesktop:
+    case Options::MouseOpacityMore:
+    case Options::MouseOpacityLess:
+    case Options::MouseClose:
+    case Options::MouseResize:
+    case Options::MouseUnrestrictedResize:
+    case Options::MouseShade:
+    case Options::MouseSetShade:
+    case Options::MouseUnsetShade:
+        return false;
+    case Options::MouseActivateRaiseAndPassClick:
+    case Options::MouseActivateRaiseOnReleaseAndPassClick:
+    case Options::MouseActivateAndPassClick:
+    case Options::MouseNothing:
+        return true;
+    case Options::MouseActivateAndRaise:
+        if (isActive()) {
+            // for clickraise mode
+            return true;
+        }
+        if (!rules()->checkAcceptFocus(acceptsFocus())) {
+            const auto stackingOrder = workspace()->stackingOrder();
+            auto it = stackingOrder.end();
+            while (--it != stackingOrder.begin() && *it != this) {
+                auto window = *it;
+                if (!window->isClient() || (window->keepAbove() && !keepAbove()) || (keepBelow() && !window->keepBelow())) {
+                    continue; // can never raise above "window"
+                }
+                if (window->isOnCurrentDesktop() && window->isOnCurrentActivity() && window->frameGeometry().intersects(frameGeometry())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    case Options::MouseActivateAndLower:
+        return !rules()->checkAcceptFocus(acceptsFocus());
+    case Options::MouseActivate:
+        return isActive() || !rules()->checkAcceptFocus(acceptsFocus());
+    case Options::MouseActivateRaiseAndMove:
+    case Options::MouseActivateRaiseAndUnrestrictedMove:
+    case Options::MouseMove:
+    case Options::MouseUnrestrictedMove:
+        return !isMovableAcrossScreens();
+    }
+    return true;
+}
+
 bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &globalPos)
 {
-    bool replay = false;
+    const bool replay = mousePressCommandReplay(cmd);
     switch (cmd) {
     case Options::MouseRaise:
         workspace()->raiseWindow(this);
@@ -2102,50 +2163,30 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         workspace()->raiseOrLowerWindow(this);
         break;
     case Options::MouseActivateAndRaise: {
-        replay = isActive(); // for clickraise mode
-        bool mustReplay = !rules()->checkAcceptFocus(acceptsFocus());
-        if (mustReplay) {
-            auto it = workspace()->stackingOrder().constEnd(),
-                 begin = workspace()->stackingOrder().constBegin();
-            while (mustReplay && --it != begin && *it != this) {
-                auto c = *it;
-                if (!c->isClient() || (c->keepAbove() && !keepAbove()) || (keepBelow() && !c->keepBelow())) {
-                    continue; // can never raise above "it"
-                }
-                mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->frameGeometry().intersects(frameGeometry()));
-            }
-        }
         workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
         workspace()->setActiveOutput(globalPos);
-        replay = replay || mustReplay;
         break;
     }
     case Options::MouseActivateAndLower:
         workspace()->requestFocus(this);
         workspace()->lowerWindow(this);
         workspace()->setActiveOutput(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(acceptsFocus());
         break;
     case Options::MouseActivate:
-        replay = isActive(); // for clickraise mode
         workspace()->takeActivity(this, Workspace::ActivityFocus);
         workspace()->setActiveOutput(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(acceptsFocus());
         break;
     case Options::MouseActivateRaiseAndPassClick:
         workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
         workspace()->setActiveOutput(globalPos);
-        replay = true;
         break;
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
         workspace()->takeActivity(this, Workspace::ActivityFocus);
         workspace()->setActiveOutput(globalPos);
-        replay = true;
         break;
     case Options::MouseActivateAndPassClick:
         workspace()->takeActivity(this, Workspace::ActivityFocus);
         workspace()->setActiveOutput(globalPos);
-        replay = true;
         break;
     case Options::MouseMaximize:
         maximize(MaximizeFull);
@@ -2202,7 +2243,6 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
     case Options::MouseMove:
     case Options::MouseUnrestrictedMove: {
         if (!isMovableAcrossScreens()) {
-            replay = true;
             break;
         }
         if (isInteractiveMoveResize()) {
@@ -2268,8 +2308,6 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         cancelShadeHoverTimer();
         break;
     case Options::MouseNothing:
-    default:
-        replay = true;
         break;
     }
     return replay;

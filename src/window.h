@@ -1173,6 +1173,7 @@ public:
     std::optional<Options::MouseCommand> getMousePressCommand(Qt::MouseButton button) const;
     std::optional<Options::MouseCommand> getMouseReleaseCommand(Qt::MouseButton button) const;
     std::optional<Options::MouseCommand> getWheelCommand(Qt::Orientation orientation) const;
+    bool mousePressCommandReplay(Options::MouseCommand command) const;
     bool performMousePressCommand(Options::MouseCommand, const QPointF &globalPos);
     bool performMouseReleaseCommand(Options::MouseCommand, const QPointF &globalPos);
 
