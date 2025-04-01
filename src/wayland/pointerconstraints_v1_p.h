@@ -37,23 +37,23 @@ protected:
     void zwp_pointer_constraints_v1_destroy(Resource *resource) override;
 };
 
-struct LockedPointerV1Commit
+class LockedPointerV1Commit : public SurfaceAttachedState<LockedPointerV1Commit>
 {
+public:
     std::optional<QRegion> region;
     std::optional<QPointF> hint;
 };
 
-class LockedPointerV1InterfacePrivate final : public QtWaylandServer::zwp_locked_pointer_v1, public SurfaceExtension<LockedPointerV1Commit>
+class LockedPointerV1InterfacePrivate final : public QtWaylandServer::zwp_locked_pointer_v1, public SurfaceExtension<LockedPointerV1InterfacePrivate, LockedPointerV1Commit>
 {
 public:
     static LockedPointerV1InterfacePrivate *get(LockedPointerV1Interface *pointer);
 
     LockedPointerV1InterfacePrivate(LockedPointerV1Interface *q, SurfaceInterface *surface, LockedPointerV1Interface::LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
 
-    void apply(LockedPointerV1Commit *commit) override;
+    void apply(LockedPointerV1Commit *commit);
 
     LockedPointerV1Interface *q;
-    QPointer<SurfaceInterface> surface;
     LockedPointerV1Interface::LifeTime lifeTime;
     QRegion effectiveRegion;
     QRegion region;
@@ -67,12 +67,13 @@ protected:
     void zwp_locked_pointer_v1_set_region(Resource *resource, struct ::wl_resource *region_resource) override;
 };
 
-struct ConfinedPointerV1Commit
+class ConfinedPointerV1Commit : public SurfaceAttachedState<ConfinedPointerV1Commit>
 {
+public:
     std::optional<QRegion> region;
 };
 
-class ConfinedPointerV1InterfacePrivate final : public QtWaylandServer::zwp_confined_pointer_v1, public SurfaceExtension<ConfinedPointerV1Commit>
+class ConfinedPointerV1InterfacePrivate final : public QtWaylandServer::zwp_confined_pointer_v1, public SurfaceExtension<ConfinedPointerV1InterfacePrivate, ConfinedPointerV1Commit>
 {
 public:
     static ConfinedPointerV1InterfacePrivate *get(ConfinedPointerV1Interface *pointer);
@@ -83,10 +84,9 @@ public:
                                       const QRegion &region,
                                       ::wl_resource *resource);
 
-    void apply(ConfinedPointerV1Commit *commit) override;
+    void apply(ConfinedPointerV1Commit *commit);
 
     ConfinedPointerV1Interface *q;
-    QPointer<SurfaceInterface> surface;
     ConfinedPointerV1Interface::LifeTime lifeTime;
     QRegion effectiveRegion;
     QRegion region;

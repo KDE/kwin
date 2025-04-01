@@ -65,8 +65,6 @@ struct SurfaceState
 
     void mergeInto(SurfaceState *target);
 
-    quint32 serial = 0;
-
     Fields committed;
     QRegion damage = QRegion();
     QRegion bufferDamage = QRegion();
@@ -114,6 +112,8 @@ struct SurfaceState
         QRectF sourceGeometry = QRectF();
         QSize destinationSize = QSize();
     } viewport;
+
+    std::unordered_map<RawSurfaceExtension *, std::unique_ptr<RawSurfaceAttachedState>> extensions;
 };
 
 class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface

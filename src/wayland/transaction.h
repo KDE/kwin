@@ -139,7 +139,7 @@ public:
      * dependencies, for example previous transactions have not been applied yet, or one of the
      * graphics buffers in the transaction is not ready to be used yet.
      */
-    bool tryApply();
+    void tryApply();
 
 private:
     void apply();

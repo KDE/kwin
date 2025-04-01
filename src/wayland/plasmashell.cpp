@@ -18,8 +18,9 @@ namespace KWin
 static const quint32 s_version = 8;
 static QList<PlasmaShellSurfaceInterface *> s_shellSurfaces;
 
-struct PlasmaShellSurfaceCommit
+class PlasmaShellSurfaceCommit : public SurfaceAttachedState<PlasmaShellSurfaceCommit>
 {
+public:
     std::optional<QPoint> globalPosition;
 };
 
@@ -39,11 +40,11 @@ PlasmaShellInterfacePrivate::PlasmaShellInterfacePrivate(PlasmaShellInterface *_
 {
 }
 
-class PlasmaShellSurfaceInterfacePrivate : public SurfaceExtension<PlasmaShellSurfaceCommit>, public QtWaylandServer::org_kde_plasma_surface
+class PlasmaShellSurfaceInterfacePrivate : public SurfaceExtension<PlasmaShellSurfaceInterfacePrivate, PlasmaShellSurfaceCommit>, public QtWaylandServer::org_kde_plasma_surface
 {
 public:
     PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *q, SurfaceInterface *surface, wl_resource *resource);
-    void apply(PlasmaShellSurfaceCommit *commit) override;
+    void apply(PlasmaShellSurfaceCommit *commit);
 
     QPointer<SurfaceInterface> surface;
     PlasmaShellSurfaceInterface *q;
@@ -110,7 +111,7 @@ void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServ
  * ShellSurfaceInterface
  *********************************/
 PlasmaShellSurfaceInterfacePrivate::PlasmaShellSurfaceInterfacePrivate(PlasmaShellSurfaceInterface *_q, SurfaceInterface *surface, wl_resource *resource)
-    : SurfaceExtension<PlasmaShellSurfaceCommit>(surface)
+    : SurfaceExtension(surface)
     , QtWaylandServer::org_kde_plasma_surface(resource)
     , surface(surface)
     , q(_q)
@@ -154,7 +155,7 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_output(Resou
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_position(Resource *resource, int32_t x, int32_t y)
 {
-    pending.globalPosition = QPoint(x, y);
+    pending->globalPosition = QPoint(x, y);
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_open_under_cursor(Resource *resource)

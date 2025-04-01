@@ -194,13 +194,11 @@ void Transaction::apply()
     delete this;
 }
 
-bool Transaction::tryApply()
+void Transaction::tryApply()
 {
-    if (!isReady()) {
-        return false;
+    if (isReady()) {
+        apply();
     }
-    apply();
-    return true;
 }
 
 void Transaction::commit()
@@ -234,11 +232,7 @@ void Transaction::commit()
         entry.surface->setLastTransaction(this);
     }
 
-    if (!tryApply()) {
-        for (const TransactionEntry &entry : m_entries) {
-            Q_EMIT entry.surface->stateStashed(entry.state->serial);
-        }
-    }
+    tryApply();
 }
 
 void Transaction::watchSyncObj(TransactionEntry *entry)

@@ -475,7 +475,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, 
         wl_resource_post_error(resource->handle, error_invalid_size, "width and height must be positive or zero");
         return;
     }
-    pending.maximumSize = QSize(width, height);
+    pending->maximumSize = QSize(width, height);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, int32_t width, int32_t height)
@@ -484,7 +484,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, 
         wl_resource_post_error(resource->handle, error_invalid_size, "width and height must be positive or zero");
         return;
     }
-    pending.minimumSize = QSize(width, height);
+    pending->minimumSize = QSize(width, height);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_maximized(Resource *resource)
@@ -528,7 +528,7 @@ XdgToplevelInterface::XdgToplevelInterface(XdgSurfaceInterface *xdgSurface, ::wl
 {
     XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
     surfacePrivate->toplevel = this;
-    surfacePrivate->pending = &d->pending;
+    surfacePrivate->pending = d->pending;
 
     d->init(resource);
 }
@@ -780,7 +780,7 @@ XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *xdgSurface, SurfaceInt
 {
     XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
     surfacePrivate->popup = this;
-    surfacePrivate->pending = &d->pending;
+    surfacePrivate->pending = d->pending;
 
     d->parentSurface = parentSurface;
     d->positioner = positioner;

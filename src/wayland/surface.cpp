@@ -421,8 +421,6 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     if (!sync) {
         transaction->commit();
     }
-
-    pending->serial++;
 }
 
 void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, int32_t transform)
@@ -475,6 +473,29 @@ SurfaceInterface::~SurfaceInterface()
     d->m_tearingDown = true;
     if (d->firstTransaction) {
         d->firstTransaction->tryApply();
+    }
+}
+
+RawSurfaceAttachedState *SurfaceInterface::addExtension(RawSurfaceExtension *extension)
+{
+    const auto &[it, inserted] = d->pending->extensions.emplace(extension, extension->createState());
+    return it->second.get();
+}
+
+void SurfaceInterface::removeExtension(RawSurfaceExtension *extension)
+{
+    d->pending->extensions.erase(extension);
+
+    if (d->subsurface.transaction) {
+        d->subsurface.transaction->amend(this, [extension](SurfaceState *state) {
+            state->extensions.erase(extension);
+        });
+    }
+
+    for (auto transaction = d->firstTransaction; transaction; transaction = transaction->next(this)) {
+        transaction->amend(this, [extension](SurfaceState *state) {
+            state->extensions.erase(extension);
+        });
     }
 }
 
@@ -582,7 +603,6 @@ void SurfaceState::mergeInto(SurfaceState *target)
     wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
     wl_list_init(&frameCallbacks);
 
-    target->serial = serial;
     target->viewport.sourceGeometry = viewport.sourceGeometry;
     target->viewport.destinationSize = viewport.destinationSize;
     target->subsurface = subsurface;
@@ -602,6 +622,20 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->fifoBarrier = fifoBarrier;
     target->hasFifoWaitCondition = hasFifoWaitCondition;
     target->presentationFeedback = std::move(presentationFeedback);
+
+    auto previousExtensions = std::exchange(target->extensions, {});
+    for (const auto &[extension, sourceState] : extensions) {
+        std::unique_ptr<RawSurfaceAttachedState> targetState;
+
+        if (auto it = previousExtensions.find(extension); it != previousExtensions.end()) {
+            targetState = std::move(it->second);
+        } else {
+            targetState = extension->createState();
+        }
+
+        sourceState->mergeInto(targetState.get());
+        target->extensions[extension] = std::move(targetState);
+    }
 
     target->committed |= std::exchange(committed, SurfaceState::Fields{});
 }
@@ -733,13 +767,16 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     // The position of a sub-surface is applied when its parent is committed.
     for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.below)) {
-        subsurface->parentApplyState(next->serial);
+        subsurface->parentApplyState();
     }
     for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.above)) {
-        subsurface->parentApplyState(next->serial);
+        subsurface->parentApplyState();
     }
 
-    Q_EMIT q->stateApplied(next->serial);
+    for (const auto &[extension, state] : current->extensions) {
+        extension->applyState(state.get());
+    }
+
     Q_EMIT q->committed();
 }
 

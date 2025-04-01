@@ -85,19 +85,21 @@ protected:
     void xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial) override;
 };
 
-struct XdgSurfaceCommit
+class XdgSurfaceCommit
 {
+public:
     std::optional<QRect> windowGeometry;
     std::optional<quint32> acknowledgedConfigure;
 };
 
-struct XdgToplevelCommit : XdgSurfaceCommit
+class XdgToplevelCommit : public SurfaceAttachedState<XdgToplevelCommit>, public XdgSurfaceCommit
 {
+public:
     std::optional<QSize> minimumSize;
     std::optional<QSize> maximumSize;
 };
 
-struct XdgPopupCommit : XdgSurfaceCommit
+class XdgPopupCommit : public SurfaceAttachedState<XdgPopupCommit>, public XdgSurfaceCommit
 {
 };
 
@@ -133,12 +135,12 @@ protected:
     void xdg_surface_ack_configure(Resource *resource, uint32_t serial) override;
 };
 
-class XdgToplevelInterfacePrivate : public SurfaceExtension<XdgToplevelCommit>, public QtWaylandServer::xdg_toplevel
+class XdgToplevelInterfacePrivate : public SurfaceExtension<XdgToplevelInterfacePrivate, XdgToplevelCommit>, public QtWaylandServer::xdg_toplevel
 {
 public:
     XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface);
 
-    void apply(XdgToplevelCommit *commit) override;
+    void apply(XdgToplevelCommit *commit);
     void reset();
 
     static XdgToplevelInterfacePrivate *get(XdgToplevelInterface *toplevel);
@@ -172,14 +174,14 @@ protected:
     void xdg_toplevel_set_minimized(Resource *resource) override;
 };
 
-class XdgPopupInterfacePrivate : public SurfaceExtension<XdgPopupCommit>, public QtWaylandServer::xdg_popup
+class XdgPopupInterfacePrivate : public SurfaceExtension<XdgPopupInterfacePrivate, XdgPopupCommit>, public QtWaylandServer::xdg_popup
 {
 public:
     static XdgPopupInterfacePrivate *get(XdgPopupInterface *popup);
 
     XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface);
 
-    void apply(XdgPopupCommit *commit) override;
+    void apply(XdgPopupCommit *commit);
     void reset();
 
     XdgPopupInterface *q;

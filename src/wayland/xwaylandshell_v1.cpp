@@ -30,21 +30,21 @@ protected:
     void xwayland_shell_v1_get_xwayland_surface(Resource *resource, uint32_t id, struct ::wl_resource *surface) override;
 };
 
-struct XwaylandSurfaceV1Commit
+class XwaylandSurfaceV1Commit : public SurfaceAttachedState<XwaylandSurfaceV1Commit>
 {
+public:
     std::optional<uint64_t> serial;
 };
 
-class XwaylandSurfaceV1InterfacePrivate : public SurfaceExtension<XwaylandSurfaceV1Commit>, public QtWaylandServer::xwayland_surface_v1
+class XwaylandSurfaceV1InterfacePrivate : public SurfaceExtension<XwaylandSurfaceV1InterfacePrivate, XwaylandSurfaceV1Commit>, public QtWaylandServer::xwayland_surface_v1
 {
 public:
     XwaylandSurfaceV1InterfacePrivate(XwaylandShellV1Interface *shell, SurfaceInterface *surface, wl_client *client, uint32_t id, int version, XwaylandSurfaceV1Interface *q);
 
-    void apply(XwaylandSurfaceV1Commit *commit) override;
+    void apply(XwaylandSurfaceV1Commit *commit);
 
     XwaylandSurfaceV1Interface *q;
     XwaylandShellV1Interface *shell;
-    QPointer<SurfaceInterface> surface;
     std::optional<uint64_t> serial;
 
 protected:
@@ -89,7 +89,6 @@ XwaylandSurfaceV1InterfacePrivate::XwaylandSurfaceV1InterfacePrivate(XwaylandShe
     , QtWaylandServer::xwayland_surface_v1(client, id, version)
     , q(q)
     , shell(shell)
-    , surface(surface)
 {
 }
 
@@ -120,7 +119,7 @@ void XwaylandSurfaceV1InterfacePrivate::xwayland_surface_v1_set_serial(Resource 
         return;
     }
 
-    pending.serial = serial;
+    pending->serial = serial;
 }
 
 void XwaylandSurfaceV1InterfacePrivate::xwayland_surface_v1_destroy(Resource *resource)

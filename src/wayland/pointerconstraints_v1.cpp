@@ -140,14 +140,13 @@ LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1
     : QtWaylandServer::zwp_locked_pointer_v1(resource)
     , SurfaceExtension(surface)
     , q(q)
-    , surface(surface)
     , lifeTime(lifeTime)
 {
-    pending.region = region;
+    pending->region = region;
 
-    apply(&pending);
+    apply(pending);
 
-    pending = LockedPointerV1Commit{};
+    *pending = LockedPointerV1Commit{};
 }
 
 void LockedPointerV1InterfacePrivate::apply(LockedPointerV1Commit *commit)
@@ -188,12 +187,12 @@ void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_destroy(Resource *re
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_cursor_position_hint(Resource *resource, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
-    pending.hint = QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y));
+    pending->hint = QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y));
 }
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
-    pending.region = regionFromResource(region_resource);
+    pending->region = regionFromResource(region_resource);
 }
 
 LockedPointerV1Interface::LockedPointerV1Interface(SurfaceInterface *surface,
@@ -259,14 +258,13 @@ ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPoi
     : QtWaylandServer::zwp_confined_pointer_v1(resource)
     , SurfaceExtension(surface)
     , q(q)
-    , surface(surface)
     , lifeTime(lifeTime)
 {
-    pending.region = region;
+    pending->region = region;
 
-    apply(&pending);
+    apply(pending);
 
-    pending = ConfinedPointerV1Commit{};
+    *pending = ConfinedPointerV1Commit{};
 }
 
 void ConfinedPointerV1InterfacePrivate::apply(ConfinedPointerV1Commit *commit)
@@ -299,7 +297,7 @@ void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_destroy(Resource
 
 void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
-    pending.region = regionFromResource(region_resource);
+    pending->region = regionFromResource(region_resource);
 }
 
 ConfinedPointerV1Interface::ConfinedPointerV1Interface(SurfaceInterface *surface,

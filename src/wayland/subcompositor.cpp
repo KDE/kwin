@@ -277,7 +277,7 @@ void SubSurfaceInterface::parentDesynchronized()
     }
 }
 
-void SubSurfaceInterface::parentApplyState(quint32 serial)
+void SubSurfaceInterface::parentApplyState()
 {
     auto parentPrivate = SurfaceInterfacePrivate::get(d->parent);
     if (parentPrivate->current->committed & SurfaceState::Field::SubsurfacePosition) {
