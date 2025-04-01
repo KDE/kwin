@@ -334,8 +334,6 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     // detect reset
     if (!surface->isMapped() && state.firstBufferAttached) {
         state = LayerSurfaceV1State();
-        pending = LayerSurfaceV1Commit();
-        stashed.clear();
 
         return;
     }

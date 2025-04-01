@@ -388,8 +388,6 @@ void XdgToplevelInterfacePrivate::reset()
     minimumSize = QSize(0, 0);
     maximumSize = QSize(0, 0);
     customIcon = QIcon();
-    pending = XdgToplevelCommit{};
-    stashed.clear();
 
     Q_EMIT q->resetOccurred();
 }
@@ -745,8 +743,6 @@ void XdgPopupInterfacePrivate::apply(XdgPopupCommit *commit)
 void XdgPopupInterfacePrivate::reset()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    pending = XdgPopupCommit{};
-    stashed.clear();
     xdgSurfacePrivate->reset();
 }
 
