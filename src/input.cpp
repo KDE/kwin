@@ -1309,7 +1309,7 @@ std::optional<Options::MouseCommand> globalWindowWheelAction(PointerAxisEvent *e
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    const auto ret = options->operationWindowMouseWheel(-1 * event->delta);
+    const auto ret = options->operationWindowMouseWheel(-event->delta);
     if (ret == Options::MouseCommand::MouseNothing) {
         return std::nullopt;
     } else {

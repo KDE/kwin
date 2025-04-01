@@ -487,11 +487,11 @@ public:
     };
     Q_ENUM(MouseWheelCommand)
 
-    MouseCommand operationTitlebarMouseWheel(int delta) const
+    MouseCommand operationTitlebarMouseWheel(qreal delta) const
     {
         return wheelToMouseCommand(CmdTitlebarWheel, delta);
     }
-    MouseCommand operationWindowMouseWheel(int delta) const
+    MouseCommand operationWindowMouseWheel(qreal delta) const
     {
         return wheelToMouseCommand(CmdAllWheel, delta);
     }
@@ -918,7 +918,7 @@ private:
     bool m_interactiveWindowMoveEnabled = true;
     bool m_doubleClickBorderToMaximize = true;
 
-    MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
+    MouseCommand wheelToMouseCommand(MouseWheelCommand com, qreal delta) const;
 };
 
 extern KWIN_EXPORT Options *options;

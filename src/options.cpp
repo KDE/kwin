@@ -836,7 +836,7 @@ bool Options::condensedTitle() const
     return condensed_title;
 }
 
-Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int delta) const
+Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, qreal delta) const
 {
     switch (com) {
     case MouseWheelRaiseLower:
