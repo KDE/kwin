@@ -1047,9 +1047,7 @@ void TestXdgShellWindow::testXdgInitiallyMinimized()
     QCOMPARE(state, 0);
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.first()[0].toUInt());
-
-    QEXPECT_FAIL("", "Client created in a minimised state is not exposed to kwin bug 404838", Abort);
-    auto window = Test::renderAndWaitForShown(surface.get(), size, Qt::blue, QImage::Format_ARGB32, 10);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(window->isMinimized());
 }
