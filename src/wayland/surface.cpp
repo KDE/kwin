@@ -575,8 +575,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->offset = offset;
         target->damage = std::move(damage);
         target->bufferDamage = std::move(bufferDamage);
-        target->acquirePoint.timeline = std::exchange(acquirePoint.timeline, nullptr);
-        target->acquirePoint.point = acquirePoint.point;
+        target->acquirePoint = std::move(acquirePoint);
         target->releasePoint = std::move(releasePoint);
     }
 
