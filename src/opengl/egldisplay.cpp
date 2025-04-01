@@ -42,13 +42,13 @@ std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, bool owning
         qCWarning(KWIN_OPENGL) << "eglInitialize failed";
         EGLint error = eglGetError();
         if (error != EGL_SUCCESS) {
-            qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
+            qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << getEglErrorString(error);
         }
         return nullptr;
     }
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
+        qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << getEglErrorString(error);
         return nullptr;
     }
     qCDebug(KWIN_OPENGL) << "Egl Initialize succeeded";

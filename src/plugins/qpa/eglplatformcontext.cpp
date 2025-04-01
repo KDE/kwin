@@ -15,6 +15,7 @@
 #include "offscreensurface.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
+#include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
 #include "swapchain.h"
 #include "window.h"
@@ -64,7 +65,7 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
     }
     const bool ok = m_eglContext->makeCurrent();
     if (!ok) {
-        qCWarning(KWIN_QPA, "eglMakeCurrent failed: %x", eglGetError());
+        qCWarning(KWIN_QPA) << "eglMakeCurrent failed:" << getEglErrorString();
         return false;
     }
     if (m_eglContext->checkGraphicsResetStatus() != GL_NO_ERROR) {
@@ -183,7 +184,7 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
 void EGLPlatformContext::create(const QSurfaceFormat &format, ::EGLContext shareContext)
 {
     if (!eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API)) {
-        qCWarning(KWIN_QPA, "eglBindAPI failed: 0x%x", eglGetError());
+        qCWarning(KWIN_QPA) << "eglBindAPI failed:" << getEglErrorString();
         return;
     }
 

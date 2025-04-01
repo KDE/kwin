@@ -207,7 +207,10 @@ void AbstractEglBackend::initClientExtensions()
     if (clientExtensionsString.isEmpty()) {
         // If eglQueryString() returned NULL, the implementation doesn't support
         // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
-        (void)eglGetError();
+        EGLint error = eglGetError();
+        if (error != EGL_SUCCESS) {
+            qCWarning(KWIN_OPENGL) << "Error during eglQueryString " << getEglErrorString(error);
+        }
     }
 
     m_clientExtensions = clientExtensionsString.split(' ');
