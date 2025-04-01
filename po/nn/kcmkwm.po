@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-10 00:41+0000\n"
+"POT-Creation-Date: 2025-04-01 00:43+0000\n"
 "PO-Revision-Date: 2024-07-12 20:45+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -227,7 +227,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:287 actions.ui:357 actions.ui:427
+#: actions.ui:287 actions.ui:362 actions.ui:437
 #, kde-format
 msgid "Move"
 msgstr "Flytt"
@@ -235,7 +235,7 @@ msgstr "Flytt"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:292 actions.ui:362 actions.ui:432
+#: actions.ui:292 actions.ui:367 actions.ui:442
 #, kde-format
 msgid "Activate, raise and move"
 msgstr "Aktiver, hev og flytt"
@@ -249,7 +249,7 @@ msgstr "Aktiver, hev og flytt"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:297 actions.ui:367 actions.ui:437 mouse.ui:252 mouse.ui:314
+#: actions.ui:297 actions.ui:372 actions.ui:447 mouse.ui:252 mouse.ui:314
 #: mouse.ui:367 mouse.ui:429 mouse.ui:482 mouse.ui:544
 #, kde-format
 msgid "Toggle raise and lower"
@@ -258,7 +258,7 @@ msgstr "Byt mellom hev og senk"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:302 actions.ui:372 actions.ui:442
+#: actions.ui:302 actions.ui:377 actions.ui:452
 #, kde-format
 msgid "Resize"
 msgstr "Endra storleik"
@@ -272,7 +272,7 @@ msgstr "Endra storleik"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:307 actions.ui:377 actions.ui:447 mouse.ui:242 mouse.ui:304
+#: actions.ui:307 actions.ui:382 actions.ui:457 mouse.ui:242 mouse.ui:304
 #: mouse.ui:357 mouse.ui:419 mouse.ui:472 mouse.ui:534
 #, kde-format
 msgid "Raise"
@@ -289,7 +289,7 @@ msgstr "Hev"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:312 actions.ui:382 actions.ui:452 mouse.ui:68 mouse.ui:247
+#: actions.ui:312 actions.ui:387 actions.ui:462 mouse.ui:68 mouse.ui:247
 #: mouse.ui:309 mouse.ui:362 mouse.ui:424 mouse.ui:477 mouse.ui:539
 #, kde-format
 msgid "Lower"
@@ -306,7 +306,7 @@ msgstr "Senk"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:317 actions.ui:387 actions.ui:457 mouse.ui:58 mouse.ui:257
+#: actions.ui:317 actions.ui:392 actions.ui:467 mouse.ui:58 mouse.ui:257
 #: mouse.ui:319 mouse.ui:372 mouse.ui:434 mouse.ui:487 mouse.ui:549
 #, kde-format
 msgid "Minimize"
@@ -315,7 +315,7 @@ msgstr "Minimer"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:322 actions.ui:392 actions.ui:462
+#: actions.ui:322 actions.ui:397 actions.ui:472
 #, kde-format
 msgid "Decrease opacity"
 msgstr "Minsk tettleiken"
@@ -323,10 +323,25 @@ msgstr "Minsk tettleiken"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:327 actions.ui:397 actions.ui:467
+#: actions.ui:327 actions.ui:402 actions.ui:477
 #, kde-format
 msgid "Increase opacity"
 msgstr "Auk tettleiken"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:272 mouse.ui:334
+#: mouse.ui:387 mouse.ui:449 mouse.ui:502 mouse.ui:564
+#, kde-format
+msgid "Show actions menu"
+msgstr "Vis handlingsmeny"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -342,7 +357,7 @@ msgstr "Auk tettleiken"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:332 actions.ui:402 actions.ui:472 actions.ui:527 advanced.ui:154
+#: actions.ui:337 actions.ui:412 actions.ui:487 actions.ui:542 advanced.ui:154
 #: mouse.ui:83 mouse.ui:135 mouse.ui:277 mouse.ui:339 mouse.ui:392 mouse.ui:454
 #: mouse.ui:507 mouse.ui:569
 #, kde-format
@@ -350,13 +365,13 @@ msgid "Do nothing"
 msgstr "Ikkje gjer noko"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:340
+#: actions.ui:345
 #, kde-format
 msgid "Middle &click:"
 msgstr "&Midtklikk:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:353
+#: actions.ui:358
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
@@ -367,13 +382,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:410 mouse.ui:687
+#: actions.ui:420 mouse.ui:687
 #, kde-format
 msgid "Right clic&k:"
 msgstr "&Høgreklikk:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:423
+#: actions.ui:433
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
@@ -382,13 +397,13 @@ msgstr ""
 "I denne rada kan du tilpassa åtferd ved høgreklikk i tittellinja eller ramma."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:480
+#: actions.ui:495
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "M&usehjul:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:493
+#: actions.ui:508
 #, kde-format
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
@@ -399,42 +414,42 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:497 mouse.ui:105
+#: actions.ui:512 mouse.ui:105
 #, kde-format
 msgid "Raise/lower"
 msgstr "Hev/senk"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:502 mouse.ui:110
+#: actions.ui:517 mouse.ui:110
 #, kde-format
 msgid "Shade/unshade"
 msgstr "Rull opp/ned"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:507 mouse.ui:115
+#: actions.ui:522 mouse.ui:115
 #, kde-format
 msgid "Maximize/restore"
 msgstr "Maksimer/gjenopprett"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:512 mouse.ui:120
+#: actions.ui:527 mouse.ui:120
 #, kde-format
 msgid "Keep above/below"
 msgstr "Hald over/under"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:517 mouse.ui:125
+#: actions.ui:532 mouse.ui:125
 #, kde-format
 msgid "Move to previous/next desktop"
 msgstr "Flytt til førre/neste skrivebord"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:522 mouse.ui:130
+#: actions.ui:537 mouse.ui:130
 #, kde-format
 msgid "Change opacity"
 msgstr "Endra gjennomsikta"
@@ -1042,18 +1057,6 @@ msgid ""
 msgstr ""
 "Åtferd ved <em>venstreklikk</em> på tittellinja eller ramma til eit "
 "<em>aktivt</em> vindauge."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:272 mouse.ui:334 mouse.ui:387 mouse.ui:449 mouse.ui:502
-#: mouse.ui:564
-#, kde-format
-msgid "Show actions menu"
-msgstr "Vis handlingsmeny"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
