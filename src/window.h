@@ -1178,7 +1178,7 @@ public:
      * @returns whether or not the command consumes the event that triggered it
      */
     bool performMousePressCommand(Options::MouseCommand, const QPointF &globalPos);
-    bool performMouseReleaseCommand(Options::MouseCommand, const QPointF &globalPos);
+    void performMouseReleaseCommand(Options::MouseCommand, const QPointF &globalPos);
 
     // decoration related
     Qt::Edge titlebarPosition() const;

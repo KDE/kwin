@@ -2315,18 +2315,15 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
     return consumes;
 }
 
-bool Window::performMouseReleaseCommand(Options::MouseCommand command, const QPointF &globalPos)
+void Window::performMouseReleaseCommand(Options::MouseCommand command, const QPointF &globalPos)
 {
-    switch (command) {
-    case Options::MouseActivateRaiseOnReleaseAndPassClick:
-        if (isActive()) {
-            workspace()->takeActivity(this, Workspace::ActivityRaise);
-        }
-        workspace()->setActiveOutput(globalPos);
-        return true;
-    default:
-        return true;
+    if (command != Options::MouseActivateRaiseOnReleaseAndPassClick) {
+        return;
     }
+    if (isActive()) {
+        workspace()->takeActivity(this, Workspace::ActivityRaise);
+    }
+    workspace()->setActiveOutput(globalPos);
 }
 
 void Window::setTransientFor(Window *transientFor)

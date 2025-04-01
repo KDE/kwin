@@ -1917,7 +1917,7 @@ public:
                 return false;
             }
             if (const auto command = window->getMouseReleaseCommand(event->button)) {
-                return !window->performMouseReleaseCommand(*command, event->position);
+                window->performMouseReleaseCommand(*command, event->position);
             }
         }
         return false;
@@ -1958,7 +1958,7 @@ public:
         }
         const auto command = window->getMouseReleaseCommand(Qt::LeftButton);
         if (command) {
-            return !window->performMouseReleaseCommand(*command, input()->touch()->position());
+            window->performMouseReleaseCommand(*command, input()->touch()->position());
         }
         return false;
     }
@@ -1977,7 +1977,7 @@ public:
         } else {
             const auto command = window->getMouseReleaseCommand(Qt::LeftButton);
             if (command) {
-                return !window->performMouseReleaseCommand(*command, event->position);
+                window->performMouseReleaseCommand(*command, event->position);
             }
         }
 
@@ -1998,7 +1998,7 @@ public:
         } else {
             const auto command = window->getMouseReleaseCommand(event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton);
             if (command) {
-                return !window->performMouseReleaseCommand(*command, input()->tablet()->position());
+                window->performMouseReleaseCommand(*command, input()->tablet()->position());
             }
         }
 
