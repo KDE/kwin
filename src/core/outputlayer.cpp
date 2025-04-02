@@ -17,16 +17,6 @@ OutputLayer::OutputLayer(Output *output)
 {
 }
 
-qreal OutputLayer::scale() const
-{
-    return m_scale;
-}
-
-void OutputLayer::setScale(qreal scale)
-{
-    m_scale = scale;
-}
-
 QPointF OutputLayer::hotspot() const
 {
     return m_hotspot;

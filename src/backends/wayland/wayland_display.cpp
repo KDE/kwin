@@ -33,12 +33,14 @@
 #include "color_manager.h"
 
 // Generated in src/wayland.
+#include "wayland-fractional-scale-v1-client-protocol.h"
 #include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 #include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
 #include "wayland-pointer-gestures-unstable-v1-server-protocol.h"
 #include "wayland-presentation-time-client-protocol.h"
 #include "wayland-relative-pointer-unstable-v1-client-protocol.h"
 #include "wayland-tearing-control-v1-client-protocol.h"
+#include "wayland-viewporter-client-protocol.h"
 #include "wayland-xdg-decoration-unstable-v1-client-protocol.h"
 #include "wayland-xdg-shell-client-protocol.h"
 
@@ -345,6 +347,12 @@ WaylandDisplay::~WaylandDisplay()
     if (m_tearingControl) {
         wp_tearing_control_manager_v1_destroy(m_tearingControl);
     }
+    if (m_fractionalScaleV1) {
+        wp_fractional_scale_manager_v1_destroy(m_fractionalScaleV1);
+    }
+    if (m_viewporter) {
+        wp_viewporter_destroy(m_viewporter);
+    }
     if (m_registry) {
         wl_registry_destroy(m_registry);
     }
@@ -441,9 +449,19 @@ wp_tearing_control_manager_v1 *WaylandDisplay::tearingControl() const
     return m_tearingControl;
 }
 
+wp_viewporter *WaylandDisplay::viewporter() const
+{
+    return m_viewporter;
+}
+
 ColorManager *WaylandDisplay::colorManager() const
 {
     return m_colorManager.get();
+}
+
+wp_fractional_scale_manager_v1 *WaylandDisplay::fractionalScale() const
+{
+    return m_fractionalScaleV1;
 }
 
 void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t name, const char *interface, uint32_t version)
@@ -489,6 +507,10 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
     } else if (strcmp(interface, wp_color_manager_v1_interface.name) == 0) {
         const auto global = reinterpret_cast<wp_color_manager_v1 *>(wl_registry_bind(registry, name, &wp_color_manager_v1_interface, 1));
         display->m_colorManager = std::make_unique<ColorManager>(global);
+    } else if (strcmp(interface, wp_fractional_scale_manager_v1_interface.name) == 0) {
+        display->m_fractionalScaleV1 = reinterpret_cast<wp_fractional_scale_manager_v1 *>(wl_registry_bind(registry, name, &wp_fractional_scale_manager_v1_interface, 1));
+    } else if (strcmp(interface, wp_viewporter_interface.name) == 0) {
+        display->m_viewporter = reinterpret_cast<wp_viewporter *>(wl_registry_bind(registry, name, &wp_viewporter_interface, 1));
     }
 }
 

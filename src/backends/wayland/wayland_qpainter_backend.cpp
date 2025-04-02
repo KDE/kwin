@@ -118,7 +118,7 @@ bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const
     wl_buffer *buffer = static_cast<WaylandOutput *>(m_output)->backend()->importBuffer(m_back->buffer());
     Q_ASSERT(buffer);
 
-    static_cast<WaylandOutput *>(m_output)->cursor()->update(buffer, scale(), hotspot().toPoint());
+    static_cast<WaylandOutput *>(m_output)->cursor()->update(buffer, m_back->buffer()->size() / m_output->scale(), hotspot().toPoint());
     m_swapchain->release(m_back);
     return true;
 }

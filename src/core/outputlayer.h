@@ -35,9 +35,6 @@ class KWIN_EXPORT OutputLayer : public QObject
 public:
     explicit OutputLayer(Output *output);
 
-    qreal scale() const;
-    void setScale(qreal scale);
-
     QPointF hotspot() const;
     void setHotspot(const QPointF &hotspot);
 
