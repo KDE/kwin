@@ -277,12 +277,12 @@ public:
     /**
      * Returns the window title of the toplevel surface.
      */
-    QString windowTitle() const;
+    QString title() const;
 
     /**
-     * Returns the window class of the toplevel surface.
+     * Returns the app id of the toplevel surface.
      */
-    QString windowClass() const;
+    QString appId() const;
 
     /**
      * Returns the minimum window geometry size of the toplevel surface.
@@ -350,12 +350,12 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the toplevel's title has been changed.
      */
-    void windowTitleChanged(const QString &windowTitle);
+    void titleChanged(const QString &windowTitle);
 
     /**
      * This signal is emitted when the toplevel's application id has been changed.
      */
-    void windowClassChanged(const QString &windowClass);
+    void appIdChanged(const QString &windowClass);
 
     /**
      * This signal is emitted when the toplevel has requested the window menu to be shown at

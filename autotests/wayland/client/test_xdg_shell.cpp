@@ -221,8 +221,8 @@ void XdgShellTest::testCreateSurface()
     // verify base things
     auto serverToplevel = xdgSurfaceCreatedSpy.first().first().value<XdgToplevelInterface *>();
     QVERIFY(serverToplevel);
-    QCOMPARE(serverToplevel->windowTitle(), QString());
-    QCOMPARE(serverToplevel->windowClass(), QByteArray());
+    QCOMPARE(serverToplevel->title(), QString());
+    QCOMPARE(serverToplevel->appId(), QByteArray());
     QCOMPARE(serverToplevel->parentXdgToplevel(), nullptr);
     QCOMPARE(serverToplevel->surface(), serverSurface);
 
@@ -239,15 +239,15 @@ void XdgShellTest::testTitle()
     SURFACE
 
     // should not have a title yet
-    QCOMPARE(serverXdgToplevel->windowTitle(), QString());
+    QCOMPARE(serverXdgToplevel->title(), QString());
 
     // lets' change the title
-    QSignalSpy titleChangedSpy(serverXdgToplevel, &XdgToplevelInterface::windowTitleChanged);
+    QSignalSpy titleChangedSpy(serverXdgToplevel, &XdgToplevelInterface::titleChanged);
     xdgSurface->setTitle(QStringLiteral("foo"));
     QVERIFY(titleChangedSpy.wait());
     QCOMPARE(titleChangedSpy.count(), 1);
     QCOMPARE(titleChangedSpy.first().first().toString(), QStringLiteral("foo"));
-    QCOMPARE(serverXdgToplevel->windowTitle(), QStringLiteral("foo"));
+    QCOMPARE(serverXdgToplevel->title(), QStringLiteral("foo"));
 }
 
 void XdgShellTest::testWindowClass()
@@ -257,15 +257,15 @@ void XdgShellTest::testWindowClass()
     SURFACE
 
     // should not have a window class yet
-    QCOMPARE(serverXdgToplevel->windowClass(), QByteArray());
+    QCOMPARE(serverXdgToplevel->appId(), QByteArray());
 
     // let's change the window class
-    QSignalSpy windowClassChanged(serverXdgToplevel, &XdgToplevelInterface::windowClassChanged);
+    QSignalSpy windowClassChanged(serverXdgToplevel, &XdgToplevelInterface::appIdChanged);
     xdgSurface->setAppId(QByteArrayLiteral("org.kde.xdgsurfacetest"));
     QVERIFY(windowClassChanged.wait());
     QCOMPARE(windowClassChanged.count(), 1);
     QCOMPARE(windowClassChanged.first().first().toByteArray(), QByteArrayLiteral("org.kde.xdgsurfacetest"));
-    QCOMPARE(serverXdgToplevel->windowClass(), QByteArrayLiteral("org.kde.xdgsurfacetest"));
+    QCOMPARE(serverXdgToplevel->appId(), QByteArrayLiteral("org.kde.xdgsurfacetest"));
 }
 
 void XdgShellTest::testMaximize()

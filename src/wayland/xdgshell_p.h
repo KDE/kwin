@@ -152,8 +152,8 @@ public:
     XdgSurfaceInterface *xdgSurface;
     XdgToplevelSessionV1Interface *session = nullptr;
 
-    QString windowTitle;
-    QString windowClass;
+    QString title;
+    QString appId;
     QSize minimumSize = QSize(0, 0);
     QSize maximumSize = QSize(0, 0);
     QIcon customIcon; // managed externally by the xdg_toplevel_icon interface
