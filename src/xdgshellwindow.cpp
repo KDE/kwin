@@ -439,10 +439,10 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 #endif
     move(workspace()->activeOutput()->geometry().center());
 
-    connect(shellSurface, &XdgToplevelInterface::windowTitleChanged,
+    connect(shellSurface, &XdgToplevelInterface::titleChanged,
             this, &XdgToplevelWindow::handleWindowTitleChanged);
-    connect(shellSurface, &XdgToplevelInterface::windowClassChanged,
-            this, &XdgToplevelWindow::handleWindowClassChanged);
+    connect(shellSurface, &XdgToplevelInterface::appIdChanged,
+            this, &XdgToplevelWindow::handleAppIdChanged);
     connect(shellSurface, &XdgToplevelInterface::windowMenuRequested,
             this, &XdgToplevelWindow::handleWindowMenuRequested);
     connect(shellSurface, &XdgToplevelInterface::moveRequested,
@@ -963,12 +963,12 @@ bool XdgToplevelWindow::acceptsFocus() const
 
 void XdgToplevelWindow::handleWindowTitleChanged()
 {
-    setCaption(m_shellSurface->windowTitle());
+    setCaption(m_shellSurface->title());
 }
 
-void XdgToplevelWindow::handleWindowClassChanged()
+void XdgToplevelWindow::handleAppIdChanged()
 {
-    const QString applicationId = m_shellSurface->windowClass();
+    const QString applicationId = m_shellSurface->appId();
     setResourceClass(resourceName(), applicationId);
     if (shellSurface()->isConfigured()) {
         evaluateWindowRules();

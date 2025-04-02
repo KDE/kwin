@@ -191,7 +191,7 @@ protected:
 
 private:
     void handleWindowTitleChanged();
-    void handleWindowClassChanged();
+    void handleAppIdChanged();
     void handleWindowMenuRequested(SeatInterface *seat,
                                    const QPoint &surfacePos, quint32 serial);
     void handleMoveRequested(SeatInterface *seat, quint32 serial);
