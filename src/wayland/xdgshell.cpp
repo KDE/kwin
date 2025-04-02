@@ -383,8 +383,8 @@ void XdgToplevelInterfacePrivate::reset()
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
     xdgSurfacePrivate->reset();
 
-    windowTitle = QString();
-    windowClass = QString();
+    title = QString();
+    appId = QString();
     minimumSize = QSize(0, 0);
     maximumSize = QSize(0, 0);
     customIcon = QIcon();
@@ -414,20 +414,20 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_parent(Resource *resource, ::
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_title(Resource *resource, const QString &title)
 {
-    if (windowTitle == title) {
+    if (this->title == title) {
         return;
     }
-    windowTitle = title;
-    Q_EMIT q->windowTitleChanged(title);
+    this->title = title;
+    Q_EMIT q->titleChanged(title);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_app_id(Resource *resource, const QString &app_id)
 {
-    if (windowClass == app_id) {
+    if (appId == app_id) {
         return;
     }
-    windowClass = app_id;
-    Q_EMIT q->windowClassChanged(app_id);
+    appId = app_id;
+    Q_EMIT q->appIdChanged(app_id);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_show_window_menu(Resource *resource, ::wl_resource *seatResource, uint32_t serial, int32_t x, int32_t y)
@@ -607,14 +607,14 @@ XdgToplevelInterface *XdgToplevelInterface::parentXdgToplevel() const
     return d->parentXdgToplevel;
 }
 
-QString XdgToplevelInterface::windowTitle() const
+QString XdgToplevelInterface::title() const
 {
-    return d->windowTitle;
+    return d->title;
 }
 
-QString XdgToplevelInterface::windowClass() const
+QString XdgToplevelInterface::appId() const
 {
-    return d->windowClass;
+    return d->appId;
 }
 
 QSize XdgToplevelInterface::minimumSize() const
