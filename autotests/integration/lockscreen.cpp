@@ -339,7 +339,7 @@ void LockScreenTest::testPointerAxis()
     // and simulate axis
     Test::pointerAxisHorizontal(5.0, timestamp++);
     QVERIFY(!axisChangedSpy.wait(10));
-    Test::pointerAxisVertical(5.0, timestamp++);
+    Test::pointerAxisVertical(15.0, timestamp++);
     QVERIFY(!axisChangedSpy.wait(10));
 
     // and unlock
@@ -348,9 +348,9 @@ void LockScreenTest::testPointerAxis()
     QCOMPARE(enteredSpy.count(), 2);
 
     // and move axis again
-    Test::pointerAxisHorizontal(5.0, timestamp++);
+    Test::pointerAxisHorizontal(15.0, timestamp++);
     QVERIFY(axisChangedSpy.wait());
-    Test::pointerAxisVertical(5.0, timestamp++);
+    Test::pointerAxisVertical(15.0, timestamp++);
     QVERIFY(axisChangedSpy.wait());
 }
 

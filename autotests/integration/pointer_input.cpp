@@ -696,9 +696,9 @@ void PointerInputTest::testModifierScrollOpacity()
     }
     QFETCH(int, modifierKey);
     Test::keyboardKeyPressed(modifierKey, timestamp++);
-    Test::pointerAxisVertical(-5, timestamp++);
+    Test::pointerAxisVertical(-15, timestamp++);
     QCOMPARE(window->opacity(), 0.6);
-    Test::pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(15, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
     Test::keyboardKeyReleased(modifierKey, timestamp++);
     if (capsLock) {
@@ -754,9 +754,9 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
     // simulate modifier+wheel
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::pointerAxisVertical(-5, timestamp++);
+    Test::pointerAxisVertical(-15, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    Test::pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(15, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
@@ -801,7 +801,7 @@ void PointerInputTest::testScrollAction()
 
     quint32 timestamp = 1;
     QVERIFY(!window1->isActive());
-    Test::pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(15, timestamp++);
     QVERIFY(window1->isActive());
 
     // but also the wheel event should be passed to the window

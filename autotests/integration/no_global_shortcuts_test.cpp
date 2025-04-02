@@ -177,9 +177,9 @@ void NoGlobalShortcutsTest::testAxisShortcut()
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     if (direction == Qt::Vertical) {
-        Test::pointerAxisVertical(sign * 5.0, timestamp++);
+        Test::pointerAxisVertical(sign * 15.0, timestamp++);
     } else {
-        Test::pointerAxisHorizontal(sign * 5.0, timestamp++);
+        Test::pointerAxisHorizontal(sign * 15.0, timestamp++);
     }
     QCoreApplication::instance()->processEvents();
     QCOMPARE(actionSpy.count(), 0);

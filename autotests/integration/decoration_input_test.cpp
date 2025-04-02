@@ -655,9 +655,9 @@ void DecorationInputTest::testModifierScrollOpacity()
     }
     QFETCH(int, modifierKey);
     Test::keyboardKeyPressed(modifierKey, timestamp++);
-    Test::pointerAxisVertical(-5, timestamp++);
+    Test::pointerAxisVertical(-15, timestamp++);
     QCOMPARE(window->opacity(), 0.6);
-    Test::pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(15, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
     Test::keyboardKeyReleased(modifierKey, timestamp++);
     if (capsLock) {
