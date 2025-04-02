@@ -801,7 +801,12 @@ void PointerInputTest::testScrollAction()
 
     quint32 timestamp = 1;
     QVERIFY(!window1->isActive());
-    Test::pointerAxisVertical(15, timestamp++);
+    // the action should be triggered only once enough delta is accumulated
+    Test::pointerAxisVertical(5, timestamp++);
+    QVERIFY(!window1->isActive());
+    Test::pointerAxisVertical(5, timestamp++);
+    QVERIFY(!window1->isActive());
+    Test::pointerAxisVertical(5, timestamp++);
     QVERIFY(window1->isActive());
 
     // but also the wheel event should be passed to the window
