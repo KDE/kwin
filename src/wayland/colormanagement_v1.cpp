@@ -265,7 +265,7 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
         m_minMasteringLuminance = func.minLuminance;
     }
     if (Colorimetry::isValid(m_colorimetry->red().toxy(), m_colorimetry->green().toxy(), m_colorimetry->blue().toxy(), m_colorimetry->white().toxy())) {
-        new ImageDescriptionV1(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::BT709));
+        new ImageDescriptionV1(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance.value_or(func.maxLuminance), m_masteringColorimetry, Colorimetry::BT709));
     } else {
         new ImageDescriptionV1(resource->client(), image_description, resource->version(), std::nullopt);
     }
