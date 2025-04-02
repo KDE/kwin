@@ -351,7 +351,7 @@ void X11WindowedBackend::createOutputs()
     const QSize pixelSize = m_options.outputSize * m_options.outputScale;
     for (int i = 0; i < m_options.outputCount; ++i) {
         auto *output = new X11WindowedOutput(this);
-        output->init(pixelSize, m_options.outputScale);
+        output->init(pixelSize, m_options.outputScale, m_options.fullscreen);
 
         m_protocols = protocolsAtom;
         m_deleteWindowProtocol = deleteWindowAtom;

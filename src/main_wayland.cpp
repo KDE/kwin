@@ -316,6 +316,10 @@ int main(int argc, char *argv[])
                                     QStringLiteral("height"));
     heightOption.setDefaultValue(QString::number(768));
 
+    QCommandLineOption fullscreenOption(QStringLiteral("fullscreen"),
+                                        i18n("Whether or not to make windowed mode fullscreen"),
+                                        QStringLiteral("fullscreen"));
+
     QCommandLineOption scaleOption(QStringLiteral("scale"),
                                    i18n("The scale for windowed mode. Default value is 1."),
                                    QStringLiteral("scale"));
@@ -370,6 +374,7 @@ int main(int argc, char *argv[])
     parser.addOption(outputCountOption);
     parser.addOption(drmOption);
     parser.addOption(locale1Option);
+    parser.addOption(fullscreenOption);
 
     QCommandLineOption inputMethodOption(QStringLiteral("inputmethod"),
                                          i18n("Input method that KWin starts."),
@@ -484,6 +489,7 @@ int main(int argc, char *argv[])
         std::cerr << "FATAL ERROR incorrect value for scale" << std::endl;
         return 1;
     }
+    const bool fullscreen = parser.isSet(fullscreenOption);
 
     outputScale = scale;
     initialWindowSize = QSize(width, height);
@@ -541,6 +547,7 @@ int main(int argc, char *argv[])
             .outputCount = outputCount,
             .outputScale = outputScale,
             .outputSize = initialWindowSize,
+            .fullscreen = fullscreen,
         }));
         break;
     }

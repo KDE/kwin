@@ -83,6 +83,7 @@ struct X11WindowedBackendOptions
     int outputCount = 1;
     qreal outputScale = 1;
     QSize outputSize = QSize(1024, 768);
+    bool fullscreen = false;
 };
 
 class KWIN_EXPORT X11WindowedBackend : public OutputBackend

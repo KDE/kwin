@@ -77,7 +77,7 @@ public:
     RenderLoop *renderLoop() const override;
     bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
-    void init(const QSize &pixelSize, qreal scale);
+    void init(const QSize &pixelSize, qreal scale, bool fullscreen);
 
     bool isReady() const;
     KWayland::Client::Surface *surface() const;

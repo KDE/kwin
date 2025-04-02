@@ -381,7 +381,7 @@ bool WaylandOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> al
     }
 }
 
-void WaylandOutput::init(const QSize &pixelSize, qreal scale)
+void WaylandOutput::init(const QSize &pixelSize, qreal scale, bool fullscreen)
 {
     m_renderLoop->setRefreshRate(m_refreshRate);
 
@@ -393,6 +393,7 @@ void WaylandOutput::init(const QSize &pixelSize, qreal scale)
     initialState.scale = scale;
     setState(initialState);
 
+    m_xdgShellSurface->setFullscreen(fullscreen);
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
 }
 

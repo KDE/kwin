@@ -82,7 +82,7 @@ public:
 
     RenderLoop *renderLoop() const override;
 
-    void init(const QSize &pixelSize, qreal scale);
+    void init(const QSize &pixelSize, qreal scale, bool fullscreen);
     void resize(const QSize &pixelSize);
 
     X11WindowedBackend *backend() const;

@@ -190,6 +190,7 @@ struct WaylandBackendOptions
     int outputCount = 1;
     qreal outputScale = 1;
     QSize outputSize = QSize(1024, 768);
+    bool fullscreen = false;
 };
 
 /**
@@ -252,7 +253,7 @@ Q_SIGNALS:
 private:
     void createOutputs();
     void destroyOutputs();
-    WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale);
+    WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale, bool fullscreen);
 
     WaylandBackendOptions m_options;
     std::unique_ptr<WaylandDisplay> m_display;

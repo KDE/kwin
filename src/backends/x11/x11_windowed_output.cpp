@@ -204,7 +204,7 @@ QPoint X11WindowedOutput::hostPosition() const
     return m_hostPosition;
 }
 
-void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
+void X11WindowedOutput::init(const QSize &pixelSize, qreal scale, bool fullscreen)
 {
     const int refreshRate = 60000; // TODO: get refresh rate via randr
     m_renderLoop->setRefreshRate(refreshRate);
@@ -252,6 +252,9 @@ void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
 
     m_winInfo = std::make_unique<NETWinInfo>(m_backend->connection(), m_window, m_backend->screen()->root,
                                              NET::WMWindowType, NET::Properties2());
+    if (fullscreen) {
+        m_winInfo->setState(NET::FullScreen, NET::FullScreen);
+    }
 
     m_winInfo->setWindowType(NET::Normal);
     m_winInfo->setPid(QCoreApplication::applicationPid());
