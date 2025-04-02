@@ -100,10 +100,16 @@ EisInputCaptureManager::EisInputCaptureManager()
     qDBusRegisterMetaType<QList<QPair<QPoint, QPoint>>>();
 
     const auto keymap = input()->keyboard()->xkb()->keymapContents();
-    m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+    if (!keymap.isEmpty()) {
+        m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+    }
     connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
         const auto keymap = input()->keyboard()->xkb()->keymapContents();
-        m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+        if (!keymap.isEmpty()) {
+            m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+        } else {
+            m_keymapFile = RamFile();
+        }
     });
 
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
