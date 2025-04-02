@@ -1586,12 +1586,11 @@ void X11Window::updateHiddenPreview()
 
 void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
 {
-    xcb_client_message_event_t ev;
+    xcb_client_message_event_t ev{};
     // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
     // 32 unconditionally. Add a static_assert to ensure we don't disclose
     // stack memory.
     static_assert(sizeof(ev) == 32, "Would leak stack data otherwise");
-    memset(&ev, 0, sizeof(ev));
     ev.response_type = XCB_CLIENT_MESSAGE;
     ev.window = w;
     ev.type = a;
@@ -2130,8 +2129,7 @@ void X11Window::getSyncCounter()
             if (error) {
                 m_syncRequest.alarm = XCB_NONE;
             } else {
-                xcb_sync_change_alarm_value_list_t value;
-                memset(&value, 0, sizeof(value));
+                xcb_sync_change_alarm_value_list_t value{};
                 value.value.hi = 0;
                 value.value.lo = 1;
                 value.delta.hi = 0;
@@ -3446,9 +3444,8 @@ void X11Window::sendSyntheticConfigureNotify()
     union {
         xcb_configure_notify_event_t event;
         char buffer[32];
-    } u;
+    } u{};
     static_assert(sizeof(u.event) < 32, "wouldn't need the union otherwise");
-    memset(&u, 0, sizeof(u));
     xcb_configure_notify_event_t &c = u.event;
     u.event.response_type = XCB_CONFIGURE_NOTIFY;
     u.event.event = window();

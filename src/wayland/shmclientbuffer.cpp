@@ -252,8 +252,7 @@ GraphicsBuffer::Map ShmClientBuffer::map(MapFlags flags)
 
         static std::once_flag sigbusOnce;
         std::call_once(sigbusOnce, []() {
-            struct sigaction action;
-            memset(&action, 0, sizeof(action));
+            struct sigaction action{};
             sigemptyset(&action.sa_mask);
             action.sa_sigaction = sigbusHandler;
             action.sa_flags = SA_SIGINFO | SA_NODEFER;

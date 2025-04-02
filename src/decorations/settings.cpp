@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include "settings.h"
 #include "appmenu.h"
 #include "decorationbridge.h"
-#include "settings.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 

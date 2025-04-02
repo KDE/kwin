@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glrendertimequery.h"
-#include "utils/common.h"
 #include "opengl/eglcontext.h"
+#include "utils/common.h"
 
 namespace KWin
 {

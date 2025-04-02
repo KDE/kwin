@@ -140,8 +140,7 @@ void Selection::sendSelectionNotify(xcb_selection_request_event_t *event, bool s
     union {
         xcb_selection_notify_event_t notify;
         char buffer[32];
-    } u;
-    memset(&u, 0, sizeof(u));
+    } u{};
     static_assert(sizeof(u.notify) < 32, "wouldn't need the union otherwise");
     u.notify.response_type = XCB_SELECTION_NOTIFY;
     u.notify.sequence = 0;

@@ -81,8 +81,7 @@ void XwaylandServerRestartTest::testRestart()
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       rect.x(), rect.y(), rect.width(), rect.height(), 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
+    xcb_size_hints_t hints{};
     xcb_icccm_size_hints_set_position(&hints, 1, rect.x(), rect.y());
     xcb_icccm_size_hints_set_size(&hints, 1, rect.width(), rect.height());
     xcb_icccm_size_hints_set_min_size(&hints, rect.width(), rect.height());

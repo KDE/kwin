@@ -95,8 +95,7 @@ void ActivitiesTest::testSetOnActivitiesValidates()
                                             windowGeometry.height(),
                                             0, XCB_WINDOW_CLASS_INPUT_OUTPUT, 0, 0, nullptr);
     QVERIFY(!xcb_request_check(c.get(), cookie));
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
+    xcb_size_hints_t hints{};
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);

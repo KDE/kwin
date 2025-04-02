@@ -138,8 +138,7 @@ void TestXcbSizeHints::testSizeHints_data()
 
 void TestXcbSizeHints::testSizeHints()
 {
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
+    xcb_size_hints_t hints{};
     QFETCH(QPoint, userPos);
     if (!userPos.isNull()) {
         xcb_icccm_size_hints_set_position(&hints, 1, userPos.x(), userPos.y());
@@ -240,8 +239,7 @@ void TestXcbSizeHints::testSizeHints()
 
 void TestXcbSizeHints::testSizeHintsEmpty()
 {
-    xcb_size_hints_t xcbHints;
-    memset(&xcbHints, 0, sizeof(xcbHints));
+    xcb_size_hints_t xcbHints{};
     xcb_icccm_set_wm_normal_hints(QX11Info::connection(), m_testWindow, &xcbHints);
     xcb_flush(QX11Info::connection());
 
@@ -334,8 +332,7 @@ void TestXcbSizeHints::geometryHintsBeforeInit()
 
 void TestXcbSizeHints::geometryHintsBeforeRead()
 {
-    xcb_size_hints_t xcbHints;
-    memset(&xcbHints, 0, sizeof(xcbHints));
+    xcb_size_hints_t xcbHints{};
     xcb_icccm_size_hints_set_position(&xcbHints, 1, 1, 2);
     xcb_icccm_set_wm_normal_hints(QX11Info::connection(), m_testWindow, &xcbHints);
     xcb_flush(QX11Info::connection());

@@ -271,5 +271,4 @@ private:
         CursorSource *cursor = nullptr;
     } m_serverCursor;
 };
-
 }

@@ -136,8 +136,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
                       windowGeometry.width(),
                       windowGeometry.height(),
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, XCB_CW_EVENT_MASK, values);
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
+    xcb_size_hints_t hints{};
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
@@ -220,8 +219,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       boundingRect.x, boundingRect.y, boundingRect.width, boundingRect.height,
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, XCB_CW_EVENT_MASK, values);
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
+    xcb_size_hints_t hints{};
     xcb_icccm_size_hints_set_position(&hints, 1, boundingRect.x, boundingRect.y);
     xcb_icccm_size_hints_set_size(&hints, 1, boundingRect.width, boundingRect.height);
     xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
