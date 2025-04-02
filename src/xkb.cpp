@@ -1019,6 +1019,9 @@ bool Xkb::switchToLayout(xkb_layout_index_t layout)
 
 void Xkb::setModifierLatched(KWin::Xkb::Modifier mod, bool latched)
 {
+    if (!m_keymap || !m_state) {
+        return;
+    }
     xkb_mod_index_t modifier = XKB_MOD_INVALID;
 
     switch (mod) {
@@ -1071,6 +1074,9 @@ void Xkb::setModifierLatched(KWin::Xkb::Modifier mod, bool latched)
 
 Xkb::Modifiers Xkb::depressedModifiers() const
 {
+    if (!m_keymap || !m_state) {
+        return NoModifier;
+    }
     Xkb::Modifiers result;
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
@@ -1100,6 +1106,9 @@ Xkb::Modifiers Xkb::depressedModifiers() const
 
 Xkb::Modifiers Xkb::latchedModifiers() const
 {
+    if (!m_keymap || !m_state) {
+        return NoModifier;
+    }
     Xkb::Modifiers result;
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LATCHED) == 1) {
@@ -1129,6 +1138,9 @@ Xkb::Modifiers Xkb::latchedModifiers() const
 
 Xkb::Modifiers Xkb::lockedModifiers() const
 {
+    if (!m_keymap || !m_state) {
+        return NoModifier;
+    }
     Xkb::Modifiers result;
 
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LOCKED) == 1) {
@@ -1158,6 +1170,9 @@ Xkb::Modifiers Xkb::lockedModifiers() const
 
 void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
 {
+    if (!m_keymap || !m_state) {
+        return;
+    }
     xkb_mod_index_t modifier = XKB_MOD_INVALID;
 
     switch (mod) {
@@ -1223,6 +1238,9 @@ void Xkb::setSeat(SeatInterface *seat)
 
 std::optional<std::pair<int, int>> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
 {
+    if (!m_keymap || !m_state) {
+        return {};
+    }
     auto layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
     const xkb_keycode_t max = xkb_keymap_max_keycode(m_keymap);
     for (xkb_keycode_t keycode = xkb_keymap_min_keycode(m_keymap); keycode < max; keycode++) {
