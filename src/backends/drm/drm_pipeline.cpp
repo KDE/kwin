@@ -458,6 +458,8 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
     m_commitThread->pageFlipped(timestamp);
+    // the commit thread adjusts the safety margin on every commit
+    m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
     if (gpu()->needsModeset()) {
         gpu()->maybeModeset(nullptr, nullptr);
     }
