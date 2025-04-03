@@ -380,7 +380,7 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
         }
     }
     const uint64_t maxBandwidthEstimation = maxSize.width() * maxSize.height() * uint64_t(maxSizeRefreshRate);
-    for (const auto &size : s_commonModes) {
+    for (const auto size : s_commonModes) {
         const uint64_t bandwidthEstimation = size.width() * size.height() * 60000ull;
         if (size.width() > maxSize.width() || size.height() > maxSize.height() || bandwidthEstimation > maxBandwidthEstimation) {
             continue;

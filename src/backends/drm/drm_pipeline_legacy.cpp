@@ -70,7 +70,7 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
 DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects)
 {
     Error err = Error::None;
-    for (const auto &pipeline : pipelines) {
+    for (DrmPipeline *pipeline : pipelines) {
         err = pipeline->applyPendingChangesLegacy();
         if (err != Error::None) {
             break;
@@ -78,18 +78,18 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *>
     }
     if (err != Error::None) {
         // at least try to revert the config
-        for (const auto &pipeline : pipelines) {
+        for (DrmPipeline *pipeline : pipelines) {
             pipeline->revertPendingChanges();
             pipeline->applyPendingChangesLegacy();
         }
     } else {
-        for (const auto &pipeline : pipelines) {
+        for (DrmPipeline *pipeline : pipelines) {
             pipeline->applyPendingChanges();
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
                 pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
             }
         }
-        for (const auto &obj : unusedObjects) {
+        for (DrmObject *obj : unusedObjects) {
             if (auto crtc = dynamic_cast<DrmCrtc *>(obj)) {
                 drmModeSetCrtc(pipelines.front()->gpu()->fd(), crtc->id(), 0, 0, 0, nullptr, 0, nullptr);
             }

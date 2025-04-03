@@ -431,7 +431,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (m_gpu == m_eglBackend->gpu()) {
         const bool needsLinear = std::ranges::all_of(sortedFormats, [&formats](const FormatInfo &fmt) {
             const auto &mods = formats[fmt.drmFormat];
-            return std::ranges::all_of(mods, [](const auto &mod) {
+            return std::ranges::all_of(mods, [](uint64_t mod) {
                 return mod == DRM_FORMAT_MOD_LINEAR;
             });
         });

@@ -384,8 +384,8 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
     QList<DrmOutput *> toBeEnabled;
     QList<DrmOutput *> toBeDisabled;
     for (const auto &gpu : m_gpus) {
-        const auto &outputs = gpu->drmOutputs();
-        for (const auto &output : outputs) {
+        const auto outputs = gpu->drmOutputs();
+        for (DrmOutput *output : outputs) {
             if (output->isNonDesktop()) {
                 continue;
             }
@@ -400,10 +400,10 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
         }
         const auto error = gpu->testPendingConfiguration();
         if (error != DrmPipeline::Error::None) {
-            for (const auto &output : std::as_const(toBeEnabled)) {
+            for (DrmOutput *output : std::as_const(toBeEnabled)) {
                 output->revertQueuedChanges();
             }
-            for (const auto &output : std::as_const(toBeDisabled)) {
+            for (DrmOutput *output : std::as_const(toBeDisabled)) {
                 output->revertQueuedChanges();
             }
             if (error == DrmPipeline::Error::NotEnoughCrtcs) {
@@ -416,18 +416,18 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
     }
     // first, apply changes to drm outputs.
     // This may remove the placeholder output and thus change m_outputs!
-    for (const auto &output : std::as_const(toBeEnabled)) {
+    for (DrmOutput *output : std::as_const(toBeEnabled)) {
         if (const auto changeset = config.constChangeSet(output)) {
             output->applyQueuedChanges(changeset);
         }
     }
-    for (const auto &output : std::as_const(toBeDisabled)) {
+    for (DrmOutput *output : std::as_const(toBeDisabled)) {
         if (const auto changeset = config.constChangeSet(output)) {
             output->applyQueuedChanges(changeset);
         }
     }
     // only then apply changes to the virtual outputs
-    for (const auto &output : std::as_const(m_virtualOutputs)) {
+    for (DrmVirtualOutput *output : std::as_const(m_virtualOutputs)) {
         output->applyChanges(config);
     }
     return OutputConfigurationError::None;
@@ -448,7 +448,7 @@ void DrmBackend::createLayers()
     for (const auto &gpu : m_gpus) {
         gpu->recreateSurfaces();
     }
-    for (const auto &virt : std::as_const(m_virtualOutputs)) {
+    for (DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
         virt->recreateSurface();
     }
 }
@@ -458,7 +458,7 @@ void DrmBackend::releaseBuffers()
     for (const auto &gpu : m_gpus) {
         gpu->releaseBuffers();
     }
-    for (const auto &virt : std::as_const(m_virtualOutputs)) {
+    for (const DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
         virt->primaryLayer()->releaseBuffers();
     }
 }

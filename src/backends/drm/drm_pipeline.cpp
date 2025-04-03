@@ -104,12 +104,12 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
             mode = CommitMode::TestAllowModeset;
         }
     }
-    for (const auto &pipeline : pipelines) {
+    for (DrmPipeline *pipeline : pipelines) {
         if (Error err = pipeline->prepareAtomicCommit(commit.get(), mode, frame); err != Error::None) {
             return err;
         }
     }
-    for (const auto &unused : unusedObjects) {
+    for (DrmObject *unused : unusedObjects) {
         unused->disable(commit.get());
     }
     switch (mode) {
@@ -122,7 +122,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
             auto commit = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{pipeline});
             return pipeline->prepareAtomicCommit(commit.get(), CommitMode::TestAllowModeset, frame) == Error::None && commit->test();
         });
-        for (const auto &pipeline : pipelines) {
+        for (DrmPipeline *pipeline : pipelines) {
             pipeline->m_pending.needsModeset = !withoutModeset;
             pipeline->m_pending.needsModesetProperties = true;
         }
