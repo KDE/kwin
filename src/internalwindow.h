@@ -84,12 +84,9 @@ protected:
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
 private:
-    void requestGeometry(const QRectF &rect);
     void commitGeometry(const QRectF &rect);
     void setCaption(const QString &caption);
     void markAsMapped();
-    void syncGeometryToInternalWindow();
-    void updateInternalWindowGeometry();
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void createDecoration(const QRectF &oldGeometry);
     void destroyDecoration();
