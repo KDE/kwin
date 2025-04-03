@@ -2243,7 +2243,7 @@ public:
 
     bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
     {
-        Window *window = input()->findToplevel(event->position);
+        Window *window = input()->tablet()->focus();
         if (!window || !window->surface()) {
             return false;
         }
@@ -2285,7 +2285,7 @@ public:
 
     bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
     {
-        Window *window = input()->findToplevel(event->position);
+        Window *window = input()->tablet()->focus();
         if (!window || !window->surface()) {
             return false;
         }
@@ -2325,7 +2325,7 @@ public:
 
     bool tabletToolTipEvent(TabletToolTipEvent *event) override
     {
-        Window *window = input()->findToplevel(event->position);
+        Window *window = input()->tablet()->focus();
         if (!window || !window->surface()) {
             return false;
         }

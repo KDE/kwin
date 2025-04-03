@@ -272,7 +272,16 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
         m_cursorByTool[tool]->setPos(pos);
     }
 
+    if (!tipDown) {
+        m_implicitGrab = false;
+    }
+
     update();
+
+    if (tipDown) {
+        m_implicitGrab = true;
+    }
+
     workspace()->setActiveOutput(pos);
 
     TabletToolTipEvent ev{
@@ -362,7 +371,7 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
 
 bool TabletInputRedirection::focusUpdatesBlocked()
 {
-    return input()->isSelectingWindow();
+    return input()->isSelectingWindow() || m_implicitGrab;
 }
 
 void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *old,
