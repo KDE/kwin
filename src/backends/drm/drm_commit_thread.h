@@ -65,6 +65,8 @@ private:
     bool m_vrr = false;
     bool m_tearing = false;
     std::chrono::nanoseconds m_safetyMargin{0};
+    std::chrono::nanoseconds m_baseSafetyMargin{0};
+    std::chrono::nanoseconds m_additionalSafetyMargin = std::chrono::milliseconds(1);
     bool m_ping = false;
     bool m_pageflipTimeoutDetected = false;
 };
