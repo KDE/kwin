@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-29 00:43+0000\n"
+"POT-Creation-Date: 2025-04-03 00:43+0000\n"
 "PO-Revision-Date: 2025-03-11 09:54+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1638,7 +1638,7 @@ msgstr "Per grup de finestres"
 msgid "Fullscreen windows"
 msgstr "Finestres a pantalla completa"
 
-#: plugins/eis/eisinputcapturemanager.cpp:124
+#: plugins/eis/eisinputcapturemanager.cpp:130
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
@@ -4313,7 +4313,7 @@ msgstr "L'ordre d'eixida proporcionada no és vàlid"
 msgid "The driver rejected the output configuration"
 msgstr "El controlador ha rebutjat la configuració de l'eixida"
 
-#: window.cpp:3224
+#: window.cpp:3261
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

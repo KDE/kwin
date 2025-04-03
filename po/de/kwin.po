@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-29 00:43+0000\n"
+"POT-Creation-Date: 2025-04-03 00:43+0000\n"
 "PO-Revision-Date: 2025-02-17 22:05+0100\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1644,7 +1644,7 @@ msgstr "Nach Fenstergruppe"
 msgid "Fullscreen windows"
 msgstr "Vollbildfenster"
 
-#: plugins/eis/eisinputcapturemanager.cpp:124
+#: plugins/eis/eisinputcapturemanager.cpp:130
 #, fuzzy, kde-format
 #| msgid "Disable KActivities integration."
 msgctxt "@action shortcut"
@@ -4350,7 +4350,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3224
+#: window.cpp:3261
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

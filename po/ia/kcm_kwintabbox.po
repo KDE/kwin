@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-27 00:43+0000\n"
-"PO-Revision-Date: 2025-01-28 11:36+0100\n"
+"PO-Revision-Date: 2025-04-02 16:45+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -228,7 +228,7 @@ msgstr "Revertite"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
