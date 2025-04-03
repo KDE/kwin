@@ -388,7 +388,7 @@ private:
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
     QMap<ElectricBorder, ElectricBorderAction> m_touchCallbacks;
-    int m_cornerOffset;
+    const int m_cornerOffset;
     GestureRecognizer *m_gestureRecognizer;
     bool m_remainActiveOnFullscreen = false;
 };

@@ -42,12 +42,6 @@
 #include <QAbstractEventDispatcher>
 #include <QAction>
 #include <QDBusInterface>
-#include <QDBusPendingCall>
-#include <QFontDatabase>
-#include <QFontMetrics>
-#include <QTextStream>
-#include <QTimer>
-#include <QWidget>
 #include <span>
 
 using namespace std::chrono_literals;
@@ -766,10 +760,9 @@ ScreenEdges::ScreenEdges()
     , m_actionBottom(ElectricActionNone)
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
+    , m_cornerOffset(40)
     , m_gestureRecognizer(new GestureRecognizer(this))
 {
-    const int gridUnit = QFontMetrics(QFontDatabase::systemFont(QFontDatabase::GeneralFont)).boundingRect(QLatin1Char('M')).height();
-    m_cornerOffset = 4 * gridUnit;
 }
 
 void ScreenEdges::init()
