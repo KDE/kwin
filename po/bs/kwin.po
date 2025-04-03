@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-19 02:33+0000\n"
+"POT-Creation-Date: 2025-04-03 02:34+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -1708,7 +1708,7 @@ msgstr "Pomjeri prozor"
 msgid "Fullscreen windows"
 msgstr "Preko &cijelog ekrana"
 
-#: plugins/eis/eisinputcapturemanager.cpp:124
+#: plugins/eis/eisinputcapturemanager.cpp:130
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"

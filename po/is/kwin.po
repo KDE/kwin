@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-19 02:33+0000\n"
+"POT-Creation-Date: 2025-04-03 02:34+0000\n"
 "PO-Revision-Date: 2025-03-24 17:24+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -1692,7 +1692,7 @@ msgstr "Eftir gluggaflokki"
 msgid "Fullscreen windows"
 msgstr "Gluggar sem fylla skjá"
 
-#: plugins/eis/eisinputcapturemanager.cpp:124
+#: plugins/eis/eisinputcapturemanager.cpp:130
 #, fuzzy, kde-format
 #| msgid "Disable KActivities integration."
 msgctxt "@action shortcut"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-19 02:33+0000\n"
+"POT-Creation-Date: 2025-04-03 02:34+0000\n"
 "PO-Revision-Date: 2025-03-30 16:25+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1707,7 +1707,7 @@ msgstr "Leiho taldearen arabera"
 msgid "Fullscreen windows"
 msgstr "Pantaila-beteko leihoak"
 
-#: plugins/eis/eisinputcapturemanager.cpp:124
+#: plugins/eis/eisinputcapturemanager.cpp:130
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"

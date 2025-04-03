@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-19 02:33+0000\n"
+"POT-Creation-Date: 2025-04-03 02:34+0000\n"
 "PO-Revision-Date: 2009-01-28 17:47+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
 "Language-Team: Hindi <kde-i18n-doc@lists.kde.org>\n"
@@ -1689,7 +1689,7 @@ msgstr "विंडोज"
 msgid "Fullscreen windows"
 msgstr "पूरा स्क्रीन (&F)"
 
-#: plugins/eis/eisinputcapturemanager.cpp:124
+#: plugins/eis/eisinputcapturemanager.cpp:130
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"

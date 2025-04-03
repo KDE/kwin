@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-19 02:33+0000\n"
+"POT-Creation-Date: 2025-04-03 02:34+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1702,7 +1702,7 @@ msgstr "Па групах акон"
 msgid "Fullscreen windows"
 msgstr "Вокны на ўвесь экран"
 
-#: plugins/eis/eisinputcapturemanager.cpp:124
+#: plugins/eis/eisinputcapturemanager.cpp:130
 #, fuzzy, kde-format
 #| msgid "Disable KActivities integration."
 msgctxt "@action shortcut"
