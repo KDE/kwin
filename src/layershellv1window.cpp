@@ -199,7 +199,9 @@ void LayerShellV1Window::destroyWindow()
     }
     m_shellSurface->disconnect(this);
     m_shellSurface->surface()->disconnect(this);
-    m_desiredOutput->disconnect(this);
+
+    disconnect(workspace(), &Workspace::outputRemoved,
+               this, &LayerShellV1Window::handleOutputRemoved);
 
     markAsDeleted();
     Q_EMIT closed();
