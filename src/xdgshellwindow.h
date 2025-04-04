@@ -196,7 +196,7 @@ private:
     void handleWindowMenuRequested(SeatInterface *seat,
                                    const QPoint &surfacePos, quint32 serial);
     void handleMoveRequested(SeatInterface *seat, quint32 serial);
-    void handleResizeRequested(SeatInterface *seat, XdgToplevelInterface::ResizeAnchor anchor, quint32 serial);
+    void handleResizeRequested(SeatInterface *seat, Gravity anchor, quint32 serial);
     void handleStatesAcknowledged(const XdgToplevelInterface::States &states);
     void handleMaximizeRequested();
     void handleUnmaximizeRequested();

@@ -992,7 +992,7 @@ void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
     }
 }
 
-void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelInterface::ResizeAnchor anchor, quint32 serial)
+void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, Gravity gravity, quint32 serial)
 {
     if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)
         && !waylandServer()->tabletManagerV2()->seat(seat)->hasImplicitGrab(serial)) {
@@ -1017,36 +1017,6 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
     setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
     setInteractiveMoveOffset(QPointF((cursorPos.x() - x()) / width(), (cursorPos.y() - y()) / height())); // map from global
     setUnrestrictedInteractiveMoveResize(false);
-    Gravity gravity;
-    switch (anchor) {
-    case XdgToplevelInterface::ResizeAnchor::TopLeft:
-        gravity = Gravity::TopLeft;
-        break;
-    case XdgToplevelInterface::ResizeAnchor::Top:
-        gravity = Gravity::Top;
-        break;
-    case XdgToplevelInterface::ResizeAnchor::TopRight:
-        gravity = Gravity::TopRight;
-        break;
-    case XdgToplevelInterface::ResizeAnchor::Right:
-        gravity = Gravity::Right;
-        break;
-    case XdgToplevelInterface::ResizeAnchor::BottomRight:
-        gravity = Gravity::BottomRight;
-        break;
-    case XdgToplevelInterface::ResizeAnchor::Bottom:
-        gravity = Gravity::Bottom;
-        break;
-    case XdgToplevelInterface::ResizeAnchor::BottomLeft:
-        gravity = Gravity::BottomLeft;
-        break;
-    case XdgToplevelInterface::ResizeAnchor::Left:
-        gravity = Gravity::Left;
-        break;
-    default:
-        gravity = Gravity::None;
-        break;
-    }
     setInteractiveMoveResizeGravity(gravity);
     if (!startInteractiveMoveResize()) {
         setInteractiveMoveResizePointerButtonDown(false);

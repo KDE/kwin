@@ -32,6 +32,8 @@ class XdgToplevelInterface;
 class XdgPopupInterface;
 class XdgSurfaceInterface;
 
+enum class Gravity;
+
 /**
  * The XdgShellInterface class represents an extension for destrop-style user interfaces.
  *
@@ -225,19 +227,6 @@ public:
     };
     Q_DECLARE_FLAGS(States, State)
 
-    enum class ResizeAnchor {
-        None = 0,
-        Top = 1,
-        Bottom = 2,
-        Left = 4,
-        TopLeft = 5,
-        BottomLeft = 6,
-        Right = 8,
-        TopRight = 9,
-        BottomRight = 10,
-    };
-    Q_ENUM(ResizeAnchor)
-
     enum class Capability {
         WindowMenu = 0x1,
         Maximize = 0x2,
@@ -385,11 +374,11 @@ Q_SIGNALS:
     void moveRequested(KWin::SeatInterface *seat, quint32 serial);
 
     /**
-     * This signal is emitted when the toplevel wants to be interactively resized by dragging
-     * the specified \a anchor. The \a seat and the \a serial indicate the user action
+     * This signal is emitted when the toplevel wants to be interactively resized with
+     * the specified \a gravity. The \a seat and the \a serial indicate the user action
      * in response to which this request has been issued.
      */
-    void resizeRequested(KWin::SeatInterface *seat, KWin::XdgToplevelInterface::ResizeAnchor anchor, quint32 serial);
+    void resizeRequested(KWin::SeatInterface *seat, KWin::Gravity gravity, quint32 serial);
 
     /**
      * This signal is emitted when the toplevel surface wants to become maximized.

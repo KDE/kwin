@@ -465,8 +465,42 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_r
         return;
     }
 
+    Gravity gravity;
+    switch (xdgEdges) {
+    case resize_edge_none:
+        gravity = Gravity::None;
+        break;
+    case resize_edge_top:
+        gravity = Gravity::Top;
+        break;
+    case resize_edge_bottom:
+        gravity = Gravity::Bottom;
+        break;
+    case resize_edge_left:
+        gravity = Gravity::Left;
+        break;
+    case resize_edge_top_left:
+        gravity = Gravity::TopLeft;
+        break;
+    case resize_edge_bottom_left:
+        gravity = Gravity::BottomLeft;
+        break;
+    case resize_edge_right:
+        gravity = Gravity::Right;
+        break;
+    case resize_edge_top_right:
+        gravity = Gravity::TopRight;
+        break;
+    case resize_edge_bottom_right:
+        gravity = Gravity::BottomRight;
+        break;
+    default:
+        wl_resource_post_error(resource->handle, error_invalid_resize_edge, "invalid resize edge");
+        return;
+    }
+
     SeatInterface *seat = SeatInterface::get(seatResource);
-    Q_EMIT q->resizeRequested(seat, XdgToplevelInterface::ResizeAnchor(xdgEdges), serial);
+    Q_EMIT q->resizeRequested(seat, gravity, serial);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, int32_t width, int32_t height)

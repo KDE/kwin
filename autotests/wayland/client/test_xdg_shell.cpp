@@ -372,17 +372,17 @@ void XdgShellTest::testMove()
 void XdgShellTest::testResize_data()
 {
     QTest::addColumn<Qt::Edges>("edges");
-    QTest::addColumn<XdgToplevelInterface::ResizeAnchor>("anchor");
+    QTest::addColumn<KWin::Gravity>("gravity");
 
-    QTest::newRow("none") << Qt::Edges() << XdgToplevelInterface::ResizeAnchor::None;
-    QTest::newRow("top") << Qt::Edges(Qt::TopEdge) << XdgToplevelInterface::ResizeAnchor::Top;
-    QTest::newRow("bottom") << Qt::Edges(Qt::BottomEdge) << XdgToplevelInterface::ResizeAnchor::Bottom;
-    QTest::newRow("left") << Qt::Edges(Qt::LeftEdge) << XdgToplevelInterface::ResizeAnchor::Left;
-    QTest::newRow("top left") << Qt::Edges(Qt::TopEdge | Qt::LeftEdge) << XdgToplevelInterface::ResizeAnchor::TopLeft;
-    QTest::newRow("bottom left") << Qt::Edges(Qt::BottomEdge | Qt::LeftEdge) << XdgToplevelInterface::ResizeAnchor::BottomLeft;
-    QTest::newRow("right") << Qt::Edges(Qt::RightEdge) << XdgToplevelInterface::ResizeAnchor::Right;
-    QTest::newRow("top right") << Qt::Edges(Qt::TopEdge | Qt::RightEdge) << XdgToplevelInterface::ResizeAnchor::TopRight;
-    QTest::newRow("bottom right") << Qt::Edges(Qt::BottomEdge | Qt::RightEdge) << XdgToplevelInterface::ResizeAnchor::BottomRight;
+    QTest::newRow("none") << Qt::Edges() << KWin::Gravity::None;
+    QTest::newRow("top") << Qt::Edges(Qt::TopEdge) << KWin::Gravity::Top;
+    QTest::newRow("bottom") << Qt::Edges(Qt::BottomEdge) << KWin::Gravity::Bottom;
+    QTest::newRow("left") << Qt::Edges(Qt::LeftEdge) << KWin::Gravity::Left;
+    QTest::newRow("top left") << Qt::Edges(Qt::TopEdge | Qt::LeftEdge) << KWin::Gravity::TopLeft;
+    QTest::newRow("bottom left") << Qt::Edges(Qt::BottomEdge | Qt::LeftEdge) << KWin::Gravity::BottomLeft;
+    QTest::newRow("right") << Qt::Edges(Qt::RightEdge) << KWin::Gravity::Right;
+    QTest::newRow("top right") << Qt::Edges(Qt::TopEdge | Qt::RightEdge) << KWin::Gravity::TopRight;
+    QTest::newRow("bottom right") << Qt::Edges(Qt::BottomEdge | Qt::RightEdge) << KWin::Gravity::BottomRight;
 }
 
 void XdgShellTest::testResize()
@@ -402,7 +402,7 @@ void XdgShellTest::testResize()
     QVERIFY(resizeSpy.wait());
     QCOMPARE(resizeSpy.count(), 1);
     QCOMPARE(resizeSpy.first().at(0).value<SeatInterface *>(), m_seatInterface);
-    QTEST(resizeSpy.first().at(1).value<XdgToplevelInterface::ResizeAnchor>(), "anchor");
+    QTEST(resizeSpy.first().at(1).value<Gravity>(), "gravity");
     QCOMPARE(resizeSpy.first().at(2).value<quint32>(), 60u);
 }
 
