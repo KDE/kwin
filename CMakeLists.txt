@@ -348,13 +348,6 @@ set_package_properties(Fontconfig PROPERTIES
     PURPOSE "Needed for KWin's QPA plugin."
 )
 
-find_package(Libcap)
-set_package_properties(Libcap PROPERTIES
-    TYPE OPTIONAL
-    PURPOSE "Needed for running kwin_wayland with real-time scheduling policy"
-)
-set(HAVE_LIBCAP ${Libcap_FOUND})
-
 find_package(hwdata)
 set_package_properties(hwdata PROPERTIES
     TYPE RUNTIME
