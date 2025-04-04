@@ -394,15 +394,6 @@ target_compile_definitions(kwin_wayland PRIVATE
 kcoreaddons_target_static_plugins(kwin_wayland NAMESPACE "kwin/effects/plugins")
 
 install(TARGETS kwin_wayland ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-if (HAVE_LIBCAP)
-    install(
-    CODE "execute_process(
-            COMMAND
-                ${SETCAP_EXECUTABLE}
-                CAP_SYS_NICE=+ep
-                \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/kwin_wayland)"
-    )
-endif()
 
 target_link_libraries(kwin_wayland
     KWinQpaPlugin
