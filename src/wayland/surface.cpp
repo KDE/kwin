@@ -732,6 +732,18 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         opaqueRegion = QRegion();
     }
 
+    // The position of a sub-surface is applied when its parent is committed.
+    for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.below)) {
+        subsurface->parentApplyState();
+    }
+    for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.above)) {
+        subsurface->parentApplyState();
+    }
+
+    for (const auto &[extension, state] : current->extensions) {
+        extension->applyState(state.get());
+    }
+
     if (opaqueRegionChanged) {
         Q_EMIT q->opaqueChanged(opaqueRegion);
     }
@@ -783,18 +795,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (!bufferDamage.isEmpty()) {
         Q_EMIT q->damaged(bufferDamage);
-    }
-
-    // The position of a sub-surface is applied when its parent is committed.
-    for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.below)) {
-        subsurface->parentApplyState();
-    }
-    for (SubSurfaceInterface *subsurface : std::as_const(current->subsurface.above)) {
-        subsurface->parentApplyState();
-    }
-
-    for (const auto &[extension, state] : current->extensions) {
-        extension->applyState(state.get());
     }
 
     Q_EMIT q->committed();
