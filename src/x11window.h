@@ -58,6 +58,8 @@ public:
     explicit X11Window();
     ~X11Window() override; ///< Use destroyWindow() or releaseWindow()
 
+    void associate(SurfaceInterface *surface);
+
     xcb_window_t frameId() const;
     xcb_window_t window() const;
     xcb_window_t wrapperId() const;
@@ -365,7 +367,6 @@ private:
     void destroyDecoration();
 
     void checkOutput();
-    void associate();
     void handleXwaylandScaleChanged();
     void handleCommitted();
 

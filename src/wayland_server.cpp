@@ -357,7 +357,7 @@ bool WaylandServer::init()
             return window->surfaceSerial() == surface->serial();
         });
         if (window) {
-            window->setSurface(surface->surface());
+            window->associate(surface->surface());
             return;
         }
 
@@ -365,7 +365,7 @@ bool WaylandServer::init()
             return window->surfaceSerial() == surface->serial();
         });
         if (unmanaged) {
-            unmanaged->setSurface(surface->surface());
+            unmanaged->associate(surface->surface());
             return;
         }
     });

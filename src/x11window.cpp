@@ -399,13 +399,6 @@ bool X11Window::track(xcb_window_t w)
     updateShadow();
     setupCompositing();
 
-    // The wayland surface is associated with the override-redirect window asynchronously.
-    if (surface()) {
-        associate();
-    } else {
-        connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-    }
-
     return true;
 }
 
@@ -990,12 +983,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     setupWindowManagementInterface();
 
-    // The wayland surface is associated with the window asynchronously.
-    if (surface()) {
-        associate();
-    } else {
-        connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-    }
     connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
     return true;
 }
@@ -4336,9 +4323,11 @@ void X11Window::updateWindowRules(Rules::Types selection)
     Window::updateWindowRules(selection);
 }
 
-void X11Window::associate()
+void X11Window::associate(SurfaceInterface *surface)
 {
-    if (surface()->isMapped()) {
+    setSurface(surface);
+
+    if (surface->isMapped()) {
         if (m_syncRequest.acked) {
             finishSync();
         }
@@ -4348,7 +4337,7 @@ void X11Window::associate()
         }
     }
 
-    connect(surface(), &SurfaceInterface::committed, this, &X11Window::handleCommitted);
+    connect(surface, &SurfaceInterface::committed, this, &X11Window::handleCommitted);
 }
 
 void X11Window::checkOutput()
