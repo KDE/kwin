@@ -47,7 +47,6 @@ public:
     int activeScreen() const override;
     Window *activeClient() const override;
     QString desktopName(Window *client) const override;
-    bool isKWinCompositing() const override;
     Window *nextClientFocusChain(Window *client) const override;
     Window *firstClientFocusChain() const override;
     bool isInFocusChain(Window *client) const override;

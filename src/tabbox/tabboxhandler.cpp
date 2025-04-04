@@ -148,41 +148,15 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     Window *currentClient = q->client(index);
     QWindow *w = window();
 
-    if (q->isKWinCompositing()) {
-        if (lastRaisedClient) {
-            q->elevateClient(lastRaisedClient, w, false);
-        }
-        lastRaisedClient = currentClient;
-        // don't elevate desktop
-        const auto desktop = q->desktopClient();
-        if (currentClient && (!desktop || currentClient->internalId() != desktop->internalId())) {
-            q->elevateClient(currentClient, w, true);
-        }
-    } else {
-        if (lastRaisedClient) {
-            q->shadeClient(lastRaisedClient, true);
-            if (lastRaisedClientSucc) {
-                q->restack(lastRaisedClient, lastRaisedClientSucc);
-            }
-            // TODO lastRaisedClient->setMinimized( lastRaisedClientWasMinimized );
-        }
+    if (lastRaisedClient) {
+        q->elevateClient(lastRaisedClient, w, false);
+    }
+    lastRaisedClient = currentClient;
 
-        lastRaisedClient = currentClient;
-        if (lastRaisedClient) {
-            q->shadeClient(lastRaisedClient, false);
-            // TODO if ( (lastRaisedClientWasMinimized = lastRaisedClient->isMinimized()) )
-            //         lastRaisedClient->setMinimized( false );
-            QList<Window *> order = q->stackingOrder();
-            int succIdx = order.count() + 1;
-            for (int i = 0; i < order.count(); ++i) {
-                if (order.at(i) == lastRaisedClient) {
-                    succIdx = i + 1;
-                    break;
-                }
-            }
-            lastRaisedClientSucc = (succIdx < order.count()) ? order.at(succIdx) : nullptr;
-            q->raiseClient(lastRaisedClient);
-        }
+    // don't elevate desktop
+    const auto desktop = q->desktopClient();
+    if (currentClient && (!desktop || currentClient->internalId() != desktop->internalId())) {
+        q->elevateClient(currentClient, w, true);
     }
 
     if (config.isShowTabBox() && w) {
@@ -195,7 +169,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 {
     Window *currentClient = q->client(index);
-    if (isHighlightWindows() && q->isKWinCompositing()) {
+    if (isHighlightWindows()) {
         const auto stackingOrder = q->stackingOrder();
         for (Window *window : stackingOrder) {
             if (window != currentClient) { // to not mess up with wanted ShadeActive/ShadeHover state
@@ -366,11 +340,9 @@ void TabBoxHandler::show()
 
 void TabBoxHandler::initHighlightWindows()
 {
-    if (isKWinCompositing()) {
-        const auto stack = stackingOrder();
-        for (Window *window : stack) {
-            shadeClient(window, false);
-        }
+    const auto stack = stackingOrder();
+    for (Window *window : stack) {
+        shadeClient(window, false);
     }
     d->updateHighlightWindows();
 }

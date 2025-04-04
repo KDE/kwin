@@ -122,11 +122,6 @@ public:
     virtual QString desktopName(Window *client) const = 0;
 
     /**
-     * whether KWin is currently compositing and it's related features (elevating) can be used
-     */
-    virtual bool isKWinCompositing() const = 0;
-
-    /**
      * De-/Elevate a client using the compositor (if enabled)
      */
     virtual void elevateClient(Window *c, QWindow *tabbox, bool elevate) const = 0;
