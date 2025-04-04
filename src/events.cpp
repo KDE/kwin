@@ -658,7 +658,7 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
         m_surfaceSerial = (uint64_t(e->data.data32[1]) << 32) | e->data.data32[0];
         if (auto w = waylandServer()) {
             if (XwaylandSurfaceV1Interface *xwaylandSurface = w->xwaylandShell()->findSurface(m_surfaceSerial)) {
-                setSurface(xwaylandSurface->surface());
+                associate(xwaylandSurface);
             }
         }
     }

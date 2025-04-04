@@ -33,6 +33,7 @@
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "wayland/surface.h"
+#include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KDecoration3/DecoratedWindow>
@@ -588,11 +589,6 @@ bool X11Window::track(xcb_window_t w)
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeWayland:
         // The wayland surface is associated with the override-redirect window asynchronously.
-        if (surface()) {
-            associate();
-        } else {
-            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-        }
         break;
     case Application::OperationModeX11:
         // We have no way knowing whether the override-redirect window can be painted. Mark it
@@ -1207,11 +1203,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeWayland:
         // The wayland surface is associated with the window asynchronously.
-        if (surface()) {
-            associate();
-        } else {
-            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-        }
         connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
         break;
     case Application::OperationModeX11:
@@ -5027,8 +5018,10 @@ void X11Window::updateWindowPixmap()
     }
 }
 
-void X11Window::associate()
+void X11Window::associate(XwaylandSurfaceV1Interface *shellSurface)
 {
+    setSurface(shellSurface->surface());
+
     if (surface()->isMapped()) {
         if (m_syncRequest.acked) {
             finishSync();

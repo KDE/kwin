@@ -39,6 +39,7 @@ namespace KWin
 {
 
 class KillPrompt;
+class XwaylandSurfaceV1Interface;
 
 /**
  * @brief Defines Predicates on how to search for a Client.
@@ -81,6 +82,8 @@ class KWIN_EXPORT X11Window : public Window
 public:
     explicit X11Window();
     ~X11Window() override; ///< Use destroyWindow() or releaseWindow()
+
+    void associate(XwaylandSurfaceV1Interface *shellSurface);
 
     xcb_window_t frameId() const;
     xcb_window_t window() const;
@@ -439,7 +442,6 @@ private:
 
     QWindow *findInternalWindow() const;
     void checkOutput();
-    void associate();
     void handleXwaylandScaleChanged();
     void handleCommitted();
 
