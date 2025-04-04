@@ -17,12 +17,10 @@
 #endif
 #include "core/pixelgrid.h"
 #include "decorations/decorationbridge.h"
+#include "input.h"
 #include "killprompt.h"
 #include "placement.h"
-#include "pointer_input.h"
-#include "tablet_input.h"
 #include "tiles/tilemanager.h"
-#include "touch_input.h"
 #include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
@@ -973,20 +971,10 @@ void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPo
 
 void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
 {
-    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)
-        && !waylandServer()->tabletManagerV2()->seat(seat)->hasImplicitGrab(serial)) {
-        return;
-    }
     if (isMovable()) {
-        QPointF cursorPos;
-        if (seat->hasImplicitPointerGrab(serial)) {
-            cursorPos = input()->pointer()->pos();
-        } else if (seat->hasImplicitTouchGrab(serial)) {
-            cursorPos = input()->touch()->position();
-        } else {
-            cursorPos = input()->tablet()->position();
+        if (const auto anchor = input()->implicitGrabPositionBySerial(seat, serial)) {
+            performMousePressCommand(Options::MouseMove, *anchor);
         }
-        performMousePressCommand(Options::MouseMove, cursorPos);
     } else {
         qCDebug(KWIN_CORE) << this << "is immovable, ignoring the move request";
     }
@@ -994,8 +982,8 @@ void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
 
 void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, Gravity gravity, quint32 serial)
 {
-    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)
-        && !waylandServer()->tabletManagerV2()->seat(seat)->hasImplicitGrab(serial)) {
+    const auto anchor = input()->implicitGrabPositionBySerial(seat, serial);
+    if (!anchor) {
         return;
     }
     if (!isResizable() || isShade()) {
@@ -1005,17 +993,9 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, Gravity gravi
         finishInteractiveMoveResize(false);
     }
     setInteractiveMoveResizePointerButtonDown(true);
-    QPointF cursorPos;
-    if (seat->hasImplicitPointerGrab(serial)) {
-        cursorPos = input()->pointer()->pos();
-    } else if (seat->hasImplicitTouchGrab(serial)) {
-        cursorPos = input()->touch()->position();
-    } else {
-        cursorPos = input()->tablet()->position();
-    }
-    setInteractiveMoveResizeAnchor(cursorPos);
+    setInteractiveMoveResizeAnchor(*anchor);
     setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
-    setInteractiveMoveOffset(QPointF((cursorPos.x() - x()) / width(), (cursorPos.y() - y()) / height())); // map from global
+    setInteractiveMoveOffset(QPointF((anchor->x() - x()) / width(), (anchor->y() - y()) / height())); // map from global
     setUnrestrictedInteractiveMoveResize(false);
     setInteractiveMoveResizeGravity(gravity);
     if (!startInteractiveMoveResize()) {

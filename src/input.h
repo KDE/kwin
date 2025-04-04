@@ -38,6 +38,7 @@ class InputEventFilter;
 class InputEventSpy;
 class KeyboardInputRedirection;
 class PointerInputRedirection;
+class SeatInterface;
 class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
@@ -96,6 +97,8 @@ public:
 
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);
+
+    std::optional<QPointF> implicitGrabPositionBySerial(SeatInterface *seat, uint32_t serial) const;
 
     void installInputEventFilter(InputEventFilter *filter);
     void uninstallInputEventFilter(InputEventFilter *filter);

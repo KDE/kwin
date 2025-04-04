@@ -3494,6 +3494,21 @@ QPointF InputRedirection::globalPointer() const
     return m_pointer->pos();
 }
 
+std::optional<QPointF> InputRedirection::implicitGrabPositionBySerial(SeatInterface *seat, uint32_t serial) const
+{
+    if (seat->hasImplicitPointerGrab(serial)) {
+        return m_pointer->pos();
+    }
+    if (seat->hasImplicitTouchGrab(serial)) {
+        return m_touch->position();
+    }
+    if (waylandServer()->tabletManagerV2()->seat(seat)->hasImplicitGrab(serial)) {
+        return m_tablet->position();
+    }
+
+    return std::nullopt;
+}
+
 void InputRedirection::startInteractiveWindowSelection(std::function<void(Window *)> callback, const QByteArray &cursorName)
 {
     if (!m_windowSelector || m_windowSelector->isActive()) {
