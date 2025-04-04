@@ -28,6 +28,7 @@
 #include "shadow.h"
 #include "virtualdesktops.h"
 #include "wayland/surface.h"
+#include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KDecoration3/DecoratedWindow>
@@ -398,13 +399,6 @@ bool X11Window::track(xcb_window_t w)
     getSkipCloseAnimation();
     updateShadow();
     setupCompositing();
-
-    // The wayland surface is associated with the override-redirect window asynchronously.
-    if (surface()) {
-        associate();
-    } else {
-        connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-    }
 
     return true;
 }
@@ -990,12 +984,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     setupWindowManagementInterface();
 
-    // The wayland surface is associated with the window asynchronously.
-    if (surface()) {
-        associate();
-    } else {
-        connect(this, &Window::surfaceChanged, this, &X11Window::associate);
-    }
     connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
     return true;
 }
@@ -4336,8 +4324,10 @@ void X11Window::updateWindowRules(Rules::Types selection)
     Window::updateWindowRules(selection);
 }
 
-void X11Window::associate()
+void X11Window::associate(XwaylandSurfaceV1Interface *shellSurface)
 {
+    setSurface(shellSurface->surface());
+
     if (surface()->isMapped()) {
         if (m_syncRequest.acked) {
             finishSync();
