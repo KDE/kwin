@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-03 00:43+0000\n"
+"POT-Creation-Date: 2025-04-04 00:43+0000\n"
 "PO-Revision-Date: 2025-03-26 16:17+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "andris.m@delfi.lv, maris.kde@gmail.com, toms.trasuns@posteo.net"
 
-#: backends/wayland/wayland_output.cpp:425
+#: backends/wayland/wayland_output.cpp:460
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Spiediet labo „Control“ taustiņu, lai atdotu peles kursoru"
 
-#: backends/wayland/wayland_output.cpp:427
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Spiediet labo „Control“ taustiņu, lai paņemtu peles kursoru"
 
-#: backends/wayland/wayland_output.cpp:431
+#: backends/wayland/wayland_output.cpp:466
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE „Wayland“ kompozitors „%1“"
 
-#: backends/wayland/wayland_output.cpp:434
+#: backends/wayland/wayland_output.cpp:469
 #, kde-format
 msgid "- Output disabled"
 msgstr "– Izvade ir izslēgta"
 
-#: backends/wayland/wayland_output.cpp:436
+#: backends/wayland/wayland_output.cpp:471
 #, kde-format
 msgid "- Output dimmed"
 msgstr "– Izvade ir satumsināta"
@@ -1452,16 +1452,21 @@ msgstr "Logu režīma augstums. Noklusējums ir 768."
 
 #: main_wayland.cpp:320
 #, kde-format
+msgid "Whether or not to make windowed mode fullscreen"
+msgstr ""
+
+#: main_wayland.cpp:324
+#, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Logu režīma mērogs. Noklusējuma vērtība ir 1."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "Kā izejas logu režīmā atveramo logu skaits. Noklusējuma vērtība ir 1."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1470,7 +1475,7 @@ msgstr ""
 "„Wayland“ ligzda ienākošiem savienojumiem. To iespējams kombinēt ar -- "
 "ligzdu, lai nosauktu ligzdu"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:338
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1479,65 +1484,65 @@ msgstr ""
 "„XWayland“ ligzda „XWayland“ ienākošiem savienojumiem. To iespējams iestatīt "
 "vairākas reizes"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Iepriekš definētais „XWayland“ displeja nosaukums"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "„xauthority“ datnes nosaukums"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:350
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Iziet no šīs instances, lai to varētu pārstartēt „kwin_wayland_wrapper“."
 
-#: main_wayland.cpp:348
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Render through drm node."
 msgstr "Renderēt caur drm režīmu."
 
-#: main_wayland.cpp:349
+#: main_wayland.cpp:353
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Izvilkt lokāles informāciju no locale1, bet ne lietotāja konfigurācijas"
 
-#: main_wayland.cpp:375
+#: main_wayland.cpp:380
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Ievades metode, kuru palaiž „KWin“."
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Sāk sesiju slēgtā režīmā."
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Sāk sesiju bez ekrāna slēgšanas atbalsta."
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Sāk sesiju bez globālo taustiņu kombināciju atbalsta."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Izslēdz „KActivities“ integrāciju."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:405
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Iziet pēc „KWin“ uzsāktās sesijas programmas aizvēršanas."
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:410
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Palaižamās programmas pēc „Wayland“ un „XWayland“ palaišanas"

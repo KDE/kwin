@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-03 00:43+0000\n"
+"POT-Creation-Date: 2025-04-04 00:43+0000\n"
 "PO-Revision-Date: 2025-03-26 17:51+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -32,29 +32,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "awl@hem.passagen.se,pelinstr@algonet.se,newzella@linux.nu"
 
-#: backends/wayland/wayland_output.cpp:425
+#: backends/wayland/wayland_output.cpp:460
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Tryck på höger kontrolltangent för att släppa pekaren"
 
-#: backends/wayland/wayland_output.cpp:427
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Tryck på höger kontrolltangent för att greppa pekaren"
 
-#: backends/wayland/wayland_output.cpp:431
+#: backends/wayland/wayland_output.cpp:466
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland-sammansättning %1"
 
-#: backends/wayland/wayland_output.cpp:434
+#: backends/wayland/wayland_output.cpp:469
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Utmatning inaktiverad"
 
-#: backends/wayland/wayland_output.cpp:436
+#: backends/wayland/wayland_output.cpp:471
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Utmatning dämpad"
@@ -1450,16 +1450,21 @@ msgstr "Höjden för fönsterläge. Standardhöjd är 768."
 
 #: main_wayland.cpp:320
 #, kde-format
+msgid "Whether or not to make windowed mode fullscreen"
+msgstr ""
+
+#: main_wayland.cpp:324
+#, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Skalan för fönsterläge. Standardvärde är 1."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "Antal fönster att öppna för utdata i fönsterläge. Standardvärdet är 1."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1468,7 +1473,7 @@ msgstr ""
 "Wayland-uttag att använda för inkommande anslutningar. Det kan kombineras "
 "med --socket för att namnge uttaget"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:338
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1477,66 +1482,66 @@ msgstr ""
 "Wayland-uttag att använda för Xwaylands inkommande anslutningar. Det kan "
 "anges flera gånger"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Namn på xwayland-skärmen som har ställts in i förväg"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Namn på xauthority-filen"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:350
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Avsluta den här instansen så att den kan startas om av kwin_wayland_wrapper."
 
-#: main_wayland.cpp:348
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Render through drm node."
 msgstr "Återge via DRM-nod."
 
-#: main_wayland.cpp:349
+#: main_wayland.cpp:353
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Extrahera landsinformation från locale1 istället för användarens inställning"
 
-#: main_wayland.cpp:375
+#: main_wayland.cpp:380
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Inmatningsmetod som Kwin startar."
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Startar sessionen i låst läge."
 
-#: main_wayland.cpp:385
+#: main_wayland.cpp:390
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Startar sessionen utan stöd för att låsa skärmen."
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Startar sessionen utan stöd för globala genvägar."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Inaktivera integration med KActivities."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:405
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Avsluta efter att sessionsprogrammet, som startas av Kwin, har stängts."
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:410
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Program att starta när väl Wayland och Xwayland-servern har startats"
