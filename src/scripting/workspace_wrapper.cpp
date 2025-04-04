@@ -71,6 +71,10 @@ QList<VirtualDesktop *> WorkspaceWrapper::desktops() const
 
 void WorkspaceWrapper::setCurrentDesktop(VirtualDesktop *desktop)
 {
+    if (!desktop) {
+        qCWarning(KWIN_SCRIPTING) << "Invalid desktop passed to setCurrentDesktop";
+        return;
+    }
     VirtualDesktopManager::self()->setCurrent(desktop);
 }
 
@@ -266,6 +270,10 @@ void WorkspaceWrapper::createDesktop(int position, const QString &name) const
 
 void WorkspaceWrapper::removeDesktop(VirtualDesktop *desktop) const
 {
+    if (!desktop) {
+        qCWarning(KWIN_SCRIPTING) << "Invalid desktop passed to removeDesktop";
+        return;
+    }
     VirtualDesktopManager::self()->removeVirtualDesktop(desktop->id());
 }
 
