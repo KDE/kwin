@@ -221,7 +221,7 @@ void X11Source::handleTargets()
 
         const auto mimeStrings = Selection::atomToMimeTypes(value);
         if (mimeStrings.isEmpty()) {
-            // TODO: this should never happen? assert?
+            // Skip invalid/internal mime types
             continue;
         }
 
