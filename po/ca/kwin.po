@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-04 00:43+0000\n"
-"PO-Revision-Date: 2025-03-11 09:54+0100\n"
+"POT-Creation-Date: 2025-04-05 00:43+0000\n"
+"PO-Revision-Date: 2025-04-04 10:07+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1461,7 +1461,7 @@ msgstr "L'alçada del mode de finestra. L'alçada per defecte és 768."
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Si s'ha de fer o no el mode de finestra a pantalla completa"
 
 #: main_wayland.cpp:324
 #, kde-format
@@ -3663,40 +3663,40 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Cap finestra oberta"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:333
 msgid "Walk Through Windows"
 msgstr "Recorre les finestres"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:334
 msgid "Walk Through Windows (Reverse)"
 msgstr "Recorre les finestres (a la inversa)"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:335
 msgid "Walk Through Windows Alternative"
 msgstr "Recorre les finestres en alternativa"
 
-#: tabbox/tabbox.cpp:341
+#: tabbox/tabbox.cpp:336
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Recorre les finestres en alternativa (a la inversa)"
 
-#: tabbox/tabbox.cpp:342
+#: tabbox/tabbox.cpp:337
 msgid "Walk Through Windows of Current Application"
 msgstr "Recorre les finestres de l'aplicació actual"
 
-#: tabbox/tabbox.cpp:343
+#: tabbox/tabbox.cpp:338
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Recorre les finestres de l'aplicació actual (a la inversa)"
 
-#: tabbox/tabbox.cpp:344
+#: tabbox/tabbox.cpp:339
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Recorre les finestres de l'aplicació actual en alternativa"
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/tabbox.cpp:340
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Recorre les finestres de l'aplicació actual en alternativa (a la inversa)"
 
-#: tabbox/tabboxhandler.cpp:249
+#: tabbox/tabboxhandler.cpp:223
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4352,6 +4352,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
-
-#~ msgid "Touchpad"
-#~ msgstr "Ratolí tàctil"

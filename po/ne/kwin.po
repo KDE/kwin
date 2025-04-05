@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-04 00:43+0000\n"
+"POT-Creation-Date: 2025-04-05 00:43+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -3726,51 +3726,51 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "सञ्झ्याल"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:333
 msgid "Walk Through Windows"
 msgstr "सञ्झ्याल मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:334
 msgid "Walk Through Windows (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:335
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:341
+#: tabbox/tabbox.cpp:336
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:342
+#: tabbox/tabbox.cpp:337
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:343
+#: tabbox/tabbox.cpp:338
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:344
+#: tabbox/tabbox.cpp:339
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/tabbox.cpp:340
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabboxhandler.cpp:249
+#: tabbox/tabboxhandler.cpp:223
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-04 00:43+0000\n"
+"POT-Creation-Date: 2025-04-05 00:43+0000\n"
 "PO-Revision-Date: 2025-03-11 10:17+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -3651,39 +3651,39 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Nulle fenestras aperite"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:333
 msgid "Walk Through Windows"
 msgstr "Transversa Fenestras"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:334
 msgid "Walk Through Windows (Reverse)"
 msgstr "Transversa Fenestras (Reverse)"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:335
 msgid "Walk Through Windows Alternative"
 msgstr "Transversa Fenestras Alternative"
 
-#: tabbox/tabbox.cpp:341
+#: tabbox/tabbox.cpp:336
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Transversa Fenestras Alternative (Reverse)"
 
-#: tabbox/tabbox.cpp:342
+#: tabbox/tabbox.cpp:337
 msgid "Walk Through Windows of Current Application"
 msgstr "Transversa Fenestras de Application Currente"
 
-#: tabbox/tabbox.cpp:343
+#: tabbox/tabbox.cpp:338
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Transversa Fenestras de Application Currente(reverse)"
 
-#: tabbox/tabbox.cpp:344
+#: tabbox/tabbox.cpp:339
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Transversa Fenestras de Application Currente Alternative"
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/tabbox.cpp:340
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Transversa Fenestras de Application Currente Alternative (reverse)"
 
-#: tabbox/tabboxhandler.cpp:249
+#: tabbox/tabboxhandler.cpp:223
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

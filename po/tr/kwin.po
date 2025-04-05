@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-04 00:43+0000\n"
-"PO-Revision-Date: 2025-03-11 12:18+0300\n"
+"POT-Creation-Date: 2025-04-05 00:43+0000\n"
+"PO-Revision-Date: 2025-04-04 18:08+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1452,7 +1452,7 @@ msgstr "Pencereli kipin yüksekliği. Öntanımlı yükseklik 768’tir."
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Pencereli kipin tam ekran yapılıp yapılmayacağı"
 
 #: main_wayland.cpp:324
 #, kde-format
@@ -3641,39 +3641,39 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Açık pencere yok"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:333
 msgid "Walk Through Windows"
 msgstr "Pencereler Arasında Gezin"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:334
 msgid "Walk Through Windows (Reverse)"
 msgstr "Pencereler Arasında Geriye Git"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:335
 msgid "Walk Through Windows Alternative"
 msgstr "Alternatif Pencereler Arasında Gezin"
 
-#: tabbox/tabbox.cpp:341
+#: tabbox/tabbox.cpp:336
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Alternatif Pencereler Arasında Gezin (Geriye Doğru)"
 
-#: tabbox/tabbox.cpp:342
+#: tabbox/tabbox.cpp:337
 msgid "Walk Through Windows of Current Application"
 msgstr "Geçerli Uygulama Pencereleri Arasında Gezin"
 
-#: tabbox/tabbox.cpp:343
+#: tabbox/tabbox.cpp:338
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Geçerli Uygulama Pencereleri Arasında Gezin (Geriye Doğru)"
 
-#: tabbox/tabbox.cpp:344
+#: tabbox/tabbox.cpp:339
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Geçerli Uygulama Alternatif Pencereleri Arasında Gezin"
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/tabbox.cpp:340
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Geçerli Uygulama Alternatif Pencereleri Arasında Gezin (Geriye Doğru)"
 
-#: tabbox/tabboxhandler.cpp:249
+#: tabbox/tabboxhandler.cpp:223
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

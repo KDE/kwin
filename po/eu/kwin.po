@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-04 00:43+0000\n"
+"POT-Creation-Date: 2025-04-05 00:43+0000\n"
 "PO-Revision-Date: 2025-03-30 16:25+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -3659,42 +3659,42 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Ez dago irekitako leihorik"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:333
 msgid "Walk Through Windows"
 msgstr "Ibili leihoetan zehar"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:334
 msgid "Walk Through Windows (Reverse)"
 msgstr "Ibili leihoetan zehar (atzerantz)"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:335
 msgid "Walk Through Windows Alternative"
 msgstr "Ibili leihoetan zehar beste modu batean"
 
-#: tabbox/tabbox.cpp:341
+#: tabbox/tabbox.cpp:336
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Ibili leihoetan zehar beste modu batean (alderantziz)"
 
-#: tabbox/tabbox.cpp:342
+#: tabbox/tabbox.cpp:337
 msgid "Walk Through Windows of Current Application"
 msgstr "Pasatu une honetako aplikazioko leiho batetik bestera"
 
-#: tabbox/tabbox.cpp:343
+#: tabbox/tabbox.cpp:338
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Pasatu une honetako aplikazioko leiho batetik bestera (alderantziz)"
 
-#: tabbox/tabbox.cpp:344
+#: tabbox/tabbox.cpp:339
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr ""
 "Pasatu une honetako aplikazioko leiho batetik bestera beste modu batean"
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/tabbox.cpp:340
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Pasatu une honetako aplikazioko leiho batetik bestera beste modu batean "
 "(alderantziz)"
 
-#: tabbox/tabboxhandler.cpp:249
+#: tabbox/tabboxhandler.cpp:223
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

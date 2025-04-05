@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-04 00:43+0000\n"
+"POT-Creation-Date: 2025-04-05 00:43+0000\n"
 "PO-Revision-Date: 2005-11-28 12:28+0200\n"
 "Last-Translator: Kobus Venter <kabousv@therugby.co.za>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -3695,51 +3695,51 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Vensters"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:333
 msgid "Walk Through Windows"
 msgstr "Stap Deur Vensters"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:334
 msgid "Walk Through Windows (Reverse)"
 msgstr "Stap Deur Vensters (Omgekeerde)"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:335
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "Stap Deur Vensters (Omgekeerde)"
 
-#: tabbox/tabbox.cpp:341
+#: tabbox/tabbox.cpp:336
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Stap Deur Vensters (Omgekeerde)"
 
-#: tabbox/tabbox.cpp:342
+#: tabbox/tabbox.cpp:337
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "Stap Deur Vensters (Omgekeerde)"
 
-#: tabbox/tabbox.cpp:343
+#: tabbox/tabbox.cpp:338
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Stap Deur Vensters (Omgekeerde)"
 
-#: tabbox/tabbox.cpp:344
+#: tabbox/tabbox.cpp:339
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Stap Deur Vensters (Omgekeerde)"
 
-#: tabbox/tabbox.cpp:345
+#: tabbox/tabbox.cpp:340
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Stap Deur Vensters (Omgekeerde)"
 
-#: tabbox/tabboxhandler.cpp:249
+#: tabbox/tabboxhandler.cpp:223
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
