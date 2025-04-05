@@ -2220,8 +2220,8 @@ msgid ""
 msgstr ""
 "Du har valgt å vise vinduet uten kant.\n"
 "Når kanten er skjult, vil du ikke kunne vise den igjen ved å bruke musa. Du "
-"må i stedet bruke menyen for vindusoperasjoner, ved hjelp av hurtigtasten «"
-"%1»."
+"må i stedet bruke menyen for vindusoperasjoner, ved hjelp av hurtigtasten "
+"«%1»."
 
 #: useractions.cpp:168
 #, kde-format
