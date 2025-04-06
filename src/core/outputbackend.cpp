@@ -48,7 +48,7 @@ OutputConfigurationError OutputBackend::applyOutputChanges(const OutputConfigura
     const auto availableOutputs = outputs();
     QList<Output *> toBeEnabledOutputs;
     QList<Output *> toBeDisabledOutputs;
-    for (const auto &output : availableOutputs) {
+    for (Output *output : availableOutputs) {
         if (const auto changeset = config.constChangeSet(output)) {
             if (changeset->enabled.value_or(output->isEnabled())) {
                 toBeEnabledOutputs << output;
@@ -57,10 +57,10 @@ OutputConfigurationError OutputBackend::applyOutputChanges(const OutputConfigura
             }
         }
     }
-    for (const auto &output : toBeEnabledOutputs) {
+    for (Output *output : toBeEnabledOutputs) {
         output->applyChanges(config);
     }
-    for (const auto &output : toBeDisabledOutputs) {
+    for (Output *output : toBeDisabledOutputs) {
         output->applyChanges(config);
     }
     return OutputConfigurationError::None;
