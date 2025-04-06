@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-05 00:43+0000\n"
-"PO-Revision-Date: 2025-03-11 17:33+0100\n"
+"PO-Revision-Date: 2025-04-04 12:36+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -1466,7 +1466,7 @@ msgstr "De hoogte voor modus met vensters. Standaard hoogte is 768."
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Of de modus met venster al dan niet volledig scherm te maken"
 
 #: main_wayland.cpp:324
 #, kde-format

@@ -1439,7 +1439,7 @@ msgstr "窗口模式的高度。默认高度为 768。"
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "是否将窗口模式全屏显示"
 
 #: main_wayland.cpp:324
 #, kde-format

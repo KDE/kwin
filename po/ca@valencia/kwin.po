@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-05 00:43+0000\n"
-"PO-Revision-Date: 2025-03-11 09:54+0100\n"
+"PO-Revision-Date: 2025-04-04 10:07+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1464,7 +1464,7 @@ msgstr "L'alçària del mode de finestra. L'alçària predeterminada és 768."
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Si s'ha de fer o no el mode de finestra a pantalla completa"
 
 #: main_wayland.cpp:324
 #, kde-format
@@ -4352,6 +4352,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Touchpad"
-#~ msgstr "Ratolí tàctil"

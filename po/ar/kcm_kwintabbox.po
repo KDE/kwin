@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-27 00:43+0000\n"
-"PO-Revision-Date: 2025-01-28 19:04+0400\n"
+"PO-Revision-Date: 2025-04-05 11:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -227,7 +227,7 @@ msgstr "اعكس"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "أو"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
