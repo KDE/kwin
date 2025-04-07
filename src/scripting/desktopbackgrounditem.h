@@ -14,13 +14,19 @@ namespace KWin
 class Output;
 class VirtualDesktop;
 
-/**
+/*!
+ * \qmltype DesktopBackground
+ * \inqmlmodule org.kde.kwin
+ *
  * The DesktopBackgroundItem type is a convenience helper that represents the desktop
  * background on the specified screen, virtual desktop, and activity.
  */
 class DesktopBackgroundItem : public WindowThumbnailItem
 {
     Q_OBJECT
+    /*!
+     * \qmlproperty string DesktopBackground::outputName
+     */
     Q_PROPERTY(QString outputName READ outputName WRITE setOutputName NOTIFY outputChanged)
     Q_PROPERTY(KWin::Output *output READ output WRITE setOutput NOTIFY outputChanged)
     Q_PROPERTY(QString activity READ activity WRITE setActivity NOTIFY activityChanged)

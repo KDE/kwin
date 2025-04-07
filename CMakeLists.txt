@@ -44,6 +44,7 @@ include(ECMSetupVersion)
 include(ECMQmlModule)
 include(ECMGenerateQmlTypes)
 include(ECMDeprecationSettings)
+include(ECMGenerateQDoc)
 
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)

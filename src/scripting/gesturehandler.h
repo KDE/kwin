@@ -16,23 +16,30 @@ namespace KWin
 class PinchGesture;
 class SwipeGesture;
 
-/**
- * The SwipeGestureHandler type provides a way to handle global swipe gestures.
+/*!
+ * \qmltype SwipeGestureHandler
+ * \inqmlmodule org.kde.kwin
+ *
+ * \brief The SwipeGestureHandler type provides a way to handle global swipe gestures.
  *
  * Example usage:
- * @code
+ * \code
  * SwipeGestureHandler {
  *     direction: SwipeGestureHandler.Direction.Up
  *     fingerCount: 3
  *     onActivated: console.log("activated")
  * }
- * @endcode
+ * \endcode
  */
 class SwipeGestureHandler : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
 
+    /*!
+     * \qmlproperty enumeration SwipeGestureHandler::direction
+     * \qmlenumeratorsfrom KWin::SwipeGestureHandler::Direction
+     */
     Q_PROPERTY(Direction direction READ direction WRITE setDirection NOTIFY directionChanged)
     Q_PROPERTY(int fingerCount READ fingerCount WRITE setFingerCount NOTIFY fingerCountChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
@@ -43,6 +50,13 @@ public:
     ~SwipeGestureHandler() override;
 
     // Matches SwipeDirection.
+    /*!
+     * \value Invalid
+     * \value Down
+     * \value Left
+     * \value Up
+     * \value Right
+     */
     enum class Direction {
         Invalid,
         Down,
