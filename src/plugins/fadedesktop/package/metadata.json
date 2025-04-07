@@ -54,7 +54,7 @@
             }
         ],
         "Category": "Virtual Desktop Switching Animation",
-        "Description": "Fade between virtual desktops when switching between them",
+        "Description": "Fade between virtual desktops when switching",
         "Description[ar]": "يجعل أسطح المكتب تتلاشى عند التبيديل بينها",
         "Description[be]": "Пераход паміж віртуальнымі працоўнымі сталамі пры пераключэнні паміж імі",
         "Description[bg]": "Избледняване при превключване между работните плотове",
@@ -105,7 +105,7 @@
         "Icon": "preferences-system-windows-effect-fadedesktop",
         "Id": "fadedesktop",
         "License": "GPL",
-        "Name": "Fade Desktop",
+        "Name": "Fade",
         "Name[ar]": "تلاشِ سطح المكتب",
         "Name[be]": "Згасанне працоўнага стала",
         "Name[bg]": "Избледняване на работния плот",

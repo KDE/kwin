@@ -54,7 +54,7 @@
             }
         ],
         "Category": "Appearance",
-        "Description": "Animation for a window going to maximize/restore from maximize",
+        "Description": "Stretch windows when they are maximized or restored",
         "Description[ar]": "تحريك النوافذ عند تكبيرها/استعادة من التكبير",
         "Description[be]": "Анімацыя акон пры разгортванні і згортванні з разгорнутага рэжыму",
         "Description[bg]": "Анимация за прозорец при максимизиране/възстановяване",
@@ -105,7 +105,7 @@
         "Icon": "preferences-system-windows-effect-maximize",
         "Id": "maximize",
         "License": "GPL",
-        "Name": "Maximize",
+        "Name": "Stretch",
         "Name[ar]": "كبّر",
         "Name[be]": "Разгарнуць",
         "Name[bg]": "Максимизиране",
@@ -154,6 +154,7 @@
         "Name[zh_TW]": "最大化"
     },
     "X-KDE-Ordering": 60,
+    "X-KWin-Exclusive-Category": "maximize",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/maximize.ogv",
     "X-Plasma-API": "javascript"
 }

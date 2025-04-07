@@ -480,6 +480,16 @@ void EffectsModel::load(LoadOptions options)
     }
 }
 
+void EffectsModel::setExcludeExclusiveGroups(const QStringList &exclusiveGroups)
+{
+    m_excludeExclusiveGroups = exclusiveGroups;
+}
+
+void EffectsModel::setExcludeEffects(const QStringList &effects)
+{
+    m_excludeEffects = effects;
+}
+
 void EffectsModel::updateEffectStatus(const QModelIndex &rowIndex, Status effectState)
 {
     setData(rowIndex, static_cast<int>(effectState), StatusRole);
@@ -542,29 +552,43 @@ void EffectsModel::save()
     }
 }
 
+void EffectsModel::defaults(const QModelIndex &index)
+{
+    const auto &effect = m_effects.at(index.row());
+    if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
+        updateEffectStatus(index, Status::EnabledUndeterminded);
+    } else if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
+        updateEffectStatus(index, effect.enabledByDefault ? Status::Enabled : Status::Disabled);
+    }
+}
+
 void EffectsModel::defaults()
 {
-    for (int i = 0; i < m_effects.count(); ++i) {
-        const auto &effect = m_effects.at(i);
-        if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
-            updateEffectStatus(index(i, 0), Status::EnabledUndeterminded);
-        } else if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
-            updateEffectStatus(index(i, 0), effect.enabledByDefault ? Status::Enabled : Status::Disabled);
-        }
+    for (int row = 0; row < rowCount(); ++row) {
+        defaults(index(row, 0));
     }
+}
+
+bool EffectsModel::isDefaults(const QModelIndex &index) const
+{
+    const auto &effect = m_effects.at(index.row());
+    if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
+        return false;
+    }
+    if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
+        return false;
+    }
+    return true;
 }
 
 bool EffectsModel::isDefaults() const
 {
-    return std::all_of(m_effects.constBegin(), m_effects.constEnd(), [](const EffectData &effect) {
-        if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
+    for (int row = 0; row < rowCount(); ++row) {
+        if (!isDefaults(index(row, 0))) {
             return false;
         }
-        if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
-            return false;
-        }
-        return true;
-    });
+    }
+    return true;
 }
 
 bool EffectsModel::needsSave() const
@@ -606,7 +630,7 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
 
 bool EffectsModel::shouldStore(const EffectData &data) const
 {
-    return !data.internal;
+    return !data.internal && !m_excludeExclusiveGroups.contains(data.exclusiveGroup) && !m_excludeEffects.contains(data.serviceName);
 }
 
 }

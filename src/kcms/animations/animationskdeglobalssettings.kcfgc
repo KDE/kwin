@@ -1,0 +1,8 @@
+File=animationskdeglobalssettings.kcfg
+ClassName=AnimationsGlobalsSettings
+Mutators=true
+DefaultValueGetters=true
+GenerateProperties=true
+ParentInConstructor=true
+Notifiers=animationDurationFactor
+NameSpace=KWin

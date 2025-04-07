@@ -54,7 +54,7 @@
             }
         ],
         "Category": "Appearance",
-        "Description": "Animation for a window going to and leaving full screen mode",
+        "Description": "Stretch windows going to and leaving full screen mode",
         "Description[ar]": "الرسوم المتحركة لنافذة تنتقل إلى وضع ملء الشاشة أوتغادرها",
         "Description[be]": "Анімацыя пераходу ў поўнаэкранны рэжым і выхаду з яго",
         "Description[bg]": "Анимация за прозорец при влизане и излизане от режим на цял екран",
@@ -105,7 +105,7 @@
         "Icon": "preferences-system-windows-effect-fullscreen",
         "Id": "fullscreen",
         "License": "GPL",
-        "Name": "Full Screen",
+        "Name": "Stretch",
         "Name[ar]": "ملء الشاشة",
         "Name[be]": "На ўвесь экран",
         "Name[bg]": "Цял екран",
@@ -154,5 +154,6 @@
         "Name[zh_TW]": "全螢幕"
     },
     "X-KDE-Ordering": 60,
+    "X-KWin-Exclusive-Category": "fullscreen",
     "X-Plasma-API": "javascript"
 }
