@@ -78,7 +78,6 @@ Q_SIGNALS:
 protected:
     bool acceptsFocus() const override;
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
-    void doInteractiveResizeSync(const QRectF &rect) override;
     void updateCaption() override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;

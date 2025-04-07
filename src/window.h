@@ -1714,8 +1714,6 @@ protected:
     /**
      * Called during handling a resize. Implementing subclasses can use this
      * method to perform windowing system specific syncing.
-     *
-     * Default implementation does nothing.
      */
     virtual void doInteractiveResizeSync(const QRectF &rect);
     qreal titlebarThickness() const;

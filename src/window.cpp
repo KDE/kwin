@@ -2578,8 +2578,9 @@ bool Window::isWaitingForInteractiveResizeSync() const
     return false;
 }
 
-void Window::doInteractiveResizeSync(const QRectF &)
+void Window::doInteractiveResizeSync(const QRectF &rect)
 {
+    moveResize(rect);
 }
 
 void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)

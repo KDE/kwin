@@ -419,11 +419,6 @@ bool InternalWindow::belongsToSameApplication(const Window *other, SameApplicati
     return otherInternal->handle()->isAncestorOf(handle()) || handle()->isAncestorOf(otherInternal->handle());
 }
 
-void InternalWindow::doInteractiveResizeSync(const QRectF &rect)
-{
-    moveResize(rect);
-}
-
 void InternalWindow::updateCaption()
 {
     const QString suffix = shortcutCaptionSuffix();

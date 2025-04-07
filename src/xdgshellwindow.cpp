@@ -780,11 +780,6 @@ void XdgToplevelWindow::doMinimize()
     workspace()->updateMinimizedOfTransients(this);
 }
 
-void XdgToplevelWindow::doInteractiveResizeSync(const QRectF &rect)
-{
-    moveResize(rect);
-}
-
 void XdgToplevelWindow::doSetActive()
 {
     WaylandWindow::doSetActive();
