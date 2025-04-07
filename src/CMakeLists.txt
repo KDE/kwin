@@ -1,9 +1,3 @@
-ecm_setup_version(${PROJECT_VERSION}
-                  VARIABLE_PREFIX KWIN
-                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinConfigVersion.cmake"
-                  SOVERSION 6
-)
-
 set(KWIN_KILLER_BIN ${CMAKE_INSTALL_FULL_LIBEXECDIR}/kwin_killer_helper)
 
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
@@ -644,18 +638,3 @@ install(FILES
     scene/workspacescene_qpainter.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel
 )
-
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin")
-
-install(FILES  "${CMAKE_CURRENT_BINARY_DIR}/KWinConfig.cmake"
-               "${CMAKE_CURRENT_BINARY_DIR}/KWinConfigVersion.cmake"
-        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        COMPONENT Devel )
-
-configure_package_config_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/KWinConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/KWinConfig.cmake"
-  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
-)
-
-install(EXPORT KWinTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KWinTargets.cmake NAMESPACE KWin:: )

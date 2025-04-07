@@ -472,6 +472,12 @@ ecm_set_disabled_deprecation_versions(QT 5.15
     KF 6.9.0
 )
 
+ecm_setup_version(${PROJECT_VERSION}
+                  VARIABLE_PREFIX KWIN
+                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinConfigVersion.cmake"
+                  SOVERSION 6
+)
+
 ecm_setup_qtplugin_macro_names(
     JSON_ARG2
         "KWIN_EFFECT_FACTORY"
@@ -505,13 +511,32 @@ kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinDBusInterface")
+set(CMAKECONFIG_DBUS_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinDBusInterface")
 configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake"
     PATH_VARS KDE_INSTALL_DBUSINTERFACEDIR
-    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+    INSTALL_DESTINATION ${CMAKECONFIG_DBUS_INSTALL_DIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
-    DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+    DESTINATION ${CMAKECONFIG_DBUS_INSTALL_DIR})
+
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWin")
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/KWinConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KWinConfig.cmake"
+    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(
+    FILES
+        cmake/modules/FindLibdrm.cmake
+        "${CMAKE_CURRENT_BINARY_DIR}/KWinConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/KWinConfigVersion.cmake"
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    COMPONENT Devel
+)
+
+install(EXPORT KWinTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KWinTargets.cmake NAMESPACE KWin:: )
 
 ecm_install_configured_files(INPUT plasma-kwin_wayland.service.in @ONLY
             DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
