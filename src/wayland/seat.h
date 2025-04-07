@@ -149,7 +149,6 @@ public:
     /**
      * @returns The currently focused Surface for drag motion events.
      * @see dragSurfaceTransformation
-     * @see dragSurfaceChanged
      */
     SurfaceInterface *dragSurface() const;
     /**
@@ -654,12 +653,6 @@ Q_SIGNALS:
      * @see dragStarted
      */
     void dragEnded();
-    /**
-     * Emitted whenever the drag surface for motion events changed.
-     * @see dragSurface
-     */
-    void dragSurfaceChanged();
-
     /** Emitted when a drop ocurrs in a drag'n'drop operation. This is emitted
      * before dragEnded
      */
