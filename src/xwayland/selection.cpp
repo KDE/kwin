@@ -71,8 +71,14 @@ QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
     } else if (atom == atoms->uri_list) {
         mimeTypes << QStringLiteral("text/uri-list")
                   << QStringLiteral("text/x-uri");
+    } else if (atom == atoms->targets || atom == atoms->timestamp) {
+        // Ignore known ICCCM internal atoms
     } else {
-        mimeTypes << atomName(atom);
+        const QString atomNameName = atomName(atom);
+        // Ignore other non-mimetype atoms
+        if (atomNameName.contains(QLatin1Char('/'))) {
+            mimeTypes << atomNameName;
+        }
     }
     return mimeTypes;
 }
