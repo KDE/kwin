@@ -54,7 +54,7 @@
             }
         ],
         "Category": "Appearance",
-        "Description": "Smoothly fade to the logout screen",
+        "Description": "Fade to the logout screen",
         "Description[ar]": "تلاشي بسلاسة إلى شاشة الخروج",
         "Description[be]": "Плаўнае зацямненне пры пераходзе да экрана выхаду з сеанса",
         "Description[bg]": "Плавен преход към екрана за излизане в системата",

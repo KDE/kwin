@@ -55,7 +55,7 @@
             }
         ],
         "Category": "Window Open/Close Animation",
-        "Description": "Make windows smoothly scale in and out when they are shown or hidden",
+        "Description": "Make windows scale in and out when they are shown or hidden",
         "Description[ar]": "اجعل النوافذ تكبر وتصغر بنعومة عند إظهاراها وإخفائها",
         "Description[be]": "Плаўнае павелічэнне або памяншэнне акон пры з'яўленні або знікненні",
         "Description[bg]": "Плавно увеличаване и намаляване на мащаба на прозорците при показване или скриване",

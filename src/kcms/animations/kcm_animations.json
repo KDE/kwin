@@ -1,0 +1,19 @@
+{
+    "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_animations",
+        "Description": "Configure animation speed and style",
+        "FormFactors": [
+            "tablet",
+            "handset",
+            "desktop"
+        ],
+        "Icon": "preferences-desktop-animations",
+        "Name": "Animations"
+    },
+    "X-KDE-Keywords": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
+    "X-KDE-System-Settings-Parent-Category": "appearance",
+    "X-KDE-Weight": 40
+}

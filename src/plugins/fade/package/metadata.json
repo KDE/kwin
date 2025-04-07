@@ -54,7 +54,7 @@
             }
         ],
         "Category": "Window Open/Close Animation",
-        "Description": "Make windows smoothly fade in and out when they are shown or hidden",
+        "Description": "Make windows fade in and out when they are shown or hidden",
         "Description[ar]": "اجعل النوافذ تظهر وتتلاشى بنعومة عند إظهاراها وإخفائها",
         "Description[be]": "Плаўнае згасанне або з'яўленне акон",
         "Description[bg]": "Постепенно избледняване при показване и скриване на прозорците",

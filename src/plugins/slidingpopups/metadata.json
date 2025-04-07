@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Appearance",
-        "Description": "Sliding animation for Plasma popups",
+        "Description": "Slide Plasma popups in and out",
         "Description[ar]": "تحريكات التمرير لمنبثقات بلازما",
         "Description[az]": "Sürüşən pəncərələrin animasiyalı peyda olması",
         "Description[be]": "Анімацыя высоўвання для выплыўных акон Plasma",
@@ -50,7 +50,7 @@
         "Description[zh_TW]": "提供滑動動畫予 Plasma 彈出視窗",
         "EnabledByDefault": true,
         "License": "GPL",
-        "Name": "Sliding Popups",
+        "Name": "Sliding popups",
         "Name[ar]": "منبثقات التمرير",
         "Name[be]": "Рухомыя выплыўныя вокны",
         "Name[bg]": "Плъзгащи се изскачащи прозорци",

@@ -55,7 +55,7 @@
             }
         ],
         "Category": "Appearance",
-        "Description": "Make popups smoothly fade in and out when they are shown or hidden",
+        "Description": "Fade popups in and out",
         "Description[ar]": "اجعل النوافذ المنبثقة تظهر وتتلاشى بنعومة عند إظهاراها وإخفائها",
         "Description[be]": "Плаўнае згасанне або з'яўленне выплыўных акон",
         "Description[bg]": "Постепенно избледняване при показване и скриване на изскачащите прозорци",
@@ -106,7 +106,7 @@
         "Icon": "preferences-system-windows-effect-fadingpopups",
         "Id": "fadingpopups",
         "License": "GPL",
-        "Name": "Fading Popups",
+        "Name": "Fading popups",
         "Name[ar]": "تتلاشى النوافذ المنبثقة",
         "Name[be]": "Згасанне выплыўных акон",
         "Name[bg]": "Избледняващи  изскачащи прозорци",
