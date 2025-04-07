@@ -33,6 +33,9 @@ DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const KPluginMetaData &met
 
     connect(m_model, &EffectsModel::dataChanged, this, &DesktopEffectsKCM::updateNeedsSave);
     connect(m_model, &EffectsModel::loaded, this, &DesktopEffectsKCM::updateNeedsSave);
+
+    // These are handled in kcm_animations
+    m_model->setExcludeExclusiveGroups({"toplevel-open-close-animation", "minimize", "show-desktop", "desktop-animations"});
 }
 
 DesktopEffectsKCM::~DesktopEffectsKCM()

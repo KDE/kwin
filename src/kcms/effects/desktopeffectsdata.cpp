@@ -18,6 +18,9 @@ DesktopEffectsData::DesktopEffectsData(QObject *parent)
     disconnect(this, &KCModuleData::aboutToLoad, nullptr, nullptr);
     connect(m_model, &EffectsModel::loaded, this, &KCModuleData::loaded);
 
+    // These are handled in kcm_animations
+    m_model->setExcludeExclusiveGroups({"toplevel-open-close-animation", "minimize", "show-desktop", "desktop-animations"});
+
     m_model->load();
 }
 

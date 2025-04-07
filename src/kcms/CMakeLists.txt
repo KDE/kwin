@@ -10,6 +10,7 @@ add_subdirectory(desktop)
 add_subdirectory(effects)
 add_subdirectory(virtualkeyboard)
 add_subdirectory(xwayland)
+add_subdirectory(animations)
 
 if (KWIN_BUILD_TABBOX)
     add_subdirectory(tabbox)
