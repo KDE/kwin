@@ -55,6 +55,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
         ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
         ${WaylandProtocols_DATADIR}/staging/security-context/security-context-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/single-pixel-buffer/single-pixel-buffer-v1.xml
         ${WaylandProtocols_DATADIR}/staging/tearing-control/tearing-control-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
@@ -145,6 +146,7 @@ target_sources(kwin PRIVATE
     server_decoration_palette.cpp
     shadow.cpp
     shmclientbuffer.cpp
+    singlepixelbuffer.cpp
     slide.cpp
     subcompositor.cpp
     surface.cpp
@@ -230,6 +232,7 @@ install(FILES
     server_decoration.h
     server_decoration_palette.h
     shadow.h
+    singlepixelbuffer.h
     slide.h
     subcompositor.h
     surface.h
@@ -260,6 +263,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-external-brightness-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-single-pixel-buffer-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
@@ -268,5 +272,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-external-brightness-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-single-pixel-buffer-v1-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

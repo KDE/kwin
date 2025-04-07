@@ -71,6 +71,7 @@
 #include "wayland/server_decoration.h"
 #include "wayland/server_decoration_palette.h"
 #include "wayland/shadow.h"
+#include "wayland/singlepixelbuffer.h"
 #include "wayland/subcompositor.h"
 #include "wayland/tablet_v2.h"
 #include "wayland/tearingcontrol_v1.h"
@@ -523,6 +524,7 @@ bool WaylandServer::init()
     new FixesInterface(m_display, m_display);
 #endif
     m_fifoManager = new FifoManagerV1(m_display, m_display);
+    m_singlePixelBuffer = new SinglePixelBufferManagerV1(m_display, m_display);
     return true;
 }
 

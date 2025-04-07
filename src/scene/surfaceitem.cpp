@@ -351,6 +351,8 @@ bool OpenGLSurfaceTexture::create()
         return loadDmabufTexture(buffer);
     } else if (buffer->shmAttributes()) {
         return loadShmTexture(buffer);
+    } else if (buffer->singlePixelAttributes()) {
+        return loadSinglePixelTexture(buffer);
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to create OpenGLSurfaceTexture for a buffer of unknown type" << buffer;
         return false;
@@ -370,6 +372,8 @@ void OpenGLSurfaceTexture::update(const QRegion &region)
         updateDmabufTexture(buffer);
     } else if (buffer->shmAttributes()) {
         updateShmTexture(buffer, region);
+    } else if (buffer->singlePixelAttributes()) {
+        updateSinglePixelTexture(buffer);
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to update OpenGLSurfaceTexture for a buffer of unknown type" << buffer;
     }
@@ -505,6 +509,31 @@ void OpenGLSurfaceTexture::updateDmabufTexture(GraphicsBuffer *buffer)
         glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer)));
         m_texture.planes[0]->unbind();
     }
+}
+
+bool OpenGLSurfaceTexture::loadSinglePixelTexture(GraphicsBuffer *buffer)
+{
+    // TODO this shouldn't allocate a texture,
+    // the renderer should just use a color in the shader
+    const GraphicsBufferView view(buffer);
+    std::shared_ptr<GLTexture> texture = GLTexture::upload(*view.image());
+    if (Q_UNLIKELY(!texture)) {
+        return false;
+    }
+    m_texture = {{texture}};
+    m_bufferType = BufferType::SinglePixel;
+    return true;
+}
+
+void OpenGLSurfaceTexture::updateSinglePixelTexture(GraphicsBuffer *buffer)
+{
+    if (Q_UNLIKELY(m_bufferType != BufferType::SinglePixel)) {
+        destroy();
+        create();
+        return;
+    }
+    const GraphicsBufferView view(buffer);
+    m_texture.planes[0]->update(*view.image(), QRect(0, 0, 1, 1));
 }
 
 QPainterSurfaceTexture::QPainterSurfaceTexture(QPainterBackend *backend, SurfacePixmap *pixmap)

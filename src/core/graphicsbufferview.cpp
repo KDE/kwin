@@ -62,6 +62,10 @@ GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::M
         width = shm->size.width();
         height = shm->size.height();
         format = shm->format;
+    } else if (buffer->singlePixelAttributes()) {
+        width = 1;
+        height = 1;
+        format = DRM_FORMAT_ARGB8888;
     } else {
         qCWarning(KWIN_CORE) << "Cannot create a graphics buffer view for unknown buffer type" << buffer;
         return;

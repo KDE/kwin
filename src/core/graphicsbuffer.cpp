@@ -78,6 +78,11 @@ const ShmAttributes *GraphicsBuffer::shmAttributes() const
     return nullptr;
 }
 
+const SinglePixelAttributes *GraphicsBuffer::singlePixelAttributes() const
+{
+    return nullptr;
+}
+
 void GraphicsBuffer::addReleasePoint(const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     m_releasePoints.push_back(releasePoint);

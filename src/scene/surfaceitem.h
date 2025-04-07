@@ -171,12 +171,15 @@ private:
     void updateShmTexture(GraphicsBuffer *buffer, const QRegion &region);
     bool loadDmabufTexture(GraphicsBuffer *buffer);
     void updateDmabufTexture(GraphicsBuffer *buffer);
+    bool loadSinglePixelTexture(GraphicsBuffer *buffer);
+    void updateSinglePixelTexture(GraphicsBuffer *buffer);
     void destroy();
 
     enum class BufferType {
         None,
         Shm,
         DmaBuf,
+        SinglePixel,
     };
 
     BufferType m_bufferType = BufferType::None;

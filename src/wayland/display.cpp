@@ -13,6 +13,7 @@
 #include "linuxdmabufv1clientbuffer_p.h"
 #include "output.h"
 #include "shmclientbuffer_p.h"
+#include "singlepixelbuffer.h"
 #include "utils/common.h"
 #include "utils/containerof.h"
 
@@ -232,6 +233,8 @@ GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
     if (auto buffer = LinuxDmaBufV1ClientBuffer::get(resource)) {
         return buffer;
     } else if (auto buffer = ShmClientBuffer::get(resource)) {
+        return buffer;
+    } else if (auto buffer = SinglePixelClientBuffer::get(resource)) {
         return buffer;
     } else {
         Q_ASSERT_X(false, Q_FUNC_INFO, "Failed to find matching GraphicsBuffer for wl_resource");

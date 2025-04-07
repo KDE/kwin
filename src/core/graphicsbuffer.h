@@ -40,6 +40,14 @@ struct ShmAttributes
     uint32_t format;
 };
 
+struct SinglePixelAttributes
+{
+    uint32_t red;
+    uint32_t green;
+    uint32_t blue;
+    uint32_t alpha;
+};
+
 /**
  * The GraphicsBuffer class represents a chunk of memory containing graphics data.
  *
@@ -80,6 +88,7 @@ public:
 
     virtual const DmaBufAttributes *dmabufAttributes() const;
     virtual const ShmAttributes *shmAttributes() const;
+    virtual const SinglePixelAttributes *singlePixelAttributes() const;
 
     /**
      * the added release point will be referenced as long as this buffer is referenced

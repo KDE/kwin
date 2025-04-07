@@ -434,8 +434,8 @@ static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
 static bool checkForBlackBackground(SurfaceItem *background)
 {
     if (!background->buffer()
-        || !background->buffer()->shmAttributes()
-        || background->buffer()->shmAttributes()->size != QSize(1, 1)) {
+        || (!background->buffer()->singlePixelAttributes() && !background->buffer()->shmAttributes())
+        || background->buffer()->size() != QSize(1, 1)) {
         return false;
     }
     const GraphicsBufferView view(background->buffer());
