@@ -60,11 +60,6 @@ void WorkspaceSceneOpenGL::doneOpenGLContextCurrent()
     m_backend->doneCurrent();
 }
 
-bool WorkspaceSceneOpenGL::supportsNativeFence() const
-{
-    return m_backend->supportsNativeFence();
-}
-
 EglContext *WorkspaceSceneOpenGL::openglContext() const
 {
     return m_backend->openglContext();

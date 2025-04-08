@@ -58,7 +58,6 @@ public:
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
-    virtual bool supportsNativeFence() const;
     virtual EglContext *openglContext() const;
 
     virtual std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *) = 0;

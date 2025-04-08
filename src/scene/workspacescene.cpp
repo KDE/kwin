@@ -523,11 +523,6 @@ void WorkspaceScene::doneOpenGLContextCurrent()
 {
 }
 
-bool WorkspaceScene::supportsNativeFence() const
-{
-    return false;
-}
-
 EglContext *WorkspaceScene::openglContext() const
 {
     return nullptr;
