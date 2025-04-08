@@ -30,8 +30,6 @@ public:
     explicit WorkspaceSceneOpenGL(OpenGLBackend *backend);
     ~WorkspaceSceneOpenGL() override;
 
-    bool makeOpenGLContextCurrent() override;
-    void doneOpenGLContextCurrent() override;
     EglContext *openglContext() const override;
     std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *impl) override;
     std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) override;

@@ -12,6 +12,7 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
+#include "opengl/eglcontext.h"
 #include "opengl/glframebuffer.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
@@ -66,7 +67,7 @@ WindowThumbnailSource::~WindowThumbnailSource()
         return;
     }
     if (!QOpenGLContext::currentContext()) {
-        Compositor::self()->scene()->makeOpenGLContextCurrent();
+        Compositor::self()->scene()->openglContext()->makeCurrent();
     }
     m_offscreenTarget.reset();
     m_offscreenTexture.reset();

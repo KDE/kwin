@@ -514,15 +514,6 @@ void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const Ren
     m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, region, data);
 }
 
-bool WorkspaceScene::makeOpenGLContextCurrent()
-{
-    return false;
-}
-
-void WorkspaceScene::doneOpenGLContextCurrent()
-{
-}
-
 EglContext *WorkspaceScene::openglContext() const
 {
     return nullptr;

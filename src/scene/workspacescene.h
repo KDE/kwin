@@ -56,8 +56,6 @@ public:
     void frame(SceneDelegate *delegate, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 
-    virtual bool makeOpenGLContextCurrent();
-    virtual void doneOpenGLContextCurrent();
     virtual EglContext *openglContext() const;
 
     virtual std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *) = 0;

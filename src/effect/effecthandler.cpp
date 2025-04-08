@@ -28,6 +28,7 @@
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "keyboard_input.h"
+#include "opengl/eglcontext.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
 #include "opengl/gltexture.h"
@@ -1418,12 +1419,17 @@ QString EffectsHandler::debug(const QString &name, const QString &parameter) con
 
 bool EffectsHandler::makeOpenGLContextCurrent()
 {
-    return m_scene->makeOpenGLContextCurrent();
+    if (!isOpenGLCompositing()) {
+        return false;
+    }
+    return m_scene->openglContext()->makeCurrent();
 }
 
 void EffectsHandler::doneOpenGLContextCurrent()
 {
-    m_scene->doneOpenGLContextCurrent();
+    if (isOpenGLCompositing()) {
+        m_scene->openglContext()->doneCurrent();
+    }
 }
 
 bool EffectsHandler::animationsSupported() const

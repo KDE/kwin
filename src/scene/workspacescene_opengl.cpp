@@ -47,17 +47,7 @@ WorkspaceSceneOpenGL::WorkspaceSceneOpenGL(OpenGLBackend *backend)
 
 WorkspaceSceneOpenGL::~WorkspaceSceneOpenGL()
 {
-    makeOpenGLContextCurrent();
-}
-
-bool WorkspaceSceneOpenGL::makeOpenGLContextCurrent()
-{
-    return m_backend->makeCurrent();
-}
-
-void WorkspaceSceneOpenGL::doneOpenGLContextCurrent()
-{
-    m_backend->doneCurrent();
+    openglContext()->makeCurrent();
 }
 
 EglContext *WorkspaceSceneOpenGL::openglContext() const
@@ -176,7 +166,7 @@ OpenGLShadowTextureProvider::OpenGLShadowTextureProvider(Shadow *shadow)
 OpenGLShadowTextureProvider::~OpenGLShadowTextureProvider()
 {
     if (m_texture) {
-        Compositor::self()->scene()->makeOpenGLContextCurrent();
+        Compositor::self()->scene()->openglContext()->makeCurrent();
         DecorationShadowTextureCache::instance().unregister(this);
         m_texture.reset();
     }
@@ -275,7 +265,7 @@ SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::Decorat
 SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer()
 {
     if (WorkspaceScene *scene = Compositor::self()->scene()) {
-        scene->makeOpenGLContextCurrent();
+        scene->openglContext()->makeCurrent();
     }
 }
 
