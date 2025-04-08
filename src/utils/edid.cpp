@@ -166,6 +166,7 @@ Edid::Edid(QByteArrayView data)
     // basic output information
     m_physicalSize = determineScreenPhysicalSizeMm(edid);
     m_eisaId = parseEisaId(bytes);
+    m_pnpId = parsePnpId(bytes);
     UniqueCPtr<char> monitorName{di_info_get_model(info)};
     m_monitorName = QByteArray(monitorName.get());
     UniqueCPtr<char> serial{di_info_get_serial(info)};
@@ -365,6 +366,11 @@ bool Edid::supportsBT2020() const
 QByteArray Edid::identifier() const
 {
     return m_identifier;
+}
+
+QByteArray Edid::pnpId() const
+{
+    return m_pnpId;
 }
 
 } // namespace KWin

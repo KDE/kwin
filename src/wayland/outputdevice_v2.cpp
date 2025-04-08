@@ -134,7 +134,7 @@ public:
     OutputDeviceModeV2Interface *m_currentMode = nullptr;
     QByteArray m_edid;
     bool m_enabled = true;
-    QUuid m_uuid;
+    QString m_uuid;
     uint32_t m_capabilities = 0;
     uint32_t m_overscan = 0;
     vrr_policy m_vrrPolicy = vrr_policy_automatic;
@@ -431,7 +431,7 @@ void OutputDeviceV2InterfacePrivate::sendEnabled(Resource *resource)
 
 void OutputDeviceV2InterfacePrivate::sendUuid(Resource *resource)
 {
-    send_uuid(resource->handle, m_uuid.toString(QUuid::WithoutBraces));
+    send_uuid(resource->handle, m_uuid);
 }
 
 void OutputDeviceV2InterfacePrivate::sendCapabilities(Resource *resource)
@@ -692,7 +692,7 @@ void OutputDeviceV2Interface::updateEnabled()
 
 void OutputDeviceV2Interface::updateUuid()
 {
-    const QUuid uuid = d->m_handle->uuid();
+    const QString uuid = d->m_handle->uuid();
     if (d->m_uuid != uuid) {
         d->m_uuid = uuid;
         const auto clientResources = d->resourceMap();

@@ -272,7 +272,7 @@ static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROU
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
     if (o->dpmsMode() == Output::DpmsMode::Off) {
-        const QUuid id = o->uuid();
+        const QString id = o->uuid();
         m_recentlyUnpluggedDpmsOffOutputs.push_back(id);
         QTimer::singleShot(s_dpmsTimeout, this, [this, id]() {
             m_recentlyUnpluggedDpmsOffOutputs.removeOne(id);
