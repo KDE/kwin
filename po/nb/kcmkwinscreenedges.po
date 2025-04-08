@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2025-03-16 18:45+0100\n"
+"PO-Revision-Date: 2025-04-05 10:18+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
@@ -109,7 +109,7 @@ msgstr "&Maksimer:"
 #: main.ui:77
 #, kde-format
 msgid "Windows dragged to top edge"
-msgstr "Vinduer trukket til toppkanten"
+msgstr "Vinduer dratt til toppkanten"
 
 #. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
 #: main.ui:84
@@ -121,7 +121,7 @@ msgstr "&Flislegging:"
 #: main.ui:94
 #, kde-format
 msgid "Windows dragged to left or right edge"
-msgstr "Vinduer trukket til ventre- eller høyrekanten"
+msgstr "Vinduer dratt til ventre- eller høyrekanten"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:101
@@ -145,7 +145,7 @@ msgstr "Bruk &kvadrantflislegging i:"
 #: main.ui:130
 #, no-c-format, kde-format
 msgid "%"
-msgstr "%"
+msgstr " %"
 
 #. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:133

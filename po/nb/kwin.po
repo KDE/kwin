@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2025-03-22 18:43+0100\n"
+"PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
@@ -253,7 +253,7 @@ msgstr "Ekstraknapp 24"
 #: debug_console.cpp:162 debug_console.cpp:164
 #, kde-format
 msgid "Input Device"
-msgstr "Inndataenhet"
+msgstr "Innenhet"
 
 #: debug_console.cpp:162
 #, kde-format
@@ -421,7 +421,7 @@ msgstr "Xkb-symbol"
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
-msgstr "UTF-88"
+msgstr "UTF-8"
 
 #: debug_console.cpp:312
 #, kde-format
@@ -917,7 +917,7 @@ msgstr "Inndatahendelser"
 #: debug_console.ui:86
 #, kde-format
 msgid "Input Devices"
-msgstr "Inndataenheter"
+msgstr "innenheter"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:96
@@ -1054,7 +1054,7 @@ msgstr "Vindusbehandler"
 #: helpers/killer/killer.cpp:38
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "Program-ID til programmet som skal avsluttes"
+msgstr "Program-ID-en til programmet som skal avsluttes"
 
 #: helpers/killer/killer.cpp:38
 #, kde-format
@@ -2816,4 +2816,4 @@ msgstr ""
 "OpenGL-driver og hvilke effekter som er i bruk.\n"
 "Opplysningene under denne innledende teksten må limes inn i en pastebin-"
 "tjeneste,\n"
-"for eksempel. http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"
+"for eksempel http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"

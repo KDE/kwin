@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2025-03-16 18:50+0100\n"
+"PO-Revision-Date: 2025-04-05 11:11+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
@@ -405,7 +405,7 @@ msgstr "(%1, %2)"
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
-msgstr "x"
+msgstr " × "
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -634,7 +634,7 @@ msgstr "Vinduet skal (ikke) vises i oppgavelinja."
 #: rulesmodel.cpp:553
 #, kde-format
 msgid "Skip pager"
-msgstr "Hopp over sideveksler"
+msgstr "Hopp over sidebytter"
 
 #: rulesmodel.cpp:555
 #, kde-format
@@ -644,7 +644,7 @@ msgstr "Vinduet skal (ikke) vises i behandleren for virtuelle skrivebord"
 #: rulesmodel.cpp:559
 #, kde-format
 msgid "Skip switcher"
-msgstr "Hopp over veksler"
+msgstr "Hopp over bytter"
 
 #: rulesmodel.cpp:561
 #, kde-format

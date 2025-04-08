@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2019-05-20 03:25+0200\n"
-"PO-Revision-Date: 2025-03-21 21:15+0100\n"
+"PO-Revision-Date: 2025-04-05 11:04+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
@@ -41,7 +41,7 @@ msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 #: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr "Kommaseparerte liste med vindusklasser"
+msgstr "Komma atskilt liste med vindusklasser"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: videowall/contents/ui/config.ui:45

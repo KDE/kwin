@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2025-03-21 21:09+0100\n"
+"PO-Revision-Date: 2025-04-05 10:32+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
@@ -930,7 +930,7 @@ msgstr ""
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "&Separat skjermfokus"
+msgstr "&Atskild skjermfokus"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
@@ -1219,7 +1219,7 @@ msgstr "Atferd ved <em>midtklikk</em> på maksimeringsknappen."
 #: mouse.ui:636
 #, kde-format
 msgid "Middle c&lick:"
-msgstr "Midtklikk:"
+msgstr "&Midtklikk:"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
