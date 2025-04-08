@@ -323,8 +323,10 @@ bool DrmGpu::updateOutputs()
             output->updateConnectorProperties();
         }
         if (stillExists) {
-            if (conn->linkStatus.isValid() && conn->linkStatus.enumValue() == DrmConnector::LinkStatus::Bad) {
+            if (conn->isConnected() && conn->linkStatus.isValid() && conn->linkStatus.enumValue() == DrmConnector::LinkStatus::Bad) {
                 qCWarning(KWIN_DRM, "Bad link status detected on connector %s", qPrintable(conn->connectorName()));
+                // force a modeset, to renegotiate the connection
+                m_forceModeset = true;
             }
             it++;
         } else {
