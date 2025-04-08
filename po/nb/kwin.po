@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-03 02:34+0000\n"
-"PO-Revision-Date: 2025-03-22 18:43+0100\n"
+"PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
@@ -368,7 +368,7 @@ msgstr "Ekstraknapp 24"
 #: debug_console.cpp:152 debug_console.cpp:154
 #, kde-format
 msgid "Input Device"
-msgstr "Inndataenhet"
+msgstr "Innenhet"
 
 #: debug_console.cpp:152
 #, kde-format
@@ -544,7 +544,7 @@ msgstr "Xkb-symbol"
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
-msgstr "UTF-88"
+msgstr "UTF-8"
 
 #: debug_console.cpp:305
 #, kde-format
@@ -733,7 +733,7 @@ msgstr "Nærhet"
 #: debug_console.cpp:496
 #, kde-format
 msgid "In"
-msgstr "In"
+msgstr "Inn"
 
 #: debug_console.cpp:496
 #, kde-format
@@ -1095,7 +1095,7 @@ msgstr "Inndatahendelser"
 #: debug_console.ui:85
 #, kde-format
 msgid "Input Devices"
-msgstr "Inndataenheter"
+msgstr "innenheter"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:95
@@ -1232,7 +1232,7 @@ msgstr "Vindusbehandler"
 #: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "Program-ID til programmet som skal avsluttes"
+msgstr "Program-ID-en til programmet som skal avsluttes"
 
 #: helpers/killer/killer.cpp:164
 #, kde-format
@@ -2749,7 +2749,7 @@ msgstr "Luft:"
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout…"
-msgstr "Åpne utforming …"
+msgstr "Åpne oppsett …"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -2907,7 +2907,7 @@ msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 #: plugins/videowall/package/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr "Kommaseparerte liste med vindusklasser"
+msgstr "Komma atskilt liste med vindusklasser"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
@@ -4316,22 +4316,22 @@ msgstr "Flytt vinduet til forrige skjerm"
 #: useractions.cpp:1039
 #, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Flytt vinduet en skjerm til høyre"
+msgstr "Flytt vinduet én skjerm til høyre"
 
 #: useractions.cpp:1041
 #, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Flytt vinduet en skjerm til venstre"
+msgstr "Flytt vinduet én skjerm til venstre"
 
 #: useractions.cpp:1043
 #, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Flytt vinduet en skjerm opp"
+msgstr "Flytt vinduet én skjerm opp"
 
 #: useractions.cpp:1045
 #, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Flytt vinduet en skjerm ned"
+msgstr "Flytt vinduet én skjerm ned"
 
 #: useractions.cpp:1049
 #, kde-format
@@ -4446,7 +4446,7 @@ msgstr "Den oppgitte sorteringen av utenheter, inneholder ikke alle utenhetene"
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr "Den oppgitte sorteringen av utenhetene, er ugyldig"
+msgstr "Den oppgitte sorteringen av utenhetene er ugyldig"
 
 #: wayland/outputmanagement_v2.cpp:494
 #, kde-format
@@ -4481,7 +4481,7 @@ msgstr ""
 "OpenGL-driver og hvilke effekter som er i bruk.\n"
 "Opplysningene under denne innledende teksten må limes inn i en pastebin-"
 "tjeneste,\n"
-"for eksempel. http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"
+"for eksempel http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"
 
 #: xwayland/xwaylandlauncher.cpp:269
 #, kde-format
