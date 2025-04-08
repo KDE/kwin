@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-05 00:43+0000\n"
-"PO-Revision-Date: 2025-03-26 16:17+0200\n"
+"PO-Revision-Date: 2025-04-06 17:47+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
@@ -1453,12 +1453,12 @@ msgstr "Logu režīma augstums. Noklusējums ir 768."
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Vai izveidot loga režīma pilnekrānu"
 
 #: main_wayland.cpp:324
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr "Logu režīma mērogs. Noklusējuma vērtība ir 1."
+msgstr "Loga režīma mērogs. Noklusējuma vērtība ir 1."
 
 #: main_wayland.cpp:329
 #, kde-format

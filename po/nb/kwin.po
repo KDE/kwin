@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-05 00:43+0000\n"
-"PO-Revision-Date: 2025-03-22 18:43+0100\n"
+"PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
 "Language: nb\n"
@@ -338,7 +338,7 @@ msgstr "Ekstraknapp 24"
 #: debug_console.cpp:153 debug_console.cpp:155
 #, kde-format
 msgid "Input Device"
-msgstr "Inndataenhet"
+msgstr "Innenhet"
 
 #: debug_console.cpp:153
 #, kde-format
@@ -514,7 +514,7 @@ msgstr "Xkb-symbol"
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
-msgstr "UTF-88"
+msgstr "UTF-8"
 
 #: debug_console.cpp:306
 #, kde-format
@@ -703,7 +703,7 @@ msgstr "Nærhet"
 #: debug_console.cpp:497
 #, kde-format
 msgid "In"
-msgstr "In"
+msgstr "Inn"
 
 #: debug_console.cpp:497
 #, kde-format
@@ -1052,7 +1052,7 @@ msgstr "Inndatahendelser"
 #: debug_console.ui:75
 #, kde-format
 msgid "Input Devices"
-msgstr "Inndataenheter"
+msgstr "innenheter"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:85
@@ -1195,7 +1195,7 @@ msgstr "Vindusbehandler"
 #: helpers/killer/killer.cpp:164
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "Program-ID til programmet som skal avsluttes"
+msgstr "Program-ID-en til programmet som skal avsluttes"
 
 #: helpers/killer/killer.cpp:164
 #, kde-format
@@ -1459,7 +1459,7 @@ msgstr "Høyden for vindusmodus. Standardhøyden er 768."
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Om vindusmodus skal bli til fullskjermmodus"
 
 #: main_wayland.cpp:324
 #, kde-format
@@ -2583,7 +2583,7 @@ msgstr "Luft:"
 #: plugins/tileseditor/qml/main.qml:163
 #, kde-format
 msgid "Load Layout…"
-msgstr "Åpne utforming …"
+msgstr "Åpne oppsett …"
 
 #: plugins/tileseditor/qml/main.qml:270
 #, kde-format
@@ -2741,7 +2741,7 @@ msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 #: plugins/videowall/package/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr "Kommaseparerte liste med vindusklasser"
+msgstr "Komma atskilt liste med vindusklasser"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
@@ -4155,22 +4155,22 @@ msgstr "Flytt vinduet til forrige skjerm"
 #: useractions.cpp:1024
 #, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Flytt vinduet en skjerm til høyre"
+msgstr "Flytt vinduet én skjerm til høyre"
 
 #: useractions.cpp:1026
 #, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Flytt vinduet en skjerm til venstre"
+msgstr "Flytt vinduet én skjerm til venstre"
 
 #: useractions.cpp:1028
 #, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Flytt vinduet en skjerm opp"
+msgstr "Flytt vinduet én skjerm opp"
 
 #: useractions.cpp:1030
 #, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Flytt vinduet en skjerm ned"
+msgstr "Flytt vinduet én skjerm ned"
 
 #: useractions.cpp:1034
 #, kde-format
@@ -4285,7 +4285,7 @@ msgstr "Den oppgitte sorteringen av utenheter, inneholder ikke alle utenhetene"
 #: wayland/outputmanagement_v2.cpp:479
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr "Den oppgitte sorteringen av utenhetene, er ugyldig"
+msgstr "Den oppgitte sorteringen av utenhetene er ugyldig"
 
 #: wayland/outputmanagement_v2.cpp:497
 #, kde-format
@@ -4320,7 +4320,7 @@ msgstr ""
 "OpenGL-driver og hvilke effekter som er i bruk.\n"
 "Opplysningene under denne innledende teksten må limes inn i en pastebin-"
 "tjeneste,\n"
-"for eksempel. http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"
+"for eksempel http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"
 
 #: xwayland/xwaylandlauncher.cpp:270
 #, kde-format
