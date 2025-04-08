@@ -10,5 +10,5 @@ find_dependency(KF6WindowSystem "@KF6_MIN_VERSION@")
 find_dependency(Wayland REQUIRED Server)
 find_dependency(epoxy)
 
-@PACKAGE_SETUP_KWIN_AUTOMOC_VARIABLES@
+@PACKAGE_SETUP_AUTOMOC_VARIABLES@
 include("${CMAKE_CURRENT_LIST_DIR}/KWinTargets.cmake")
