@@ -439,10 +439,14 @@ std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const s
     const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.referenceLuminance)) : 200;
     const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * m_state.artificialHdrHeadroom;
     const double referenceLuminance = effectiveHdr ? props->referenceLuminance.value_or(m_state.referenceLuminance) : 200;
-    const auto transferFunction = TransferFunction{effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22}.relativeScaledTo(referenceLuminance * m_state.artificialHdrHeadroom);
+    // the min luminance the Wayland protocol defines for SDR is unrealistically high for most modern displays
+    // normally that doesn't really matter, but with night light it can lead to increased black levels,
+    // which are really noticeable when they're tinted red
+    const double minSdrLuminance = 0.01;
+    const auto transferFunction = effectiveHdr ? TransferFunction{TransferFunction::PerceptualQuantizer} : TransferFunction{TransferFunction::gamma22, minSdrLuminance * m_state.artificialHdrHeadroom, referenceLuminance * m_state.artificialHdrHeadroom};
     // HDR screens are weird, sending them the min. luminance from the EDID does *not* make all of them present the darkest luminance the display can show
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
-    const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
+    const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(transferFunction.minLuminance) : transferFunction.minLuminance;
 
     const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     const double brightnessFactor = (!m_brightnessDevice && allowSdrSoftwareBrightness) || effectiveHdr ? brightness : 1.0;
