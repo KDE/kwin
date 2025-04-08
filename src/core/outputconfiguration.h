@@ -54,6 +54,7 @@ public:
     std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
     std::optional<double> dimming;
     std::optional<BrightnessDevice *> brightnessDevice;
+    std::optional<QString> uuid;
 };
 
 class KWIN_EXPORT OutputConfiguration

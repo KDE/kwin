@@ -370,9 +370,9 @@ QString Output::name() const
     return m_information.name;
 }
 
-QUuid Output::uuid() const
+QString Output::uuid() const
 {
-    return m_uuid;
+    return m_state.uuid;
 }
 
 OutputTransform Output::transform() const
@@ -533,6 +533,7 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    next.uuid = props->uuid.value_or(m_state.uuid);
 
     setState(next);
 
@@ -549,21 +550,10 @@ QString Output::description() const
     return manufacturer() + ' ' + model();
 }
 
-static QUuid generateOutputId(const QString &eisaId, const QString &model,
-                              const QString &serialNumber, const QString &name)
-{
-    static const QUuid urlNs = QUuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8"); // NameSpace_URL
-    static const QUuid kwinNs = QUuid::createUuidV5(urlNs, QStringLiteral("https://kwin.kde.org/o/"));
-
-    const QString payload = QStringList{name, eisaId, model, serialNumber}.join(':');
-    return QUuid::createUuidV5(kwinNs, payload);
-}
-
 void Output::setInformation(const Information &information)
 {
     const auto oldInfo = m_information;
     m_information = information;
-    m_uuid = generateOutputId(eisaId(), model(), serialNumber(), name());
     if (oldInfo.capabilities != information.capabilities) {
         Q_EMIT capabilitiesChanged();
     }

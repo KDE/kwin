@@ -40,7 +40,7 @@ public:
 private:
     struct WindowData
     {
-        QUuid outputUuid;
+        QString outputUuid;
         QRectF geometry;
         MaximizeMode maximize;
         QuickTileMode quickTile;

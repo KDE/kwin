@@ -271,13 +271,24 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
     return nullptr;
 }
 
+// this is the old output UUID format from Plasma 6.3
+// to not reset the config on updates, attempt to load the settings with this uuid too!
+static QString generateOutputId(Output *output)
+{
+    static const QUuid urlNs = QUuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8"); // NameSpace_URL
+    static const QUuid kwinNs = QUuid::createUuidV5(urlNs, QStringLiteral("https://kwin.kde.org/o/"));
+
+    const QString payload = QStringList{output->name(), output->eisaId(), output->model(), output->serialNumber()}.join(':');
+    return QUuid::createUuidV5(kwinNs, payload).toString(QUuid::StringFormat::WithoutBraces);
+}
+
 void TileManager::readSettings(RootTile *rootTile)
 {
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     qreal padding = cg.readEntry("padding", 4);
     VirtualDesktop *desk = rootTile->desktop();
-    cg = KConfigGroup(&cg, desk->id());
-    cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
+    KConfigGroup desktopCg = KConfigGroup(&cg, desk->id());
+    cg = KConfigGroup(&desktopCg, m_output->uuid());
 
     Q_ASSERT(m_rootTiles.contains(desk));
 
@@ -293,17 +304,21 @@ void TileManager::readSettings(RootTile *rootTile)
     };
 
     QJsonParseError error;
-    const auto tiles = cg.readEntry("tiles", QByteArray());
+    auto tiles = cg.readEntry("tiles", QByteArray());
     if (tiles.isEmpty()) {
-        qCDebug(KWIN_CORE) << "Empty tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":"
-                           << "Creating default setup";
-        createDefaultSetup(rootTile);
-        return;
+        cg = KConfigGroup(&desktopCg, generateOutputId(m_output));
+        tiles = cg.readEntry("tiles", QByteArray());
+        if (tiles.isEmpty()) {
+            qCDebug(KWIN_CORE) << "Empty tiles configuration for monitor" << m_output->uuid() << ":"
+                               << "Creating default setup";
+            createDefaultSetup(rootTile);
+            return;
+        }
     }
     QJsonDocument doc = QJsonDocument::fromJson(tiles, &error);
 
     if (error.error != QJsonParseError::NoError) {
-        qCWarning(KWIN_CORE) << "Parse error in tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":" << error.errorString() << "Creating default setup";
+        qCWarning(KWIN_CORE) << "Parse error in tiles configuration for monitor" << m_output->uuid() << ":" << error.errorString() << "Creating default setup";
         createDefaultSetup(rootTile);
         return;
     }
@@ -378,7 +393,7 @@ void TileManager::saveSettings()
         auto obj = tileToJSon(rootTile);
         QJsonDocument doc(obj);
         KConfigGroup tileGroup(&cg, desk->id());
-        tileGroup = KConfigGroup(&tileGroup, m_output->uuid().toString(QUuid::WithoutBraces));
+        tileGroup = KConfigGroup(&tileGroup, m_output->uuid());
         tileGroup.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
     }
     cg.sync(); // FIXME: less frequent?

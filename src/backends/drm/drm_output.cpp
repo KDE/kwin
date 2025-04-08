@@ -519,6 +519,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
+    next.uuid = props->uuid.value_or(m_state.uuid);
     setState(next);
 
     // allowSdrSoftwareBrightness might change our capabilities

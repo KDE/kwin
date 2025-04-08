@@ -106,10 +106,13 @@ public:
      */
     std::optional<QSize> likelyNativeResolution() const;
 
+    QByteArray pnpId() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;
     QByteArray m_eisaId;
+    QByteArray m_pnpId;
     QByteArray m_monitorName;
     QByteArray m_serialNumber;
     QString m_hash;

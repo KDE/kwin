@@ -232,8 +232,10 @@ public:
 
     /**
      * Returns the identifying uuid of this output.
+     * NOTE that this is set by the output configuration store, and
+     * can potentially change on hotplug events, because displays are terrible
      */
-    QUuid uuid() const;
+    QString uuid() const;
 
     /**
      * Returns @c true if the output is enabled; otherwise returns @c false.
@@ -513,6 +515,7 @@ protected:
         ColorPowerTradeoff colorPowerTradeoff = ColorPowerTradeoff::PreferEfficiency;
         double dimming = 1.0;
         BrightnessDevice *brightnessDevice = nullptr;
+        QString uuid;
     };
 
     void setInformation(const Information &information);
@@ -520,7 +523,6 @@ protected:
 
     State m_state;
     Information m_information;
-    QUuid m_uuid;
     int m_refCount = 1;
 };
 

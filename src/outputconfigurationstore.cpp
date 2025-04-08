@@ -46,6 +46,8 @@ std::optional<std::tuple<OutputConfiguration, QList<Output *>, OutputConfigurati
     if (relevantOutputs.isEmpty()) {
         return std::nullopt;
     }
+    // assigns uuids, if the outputs don't have one yet
+    registerOutputs(outputs);
     if (const auto opt = findSetup(relevantOutputs, isLidClosed)) {
         const auto &[setup, outputStates] = *opt;
         auto [config, order] = setupToConfig(setup, outputStates);
@@ -232,6 +234,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
     if (relevantOutputs.isEmpty()) {
         return;
     }
+    registerOutputs(allOutputs);
     const auto opt = findSetup(relevantOutputs, isLidClosed);
     Setup *setup = nullptr;
     if (opt) {
@@ -243,10 +246,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
     }
     for (Output *output : relevantOutputs) {
         auto outputIndex = findOutput(output, outputOrder);
-        if (!outputIndex) {
-            m_outputs.push_back(OutputState{});
-            outputIndex = m_outputs.size() - 1;
-        }
+        Q_ASSERT(outputIndex.has_value());
         auto outputIt = std::find_if(setup->outputs.begin(), setup->outputs.end(), [outputIndex](const auto &output) {
             return output.outputIndex == outputIndex;
         });
@@ -254,6 +254,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             setup->outputs.push_back(SetupState{});
             outputIt = setup->outputs.end() - 1;
         }
+        const std::optional<QString> existingUuid = m_outputs[*outputIndex].uuid;
         if (const auto changeSet = config.constChangeSet(output)) {
             QSize modeSize = changeSet->desiredModeSize.value_or(output->desiredModeSize());
             if (modeSize.isEmpty()) {
@@ -291,6 +292,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .brightness = changeSet->brightness.value_or(output->brightnessSetting()),
                 .allowSdrSoftwareBrightness = changeSet->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness()),
                 .colorPowerTradeoff = changeSet->colorPowerTradeoff.value_or(output->colorPowerTradeoff()),
+                .uuid = existingUuid,
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -335,6 +337,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .brightness = output->brightnessSetting(),
                 .allowSdrSoftwareBrightness = output->allowSdrSoftwareBrightness(),
                 .colorPowerTradeoff = output->colorPowerTradeoff(),
+                .uuid = existingUuid,
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -392,6 +395,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .brightness = state.brightness,
             .allowSdrSoftwareBrightness = state.allowSdrSoftwareBrightness,
             .colorPowerTradeoff = state.colorPowerTradeoff,
+            .uuid = state.uuid,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -518,6 +522,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .brightness = existingData.brightness.value_or(1.0),
             .allowSdrSoftwareBrightness = existingData.allowSdrSoftwareBrightness.value_or(output->brightnessDevice() == nullptr),
             .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(Output::ColorPowerTradeoff::PreferEfficiency),
+            .uuid = existingData.uuid,
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -653,6 +658,28 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
     const double scale = std::min(scaleX, scaleY);
     const double steps = 5;
     return std::round(100.0 * scale / steps) * steps / 100.0;
+}
+
+void OutputConfigurationStore::registerOutputs(const QList<Output *> &outputs)
+{
+    for (Output *output : outputs) {
+        if (output->isNonDesktop() || output->isPlaceholder()) {
+            continue;
+        }
+        auto index = findOutput(output, outputs);
+        if (!index) {
+            index = m_outputs.size();
+            m_outputs.push_back(OutputState{});
+        }
+        auto &state = m_outputs[*index];
+        state.edidIdentifier = output->edid().identifier();
+        state.connectorName = output->name();
+        state.edidHash = output->edid().hash();
+        state.mstPath = output->mstPath();
+        if (!state.uuid.has_value()) {
+            state.uuid = QUuid::createUuid().toString(QUuid::StringFormat::WithoutBraces);
+        }
+    }
 }
 
 void OutputConfigurationStore::load()
@@ -866,6 +893,9 @@ void OutputConfigurationStore::load()
                 state.colorPowerTradeoff = Output::ColorPowerTradeoff::PreferAccuracy;
             }
         }
+        if (const auto it = data.find("uuid"); it != data.end() && !it->toString().isEmpty()) {
+            state.uuid = it->toString();
+        }
         outputDatas.push_back(state);
     }
 
@@ -970,6 +1000,14 @@ void OutputConfigurationStore::load()
                 setupIt++;
             }
         } else {
+            // ensure that uuids are actually unique in the config
+            const int count = std::ranges::count_if(outputDatas, [i, &outputDatas](const auto &data) {
+                return data.has_value() && data->uuid == outputDatas[i]->uuid;
+            });
+            if (count > 1) {
+                // a new uuid will be generated when the data gets used
+                outputDatas[i]->uuid.reset();
+            }
             i++;
         }
     }
@@ -1110,6 +1148,9 @@ void OutputConfigurationStore::save()
                 o["colorPowerTradeoff"] = "PreferAccuracy";
                 break;
             }
+        }
+        if (output.uuid.has_value()) {
+            o["uuid"] = *output.uuid;
         }
         outputsData.append(o);
     }
