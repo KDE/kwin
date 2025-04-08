@@ -35,7 +35,7 @@ std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 {
-    m_backend->makeCurrent();
+    m_backend->openglContext()->makeCurrent();
 
     const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
@@ -152,18 +152,18 @@ void VirtualEglBackend::init()
 
 bool VirtualEglBackend::initRenderingContext()
 {
-    return createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
+    return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
 }
 
 void VirtualEglBackend::addOutput(Output *output)
 {
-    makeCurrent();
+    openglContext()->makeCurrent();
     m_outputs[output] = std::make_unique<VirtualEglLayer>(output, this);
 }
 
 void VirtualEglBackend::removeOutput(Output *output)
 {
-    makeCurrent();
+    openglContext()->makeCurrent();
     m_outputs.erase(output);
 }
 

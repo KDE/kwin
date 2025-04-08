@@ -95,7 +95,7 @@ void EglGbmBackend::init()
 
 bool EglGbmBackend::initRenderingContext()
 {
-    return createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
+    return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
 }
 
 EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)

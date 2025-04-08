@@ -391,7 +391,7 @@ void Compositor::stop()
 
     if (m_backend->compositingType() == OpenGLCompositing) {
         // some layers need a context current for destruction
-        static_cast<OpenGLBackend *>(m_backend.get())->makeCurrent();
+        static_cast<OpenGLBackend *>(m_backend.get())->openglContext()->makeCurrent();
     }
 
     const auto superlayers = m_superlayers;

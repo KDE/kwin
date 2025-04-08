@@ -322,7 +322,7 @@ bool WaylandEglBackend::initRenderingContext()
         return false;
     }
 
-    return makeCurrent();
+    return openglContext()->makeCurrent();
 }
 
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> WaylandEglBackend::textureForOutput(KWin::Output *output) const

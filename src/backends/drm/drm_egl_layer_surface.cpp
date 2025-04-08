@@ -685,7 +685,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     }
 
     // restore the old context
-    m_eglBackend->makeCurrent();
+    m_eglBackend->openglContext()->makeCurrent();
     return m_gpu->importBuffer(slot->buffer(), endFence.takeFileDescriptor());
 }
 

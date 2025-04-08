@@ -29,8 +29,6 @@ class KWIN_EXPORT AbstractEglBackend : public OpenGLBackend
     Q_OBJECT
 public:
     ~AbstractEglBackend() override;
-    bool makeCurrent() override;
-    void doneCurrent() override;
 
     EGLConfig config() const;
     EglDisplay *eglDisplayObject() const override;

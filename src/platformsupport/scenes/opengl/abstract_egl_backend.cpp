@@ -23,8 +23,6 @@
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include "utils/drm_format_helper.h"
-// Qt
-#include <QOpenGLContext>
 
 #include <memory>
 
@@ -219,20 +217,6 @@ void AbstractEglBackend::initClientExtensions()
 bool AbstractEglBackend::hasClientExtension(const QByteArray &ext) const
 {
     return m_clientExtensions.contains(ext);
-}
-
-bool AbstractEglBackend::makeCurrent()
-{
-    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
-        // Workaround to tell Qt that no QOpenGLContext is current
-        context->doneCurrent();
-    }
-    return m_context->makeCurrent();
-}
-
-void AbstractEglBackend::doneCurrent()
-{
-    m_context->doneCurrent();
 }
 
 bool AbstractEglBackend::isOpenGLES() const

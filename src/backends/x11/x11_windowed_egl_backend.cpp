@@ -241,7 +241,7 @@ bool X11WindowedEglBackend::initRenderingContext()
         return false;
     }
 
-    return makeCurrent();
+    return openglContext()->makeCurrent();
 }
 
 void X11WindowedEglBackend::init()

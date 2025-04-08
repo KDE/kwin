@@ -48,8 +48,6 @@ public:
     CompositingType compositingType() const override final;
     bool checkGraphicsReset() override final;
 
-    virtual bool makeCurrent() = 0;
-    virtual void doneCurrent() = 0;
     virtual EglContext *openglContext() const = 0;
 
     /**
