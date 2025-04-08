@@ -325,11 +325,6 @@ QHash<uint32_t, QList<uint64_t>> AbstractEglBackend::supportedFormats() const
     return m_display->nonExternalOnlySupportedDrmFormats();
 }
 
-EGLConfig AbstractEglBackend::config() const
-{
-    return m_context->config();
-}
-
 EglDisplay *AbstractEglBackend::eglDisplayObject() const
 {
     return m_display;

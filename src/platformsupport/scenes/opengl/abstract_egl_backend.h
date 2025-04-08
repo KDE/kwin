@@ -30,7 +30,6 @@ class KWIN_EXPORT AbstractEglBackend : public OpenGLBackend
 public:
     ~AbstractEglBackend() override;
 
-    EGLConfig config() const;
     EglDisplay *eglDisplayObject() const override;
     EglContext *openglContext() const override;
     std::shared_ptr<EglContext> openglContextRef() const;
