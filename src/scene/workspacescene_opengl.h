@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include "platformsupport/scenes/opengl/openglbackend.h"
-
 #include "scene/decorationitem.h"
 #include "scene/shadowitem.h"
 #include "scene/workspacescene.h"
@@ -20,14 +18,15 @@
 
 namespace KWin
 {
-class OpenGLBackend;
+
+class EglBackend;
 
 class KWIN_EXPORT WorkspaceSceneOpenGL : public WorkspaceScene
 {
     Q_OBJECT
 
 public:
-    explicit WorkspaceSceneOpenGL(OpenGLBackend *backend);
+    explicit WorkspaceSceneOpenGL(EglBackend *backend);
     ~WorkspaceSceneOpenGL() override;
 
     EglContext *openglContext() const override;
@@ -35,7 +34,7 @@ public:
     std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) override;
     bool animationsSupported() const override;
 
-    OpenGLBackend *backend() const
+    EglBackend *backend() const
     {
         return m_backend;
     }
@@ -43,7 +42,7 @@ public:
     std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
 
 private:
-    OpenGLBackend *m_backend;
+    EglBackend *m_backend;
 };
 
 /**

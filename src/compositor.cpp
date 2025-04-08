@@ -25,7 +25,7 @@
 #include "effect/effecthandler.h"
 #include "ftrace.h"
 #include "opengl/glplatform.h"
-#include "platformsupport/scenes/opengl/openglbackend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 #include "scene/cursordelegate_opengl.h"
 #include "scene/cursordelegate_qpainter.h"
@@ -176,7 +176,7 @@ bool Compositor::isActive()
     return m_state == State::On;
 }
 
-static QVariantHash collectCrashInformation(const OpenGLBackend *backend)
+static QVariantHash collectCrashInformation(const EglBackend *backend)
 {
     const GLPlatform *glPlatform = backend->openglContext()->glPlatform();
 
@@ -196,7 +196,7 @@ static QVariantHash collectCrashInformation(const OpenGLBackend *backend)
 
 bool Compositor::attemptOpenGLCompositing()
 {
-    std::unique_ptr<OpenGLBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
+    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
     if (!backend) {
         return false;
     }
@@ -293,9 +293,9 @@ void Compositor::createRenderer()
 
 void Compositor::createScene()
 {
-    if (const auto openglBackend = qobject_cast<OpenGLBackend *>(m_backend.get())) {
-        m_scene = std::make_unique<WorkspaceSceneOpenGL>(openglBackend);
-        m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(openglBackend->eglDisplayObject()));
+    if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
+        m_scene = std::make_unique<WorkspaceSceneOpenGL>(eglBackend);
+        m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
     } else {
         const auto qpainterBackend = static_cast<QPainterBackend *>(m_backend.get());
         m_scene = std::make_unique<WorkspaceSceneQPainter>(qpainterBackend);
@@ -391,7 +391,7 @@ void Compositor::stop()
 
     if (m_backend->compositingType() == OpenGLCompositing) {
         // some layers need a context current for destruction
-        static_cast<OpenGLBackend *>(m_backend.get())->openglContext()->makeCurrent();
+        static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
     }
 
     const auto superlayers = m_superlayers;

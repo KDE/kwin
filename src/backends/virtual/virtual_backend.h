@@ -31,7 +31,7 @@ public:
     bool initialize() override;
 
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
-    std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
+    std::unique_ptr<EglBackend> createOpenGLBackend() override;
 
     struct OutputInfo
     {

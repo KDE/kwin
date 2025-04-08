@@ -221,8 +221,7 @@ QHash<uint32_t, QList<uint64_t>> WaylandEglCursorLayer::supportedDrmFormats() co
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
-    : AbstractEglBackend()
-    , m_backend(b)
+    : m_backend(b)
 {
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {

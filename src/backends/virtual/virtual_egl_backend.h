@@ -9,7 +9,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include <chrono>
 #include <memory>
 
@@ -47,7 +47,7 @@ private:
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  */
-class VirtualEglBackend : public AbstractEglBackend
+class VirtualEglBackend : public EglBackend
 {
     Q_OBJECT
 

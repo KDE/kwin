@@ -11,7 +11,7 @@
 namespace KWin
 {
 
-class AbstractEglBackend;
+class EglBackend;
 class GLTexture;
 
 class KWIN_EXPORT OpenGLSurfaceContents
@@ -44,7 +44,7 @@ public:
 class KWIN_EXPORT OpenGLSurfaceTexture : public SurfaceTexture
 {
 public:
-    explicit OpenGLSurfaceTexture(AbstractEglBackend *backend, SurfacePixmap *pixmap);
+    explicit OpenGLSurfaceTexture(EglBackend *backend, SurfacePixmap *pixmap);
     ~OpenGLSurfaceTexture() override;
 
     bool create() override;
@@ -67,7 +67,7 @@ private:
     };
 
     BufferType m_bufferType = BufferType::None;
-    AbstractEglBackend *m_backend;
+    EglBackend *m_backend;
     SurfacePixmap *m_pixmap;
     OpenGLSurfaceContents m_texture;
 };

@@ -9,7 +9,7 @@
 #include "core/drmdevice.h"
 #include "core/shmgraphicsbufferallocator.h"
 #include "opengl/glframebuffer.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 
 namespace KWin
 {
@@ -34,7 +34,7 @@ DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shar
 
 DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, const GraphicsBufferOptions &options)
 {
-    AbstractEglBackend *backend = dynamic_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    EglBackend *backend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!backend || !backend->drmDevice()) {
         return nullptr;
     }

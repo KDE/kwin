@@ -19,7 +19,7 @@
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "pipewirecore.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include "scene/workspacescene.h"
 #include "screencastbuffer.h"
 #include "screencastsource.h"
@@ -370,7 +370,7 @@ bool ScreenCastStream::init()
         return false;
     }
 
-    AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
     if (!backend) {
         m_error = i18n("OpenGL compositing is required for screencasting");
         return false;
@@ -572,7 +572,7 @@ pw_buffer *ScreenCastStream::dequeueBuffer()
 
 void ScreenCastStream::record(const QRegion &damage, Contents contents)
 {
-    AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
     if (!backend) {
         return;
     }
@@ -919,7 +919,7 @@ void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode)
 
 std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers)
 {
-    AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
     if (!backend) {
         return std::nullopt;
     }

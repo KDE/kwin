@@ -11,7 +11,7 @@
 
 #include "core/outputlayer.h"
 #include "opengl/eglnativefence.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include "utils/damagejournal.h"
 
 #include <memory>
@@ -89,7 +89,7 @@ private:
  * repaints, which is obviously not optimal. Best solution is probably to go for buffer_age extension
  * and make it the only available solution next to fullscreen repaints.
  */
-class WaylandEglBackend : public AbstractEglBackend
+class WaylandEglBackend : public EglBackend
 {
     Q_OBJECT
 public:

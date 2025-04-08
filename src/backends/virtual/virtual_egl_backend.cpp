@@ -78,8 +78,7 @@ QHash<uint32_t, QList<uint64_t>> VirtualEglLayer::supportedDrmFormats() const
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
-    : AbstractEglBackend()
-    , m_backend(b)
+    : m_backend(b)
 {
 }
 
@@ -138,7 +137,6 @@ void VirtualEglBackend::init()
         return;
     }
 
-    setSupportsBufferAge(false);
     initWayland();
 
     const auto outputs = m_backend->outputs();

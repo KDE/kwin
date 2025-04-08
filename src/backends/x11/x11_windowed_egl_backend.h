@@ -10,7 +10,7 @@
 
 #include "core/outputlayer.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 
 namespace KWin
 {
@@ -67,7 +67,7 @@ private:
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
  */
-class X11WindowedEglBackend : public AbstractEglBackend
+class X11WindowedEglBackend : public EglBackend
 {
     Q_OBJECT
 

@@ -12,12 +12,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "workspacescene_opengl.h"
-
-#include "opengl/glplatform.h"
-
 #include "compositor.h"
 #include "core/output.h"
 #include "decorations/decoratedwindow.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include "scene/itemrenderer_opengl.h"
 #include "shadow.h"
 #include "window.h"
@@ -39,7 +37,7 @@ namespace KWin
  * SceneOpenGL
  ***********************************************/
 
-WorkspaceSceneOpenGL::WorkspaceSceneOpenGL(OpenGLBackend *backend)
+WorkspaceSceneOpenGL::WorkspaceSceneOpenGL(EglBackend *backend)
     : WorkspaceScene(std::make_unique<ItemRendererOpenGL>(backend->eglDisplayObject()))
     , m_backend(backend)
 {

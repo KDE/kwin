@@ -498,7 +498,7 @@ std::unique_ptr<InputBackend> WaylandBackend::createInputBackend()
     return std::make_unique<WaylandInputBackend>(this);
 }
 
-std::unique_ptr<OpenGLBackend> WaylandBackend::createOpenGLBackend()
+std::unique_ptr<EglBackend> WaylandBackend::createOpenGLBackend()
 {
     return std::make_unique<WaylandEglBackend>(this);
 }

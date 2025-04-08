@@ -10,45 +10,36 @@
 #pragma once
 
 #include "core/renderbackend.h"
+#include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
 
 #include <QRegion>
 #include <memory>
 
+#include <epoxy/egl.h>
+
 namespace KWin
 {
 class Output;
-class OpenGLBackend;
 class GLTexture;
 class EglContext;
 class EglDisplay;
 
-/**
- * @brief The OpenGLBackend creates and holds the OpenGL context and is responsible for Texture from Pixmap.
- *
- * The OpenGLBackend is an abstract base class used by the SceneOpenGL to abstract away the differences
- * between various OpenGL windowing systems such as GLX and EGL.
- *
- * A concrete implementation has to create and release the OpenGL context in a way so that the
- * SceneOpenGL does not have to care about it.
- *
- * In addition a major task for this class is to generate the SceneOpenGLTexturePrivate which is
- * able to perform the texture from pixmap operation in the given backend.
- *
- * @author Martin Gräßlin <mgraesslin@kde.org>
- */
-class KWIN_EXPORT OpenGLBackend : public RenderBackend
+struct DmaBufAttributes;
+
+class KWIN_EXPORT EglBackend : public RenderBackend
 {
     Q_OBJECT
 
 public:
-    OpenGLBackend();
-    virtual ~OpenGLBackend();
-
     virtual void init() = 0;
     CompositingType compositingType() const override final;
     bool checkGraphicsReset() override final;
 
-    virtual EglContext *openglContext() const = 0;
+    EglContext *openglContext() const;
+    std::shared_ptr<EglContext> openglContextRef() const;
+    EglDisplay *eglDisplayObject() const;
 
     /**
      * @brief Whether the creation of the Backend failed.
@@ -61,16 +52,6 @@ public:
     bool isFailed() const
     {
         return m_failed;
-    }
-
-    bool supportsBufferAge() const
-    {
-        return m_haveBufferAge;
-    }
-
-    bool supportsNativeFence() const
-    {
-        return m_haveNativeFence;
     }
 
     /**
@@ -98,9 +79,36 @@ public:
 
     virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const;
 
-    virtual EglDisplay *eglDisplayObject() const;
+    bool testImportBuffer(GraphicsBuffer *buffer) override;
+    QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
+
+    QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
+
+    std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
+    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;
+    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes, int plane, int format, const QSize &size) const;
+    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
+    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
+
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
 
 protected:
+    EglBackend();
+
+    void cleanup();
+    virtual void cleanupSurfaces();
+    void setEglDisplay(EglDisplay *display);
+    void initClientExtensions();
+    void initWayland();
+    bool hasClientExtension(const QByteArray &ext) const;
+    bool isOpenGLES() const;
+    bool createContext(EGLConfig config);
+
+    bool ensureGlobalShareContext(EGLConfig config);
+    void destroyGlobalShareContext();
+    ::EGLContext createContextInternal(::EGLContext sharedContext);
+    void teardown();
+
     /**
      * @brief Sets the backend initialization to failed.
      *
@@ -111,39 +119,16 @@ protected:
      */
     void setFailed(const QString &reason);
 
-    void setSupportsBufferAge(bool value)
-    {
-        m_haveBufferAge = value;
-    }
+    EglDisplay *m_display = nullptr;
+    std::shared_ptr<EglContext> m_context;
+    QList<QByteArray> m_clientExtensions;
+    QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
+    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 
-    void setSupportsNativeFence(bool value)
-    {
-        m_haveNativeFence = value;
-    }
-
-    /**
-     * Sets the platform-specific @p extensions.
-     *
-     * These are the EGL/GLX extensions, not the OpenGL extensions
-     */
-    void setExtensions(const QList<QByteArray> &extensions)
-    {
-        m_extensions = extensions;
-    }
-
-private:
-    /**
-     * @brief Whether the backend supports GLX_EXT_buffer_age / EGL_EXT_buffer_age.
-     */
-    bool m_haveBufferAge;
-    /**
-     * @brief Whether the backend supports EGL_ANDROID_native_fence_sync.
-     */
-    bool m_haveNativeFence = false;
     /**
      * @brief Whether the initialization failed, of course default to @c false.
      */
-    bool m_failed;
+    bool m_failed = false;
     QList<QByteArray> m_extensions;
 };
 

@@ -90,7 +90,7 @@ std::unique_ptr<QPainterBackend> VirtualBackend::createQPainterBackend()
     return std::make_unique<VirtualQPainterBackend>(this);
 }
 
-std::unique_ptr<OpenGLBackend> VirtualBackend::createOpenGLBackend()
+std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
 {
     return std::make_unique<VirtualEglBackend>(this);
 }

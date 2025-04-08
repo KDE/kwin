@@ -7,7 +7,7 @@
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "core/graphicsbufferview.h"
 #include "opengl/gltexture.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include "utils/common.h"
 
 #include <epoxy/egl.h>
@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-OpenGLSurfaceTexture::OpenGLSurfaceTexture(AbstractEglBackend *backend, SurfacePixmap *pixmap)
+OpenGLSurfaceTexture::OpenGLSurfaceTexture(EglBackend *backend, SurfacePixmap *pixmap)
     : m_backend(backend)
     , m_pixmap(pixmap)
 {

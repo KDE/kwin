@@ -23,7 +23,7 @@ namespace KWin
 
 class Output;
 class InputBackend;
-class OpenGLBackend;
+class EglBackend;
 class QPainterBackend;
 class OutputConfiguration;
 class EglDisplay;
@@ -49,7 +49,7 @@ public:
 
     virtual bool initialize() = 0;
     virtual std::unique_ptr<InputBackend> createInputBackend();
-    virtual std::unique_ptr<OpenGLBackend> createOpenGLBackend();
+    virtual std::unique_ptr<EglBackend> createOpenGLBackend();
     virtual std::unique_ptr<QPainterBackend> createQPainterBackend();
 
     virtual EglDisplay *sceneEglDisplayObject() const = 0;

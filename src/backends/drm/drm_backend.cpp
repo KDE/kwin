@@ -317,7 +317,7 @@ std::unique_ptr<QPainterBackend> DrmBackend::createQPainterBackend()
     return std::make_unique<DrmQPainterBackend>(this);
 }
 
-std::unique_ptr<OpenGLBackend> DrmBackend::createOpenGLBackend()
+std::unique_ptr<EglBackend> DrmBackend::createOpenGLBackend()
 {
     return std::make_unique<EglGbmBackend>(this);
 }

@@ -2,31 +2,29 @@
     KWin - the KDE window manager
     This file is part of the KDE project.
 
-    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/outputbackend.h"
 #include "main.h"
-#include "opengl/egl_context_attribute_builder.h"
+#include "opengl/eglimagetexture.h"
+#include "opengl/eglutils_p.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "utils/common.h"
+#include "utils/drm_format_helper.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
-// kwin libs
-#include "opengl/eglimagetexture.h"
-#include "opengl/eglutils_p.h"
-#include "opengl/glplatform.h"
-#include "opengl/glutils.h"
-#include "utils/drm_format_helper.h"
 
-#include <memory>
+#include <QElapsedTimer>
 
 #include <drm_fourcc.h>
+#include <unistd.h>
 #include <xf86drm.h>
 
 namespace KWin
@@ -34,16 +32,77 @@ namespace KWin
 
 static std::unique_ptr<EglContext> s_globalShareContext;
 
-AbstractEglBackend::AbstractEglBackend()
+EglBackend::EglBackend()
 {
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::teardown);
+    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &EglBackend::teardown);
 }
 
-AbstractEglBackend::~AbstractEglBackend()
+CompositingType EglBackend::compositingType() const
 {
+    return OpenGLCompositing;
 }
 
-bool AbstractEglBackend::ensureGlobalShareContext(EGLConfig config)
+void EglBackend::setFailed(const QString &reason)
+{
+    qCWarning(KWIN_OPENGL) << "Creating the OpenGL rendering failed: " << reason;
+    m_failed = true;
+}
+
+void EglBackend::copyPixels(const QRegion &region, const QSize &screenSize)
+{
+    const int height = screenSize.height();
+    for (const QRect &r : region) {
+        const int x0 = r.x();
+        const int y0 = height - r.y() - r.height();
+        const int x1 = r.x() + r.width();
+        const int y1 = height - r.y();
+
+        glBlitFramebuffer(x0, y0, x1, y1, x0, y0, x1, y1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+}
+
+std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglBackend::textureForOutput(Output *output) const
+{
+    return {nullptr, ColorDescription::sRGB};
+}
+
+bool EglBackend::checkGraphicsReset()
+{
+    const auto context = openglContext();
+    const GLenum status = context->checkGraphicsResetStatus();
+    if (Q_LIKELY(status == GL_NO_ERROR)) {
+        return false;
+    }
+
+    switch (status) {
+    case GL_GUILTY_CONTEXT_RESET:
+        qCWarning(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
+        break;
+    case GL_INNOCENT_CONTEXT_RESET:
+        qCWarning(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
+        break;
+    case GL_UNKNOWN_CONTEXT_RESET:
+        qCWarning(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
+        break;
+    default:
+        break;
+    }
+
+    QElapsedTimer timer;
+    timer.start();
+
+    // Wait until the reset is completed or max one second
+    while (timer.elapsed() < 10000 && context->checkGraphicsResetStatus() != GL_NO_ERROR) {
+        usleep(50);
+    }
+    if (timer.elapsed() >= 10000) {
+        qCWarning(KWIN_OPENGL) << "Waiting for glGetGraphicsResetStatus to return GL_NO_ERROR timed out!";
+    }
+
+    return true;
+}
+
+bool EglBackend::ensureGlobalShareContext(EGLConfig config)
 {
     if (!s_globalShareContext) {
         s_globalShareContext = EglContext::create(m_display, config, EGL_NO_CONTEXT);
@@ -56,7 +115,7 @@ bool AbstractEglBackend::ensureGlobalShareContext(EGLConfig config)
     }
 }
 
-void AbstractEglBackend::destroyGlobalShareContext()
+void EglBackend::destroyGlobalShareContext()
 {
     EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
     if (!eglDisplay || !s_globalShareContext) {
@@ -66,12 +125,12 @@ void AbstractEglBackend::destroyGlobalShareContext()
     kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
 }
 
-void AbstractEglBackend::teardown()
+void EglBackend::teardown()
 {
     destroyGlobalShareContext();
 }
 
-void AbstractEglBackend::cleanup()
+void EglBackend::cleanup()
 {
     for (const EGLImageKHR &image : m_importedBuffers) {
         m_display->destroyImage(image);
@@ -81,19 +140,17 @@ void AbstractEglBackend::cleanup()
     m_context.reset();
 }
 
-void AbstractEglBackend::cleanupSurfaces()
+void EglBackend::cleanupSurfaces()
 {
 }
 
-void AbstractEglBackend::setEglDisplay(EglDisplay *display)
+void EglBackend::setEglDisplay(EglDisplay *display)
 {
     m_display = display;
-    setExtensions(m_display->extensions());
-    setSupportsNativeFence(m_display->supportsNativeFence());
-    setSupportsBufferAge(m_display->supportsBufferAge());
+    m_extensions = m_display->extensions();
 }
 
-void AbstractEglBackend::initWayland()
+void EglBackend::initWayland()
 {
     if (!WaylandServer::self()) {
         return;
@@ -197,7 +254,7 @@ void AbstractEglBackend::initWayland()
     waylandServer()->setRenderBackend(this);
 }
 
-void AbstractEglBackend::initClientExtensions()
+void EglBackend::initClientExtensions()
 {
     // Get the list of client extensions
     const char *clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
@@ -214,17 +271,17 @@ void AbstractEglBackend::initClientExtensions()
     m_clientExtensions = clientExtensionsString.split(' ');
 }
 
-bool AbstractEglBackend::hasClientExtension(const QByteArray &ext) const
+bool EglBackend::hasClientExtension(const QByteArray &ext) const
 {
     return m_clientExtensions.contains(ext);
 }
 
-bool AbstractEglBackend::isOpenGLES() const
+bool EglBackend::isOpenGLES() const
 {
     return EglDisplay::shouldUseOpenGLES();
 }
 
-bool AbstractEglBackend::createContext(EGLConfig config)
+bool EglBackend::createContext(EGLConfig config)
 {
     if (!ensureGlobalShareContext(config)) {
         return false;
@@ -233,12 +290,12 @@ bool AbstractEglBackend::createContext(EGLConfig config)
     return m_context != nullptr;
 }
 
-QList<LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
+QList<LinuxDmaBufV1Feedback::Tranche> EglBackend::tranches() const
 {
     return m_tranches;
 }
 
-EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
+EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
 {
     std::pair key(buffer, plane);
     auto it = m_importedBuffers.constFind(key);
@@ -260,7 +317,7 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer, int 
     return image;
 }
 
-EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer)
+EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer)
 {
     auto key = std::pair(buffer, 0);
     auto it = m_importedBuffers.constFind(key);
@@ -282,22 +339,22 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer)
     return image;
 }
 
-EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
+EGLImageKHR EglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
 {
     return m_display->importDmaBufAsImage(dmabuf);
 }
 
-EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const
+EGLImageKHR EglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const
 {
     return m_display->importDmaBufAsImage(dmabuf, plane, format, size);
 }
 
-std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
+std::shared_ptr<GLTexture> EglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
 {
     return m_context->importDmaBufAsTexture(attributes);
 }
 
-bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
+bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
     const auto nonExternalOnly = m_display->nonExternalOnlySupportedDrmFormats();
     if (auto it = nonExternalOnly.find(buffer->dmabufAttributes()->format); it != nonExternalOnly.end() && it->contains(buffer->dmabufAttributes()->modifier)) {
@@ -320,30 +377,31 @@ bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
     return true;
 }
 
-QHash<uint32_t, QList<uint64_t>> AbstractEglBackend::supportedFormats() const
+QHash<uint32_t, QList<uint64_t>> EglBackend::supportedFormats() const
 {
     return m_display->nonExternalOnlySupportedDrmFormats();
 }
 
-EglDisplay *AbstractEglBackend::eglDisplayObject() const
+EglDisplay *EglBackend::eglDisplayObject() const
 {
     return m_display;
 }
 
-EglContext *AbstractEglBackend::openglContext() const
+EglContext *EglBackend::openglContext() const
 {
     return m_context.get();
 }
 
-std::shared_ptr<EglContext> AbstractEglBackend::openglContextRef() const
+std::shared_ptr<EglContext> EglBackend::openglContextRef() const
 {
     return m_context;
 }
 
-std::unique_ptr<SurfaceTexture> AbstractEglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
+std::unique_ptr<SurfaceTexture> EglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
 {
     return std::make_unique<OpenGLSurfaceTexture>(this, pixmap);
 }
-}
 
-#include "moc_abstract_egl_backend.cpp"
+} // namespace KWin
+
+#include "moc_eglbackend.cpp"

@@ -10,7 +10,7 @@
 #include "drm_plane.h"
 #include "drm_render_backend.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 
 #include <QHash>
 #include <QPointer>
@@ -35,7 +35,7 @@ class EglDisplay;
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  */
-class EglGbmBackend : public AbstractEglBackend, public DrmRenderBackend
+class EglGbmBackend : public EglBackend, public DrmRenderBackend
 {
     Q_OBJECT
 public:
