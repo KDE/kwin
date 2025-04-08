@@ -72,11 +72,6 @@ public:
         return m_extensions.contains(extension);
     }
 
-    /**
-     * Copy a region of pixels from the current read to the current draw buffer
-     */
-    void copyPixels(const QRegion &region, const QSize &screenSize);
-
     virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const;
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;

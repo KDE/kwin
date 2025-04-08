@@ -48,19 +48,6 @@ void EglBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-void EglBackend::copyPixels(const QRegion &region, const QSize &screenSize)
-{
-    const int height = screenSize.height();
-    for (const QRect &r : region) {
-        const int x0 = r.x();
-        const int y0 = height - r.y() - r.height();
-        const int x1 = r.x() + r.width();
-        const int y1 = height - r.y();
-
-        glBlitFramebuffer(x0, y0, x1, y1, x0, y0, x1, y1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    }
-}
-
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglBackend::textureForOutput(Output *output) const
 {
     return {nullptr, ColorDescription::sRGB};
