@@ -33,12 +33,6 @@ public:
     std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *impl) override;
     std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) override;
     bool animationsSupported() const override;
-
-    EglBackend *backend() const
-    {
-        return m_backend;
-    }
-
     std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
 
 private:
