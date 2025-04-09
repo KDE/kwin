@@ -452,6 +452,7 @@ Q_SIGNALS:
     void brightnessChanged();
     void colorPowerTradeoffChanged();
     void dimmingChanged();
+    void uuidChanged();
 
 protected:
     struct Information

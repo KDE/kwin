@@ -634,6 +634,9 @@ void Output::setState(const State &state)
     if (oldState.dimming != state.dimming) {
         Q_EMIT dimmingChanged();
     }
+    if (oldState.uuid != state.uuid) {
+        Q_EMIT uuidChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
