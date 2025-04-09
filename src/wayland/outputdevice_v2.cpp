@@ -278,6 +278,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
     connect(handle, &Output::colorPowerTradeoffChanged, this, &OutputDeviceV2Interface::updateColorPowerTradeoff);
     connect(handle, &Output::dimmingChanged, this, &OutputDeviceV2Interface::updateDimming);
+    connect(handle, &Output::uuidChanged, this, &OutputDeviceV2Interface::updateUuid);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
