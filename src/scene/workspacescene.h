@@ -14,16 +14,13 @@
 namespace KWin
 {
 
-class Deleted;
 class DragAndDropIconItem;
 class EffectWindow;
+class EglContext;
 class Item;
-class RenderLoop;
-class WorkspaceScene;
 class SurfaceItem;
 class WindowItem;
 class WindowPaintData;
-class EglContext;
 
 class KWIN_EXPORT WorkspaceScene : public Scene
 {

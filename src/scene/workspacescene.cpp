@@ -60,24 +60,18 @@
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
-#include "internalwindow.h"
 #include "opengl/eglcontext.h"
 #include "platformsupport/scenes/opengl/eglbackend.h"
 #include "scene/decorationitem.h"
 #include "scene/dndiconitem.h"
 #include "scene/itemrenderer.h"
 #include "scene/rootitem.h"
-#include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
-#include "shadow.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#if KWIN_BUILD_X11
-#include "x11window.h"
-#endif
 
 #include <QtMath>
 
