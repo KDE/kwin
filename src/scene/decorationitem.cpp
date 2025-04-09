@@ -8,7 +8,10 @@
 #include "scene/decorationitem.h"
 #include "compositor.h"
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "decorations/decoratedwindow.h"
+#include "opengl/eglcontext.h"
+#include "opengl/gltexture.h"
 #include "scene/workspacescene.h"
 #include "window.h"
 
@@ -16,6 +19,8 @@
 
 #include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
+
+#include <QPainter>
 
 namespace KWin
 {
@@ -88,12 +93,300 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRectF &rect)
     client()->decoration()->paint(painter, rect);
 }
 
+SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedWindowImpl *client)
+    : DecorationRenderer(client)
+    , m_texture()
+{
+}
+
+SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer()
+{
+    if (WorkspaceScene *scene = Compositor::self()->scene()) {
+        scene->openglContext()->makeCurrent();
+    }
+}
+
+static void clamp_row(int left, int width, int right, const uint32_t *src, uint32_t *dest)
+{
+    std::fill_n(dest, left, *src);
+    std::copy(src, src + width, dest + left);
+    std::fill_n(dest + left + width, right, *(src + width - 1));
+}
+
+static void clamp_sides(int left, int width, int right, const uint32_t *src, uint32_t *dest)
+{
+    std::fill_n(dest, left, *src);
+    std::fill_n(dest + left + width, right, *(src + width - 1));
+}
+
+static void clamp(QImage &image, const QRect &viewport)
+{
+    Q_ASSERT(image.depth() == 32);
+    if (viewport.isEmpty()) {
+        image = {};
+        return;
+    }
+
+    const QRect rect = image.rect();
+
+    const int left = viewport.left() - rect.left();
+    const int top = viewport.top() - rect.top();
+    const int right = rect.right() - viewport.right();
+    const int bottom = rect.bottom() - viewport.bottom();
+
+    const int width = rect.width() - left - right;
+    const int height = rect.height() - top - bottom;
+
+    const uint32_t *firstRow = reinterpret_cast<uint32_t *>(image.scanLine(top));
+    const uint32_t *lastRow = reinterpret_cast<uint32_t *>(image.scanLine(top + height - 1));
+
+    for (int i = 0; i < top; ++i) {
+        uint32_t *dest = reinterpret_cast<uint32_t *>(image.scanLine(i));
+        clamp_row(left, width, right, firstRow + left, dest);
+    }
+
+    for (int i = 0; i < height; ++i) {
+        uint32_t *dest = reinterpret_cast<uint32_t *>(image.scanLine(top + i));
+        clamp_sides(left, width, right, dest + left, dest);
+    }
+
+    for (int i = 0; i < bottom; ++i) {
+        uint32_t *dest = reinterpret_cast<uint32_t *>(image.scanLine(top + height + i));
+        clamp_row(left, width, right, lastRow + left, dest);
+    }
+}
+
+void SceneOpenGLDecorationRenderer::render(const QRegion &region)
+{
+    if (areImageSizesDirty()) {
+        resizeTexture();
+        resetImageSizesDirty();
+    }
+
+    if (!m_texture) {
+        // for invalid sizes we get no texture, see BUG 361551
+        return;
+    }
+
+    QRectF left, top, right, bottom;
+    client()->window()->layoutDecorationRects(left, top, right, bottom);
+
+    const qreal devicePixelRatio = effectiveDevicePixelRatio();
+    const int topHeight = std::round(top.height() * devicePixelRatio);
+    const int bottomHeight = std::round(bottom.height() * devicePixelRatio);
+    const int leftWidth = std::round(left.width() * devicePixelRatio);
+
+    const QPoint topPosition(0, 0);
+    const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * TexturePad));
+    const QPoint leftPosition(0, bottomPosition.y() + bottomHeight + (2 * TexturePad));
+    const QPoint rightPosition(0, leftPosition.y() + leftWidth + (2 * TexturePad));
+
+    const QRect dirtyRect = region.boundingRect();
+
+    renderPart(top.intersected(dirtyRect), top, topPosition, devicePixelRatio);
+    renderPart(bottom.intersected(dirtyRect), bottom, bottomPosition, devicePixelRatio);
+    renderPart(left.intersected(dirtyRect), left, leftPosition, devicePixelRatio, true);
+    renderPart(right.intersected(dirtyRect), right, rightPosition, devicePixelRatio, true);
+}
+
+void SceneOpenGLDecorationRenderer::renderPart(const QRectF &rect, const QRectF &partRect,
+                                               const QPoint &textureOffset,
+                                               qreal devicePixelRatio, bool rotated)
+{
+    if (!rect.isValid() || !m_texture) {
+        return;
+    }
+    // We allow partial decoration updates and it might just so happen that the
+    // dirty region is completely contained inside the decoration part, i.e.
+    // the dirty region doesn't touch any of the decoration's edges. In that
+    // case, we should **not** pad the dirty region.
+    const QMargins padding = texturePadForPart(rect, partRect);
+    int verticalPadding = padding.top() + padding.bottom();
+    int horizontalPadding = padding.left() + padding.right();
+
+    QSize imageSize(toNativeSize(rect.width()), toNativeSize(rect.height()));
+    if (rotated) {
+        imageSize = QSize(imageSize.height(), imageSize.width());
+    }
+    QSize paddedImageSize = imageSize;
+    paddedImageSize.rheight() += verticalPadding;
+    paddedImageSize.rwidth() += horizontalPadding;
+    QImage image(paddedImageSize, QImage::Format_ARGB32_Premultiplied);
+    image.setDevicePixelRatio(devicePixelRatio);
+    image.fill(Qt::transparent);
+
+    QRect padClip = QRect(padding.left(), padding.top(), imageSize.width(), imageSize.height());
+    QPainter painter(&image);
+    const qreal inverseScale = 1.0 / devicePixelRatio;
+    painter.scale(inverseScale, inverseScale);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setClipRect(padClip);
+    painter.translate(padding.left(), padding.top());
+    if (rotated) {
+        painter.translate(0, imageSize.height());
+        painter.rotate(-90);
+    }
+    painter.scale(devicePixelRatio, devicePixelRatio);
+    painter.translate(-rect.topLeft());
+    renderToPainter(&painter, rect);
+    painter.end();
+
+    // fill padding pixels by copying from the neighbour row
+    clamp(image, padClip);
+
+    QPoint dirtyOffset = ((rect.topLeft() - partRect.topLeft()) * devicePixelRatio).toPoint();
+    if (padding.top() == 0) {
+        dirtyOffset.ry() += TexturePad;
+    }
+    if (padding.left() == 0) {
+        dirtyOffset.rx() += TexturePad;
+    }
+    m_texture->update(image, image.rect(), textureOffset + dirtyOffset);
+}
+
+const QMargins SceneOpenGLDecorationRenderer::texturePadForPart(
+    const QRectF &rect, const QRectF &partRect)
+{
+    QMargins result = QMargins(0, 0, 0, 0);
+    if (rect.top() == partRect.top()) {
+        result.setTop(TexturePad);
+    }
+    if (rect.bottom() == partRect.bottom()) {
+        result.setBottom(TexturePad);
+    }
+    if (rect.left() == partRect.left()) {
+        result.setLeft(TexturePad);
+    }
+    if (rect.right() == partRect.right()) {
+        result.setRight(TexturePad);
+    }
+    return result;
+}
+
+static int align(int value, int align)
+{
+    return (value + align - 1) & ~(align - 1);
+}
+
+void SceneOpenGLDecorationRenderer::resizeTexture()
+{
+    QRectF left, top, right, bottom;
+    client()->window()->layoutDecorationRects(left, top, right, bottom);
+    QSize size;
+
+    size.rwidth() = toNativeSize(std::max({top.width(), bottom.width(), left.height(), right.height()}));
+    size.rheight() = toNativeSize(top.height()) + toNativeSize(bottom.height()) + toNativeSize(left.width()) + toNativeSize(right.width());
+
+    size.rheight() += 4 * (2 * TexturePad);
+    size.rwidth() += 2 * TexturePad;
+    size.rwidth() = align(size.width(), 128);
+
+    if (m_texture && m_texture->size() == size) {
+        return;
+    }
+
+    if (!size.isEmpty()) {
+        m_texture = GLTexture::allocate(GL_RGBA8, size);
+        if (!m_texture) {
+            return;
+        }
+        m_texture->setContentTransform(OutputTransform::FlipY);
+        m_texture->setFilter(GL_LINEAR);
+        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
+    } else {
+        m_texture.reset();
+    }
+}
+
+int SceneOpenGLDecorationRenderer::toNativeSize(double size) const
+{
+    return std::round(size * effectiveDevicePixelRatio());
+}
+
+SceneQPainterDecorationRenderer::SceneQPainterDecorationRenderer(Decoration::DecoratedWindowImpl *client)
+    : DecorationRenderer(client)
+{
+}
+
+QImage SceneQPainterDecorationRenderer::image(SceneQPainterDecorationRenderer::DecorationPart part) const
+{
+    Q_ASSERT(part != DecorationPart::Count);
+    return m_images[int(part)];
+}
+
+void SceneQPainterDecorationRenderer::render(const QRegion &region)
+{
+    if (areImageSizesDirty()) {
+        resizeImages();
+        resetImageSizesDirty();
+    }
+
+    auto imageSize = [this](DecorationPart part) {
+        return m_images[int(part)].size() / m_images[int(part)].devicePixelRatio();
+    };
+
+    const QRect top(QPoint(0, 0), imageSize(DecorationPart::Top));
+    const QRect left(QPoint(0, top.height()), imageSize(DecorationPart::Left));
+    const QRect right(QPoint(top.width() - imageSize(DecorationPart::Right).width(), top.height()), imageSize(DecorationPart::Right));
+    const QRect bottom(QPoint(0, left.y() + left.height()), imageSize(DecorationPart::Bottom));
+
+    const QRect geometry = region.boundingRect();
+    auto renderPart = [this](const QRect &rect, const QRect &partRect, int index) {
+        if (rect.isEmpty()) {
+            return;
+        }
+        QPainter painter(&m_images[index]);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setWindow(QRect(partRect.topLeft(), partRect.size() * effectiveDevicePixelRatio()));
+        painter.setClipRect(rect);
+        painter.save();
+        // clear existing part
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(rect, Qt::transparent);
+        painter.restore();
+        client()->decoration()->paint(&painter, rect);
+    };
+
+    renderPart(left.intersected(geometry), left, int(DecorationPart::Left));
+    renderPart(top.intersected(geometry), top, int(DecorationPart::Top));
+    renderPart(right.intersected(geometry), right, int(DecorationPart::Right));
+    renderPart(bottom.intersected(geometry), bottom, int(DecorationPart::Bottom));
+}
+
+void SceneQPainterDecorationRenderer::resizeImages()
+{
+    QRectF left, top, right, bottom;
+    client()->window()->layoutDecorationRects(left, top, right, bottom);
+
+    auto checkAndCreate = [this](int index, const QSizeF &size) {
+        auto dpr = effectiveDevicePixelRatio();
+        if (m_images[index].size() != size * dpr || m_images[index].devicePixelRatio() != dpr) {
+            m_images[index] = QImage(size.toSize() * dpr, QImage::Format_ARGB32_Premultiplied);
+            m_images[index].setDevicePixelRatio(dpr);
+            m_images[index].fill(Qt::transparent);
+        }
+    };
+    checkAndCreate(int(DecorationPart::Left), left.size());
+    checkAndCreate(int(DecorationPart::Right), right.size());
+    checkAndCreate(int(DecorationPart::Top), top.size());
+    checkAndCreate(int(DecorationPart::Bottom), bottom.size());
+}
+
 DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *window, Item *parent)
     : Item(parent)
     , m_window(window)
     , m_decoration(decoration)
 {
-    m_renderer = Compositor::self()->scene()->createDecorationRenderer(window->decoratedWindow());
+    switch (Compositor::self()->backend()->compositingType()) {
+    case OpenGLCompositing:
+        m_renderer = std::make_unique<SceneOpenGLDecorationRenderer>(window->decoratedWindow());
+        break;
+    case QPainterCompositing:
+        m_renderer = std::make_unique<SceneQPainterDecorationRenderer>(window->decoratedWindow());
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
 
     connect(window, &Window::targetScaleChanged, this, &DecorationItem::updateScale);
 

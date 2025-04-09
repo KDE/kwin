@@ -15,12 +15,6 @@
 namespace KWin
 {
 
-namespace Decoration
-{
-class DecoratedWindowImpl;
-}
-
-class DecorationRenderer;
 class Deleted;
 class DragAndDropIconItem;
 class EffectWindow;
@@ -54,8 +48,6 @@ public:
     double desiredHdrHeadroom() const override;
 
     virtual EglContext *openglContext() const;
-
-    virtual std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *) = 0;
 
     /**
      * Whether the Scene is able to drive animations.

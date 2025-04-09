@@ -17,7 +17,7 @@
 #include "scene/imageitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
-#include "scene/workspacescene_opengl.h"
+#include "scene/workspacescene.h"
 #include "utils/common.h"
 
 namespace KWin

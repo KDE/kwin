@@ -10,7 +10,6 @@
 
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 
-#include "scene/decorationitem.h"
 #include "scene/workspacescene.h"
 
 namespace KWin
@@ -24,8 +23,6 @@ public:
     explicit WorkspaceSceneQPainter(QPainterBackend *backend);
     ~WorkspaceSceneQPainter() override;
 
-    std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *impl) override;
-
     bool animationsSupported() const override
     {
         return false;
@@ -38,28 +35,6 @@ public:
 
 private:
     QPainterBackend *m_backend;
-};
-
-class SceneQPainterDecorationRenderer : public DecorationRenderer
-{
-    Q_OBJECT
-public:
-    enum class DecorationPart : int {
-        Left,
-        Top,
-        Right,
-        Bottom,
-        Count
-    };
-    explicit SceneQPainterDecorationRenderer(Decoration::DecoratedWindowImpl *client);
-
-    void render(const QRegion &region) override;
-
-    QImage image(DecorationPart part) const;
-
-private:
-    void resizeImages();
-    QImage m_images[int(DecorationPart::Count)];
 };
 
 } // KWin
