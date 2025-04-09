@@ -41,22 +41,9 @@ std::unique_ptr<DecorationRenderer> WorkspaceSceneQPainter::createDecorationRend
     return std::make_unique<SceneQPainterDecorationRenderer>(impl);
 }
 
-std::unique_ptr<ShadowTextureProvider> WorkspaceSceneQPainter::createShadowTextureProvider(Shadow *shadow)
-{
-    return std::make_unique<QPainterShadowTextureProvider>(shadow);
-}
-
 //****************************************
 // QPainterShadow
 //****************************************
-QPainterShadowTextureProvider::QPainterShadowTextureProvider(Shadow *shadow)
-    : ShadowTextureProvider(shadow)
-{
-}
-
-void QPainterShadowTextureProvider::update()
-{
-}
 
 //****************************************
 // QPainterDecorationRenderer

@@ -28,9 +28,6 @@ class GLTexture;
 class Item;
 class RenderLoop;
 class WorkspaceScene;
-class Shadow;
-class ShadowItem;
-class ShadowTextureProvider;
 class SurfaceItem;
 class WindowItem;
 class WindowPaintData;
@@ -59,7 +56,6 @@ public:
     virtual EglContext *openglContext() const;
 
     virtual std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedWindowImpl *) = 0;
-    virtual std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) = 0;
 
     /**
      * Whether the Scene is able to drive animations.
