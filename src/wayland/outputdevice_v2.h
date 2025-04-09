@@ -81,6 +81,7 @@ private:
     void updateBrightness();
     void updateColorPowerTradeoff();
     void updateDimming();
+    void updateReplicationSource();
 
     void scheduleDone();
 

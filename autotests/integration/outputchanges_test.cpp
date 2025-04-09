@@ -239,20 +239,25 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
+    {
+        OutputConfiguration config;
+        config.changeSet(outputs[0])->pos = QPoint(20, 20);
+        workspace()->applyOutputConfiguration(config);
+    }
+
     // Move the window to some predefined position so the test is more robust.
     window->move(QPoint(42, 67));
     QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
 
-    // Disable the first output.
-    OutputConfiguration config;
+    // move the first output
     {
-        auto changeSet = config.changeSet(outputs[0]);
-        changeSet->pos = QPoint(-10, 20);
+        OutputConfiguration config;
+        config.changeSet(outputs[0])->pos = QPoint(0, 40);
+        workspace()->applyOutputConfiguration(config);
     }
-    workspace()->applyOutputConfiguration(config);
 
     // The position of the window relative to its output should remain the same.
-    QCOMPARE(window->frameGeometry(), QRect(-10 + 42, 20 + 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), QRect(42 - 20, 67 + 20, 100, 50));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRight()

@@ -55,6 +55,7 @@ public:
     std::optional<double> dimming;
     std::optional<BrightnessDevice *> brightnessDevice;
     std::optional<QString> uuid;
+    std::optional<QString> replicationSource;
 };
 
 class KWIN_EXPORT OutputConfiguration

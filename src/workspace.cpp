@@ -214,9 +214,9 @@ void Workspace::init()
 
         const auto applySensorChanges = [this]() {
             m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-            const auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+            auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
             if (opt) {
-                const auto &[config, order, type] = *opt;
+                auto &[config, order, type] = *opt;
                 applyOutputConfiguration(config, order);
             }
         };
@@ -416,8 +416,9 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-OutputConfigurationError Workspace::applyOutputConfiguration(const OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
+OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
 {
+    m_outputConfigStore->applyMirroring(config, kwinApp()->outputBackend()->outputs());
     auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
     if (error != OutputConfigurationError::None) {
         return error;

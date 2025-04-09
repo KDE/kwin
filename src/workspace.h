@@ -473,7 +473,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    OutputConfigurationError applyOutputConfiguration(const OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt);
+    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt);
     void updateXwaylandScale();
 
 public Q_SLOTS:

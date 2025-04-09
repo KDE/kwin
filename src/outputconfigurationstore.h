@@ -38,6 +38,7 @@ public:
     std::optional<std::tuple<OutputConfiguration, QList<Output *>, ConfigType>> queryConfig(const QList<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
     void storeConfig(const QList<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<Output *> &outputOrder);
 
+    void applyMirroring(OutputConfiguration &config, const QList<Output *> &outputs);
     bool isAutoRotateActive(const QList<Output *> &outputs, bool isTabletMode) const;
 
 private:
@@ -91,6 +92,7 @@ private:
         QPoint position;
         bool enabled;
         int priority;
+        QString replicationSource;
     };
     struct Setup
     {

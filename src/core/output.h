@@ -385,6 +385,7 @@ public:
     bool allowSdrSoftwareBrightness() const;
 
     ColorPowerTradeoff colorPowerTradeoff() const;
+    QString replicationSource() const;
 
 Q_SIGNALS:
     /**
@@ -453,6 +454,7 @@ Q_SIGNALS:
     void colorPowerTradeoffChanged();
     void dimmingChanged();
     void uuidChanged();
+    void replicationSourceChanged();
 
 protected:
     struct Information
@@ -517,6 +519,7 @@ protected:
         double dimming = 1.0;
         BrightnessDevice *brightnessDevice = nullptr;
         QString uuid;
+        QString replicationSource;
     };
 
     void setInformation(const Information &information);

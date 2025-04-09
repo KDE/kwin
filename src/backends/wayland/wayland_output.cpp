@@ -336,6 +336,7 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
         tf.maxLuminance,
     };
     next.uuid = props->uuid.value_or(m_state.uuid);
+    next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     setState(next);
 
     if (m_colorSurface) {

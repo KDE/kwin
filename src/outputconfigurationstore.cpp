@@ -52,11 +52,13 @@ std::optional<std::tuple<OutputConfiguration, QList<Output *>, OutputConfigurati
         const auto &[setup, outputStates] = *opt;
         auto [config, order] = setupToConfig(setup, outputStates);
         applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
+        applyMirroring(config, relevantOutputs);
         storeConfig(relevantOutputs, isLidClosed, config, order);
         return std::make_tuple(config, order, ConfigType::Preexisting);
     }
     auto [config, order] = generateConfig(relevantOutputs, isLidClosed);
     applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
+    applyMirroring(config, relevantOutputs);
     storeConfig(relevantOutputs, isLidClosed, config, order);
     return std::make_tuple(config, order, ConfigType::Generated);
 }
@@ -95,6 +97,85 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
     case QOrientationReading::Orientation::Undefined:
         changeset->transform = changeset->manualTransform;
         return;
+    }
+}
+
+void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const QList<Output *> &outputs)
+{
+    for (const auto output : outputs) {
+        const auto changeset = config.changeSet(output);
+        const QString mirrorSource = changeset->replicationSource.value_or(output->replicationSource());
+        if (mirrorSource.isEmpty()) {
+            continue;
+        }
+        const auto sourceIt = std::ranges::find_if(outputs, [&](Output *o) {
+            return config.changeSet(o)->uuid.value_or(o->uuid()) == mirrorSource;
+        });
+        if (sourceIt == outputs.end()) {
+            continue;
+        }
+        Output *const source = *sourceIt;
+        if (source == output) {
+            qCWarning(KWIN_CORE, "Output %s is trying to mirror itself, that shouldn't happen!", qPrintable(output->name()));
+            continue;
+        }
+        const auto sourceChange = config.changeSet(source);
+        auto sourceMode = sourceChange->mode.value_or(source->currentMode()).lock();
+        if (!sourceMode) {
+            continue;
+        }
+        const auto sourcePosition = sourceChange->pos.value_or(source->geometry().topLeft());
+        const auto sourceScale = sourceChange->scale.value_or(source->scale());
+        const auto sourceTransform = sourceChange->transform.value_or(source->transform());
+        const auto sourceModeSize = sourceTransform.map(sourceMode->size());
+        const auto logicalSourceSize = sourceModeSize / sourceScale;
+        const auto transform = changeset->transform.value_or(output->transform());
+        const auto modes = output->modes();
+        auto sameAspect = modes | std::views::filter([sourceModeSize, transform](const auto &mode) {
+            const double aspect1 = sourceModeSize.width() / double(sourceModeSize.height());
+            const auto size = transform.map(mode->size());
+            const double aspect2 = size.width() / double(size.height());
+            return std::abs(aspect1 - aspect2) < 0.01;
+        });
+        if (!sameAspect.empty()) {
+            changeset->mode = sameAspect.front();
+            changeset->scale = std::round(transform.map(sameAspect.front()->size()).width() / double(logicalSourceSize.width()) * 120) / 120.0;
+            changeset->pos = sourcePosition;
+            continue;
+        }
+        const auto mode = changeset->mode.value_or(output->currentMode()).lock();
+        if (!mode) {
+            continue;
+        }
+        // we can't do anything good here without additional infrastructure to handle mirroring explicitly
+        // next-best workaround for now: make the outputs equal height or width through scaling, and then center it on the other axis
+        const auto modeSize = transform.map(mode->size());
+        if (modeSize.width() > modeSize.height()) {
+            changeset->scale = std::round(modeSize.height() / double(logicalSourceSize.height()) * 120) / 120.0;
+            const QSize logicalSize = modeSize / *changeset->scale;
+            changeset->pos = QPoint(sourcePosition.x() + logicalSourceSize.width() / 2 - logicalSize.width() / 2, sourcePosition.y());
+        } else {
+            changeset->scale = std::round(modeSize.width() / double(logicalSourceSize.width()) * 120) / 120.0;
+            const QSize logicalSize = modeSize / *changeset->scale;
+            changeset->pos = QPoint(sourcePosition.x(), sourcePosition.y() + logicalSourceSize.height() / 2 - logicalSize.height() / 2);
+        }
+    }
+    // the fallback logic above may push some output into negative coordinates,
+    // which causes issues with Xwayland -> shift all of them to be positive
+    for (Output *output : outputs) {
+        const auto changeset = config.changeSet(output);
+        if (!changeset->pos.has_value()) {
+            continue;
+        }
+        const QPoint pos = *changeset->pos;
+        if (pos.x() >= 0 && pos.y() >= 0) {
+            continue;
+        }
+        for (Output *output : outputs) {
+            const auto changeset = config.changeSet(output);
+            const auto otherPos = changeset->pos.value_or(output->geometry().topLeft());
+            changeset->pos = otherPos - QPoint(std::min(pos.x(), 0), std::min(pos.y(), 0));
+        }
     }
 }
 
@@ -299,6 +380,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .position = changeSet->pos.value_or(output->geometry().topLeft()),
                 .enabled = changeSet->enabled.value_or(output->isEnabled()),
                 .priority = int(outputOrder.indexOf(output)),
+                .replicationSource = changeSet->replicationSource.value_or(output->replicationSource()),
             };
         } else {
             QSize modeSize = output->desiredModeSize();
@@ -344,6 +426,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .position = output->geometry().topLeft(),
                 .enabled = output->isEnabled(),
                 .priority = int(outputOrder.indexOf(output)),
+                .replicationSource = output->replicationSource(),
             };
         }
     }
@@ -396,6 +479,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .allowSdrSoftwareBrightness = state.allowSdrSoftwareBrightness,
             .colorPowerTradeoff = state.colorPowerTradeoff,
             .uuid = state.uuid,
+            .replicationSource = setupState.replicationSource,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -950,6 +1034,9 @@ void OutputConfigurationStore::load()
                     break;
                 }
             }
+            if (const auto it = outputData.find("replicationSource"); it != outputData.end()) {
+                state.replicationSource = it->toString();
+            }
             setup.outputs.push_back(state);
         }
         if (fail || setup.outputs.empty()) {
@@ -1174,6 +1261,7 @@ void OutputConfigurationStore::save()
             pos["x"] = output.position.x();
             pos["y"] = output.position.y();
             o["position"] = pos;
+            o["replicationSource"] = output.replicationSource;
 
             outputs.append(o);
         }
