@@ -10,7 +10,7 @@
 #include <QPointer>
 #include <QStringList>
 // Wayland
-#include <qwayland-server-wp-primary-selection-unstable-v1.h>
+#include <qwayland-server-primary-selection-unstable-v1.h>
 // system
 #include <unistd.h>
 

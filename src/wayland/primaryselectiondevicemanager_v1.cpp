@@ -10,7 +10,7 @@
 #include "primaryselectionsource_v1.h"
 #include "seat_p.h"
 // Wayland
-#include <qwayland-server-wp-primary-selection-unstable-v1.h>
+#include <qwayland-server-primary-selection-unstable-v1.h>
 
 static const int s_version = 1;
 namespace KWin
