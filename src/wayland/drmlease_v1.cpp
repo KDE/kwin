@@ -97,13 +97,13 @@ void DrmLeaseDeviceV1Interface::removeOutput(DrmAbstractOutput *output)
     if (it != m_connectors.end()) {
         DrmLeaseConnectorV1Interface *connector = it->second.get();
         connector->withdraw();
-        for (const auto &lease : std::as_const(m_leases)) {
+        for (DrmLeaseV1Interface *lease : std::as_const(m_leases)) {
             if (lease->connectors().contains(connector)) {
                 lease->connectors().removeOne(connector);
                 lease->revoke();
             }
         }
-        for (const auto &leaseRequest : std::as_const(m_leaseRequests)) {
+        for (DrmLeaseRequestV1Interface *leaseRequest : std::as_const(m_leaseRequests)) {
             if (leaseRequest->connectors().contains(connector)) {
                 leaseRequest->invalidate();
             }
@@ -133,7 +133,7 @@ void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
             connector->withdraw();
         }
         // and revoke all leases
-        for (const auto &lease : std::as_const(m_leases)) {
+        for (DrmLeaseV1Interface *lease : std::as_const(m_leases)) {
             lease->revoke();
         }
     }
@@ -151,13 +151,13 @@ void DrmLeaseDeviceV1Interface::done()
 
 void DrmLeaseDeviceV1Interface::remove()
 {
-    for (const auto &lease : std::as_const(m_leases)) {
+    for (DrmLeaseV1Interface *lease : std::as_const(m_leases)) {
         lease->deny();
     }
     for (const auto &[output, connector] : m_connectors) {
         connector->withdraw();
     }
-    for (const auto &request : std::as_const(m_leaseRequests)) {
+    for (DrmLeaseRequestV1Interface *request : std::as_const(m_leaseRequests)) {
         request->invalidate();
     }
     done();
@@ -196,7 +196,7 @@ DrmGpu *DrmLeaseDeviceV1Interface::gpu() const
 
 void DrmLeaseDeviceV1Interface::offerConnector(DrmLeaseConnectorV1Interface *connector)
 {
-    for (const auto &resource : resourceMap()) {
+    for (const Resource *resource : resourceMap()) {
         auto connectorResource = connector->add(resource->client(), 0, resource->version());
         send_connector(resource->handle, connectorResource->handle);
         connector->send(connectorResource->handle);
@@ -291,7 +291,7 @@ void DrmLeaseConnectorV1Interface::withdraw()
 {
     if (!m_withdrawn) {
         m_withdrawn = true;
-        for (const auto &resource : resourceMap()) {
+        for (const Resource *resource : resourceMap()) {
             send_withdrawn(resource->handle);
         }
     }
@@ -362,7 +362,7 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resour
         wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_EMPTY_LEASE, "Requested lease without connectors");
     } else {
         QList<DrmOutput *> outputs;
-        for (const auto &connector : m_connectors) {
+        for (const DrmLeaseConnectorV1Interface *connector : m_connectors) {
             outputs.push_back(connector->output());
         }
         auto drmLease = m_device->gpu()->leaseOutputs(outputs);
@@ -403,7 +403,7 @@ void DrmLeaseV1Interface::grant(std::unique_ptr<DrmLease> &&lease)
     send_lease_fd(tmp.get());
     m_lease = std::move(lease);
     connect(m_lease.get(), &DrmLease::revokeRequested, this, &DrmLeaseV1Interface::revoke);
-    for (const auto &connector : std::as_const(m_connectors)) {
+    for (DrmLeaseConnectorV1Interface *connector : std::as_const(m_connectors)) {
         connector->withdraw();
     }
     m_device->done();
@@ -428,7 +428,7 @@ void DrmLeaseV1Interface::revoke()
     m_lease.reset();
     // check if we should offer connectors again
     if (m_device->hasDrmMaster()) {
-        for (const auto &connector : std::as_const(m_connectors)) {
+        for (DrmLeaseConnectorV1Interface *connector : std::as_const(m_connectors)) {
             m_device->offerConnector(connector);
         }
         m_device->done();

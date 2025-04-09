@@ -242,7 +242,7 @@ static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource 
 
     // finally pick something everyone supports in a deterministic fashion
     if (offer->supportedDragAndDropActions().has_value()) {
-        for (const auto &action : {DataDeviceManagerInterface::DnDAction::Copy, DataDeviceManagerInterface::DnDAction::Move, DataDeviceManagerInterface::DnDAction::Ask}) {
+        for (const DataDeviceManagerInterface::DnDAction action : {DataDeviceManagerInterface::DnDAction::Copy, DataDeviceManagerInterface::DnDAction::Move, DataDeviceManagerInterface::DnDAction::Ask}) {
             if (source->supportedDragAndDropActions().testFlag(action) && offer->supportedDragAndDropActions()->testFlag(action)) {
                 return action;
             }

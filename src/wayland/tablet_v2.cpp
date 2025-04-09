@@ -1024,7 +1024,7 @@ bool TabletSeatV2Interface::isClientSupported(ClientConnection *client) const
 
 bool TabletSeatV2Interface::hasImplicitGrab(quint32 serial) const
 {
-    return std::any_of(d->m_tools.cbegin(), d->m_tools.cend(), [serial](const auto &tool) {
+    return std::any_of(d->m_tools.cbegin(), d->m_tools.cend(), [serial](const TabletToolV2Interface *tool) {
         return tool->downSerial() == serial;
     });
 }

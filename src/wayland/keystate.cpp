@@ -68,14 +68,14 @@ KeyStateInterface::KeyStateInterface(Display *display, QObject *parent)
 {
     connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this, [this]() {
         const auto resources = d->resourceMap();
-        for (const auto &resource : resources) {
+        for (auto resource : resources) {
             d->org_kde_kwin_keystate_fetchStates(resource);
         }
     });
 
     connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
         const auto resources = d->resourceMap();
-        for (const auto &resource : resources) {
+        for (auto resource : resources) {
             d->org_kde_kwin_keystate_fetchStates(resource);
         }
     });

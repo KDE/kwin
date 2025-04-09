@@ -183,7 +183,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
     d->doneTimer.setInterval(0);
     connect(&d->doneTimer, &QTimer::timeout, this, [this]() {
         const auto resources = d->resourceMap();
-        for (const auto &resource : resources) {
+        for (auto resource : resources) {
             d->sendDone(resource);
         }
     });
@@ -205,7 +205,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
         if (d->globalPosition != position) {
             d->globalPosition = position;
             const auto resources = d->resourceMap();
-            for (const auto &resource : resources) {
+            for (auto resource : resources) {
                 d->sendGeometry(resource);
             }
             scheduleDone();
@@ -217,7 +217,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
         if (d->scale != scale) {
             d->scale = scale;
             const auto resources = d->resourceMap();
-            for (const auto &resource : resources) {
+            for (auto resource : resources) {
                 d->sendScale(resource);
             }
             scheduleDone();
@@ -229,7 +229,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
         if (d->transform != transform) {
             d->transform = transform;
             const auto resources = d->resourceMap();
-            for (const auto &resource : resources) {
+            for (auto resource : resources) {
                 d->sendGeometry(resource);
             }
             scheduleDone();
@@ -243,7 +243,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
             d->modeSize = size;
             d->refreshRate = refreshRate;
             const auto resources = d->resourceMap();
-            for (const auto &resource : resources) {
+            for (auto resource : resources) {
                 d->sendMode(resource);
             }
             scheduleDone();

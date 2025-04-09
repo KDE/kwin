@@ -17,8 +17,10 @@
 #include "surface_p.h"
 #include "utils/common.h"
 
+#include <cstdint>
 #include <errno.h>
 #include <fcntl.h>
+#include <qtypes.h>
 #include <unistd.h>
 
 namespace KWin
@@ -36,9 +38,9 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_bind_resou
 {
     if (resource->version() < ZWP_LINUX_DMABUF_V1_GET_DEFAULT_FEEDBACK_SINCE_VERSION) {
         for (auto it = supportedModifiers.constBegin(); it != supportedModifiers.constEnd(); ++it) {
-            const uint32_t &format = it.key();
+            const uint32_t format = it.key();
             const auto &modifiers = it.value();
-            for (const uint64_t &modifier : std::as_const(modifiers)) {
+            for (const uint64_t modifier : std::as_const(modifiers)) {
                 if (resource->version() >= ZWP_LINUX_DMABUF_V1_MODIFIER_SINCE_VERSION) {
                     const uint32_t modifier_lo = modifier & 0xffffffff;
                     const uint32_t modifier_hi = modifier >> 32;
@@ -404,8 +406,8 @@ void LinuxDmaBufV1Feedback::setTranches(const QList<Tranche> &tranches)
 {
     if (d->m_tranches != tranches) {
         d->m_tranches = tranches;
-        const auto &map = d->resourceMap();
-        for (const auto &resource : map) {
+        const auto map = d->resourceMap();
+        for (auto resource : map) {
             d->send(resource);
         }
     }
@@ -420,7 +422,7 @@ QList<LinuxDmaBufV1Feedback::Tranche> LinuxDmaBufV1Feedback::createScanoutTranch
             const uint32_t format = it.key();
             const auto trancheModifiers = it.value();
             const auto drmModifiers = formats[format];
-            for (const auto &mod : trancheModifiers) {
+            for (const uint64_t mod : trancheModifiers) {
                 if (drmModifiers.contains(mod)) {
                     scanoutTranche.formatTable[format] << mod;
                 }
@@ -451,13 +453,13 @@ void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
     QByteArray bytes;
     bytes.append(reinterpret_cast<const char *>(&m_bufferintegration->mainDevice), sizeof(dev_t));
     send_main_device(resource->handle, bytes);
-    const auto &sendTranche = [this, resource](const LinuxDmaBufV1Feedback::Tranche &tranche) {
+    const auto sendTranche = [this, resource](const LinuxDmaBufV1Feedback::Tranche &tranche) {
         QByteArray targetDevice;
         targetDevice.append(reinterpret_cast<const char *>(&tranche.device), sizeof(dev_t));
         QByteArray indices;
         for (auto it = tranche.formatTable.begin(); it != tranche.formatTable.end(); it++) {
             const uint32_t format = it.key();
-            for (const auto &mod : std::as_const(it.value())) {
+            for (const uint64_t mod : std::as_const(it.value())) {
                 uint16_t index = m_bufferintegration->table->indices[std::pair<uint32_t, uint64_t>(format, mod)];
                 indices.append(reinterpret_cast<const char *>(&index), 2);
             }

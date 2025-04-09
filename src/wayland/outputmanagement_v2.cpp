@@ -439,7 +439,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
     }
 
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
-    const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](const auto &output) {
+    const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](Output *output) {
         const auto changeset = config.constChangeSet(output);
         if (changeset && changeset->enabled.has_value()) {
             return *changeset->enabled;

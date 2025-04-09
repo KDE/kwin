@@ -284,7 +284,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     d->m_doneTimer.setInterval(0);
     connect(&d->m_doneTimer, &QTimer::timeout, this, [this]() {
         const auto resources = d->resourceMap();
-        for (const auto &resource : resources) {
+        for (auto resource : resources) {
             d->sendDone(resource);
         }
     });
@@ -541,7 +541,7 @@ void OutputDeviceV2InterfacePrivate::sendDimming(Resource *resource)
 void OutputDeviceV2Interface::updateGeometry()
 {
     const auto clientResources = d->resourceMap();
-    for (const auto &resource : clientResources) {
+    for (auto resource : clientResources) {
         d->sendGeometry(resource);
     }
     scheduleDone();
@@ -613,7 +613,7 @@ void OutputDeviceV2Interface::updateScale()
     }
     d->m_scale = scale;
     const auto clientResources = d->resourceMap();
-    for (const auto &resource : clientResources) {
+    for (auto resource : clientResources) {
         d->sendScale(resource);
     }
     scheduleDone();
@@ -671,7 +671,7 @@ void OutputDeviceV2Interface::updateEdid()
 {
     d->m_edid = d->m_handle->edid().raw();
     const auto clientResources = d->resourceMap();
-    for (const auto &resource : clientResources) {
+    for (auto resource : clientResources) {
         d->sendEdid(resource);
     }
     scheduleDone();
@@ -683,7 +683,7 @@ void OutputDeviceV2Interface::updateEnabled()
     if (d->m_enabled != enabled) {
         d->m_enabled = enabled;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendEnabled(resource);
         }
         scheduleDone();
@@ -696,7 +696,7 @@ void OutputDeviceV2Interface::updateUuid()
     if (d->m_uuid != uuid) {
         d->m_uuid = uuid;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendUuid(resource);
         }
         scheduleDone();
@@ -709,7 +709,7 @@ void OutputDeviceV2Interface::updateCapabilities()
     if (d->m_capabilities != cap) {
         d->m_capabilities = cap;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendCapabilities(resource);
         }
         scheduleDone();
@@ -722,7 +722,7 @@ void OutputDeviceV2Interface::updateOverscan()
     if (d->m_overscan != overscan) {
         d->m_overscan = overscan;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendOverscan(resource);
         }
         scheduleDone();
@@ -735,7 +735,7 @@ void OutputDeviceV2Interface::updateVrrPolicy()
     if (d->m_vrrPolicy != policy) {
         d->m_vrrPolicy = policy;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendVrrPolicy(resource);
         }
         scheduleDone();
@@ -748,7 +748,7 @@ void OutputDeviceV2Interface::updateRgbRange()
     if (d->m_rgbRange != rgbRange) {
         d->m_rgbRange = rgbRange;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendRgbRange(resource);
         }
         scheduleDone();
@@ -760,7 +760,7 @@ void OutputDeviceV2Interface::updateHighDynamicRange()
     if (d->m_highDynamicRange != d->m_handle->highDynamicRange()) {
         d->m_highDynamicRange = d->m_handle->highDynamicRange();
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendHighDynamicRange(resource);
         }
         scheduleDone();
@@ -772,7 +772,7 @@ void OutputDeviceV2Interface::updateSdrBrightness()
     if (d->m_referenceLuminance != d->m_handle->referenceLuminance()) {
         d->m_referenceLuminance = d->m_handle->referenceLuminance();
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendSdrBrightness(resource);
         }
         scheduleDone();
@@ -784,7 +784,7 @@ void OutputDeviceV2Interface::updateWideColorGamut()
     if (d->m_wideColorGamut != d->m_handle->wideColorGamut()) {
         d->m_wideColorGamut = d->m_handle->wideColorGamut();
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendWideColorGamut(resource);
         }
         scheduleDone();
@@ -797,7 +797,7 @@ void OutputDeviceV2Interface::updateAutoRotate()
     if (d->m_autoRotation != policy) {
         d->m_autoRotation = policy;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendAutoRotationPolicy(resource);
         }
         scheduleDone();
@@ -809,7 +809,7 @@ void OutputDeviceV2Interface::updateIccProfilePath()
     if (d->m_iccProfilePath != d->m_handle->iccProfilePath()) {
         d->m_iccProfilePath = d->m_handle->iccProfilePath();
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendIccProfilePath(resource);
         }
         scheduleDone();
@@ -823,7 +823,7 @@ void OutputDeviceV2Interface::updateBrightnessMetadata()
         d->m_maxAverageBrightness = d->m_handle->maxAverageBrightness();
         d->m_minBrightness = d->m_handle->minBrightness();
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendBrightnessMetadata(resource);
         }
         scheduleDone();
@@ -837,7 +837,7 @@ void OutputDeviceV2Interface::updateBrightnessOverrides()
         d->m_maxAverageBrightnessOverride = d->m_handle->maxAverageBrightnessOverride();
         d->m_minBrightnessOverride = d->m_handle->minBrightnessOverride();
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendBrightnessOverrides(resource);
         }
         scheduleDone();
@@ -849,7 +849,7 @@ void OutputDeviceV2Interface::updateSdrGamutWideness()
     if (d->m_sdrGamutWideness != d->m_handle->sdrGamutWideness()) {
         d->m_sdrGamutWideness = d->m_handle->sdrGamutWideness();
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendSdrGamutWideness(resource);
         }
         scheduleDone();
@@ -872,7 +872,7 @@ void OutputDeviceV2Interface::updateColorProfileSource()
     if (d->m_colorProfile != waylandColorProfileSource) {
         d->m_colorProfile = waylandColorProfileSource;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendColorProfileSource(resource);
         }
         scheduleDone();
@@ -885,7 +885,7 @@ void OutputDeviceV2Interface::updateBrightness()
     if (d->m_brightness != newBrightness) {
         d->m_brightness = newBrightness;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendBrightness(resource);
         }
         scheduleDone();
@@ -906,7 +906,7 @@ void OutputDeviceV2Interface::updateColorPowerTradeoff()
     if (d->m_powerColorTradeoff != colorPowerTradeoff) {
         d->m_powerColorTradeoff = colorPowerTradeoff;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendColorPowerTradeoff(resource);
             d->sendDone(resource);
         }
@@ -919,7 +919,7 @@ void OutputDeviceV2Interface::updateDimming()
     if (d->m_dimming != newDimming) {
         d->m_dimming = newDimming;
         const auto clientResources = d->resourceMap();
-        for (const auto &resource : clientResources) {
+        for (auto resource : clientResources) {
             d->sendDimming(resource);
         }
         scheduleDone();
@@ -970,7 +970,7 @@ OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate
 OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate::findResource(OutputDeviceV2InterfacePrivate::Resource *output) const
 {
     const auto resources = resourceMap();
-    for (const auto &resource : resources) {
+    for (auto resource : resources) {
         auto modeResource = static_cast<ModeResource *>(resource);
         if (modeResource->output == output) {
             return resource;
