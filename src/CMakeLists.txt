@@ -170,8 +170,6 @@ target_sources(kwin PRIVATE
     scene/surfaceitem_wayland.cpp
     scene/windowitem.cpp
     scene/workspacescene.cpp
-    scene/workspacescene_opengl.cpp
-    scene/workspacescene_qpainter.cpp
     screenedge.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
@@ -625,7 +623,5 @@ install(FILES
     scene/surfaceitem_wayland.h
     scene/windowitem.h
     scene/workspacescene.h
-    scene/workspacescene_opengl.h
-    scene/workspacescene_qpainter.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel
 )

@@ -45,7 +45,7 @@ public:
     void frame(SceneDelegate *delegate, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 
-    virtual EglContext *openglContext() const;
+    EglContext *openglContext() const;
 
     /**
      * Whether the Scene is able to drive animations.
@@ -53,7 +53,7 @@ public:
      * If the Scene performs software rendering it is supposed to return @c false,
      * if rendering is hardware accelerated it should return @c true.
      */
-    virtual bool animationsSupported() const = 0;
+    bool animationsSupported() const;
 
 Q_SIGNALS:
     void preFrameRender();

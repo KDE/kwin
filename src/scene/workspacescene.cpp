@@ -61,6 +61,8 @@
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "internalwindow.h"
+#include "opengl/eglcontext.h"
+#include "platformsupport/scenes/opengl/eglbackend.h"
 #include "scene/decorationitem.h"
 #include "scene/dndiconitem.h"
 #include "scene/itemrenderer.h"
@@ -516,7 +518,16 @@ void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const Ren
 
 EglContext *WorkspaceScene::openglContext() const
 {
+    if (auto eglBackend = qobject_cast<EglBackend *>(Compositor::self()->backend())) {
+        return eglBackend->openglContext();
+    }
     return nullptr;
+}
+
+bool WorkspaceScene::animationsSupported() const
+{
+    const auto context = openglContext();
+    return context && !context->isSoftwareRenderer();
 }
 
 } // namespace

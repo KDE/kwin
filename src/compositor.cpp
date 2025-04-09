@@ -35,8 +35,6 @@
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
-#include "scene/workspacescene_opengl.h"
-#include "scene/workspacescene_qpainter.h"
 #include "utils/common.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
@@ -294,11 +292,10 @@ void Compositor::createRenderer()
 void Compositor::createScene()
 {
     if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
-        m_scene = std::make_unique<WorkspaceSceneOpenGL>(eglBackend);
+        m_scene = std::make_unique<WorkspaceScene>(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
         m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
     } else {
-        const auto qpainterBackend = static_cast<QPainterBackend *>(m_backend.get());
-        m_scene = std::make_unique<WorkspaceSceneQPainter>(qpainterBackend);
+        m_scene = std::make_unique<WorkspaceScene>(std::make_unique<ItemRendererQPainter>());
         m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererQPainter>());
     }
     Q_EMIT sceneCreated();
