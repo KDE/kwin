@@ -19,8 +19,6 @@
 
 #include <kwin_export.h>
 
-#define KWIN_QT5_PORTING 0
-
 namespace KWin
 {
 KWIN_EXPORT Q_NAMESPACE
@@ -35,7 +33,6 @@ KWIN_EXPORT Q_NAMESPACE
          * use EffectsHandler::isOpenGLCompositing().
          */
         OpenGLCompositing = 1,
-        /* XRenderCompositing = 1<<1, */
         QPainterCompositing = 1 << 2,
     };
 
