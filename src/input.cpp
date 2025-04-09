@@ -2496,9 +2496,11 @@ public:
     {
         connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, []() {
             AbstractDataSource *dragSource = waylandServer()->seat()->dragSource();
-            Q_ASSERT(dragSource);
-            dragSource->setKeyboardModifiers(input()->keyboardModifiers());
+            if (!dragSource) {
+                return;
+            }
 
+            dragSource->setKeyboardModifiers(input()->keyboardModifiers());
             connect(input(), &InputRedirection::keyboardModifiersChanged, dragSource, [dragSource](Qt::KeyboardModifiers mods) {
                 dragSource->setKeyboardModifiers(mods);
             });
