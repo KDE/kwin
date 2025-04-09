@@ -45,7 +45,6 @@ WorkspaceSceneOpenGL::WorkspaceSceneOpenGL(EglBackend *backend)
 
 WorkspaceSceneOpenGL::~WorkspaceSceneOpenGL()
 {
-    openglContext()->makeCurrent();
 }
 
 EglContext *WorkspaceSceneOpenGL::openglContext() const
