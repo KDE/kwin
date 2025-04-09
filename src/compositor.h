@@ -21,6 +21,8 @@
 namespace KWin
 {
 
+class ColorDescription;
+class GLTexture;
 class Output;
 class CursorScene;
 class RenderBackend;
@@ -76,6 +78,8 @@ public:
     }
 
     void createRenderer();
+
+    std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const;
 
 Q_SIGNALS:
     void compositingToggled(bool active);

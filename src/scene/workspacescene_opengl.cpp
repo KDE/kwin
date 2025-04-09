@@ -59,11 +59,6 @@ bool WorkspaceSceneOpenGL::animationsSupported() const
     return context && !context->isSoftwareRenderer();
 }
 
-std::pair<std::shared_ptr<GLTexture>, ColorDescription> WorkspaceSceneOpenGL::textureForOutput(Output *output) const
-{
-    return m_backend->textureForOutput(output);
-}
-
 } // namespace
 
 #include "moc_workspacescene_opengl.cpp"

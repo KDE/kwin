@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "core/colorspace.h"
 #include "scene/scene.h"
 
 namespace KWin
@@ -18,7 +17,6 @@ namespace KWin
 class Deleted;
 class DragAndDropIconItem;
 class EffectWindow;
-class GLTexture;
 class Item;
 class RenderLoop;
 class WorkspaceScene;
@@ -56,11 +54,6 @@ public:
      * if rendering is hardware accelerated it should return @c true.
      */
     virtual bool animationsSupported() const = 0;
-
-    virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const
-    {
-        return {nullptr, ColorDescription::sRGB};
-    }
 
 Q_SIGNALS:
     void preFrameRender();

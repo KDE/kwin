@@ -29,7 +29,6 @@ public:
 
     EglContext *openglContext() const override;
     bool animationsSupported() const override;
-    std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
 
 private:
     EglBackend *m_backend;

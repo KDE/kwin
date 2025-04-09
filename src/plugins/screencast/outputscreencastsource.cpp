@@ -54,7 +54,7 @@ qreal OutputScreenCastSource::devicePixelRatio() const
 
 void OutputScreenCastSource::render(QImage *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(m_output);
+    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
     if (outputTexture) {
         grabTexture(outputTexture.get(), target);
     }
@@ -62,7 +62,7 @@ void OutputScreenCastSource::render(QImage *target)
 
 void OutputScreenCastSource::render(GLFramebuffer *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(m_output);
+    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
     if (!outputTexture) {
         return;
     }
