@@ -536,6 +536,12 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
         const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
         m_brightnessDevice->setBrightness(effectiveBrightness);
     }
+    if (m_brightnessDevice && m_state.highDynamicRange && isInternal()) {
+        // This is usually not necessary with external monitors, as they default to 100% in HDR mode on their own,
+        // and is known to even cause problems with some buggy ones.
+        // This is however needed for laptop displays to have the desired luminance levels
+        m_brightnessDevice->setBrightness(1.0);
+    }
     State next = m_state;
     std::tie(next.colorDescription, m_adaptedChannelFactors) = createColorDescription(std::make_shared<OutputChangeSet>(), newBrightness);
     next.currentBrightness = newBrightness;
