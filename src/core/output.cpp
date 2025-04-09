@@ -534,6 +534,7 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.uuid = props->uuid.value_or(m_state.uuid);
+    next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
 
     setState(next);
 
@@ -636,6 +637,9 @@ void Output::setState(const State &state)
     }
     if (oldState.uuid != state.uuid) {
         Q_EMIT uuidChanged();
+    }
+    if (oldState.replicationSource != state.replicationSource) {
+        Q_EMIT replicationSourceChanged();
     }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
@@ -824,6 +828,11 @@ bool Output::allowSdrSoftwareBrightness() const
 Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
 {
     return m_state.colorPowerTradeoff;
+}
+
+QString Output::replicationSource() const
+{
+    return m_state.replicationSource;
 }
 } // namespace KWin
 

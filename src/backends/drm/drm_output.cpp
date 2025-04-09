@@ -520,6 +520,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
     next.originalColorDescription = createColorDescription(next);
     next.uuid = props->uuid.value_or(m_state.uuid);
+    next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     setState(next);
 
     // allowSdrSoftwareBrightness might change our capabilities
