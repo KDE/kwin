@@ -1391,7 +1391,7 @@ void XdgToplevelWindow::initialize()
     }
 
     XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session && !session->isEmpty()) {
+    if (session && session->exists()) {
         session->sendRestored();
     }
 

@@ -281,9 +281,9 @@ XdgToplevelSessionV1Interface::~XdgToplevelSessionV1Interface()
     }
 }
 
-bool XdgToplevelSessionV1Interface::isEmpty() const
+bool XdgToplevelSessionV1Interface::exists() const
 {
-    return false; // FIXME
+    return d->session->storage()->contains(d->session->sessionId(), d->toplevelId);
 }
 
 XdgToplevelInterface *XdgToplevelSessionV1Interface::toplevel() const
@@ -353,9 +353,13 @@ void XdgSessionConfigStorageV1::setConfig(KSharedConfigPtr config)
     d->config = config;
 }
 
-bool XdgSessionConfigStorageV1::contains(const QString &sessionId) const
+bool XdgSessionConfigStorageV1::contains(const QString &sessionId, const QString &toplevelId) const
 {
-    return d->config->hasGroup(sessionId);
+    if (toplevelId.isEmpty()) {
+        return d->config->hasGroup(sessionId);
+    } else {
+        return d->config->group(sessionId).hasGroup(toplevelId);
+    }
 }
 
 QVariant XdgSessionConfigStorageV1::read(const QString &sessionId, const QString &surfaceId, const QString &key) const
