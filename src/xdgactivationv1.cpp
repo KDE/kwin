@@ -54,7 +54,7 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         Q_ASSERT(client); // Should always be available as it's coming straight from the wayland implementation
         const bool isPrivileged = isPrivilegedInWindowManagement(client);
         if (!isPrivileged && ws->activeWindow() && ws->activeWindow()->surface() != surface) {
-            qCWarning(KWIN_CORE) << "Cannot grant a token to" << client;
+            qCDebug(KWIN_CORE) << "Cannot grant a token to" << client;
             return QStringLiteral("not-granted-666");
         }
 
