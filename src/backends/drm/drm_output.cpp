@@ -445,12 +445,17 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
     }
     const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::BT709);
 
+    double maxPossibleArtificialHeadroom = 1.0;
+    if (next.brightnessDevice && isInternal()) {
+        maxPossibleArtificialHeadroom = 1.0 / next.currentBrightness.value_or(next.brightnessSetting);
+    }
+
     const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::BT2020 : (next.colorProfileSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::BT709);
     const Colorimetry masteringColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::BT709;
     const Colorimetry sdrColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness) : Colorimetry::BT709;
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
     const double maxAverageBrightness = effectiveHdr ? next.maxAverageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(next.referenceLuminance)) : 200;
-    const double maxPeakBrightness = effectiveHdr ? next.maxPeakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * next.artificialHdrHeadroom;
+    const double maxPeakBrightness = effectiveHdr ? next.maxPeakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * maxPossibleArtificialHeadroom;
     const double referenceLuminance = effectiveHdr ? next.referenceLuminance : 200;
     // the min luminance the Wayland protocol defines for SDR is unrealistically high for most modern displays
     // normally that doesn't really matter, but with night light it can lead to increased black levels,
