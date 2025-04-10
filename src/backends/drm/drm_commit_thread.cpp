@@ -323,10 +323,10 @@ DrmCommitThread::~DrmCommitThread()
             m_pong.notify_all();
         }
         m_thread->wait();
-        if (m_committed) {
-            m_committed->setDefunct();
-            m_gpu->addDefunctCommit(std::move(m_committed));
-        }
+    }
+    if (m_committed) {
+        m_committed->setDefunct();
+        m_gpu->addDefunctCommit(std::move(m_committed));
     }
 }
 
