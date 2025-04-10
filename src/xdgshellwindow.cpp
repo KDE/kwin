@@ -493,6 +493,23 @@ XdgToplevelWindow::~XdgToplevelWindow()
 
 void XdgToplevelWindow::handleRoleDestroyed()
 {
+    if (XdgToplevelSessionV1Interface *session = m_shellSurface->session()) {
+        session->write(QStringLiteral("position"), pos());
+        session->write(QStringLiteral("size"), size());
+        session->write(QStringLiteral("keepAbove"), keepAbove());
+        session->write(QStringLiteral("keepBelow"), keepBelow());
+        session->write(QStringLiteral("skipSwitcher"), skipSwitcher());
+        session->write(QStringLiteral("skipPager"), skipPager());
+        session->write(QStringLiteral("skipTaskbar"), skipTaskbar());
+        session->write(QStringLiteral("maximizeMode"), uint(maximizeMode()));
+        session->write(QStringLiteral("fullscreenMode"), isFullScreen());
+        session->write(QStringLiteral("minimizeMode"), isMinimized());
+        session->write(QStringLiteral("desktops"), desktopIds());
+        session->write(QStringLiteral("activities"), activities());
+        session->write(QStringLiteral("noBorder"), noBorder());
+        session->write(QStringLiteral("shortcut"), shortcut());
+    }
+
     destroyWindowManagementInterface();
 
     if (m_appMenuInterface) {
@@ -709,22 +726,6 @@ void XdgToplevelWindow::closeWindow()
         return;
     }
     if (isCloseable()) {
-        // TODO: Decide when it's actually safe to save window props.
-        savePosition();
-        saveSize();
-        saveKeepAbove();
-        saveKeepBelow();
-        saveSkipSwitcher();
-        saveSkipPager();
-        saveSkipTaskbar();
-        saveMinimizeMode();
-        saveNoBorder();
-        saveMaximizeMode();
-        saveFullScreenMode();
-        saveDesktops();
-        saveShortcut();
-        saveActivities();
-
         sendPing(PingReason::CloseWindow);
         m_shellSurface->sendClose();
     }
@@ -1189,14 +1190,6 @@ QPointF XdgToplevelWindow::initialPosition() const
     return invalidPoint;
 }
 
-void XdgToplevelWindow::savePosition()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("position"), pos());
-    }
-}
-
 QSizeF XdgToplevelWindow::initialSize() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1208,14 +1201,6 @@ QSizeF XdgToplevelWindow::initialSize() const
     return QSizeF();
 }
 
-void XdgToplevelWindow::saveSize()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("size"), size());
-    }
-}
-
 bool XdgToplevelWindow::initialKeepAbove() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1223,14 +1208,6 @@ bool XdgToplevelWindow::initialKeepAbove() const
         return session->read(QStringLiteral("keepAbove")).toBool();
     }
     return keepAbove();
-}
-
-void XdgToplevelWindow::saveKeepAbove()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("keepAbove"), keepAbove());
-    }
 }
 
 bool XdgToplevelWindow::initialKeepBelow() const
@@ -1242,14 +1219,6 @@ bool XdgToplevelWindow::initialKeepBelow() const
     return keepBelow();
 }
 
-void XdgToplevelWindow::saveKeepBelow()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("keepBelow"), keepBelow());
-    }
-}
-
 bool XdgToplevelWindow::initialSkipSwitcher() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1257,14 +1226,6 @@ bool XdgToplevelWindow::initialSkipSwitcher() const
         return session->read(QStringLiteral("skipSwitcher")).toBool();
     }
     return skipSwitcher();
-}
-
-void XdgToplevelWindow::saveSkipSwitcher()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("skipSwitcher"), skipSwitcher());
-    }
 }
 
 bool XdgToplevelWindow::initialSkipPager() const
@@ -1276,14 +1237,6 @@ bool XdgToplevelWindow::initialSkipPager() const
     return skipPager();
 }
 
-void XdgToplevelWindow::saveSkipPager()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("skipPager"), skipPager());
-    }
-}
-
 bool XdgToplevelWindow::initialSkipTaskbar() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1291,14 +1244,6 @@ bool XdgToplevelWindow::initialSkipTaskbar() const
         return session->read(QStringLiteral("skipTaskbar")).toBool();
     }
     return skipTaskbar();
-}
-
-void XdgToplevelWindow::saveSkipTaskbar()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("skipTaskbar"), skipTaskbar());
-    }
 }
 
 MaximizeMode XdgToplevelWindow::initialMaximizeMode() const
@@ -1321,14 +1266,6 @@ MaximizeMode XdgToplevelWindow::initialMaximizeMode() const
     return MaximizeRestore;
 }
 
-void XdgToplevelWindow::saveMaximizeMode()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("maximizeMode"), uint(maximizeMode()));
-    }
-}
-
 bool XdgToplevelWindow::initialFullScreenMode() const
 {
     // We prefer set_fullscreen() requests over fullscreen state stored in the session.
@@ -1342,14 +1279,6 @@ bool XdgToplevelWindow::initialFullScreenMode() const
     return false;
 }
 
-void XdgToplevelWindow::saveFullScreenMode()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("fullscreenMode"), isFullScreen());
-    }
-}
-
 bool XdgToplevelWindow::initialMinimizeMode() const
 {
     if (isMinimized()) {
@@ -1360,14 +1289,6 @@ bool XdgToplevelWindow::initialMinimizeMode() const
         return session->read(QStringLiteral("minimizeMode")).toBool();
     }
     return false;
-}
-
-void XdgToplevelWindow::saveMinimizeMode()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("minimizeMode"), isMinimized());
-    }
 }
 
 QVector<VirtualDesktop *> XdgToplevelWindow::initialDesktops() const
@@ -1389,14 +1310,6 @@ QVector<VirtualDesktop *> XdgToplevelWindow::initialDesktops() const
     return desktops();
 }
 
-void XdgToplevelWindow::saveDesktops()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("desktops"), desktopIds());
-    }
-}
-
 QStringList XdgToplevelWindow::initialActivities() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1408,14 +1321,6 @@ QStringList XdgToplevelWindow::initialActivities() const
     return activities();
 }
 
-void XdgToplevelWindow::saveActivities()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("activities"), activities());
-    }
-}
-
 bool XdgToplevelWindow::initialNoBorder() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1425,14 +1330,6 @@ bool XdgToplevelWindow::initialNoBorder() const
     return noBorder();
 }
 
-void XdgToplevelWindow::saveNoBorder()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("noBorder"), noBorder());
-    }
-}
-
 QString XdgToplevelWindow::initialShortcut() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1440,14 +1337,6 @@ QString XdgToplevelWindow::initialShortcut() const
         return session->read(QStringLiteral("shortcut")).toString();
     }
     return shortcut().toString();
-}
-
-void XdgToplevelWindow::saveShortcut()
-{
-    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
-    if (session) {
-        session->write(QStringLiteral("shortcut"), shortcut());
-    }
 }
 
 void XdgToplevelWindow::initialize()
