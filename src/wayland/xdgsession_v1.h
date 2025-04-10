@@ -47,7 +47,7 @@ public:
     {
     }
 
-    virtual bool contains(const QString &sessionId) const = 0;
+    virtual bool contains(const QString &sessionId, const QString &toplevelId = QString()) const = 0;
     virtual QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const = 0;
     virtual void write(const QString &sessionid, const QString &toplevelId, const QString &key, const QVariant &value) = 0;
     virtual void remove(const QString &sessionId, const QString &toplevelId = QString()) = 0;
@@ -87,7 +87,7 @@ public:
      */
     void setConfig(KSharedConfigPtr config);
 
-    bool contains(const QString &sessionId) const override;
+    bool contains(const QString &sessionId, const QString &toplevelId = QString()) const override;
     QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const override;
     void write(const QString &sessionId, const QString &toplevelId, const QString &key, const QVariant &value) override;
     void remove(const QString &sessionId, const QString &toplevelId = QString()) override;
@@ -165,9 +165,10 @@ public:
     ~XdgToplevelSessionV1Interface() override;
 
     /**
-     * Returns @c true if this session is empty; otherwise returns @c false. A new session is empty.
+     * Returns @c true if the toplevel session has some stored data; otherwise returns @c false.
+     * If it is a new toplevel session, this function will return @c false.
      */
-    bool isEmpty() const;
+    bool exists() const;
 
     /**
      * Returns the XdgToplevelInterface object associated with this toplevel session.
