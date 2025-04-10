@@ -10,13 +10,13 @@
 #include <QPointer>
 #include <QStringList>
 // Wayland
-#include <qwayland-server-wlr-data-control-unstable-v1.h>
+#include <qwayland-server-ext-data-control-v1.h>
 // system
 #include <unistd.h>
 
 namespace KWin
 {
-class DataControlOfferV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_offer_v1
+class DataControlOfferV1InterfacePrivate : public QtWaylandServer::ext_data_control_offer_v1
 {
 public:
     DataControlOfferV1InterfacePrivate(DataControlOfferV1Interface *q, AbstractDataSource *source, wl_resource *resource);
@@ -25,29 +25,29 @@ public:
     QPointer<AbstractDataSource> source;
 
 protected:
-    void zwlr_data_control_offer_v1_receive(Resource *resource, const QString &mime_type, int32_t fd) override;
-    void zwlr_data_control_offer_v1_destroy(Resource *resource) override;
-    void zwlr_data_control_offer_v1_destroy_resource(Resource *resource) override;
+    void ext_data_control_offer_v1_receive(Resource *resource, const QString &mime_type, int32_t fd) override;
+    void ext_data_control_offer_v1_destroy(Resource *resource) override;
+    void ext_data_control_offer_v1_destroy_resource(Resource *resource) override;
 };
 
 DataControlOfferV1InterfacePrivate::DataControlOfferV1InterfacePrivate(DataControlOfferV1Interface *_q, AbstractDataSource *source, wl_resource *resource)
-    : QtWaylandServer::zwlr_data_control_offer_v1(resource)
+    : QtWaylandServer::ext_data_control_offer_v1(resource)
     , q(_q)
     , source(source)
 {
 }
 
-void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_destroy(QtWaylandServer::zwlr_data_control_offer_v1::Resource *resource)
+void DataControlOfferV1InterfacePrivate::ext_data_control_offer_v1_destroy(QtWaylandServer::ext_data_control_offer_v1::Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_destroy_resource(QtWaylandServer::zwlr_data_control_offer_v1::Resource *resource)
+void DataControlOfferV1InterfacePrivate::ext_data_control_offer_v1_destroy_resource(QtWaylandServer::ext_data_control_offer_v1::Resource *resource)
 {
     delete q;
 }
 
-void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
+void DataControlOfferV1InterfacePrivate::ext_data_control_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
 {
     if (!source) {
         close(fd);

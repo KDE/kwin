@@ -17,7 +17,7 @@ class DataControlSourceV1InterfacePrivate;
 /**
  * The DataControlSourceV1Interface class represents the source side in a data transfer.
  *
- * DataControlSourceV1Interface corresponds to the wayland interface zwlr_data_control_source_v1.
+ * DataControlSourceV1Interface corresponds to the wayland interface ext_data_control_source_v1.
  */
 class KWIN_EXPORT DataControlSourceV1Interface : public AbstractDataSource
 {

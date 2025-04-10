@@ -10,12 +10,12 @@
 #include "display.h"
 #include "seat_p.h"
 // Wayland
-#include <qwayland-server-wlr-data-control-unstable-v1.h>
+#include <qwayland-server-ext-data-control-v1.h>
 
-static const int s_version = 2;
+static const int s_version = 1;
 namespace KWin
 {
-class DataControlDeviceManagerV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_manager_v1
+class DataControlDeviceManagerV1InterfacePrivate : public QtWaylandServer::ext_data_control_manager_v1
 {
 public:
     DataControlDeviceManagerV1InterfacePrivate(DataControlDeviceManagerV1Interface *q, Display *d);
@@ -23,20 +23,20 @@ public:
     DataControlDeviceManagerV1Interface *q;
 
 protected:
-    void zwlr_data_control_manager_v1_create_data_source(Resource *resource, uint32_t id) override;
-    void zwlr_data_control_manager_v1_get_data_device(Resource *resource, uint32_t id, wl_resource *seat) override;
-    void zwlr_data_control_manager_v1_destroy(Resource *resource) override;
+    void ext_data_control_manager_v1_create_data_source(Resource *resource, uint32_t id) override;
+    void ext_data_control_manager_v1_get_data_device(Resource *resource, uint32_t id, wl_resource *seat) override;
+    void ext_data_control_manager_v1_destroy(Resource *resource) override;
 };
 
 DataControlDeviceManagerV1InterfacePrivate::DataControlDeviceManagerV1InterfacePrivate(DataControlDeviceManagerV1Interface *q, Display *d)
-    : QtWaylandServer::zwlr_data_control_manager_v1(*d, s_version)
+    : QtWaylandServer::ext_data_control_manager_v1(*d, s_version)
     , q(q)
 {
 }
 
-void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_create_data_source(Resource *resource, uint32_t id)
+void DataControlDeviceManagerV1InterfacePrivate::ext_data_control_manager_v1_create_data_source(Resource *resource, uint32_t id)
 {
-    wl_resource *data_source_resource = wl_resource_create(resource->client(), &zwlr_data_control_source_v1_interface, resource->version(), id);
+    wl_resource *data_source_resource = wl_resource_create(resource->client(), &ext_data_control_source_v1_interface, resource->version(), id);
     if (!data_source_resource) {
         wl_resource_post_no_memory(resource->handle);
         return;
@@ -45,7 +45,7 @@ void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_cr
     Q_EMIT q->dataSourceCreated(dataSource);
 }
 
-void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_get_data_device(Resource *resource, uint32_t id, wl_resource *seat)
+void DataControlDeviceManagerV1InterfacePrivate::ext_data_control_manager_v1_get_data_device(Resource *resource, uint32_t id, wl_resource *seat)
 {
     SeatInterface *s = SeatInterface::get(seat);
     Q_ASSERT(s);
@@ -53,7 +53,7 @@ void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_ge
         return;
     }
 
-    wl_resource *data_device_resource = wl_resource_create(resource->client(), &zwlr_data_control_device_v1_interface, resource->version(), id);
+    wl_resource *data_device_resource = wl_resource_create(resource->client(), &ext_data_control_device_v1_interface, resource->version(), id);
     if (!data_device_resource) {
         wl_resource_post_no_memory(resource->handle);
         return;
@@ -62,7 +62,7 @@ void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_ge
     Q_EMIT q->dataDeviceCreated(dataDevice);
 }
 
-void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_destroy(QtWaylandServer::zwlr_data_control_manager_v1::Resource *resource)
+void DataControlDeviceManagerV1InterfacePrivate::ext_data_control_manager_v1_destroy(QtWaylandServer::ext_data_control_manager_v1::Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }

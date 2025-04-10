@@ -10,13 +10,13 @@
 // Qt
 #include <QStringList>
 // Wayland
-#include <qwayland-server-wlr-data-control-unstable-v1.h>
+#include <qwayland-server-ext-data-control-v1.h>
 // system
 #include <unistd.h>
 
 namespace KWin
 {
-class DataControlSourceV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_source_v1
+class DataControlSourceV1InterfacePrivate : public QtWaylandServer::ext_data_control_source_v1
 {
 public:
     DataControlSourceV1InterfacePrivate(DataControlSourceV1Interface *q, ::wl_resource *resource);
@@ -25,30 +25,30 @@ public:
     DataControlSourceV1Interface *q;
 
 protected:
-    void zwlr_data_control_source_v1_destroy_resource(Resource *resource) override;
-    void zwlr_data_control_source_v1_offer(Resource *resource, const QString &mime_type) override;
-    void zwlr_data_control_source_v1_destroy(Resource *resource) override;
+    void ext_data_control_source_v1_destroy_resource(Resource *resource) override;
+    void ext_data_control_source_v1_offer(Resource *resource, const QString &mime_type) override;
+    void ext_data_control_source_v1_destroy(Resource *resource) override;
 };
 
 DataControlSourceV1InterfacePrivate::DataControlSourceV1InterfacePrivate(DataControlSourceV1Interface *_q, ::wl_resource *resource)
-    : QtWaylandServer::zwlr_data_control_source_v1(resource)
+    : QtWaylandServer::ext_data_control_source_v1(resource)
     , q(_q)
 {
 }
 
-void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_destroy_resource(QtWaylandServer::zwlr_data_control_source_v1::Resource *resource)
+void DataControlSourceV1InterfacePrivate::ext_data_control_source_v1_destroy_resource(QtWaylandServer::ext_data_control_source_v1::Resource *resource)
 {
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
-void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_offer(Resource *, const QString &mimeType)
+void DataControlSourceV1InterfacePrivate::ext_data_control_source_v1_offer(Resource *, const QString &mimeType)
 {
     mimeTypes << mimeType;
     Q_EMIT q->mimeTypeOffered(mimeType);
 }
 
-void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_destroy(QtWaylandServer::zwlr_data_control_source_v1::Resource *resource)
+void DataControlSourceV1InterfacePrivate::ext_data_control_source_v1_destroy(QtWaylandServer::ext_data_control_source_v1::Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }

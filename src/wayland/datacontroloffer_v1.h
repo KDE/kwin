@@ -23,7 +23,7 @@ class DataControlOfferV1InterfacePrivate;
 /**
  * The DataControlOfferV1Interface extension represents a piece of data offered for transfer.
  *
- * DataControlOfferV1Interface corresponds to the Wayland interface @c zwlr_data_control_offer_v1.
+ * DataControlOfferV1Interface corresponds to the Wayland interface @c ext_data_control_offer_v1.
  */
 class KWIN_EXPORT DataControlOfferV1Interface : public QObject
 {

@@ -14,11 +14,11 @@
 #include "surface.h"
 
 // Wayland
-#include <qwayland-server-wlr-data-control-unstable-v1.h>
+#include <qwayland-server-ext-data-control-v1.h>
 
 namespace KWin
 {
-class DataControlDeviceV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_device_v1
+class DataControlDeviceV1InterfacePrivate : public QtWaylandServer::ext_data_control_device_v1
 {
 public:
     DataControlDeviceV1InterfacePrivate(DataControlDeviceV1Interface *q, SeatInterface *seat, wl_resource *resource);
@@ -31,20 +31,20 @@ public:
     QPointer<DataControlSourceV1Interface> primarySelection;
 
 protected:
-    void zwlr_data_control_device_v1_destroy_resource(Resource *resource) override;
-    void zwlr_data_control_device_v1_set_selection(Resource *resource, wl_resource *source) override;
-    void zwlr_data_control_device_v1_set_primary_selection(Resource *resource, struct ::wl_resource *source) override;
-    void zwlr_data_control_device_v1_destroy(Resource *resource) override;
+    void ext_data_control_device_v1_destroy_resource(Resource *resource) override;
+    void ext_data_control_device_v1_set_selection(Resource *resource, wl_resource *source) override;
+    void ext_data_control_device_v1_set_primary_selection(Resource *resource, struct ::wl_resource *source) override;
+    void ext_data_control_device_v1_destroy(Resource *resource) override;
 };
 
 DataControlDeviceV1InterfacePrivate::DataControlDeviceV1InterfacePrivate(DataControlDeviceV1Interface *_q, SeatInterface *seat, wl_resource *resource)
-    : QtWaylandServer::zwlr_data_control_device_v1(resource)
+    : QtWaylandServer::ext_data_control_device_v1(resource)
     , q(_q)
     , seat(seat)
 {
 }
 
-void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_selection(Resource *resource, wl_resource *source)
+void DataControlDeviceV1InterfacePrivate::ext_data_control_device_v1_set_selection(Resource *resource, wl_resource *source)
 {
     DataControlSourceV1Interface *dataSource = nullptr;
 
@@ -63,7 +63,7 @@ void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_select
     Q_EMIT q->selectionChanged(selection);
 }
 
-void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_primary_selection(Resource *resource, wl_resource *source)
+void DataControlDeviceV1InterfacePrivate::ext_data_control_device_v1_set_primary_selection(Resource *resource, wl_resource *source)
 {
     DataControlSourceV1Interface *dataSource = nullptr;
 
@@ -82,7 +82,7 @@ void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_primar
     Q_EMIT q->primarySelectionChanged(primarySelection);
 }
 
-void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_destroy(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)
+void DataControlDeviceV1InterfacePrivate::ext_data_control_device_v1_destroy(QtWaylandServer::ext_data_control_device_v1::Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
@@ -94,7 +94,7 @@ DataControlOfferV1Interface *DataControlDeviceV1InterfacePrivate::createDataOffe
         return nullptr;
     }
 
-    wl_resource *data_offer_resource = wl_resource_create(resource()->client(), &zwlr_data_control_offer_v1_interface, resource()->version(), 0);
+    wl_resource *data_offer_resource = wl_resource_create(resource()->client(), &ext_data_control_offer_v1_interface, resource()->version(), 0);
     if (!data_offer_resource) {
         return nullptr;
     }
@@ -105,7 +105,7 @@ DataControlOfferV1Interface *DataControlDeviceV1InterfacePrivate::createDataOffe
     return offer;
 }
 
-void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_destroy_resource(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)
+void DataControlDeviceV1InterfacePrivate::ext_data_control_device_v1_destroy_resource(QtWaylandServer::ext_data_control_device_v1::Resource *resource)
 {
     delete q;
 }
@@ -143,10 +143,8 @@ void DataControlDeviceV1Interface::sendSelection(AbstractDataSource *other)
 
 void DataControlDeviceV1Interface::sendPrimarySelection(AbstractDataSource *other)
 {
-    if (d->resource()->version() >= ZWLR_DATA_CONTROL_DEVICE_V1_PRIMARY_SELECTION_SINCE_VERSION) {
-        DataControlOfferV1Interface *offer = d->createDataOffer(other);
-        d->send_primary_selection(offer ? offer->resource() : nullptr);
-    }
+    DataControlOfferV1Interface *offer = d->createDataOffer(other);
+    d->send_primary_selection(offer ? offer->resource() : nullptr);
 }
 }
 
