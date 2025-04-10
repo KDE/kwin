@@ -46,7 +46,7 @@ public:
     InputCapture()
     {
         auto msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("addInputCapture"));
-        msg << static_cast<int>(PortalCapabilities::All);
+        msg << static_cast<uint>(PortalCapabilities::All);
         QDBusReply<QDBusObjectPath> captureReply = QDBusConnection::sessionBus().call(msg);
         QVERIFY2(captureReply.isValid(), QTest::toString(captureReply.error()));
         dbusPath = captureReply.value().path();

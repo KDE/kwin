@@ -40,7 +40,7 @@ public:
     EisInputCaptureManager();
     ~EisInputCaptureManager();
 
-    Q_INVOKABLE QDBusObjectPath addInputCapture(int capabilities);
+    Q_INVOKABLE QDBusObjectPath addInputCapture(uint capabilities);
     Q_INVOKABLE void removeInputCapture(const QDBusObjectPath &capture);
 
     const RamFile &keyMap() const;

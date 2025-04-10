@@ -161,11 +161,11 @@ void EisInputCaptureManager::removeInputCapture(const QDBusObjectPath &capture)
     }
 }
 
-QDBusObjectPath EisInputCaptureManager::addInputCapture(int capabilities)
+QDBusObjectPath EisInputCaptureManager::addInputCapture(uint capabilities)
 {
-    constexpr int keyboardPortal = 1;
-    constexpr int pointerPortal = 2;
-    constexpr int touchPortal = 4;
+    constexpr uint keyboardPortal = 1;
+    constexpr uint pointerPortal = 2;
+    constexpr uint touchPortal = 4;
     QFlags<eis_device_capability> eisCapabilities;
     if (capabilities & keyboardPortal) {
         eisCapabilities |= EIS_DEVICE_CAP_KEYBOARD;
