@@ -505,6 +505,13 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
 
     tryKmsColorOffloading();
 
+    if (m_brightnessDevice && m_state.highDynamicRange && isInternal()) {
+        // This is usually not necessary with external monitors, as they default to 100% in HDR mode on their own,
+        // and is known to even cause problems with some buggy ones.
+        // This is however needed for laptop displays to have the desired luminance levels
+        m_brightnessDevice->setBrightness(1.0);
+    }
+
     Q_EMIT changed();
 }
 
@@ -535,12 +542,6 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
         constexpr double minLuminance = 0.04;
         const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
         m_brightnessDevice->setBrightness(effectiveBrightness);
-    }
-    if (m_brightnessDevice && m_state.highDynamicRange && isInternal()) {
-        // This is usually not necessary with external monitors, as they default to 100% in HDR mode on their own,
-        // and is known to even cause problems with some buggy ones.
-        // This is however needed for laptop displays to have the desired luminance levels
-        m_brightnessDevice->setBrightness(1.0);
     }
     State next = m_state;
     std::tie(next.colorDescription, m_adaptedChannelFactors) = createColorDescription(std::make_shared<OutputChangeSet>(), newBrightness);
