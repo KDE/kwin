@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-03 02:34+0000\n"
+"POT-Creation-Date: 2025-04-10 02:33+0000\n"
 "PO-Revision-Date: 2025-03-30 16:25+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1363,7 +1363,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ostalari-izena: %1"
 
-#: input.cpp:3334
+#: input.cpp:3336
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"

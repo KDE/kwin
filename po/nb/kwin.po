@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-03 02:34+0000\n"
+"POT-Creation-Date: 2025-04-10 02:33+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1360,7 +1360,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Vertsnavn: %1"
 
-#: input.cpp:3334
+#: input.cpp:3336
 #, kde-format
 msgid "Touchpad"
 msgstr "Styreplate"
