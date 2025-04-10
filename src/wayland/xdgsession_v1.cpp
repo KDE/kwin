@@ -149,11 +149,6 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_add_toplevel(Resourc
         return;
     }
 
-    if (toplevel->isConfigured()) {
-        wl_resource_post_error(resource->handle, error_already_mapped, "xdg_toplevel is already initialized");
-        return;
-    }
-
     // clear any storage, this ensures we won't restore anything
     storage->remove(sessionId, toplevel_id);
 
