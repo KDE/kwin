@@ -49,6 +49,10 @@ public:
     ~Compositor() override;
     static Compositor *self();
 
+    bool wantsSoftwareCursor() const;
+    void forceSoftwareCursor();
+    void unforceSoftwareCursor();
+
     void start();
     void stop();
 
@@ -122,6 +126,7 @@ protected:
     std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
+    int m_softwareCursorLock = 0;
 };
 
 } // namespace KWin

@@ -81,6 +81,23 @@ Compositor::~Compositor()
     s_compositor = nullptr;
 }
 
+bool Compositor::wantsSoftwareCursor() const
+{
+    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
+    return forceSoftwareCursor || m_softwareCursorLock > 0;
+}
+
+void Compositor::forceSoftwareCursor()
+{
+    m_softwareCursorLock++;
+}
+
+void Compositor::unforceSoftwareCursor()
+{
+    Q_ASSERT(m_softwareCursorLock > 0);
+    --m_softwareCursorLock;
+}
+
 Output *Compositor::findOutput(RenderLoop *loop) const
 {
     const auto outputs = workspace()->outputs();
@@ -624,8 +641,6 @@ void Compositor::addOutput(Output *output)
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
-    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
-
     auto updateCursorLayer = [this, output, cursorLayer]() {
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
@@ -644,7 +659,7 @@ void Compositor::addOutput(Output *output)
             return true;
         }
         const auto renderHardwareCursor = [&]() {
-            if (!outputLayer || forceSoftwareCursor) {
+            if (!outputLayer || wantsSoftwareCursor()) {
                 return false;
             }
             QRectF nativeCursorRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize());
@@ -713,7 +728,7 @@ void Compositor::addOutput(Output *output)
         const auto outputLayer = m_backend->cursorLayer(output);
         bool hardwareCursor = false;
         const bool shouldBeVisible = cursor->isOnOutput(output);
-        if (outputLayer && !forceSoftwareCursor) {
+        if (outputLayer && !wantsSoftwareCursor()) {
             if (shouldBeVisible) {
                 const bool enabledBefore = outputLayer->isEnabled();
                 if (enabledBefore) {

@@ -2903,8 +2903,10 @@ void Workspace::setMoveResizeWindow(Window *window)
     m_moveResizeWindow = window;
     if (m_moveResizeWindow) {
         ++block_focus;
+        Compositor::self()->forceSoftwareCursor();
     } else {
         --block_focus;
+        Compositor::self()->unforceSoftwareCursor();
     }
 }
 
