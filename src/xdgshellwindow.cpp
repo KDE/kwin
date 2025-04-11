@@ -345,7 +345,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         auto moveUnderCursor = [this] {
             if (input()->hasPointer()) {
                 move(input()->globalPointer());
-                moveResize(keepInArea(moveResizeGeometry(), workspace()->clientArea(PlacementArea, this)));
+                moveResize(keepInArea(moveResizeGeometry(), workspace()->clientArea(PlacementArea, this, workspace()->outputAt(pos()))));
             }
         };
         connect(this, &Window::readyForPaintingChanged, this, moveUnderCursor, Qt::SingleShotConnection);
