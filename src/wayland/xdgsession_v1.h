@@ -51,6 +51,7 @@ public:
     virtual QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const = 0;
     virtual void write(const QString &sessionid, const QString &toplevelId, const QString &key, const QVariant &value) = 0;
     virtual void remove(const QString &sessionId, const QString &toplevelId = QString()) = 0;
+    virtual void rename(const QString &sessionId, const QString &oldToplevelId, const QString &newToplevelId) = 0;
     virtual void sync() = 0;
 };
 
@@ -91,6 +92,7 @@ public:
     QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const override;
     void write(const QString &sessionId, const QString &toplevelId, const QString &key, const QVariant &value) override;
     void remove(const QString &sessionId, const QString &toplevelId = QString()) override;
+    void rename(const QString &sessionId, const QString &oldToplevelId, const QString &newToplevelId) override;
     void sync() override;
 
 private:

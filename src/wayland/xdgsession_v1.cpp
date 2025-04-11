@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 1;
+static const quint32 s_version = 2;
 
 class XdgSessionManagerV1InterfacePrivate : public QtWaylandServer::xx_session_manager_v1
 {
@@ -232,6 +232,7 @@ protected:
     void xx_toplevel_session_v1_destroy_resource(Resource *resource) override;
     void xx_toplevel_session_v1_destroy(Resource *resource) override;
     void xx_toplevel_session_v1_remove(Resource *resource) override;
+    void xx_toplevel_session_v1_rename(Resource *resource, const QString &name) override;
 };
 
 XdgToplevelSessionV1InterfacePrivate::XdgToplevelSessionV1InterfacePrivate(XdgApplicationSessionV1Interface *session,
@@ -262,6 +263,17 @@ void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_remove(Resourc
 {
     session->storage()->remove(session->sessionId(), toplevelId);
     wl_resource_destroy(resource->handle);
+}
+
+void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_rename(Resource *resource, const QString &name)
+{
+    if (session->storage()->contains(session->sessionId(), name)) {
+        wl_resource_post_error(resource->handle, XX_SESSION_V1_ERROR_NAME_IN_USE, "specified name is already used");
+        return;
+    }
+
+    session->storage()->rename(session->sessionId(), toplevelId, name);
+    toplevelId = name;
 }
 
 XdgToplevelSessionV1Interface::XdgToplevelSessionV1Interface(XdgApplicationSessionV1Interface *session,
@@ -402,6 +414,17 @@ void XdgSessionConfigStorageV1::remove(const QString &sessionId, const QString &
         KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
         surfaceGroup.deleteGroup();
     }
+}
+
+void XdgSessionConfigStorageV1::rename(const QString &sessionId, const QString &oldToplevelId, const QString &newToplevelId)
+{
+    KConfigGroup sessionGroup(d->config, sessionId);
+
+    KConfigGroup oldGroup(&sessionGroup, oldToplevelId);
+    KConfigGroup newGroup(&sessionGroup, newToplevelId);
+
+    oldGroup.moveValuesTo(newGroup);
+    oldGroup.deleteGroup();
 }
 
 void XdgSessionConfigStorageV1::sync()

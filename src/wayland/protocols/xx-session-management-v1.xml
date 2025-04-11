@@ -51,7 +51,7 @@
     only be done by creating a new major version of the extension.
   </description>
 
-  <interface name="xx_session_manager_v1" version="1">
+  <interface name="xx_session_manager_v1" version="2">
     <description summary="manage sessions for applications">
       The xx_session_manager interface defines base requests for creating and
       managing a session for an application. Sessions persist across application
@@ -130,7 +130,7 @@
     </request>
   </interface>
 
-  <interface name="xx_session_v1" version="1">
+  <interface name="xx_session_v1" version="2">
     <description summary="A session for an application">
       A xx_session_v1 object represents a session for an application. While the
       object exists, all surfaces which have been added to the session will
@@ -233,7 +233,7 @@
     </event>
   </interface>
 
-  <interface name="xx_toplevel_session_v1" version="1">
+  <interface name="xx_toplevel_session_v1" version="2">
     <request name="destroy" type="destructor">
       <description summary="Destroy the object">
 	Destroy the object. This has no effect window management of the
@@ -260,5 +260,17 @@
       </description>
       <arg name="surface" type="object" interface="xdg_toplevel"/>
     </event>
+
+    <request name="rename" since="2">
+      <description summary="change the name of toplevel session">
+	Renames the toplevel session. The new name can be used in subsequent requests
+  to identify this session object. The state associated with this toplevel
+  session will be preserved.
+
+  If the xx_session_v1 already contains a toplevel with the specified name,
+  the name_in_use protocol error will be raised.
+      </description>
+      <arg name="name" type="string"/>
+    </request>
   </interface>
 </protocol>
