@@ -263,7 +263,7 @@ void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer, OutputLayer *ou
     }
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
-    if ((vrr || tearing) && workspace()->activeWindow() && d->output) {
+    if ((vrr || tearing) && workspace() && workspace()->activeWindow() && d->output) {
         Window *const activeWindow = workspace()->activeWindow();
         if ((item || layer || outputLayer) && activeWindowControlsVrrRefreshRate() && item != activeWindow->surfaceItem()) {
             d->delayedVrrTimer.start();
