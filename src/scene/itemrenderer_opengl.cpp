@@ -12,7 +12,6 @@
 #include "core/syncobjtimeline.h"
 #include "effect/effect.h"
 #include "opengl/eglnativefence.h"
-#include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
 #include "scene/shadowitem.h"

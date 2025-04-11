@@ -7,8 +7,8 @@
 #pragma once
 
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/itemrenderer.h"
+#include "scene/surfaceitem.h"
 
 #include <unordered_set>
 

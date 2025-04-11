@@ -15,6 +15,9 @@
 namespace KWin
 {
 
+class EglBackend;
+class GLTexture;
+class QPainterBackend;
 class SurfacePixmap;
 class Window;
 
@@ -122,6 +125,82 @@ protected:
 
 private:
     std::unique_ptr<SurfaceTexture> m_texture;
+};
+
+class KWIN_EXPORT OpenGLSurfaceContents
+{
+public:
+    OpenGLSurfaceContents()
+    {
+    }
+    OpenGLSurfaceContents(const std::shared_ptr<GLTexture> &contents)
+        : planes({contents})
+    {
+    }
+    OpenGLSurfaceContents(const QList<std::shared_ptr<GLTexture>> &planes)
+        : planes(planes)
+    {
+    }
+
+    void reset()
+    {
+        planes.clear();
+    }
+    bool isValid() const
+    {
+        return !planes.isEmpty();
+    }
+
+    QList<std::shared_ptr<GLTexture>> planes;
+};
+
+class KWIN_EXPORT OpenGLSurfaceTexture : public SurfaceTexture
+{
+public:
+    explicit OpenGLSurfaceTexture(EglBackend *backend, SurfacePixmap *pixmap);
+    ~OpenGLSurfaceTexture() override;
+
+    bool create() override;
+    void update(const QRegion &region) override;
+    bool isValid() const override;
+
+    OpenGLSurfaceContents texture() const;
+
+private:
+    bool loadShmTexture(GraphicsBuffer *buffer);
+    void updateShmTexture(GraphicsBuffer *buffer, const QRegion &region);
+    bool loadDmabufTexture(GraphicsBuffer *buffer);
+    void updateDmabufTexture(GraphicsBuffer *buffer);
+    void destroy();
+
+    enum class BufferType {
+        None,
+        Shm,
+        DmaBuf,
+    };
+
+    BufferType m_bufferType = BufferType::None;
+    EglBackend *m_backend;
+    SurfacePixmap *m_pixmap;
+    OpenGLSurfaceContents m_texture;
+};
+
+class KWIN_EXPORT QPainterSurfaceTexture : public SurfaceTexture
+{
+public:
+    QPainterSurfaceTexture(QPainterBackend *backend, SurfacePixmap *pixmap);
+
+    bool create() override;
+    void update(const QRegion &region) override;
+    bool isValid() const override;
+
+    QPainterBackend *backend() const;
+    QImage image() const;
+
+protected:
+    QPainterBackend *m_backend;
+    SurfacePixmap *m_pixmap;
+    QImage m_image;
 };
 
 } // namespace KWin

@@ -20,8 +20,6 @@ namespace KWin
 class GraphicsBuffer;
 class Output;
 class OutputLayer;
-class SurfacePixmap;
-class SurfaceTexture;
 class PresentationFeedback;
 class RenderLoop;
 class DrmDevice;
@@ -138,8 +136,6 @@ public:
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer);
     virtual QHash<uint32_t, QList<uint64_t>> supportedFormats() const;
-
-    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap);
 };
 
 } // namespace KWin

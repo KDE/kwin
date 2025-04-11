@@ -14,7 +14,6 @@
 #include "main.h"
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
-#include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "utils/common.h"
 #include "utils/drm_format_helper.h"
 #include "wayland/drmclientbuffer.h"
@@ -382,11 +381,6 @@ EglContext *EglBackend::openglContext() const
 std::shared_ptr<EglContext> EglBackend::openglContextRef() const
 {
     return m_context;
-}
-
-std::unique_ptr<SurfaceTexture> EglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
-{
-    return std::make_unique<OpenGLSurfaceTexture>(this, pixmap);
 }
 
 } // namespace KWin

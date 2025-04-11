@@ -8,9 +8,9 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
-#include "platformsupport/scenes/qpainter/qpaintersurfacetexture.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/surfaceitem.h"
 #include "scene/workspacescene.h"
 #include "window.h"
 
