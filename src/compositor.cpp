@@ -591,13 +591,12 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     // TODO: move this into the cursor layer
+    // FIXME: Normally this only runs if the cursor isn't hidden, but that breaks zoom effect when current cursor is a SurfaceCursorSource.
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
-    if (!Cursors::self()->isCursorHidden()) {
-        Cursor *cursor = Cursors::self()->currentCursor();
-        if (cursor->geometry().intersects(output->geometry())) {
-            if (CursorSource *source = cursor->source()) {
-                source->frame(frameTime);
-            }
+    Cursor *cursor = Cursors::self()->currentCursor();
+    if (cursor->geometry().intersects(output->geometry())) {
+        if (CursorSource *source = cursor->source()) {
+            source->frame(frameTime);
         }
     }
 }
