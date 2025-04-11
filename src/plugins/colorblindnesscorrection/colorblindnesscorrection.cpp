@@ -92,7 +92,7 @@ void ColorBlindnessCorrectionEffect::loadData()
     }
 
     ShaderBinder binder{m_shader.get()};
-    m_shader->setUniform("intensity", m_intensity);
+    m_shader->setUniform("intensity", 0.0f);
     m_shader->setUniform("defectMatrix", defectMatrix);
 
     for (const auto windows = effects->stackingOrder(); EffectWindow * w : windows) {
@@ -162,6 +162,12 @@ void ColorBlindnessCorrectionEffect::reconfigure(ReconfigureFlags flags)
 int ColorBlindnessCorrectionEffect::requestedEffectChainPosition() const
 {
     return 98;
+}
+
+void ColorBlindnessCorrectionEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    data.setSaturation(0.0f);
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 } // namespace

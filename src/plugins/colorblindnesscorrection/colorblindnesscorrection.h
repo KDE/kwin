@@ -35,6 +35,7 @@ public:
     bool provides(Feature) override;
     void reconfigure(ReconfigureFlags flags) override;
     int requestedEffectChainPosition() const override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     static bool supported();
 
