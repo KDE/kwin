@@ -766,22 +766,10 @@ void Workspace::addWaylandWindow(Window *window)
     setupWindowConnections(window);
     window->updateLayer();
 
-    if (window->isPlaceable()) {
-        bool placementDone = false;
-        if (window->isRequestedFullScreen()) {
-            placementDone = true;
-        }
-        if (window->requestedMaximizeMode() == MaximizeMode::MaximizeFull) {
-            placementDone = true;
-        }
-        if (window->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
-            placementDone = true;
-        }
-        if (!placementDone) {
-            const QRectF area = clientArea(PlacementArea, window, activeOutput());
-            if (const auto placement = m_placement->place(window, area)) {
-                window->place(*placement);
-            }
+    if (window->isPlaceable() && !window->isPlaced()) {
+        const QRectF area = clientArea(PlacementArea, window, activeOutput());
+        if (const auto placement = m_placement->place(window, area)) {
+            window->place(*placement);
         }
     }
     Q_ASSERT(!m_windows.contains(window));

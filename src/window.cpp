@@ -3597,6 +3597,11 @@ void Window::moveResize(const QRectF &rect)
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
 }
 
+bool Window::isPlaced() const
+{
+    return m_placed;
+}
+
 void Window::place(const PlacementCommand &placement)
 {
     if (auto position = std::get_if<QPointF>(&placement)) {
@@ -3606,6 +3611,12 @@ void Window::place(const PlacementCommand &placement)
     } else if (auto maximizeMode = std::get_if<MaximizeMode>(&placement)) {
         maximize(*maximizeMode);
     }
+    markAsPlaced();
+}
+
+void Window::markAsPlaced()
+{
+    m_placed = true;
 }
 
 void Window::setElectricBorderMode(std::optional<ElectricBorderMode> mode)

@@ -718,6 +718,11 @@ public:
     void moveResize(const QRectF &geometry);
 
     /**
+     * Returns @c true if the window has already been placed in the workspace; otherwise returns @c false.
+     */
+    bool isPlaced() const;
+
+    /**
      * Places the window in the workspace as specified by the @a placement command.
      */
     void place(const PlacementCommand &placement);
@@ -1500,6 +1505,7 @@ protected:
     void autoRaise();
     bool isMostRecentlyRaised() const;
     void markAsDeleted();
+    void markAsPlaced();
     /**
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return
@@ -1811,6 +1817,7 @@ protected:
     QIcon m_icon;
     bool m_active = false;
     bool m_deleted = false;
+    bool m_placed = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
     bool m_demandsAttention = false;

@@ -335,14 +335,14 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
 
     auto updatePosition = [this, shellSurface] {
         if (!isInteractiveMoveResize()) {
-            move(shellSurface->position());
+            place(shellSurface->position());
         }
     };
     auto showUnderCursor = [this] {
         // Wait for the first commit
         auto moveUnderCursor = [this] {
             if (input()->hasPointer()) {
-                move(input()->globalPointer());
+                place(input()->globalPointer());
                 moveResize(keepInArea(moveResizeGeometry(), workspace()->clientArea(PlacementArea, this, workspace()->outputAt(pos()))));
             }
         };
@@ -662,11 +662,6 @@ bool XdgToplevelWindow::isPlaceable() const
 {
     if (m_plasmaShellSurface) {
         return !m_plasmaShellSurface->isPositionSet() && !m_plasmaShellSurface->wantsOpenUnderCursor();
-    }
-    // TODO: Not really accurate, we need "isPlaced" or something
-    const XdgToplevelSessionV1Interface *state = m_shellSurface->session();
-    if (state) {
-        return !state->read(QStringLiteral("position")).isValid();
     }
     return true;
 }
@@ -1354,7 +1349,7 @@ void XdgToplevelWindow::initialize()
     // Move or resize the window only if enforced by a window rule.
     const QPointF forcedPosition = rules()->checkPositionSafe(initialPosition(), true);
     if (forcedPosition != invalidPoint) {
-        move(forcedPosition);
+        place(forcedPosition);
     }
     const QSizeF forcedSize = rules()->checkSize(initialSize(), true);
     if (forcedSize.isValid()) {
@@ -1362,7 +1357,6 @@ void XdgToplevelWindow::initialize()
     }
 
     maximize(rules()->checkMaximize(initialMaximizeMode(), true));
-
     setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true));
     setOnActivities(rules()->checkActivity(initialActivities(), true));
     setDesktops(rules()->checkDesktops(initialDesktops(), true));
@@ -1667,6 +1661,8 @@ void XdgToplevelWindow::setFullScreen(bool set)
         }
     }
 
+    markAsPlaced();
+
     doSetFullScreen();
 }
 
@@ -1774,6 +1770,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
     }
 
     moveResize(geometry);
+    markAsPlaced();
 
     doSetMaximized();
 }
