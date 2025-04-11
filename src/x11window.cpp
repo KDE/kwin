@@ -717,7 +717,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (!session) {
             position = clientPosToFramePos(position);
         }
-        move(position);
+        place(position);
     }
 
     // Create client group if the window will have a decoration
@@ -734,7 +734,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     QPointF forced_pos = rules()->checkPositionSafe(invalidPoint, !isMapped);
     if (forced_pos != invalidPoint) {
-        move(forced_pos);
+        place(forced_pos);
         placementDone = true;
         // Don't keep inside workarea if the window has specially configured position
         partial_keep_in_area = true;
@@ -4185,6 +4185,8 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
         break;
     }
 
+    markAsPlaced();
+
     blockGeometryUpdates(false);
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz | Rules::Position | Rules::Size);
@@ -4240,6 +4242,8 @@ void X11Window::setFullScreen(bool set)
         Q_ASSERT(!fullscreenGeometryRestore().isNull());
         moveResize(QRectF(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
     }
+
+    markAsPlaced();
 
     updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
     updateAllowedActions(false);

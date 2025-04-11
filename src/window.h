@@ -712,6 +712,9 @@ public:
      */
     void moveResize(const QRectF &geometry);
 
+    bool isPlaced() const;
+    void place(const QPointF &position);
+
     void growHorizontal();
     void shrinkHorizontal();
     void growVertical();
@@ -1490,6 +1493,7 @@ protected:
     void autoRaise();
     bool isMostRecentlyRaised() const;
     void markAsDeleted();
+    void markAsPlaced();
     /**
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return
@@ -1801,6 +1805,7 @@ protected:
     QIcon m_icon;
     bool m_active = false;
     bool m_deleted = false;
+    bool m_placed = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
     bool m_demandsAttention = false;

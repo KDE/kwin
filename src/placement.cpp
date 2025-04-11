@@ -138,7 +138,7 @@ bool Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
     }
 
     const QRectF placed = cascadeIfCovering(c, QRectF(QPointF(tx, ty), size), area);
-    c->move(placed.topLeft());
+    c->place(placed.topLeft());
 
     return true;
 }
@@ -339,7 +339,7 @@ bool Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
     }
 
     // place the window
-    window->move(QPoint(x_optimal, y_optimal));
+    window->place(QPoint(x_optimal, y_optimal));
 
     return true;
 }
@@ -428,7 +428,7 @@ bool Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
     }
 
     // place the window
-    c->move(QPoint(xp, yp));
+    c->place(QPoint(xp, yp));
 
     // new position
     cci[dn].pos = QPoint(xp + delta.x(), yp + delta.y());
@@ -452,7 +452,7 @@ bool Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*n
                           std::max(area.top() + (area.height() - size.height()) / 2, area.top()));
 
     const QRectF placed = cascadeIfCovering(c, QRectF(position, size), area);
-    c->move(placed.topLeft());
+    c->place(placed.topLeft());
 
     return true;
 }
@@ -471,7 +471,7 @@ bool Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy 
 
     // get the maximum allowed windows space and desk's origin
     const QRectF placed = cascadeIfCovering(c, QRectF(area.topLeft(), size), area);
-    c->move(placed.topLeft());
+    c->place(placed.topLeft());
 
     return true;
 }
@@ -499,7 +499,7 @@ bool Placement::placeOnScreenDisplay(Window *c, const QRect &area)
     const int x = area.left() + (area.width() - size.width()) / 2;
     const int y = area.top() + 2 * area.height() / 3 - size.height() / 2;
 
-    c->move(QPoint(x, y));
+    c->place(QPoint(x, y));
 
     return true;
 }
@@ -530,7 +530,7 @@ bool Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*
 
     const QRectF screenArea = workspace()->clientArea(PlacementArea, c, cursorPos);
     const QRectF placed = cascadeIfCovering(c, c->keepInArea(centered, screenArea), screenArea);
-    c->move(placed.topLeft());
+    c->place(placed.topLeft());
 
     return true;
 }
@@ -593,7 +593,7 @@ bool Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy 
 
     // get area again, because the mainwindow may be on different xinerama screen
     const QRect placementArea = workspace()->clientArea(PlacementArea, c, geom.center()).toRect();
-    c->move(c->keepInArea(geom, placementArea).topLeft()); // make sure it's kept inside workarea
+    c->place(c->keepInArea(geom, placementArea).topLeft()); // make sure it's kept inside workarea
 
     return true;
 }

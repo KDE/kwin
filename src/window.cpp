@@ -3595,6 +3595,22 @@ void Window::moveResize(const QRectF &rect)
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
 }
 
+bool Window::isPlaced() const
+{
+    return m_placed;
+}
+
+void Window::place(const QPointF &position)
+{
+    move(position);
+    markAsPlaced();
+}
+
+void Window::markAsPlaced()
+{
+    m_placed = true;
+}
+
 void Window::setElectricBorderMode(std::optional<ElectricBorderMode> mode)
 {
     m_electricMode = mode;
