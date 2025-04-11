@@ -6,7 +6,6 @@
 
 #include "renderbackend.h"
 #include "renderloop_p.h"
-#include "scene/surfaceitem.h"
 #include "syncobjtimeline.h"
 
 #include <QCoreApplication>
@@ -192,11 +191,6 @@ bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer)
 QHash<uint32_t, QList<uint64_t>> RenderBackend::supportedFormats() const
 {
     return QHash<uint32_t, QList<uint64_t>>{{DRM_FORMAT_XRGB8888, QList<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
-}
-
-std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)
-{
-    return nullptr;
 }
 
 void RenderBackend::repairPresentation(Output *output)
