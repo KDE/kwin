@@ -4326,6 +4326,10 @@ void X11Window::updateWindowRules(Rules::Types selection)
 
 void X11Window::associate(XwaylandSurfaceV1Interface *shellSurface)
 {
+    if (surface()) {
+        disconnect(surface(), &SurfaceInterface::committed, this, &X11Window::handleCommitted);
+    }
+
     setSurface(shellSurface->surface());
 
     if (surface()->isMapped()) {
