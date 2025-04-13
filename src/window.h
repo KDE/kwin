@@ -59,6 +59,11 @@ class DecorationPalette;
 
 using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
 
+/**
+ * The PlacementCommand type specifies how a window should be placed in the workspace when it's shown.
+ */
+using PlacementCommand = std::variant<QPointF, QRectF, MaximizeMode>;
+
 class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
@@ -711,6 +716,11 @@ public:
      * within its possibilities.
      */
     void moveResize(const QRectF &geometry);
+
+    /**
+     * Places the window in the workspace as specified by the @a placement command.
+     */
+    void place(const PlacementCommand &placement);
 
     void growHorizontal();
     void shrinkHorizontal();

@@ -736,7 +736,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     }
     if (!placementDone) {
         // Placement needs to be after setting size
-        workspace()->placement()->place(this, area);
+        if (const auto placement = workspace()->placement()->place(this, area)) {
+            place(*placement);
+        }
         // The client may have been moved to another screen, update placement area.
         area = workspace()->clientArea(PlacementArea, this, moveResizeOutput());
         dontKeepInArea = true;
@@ -4080,7 +4082,9 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
                 // needs placement
                 const QSizeF constraintedSize = constrainFrameSize(QSizeF(width() * 2 / 3, clientArea.height()), SizeModeFixedH);
                 resize(QSizeF(constraintedSize.width(), clientArea.height()));
-                workspace()->placement()->placeSmart(this, clientArea);
+                if (const auto placement = workspace()->placement()->placeSmart(this, clientArea)) {
+                    place(*placement);
+                }
             } else {
                 moveResize(QRectF(QPointF(geometryRestore().x(), clientArea.top()),
                                   QSize(geometryRestore().width(), clientArea.height())));
@@ -4099,7 +4103,9 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
                 // needs placement
                 const QSizeF constraintedSize = constrainFrameSize(QSizeF(clientArea.width(), height() * 2 / 3), SizeModeFixedW);
                 resize(QSizeF(clientArea.width(), constraintedSize.height()));
-                workspace()->placement()->placeSmart(this, clientArea);
+                if (const auto placement = workspace()->placement()->placeSmart(this, clientArea)) {
+                    place(*placement);
+                }
             } else {
                 moveResize(QRectF(QPoint(clientArea.left(), geometryRestore().y()),
                                   QSize(clientArea.width(), geometryRestore().height())));
@@ -4132,7 +4138,9 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
                 s.setHeight(geometryRestore().height());
             }
             resize(constrainFrameSize(s));
-            workspace()->placement()->placeSmart(this, clientArea);
+            if (const auto placement = workspace()->placement()->placeSmart(this, clientArea)) {
+                place(*placement);
+            }
             restore = moveResizeGeometry();
             if (geometryRestore().width() > 0) {
                 restore.moveLeft(geometryRestore().x());

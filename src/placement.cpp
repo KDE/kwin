@@ -37,7 +37,7 @@ Placement::Placement()
 /**
  * Places the client \a c according to the workspace's layout policy
  */
-bool Placement::place(Window *c, const QRectF &area)
+std::optional<PlacementCommand> Placement::place(Window *c, const QRectF &area)
 {
     PlacementPolicy policy = c->rules()->checkPlacement(PlacementDefault);
     if (policy != PlacementDefault) {
@@ -61,7 +61,7 @@ bool Placement::place(Window *c, const QRectF &area)
     }
 }
 
-bool Placement::place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement)
 {
     if (policy == PlacementUnknown || policy == PlacementDefault) {
         policy = options->placement();
@@ -69,7 +69,7 @@ bool Placement::place(Window *c, const QRectF &area, PlacementPolicy policy, Pla
 
     switch (policy) {
     case PlacementNone:
-        return false;
+        return std::nullopt;
     case PlacementRandom:
         return placeAtRandom(c, area.toRect(), nextPlacement);
     case PlacementCentered:
@@ -90,13 +90,13 @@ bool Placement::place(Window *c, const QRectF &area, PlacementPolicy policy, Pla
 /**
  * Place the client \a c according to a simply "random" placement algorithm.
  */
-bool Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
     const QSizeF size = c->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     const int step = 24;
@@ -138,9 +138,7 @@ bool Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
     }
 
     const QRectF placed = cascadeIfCovering(c, QRectF(QPointF(tx, ty), size), area);
-    c->move(placed.topLeft());
-
-    return true;
+    return placed.topLeft();
 }
 
 static inline bool isIrrelevant(const Window *window, const Window *regarding, VirtualDesktop *desktop)
@@ -157,7 +155,7 @@ static inline bool isIrrelevant(const Window *window, const Window *regarding, V
 /**
  * Place the client \a c according to a really smart placement algorithm :-)
  */
-bool Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
@@ -172,7 +170,7 @@ bool Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
 
     const QSizeF size = window->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
@@ -338,10 +336,7 @@ bool Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
         y_optimal = area.top();
     }
 
-    // place the window
-    window->move(QPoint(x_optimal, y_optimal));
-
-    return true;
+    return QPointF(x_optimal, y_optimal);
 }
 
 void Placement::reinitCascading()
@@ -370,13 +365,13 @@ QPoint Workspace::cascadeOffset(const QRectF &area) const
 /**
  * Place windows in a cascading order, remembering positions for each desktop
  */
-bool Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     Q_ASSERT(area.isValid());
 
     const QSizeF size = c->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     // CT how do I get from the 'Client' class the size that NW squarish "handle"
@@ -427,56 +422,49 @@ bool Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
         }
     }
 
-    // place the window
-    c->move(QPoint(xp, yp));
-
     // new position
     cci[dn].pos = QPoint(xp + delta.x(), yp + delta.y());
 
-    return true;
+    return QPointF(xp, yp);
 }
 
 /**
  * Place windows centered, on top of all others
  */
-bool Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
     const QSizeF size = c->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     const QPoint position(std::max(area.left() + (area.width() - size.width()) / 2, area.left()),
                           std::max(area.top() + (area.height() - size.height()) / 2, area.top()));
 
     const QRectF placed = cascadeIfCovering(c, QRectF(position, size), area);
-    c->move(placed.topLeft());
-
-    return true;
+    return placed.topLeft();
 }
 
 /**
  * Place windows in the (0,0) corner, on top of all others
  */
-bool Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
     const QSizeF size = c->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     // get the maximum allowed windows space and desk's origin
     const QRectF placed = cascadeIfCovering(c, QRectF(area.topLeft(), size), area);
-    c->move(placed.topLeft());
-
-    return true;
+    return placed.topLeft();
 }
 
-bool Placement::placeUtility(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeUtility(Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     // TODO kwin should try to place utility windows next to their mainwindow,
     // preferably at the right edge, and going down if there are more of them
@@ -486,40 +474,37 @@ bool Placement::placeUtility(Window *c, const QRect &area, PlacementPolicy /*nex
     return place(c, area, PlacementDefault);
 }
 
-bool Placement::placeOnScreenDisplay(Window *c, const QRect &area)
+std::optional<PlacementCommand> Placement::placeOnScreenDisplay(Window *c, const QRect &area)
 {
     Q_ASSERT(area.isValid());
 
     const QSizeF size = c->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     // place at lower area of the screen
     const int x = area.left() + (area.width() - size.width()) / 2;
     const int y = area.top() + 2 * area.height() / 3 - size.height() / 2;
 
-    c->move(QPoint(x, y));
-
-    return true;
+    return QPointF(x, y);
 }
 
-bool Placement::placeTransient(Window *c)
+std::optional<PlacementCommand> Placement::placeTransient(Window *c)
 {
-    c->moveResize(c->transientPlacement());
-    return true;
+    return c->transientPlacement();
 }
 
-bool Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     return placeOnMainWindow(c, area, nextPlacement);
 }
 
-bool Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     const QSizeF size = c->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     const QPointF cursorPos = Cursors::self()->mouse()->pos();
@@ -530,12 +515,10 @@ bool Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*
 
     const QRectF screenArea = workspace()->clientArea(PlacementArea, c, cursorPos);
     const QRectF placed = cascadeIfCovering(c, c->keepInArea(centered, screenArea), screenArea);
-    c->move(placed.topLeft());
-
-    return true;
+    return placed.topLeft();
 }
 
-bool Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     Q_ASSERT(area.isValid());
 
@@ -543,14 +526,14 @@ bool Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy 
         nextPlacement = PlacementCentered;
     }
     if (nextPlacement == PlacementMaximizing) { // maximize if needed
-        if (const bool placed = placeMaximizing(c, area, PlacementNone)) {
+        if (const auto placed = placeMaximizing(c, area, PlacementNone)) {
             return placed;
         }
     }
 
     const QSizeF size = c->size();
     if (size.isEmpty()) {
-        return false;
+        return std::nullopt;
     }
 
     auto mainwindows = c->mainWindows();
@@ -593,12 +576,10 @@ bool Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy 
 
     // get area again, because the mainwindow may be on different xinerama screen
     const QRect placementArea = workspace()->clientArea(PlacementArea, c, geom.center()).toRect();
-    c->move(c->keepInArea(geom, placementArea).topLeft()); // make sure it's kept inside workarea
-
-    return true;
+    return c->keepInArea(geom, placementArea).topLeft(); // make sure it's kept inside workarea
 }
 
-bool Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     Q_ASSERT(area.isValid());
 
@@ -606,8 +587,7 @@ bool Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
         nextPlacement = PlacementCentered;
     }
     if (c->isMaximizable()) {
-        c->maximize(MaximizeFull);
-        return true;
+        return MaximizeFull;
     } else {
         return place(c, area, nextPlacement);
     }
@@ -673,7 +653,9 @@ void Placement::cascadeDesktop()
             continue;
         }
         const QRect placementArea = workspace()->clientArea(PlacementArea, window).toRect();
-        placeCascaded(window, placementArea);
+        if (const auto placement = placeCascaded(window, placementArea)) {
+            window->place(*placement);
+        }
     }
 }
 
@@ -689,7 +671,9 @@ void Placement::unclutterDesktop()
             continue;
         }
         const QRect placementArea = workspace()->clientArea(PlacementArea, window).toRect();
-        placeSmart(window, placementArea);
+        if (const auto placement = placeSmart(window, placementArea)) {
+            window->place(*placement);
+        }
     }
 }
 

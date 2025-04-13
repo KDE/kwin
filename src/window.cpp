@@ -87,7 +87,9 @@ Window::Window()
     // replace on-screen-display on size changes
     connect(this, &Window::frameGeometryChanged, this, [this](const QRectF &old) {
         if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
-            workspace()->placement()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
+            if (const auto placement = workspace()->placement()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()))) {
+                place(*placement);
+            }
         }
     });
 
@@ -3593,6 +3595,17 @@ void Window::moveResize(const QRectF &rect)
 
     setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
+}
+
+void Window::place(const PlacementCommand &placement)
+{
+    if (auto position = std::get_if<QPointF>(&placement)) {
+        move(*position);
+    } else if (auto rect = std::get_if<QRectF>(&placement)) {
+        moveResize(*rect);
+    } else if (auto maximizeMode = std::get_if<MaximizeMode>(&placement)) {
+        maximize(*maximizeMode);
+    }
 }
 
 void Window::setElectricBorderMode(std::optional<ElectricBorderMode> mode)

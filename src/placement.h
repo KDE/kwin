@@ -12,6 +12,7 @@
 #pragma once
 // KWin
 #include "options.h"
+#include "window.h"
 // Qt
 #include <QList>
 #include <QPoint>
@@ -21,17 +22,15 @@ namespace KWin
 {
 
 class VirtualDesktop;
-class Window;
 
 class KWIN_EXPORT Placement
 {
 public:
     explicit Placement();
 
-    bool place(Window *c, const QRectF &area);
-    bool placeSmart(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
-
-    bool placeCentered(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> place(Window *c, const QRectF &area);
+    std::optional<PlacementCommand> placeSmart(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeCentered(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 
     void reinitCascading();
     void reinitCascading(VirtualDesktop *desktop);
@@ -50,17 +49,17 @@ public:
     static const char *policyToString(PlacementPolicy policy);
 
 private:
-    bool place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement = PlacementUnknown);
-    bool placeUnderMouse(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeTransient(Window *c);
-    bool placeAtRandom(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeCascaded(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeMaximizing(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeZeroCornered(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeDialog(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeUtility(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    bool placeOnScreenDisplay(Window *c, const QRect &area);
+    std::optional<PlacementCommand> place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement = PlacementUnknown);
+    std::optional<PlacementCommand> placeUnderMouse(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeTransient(Window *c);
+    std::optional<PlacementCommand> placeAtRandom(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeCascaded(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeMaximizing(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeZeroCornered(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeDialog(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeUtility(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    std::optional<PlacementCommand> placeOnScreenDisplay(Window *c, const QRect &area);
 
     // CT needed for cascading+
     struct DesktopCascadingInfo

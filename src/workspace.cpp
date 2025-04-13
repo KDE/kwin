@@ -779,7 +779,9 @@ void Workspace::addWaylandWindow(Window *window)
         }
         if (!placementDone) {
             const QRectF area = clientArea(PlacementArea, window, activeOutput());
-            m_placement->place(window, area);
+            if (const auto placement = m_placement->place(window, area)) {
+                window->place(*placement);
+            }
         }
     }
     Q_ASSERT(!m_windows.contains(window));
@@ -1991,7 +1993,9 @@ void Workspace::addInternalWindow(InternalWindow *window)
 
     if (window->isPlaceable()) {
         const QRectF area = clientArea(PlacementArea, window, workspace()->activeOutput());
-        m_placement->place(window, area);
+        if (const auto placement = m_placement->place(window, area)) {
+            window->place(*placement);
+        }
     }
 
     updateStackingOrder(true);

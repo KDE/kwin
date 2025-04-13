@@ -316,7 +316,7 @@ void MoveResizeWindowTest::testPackTo()
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
 
     // let's place it centered
-    workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024));
+    window->place(*workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024)));
     QCOMPARE(window->frameGeometry(), QRect(590, 487, 100, 50));
 
     QFETCH(QString, methodCall);
@@ -364,7 +364,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
         QCOMPARE(workspace()->activeWindow(), window);
         QCOMPARE(window->frameGeometry().size(), QSize(10, 10));
         // let's place it centered
-        workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024));
+        window->place(*workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024)));
         QCOMPARE(window->frameGeometry(), QRect(635, 507, 10, 10));
         QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
         QCOMPARE(window->frameGeometry(), expectedGeometry);
@@ -383,7 +383,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
     // let's place it centered
-    workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024));
+    window->place(*workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024)));
     QCOMPARE(window->frameGeometry(), QRect(590, 487, 100, 50));
 
     QFETCH(QString, methodCall);
@@ -429,7 +429,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QCOMPARE(workspace()->activeWindow(), window);
 
     // let's place it centered
-    workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024));
+    window->place(*workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024)));
     QCOMPARE(window->frameGeometry(), QRect(590, 487, 100, 50));
 
     QFETCH(QString, methodCall);

@@ -1387,7 +1387,9 @@ void XdgToplevelWindow::initialize()
     }
     if (needsPlacement) {
         const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-        workspace()->placement()->place(this, area);
+        if (const auto placement = workspace()->placement()->place(this, area)) {
+            place(*placement);
+        }
     }
 
     XdgToplevelSessionV1Interface *session = m_shellSurface->session();
@@ -1847,7 +1849,7 @@ void XdgPopupWindow::relayout()
     if (m_shellSurface->positioner().isReactive()) {
         updateRelativePlacement();
     }
-    workspace()->placement()->place(this, QRectF());
+    place(workspace()->placement()->place(this, QRectF()).value());
     scheduleConfigure();
 }
 
@@ -1965,7 +1967,7 @@ void XdgPopupWindow::initialize()
     connect(parent, &Window::frameGeometryChanged, this, &XdgPopupWindow::relayout);
     connect(parent, &Window::closed, this, &XdgPopupWindow::popupDone);
 
-    workspace()->placement()->place(this, QRectF());
+    place(workspace()->placement()->place(this, QRectF()).value());
     scheduleConfigure();
 }
 
