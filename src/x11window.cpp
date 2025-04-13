@@ -3678,7 +3678,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
 }
 
-QRectF X11Window::resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb_gravity_t gravity)
+QRectF X11Window::resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb_gravity_t gravity) const
 {
     Q_ASSERT(!shade_geometry_change);
     if (isShade()) {

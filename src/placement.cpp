@@ -37,7 +37,7 @@ Placement::Placement()
 /**
  * Places the client \a c according to the workspace's layout policy
  */
-std::optional<PlacementCommand> Placement::place(Window *c, const QRectF &area)
+std::optional<PlacementCommand> Placement::place(const Window *c, const QRectF &area)
 {
     PlacementPolicy policy = c->rules()->checkPlacement(PlacementDefault);
     if (policy != PlacementDefault) {
@@ -61,7 +61,7 @@ std::optional<PlacementCommand> Placement::place(Window *c, const QRectF &area)
     }
 }
 
-std::optional<PlacementCommand> Placement::place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::place(const Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement)
 {
     if (policy == PlacementUnknown || policy == PlacementDefault) {
         policy = options->placement();
@@ -90,7 +90,7 @@ std::optional<PlacementCommand> Placement::place(Window *c, const QRectF &area, 
 /**
  * Place the client \a c according to a simply "random" placement algorithm.
  */
-std::optional<PlacementCommand> Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeAtRandom(const Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
@@ -155,7 +155,7 @@ static inline bool isIrrelevant(const Window *window, const Window *regarding, V
 /**
  * Place the client \a c according to a really smart placement algorithm :-)
  */
-std::optional<PlacementCommand> Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeSmart(const Window *window, const QRectF &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
@@ -365,7 +365,7 @@ QPoint Workspace::cascadeOffset(const QRectF &area) const
 /**
  * Place windows in a cascading order, remembering positions for each desktop
  */
-std::optional<PlacementCommand> Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeCascaded(const Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     Q_ASSERT(area.isValid());
 
@@ -431,7 +431,7 @@ std::optional<PlacementCommand> Placement::placeCascaded(Window *c, const QRect 
 /**
  * Place windows centered, on top of all others
  */
-std::optional<PlacementCommand> Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeCentered(const Window *c, const QRectF &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
@@ -450,7 +450,7 @@ std::optional<PlacementCommand> Placement::placeCentered(Window *c, const QRectF
 /**
  * Place windows in the (0,0) corner, on top of all others
  */
-std::optional<PlacementCommand> Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeZeroCornered(const Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
@@ -464,7 +464,7 @@ std::optional<PlacementCommand> Placement::placeZeroCornered(Window *c, const QR
     return placed.topLeft();
 }
 
-std::optional<PlacementCommand> Placement::placeUtility(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeUtility(const Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     // TODO kwin should try to place utility windows next to their mainwindow,
     // preferably at the right edge, and going down if there are more of them
@@ -474,7 +474,7 @@ std::optional<PlacementCommand> Placement::placeUtility(Window *c, const QRect &
     return place(c, area, PlacementDefault);
 }
 
-std::optional<PlacementCommand> Placement::placeOnScreenDisplay(Window *c, const QRect &area)
+std::optional<PlacementCommand> Placement::placeOnScreenDisplay(const Window *c, const QRect &area)
 {
     Q_ASSERT(area.isValid());
 
@@ -490,17 +490,17 @@ std::optional<PlacementCommand> Placement::placeOnScreenDisplay(Window *c, const
     return QPointF(x, y);
 }
 
-std::optional<PlacementCommand> Placement::placeTransient(Window *c)
+std::optional<PlacementCommand> Placement::placeTransient(const Window *c)
 {
     return c->transientPlacement();
 }
 
-std::optional<PlacementCommand> Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeDialog(const Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     return placeOnMainWindow(c, area, nextPlacement);
 }
 
-std::optional<PlacementCommand> Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*next*/)
+std::optional<PlacementCommand> Placement::placeUnderMouse(const Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
     const QSizeF size = c->size();
     if (size.isEmpty()) {
@@ -518,7 +518,7 @@ std::optional<PlacementCommand> Placement::placeUnderMouse(Window *c, const QRec
     return placed.topLeft();
 }
 
-std::optional<PlacementCommand> Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeOnMainWindow(const Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     Q_ASSERT(area.isValid());
 
@@ -579,7 +579,7 @@ std::optional<PlacementCommand> Placement::placeOnMainWindow(Window *c, const QR
     return c->keepInArea(geom, placementArea).topLeft(); // make sure it's kept inside workarea
 }
 
-std::optional<PlacementCommand> Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy nextPlacement)
+std::optional<PlacementCommand> Placement::placeMaximizing(const Window *c, const QRect &area, PlacementPolicy nextPlacement)
 {
     Q_ASSERT(area.isValid());
 
@@ -596,7 +596,7 @@ std::optional<PlacementCommand> Placement::placeMaximizing(Window *c, const QRec
 /**
  * Cascade the window until it no longer fully overlaps any other window
  */
-QRectF Placement::cascadeIfCovering(Window *window, const QRectF &geometry, const QRectF &area) const
+QRectF Placement::cascadeIfCovering(const Window *window, const QRectF &geometry, const QRectF &area) const
 {
     const QPoint offset = workspace()->cascadeOffset(area);
 

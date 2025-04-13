@@ -727,8 +727,8 @@ public:
     void growVertical();
     void shrinkVertical();
 
-    virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) = 0;
-    QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false);
+    virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) const = 0;
+    QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false) const;
 
     // prefer isXXX() instead
     virtual WindowType windowType() const = 0;

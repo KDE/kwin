@@ -1263,6 +1263,14 @@ MaximizeMode XdgToplevelWindow::initialMaximizeMode() const
     if (session) {
         return MaximizeMode(session->read(QStringLiteral("maximizeMode")).toUInt());
     }
+    if (isPlaceable()) {
+        const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
+        if (const auto placement = workspace()->placement()->place(this, area)) {
+            if (const auto maximizeMode = std::get_if<MaximizeMode>(&*placement)) {
+                return *maximizeMode;
+            }
+        }
+    }
     return MaximizeRestore;
 }
 
@@ -1341,7 +1349,6 @@ QString XdgToplevelWindow::initialShortcut() const
 
 void XdgToplevelWindow::initialize()
 {
-    bool needsPlacement = isPlaceable();
     setupWindowRules();
 
     // Move or resize the window only if enforced by a window rule.
@@ -1369,28 +1376,8 @@ void XdgToplevelWindow::initialize()
     setShortcut(rules()->checkShortcut(initialShortcut(), true));
     setNoBorder(rules()->checkNoBorder(initialNoBorder(), true));
 
-    // Don't place the client if its position is set by a rule.
-    if (rules()->checkPosition(invalidPoint, true) != invalidPoint) {
-        needsPlacement = false;
-    }
-
-    // Don't place the client if the maximize state is set by a rule.
-    if (requestedMaximizeMode() != MaximizeRestore) {
-        needsPlacement = false;
-    }
-
     workspace()->rulebook()->discardUsed(this, false); // Remove Apply Now rules.
     updateWindowRules(Rules::All);
-
-    if (isRequestedFullScreen()) {
-        needsPlacement = false;
-    }
-    if (needsPlacement) {
-        const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-        if (const auto placement = workspace()->placement()->place(this, area)) {
-            place(*placement);
-        }
-    }
 
     XdgToplevelSessionV1Interface *session = m_shellSurface->session();
     if (session && session->exists()) {

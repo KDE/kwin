@@ -82,7 +82,7 @@ bool WaylandWindow::isLocalhost() const
     return true;
 }
 
-QRectF WaylandWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &size)
+QRectF WaylandWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &size) const
 {
     const QRectF area = workspace()->clientArea(WorkArea, this, geometry.center());
 

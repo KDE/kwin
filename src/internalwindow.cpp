@@ -243,7 +243,7 @@ bool InternalWindow::isOutline() const
     return false;
 }
 
-QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &size)
+QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &size) const
 {
     if (!m_handle) {
         return geometry;

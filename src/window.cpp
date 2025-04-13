@@ -1071,7 +1071,7 @@ void Window::handlePaletteChange()
     Q_EMIT paletteChanged(palette());
 }
 
-QRectF Window::keepInArea(QRectF geometry, QRectF area, bool partial)
+QRectF Window::keepInArea(QRectF geometry, QRectF area, bool partial) const
 {
     if (partial) {
         // increase the area so that can have only 100 pixels in the area

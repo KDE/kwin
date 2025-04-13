@@ -170,9 +170,9 @@ public:
     void updateShape();
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) override;
-    QRectF resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb_gravity_t gravity);
-    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s, xcb_gravity_t gravity);
+    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) const override;
+    QRectF resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb_gravity_t gravity) const;
+    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s, xcb_gravity_t gravity) const;
     QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const override;
 
     bool providesContextHelp() const override;
@@ -548,12 +548,12 @@ inline bool X11Window::isManaged() const
     return m_managed;
 }
 
-inline QRectF X11Window::resizeWithChecks(const QRectF &geometry, const QSizeF &s)
+inline QRectF X11Window::resizeWithChecks(const QRectF &geometry, const QSizeF &s) const
 {
     return resizeWithChecks(geometry, s.width(), s.height(), XCB_GRAVITY_BIT_FORGET);
 }
 
-inline QRectF X11Window::resizeWithChecks(const QRectF &geometry, const QSizeF &s, xcb_gravity_t gravity)
+inline QRectF X11Window::resizeWithChecks(const QRectF &geometry, const QSizeF &s, xcb_gravity_t gravity) const
 {
     return resizeWithChecks(geometry, s.width(), s.height(), gravity);
 }
