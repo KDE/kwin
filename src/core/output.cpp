@@ -876,6 +876,9 @@ Output::EdrPolicy Output::edrPolicy() const
     return m_state.edrPolicy;
 }
 
+void Output::setAutoRotateAvailable(bool isAvailable)
+{
+}
 } // namespace KWin
 
 #include "moc_output.cpp"

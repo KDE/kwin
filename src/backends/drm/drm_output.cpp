@@ -284,8 +284,7 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->hdrMetadata.isValid() && m_connector->edid()->supportsPQ() && (capabilities & Capability::WideColorGamut)) {
         capabilities |= Capability::HighDynamicRange;
     }
-    if (m_connector->isInternal()) {
-        // TODO only set this if an orientation sensor is available?
+    if (m_connector->isInternal() && m_autoRotateAvailable) {
         capabilities |= Capability::AutoRotation;
     }
     if (m_state.highDynamicRange || m_state.brightnessDevice || m_state.allowSdrSoftwareBrightness) {
@@ -756,6 +755,14 @@ const ColorDescription &DrmOutput::blendingColorDescription() const
 void DrmOutput::removePipeline()
 {
     m_pipeline = nullptr;
+}
+
+void DrmOutput::setAutoRotateAvailable(bool isAvailable)
+{
+    m_autoRotateAvailable = isAvailable;
+    Information next = m_information;
+    next.capabilities = computeCapabilities();
+    setInformation(next);
 }
 }
 

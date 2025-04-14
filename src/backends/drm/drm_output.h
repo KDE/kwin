@@ -52,6 +52,7 @@ public:
 
     bool shouldDisableCursorPlane() const;
     bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
+    void setAutoRotateAvailable(bool isAvailable) override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QList<uint32_t> &objectList);
@@ -104,6 +105,7 @@ private:
     ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
     ColorDescription m_blendingColorDescription = ColorDescription::sRGB;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
+    bool m_autoRotateAvailable = false;
 };
 
 }
