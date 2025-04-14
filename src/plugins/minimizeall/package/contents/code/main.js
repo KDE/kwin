@@ -11,8 +11,8 @@ var registeredBorders = [];
 
 function isRelevant(client) {
     return client.minimizable &&
-           (!client.desktops.length || client.desktops.indexOf(workspace.currentDesktop) != -1);
-           (!client.activities.length || client.activities.indexOf(workspace.currentActivity.toString()) > -1);
+           (!client.desktops.length || client.desktops.indexOf(workspace.currentDesktop) != -1) &&
+           (!client.activities.length || client.activities.indexOf(workspace.currentActivity) != -1);
 }
 
 function minimizeAllWindows() {
