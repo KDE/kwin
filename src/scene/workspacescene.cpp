@@ -326,9 +326,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
         Output *output = delegate->output();
         const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
         m_containerItem->framePainted(output, frame, frameTime);
-        if (m_overlayItem) {
-            m_overlayItem->framePainted(output, frame, frameTime);
-        }
+        m_overlayItem->framePainted(output, frame, frameTime);
     }
 }
 
