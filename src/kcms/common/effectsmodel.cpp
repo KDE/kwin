@@ -630,7 +630,25 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
 
 bool EffectsModel::shouldStore(const EffectData &data) const
 {
-    return !data.internal && !m_excludeExclusiveGroups.contains(data.exclusiveGroup) && !m_excludeEffects.contains(data.serviceName);
+    if (data.internal) {
+        return false;
+    }
+
+    if (m_excludeExclusiveGroups.contains(data.exclusiveGroup)) {
+        return false;
+    }
+
+    if (m_excludeEffects.contains(data.serviceName)) {
+        return false;
+    }
+
+    if (std::any_of(m_pendingEffects.cbegin(), m_pendingEffects.cend(), [&](const EffectData &effect) {
+        return effect.serviceName == data.serviceName;
+    })) {
+        return false;
+    }
+
+    return true;
 }
 
 }
