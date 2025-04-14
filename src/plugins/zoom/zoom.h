@@ -25,6 +25,7 @@ namespace KWin
 class ZoomAccessibilityIntegration;
 #endif
 
+class CursorItem;
 class GLFramebuffer;
 class GLTexture;
 class GLVertexBuffer;
@@ -108,6 +109,7 @@ private:
     bool screenExistsAt(const QPoint &point) const;
     void realtimeZoom(double delta);
 
+    QPointF calculateCursorItemPosition() const;
     void showCursor();
     void hideCursor();
     GLTexture *ensureCursorTexture();
@@ -131,12 +133,13 @@ private:
     QPoint m_prevPoint;
     QTime m_lastMouseEvent;
     QTime m_lastFocusEvent;
-    std::unique_ptr<GLTexture> m_cursorTexture;
-    bool m_cursorTextureDirty = false;
-    bool m_isMouseHidden = false;
+    std::unique_ptr<CursorItem> m_cursorItem;
+    bool m_cursorHidden = false;
     QTimeLine m_timeline;
     int m_xMove = 0;
     int m_yMove = 0;
+    int m_xTranslation = 0;
+    int m_yTranslation = 0;
     double m_moveFactor = 20.0;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
     std::map<Output *, OffscreenData> m_offscreenData;
