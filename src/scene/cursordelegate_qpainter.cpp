@@ -47,6 +47,7 @@ void CursorDelegateQPainter::paint(const RenderTarget &renderTarget, const QRegi
     renderLayer.delegate()->prePaint();
     renderLayer.delegate()->paint(offscreenRenderTarget, infiniteRegion());
     renderLayer.delegate()->postPaint();
+    renderLayer.delegate()->frame(nullptr);
 
     QPainter painter(buffer);
     painter.setClipRegion(region);

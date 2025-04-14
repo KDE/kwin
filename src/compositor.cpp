@@ -119,6 +119,9 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 
 void Compositor::framePass(RenderLayer *layer, OutputFrame *frame)
 {
+    if (!layer->isVisible()) {
+        return;
+    }
     layer->delegate()->frame(frame);
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
@@ -589,17 +592,6 @@ void Compositor::composite(RenderLoop *renderLoop)
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
     }
-
-    // TODO: move this into the cursor layer
-    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
-    if (!Cursors::self()->isCursorHidden()) {
-        Cursor *cursor = Cursors::self()->currentCursor();
-        if (cursor->geometry().intersects(output->geometry())) {
-            if (CursorSource *source = cursor->source()) {
-                source->frame(frameTime);
-            }
-        }
-    }
 }
 
 void Compositor::addOutput(Output *output)
@@ -676,6 +668,7 @@ void Compositor::addOutput(Output *output)
                 renderLayer.delegate()->prePaint();
                 renderLayer.delegate()->paint(renderTarget, infiniteRegion());
                 renderLayer.delegate()->postPaint();
+                renderLayer.delegate()->frame(nullptr);
 
                 if (!outputLayer->endFrame(infiniteRegion(), infiniteRegion(), nullptr)) {
                     return false;

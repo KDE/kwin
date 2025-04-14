@@ -59,6 +59,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     renderLayer.delegate()->prePaint();
     renderLayer.delegate()->paint(offscreenRenderTarget, infiniteRegion());
     renderLayer.delegate()->postPaint();
+    renderLayer.delegate()->frame(nullptr);
 
     QMatrix4x4 mvp;
     mvp.scale(1, -1); // flip the y axis back

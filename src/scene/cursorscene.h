@@ -26,6 +26,7 @@ public:
     QRegion prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void frame(SceneDelegate *delegate, OutputFrame *frame) override;
 
 private:
     std::unique_ptr<RootItem> m_rootItem;

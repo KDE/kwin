@@ -64,6 +64,12 @@ void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)
     m_renderer->endFrame();
 }
 
+void CursorScene::frame(SceneDelegate *delegate, OutputFrame *frame)
+{
+    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(delegate->output()->renderLoop()->lastPresentationTimestamp());
+    m_rootItem->framePainted(delegate->output(), frame, frameTime);
+}
+
 } // namespace KWin
 
 #include "moc_cursorscene.cpp"
