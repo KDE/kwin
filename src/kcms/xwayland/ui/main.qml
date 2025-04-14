@@ -15,10 +15,7 @@ import org.kde.kquickcontrols
 
 KCM.SimpleKCM {
     id: root
-    KCM.SettingStateBinding {
-        configObject: kcm.settings
-        settingName: "Xwayland"
-    }
+
     implicitWidth: Kirigami.Units.gridUnit * 48
     implicitHeight: Kirigami.Units.gridUnit * 33
 
