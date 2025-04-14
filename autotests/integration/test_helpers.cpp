@@ -540,6 +540,11 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->xdgActivation = std::make_unique<XdgActivation>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::XdgSessionV1) {
+            if (interface == xx_session_manager_v1_interface.name) {
+                c->sessionManager = std::make_unique<XdgSessionManagerV1>(*c->registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -671,6 +676,7 @@ Connection::~Connection()
     fifoManager.reset();
     presentationTime.reset();
     xdgActivation.reset();
+    sessionManager.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -1201,6 +1207,16 @@ std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel)
         return nullptr;
     }
     return std::make_unique<XdgDialogV1>(wm, toplevel);
+}
+
+std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1::reason reason, const QString &sessionId)
+{
+    XdgSessionManagerV1 *manager = s_waylandConnection->sessionManager.get();
+    if (!manager) {
+        qWarning() << "Could not create a xx_session_v1 because xx_session_manager_v1 global is not bound";
+        return nullptr;
+    }
+    return std::make_unique<XdgSessionV1>(manager->get_session(reason, sessionId));
 }
 
 bool waitForWindowClosed(Window *window)
@@ -1865,6 +1881,66 @@ XdgActivation::~XdgActivation()
 std::unique_ptr<XdgActivationToken> XdgActivation::createToken()
 {
     return std::make_unique<XdgActivationToken>(get_activation_token());
+}
+
+XdgToplevelSessionV1::XdgToplevelSessionV1(::xx_toplevel_session_v1 *session)
+    : QtWayland::xx_toplevel_session_v1(session)
+{
+}
+
+XdgToplevelSessionV1::~XdgToplevelSessionV1()
+{
+    destroy();
+}
+
+void XdgToplevelSessionV1::xx_toplevel_session_v1_restored(struct ::xdg_toplevel *surface)
+{
+    Q_EMIT restored();
+}
+
+XdgSessionV1::XdgSessionV1(::xx_session_v1 *session)
+    : QtWayland::xx_session_v1(session)
+{
+}
+
+XdgSessionV1::~XdgSessionV1()
+{
+    destroy();
+}
+
+std::unique_ptr<XdgToplevelSessionV1> XdgSessionV1::add(XdgToplevel *toplevel, const QString &toplevelId)
+{
+    return std::make_unique<XdgToplevelSessionV1>(add_toplevel(toplevel->object(), toplevelId));
+}
+
+std::unique_ptr<XdgToplevelSessionV1> XdgSessionV1::restore(XdgToplevel *toplevel, const QString &toplevelId)
+{
+    return std::make_unique<XdgToplevelSessionV1>(restore_toplevel(toplevel->object(), toplevelId));
+}
+
+void XdgSessionV1::xx_session_v1_created(const QString &id)
+{
+    Q_EMIT created(id);
+}
+
+void XdgSessionV1::xx_session_v1_restored()
+{
+    Q_EMIT restored();
+}
+
+void XdgSessionV1::xx_session_v1_replaced()
+{
+    Q_EMIT replaced();
+}
+
+XdgSessionManagerV1::XdgSessionManagerV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::xx_session_manager_v1(registry, id, version)
+{
+}
+
+XdgSessionManagerV1::~XdgSessionManagerV1()
+{
+    destroy();
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)

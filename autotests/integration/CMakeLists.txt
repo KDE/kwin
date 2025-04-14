@@ -15,6 +15,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
     ${private_code_option}
     FILES
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
+        ${CMAKE_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
         ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
@@ -148,6 +149,7 @@ integrationTest(NAME testColorManagement SRCS test_colormanagement.cpp)
 integrationTest(NAME testKeyboardInput SRCS keyboard_input_test.cpp)
 integrationTest(NAME testFifo SRCS test_fifo.cpp)
 integrationTest(NAME testMouseKeys SRCS mouse_keys_test.cpp)
+integrationTest(NAME testXdgSession SRCS xdgsession_test.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration3::KDecoration)

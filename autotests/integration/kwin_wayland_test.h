@@ -38,6 +38,7 @@
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-dialog-v1.h"
 #include "qwayland-xdg-shell.h"
+#include "qwayland-xx-session-management-v1.h"
 #include "qwayland-zkde-screencast-unstable-v1.h"
 
 namespace KWayland
@@ -613,6 +614,7 @@ enum class AdditionalWaylandInterface {
     FifoV1 = 1 << 23,
     PresentationTime = 1 << 24,
     XdgActivation = 1 << 25,
+    XdgSessionV1 = 1 << 26,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -746,6 +748,50 @@ public:
     std::unique_ptr<XdgActivationToken> createToken();
 };
 
+class XdgToplevelSessionV1 : public QObject, public QtWayland::xx_toplevel_session_v1
+{
+    Q_OBJECT
+
+public:
+    explicit XdgToplevelSessionV1(::xx_toplevel_session_v1 *session);
+    ~XdgToplevelSessionV1() override;
+
+Q_SIGNALS:
+    void restored();
+
+protected:
+    void xx_toplevel_session_v1_restored(struct ::xdg_toplevel *surface) override;
+};
+
+class XdgSessionV1 : public QObject, public QtWayland::xx_session_v1
+{
+    Q_OBJECT
+
+public:
+    explicit XdgSessionV1(::xx_session_v1 *session);
+    ~XdgSessionV1() override;
+
+    std::unique_ptr<XdgToplevelSessionV1> add(XdgToplevel *toplevel, const QString &toplevelId);
+    std::unique_ptr<XdgToplevelSessionV1> restore(XdgToplevel *toplevel, const QString &toplevelId);
+
+Q_SIGNALS:
+    void created(const QString &id);
+    void restored();
+    void replaced();
+
+protected:
+    void xx_session_v1_created(const QString &id) override;
+    void xx_session_v1_restored() override;
+    void xx_session_v1_replaced() override;
+};
+
+class XdgSessionManagerV1 : public QtWayland::xx_session_manager_v1
+{
+public:
+    XdgSessionManagerV1(::wl_registry *registry, uint32_t id, int version);
+    ~XdgSessionManagerV1() override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -787,6 +833,7 @@ struct Connection
     std::unique_ptr<FifoManagerV1> fifoManager;
     std::unique_ptr<PresentationTime> presentationTime;
     std::unique_ptr<XdgActivation> xdgActivation;
+    std::unique_ptr<XdgSessionManagerV1> sessionManager;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -911,6 +958,7 @@ std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface
 std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
 std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
 std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel);
+std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1::reason reason, const QString &sessionId = QString());
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
