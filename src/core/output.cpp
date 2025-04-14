@@ -832,6 +832,10 @@ Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
 {
     return m_state.colorPowerTradeoff;
 }
+
+void Output::setAutoRotateAvailable(bool isAvailable)
+{
+}
 } // namespace KWin
 
 #include "moc_output.cpp"

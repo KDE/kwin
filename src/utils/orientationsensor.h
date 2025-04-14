@@ -25,8 +25,11 @@ public:
     void setEnabled(bool enable);
     QOrientationReading *reading() const;
 
+    bool isAvailable() const;
+
 Q_SIGNALS:
     void orientationChanged();
+    void availableChanged();
 
 private:
     void update();

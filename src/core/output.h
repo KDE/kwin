@@ -384,6 +384,8 @@ public:
 
     ColorPowerTradeoff colorPowerTradeoff() const;
 
+    virtual void setAutoRotateAvailable(bool isAvailable);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.

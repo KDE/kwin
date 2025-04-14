@@ -16,9 +16,15 @@ OrientationSensor::OrientationSensor()
     , m_reading(std::make_unique<QOrientationReading>())
 {
     m_reading->setOrientation(QOrientationReading::Orientation::Undefined);
+    connect(m_sensor.get(), &QOrientationSensor::availableSensorsChanged, this, &OrientationSensor::availableChanged);
 }
 
 OrientationSensor::~OrientationSensor() = default;
+
+bool OrientationSensor::isAvailable() const
+{
+    return m_sensor->isConnectedToBackend() && !m_sensor->sensorsForType(m_sensor->type()).isEmpty();
+}
 
 void OrientationSensor::setEnabled(bool enable)
 {

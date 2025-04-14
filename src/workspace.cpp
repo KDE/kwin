@@ -224,6 +224,12 @@ void Workspace::init()
         connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
         connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+        connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, [this]() {
+            const auto outputs = kwinApp()->outputBackend()->outputs();
+            for (const auto output : outputs) {
+                output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
+            }
+        });
     }
 
     slotOutputBackendOutputsQueried();
@@ -1215,6 +1221,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         if (!output->isNonDesktop() && output->isEnabled()) {
             m_outputs.append(output);
         }
+        output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
     }
 
     // The workspace requires at least one output connected.
