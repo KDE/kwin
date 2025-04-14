@@ -61,6 +61,7 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
         QStringLiteral("kcminputrc"),
         QStringLiteral("kxkbrc"),
         QStringLiteral("kwinoutputconfig.json"),
+        QStringLiteral("kwinsessionrc"),
     };
     for (const QString &config : configs) {
         if (const QString &fileName = QStandardPaths::locate(QStandardPaths::ConfigLocation, config); !fileName.isEmpty()) {
