@@ -32,11 +32,6 @@ public:
 
     QRectF cascadeIfCovering(const Window *c, const QRectF &geometry, const QRectF &area) const;
 
-    /**
-     *   Unclutters the current desktop by smart-placing all clients again.
-     */
-    void unclutterDesktop();
-
     static const char *policyToString(PlacementPolicy policy);
 
 private:

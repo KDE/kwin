@@ -2,9 +2,6 @@
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
   <interface name="org.kde.KWin">
-    <method name="unclutterDesktop">
-      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
-    </method>
     <method name="reconfigure">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>

@@ -558,24 +558,6 @@ QRectF Placement::cascadeIfCovering(const Window *window, const QRectF &geometry
     return possibleGeo;
 }
 
-void Placement::unclutterDesktop()
-{
-    const auto &windows = Workspace::self()->windows();
-    for (int i = windows.size() - 1; i >= 0; i--) {
-        auto window = windows.at(i);
-        if (!window->isClient()) {
-            continue;
-        }
-        if ((!window->isOnCurrentDesktop()) || (window->isMinimized()) || (window->isOnAllDesktops()) || (!window->isMovable())) {
-            continue;
-        }
-        const QRect placementArea = workspace()->clientArea(PlacementArea, window).toRect();
-        if (const auto placement = placeSmart(window, placementArea)) {
-            window->place(*placement);
-        }
-    }
-}
-
 #endif
 
 const char *Placement::policyToString(PlacementPolicy policy)

@@ -71,11 +71,6 @@ void DBusInterface::killWindow()
     Workspace::self()->slotKillWindow();
 }
 
-void DBusInterface::unclutterDesktop()
-{
-    workspace()->placement()->unclutterDesktop();
-}
-
 QString DBusInterface::supportInformation()
 {
     return Workspace::self()->supportInformation();
