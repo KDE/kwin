@@ -1374,7 +1374,6 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
 {
     m_focusChain->addDesktop(desktop);
-    m_placement->reinitCascading();
     rearrange();
 }
 
@@ -1399,7 +1398,6 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
     }
 
     rearrange();
-    m_placement->reinitCascading();
     m_focusChain->removeDesktop(desktop);
 }
 

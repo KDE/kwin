@@ -21,8 +21,6 @@
 namespace KWin
 {
 
-class VirtualDesktop;
-
 class KWIN_EXPORT Placement
 {
 public:
@@ -32,15 +30,8 @@ public:
     std::optional<PlacementCommand> placeSmart(const Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeCentered(const Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 
-    void reinitCascading();
-    void reinitCascading(VirtualDesktop *desktop);
-
     QRectF cascadeIfCovering(const Window *c, const QRectF &geometry, const QRectF &area) const;
 
-    /**
-     * Cascades all clients on the current desktop
-     */
-    void cascadeDesktop();
     /**
      *   Unclutters the current desktop by smart-placing all clients again.
      */
@@ -54,22 +45,11 @@ private:
     std::optional<PlacementCommand> placeOnMainWindow(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeTransient(const Window *c);
     std::optional<PlacementCommand> placeAtRandom(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    std::optional<PlacementCommand> placeCascaded(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeMaximizing(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeZeroCornered(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeDialog(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeUtility(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeOnScreenDisplay(const Window *c, const QRect &area);
-
-    // CT needed for cascading+
-    struct DesktopCascadingInfo
-    {
-        QPoint pos;
-        int col;
-        int row;
-    };
-
-    QHash<VirtualDesktop *, DesktopCascadingInfo> cci;
 };
 
 } // namespace

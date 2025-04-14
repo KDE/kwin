@@ -49,7 +49,6 @@ public: // PROPERTIES
     bool showingDesktop() const;
 
 public Q_SLOTS: // METHODS
-    Q_NOREPLY void cascadeDesktop();
     int currentDesktop();
     Q_NOREPLY void killWindow();
     void nextDesktop();

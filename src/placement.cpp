@@ -31,7 +31,6 @@ namespace KWin
 
 Placement::Placement()
 {
-    reinitCascading();
 }
 
 /**
@@ -339,93 +338,9 @@ std::optional<PlacementCommand> Placement::placeSmart(const Window *window, cons
     return QPointF(x_optimal, y_optimal);
 }
 
-void Placement::reinitCascading()
-{
-    cci.clear();
-    const auto desktops = VirtualDesktopManager::self()->desktops();
-    for (VirtualDesktop *desktop : desktops) {
-        reinitCascading(desktop);
-    }
-}
-
-void Placement::reinitCascading(VirtualDesktop *desktop)
-{
-    cci[desktop] = DesktopCascadingInfo{
-        .pos = QPoint(-1, -1),
-        .col = 0,
-        .row = 0,
-    };
-}
-
 QPoint Workspace::cascadeOffset(const QRectF &area) const
 {
     return QPoint(area.width() / 48, area.height() / 48);
-}
-
-/**
- * Place windows in a cascading order, remembering positions for each desktop
- */
-std::optional<PlacementCommand> Placement::placeCascaded(const Window *c, const QRect &area, PlacementPolicy nextPlacement)
-{
-    Q_ASSERT(area.isValid());
-
-    const QSizeF size = c->size();
-    if (size.isEmpty()) {
-        return std::nullopt;
-    }
-
-    // CT how do I get from the 'Client' class the size that NW squarish "handle"
-    const QPoint delta = workspace()->cascadeOffset(area);
-
-    VirtualDesktop *dn = c->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : c->desktops().constLast();
-
-    if (nextPlacement == PlacementUnknown) {
-        nextPlacement = PlacementSmart;
-    }
-
-    // initialize if needed
-    if (cci[dn].pos.x() < 0 || cci[dn].pos.x() < area.left() || cci[dn].pos.y() < area.top()) {
-        cci[dn].pos = QPoint(area.left(), area.top());
-        cci[dn].col = cci[dn].row = 0;
-    }
-
-    int xp = cci[dn].pos.x();
-    int yp = cci[dn].pos.y();
-
-    // here to touch in case people vote for resize on placement
-    if ((yp + size.height()) > area.height()) {
-        yp = area.top();
-    }
-
-    if ((xp + size.width()) > area.width()) {
-        if (!yp) {
-            return place(c, area, nextPlacement);
-        } else {
-            xp = area.left();
-        }
-    }
-
-    // if this isn't the first window
-    if (cci[dn].pos.x() != area.left() && cci[dn].pos.y() != area.top()) {
-        if (xp != area.left() && yp == area.top()) {
-            cci[dn].col++;
-            xp = delta.x() * cci[dn].col;
-        }
-        if (yp != area.top() && xp == area.left()) {
-            cci[dn].row++;
-            yp = delta.y() * cci[dn].row;
-        }
-
-        // last resort: if still doesn't fit, smart place it
-        if (((xp + size.width()) > area.width() - area.left()) || ((yp + size.height()) > area.height() - area.top())) {
-            return place(c, area, nextPlacement);
-        }
-    }
-
-    // new position
-    cci[dn].pos = QPoint(xp + delta.x(), yp + delta.y());
-
-    return QPointF(xp, yp);
 }
 
 /**
@@ -641,22 +556,6 @@ QRectF Placement::cascadeIfCovering(const Window *window, const QRectF &geometry
     }
 
     return possibleGeo;
-}
-
-void Placement::cascadeDesktop()
-{
-    Workspace *ws = Workspace::self();
-    reinitCascading(VirtualDesktopManager::self()->currentDesktop());
-    const auto stackingOrder = ws->stackingOrder();
-    for (Window *window : stackingOrder) {
-        if (!window->isClient() || (!window->isOnCurrentDesktop()) || (window->isMinimized()) || (window->isOnAllDesktops()) || (!window->isMovable())) {
-            continue;
-        }
-        const QRect placementArea = workspace()->clientArea(PlacementArea, window).toRect();
-        if (const auto placement = placeCascaded(window, placementArea)) {
-            window->place(*placement);
-        }
-    }
 }
 
 void Placement::unclutterDesktop()
