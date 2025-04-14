@@ -11,23 +11,18 @@
 */
 
 #include "placement.h"
-
-#ifndef KCMRULES
 #include "cursor.h"
 #include "options.h"
 #include "rules.h"
 #include "virtualdesktops.h"
-#include "workspace.h"
-#endif
-
 #include "window.h"
+#include "workspace.h"
+
 #include <QTextStream>
 #include <QTimer>
 
 namespace KWin
 {
-
-#ifndef KCMRULES
 
 Placement::Placement()
 {
@@ -558,8 +553,6 @@ QRectF Placement::cascadeIfCovering(const Window *window, const QRectF &geometry
     return possibleGeo;
 }
 
-#endif
-
 const char *Placement::policyToString(PlacementPolicy policy)
 {
     const char *const policies[] = {
@@ -568,8 +561,6 @@ const char *Placement::policyToString(PlacementPolicy policy)
     Q_ASSERT(policy < int(sizeof(policies) / sizeof(policies[0])));
     return policies[policy];
 }
-
-#ifndef KCMRULES
 
 // ********************
 // Workspace
@@ -877,7 +868,5 @@ qreal Workspace::packPositionDown(const Window *window, qreal oldY, bool bottomE
     }
     return newY;
 }
-
-#endif
 
 } // namespace
