@@ -509,6 +509,9 @@ YUVMatrixCoefficients ColorDescription::yuvCoefficients() const
     return m_yuvCoefficients;
 }
 
+/**
+ * @returns a matrix that converts colors in the specified YCbCr (full range: Y[0; 1] and CbCr[-0.5; 0.5]) to RGB ([0; 1])
+ */
 static QMatrix4x4 calculateYuvToRgbMatrix(double kr, double kg, double kb, bool limitedRange)
 {
     const QMatrix4x4 conversion(
@@ -522,7 +525,9 @@ static QMatrix4x4 calculateYuvToRgbMatrix(double kr, double kg, double kb, bool 
         limitedToFullRangeYCbCr.translate(-16.0 / 255.0, -0.5, -0.5);
         return conversion * limitedToFullRangeYCbCr;
     } else {
-        return conversion;
+        QMatrix4x4 chromaConversion;
+        chromaConversion.translate(0, -0.5, -0.5);
+        return conversion * chromaConversion;
     }
 }
 
