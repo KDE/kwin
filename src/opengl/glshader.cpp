@@ -491,7 +491,7 @@ void GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
     if (!s_disableTonemapping && intent == RenderingIntent::Perceptual) {
         setUniform(FloatUniform::MaxTonemappingLuminance, src.maxHdrLuminance().value_or(src.referenceLuminance()) * dst.referenceLuminance() / src.referenceLuminance());
     } else {
-        setUniform(FloatUniform::MaxTonemappingLuminance, dst.referenceLuminance());
+        setUniform(FloatUniform::MaxTonemappingLuminance, dst.maxHdrLuminance().value_or(10'000));
     }
     setUniform(Mat4Uniform::DestinationToLMS, dst.containerColorimetry().toLMS());
     setUniform(Mat4Uniform::LMSToDestination, dst.containerColorimetry().fromLMS());
