@@ -7,6 +7,7 @@
 
 #include "display.h"
 #include "surface_p.h"
+#include "utils/drm_format_helper.h"
 
 namespace KWin
 {
@@ -123,4 +124,34 @@ void ColorRepresentationSurfaceV1::wp_color_representation_surface_v1_set_chroma
     // TODO route this through to the core, and use it when possible
 }
 
+bool ColorRepresentationSurfaceV1::maybeEmitProtocolErrors()
+{
+    const auto priv = SurfaceInterfacePrivate::get(m_surface);
+    if (!priv->pending->buffer) {
+        return false;
+    }
+    bool yuv = false;
+    if (auto attrs = priv->pending->buffer->dmabufAttributes()) {
+        // this assumes that we only support YUV formats we have conversions for
+        // if we ever change that, we should add a "isYUV" flag in FormatInfo
+        const auto info = FormatInfo::get(attrs->format);
+        yuv = info && info->yuvConversion();
+    } else {
+        // we (currently?) don't support YUV formats with SHM
+        // and single pixel buffer doesn't support them either
+        yuv = false;
+    }
+    const bool match = yuv == (priv->pending->yuvCoefficients != YUVMatrixCoefficients::Identity);
+    if (match) {
+        return false;
+    }
+    if (yuv) {
+        wl_resource_post_error(resource()->handle, WP_COLOR_REPRESENTATION_SURFACE_V1_ERROR_PIXEL_FORMAT,
+                               "The buffer has a YCbCr format, but color representation is identity!");
+    } else {
+        wl_resource_post_error(resource()->handle, WP_COLOR_REPRESENTATION_SURFACE_V1_ERROR_PIXEL_FORMAT,
+                               "The buffer has a RGB format, but color representation is not identity!");
+    }
+    return true;
+}
 }

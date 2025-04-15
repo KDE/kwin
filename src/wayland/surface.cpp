@@ -346,6 +346,9 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     if (syncObjV1 && syncObjV1->maybeEmitProtocolErrors()) {
         return;
     }
+    if (colorRepresentation && colorRepresentation->maybeEmitProtocolErrors()) {
+        return;
+    }
 
     if ((pending->committed & SurfaceState::Field::Buffer) && !pending->buffer) {
         pending->damage = QRegion();
