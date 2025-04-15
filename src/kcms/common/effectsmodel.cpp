@@ -25,7 +25,9 @@
 #include <QDBusMessage>
 #include <QDBusPendingCall>
 #include <QDirIterator>
+#include <QQuickRenderControl>
 #include <QStandardPaths>
+#include <QWindow>
 
 namespace KWin
 {
@@ -611,7 +613,7 @@ QModelIndex EffectsModel::findByPluginId(const QString &pluginId) const
     return index(std::distance(m_effects.constBegin(), it), 0);
 }
 
-void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transientParent)
+void EffectsModel::requestConfigure(const QModelIndex &index, QQuickItem *context)
 {
     if (!index.isValid()) {
         return;
@@ -623,9 +625,14 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     KCMultiDialog *dialog = new KCMultiDialog();
     dialog->addModule(KPluginMetaData(QStringLiteral("kwin/effects/configs/") + effect.configModule), effect.configArgs);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
-    dialog->winId();
-    dialog->windowHandle()->setTransientParent(transientParent);
-    dialog->show();
+
+    if (context && context->window()) {
+        dialog->winId(); // so it creates windowHandle
+        dialog->windowHandle()->setTransientParent(QQuickRenderControl::renderWindowFor(context->window()));
+        dialog->setWindowModality(Qt::WindowModal);
+    }
+
+    dialog->open();
 }
 
 bool EffectsModel::shouldStore(const EffectData &data) const

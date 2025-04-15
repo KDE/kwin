@@ -15,9 +15,9 @@
 #include <KSharedConfig>
 
 #include <QAbstractItemModel>
+#include <QQuickItem>
 #include <QString>
 #include <QUrl>
-#include <QWindow>
 
 namespace KWin
 {
@@ -227,9 +227,9 @@ public:
      * Shows a configuration dialog for a given effect.
      *
      * @param index An effect represented by the given index.
-     * @param transientParent The transient parent of the configuration dialog.
+     * @param context The context in which to open configuration dialog.
      */
-    void requestConfigure(const QModelIndex &index, QWindow *transientParent);
+    void requestConfigure(const QModelIndex &index, QQuickItem *context);
 
 Q_SIGNALS:
     /**

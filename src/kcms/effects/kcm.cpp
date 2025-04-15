@@ -12,9 +12,6 @@
 #include <KLocalizedString>
 #include <KPluginFactory>
 
-#include <QQuickWindow>
-#include <QWindow>
-
 K_PLUGIN_FACTORY_WITH_JSON(DesktopEffectsKCMFactory,
                            "kcm_kwin_effects.json",
                            registerPlugin<KWin::DesktopEffectsKCM>();
@@ -71,16 +68,10 @@ void DesktopEffectsKCM::onGHNSEntriesChanged()
     m_model->load(EffectsModel::LoadOptions::KeepDirty);
 }
 
-void DesktopEffectsKCM::configure(const QString &pluginId, QQuickItem *context)
+void DesktopEffectsKCM::configure(const QString &pluginId, QQuickItem *context) const
 {
     const QModelIndex index = m_model->findByPluginId(pluginId);
-
-    QWindow *transientParent = nullptr;
-    if (context && context->window()) {
-        transientParent = context->window();
-    }
-
-    m_model->requestConfigure(index, transientParent);
+    m_model->requestConfigure(index, context);
 }
 
 void DesktopEffectsKCM::updateNeedsSave()

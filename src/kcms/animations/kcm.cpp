@@ -4,12 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-#include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QProcess>
-#include <QQuickItem>
-#include <QQuickWindow>
 
 #include <KPluginFactory>
 #include <KService>
@@ -99,13 +96,7 @@ EffectsSubsetModel *AnimationsKCM::otherEffects() const
 void AnimationsKCM::configure(const QString &pluginId, QQuickItem *context) const
 {
     const QModelIndex index = m_model->findByPluginId(pluginId);
-
-    QWindow *transientParent = nullptr;
-    if (context && context->window()) {
-        transientParent = context->window();
-    }
-
-    m_model->requestConfigure(index, transientParent);
+    m_model->requestConfigure(index, context);
 }
 
 QVariantMap AnimationsKCM::effectsKCMData() const
