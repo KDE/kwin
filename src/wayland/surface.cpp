@@ -587,6 +587,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     }
     if (colorDescriptionIsSet) {
         target->colorDescription = colorDescription;
+        target->renderingIntent = renderingIntent;
         target->colorDescriptionIsSet = true;
     }
     if (alphaMultiplierIsSet) {
