@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1706958 2025-04-11 01:21:16Z scripty $
+# $Id: kwin.po 1707159 2025-04-15 01:20:12Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-11 00:43+0000\n"
+"POT-Creation-Date: 2025-04-15 00:42+0000\n"
 "PO-Revision-Date: 2025-04-04 06:55+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -4308,13 +4308,13 @@ msgstr "Navedeni izhodni vrstni red je neveljaven"
 msgid "The driver rejected the output configuration"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
 
-#: window.cpp:3262
+#: window.cpp:3264
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1622
+#: workspace.cpp:1612
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
