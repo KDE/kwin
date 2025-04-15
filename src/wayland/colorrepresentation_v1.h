@@ -33,6 +33,8 @@ public:
     explicit ColorRepresentationSurfaceV1(SurfaceInterface *surface, wl_client *client, uint32_t id, uint32_t version);
     ~ColorRepresentationSurfaceV1();
 
+    bool maybeEmitProtocolErrors();
+
 private:
     void wp_color_representation_surface_v1_destroy_resource(Resource *resource) override;
     void wp_color_representation_surface_v1_destroy(Resource *resource) override;
