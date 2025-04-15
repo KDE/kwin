@@ -650,8 +650,8 @@ private:
 
     void updateOutputConfiguration();
     void updateOutputs(const std::optional<QList<Output *>> &outputOrder = std::nullopt);
-    void createDpmsFilter();
-    void maybeDestroyDpmsFilter();
+    void aboutToTurnOff();
+    void wakeUp();
     void assignBrightnessDevices(OutputConfiguration &outputConfig);
 
     bool breaksShowingDesktop(Window *window) const;

@@ -1250,14 +1250,14 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     for (Output *output : added) {
         output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
-        connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
-        connect(output, &Output::wakeUp, this, &Workspace::maybeDestroyDpmsFilter);
+        connect(output, &Output::aboutToTurnOff, this, &Workspace::aboutToTurnOff);
+        connect(output, &Output::wakeUp, this, &Workspace::wakeUp);
         if (output->dpmsMode() != Output::DpmsMode::On) {
-            createDpmsFilter();
+            aboutToTurnOff();
         }
         Q_EMIT outputAdded(output);
     }
-    maybeDestroyDpmsFilter();
+    wakeUp();
 
     m_placementTracker->inhibit();
 
@@ -1321,15 +1321,17 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     Q_EMIT outputsChanged();
 }
 
-void Workspace::createDpmsFilter()
+void Workspace::aboutToTurnOff()
 {
     if (!m_dpmsFilter) {
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
     }
+    // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 }
 
-void Workspace::maybeDestroyDpmsFilter()
+void Workspace::wakeUp()
 {
     const bool allOn = std::all_of(m_outputs.begin(), m_outputs.end(), [](Output *output) {
         return output->dpmsMode() == Output::DpmsMode::On && !output->isPlaceholder();
@@ -1337,6 +1339,8 @@ void Workspace::maybeDestroyDpmsFilter()
     if (allOn) {
         m_dpmsFilter.reset();
     }
+    // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 }
 
 void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)

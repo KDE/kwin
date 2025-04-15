@@ -1292,6 +1292,10 @@ bool OutputConfigurationStore::isAutoRotateActive(const QList<Output *> &outputs
         return false;
     }
     Output *internal = *internalIt;
+    // if output is not on, disable auto-rotate
+    if (internal->dpmsMode() != Output::DpmsMode::On) {
+        return false;
+    }
     switch (internal->autoRotationPolicy()) {
     case Output::AutoRotationPolicy::Never:
         return false;
