@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-10 02:33+0000\n"
-"PO-Revision-Date: 2025-03-30 16:25+0200\n"
+"PO-Revision-Date: 2025-04-14 22:36+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -1705,7 +1705,7 @@ msgstr "Leiho taldearen arabera"
 #: plugins/diminactive/diminactive_config.ui:75
 #, kde-format
 msgid "Fullscreen windows"
-msgstr "Pantaila-beteko leihoak"
+msgstr "Pantaila-osoko leihoak"
 
 #: plugins/eis/eisinputcapturemanager.cpp:130
 #, kde-format
@@ -2049,7 +2049,7 @@ msgstr "maximizatu"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "Pantaila-betea"
+msgstr "Pantaila-osoa"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
 #, kde-format
@@ -2117,7 +2117,7 @@ msgstr "Maximizatu/lehengoratu «%1»(e)an dabilen leihoa"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr "Txandakatu pantaila-betea «%1»(e)an dabilen leihoan"
+msgstr "Txandakatu pantaila-osoa «%1»(e)an dabilen leihoan"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
@@ -2143,7 +2143,7 @@ msgstr "Aktibatu «%1»(e)an dabilen leihoa"
 #: plugins/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
-msgstr "Beltzera urtu (Pantaila osoko plasta pantailak bakarrik)"
+msgstr "Beltzera urtu (pantaila osoko plasta pantailak bakarrik)"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/magiclamp/magiclamp_config.ui:17
@@ -3557,13 +3557,13 @@ msgstr "Mantendu azpian arau mota"
 #: rulesettings.kcfg:286
 #, kde-format
 msgid "Fullscreen"
-msgstr "Pantaila-betea"
+msgstr "Pantaila-osoa"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:290
 #, kde-format
 msgid "Fullscreen rule type"
-msgstr "Pantaila-betearen arau mota"
+msgstr "Pantaila-osoaren arau mota"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
@@ -3924,7 +3924,7 @@ msgstr "Mantendu &besteen azpian"
 #: useractions.cpp:238
 #, kde-format
 msgid "&Fullscreen"
-msgstr "&Pantaila osoa"
+msgstr "&Pantaila-osoa"
 
 #: useractions.cpp:244
 #, kde-format
@@ -4117,7 +4117,7 @@ msgstr "Txandakatu leihoa goratu/beheratu"
 #: useractions.cpp:935
 #, kde-format
 msgid "Make Window Fullscreen"
-msgstr "Erakutsi leihoa pantaila osoan"
+msgstr "Egin leihoa pantaila-osokoa"
 
 #: useractions.cpp:937
 #, kde-format
