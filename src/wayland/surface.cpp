@@ -621,6 +621,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->contentType = contentType;
     target->presentationHint = presentationHint;
     target->colorDescription = colorDescription;
+    target->renderingIntent = renderingIntent;
     target->alphaMultiplier = alphaMultiplier;
     target->yuvCoefficients = yuvCoefficients;
     target->fifoBarrier = fifoBarrier;

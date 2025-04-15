@@ -127,6 +127,7 @@ void ColorManagementTest::cleanup()
 void ColorManagementTest::testSetImageDescription_data()
 {
     QTest::addColumn<ColorDescription>("input");
+    QTest::addColumn<RenderingIntent>("renderingIntent");
     QTest::addColumn<bool>("protocolError");
     QTest::addColumn<bool>("shouldSucceed");
     QTest::addColumn<std::optional<ColorDescription>>("expectedResult");
@@ -134,36 +135,60 @@ void ColorManagementTest::testSetImageDescription_data()
     // sRGB is not tested, because it's the default (and thus no change signal will be emitted)
     QTest::addRow("rec.2020 PQ")
         << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << RenderingIntent::Perceptual
         << false << true
         << std::optional<ColorDescription>();
     QTest::addRow("scRGB")
         << ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 80, 80)
+        << RenderingIntent::Perceptual
         << false << true
         << std::optional<ColorDescription>();
     QTest::addRow("custom")
         << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 0.05, 400), 203, 0, 400, 400)
+        << RenderingIntent::Perceptual
         << false << true
         << std::optional<ColorDescription>();
     QTest::addRow("invalid tf")
         << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::gamma22, 204, 205), 203, 0, 400, 400)
+        << RenderingIntent::Perceptual
         << true << false
         << std::optional<ColorDescription>();
     QTest::addRow("invalid HDR metadata")
         << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 500, 400, 400)
+        << RenderingIntent::Perceptual
         << true << false
         << std::optional<ColorDescription>();
     QTest::addRow("rec.2020 PQ with out of bounds white point")
         << ColorDescription(Colorimetry::BT2020.withWhitepoint(xyY{0.9, 0.9, 1}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << RenderingIntent::Perceptual
         << false << false
         << std::optional<ColorDescription>();
     QTest::addRow("nonsense primaries")
         << ColorDescription(Colorimetry(xy{0, 0}, xy{0, 0}, xy{0, 0}, xy{0, 0}), TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << RenderingIntent::Perceptual
         << false << false
         << std::optional<ColorDescription>();
     QTest::addRow("custom PQ luminances are ignored")
         << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 100), 203, 0, 400, 400)
+        << RenderingIntent::Perceptual
         << false << true
         << std::make_optional<ColorDescription>(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 10, 10'010), 203, 0, 400, 400);
+
+    QTest::addRow("rec.2020 PQ relative colorimetric")
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << RenderingIntent::RelativeColorimetric
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("rec.2020 PQ relative colorimetric bpc")
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << RenderingIntent::RelativeColorimetricWithBPC
+        << false << true
+        << std::optional<ColorDescription>();
+    QTest::addRow("rec.2020 PQ absolute colorimetric")
+        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+        << RenderingIntent::AbsoluteColorimetric
+        << false << true
+        << std::optional<ColorDescription>();
 }
 
 void ColorManagementTest::testSetImageDescription()
@@ -178,6 +203,7 @@ void ColorManagementTest::testSetImageDescription()
     QtWayland::wp_image_description_creator_params_v1 creator(Test::colorManager()->create_parametric_creator());
 
     QFETCH(ColorDescription, input);
+    QFETCH(RenderingIntent, renderingIntent);
 
     creator.set_primaries(std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().x),
                           std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().y),
@@ -215,26 +241,45 @@ void ColorManagementTest::testSetImageDescription()
         return;
     }
 
+    uint32_t waylandRenderIntent;
+    switch (renderingIntent) {
+    case RenderingIntent::Perceptual:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL;
+        break;
+    case RenderingIntent::RelativeColorimetric:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE;
+        break;
+    case RenderingIntent::RelativeColorimetricWithBPC:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE_BPC;
+        break;
+    case RenderingIntent::AbsoluteColorimetric:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE;
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+
     QFETCH(bool, shouldSucceed);
     QFETCH(std::optional<ColorDescription>, expectedResult);
     if (shouldSucceed) {
         QSignalSpy ready(&imageDescr, &ImageDescription::ready);
         QVERIFY(ready.wait(50ms));
 
-        cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
+        cmSurf->set_image_description(imageDescr.object(), waylandRenderIntent);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
         QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
         QVERIFY(colorChange.wait());
 
         QCOMPARE(window->surface()->colorDescription(), expectedResult.value_or(input));
+        QCOMPARE(window->surface()->renderingIntent(), renderingIntent);
     } else {
         QSignalSpy fail(&imageDescr, &ImageDescription::failed);
         QVERIFY(fail.wait(50ms));
 
         // trying to use a failed image description should cause an error
         QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
-        cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
+        cmSurf->set_image_description(imageDescr.object(), waylandRenderIntent);
         QVERIFY(error.wait(50ms));
     }
 }
