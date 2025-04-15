@@ -60,15 +60,7 @@ void XdgSessionManagerV1InterfacePrivate::xx_session_manager_v1_get_session(Reso
         return;
     }
 
-    wl_resource *sessionResource = wl_resource_create(resource->client(),
-                                                      &xx_session_v1_interface,
-                                                      resource->version(), id);
-    if (!sessionResource) {
-        wl_resource_post_no_memory(resource->handle);
-        return;
-    }
-
-    auto applicationSession = new XdgApplicationSessionV1Interface(storage, sessionHandle, sessionResource);
+    auto applicationSession = new XdgApplicationSessionV1Interface(storage, sessionHandle, resource->client(), id, resource->version());
     sessions.insert(sessionHandle, applicationSession);
     QObject::connect(applicationSession, &QObject::destroyed, q, [this, sessionHandle]() {
         sessions.remove(sessionHandle);
@@ -93,7 +85,7 @@ XdgSessionStorageV1 *XdgSessionManagerV1Interface::storage() const
 class XdgApplicationSessionV1InterfacePrivate : public QtWaylandServer::xx_session_v1
 {
 public:
-    XdgApplicationSessionV1InterfacePrivate(XdgSessionStorageV1 *storage, const QString &sessionId, wl_resource *resource, XdgApplicationSessionV1Interface *q);
+    XdgApplicationSessionV1InterfacePrivate(XdgSessionStorageV1 *storage, const QString &sessionId, wl_client *client, int id, int version, XdgApplicationSessionV1Interface *q);
 
     XdgApplicationSessionV1Interface *q;
     XdgSessionStorageV1 *storage;
@@ -110,9 +102,9 @@ protected:
 
 XdgApplicationSessionV1InterfacePrivate::XdgApplicationSessionV1InterfacePrivate(XdgSessionStorageV1 *storage,
                                                                                  const QString &sessionId,
-                                                                                 wl_resource *resource,
+                                                                                 wl_client *client, int id, int version,
                                                                                  XdgApplicationSessionV1Interface *q)
-    : QtWaylandServer::xx_session_v1(resource)
+    : QtWaylandServer::xx_session_v1(client, id, version)
     , q(q)
     , storage(storage)
     , sessionId(sessionId)
@@ -157,15 +149,7 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_add_toplevel(Resourc
     // clear any storage, this ensures we won't restore anything
     storage->remove(sessionId, toplevel_id);
 
-    wl_resource *sessionResource = wl_resource_create(resource->client(),
-                                                      &xx_toplevel_session_v1_interface,
-                                                      resource->version(), id);
-    if (!sessionResource) {
-        wl_resource_post_no_memory(resource->handle);
-        return;
-    }
-
-    auto session = new XdgToplevelSessionV1Interface(q, toplevel, toplevel_id, sessionResource);
+    auto session = new XdgToplevelSessionV1Interface(q, toplevel, toplevel_id, resource->client(), id, resource->version());
     sessions.insert(toplevel_id, session);
     QObject::connect(session, &QObject::destroyed, q, [this, toplevel_id]() {
         sessions.remove(toplevel_id);
@@ -190,23 +174,15 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_restore_toplevel(Res
         return;
     }
 
-    wl_resource *sessionResource = wl_resource_create(resource->client(),
-                                                      &xx_toplevel_session_v1_interface,
-                                                      resource->version(), id);
-    if (!sessionResource) {
-        wl_resource_post_no_memory(resource->handle);
-        return;
-    }
-
-    auto session = new XdgToplevelSessionV1Interface(q, toplevel, toplevel_id, sessionResource);
+    auto session = new XdgToplevelSessionV1Interface(q, toplevel, toplevel_id, resource->client(), id, resource->version());
     sessions.insert(toplevel_id, session);
     QObject::connect(session, &QObject::destroyed, q, [this, toplevel_id]() {
         sessions.remove(toplevel_id);
     });
 }
 
-XdgApplicationSessionV1Interface::XdgApplicationSessionV1Interface(XdgSessionStorageV1 *storage, const QString &handle, wl_resource *resource)
-    : d(new XdgApplicationSessionV1InterfacePrivate(storage, handle, resource, this))
+XdgApplicationSessionV1Interface::XdgApplicationSessionV1Interface(XdgSessionStorageV1 *storage, const QString &handle, wl_client *client, int id, int version)
+    : d(new XdgApplicationSessionV1InterfacePrivate(storage, handle, client, id, version, this))
 {
 }
 
@@ -230,7 +206,7 @@ public:
     XdgToplevelSessionV1InterfacePrivate(XdgApplicationSessionV1Interface *session,
                                          XdgToplevelInterface *toplevel,
                                          const QString &toplevelId,
-                                         wl_resource *resource,
+                                         wl_client *client, int id, int version,
                                          XdgToplevelSessionV1Interface *q);
 
     XdgToplevelSessionV1Interface *q;
@@ -247,9 +223,9 @@ protected:
 XdgToplevelSessionV1InterfacePrivate::XdgToplevelSessionV1InterfacePrivate(XdgApplicationSessionV1Interface *session,
                                                                            XdgToplevelInterface *toplevel,
                                                                            const QString &toplevelId,
-                                                                           wl_resource *resource,
+                                                                           wl_client *client, int id, int version,
                                                                            XdgToplevelSessionV1Interface *q)
-    : QtWaylandServer::xx_toplevel_session_v1(resource)
+    : QtWaylandServer::xx_toplevel_session_v1(client, id, version)
     , q(q)
     , session(session)
     , toplevel(toplevel)
@@ -276,8 +252,8 @@ void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_remove(Resourc
 
 XdgToplevelSessionV1Interface::XdgToplevelSessionV1Interface(XdgApplicationSessionV1Interface *session,
                                                              XdgToplevelInterface *toplevel,
-                                                             const QString &handle, wl_resource *resource)
-    : d(new XdgToplevelSessionV1InterfacePrivate(session, toplevel, handle, resource, this))
+                                                             const QString &handle, wl_client *client, int id, int version)
+    : d(new XdgToplevelSessionV1InterfacePrivate(session, toplevel, handle, client, id, version, this))
 {
     XdgToplevelInterfacePrivate *toplevelPrivate = XdgToplevelInterfacePrivate::get(toplevel);
     toplevelPrivate->session = this;

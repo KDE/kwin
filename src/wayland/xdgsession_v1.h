@@ -14,7 +14,7 @@
 
 #include <memory>
 
-struct wl_resource;
+struct wl_client;
 
 namespace KWin
 {
@@ -131,7 +131,7 @@ class KWIN_EXPORT XdgApplicationSessionV1Interface : public QObject
     Q_OBJECT
 
 public:
-    XdgApplicationSessionV1Interface(XdgSessionStorageV1 *storage, const QString &handle, wl_resource *resource);
+    XdgApplicationSessionV1Interface(XdgSessionStorageV1 *storage, const QString &handle, wl_client *client, int id, int version);
     ~XdgApplicationSessionV1Interface() override;
 
     /**
@@ -161,7 +161,7 @@ class KWIN_EXPORT XdgToplevelSessionV1Interface : public QObject
 public:
     XdgToplevelSessionV1Interface(XdgApplicationSessionV1Interface *session,
                                   XdgToplevelInterface *toplevel,
-                                  const QString &handle, wl_resource *resource);
+                                  const QString &handle, wl_client *client, int id, int version);
     ~XdgToplevelSessionV1Interface() override;
 
     /**
