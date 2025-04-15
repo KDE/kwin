@@ -2427,12 +2427,6 @@ static bool shouldKeepTransientAbove(const Window *parent, const Window *transie
     if (transient->isDialog() && !transient->isModal() && transient->groupTransient()) {
         return false;
     }
-    // #63223 - don't keep transients above docks, because the dock is kept high,
-    // and e.g. dialogs for them would be too high too
-    // ignore this if the transient has a placement hint which indicates it should go above it's parent
-    if (parent->isDock() && !transient->isPopupWindow()) {
-        return false;
-    }
     return true;
 }
 
