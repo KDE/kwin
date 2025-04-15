@@ -25,9 +25,9 @@ KCM.SimpleKCM {
         // otherwise place their delegates at the end
 
         Kirigami.FormLayout {
-            id: exclusiveEffectsLayout
+            id: sliderLayout
 
-            twinFormLayouts: [otherEffectsLayout, separatorLayout]
+            twinFormLayouts: [exclusiveEffectsLayout, otherEffectsLayout, separatorLayout]
 
             // We want to show the slider in a logarithmic way. ie
             // move from 4x, 3x, 2x, 1x, 0.5x, 0.25x, 0.125x
@@ -87,6 +87,14 @@ KCM.SimpleKCM {
                     }
                 }
             }
+        }
+
+        Kirigami.FormLayout {
+            id: exclusiveEffectsLayout
+
+            twinFormLayouts: [sliderLayout, otherEffectsLayout, separatorLayout]
+
+            enabled: kcm.globalsSettings.animationDurationFactor != 0
 
             Item {
                 Kirigami.FormData.isSection: true
@@ -118,7 +126,7 @@ KCM.SimpleKCM {
                         animationsModel: modelData.animationsModel
 
                         KCM.SettingHighlighter {
-                            highlight: !animationComboBox.isDefault
+                            highlight: !animationComboBox.isDefault && kcm.globalsSettings.animationDurationFactor != 0
                         }
                     }
 
@@ -143,7 +151,9 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             id: otherEffectsLayout
 
-            twinFormLayouts: [exclusiveEffectsLayout, separatorLayout]
+            twinFormLayouts: [sliderLayout, exclusiveEffectsLayout, separatorLayout]
+
+            enabled: kcm.globalsSettings.animationDurationFactor != 0
 
             Connections {
                 target: kcm.otherEffects
@@ -189,7 +199,7 @@ KCM.SimpleKCM {
 
 
                         KCM.SettingHighlighter {
-                            highlight: !animationCheckBox.isDefault
+                            highlight: !animationCheckBox.isDefault && kcm.globalsSettings.animationDurationFactor != 0
                         }
                     }
 
@@ -213,7 +223,7 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             id: separatorLayout
 
-            twinFormLayouts: [exclusiveEffectsLayout, otherEffectsLayout]
+            twinFormLayouts: [sliderLayout, exclusiveEffectsLayout, otherEffectsLayout]
 
             Kirigami.Separator {
                 id: separator
