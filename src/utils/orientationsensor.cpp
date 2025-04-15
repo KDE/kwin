@@ -25,8 +25,11 @@ void OrientationSensor::setEnabled(bool enable)
     if (enable) {
         connect(m_sensor.get(), &QOrientationSensor::readingChanged, this, &OrientationSensor::update, Qt::UniqueConnection);
         m_sensor->start();
+        // after we enable the sensor, pick up current reading as device might have rotated meanwhile
+        update();
     } else {
         disconnect(m_sensor.get(), &QOrientationSensor::readingChanged, this, &OrientationSensor::update);
+        m_sensor->stop();
         m_reading->setOrientation(QOrientationReading::Undefined);
     }
 }
