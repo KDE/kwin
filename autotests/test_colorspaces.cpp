@@ -44,6 +44,8 @@ private Q_SLOTS:
     void dontCrashWithWeirdHdrMetadata();
     void testColorimetryCheck_data();
     void testColorimetryCheck();
+    void testYCbCr_data();
+    void testYCbCr();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -464,6 +466,36 @@ void TestColorspaces::testColorimetryCheck()
     QFETCH(xy, blue);
     QFETCH(xy, white);
     QCOMPARE(Colorimetry::isValid(red, green, blue, white), expectedResult);
+}
+
+void TestColorspaces::testYCbCr_data()
+{
+    QTest::addColumn<YUVMatrixCoefficients>("yuvCoefficients");
+
+    QTest::addRow("BT601") << YUVMatrixCoefficients::BT601;
+    QTest::addRow("BT709") << YUVMatrixCoefficients::BT709;
+    QTest::addRow("BT2020") << YUVMatrixCoefficients::BT2020;
+}
+
+static float limitedLuma(float value)
+{
+    return (16 + 219 * value) / 255.0;
+}
+static float limitedChroma(float value)
+{
+    return (128 + 224 * value) / 255.0;
+};
+
+void TestColorspaces::testYCbCr()
+{
+    QFETCH(YUVMatrixCoefficients, yuvCoefficients);
+    ColorDescription limitedRange{Colorimetry::BT709, TransferFunction(TransferFunction::gamma22), yuvCoefficients, EncodingRange::Limited};
+    QVERIFY(compareVectors(limitedRange.yuvMatrix() * QVector3D(limitedLuma(1), limitedChroma(0), limitedChroma(0)), QVector3D(1, 1, 1), 0.005));
+    QVERIFY(compareVectors(limitedRange.yuvMatrix() * QVector3D(limitedLuma(0), limitedChroma(0), limitedChroma(0)), QVector3D(0, 0, 0), 0.005));
+
+    ColorDescription fullRange{Colorimetry::BT709, TransferFunction(TransferFunction::gamma22), yuvCoefficients, EncodingRange::Full};
+    QVERIFY(compareVectors(fullRange.yuvMatrix() * QVector3D(1, 0.5, 0.5), QVector3D(1, 1, 1), 0.005));
+    QVERIFY(compareVectors(fullRange.yuvMatrix() * QVector3D(0, 0.5, 0.5), QVector3D(0, 0, 0), 0.005));
 }
 
 QTEST_MAIN(TestColorspaces)
