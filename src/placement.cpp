@@ -46,8 +46,6 @@ std::optional<PlacementCommand> Placement::place(const Window *c, const QRectF &
         return placeOnMainWindow(c, area.toRect()); // on mainwindow, if any, otherwise centered
     } else if (c->isOnScreenDisplay() || c->isNotification() || c->isCriticalNotification()) {
         return placeOnScreenDisplay(c, area.toRect());
-    } else if (c->isTransient() && c->hasTransientPlacementHint()) {
-        return placeTransient(c);
     } else if (c->isTransient() && c->surface()) {
         return placeDialog(c, area.toRect(), options->placement());
     } else {
@@ -398,11 +396,6 @@ std::optional<PlacementCommand> Placement::placeOnScreenDisplay(const Window *c,
     const int y = area.top() + 2 * area.height() / 3 - size.height() / 2;
 
     return QPointF(x, y);
-}
-
-std::optional<PlacementCommand> Placement::placeTransient(const Window *c)
-{
-    return c->transientPlacement();
 }
 
 std::optional<PlacementCommand> Placement::placeDialog(const Window *c, const QRect &area, PlacementPolicy nextPlacement)

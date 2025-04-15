@@ -988,16 +988,6 @@ public:
     void setHiddenByShowDesktop(bool hidden);
     Window *findModal() const;
     virtual bool isTransient() const;
-    /**
-     * @returns Whether there is a hint available to place the Window on it's parent, default @c false.
-     * @see transientPlacementHint
-     */
-    virtual bool hasTransientPlacementHint() const;
-    /**
-     * Only valid id hasTransientPlacementHint is true
-     * @returns The position the transient wishes to position itself
-     */
-    virtual QRectF transientPlacement() const;
     const Window *transientFor() const;
     Window *transientFor();
     void setTransientFor(Window *transientFor);

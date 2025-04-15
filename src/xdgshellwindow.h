@@ -274,11 +274,10 @@ public:
     void popupDone() override;
     bool isPopupWindow() const override;
     bool isTransient() const override;
+    bool isPlaceable() const override;
     bool isResizable() const override;
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
-    bool hasTransientPlacementHint() const override;
-    QRectF transientPlacement() const override;
     bool isCloseable() const override;
     void closeWindow() override;
     bool wantsInput() const override;
@@ -297,6 +296,7 @@ private:
     void handleRepositionRequested(quint32 token);
     void initialize();
     void updateRelativePlacement();
+    QRectF transientPlacement() const;
     void relayout();
 
     XdgPopupInterface *m_shellSurface;

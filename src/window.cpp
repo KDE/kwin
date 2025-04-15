@@ -2351,17 +2351,6 @@ Window *Window::transientFor()
     return m_transientFor;
 }
 
-bool Window::hasTransientPlacementHint() const
-{
-    return false;
-}
-
-QRectF Window::transientPlacement() const
-{
-    Q_UNREACHABLE();
-    return QRectF();
-}
-
 bool Window::hasTransient(const Window *c, bool indirect) const
 {
     return c->transientFor() == this;
@@ -2441,7 +2430,7 @@ static bool shouldKeepTransientAbove(const Window *parent, const Window *transie
     // #63223 - don't keep transients above docks, because the dock is kept high,
     // and e.g. dialogs for them would be too high too
     // ignore this if the transient has a placement hint which indicates it should go above it's parent
-    if (parent->isDock() && !transient->hasTransientPlacementHint()) {
+    if (parent->isDock() && !transient->isPopupWindow()) {
         return false;
     }
     return true;

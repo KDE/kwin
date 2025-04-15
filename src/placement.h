@@ -38,7 +38,6 @@ private:
     std::optional<PlacementCommand> place(const Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement = PlacementUnknown);
     std::optional<PlacementCommand> placeUnderMouse(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeOnMainWindow(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    std::optional<PlacementCommand> placeTransient(const Window *c);
     std::optional<PlacementCommand> placeAtRandom(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeMaximizing(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeZeroCornered(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);

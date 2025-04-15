@@ -1833,7 +1833,7 @@ void XdgPopupWindow::relayout()
     if (m_shellSurface->positioner().isReactive()) {
         updateRelativePlacement();
     }
-    place(workspace()->placement()->place(this, QRectF()).value());
+    place(transientPlacement());
     scheduleConfigure();
 }
 
@@ -1862,6 +1862,11 @@ bool XdgPopupWindow::isTransient() const
     return true;
 }
 
+bool XdgPopupWindow::isPlaceable() const
+{
+    return false;
+}
+
 bool XdgPopupWindow::isResizable() const
 {
     return false;
@@ -1875,11 +1880,6 @@ bool XdgPopupWindow::isMovable() const
 bool XdgPopupWindow::isMovableAcrossScreens() const
 {
     return false;
-}
-
-bool XdgPopupWindow::hasTransientPlacementHint() const
-{
-    return true;
 }
 
 QRectF XdgPopupWindow::transientPlacement() const
@@ -1951,7 +1951,7 @@ void XdgPopupWindow::initialize()
     connect(parent, &Window::frameGeometryChanged, this, &XdgPopupWindow::relayout);
     connect(parent, &Window::closed, this, &XdgPopupWindow::popupDone);
 
-    place(workspace()->placement()->place(this, QRectF()).value());
+    place(transientPlacement());
     scheduleConfigure();
 }
 
