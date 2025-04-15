@@ -9,7 +9,6 @@
 #include <KQuickConfigModule>
 
 #include <QAbstractItemModel>
-#include <QQuickItem>
 
 namespace KWin
 {
@@ -33,7 +32,7 @@ public Q_SLOTS:
     void defaults() override;
 
     void onGHNSEntriesChanged();
-    void configure(const QString &pluginId, QQuickItem *context);
+    void configure(const QString &pluginId, QQuickItem *context) const;
 
 private Q_SLOTS:
     void updateNeedsSave();

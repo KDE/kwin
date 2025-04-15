@@ -14,6 +14,7 @@ add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})
 target_link_libraries(kcmkwincommon
     Qt::Core
     Qt::DBus
+    Qt::Quick
     KF6::CoreAddons
     KF6::ConfigCore
     KF6::I18n
