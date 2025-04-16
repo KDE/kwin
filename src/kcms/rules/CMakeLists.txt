@@ -7,7 +7,6 @@ set(kwinrules_SRCS
     ../../rules.cpp
     ../../utils/common.cpp
     ../../virtualdesktopsdbustypes.cpp
-    kwinsrc.cpp
     optionsmodel.cpp
     ruleitem.cpp
     rulesmodel.cpp
