@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-22 00:42+0000\n"
+"POT-Creation-Date: 2025-04-16 00:43+0000\n"
 "PO-Revision-Date: 2022-12-24 07:21+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-POFile-SpellExtra: Control\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ui/main.qml:32
+#: ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid ""
 #| "Legacy X11 apps require the ability to read keystrokes typed in other "
@@ -41,25 +41,25 @@ msgstr ""
 "poderá escolher aí o seu ponto de equilíbrio entre segurança e "
 "funcionalidade."
 
-#: ui/main.qml:48
+#: ui/main.qml:45
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Permitir às aplicações de X11 antigas lerem o texto escrito em todas as "
 "aplicações"
 
-#: ui/main.qml:49
+#: ui/main.qml:46
 #, kde-format
 msgid "Never"
 msgstr "Nunca"
 
-#: ui/main.qml:60
+#: ui/main.qml:57
 #, fuzzy, kde-format
 #| msgid "Only Meta, Control, Alt, and Shift keys"
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Apenas as teclas Meta, Control, Alt e Shift"
 
-#: ui/main.qml:71
+#: ui/main.qml:68
 #, fuzzy, kde-format
 #| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgid ""
@@ -68,17 +68,17 @@ msgstr ""
 "Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
 "estiverem carregadas"
 
-#: ui/main.qml:83
+#: ui/main.qml:80
 #, kde-format
 msgid "Always"
 msgstr "Sempre"
 
-#: ui/main.qml:98
+#: ui/main.qml:95
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr ""
 
-#: ui/main.qml:114
+#: ui/main.qml:111
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
