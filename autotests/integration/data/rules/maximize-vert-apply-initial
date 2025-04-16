@@ -1,4 +1,4 @@
-[1]
+[94b936eb-74e1-47a2-8a50-7d25fae2cfc7]
 Description=Window settings for kpat
 clientmachine=localhost
 clientmachinematch=0
@@ -15,3 +15,4 @@ wmclassmatch=1
 
 [General]
 count=1
+rules=94b936eb-74e1-47a2-8a50-7d25fae2cfc7

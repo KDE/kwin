@@ -132,9 +132,10 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
 void WindowRuleTest::testWindowClassChange()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group(QStringLiteral("General")).writeEntry("count", 1);
+    const QString ruleGroupName = QStringLiteral("above-test-rule");
+    config->group(QStringLiteral("General")).writeEntry("rules", QStringList({ruleGroupName}));
 
-    auto group = config->group(QStringLiteral("1"));
+    auto group = config->group(ruleGroupName);
     group.writeEntry("above", true);
     group.writeEntry("aboverule", 2);
     group.writeEntry("wmclass", "org.kde.foo");
