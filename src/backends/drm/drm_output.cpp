@@ -507,7 +507,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
-    next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
@@ -519,6 +518,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.dimming = props->dimming.value_or(m_state.dimming);
     next.brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
     next.originalColorDescription = createColorDescription(next);
+    next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     setState(next);
 
     // allowSdrSoftwareBrightness might change our capabilities
