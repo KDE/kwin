@@ -266,80 +266,78 @@ void X11KeyReadTest::tabBox()
 #endif
 }
 
-class X11EventRecorder :
-    public
-        QObject
-        {
-            Q_OBJECT
-        public:
-            X11EventRecorder(xcb_connection_t * c);
-            QList<KeyAction> keyEvents() const
-            {
-                return m_keyEvents;
-            }
-        Q_SIGNALS:
-            void fenceReceived();
+class X11EventRecorder : public QObject
+{
+    Q_OBJECT
+public:
+    X11EventRecorder(xcb_connection_t *c);
+    QList<KeyAction> keyEvents() const
+    {
+        return m_keyEvents;
+    }
+Q_SIGNALS:
+    void fenceReceived();
 
-        private:
-            void processXcbEvents();
-            QList<KeyAction> m_keyEvents;
-            xcb_connection_t *m_connection;
-            QSocketNotifier *m_notifier;
-        };
+private:
+    void processXcbEvents();
+    QList<KeyAction> m_keyEvents;
+    xcb_connection_t *m_connection;
+    QSocketNotifier *m_notifier;
+};
 
-        X11EventRecorder::X11EventRecorder(xcb_connection_t * c)
-            : QObject()
-            , m_connection(c)
-            , m_notifier(new QSocketNotifier(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read, this))
-        {
-            struct
-            {
-                xcb_input_event_mask_t head;
-                xcb_input_xi_event_mask_t mask;
-            } mask;
-            mask.head.deviceid = XCB_INPUT_DEVICE_ALL;
-            mask.head.mask_len = sizeof(mask.mask) / sizeof(uint32_t);
-            mask.mask = static_cast<xcb_input_xi_event_mask_t>(
-                XCB_INPUT_XI_EVENT_MASK_KEY_PRESS
-                | XCB_INPUT_XI_EVENT_MASK_KEY_RELEASE
-                | XCB_INPUT_RAW_KEY_PRESS
-                | XCB_INPUT_RAW_KEY_RELEASE);
+X11EventRecorder::X11EventRecorder(xcb_connection_t *c)
+    : QObject()
+    , m_connection(c)
+    , m_notifier(new QSocketNotifier(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read, this))
+{
+    struct
+    {
+        xcb_input_event_mask_t head;
+        xcb_input_xi_event_mask_t mask;
+    } mask;
+    mask.head.deviceid = XCB_INPUT_DEVICE_ALL;
+    mask.head.mask_len = sizeof(mask.mask) / sizeof(uint32_t);
+    mask.mask = static_cast<xcb_input_xi_event_mask_t>(
+        XCB_INPUT_XI_EVENT_MASK_KEY_PRESS
+        | XCB_INPUT_XI_EVENT_MASK_KEY_RELEASE
+        | XCB_INPUT_RAW_KEY_PRESS
+        | XCB_INPUT_RAW_KEY_RELEASE);
 
-            xcb_input_xi_select_events(c, kwinApp()->x11RootWindow(), 1, &mask.head);
-            xcb_flush(c);
+    xcb_input_xi_select_events(c, kwinApp()->x11RootWindow(), 1, &mask.head);
+    xcb_flush(c);
 
-            connect(m_notifier, &QSocketNotifier::activated, this, &X11EventRecorder::processXcbEvents);
-            connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11EventRecorder::processXcbEvents);
-            connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, &X11EventRecorder::processXcbEvents);
-        }
+    connect(m_notifier, &QSocketNotifier::activated, this, &X11EventRecorder::processXcbEvents);
+    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11EventRecorder::processXcbEvents);
+    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, &X11EventRecorder::processXcbEvents);
+}
 
-        void X11EventRecorder::processXcbEvents()
-        {
-            xcb_generic_event_t *event;
-            while ((event = xcb_poll_for_event(m_connection))) {
-                u_int8_t responseType = event->response_type & ~0x80;
-                if (responseType == XCB_GE_GENERIC) {
-                    auto *geEvent = reinterpret_cast<xcb_ge_generic_event_t *>(event);
-                    if (geEvent->event_type == XCB_INPUT_KEY_PRESS || geEvent->event_type == XCB_INPUT_KEY_RELEASE) {
+void X11EventRecorder::processXcbEvents()
+{
+    xcb_generic_event_t *event;
+    while ((event = xcb_poll_for_event(m_connection))) {
+        u_int8_t responseType = event->response_type & ~0x80;
+        if (responseType == XCB_GE_GENERIC) {
+            auto *geEvent = reinterpret_cast<xcb_ge_generic_event_t *>(event);
+            if (geEvent->event_type == XCB_INPUT_KEY_PRESS || geEvent->event_type == XCB_INPUT_KEY_RELEASE) {
 
-                        auto keyEvent = reinterpret_cast<xcb_input_key_press_event_t *>(geEvent);
-                        int nativeKeyCode = keyEvent->detail - 0x08;
+                auto keyEvent = reinterpret_cast<xcb_input_key_press_event_t *>(geEvent);
+                int nativeKeyCode = keyEvent->detail - 0x08;
 
-                        if (nativeKeyCode == 0) {
-                            if (geEvent->event_type == XCB_INPUT_KEY_RELEASE) {
-                                Q_EMIT fenceReceived();
-                            }
-                        } else {
-                            KeyAction action({geEvent->event_type == XCB_INPUT_KEY_PRESS ? State::Press : State::Release, nativeKeyCode});
-                            m_keyEvents << action;
-                        }
+                if (nativeKeyCode == 0) {
+                    if (geEvent->event_type == XCB_INPUT_KEY_RELEASE) {
+                        Q_EMIT fenceReceived();
                     }
+                } else {
+                    KeyAction action({geEvent->event_type == XCB_INPUT_KEY_PRESS ? State::Press : State::Release, nativeKeyCode});
+                    m_keyEvents << action;
                 }
-                std::free(event);
             }
-
-            xcb_flush(m_connection);
         }
+        std::free(event);
+    }
+
+    xcb_flush(m_connection);
+}
 
 QList<KeyAction> X11KeyReadTest::recievedX11EventsForInput(const QList<KeyAction> &keysIn)
 {
