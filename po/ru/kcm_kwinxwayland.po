@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-22 00:42+0000\n"
+"POT-Creation-Date: 2025-04-16 02:32+0000\n"
 "PO-Revision-Date: 2024-05-12 16:47+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 21.08.3\n"
 
-#: ui/main.qml:32
+#: ui/main.qml:29
 #, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
@@ -38,40 +38,40 @@ msgstr ""
 "приложения, вы можете настроить баланс между безопасностью и "
 "функциональностью здесь."
 
-#: ui/main.qml:48
+#: ui/main.qml:45
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Разрешить передачу следующих событий ввода с клавиатуры для всех устаревших "
 "приложений X11:"
 
-#: ui/main.qml:49
+#: ui/main.qml:46
 #, kde-format
 msgid "Never"
 msgstr "Ничего"
 
-#: ui/main.qml:60
+#: ui/main.qml:57
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Только нажатия клавиш Meta, Control, Alt и Shift"
 
-#: ui/main.qml:71
+#: ui/main.qml:68
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "Указанное выше, но только в сочетании с Meta, Ctrl, Alt или Shift"
 
-#: ui/main.qml:83
+#: ui/main.qml:80
 #, kde-format
 msgid "Always"
 msgstr "Нажатия всех клавиш без ограничений"
 
-#: ui/main.qml:98
+#: ui/main.qml:95
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Также нажатия кнопок мыши"
 
-#: ui/main.qml:114
+#: ui/main.qml:111
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "

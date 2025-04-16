@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-22 00:42+0000\n"
+"POT-Creation-Date: 2025-04-16 02:32+0000\n"
 "PO-Revision-Date: 2024-04-04 17:46+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: ui/main.qml:32
+#: ui/main.qml:29
 #, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
@@ -37,24 +37,24 @@ msgstr ""
 "tokiomis programomis, čia galite pasirinkti pageidaujamą saugumo ir "
 "funkcionalumo balansą."
 
-#: ui/main.qml:48
+#: ui/main.qml:45
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Leisti pasenusioms X11 programoms skaityti visose programose paspaudžiamus "
 "klavišus:"
 
-#: ui/main.qml:49
+#: ui/main.qml:46
 #, kde-format
 msgid "Never"
 msgstr "Niekada"
 
-#: ui/main.qml:60
+#: ui/main.qml:57
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Tik Meta, Vald, Alt ir Lyg2 klavišai"
 
-#: ui/main.qml:71
+#: ui/main.qml:68
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -62,17 +62,17 @@ msgstr ""
 "Tas pats, kaip aukščiau ir dar papildomai bet kuriuos klavišus, kurie rašomi "
 "nuspaudus Vald, Alt ar Meta klavišus"
 
-#: ui/main.qml:83
+#: ui/main.qml:80
 #, kde-format
 msgid "Always"
 msgstr "Visada"
 
-#: ui/main.qml:98
+#: ui/main.qml:95
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Papildomai įtraukti pelės mygtukus"
 
-#: ui/main.qml:114
+#: ui/main.qml:111
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
