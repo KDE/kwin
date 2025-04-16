@@ -25,9 +25,9 @@ KCM.SimpleKCM {
         // otherwise place their delegates at the end
 
         Kirigami.FormLayout {
-            id: sliderLayout
+            id: mainLayout
 
-            twinFormLayouts: [exclusiveEffectsLayout, otherEffectsLayout, separatorLayout]
+            twinFormLayouts: separatorLayout
 
             // We want to show the slider in a logarithmic way. ie
             // move from 4x, 3x, 2x, 1x, 0.5x, 0.25x, 0.125x
@@ -87,14 +87,6 @@ KCM.SimpleKCM {
                     }
                 }
             }
-        }
-
-        Kirigami.FormLayout {
-            id: exclusiveEffectsLayout
-
-            twinFormLayouts: [sliderLayout, otherEffectsLayout, separatorLayout]
-
-            enabled: kcm.globalsSettings.animationDurationFactor != 0
 
             Item {
                 Kirigami.FormData.isSection: true
@@ -105,7 +97,7 @@ KCM.SimpleKCM {
                 model: [{"animationsModel": kcm.windowOpenCloseAnimations,  "label": i18nc("@label:listbox", "Window open/close:")        },
                         {"animationsModel": kcm.windowMaximizeAnimations,   "label": i18nc("@label:listbox", "Window maximize:")          },
                         {"animationsModel": kcm.windowMinimizeAnimations,   "label": i18nc("@label:listbox", "Window minimize:")          },
-                        {"animationsModel": kcm.windowFullscreenAnimations, "label": i18nc("@label:listbox", "Window full screen:")        },
+                        {"animationsModel": kcm.windowFullscreenAnimations, "label": i18nc("@label:listbox", "Window full screen:")       },
                         {"animationsModel": kcm.peekDesktopAnimations,      "label": i18nc("@label:listbox", "Peek at desktop:")          },
                         {"animationsModel": kcm.virtualDesktopAnimations,   "label": i18nc("@label:listbox", "Virtual desktop switching:")}]
                 delegate: RowLayout {
@@ -116,6 +108,8 @@ KCM.SimpleKCM {
                     Layout.minimumWidth: Kirigami.Units.gridUnit * 16
 
                     spacing: Kirigami.Units.smallSpacing
+
+                    enabled: kcm.globalsSettings.animationDurationFactor != 0
 
                     AnimationComboBox {
                         id: animationComboBox
@@ -146,14 +140,6 @@ KCM.SimpleKCM {
                     }
                 }
             }
-        }
-
-        Kirigami.FormLayout {
-            id: otherEffectsLayout
-
-            twinFormLayouts: [sliderLayout, exclusiveEffectsLayout, separatorLayout]
-
-            enabled: kcm.globalsSettings.animationDurationFactor != 0
 
             Connections {
                 target: kcm.otherEffects
@@ -175,6 +161,8 @@ KCM.SimpleKCM {
                     required property int index
 
                     spacing: Kirigami.Units.smallSpacing
+
+                    enabled: kcm.globalsSettings.animationDurationFactor != 0
 
                     AnimationCheckBox {
                         id: animationCheckBox
@@ -223,7 +211,7 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             id: separatorLayout
 
-            twinFormLayouts: [sliderLayout, exclusiveEffectsLayout, otherEffectsLayout]
+            twinFormLayouts: mainLayout
 
             Kirigami.Separator {
                 id: separator
@@ -275,4 +263,3 @@ KCM.SimpleKCM {
         }
     }
 }
-
