@@ -2043,15 +2043,19 @@ static inline void setTransientFor(xcb_window_t window, xcb_window_t transient_f
                         XCB_ATOM_WINDOW, 32, 1, &transient_for_window);
 }
 
-static inline void sync()
+static inline void sync(xcb_connection_t *connection)
 {
-    auto *c = connection();
-    const auto cookie = xcb_get_input_focus(c);
+    const auto cookie = xcb_get_input_focus(connection);
     xcb_generic_error_t *error = nullptr;
-    UniqueCPtr<xcb_get_input_focus_reply_t> sync(xcb_get_input_focus_reply(c, cookie, &error));
+    UniqueCPtr<xcb_get_input_focus_reply_t> sync(xcb_get_input_focus_reply(connection, cookie, &error));
     if (error) {
         free(error);
     }
+}
+
+static inline void sync()
+{
+    sync(connection());
 }
 
 void selectInput(xcb_window_t window, uint32_t events)
