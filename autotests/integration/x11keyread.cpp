@@ -15,6 +15,7 @@
 #include "pointer_input.h"
 #include "qabstracteventdispatcher.h"
 #include "qsocketnotifier.h"
+#include "utils/xcbutils.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -304,7 +305,10 @@ X11EventRecorder::X11EventRecorder(xcb_connection_t *c)
         | XCB_INPUT_RAW_KEY_RELEASE);
 
     xcb_input_xi_select_events(c, kwinApp()->x11RootWindow(), 1, &mask.head);
-    xcb_flush(c);
+    // Block until the X server has processed this event, not
+    // just until it received it (which xcb_flush would do).
+    // Otherwise we might miss key events
+    Xcb::sync(c);
 
     connect(m_notifier, &QSocketNotifier::activated, this, &X11EventRecorder::processXcbEvents);
     connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11EventRecorder::processXcbEvents);
