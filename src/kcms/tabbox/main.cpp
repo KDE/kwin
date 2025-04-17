@@ -21,6 +21,7 @@
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QPointer>
+#include <QProcess>
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QStandardPaths>
@@ -42,7 +43,6 @@
 #include "kwintabboxconfigform.h"
 #include "kwintabboxdata.h"
 #include "kwintabboxsettings.h"
-#include "layoutpreview.h"
 #include "shortcutsettings.h"
 
 #include <QTabBar>
@@ -270,17 +270,47 @@ void KWinTabBoxConfig::defaults()
     KCModule::defaults();
     updateUnmanagedState();
 }
+
 void KWinTabBoxConfig::configureEffectClicked()
 {
     auto form = qobject_cast<KWinTabBoxConfigForm *>(sender());
     Q_ASSERT(form);
 
-    if (form->effectComboCurrentData(KWinTabBoxConfigForm::AddonEffect).toBool()) {
-        // Show the preview for addon effect
-        new LayoutPreview(form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString(),
-                          form->config()->showDesktopMode(),
-                          this);
+    if (!form->effectComboCurrentData(KWinTabBoxConfigForm::AddonEffect).toBool()) {
+        return;
     }
+
+    // The process will close when losing focus, but check in case of multiple calls
+    if (m_previewProcess && m_previewProcess->state() != QProcess::NotRunning) {
+        return;
+    }
+
+    // Launch the preview helper executable with the required env var
+    // that allows the PlasmaDialog to position itself
+    // QT_WAYLAND_DISABLE_FIXED_POSITIONS=1 kwin-tabbox-preview <path> [--show-desktop]
+
+    const QString previewHelper = QStandardPaths::findExecutable("kwin-tabbox-preview", {LIBEXEC_DIR});
+    if (previewHelper.isEmpty()) {
+        qWarning() << "Cannot find tabbox preview helper executable \"kwin-tabbox-preview\" in" << LIBEXEC_DIR;
+        return;
+    }
+
+    QStringList args;
+    args << form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString();
+    if (form->config()->showDesktopMode()) {
+        args << QStringLiteral("--show-desktop");
+    }
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert(QStringLiteral("QT_WAYLAND_DISABLE_FIXED_POSITIONS"),
+               QStringLiteral("1"));
+
+    m_previewProcess = std::make_unique<QProcess>();
+    m_previewProcess->setArguments(args);
+    m_previewProcess->setProgram(previewHelper);
+    m_previewProcess->setProcessEnvironment(env);
+    m_previewProcess->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_previewProcess->start();
 }
 
 } // namespace

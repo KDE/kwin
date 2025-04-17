@@ -3,9 +3,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwintabbox\")
 
 set(kcm_kwintabbox_PART_SRCS
     ${KWin_SOURCE_DIR}/src/tabbox/tabboxconfig.cpp
-    layoutpreview.cpp
     main.cpp
-    thumbnailitem.cpp
     kwintabboxconfigform.cpp
     kwintabboxdata.cpp
     shortcutsettings.cpp
@@ -19,7 +17,6 @@ kcoreaddons_add_plugin(kcm_kwintabbox SOURCES ${kcm_kwintabbox_PART_SRCS} INSTAL
 
 kcmutils_generate_desktop_file(kcm_kwintabbox)
 target_link_libraries(kcm_kwintabbox
-    Qt::Quick
     KF6::GlobalAccel
     KF6::I18n
     KF6::KCMUtils
@@ -34,6 +31,17 @@ if (KWIN_BUILD_X11)
         XCB::XCB
     )
 endif()
+
+# TabBox preview helper
+add_executable(kwin-tabbox-preview
+    layoutpreview.cpp
+    thumbnailitem.cpp
+)
+target_link_libraries(kwin-tabbox-preview
+    Qt::Quick
+    KF6::I18n
+)
+install(TARGETS kwin-tabbox-preview DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
 ########### install files ###############
 install(FILES thumbnails/falkon.png
