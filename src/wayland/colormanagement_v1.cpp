@@ -96,7 +96,7 @@ void ColorManagerV1::wp_color_manager_v1_create_windows_scrgb(Resource *resource
     const auto scrgb = ColorDescription{
         NamedColorimetry::BT709,
         TransferFunction(TransferFunction::linear, 0, 80),
-        80,
+        203,
         0,
         std::nullopt,
         std::nullopt,
