@@ -152,8 +152,8 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
 
 EglContext::~EglContext()
 {
-    makeCurrent();
-    if (m_vao) {
+    const bool current = makeCurrent();
+    if (m_vao && current) {
         glDeleteVertexArrays(1, &m_vao);
     }
     m_shaderManager.reset();
