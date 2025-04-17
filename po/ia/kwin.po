@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-15 00:42+0000\n"
+"POT-Creation-Date: 2025-04-17 00:42+0000\n"
 "PO-Revision-Date: 2025-04-07 15:59+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -29,29 +29,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "g.sora@tiscali.it"
 
-#: backends/wayland/wayland_output.cpp:460
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pressa controlo dextere per lassar punctator"
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:464
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pressa controlo dextere per prender punctator"
 
-#: backends/wayland/wayland_output.cpp:466
+#: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:471
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Sortita dishabilitate"
 
-#: backends/wayland/wayland_output.cpp:471
+#: backends/wayland/wayland_output.cpp:473
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Sortita obscurate"
@@ -4233,7 +4233,7 @@ msgstr "Occide  fenestra"
 msgid "Activate Window (%1)"
 msgstr "Activa fenestra (%1)"
 
-#: utils/edid.cpp:326
+#: utils/edid.cpp:327
 #, kde-format
 msgid "unknown"
 msgstr "incognite"
@@ -4278,39 +4278,39 @@ msgstr "Commuta un Scriptorio a basso"
 msgid "Switch to Desktop %1"
 msgstr "Commuta a Scriptorio %1"
 
-#: wayland/outputmanagement_v2.cpp:433
+#: wayland/outputmanagement_v2.cpp:444
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Un del exitos pertinente non es plus disponibile"
 
-#: wayland/outputmanagement_v2.cpp:451
+#: wayland/outputmanagement_v2.cpp:462
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Dishabilitar omne exitos per cambios de configuration non es permittite"
 
-#: wayland/outputmanagement_v2.cpp:461
+#: wayland/outputmanagement_v2.cpp:472
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "Le ordine de exito fornite non contine omne exitos"
 
-#: wayland/outputmanagement_v2.cpp:479
+#: wayland/outputmanagement_v2.cpp:490
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "Leordine de exito fornite es invalide"
 
-#: wayland/outputmanagement_v2.cpp:497
+#: wayland/outputmanagement_v2.cpp:508
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Le driver refusava le configuration de exito"
 
-#: window.cpp:3264
+#: window.cpp:3247
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non respondente)"
 
-#: workspace.cpp:1612
+#: workspace.cpp:1611
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

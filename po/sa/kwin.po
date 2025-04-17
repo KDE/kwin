@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-15 00:42+0000\n"
+"POT-Creation-Date: 2025-04-17 00:42+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -29,29 +29,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "skkalwar999@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:460
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "सूचकं अनग्राब् कर्तुं right control नुदन्तु"
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:464
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "सूचकं ग्रहीतुं दक्षिणनियन्त्रणकुंजी नुदन्तु"
 
-#: backends/wayland/wayland_output.cpp:466
+#: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "WHERE Wayland रचनाकार %1"
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:471
 #, kde-format
 msgid "- Output disabled"
 msgstr "- आउटपुट् अक्षमम्"
 
-#: backends/wayland/wayland_output.cpp:471
+#: backends/wayland/wayland_output.cpp:473
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- आउटपुट मन्द"
@@ -4202,7 +4202,7 @@ msgstr "किल विण्डो"
 msgid "Activate Window (%1)"
 msgstr "विण्डो सक्रियं कुर्वन्तु (%1) ."
 
-#: utils/edid.cpp:326
+#: utils/edid.cpp:327
 #, kde-format
 msgid "unknown"
 msgstr "अज्ञात"
@@ -4247,38 +4247,38 @@ msgstr "एकं डेस्कटॉपं अधः स्विच कु�
 msgid "Switch to Desktop %1"
 msgstr "डेस्कटॉप %1 प्रति स्विच् कुर्वन्तु"
 
-#: wayland/outputmanagement_v2.cpp:433
+#: wayland/outputmanagement_v2.cpp:444
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "प्रासंगिकनिर्गमानाम् एकं उत्पादनं अधुना उपलब्धं नास्ति"
 
-#: wayland/outputmanagement_v2.cpp:451
+#: wayland/outputmanagement_v2.cpp:462
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "विन्यासपरिवर्तनद्वारा सर्वाणि निर्गमानाम् अक्षमीकरणं न अनुमतम्"
 
-#: wayland/outputmanagement_v2.cpp:461
+#: wayland/outputmanagement_v2.cpp:472
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "प्रदत्तनिर्गमक्रमे सर्वाणि निर्गमाः न सन्ति"
 
-#: wayland/outputmanagement_v2.cpp:479
+#: wayland/outputmanagement_v2.cpp:490
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "प्रदत्तः आउटपुट् क्रमः अमान्यः अस्ति"
 
-#: wayland/outputmanagement_v2.cpp:497
+#: wayland/outputmanagement_v2.cpp:508
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "चालकः निर्गमविन्यासं अङ्गीकृतवान्"
 
-#: window.cpp:3264
+#: window.cpp:3247
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(प्रतिक्रिया न ददाति)"
 
-#: workspace.cpp:1612
+#: workspace.cpp:1611
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

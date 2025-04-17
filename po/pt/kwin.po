@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-15 00:42+0000\n"
+"POT-Creation-Date: 2025-04-17 00:42+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -43,29 +43,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "morais@kde.org"
 
-#: backends/wayland/wayland_output.cpp:460
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:464
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:466
+#: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:471
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:471
+#: backends/wayland/wayland_output.cpp:473
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -4370,7 +4370,7 @@ msgstr "Matar a Janela"
 msgid "Activate Window (%1)"
 msgstr "Activar a Janela (%1)"
 
-#: utils/edid.cpp:326
+#: utils/edid.cpp:327
 #, fuzzy, kde-format
 #| msgctxt "The input device of the event is not known"
 #| msgid "Unknown"
@@ -4417,38 +4417,38 @@ msgstr "Mudar para um Ecrã Abaixo"
 msgid "Switch to Desktop %1"
 msgstr "Mudar para o Ecrã %1"
 
-#: wayland/outputmanagement_v2.cpp:433
+#: wayland/outputmanagement_v2.cpp:444
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:451
+#: wayland/outputmanagement_v2.cpp:462
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:461
+#: wayland/outputmanagement_v2.cpp:472
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:479
+#: wayland/outputmanagement_v2.cpp:490
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:497
+#: wayland/outputmanagement_v2.cpp:508
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3264
+#: window.cpp:3247
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Não Responde)"
 
-#: workspace.cpp:1612
+#: workspace.cpp:1611
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

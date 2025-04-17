@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1707159 2025-04-15 01:20:12Z scripty $
+# $Id: kwin.po 1707265 2025-04-17 01:19:59Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-15 00:42+0000\n"
+"POT-Creation-Date: 2025-04-17 00:42+0000\n"
 "PO-Revision-Date: 2025-04-04 06:55+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -43,29 +43,29 @@ msgstr ""
 "roman.maurer@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,andrejm@ubuntu."
 "si,matjaz.jeran@amis.net,miles@filmsi.net"
 
-#: backends/wayland/wayland_output.cpp:460
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pritisnite desno kontrolko, da spustite kazalko"
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:464
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pritisnite puščico desno da zgrabite kazalko"
 
-#: backends/wayland/wayland_output.cpp:466
+#: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:471
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Output onemogočen"
 
-#: backends/wayland/wayland_output.cpp:471
+#: backends/wayland/wayland_output.cpp:473
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Output zamegljen"
@@ -4238,7 +4238,7 @@ msgstr "Uniči okno"
 msgid "Activate Window (%1)"
 msgstr "Omogoči okno (%1)"
 
-#: utils/edid.cpp:326
+#: utils/edid.cpp:327
 #, kde-format
 msgid "unknown"
 msgstr "neznano"
@@ -4283,38 +4283,38 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: wayland/outputmanagement_v2.cpp:433
+#: wayland/outputmanagement_v2.cpp:444
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Eden od ustreznih izhodov ni več na voljo"
 
-#: wayland/outputmanagement_v2.cpp:451
+#: wayland/outputmanagement_v2.cpp:462
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Onemogočanje vseh izhodov prek sprememb konfiguracije ni dovoljeno"
 
-#: wayland/outputmanagement_v2.cpp:461
+#: wayland/outputmanagement_v2.cpp:472
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "Navedeni izhodni vrstni red ne vsebuje vseh izhodov"
 
-#: wayland/outputmanagement_v2.cpp:479
+#: wayland/outputmanagement_v2.cpp:490
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "Navedeni izhodni vrstni red je neveljaven"
 
-#: wayland/outputmanagement_v2.cpp:497
+#: wayland/outputmanagement_v2.cpp:508
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
 
-#: window.cpp:3264
+#: window.cpp:3247
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1612
+#: workspace.cpp:1611
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

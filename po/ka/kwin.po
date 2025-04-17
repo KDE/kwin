@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-15 00:42+0000\n"
+"POT-Creation-Date: 2025-04-17 00:42+0000\n"
 "PO-Revision-Date: 2025-04-04 04:12+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -28,29 +28,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:460
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "მაჩვენებლის დათრევის მოსახსნელად მარჯვენა control-ს დააწექით"
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:464
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "მაჩვენებლის დასათრევად მარჯვენა Control-ს დააწექით"
 
-#: backends/wayland/wayland_output.cpp:466
+#: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland კომპოზიტორი %1"
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:471
 #, kde-format
 msgid "- Output disabled"
 msgstr "- გამოტანა გამორთულია"
 
-#: backends/wayland/wayland_output.cpp:471
+#: backends/wayland/wayland_output.cpp:473
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- გამოტანა დამალულია"
@@ -4220,7 +4220,7 @@ msgstr "ფანჯრის ნაძალადევი დაღუპვ�
 msgid "Activate Window (%1)"
 msgstr "ფანჯრის გააქტიურება (%1)"
 
-#: utils/edid.cpp:326
+#: utils/edid.cpp:327
 #, kde-format
 msgid "unknown"
 msgstr "unknown"
@@ -4265,38 +4265,38 @@ msgstr "ერთი სამუშაო მაგიდის დაბლა
 msgid "Switch to Desktop %1"
 msgstr "%1-ე სამუშაო მაგიდაზე გადართვა"
 
-#: wayland/outputmanagement_v2.cpp:433
+#: wayland/outputmanagement_v2.cpp:444
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "ერთ-ერთი შესაბამისი გამოტანა ხელმისაწვდომი აღარაა"
 
-#: wayland/outputmanagement_v2.cpp:451
+#: wayland/outputmanagement_v2.cpp:462
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "ყველა გამოტანს გამორთვა კონფიგურაციის ცვლილებებით დაშვებული არაა"
 
-#: wayland/outputmanagement_v2.cpp:461
+#: wayland/outputmanagement_v2.cpp:472
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "მითითებული გამოტანის მიმდევრობა ყველა გამოტანას არ შეიცავს"
 
-#: wayland/outputmanagement_v2.cpp:479
+#: wayland/outputmanagement_v2.cpp:490
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "მითითებული გამოტანის მიმდევრობა არასწორია"
 
-#: wayland/outputmanagement_v2.cpp:497
+#: wayland/outputmanagement_v2.cpp:508
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "დრაივერმა უარყო გამოტანის კონფიგურაცია"
 
-#: window.cpp:3264
+#: window.cpp:3247
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(არ პასუხობს)"
 
-#: workspace.cpp:1612
+#: workspace.cpp:1611
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
