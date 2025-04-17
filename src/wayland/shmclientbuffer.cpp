@@ -36,7 +36,7 @@ static constexpr uint32_t s_formats[] = {
 #endif
     WL_SHM_FORMAT_BGR888,
     WL_SHM_FORMAT_RGB888,
-};
+    WL_SHM_FORMAT_R8};
 
 static std::atomic<ShmAccess *> s_accessedBuffers = nullptr;
 static struct sigaction prevSigbusAction;

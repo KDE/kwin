@@ -569,6 +569,10 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, im.width(), im.height(), 0, format, type, im.constBits());
         }
+    } else if (image.format() == QImage::Format_Grayscale8) {
+        internalFormat = GL_R8;
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image.width(), image.height(),
+                     0, GL_RED, GL_UNSIGNED_BYTE, image.constBits());
     } else {
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, im.width(), im.height(), 0, format, type, im.constBits());
     }
