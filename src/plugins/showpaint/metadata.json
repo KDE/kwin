@@ -88,5 +88,8 @@
         "Name[zh_CN]": "突出显示画面更新区域",
         "Name[zh_TW]": "顯示塗繪"
     },
-    "X-KDE-ConfigModule": "kwin_showpaint_config"
+    "X-KDE-ConfigModule": "kwin_showpaint_config",
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
 }

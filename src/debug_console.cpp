@@ -1641,16 +1641,59 @@ DebugConsoleEffectsTab::DebugConsoleEffectsTab(QWidget *parent)
         return;
     }
 
-    const QStringList availableEffects = effects->listOfEffects();
+    QStringList availableEffects = effects->listOfEffects();
     const QStringList loadedEffects = effects->loadedEffects();
 
-    for (const QString &effectName : availableEffects) {
+    // Remove any duplicates with the same name
+    availableEffects.removeDuplicates();
+
+    // Show these debugging effects at the top of the list, sort the rest so they can be easily found
+    const QStringList priorityEffects = {QStringLiteral("showcompositing"), QStringLiteral("showfps"), QStringLiteral("showpaint")};
+    std::sort(availableEffects.begin(), availableEffects.end(), [&priorityEffects](const QString &a, const QString &b) {
+        const int indexA = priorityEffects.indexOf(a);
+        const int indexB = priorityEffects.indexOf(b);
+
+        if (indexA != -1 && indexB != -1) {
+            return a < b;
+        } else if (indexA != -1) {
+            return true;
+        } else if (indexB != -1) {
+            return false;
+        }
+
+        return a < b;
+    });
+
+    // Determine the index of the last priority effect so we can insert a separator beneath
+    int lastPriorityIndex = -1;
+    for (int i = 0; i < availableEffects.count(); ++i) {
+        if (priorityEffects.contains(availableEffects[i])) {
+            lastPriorityIndex = i;
+        } else {
+            break;
+        }
+    }
+
+    for (int i = 0; i < availableEffects.count(); ++i) {
+        const QString &effectName = availableEffects[i];
+
         QListWidgetItem *item = new QListWidgetItem(this);
         DebugConsoleEffectItem *effectItem = new DebugConsoleEffectItem(effectName, loadedEffects.contains(effectName));
 
         addItem(item);
         setItemWidget(item, effectItem);
         item->setSizeHint(effectItem->sizeHint());
+
+        if (i == lastPriorityIndex) {
+            QListWidgetItem *separatorItem = new QListWidgetItem(this);
+            separatorItem->setFlags(Qt::NoItemFlags);
+
+            QFrame *separator = new QFrame();
+            separator->setFrameShape(QFrame::HLine);
+
+            addItem(separatorItem);
+            setItemWidget(separatorItem, separator);
+        }
     }
 }
 
