@@ -133,6 +133,9 @@ private Q_SLOTS:
     void testSettingRestoration_data();
     void testSettingRestoration();
     void testSettingRestoration_initialParsingFailure();
+
+    void testEvacuateTiledWindowFromRemovedOutput_data();
+    void testEvacuateTiledWindowFromRemovedOutput();
 };
 
 void OutputChangesTest::initTestCase()
@@ -606,7 +609,6 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     // The window will be moved to the left monitor
     QCOMPARE(window->output(), outputs[0]);
     QVERIFY(tileChangedSpy.wait());
-    qWarning() << window->requestedTile()->windowGeometry();
     QCOMPARE(window->frameGeometry(), rightQuickTileGeomScreen1);
     QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeomScreen1);
 
@@ -1920,6 +1922,107 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         const auto [config, order, type] = *cfg;
         QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
     }
+}
+
+void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput_data()
+{
+    QTest::addColumn<QuickTileFlag>("tileMode");
+
+    QTest::addRow("Not tiled") << QuickTileFlag::None;
+    QTest::addRow("Quick Left") << QuickTileFlag::Left;
+    QTest::addRow("Quick Right") << QuickTileFlag::Right;
+    QTest::addRow("Quick Top") << QuickTileFlag::Top;
+    QTest::addRow("Quick Bottom") << QuickTileFlag::Bottom;
+    // FIXME this case currently fails!
+    // QTest::addRow("Custom") << QuickTileFlag::Custom;
+}
+
+void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
+{
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 5120, 1440),
+            .internal = false,
+        },
+        Test::OutputInfo{
+            .geometry = QRect(1705, 1440, 1800, 1200),
+            .scale = 1.6,
+            .internal = true,
+        },
+    });
+
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const auto external = outputs[0];
+    const auto internal = outputs[1];
+    QVERIFY(!external->isInternal());
+
+    // create a window on the external output
+    workspace()->setActiveOutput(external);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(500, 300), Qt::blue);
+    QVERIFY(window);
+
+    // kwin will send a configure event with the active state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    QVERIFY(external->geometryF().contains(window->frameGeometry()));
+
+    // possibly tile it
+    QFETCH(QuickTileFlag, tileMode);
+    if (tileMode != QuickTileFlag::None) {
+        QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+
+        window->setQuickTileModeAtCurrentPosition(tileMode);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
+
+        QVERIFY(frameGeometryChangedSpy.wait());
+        QVERIFY(external->geometryF().contains(window->frameGeometry()));
+    }
+
+    const QRectF originalGeometry = window->frameGeometry();
+
+    // now remove the external output
+    {
+        OutputConfiguration config;
+        config.changeSet(external)->enabled = false;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    if (tileMode != QuickTileFlag::None) {
+        // react to the configure event
+        QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
+        QVERIFY(frameGeometryChangedSpy.wait());
+    }
+
+    // the window should be moved to be completely in the internal output
+    QVERIFY(internal->geometryF().contains(window->frameGeometry()));
+
+    // when re-adding the output, the window should be back at its original spot
+    {
+        OutputConfiguration config;
+        config.changeSet(external)->enabled = true;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    if (tileMode != QuickTileFlag::None) {
+        // react to the configure event
+        QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
+        QVERIFY(frameGeometryChangedSpy.wait());
+    }
+
+    QCOMPARE(window->frameGeometry(), originalGeometry);
 }
 
 } // namespace KWin
