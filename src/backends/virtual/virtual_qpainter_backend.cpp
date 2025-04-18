@@ -10,7 +10,7 @@
 #include "core/drmdevice.h"
 #include "core/graphicsbufferview.h"
 #include "core/shmgraphicsbufferallocator.h"
-#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
+#include "qpainter/qpainterswapchain.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_output.h"

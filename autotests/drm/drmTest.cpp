@@ -24,7 +24,7 @@
 #include "drm_pipeline.h"
 #include "drm_plane.h"
 #include "drm_pointer.h"
-#include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "qpainter/qpainterbackend.h"
 
 #include <drm_fourcc.h>
 #include <fcntl.h>

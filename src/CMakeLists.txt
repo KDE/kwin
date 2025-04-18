@@ -119,6 +119,7 @@ target_sources(kwin PRIVATE
     onscreennotification.cpp
     opengl/abstract_opengl_context_attribute_builder.cpp
     opengl/egl_context_attribute_builder.cpp
+    opengl/eglbackend.cpp
     opengl/eglcontext.cpp
     opengl/egldisplay.cpp
     opengl/eglimagetexture.cpp
@@ -147,6 +148,8 @@ target_sources(kwin PRIVATE
     pluginmanager.cpp
     pointer_input.cpp
     popup_input_filter.cpp
+    qpainter/qpainterbackend.cpp
+    qpainter/qpainterswapchain.cpp
     resources.qrc
     rulebooksettings.cpp
     rules.cpp
@@ -326,7 +329,6 @@ target_sources(kwin PRIVATE
 )
 
 add_subdirectory(backends)
-add_subdirectory(platformsupport)
 add_subdirectory(plugins)
 add_subdirectory(utils)
 add_subdirectory(wayland)

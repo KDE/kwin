@@ -9,7 +9,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
-#include "platformsupport/scenes/opengl/eglbackend.h"
+#include "opengl/eglbackend.h"
 #include <chrono>
 #include <memory>
 

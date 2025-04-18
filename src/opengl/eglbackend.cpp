@@ -7,7 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "platformsupport/scenes/opengl/eglbackend.h"
+#include "opengl/eglbackend.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/outputbackend.h"

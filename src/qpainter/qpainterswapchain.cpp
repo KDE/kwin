@@ -8,9 +8,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
-#include "core/graphicsbufferview.h"
+#include "qpainter/qpainterswapchain.h"
 #include "core/graphicsbufferallocator.h"
+#include "core/graphicsbufferview.h"
 #include "utils/common.h"
 
 namespace KWin

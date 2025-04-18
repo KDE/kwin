@@ -9,8 +9,8 @@
 #pragma once
 
 #include "core/outputlayer.h"
+#include "opengl/eglbackend.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/eglbackend.h"
 
 namespace KWin
 {

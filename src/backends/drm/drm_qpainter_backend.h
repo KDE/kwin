@@ -8,7 +8,7 @@
 */
 #pragma once
 #include "drm_render_backend.h"
-#include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "qpainter/qpainterbackend.h"
 
 #include <QList>
 #include <QObject>

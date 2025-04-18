@@ -45,8 +45,6 @@ target_link_libraries(LibDrmTest
 target_include_directories(LibDrmTest
     PUBLIC
         ../../src
-        ../../src/platformsupport/scenes/opengl
-        ../../src/platformsupport/scenes/qpainter
         ../../src/backends/drm/
 )
 

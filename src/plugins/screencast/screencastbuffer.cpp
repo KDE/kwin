@@ -8,8 +8,8 @@
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/shmgraphicsbufferallocator.h"
+#include "opengl/eglbackend.h"
 #include "opengl/glframebuffer.h"
-#include "platformsupport/scenes/opengl/eglbackend.h"
 
 namespace KWin
 {

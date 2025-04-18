@@ -9,8 +9,8 @@
 #pragma once
 #include "drm_plane.h"
 #include "drm_render_backend.h"
+#include "opengl/eglbackend.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/eglbackend.h"
 
 #include <QHash>
 #include <QPointer>
