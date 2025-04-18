@@ -139,7 +139,7 @@ std::unique_ptr<SurfacePixmap> SurfaceItemWayland::createPixmap()
 
 ContentType SurfaceItemWayland::contentType() const
 {
-    return m_surface->contentType();
+    return m_surface ? m_surface->contentType() : ContentType::None;
 }
 
 void SurfaceItemWayland::freeze()
