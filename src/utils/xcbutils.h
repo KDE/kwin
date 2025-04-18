@@ -1154,16 +1154,16 @@ public:
     {
         m_hints = m_prop.value<MwmHints *>(32, m_atom, nullptr);
     }
-    bool hasDecoration() const
+    bool hasDecorationsFlag() const
     {
         if (!m_window || !m_hints) {
             return false;
         }
         return m_hints->flags & uint32_t(Hints::Decorations);
     }
-    bool noBorder() const
+    bool noDecorations() const
     {
-        if (!hasDecoration()) {
+        if (!hasDecorationsFlag()) {
             return false;
         }
         return !m_hints->decorations;

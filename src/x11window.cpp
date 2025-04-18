@@ -1262,7 +1262,7 @@ void X11Window::updateShape()
         xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
         detectNoBorder();
         app_noborder = noborder;
-        noborder = rules()->checkNoBorder(noborder || m_motif.noBorder());
+        noborder = rules()->checkNoBorder(noborder || m_motif.noDecorations());
         updateDecoration(true);
     }
 
@@ -2017,14 +2017,14 @@ void X11Window::fetchIconicName()
 void X11Window::getMotifHints()
 {
     const bool wasClosable = isCloseable();
-    const bool wasNoBorder = m_motif.noBorder();
+    const bool wasNoBorder = m_motif.noDecorations();
     if (m_managed) { // only on property change, initial read is prefetched
         m_motif.fetch();
     }
     m_motif.read();
-    if (m_motif.hasDecoration() && m_motif.noBorder() != wasNoBorder) {
+    if (m_motif.hasDecorationsFlag() && m_motif.noDecorations() != wasNoBorder) {
         // If we just got a hint telling us to hide decorations, we do so.
-        if (m_motif.noBorder()) {
+        if (m_motif.noDecorations()) {
             noborder = rules()->checkNoBorder(true);
             // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
             // instruct us to hide decorations in some other way, though.
@@ -4070,7 +4070,7 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
         // triggers a maximize change.
         // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
         changeMaximizeRecursion = true;
-        setNoBorder(rules()->checkNoBorder(app_noborder || (m_motif.hasDecoration() && m_motif.noBorder()) || max_mode == MaximizeFull));
+        setNoBorder(rules()->checkNoBorder(app_noborder || (m_motif.hasDecorationsFlag() && m_motif.noDecorations()) || max_mode == MaximizeFull));
         changeMaximizeRecursion = false;
     }
 

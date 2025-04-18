@@ -438,8 +438,8 @@ void TestXcbWrapper::testMotifEmpty()
     Xcb::Atom atom(QByteArrayLiteral("_MOTIF_WM_HINTS"));
     Xcb::MotifHints hints(atom);
     // pre init
-    QCOMPARE(hints.hasDecoration(), false);
-    QCOMPARE(hints.noBorder(), false);
+    QCOMPARE(hints.hasDecorationsFlag(), false);
+    QCOMPARE(hints.noDecorations(), false);
     QCOMPARE(hints.resize(), true);
     QCOMPARE(hints.move(), true);
     QCOMPARE(hints.minimize(), true);
@@ -447,8 +447,8 @@ void TestXcbWrapper::testMotifEmpty()
     QCOMPARE(hints.close(), true);
     // post init, pre read
     hints.init(m_testWindow);
-    QCOMPARE(hints.hasDecoration(), false);
-    QCOMPARE(hints.noBorder(), false);
+    QCOMPARE(hints.hasDecorationsFlag(), false);
+    QCOMPARE(hints.noDecorations(), false);
     QCOMPARE(hints.resize(), true);
     QCOMPARE(hints.move(), true);
     QCOMPARE(hints.minimize(), true);
@@ -456,8 +456,8 @@ void TestXcbWrapper::testMotifEmpty()
     QCOMPARE(hints.close(), true);
     // post read
     hints.read();
-    QCOMPARE(hints.hasDecoration(), false);
-    QCOMPARE(hints.noBorder(), false);
+    QCOMPARE(hints.hasDecorationsFlag(), false);
+    QCOMPARE(hints.noDecorations(), false);
     QCOMPARE(hints.resize(), true);
     QCOMPARE(hints.move(), true);
     QCOMPARE(hints.minimize(), true);
@@ -471,8 +471,8 @@ void TestXcbWrapper::testMotif_data()
     QTest::addColumn<quint32>("functions");
     QTest::addColumn<quint32>("decorations");
 
-    QTest::addColumn<bool>("expectedHasDecoration");
-    QTest::addColumn<bool>("expectedNoBorder");
+    QTest::addColumn<bool>("expectedHasDecorationsFlag");
+    QTest::addColumn<bool>("expectedNoDecorations");
     QTest::addColumn<bool>("expectedResize");
     QTest::addColumn<bool>("expectedMove");
     QTest::addColumn<bool>("expectedMinimize");
@@ -516,8 +516,8 @@ void TestXcbWrapper::testMotif()
     Xcb::MotifHints hints(atom);
     hints.init(m_testWindow);
     hints.read();
-    QTEST(hints.hasDecoration(), "expectedHasDecoration");
-    QTEST(hints.noBorder(), "expectedNoBorder");
+    QTEST(hints.hasDecorationsFlag(), "expectedHasDecorationsFlag");
+    QTEST(hints.noDecorations(), "expectedNoDecorations");
     QTEST(hints.resize(), "expectedResize");
     QTEST(hints.move(), "expectedMove");
     QTEST(hints.minimize(), "expectedMinimize");
