@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "qpainter/qpainterbackend.h"
 #include "utils/common.h"
 
 #include <QtGlobal>

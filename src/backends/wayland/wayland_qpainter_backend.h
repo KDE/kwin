@@ -10,7 +10,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
-#include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "qpainter/qpainterbackend.h"
 #include "utils/damagejournal.h"
 
 #include <QImage>

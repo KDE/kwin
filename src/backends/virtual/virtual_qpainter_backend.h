@@ -10,7 +10,7 @@
 
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
-#include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "qpainter/qpainterbackend.h"
 
 #include <QList>
 #include <QMap>

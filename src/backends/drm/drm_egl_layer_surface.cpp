@@ -21,7 +21,7 @@
 #include "opengl/gllut.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/icc_shader.h"
-#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
+#include "qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
 
 #include <drm_fourcc.h>

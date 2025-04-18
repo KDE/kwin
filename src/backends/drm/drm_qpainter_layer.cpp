@@ -14,7 +14,7 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
-#include "platformsupport/scenes/qpainter/qpainterswapchain.h"
+#include "qpainter/qpainterswapchain.h"
 
 #include <cerrno>
 #include <drm_fourcc.h>

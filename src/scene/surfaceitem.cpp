@@ -9,9 +9,9 @@
 #include "core/graphicsbufferview.h"
 #include "core/pixelgrid.h"
 #include "core/renderbackend.h"
+#include "opengl/eglbackend.h"
 #include "opengl/gltexture.h"
-#include "platformsupport/scenes/opengl/eglbackend.h"
-#include "platformsupport/scenes/qpainter/qpainterbackend.h"
+#include "qpainter/qpainterbackend.h"
 #include "scene/scene.h"
 #include "utils/common.h"
 
