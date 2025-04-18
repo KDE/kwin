@@ -70,7 +70,8 @@ private:
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
     QHash<InputDeviceTabletTool *, Cursor *> m_cursorByTool;
-    bool m_implicitGrab = false;
+    bool m_tipDown = false;
+    bool m_buttonDown = false;
 };
 
 }
