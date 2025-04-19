@@ -418,9 +418,9 @@ static const Colorimetry NTSC = Colorimetry{
     xy{0.3127, 0.3290},
 };
 static const Colorimetry GenericFilm = Colorimetry{
+    xy{0.681, 0.319},
     xy{0.243, 0.692},
     xy{0.145, 0.049},
-    xy{0.681, 0.319},
     xy{0.310, 0.316},
 };
 static const Colorimetry BT2020 = Colorimetry{
