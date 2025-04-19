@@ -403,9 +403,9 @@ const Colorimetry Colorimetry::NTSC = Colorimetry{
     xy{0.3127, 0.3290},
 };
 const Colorimetry Colorimetry::GenericFilm = Colorimetry{
+    xy{0.681, 0.319},
     xy{0.243, 0.692},
     xy{0.145, 0.049},
-    xy{0.681, 0.319},
     xy{0.310, 0.316},
 };
 const Colorimetry Colorimetry::BT2020 = Colorimetry{
