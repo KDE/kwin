@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-18 00:43+0000\n"
+"POT-Creation-Date: 2025-04-19 00:43+0000\n"
 "PO-Revision-Date: 2025-02-17 22:05+0100\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1272,62 +1272,65 @@ msgstr "KWin-Hilfsprogramm"
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Dieses Hilfsprogramm ist nicht für den direkten Aufruf gedacht."
 
-#: helpers/killer/killer.cpp:234
-#, kde-kuit-format
+#: helpers/killer/killer.cpp:236
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><emphasis strong='true'>Terminating this application will close all "
+#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
-"terminate this application?</para>"
-msgstr ""
-"<para><application>%1</application> reagiert nicht. Wollen Sie diese "
-"Anwendung beenden?</para>"
-
-#: helpers/killer/killer.cpp:236
-#, kde-kuit-format
-msgctxt "@info \"window title\" of application name is not responding."
-msgid ""
-"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
-"to terminate this application?</para>"
-msgstr ""
-"<para>„%1“ von <application>%2</application> reagiert nicht. Wollen Sie "
-"diese Anwendung beenden?</para>"
-
-#: helpers/killer/killer.cpp:239
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"<para><emphasis strong='true'>Terminating this application will close all of "
-"its windows. Any unsaved data will be lost.</emphasis></para>"
+"terminate this application?</para><para><emphasis strong='true'>Terminating "
+"this application will close all of its windows. Any unsaved data will be "
+"lost.</emphasis></para>"
 msgstr ""
 "<para><emphasis strong='true'>Beim Beenden der Anwendung werden alle zur "
 "Anwendung gehörenden Fenster geschlossen und ungespeicherte Daten gehen "
 "verloren.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:241
+#: helpers/killer/killer.cpp:240
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><emphasis strong='true'>Terminating this application will close all "
+#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+msgctxt "@info \"window title\" of application name is not responding."
+msgid ""
+"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para><para><emphasis "
+"strong='true'>Terminating this application will close all of its windows. "
+"Any unsaved data will be lost.</emphasis></para>"
+msgstr ""
+"<para><emphasis strong='true'>Beim Beenden der Anwendung werden alle zur "
+"Anwendung gehörenden Fenster geschlossen und ungespeicherte Daten gehen "
+"verloren.</emphasis></para>"
+
+#: helpers/killer/killer.cpp:244
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "%1 &beenden"
 
-#: helpers/killer/killer.cpp:242
+#: helpers/killer/killer.cpp:245
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Länger &warten"
 
-#: helpers/killer/killer.cpp:250
+#: helpers/killer/killer.cpp:253
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "Reagiert nicht"
 
-#: helpers/killer/killer.cpp:266
+#: helpers/killer/killer.cpp:269
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "Prozess-ID: %1"
 
-#: helpers/killer/killer.cpp:268
+#: helpers/killer/killer.cpp:271
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -4389,6 +4392,22 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ist abgestürzt"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><application>%1</application> is not responding. Do you want to "
+#~ "terminate this application?</para>"
+#~ msgstr ""
+#~ "<para><application>%1</application> reagiert nicht. Wollen Sie diese "
+#~ "Anwendung beenden?</para>"
+
+#~ msgctxt "@info \"window title\" of application name is not responding."
+#~ msgid ""
+#~ "<para>\"%1\" of <application>%2</application> is not responding. Do you "
+#~ "want to terminate this application?</para>"
+#~ msgstr ""
+#~ "<para>„%1“ von <application>%2</application> reagiert nicht. Wollen Sie "
+#~ "diese Anwendung beenden?</para>"
 
 #~ msgid "Touchpad"
 #~ msgstr "Touchpad"

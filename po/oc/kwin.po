@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-18 00:43+0000\n"
+"POT-Creation-Date: 2025-04-19 00:43+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -1260,55 +1260,51 @@ msgstr ""
 msgid "This helper utility is not supposed to be called directly."
 msgstr ""
 
-#: helpers/killer/killer.cpp:234
+#: helpers/killer/killer.cpp:236
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
-"terminate this application?</para>"
+"terminate this application?</para><para><emphasis strong='true'>Terminating "
+"this application will close all of its windows. Any unsaved data will be "
+"lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:236
+#: helpers/killer/killer.cpp:240
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
-"to terminate this application?</para>"
+"to terminate this application?</para><para><emphasis "
+"strong='true'>Terminating this application will close all of its windows. "
+"Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:239
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"<para><emphasis strong='true'>Terminating this application will close all of "
-"its windows. Any unsaved data will be lost.</emphasis></para>"
-msgstr ""
-
-#: helpers/killer/killer.cpp:241
+#: helpers/killer/killer.cpp:244
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:242
+#: helpers/killer/killer.cpp:245
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr ""
 
-#: helpers/killer/killer.cpp:250
+#: helpers/killer/killer.cpp:253
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr ""
 
-#: helpers/killer/killer.cpp:266
+#: helpers/killer/killer.cpp:269
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:268
+#: helpers/killer/killer.cpp:271
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"

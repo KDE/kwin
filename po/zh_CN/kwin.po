@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-18 00:43+0000\n"
+"POT-Creation-Date: 2025-04-19 00:43+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1246,61 +1246,63 @@ msgstr "KWin 辅助工具程序"
 msgid "This helper utility is not supposed to be called directly."
 msgstr "这一辅助工具程序不应被直接调用。"
 
-#: helpers/killer/killer.cpp:234
-#, kde-kuit-format
+#: helpers/killer/killer.cpp:236
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><emphasis strong='true'>Terminating this application will close all "
+#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
-"terminate this application?</para>"
-msgstr ""
-"<para><application>%1</application> 没有响应。您想要强制终止此应用程序吗？</"
-"para>"
-
-#: helpers/killer/killer.cpp:236
-#, kde-kuit-format
-msgctxt "@info \"window title\" of application name is not responding."
-msgid ""
-"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
-"to terminate this application?</para>"
-msgstr ""
-"<para><application>%2</application> 的“%1”没有响应。您想要强制终止此应用程序"
-"吗？</para>"
-
-#: helpers/killer/killer.cpp:239
-#, kde-kuit-format
-msgctxt "@info"
-msgid ""
-"<para><emphasis strong='true'>Terminating this application will close all of "
-"its windows. Any unsaved data will be lost.</emphasis></para>"
+"terminate this application?</para><para><emphasis strong='true'>Terminating "
+"this application will close all of its windows. Any unsaved data will be "
+"lost.</emphasis></para>"
 msgstr ""
 "<para><emphasis strong='true'>强制终止此应用程序将会关闭它的所有窗口。所有尚"
 "未保存的数据都将丢失。</emphasis></para>"
 
-#: helpers/killer/killer.cpp:241
+#: helpers/killer/killer.cpp:240
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><emphasis strong='true'>Terminating this application will close all "
+#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+msgctxt "@info \"window title\" of application name is not responding."
+msgid ""
+"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para><para><emphasis "
+"strong='true'>Terminating this application will close all of its windows. "
+"Any unsaved data will be lost.</emphasis></para>"
+msgstr ""
+"<para><emphasis strong='true'>强制终止此应用程序将会关闭它的所有窗口。所有尚"
+"未保存的数据都将丢失。</emphasis></para>"
+
+#: helpers/killer/killer.cpp:244
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "终止 %1(&T)"
 
-#: helpers/killer/killer.cpp:242
+#: helpers/killer/killer.cpp:245
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "继续等待(&W)"
 
-#: helpers/killer/killer.cpp:250
+#: helpers/killer/killer.cpp:253
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "没有响应"
 
-#: helpers/killer/killer.cpp:266
+#: helpers/killer/killer.cpp:269
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "进程 ID：%1"
 
-#: helpers/killer/killer.cpp:268
+#: helpers/killer/killer.cpp:271
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -4288,3 +4290,19 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
+
+#~ msgctxt "@info"
+#~ msgid ""
+#~ "<para><application>%1</application> is not responding. Do you want to "
+#~ "terminate this application?</para>"
+#~ msgstr ""
+#~ "<para><application>%1</application> 没有响应。您想要强制终止此应用程序吗？"
+#~ "</para>"
+
+#~ msgctxt "@info \"window title\" of application name is not responding."
+#~ msgid ""
+#~ "<para>\"%1\" of <application>%2</application> is not responding. Do you "
+#~ "want to terminate this application?</para>"
+#~ msgstr ""
+#~ "<para><application>%2</application> 的“%1”没有响应。您想要强制终止此应用程"
+#~ "序吗？</para>"

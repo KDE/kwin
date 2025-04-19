@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-27 00:43+0000\n"
+"POT-Creation-Date: 2025-04-19 00:43+0000\n"
 "PO-Revision-Date: 2010-10-22 18:28+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -17,37 +17,52 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: layoutpreview.cpp:113
+#: layoutpreview.cpp:27
+#, kde-format
+msgid "Launch an interactive preview for a tabbox switcher"
+msgstr ""
+
+#: layoutpreview.cpp:28
+#, kde-format
+msgid "Path to the Window Switcher QML main file"
+msgstr ""
+
+#: layoutpreview.cpp:29
+#, kde-format
+msgid "Show also a thumbnail for the desktop"
+msgstr ""
+
+#: layoutpreview.cpp:156
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
 msgstr ""
 
-#: layoutpreview.cpp:117
+#: layoutpreview.cpp:160
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
 msgstr ""
 
-#: layoutpreview.cpp:121
+#: layoutpreview.cpp:164
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
 msgstr ""
 
-#: layoutpreview.cpp:125
+#: layoutpreview.cpp:168
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
 msgstr ""
 
-#: layoutpreview.cpp:131
+#: layoutpreview.cpp:174
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Show Desktop"
 msgstr "Tos les scribannes"
 
-#: layoutpreview.cpp:161
+#: layoutpreview.cpp:204
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgctxt "An example Desktop Name"
