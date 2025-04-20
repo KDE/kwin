@@ -37,17 +37,21 @@ add_executable(kwin-tabbox-preview
     layoutpreview.cpp
     thumbnailitem.cpp
 )
+qt_add_resources(kwin-tabbox-preview "thumbnails"
+    PREFIX "/kwin-tabbox-preview"
+    BASE "thumbnails"
+    FILES
+        thumbnails/falkon.png
+        thumbnails/kmail.png
+        thumbnails/systemsettings.png
+        thumbnails/dolphin.png
+        thumbnails/desktop.png
+)
 target_link_libraries(kwin-tabbox-preview
     Qt::Quick
     KF6::I18n
 )
 install(TARGETS kwin-tabbox-preview DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
-########### install files ###############
-install(FILES thumbnails/falkon.png
-              thumbnails/kmail.png
-              thumbnails/systemsettings.png
-              thumbnails/dolphin.png
-              thumbnails/desktop.png
-        DESTINATION ${KDE_INSTALL_DATADIR}/kwin-wayland/kcm_kwintabbox)
+# KNewStuff
 install(FILES kwinswitcher.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
