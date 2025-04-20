@@ -1,5 +1,6 @@
 # Spanish translations for kwin.po package.
-# Copyright (C) 1999-2024.
+# Copyright (C) 1999-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
 #
 # SPDX-FileCopyrightText: 1999-2000 Boris Wesslowski <Boris@Wesslowski.com>
 # SPDX-FileCopyrightText: 2001-2002, 2003 Pablo de Vicente <vicente@oan.es>
@@ -16,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-04-05 00:25+0100\n"
+"PO-Revision-Date: 2025-04-19 20:11+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1270,11 +1271,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Esta utilidad de ayuda no debe ser llamada directamente."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1282,15 +1279,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Si termina esta aplicación se cerrarán todas "
-"sus ventanas. Se perderán los datos que no haya guardado.</emphasis></para>"
+"<para><application>%1</application> no está respondiendo. ¿Quiere terminar "
+"esta aplicación?</para><para><emphasis strong='true'>Si termina esta "
+"aplicación se cerrarán todas sus ventanas. Se perderán los datos que no haya "
+"guardado.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1298,8 +1293,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Si termina esta aplicación se cerrarán todas "
-"sus ventanas. Se perderán los datos que no haya guardado.</emphasis></para>"
+"<para>«%1» de <application>%2</application> no está respondiendo. Quiere "
+"terminar esta aplicación?</para><para><emphasis strong='true'>Si termina "
+"esta aplicación se cerrarán todas sus ventanas. Se perderán los datos que no "
+"haya guardado.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -4360,19 +4357,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para><application>%1</application> is not responding. Do you want to "
-#~ "terminate this application?</para>"
-#~ msgstr ""
-#~ "<para><application>%1</application> no responde. ¿Desea terminar esta "
-#~ "aplicación?</para>"
-
-#~ msgctxt "@info \"window title\" of application name is not responding."
-#~ msgid ""
-#~ "<para>\"%1\" of <application>%2</application> is not responding. Do you "
-#~ "want to terminate this application?</para>"
-#~ msgstr ""
-#~ "<para>«%1» de <application>%2</application> no responde. ¿Desea terminar "
-#~ "esta aplicación?</para>"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-03-27 13:49+0100\n"
+"PO-Revision-Date: 2025-04-19 16:23+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -22,16 +22,17 @@ msgstr ""
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
 msgstr ""
+"Start een interactief voorbeeld voor een omschakelaar van een tabbladvak"
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Pad naar het QML hoofdbestandvan de Vensteromschakelaar"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Ook een miniatuur voor het bureaublad tonen"
 
 #: layoutpreview.cpp:156
 #, kde-format
