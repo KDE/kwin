@@ -892,6 +892,8 @@ Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &img, int timeout = 5000);
 Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img, int timeout = 5000);
 
+void maybeHandleConfigure(KWayland::Client::Surface *surface, XdgToplevel *toplevel, Window *window);
+
 /**
  * Waits for the @p window to be destroyed.
  */

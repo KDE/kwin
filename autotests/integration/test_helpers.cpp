@@ -942,6 +942,12 @@ public:
         wl_callback_destroy(m_callback);
     }
 
+    void wait()
+    {
+        QSignalSpy spy(this, &WaylandSyncPoint::done);
+        spy.wait();
+    }
+
 Q_SIGNALS:
     void done();
 
@@ -1893,6 +1899,30 @@ void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qrea
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
     Q_EMIT tablet->tabletToolProximityEvent(pos, xTilt, yTilt, rotation, distance, tipNear, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
+}
+
+void maybeHandleConfigure(KWayland::Client::Surface *surface, XdgToplevel *toplevel, Window *window)
+{
+    QSignalSpy toplevelConfigureRequestedSpy(toplevel, &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(toplevel->xdgSurface(), &Test::XdgSurface::configureRequested);
+    WaylandSyncPoint sync(s_waylandConnection->connection, s_waylandConnection->queue);
+    sync.wait();
+    if (toplevelConfigureRequestedSpy.count() == 0) {
+        return;
+    }
+    toplevel->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    const auto newSize = toplevelConfigureRequestedSpy.last().at(0).value<QSize>();
+    if (newSize != surface->size()) {
+        Test::render(surface, newSize, Qt::blue);
+        if (!surface->size().isEmpty()) {
+            // when the surface isn't mapped yet, the signal doesn't get emitted
+            QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+            QVERIFY(frameGeometryChangedSpy.wait());
+        }
+    } else {
+        surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
+    surface->setSize(newSize);
 }
 }
 }
