@@ -669,7 +669,7 @@ ColorDescription ColorDescription::withReference(double referenceLuminance) cons
     };
 }
 
-ColorDescription ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coefficient) const
+ColorDescription ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const
 {
     return ColorDescription{
         m_containerColorimetry,
@@ -681,6 +681,7 @@ ColorDescription ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coe
         m_masteringColorimetry,
         m_sdrColorimetry,
         coefficient,
+        range,
     };
 }
 

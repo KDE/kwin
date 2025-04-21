@@ -756,7 +756,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         Q_EMIT q->childSubSurfacesChanged();
     }
     if (colorDescriptionChanged || yuvCoefficientsChanged) {
-        current->colorDescription = current->colorDescription.withYuvCoefficients(current->yuvCoefficients);
+        current->colorDescription = current->colorDescription.withYuvCoefficients(current->yuvCoefficients, current->range);
         Q_EMIT q->colorDescriptionChanged();
     }
     if (presentationModeHintChanged) {

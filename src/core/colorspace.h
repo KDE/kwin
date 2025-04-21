@@ -260,7 +260,7 @@ public:
     ColorDescription withWhitepoint(xyY newWhitePoint) const;
     ColorDescription dimmed(double brightnessFactor) const;
     ColorDescription withReference(double referenceLuminance) const;
-    ColorDescription withYuvCoefficients(YUVMatrixCoefficients coefficient) const;
+    ColorDescription withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const;
 
     /**
      * @returns a matrix that transforms from linear RGB in this color description to linear RGB in the other one
