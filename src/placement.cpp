@@ -563,6 +563,8 @@ void Window::packTo(qreal left, qreal top)
 {
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
+    exitQuickTileMode();
+
     const Output *oldOutput = moveResizeOutput();
     move(QPoint(left, top));
     if (moveResizeOutput() != oldOutput) {
@@ -653,6 +655,7 @@ void Window::growHorizontal()
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
+    exitQuickTileMode();
     moveResize(geom);
 }
 
@@ -676,6 +679,7 @@ void Window::shrinkHorizontal()
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     if (geom.width() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
+        exitQuickTileMode();
         moveResize(geom);
     }
 }
@@ -708,6 +712,7 @@ void Window::growVertical()
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
+    exitQuickTileMode();
     moveResize(geom);
 }
 
@@ -731,6 +736,7 @@ void Window::shrinkVertical()
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     if (geom.height() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
+        exitQuickTileMode();
         moveResize(geom);
     }
 }
