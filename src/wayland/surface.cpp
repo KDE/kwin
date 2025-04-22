@@ -359,8 +359,8 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     // matrix and color space to be attached to YUV formats
     const bool hasColorManagementProtocol = colorSurface || frogColorManagement;
     const bool hasColorRepresentation = colorRepresentation != nullptr;
-    if (bufferRef && bufferRef->dmabufAttributes()) {
-        switch (bufferRef->dmabufAttributes()->format) {
+    if (pending->buffer && pending->buffer->dmabufAttributes()) {
+        switch (pending->buffer->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
             if (!hasColorRepresentation) {
                 pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
