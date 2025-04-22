@@ -1285,11 +1285,41 @@ void Workspace::updateOutputs()
         m_moveResizeWindow->cancelInteractiveMoveResize();
     }
 
+    // check tile info first
+    std::unordered_map<int, BackendOutput *> tileWithNativeMode;
+    for (BackendOutput *output : availableOutputs) {
+        const auto info = output->tileInfo();
+        if (!info || info->tileLocation != QPoint(0, 0)) {
+            continue;
+        }
+        const QSize pixelSize{
+            info->completeSizeInTiles.width() * info->tileSizeInPixels.width(),
+            info->completeSizeInTiles.height() * info->tileSizeInPixels.height(),
+        };
+        const auto modes = output->modes();
+        const bool hasNativeMode = std::ranges::any_of(modes, [&pixelSize](const auto &mode) {
+            return mode->size() == pixelSize;
+        });
+        if (hasNativeMode) {
+            tileWithNativeMode[info->groupId] = output;
+        }
+    }
+
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
         output->setAutoBrightnessAvailable(m_lightSensor->isAvailable());
         if (output->isNonDesktop() || !output->isEnabled()) {
             continue;
+        }
+        if (const auto info = output->tileInfo()) {
+            const bool hasNativeModeTile = tileWithNativeMode.contains(info->groupId);
+            if (hasNativeModeTile && info->tileLocation != QPoint(0, 0)) {
+                // This output is for a tile of a display that can be driven
+                // as either a tiled display, or as a 'normal' one.
+                // We only want to enable tile zero in this case, and use it
+                // as a normal display.
+                continue;
+            }
         }
         const auto replicationSource = std::ranges::find_if(availableOutputs, [output](BackendOutput *other) {
             return other->uuid() == output->replicationSource();

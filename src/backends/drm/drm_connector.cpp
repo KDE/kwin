@@ -161,6 +161,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                             QByteArrayLiteral("BT2020_YCC"),
                                                         })
     , path(this, QByteArrayLiteral("PATH"))
+    , tile(this, QByteArrayLiteral("TILE"))
 {
 }
 
@@ -239,6 +240,11 @@ BackendOutput::SubPixel DrmConnector::subpixel() const
     }
 }
 
+const std::optional<BackendOutput::TileInfo> &DrmConnector::tileInfo() const
+{
+    return m_tileInfo;
+}
+
 bool DrmConnector::updateProperties()
 {
     if (auto connector = drmModeGetConnector(gpu()->fd(), id())) {
@@ -269,6 +275,7 @@ bool DrmConnector::updateProperties()
     scalingMode.update(props);
     colorspace.update(props);
     path.update(props);
+    tile.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         qCWarning(KWIN_DRM) << "Failed to update the basic connector properties (CRTC_ID)";
@@ -328,6 +335,26 @@ bool DrmConnector::updateProperties()
         } else {
             qCWarning(KWIN_DRM) << "Unknown path type detected:" << value;
         }
+    }
+
+    if (auto blob = tile.immutableBlob()) {
+        int groupId, flags, numTilesX, numTilesY, tileLocX, tileLocY, tileWidth, tileHeight;
+        const int parsed = sscanf(static_cast<char *>(blob->data), "%d:%d:%d:%d:%d:%d:%d:%d",
+                                  &groupId, &flags, &numTilesX, &numTilesY,
+                                  &tileLocX, &tileLocY, &tileWidth, &tileHeight);
+        if (parsed == 8 && (numTilesX > 1 || numTilesY > 1)) {
+            m_tileInfo = BackendOutput::TileInfo{
+                .groupId = groupId,
+                .completeSizeInTiles = QSize(numTilesX, numTilesY),
+                .tileLocation = QPoint(tileLocX, tileLocY),
+                .tileSizeInPixels = QSize(tileWidth, tileHeight),
+            };
+        } else {
+            qCWarning(KWIN_DRM, "Failed to parse the TILE blob!");
+            m_tileInfo.reset();
+        }
+    } else {
+        m_tileInfo.reset();
     }
 
     return true;
