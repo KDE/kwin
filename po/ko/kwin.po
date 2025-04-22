@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-04-06 23:38+0200\n"
+"PO-Revision-Date: 2025-04-22 01:27+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1250,11 +1250,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "이 도우미 유틸리티는 직접 호출되지 않습니다."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1262,15 +1258,12 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>앱을 종료하면 자식 모든 창이 닫힙니다. 저장하"
-"지 않은 데이터는 손실됩니다.</emphasis></para>"
+"<para><application>%1</application> 앱이 응답하지 않습니다. 이 앱을 강제로 종"
+"료하시겠습니까?</para><para><emphasis strong='true'>앱을 종료하면 자식 창도 "
+"종료됩니다. 저장하지 않은 데이터는 손실됩니다.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1278,8 +1271,9 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>앱을 종료하면 자식 모든 창이 닫힙니다. 저장하"
-"지 않은 데이터는 손실됩니다.</emphasis></para>"
+"<para><application>%2</application> 앱의 \"%1\"이(가) 응답하지 않습니다. 이 "
+"앱을 강제로 종료하시겠습니까?</para><para><emphasis strong='true'>앱을 종료하"
+"면 자식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-03-28 09:47+0100\n"
+"PO-Revision-Date: 2025-04-20 08:58+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -27,17 +27,18 @@ msgstr ""
 #: layoutpreview.cpp:27
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "Lancer un aperçu interactif pour un commutateur de boîte à onglets"
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
 msgstr ""
+"Emplacement du fichier principal « QML » pour le commutateur de fenêtres"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Afficher également une vignette pour le bureau"
 
 #: layoutpreview.cpp:156
 #, kde-format
