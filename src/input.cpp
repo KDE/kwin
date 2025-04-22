@@ -1166,8 +1166,7 @@ public:
             m_gestureCancelled = true;
             return true;
         } else {
-            m_touchPoints.insert(id, pos);
-            if (m_touchPoints.count() == 1) {
+            if (m_touchPoints.isEmpty()) {
                 m_lastTouchDownTime = time;
             } else {
                 if (time - m_lastTouchDownTime > 250ms) {
@@ -1191,6 +1190,7 @@ public:
                     return false;
                 }
             }
+            m_touchPoints.insert(id, pos);
             if (m_touchPoints.count() >= 3 && !m_gestureCancelled) {
                 m_gestureTaken = true;
                 m_syntheticCancel = true;
