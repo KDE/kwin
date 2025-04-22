@@ -99,34 +99,6 @@ QQC2.ItemDelegate {
                 visible: listItem.ListView.isCurrentItem
                 wrapMode: Text.Wrap
             }
-
-            Loader {
-                id: videoItem
-
-                active: false
-                source: "Video.qml"
-                visible: false
-
-                function showHide() {
-                    if (!videoItem.active) {
-                        videoItem.active = true;
-                        videoItem.visible = true;
-                    } else {
-                        videoItem.active = false;
-                        videoItem.visible = false;
-                    }
-                }
-            }
-        }
-
-        QQC2.ToolButton {
-            visible: model.VideoRole.toString() !== ""
-            icon.name: "videoclip-amarok"
-            text: i18nc("@info:tooltip", "Show/Hide Video")
-            display: QQC2.AbstractButton.IconOnly
-            QQC2.ToolTip.text: text
-            QQC2.ToolTip.visible: hovered
-            onClicked: videoItem.showHide()
         }
 
         QQC2.ToolButton  {

@@ -21,8 +21,5 @@
         "Name[sl]": "Drsna pojavna okna",
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[x-test]": "xxSliding popupsxx"
-    },
-    "org.kde.kwin.effect": {
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4"
     }
 }

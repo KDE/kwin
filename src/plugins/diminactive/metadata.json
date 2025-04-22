@@ -100,8 +100,5 @@
         "Name[zh_CN]": "非活动窗口变暗",
         "Name[zh_TW]": "暗化非作用"
     },
-    "X-KDE-ConfigModule": "kwin_diminactive_config",
-    "org.kde.kwin.effect": {
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/dim_inactive.mp4"
-    }
+    "X-KDE-ConfigModule": "kwin_diminactive_config"
 }

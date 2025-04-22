@@ -98,8 +98,5 @@
         "Name[x-test]": "xxSnap Helperxx",
         "Name[zh_CN]": "窗口居中辅助线",
         "Name[zh_TW]": "貼齊輔助"
-    },
-    "org.kde.kwin.effect": {
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4"
     }
 }

@@ -102,7 +102,6 @@
     },
     "X-KDE-ConfigModule": "kwin_magiclamp_config",
     "org.kde.kwin.effect": {
-        "exclusiveGroup": "minimize",
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/magic_lamp.ogv"
+        "exclusiveGroup": "minimize"
     }
 }

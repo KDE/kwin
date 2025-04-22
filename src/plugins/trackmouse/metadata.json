@@ -89,8 +89,5 @@
         "Name[zh_CN]": "鼠标定位",
         "Name[zh_TW]": "滑鼠追蹤"
     },
-    "X-KDE-ConfigModule": "kwin_trackmouse_config",
-    "org.kde.kwin.effect": {
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/track_mouse.mp4"
-    }
+    "X-KDE-ConfigModule": "kwin_trackmouse_config"
 }

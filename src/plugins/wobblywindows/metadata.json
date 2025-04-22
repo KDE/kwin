@@ -101,8 +101,5 @@
         "Name[zh_CN]": "窗口惯性晃动",
         "Name[zh_TW]": "擺動視窗"
     },
-    "X-KDE-ConfigModule": "kwin_wobblywindows_config",
-    "org.kde.kwin.effect": {
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/wobbly_windows.ogv"
-    }
+    "X-KDE-ConfigModule": "kwin_wobblywindows_config"
 }

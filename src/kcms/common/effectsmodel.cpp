@@ -86,7 +86,6 @@ QHash<int, QByteArray> EffectsModel::roleNames() const
     roleNames[ServiceNameRole] = "ServiceNameRole";
     roleNames[IconNameRole] = "IconNameRole";
     roleNames[StatusRole] = "StatusRole";
-    roleNames[VideoRole] = "VideoRole";
     roleNames[WebsiteRole] = "WebsiteRole";
     roleNames[SupportedRole] = "SupportedRole";
     roleNames[ExclusiveRole] = "ExclusiveRole";
@@ -153,8 +152,6 @@ QVariant EffectsModel::data(const QModelIndex &index, int role) const
         return effect.iconName;
     case StatusRole:
         return static_cast<int>(effect.status);
-    case VideoRole:
-        return effect.video;
     case WebsiteRole:
         return effect.website;
     case SupportedRole:
@@ -249,7 +246,6 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
         if (metaData.rawData().contains("org.kde.kwin.effect")) {
             const QJsonObject d(metaData.rawData().value("org.kde.kwin.effect").toObject());
             effect.exclusiveGroup = d.value("exclusiveGroup").toString();
-            effect.video = QUrl::fromUserInput(d.value("video").toString());
             effect.enabledByDefaultFunction = d.value("enabledByDefaultMethod").toBool();
             effect.internal = d.value("internal").toBool();
         }
@@ -297,7 +293,6 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
             effect.originalStatus = effect.status;
             effect.enabledByDefault = plugin.isEnabledByDefault();
             effect.enabledByDefaultFunction = false;
-            effect.video = QUrl(plugin.value(QStringLiteral("X-KWin-Video-Url")));
             effect.website = QUrl(plugin.website());
             effect.supported = true;
             effect.exclusiveGroup = plugin.value(QStringLiteral("X-KWin-Exclusive-Category"));
@@ -357,7 +352,6 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
         if (pluginEffect.rawData().contains("org.kde.kwin.effect")) {
             const QJsonObject d(pluginEffect.rawData().value("org.kde.kwin.effect").toObject());
             effect.exclusiveGroup = d.value("exclusiveGroup").toString();
-            effect.video = QUrl::fromUserInput(d.value("video").toString());
             effect.enabledByDefaultFunction = d.value("enabledByDefaultMethod").toBool();
         }
 

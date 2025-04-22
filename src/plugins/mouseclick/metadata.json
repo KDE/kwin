@@ -89,8 +89,5 @@
         "Name[zh_CN]": "鼠标点击动效",
         "Name[zh_TW]": "滑鼠點擊動畫"
     },
-    "X-KDE-ConfigModule": "kwin_mouseclick_config",
-    "org.kde.kwin.effect": {
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/mouse_click.mp4"
-    }
+    "X-KDE-ConfigModule": "kwin_mouseclick_config"
 }

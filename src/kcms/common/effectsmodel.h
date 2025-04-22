@@ -74,10 +74,6 @@ public:
          */
         StatusRole,
         /**
-         * Link to a video demonstration of the effect.
-         */
-        VideoRole,
-        /**
          * Link to the home page of the effect.
          */
         WebsiteRole,
@@ -256,7 +252,6 @@ protected:
         Status originalStatus;
         bool enabledByDefault;
         bool enabledByDefaultFunction;
-        QUrl video;
         QUrl website;
         bool supported;
         QString exclusiveGroup;
