@@ -24,16 +24,10 @@ public:
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
-    bool isActive() const override;
-
-private Q_SLOTS:
-    void toggle();
-
 private:
     void paintGL(const RenderTarget &renderTarget, const QMatrix4x4 &projection, qreal scale);
     void paintQPainter();
 
-    bool m_active = false;
     QRegion m_painted; // what's painted in one pass
     int m_colorIndex = 0;
 };
