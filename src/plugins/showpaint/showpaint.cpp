@@ -16,9 +16,6 @@
 #include "effect/effecthandler.h"
 #include "opengl/glutils.h"
 
-#include <KGlobalAccel>
-#include <KLocalizedString>
-
 #include <QAction>
 #include <QPainter>
 
@@ -35,16 +32,7 @@ static const QList<QColor> s_colors{
     Qt::yellow,
     Qt::gray};
 
-ShowPaintEffect::ShowPaintEffect()
-{
-    auto *toggleAction = new QAction(this);
-    toggleAction->setObjectName(QStringLiteral("Toggle"));
-    toggleAction->setText(i18n("Toggle Show Paint"));
-    KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::ALT | Qt::Key_P));
-    KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::ALT | Qt::Key_P));
-
-    connect(toggleAction, &QAction::triggered, this, &ShowPaintEffect::toggle);
-}
+ShowPaintEffect::ShowPaintEffect() = default;
 
 void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
@@ -101,17 +89,6 @@ void ShowPaintEffect::paintQPainter()
     for (const QRect &r : m_painted) {
         effects->scenePainter()->fillRect(r, color);
     }
-}
-
-bool ShowPaintEffect::isActive() const
-{
-    return m_active;
-}
-
-void ShowPaintEffect::toggle()
-{
-    m_active = !m_active;
-    effects->addRepaintFull();
 }
 
 } // namespace KWin
