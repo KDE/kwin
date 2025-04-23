@@ -84,7 +84,7 @@ void AnimationEffect::init()
 
 bool AnimationEffect::isActive() const
 {
-    return !d->m_animations.empty() && !effects->isScreenLocked();
+    return !d->m_animations.empty();
 }
 
 #define RELATIVE_XY(_FIELD_) const bool relative[2] = {static_cast<bool>(metaData(Relative##_FIELD_##X, meta)), \
