@@ -230,7 +230,7 @@ void Workspace::setActiveWindow(Window *window)
     if (m_userActionsMenu->hasWindow() && !m_userActionsMenu->isMenuWindow(window) && m_setActiveWindowRecursion == 0) {
         m_userActionsMenu->close();
     }
-    StackingUpdatesBlocker blocker(this);
+
     ++m_setActiveWindowRecursion;
     updateFocusMousePosition(Cursors::self()->mouse()->pos());
 

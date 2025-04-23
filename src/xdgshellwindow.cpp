@@ -1477,9 +1477,7 @@ void XdgToplevelWindow::updateFullScreenMode(bool set)
     if (m_isFullScreen == set) {
         return;
     }
-    StackingUpdatesBlocker blocker1(workspace());
     m_isFullScreen = set;
-    updateLayer();
     updateWindowRules(Rules::Fullscreen);
     Q_EMIT fullScreenChanged();
 }

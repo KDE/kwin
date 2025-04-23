@@ -21,13 +21,6 @@
 #include <KWayland/Client/surface.h>
 #include <linux/input.h>
 
-#if KWIN_BUILD_X11
-#include "x11window.h"
-
-#include <netwm.h>
-#include <xcb/xcb_icccm.h>
-#endif
-
 namespace KWin
 {
 
@@ -48,7 +41,6 @@ private Q_SLOTS:
     void testSwitchToWindowBelow();
     void testSwitchToWindowMaximized();
     void testSwitchToWindowFullScreen();
-    void testActiveFullscreen();
     void testXdgActivation();
     void testGlobalShortcutActivation();
     void testFocusMovesFromClosedDialogToParentWindow();
@@ -409,70 +401,6 @@ void ActivationTest::stackScreensVertically()
         QRect(0, 1024, 1280, 1024),
     };
     Test::setOutputConfig(screenGeometries);
-}
-
-#if KWIN_BUILD_X11
-static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
-{
-    xcb_window_t windowId = xcb_generate_id(connection);
-    xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
-                      geometry.x(),
-                      geometry.y(),
-                      geometry.width(),
-                      geometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-
-    xcb_size_hints_t hints{};
-    xcb_icccm_size_hints_set_position(&hints, 1, geometry.x(), geometry.y());
-    xcb_icccm_size_hints_set_size(&hints, 1, geometry.width(), geometry.height());
-    xcb_icccm_set_wm_normal_hints(connection, windowId, &hints);
-
-    if (setup) {
-        setup(windowId);
-    }
-
-    xcb_map_window(connection, windowId);
-    xcb_flush(connection);
-
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    if (!windowCreatedSpy.wait()) {
-        return nullptr;
-    }
-    return windowCreatedSpy.last().first().value<X11Window *>();
-}
-#endif
-
-void ActivationTest::testActiveFullscreen()
-{
-#if KWIN_BUILD_X11
-    // Tests that an active X11 fullscreen window gets removed from the active layer
-    // when activating a Wayland window, even if there's a pending activation request
-    // for the X11 window
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
-
-    Test::XcbConnectionPtr c = Test::createX11Connection();
-    QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *x11Window = createX11Window(c.get(), QRect(0, 0, 100, 200));
-
-    // make it fullscreen
-    x11Window->setFullScreen(true);
-    QVERIFY(x11Window->isFullScreen());
-    QCOMPARE(x11Window->layer(), Layer::ActiveLayer);
-
-    // now, activate it again
-    workspace()->activateWindow(x11Window);
-
-    // now, create and activate a Wayland window
-    Test::XdgToplevelWindow waylandWindow;
-    QVERIFY(waylandWindow.show());
-
-    // the Wayland window should become active
-    // and the X11 window should not be in the active layer anymore
-    QSignalSpy stackingOrder(workspace(), &Workspace::stackingOrderChanged);
-    workspace()->activateWindow(waylandWindow.m_window);
-    QCOMPARE(workspace()->activeWindow(), waylandWindow.m_window);
-    QCOMPARE(x11Window->layer(), Layer::NormalLayer);
-#endif
 }
 
 static std::vector<std::unique_ptr<Test::XdgToplevelWindow>> setupWindows(uint32_t &time)

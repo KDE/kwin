@@ -3559,7 +3559,6 @@ void X11Window::moveResizeInternal(const RectF &rect, MoveResizeMode mode)
     if (isActive()) {
         workspace()->setActiveOutput(output());
     }
-    workspace()->updateStackingOrder();
 
     if (oldBufferGeometry != m_bufferGeometry) {
         Q_EMIT bufferGeometryChanged(oldBufferGeometry);
@@ -3840,11 +3839,7 @@ void X11Window::setFullScreen(bool set)
         m_fullscreenMode = FullScreenNone;
     }
 
-    StackingUpdatesBlocker blocker1(workspace());
     X11GeometryUpdatesBlocker blocker2(this);
-
-    // active fullscreens get different layer
-    updateLayer();
 
     info->setState(isFullScreen() ? NET::FullScreen : NET::States(), NET::FullScreen);
     updateDecoration(false, false);

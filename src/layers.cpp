@@ -29,7 +29,7 @@
 
  Every window has one layer assigned in which it is. There are 7 layers,
  from bottom : DesktopLayer, BelowLayer, NormalLayer, DockLayer, AboveLayer, NotificationLayer,
- ActiveLayer, CriticalNotificationLayer, and OnScreenDisplayLayer (see also NETWM sect.7.10.).
+ CriticalNotificationLayer, and OnScreenDisplayLayer (see also NETWM sect.7.10.).
  The layer a window is in depends on the window type, and on other things like whether the window
  is active. We extend the layers provided in NETWM by the NotificationLayer, OnScreenDisplayLayer,
  and CriticalNotificationLayer.
@@ -234,44 +234,6 @@ Window *Workspace::findDesktop(VirtualDesktop *desktop, LogicalOutput *output) c
     return nullptr;
 }
 
-#if KWIN_BUILD_X11
-static Layer layerForWindow(const X11Window *window)
-{
-    Layer layer = window->layer();
-
-    // Desktop windows cannot be promoted to upper layers.
-    if (layer == DesktopLayer) {
-        return layer;
-    }
-
-    if (const Group *group = window->group()) {
-        const auto members = group->members();
-        for (const X11Window *member : members) {
-            if (member == window) {
-                continue;
-            } else if (member->output() != window->output()) {
-                continue;
-            }
-            if (member->layer() == ActiveLayer) {
-                return ActiveLayer;
-            }
-        }
-    }
-
-    return layer;
-}
-#endif
-
-static Layer computeLayer(const Window *window)
-{
-#if KWIN_BUILD_X11
-    if (auto x11Window = qobject_cast<const X11Window *>(window)) {
-        return layerForWindow(x11Window);
-    }
-#endif
-    return window->layer();
-}
-
 bool Workspace::areConstrained(const Window *below, const Window *above) const
 {
     for (const auto constraint : std::as_const(m_constraints)) {
@@ -299,11 +261,11 @@ void Workspace::raiseOrLowerWindow(Window *window)
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
     LogicalOutput *output = options->isSeparateScreenFocus() ? window->output() : nullptr;
-    Layer layer = computeLayer(window);
+    Layer layer = window->layer();
 
     bool topmost = false;
     for (auto it = unconstrained_stacking_order.crbegin(); it != unconstrained_stacking_order.crend(); ++it) {
-        if (layer != computeLayer(*it) || !(*it)->isClient() || (*it)->isDeleted()) {
+        if (layer != (*it)->layer() || !(*it)->isClient() || (*it)->isDeleted()) {
             continue;
         }
         if ((*it)->isOnDesktop(desktop) && (*it)->isShown() && (*it)->isOnCurrentActivity()) {
@@ -567,8 +529,7 @@ QList<Window *> Workspace::constrainedStackingOrder()
     // unconstrained stacking order.
     std::array<QList<Window *>, NumLayers> windows;
     for (Window *window : std::as_const(unconstrained_stacking_order)) {
-        const Layer layer = computeLayer(window);
-        windows[layer] << window;
+        windows[window->layer()] << window;
     }
 
     QList<Window *> stacking;
