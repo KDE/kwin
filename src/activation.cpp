@@ -230,7 +230,7 @@ void Workspace::setActiveWindow(Window *window)
     if (m_userActionsMenu->hasWindow() && !m_userActionsMenu->isMenuWindow(window) && m_setActiveWindowRecursion == 0) {
         m_userActionsMenu->close();
     }
-    StackingUpdatesBlocker blocker(this);
+
     ++m_setActiveWindowRecursion;
     updateFocusMousePosition(Cursors::self()->mouse()->pos());
 
@@ -543,7 +543,6 @@ void Workspace::gotFocusIn(const Window *window)
 void Workspace::setShouldGetFocus(Window *window)
 {
     should_get_focus.append(window);
-    updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 }
 
 // basically the same like allowWindowActivation(), this time allowing

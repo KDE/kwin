@@ -1577,7 +1577,6 @@ protected:
     void handlePaletteChange();
 
     virtual Layer belongsToLayer() const;
-    bool isActiveFullScreen() const;
 
     // electric border / quick tiling
     void setElectricBorderMode(std::optional<ElectricBorderMode> mode);
