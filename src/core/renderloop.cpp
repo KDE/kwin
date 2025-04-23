@@ -117,7 +117,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
         } else {
             // adaptive sync: pageflips happen after one vblank interval
             // TODO read minimum refresh rate from the EDID and take it into account here
-            nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
+            nextPresentationTimestamp = std::max(currentTime, lastPresentationTimestamp + vblankInterval);
         }
     }
 
