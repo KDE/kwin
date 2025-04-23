@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-04-07 15:59+0200\n"
+"PO-Revision-Date: 2025-04-22 12:34+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.1\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1258,11 +1258,7 @@ msgstr ""
 "Iste utilitate de adjuta il non es supponite de esser appellate directemente."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1270,15 +1266,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Terminar iste application claudera omnes su "
-"fenestras. Ulle datos non salveguardate essera perdite.</emphasis></para>"
+"<para><application>%1</application>non es respondente.Tu vole terminar iste "
+"application?</para> <para><emphasis strong='true'>Quando on termina le "
+"application on claudera omne su fenestras. Omne datos non salveguardate "
+"essera perdite</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1286,8 +1280,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Terminar iste application claudera omnes su "
-"fenestras. Ulle datos non salveguardate essera perdite.</emphasis></para>"
+"<para>\"%1\" de <application>%2</application> non es respondente.Tu vole "
+"terminar iste application?</para><para><emphasis strong='true'>Quando on "
+"termina le application on claudera omne su fenestras.  Omne datos non "
+"salveguardate essera perdite.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
