@@ -71,6 +71,7 @@ QQC2.ItemDelegate {
         ColumnLayout {
             Layout.topMargin: Kirigami.Units.smallSpacing
             Layout.bottomMargin: Kirigami.Units.smallSpacing
+            Layout.rightMargin: configureButton.visible ? undefined : parent.spacing + configureButton.implicitWidth
             spacing: 0
 
             Kirigami.Heading {
@@ -102,6 +103,7 @@ QQC2.ItemDelegate {
         }
 
         QQC2.ToolButton  {
+            id: configureButton
             visible: model.ConfigurableRole
             enabled: model.StatusRole != Qt.Unchecked
             icon.name: "configure"
