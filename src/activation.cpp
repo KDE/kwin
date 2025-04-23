@@ -250,15 +250,6 @@ void Workspace::setActiveWindow(Window *window)
         m_lastActiveWindow = m_activeWindow;
         m_focusChain->update(m_activeWindow, FocusChain::MakeFirst);
         m_activeWindow->demandAttention(false);
-
-        // activating a client can cause a non active fullscreen window to loose the ActiveLayer status on > 1 screens
-        if (outputs().count() > 1) {
-            for (auto it = m_windows.begin(); it != m_windows.end(); ++it) {
-                if (*it != m_activeWindow && (*it)->layer() == ActiveLayer && (*it)->output() == m_activeWindow->output()) {
-                    (*it)->updateLayer();
-                }
-            }
-        }
     }
 
     if (window) {
@@ -266,8 +257,6 @@ void Workspace::setActiveWindow(Window *window)
     } else {
         disableGlobalShortcutsForClient(false);
     }
-
-    updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 
 #if KWIN_BUILD_X11
     if (rootInfo()) {
@@ -552,7 +541,6 @@ void Workspace::gotFocusIn(const Window *window)
 void Workspace::setShouldGetFocus(Window *window)
 {
     should_get_focus.append(window);
-    updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 }
 
 // basically the same like allowWindowActivation(), this time allowing

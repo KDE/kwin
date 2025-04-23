@@ -584,9 +584,6 @@ Layer Window::belongsToLayer() const
     if (keepBelow()) {
         return BelowLayer;
     }
-    if (isActiveFullScreen()) {
-        return ActiveLayer;
-    }
     if (keepAbove()) {
         return AboveLayer;
     }
@@ -2316,19 +2313,6 @@ void Window::removeTransient(Window *cl)
 void Window::removeTransientFromList(Window *cl)
 {
     m_transients.removeAll(cl);
-}
-
-bool Window::isActiveFullScreen() const
-{
-    if (!isFullScreen()) {
-        return false;
-    }
-
-    const auto ac = workspace()->mostRecentlyActivatedWindow(); // instead of activeWindow() - avoids flicker
-    // according to NETWM spec implementation notes suggests
-    // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
-    // we'll also take the screen into account
-    return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainWindows().contains(const_cast<Window *>(this)));
 }
 
 qreal Window::borderBottom() const

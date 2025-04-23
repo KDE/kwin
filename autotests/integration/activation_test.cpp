@@ -574,7 +574,6 @@ void ActivationTest::testActiveFullscreen()
     // make it fullscreen
     x11Window->setFullScreen(true);
     QVERIFY(x11Window->isFullScreen());
-    QCOMPARE(x11Window->layer(), Layer::ActiveLayer);
 
     // now, activate it again
     workspace()->activateWindow(x11Window);

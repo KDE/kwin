@@ -924,7 +924,6 @@ QList<OptionsModel::Data> RulesModel::layerModelData() const
         {NormalLayer, i18n("Normal")},
         {AboveLayer, i18n("Above")},
         {NotificationLayer, i18n("Notification")},
-        {ActiveLayer, i18n("Fullscreen")},
         {PopupLayer, i18n("Popup")},
         {CriticalNotificationLayer, i18n("Critical notification")},
         {OnScreenDisplayLayer, i18n("On-screen display")},

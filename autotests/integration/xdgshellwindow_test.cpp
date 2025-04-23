@@ -416,7 +416,7 @@ void TestXdgShellWindow::testFullscreen()
     QCOMPARE(fullScreenChangedSpy.count(), 1);
     QVERIFY(window->isFullScreen());
     QVERIFY(!window->isDecorated());
-    QCOMPARE(window->layer(), ActiveLayer);
+    QCOMPARE(window->layer(), NormalLayer);
     QCOMPARE(window->frameGeometry(), QRect(QPoint(0, 0), window->output()->geometry().size()));
 
     // Ask the compositor to show the window in normal mode.

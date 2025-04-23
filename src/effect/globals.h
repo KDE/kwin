@@ -164,7 +164,6 @@ enum Layer {
     NormalLayer,
     AboveLayer,
     NotificationLayer, // layer for windows of type notification
-    ActiveLayer, // active fullscreen, or active dialog
     PopupLayer, // tooltips, sub- and context menus
     CriticalNotificationLayer, // layer for notifications that should be shown even on top of fullscreen
     OnScreenDisplayLayer, // layer for On Screen Display windows such as volume feedback

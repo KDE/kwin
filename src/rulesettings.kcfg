@@ -432,7 +432,6 @@
         <choice name="NormalLayer" value="normal" />
         <choice name="AboveLayer" value="above" />
         <choice name="NotificationLayer" value="notification" />
-        <choice name="ActiveLayer" value="fullscreen" />
         <choice name="PopupLayer" value="popup" />
         <choice name="CriticalNotificationLayer" value="critical-notification" />
         <choice name="OnScreenDisplayLayer" value="osd" />
