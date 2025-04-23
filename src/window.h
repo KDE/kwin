@@ -1620,7 +1620,6 @@ protected:
     void handlePaletteChange();
 
     virtual Layer belongsToLayer() const;
-    bool isActiveFullScreen() const;
     void performDelayedRaise();
 
     // electric border / quick tiling
