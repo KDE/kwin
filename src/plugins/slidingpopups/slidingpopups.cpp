@@ -469,6 +469,7 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     animation.timeLine.setDuration((*dataIt).slideOutDuration);
     // this is effectively InCubic because the direction is reversed
     animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
+    animation.windowEffect = ItemEffect(w->windowItem());
 
     // If the opposite animation (In) was active and it had shorter duration,
     // at this point, the timeline can end up in the "done" state. Thus, we have
