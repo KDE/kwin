@@ -46,7 +46,7 @@ QQC2.ComboBox {
 
     function updateModel() {
         model.clear();
-        model.append({ "name": "None", "description": "" }); // We must add a 'None' option because we're using a combobox
+        model.append({ "name": i18nc("@item:inlistbox", "None"), "description": "" }); // We must add a 'None' option because we're using a combobox
         for (let i = 0; i < animationsModel.rowCount(); ++i) {
             let index = animationsModel.index(i, 0);
             let name = animationsModel.data(index, EffectsModel.NameRole);

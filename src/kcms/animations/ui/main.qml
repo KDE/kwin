@@ -153,7 +153,7 @@ KCM.SimpleKCM {
                 delegate: RowLayout {
                     id: otherAnimationLayout
                     Kirigami.FormData.buddyFor: animationCheckBox
-                    Kirigami.FormData.label: i18nc("option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'",
+                    Kirigami.FormData.label: i18nc("@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'",
                                                    "%1:",
                                                    kcm.otherEffects.data(kcm.otherEffects.index(index, 0), EffectsModel.NameRole))
                     Layout.fillWidth: true
