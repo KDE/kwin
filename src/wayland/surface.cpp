@@ -5,7 +5,6 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "surface.h"
-#include "blur.h"
 #include "clientconnection.h"
 #include "colormanagement_v1.h"
 #include "colorrepresentation_v1.h"
@@ -15,6 +14,7 @@
 #include "fractionalscale_v1_p.h"
 #include "frog_colormanagement_v1.h"
 #include "idleinhibit_v1_p.h"
+#include "kde_blur.h"
 #include "linux_drm_syncobj_v1.h"
 #include "linuxdmabufv1clientbuffer.h"
 #include "output.h"

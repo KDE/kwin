@@ -19,9 +19,9 @@
 #include "scene/scene.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
-#include "wayland/blur.h"
 #include "wayland/contrast.h"
 #include "wayland/display.h"
+#include "wayland/kde_blur.h"
 #include "wayland/surface.h"
 #include "window.h"
 
