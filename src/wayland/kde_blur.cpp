@@ -5,7 +5,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "blur.h"
+#include "kde_blur.h"
 #include "display.h"
 #include "region_p.h"
 #include "surface_p.h"
@@ -144,4 +144,4 @@ QRegion BlurInterface::region()
 
 }
 
-#include "moc_blur.cpp"
+#include "moc_kde_blur.cpp"

@@ -85,7 +85,6 @@ target_sources(kwin PRIVATE
     abstract_drop_handler.cpp
     alphamodifier_v1.cpp
     appmenu.cpp
-    blur.cpp
     clientconnection.cpp
     colormanagement_v1.cpp
     compositor.cpp
@@ -114,6 +113,7 @@ target_sources(kwin PRIVATE
     idleinhibit_v1.cpp
     idlenotify_v1.cpp
     inputmethod_v1.cpp
+    kde_blur.cpp
     keyboard.cpp
     keyboard_shortcuts_inhibit_v1.cpp
     keystate.cpp
@@ -176,7 +176,6 @@ target_sources(kwin PRIVATE
 install(FILES
     alphamodifier_v1.h
     appmenu.h
-    blur.h
     clientconnection.h
     colormanagement_v1.h
     compositor.h
@@ -202,6 +201,7 @@ install(FILES
     idleinhibit_v1.h
     idlenotify_v1.h
     inputmethod_v1.h
+    kde_blur.h
     keyboard.h
     keyboard_shortcuts_inhibit_v1.h
     keystate.h

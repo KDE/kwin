@@ -18,8 +18,8 @@
 #include "scene/decorationitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
-#include "wayland/blur.h"
 #include "wayland/display.h"
+#include "wayland/kde_blur.h"
 #include "wayland/surface.h"
 
 #if KWIN_BUILD_X11
