@@ -188,10 +188,7 @@ public:
      */
     ShadowInterface *shadow() const;
 
-    /**
-     * @returns The Blur for this Surface.
-     */
-    BlurInterface *blur() const;
+    Region blurRegion() const;
 
     /**
      * @returns The Slide for this Surface.

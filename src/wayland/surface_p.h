@@ -98,6 +98,7 @@ struct SurfaceState
     EncodingRange range = EncodingRange::Full;
     bool fifoBarrier = false;
     bool hasFifoWaitCondition = false;
+    Region blurRegion;
 
     struct
     {
@@ -135,7 +136,6 @@ public:
     bool raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *anchor);
     bool lowerChild(SubSurfaceInterface *subsurface, SurfaceInterface *anchor);
     void setShadow(const QPointer<ShadowInterface> &shadow);
-    void setBlur(const QPointer<BlurInterface> &blur);
     void setContrast(const QPointer<ContrastInterface> &contrast);
     void setSlide(const QPointer<SlideInterface> &slide);
     void installPointerConstraint(LockedPointerV1Interface *lock);

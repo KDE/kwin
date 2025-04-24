@@ -326,8 +326,8 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
 #endif
 
     if (SurfaceInterface *surface = w->surface()) {
-        if (surface->blur()) {
-            content = surface->blur()->region();
+        if (!surface->blurRegion().isEmpty()) {
+            content = surface->blurRegion();
         }
         if (surface->contrast()) {
             saturation = surface->contrast()->saturation();
