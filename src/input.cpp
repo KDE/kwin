@@ -372,6 +372,12 @@ public:
             return true;
         }
 
+        // FIXME: Ideally we want to move all whitelisted global shortcuts here and process it here instead of lockscreen
+        if (event->key == Qt::Key_PowerOff) {
+            // globalshortcuts want to use this
+            return false;
+        }
+
         ScreenLocker::KSldApp::self()->userActivity();
 
         // send event to KSldApp for global accel
