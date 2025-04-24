@@ -368,6 +368,12 @@ public:
             return true;
         }
 
+        // FIXME: Ideally we want to move all whitelisted global shortcuts here and process it here instead of lockscreen
+        if (event->key == Qt::Key_PowerOff) {
+            // globalshortcuts want to use this
+            return false;
+        }
+
         ScreenLocker::KSldApp::self()->userActivity();
 
         // send event to KSldApp for global accel
@@ -575,13 +581,13 @@ public:
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
         if (!passToInputMethod(event)) {
             QKeyEvent keyEvent(event->state == KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
-                            event->key,
-                            event->modifiers,
-                            event->nativeScanCode,
-                            event->nativeVirtualKey,
-                            0,
-                            event->text,
-                            event->state == KeyboardKeyState::Repeated);
+                               event->key,
+                               event->modifiers,
+                               event->nativeScanCode,
+                               event->nativeVirtualKey,
+                               0,
+                               event->text,
+                               event->state == KeyboardKeyState::Repeated);
             keyEvent.setAccepted(false);
             effects->grabbedKeyboardEvent(&keyEvent);
         }
