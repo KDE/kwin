@@ -140,6 +140,7 @@ private:
     int m_offset;
     int m_expandSize;
     int m_noiseStrength;
+    bool m_useContrastEffects = true;
 
     struct OffsetStruct
     {

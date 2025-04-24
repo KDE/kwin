@@ -256,6 +256,7 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     m_offset = blurStrengthValues[blurStrength].offset;
     m_expandSize = blurOffsets[m_iterationCount - 1].expandSize;
     m_noiseStrength = BlurConfig::noiseStrength();
+    m_useContrastEffects = BlurConfig::useContrastEffects();
 
     // Update all windows for the blur to take effect
     effects->addRepaintFull();
@@ -818,9 +819,40 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         m_upsamplePass.shader->setUniform(m_upsamplePass.mvpMatrixLocation, projectionMatrix);
         m_upsamplePass.shader->setUniform(m_upsamplePass.offsetLocation, float(m_offset));
 
-        for (size_t i = renderInfo.framebuffers.size() - 1; i > 0; --i) {
+        if (m_useContrastEffects) {
+            for (size_t i = renderInfo.framebuffers.size() - 1; i > 0; --i) {
+                GLFramebuffer::popFramebuffer();
+                const auto &read = renderInfo.framebuffers[i];
+
+                const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
+                                          0.5 / read->colorAttachment()->height());
+                m_upsamplePass.shader->setUniform(m_upsamplePass.halfpixelLocation, halfpixel);
+
+                read->colorAttachment()->bind();
+
+                vbo->draw(GL_TRIANGLES, 0, 6);
+            }
+        } else {
+            for (size_t i = renderInfo.framebuffers.size() - 1; i > 0; --i) {
+                GLFramebuffer::popFramebuffer();
+                const auto &read = renderInfo.framebuffers[i];
+
+                const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
+                                          0.5 / read->colorAttachment()->height());
+                m_upsamplePass.shader->setUniform(m_upsamplePass.halfpixelLocation, halfpixel);
+
+                read->colorAttachment()->bind();
+
+                vbo->draw(GL_TRIANGLES, 0, 6);
+            }
+
+            // The last upsampling pass is rendered on the screen, not in framebuffers[0].
             GLFramebuffer::popFramebuffer();
-            const auto &read = renderInfo.framebuffers[i];
+            const auto &read = renderInfo.framebuffers[1];
+
+            projectionMatrix = viewport.projectionMatrix();
+            projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
+            m_upsamplePass.shader->setUniform(m_upsamplePass.mvpMatrixLocation, projectionMatrix);
 
             const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
                                       0.5 / read->colorAttachment()->height());
@@ -828,14 +860,27 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
             read->colorAttachment()->bind();
 
-            vbo->draw(GL_TRIANGLES, 0, 6);
+            // Modulate the blurred texture with the window opacity if the window isn't opaque
+            if (opacity < 1.0) {
+                glEnable(GL_BLEND);
+                float o = 1.0f - (opacity);
+                o = 1.0f - o * o;
+                glBlendColor(0, 0, 0, o);
+                glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
+            }
+
+            vbo->draw(GL_TRIANGLES, 6, vertexCount);
+
+            if (opacity < 1.0) {
+                glDisable(GL_BLEND);
+            }
         }
 
         ShaderManager::instance()->popShader();
     }
 
     // Last upsample pass wrote to framebuffers[0], we now read from it, apply the contrast shader and write on screen
-    {
+    if (m_useContrastEffects) {
         ShaderManager::instance()->pushShader(m_contrastPass.shader.get());
 
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
