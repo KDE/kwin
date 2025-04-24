@@ -10,6 +10,7 @@
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/kde_blur.h"
+#include "wayland/surface_p.h"
 
 #include "KWayland/Client/blur.h"
 #include "KWayland/Client/compositor.h"
@@ -146,11 +147,11 @@ void TestBlur::testCreate()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(blurChanged.wait());
-    QCOMPARE(serverSurface->blur()->region(), QRegion(0, 0, 10, 20));
+    QCOMPARE(serverSurface->blurRegion(), QRegion(0, 0, 10, 20));
 
-    // and destroy
-    QSignalSpy destroyedSpy(serverSurface->blur(), &QObject::destroyed);
     delete blur;
+    QSignalSpy destroyedSpy(serverSurface, &KWin::SurfaceInterface::destroyed);
+    surface.reset();
     QVERIFY(destroyedSpy.wait());
 }
 
@@ -170,17 +171,16 @@ void TestBlur::testSurfaceDestroy()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(blurChanged.wait());
-    QCOMPARE(serverSurface->blur()->region(), QRegion(0, 0, 10, 20));
+    QCOMPARE(serverSurface->blurRegion(), QRegion(0, 0, 10, 20));
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QSignalSpy blurDestroyedSpy(serverSurface->blur(), &QObject::destroyed);
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
-    QVERIFY(blurDestroyedSpy.isEmpty());
-    // destroy the blur
-    blur.reset();
-    QVERIFY(blurDestroyedSpy.wait());
+
+    // we shouldn't crash if we set a region after destroying the surface
+    blur->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
+    blur->commit();
 }
 
 QTEST_GUILESS_MAIN(TestBlur)

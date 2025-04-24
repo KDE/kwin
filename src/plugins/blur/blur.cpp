@@ -243,13 +243,11 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
     }
 #endif
 
-    SurfaceInterface *surf = w->surface();
-
-    if (surf && surf->blur()) {
-        content = surf->blur()->region();
-    }
-
-    if (auto internal = w->internalWindow()) {
+    if (SurfaceInterface *surf = w->surface()) {
+        if (!surf->blurRegion().isEmpty()) {
+            content = surf->blurRegion();
+        }
+    } else if (auto internal = w->internalWindow()) {
         const auto property = internal->property("kwin_blur");
         if (property.isValid()) {
             content = property.value<QRegion>();
