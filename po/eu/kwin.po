@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-04-14 22:37+0200\n"
+"PO-Revision-Date: 2025-04-23 15:02+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -1268,11 +1268,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Laguntza-morroi honi ez zaio zuzenean deitu behar."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1280,15 +1276,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Aplikazio hori bukatzeak bere leiho guztiak "
-"itxiko ditu. Gorde gabeko datuak galdu egingo dira.</emphasis></para>"
+"<para><application>%1</application>(e)k ez du erantzuten. Aplikazio hau "
+"bukatu nahi duzu?</para><para><emphasis strong='true'>Aplikazio hori "
+"bukatzeak bere leiho guztiak itxiko ditu. Gorde gabeko datuak galdu egingo "
+"dira.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1296,8 +1290,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Aplikazio hori bukatzeak bere leiho guztiak "
-"itxiko ditu. Gorde gabeko datuak galdu egingo dira.</emphasis></para>"
+"<para><application>%2</application>(e)ren \"%1\"(e)k ez du erantzuten. "
+"Aplikazio hau bukatu nahi duzu?</para><para><emphasis "
+"strong='true'>Aplikazio hau bukatzeak bere leiho guztiak itxiko ditu. Gorde "
+"gabeko datuak galdu egingo dira.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
