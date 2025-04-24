@@ -14,7 +14,6 @@
 #include "fractionalscale_v1_p.h"
 #include "frog_colormanagement_v1.h"
 #include "idleinhibit_v1_p.h"
-#include "kde_blur.h"
 #include "linux_drm_syncobj_v1.h"
 #include "linuxdmabufv1clientbuffer.h"
 #include "output.h"
@@ -180,12 +179,6 @@ void SurfaceInterfacePrivate::setShadow(const QPointer<ShadowInterface> &shadow)
 {
     pending->shadow = shadow;
     pending->committed |= SurfaceState::Field::Shadow;
-}
-
-void SurfaceInterfacePrivate::setBlur(const QPointer<BlurInterface> &blur)
-{
-    pending->blur = blur;
-    pending->committed |= SurfaceState::Field::Blur;
 }
 
 void SurfaceInterfacePrivate::setSlide(const QPointer<SlideInterface> &slide)
@@ -647,6 +640,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->yuvCoefficients = yuvCoefficients;
     target->range = range;
     target->presentationFeedback = std::move(presentationFeedback);
+    target->blurRegion = blurRegion;
 
     auto previousExtensions = std::exchange(target->extensions, {});
     for (const auto &[extension, sourceState] : extensions) {
@@ -961,9 +955,9 @@ ShadowInterface *SurfaceInterface::shadow() const
     return d->current->shadow;
 }
 
-BlurInterface *SurfaceInterface::blur() const
+QRegion SurfaceInterface::blurRegion() const
 {
-    return d->current->blur;
+    return d->current->blurRegion;
 }
 
 ContrastInterface *SurfaceInterface::contrast() const
