@@ -20,6 +20,7 @@
 
 #if KWIN_BUILD_X11
 #include "utils/xcbutils.h"
+#include <xcb/xcb_cursor.h>
 #endif
 // KDE
 #include <KConfig>
@@ -29,8 +30,6 @@
 #include <QDBusConnection>
 #include <QScreen>
 #include <QTimer>
-
-#include <xcb/xcb_cursor.h>
 
 namespace KWin
 {
