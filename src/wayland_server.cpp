@@ -27,6 +27,7 @@
 #include "virtualdesktops.h"
 #include "wayland/alphamodifier_v1.h"
 #include "wayland/appmenu.h"
+#include "wayland/backgroundeffect_v1.h"
 #include "wayland/clientconnection.h"
 #include "wayland/colormanagement_v1.h"
 #include "wayland/compositor.h"
@@ -525,6 +526,7 @@ bool WaylandServer::init()
 #endif
     m_fifoManager = new FifoManagerV1(m_display, m_display);
     m_singlePixelBuffer = new SinglePixelBufferManagerV1(m_display, m_display);
+    m_backgroundEffect = new ExtBackgroundEffectManagerV1(m_display, m_display);
     return true;
 }
 
@@ -833,6 +835,11 @@ LinuxDrmSyncObjV1Interface *WaylandServer::linuxSyncObj() const
 ExternalBrightnessV1 *WaylandServer::externalBrightness() const
 {
     return m_externalBrightness;
+}
+
+ExtBackgroundEffectManagerV1 *WaylandServer::backgroundEffectManager() const
+{
+    return m_backgroundEffect;
 }
 
 void WaylandServer::setRenderBackend(RenderBackend *backend)

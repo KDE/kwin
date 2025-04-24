@@ -40,8 +40,8 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-data-control-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
-        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/ext-blur-v1.xml
 
+        ${WaylandProtocols_DATADIR}/staging/ext-background-effect/ext-background-effect-v1.xml
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
         ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
@@ -86,6 +86,7 @@ target_sources(kwin PRIVATE
     abstract_drop_handler.cpp
     alphamodifier_v1.cpp
     appmenu.cpp
+    backgroundeffect_v1.cpp
     clientconnection.cpp
     colormanagement_v1.cpp
     compositor.cpp
@@ -104,7 +105,6 @@ target_sources(kwin PRIVATE
     dpms.cpp
     drmclientbuffer.cpp
     drmlease_v1.cpp
-    extblur_v1.cpp
     externalbrightness_v1.cpp
     fifo_v1.cpp
     filtered_display.cpp
@@ -178,6 +178,7 @@ target_sources(kwin PRIVATE
 install(FILES
     alphamodifier_v1.h
     appmenu.h
+    backgroundeffect_v1.h
     clientconnection.h
     colormanagement_v1.h
     compositor.h
@@ -195,7 +196,6 @@ install(FILES
     display.h
     dpms.h
     drmlease_v1.h
-    extblur_v1.h
     externalbrightness_v1.h
     fifo_v1.h
     fractionalscale_v1.h
