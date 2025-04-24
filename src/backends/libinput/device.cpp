@@ -155,6 +155,7 @@ enum class ConfigKey {
     TabletToolPressureRangeMax,
     InputArea,
     TabletToolRelativeMode,
+    Rotation,
 };
 
 struct ConfigDataBase
@@ -261,6 +262,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::TabletToolPressureRangeMax, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMax"), &Device::setPressureRangeMax, &Device::defaultPressureRangeMax)},
     {ConfigKey::InputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("InputArea"), &Device::setInputArea, &Device::defaultInputArea)},
     {ConfigKey::TabletToolRelativeMode, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TabletToolRelativeMode"), &Device::setTabletToolRelative, &Device::defaultTabletToolIsRelative)},
+    {ConfigKey::Rotation, std::make_shared<ConfigData<uint32_t>>(QByteArrayLiteral("Rotation"), &Device::setRotation, &Device::defaultRotation)},
 };
 
 namespace
@@ -1078,6 +1080,29 @@ void Device::setTabletToolRelative(bool relative)
     m_tabletToolIsRelative = relative;
     writeEntry(ConfigKey::TabletToolRelativeMode, m_tabletToolIsRelative);
     Q_EMIT tabletToolRelativeChanged();
+}
+
+bool Device::supportsRotation() const
+{
+    return libinput_device_config_rotation_is_available(m_device);
+}
+
+uint32_t Device::rotation() const
+{
+    return libinput_device_config_rotation_get_angle(m_device);
+}
+
+void Device::setRotation(uint32_t degrees_cw)
+{
+    if (rotation() != degrees_cw && libinput_device_config_rotation_set_angle(m_device, degrees_cw) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        writeEntry(ConfigKey::Rotation, degrees_cw);
+        Q_EMIT rotationChanged();
+    }
+}
+
+uint32_t Device::defaultRotation() const
+{
+    return libinput_device_config_rotation_get_default_angle(m_device);
 }
 
 }

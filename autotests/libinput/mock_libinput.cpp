@@ -1107,3 +1107,33 @@ libinput_device_config_area_set_rectangle(struct libinput_device *device,
 {
     return LIBINPUT_CONFIG_STATUS_UNSUPPORTED;
 }
+
+int libinput_device_config_rotation_is_available(struct libinput_device *device)
+{
+    return device->pointer;
+}
+
+unsigned int libinput_device_config_rotation_get_angle(struct libinput_device *device)
+{
+    return device->pointer ? device->rotation : 0;
+}
+
+enum libinput_config_status
+libinput_device_config_rotation_set_angle(struct libinput_device *device,
+					  unsigned int degrees_cw)
+{
+    if (!device->pointer) {
+        return LIBINPUT_CONFIG_STATUS_UNSUPPORTED;
+    }
+    if (degrees_cw >= 360) {
+        return LIBINPUT_CONFIG_STATUS_INVALID;
+    }
+    device->rotation = degrees_cw;
+    return LIBINPUT_CONFIG_STATUS_SUCCESS;
+}
+
+unsigned int
+libinput_device_config_rotation_get_default_angle(struct libinput_device *device)
+{
+    return 0u;
+}

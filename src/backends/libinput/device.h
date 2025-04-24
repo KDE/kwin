@@ -181,6 +181,10 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(double defaultPressureRangeMax READ defaultPressureRangeMax CONSTANT)
 
     Q_PROPERTY(bool tabletToolIsRelative READ tabletToolIsRelative WRITE setTabletToolRelative NOTIFY tabletToolRelativeChanged)
+    Q_PROPERTY(bool supportsRotation READ supportsRotation CONSTANT)
+    /// rotation angle, as 0 to 360 degrees
+    Q_PROPERTY(uint32_t rotation READ rotation WRITE setRotation NOTIFY rotationChanged)
+    Q_PROPERTY(uint32_t defaultRotation READ defaultRotation CONSTANT)
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -743,6 +747,11 @@ public:
         return defaultValue("TabletToolRelativeMode", false);
     }
 
+    bool supportsRotation() const;
+    uint32_t rotation() const;
+    void setRotation(uint32_t degrees_cw);
+    uint32_t defaultRotation() const;
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -776,6 +785,7 @@ Q_SIGNALS:
     void pressureRangeMaxChanged();
     void inputAreaChanged();
     void tabletToolRelativeChanged();
+    void rotationChanged();
 
 private:
     template<typename T>

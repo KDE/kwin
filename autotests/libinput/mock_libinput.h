@@ -104,6 +104,7 @@ struct libinput_device
     uint32_t stripCount = 0;
     uint32_t ringCount = 0;
     uint32_t dialCount = 0;
+    uint32_t rotation = 0;
 };
 
 struct libinput_event
