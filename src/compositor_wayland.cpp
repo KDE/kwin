@@ -452,7 +452,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
 
     framePass(superLayer, frame.get());
 
-    if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001)
+    if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
