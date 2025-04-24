@@ -95,6 +95,13 @@ Application::Application(int &argc, char **argv)
     , m_kxkbConfig()
     , m_kdeglobals(KSharedConfig::openConfig(QStringLiteral("kdeglobals")))
 {
+    const QString overlayConfig = qgetenv("KWIN_OVERLAY_KWINRC_PATH");
+    if (!overlayConfig.isEmpty()) {
+        // Give the overlayed kwinrc file higher priority over the regular kwinrc
+        m_config = KSharedConfig::openConfig(overlayConfig);
+        m_config->addConfigSources({QStringLiteral("kwinrc")});
+    }
+
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
     qRegisterMetaType<KWin::EffectWindow *>();
     qRegisterMetaType<KWin::SurfaceInterface *>("KWin::SurfaceInterface *");
