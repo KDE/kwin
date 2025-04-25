@@ -55,6 +55,21 @@ ZoomEffect::ZoomEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
 
+    m_touchpadAction = std::make_unique<QAction>();
+    connect(m_touchpadAction.get(), &QAction::triggered, this, [this]() {
+        m_lastPinchProgress = 0;
+    });
+    effects->registerTouchpadPinchShortcut(PinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
+        const qreal delta = progress - m_lastPinchProgress;
+        m_lastPinchProgress = progress;
+        realtimeZoom(delta);
+    });
+    effects->registerTouchpadPinchShortcut(PinchDirection::Contracting, 3, m_touchpadAction.get(), [this](qreal progress) {
+        const qreal delta = progress - m_lastPinchProgress;
+        m_lastPinchProgress = progress;
+        realtimeZoom(-delta);
+    });
+
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomLeft"));
     a->setText(i18n("Move Zoomed Area to Left"));
@@ -506,7 +521,6 @@ void ZoomEffect::zoomTo(double to)
     if (m_mouseTracking == MouseTrackingDisabled) {
         m_prevPoint = m_cursorPoint;
     }
-    effects->addRepaintFull();
 }
 
 void ZoomEffect::zoomOut()
@@ -519,14 +533,12 @@ void ZoomEffect::zoomOut()
     if (m_mouseTracking == MouseTrackingDisabled) {
         m_prevPoint = effects->cursorPos().toPoint();
     }
-    effects->addRepaintFull();
 }
 
 void ZoomEffect::actualSize()
 {
     m_sourceZoom = m_zoom;
     setTargetZoom(1);
-    effects->addRepaintFull();
 }
 
 void ZoomEffect::timelineFrameChanged(int /* frame */)
@@ -690,15 +702,33 @@ bool ZoomEffect::screenExistsAt(const QPoint &point) const
 
 void ZoomEffect::setTargetZoom(double value)
 {
-    value = std::min(value, 100.0);
+    value = std::clamp(value, 1.0, 100.0);
+    if (m_targetZoom == value) {
+        return;
+    }
     const bool newActive = value != 1.0;
     const bool oldActive = m_targetZoom != 1.0;
     if (newActive && !oldActive) {
         connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
+        m_cursorPoint = effects->cursorPos().toPoint();
     } else if (!newActive && oldActive) {
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     }
     m_targetZoom = value;
+    effects->addRepaintFull();
+}
+
+void ZoomEffect::realtimeZoom(double delta)
+{
+    // for the change speed to feel roughly linear,
+    // we have to increase the delta at higher zoom levels
+    delta *= m_targetZoom / 2;
+    setTargetZoom(m_targetZoom + delta);
+    // skip the animation, we want this to be real time
+    m_zoom = m_targetZoom;
+    if (m_zoom == 1.0) {
+        showCursor();
+    }
 }
 
 } // namespace
