@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
 "PO-Revision-Date: 2025-04-19 11:20+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -3705,17 +3705,17 @@ msgstr ""
 "recursos.\n"
 "Contacteu amb la vostra distribució respecte a açò."
 
-#: tablet_input.cpp:104
+#: tablet_input.cpp:112
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mou la tauleta cap a l'eixida següent"
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "La tauleta s'ha mogut cap a %1"
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Les tauletes han intercanviat les eixides"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -3823,17 +3823,17 @@ msgstr ""
 "De Finsterwessel-Installeren is twei, dor fehlt Ressourcen.\n"
 "Vermell dat bitte Dien Distributschoon."
 
-#: tablet_input.cpp:104
+#: tablet_input.cpp:112
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""

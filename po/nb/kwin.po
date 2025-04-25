@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -3686,17 +3686,17 @@ msgstr ""
 "Vindusbytter-installasjonen er ødelagt, ressurser mangler.\n"
 "Kontakt distribusjonen din om dette."
 
-#: tablet_input.cpp:104
+#: tablet_input.cpp:112
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Flytt tegneplata til neste utenhet"
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tegneplate flyttet til %1"
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tegneplate fikk nye utenheter"
@@ -4329,19 +4329,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para><application>%1</application> is not responding. Do you want to "
-#~ "terminate this application?</para>"
-#~ msgstr ""
-#~ "<para><application>%1</application> svarer ikke. Vil du å tvangsavslutte "
-#~ "programmet?</para>"
-
-#~ msgctxt "@info \"window title\" of application name is not responding."
-#~ msgid ""
-#~ "<para>\"%1\" of <application>%2</application> is not responding. Do you "
-#~ "want to terminate this application?</para>"
-#~ msgstr ""
-#~ "<para>«%1» i <application>%2</application> svarer ikke. Vil du å "
-#~ "tvangsavslutte programmet?</para>"

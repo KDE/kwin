@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
 "PO-Revision-Date: 2010-08-23 19:35+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -3744,17 +3744,17 @@ msgid ""
 "Contact your distribution about this."
 msgstr ""
 
-#: tablet_input.cpp:104
+#: tablet_input.cpp:112
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""

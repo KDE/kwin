@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -3666,17 +3666,17 @@ msgstr ""
 "Window Switcher संस्थापनं भग्नम् अस्ति, संसाधनाः अनुपलब्धाः सन्ति ।\n"
 "अस्य विषये स्ववितरणं सम्पर्कं कुर्वन्तु।"
 
-#: tablet_input.cpp:104
+#: tablet_input.cpp:112
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "टैब्लेट् अग्रिम-आउटपुट् प्रति चालयन्तु"
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "टैब्लेट् %1 प्रति गतः"
 
-#: tablet_input.cpp:177
+#: tablet_input.cpp:192
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "टैब्लेट् आउटपुट् स्विच् कृतवन्तः"
