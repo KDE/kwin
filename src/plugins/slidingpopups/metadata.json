@@ -2,9 +2,25 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Slide Plasma popups in and out",
+        "Description[ca@valencia]": "Llisca les finestres emergents de Plasma d'entrada i eixida",
+        "Description[ca]": "Llisca les finestres emergents del Plasma d'entrada i sortida",
+        "Description[es]": "Deslizar las ventanas emergentes de Plasma al mostrarlas y ocultarlas",
+        "Description[ka]": "Plasma-ის მხტუნარების სრიალი შიგნით და გარეთ",
+        "Description[nl]": "Plasma pop-ups in- en uitschuiven",
+        "Description[sl]": "Drsaj pojavna okna Plasme",
+        "Description[uk]": "Виковзування за заковзування контекстних вікон Плазми",
+        "Description[x-test]": "xxSlide Plasma popups in and outxx",
         "EnabledByDefault": true,
         "License": "GPL",
-        "Name": "Sliding popups"
+        "Name": "Sliding popups",
+        "Name[ca@valencia]": "Missatges emergents desplaçant-se",
+        "Name[ca]": "Missatges emergents desplaçant-se",
+        "Name[es]": "Deslizar ventanas emergentes",
+        "Name[ka]": "მცურავი მხტუნარები",
+        "Name[nl]": "Schuivende pop-ups",
+        "Name[sl]": "Drsna pojavna okna",
+        "Name[uk]": "Ковзні контекстні вікна",
+        "Name[x-test]": "xxSliding popupsxx"
     },
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4"
