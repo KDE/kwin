@@ -200,11 +200,9 @@ void GlideEffect::windowAdded(EffectWindow *w)
     }
 
     const void *addGrab = w->data(WindowAddedGrabRole).value<void *>();
-    if (addGrab && addGrab != this) {
+    if (addGrab) {
         return;
     }
-
-    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     GlideAnimation &animation = m_animations[w];
     animation.timeLine.reset();
@@ -220,7 +218,7 @@ void GlideEffect::windowAdded(EffectWindow *w)
 void GlideEffect::windowClosed(EffectWindow *w)
 {
     const void *closeGrab = w->data(WindowClosedGrabRole).value<void *>();
-    if (closeGrab && closeGrab != this) {
+    if (closeGrab) {
         return;
     }
     if (effects->activeFullScreenEffect() || !isGlideWindow(w) || !w->isVisible() || w->skipsCloseAnimation()) {
@@ -231,8 +229,6 @@ void GlideEffect::windowClosed(EffectWindow *w)
         }
         return;
     }
-
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     GlideAnimation &animation = m_animations[w];
     animation.deletedRef = EffectWindowDeletedRef(w);
@@ -248,10 +244,6 @@ void GlideEffect::windowClosed(EffectWindow *w)
 void GlideEffect::windowDataChanged(EffectWindow *w, int role)
 {
     if (role != WindowAddedGrabRole && role != WindowClosedGrabRole) {
-        return;
-    }
-
-    if (w->data(role).value<void *>() == this) {
         return;
     }
 
