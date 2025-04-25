@@ -81,6 +81,7 @@ private:
     WindowType m_windowType;
     QList<LayerShellV1ConfigureEvent> m_configureEvents;
     QTimer m_rescalingTimer;
+    std::optional<quint32> m_repositionToken;
 };
 
 } // namespace KWin

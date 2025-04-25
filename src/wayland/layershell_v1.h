@@ -169,6 +169,8 @@ public:
      */
     quint32 sendConfigure(const QSize &size);
 
+    void sendRepositioned(quint32 token);
+
     /**
      * Sends a closed event to the client. The client should destroy the surface after receiving
      * this event. Further changes to the surface will be ignored.
@@ -184,6 +186,7 @@ Q_SIGNALS:
     void desiredSizeChanged();
     void exclusiveZoneChanged();
     void marginsChanged();
+    void repositionRequested(quint32 token);
 
 private:
     std::unique_ptr<LayerSurfaceV1InterfacePrivate> d;

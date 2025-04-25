@@ -79,6 +79,11 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
             this, &LayerShellV1Window::handleAcceptsFocusChanged);
     connect(shellSurface, &LayerSurfaceV1Interface::configureAcknowledged,
             this, &LayerShellV1Window::handleConfigureAcknowledged);
+    connect(shellSurface, &LayerSurfaceV1Interface::repositionRequested, this, [this](quint32 token) {
+        qDebug() << "reposition requested" << token;
+        m_repositionToken = token;
+        scheduleRearrange();
+    });
 
     m_rescalingTimer.setSingleShot(true);
     m_rescalingTimer.setInterval(0);
@@ -246,6 +251,13 @@ bool LayerShellV1Window::acceptsFocus() const
 void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
     const QSize requestedClientSize = nextFrameSizeToClientSize(rect.size()).toSize();
+
+    if (m_repositionToken) {
+        if (m_shellSurface) {
+            m_shellSurface->sendRepositioned(m_repositionToken.value());
+        }
+        m_repositionToken.reset();
+    }
 
     if (!m_configureEvents.isEmpty()) {
         const LayerShellV1ConfigureEvent &lastLayerShellV1ConfigureEvent = m_configureEvents.constLast();

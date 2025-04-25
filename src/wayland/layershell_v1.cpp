@@ -18,7 +18,7 @@
 
 namespace KWin
 {
-static const int s_version = 5;
+static const int s_version = 6;
 
 class LayerShellV1InterfacePrivate : public QtWaylandServer::zwlr_layer_shell_v1
 {
@@ -49,6 +49,7 @@ public:
     std::optional<Qt::Edge> exclusiveEdge;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
+    std::optional<quint32> token;
 };
 
 struct LayerSurfaceV1State
@@ -92,6 +93,7 @@ protected:
     void zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial) override;
     void zwlr_layer_surface_v1_destroy(Resource *resource) override;
     void zwlr_layer_surface_v1_set_layer(Resource *resource, uint32_t layer) override;
+    void zwlr_layer_surface_v1_set_arrange_token(Resource *resource, uint32_t token) override;
 };
 
 LayerShellV1InterfacePrivate::LayerShellV1InterfacePrivate(LayerShellV1Interface *q, Display *display)
@@ -281,6 +283,11 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_layer(Resource *r
     pending->layer = LayerSurfaceV1Interface::Layer(layer);
 }
 
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_arrange_token(Resource *resource, uint32_t token)
+{
+    pending->token = token;
+}
+
 void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
 {
     if (state.closed) {
@@ -365,6 +372,10 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
 
     if (commit->acceptsFocus.has_value()) {
         state.acceptsFocus = commit->acceptsFocus.value();
+    }
+
+    if (commit->token.has_value()) {
+        Q_EMIT q->repositionRequested(commit->token.value());
     }
 
     if (previous.acceptsFocus != state.acceptsFocus) {
@@ -523,6 +534,15 @@ quint32 LayerSurfaceV1Interface::sendConfigure(const QSize &size)
     d->state.configured = true;
 
     return serial;
+}
+
+void LayerSurfaceV1Interface::sendRepositioned(quint32 token)
+{
+    if (d->state.closed) {
+        return;
+    }
+
+    d->send_rearranged(token);
 }
 
 void LayerSurfaceV1Interface::sendClosed()
