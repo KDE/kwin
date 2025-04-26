@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-10 02:33+0000\n"
+"POT-Creation-Date: 2025-04-26 02:35+0000\n"
 "PO-Revision-Date: 2024-09-27 11:45+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1348,7 +1348,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Název hostitele: %1"
 
-#: input.cpp:3336
+#: input.cpp:3342
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -4438,7 +4438,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovídá)"
 
-#: workspace.cpp:1672
+#: workspace.cpp:1676
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
