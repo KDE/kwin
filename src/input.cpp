@@ -2253,7 +2253,7 @@ public:
         TabletToolV2Interface *tool = seat->tool(event->tool());
         TabletV2Interface *tablet = seat->tablet(event->device());
 
-        SurfaceInterface *surface = window->surface();
+        const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->globalPosition()));
         tool->setCurrentSurface(surface);
 
         if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
@@ -2262,7 +2262,7 @@ public:
 
         if (event->type() == QEvent::TabletEnterProximity) {
             tool->sendProximityIn(tablet);
-            tool->sendMotion(window->mapToLocal(event->globalPosition()));
+            tool->sendMotion(surfaceLocalPos);
         } else {
             tool->sendProximityOut();
         }
@@ -2295,14 +2295,14 @@ public:
         TabletToolV2Interface *tool = seat->tool(event->tool());
         TabletV2Interface *tablet = seat->tablet(event->device());
 
-        SurfaceInterface *surface = window->surface();
+        const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->globalPosition()));
         tool->setCurrentSurface(surface);
 
         if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
             return emulateTabletEvent(event);
         }
 
-        tool->sendMotion(window->mapToLocal(event->globalPosition()));
+        tool->sendMotion(surfaceLocalPos);
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
             tool->sendPressure(event->pressure());
@@ -2332,7 +2332,7 @@ public:
         TabletToolV2Interface *tool = seat->tool(event->tool());
         TabletV2Interface *tablet = seat->tablet(event->device());
 
-        SurfaceInterface *surface = window->surface();
+        const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->globalPosition()));
         tool->setCurrentSurface(surface);
 
         if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
@@ -2340,7 +2340,7 @@ public:
         }
 
         if (event->type() == QEvent::TabletPress) {
-            tool->sendMotion(window->mapToLocal(event->globalPosition()));
+            tool->sendMotion(surfaceLocalPos);
             tool->sendDown();
         } else {
             tool->sendUp();

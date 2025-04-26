@@ -41,19 +41,6 @@ namespace KWin
 {
 static const int s_version = 9;
 
-/// Maps surface to the surface at @p pos, be it @p surface or one of its subsurfaces
-static SurfaceInterface *mapToSurfaceInPosition(SurfaceInterface *surface, QPointF &pos)
-{
-    auto ret = surface->inputSurfaceAt(pos);
-    if (ret && ret != surface) {
-        pos = surface->mapToChild(ret, pos);
-    }
-    if (!ret) {
-        ret = surface;
-    }
-    return ret;
-}
-
 SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
 {
     return seat->d.get();
@@ -454,8 +441,7 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
         return;
     }
 
-    QPointF localPosition = focusedPointerSurfaceTransformation().map(pos);
-    SurfaceInterface *effectiveFocusedSurface = mapToSurfaceInPosition(focusedSurface, localPosition);
+    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
 
     if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
         d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
@@ -569,8 +555,7 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
     d->globalPointer.focus.offset = QPointF();
 
     d->globalPointer.pos = position;
-    QPointF localPosition = focusedPointerSurfaceTransformation().map(position);
-    SurfaceInterface *effectiveFocusedSurface = mapToSurfaceInPosition(surface, localPosition);
+    const auto [effectiveFocusedSurface, localPosition] = surface->mapToInputSurface(focusedPointerSurfaceTransformation().map(position));
     d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
     if (d->keyboard) {
         d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
@@ -1051,8 +1036,7 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     }
     it->second->refs++;
 
-    auto pos = globalPosition - surfacePosition;
-    SurfaceInterface *effectiveTouchedSurface = mapToSurfaceInPosition(surface, pos);
+    const auto [effectiveTouchedSurface, pos] = surface->mapToInputSurface(globalPosition - surfacePosition);
     const quint32 serial = display()->nextSerial();
     d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
 
@@ -1079,8 +1063,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
 
     auto interaction = d->globalTouch.focus.find(itTouch->second->surface);
     if (interaction != d->globalTouch.focus.end()) {
-        auto pos = globalPosition - itTouch->second->offset;
-        SurfaceInterface *effectiveTouchedSurface = mapToSurfaceInPosition(d->globalTouch.ids[id]->surface, pos);
+        const auto [effectiveTouchedSurface, pos] = d->globalTouch.ids[id]->surface->mapToInputSurface(globalPosition - itTouch->second->offset);
 
         if (isDragTouch()) {
             // handled by DataDevice

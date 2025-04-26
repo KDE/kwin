@@ -240,6 +240,8 @@ public:
      */
     SurfaceInterface *inputSurfaceAt(const QPointF &position);
 
+    std::pair<SurfaceInterface *, QPointF> mapToInputSurface(const QPointF &position);
+
     /**
      * Sets the @p outputs this SurfaceInterface overlaps with, may be empty.
      *
