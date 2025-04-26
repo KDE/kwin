@@ -61,6 +61,7 @@
         "Description[ka]": "ფანჯრების გაწელვა მათი ჩაკეცვის ან ამოკეცვის დროს",
         "Description[nl]": "Vensters uitrekken wanneer ze geminimaliseerd worden of hersteld",
         "Description[sl]": "Raztegni okna, ko so razprta ali obnovljena",
+        "Description[tr]": "Pencereler ekranı kapladığında veya eski hallerine döndüğünde onları ger",
         "Description[uk]": "Розтягування вікон при максимізації або відновленні",
         "Description[x-test]": "xxStretch windows when they are maximized or restoredxx",
         "EnabledByDefault": true,
@@ -74,6 +75,7 @@
         "Name[ka]": "გაწელვა",
         "Name[nl]": "Uitrekken",
         "Name[sl]": "Raztegni",
+        "Name[tr]": "Ger",
         "Name[uk]": "Розтягнути",
         "Name[x-test]": "xxStretchxx"
     },

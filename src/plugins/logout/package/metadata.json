@@ -61,6 +61,7 @@
         "Description[ka]": "მინავლება გასვლის ეკრანამდე",
         "Description[nl]": "Naar het afmeldscherm vervagen",
         "Description[sl]": "Obledi na odjavni zaslon",
+        "Description[tr]": "Oturumu kapatırken masaüstünden solarak çık",
         "Description[uk]": "Затемнення до вікна виходу з системи",
         "Description[x-test]": "xxFade to the logout screenxx",
         "EnabledByDefault": true,

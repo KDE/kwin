@@ -8,6 +8,7 @@
         "Description[ka]": "ანიმაციის სიჩქარისა და სტილის მორგება",
         "Description[nl]": "Animatiesnelheid en stijl configureren",
         "Description[sl]": "Konfigurirajte hitrost in slog animacije",
+        "Description[tr]": "Canlandırma hızını ve biçemini yapılandır",
         "Description[uk]": "Налаштування швидкості і стилю анімацій",
         "Description[x-test]": "xxConfigure animation speed and stylexx",
         "FormFactors": [
@@ -23,6 +24,7 @@
         "Name[ka]": "ანიმაციები",
         "Name[nl]": "Animaties",
         "Name[sl]": "Animacije",
+        "Name[tr]": "Canlandırmalar",
         "Name[uk]": "Анімації",
         "Name[x-test]": "xxAnimationsxx"
     },
@@ -33,6 +35,7 @@
     "X-KDE-Keywords[ka]": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect;ანიმაციები;ანიმაციის ეფექტები;გადასვლები;ეფექტები;ფანჯრის გახსნადახურვა;ფანჯრის გაშლა;ფანჯრის ჩაკეცვა;ფანჯარა მთელ ეკრანზე;გადათრევის ეფექტები;გასვლის ეფექტი;შესვლის ეფექტი;მხტუნარა;მხტუნარას ეფექტები",
     "X-KDE-Keywords[nl]": "animaties,animatiesnelheid,transities,effecten,venster openen sluiten,venster openen/sluiten,venster maximaliseren,venster minimaliseren,venster volledig scherm,naar bureaublad gluren,bureaublad gluren,virtueel bureblad omschakelen,vervaageffect,schuifeffect,schaaleffect,uitrekeffect,magische lamp-effect,vlekeffect,oog-op-schermeffect,vensteropeningeffect, dia-effect,vervangende pop-ups-effect,schuivende pop-upseffect,aanmeldeffect,afmeldeffect",
     "X-KDE-Keywords[sl]": "animacije,hitrost animacije,prehodi,učinki,odpiranje okna,zapiranje,odpiranje/zapiranje okna,povečanje okna,strnjevanje okna,celozaslonsko okno,kukanje na namizje,kukanje namizja,preklapljanje navideznega namizja,učinek bledenja,učinek drsenja,učinek povečanja,učinek raztezanja,učinek čarobne svetilke,učinek skrčenja,učinek očesa na zaslonu,učinek zaslonke okna,učinek drsenja,učinek bledenja pojavnih oken, učinek drsenja pojavnih oken,učinek prijave,učinek odjave",
+    "X-KDE-Keywords[tr]": "canlandırmalar,canlandırma hızı,geçişler,efektler,pencere aç,pencere kapat,pencere ekranı kapla,pencere küçült,pencere tam ekran,masaüstüne bak,sanal masaüstü geçişi,solma ekfekti,süzülme efekti,ölçekleme efekti,germe efekti,sihirli lamba efekti,tıkıştırma efekti,göz ekranda efekti,pencere açıklığı efekti,kayma efekti,solan açılır pencereler efekti,kayan açılır pencereler efekti,oturum açma efekti,oturumu kapatma efekti",
     "X-KDE-Keywords[uk]": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect,анімація,швидкість анімації,переходи,ефекти,відкриття закриття вікон,відкрити/закрити вікно,максимізувати вікно,розгорнути вікно,повноекранне вікно,верх стільниці,перемикання віртуальних стільниць,ефект згасання,ефект ковзання,ефект масштабування,ефект розтягування,ефект магічної лампи,ефект чарівної лампи,ефект вибуху,ефект ока на екрані,ефект апертури вікна,ефект затвору вікна,ефект руху,ефект розчинення контекстних вікон,ефект виковзування контекстних вікон, ефект входу, ефект виходу",
     "X-KDE-Keywords[x-test]": "xxanimationsxx,xxanimation speedxx,xxtransitionsxx,xxeffectsxx,xxwindow open closexx,xxwindow open/closexx,xxwindow maximizexx,xxwindow minimizexx,xxwindow full screenxx,xxpeek at desktopxx,xxpeek desktopxx,xxvirtual desktop switchingxx,xxfade effectxx,xxglide effectxx,xxscale effectxx,xxstretch effectxx,xxmagic lamp effectxx,xxsquash effectxx,xxeye on screen effectxx,xxwindow aperture effectxx,xxslide effectxx,xxfading popups effectxx,xxsliding popups effectxx,xxlogin effectxx,xxlogout effectxx",
     "X-KDE-OnlyShowOnQtPlatforms": [

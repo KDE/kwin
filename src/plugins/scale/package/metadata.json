@@ -62,6 +62,7 @@
         "Description[ka]": "ფანჯრების რბილად გადიდება/დაპატარავება მათი ჩვენება/დამალვისას",
         "Description[nl]": "Vensters kleiner en groter schalen wanneer ze worden getoond of verborgen",
         "Description[sl]": "Naj se okna povečajo in zmanjšajo, ko so prikazana ali skrita",
+        "Description[tr]": "Pencereler gösterilirken veya gizlenirken onları ölçekle",
         "Description[uk]": "Масштабування вікон при появі або приховуванні",
         "Description[x-test]": "xxMake windows scale in and out when they are shown or hiddenxx",
         "EnabledByDefault": true,

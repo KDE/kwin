@@ -8,6 +8,7 @@
         "Description[ka]": "Plasma-ის მხტუნარების სრიალი შიგნით და გარეთ",
         "Description[nl]": "Plasma pop-ups in- en uitschuiven",
         "Description[sl]": "Drsaj pojavna okna Plasme",
+        "Description[tr]": "Plasma açılır pencerelerini içeri ve dışarı kaydır",
         "Description[uk]": "Виковзування за заковзування контекстних вікон Плазми",
         "Description[x-test]": "xxSlide Plasma popups in and outxx",
         "EnabledByDefault": true,
@@ -19,6 +20,7 @@
         "Name[ka]": "მცურავი მხტუნარები",
         "Name[nl]": "Schuivende pop-ups",
         "Name[sl]": "Drsna pojavna okna",
+        "Name[tr]": "Kayan açılır pencereler",
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[x-test]": "xxSliding popupsxx"
     }

@@ -62,6 +62,7 @@
         "Description[ka]": "მხტუნარების მინავლება შიგნით და გარეთ",
         "Description[nl]": "Pop-ups in- en uitvagen",
         "Description[sl]": "Zbledi in obarvaj pojavna okna",
+        "Description[tr]": "Açılır pencereleri soldur ve belirginleştir",
         "Description[uk]": "Розчинення та поява контекстних вікон",
         "Description[x-test]": "xxFade popups in and outxx",
         "EnabledByDefault": true,
@@ -75,6 +76,7 @@
         "Name[ka]": "მინავლებადი მხტუნარები",
         "Name[nl]": "Vervagende pop-ups",
         "Name[sl]": "Bledenje pojavnih oken",
+        "Name[tr]": "Solan açılır pencereler",
         "Name[uk]": "Згасання контекстних панелей",
         "Name[x-test]": "xxFading popupsxx"
     },

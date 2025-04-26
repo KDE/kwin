@@ -61,6 +61,7 @@
         "Description[ka]": "ფანჯრების მინავლება და გამოჩენა, როცა ისინი იმალება ან გამოჩნდებიან",
         "Description[nl]": "Laat vensters vloeiend opkomen/vervagen als ze worden weergegeven of verborgen",
         "Description[sl]": "Naj okna zbledijo in se spet obarvajo, ko so prikazana ali skrita",
+        "Description[tr]": "Pencereler gösterilirken veya gizlenirken solarak geçiş yapmalarını sağla",
         "Description[uk]": "Затемнення або освітлення при появі або зникненні вікон",
         "Description[x-test]": "xxMake windows fade in and out when they are shown or hiddenxx",
         "EnabledByDefault": false,

@@ -61,6 +61,7 @@
         "Description[ka]": "ფანჯრების გაწელვა სრულ ეკრანზე გასვლისას და სრული ეკრანიდან გამოსვლისას",
         "Description[nl]": "Vensters uitrekken die gaan naar volledig scherm en deze modus verlaten",
         "Description[sl]": "Raztegni okna, ki gredo v celozaslonski način in ga zapuščajo",
+        "Description[tr]": "Tam ekran kipine giren veya çıkan pencereleri ger",
         "Description[uk]": "Розтягування вікон під час входу до повноекранного режиму і виходу з нього",
         "Description[x-test]": "xxStretch windows going to and leaving full screen modexx",
         "EnabledByDefault": true,
@@ -74,6 +75,7 @@
         "Name[ka]": "გაწელვა",
         "Name[nl]": "Uitrekken",
         "Name[sl]": "Raztegni",
+        "Name[tr]": "Ger",
         "Name[uk]": "Розтягнути",
         "Name[x-test]": "xxStretchxx"
     },
