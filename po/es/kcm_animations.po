@@ -6,10 +6,10 @@
 # SPDX-FileCopyrightText: 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
-"Project-Id-Version: kwin\n"
+"Project-Id-Version: kcm_animations\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-25 00:43+0000\n"
-"PO-Revision-Date: 2025-04-24 16:09+0200\n"
+"PO-Revision-Date: 2025-04-25 12:08+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "None"
-msgstr ""
+msgstr "Ninguna"
 
 #: ui/main.qml:37
 #, kde-format
@@ -105,10 +105,7 @@ msgid "Configure…"
 msgstr "Configurar…"
 
 #: ui/main.qml:157
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
-#| msgid "%1:"
+#, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"

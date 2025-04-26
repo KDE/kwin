@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2025-04-26 00:43+0000\n"
 "PO-Revision-Date: 2023-06-18 13:37+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 23.04.2\n"
 
-#: ui/Effect.qml:97
+#: ui/Effect.qml:98
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -26,13 +26,7 @@ msgstr ""
 "Autor: %1\n"
 "Licenza: %2"
 
-#: ui/Effect.qml:125
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Show/Hide Video"
-msgstr "Amosar ou agochar o vídeo."
-
-#: ui/Effect.qml:136
+#: ui/Effect.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
@@ -53,6 +47,10 @@ msgstr "Configurar o filtro"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Excluír os efectos incompatíbeis"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Show/Hide Video"
+#~ msgstr "Amosar ou agochar o vídeo."
 
 #~ msgid ""
 #~ "Hint: To find out or configure how to activate an effect, look at the "

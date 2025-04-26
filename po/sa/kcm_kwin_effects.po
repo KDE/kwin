@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2025-04-26 00:43+0000\n"
 "PO-Revision-Date: 2024-12-13 19:10+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n>2);\n"
 
-#: ui/Effect.qml:97
+#: ui/Effect.qml:98
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -26,13 +26,7 @@ msgstr ""
 "लेखकः %1\n"
 "अनुज्ञापत्रम् : %2"
 
-#: ui/Effect.qml:125
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Show/Hide Video"
-msgstr "विडियो दर्शयतु/गोपयतु"
-
-#: ui/Effect.qml:136
+#: ui/Effect.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
@@ -53,3 +47,7 @@ msgstr "फ़िल्टर विन्यस्तं कुर्वन्�
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "असमर्थितप्रभावान् बहिष्कृत्य"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Show/Hide Video"
+#~ msgstr "विडियो दर्शयतु/गोपयतु"

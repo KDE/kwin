@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2025-04-26 00:43+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwin_effects.pot\n"
 "X-Crowdin-File-ID: 42539\n"
 
-#: ui/Effect.qml:97
+#: ui/Effect.qml:98
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -26,13 +26,7 @@ msgstr ""
 "开发者：%1\n"
 "许可证：%2"
 
-#: ui/Effect.qml:125
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Show/Hide Video"
-msgstr "显示/隐藏特效演示视频"
-
-#: ui/Effect.qml:136
+#: ui/Effect.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
@@ -53,3 +47,7 @@ msgstr "过滤条件"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "排除不支持的特效"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Show/Hide Video"
+#~ msgstr "显示/隐藏特效演示视频"

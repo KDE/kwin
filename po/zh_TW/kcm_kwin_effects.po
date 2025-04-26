@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2025-04-26 00:43+0000\n"
 "PO-Revision-Date: 2023-08-07 19:26+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 23.04.3\n"
 
-#: ui/Effect.qml:97
+#: ui/Effect.qml:98
 #, kde-format
 msgid ""
 "Author: %1\n"
@@ -29,13 +29,7 @@ msgstr ""
 "作者：%1\n"
 "授權：%2"
 
-#: ui/Effect.qml:125
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Show/Hide Video"
-msgstr "顯示 / 隱藏影片"
-
-#: ui/Effect.qml:136
+#: ui/Effect.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
@@ -56,6 +50,10 @@ msgstr "設定過濾器"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "排除不支援特效"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Show/Hide Video"
+#~ msgstr "顯示 / 隱藏影片"
 
 #~ msgid ""
 #~ "Hint: To find out or configure how to activate an effect, look at the "

@@ -1,32 +1,33 @@
-# Copyright (C) 2025 This file is copyright:
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# SPDX-FileCopyrightText: 2025 Freek de Kruijf <freekdekruijf@kde.nl>
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-25 00:43+0000\n"
-"PO-Revision-Date: 2025-04-24 16:31+0200\n"
-"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
-"Language-Team: \n"
-"Language: nl\n"
+"PO-Revision-Date: 2025-04-25 04:47+0200\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
+"Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.04.0\n"
+"X-Generator: Poedit 3.5\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "None"
-msgstr ""
+msgstr "არცერთი"
 
 #: ui/main.qml:37
 #, kde-format
 msgid "Global animation speed:"
-msgstr "Globale animatiesnelheid:"
+msgstr "ანიმაციის გლობალური სიჩქარე:"
 
 #: ui/main.qml:69
 #, kde-kuit-format
@@ -37,76 +38,73 @@ msgid ""
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
 msgstr ""
-"Sommige toepassingen ondersteunen deze instelling niet: speciaal, GT-"
-"toepassingen kunnen de animatieduur niet wijzigen, maar zullen nog steeds "
-"animaties uitschakelen wanneer <interface>animatiesnelheid</interface> is "
-"<interface>Onmiddellijk</interface>."
+"ზოგიერთ პროგრამას ამ პარამეტრის მხარდაჭერა არ გააჩნია: კერძოდ, GTK-ის "
+"აპლიკაციებს არ შეუძლიათ ანიმაციის ხანგრძლივობის შეცვლა, მაგრამ მაინც "
+"გამორთავენ ანიმაციებს, როცა <interface>ანიმაციის სიჩქარე</interface> "
+"<interface>მყისიერზეა</interface> დაყენებული."
 
 #: ui/main.qml:76
 #, kde-format
 msgctxt "Animation speed"
 msgid "Slow"
-msgstr "Langzaam"
+msgstr "ნელი"
 
 #: ui/main.qml:85
 #, kde-format
 msgctxt "Animation speed"
 msgid "Instant"
-msgstr "Onmiddellijk"
+msgstr "მყისი"
 
 #: ui/main.qml:93
 #, kde-format
 msgctxt "@title:group"
 msgid "Desktop animations"
-msgstr "Bureaubladanimaties"
+msgstr "სამუშაო მაგიდის ანიმაციები"
 
 #: ui/main.qml:97
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window open/close:"
-msgstr "Venster openen/sluiten:"
+msgstr "ფანჯრის გახსნა/დახურვა:"
 
 #: ui/main.qml:98
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window maximize:"
-msgstr "Venster maximaliseren:"
+msgstr "ფანჯრის გაშლა:"
 
 #: ui/main.qml:99
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window minimize:"
-msgstr "Venster minimaliseren:"
+msgstr "ფანჯრის ჩაკეცვა:"
 
 #: ui/main.qml:100
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window full screen:"
-msgstr "Venster volledig scherm:"
+msgstr "ფანჯარა სრულ ეკრანზე:"
 
 #: ui/main.qml:101
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Peek at desktop:"
-msgstr "Naar bureaublad gluren:"
+msgstr "სამუშაო მაგიდაზე გაჭვრეტა:"
 
 #: ui/main.qml:102
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Virtual desktop switching:"
-msgstr "Virtueel bureaublad omschakelen:"
+msgstr "ვირტუალური სამუშაო მაგიდის გადართვა:"
 
 #: ui/main.qml:130 ui/main.qml:197
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "Configureren…"
+msgstr "მორგება…"
 
 #: ui/main.qml:157
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
-#| msgid "%1:"
+#, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
@@ -116,4 +114,4 @@ msgstr "%1:"
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"
-msgstr "Meer instellingen voor effecten:"
+msgstr "ეფექტის დამატებითი პარამეტრები:"
