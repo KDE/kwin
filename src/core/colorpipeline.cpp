@@ -221,6 +221,34 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
             ops.erase(ops.end() - 1);
             addMatrix(scaled, output);
             return;
+        } else if (std::abs(mat(0, 3)) >= s_maxResolution
+                   && std::abs(mat(0, 3) - mat(1, 3)) < s_maxResolution
+                   && std::abs(mat(1, 3) - mat(2, 3)) < s_maxResolution) {
+            // there's a color-neutral offset,
+            // which can be folded into transfer functions
+            bool success = false;
+            QMatrix4x4 inverse = mat.inverted(&success);
+            if (success) {
+                if (const auto tf = std::get_if<ColorTransferFunction>(lastOp)) {
+                    tf->tf.minLuminance -= inverse(0, 3);
+                    tf->tf.maxLuminance -= inverse(0, 3);
+                    QMatrix4x4 newMat = mat;
+                    newMat(0, 3) = 0;
+                    newMat(1, 3) = 0;
+                    newMat(2, 3) = 0;
+                    addMatrix(newMat, output);
+                    return;
+                } else if (const auto invTf = std::get_if<InverseColorTransferFunction>(lastOp)) {
+                    invTf->tf.minLuminance += inverse(0, 3);
+                    tf->tf.maxLuminance += inverse(0, 3);
+                    QMatrix4x4 newMat = mat;
+                    newMat(0, 3) = 0;
+                    newMat(1, 3) = 0;
+                    newMat(2, 3) = 0;
+                    addMatrix(newMat, output);
+                    return;
+                }
+            }
         }
     }
     if (isFuzzyScalingOnly(mat)) {

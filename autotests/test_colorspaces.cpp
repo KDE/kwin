@@ -44,6 +44,7 @@ private Q_SLOTS:
     void dontCrashWithWeirdHdrMetadata();
     void testColorimetryCheck_data();
     void testColorimetryCheck();
+    void testBlackPointCompensation();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -478,6 +479,19 @@ void TestColorspaces::testColorimetryCheck()
     QFETCH(xy, blue);
     QFETCH(xy, white);
     QCOMPARE(Colorimetry::isValid(red, green, blue, white), expectedResult);
+}
+
+void TestColorspaces::testBlackPointCompensation()
+{
+    // this test verifies that black point compensation both works and is optimized
+    const ColorDescription src = ColorDescription::sRGB;
+    const ColorDescription dst = ColorDescription(src.containerColorimetry(), TransferFunction(TransferFunction::gamma22, 0.01, 200), 200, 0.01, 200, 200);
+
+    QVERIFY(ColorPipeline::create(src, dst, RenderingIntent::Perceptual).isIdentity());
+    QVERIFY(ColorPipeline::create(dst, src, RenderingIntent::Perceptual).isIdentity());
+
+    QVERIFY(ColorPipeline::create(src, dst, RenderingIntent::RelativeColorimetricWithBPC).isIdentity());
+    QVERIFY(ColorPipeline::create(dst, src, RenderingIntent::RelativeColorimetricWithBPC).isIdentity());
 }
 
 QTEST_MAIN(TestColorspaces)
