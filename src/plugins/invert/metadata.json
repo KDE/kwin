@@ -89,5 +89,7 @@
         "Name[zh_CN]": "颜色反相",
         "Name[zh_TW]": "反轉"
     },
-    "X-KDE-ConfigModule": "kwin_invert_config"
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
 }
