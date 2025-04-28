@@ -89,8 +89,8 @@
         "Name[zh_CN]": "放大镜 (方形)",
         "Name[zh_TW]": "放大鏡"
     },
-    "X-KDE-ConfigModule": "kwin_magnifier_config",
     "org.kde.kwin.effect": {
-        "exclusiveGroup": "magnifiers"
+        "exclusiveGroup": "magnifiers",
+        "internal": true
     }
 }
