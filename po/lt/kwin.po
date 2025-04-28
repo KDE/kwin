@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-25 00:43+0000\n"
+"POT-Creation-Date: 2025-04-28 00:42+0000\n"
 "PO-Revision-Date: 2024-10-05 22:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -773,7 +773,7 @@ msgid "Pressed"
 msgstr "Paspaustas"
 
 #: debug_console.cpp:547 debug_console.cpp:561 debug_console.cpp:575
-#: debug_console.cpp:589
+#: debug_console.cpp:589 debug_console.cpp:602
 #, kde-format
 msgid "Tablet"
 msgstr "Planšetė"
@@ -788,7 +788,7 @@ msgstr "Planšetės kilimėlio mygtukas"
 msgid "Tablet Pad Strip"
 msgstr "Planšetės kilimėlio juosta"
 
-#: debug_console.cpp:572 debug_console.cpp:586
+#: debug_console.cpp:572 debug_console.cpp:586 debug_console.cpp:600
 #, kde-format
 msgid "Number"
 msgstr "Skaičius"
@@ -803,224 +803,237 @@ msgstr "Yra pirštas"
 msgid "Tablet Pad Ring"
 msgstr "Planšetės kilimėlio žiedas"
 
-#: debug_console.cpp:641
+#: debug_console.cpp:599
+#, fuzzy, kde-format
+#| msgid "Tablet Pad Ring"
+msgid "Tablet Pad Dial"
+msgstr "Planšetės kilimėlio žiedas"
+
+#: debug_console.cpp:601
+#, fuzzy, kde-format
+#| msgctxt "The relative mouse movement"
+#| msgid "Delta"
+msgid "Delta"
+msgstr "Delta"
+
+#: debug_console.cpp:654
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Efektai"
 
-#: debug_console.cpp:814
+#: debug_console.cpp:827
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Nėra pelės mygtukų"
 
-#: debug_console.cpp:818
+#: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "kairysis"
 
-#: debug_console.cpp:821
+#: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "dešinysis"
 
-#: debug_console.cpp:824
+#: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "vidurinysis"
 
-#: debug_console.cpp:827
+#: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "atgal"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "pirmyn"
 
-#: debug_console.cpp:833
+#: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "papildomas 1"
 
-#: debug_console.cpp:836
+#: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "papildomas 2"
 
-#: debug_console.cpp:839
+#: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "papildomas 3"
 
-#: debug_console.cpp:842
+#: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "papildomas 4"
 
-#: debug_console.cpp:845
+#: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "papildomas 5"
 
-#: debug_console.cpp:848
+#: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "papildomas 6"
 
-#: debug_console.cpp:851
+#: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "papildomas 7"
 
-#: debug_console.cpp:854
+#: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "papildomas 8"
 
-#: debug_console.cpp:857
+#: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "papildomas 9"
 
-#: debug_console.cpp:860
+#: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "papildomas 10"
 
-#: debug_console.cpp:863
+#: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "papildomas 11"
 
-#: debug_console.cpp:866
+#: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "papildomas 12"
 
-#: debug_console.cpp:869
+#: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "papildomas 13"
 
-#: debug_console.cpp:872
+#: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "papildomas 14"
 
-#: debug_console.cpp:875
+#: debug_console.cpp:888
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "papildomas 15"
 
-#: debug_console.cpp:878
+#: debug_console.cpp:891
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "papildomas 16"
 
-#: debug_console.cpp:881
+#: debug_console.cpp:894
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "papildomas 17"
 
-#: debug_console.cpp:884
+#: debug_console.cpp:897
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "papildomas 18"
 
-#: debug_console.cpp:887
+#: debug_console.cpp:900
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "papildomas 19"
 
-#: debug_console.cpp:890
+#: debug_console.cpp:903
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "papildomas 20"
 
-#: debug_console.cpp:893
+#: debug_console.cpp:906
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "papildomas 21"
 
-#: debug_console.cpp:896
+#: debug_console.cpp:909
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "papildomas 22"
 
-#: debug_console.cpp:899
+#: debug_console.cpp:912
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "papildomas 23"
 
-#: debug_console.cpp:902
+#: debug_console.cpp:915
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "papildomas 24"
 
-#: debug_console.cpp:905
+#: debug_console.cpp:918
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "užduotis"
 
-#: debug_console.cpp:1257
+#: debug_console.cpp:1270
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 langai"
 
-#: debug_console.cpp:1259
+#: debug_console.cpp:1272
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 netvarkomi langai"
 
-#: debug_console.cpp:1261
+#: debug_console.cpp:1274
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland langai"
 
-#: debug_console.cpp:1263
+#: debug_console.cpp:1276
 #, kde-format
 msgid "Internal Windows"
 msgstr "Vidiniai langai"
 
-#: debug_console.cpp:1603 debug_console.cpp:1617
+#: debug_console.cpp:1616 debug_console.cpp:1630
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Iškelti"
 
-#: debug_console.cpp:1605 debug_console.cpp:1619
+#: debug_console.cpp:1618 debug_console.cpp:1632
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-25 00:43+0000\n"
+"POT-Creation-Date: 2025-04-28 00:42+0000\n"
 "PO-Revision-Date: 2025-04-23 15:02+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -782,7 +782,7 @@ msgid "Pressed"
 msgstr "Sakatuta"
 
 #: debug_console.cpp:547 debug_console.cpp:561 debug_console.cpp:575
-#: debug_console.cpp:589
+#: debug_console.cpp:589 debug_console.cpp:602
 #, kde-format
 msgid "Tablet"
 msgstr "Tableta"
@@ -797,7 +797,7 @@ msgstr "Tableta paneleko botoia"
 msgid "Tablet Pad Strip"
 msgstr "Tableta paneleko zerrenda"
 
-#: debug_console.cpp:572 debug_console.cpp:586
+#: debug_console.cpp:572 debug_console.cpp:586 debug_console.cpp:600
 #, kde-format
 msgid "Number"
 msgstr "Kopurua"
@@ -812,224 +812,237 @@ msgstr "hatzaDa"
 msgid "Tablet Pad Ring"
 msgstr "Tableta paneleko eraztuna"
 
-#: debug_console.cpp:641
+#: debug_console.cpp:599
+#, fuzzy, kde-format
+#| msgid "Tablet Pad Ring"
+msgid "Tablet Pad Dial"
+msgstr "Tableta paneleko eraztuna"
+
+#: debug_console.cpp:601
+#, fuzzy, kde-format
+#| msgctxt "The relative mouse movement"
+#| msgid "Delta"
+msgid "Delta"
+msgstr "Delta"
+
+#: debug_console.cpp:654
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Efektuak"
 
-#: debug_console.cpp:814
+#: debug_console.cpp:827
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Saguaren botoirik ez"
 
-#: debug_console.cpp:818
+#: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "ezkerrekoa"
 
-#: debug_console.cpp:821
+#: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "eskuinekoa"
 
-#: debug_console.cpp:824
+#: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "erdikoa"
 
-#: debug_console.cpp:827
+#: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "atzera"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "aurrera"
 
-#: debug_console.cpp:833
+#: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "gehigarria 1"
 
-#: debug_console.cpp:836
+#: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "gehigarria 2"
 
-#: debug_console.cpp:839
+#: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "gehigarria 3"
 
-#: debug_console.cpp:842
+#: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "gehigarria 4"
 
-#: debug_console.cpp:845
+#: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "gehigarria 5"
 
-#: debug_console.cpp:848
+#: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "gehigarria 6"
 
-#: debug_console.cpp:851
+#: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "gehigarria 7"
 
-#: debug_console.cpp:854
+#: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "gehigarria 8"
 
-#: debug_console.cpp:857
+#: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "gehigarria 9"
 
-#: debug_console.cpp:860
+#: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "gehigarria 10"
 
-#: debug_console.cpp:863
+#: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "gehigarria 11"
 
-#: debug_console.cpp:866
+#: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "gehigarria 12"
 
-#: debug_console.cpp:869
+#: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "gehigarria 13"
 
-#: debug_console.cpp:872
+#: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "gehigarria 14"
 
-#: debug_console.cpp:875
+#: debug_console.cpp:888
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "gehigarria 15"
 
-#: debug_console.cpp:878
+#: debug_console.cpp:891
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "gehigarria 16"
 
-#: debug_console.cpp:881
+#: debug_console.cpp:894
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "gehigarria 17"
 
-#: debug_console.cpp:884
+#: debug_console.cpp:897
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "gehigarria 18"
 
-#: debug_console.cpp:887
+#: debug_console.cpp:900
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "gehigarria 19"
 
-#: debug_console.cpp:890
+#: debug_console.cpp:903
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "gehigarria 20"
 
-#: debug_console.cpp:893
+#: debug_console.cpp:906
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "gehigarria 21"
 
-#: debug_console.cpp:896
+#: debug_console.cpp:909
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "gehigarria 22"
 
-#: debug_console.cpp:899
+#: debug_console.cpp:912
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "gehigarria 23"
 
-#: debug_console.cpp:902
+#: debug_console.cpp:915
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "gehigarria 24"
 
-#: debug_console.cpp:905
+#: debug_console.cpp:918
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "ataza"
 
-#: debug_console.cpp:1257
+#: debug_console.cpp:1270
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 leihoak"
 
-#: debug_console.cpp:1259
+#: debug_console.cpp:1272
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 kudeatu gabeko leihoak"
 
-#: debug_console.cpp:1261
+#: debug_console.cpp:1274
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland leihoak"
 
-#: debug_console.cpp:1263
+#: debug_console.cpp:1276
 #, kde-format
 msgid "Internal Windows"
 msgstr "Barneko leihoak"
 
-#: debug_console.cpp:1603 debug_console.cpp:1617
+#: debug_console.cpp:1616 debug_console.cpp:1630
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Zama kendu"
 
-#: debug_console.cpp:1605 debug_console.cpp:1619
+#: debug_console.cpp:1618 debug_console.cpp:1632
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"

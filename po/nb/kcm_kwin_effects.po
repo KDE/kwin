@@ -48,7 +48,3 @@ msgstr "Sett opp filter"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Utelat effekter som ikke er støttet"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Show/Hide Video"
-#~ msgstr "Vis/skjul video"

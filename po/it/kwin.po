@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-25 00:43+0000\n"
-"PO-Revision-Date: 2025-04-05 18:13+0200\n"
+"POT-Creation-Date: 2025-04-28 00:42+0000\n"
+"PO-Revision-Date: 2025-04-23 09:05+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -776,7 +776,7 @@ msgid "Pressed"
 msgstr "Premuto"
 
 #: debug_console.cpp:547 debug_console.cpp:561 debug_console.cpp:575
-#: debug_console.cpp:589
+#: debug_console.cpp:589 debug_console.cpp:602
 #, kde-format
 msgid "Tablet"
 msgstr "Tavoletta grafica"
@@ -791,7 +791,7 @@ msgstr "Pulsante tablet"
 msgid "Tablet Pad Strip"
 msgstr "Barra tablet"
 
-#: debug_console.cpp:572 debug_console.cpp:586
+#: debug_console.cpp:572 debug_console.cpp:586 debug_console.cpp:600
 #, kde-format
 msgid "Number"
 msgstr "Numero"
@@ -806,224 +806,237 @@ msgstr "isFinger"
 msgid "Tablet Pad Ring"
 msgstr "Anello tablet"
 
-#: debug_console.cpp:641
+#: debug_console.cpp:599
+#, fuzzy, kde-format
+#| msgid "Tablet Pad Ring"
+msgid "Tablet Pad Dial"
+msgstr "Anello tablet"
+
+#: debug_console.cpp:601
+#, fuzzy, kde-format
+#| msgctxt "The relative mouse movement"
+#| msgid "Delta"
+msgid "Delta"
+msgstr "Delta"
+
+#: debug_console.cpp:654
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Effetti"
 
-#: debug_console.cpp:814
+#: debug_console.cpp:827
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "nessun pulsante del mouse"
 
-#: debug_console.cpp:818
+#: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "sinistro"
 
-#: debug_console.cpp:821
+#: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "destro"
 
-#: debug_console.cpp:824
+#: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "centrale"
 
-#: debug_console.cpp:827
+#: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "indietro"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "avanti"
 
-#: debug_console.cpp:833
+#: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "tasto supplementare 1"
 
-#: debug_console.cpp:836
+#: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "tasto supplementare 2"
 
-#: debug_console.cpp:839
+#: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "tasto supplementare 3"
 
-#: debug_console.cpp:842
+#: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "tasto supplementare 4"
 
-#: debug_console.cpp:845
+#: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "tasto supplementare 5"
 
-#: debug_console.cpp:848
+#: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "tasto supplementare 6"
 
-#: debug_console.cpp:851
+#: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "tasto supplementare 7"
 
-#: debug_console.cpp:854
+#: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "tasto supplementare 8"
 
-#: debug_console.cpp:857
+#: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "tasto supplementare 9"
 
-#: debug_console.cpp:860
+#: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "tasto supplementare 10"
 
-#: debug_console.cpp:863
+#: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "tasto supplementare 11"
 
-#: debug_console.cpp:866
+#: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "tasto supplementare 12"
 
-#: debug_console.cpp:869
+#: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "tasto supplementare 13"
 
-#: debug_console.cpp:872
+#: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "tasto supplementare 14"
 
-#: debug_console.cpp:875
+#: debug_console.cpp:888
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "tasto supplementare 15"
 
-#: debug_console.cpp:878
+#: debug_console.cpp:891
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "tasto supplementare 16"
 
-#: debug_console.cpp:881
+#: debug_console.cpp:894
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "tasto supplementare 17"
 
-#: debug_console.cpp:884
+#: debug_console.cpp:897
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "tasto supplementare 18"
 
-#: debug_console.cpp:887
+#: debug_console.cpp:900
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "tasto supplementare 19"
 
-#: debug_console.cpp:890
+#: debug_console.cpp:903
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "tasto supplementare 20"
 
-#: debug_console.cpp:893
+#: debug_console.cpp:906
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "tasto supplementare 21"
 
-#: debug_console.cpp:896
+#: debug_console.cpp:909
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "tasto supplementare 22"
 
-#: debug_console.cpp:899
+#: debug_console.cpp:912
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "tasto supplementare 23"
 
-#: debug_console.cpp:902
+#: debug_console.cpp:915
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "tasto supplementare 24"
 
-#: debug_console.cpp:905
+#: debug_console.cpp:918
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "attività"
 
-#: debug_console.cpp:1257
+#: debug_console.cpp:1270
 #, kde-format
 msgid "X11 Windows"
 msgstr "Finestre X11"
 
-#: debug_console.cpp:1259
+#: debug_console.cpp:1272
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Finestre non gestite X11"
 
-#: debug_console.cpp:1261
+#: debug_console.cpp:1274
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Finestre Wayland"
 
-#: debug_console.cpp:1263
+#: debug_console.cpp:1276
 #, kde-format
 msgid "Internal Windows"
 msgstr "Finestre interne"
 
-#: debug_console.cpp:1603 debug_console.cpp:1617
+#: debug_console.cpp:1616 debug_console.cpp:1630
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Scarica"
 
-#: debug_console.cpp:1605 debug_console.cpp:1619
+#: debug_console.cpp:1618 debug_console.cpp:1632
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1264,11 +1277,7 @@ msgstr ""
 "Questo accessorio di supporto non è fatto per essere chiamato direttamente."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1276,16 +1285,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Terminando questa applicazione saranno chiuse "
-"tutte le sue finestre. Tutti i dati non salvati saranno persi.</emphasis></"
-"para>"
+"<para><application>%1</application> non risponde. Vuoi terminare questa "
+"applicazione?</para><para><emphasis strong='true'>La chiusura di questa "
+"applicazione chiuderà tutte le sue finestre. Tutti i dati non salvati "
+"sarannopersi.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1293,9 +1299,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Terminando questa applicazione saranno chiuse "
-"tutte le sue finestre. Tutti i dati non salvati saranno persi.</emphasis></"
-"para>"
+"<para>«%1» di <application>%2</application> non risponde. Vuoi terminare "
+"questa applicazione?</para><para><emphasis strong='true'>La chiusura di "
+"questa applicazione chiuderà tutte le sue finestre. Tutti i dati non salvati "
+"saranno persi.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
