@@ -235,7 +235,8 @@ static Qt::KeyboardModifiers stringToKeyboardModifiers(const QString &string)
     for (const QString &part : parts) {
         if (part == QLatin1String("Meta")) {
             modifiers |= Qt::MetaModifier;
-        } else if (part == QLatin1String("Ctrl")) {
+        } else if (part == QLatin1String("Ctrl") || part == QLatin1String("Control")) {
+            // NOTE: "Meta+Control" is provided KQuickControls.KeySequenceItem instead of "Meta+Ctrl"
             modifiers |= Qt::ControlModifier;
         } else if (part == QLatin1String("Alt")) {
             modifiers |= Qt::AltModifier;
