@@ -166,6 +166,7 @@ public:
         BuiltInColorProfile = 1 << 10,
         DdcCi = 1 << 11,
         MaxBitsPerColor = 1 << 12,
+        Edr = 1 << 13,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -202,6 +203,12 @@ public:
         PreferAccuracy,
     };
     Q_ENUM(ColorPowerTradeoff);
+
+    enum class EdrPolicy {
+        Never = 0,
+        Always,
+    };
+    Q_ENUM(EdrPolicy);
 
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
@@ -400,6 +407,7 @@ public:
     };
     BpcRange bitsPerColorRange() const;
     std::optional<uint32_t> automaticMaxBitsPerColorLimit() const;
+    EdrPolicy edrPolicy() const;
 
 Q_SIGNALS:
     /**
@@ -471,6 +479,7 @@ Q_SIGNALS:
     void replicationSourceChanged();
     void allowDdcCiChanged();
     void maxBitsPerColorChanged();
+    void edrPolicyChanged();
 
 protected:
     struct Information
@@ -541,6 +550,7 @@ protected:
         bool allowDdcCi = true;
         uint32_t maxBitsPerColor = 0;
         std::optional<uint32_t> automaticMaxBitsPerColorLimit;
+        EdrPolicy edrPolicy = EdrPolicy::Always;
     };
 
     void setInformation(const Information &information);

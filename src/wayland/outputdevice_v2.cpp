@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 15;
+static const quint32 s_version = 16;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -71,6 +71,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     if (caps & Output::Capability::MaxBitsPerColor) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_max_bits_per_color;
     }
+    if (caps & Output::Capability::Edr) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_edr;
+    }
     return ret;
 }
 
@@ -87,6 +90,11 @@ static QtWaylandServer::kde_output_device_v2::rgb_range kwinRgbRangeToOutputDevi
 static QtWaylandServer::kde_output_device_v2::auto_rotate_policy kwinAutoRotationToOutputDeviceAutoRotation(Output::AutoRotationPolicy policy)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::auto_rotate_policy>(policy);
+}
+
+static QtWaylandServer::kde_output_device_v2::edr_policy kwinEdrPolicyToOutputDevice(Output::EdrPolicy policy)
+{
+    return static_cast<QtWaylandServer::kde_output_device_v2::edr_policy>(policy);
 }
 
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
@@ -125,6 +133,7 @@ public:
     void sendReplicationSource(Resource *resource);
     void sendDdcCiAllowed(Resource *resource);
     void sendMaxBpc(Resource *resource);
+    void sendEdrPolicy(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -170,6 +179,7 @@ public:
     uint32_t m_maxBpc = 0;
     Output::BpcRange m_maxBpcRange;
     std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
+    Output::EdrPolicy m_edrPolicy = Output::EdrPolicy::Always;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -262,6 +272,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateReplicationSource();
     updateDdcCiAllowed();
     updateMaxBpc();
+    updateEdrPolicy();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -299,6 +310,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::replicationSourceChanged, this, &OutputDeviceV2Interface::updateReplicationSource);
     connect(handle, &Output::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
     connect(handle, &Output::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
+    connect(handle, &Output::edrPolicyChanged, this, &OutputDeviceV2Interface::updateEdrPolicy);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -381,6 +393,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendReplicationSource(resource);
     sendDdcCiAllowed(resource);
     sendMaxBpc(resource);
+    sendEdrPolicy(resource);
     sendDone(resource);
 }
 
@@ -582,6 +595,13 @@ void OutputDeviceV2InterfacePrivate::sendMaxBpc(Resource *resource)
         send_max_bits_per_color(resource->handle, m_maxBpc);
         send_automatic_max_bits_per_color_limit(resource->handle, m_automaticMaxBitsPerColorLimit.value_or(0));
         send_max_bits_per_color_range(resource->handle, m_maxBpcRange.min, m_maxBpcRange.max);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendEdrPolicy(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_EDR_POLICY_SINCE_VERSION) {
+        send_edr_policy(resource->handle, kwinEdrPolicyToOutputDevice(m_edrPolicy));
     }
 }
 
@@ -1009,6 +1029,17 @@ void OutputDeviceV2Interface::updateDdcCiAllowed()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendDdcCiAllowed(resource);
+        }
+    }
+}
+
+void OutputDeviceV2Interface::updateEdrPolicy()
+{
+    if (d->m_edrPolicy != d->m_handle->edrPolicy()) {
+        d->m_edrPolicy = d->m_handle->edrPolicy();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendEdrPolicy(resource);
         }
         scheduleDone();
     }

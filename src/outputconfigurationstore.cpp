@@ -377,6 +377,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .detectedDdcCi = changeSet->detectedDdcCi.value_or(output->detectedDdcCi()),
                 .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
                 .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
+                .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -426,6 +427,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .detectedDdcCi = output->detectedDdcCi(),
                 .allowDdcCi = output->allowDdcCi(),
                 .maxBitsPerColor = output->maxBitsPerColor(),
+                .edrPolicy = output->edrPolicy(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -489,6 +491,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .detectedDdcCi = state.detectedDdcCi,
             .allowDdcCi = state.allowDdcCi,
             .maxBitsPerColor = state.maxBitsPerColor,
+            .edrPolicy = state.edrPolicy,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -619,6 +622,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .detectedDdcCi = existingData.detectedDdcCi.value_or(false),
             .allowDdcCi = existingData.allowDdcCi.value_or(true),
             .maxBitsPerColor = existingData.maxBitsPerColor,
+            .edrPolicy = existingData.edrPolicy.value_or(Output::EdrPolicy::Always),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -1004,6 +1008,14 @@ void OutputConfigurationStore::load()
                 state.maxBitsPerColor = bpc;
             }
         }
+        if (const auto it = data.find("edrPolicy"); it != data.end()) {
+            const auto str = it->toString();
+            if (str == "never") {
+                state.edrPolicy = Output::EdrPolicy::Never;
+            } else if (str == "always") {
+                state.edrPolicy = Output::EdrPolicy::Always;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1271,6 +1283,16 @@ void OutputConfigurationStore::save()
         }
         if (output.maxBitsPerColor.has_value()) {
             o["maxBitsPerColor"] = int(*output.maxBitsPerColor);
+        }
+        if (output.edrPolicy.has_value()) {
+            switch (*output.edrPolicy) {
+            case Output::EdrPolicy::Never:
+                o["edrPolicy"] = "never";
+                break;
+            case Output::EdrPolicy::Always:
+                o["edrPolicy"] = "always";
+                break;
+            }
         }
         outputsData.append(o);
     }
