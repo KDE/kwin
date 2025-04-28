@@ -33,7 +33,7 @@
             <default>15.0</default>
         </entry>
         <entry name="PointerAxisGestureModifiers" type="String">
-            <default>Meta+Ctrl</default>
+            <default>Meta+Control</default>
         </entry>
     </group>
 </kcfg>
