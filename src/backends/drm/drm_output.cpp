@@ -300,6 +300,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->maxBpc.isValid()) {
         capabilities |= Capability::MaxBitsPerColor;
     }
+    if (m_state.brightnessDevice && isInternal()) {
+        capabilities |= Capability::Edr;
+    }
     return capabilities;
 }
 
@@ -477,7 +480,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
     const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::BT709);
 
     double maxPossibleArtificialHeadroom = 1.0;
-    if (next.brightnessDevice && isInternal()) {
+    if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
         maxPossibleArtificialHeadroom = 1.0 / next.currentBrightness.value_or(next.brightnessSetting);
     }
 
@@ -558,6 +561,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     }
     next.maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
     next.automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
+    next.edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     setState(next);

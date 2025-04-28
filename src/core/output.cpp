@@ -649,6 +649,9 @@ void Output::setState(const State &state)
         || oldState.automaticMaxBitsPerColorLimit != state.automaticMaxBitsPerColorLimit) {
         Q_EMIT maxBitsPerColorChanged();
     }
+    if (oldState.edrPolicy != state.edrPolicy) {
+        Q_EMIT edrPolicyChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -866,6 +869,11 @@ Output::BpcRange Output::bitsPerColorRange() const
 std::optional<uint32_t> Output::automaticMaxBitsPerColorLimit() const
 {
     return m_state.automaticMaxBitsPerColorLimit;
+}
+
+Output::EdrPolicy Output::edrPolicy() const
+{
+    return m_state.edrPolicy;
 }
 
 } // namespace KWin

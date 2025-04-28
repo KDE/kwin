@@ -84,6 +84,7 @@ private:
     void updateReplicationSource();
     void updateDdcCiAllowed();
     void updateMaxBpc();
+    void updateEdrPolicy();
 
     void scheduleDone();
 
