@@ -43,8 +43,9 @@ DrmFramebufferData::~DrmFramebufferData()
     if (drmModeCloseFB(m_gpu->fd(), m_framebufferId) != 0) {
         drmModeRmFB(m_gpu->fd(), m_framebufferId);
     }
-
-    m_gpu->forgetBuffer(m_buffer);
+    if (m_buffer) {
+        m_gpu->forgetBuffer(m_buffer);
+    }
 }
 
 DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, GraphicsBuffer *buffer, FileDescriptor &&readFence)

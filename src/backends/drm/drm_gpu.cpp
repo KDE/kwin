@@ -916,12 +916,19 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, Fil
 
     auto fbData = std::make_shared<DrmFramebufferData>(this, framebufferId, buffer);
     m_fbCache[buffer] = fbData;
+    connect(buffer, &GraphicsBuffer::destroyed, this, &DrmGpu::forgetBufferObject);
     return std::make_shared<DrmFramebuffer>(fbData, buffer, std::move(readFence));
 }
 
 void DrmGpu::forgetBuffer(GraphicsBuffer *buf)
 {
+    disconnect(buf, &GraphicsBuffer::destroyed, this, &DrmGpu::forgetBufferObject);
     m_fbCache.remove(buf);
+}
+
+void DrmGpu::forgetBufferObject(QObject *buf)
+{
+    m_fbCache.remove(static_cast<GraphicsBuffer *>(buf));
 }
 
 QString DrmGpu::driverName() const

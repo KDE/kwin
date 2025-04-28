@@ -134,6 +134,7 @@ private:
     DrmOutput *findOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
     void initDrmResources();
+    void forgetBufferObject(QObject *buf);
 
     DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs);
     DrmPipeline::Error testPipelines();

@@ -12,6 +12,7 @@
 #include "core/graphicsbuffer.h"
 #include "utils/filedescriptor.h"
 
+#include <QPointer>
 #include <chrono>
 
 namespace KWin
@@ -27,7 +28,7 @@ public:
 
     DrmGpu *const m_gpu;
     const uint32_t m_framebufferId;
-    GraphicsBuffer *const m_buffer;
+    const QPointer<GraphicsBuffer> m_buffer;
 };
 
 class DrmFramebuffer
