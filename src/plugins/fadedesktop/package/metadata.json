@@ -55,6 +55,7 @@
         ],
         "Category": "Virtual Desktop Switching Animation",
         "Description": "Fade between virtual desktops when switching",
+        "Description[ar]": "التلاشي بين أسطح المكتب الافتراضية عند التبديل",
         "Description[ca@valencia]": "Esvaïx en canviar entre els escriptoris virtuals",
         "Description[ca]": "Esvaeix en commutar entre els escriptoris virtuals",
         "Description[es]": "Desvanecer al cambiar de escritorio virtual",

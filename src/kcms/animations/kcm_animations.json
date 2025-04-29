@@ -2,6 +2,7 @@
     "KPlugin": {
         "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_animations",
         "Description": "Configure animation speed and style",
+        "Description[ar]": "اضبط سرعة التحريك و النمط",
         "Description[ca@valencia]": "Configura la velocitat i estil de les animacions",
         "Description[ca]": "Configura la velocitat i estil de les animacions",
         "Description[es]": "Configurar la velocidad y el estilo de las animaciones",
@@ -19,6 +20,7 @@
         ],
         "Icon": "preferences-desktop-animations",
         "Name": "Animations",
+        "Name[ar]": "التّحريكات",
         "Name[ca@valencia]": "Animacions",
         "Name[ca]": "Animacions",
         "Name[es]": "Animaciones",
@@ -31,6 +33,7 @@
         "Name[x-test]": "xxAnimationsxx"
     },
     "X-KDE-Keywords": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect",
+    "X-KDE-Keywords[ar]": "رسوم متحركة,سرعة الحركة,انتقالات,تأثيرات,فتح/إغلاق النافذة,فتح/إغلاق النافذة,تكبير النافذة,تصغير النافذة,نافذة ملء الشاشة,إلقاء نظرة خاطفة على سطح المكتب,إلقاء نظرة خاطفة على سطح المكتب,تبديل سطح المكتب الافتراضي,تأثير التلاشي,تأثير الانزلاق,تأثير التدرج,تأثير التمدد,تأثير المصباح السحري,تأثير الضغط,تأثير العين على الشاشة,تأثير فتحة النافذة,تأثير الانزلاق,تأثير النوافذ المنبثقة المتلاشية,تأثير النوافذ المنبثقة المنزلقة,تأثير تسجيل الدخول,تأثير تسجيل الخروج",
     "X-KDE-Keywords[ca@valencia]": "animacions,velocitat d'animació,transicions,efectes,obertura tancament de finestra,obertura/tancament de finestra,maximització de finestra,minimització de finestra,finestra a pantalla completa,ullada a l'escriptori,commutació d'escriptori virtual,efecte d'esvaïment,efecte de lliscament,efecte d'escala,efecte d'estirament,efecte de làmpada màgica,efecte d'amuntegament,efecte ull a la pantalla,efecte d'obertura de finestra,efecte de lliscament,efecte de finestres emergents esvaïdes,efecte de finestres emergents lliscants,efecte d'entrada de sessió,efecte d'eixida de sessió",
     "X-KDE-Keywords[ca]": "animacions,velocitat d'animació,transicions,efectes,obertura tancament de finestra,obertura/tancament de finestra,maximització de finestra,minimització de finestra,finestra a pantalla completa,ullada a l'escriptori,commutació d'escriptori virtual,efecte d'esvaïment,efecte de lliscament,efecte d'escala,efecte d'estirament,efecte de làmpada màgica,efecte d'amuntegament,efecte ull a la pantalla,efecte d'obertura de finestra,efecte de lliscament,efecte de finestres emergents esvaïdes,efecte de finestres emergents lliscants,efecte d'entrada de sessió,efecte de sortida de sessió",
     "X-KDE-Keywords[es]": "animaciones,velocidad de animación,transiciones,efectos,apertura cierre de ventana,abrir/cerrar ventana,abrir ventana,cerrar ventana,abrir cerrar ventana,apertura de ventana,cierre de ventana,maximizar ventana,minimizar ventana,ventana a pantalla completa,echar vistazo al escritorio,espiar escritorio,cambio de escritorio virtual,efecto de desvanecimiento,efecto de planeo,efecto de escalado,efecto de estirar,efecto de lámpara maravillosa,efecto de lámpara mágica,efecto de aplastar,efecto de ojo en la pantalla,efecto de apertura de ventana,efecto de deslizar,efecto de deslizamiento,efecto de desvanecer ventanas emergentes,efecto de desvanecimiento de ventana emergente,efecto de deslizar ventana emergente,efecto de deslizamiento de ventanas emergentes,efecto de inicio de sesión,efecto de cierre de sesión",

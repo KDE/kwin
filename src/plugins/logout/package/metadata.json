@@ -55,6 +55,7 @@
         ],
         "Category": "Appearance",
         "Description": "Fade to the logout screen",
+        "Description[ar]": "تلاشي إلى شاشة الخروج",
         "Description[ca@valencia]": "Esvaïment a la pantalla d'eixida",
         "Description[ca]": "Esvaïment a la pantalla de sortida",
         "Description[es]": "Desvanecer al mostrar la pantalla de cierre de sesión",

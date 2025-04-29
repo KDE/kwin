@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Virtual Desktop Switching Animation",
         "Description": "Slide between virtual desktops when switching",
+        "Description[ar]": "التنقل بين أسطح المكتب الافتراضية مثل الشرائح عند التبديل",
         "Description[ca@valencia]": "Llisca entre els escriptoris virtuals quan es canvien",
         "Description[ca]": "Llisca entre els escriptoris virtuals quan es commuten",
         "Description[es]": "Deslizar los escritorios virtuales al cambiar entre ellos",
@@ -15,7 +16,7 @@
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "Slide",
-        "Name[ar]": "أزْلِق",
+        "Name[ar]": "الشريحة",
         "Name[az]": "Slayd",
         "Name[be]": "Ссоўванне",
         "Name[bg]": "Плъзгане",
