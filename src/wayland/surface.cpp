@@ -624,8 +624,8 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->renderingIntent = renderingIntent;
     target->alphaMultiplier = alphaMultiplier;
     target->yuvCoefficients = yuvCoefficients;
-    target->fifoBarrier = fifoBarrier;
-    target->hasFifoWaitCondition = hasFifoWaitCondition;
+    target->fifoBarrier = std::exchange(fifoBarrier, false);
+    target->hasFifoWaitCondition = std::exchange(hasFifoWaitCondition, false);
     target->yuvCoefficients = yuvCoefficients;
     target->range = range;
     target->presentationFeedback = std::move(presentationFeedback);
