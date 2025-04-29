@@ -1,0 +1,116 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# SPDX-FileCopyrightText: 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
+"PO-Revision-Date: 2025-04-28 17:44+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
+
+#: ui/AnimationComboBox.qml:49
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "لا شيء"
+
+#: ui/main.qml:37
+#, kde-format
+msgid "Global animation speed:"
+msgstr "سرعة التحريك العامة:"
+
+#: ui/main.qml:69
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Some applications do not support this setting: In particular, GTK "
+"applications cannot change animation duration, but will still disable "
+"animations when <interface>animation speed</interface> is "
+"<interface>Instant</interface>."
+msgstr ""
+"لا تدعم بعض التطبيقات هذا الإعداد: على وجه الخصوص، لا تستطيع تطبيقات GTK "
+"تغيير مدة الحركة، ولكنها ستظل تقوم بتعطيل الرسوم المتحركة عندما تكون "
+"<interface>سرعة التحريك</interface> هي <interface>فورية</interface>."
+
+#: ui/main.qml:76
+#, kde-format
+msgctxt "Animation speed"
+msgid "Slow"
+msgstr "بطيء"
+
+#: ui/main.qml:85
+#, kde-format
+msgctxt "Animation speed"
+msgid "Instant"
+msgstr "فوري"
+
+#: ui/main.qml:93
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "تحريكات سطح المكتب"
+
+#: ui/main.qml:97
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window open/close:"
+msgstr "فتح/غلق النافذة:"
+
+#: ui/main.qml:98
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window maximize:"
+msgstr "تكبير النافذة:"
+
+#: ui/main.qml:99
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window minimize:"
+msgstr "تصغير النافذة:"
+
+#: ui/main.qml:100
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window full screen:"
+msgstr "جعل النافذة ملء الشاشة:"
+
+#: ui/main.qml:101
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "نظرة على سطح المكتب:"
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Virtual desktop switching:"
+msgstr "تبديل سطح المكتب الافتراضي:"
+
+#: ui/main.qml:130 ui/main.qml:197
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure…"
+msgstr "اضبط…"
+
+#: ui/main.qml:157
+#, kde-format
+msgctxt ""
+"@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
+msgid "%1:"
+msgstr "%1:"
+
+#: ui/main.qml:224
+#, kde-format
+msgctxt "@title:group translate as short as possible"
+msgid "More effects settings:"
+msgstr "المزيد من إعدادات التأثيرات:"

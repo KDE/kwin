@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-28 00:42+0000\n"
-"PO-Revision-Date: 2025-04-19 20:11+0200\n"
+"POT-Creation-Date: 2025-04-29 00:42+0000\n"
+"PO-Revision-Date: 2025-04-28 03:37+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -816,15 +816,12 @@ msgid "Tablet Pad Ring"
 msgstr "Anillo de la tableta"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Anillo de la tableta"
+msgstr "Dial de la tableta"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -3171,464 +3168,478 @@ msgstr "Máquina (nombre del servidor)"
 msgid "Machine string match type"
 msgstr "Tipo de coincidencia para cadena de la máquina"
 
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
+#, fuzzy, kde-format
+#| msgid "Window Manager"
+msgid "Window tag"
+msgstr "Gestor de ventanas"
+
+#. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:71
+#, fuzzy, kde-format
+#| msgid "Window title string match type"
+msgid "Window tag string match type"
+msgstr "Tipo de coincidencia para la cadena del título de la ventana"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:78
 #, kde-format
 msgid "Window types that match"
 msgstr "Tipos de ventanas que coinciden"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:73
+#: rulesettings.kcfg:83
 #, kde-format
 msgid "Initial placement"
 msgstr "Ubicación inicial"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:78
+#: rulesettings.kcfg:88
 #, kde-format
 msgid "Initial placement rule type"
 msgstr "Tipo de regla para ubicación inicial"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
+#: rulesettings.kcfg:93
 #, kde-format
 msgid "Window position"
 msgstr "Posición de la ventana"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:87
+#: rulesettings.kcfg:97
 #, kde-format
 msgid "Window position rule type"
 msgstr "Tipo de regla para posición de la ventana"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:94
+#: rulesettings.kcfg:104
 #, kde-format
 msgid "Window size"
 msgstr "Tamaño de la ventana"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:97
+#: rulesettings.kcfg:107
 #, kde-format
 msgid "Window size rule type"
 msgstr "Tipo de regla para tamaño de la ventana"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
+#: rulesettings.kcfg:114
 #, kde-format
 msgid "Window minimum size"
 msgstr "Tamaño mínimo de la ventana"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:108
+#: rulesettings.kcfg:118
 #, kde-format
 msgid "Window minimum size rule type"
 msgstr "Tipo de regla para tamaño mínimo de la ventana"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
+#: rulesettings.kcfg:123
 #, kde-format
 msgid "Window maximum size"
 msgstr "Tamaño máximo de la ventana"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:117
+#: rulesettings.kcfg:127
 #, kde-format
 msgid "Window maximum size rule type"
 msgstr "Tipo de regla para tamaño máximo de la ventana"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:122
+#: rulesettings.kcfg:132
 #, kde-format
 msgid "Active opacity"
 msgstr "Opacidad de ventana activa"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:128
+#: rulesettings.kcfg:138
 #, kde-format
 msgid "Active opacity rule type"
 msgstr "Tipo de regla para opacidad de ventana activa"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:133
+#: rulesettings.kcfg:143
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Opacidad de ventana inactiva"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:139
+#: rulesettings.kcfg:149
 #, kde-format
 msgid "Inactive opacity rule type"
 msgstr "Tipo de regla para opacidad de ventana inactiva"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
+#: rulesettings.kcfg:154
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "Ignorar la geometría solicitada"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:148
+#: rulesettings.kcfg:158
 #, kde-format
 msgid "Ignore requested geometry rule type"
 msgstr "Tipo de regla para ignorar la geometría solicitada"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
+#: rulesettings.kcfg:165
 #, kde-format
 msgid "List of Desktop Ids"
 msgstr "Lista de identificadores de escritorios"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:159
+#: rulesettings.kcfg:169
 #, kde-format
 msgid "Desktop Ids rule type"
 msgstr "Tipo de regla para identificadores de escritorio"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
+#: rulesettings.kcfg:176
 #, kde-format
 msgid "Screen number"
 msgstr "Número de pantalla"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:170
+#: rulesettings.kcfg:180
 #, kde-format
 msgid "Screen number rule type"
 msgstr "Tipo de regla para número de pantalla"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:177
+#: rulesettings.kcfg:187
 #, kde-format
 msgid "Activity"
 msgstr "Actividad"
 
 #. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:180
+#: rulesettings.kcfg:190
 #, kde-format
 msgid "Activity rule type"
 msgstr "Tipo de regla para actividad"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:187
+#: rulesettings.kcfg:197
 #, kde-format
 msgid "Maximized vertically"
 msgstr "Maximizada verticalmente"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:191
+#: rulesettings.kcfg:201
 #, kde-format
 msgid "Maximized vertically rule type"
 msgstr "Tipo de regla para maximizada verticalmente"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
+#: rulesettings.kcfg:208
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "Maximizada horizontalmente"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:202
+#: rulesettings.kcfg:212
 #, kde-format
 msgid "Maximized horizontally rule type"
 msgstr "Tipo de regla para maximizada horizontalmente"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
+#: rulesettings.kcfg:219
 #, kde-format
 msgid "Minimized"
 msgstr "Minimizada"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:213
+#: rulesettings.kcfg:223
 #, kde-format
 msgid "Minimized rule type"
 msgstr "Tipo de regla para minimizada"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
+#: rulesettings.kcfg:230
 #, kde-format
 msgid "Shaded"
 msgstr "Recogida"
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:224
+#: rulesettings.kcfg:234
 #, kde-format
 msgid "Shaded rule type"
 msgstr "Tipo de regla para recogida"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
+#: rulesettings.kcfg:241
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Omitir la barra de tareas"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:235
+#: rulesettings.kcfg:245
 #, kde-format
 msgid "Skip taskbar rule type"
 msgstr "Tipo de regla para omitir la barra de tareas"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
+#: rulesettings.kcfg:252
 #, kde-format
 msgid "Skip pager"
 msgstr "Omitir el paginador"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:246
+#: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip pager rule type"
 msgstr "Tipo de regla para omitir el paginador"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
+#: rulesettings.kcfg:263
 #, kde-format
 msgid "Skip switcher"
 msgstr "Omitir el selector"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:257
+#: rulesettings.kcfg:267
 #, kde-format
 msgid "Skip switcher rule type"
 msgstr "Tipo de regla para omitir el selector"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
+#: rulesettings.kcfg:274
 #, kde-format
 msgid "Keep above"
 msgstr "Mantener encima"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:268
+#: rulesettings.kcfg:278
 #, kde-format
 msgid "Keep above rule type"
 msgstr "Tipo de regla para mantener encima"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
+#: rulesettings.kcfg:285
 #, kde-format
 msgid "Keep below"
 msgstr "Mantener debajo"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:279
+#: rulesettings.kcfg:289
 #, kde-format
 msgid "Keep below rule type"
 msgstr "Tipo de regla para mantener debajo"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
+#: rulesettings.kcfg:296
 #, kde-format
 msgid "Fullscreen"
 msgstr "Pantalla completa"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:290
+#: rulesettings.kcfg:300
 #, kde-format
 msgid "Fullscreen rule type"
 msgstr "Tipo de regla para pantalla completa"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
+#: rulesettings.kcfg:307
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Sin barra de título ni marco"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:301
+#: rulesettings.kcfg:311
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "Tipo de regla para sin barra de título ni marco"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
+#: rulesettings.kcfg:318
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "Color y esquema de la barra de título"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:311
+#: rulesettings.kcfg:321
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "Tipo de regla para color y esquema de la barra de título"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:316
+#: rulesettings.kcfg:326
 #, kde-format
 msgid "Block Compositing"
 msgstr "Bloquear la composición"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:320
+#: rulesettings.kcfg:330
 #, kde-format
 msgid "Block Compositing rule type"
 msgstr "Tipo de regla para bloquear la composición"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:325
+#: rulesettings.kcfg:335
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Prevención de robo del foco"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:331
+#: rulesettings.kcfg:341
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Tipo de regla para prevención de robo del foco"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:336
+#: rulesettings.kcfg:346
 #, kde-format
 msgid "Focus protection"
 msgstr "Protección del foco"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:342
+#: rulesettings.kcfg:352
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Tipo de regla para protección del foco"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:347
+#: rulesettings.kcfg:357
 #, kde-format
 msgid "Accept Focus"
 msgstr "Aceptar el foco"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:351
+#: rulesettings.kcfg:361
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Tipo de regla para aceptar el foco"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:356
+#: rulesettings.kcfg:366
 #, kde-format
 msgid "Closeable"
 msgstr "Se puede cerrar"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:360
+#: rulesettings.kcfg:370
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Tipo de regla para se puede cerrar"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:365
+#: rulesettings.kcfg:375
 #, kde-format
 msgid "Autogroup with identical"
 msgstr "Agrupar automáticamente con idénticas"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:369
+#: rulesettings.kcfg:379
 #, kde-format
 msgid "Autogroup with identical rule type"
 msgstr "Tipo de regla para agrupar automáticamente con idénticas"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:374
+#: rulesettings.kcfg:384
 #, kde-format
 msgid "Autogroup in foreground"
 msgstr "Agrupar automáticamente en primer plano"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:378
+#: rulesettings.kcfg:388
 #, kde-format
 msgid "Autogroup in foreground rule type"
 msgstr "Tipo de regla para agrupar automáticamente en primer plano"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:383
+#: rulesettings.kcfg:393
 #, kde-format
 msgid "Autogroup by ID"
 msgstr "Agrupar automáticamente por ID"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:386
+#: rulesettings.kcfg:396
 #, kde-format
 msgid "Autogroup by ID rule type"
 msgstr "Tipo de regla para agrupar automáticamente por ID"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:391
+#: rulesettings.kcfg:401
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Obedecer restricciones de geometría"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:395
+#: rulesettings.kcfg:405
 #, kde-format
 msgid "Obey geometry restrictions rule type"
 msgstr "Tipo de regla para obedecer restricciones de geometría"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:400
+#: rulesettings.kcfg:410
 #, kde-format
 msgid "Shortcut"
 msgstr "Atajo de teclado"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:403
+#: rulesettings.kcfg:413
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Tipo de regla para atajo de teclado"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:420
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignorar atajos de teclado globales"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:414
+#: rulesettings.kcfg:424
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Tipo de regla para ignorar atajos de teclado globales"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:419
+#: rulesettings.kcfg:429
 #, kde-format
 msgid "Desktop file name"
 msgstr "Nombre del archivo de escritorio"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:422
+#: rulesettings.kcfg:432
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Tipo de regla para nombre del archivo de escritorio"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:439
 #, kde-format
 msgid "Layer"
 msgstr "Capa"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:445
+#: rulesettings.kcfg:455
 #, kde-format
 msgid "Layer rule type"
 msgstr "Tipo de regla para capa"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:450
+#: rulesettings.kcfg:460
 #, kde-format
 msgid "AdaptiveSync"
 msgstr "Sincronización adaptativa"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:454
+#: rulesettings.kcfg:464
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Tipo de regla para sincronización adaptativa"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:459
+#: rulesettings.kcfg:469
 #, kde-format
 msgid "Allow Tearing"
 msgstr "Permitir «tearing»"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:463
+#: rulesettings.kcfg:473
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Tipo de regla para «tearing»"
