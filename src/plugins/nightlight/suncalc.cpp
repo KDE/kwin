@@ -21,6 +21,19 @@ namespace KWin
 #define SUN_RISE_SET -0.833
 #define SUN_HIGH 2.0
 
+static const qreal secondsPerDay = 86400.0;
+static const qreal junix = 2440587.5;
+
+static QDateTime julianDateToDateTime(double jd)
+{
+    return QDateTime::fromSecsSinceEpoch(std::round((jd - junix) * secondsPerDay));
+}
+
+static double dateTimeToJulianDate(const QDateTime &dateTime)
+{
+    return dateTime.toSecsSinceEpoch() / secondsPerDay + junix;
+}
+
 QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning)
 {
     // calculations based on https://aa.quae.nl/en/reken/zonpositie.html
@@ -34,8 +47,7 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
     const double lng = -longitude; // lw
 
     // times
-    const QDateTime utcDateTime = dateTime.toUTC();
-    const double juPrompt = utcDateTime.date().toJulianDay(); // J
+    const double juPrompt = dateTimeToJulianDate(dateTime); // J
     const double ju2000 = 2451545.; // J2000
 
     // geometry
@@ -128,23 +140,16 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
         begin = getSunEvening(SUN_HIGH, juNoon);
         end = getSunEvening(TWILIGHT_CIVIL, juNoon);
     }
-    // transform to QDateTime
-    begin += 0.5;
-    end += 0.5;
 
     QDateTime dateTimeBegin;
     QDateTime dateTimeEnd;
 
     if (!std::isnan(begin)) {
-        const double dayFraction = begin - int(begin);
-        const QTime utcTime = QTime::fromMSecsSinceStartOfDay(dayFraction * MSC_DAY);
-        dateTimeBegin = QDateTime(dateTime.date(), utcTime, QTimeZone::utc()).toLocalTime();
+        dateTimeBegin = julianDateToDateTime(begin);
     }
 
     if (!std::isnan(end)) {
-        const double dayFraction = end - int(end);
-        const QTime utcTime = QTime::fromMSecsSinceStartOfDay(dayFraction * MSC_DAY);
-        dateTimeEnd = QDateTime(dateTime.date(), utcTime, QTimeZone::utc()).toLocalTime();
+        dateTimeEnd = julianDateToDateTime(end);
     }
 
     return {dateTimeBegin, dateTimeEnd};
