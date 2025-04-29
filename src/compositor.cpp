@@ -416,21 +416,6 @@ static bool isTearingRequested(const Item *item)
     });
 }
 
-static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
-{
-    const double widthScale = bufferSize.width() / double(modeSize.width());
-    const double heightScale = bufferSize.height() / double(modeSize.height());
-    if (widthScale > heightScale) {
-        const QSize size = (bufferSize / widthScale).toSize();
-        const uint32_t yOffset = (modeSize.height() - size.height()) / 2;
-        return QRect(QPoint(0, yOffset), size);
-    } else {
-        const QSize size = (bufferSize / heightScale).toSize();
-        const uint32_t xOffset = (modeSize.width() - size.width()) / 2;
-        return QRect(QPoint(xOffset, 0), size);
-    }
-}
-
 static bool checkForBlackBackground(SurfaceItem *background)
 {
     if (!background->buffer()
@@ -541,7 +526,8 @@ void Compositor::composite(RenderLoop *renderLoop)
                 scanoutPossible &= checkForBlackBackground(scanoutCandidates.back());
             }
             if (scanoutPossible) {
-                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.front()->size()), output->modeSize()));
+                const auto geometry = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).translated(-output->geometryF().topLeft());
+                primaryLayer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->modeSize()).toRect());
                 directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
                 if (directScanout) {
                     // if present works, we don't want to touch the frame object again afterwards,
