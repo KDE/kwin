@@ -175,6 +175,13 @@ static QList<LayerShellV1Window *> windowsForOutput(Output *output)
             result.append(layerShellWindow);
         }
     }
+    std::sort(result.begin(), result.end(), [](LayerShellV1Window *a, LayerShellV1Window *b) {
+        if ((a->shellSurface()->anchor() & AnchorHorizontal) == AnchorHorizontal
+            && (b->shellSurface()->anchor() & AnchorHorizontal) != AnchorHorizontal) {
+            return true;
+        }
+        return a->internalId() < b->internalId();
+    });
     return result;
 }
 
