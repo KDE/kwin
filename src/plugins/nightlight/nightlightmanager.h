@@ -256,7 +256,6 @@ private:
 
     void updateTargetTemperature();
     void updateTransitionTimings(const QDateTime &dateTime);
-    DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
 
     void commitGammaRamps(int temperature);
 

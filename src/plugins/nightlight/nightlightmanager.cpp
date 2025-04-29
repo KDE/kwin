@@ -17,7 +17,7 @@
 #include "nightlightdbusinterface.h"
 #include "nightlightlogging.h"
 #include "nightlightsettings.h"
-#include "suncalc.h"
+#include "suntransit.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -441,6 +441,34 @@ void NightLightManager::updateTargetTemperature()
     Q_EMIT targetTemperatureChanged();
 }
 
+static DateTimes morningAtLocationAndTime(const QDateTime &dateTime, qreal latitude, qreal longitude)
+{
+    const SunTransit transit(dateTime, latitude, longitude);
+
+    QDateTime start = transit.dateTime(SunTransit::CivilDawn);
+    QDateTime end = transit.dateTime(SunTransit::Sunrise);
+    if (start.isNull() || end.isNull()) {
+        end = QDateTime(dateTime.date(), QTime(6, 0));
+        start = end.addMSecs(-DEFAULT_TRANSITION_DURATION);
+    }
+
+    return DateTimes(start, end);
+}
+
+static DateTimes eveningAtLocationAndTime(const QDateTime &dateTime, qreal latitude, qreal longitude)
+{
+    const SunTransit transit(dateTime, latitude, longitude);
+
+    QDateTime start = transit.dateTime(SunTransit::Sunset);
+    QDateTime end = transit.dateTime(SunTransit::CivilDusk);
+    if (start.isNull() || end.isNull()) {
+        start = QDateTime(dateTime.date(), QTime(18, 0));
+        end = start.addMSecs(DEFAULT_TRANSITION_DURATION);
+    }
+
+    return DateTimes(start, end);
+}
+
 void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
 {
     const auto oldPrev = m_prev;
@@ -484,14 +512,14 @@ void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
             longitude = m_longitudeFixed;
         }
 
-        const DateTimes morning = getSunTimings(dateTime, latitude, longitude, true);
+        const DateTimes morning = morningAtLocationAndTime(dateTime, latitude, longitude);
         if (dateTime.secsTo(morning.first) > granularity) {
             // have not reached the morning yet
             setDaylight(false);
-            m_prev = getSunTimings(dateTime.addDays(-1), latitude, longitude, false);
+            m_prev = eveningAtLocationAndTime(dateTime.addDays(-1), latitude, longitude);
             m_next = morning;
         } else {
-            const DateTimes evening = getSunTimings(dateTime, latitude, longitude, false);
+            const DateTimes evening = eveningAtLocationAndTime(dateTime, latitude, longitude);
             if (dateTime.secsTo(evening.first) > granularity) {
                 // have not reached the evening yet, it's daylight
                 setDaylight(true);
@@ -501,7 +529,7 @@ void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
                 // we are passed the evening, it's night time
                 setDaylight(false);
                 m_prev = evening;
-                m_next = getSunTimings(dateTime.addDays(1), latitude, longitude, true);
+                m_next = morningAtLocationAndTime(dateTime.addDays(1), latitude, longitude);
             }
         }
     }
@@ -512,31 +540,6 @@ void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
     if (oldNext != m_next) {
         Q_EMIT scheduledTransitionTimingsChanged();
     }
-}
-
-DateTimes NightLightManager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const
-{
-    DateTimes dateTimes = calculateSunTimings(dateTime, latitude, longitude, morning);
-    // At locations near the poles it is possible, that we can't
-    // calculate some or all sun timings (midnight sun).
-    // In this case try to fallback to sensible default values.
-    const bool beginDefined = !dateTimes.first.isNull();
-    const bool endDefined = !dateTimes.second.isNull();
-    if (!beginDefined || !endDefined) {
-        if (beginDefined) {
-            dateTimes.second = dateTimes.first.addMSecs(DEFAULT_TRANSITION_DURATION);
-        } else if (endDefined) {
-            dateTimes.first = dateTimes.second.addMSecs(-DEFAULT_TRANSITION_DURATION);
-        } else {
-            // Just use default values for morning and evening, but the user
-            // will probably deactivate Night Light anyway if he is living
-            // in a region without clear sun rise and set.
-            const QTime referenceTime = morning ? QTime(6, 0) : QTime(18, 0);
-            dateTimes.first = QDateTime(dateTime.date(), referenceTime);
-            dateTimes.second = dateTimes.first.addMSecs(DEFAULT_TRANSITION_DURATION);
-        }
-    }
-    return dateTimes;
 }
 
 bool NightLightManager::daylight() const

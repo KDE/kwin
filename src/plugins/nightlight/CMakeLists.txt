@@ -5,7 +5,7 @@ target_sources(nightlight PRIVATE
     nightlightdbusinterface.cpp
     nightlightmanager.cpp
     main.cpp
-    suncalc.cpp
+    suntransit.cpp
 )
 
 ecm_qt_declare_logging_category(nightlight
@@ -32,15 +32,15 @@ install(FILES org.kde.KWin.NightLight.xml DESTINATION ${KDE_INSTALL_DBUSINTERFAC
 
 if (BUILD_TESTING)
     include(ECMMarkAsTest)
-    add_executable(testSolarTransit)
-    target_sources(testSolarTransit PRIVATE
-        suncalc.cpp
-        suncalc_test.cpp
+    add_executable(testSunTransit)
+    target_sources(testSunTransit PRIVATE
+        suntransit.cpp
+        suntransit_test.cpp
     )
-    target_link_libraries(testSolarTransit
+    target_link_libraries(testSunTransit
         Qt::Core
         Qt::Test
     )
-    add_test(NAME kwin-testSolarTransit COMMAND testSolarTransit)
-    ecm_mark_as_test(testSolarTransit)
+    add_test(NAME kwin-testSunTransit COMMAND testSunTransit)
+    ecm_mark_as_test(testSunTransit)
 endif()
