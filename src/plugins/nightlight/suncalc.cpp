@@ -21,6 +21,13 @@ namespace KWin
 #define SUN_RISE_SET -0.833
 #define SUN_HIGH 2.0
 
+static QTime convertToLocalTime(const QDateTime &when, const QTime &utcTime)
+{
+    const QTimeZone timeZone = QTimeZone::systemTimeZone();
+    const int utcOffset = timeZone.offsetFromUtc(when);
+    return utcTime.addSecs(utcOffset);
+}
+
 QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning)
 {
     // calculations based on https://aa.quae.nl/en/reken/zonpositie.html
@@ -138,13 +145,15 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
     if (!std::isnan(begin)) {
         const double dayFraction = begin - int(begin);
         const QTime utcTime = QTime::fromMSecsSinceStartOfDay(dayFraction * MSC_DAY);
-        dateTimeBegin = QDateTime(dateTime.date(), utcTime, QTimeZone::utc()).toLocalTime();
+        const QTime localTime = convertToLocalTime(dateTime, utcTime);
+        dateTimeBegin = QDateTime(dateTime.date(), localTime);
     }
 
     if (!std::isnan(end)) {
         const double dayFraction = end - int(end);
         const QTime utcTime = QTime::fromMSecsSinceStartOfDay(dayFraction * MSC_DAY);
-        dateTimeEnd = QDateTime(dateTime.date(), utcTime, QTimeZone::utc()).toLocalTime();
+        const QTime localTime = convertToLocalTime(dateTime, utcTime);
+        dateTimeEnd = QDateTime(dateTime.date(), localTime);
     }
 
     return {dateTimeBegin, dateTimeEnd};
