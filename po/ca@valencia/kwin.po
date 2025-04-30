@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-29 00:42+0000\n"
-"PO-Revision-Date: 2025-04-28 09:26+0200\n"
+"PO-Revision-Date: 2025-04-29 09:06+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -3119,7 +3119,7 @@ msgstr "Classe de finestra (aplicació)"
 #: rulesettings.kcfg:27
 #, kde-format
 msgid "Window class string match type"
-msgstr "Tipus de coincidència de la cadena de classe de finestra"
+msgstr "Tipus de coincidència de la cadena classe de la finestra"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:33
@@ -3137,7 +3137,7 @@ msgstr "Funció de la finestra"
 #: rulesettings.kcfg:41
 #, kde-format
 msgid "Window role string match type"
-msgstr "Tipus de coincidència de la cadena de funció de finestra"
+msgstr "Tipus de coincidència de la cadena funció de la finestra"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:48
@@ -3149,7 +3149,7 @@ msgstr "Títol de la finestra"
 #: rulesettings.kcfg:51
 #, kde-format
 msgid "Window title string match type"
-msgstr "Tipus de coincidència de la cadena de títol de finestra"
+msgstr "Tipus de coincidència de la cadena títol de la finestra"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:58
@@ -3161,21 +3161,19 @@ msgstr "Màquina (nom de l'amfitrió)"
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr "Tipus de coincidència de cadena de la màquina"
+msgstr "Tipus de coincidència de la cadena màquina"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Gestor de finestres"
+msgstr "Etiqueta de finestra"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Tipus de coincidència de la cadena de títol de finestra"
+msgstr "Tipus de coincidència de la cadena etiqueta de la finestra"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
