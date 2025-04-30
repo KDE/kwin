@@ -25,7 +25,7 @@
             <default>Operations menu</default>
         </entry>
         <entry name="CommandInactiveTitlebar1" type="String">
-            <default>Activate, pass click and raise on release</default>
+            <default>Activate and raise</default>
         </entry>
         <entry name="CommandInactiveTitlebar2" type="String">
             <default>Nothing</default>

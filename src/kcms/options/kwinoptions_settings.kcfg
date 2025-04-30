@@ -201,9 +201,8 @@
     </entry>
 
     <entry key="CommandInactiveTitlebar1" type="Enum">
-        <default>ActivateRaiseOnReleaseAndPassClick</default>
+        <default>ActivateAndRaise</default>
         <choices>
-            <choice name="ActivateRaiseOnReleaseAndPassClick" value="Activate, pass click and raise on release"></choice>
             <choice name="ActivateAndRaise" value="Activate and raise"></choice>
             <choice name="ActivateAndLower" value="Activate and lower"></choice>
             <choice name="Activate"></choice>
@@ -253,8 +252,9 @@
     </entry>
 
     <entry key="CommandWindow1" type="Enum">
-      <default>ActivateRaisePassClick</default>
+      <default>ActivateRaiseOnReleaseAndPassClick</default>
       <choices>
+          <choice name="ActivateRaiseOnReleaseAndPassClick" value="Activate, pass click and raise on release"></choice>
           <choice name="ActivateRaisePassClick" value="Activate, raise and pass click"></choice>
           <choice name="ActivatePassClick" value="Activate and pass click"></choice>
           <choice name="Activate"></choice>
