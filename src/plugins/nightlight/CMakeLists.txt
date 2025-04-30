@@ -29,3 +29,18 @@ target_link_libraries(nightlight kwin KF6::ConfigGui KF6::GlobalAccel KF6::I18n)
 
 install(FILES nightlightsettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 install(FILES org.kde.KWin.NightLight.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
+
+if (BUILD_TESTING)
+    include(ECMMarkAsTest)
+    add_executable(testSolarTransit)
+    target_sources(testSolarTransit PRIVATE
+        suncalc.cpp
+        suncalc_test.cpp
+    )
+    target_link_libraries(testSolarTransit
+        Qt::Core
+        Qt::Test
+    )
+    add_test(NAME kwin-testSolarTransit COMMAND testSolarTransit)
+    ecm_mark_as_test(testSolarTransit)
+endif()
