@@ -13,6 +13,7 @@
         "Description[tr]": "Canlandırma hızını ve biçemini yapılandır",
         "Description[uk]": "Налаштування швидкості і стилю анімацій",
         "Description[x-test]": "xxConfigure animation speed and stylexx",
+        "Description[zh_TW]": "設定動畫速度與風格",
         "FormFactors": [
             "tablet",
             "handset",
@@ -30,7 +31,8 @@
         "Name[sl]": "Animacije",
         "Name[tr]": "Canlandırmalar",
         "Name[uk]": "Анімації",
-        "Name[x-test]": "xxAnimationsxx"
+        "Name[x-test]": "xxAnimationsxx",
+        "Name[zh_TW]": "動畫效果"
     },
     "X-KDE-Keywords": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect",
     "X-KDE-Keywords[ar]": "رسوم متحركة,سرعة الحركة,انتقالات,تأثيرات,فتح/إغلاق النافذة,فتح/إغلاق النافذة,تكبير النافذة,تصغير النافذة,نافذة ملء الشاشة,إلقاء نظرة خاطفة على سطح المكتب,إلقاء نظرة خاطفة على سطح المكتب,تبديل سطح المكتب الافتراضي,تأثير التلاشي,تأثير الانزلاق,تأثير التدرج,تأثير التمدد,تأثير المصباح السحري,تأثير الضغط,تأثير العين على الشاشة,تأثير فتحة النافذة,تأثير الانزلاق,تأثير النوافذ المنبثقة المتلاشية,تأثير النوافذ المنبثقة المنزلقة,تأثير تسجيل الدخول,تأثير تسجيل الخروج",
@@ -44,6 +46,7 @@
     "X-KDE-Keywords[tr]": "canlandırmalar,canlandırma hızı,geçişler,efektler,pencere aç,pencere kapat,pencere ekranı kapla,pencere küçült,pencere tam ekran,masaüstüne bak,sanal masaüstü geçişi,solma ekfekti,süzülme efekti,ölçekleme efekti,germe efekti,sihirli lamba efekti,tıkıştırma efekti,göz ekranda efekti,pencere açıklığı efekti,kayma efekti,solan açılır pencereler efekti,kayan açılır pencereler efekti,oturum açma efekti,oturumu kapatma efekti",
     "X-KDE-Keywords[uk]": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect,анімація,швидкість анімації,переходи,ефекти,відкриття закриття вікон,відкрити/закрити вікно,максимізувати вікно,розгорнути вікно,повноекранне вікно,верх стільниці,перемикання віртуальних стільниць,ефект згасання,ефект ковзання,ефект масштабування,ефект розтягування,ефект магічної лампи,ефект чарівної лампи,ефект вибуху,ефект ока на екрані,ефект апертури вікна,ефект затвору вікна,ефект руху,ефект розчинення контекстних вікон,ефект виковзування контекстних вікон, ефект входу, ефект виходу",
     "X-KDE-Keywords[x-test]": "xxanimationsxx,xxanimation speedxx,xxtransitionsxx,xxeffectsxx,xxwindow open closexx,xxwindow open/closexx,xxwindow maximizexx,xxwindow minimizexx,xxwindow full screenxx,xxpeek at desktopxx,xxpeek desktopxx,xxvirtual desktop switchingxx,xxfade effectxx,xxglide effectxx,xxscale effectxx,xxstretch effectxx,xxmagic lamp effectxx,xxsquash effectxx,xxeye on screen effectxx,xxwindow aperture effectxx,xxslide effectxx,xxfading popups effectxx,xxsliding popups effectxx,xxlogin effectxx,xxlogout effectxx",
+    "X-KDE-Keywords[zh_TW]": "桌面動畫,動畫速度,轉場,視窗開啟關閉,視窗開啟/關閉,視窗最大化,視窗最小化,視窗全螢幕,看一下桌面,虛擬桌面切換,淡化效果,滑動效果,滑行效果,縮放效果,拉伸效果,魔術燈效果,擠壓效果,螢幕眼睛效果,視窗光圈效果,淡化彈出視窗效果,滑動彈出視窗效果,登入效果,登出效果",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

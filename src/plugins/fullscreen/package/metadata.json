@@ -66,6 +66,7 @@
         "Description[tr]": "Tam ekran kipine giren veya çıkan pencereleri ger",
         "Description[uk]": "Розтягування вікон під час входу до повноекранного режиму і виходу з нього",
         "Description[x-test]": "xxStretch windows going to and leaving full screen modexx",
+        "Description[zh_TW]": "拉伸正在進入或離開全螢幕的視窗",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fullscreen",
         "Id": "fullscreen",
@@ -81,7 +82,8 @@
         "Name[sl]": "Raztegni",
         "Name[tr]": "Ger",
         "Name[uk]": "Розтягнути",
-        "Name[x-test]": "xxStretchxx"
+        "Name[x-test]": "xxStretchxx",
+        "Name[zh_TW]": "拉伸"
     },
     "X-KDE-Ordering": 60,
     "X-KWin-Exclusive-Category": "fullscreen",

@@ -66,6 +66,7 @@
         "Description[tr]": "Pencereler gösterilirken veya gizlenirken solarak geçiş yapmalarını sağla",
         "Description[uk]": "Затемнення або освітлення при появі або зникненні вікон",
         "Description[x-test]": "xxMake windows fade in and out when they are shown or hiddenxx",
+        "Description[zh_TW]": "讓視窗在顯示或隱藏的時候淡入或淡出",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fade",
         "Id": "fade",

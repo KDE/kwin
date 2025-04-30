@@ -13,6 +13,7 @@
         "Description[tr]": "Sanal masaüstleri arasında kayarak geçiş yap",
         "Description[uk]": "Ковзання під час перемикання між віртуальними стільницями",
         "Description[x-test]": "xxSlide between virtual desktops when switchingxx",
+        "Description[zh_TW]": "用滑動方式切換虛擬桌面",
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "Slide",

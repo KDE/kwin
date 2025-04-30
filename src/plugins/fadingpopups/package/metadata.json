@@ -67,6 +67,7 @@
         "Description[tr]": "Açılır pencereleri soldur ve belirginleştir",
         "Description[uk]": "Розчинення та поява контекстних вікон",
         "Description[x-test]": "xxFade popups in and outxx",
+        "Description[zh_TW]": "讓彈出視窗淡入淡出",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fadingpopups",
         "Id": "fadingpopups",
@@ -82,7 +83,8 @@
         "Name[sl]": "Bledenje pojavnih oken",
         "Name[tr]": "Solan açılır pencereler",
         "Name[uk]": "Згасання контекстних панелей",
-        "Name[x-test]": "xxFading popupsxx"
+        "Name[x-test]": "xxFading popupsxx",
+        "Name[zh_TW]": "淡化彈出視窗"
     },
     "X-KDE-Ordering": 60,
     "X-Plasma-API": "javascript"
