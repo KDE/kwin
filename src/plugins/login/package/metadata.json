@@ -56,6 +56,7 @@
         "Category": "Appearance",
         "Description": "Fade to the desktop when logging in",
         "Description[ar]": "التلاشي إلى سطح المكتب عند الولوج",
+        "Description[bg]": "Плавен преход към работния плот при влизане",
         "Description[ca@valencia]": "Esvaïment a l'escriptori en connectar-se",
         "Description[ca]": "Esvaïment a l'escriptori en connectar-se",
         "Description[es]": "Desvanecer al mostrar el escritorio al iniciar sesión",

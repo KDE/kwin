@@ -57,6 +57,7 @@
         "Category": "Window Open/Close Animation",
         "Description": "Make windows scale in and out when they are shown or hidden",
         "Description[ar]": "اجعل النوافذ تكبر وتصغر عند إظهاراها وإخفائها",
+        "Description[bg]": "Мащабиране на прозорците при показване или скриване",
         "Description[ca@valencia]": "Fa que les finestres s'engrandisquen o empetitisquen quan es mostren o s'oculten",
         "Description[ca]": "Fa que les finestres s'engrandeixin o empetiteixin quan es mostren o s'oculten",
         "Description[es]": "Hacer que las ventanas se escalen al mostrarlas y al ocultarlas",

@@ -56,6 +56,7 @@
         "Category": "Window Open/Close Animation",
         "Description": "Make windows fade in and out when they are shown or hidden",
         "Description[ar]": "اجعل النوافذ تظهر وتتلاشى عند إظهاراها وإخفائها",
+        "Description[bg]": "Избледняване при показване и скриване на прозорците",
         "Description[ca@valencia]": "Fa que les finestres s'encengen o s'apaguen quan es mostren o s'oculten",
         "Description[ca]": "Fa que les finestres s'encenguin o s'apaguin quan es mostren o s'oculten",
         "Description[es]": "Hacer que las ventanas se desvanezcan y reaparezcan al mostrarlas y al ocultarlas",
