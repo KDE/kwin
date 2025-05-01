@@ -164,17 +164,19 @@ set_package_properties(Plasma PROPERTIES
 
 find_package(KDecoration3 ${PROJECT_DEP_VERSION} CONFIG REQUIRED)
 
-find_package(Breeze ${PROJECT_DEP_VERSION} CONFIG)
-set_package_properties(Breeze PROPERTIES
-    TYPE RUNTIME
-    PURPOSE "For setting the default window decoration plugin"
-)
+if (KWIN_BUILD_DECORATIONS)
+    find_package(Breeze ${PROJECT_DEP_VERSION} CONFIG)
+    set_package_properties(Breeze PROPERTIES
+        TYPE RUNTIME
+        PURPOSE "For setting the default window decoration plugin"
+    )
 
-find_package(Aurorae ${PROJECT_DEP_VERSION} CONFIG)
-set_package_properties(Aurorae PROPERTIES
-    TYPE RUNTIME
-    PURPOSE "Provides support for decorations downloaded from the internet"
-)
+    find_package(Aurorae ${PROJECT_DEP_VERSION} CONFIG)
+    set_package_properties(Aurorae PROPERTIES
+        TYPE RUNTIME
+        PURPOSE "Provides support for decorations downloaded from the internet"
+    )
+endif()
 
 find_package(EGL)
 set_package_properties(EGL PROPERTIES
