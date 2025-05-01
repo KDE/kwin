@@ -15,20 +15,23 @@
 namespace KWin
 {
 
-/**
- * @brief Qml export for providing a wrapper for sending a message over the DBus
+/*!
+ * \qmltype DBusCall
+ * \inqmlmodule org.kde.kwin
+ *
+ * \brief Qml export for providing a wrapper for sending a message over the DBus
  * session bus.
  *
  * Allows to setup the connection arguments just like in QDBusMessage and supports
- * adding arguments to the call. To invoke the message use the slot @ref call.
+ * adding arguments to the call. To invoke the message use the slot call().
  *
- * If the call succeeds the signal @ref finished is emitted, if the call fails
- * the signal @ref failed is emitted.
+ * If the call succeeds the signal finished() is emitted, if the call fails
+ * the signal failed() is emitted.
  *
  * Note: the DBusCall always uses the session bus and performs an async call.
  *
  * Example on how to use in Qml:
- * @code
+ * \code
  * DBusCall {
  *     id: dbus
  *     service: "org.kde.KWin"
@@ -36,10 +39,10 @@ namespace KWin
  *     method: "nextDesktop"
  *     Component.onCompleted: dbus.call()
  * }
- * @endcode
+ * \endcode
  *
  * Example with arguments:
- * @code
+ * \code
  * DBusCall {
  *     id: dbus
  *     service: "org.kde.KWin"
@@ -48,10 +51,10 @@ namespace KWin
  *     arguments: [1]
  *     Component.onCompleted: dbus.call()
  * }
- * @endcode
+ * \endcode
  *
  * Example with a callback:
- * @code
+ * \code
  * DBusCall {
  *      id: dbus
  *      service: "org.kde.KWin"
@@ -59,15 +62,49 @@ namespace KWin
  *      method: "currentDesktop"
  *      onFinished: console.log(returnValue[0])
  *  }
- * @endcode
+ * \endcode
  */
 class DBusCall : public QObject
 {
     Q_OBJECT
+
+    /*!
+     * \qmlproperty string DBusCall::service
+     *
+     * This property specifies the dbus service name of the remote object. (service, path, dbusInterface, method)
+     * tuplet forms the destination address.
+     */
     Q_PROPERTY(QString service READ service WRITE setService NOTIFY serviceChanged)
+
+    /*!
+     * \qmlproperty string DBusCall::path
+     *
+     * This property specifies the dbus object path. (service, path, dbusInterface, method) tuplet
+     * forms the destination address.
+     */
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
+
+    /*!
+     * \qmlproperty string DBusCall::dbusInterface
+     *
+     * This property specifies the dbus interface. (service, path, dbusInterface, method) tuplet forms
+     * the destination address.
+     */
     Q_PROPERTY(QString dbusInterface READ interface WRITE setInterface NOTIFY interfaceChanged)
+
+    /*!
+     * \qmlproperty string DBusCall::method
+     *
+     * This property specifies the name of the method. (service, path, dbusInterface, method) tuplet
+     * forms the destination address.
+     */
     Q_PROPERTY(QString method READ method WRITE setMethod NOTIFY methodChanged)
+
+    /*!
+     * \qmlproperty string DBusCall::arguments
+     *
+     * This property specifies the arguments that will be passed to the request.
+     */
     Q_PROPERTY(QVariantList arguments READ arguments WRITE setArguments NOTIFY argumentsChanged)
 public:
     explicit DBusCall(QObject *parent = nullptr);
@@ -80,6 +117,12 @@ public:
     const QVariantList &arguments() const;
 
 public Q_SLOTS:
+    /*!
+     * Calls the specified method asynchronously. If the method call succeeds, the finished() signal
+     * will be emitted. If the method call fails, the failed() signal will be emitted.
+     *
+     * \sa finished(), failed()
+     */
     void call();
 
     void setService(const QString &service);
@@ -89,7 +132,15 @@ public Q_SLOTS:
     void setArguments(const QVariantList &arguments);
 
 Q_SIGNALS:
+    /*!
+     * This signal is emitted if a dbus method call finishes successfully. The \a returnValue
+     * specifies an optional return value.
+     */
     void finished(QVariantList returnValue);
+
+    /*!
+     * This signal is emitted if a dbus method call fails.
+     */
     void failed();
 
     void serviceChanged();

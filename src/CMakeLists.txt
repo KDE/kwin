@@ -627,3 +627,5 @@ install(FILES
     scene/workspacescene.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel
 )
+
+ecm_generate_qdoc(kwin kwin.qdocconf)

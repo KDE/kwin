@@ -18,12 +18,15 @@ class KConfigPropertyMap;
 namespace KWin
 {
 
-/**
- * The SceneEffect type provides a way to implement effects that replace the default scene with
+/*!
+ * \qmltype SceneEffect
+ * \inqmlmodule org.kde.kwin
+ *
+ * \brief The SceneEffect type provides a way to implement effects that replace the default scene with
  * a custom one.
  *
  * Example usage:
- * @code
+ * \code
  * SceneEffect {
  *     id: root
  *
@@ -38,22 +41,30 @@ namespace KWin
  *         onActivated: root.visible = !root.visible;
  *     }
  * }
- * @endcode
+ * \endcode
  */
 class ScriptedQuickSceneEffect : public QuickSceneEffect
 {
     Q_OBJECT
+    /*!
+     * \qmlproperty list<QtObject> SceneEffect::data
+     * \qmldefault
+     */
     Q_PROPERTY(QQmlListProperty<QObject> data READ data)
     Q_CLASSINFO("DefaultProperty", "data")
 
-    /**
+    /*!
+     * \qmlproperty KConfigPropertyMap SceneEffect::configuration
+     *
      * The key-value store with the effect settings.
      */
     Q_PROPERTY(KConfigPropertyMap *configuration READ configuration NOTIFY configurationChanged)
 
-    /**
-     * Whether the effect is shown. Setting this property to @c true activates the effect; setting
-     * this property to @c false will deactivate the effect and the screen views will be unloaded at
+    /*!
+     * \qmlproperty bool SceneEffect::visible
+     *
+     * Whether the effect is shown. Setting this property to \c true activates the effect; setting
+     * this property to \c false will deactivate the effect and the screen views will be unloaded at
      * the next available time.
      */
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)

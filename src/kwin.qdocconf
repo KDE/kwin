@@ -1,0 +1,8 @@
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = kwin
+
+sourcedirs += .
+headerdirs += .
+
+documentationinheaders = true
