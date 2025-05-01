@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-29 00:42+0000\n"
-"PO-Revision-Date: 2025-04-19 12:32+0200\n"
+"POT-Creation-Date: 2025-05-01 00:43+0000\n"
+"PO-Revision-Date: 2025-04-30 08:17+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -73,7 +73,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor.cpp:457
+#: compositor.cpp:442
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -761,7 +761,7 @@ msgstr "Нагоре"
 #: debug_console.cpp:544
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr "Бутон за таблетен инструмент"
+msgstr "Инструмент за таблет Бутон"
 
 #: debug_console.cpp:545 debug_console.cpp:559
 #, kde-format
@@ -787,7 +787,7 @@ msgstr "Бутон за таблетна подложка"
 #: debug_console.cpp:571
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr "Лента за таблетна подложка"
+msgstr "Лента за таблет"
 
 #: debug_console.cpp:572 debug_console.cpp:586 debug_console.cpp:600
 #, kde-format
@@ -802,18 +802,15 @@ msgstr "isFinger"
 #: debug_console.cpp:585
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr "Рамка на таблетна подложка"
+msgstr "Рамка на таблет"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Рамка на таблетна подложка"
+msgstr "Циферблат на таблет"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Делта"
 
@@ -2871,32 +2868,32 @@ msgstr "По-малко"
 msgid "More"
 msgstr "Повече"
 
-#: plugins/zoom/zoom.cpp:60
+#: plugins/zoom/zoom.cpp:75
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Преместване на увеличената област наляво"
 
-#: plugins/zoom/zoom.cpp:67
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Преместване на увеличената област надясно"
 
-#: plugins/zoom/zoom.cpp:74
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Преместване на увеличената област нагоре"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Преместване на намалената зона надолу"
 
-#: plugins/zoom/zoom.cpp:89 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:195
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Преместване на мишката във фокуса"
 
-#: plugins/zoom/zoom.cpp:96 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:111 plugins/zoom/zoom_config.cpp:202
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Преместване на мишката в центъра"
@@ -3146,17 +3143,15 @@ msgstr "Тип съвпадение на машинен низ"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Мениджър на прозорци"
+msgstr "Етикет на прозорец"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Тип на съвпадението на заглавието на прозореца"
+msgstr "Тип на съвпадение на низ от етикети на прозорци"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -4295,28 +4290,28 @@ msgstr "Превключване един работен плот надолу"
 msgid "Switch to Desktop %1"
 msgstr "Превключване към работен плот %1"
 
-#: wayland/outputmanagement_v2.cpp:444
+#: wayland/outputmanagement_v2.cpp:471
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Един от съответстващите изходи вече не е наличен"
 
-#: wayland/outputmanagement_v2.cpp:462
+#: wayland/outputmanagement_v2.cpp:489
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Деактивирането на всички изходи чрез промени в конфигурацията не е разрешено"
 
-#: wayland/outputmanagement_v2.cpp:472
+#: wayland/outputmanagement_v2.cpp:499
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "Предоставеният изходен ред не съдържа всички изходи"
 
-#: wayland/outputmanagement_v2.cpp:490
+#: wayland/outputmanagement_v2.cpp:517
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "Предоставеният изходен ред е невалиден"
 
-#: wayland/outputmanagement_v2.cpp:508
+#: wayland/outputmanagement_v2.cpp:535
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Драйверът отхвърли изходната конфигурация"
@@ -4327,7 +4322,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не отговаря)"
 
-#: workspace.cpp:1615
+#: workspace.cpp:1618
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

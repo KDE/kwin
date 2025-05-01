@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-29 00:42+0000\n"
-"PO-Revision-Date: 2025-04-28 10:27+0300\n"
+"POT-Creation-Date: 2025-05-01 00:43+0000\n"
+"PO-Revision-Date: 2025-04-30 17:34+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -79,7 +79,7 @@ msgstr "Girdiyi yakalamak için sağ kontrol düğmesine bas"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Bileşikleştiricisi"
 
-#: compositor.cpp:457
+#: compositor.cpp:442
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Grafik sıfırlaması nedeniyle masaüstü efektleri yeniden başlatıldı"
@@ -2870,32 +2870,32 @@ msgstr "Daha Az"
 msgid "More"
 msgstr "Daha Çok"
 
-#: plugins/zoom/zoom.cpp:60
+#: plugins/zoom/zoom.cpp:75
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Yakınlaştırılan Alanı Sola Taşı"
 
-#: plugins/zoom/zoom.cpp:67
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Yakınlaştırılan Alanı Sağa Taşı"
 
-#: plugins/zoom/zoom.cpp:74
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Yakınlaştırılan Alanı Yukarı Taşı"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Yakınlaştırılan Alanı Aşağı Taşı"
 
-#: plugins/zoom/zoom.cpp:89 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:195
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Odaklamak için Fareyi Taşı"
 
-#: plugins/zoom/zoom.cpp:96 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:111 plugins/zoom/zoom_config.cpp:202
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Fareyi Merkeze Taşı"
@@ -3142,17 +3142,15 @@ msgstr "Makine dizisi eşleşme türü"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Pencere Yöneticisi"
+msgstr "Pencere künyesi"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Pencere başlık dizisi eşleşmesi türü"
+msgstr "Pencere künyesi dizisi eşleşme türü"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -4288,29 +4286,29 @@ msgstr "Bir Alt Masaüstüne Geç"
 msgid "Switch to Desktop %1"
 msgstr "%1. Masaüstüne Geç"
 
-#: wayland/outputmanagement_v2.cpp:444
+#: wayland/outputmanagement_v2.cpp:471
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "İlgili çıktılardan biri artık kullanılabilir değil"
 
-#: wayland/outputmanagement_v2.cpp:462
+#: wayland/outputmanagement_v2.cpp:489
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Tüm çıktıları yapılandırma değişiklikleriyle devre dışı bırakmaya izin "
 "verilmiyor"
 
-#: wayland/outputmanagement_v2.cpp:472
+#: wayland/outputmanagement_v2.cpp:499
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "Sağlanan çıktı sıralaması tüm çıktıları içermiyor"
 
-#: wayland/outputmanagement_v2.cpp:490
+#: wayland/outputmanagement_v2.cpp:517
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "Sağlanan çıktı sıralaması geçersiz"
 
-#: wayland/outputmanagement_v2.cpp:508
+#: wayland/outputmanagement_v2.cpp:535
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Sürücü çıktı yapılandırmasını reddetti"
@@ -4321,7 +4319,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1615
+#: workspace.cpp:1618
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

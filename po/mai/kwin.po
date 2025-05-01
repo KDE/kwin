@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-29 00:42+0000\n"
+"POT-Creation-Date: 2025-05-01 00:43+0000\n"
 "PO-Revision-Date: 2010-09-24 21:47+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -76,7 +76,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:457
+#: compositor.cpp:442
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -2923,35 +2923,35 @@ msgstr "कम"
 msgid "More"
 msgstr "बेसी"
 
-#: plugins/zoom/zoom.cpp:60
+#: plugins/zoom/zoom.cpp:75
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "विंडो एकटा डेस्कटाप बम्माँ पर"
 
-#: plugins/zoom/zoom.cpp:67
+#: plugins/zoom/zoom.cpp:82
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "विंडो एकटा डेस्कटाप दहिन्ना पर"
 
-#: plugins/zoom/zoom.cpp:74
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:89 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:195
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "माउस एमुलेशन"
 
-#: plugins/zoom/zoom.cpp:96 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:111 plugins/zoom/zoom_config.cpp:202
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Mouse to Center"
@@ -4434,27 +4434,27 @@ msgstr "एकटा डेस्कटाप नीच्चाँ स्वि
 msgid "Switch to Desktop %1"
 msgstr "डेस्कटाप 1 पर स्विच करू"
 
-#: wayland/outputmanagement_v2.cpp:444
+#: wayland/outputmanagement_v2.cpp:471
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:462
+#: wayland/outputmanagement_v2.cpp:489
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:472
+#: wayland/outputmanagement_v2.cpp:499
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:490
+#: wayland/outputmanagement_v2.cpp:517
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:508
+#: wayland/outputmanagement_v2.cpp:535
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
@@ -4465,7 +4465,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1615
+#: workspace.cpp:1618
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
