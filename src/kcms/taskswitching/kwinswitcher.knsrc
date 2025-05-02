@@ -1,0 +1,9 @@
+[KNewStuff3]
+Name=Task Switcher Styles
+
+ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
+ContentWarning=Executables
+Categories=Kwin Switching Layouts Plasma 6
+StandardResource=tmp
+Uncompress=kpackage
+KPackageStructure=KWin/WindowSwitcher
