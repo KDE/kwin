@@ -14,5 +14,5 @@ add_subdirectory(virtualkeyboard)
 add_subdirectory(xwayland)
 
 if (KWIN_BUILD_TABBOX)
-    add_subdirectory(tabbox)
+    add_subdirectory(taskswitching)
 endif()

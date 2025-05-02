@@ -1,0 +1,118 @@
+/*
+    SPDX-FileCopyrightText: 2025 Oliver Beard <olib141@outlook.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
+
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as QQC2
+
+import org.kde.kirigami as Kirigami
+import org.kde.kcmutils as KCM
+
+import org.kde.kwin.kcmtaskswitching
+
+KCM.AbstractKCM {
+    id: root
+
+    topPadding: 0
+    leftPadding: 0
+    rightPadding: 0
+    bottomPadding: 0
+
+    ColumnLayout {
+        anchors.fill: parent
+
+        spacing: 0
+
+        Kirigami.NavigationTabBar {
+            Layout.fillWidth: true
+
+            actions: [
+                // TODO: Need custom symbolic icons for each of these, like in
+                //       Accessibility & Power Managment KCMs
+                Kirigami.Action {
+                    text: i18nc("@title:tab", "Task Switcher")
+                    icon.name: "preferences-system-tabbox-symbolic"
+                    checked: stackLayout.currentIndex === 0
+                    onTriggered: stackLayout.currentIndex = 0
+                },
+                Kirigami.Action {
+                    text: i18nc("@title:tab", "Task Switcher (Alternative)")
+                    icon.name: "preferences-system-tabbox-symbolic"
+                    checked: stackLayout.currentIndex === 1
+                    onTriggered: stackLayout.currentIndex = 1
+                },
+                Kirigami.Action {
+                    text: i18nc("@title:tab", "Overview")
+                    icon.name: "preferences-system-windows-effect-overview-symbolic"
+                    checked: stackLayout.currentIndex === 2
+                    onTriggered: stackLayout.currentIndex = 2
+                }
+            ]
+        }
+
+        Kirigami.InlineMessage {
+            Layout.fillWidth: true
+
+            position: Kirigami.InlineMessage.Position.Header
+            type: Kirigami.MessageType.Information
+            visible: kcm.tabBoxLimitedByFocusPolicy && stackLayout.currentIndex !== 2
+            text: i18nc("@info", "Focus policy settings limit the functionality of navigating through windows.")
+        }
+
+        QQC2.ScrollView {
+            id: scrollView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Item {
+                width: scrollView.availableWidth
+                height: Math.max(implicitHeight, scrollView.availableHeight)
+                implicitHeight: (stackLayout.children[stackLayout.currentIndex]?.implicitHeight ?? 0) + Kirigami.Units.gridUnit * 2
+
+                StackLayout {
+                    id: stackLayout
+                    anchors.fill: parent
+                    anchors.margins: Kirigami.Units.gridUnit
+
+                    currentIndex: 0
+
+                    // "Task Switcher"
+                    TabBoxSettings {
+                        enabled: !kcm.tabBoxLimitedByFocusPolicy
+                        isAlternative: false
+                    }
+
+                    // "Task Switcher (Alternative)"
+                    ColumnLayout {
+                        enabled: !kcm.tabBoxLimitedByFocusPolicy
+                        spacing: Kirigami.Units.largeSpacing
+
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            Layout.maximumWidth: Kirigami.Units.gridUnit * 24
+                            Layout.alignment: Qt.AlignHCenter
+
+                            horizontalAlignment: Text.AlignHCenter
+                            textFormat: Text.PlainText
+                            wrapMode: Text.Wrap
+
+                            text: i18nc("@info", "The alternative task switcher is a second switcher with its own separate shortcut, appearance, and behavior settings.")
+                        }
+
+                        TabBoxSettings {
+                            Layout.fillWidth: true
+
+                            isAlternative: true
+                        }
+                    }
+
+                    // "Overview"
+                    OverviewSettings {}
+                }
+            }
+        }
+    }
+}
