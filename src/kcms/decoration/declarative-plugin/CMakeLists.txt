@@ -21,6 +21,7 @@ target_link_libraries(kdecorationprivatedeclarative PRIVATE
     KF6::KCMUtils
     KF6::I18n
     KF6::Service
+    KF6::ColorScheme
 )
 
 ecm_finalize_qml_module(kdecorationprivatedeclarative)
