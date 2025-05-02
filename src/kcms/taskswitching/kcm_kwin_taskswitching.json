@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwin_taskswitching",
+        "Description": "Navigation Through Windows",
+        "Icon": "preferences-system-tabbox",
+        "Name": "Task Switching"
+    },
+    "X-KDE-Keywords": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher",
+    "X-KDE-OnlyShowOnQtPlatforms": [
+        "wayland"
+    ],
+    "X-KDE-System-Settings-Parent-Category": "windowmanagement",
+    "X-KDE-Weight": 20
+}

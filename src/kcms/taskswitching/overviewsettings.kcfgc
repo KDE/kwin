@@ -1,0 +1,7 @@
+File=overviewsettings.kcfg
+NameSpace=KWin
+ClassName=OverviewSettings
+Mutators=true
+DefaultValueGetters=true
+GenerateProperties=true
+ParentInConstructor=true
