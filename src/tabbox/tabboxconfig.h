@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <QObject>
 #include <QString>
 
 /**
@@ -38,6 +39,8 @@ class TabBoxConfigPrivate;
  */
 class TabBoxConfig
 {
+    Q_GADGET // for Q_ENUM for Task Switching KCM
+
 public:
     /**
      * ClientDesktopMode defines whether windows from the current desktop or from all
@@ -48,6 +51,7 @@ public:
         OnlyCurrentDesktopClients, ///< Only Windows on current desktop are included
         ExcludeCurrentDesktopClients ///< Exclude Windows on current desktop
     };
+    Q_ENUM(ClientDesktopMode)
     /**
      * ClientActivitiesMode defines whether windows from the current activity or from all
      * activities are included in the Window List in the ClientModel
@@ -57,6 +61,7 @@ public:
         OnlyCurrentActivityClients, ///< Only Windows on current activity are included
         ExcludeCurrentActivityClients ///< Exclude Windows on current activity
     };
+    Q_ENUM(ClientActivitiesMode)
     /**
      * ClientApplicationsMode defines which windows from the current application or from all
      * applications are included in the Window List in the ClientModel
@@ -66,6 +71,7 @@ public:
         OneWindowPerApplication, ///< Only one Window for each application is included
         AllWindowsCurrentApplication ///< Only Windows for the current application are included
     };
+    Q_ENUM(ClientApplicationsMode)
     /**
      * ClientMinimizedMode defines which windows are included in the Window List
      * in the ClientModel based on whether they are minimized or not
@@ -75,6 +81,7 @@ public:
         ExcludeMinimizedClients, ///< Exclude minimized Windows
         OnlyMinimizedClients ///< Only minimized Windows are included
     };
+    Q_ENUM(ClientMinimizedMode)
     /**
      * ShowDesktopMode defines whether a Window representing the desktop
      * is included in the Window List in the ClientModel
@@ -83,6 +90,7 @@ public:
         DoNotShowDesktopClient, ///< A Window representing the desktop is not included
         ShowDesktopClient ///< A Window representing the desktop is included
     };
+    Q_ENUM(ShowDesktopMode)
     /**
      * OrderMinimizedMode defines whether the Windows considered part of the
      * Window List should be grouped by the minimisation status
@@ -91,6 +99,7 @@ public:
         NoGroupByMinimized, ///< Windows are not grouped by whether they are minimized
         GroupByMinimized ///< Windows are grouped by whether they are minimized or not
     };
+    Q_ENUM(OrderMinimizedMode)
     /**
      * ClientActivitiesMode defines whether windows from the current activity or from all
      * activities are included in the Window List in the ClientModel
@@ -100,6 +109,7 @@ public:
         OnlyCurrentScreenClients, ///< Only Windows on current screen are included
         ExcludeCurrentScreenClients ///< Exclude Windows from the current screen
     };
+    Q_ENUM(ClientMultiScreenMode)
     /**
      * ClientSwitchingMode defines the sorting of the Windows in the
      * ClientModel.
@@ -108,6 +118,7 @@ public:
         FocusChainSwitching, ///< Sort by recently used. Most recently used Window is the first
         StackingOrderSwitching ///< Sort by current stacking order
     };
+    Q_ENUM(ClientSwitchingMode);
     TabBoxConfig();
     ~TabBoxConfig();
     TabBoxConfig &operator=(const TabBoxConfig &object);
