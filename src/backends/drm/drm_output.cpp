@@ -128,6 +128,11 @@ bool DrmOutput::shouldDisableCursorPlane() const
 
 bool DrmOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
+    if (!m_pipeline) {
+        // this can happen when the output gets hot-unplugged
+        // FIXME fix output lifetimes so that this doesn't happen anymore...
+        return false;
+    }
     if (m_pipeline->gpu()->atomicModeSetting() && shouldDisableCursorPlane() && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
         return false;
     }
