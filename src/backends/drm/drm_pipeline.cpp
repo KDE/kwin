@@ -25,6 +25,8 @@
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_plane.h"
+#include "utils/envvar.h"
+#include "utils/kernel.h"
 
 #include <drm_fourcc.h>
 #include <gbm.h>
@@ -432,7 +434,7 @@ bool DrmPipeline::updateCursor(std::optional<std::chrono::nanoseconds> allowedVr
 
 bool DrmPipeline::amdgpuVrrWorkaroundActive() const
 {
-    static const bool s_env = qEnvironmentVariableIntValue("KWIN_DRM_DONT_FORCE_AMD_SW_CURSOR") == 1;
+    static const bool s_env = environmentVariableBoolValue("KWIN_DRM_DONT_FORCE_AMD_SW_CURSOR").value_or(linuxKernelVersion() >= Version(6, 11));
     return !s_env && gpu()->isAmdgpu() && (m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
 }
 
