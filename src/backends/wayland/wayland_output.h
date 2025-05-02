@@ -42,6 +42,7 @@ class OutputFrame;
 namespace Wayland
 {
 class WaylandBackend;
+class ColorSurfaceFeedback;
 
 class WaylandCursor
 {
@@ -100,6 +101,7 @@ private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
     void applyConfigure(const QSize &size, quint32 serial);
+    void updateColor();
 
     static const wp_fractional_scale_v1_listener s_fractionalScaleListener;
     static void handleFractionalScaleChanged(void *data, struct wp_fractional_scale_v1 *wp_fractional_scale_v1, uint32_t scale120);
@@ -122,6 +124,7 @@ private:
     wp_presentation_feedback *m_presentationFeedback = nullptr;
     wp_tearing_control_v1 *m_tearingControl = nullptr;
     wp_color_management_surface_v1 *m_colorSurface = nullptr;
+    std::unique_ptr<ColorSurfaceFeedback> m_colorSurfaceFeedback;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
     wp_viewport *m_viewport = nullptr;
     uint32_t m_refreshRate = 60'000;

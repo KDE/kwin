@@ -138,14 +138,14 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         m_tearingControl = wp_tearing_control_manager_v1_get_tearing_control(manager, *m_surface);
     }
     if (auto manager = backend->display()->colorManager()) {
-        const bool supportsHDR = manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_PARAMETRIC)
+        const bool supportsMinFeatures = manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_PARAMETRIC)
+            && manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_PRIMARIES)
             && manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_LUMINANCES)
-            && manager->supportsPrimaries(WP_COLOR_MANAGER_V1_PRIMARIES_BT2020)
             && manager->supportsTransferFunction(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22);
-        if (supportsHDR) {
-            caps |= Capability::HighDynamicRange;
-            caps |= Capability::WideColorGamut;
+        if (supportsMinFeatures) {
             m_colorSurface = wp_color_manager_v1_get_surface(manager->object(), *m_surface);
+            m_colorSurfaceFeedback = std::make_unique<ColorSurfaceFeedback>(wp_color_manager_v1_get_surface_feedback(manager->object(), *m_surface));
+            connect(m_colorSurfaceFeedback.get(), &ColorSurfaceFeedback::preferredColorChanged, this, &WaylandOutput::updateColor);
         }
     }
     if (auto manager = backend->display()->fractionalScale()) {
@@ -207,6 +207,28 @@ WaylandOutput::~WaylandOutput()
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
     m_surface.reset();
+}
+
+void WaylandOutput::updateColor()
+{
+    const auto &preferred = m_colorSurfaceFeedback->preferredColor();
+    const auto tf = TransferFunction(TransferFunction::gamma22, preferred.transferFunction().minLuminance, preferred.transferFunction().maxLuminance);
+    State next = m_state;
+    next.colorDescription = ColorDescription{
+        preferred.containerColorimetry(),
+        tf,
+        preferred.referenceLuminance(),
+        preferred.minLuminance(),
+        preferred.maxAverageLuminance(),
+        preferred.maxHdrLuminance(),
+    };
+    next.originalColorDescription = next.colorDescription;
+    setState(next);
+    if (m_colorSurface) {
+        const auto imageDescription = m_backend->display()->colorManager()->createImageDescription(next.colorDescription);
+        wp_color_management_surface_v1_set_image_description(m_colorSurface, imageDescription, WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
+        wp_image_description_v1_destroy(imageDescription);
+    }
 }
 
 void WaylandOutput::setPrimaryBuffer(wl_buffer *buffer)
@@ -323,27 +345,9 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
     // next.scale = props->scale.value_or(m_state.scale);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    next.highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
-    next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
-    // TODO unconditionally use the primaries + luminance ranges from the preferred image description instead of this?
-    const auto tf = next.highDynamicRange ? TransferFunction(TransferFunction::gamma22, 0, 1000) : TransferFunction(TransferFunction::gamma22);
-    next.colorDescription = ColorDescription{
-        next.wideColorGamut ? Colorimetry::BT2020 : Colorimetry::BT709,
-        tf,
-        next.highDynamicRange ? 203 : TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22),
-        tf.minLuminance,
-        tf.maxLuminance,
-        tf.maxLuminance,
-    };
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     setState(next);
-
-    if (m_colorSurface) {
-        const auto imageDescription = m_backend->display()->colorManager()->createImageDescription(next.colorDescription);
-        wp_color_management_surface_v1_set_image_description(m_colorSurface, imageDescription, WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
-        wp_image_description_v1_destroy(imageDescription);
-    }
 }
 
 bool WaylandOutput::isReady() const
