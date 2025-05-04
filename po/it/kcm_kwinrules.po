@@ -1,5 +1,5 @@
 # translation of kcmkwinrules.po to Italian
-# SPDX-FileCopyrightText: 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Paolo Zamponi <feus73@gmail.com>
+# SPDX-FileCopyrightText: 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Paolo Zamponi <feus73@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-29 00:42+0000\n"
-"PO-Revision-Date: 2024-09-01 15:04+0200\n"
+"PO-Revision-Date: 2025-04-30 14:38+0200\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -236,10 +236,9 @@ msgid "Machine (hostname)"
 msgstr "Macchina (nome host)"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window &Extra"
+#, kde-format
 msgid "Window tag"
-msgstr "Finestra &extra"
+msgstr "Etichetta della finestra"
 
 #: rulesmodel.cpp:447
 #, kde-format

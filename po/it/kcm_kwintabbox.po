@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-03-27 15:44+0100\n"
+"PO-Revision-Date: 2025-05-02 08:55+0200\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #: layoutpreview.cpp:27
 #, kde-format
@@ -27,12 +27,12 @@ msgstr ""
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Percorso del file QML principale del selettore delle finestre"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Mostra anche una miniatura del desktop"
 
 #: layoutpreview.cpp:156
 #, kde-format
