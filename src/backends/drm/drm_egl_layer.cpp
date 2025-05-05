@@ -115,6 +115,9 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         return false;
     }
     m_colorPipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
+    if (!m_colorPipeline.isIdentity() && m_pipeline->output()->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy) {
+        return false;
+    }
     m_scanoutColor = color;
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
