@@ -269,7 +269,7 @@ bool RenderLoop::activeWindowControlsVrrRefreshRate() const
     return activeWindow
         && activeWindow->isOnOutput(d->output)
         && activeWindow->surfaceItem()
-        && activeWindow->surfaceItem()->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30;
+        && activeWindow->surfaceItem()->recursiveFrameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30;
 }
 
 std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const

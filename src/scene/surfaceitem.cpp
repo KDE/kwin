@@ -255,6 +255,16 @@ void SurfaceItem::freeze()
 {
 }
 
+std::chrono::nanoseconds SurfaceItem::recursiveFrameTimeEstimation() const
+{
+    std::chrono::nanoseconds ret = frameTimeEstimation();
+    const auto children = childItems();
+    for (Item *child : children) {
+        ret = std::max(ret, static_cast<SurfaceItem *>(child)->frameTimeEstimation());
+    }
+    return ret;
+}
+
 std::chrono::nanoseconds SurfaceItem::frameTimeEstimation() const
 {
     if (m_lastDamage) {
