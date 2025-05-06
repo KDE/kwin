@@ -9,7 +9,7 @@
 # Nicolas Ternisien <nicolast@libertysurf.fr>, 2005.
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005, 2007, 2008, 2010.
 # Matthieu Robin <matthieu@macolu.org>, 2005, 2012.
-# SPDX-FileCopyrightText: 2013, 2024 Xavier Besnard <xavier.besnard@kde.org>
+# SPDX-FileCopyrightText: 2013, 2024, 2025 Xavier Besnard <xavier.besnard@kde.org>
 # Bruno Patri <bruno.patri@gmail.com>, 2013.
 # Sebastien Renard <renard@kde.org>, 2015.
 # Vincent Pinon <vpinon@kde.org>, 2016, 2017.
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.04.0\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
