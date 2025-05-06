@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "nightlightmanager.h"
-#include "clockskewnotifier.h"
 #include "colors/colordevice.h"
 #include "colors/colormanager.h"
 #include "core/outputbackend.h"
@@ -21,6 +20,7 @@
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KSystemClockSkewNotifier>
 
 #include <QAction>
 #include <QDBusConnection>
@@ -45,8 +45,8 @@ NightLightManager::NightLightManager()
     NightLightSettings::instance(kwinApp()->config());
 
     m_iface = new NightLightDBusInterface(this);
-    m_skewNotifier = new ClockSkewNotifier(this);
-    connect(m_skewNotifier, &ClockSkewNotifier::clockSkewed, this, &NightLightManager::resetAllTimers);
+    m_skewNotifier = new KSystemClockSkewNotifier(this);
+    connect(m_skewNotifier, &KSystemClockSkewNotifier::skewed, this, &NightLightManager::resetAllTimers);
 
     // Display a message when Night Light is (un)inhibited.
     connect(this, &NightLightManager::inhibitedChanged, this, [this] {
