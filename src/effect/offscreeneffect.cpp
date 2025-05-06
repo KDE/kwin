@@ -112,6 +112,11 @@ void OffscreenData::maybeRender(EffectWindow *window)
     const QRectF logicalGeometry = snapToPixels(window->expandedGeometry(), scale);
     const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
+    if (textureSize.isEmpty()) {
+        m_fbo.reset();
+        m_texture.reset();
+        return;
+    }
     if (!m_texture || m_texture->size() != textureSize) {
         m_texture = GLTexture::allocate(GL_RGBA8, textureSize);
         if (!m_texture) {
@@ -164,6 +169,9 @@ void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mod
 void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &region,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
+    if (!m_texture) {
+        return;
+    }
     GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation | ShaderTrait::TransformColorspace);
     ShaderBinder binder(shader);
 
