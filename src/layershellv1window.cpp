@@ -31,8 +31,17 @@ static WindowType scopeToType(const QString &scope)
         {QStringLiteral("dialog"), WindowType::Dialog},
         {QStringLiteral("splash"), WindowType::Splash},
         {QStringLiteral("utility"), WindowType::Utility},
+        {QStringLiteral("sidebar"), WindowType::Dock},
     };
     return scopeToType.value(scope.toLower(), WindowType::Normal);
+}
+
+static int scopeToWeight(const QString &scope)
+{
+    static const QHash<QString, int> weights{
+        {QStringLiteral("sidebar"), -1},
+    };
+    return weights.value(scope.toLower(), 0);
 }
 
 LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
@@ -43,6 +52,7 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
     , m_integration(integration)
     , m_shellSurface(shellSurface)
     , m_windowType(scopeToType(shellSurface->scope()))
+    , m_weight(scopeToWeight(shellSurface->scope()))
 {
     setOutput(output);
     setMoveResizeOutput(output);
@@ -93,6 +103,11 @@ LayerSurfaceV1Interface *LayerShellV1Window::shellSurface() const
 Output *LayerShellV1Window::desiredOutput() const
 {
     return m_desiredOutput;
+}
+
+int LayerShellV1Window::weight() const
+{
+    return m_weight;
 }
 
 void LayerShellV1Window::scheduleRearrange()

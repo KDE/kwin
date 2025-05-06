@@ -33,6 +33,7 @@ public:
 
     LayerSurfaceV1Interface *shellSurface() const;
     Output *desiredOutput() const;
+    int weight() const;
 
     WindowType windowType() const override;
     bool isPlaceable() const override;
@@ -81,6 +82,7 @@ private:
     WindowType m_windowType;
     QList<LayerShellV1ConfigureEvent> m_configureEvents;
     QTimer m_rescalingTimer;
+    int m_weight = 0;
 };
 
 } // namespace KWin

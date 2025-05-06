@@ -175,6 +175,11 @@ static QList<LayerShellV1Window *> windowsForOutput(Output *output)
             result.append(layerShellWindow);
         }
     }
+
+    std::stable_sort(result.begin(), result.end(), [](LayerShellV1Window *a, LayerShellV1Window *b) {
+        return a->weight() > b->weight();
+    });
+
     return result;
 }
 
