@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
+# SPDX-FileCopyrightText: 2024, 2025 Flori G <Renner03@protonmail.com>
 # Thomas Diehl <thd@kde.org>, 2004.
 # Stephan Johach <hunsum@gmx.de>, 2005.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2005, 2006, 2007, 2008, 2010.
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-29 00:42+0000\n"
-"PO-Revision-Date: 2024-09-29 16:09+0200\n"
+"PO-Revision-Date: 2025-02-20 17:05+0100\n"
 "Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 24.12.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -567,7 +567,7 @@ msgstr "Schicht"
 #: rulesmodel.cpp:727
 #, kde-format
 msgid "Adaptive sync"
-msgstr "AdaptiveSync"
+msgstr "Adaptive-Sync"
 
 #: rulesmodel.cpp:732
 #, kde-format
