@@ -61,6 +61,10 @@ public:
 
     virtual void freeze();
 
+    /**
+     * like frameTimeEstimation, but takes child items into account
+     */
+    std::chrono::nanoseconds recursiveFrameTimeEstimation() const;
     std::chrono::nanoseconds frameTimeEstimation() const;
 
 Q_SIGNALS:
