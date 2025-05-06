@@ -19,12 +19,12 @@
 #include <QObject>
 #include <QPair>
 
+class KSystemClockSkewNotifier;
 class QTimer;
 
 namespace KWin
 {
 
-class ClockSkewNotifier;
 class NightLightDBusInterface;
 
 typedef QPair<QDateTime, QDateTime> DateTimes;
@@ -266,7 +266,7 @@ private:
     void setDaylight(bool daylight);
 
     NightLightDBusInterface *m_iface;
-    ClockSkewNotifier *m_skewNotifier;
+    KSystemClockSkewNotifier *m_skewNotifier;
 
     // Specifies whether Night Light is enabled.
     bool m_active = false;
