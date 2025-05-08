@@ -77,7 +77,7 @@ ExpoCell {
     naturalWidth: thumb.window.width
     naturalHeight: thumb.window.height
     persistentKey: thumb.window.internalId
-    bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height + Kirigami.Units.smallSpacing : 0) + Kirigami.Units.largeSpacing
+    bottomMargin: icon.height / 4 + (caption.visible ? caption.height + Kirigami.Units.smallSpacing : 0) + Kirigami.Units.largeSpacing
 
     Behavior on x {
         enabled: thumb.isReady
@@ -250,7 +250,7 @@ ExpoCell {
             visible: !thumb.activeHidden && !activeDragHandler.active && !returnAnimation.running
             PC3.Label {
                 id: caption
-                visible: thumb.windowTitleVisible
+                visible: thumb.window.caption.length > 0 && thumb.windowTitleVisible
                 width: thumb.width
                 maximumLineCount: 1
                 anchors.top: parent.bottom
