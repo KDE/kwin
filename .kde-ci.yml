@@ -14,6 +14,7 @@ Dependencies:
     'frameworks/kdeclarative': '@latest-kf6'
     'frameworks/kdoctools': '@latest-kf6'
     'frameworks/kglobalaccel': '@latest-kf6'
+    'frameworks/kholidays': '@latest-kf6'
     'frameworks/ki18n': '@latest-kf6'
     'frameworks/kidletime': '@latest-kf6'
     'frameworks/knewstuff': '@latest-kf6'

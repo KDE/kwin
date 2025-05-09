@@ -97,6 +97,7 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     DBusAddons
     GlobalAccel
     GuiAddons
+    Holidays
     I18n
     IdleTime
     Package
