@@ -16,9 +16,9 @@
 #include "nightlightdbusinterface.h"
 #include "nightlightlogging.h"
 #include "nightlightsettings.h"
-#include "suntransit.h"
 
 #include <KGlobalAccel>
+#include <KHolidays/SunEvents>
 #include <KLocalizedString>
 #include <KSystemClockSkewNotifier>
 
@@ -443,10 +443,10 @@ void NightLightManager::updateTargetTemperature()
 
 static DateTimes morningAtLocationAndTime(const QDateTime &dateTime, qreal latitude, qreal longitude)
 {
-    const SunTransit transit(dateTime, latitude, longitude);
+    const KHolidays::SunEvents events(dateTime, latitude, longitude);
 
-    QDateTime start = transit.dateTime(SunTransit::CivilDawn);
-    QDateTime end = transit.dateTime(SunTransit::Sunrise);
+    QDateTime start = events.civilDawn();
+    QDateTime end = events.sunrise();
     if (start.isNull() || end.isNull()) {
         end = QDateTime(dateTime.date(), QTime(6, 0));
         start = end.addMSecs(-DEFAULT_TRANSITION_DURATION);
@@ -457,10 +457,10 @@ static DateTimes morningAtLocationAndTime(const QDateTime &dateTime, qreal latit
 
 static DateTimes eveningAtLocationAndTime(const QDateTime &dateTime, qreal latitude, qreal longitude)
 {
-    const SunTransit transit(dateTime, latitude, longitude);
+    const KHolidays::SunEvents events(dateTime, latitude, longitude);
 
-    QDateTime start = transit.dateTime(SunTransit::Sunset);
-    QDateTime end = transit.dateTime(SunTransit::CivilDusk);
+    QDateTime start = events.sunset();
+    QDateTime end = events.civilDusk();
     if (start.isNull() || end.isNull()) {
         start = QDateTime(dateTime.date(), QTime(18, 0));
         end = start.addMSecs(DEFAULT_TRANSITION_DURATION);

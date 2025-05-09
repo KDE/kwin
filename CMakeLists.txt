@@ -122,6 +122,12 @@ if(KWIN_BUILD_TABBOX AND KWIN_BUILD_KCMS)
     )
 endif()
 
+find_package(KF6Holidays ${KF6_MIN_VERSION} CONFIG)
+set_package_properties(KF6Holidays PROPERTIES
+    PURPOSE "Needed for sunset and sunrise times in Night Light"
+    TYPE REQUIRED
+)
+
 find_package(Threads)
 set_package_properties(Threads PROPERTIES
     PURPOSE "Needed for VirtualTerminal support in KWin Wayland"
