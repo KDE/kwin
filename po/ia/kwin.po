@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-06 00:43+0000\n"
-"PO-Revision-Date: 2025-04-22 12:34+0200\n"
+"PO-Revision-Date: 2025-05-09 18:13+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -802,15 +802,12 @@ msgid "Tablet Pad Ring"
 msgstr "Anillo de tampon (pad) de tabletta"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Anillo de tampon (pad) de tabletta"
+msgstr "Quadrante del Pad de tabletta"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -3155,17 +3152,15 @@ msgstr "Typo de correspondentia de cqtena de machina"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Gerente de Fenestra"
+msgstr "Etiquetta de fenestra"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Typo de correspondentia de catena de titulo de fenestra"
+msgstr "Typo de correspondentia de catena de etiquetta de fenestra"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
