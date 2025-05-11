@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1707783 $
+# Version: $Revision: 1708617 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-26 02:35+0000\n"
-"PO-Revision-Date: 2025-01-11 11:58+0100\n"
+"PO-Revision-Date: 2025-05-10 12:07+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -2792,7 +2792,7 @@ msgstr "Podziel góra/dół"
 #: plugins/tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr "Dodaj pływający tytuł"
+msgstr "Dodaj pływające okno"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
