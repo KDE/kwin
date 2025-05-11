@@ -803,9 +803,7 @@ msgid "Tablet Pad Dial"
 msgstr "Tlačítko tabletu"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Rozdíl"
 
