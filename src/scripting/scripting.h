@@ -154,7 +154,7 @@ public:
      * The JavaScript object structure for a menu entry looks like the following:
      * @code
      * {
-     *     title: "My Menu Entry",
+     *     text: "My Menu Entry",
      *     checkable: true,
      *     checked: false,
      *     triggered: function (action) {
@@ -166,7 +166,7 @@ public:
      * To construct a complete Menu the JavaScript object looks like the following:
      * @code
      * {
-     *     title: "My Menu Title",
+     *     text: "My Menu Title",
      *     items: [{...}, {...}, ...] // list of menu entries as described above
      * }
      * @endcode
