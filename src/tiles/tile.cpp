@@ -367,59 +367,75 @@ bool Tile::addWindow(Window *window)
 
     // There can be only one window owner per root tile, so make it forget
     // if anybody else had the association
+    bool evacuated = false;
+    const auto evacuate = [&evacuated, window](Tile *tile) {
+        if (tile->remove(window)) {
+            evacuated = true;
+        }
+    };
+
     const auto outputs = workspace()->outputs();
     for (Output *output : outputs) {
         if (TileManager *manager = workspace()->tileManager(output)) {
             if (Tile *rootTile = manager->rootTile(m_desktop)) {
-                rootTile->visitDescendants([window](Tile *tile) {
-                    tile->removeWindow(window);
-                });
+                rootTile->visitDescendants(evacuate);
             }
             if (Tile *rootTile = manager->quickRootTile(m_desktop)) {
-                rootTile->visitDescendants([window](Tile *tile) {
-                    tile->removeWindow(window);
-                });
+                rootTile->visitDescendants(evacuate);
             }
         }
     }
 
-    // Needs to be added before setAssociation to avoid double insertions
-    m_windows.append(window);
-
-    Q_EMIT windowAdded(window);
-    Q_EMIT windowsChanged();
+    add(window);
 
     // We can actually manage the window geometry if our desktop is current
     // or if our desktop is the only desktop the window is in
     if (isActive()) {
         window->requestTile(this);
+    } else if (evacuated) {
+        window->requestTile(nullptr);
     }
+
     return true;
 }
 
 bool Tile::removeWindow(Window *window)
 {
-    // We already ensure there is a single copy of window in m_windows
-    if (m_windows.removeOne(window)) {
-        Q_EMIT windowRemoved(window);
-        Q_EMIT windowsChanged();
-
-        if (window->requestedTile() == this) {
-            window->requestTile(nullptr);
-        }
-        return true;
+    if (!remove(window)) {
+        return false;
     }
-    return false;
+
+    if (window->requestedTile() == this) {
+        window->requestTile(nullptr);
+    }
+    return true;
 }
 
 void Tile::forgetWindow(Window *window)
 {
-    if (m_windows.removeOne(window)) {
-        Q_EMIT windowRemoved(window);
-        Q_EMIT windowsChanged();
-
+    if (remove(window)) {
         window->forgetTile(this);
     }
+}
+
+void Tile::add(Window *window)
+{
+    Q_ASSERT(!m_windows.contains(window));
+    m_windows.append(window);
+
+    Q_EMIT windowAdded(window);
+    Q_EMIT windowsChanged();
+}
+
+bool Tile::remove(Window *window)
+{
+    if (!m_windows.removeOne(window)) {
+        return false;
+    }
+
+    Q_EMIT windowRemoved(window);
+    Q_EMIT windowsChanged();
+    return true;
 }
 
 QList<KWin::Window *> Tile::windows() const

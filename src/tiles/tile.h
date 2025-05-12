@@ -165,6 +165,9 @@ protected:
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);
 
+    void add(Window *window);
+    bool remove(Window *window);
+
     QList<Tile *> m_children;
     QList<Window *> m_windows;
     Tile *m_parentTile;
