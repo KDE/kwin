@@ -2367,7 +2367,8 @@ QList<Window *> Window::mainWindows() const
 QList<Window *> Window::allMainWindows() const
 {
     auto result = mainWindows();
-    for (const auto *window : result) {
+    const auto copy = result; // we need a copy to ensure we don't assign into the container we loop over
+    for (const auto *window : copy) {
         result += window->allMainWindows();
     }
     return result;
