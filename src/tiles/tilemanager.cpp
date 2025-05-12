@@ -166,7 +166,7 @@ void TileManager::forgetWindow(Window *window, VirtualDesktop *desktop)
     if (desktop) {
         Tile *owner = tileForWindow(window, desktop);
         if (owner) {
-            owner->forgetWindow(window);
+            owner->forget(window);
         }
         return;
     }
@@ -175,7 +175,7 @@ void TileManager::forgetWindow(Window *window, VirtualDesktop *desktop)
     for (VirtualDesktop *desk : desktops) {
         Tile *owner = tileForWindow(window, desk);
         if (owner) {
-            owner->forgetWindow(window);
+            owner->forget(window);
         }
     }
 }

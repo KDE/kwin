@@ -233,7 +233,7 @@ void TilesTest::testWindowInteraction()
     auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
     QVERIFY(leftTile);
 
-    leftTile->addWindow(rootWindow);
+    leftTile->manage(rootWindow);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -306,7 +306,7 @@ void TilesTest::testAssignedTileDeletion()
     auto middleBottomTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]->childTiles()[1]);
     QVERIFY(middleBottomTile);
 
-    middleBottomTile->addWindow(rootWindow);
+    middleBottomTile->manage(rootWindow);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -385,7 +385,7 @@ void TilesTest::resizeTileFromWindow()
     QVERIFY(bottomLeftTile);
     QCOMPARE(bottomLeftTile->windowGeometry(), QRectF(4, 514, 506, 506));
 
-    topLeftTile->addWindow(window);
+    topLeftTile->manage(window);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -598,7 +598,7 @@ void TilesTest::testPerDesktopTiles()
 
     // Add the window to a tile in desktop 1
     {
-        rightTileD1->addWindow(window);
+        rightTileD1->manage(window);
         ackConfigure();
         QVERIFY(tileChangedSpy.wait());
         QCOMPARE(window->tile(), rightTileD1);
@@ -616,7 +616,7 @@ void TilesTest::testPerDesktopTiles()
 
     // Set a new tile for Desktop 2
     {
-        leftTileD2->addWindow(window);
+        leftTileD2->manage(window);
         ackConfigure();
         QVERIFY(tileChangedSpy.wait());
         QCOMPARE(window->tile(), leftTileD2);
@@ -668,7 +668,7 @@ void TilesTest::sendToOutput()
     // Tile window on desktop 1
     {
         VirtualDesktopManager::self()->setCurrent(desktops[0]);
-        firstTile->addWindow(window);
+        firstTile->manage(window);
         QCOMPARE(window->tile(), nullptr);
         QCOMPARE(window->requestedTile(), firstTile);
         ackConfigure();
@@ -681,7 +681,7 @@ void TilesTest::sendToOutput()
     // Tile window on desktop 2
     {
         VirtualDesktopManager::self()->setCurrent(desktops[1]);
-        secondTile->addWindow(window);
+        secondTile->manage(window);
         ackConfigure();
         QVERIFY(tileChangedSpy.wait());
         QCOMPARE(window->tile(), secondTile);
@@ -719,7 +719,7 @@ void TilesTest::sendToOutputX11()
     // Tile window on desktop 1
     {
         VirtualDesktopManager::self()->setCurrent(desktops[0]);
-        firstTile->addWindow(window);
+        firstTile->manage(window);
         QCOMPARE(window->tile(), firstTile);
         QCOMPARE(window->requestedTile(), firstTile);
         QCOMPARE(window->frameGeometry(), firstTile->windowGeometry());
@@ -728,7 +728,7 @@ void TilesTest::sendToOutputX11()
     // Tile window on desktop 2
     {
         VirtualDesktopManager::self()->setCurrent(desktops[1]);
-        secondTile->addWindow(window);
+        secondTile->manage(window);
         QCOMPARE(window->tile(), secondTile);
         QCOMPARE(window->requestedTile(), secondTile);
         QCOMPARE(window->frameGeometry(), secondTile->windowGeometry());
@@ -776,8 +776,8 @@ void TilesTest::tileAndMaximize()
 
     // Add the window to a quick tile in desktop 1 and a cutom tile on desktop 2
     {
-        leftQuickTileD1->addWindow(window);
-        rightTileD2->addWindow(window);
+        leftQuickTileD1->manage(window);
+        rightTileD2->manage(window);
         QCOMPARE(window->requestedTile(), leftQuickTileD1);
         ackConfigure();
         QVERIFY(tileChangedSpy.wait());
@@ -797,7 +797,7 @@ void TilesTest::tileAndMaximize()
     }
 
     // Add the window also on a tile of another output
-    leftTileD3O2->addWindow(window);
+    leftTileD3O2->manage(window);
 
     // Maximize the window, it should lose its tile
     {
@@ -818,7 +818,7 @@ void TilesTest::tileAndMaximize()
 
     // Set a tile again, it should unmaximize
     {
-        rightTileD2->addWindow(window);
+        rightTileD2->manage(window);
         QCOMPARE(window->requestedTile(), rightTileD2);
         ackConfigure();
         QVERIFY(tileChangedSpy.wait());
@@ -854,8 +854,8 @@ void TilesTest::evacuateFromRemovedDesktop()
     // Add the window to a tile in desktop 2 and desktop 3
     {
         VirtualDesktopManager::self()->setCurrent(desktops[1]);
-        rightTileD2->addWindow(window);
-        leftTileD3->addWindow(window);
+        rightTileD2->manage(window);
+        leftTileD3->manage(window);
         QCOMPARE(window->requestedTile(), rightTileD2);
         ackConfigure();
         QCOMPARE(window->tile(), rightTileD2);
@@ -914,7 +914,7 @@ void TilesTest::evacuateFromRemovedOutput()
 
     // tile a window in output 2
     {
-        rightTileD1O2->addWindow(window);
+        rightTileD1O2->manage(window);
         QCOMPARE(window->requestedTile(), rightTileD1O2);
         ackConfigure();
         QCOMPARE(window->tile(), rightTileD1O2);

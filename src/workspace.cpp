@@ -1268,7 +1268,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
             tileManager->rootTile(desktop)->visitDescendants([](Tile *child) {
                 const QList<Window *> windows = child->windows();
                 for (Window *window : windows) {
-                    child->removeWindow(window);
+                    child->unmanage(window);
                 }
             });
 
@@ -1296,7 +1296,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 
                 if (bestTile) {
                     for (Window *window : windows) {
-                        bestTile->addWindow(window);
+                        bestTile->manage(window);
                     }
                 }
             }

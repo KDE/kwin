@@ -334,7 +334,7 @@ void CustomTile::remove()
     for (Window *window : windows) {
         Tile *tile = m_tiling->rootTile(m_desktop)->pick(window->moveResizeGeometry().center());
         if (tile) {
-            tile->addWindow(window);
+            tile->manage(window);
         }
     }
 

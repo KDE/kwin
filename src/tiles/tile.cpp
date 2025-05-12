@@ -32,7 +32,7 @@ Tile::Tile(TileManager *tiling, Tile *parent)
         m_desktop = m_parentTile->desktop();
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
-    connect(Workspace::self(), &Workspace::windowRemoved, this, &Tile::removeWindow);
+    connect(Workspace::self(), &Workspace::windowRemoved, this, &Tile::unmanage);
 }
 
 Tile::~Tile()
@@ -53,15 +53,15 @@ Tile::~Tile()
     auto windows = m_windows;
     for (auto *w : windows) {
         if (m_quickTileMode != QuickTileFlag::Custom) {
-            removeWindow(w);
+            unmanage(w);
         } else {
             Tile *tile = nullptr;
             if (RootTile *root = m_tiling->rootTile(m_desktop)) {
                 tile = root->pick(w->moveResizeGeometry().center());
             }
-            removeWindow(w);
+            unmanage(w);
             if (tile) {
-                tile->addWindow(w);
+                tile->manage(w);
             }
         }
     }
@@ -349,7 +349,7 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
     setRelativeGeometry(newGeom);
 }
 
-bool Tile::addWindow(Window *window)
+bool Tile::manage(Window *window)
 {
     if (!window->isResizable() || window->isAppletPopup()) {
         return false;
@@ -399,7 +399,7 @@ bool Tile::addWindow(Window *window)
     return true;
 }
 
-bool Tile::removeWindow(Window *window)
+bool Tile::unmanage(Window *window)
 {
     if (!remove(window)) {
         return false;
@@ -411,7 +411,7 @@ bool Tile::removeWindow(Window *window)
     return true;
 }
 
-void Tile::forgetWindow(Window *window)
+void Tile::forget(Window *window)
 {
     if (remove(window)) {
         window->forgetTile(this);
@@ -456,9 +456,9 @@ void Tile::insertChild(int position, Tile *item)
         auto windows = m_windows;
         for (auto *w : windows) {
             Tile *tile = m_tiling->rootTile(m_desktop)->pick(w->moveResizeGeometry().center());
-            removeWindow(w);
+            unmanage(w);
             if (tile) {
-                tile->addWindow(w);
+                tile->manage(w);
             }
         }
     }

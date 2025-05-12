@@ -3802,7 +3802,7 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
         return;
     }
     if (tileAtPoint != m_requestedTile) {
-        tileAtPoint->addWindow(this);
+        tileAtPoint->manage(this);
         return;
     }
     const auto customTile = qobject_cast<CustomTile *>(tileAtPoint);
@@ -3825,7 +3825,7 @@ void Window::handleCustomQuickTileShortcut(QuickTileMode mode)
     }
     CustomTile *next = customTile->nextNonLayoutTileAt(edge);
     if (next) {
-        next->addWindow(this);
+        next->manage(this);
     }
 }
 
@@ -3855,9 +3855,9 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
 
     if (m_requestedTile != tile) {
         if (tile) {
-            tile->addWindow(this);
+            tile->manage(this);
         } else if (m_requestedTile && m_requestedTile->isActive()) {
-            m_requestedTile->removeWindow(this);
+            m_requestedTile->unmanage(this);
         }
     }
 }
@@ -3962,7 +3962,7 @@ void Window::forgetTile(Tile *tile)
 
 void Window::setTileCompatibility(Tile *tile)
 {
-    qCWarning(KWIN_CORE) << "Writing to the property window.tile is deprecated: use tile.addWindow() instead";
+    qCWarning(KWIN_CORE) << "Writing to the property window.tile is deprecated: use tile.manage() instead";
 
     if (m_requestedTile == tile) {
         return;
@@ -3970,11 +3970,11 @@ void Window::setTileCompatibility(Tile *tile)
 
     Tile *previousTile = m_requestedTile;
     if (tile) {
-        tile->addWindow(this);
+        tile->manage(this);
     }
 
     if (previousTile) {
-        previousTile->removeWindow(this);
+        previousTile->unmanage(this);
     }
 }
 
@@ -4057,7 +4057,7 @@ void Window::sendToOutput(Output *newOutput)
     } else {
         Tile *newTile = workspace()->tileManager(newOutput)->quickTile(requestedQuickTileMode());
         if (newTile) {
-            newTile->addWindow(this);
+            newTile->manage(this);
         }
     }
 

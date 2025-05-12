@@ -119,9 +119,9 @@ public:
 
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
 
-    Q_INVOKABLE bool addWindow(Window *window);
-    Q_INVOKABLE bool removeWindow(Window *window);
-    void forgetWindow(Window *window);
+    Q_INVOKABLE bool manage(Window *window);
+    Q_INVOKABLE bool unmanage(Window *window);
+    void forget(Window *window);
     QList<KWin::Window *> windows() const;
 
     int row() const;

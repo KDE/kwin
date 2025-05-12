@@ -1825,7 +1825,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
 
                     // put the window in a custom tile on the first virtual desktop
                     vds->setCurrent(customTileDesktop);
-                    customTile->addWindow(window);
+                    customTile->manage(window);
                     QCOMPARE(window->tile(), nullptr);
                     QCOMPARE(window->requestedTile(), customTile);
                     QCOMPARE(window->frameGeometry(), originalGeometry);
@@ -1845,7 +1845,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
                     QCOMPARE(window->frameGeometry(), originalGeometry);
 
                     // put the window in a quick tile on the second virtual desktop
-                    quickTile->addWindow(window);
+                    quickTile->manage(window);
                     QCOMPARE(window->tile(), nullptr);
                     QCOMPARE(window->requestedTile(), quickTile);
                     QCOMPARE(window->frameGeometry(), originalGeometry);
@@ -1875,7 +1875,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
                     QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
 
                     // remove the window from the quick tile on the second virtual desktop
-                    quickTile->removeWindow(window);
+                    quickTile->unmanage(window);
                     QCOMPARE(window->tile(), quickTile);
                     QCOMPARE(window->requestedTile(), nullptr);
                     QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
@@ -1895,7 +1895,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
                     QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
 
                     // remove the window from the custom tile on the first virtual desktop
-                    customTile->removeWindow(window);
+                    customTile->unmanage(window);
                     QCOMPARE(window->tile(), customTile);
                     QCOMPARE(window->requestedTile(), nullptr);
                     QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
@@ -1956,7 +1956,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
                         QCOMPARE(window->requestedTile(), nullptr);
                         QCOMPARE(window->frameGeometry(), originalGeometry);
 
-                        customTile->addWindow(window);
+                        customTile->manage(window);
 
                         QCOMPARE(window->tile(), customTile);
                         QCOMPARE(window->requestedTile(), customTile);
@@ -1982,7 +1982,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
                         QCOMPARE(window->requestedTile(), nullptr);
                         QCOMPARE(window->frameGeometry(), originalGeometry);
 
-                        quickTile->addWindow(window);
+                        quickTile->manage(window);
 
                         QCOMPARE(window->tile(), quickTile);
                         QCOMPARE(window->requestedTile(), quickTile);
@@ -2021,7 +2021,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
                         QCOMPARE(window->requestedTile(), quickTile);
                         QCOMPARE(window->frameGeometry(), quickTile->windowGeometry());
 
-                        quickTile->removeWindow(window);
+                        quickTile->unmanage(window);
 
                         QCOMPARE(window->tile(), nullptr);
                         QCOMPARE(window->requestedTile(), nullptr);
@@ -2047,7 +2047,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
                         QCOMPARE(window->requestedTile(), customTile);
                         QCOMPARE(window->frameGeometry(), customTile->windowGeometry());
 
-                        customTile->removeWindow(window);
+                        customTile->unmanage(window);
 
                         QCOMPARE(window->tile(), nullptr);
                         QCOMPARE(window->requestedTile(), nullptr);
@@ -2149,7 +2149,7 @@ void QuickTilingTest::testCloseTiledWindow()
     Tile *tile = workspace()->tileManager(workspace()->activeOutput())->quickTile(QuickTileFlag::Right);
 
     const QRectF originalGeometry = window->frameGeometry();
-    tile->addWindow(window);
+    tile->manage(window);
     QCOMPARE(window->geometryRestore(), originalGeometry);
     QCOMPARE(window->tile(), nullptr);
     QCOMPARE(window->requestedTile(), tile);
@@ -2177,7 +2177,7 @@ void QuickTilingTest::testCloseTiledWindowX11()
 
     Tile *tile = workspace()->tileManager(workspace()->activeOutput())->quickTile(QuickTileFlag::Right);
 
-    tile->addWindow(window);
+    tile->manage(window);
     QCOMPARE(window->tile(), tile);
     QCOMPARE(window->requestedTile(), tile);
     QCOMPARE(window->frameGeometry(), tile->windowGeometry());
