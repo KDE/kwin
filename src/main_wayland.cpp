@@ -13,7 +13,6 @@
 #include "backends/drm/drm_backend.h"
 #include "backends/virtual/virtual_backend.h"
 #include "backends/wayland/wayland_backend.h"
-#include "backends/x11/x11_windowed_backend.h"
 #include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
@@ -27,6 +26,7 @@
 #include "workspace.h"
 
 #if KWIN_BUILD_X11
+#include "backends/x11/x11_windowed_backend.h"
 #include "xwayland/xwayland.h"
 #include "xwayland/xwaylandlauncher.h"
 #endif
@@ -432,7 +432,9 @@ int main(int argc, char *argv[])
 
     enum class BackendType {
         Kms,
+#if KWIN_BUILD_X11
         X11,
+#endif
         Wayland,
         Virtual,
     };
@@ -458,9 +460,11 @@ int main(int argc, char *argv[])
         if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
             qInfo("No backend specified, automatically choosing Wayland because WAYLAND_DISPLAY is set");
             backendType = BackendType::Wayland;
+#if KWIN_BUILD_X11
         } else if (qEnvironmentVariableIsSet("DISPLAY")) {
             qInfo("No backend specified, automatically choosing X11 because DISPLAY is set");
             backendType = BackendType::X11;
+#endif
         } else {
             qInfo("No backend specified, automatically choosing drm");
             backendType = BackendType::Kms;
