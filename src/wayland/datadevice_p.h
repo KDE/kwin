@@ -37,6 +37,7 @@ public:
     struct Drag
     {
         SurfaceInterface *surface = nullptr;
+        QPointer<DataOfferInterface> offer;
         QMetaObject::Connection destroyConnection;
         QMetaObject::Connection posConnection;
         QMetaObject::Connection sourceActionConnection;
