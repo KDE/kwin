@@ -18,6 +18,7 @@
         "Description[tr]": "Canlandırma hızını ve biçemini yapılandır",
         "Description[uk]": "Налаштування швидкості і стилю анімацій",
         "Description[x-test]": "xxConfigure animation speed and stylexx",
+        "Description[zh_CN]": "配置动效速度和样式",
         "Description[zh_TW]": "設定動畫速度與風格",
         "FormFactors": [
             "tablet",
@@ -43,6 +44,7 @@
         "Name[tr]": "Canlandırmalar",
         "Name[uk]": "Анімації",
         "Name[x-test]": "xxAnimationsxx",
+        "Name[zh_CN]": "动效",
         "Name[zh_TW]": "動畫效果"
     },
     "X-KDE-Keywords": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect",
@@ -61,6 +63,7 @@
     "X-KDE-Keywords[tr]": "canlandırmalar,canlandırma hızı,geçişler,efektler,pencere aç,pencere kapat,pencere ekranı kapla,pencere küçült,pencere tam ekran,masaüstüne bak,sanal masaüstü geçişi,solma ekfekti,süzülme efekti,ölçekleme efekti,germe efekti,sihirli lamba efekti,tıkıştırma efekti,göz ekranda efekti,pencere açıklığı efekti,kayma efekti,solan açılır pencereler efekti,kayan açılır pencereler efekti,oturum açma efekti,oturumu kapatma efekti",
     "X-KDE-Keywords[uk]": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect,анімація,швидкість анімації,переходи,ефекти,відкриття закриття вікон,відкрити/закрити вікно,максимізувати вікно,розгорнути вікно,повноекранне вікно,верх стільниці,перемикання віртуальних стільниць,ефект згасання,ефект ковзання,ефект масштабування,ефект розтягування,ефект магічної лампи,ефект чарівної лампи,ефект вибуху,ефект ока на екрані,ефект апертури вікна,ефект затвору вікна,ефект руху,ефект розчинення контекстних вікон,ефект виковзування контекстних вікон, ефект входу, ефект виходу",
     "X-KDE-Keywords[x-test]": "xxanimationsxx,xxanimation speedxx,xxtransitionsxx,xxeffectsxx,xxwindow open closexx,xxwindow open/closexx,xxwindow maximizexx,xxwindow minimizexx,xxwindow full screenxx,xxpeek at desktopxx,xxpeek desktopxx,xxvirtual desktop switchingxx,xxfade effectxx,xxglide effectxx,xxscale effectxx,xxstretch effectxx,xxmagic lamp effectxx,xxsquash effectxx,xxeye on screen effectxx,xxwindow aperture effectxx,xxslide effectxx,xxfading popups effectxx,xxsliding popups effectxx,xxlogin effectxx,xxlogout effectxx",
+    "X-KDE-Keywords[zh_CN]": "animations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effectanimations,animation speed,transitions,effects,window open close,window open/close,window maximize,window minimize,window full screen,peek at desktop,peek desktop,virtual desktop switching,fade effect,glide effect,scale effect,stretch effect,magic lamp effect,squash effect,eye on screen effect,window aperture effect,slide effect,fading popups effect,sliding popups effect,login effect,logout effect,donghua,dongxiao,donghuasudu,dongxiaodusu,sudu,guodu,xiaoguo,texiao,chuangkoudakai,chuangkouguanbi,chuangkoukaiguan,chuangkouzuidahua,chuangkouzuixiaohua,chuangkouquanping,zanshixianshizhuomian,linshixianshi,xunizhuomianqiehuan,darudanchudonghua,huaxiangdongxiao,anbilisuofang,quanpingguodudongxiao,lashen,zuixiaohuaguodudongxiao,shendeng,shousuo,chuangkouneishou,chuangkouwaitui,huadongdongxiao,qipaoxianyinjianbiandongxiao,qipaohuadongdongxiao,denglujianbiandongxiao,zhuxiaoguodudongxiao,动画,动效,动画速度,动效速度,过渡,效果,特效,窗口打开,窗口关闭,窗口开关,窗口最大化,窗口最小化,窗口全屏,暂时显示桌面,临时显示,虚拟桌面切换,淡出淡入动画,滑翔动效,按比例缩放,全屏过渡动效 (拉伸),最小化过渡动画 (神灯),最小化过渡动画 (收缩),窗口内收,窗口外推,滑动动效,气泡显隐渐变动画,气泡滑动动效,登陆渐变动效,注销过渡动效,",
     "X-KDE-Keywords[zh_TW]": "桌面動畫,動畫速度,轉場,視窗開啟關閉,視窗開啟/關閉,視窗最大化,視窗最小化,視窗全螢幕,看一下桌面,虛擬桌面切換,淡化效果,滑動效果,滑行效果,縮放效果,拉伸效果,魔術燈效果,擠壓效果,螢幕眼睛效果,視窗光圈效果,淡化彈出視窗效果,滑動彈出視窗效果,登入效果,登出效果",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"

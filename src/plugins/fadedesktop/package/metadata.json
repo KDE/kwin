@@ -70,6 +70,7 @@
         "Description[tr]": "Geçiş yaparken sanal masaüstlerini soldur",
         "Description[uk]": "Затемнення під час перемикання між віртуальними стільницями",
         "Description[x-test]": "xxFade between virtual desktops when switchingxx",
+        "Description[zh_CN]": "在虚拟桌面间切换时呈现渐入渐出动效",
         "Description[zh_TW]": "切換虛擬桌面時在它們之間進行淡化",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fadedesktop",

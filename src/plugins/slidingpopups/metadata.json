@@ -17,6 +17,7 @@
         "Description[tr]": "Plasma açılır pencerelerini içeri ve dışarı kaydır",
         "Description[uk]": "Виковзування за заковзування контекстних вікон Плазми",
         "Description[x-test]": "xxSlide Plasma popups in and outxx",
+        "Description[zh_CN]": "滑动显示/隐藏 Plasma 弹窗",
         "Description[zh_TW]": "讓 Plasma 彈出視窗滑進滑出",
         "EnabledByDefault": true,
         "License": "GPL",
@@ -41,6 +42,7 @@
         "Name[tr]": "Kayan açılır pencereler",
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[x-test]": "xxSliding popupsxx",
+        "Name[zh_CN]": "气泡滑动动效",
         "Name[zh_TW]": "滑動的彈出視窗"
     }
 }

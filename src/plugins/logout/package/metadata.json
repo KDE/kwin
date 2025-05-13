@@ -70,6 +70,7 @@
         "Description[tr]": "Oturumu kapatırken masaüstünden solarak çık",
         "Description[uk]": "Затемнення до вікна виходу з системи",
         "Description[x-test]": "xxFade to the logout screenxx",
+        "Description[zh_CN]": "注销时平滑地过渡到注销屏幕",
         "Description[zh_TW]": "淡入至登出畫面",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
