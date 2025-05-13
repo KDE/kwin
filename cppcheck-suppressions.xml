@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<suppressions>
+<suppress>
+<id>returnByReference</id>
+</suppress>
+<suppress>
+<id>useStlAlgorithm</id>
+</suppress>
+</suppressions>

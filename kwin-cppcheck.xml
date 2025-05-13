@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<def format="2">
+  <define name="KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED(className, jsonFile, supported, enabled)" value=""/>
+  <define name="KWIN_EFFECT_FACTORY_SUPPORTED(className, jsonFile, supported)" value=""/>
+  <define name="KWIN_SINGLETON(ClassName)" value=""/>
+</def>

@@ -48,4 +48,7 @@ RuntimeDependencies:
 Options:
  ctest-arguments: '--repeat until-pass:5'
  use-ccache: True
+ cppcheck-arguments: '--enable=warning,style,performance --library=kwin-cppcheck.xml --suppress-xml=cppcheck-suppressions.xml'
+ cppcheck-ignore-files:
+  - autotests
  require-passing-tests-on: ['Linux/Qt6']

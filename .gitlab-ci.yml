@@ -9,6 +9,7 @@ include:
       - /gitlab-templates/freebsd-qt6.yml
       - /gitlab-templates/xml-lint.yml
       - /gitlab-templates/yaml-lint.yml
+      - /gitlab-templates/cppcheck.yml
 
 suse_tumbleweed_qt69_reduced_featureset:
   extends: suse_tumbleweed_qt69
