@@ -2,10 +2,6 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-if (KWIN_BUILD_KCMS)
-    add_subdirectory(kcm)
-endif()
-
 set(overview_SOURCES
     main.cpp
     overvieweffect.cpp
