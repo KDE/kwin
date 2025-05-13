@@ -47,7 +47,3 @@ msgstr "过滤条件"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "排除不支持的特效"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Show/Hide Video"
-#~ msgstr "显示/隐藏特效演示视频"

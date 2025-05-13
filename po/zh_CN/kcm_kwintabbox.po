@@ -20,17 +20,17 @@ msgstr ""
 #: layoutpreview.cpp:27
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "启动标签页盒切换器的交互式预览"
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "窗口切换器 QML 主文件的路径"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "桌面也显示缩略图"
 
 #: layoutpreview.cpp:156
 #, kde-format

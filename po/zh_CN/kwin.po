@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-06 00:43+0000\n"
+"POT-Creation-Date: 2025-05-13 00:43+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -792,15 +792,12 @@ msgid "Tablet Pad Ring"
 msgstr "数位板触控环"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "数位板触控环"
+msgstr "数位板转盘"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "坐标差"
 
@@ -1260,11 +1257,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "这一辅助工具程序不应被直接调用。"
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1272,15 +1265,12 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>强制终止此应用程序将会关闭它的所有窗口。所有尚"
-"未保存的数据都将丢失。</emphasis></para>"
+"<para><application>%1</application> 没有响应。您想要终止此应用程序吗？</"
+"para><para><emphasis strong='true'>终止此应用程序将关闭其所有窗口。所有未保存"
+"的数据都将丢失。</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1288,8 +1278,9 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>强制终止此应用程序将会关闭它的所有窗口。所有尚"
-"未保存的数据都将丢失。</emphasis></para>"
+"<para><application>%2</application> 的“%1”没有响应。您想要终止此应用程序吗？"
+"</para><para><emphasis strong='true'>终止此应用程序将关闭其所有窗口。所有未保"
+"存的数据都将丢失。</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -3117,17 +3108,15 @@ msgstr "机器字符串匹配类型"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "窗口管理器"
+msgstr ""
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "窗口标题字符串匹配类型"
+msgstr ""
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -4286,7 +4275,7 @@ msgstr "提供的输出顺序无效"
 msgid "The driver rejected the output configuration"
 msgstr "驱动程序拒绝了输出配置"
 
-#: window.cpp:3247
+#: window.cpp:3248
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4317,19 +4306,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para><application>%1</application> is not responding. Do you want to "
-#~ "terminate this application?</para>"
-#~ msgstr ""
-#~ "<para><application>%1</application> 没有响应。您想要强制终止此应用程序吗？"
-#~ "</para>"
-
-#~ msgctxt "@info \"window title\" of application name is not responding."
-#~ msgid ""
-#~ "<para>\"%1\" of <application>%2</application> is not responding. Do you "
-#~ "want to terminate this application?</para>"
-#~ msgstr ""
-#~ "<para><application>%2</application> 的“%1”没有响应。您想要强制终止此应用程"
-#~ "序吗？</para>"

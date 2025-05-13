@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-06 00:43+0000\n"
+"POT-Creation-Date: 2025-05-13 00:43+0000\n"
 "PO-Revision-Date: 2024-09-27 11:45+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -797,10 +797,9 @@ msgid "Tablet Pad Ring"
 msgstr ""
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Button"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Tlačítko tabletu"
+msgstr ""
 
 #: debug_console.cpp:601
 #, kde-format
@@ -1263,11 +1262,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Tento pomocný nástroj není určen k samostatnému spouštění."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1275,15 +1270,9 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Ukončení této aplikace uzavře všechny její "
-"okna. Veškerá neuložená data budou ztracena.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1291,8 +1280,6 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Ukončení této aplikace uzavře všechny její "
-"okna. Veškerá neuložená data budou ztracena.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -2903,10 +2890,9 @@ msgid "Move Down"
 msgstr "Přesunout dolů"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Free draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Modifikátory klávesnice pro kresbu rukou:"
+msgstr ""
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
@@ -3119,17 +3105,15 @@ msgstr ""
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Správce oken"
+msgstr ""
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window types that match"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Typy oken, které odpovídají"
+msgstr ""
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -4286,7 +4270,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3247
+#: window.cpp:3248
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4311,115 +4295,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
-
-#~ msgid "Touchpad"
-#~ msgstr "Touchpad"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Zastavit kompozici"
-
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p>"
-#~ msgstr ""
-#~ "<b>Kompozice OpenGL (výchozí) vedla v minulosti k pádu KWinu.</b><br>K "
-#~ "tomu nejspíš došlo kvůli chybě v ovladači.<p>Pokud si myslíte, že jste "
-#~ "mezitím aktualizovali na stabilní verzi ovladače,<br>můžete resetovat "
-#~ "ochranu, ale mějte na paměti, že to může vést k okamžitému pádu.</b></p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "Požadovaná X rozšíření (XComposite a XDamage) nejsou dostupná."
-
-#~ msgid "GLX/OpenGL is not available."
-#~ msgstr "GLX/OpenGL není dostupné."
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Ukončit ladicí konzoli"
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "KWin je nestabilní.\n"
-#~ "Zdá se, že havaroval několikrát po sobě.\n"
-#~ "Můžete si zvolit ke spuštění jiného správce oken:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "kwin: nelze získat výběr správce oken, je spuštěn jiný správce? (zkuste "
-#~ "použít --replace)\n"
-
-#~ msgid "kwin: another window manager is running (try using --replace)\n"
-#~ msgstr "kwin: je spuštěn jiný správce oken (zkuste použít --replace)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr "Nahradit již běžící správce oken kompatibilní s ICCCM 2.0"
-
-#~ msgid "Move to &Desktop"
-#~ msgstr "Přesunout na &plochu"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "Malá"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "Normální"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "Velká"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "Velmi velká"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "Obrovská"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "Velmi obrovská"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "Nadměrná"
-
-#~ msgid "Button size:"
-#~ msgstr "Velikost tlačítka:"
-
-#~ msgid "Config Dialog"
-#~ msgstr "Nastavovací dialog"
-
-#~ msgid "Title &Alignment"
-#~ msgstr "Z&arovnání titulku"
-
-#~ msgid "Center"
-#~ msgstr "Střed"
-
-#~ msgid ""
-#~ "Check this option if the window border should be painted in the titlebar "
-#~ "color. Otherwise it will be painted in the background color."
-#~ msgstr ""
-#~ "Je-li vybráno, okraje oken budou kresleny pomocí barev panelu titulku; "
-#~ "jinak budou použity normální barvy."
-
-#~ msgid "Colored window border"
-#~ msgstr "Barevný okraj okna"
-
-#~ msgid ""
-#~ "Check this option if you want the buttons to fade in when the mouse "
-#~ "pointer hovers over them and fade out again when it moves away."
-#~ msgstr ""
-#~ "Zaškrtněte tuto volbu, pokud si přejete, aby se tlačítka zesvětlovala/"
-#~ "ztmavovala, když na ně myš vstoupí nebo z nich odejde."
-
-#~ msgid "Animate buttons"
-#~ msgstr "Animovat tlačítka"

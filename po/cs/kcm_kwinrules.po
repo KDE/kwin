@@ -220,10 +220,9 @@ msgid "Machine (hostname)"
 msgstr "Počítač (název)"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window types"
+#, kde-format
 msgid "Window tag"
-msgstr "Typy oken"
+msgstr ""
 
 #: rulesmodel.cpp:447
 #, kde-format

@@ -222,10 +222,9 @@ msgid "Machine (hostname)"
 msgstr "机器 (主机名)"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window types"
+#, kde-format
 msgid "Window tag"
-msgstr "窗口类型"
+msgstr ""
 
 #: rulesmodel.cpp:447
 #, kde-format
