@@ -16,35 +16,44 @@ class QAction;
 namespace KWin
 {
 
-/**
- * The ShortcutHandler type provides a way to register global key shorcuts.
+/*!
+ * \qmltype ShortcutHandler
+ * \inqmlmodule org.kde.kwin
+ * \brief The ShortcutHandler type provides a way to register global key shorcuts.
  *
  * Example usage:
- * @code
+ *
+ * \code
  * ShortcutHandler {
  *     name: "Activate Something"
  *     text: i18n("Activate Something")
  *     sequence: "Meta+Ctrl+S"
  *     onActivated: doSomething()
  * }
- * @endcode
+ * \endcode
  */
 class ShortcutHandler : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
 
-    /**
+    /*!
+     * \qmlproperty string ShortcutHandler::name
+     *
      * This property specifies the unique shortcut identifier, not localized.
      *
      * The shortcut name cannot be changed once the ShortcutHandler is constructed.
      */
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    /**
+    /*!
+     * \qmlproperty string ShortcutHandler::text
+     *
      * This property specifies human readable name of the shortcut.
      */
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
-    /**
+    /*!
+     * \qmlproperty variant ShortcutHandler::sequence
+     *
      * This property holds the key sequence for this shortcut. The key sequence
      * can be specified using a string containing a sequence of keys that are needed
      * to be pressed to activate the shortcut, e.g. `Meta+K`.
@@ -75,6 +84,12 @@ Q_SIGNALS:
     void nameChanged();
     void textChanged();
     void sequenceChanged();
+
+    /*!
+     * \qmlsignal ShortcutHandler::activated
+     *
+     * This signal is emitted when the shortcut is triggered.
+     */
     void activated();
 
 private:
