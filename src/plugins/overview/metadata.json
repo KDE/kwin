@@ -89,5 +89,7 @@
         "Name[zh_CN]": "桌面概览",
         "Name[zh_TW]": "總覽"
     },
-    "X-KDE-ConfigModule": "kwin_overview_config"
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
 }
