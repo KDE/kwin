@@ -378,8 +378,6 @@ private:
     Xcb::Window m_frame;
     qreal m_bufferScale = 1;
     xcb_window_t m_wmClientLeader = XCB_WINDOW_NONE;
-    int m_activityUpdatesBlocked;
-    bool m_blockedActivityUpdatesRequireTransients;
     bool m_managed;
 
     Xcb::GeometryHints m_geometryHints;
