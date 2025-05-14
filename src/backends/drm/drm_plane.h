@@ -106,7 +106,7 @@ private:
     QList<std::shared_ptr<DrmFramebufferData>> m_lastBuffers;
 
     QHash<uint32_t, QList<uint64_t>> m_supportedFormats;
-    uint32_t m_possibleCrtcs;
+    uint32_t m_possibleCrtcs = 0;
     QList<QSize> m_sizeHints;
 };
 
