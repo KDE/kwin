@@ -1072,6 +1072,8 @@ void OutputConfigurationStore::load()
                     fail = true;
                     break;
                 }
+            } else {
+                state.priority = INT_MAX;
             }
             if (const auto it = outputData.find("replicationSource"); it != outputData.end()) {
                 state.replicationSource = it->toString();
