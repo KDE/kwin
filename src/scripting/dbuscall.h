@@ -133,12 +133,16 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /*!
+     * \qmlsignal DBusCall::finished(list<variant> returnValue)
+     *
      * This signal is emitted if a dbus method call finishes successfully. The \a returnValue
      * specifies an optional return value.
      */
     void finished(QVariantList returnValue);
 
     /*!
+     * \qmlsignal DBusCall::failed()
+     *
      * This signal is emitted if a dbus method call fails.
      */
     void failed();

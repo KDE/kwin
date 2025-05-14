@@ -114,6 +114,8 @@ Q_SIGNALS:
     void modeChanged();
 
     /*!
+     * \qmlsignal ScreenEdgeHandler::activated()
+     *
      * This signal is emitted when the screen edge is activated by the user.
      *
      * The way how the screen edge gets activated depends on the mode(). For example, with

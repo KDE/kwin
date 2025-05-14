@@ -120,11 +120,15 @@ public:
 
 Q_SIGNALS:
     /*!
+     * \qmlsignal SwipeGestureHandler::activated()
+     *
      * This signal is emitted when the swipe gesture is triggered, i.e. the progress() reaches 1.0.
      */
     void activated();
 
     /*!
+     * \qmlsignal SwipeGestureHandler::cancelled()
+     *
      * This signal is emitted when the swipe gesture is cancelled. A swipe gesture can be cancelled
      * if the user lifts their fingers or moves the fingers in a different direction, etc.
      */
@@ -231,11 +235,15 @@ public:
 
 Q_SIGNALS:
     /*!
+     * \qmlsignal PinchGestureHandler::activated()
+     *
      * This signal is emitted when the pinch gesture is triggered, i.e. the progress() reaches 1.0.
      */
     void activated();
 
     /*!
+     * \qmlsignal PinchGestureHandler::cancelled()
+     *
      * This signal is emitted when the pinch gesture is cancelled. A pinch gesture can be cancelled
      * if the user lifts their fingers or moves the fingers in a different direction, etc.
      */
