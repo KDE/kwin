@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-05-14 00:45+0000\n"
 "PO-Revision-Date: 2025-01-28 21:27+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -4294,27 +4294,27 @@ msgstr "Váltás a lefelé eső asztalra"
 msgid "Switch to Desktop %1"
 msgstr "Váltás a(z) %1. asztalra"
 
-#: wayland/outputmanagement_v2.cpp:471
+#: wayland/outputmanagement_v2.cpp:491
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Az egyik releváns kimenet már nem érhető el"
 
-#: wayland/outputmanagement_v2.cpp:489
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Az összes kimenet letiltása beállításmódosítással nem engedélyezett"
 
-#: wayland/outputmanagement_v2.cpp:499
+#: wayland/outputmanagement_v2.cpp:519
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "A megadott kimenetsorrend nem tartalmazza az összes kimenetet"
 
-#: wayland/outputmanagement_v2.cpp:517
+#: wayland/outputmanagement_v2.cpp:537
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "A megadott kimenetsorrend érvénytelen"
 
-#: wayland/outputmanagement_v2.cpp:535
+#: wayland/outputmanagement_v2.cpp:555
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Az illesztőprogram elutasította a kimenetbeállítást"

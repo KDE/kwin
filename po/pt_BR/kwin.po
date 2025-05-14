@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-05-14 00:45+0000\n"
 "PO-Revision-Date: 2025-02-27 20:16-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -4323,29 +4323,29 @@ msgstr "Mudar para a área de trabalho abaixo"
 msgid "Switch to Desktop %1"
 msgstr "Mudar para a área de trabalho %1"
 
-#: wayland/outputmanagement_v2.cpp:471
+#: wayland/outputmanagement_v2.cpp:491
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Uma das saídas relevantes não está mais disponível"
 
-#: wayland/outputmanagement_v2.cpp:489
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Não é permitido desabilitar todas as saídas por meio de alterações de "
 "configuração"
 
-#: wayland/outputmanagement_v2.cpp:499
+#: wayland/outputmanagement_v2.cpp:519
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "A ordem de saída fornecida não contém todas as saídas"
 
-#: wayland/outputmanagement_v2.cpp:517
+#: wayland/outputmanagement_v2.cpp:537
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "A ordem de saída fornecida é inválida"
 
-#: wayland/outputmanagement_v2.cpp:535
+#: wayland/outputmanagement_v2.cpp:555
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "O driver rejeitou a configuração de saída"

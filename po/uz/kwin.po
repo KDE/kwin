@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-05-14 00:45+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -4385,27 +4385,27 @@ msgstr "Pastdagi ish stoliga oʻtish"
 msgid "Switch to Desktop %1"
 msgstr "1 Ish stoliga oʻtish"
 
-#: wayland/outputmanagement_v2.cpp:471
+#: wayland/outputmanagement_v2.cpp:491
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:489
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:499
+#: wayland/outputmanagement_v2.cpp:519
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:517
+#: wayland/outputmanagement_v2.cpp:537
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:535
+#: wayland/outputmanagement_v2.cpp:555
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""

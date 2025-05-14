@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-05-14 00:45+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -4276,27 +4276,27 @@ msgstr "एकं डेस्कटॉपं अधः स्विच कु�
 msgid "Switch to Desktop %1"
 msgstr "डेस्कटॉप %1 प्रति स्विच् कुर्वन्तु"
 
-#: wayland/outputmanagement_v2.cpp:471
+#: wayland/outputmanagement_v2.cpp:491
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "प्रासंगिकनिर्गमानाम् एकं उत्पादनं अधुना उपलब्धं नास्ति"
 
-#: wayland/outputmanagement_v2.cpp:489
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "विन्यासपरिवर्तनद्वारा सर्वाणि निर्गमानाम् अक्षमीकरणं न अनुमतम्"
 
-#: wayland/outputmanagement_v2.cpp:499
+#: wayland/outputmanagement_v2.cpp:519
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "प्रदत्तनिर्गमक्रमे सर्वाणि निर्गमाः न सन्ति"
 
-#: wayland/outputmanagement_v2.cpp:517
+#: wayland/outputmanagement_v2.cpp:537
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "प्रदत्तः आउटपुट् क्रमः अमान्यः अस्ति"
 
-#: wayland/outputmanagement_v2.cpp:535
+#: wayland/outputmanagement_v2.cpp:555
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "चालकः निर्गमविन्यासं अङ्गीकृतवान्"

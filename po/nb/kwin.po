@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-13 00:43+0000\n"
+"POT-Creation-Date: 2025-05-14 00:45+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -4297,27 +4297,27 @@ msgstr "Hopp ett skrivebord ned"
 msgid "Switch to Desktop %1"
 msgstr "Bytt til skrivebord %1"
 
-#: wayland/outputmanagement_v2.cpp:471
+#: wayland/outputmanagement_v2.cpp:491
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "En av de relevante utenhetene er ikke tilgjengelige"
 
-#: wayland/outputmanagement_v2.cpp:489
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Avslåing av utenhetene gjennom oppsett er ikke tillatt"
 
-#: wayland/outputmanagement_v2.cpp:499
+#: wayland/outputmanagement_v2.cpp:519
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "Den oppgitte sorteringen av utenheter, inneholder ikke alle utenhetene"
 
-#: wayland/outputmanagement_v2.cpp:517
+#: wayland/outputmanagement_v2.cpp:537
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "Den oppgitte sorteringen av utenhetene er ugyldig"
 
-#: wayland/outputmanagement_v2.cpp:535
+#: wayland/outputmanagement_v2.cpp:555
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Driveren avviste utenhetsoppsettet"
