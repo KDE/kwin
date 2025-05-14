@@ -651,6 +651,7 @@ void Xwayland::updatePrimary()
     Xcb::RandR::ScreenResources resources(kwinApp()->x11RootWindow());
     xcb_randr_crtc_t *crtcs = resources.crtcs();
     if (!crtcs) {
+        qCWarning(KWIN_XWL) << "Failed to get RandR screen resources or CRTCs for updating primary output.";
         return;
     }
 
@@ -664,10 +665,11 @@ void Xwayland::updatePrimary()
             if (outputs && crtcInfo->num_outputs > 0) {
                 qCDebug(KWIN_XWL) << "Setting primary" << primaryOutput << outputs[0];
                 xcb_randr_set_output_primary(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), outputs[0]);
-                break;
+                return;
             }
         }
     }
+    qCDebug(KWIN_XWL) << "Could not find a matching X RandR CRTC/output to set as primary for" << primaryOutput;
 }
 
 bool Xwayland::createX11Connection()
