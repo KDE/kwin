@@ -378,8 +378,10 @@ bool WaylandServer::init()
     m_tabletManagerV2 = new TabletManagerV2Interface(m_display, m_display);
     m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
 
-    auto storage = new XdgSessionConfigStorageV1(KSharedConfig::openStateConfig(QStringLiteral("kwinsessionrc")), this);
-    new XdgSessionManagerV1Interface(m_display, storage, m_display);
+    if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_SESSION_MANAGER") == 1) {
+        auto storage = new XdgSessionConfigStorageV1(KSharedConfig::openStateConfig(QStringLiteral("kwinsessionrc")), this);
+        new XdgSessionManagerV1Interface(m_display, storage, m_display);
+    }
 
     m_xdgDecorationManagerV1 = new XdgDecorationManagerV1Interface(m_display, m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this, [this](XdgToplevelDecorationV1Interface *decoration) {
