@@ -2,5 +2,5 @@
 <def format="2">
   <define name="KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED(className, jsonFile, supported, enabled)" value=""/>
   <define name="KWIN_EFFECT_FACTORY_SUPPORTED(className, jsonFile, supported)" value=""/>
-  <define name="KWIN_SINGLETON(ClassName)" value=""/>
+  <define name="KWIN_SINGLETON(ClassName)" value="public: static ClassName *create(QObject *parent = nullptr); static ClassName *self() { return s_self; } protected: explicit ClassName(QObject *parent = nullptr); private static ClassName *s_self; "/>
 </def>
