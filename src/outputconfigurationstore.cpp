@@ -1049,6 +1049,9 @@ void OutputConfigurationStore::load()
                     break;
                 }
                 state.outputIndex = index;
+            } else {
+                fail = true;
+                break;
             }
             if (const auto it = outputData.find("position"); it != outputData.end()) {
                 const auto obj = it->toObject();
