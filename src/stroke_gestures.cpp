@@ -48,10 +48,12 @@ void stroke_deleter::operator()(stroke_t *s) const
     stroke_free(s);
 }
 
-StrokeGesture::StrokeGesture(const QList<QPointF> &points, QObject *parent)
+StrokeGesture::StrokeGesture(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, const QAction *actionInfo, QObject *parent)
     : QObject(parent)
     , m_points(points)
+    , m_modifiers(modifiers)
     , m_stroke(StrokeGesture::make_stroke(points))
+    , m_actionInfo(actionInfo)
 {
 }
 
@@ -59,7 +61,12 @@ StrokeGesture::~StrokeGesture() = default;
 
 bool StrokeGesture::operator==(const StrokeGesture &other) const
 {
-    return m_points == other.m_points;
+    return m_modifiers == other.m_modifiers && m_points == other.m_points;
+}
+
+Qt::KeyboardModifiers StrokeGesture::modifiers() const
+{
+    return m_modifiers;
 }
 
 const QList<QPointF> &StrokeGesture::points() const
@@ -70,6 +77,11 @@ const QList<QPointF> &StrokeGesture::points() const
 double StrokeGesture::time(int n) const
 {
     return m_stroke ? stroke_get_time(m_stroke.get(), n) : 0.0;
+}
+
+const QAction *StrokeGesture::actionInfo() const
+{
+    return m_actionInfo;
 }
 
 Stroke StrokeGesture::make_stroke(const QList<QPointF> &points)
@@ -109,22 +121,36 @@ bool StrokeGesture::compare(const Stroke &drawn, double &score) const
     return true;
 }
 
-StrokeGestures::StrokeGestures() = default;
+StrokeGestures::StrokeGestures(QObject *parent)
+    : QObject(parent)
+{
+}
+
 StrokeGestures::~StrokeGestures() = default;
 
 bool StrokeGestures::isEmpty() const
 {
-    return m_gestures.empty();
+    return m_gestures.isEmpty();
 }
 
-const QList<StrokeGesture *> &StrokeGestures::list() const
+bool StrokeGestures::isEmpty(Qt::KeyboardModifiers modifiers) const
 {
-    return m_gestures;
+    return m_gestures.find(modifiers) == m_gestures.end();
+}
+
+const QList<StrokeGesture *> StrokeGestures::list() const
+{
+    return m_gestures.values();
+}
+
+const QList<StrokeGesture *> StrokeGestures::list(Qt::KeyboardModifiers modifiers) const
+{
+    return m_gestures.values(modifiers);
 }
 
 void StrokeGestures::add(StrokeGesture *gesture)
 {
-    m_gestures.push_back(gesture);
+    m_gestures.insert(gesture->modifiers(), gesture);
     QObject::connect(gesture, &StrokeGesture::destroyed, this, [this, gesture] {
         remove(gesture);
     });
@@ -133,15 +159,19 @@ void StrokeGestures::add(StrokeGesture *gesture)
 void StrokeGestures::remove(StrokeGesture *gesture)
 {
     QObject::disconnect(gesture, &StrokeGesture::destroyed, this, nullptr);
-    m_gestures.removeAll(gesture);
+    m_gestures.remove(gesture->modifiers(), gesture);
 }
 
-StrokeGesture *StrokeGestures::bestMatch(const QList<QPointF> &points, double &bestScore) const
+StrokeGesture *StrokeGestures::bestMatch(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, double &bestScore) const
 {
+    QList<StrokeGesture *> candidates = m_gestures.values(modifiers);
+    if (candidates.isEmpty()) {
+        return nullptr;
+    }
     StrokeGesture *bestGesture = nullptr;
     Stroke stroke = StrokeGesture::make_stroke(points);
 
-    for (StrokeGesture *candidate : m_gestures) {
+    for (StrokeGesture *candidate : candidates) {
         double score;
         if (!candidate->compare(stroke, score) || score < StrokeGesture::min_matching_score()) {
             continue;

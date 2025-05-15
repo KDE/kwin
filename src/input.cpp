@@ -44,6 +44,7 @@
 #include "popup_input_filter.h"
 #include "screenedge.h"
 #include "screenedgegestures.h"
+#include "stroke_input_filter.h"
 #include "virtualdesktops.h"
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1.h"
@@ -3190,6 +3191,10 @@ void InputRedirection::setupInputFilters()
     if (kwinApp()->supportsGlobalShortcuts()) {
         m_globalShortcutFilter = std::make_unique<GlobalShortcutFilter>();
         installInputEventFilter(m_globalShortcutFilter.get());
+
+        m_strokeInputFilter = std::make_unique<StrokeInputFilter>(
+            kwinApp()->inputConfig()->group(QStringLiteral("LineShapeGestures")), m_shortcuts->strokeGestures());
+        installInputEventFilter(m_strokeInputFilter.get());
     }
 #endif
 
@@ -3226,6 +3231,14 @@ void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
         const KConfigGroup tabletGroup(kwinApp()->inputConfig(), QStringLiteral("Tablet"));
         m_syncTabletWithMouse = tabletGroup.readEntry(QStringLiteral("SyncWithMouse"), false);
     }
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    KConfigGroup toplevelGroup = group;
+    for (; !toplevelGroup.parent().name().isEmpty(); toplevelGroup = toplevelGroup.parent()) { }
+
+    if (toplevelGroup.name() == QLatin1StringView("LineShapeGestures")) {
+        m_strokeInputFilter->reconfigure(toplevelGroup);
+    }
+#endif
 }
 
 void InputRedirection::updateLeds(LEDs leds)
@@ -3541,7 +3554,14 @@ void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction
 void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    m_shortcuts->forceRegisterTouchscreenSwipe(direction, fingerCount, action, progressCallback);
+    m_shortcuts->registerTouchscreenSwipe(direction, fingerCount, action, progressCallback);
+#endif
+}
+
+void InputRedirection::registerStrokeShortcut(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, QAction *action)
+{
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    m_shortcuts->registerStroke(modifiers, points, action);
 #endif
 }
 

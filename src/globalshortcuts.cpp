@@ -15,6 +15,7 @@
 #include "effect/globals.h"
 #include "gestures.h"
 #include "main.h"
+#include "stroke_gestures.h"
 #include "utils/common.h"
 // KDE
 #if KWIN_BUILD_GLOBALSHORTCUTS
@@ -58,6 +59,9 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
         } else {
             QObject::connect(m_pinchGesture.get(), &PinchGesture::cancelled, m_action, &QAction::trigger, Qt::QueuedConnection);
         }
+    } else if (auto strokeGesture = std::get_if<StrokeShortcut>(&sc)) {
+        m_strokeGesture = std::make_unique<StrokeGesture>(strokeGesture->modifiers, strokeGesture->points, m_action);
+        QObject::connect(m_strokeGesture.get(), &StrokeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
     }
 }
 
@@ -90,10 +94,16 @@ PinchGesture *GlobalShortcut::pinchGesture() const
     return m_pinchGesture.get();
 }
 
+StrokeGesture *GlobalShortcut::strokeGesture() const
+{
+    return m_strokeGesture.get();
+}
+
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
     , m_touchpadGestureRecognizer(std::make_unique<GestureRecognizer>())
     , m_touchscreenGestureRecognizer(std::make_unique<GestureRecognizer>())
+    , m_strokeGestures(std::make_unique<StrokeGestures>())
 {
 }
 
@@ -196,6 +206,14 @@ void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(SwipeDirection direct
     m_touchscreenGestureRecognizer->registerSwipeGesture(shortcut.swipeGesture());
     connect(shortcut.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
     m_shortcuts.push_back(std::move(shortcut));
+}
+
+void GlobalShortcutsManager::registerStroke(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, QAction *action)
+{
+    GlobalShortcut sc{StrokeShortcut{modifiers, points}, action};
+    m_strokeGestures->add(sc.strokeGesture());
+    connect(sc.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
+    m_shortcuts.push_back(std::move(sc));
 }
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt, KeyboardKeyState state)
@@ -327,6 +345,11 @@ void GlobalShortcutsManager::cancelModiferOnlySequence()
         m_kglobalAccel->resetModifierOnlyState();
     }
 #endif
+}
+
+StrokeGestures *GlobalShortcutsManager::strokeGestures() const
+{
+    return m_strokeGestures.get();
 }
 
 static QString getComponentName(QAction *shortcutAction)
