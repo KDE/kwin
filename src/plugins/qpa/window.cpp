@@ -122,7 +122,7 @@ void Window::setGeometry(const QRect &rect)
         return;
     }
 
-    QPlatformWindow::setGeometry(rect);
+    QWindowSystemInterface::handleGeometryChange(window(), rect);
 }
 
 WId Window::winId() const
