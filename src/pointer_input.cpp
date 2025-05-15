@@ -459,6 +459,54 @@ void PointerInputRedirection::processHoldGestureCancelled(std::chrono::microseco
     input()->processFilters(std::bind(&InputEventFilter::holdGestureCancelled, std::placeholders::_1, time));
 }
 
+void PointerInputRedirection::processStrokeGestureBegin(const QList<QPointF> &points, std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(std::bind(&InputEventSpy::strokeGestureBegin, std::placeholders::_1, points, time));
+    input()->processFilters(std::bind(&InputEventFilter::strokeGestureBegin, std::placeholders::_1, points, time));
+}
+
+void PointerInputRedirection::processStrokeGestureUpdate(const QList<QPointF> &points, std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(std::bind(&InputEventSpy::strokeGestureUpdate, std::placeholders::_1, points, time));
+    input()->processFilters(std::bind(&InputEventFilter::strokeGestureUpdate, std::placeholders::_1, points, time));
+}
+
+void PointerInputRedirection::processStrokeGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(std::bind(&InputEventSpy::strokeGestureEnd, std::placeholders::_1, time));
+    input()->processFilters(std::bind(&InputEventFilter::strokeGestureEnd, std::placeholders::_1, time));
+}
+
+void PointerInputRedirection::processStrokeGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(std::bind(&InputEventSpy::strokeGestureCancelled, std::placeholders::_1, time));
+    input()->processFilters(std::bind(&InputEventFilter::strokeGestureCancelled, std::placeholders::_1, time));
+}
+
 void PointerInputRedirection::processFrame(KWin::InputDevice *device)
 {
     if (!inited()) {

@@ -78,6 +78,11 @@ public:
     virtual void holdGestureEnd(std::chrono::microseconds time);
     virtual void holdGestureCancelled(std::chrono::microseconds time);
 
+    virtual void strokeGestureBegin(const QList<QPointF> &points, std::chrono::microseconds time);
+    virtual void strokeGestureUpdate(const QList<QPointF> &points, std::chrono::microseconds time);
+    virtual void strokeGestureEnd(std::chrono::microseconds time);
+    virtual void strokeGestureCancelled(std::chrono::microseconds time);
+
     virtual void switchEvent(SwitchEvent *event);
 
     virtual void tabletToolProximityEvent(TabletToolProximityEvent *event);

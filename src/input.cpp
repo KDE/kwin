@@ -43,6 +43,7 @@
 #include "internalwindow.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"
+#include "stroke_input_filter.h"
 #include "virtualdesktops.h"
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1.h"
@@ -198,6 +199,26 @@ bool InputEventFilter::holdGestureEnd(std::chrono::microseconds time)
 }
 
 bool InputEventFilter::holdGestureCancelled(std::chrono::microseconds time)
+{
+    return false;
+}
+
+bool InputEventFilter::strokeGestureBegin(const QList<QPointF> &points, std::chrono::microseconds time)
+{
+    return false;
+}
+
+bool InputEventFilter::strokeGestureUpdate(const QList<QPointF> &points, std::chrono::microseconds time)
+{
+    return false;
+}
+
+bool InputEventFilter::strokeGestureEnd(std::chrono::microseconds time)
+{
+    return false;
+}
+
+bool InputEventFilter::strokeGestureCancelled(std::chrono::microseconds time)
 {
     return false;
 }
@@ -2905,7 +2926,9 @@ void InputRedirection::init()
     connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
             this, &InputRedirection::handleInputConfigChanged);
 #if KWIN_BUILD_GLOBALSHORTCUTS
+    m_strokeGestures = std::make_unique<StrokeGestures>();
     m_shortcuts->init();
+    m_shortcuts->setStrokeGestures(m_strokeGestures.get());
 #endif
 }
 
@@ -3165,6 +3188,9 @@ void InputRedirection::setupInputFilters()
     if (kwinApp()->supportsGlobalShortcuts()) {
         m_globalShortcutFilter = std::make_unique<GlobalShortcutFilter>();
         installInputEventFilter(m_globalShortcutFilter.get());
+
+        m_strokeInputFilter = std::make_unique<StrokeInputFilter>(m_strokeGestures.get());
+        installInputEventFilter(m_strokeInputFilter.get());
     }
 #endif
 
@@ -3517,7 +3543,14 @@ void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction
 void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    m_shortcuts->forceRegisterTouchscreenSwipe(direction, fingerCount, action, progressCallback);
+    m_shortcuts->registerTouchscreenSwipe(direction, fingerCount, action, progressCallback);
+#endif
+}
+
+void InputRedirection::registerStrokeShortcut(const QList<QPointF> &points, QAction *action)
+{
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    m_shortcuts->registerStroke(points, action);
 #endif
 }
 

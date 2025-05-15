@@ -95,6 +95,22 @@ void InputEventSpy::holdGestureCancelled(std::chrono::microseconds time)
 {
 }
 
+void InputEventSpy::strokeGestureBegin(const QList<QPointF> &points, std::chrono::microseconds time)
+{
+}
+
+void InputEventSpy::strokeGestureUpdate(const QList<QPointF> &points, std::chrono::microseconds time)
+{
+}
+
+void InputEventSpy::strokeGestureEnd(std::chrono::microseconds time)
+{
+}
+
+void InputEventSpy::strokeGestureCancelled(std::chrono::microseconds time)
+{
+}
+
 void InputEventSpy::switchEvent(SwitchEvent *event)
 {
 }

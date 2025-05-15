@@ -14,6 +14,7 @@
 #include "effect/globals.h"
 #include "gestures.h"
 #include "main.h"
+#include "stroke_gestures.h"
 #include "utils/common.h"
 // KDE
 #if KWIN_BUILD_GLOBALSHORTCUTS
@@ -53,6 +54,8 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
         if (pinchGesture->scaleCallback) {
             QObject::connect(m_pinchGesture.get(), &PinchGesture::progress, pinchGesture->scaleCallback);
         }
+    } else if (auto strokeGesture = std::get_if<StrokeShortcut>(&sc)) {
+        m_strokeGesture = std::make_unique<StrokeGesture>(strokeGesture->points);
     }
 }
 
@@ -83,6 +86,11 @@ SwipeGesture *GlobalShortcut::swipeGesture() const
 PinchGesture *GlobalShortcut::pinchGesture() const
 {
     return m_pinchGesture.get();
+}
+
+StrokeGesture *GlobalShortcut::strokeGesture() const
+{
+    return m_strokeGesture.get();
 }
 
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
@@ -187,6 +195,16 @@ void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(SwipeDirection direct
     m_touchscreenGestureRecognizer->registerSwipeGesture(shortcut.swipeGesture());
     connect(shortcut.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
     m_shortcuts.push_back(std::move(shortcut));
+}
+
+void GlobalShortcutsManager::registerStroke(const QList<QPointF> &points, QAction *action)
+{
+    if (m_strokeGestures) {
+        GlobalShortcut sc{StrokeShortcut{points}, action};
+        m_strokeGestures->add(sc.strokeGesture());
+        connect(sc.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
+        m_shortcuts.push_back(std::move(sc));
+    }
 }
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
@@ -344,6 +362,16 @@ void GlobalShortcutsManager::processPinchCancel()
 void GlobalShortcutsManager::processPinchEnd()
 {
     m_touchpadGestureRecognizer->endPinchGesture();
+}
+
+void GlobalShortcutsManager::setStrokeGestures(StrokeGestures *gestures)
+{
+    m_strokeGestures = gestures;
+}
+
+StrokeGestures *GlobalShortcutsManager::strokeGestures() const
+{
+    return m_strokeGestures;
 }
 
 } // namespace

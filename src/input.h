@@ -39,6 +39,7 @@ class InputEventSpy;
 class KeyboardInputRedirection;
 class PointerInputRedirection;
 class SeatInterface;
+class StrokeGestures;
 class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
@@ -94,6 +95,7 @@ public:
     void registerTouchpadPinchShortcut(PinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerStrokeShortcut(const QList<QPointF> &points, QAction *action);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     bool supportsPointerWarping() const;
@@ -273,6 +275,7 @@ private:
     QObject *m_lastInputDevice = nullptr;
 
     GlobalShortcutsManager *m_shortcuts;
+    std::unique_ptr<StrokeGestures> m_strokeGestures;
 
     std::vector<std::unique_ptr<InputBackend>> m_inputBackends;
     QList<InputDevice *> m_inputDevices;
@@ -291,6 +294,7 @@ private:
     std::unique_ptr<InputEventFilter> m_lockscreenFilter;
 #endif
     std::unique_ptr<InputEventFilter> m_screenEdgeFilter;
+    std::unique_ptr<InputEventFilter> m_strokeInputFilter;
     std::unique_ptr<InputEventFilter> m_tabboxFilter;
     std::unique_ptr<InputEventFilter> m_globalShortcutFilter;
     std::unique_ptr<InputEventFilter> m_effectsFilter;
@@ -333,6 +337,7 @@ enum Order {
     VirtualTerminal,
     LockScreen,
     ScreenEdge,
+    Stroke,
     DragAndDrop,
     WindowSelector,
     TabBox,
@@ -424,6 +429,11 @@ public:
     virtual bool holdGestureBegin(int fingerCount, std::chrono::microseconds time);
     virtual bool holdGestureEnd(std::chrono::microseconds time);
     virtual bool holdGestureCancelled(std::chrono::microseconds time);
+
+    virtual bool strokeGestureBegin(const QList<QPointF> &points, std::chrono::microseconds time);
+    virtual bool strokeGestureUpdate(const QList<QPointF> &points, std::chrono::microseconds time);
+    virtual bool strokeGestureEnd(std::chrono::microseconds time);
+    virtual bool strokeGestureCancelled(std::chrono::microseconds time);
 
     virtual bool switchEvent(SwitchEvent *event);
 

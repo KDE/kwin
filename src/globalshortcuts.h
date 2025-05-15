@@ -24,6 +24,8 @@ namespace KWin
 class GlobalShortcut;
 class SwipeGesture;
 class PinchGesture;
+class StrokeGesture;
+class StrokeGestures;
 class GestureRecognizer;
 
 enum class DeviceType {
@@ -73,6 +75,8 @@ public:
     void registerTouchscreenSwipe(SwipeGesture *swipeGesture);
     void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
 
+    void registerStroke(const QList<QPointF> &points, QAction *action);
+
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
      *
@@ -117,6 +121,9 @@ public:
     }
 #endif
 
+    StrokeGestures *strokeGestures() const;
+    void setStrokeGestures(StrokeGestures *);
+
 private:
     void objectDeleted(QObject *object);
     bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
@@ -129,6 +136,7 @@ private:
 #endif
     std::unique_ptr<GestureRecognizer> m_touchpadGestureRecognizer;
     std::unique_ptr<GestureRecognizer> m_touchscreenGestureRecognizer;
+    StrokeGestures *m_strokeGestures = nullptr;
 };
 
 struct KeyboardShortcut
@@ -182,8 +190,16 @@ struct RealtimeFeedbackPinchShortcut
         return direction == rhs.direction && fingerCount == rhs.fingerCount;
     }
 };
+struct StrokeShortcut
+{
+    QList<QPointF> points;
+    bool operator==(const StrokeShortcut &rhs) const
+    {
+        return points == rhs.points;
+    }
+};
 
-using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, RealtimeFeedbackSwipeShortcut, RealtimeFeedbackPinchShortcut>;
+using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, RealtimeFeedbackSwipeShortcut, RealtimeFeedbackPinchShortcut, StrokeShortcut>;
 
 class GlobalShortcut
 {
@@ -196,10 +212,12 @@ public:
     const Shortcut &shortcut() const;
     SwipeGesture *swipeGesture() const;
     PinchGesture *pinchGesture() const;
+    StrokeGesture *strokeGesture() const;
 
 private:
     std::shared_ptr<SwipeGesture> m_swipeGesture;
     std::shared_ptr<PinchGesture> m_pinchGesture;
+    std::shared_ptr<StrokeGesture> m_strokeGesture;
     Shortcut m_shortcut = {};
     QAction *m_action = nullptr;
 };

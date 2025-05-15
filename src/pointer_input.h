@@ -38,7 +38,6 @@ namespace Decoration
 class DecoratedWindowImpl;
 }
 
-
 class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
@@ -140,6 +139,22 @@ public:
      * @internal
      */
     void processHoldGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureBegin(const QList<QPointF> &points, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureUpdate(const QList<QPointF> &points, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
