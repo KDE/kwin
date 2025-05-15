@@ -29,6 +29,7 @@
 #include <QStack>
 
 #include <functional>
+#include <vector>
 
 #if KWIN_BUILD_X11
 #include <xcb/xcb.h>
@@ -41,6 +42,7 @@ class QMatrix4x4;
 class QMouseEvent;
 class QWheelEvent;
 class QAction;
+class QPointF;
 class QQmlEngine;
 
 /**
@@ -252,6 +254,15 @@ public:
      * @since 5.25
      */
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
+
+    /**
+     * @brief Registers a global stroke gesture shortcut with the provided @p action.
+     *
+     * @param points The (approximate) pointer movement shape to match against
+     * @param action The action which gets triggered when the gesture triggers
+     * @since 6.5
+     */
+    void registerStrokeShortcut(const std::vector<QPointF> &points, QAction *action);
 
     void reserveElectricBorder(ElectricBorder border, Effect *effect);
     void unreserveElectricBorder(ElectricBorder border, Effect *effect);
