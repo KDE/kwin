@@ -38,6 +38,10 @@ namespace Decoration
 class DecoratedWindowImpl;
 }
 
+enum StrokeGestureUpdate {
+    StartingNewSegment,
+    UpdatingCurrentSegment,
+};
 
 class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
 {
@@ -140,6 +144,22 @@ public:
      * @internal
      */
     void processHoldGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureBegin(Qt::KeyboardModifiers modifiers, const QPointF &initial, const QPointF &latest, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureUpdate(const QPointF &latest, StrokeGestureUpdate type, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
+    /**
+     * @internal
+     */
+    void processStrokeGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */

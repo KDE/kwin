@@ -95,6 +95,22 @@ void InputEventSpy::holdGestureCancelled(std::chrono::microseconds time)
 {
 }
 
+void InputEventSpy::strokeGestureBegin(Qt::KeyboardModifiers modifiers, const QPointF &initial, const QPointF &latest, std::chrono::microseconds time)
+{
+}
+
+void InputEventSpy::strokeGestureUpdate(const QPointF &latest, bool startingNewSegment, std::chrono::microseconds time)
+{
+}
+
+void InputEventSpy::strokeGestureEnd(std::chrono::microseconds time)
+{
+}
+
+void InputEventSpy::strokeGestureCancelled(std::chrono::microseconds time)
+{
+}
+
 void InputEventSpy::switchEvent(SwitchEvent *event)
 {
 }

@@ -9,6 +9,7 @@
 #pragma once
 #include <kwin_export.h>
 
+#include <Qt>
 #include <QtGlobal>
 #include <chrono>
 
@@ -77,6 +78,11 @@ public:
     virtual void holdGestureBegin(int fingerCount, std::chrono::microseconds time);
     virtual void holdGestureEnd(std::chrono::microseconds time);
     virtual void holdGestureCancelled(std::chrono::microseconds time);
+
+    virtual void strokeGestureBegin(Qt::KeyboardModifiers modifiers, const QPointF &initial, const QPointF &latest, std::chrono::microseconds time);
+    virtual void strokeGestureUpdate(const QPointF &latest, bool startingNewSegment, std::chrono::microseconds time);
+    virtual void strokeGestureEnd(std::chrono::microseconds time);
+    virtual void strokeGestureCancelled(std::chrono::microseconds time);
 
     virtual void switchEvent(SwitchEvent *event);
 
