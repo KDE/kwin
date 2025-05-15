@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-16 00:43+0000\n"
+"POT-Creation-Date: 2025-05-15 00:44+0000\n"
 "PO-Revision-Date: 2024-03-12 02:23+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -17,7 +17,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 24.04.70\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:27
+#, kde-format
+msgctxt "@info"
+msgid "Changes will take effect the next time you log in."
+msgstr ""
+
+#: ui/main.qml:31
+#, kde-format
+msgctxt "@action:button"
+msgid "Log Out Now"
+msgstr ""
+
+#: ui/main.qml:52
 #, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
@@ -32,38 +44,38 @@ msgstr ""
 "種權限為了安全性考量預設不允許。如果您需要使用這樣的應用程式，您可以在這裡對"
 "安全性與功能性間選擇您所偏好的平衡。"
 
-#: ui/main.qml:45
+#: ui/main.qml:69
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr "允許舊式 X11 應用程式讀取在所有應用程式內的鍵盤輸入："
 
-#: ui/main.qml:46
+#: ui/main.qml:70
 #, kde-format
 msgid "Never"
 msgstr "永不"
 
-#: ui/main.qml:57
+#: ui/main.qml:81
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "僅 Meta、Control、Alt 與 Shift 鍵"
 
-#: ui/main.qml:68
+#: ui/main.qml:92
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "同上，加上按下 Control、Alt 或 Meta 鍵時所輸入的任何按鍵"
 
-#: ui/main.qml:80
+#: ui/main.qml:104
 #, kde-format
 msgid "Always"
 msgstr "總是"
 
-#: ui/main.qml:95
+#: ui/main.qml:119
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "額外包含滑鼠按鈕"
 
-#: ui/main.qml:111
+#: ui/main.qml:135
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -72,6 +84,13 @@ msgid ""
 msgstr ""
 "請注意，使用這個設定將會使系統安全性降低至與 X11 工作階段相同：惡意軟體執行時"
 "可以監視您所輸入的文字並盜取密碼。請確保您理解並接受這個風險。"
+
+#: ui/main.qml:147
+#, kde-format
+msgctxt "@option:check"
+msgid ""
+"Allow controlling the pointer and keyboard without asking for permission"
+msgstr ""
 
 #~ msgid "Only non-character keys"
 #~ msgstr "僅非字元按鍵"

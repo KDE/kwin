@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-16 00:43+0000\n"
+"POT-Creation-Date: 2025-05-15 00:44+0000\n"
 "PO-Revision-Date: 2024-05-31 14:39+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -17,7 +17,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 24.02.2\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:27
+#, kde-format
+msgctxt "@info"
+msgid "Changes will take effect the next time you log in."
+msgstr ""
+
+#: ui/main.qml:31
+#, kde-format
+msgctxt "@action:button"
+msgid "Log Out Now"
+msgstr ""
+
+#: ui/main.qml:52
 #, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
@@ -35,24 +47,24 @@ msgstr ""
 "szeretne használni, itt kiválaszthatja a biztonság és a funkcionalitás "
 "kívánt egyensúlyát."
 
-#: ui/main.qml:45
+#: ui/main.qml:69
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Más alkalmazásokban beírt billentyűleütések olvasásának engedélyezése "
 "örökölt X11 alkalmazásoknak:"
 
-#: ui/main.qml:46
+#: ui/main.qml:70
 #, kde-format
 msgid "Never"
 msgstr "Soha"
 
-#: ui/main.qml:57
+#: ui/main.qml:81
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Csak Meta, Control, Alt és Shift billentyűk"
 
-#: ui/main.qml:68
+#: ui/main.qml:92
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -60,17 +72,17 @@ msgstr ""
 "Mint fent, plusz bármely billentyű, amelyet a Control, Alt vagy Meta "
 "billentyűk lenyomva tartása közben gépeltek be"
 
-#: ui/main.qml:80
+#: ui/main.qml:104
 #, kde-format
 msgid "Always"
 msgstr "Mindig"
 
-#: ui/main.qml:95
+#: ui/main.qml:119
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Továbbá egérgombok"
 
-#: ui/main.qml:111
+#: ui/main.qml:135
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -81,6 +93,13 @@ msgstr ""
 "biztonságát az X11 munkamenet szintjére azzal, hogy lehetővé teszi "
 "rosszindulatú szoftvereknek jelszavak ellopását vagy a begépelt szöveg utáni "
 "kémkedést. Győzödjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
+
+#: ui/main.qml:147
+#, kde-format
+msgctxt "@option:check"
+msgid ""
+"Allow controlling the pointer and keyboard without asking for permission"
+msgstr ""
 
 #~ msgid "Only non-character keys"
 #~ msgstr "Csak nem karakter billentyűk"

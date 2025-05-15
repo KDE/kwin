@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-16 00:43+0000\n"
+"POT-Creation-Date: 2025-05-15 00:44+0000\n"
 "PO-Revision-Date: 2023-12-02 20:12+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -17,7 +17,19 @@ msgstr ""
 "X-Generator: Lokalize 24.01.80\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:27
+#, kde-format
+msgctxt "@info"
+msgid "Changes will take effect the next time you log in."
+msgstr ""
+
+#: ui/main.qml:31
+#, kde-format
+msgctxt "@action:button"
+msgid "Log Out Now"
+msgstr ""
+
+#: ui/main.qml:52
 #, fuzzy, kde-format
 #| msgid ""
 #| "Legacy X11 apps require the ability to read keystrokes typed in other "
@@ -39,25 +51,25 @@ msgstr ""
 "nastavení zakázané. Ak potrebujete používať takéto aplikácie, môžete si tu "
 "zvoliť preferovanú rovnováhu medzi bezpečnosťou a funkčnosťou."
 
-#: ui/main.qml:45
+#: ui/main.qml:69
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Umožniť starším aplikáciám X11 čítať stlačené klávesy zadané vo všetkých "
 "aplikáciách:"
 
-#: ui/main.qml:46
+#: ui/main.qml:70
 #, kde-format
 msgid "Never"
 msgstr "Nikdy"
 
-#: ui/main.qml:57
+#: ui/main.qml:81
 #, fuzzy, kde-format
 #| msgid "Only Meta, Control, Alt, and Shift keys"
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Len klávesy Meta, Control, Alt a Shift"
 
-#: ui/main.qml:68
+#: ui/main.qml:92
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -65,17 +77,17 @@ msgstr ""
 "Ako vyššie, okrem toho akýkoľvek kláves napísaný pri stlačených klávesoch "
 "Control, Alt alebo Meta."
 
-#: ui/main.qml:80
+#: ui/main.qml:104
 #, kde-format
 msgid "Always"
 msgstr "Vždy"
 
-#: ui/main.qml:95
+#: ui/main.qml:119
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr ""
 
-#: ui/main.qml:111
+#: ui/main.qml:135
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -86,6 +98,13 @@ msgstr ""
 "na úroveň sedenia X11, pretože umožní škodlivému softvéru kradnúť heslá a "
 "špehovať text, ktorý zadávate. Uistite sa, že tomuto riziku rozumiete a "
 "akceptujete ho."
+
+#: ui/main.qml:147
+#, kde-format
+msgctxt "@option:check"
+msgid ""
+"Allow controlling the pointer and keyboard without asking for permission"
+msgstr ""
 
 #~ msgid "Only non-character keys"
 #~ msgstr "Len iné ako znakové klávesy"

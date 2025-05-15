@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-14 00:45+0000\n"
+"POT-Creation-Date: 2025-05-15 00:44+0000\n"
 "PO-Revision-Date: 2025-04-30 09:36+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1419,60 +1419,60 @@ msgstr "השבתת אפשרויות הגדרה"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "מציין כי KWin קרס לאחרונה n פעמים"
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:298
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "הפעלת שרת Xwayless לא כמשתמש על."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:301
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "שם שקע (socket) ה־Wayland להאזין לו. אם לא הוגדר, ייעשה שימוש ב־„wayland-0”."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:305
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "תצוגת ה־X11 לשימוש במצב חלוני בפלטפורמת X11."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:309
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "תצוגת ה־Wayland לשימוש במצב חלוני בפלטפורמת Wayland."
 
-#: main_wayland.cpp:309
+#: main_wayland.cpp:311
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "עיבוד למכלא חוזי וירטואלי."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:313
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "רוחב למצב חלון. רוחב ברירת המחדל הוא 1024."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "גובה למצב חלון. גובה ברירת המחדל הוא 768."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "האם להפוך מצב חלון למסך מלא או לא"
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:326
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "קנה המידה למצב חלון. ערך ברירת המחדל הוא 1."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "מספר החלונות לפתיחה כערוצי פלט במצב חלוני. ערך ברירת המחדל הוא 1"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:336
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1481,7 +1481,7 @@ msgstr ""
 "שקע (socket) Wayland לשימוש לחיבורים נכנסים. אפשר לשלב את זה עם ‎--socket כדי "
 "לתת שם לשקע"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:340
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1490,64 +1490,64 @@ msgstr ""
 "שקע (socket) XWayland לשימוש לחיבורי Xwayland הנכנסים. אפשר להגדיר את זה "
 "מספר פעמים"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:344
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "שם תצוגת ה־xwayland שהוקמה מראש"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:348
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "שם קובץ ה־xauthority "
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "יוצא מהמופע הזה כדי שניתן יהיה להפעיל אותו מחדש על ידי kwin_wayland_wrapper."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:354
 #, kde-format
 msgid "Render through drm node."
 msgstr "עיבוד דרך צומת drm."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:355
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "חילוץ פרטי הגדרות אזוריות מ־locale1 במקום מהגדרות המשתמש"
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:382
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "שיטת הקלט בה KWin יתחיל."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "מפעיל את ההפעלה במצב נעול."
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במסך נעילה."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:397
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "מפעיל את ההפעלה ללא תמיכה במקשי קיצור גלובליים."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:402
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "השבתת שילוב מול KActivities."
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:407
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "לצאת לאחר יציאת יישום ההפעלה, שהופעל על ידי KWin."
 
-#: main_wayland.cpp:410
+#: main_wayland.cpp:412
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "יישומים להתחלה מיד לאחר התחלת שרתי Wayland ו־Xwayland"
@@ -2498,31 +2498,31 @@ msgstr "אנכי:"
 msgid "Slide desktop background"
 msgstr "החלקת רקע שולחן העבודה"
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Shift ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Control ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Alt ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Meta ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
@@ -4326,7 +4326,7 @@ msgstr ""
 "נא לפרסם את המידע שסופק מתחת לפסקת ההיכרות הזאת לשירות הדבקת תוכן\n"
 "כגון https://paste.kde.org במקום להדביק אותו לתוך שרשורי תמיכה.\n"
 
-#: xwayland/xwaylandlauncher.cpp:270
+#: xwayland/xwaylandlauncher.cpp:295
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland קרס"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-14 00:45+0000\n"
+"POT-Creation-Date: 2025-05-15 00:44+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1433,12 +1433,12 @@ msgstr "Slå av oppsettsvalg"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Viser at KWin nylig har krasjet n ganger"
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:298
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Start en rotløs XWayland-tjener."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:301
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1446,50 +1446,50 @@ msgstr ""
 "Navn på Wayland-sokkelen det lyttes på. «wayland-0» brukes hvis ingenting er "
 "satt."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:305
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11-skjermbilder som ska brukes i vindusmodus på X11-plattformen."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:309
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Wayland-skjermbildet som skal brukes i vindusmodus på Wayland-plattformen."
 
-#: main_wayland.cpp:309
+#: main_wayland.cpp:311
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Tegn opp til virtuell bildebuffer."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:313
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Bredden for vindusmodus. Standardbredden er 1024."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Høyden for vindusmodus. Standardhøyden er 768."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "Om vindusmodus skal bli til fullskjermmodus"
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:326
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Skala for vindusmodus. Standardverdien er 1."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "Tallet på vinduer å åpne for utdata i vindusmodus. Standardverdien er 1."
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:336
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1498,7 +1498,7 @@ msgstr ""
 "Wayland-sokkelen som skal brukes for innkommende tilkoblinger. Du kan "
 "kombinere dette med «--socket» for å gi sokkelen et navn."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:340
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1507,65 +1507,65 @@ msgstr ""
 "XWayland-sokkel som skal brukes for innkommende tilkoblinger til XWayland. "
 "Kan oppgis flere ganger."
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:344
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Navn på XWayland-skjerm som er satt opp på forhånd"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:348
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Navn på xauthority-fil "
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Avslutter denne instansen, slik at den kan startes på nytt med "
 "«kwin_wayland_wrapper»."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:354
 #, kde-format
 msgid "Render through drm node."
 msgstr "Tegn opp gjennom drm-node."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:355
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Hent lokale-informasjon fra locale1 og ikke fra brukeroppsettet"
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:382
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Inndata-metode som KWin starter."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Starter økta i låst modus."
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Starter økta uten støtte for skjermlås."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:397
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Starter økta uten støtte for globale snarveier."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:402
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Slå av KAactivities-integrasjon"
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:407
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Avslutt etter at øktprogrammet, som ble startet av KWin, lukkes."
 
-#: main_wayland.cpp:410
+#: main_wayland.cpp:412
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Programmer som skal startes når Wayland og XWayland-tjener er startet"
@@ -2512,35 +2512,35 @@ msgstr "Loddrett:"
 msgid "Slide desktop background"
 msgstr "Gli skrivebordsbakgrunn"
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 "«Shift»-tasten er låst og kan nå brukes sammen med alle følgende tastetrykk."
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 "«Ctrl»-tasten er låst og kan nå brukes sammen med alle følgende tastetrykk."
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 "«Alt»-tasten er låst og kan nå brukes sammen med alle følgende tastetrykk."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 "«Meta»-tasten er låst og kan nå brukes sammen med alle følgende tastetrykk."
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
@@ -4352,7 +4352,7 @@ msgstr ""
 "tjeneste,\n"
 "for eksempel http://paste.kde.org og ikke limes inn i hjelpemeldingene.\n"
 
-#: xwayland/xwaylandlauncher.cpp:270
+#: xwayland/xwaylandlauncher.cpp:295
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"

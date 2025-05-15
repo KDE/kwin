@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-14 00:45+0000\n"
+"POT-Creation-Date: 2025-05-15 00:44+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -1441,12 +1441,12 @@ msgstr "Zakázať možnosti nastavenia"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Zdá sa, že KWin v poslednej dobe n-krát spadol"
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:298
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Spustí rootless Xwayland server."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:301
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1454,49 +1454,49 @@ msgstr ""
 "Názov Wayland socketu, kde počúvať. Ak nie je nastavené, použije sa "
 "\"wayland-0\"."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:305
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 obrazovka pre režim v okne na platforme X11."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:309
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland obrazovka pre režim v okne na platforme Wayland."
 
-#: main_wayland.cpp:309
+#: main_wayland.cpp:311
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Renderovať na virtuálny framebuffer."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:313
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Šírka pre režim v okne. Predvolená šírka je 1024."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Výška pre režim v okne. Predvolená výška je 768."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr ""
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:326
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Mierka pre režim v okne. Predvolená hodnota je 1."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:331
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "Počet okien na otvorenie ako výstupov v režime okna. Predvolená hodnota je 1"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:336
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1505,7 +1505,7 @@ msgstr ""
 "Wayland socket na použitie pre prichádzajúce spojenia. To je možné "
 "skombinovať s --socket na pomenovanie socketu"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:340
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1514,66 +1514,66 @@ msgstr ""
 "XWayland socket na použitie pre prichádzajúce pripojenia Xwayland. Toto je "
 "možné nastaviť viackrát"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:344
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Názov vopred nastaveného displeja xwayland"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:348
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Názov súboru xauthority "
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Ukončí túto inštanciu, aby ju bolo možné reštartovať pomocou "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:354
 #, kde-format
 msgid "Render through drm node."
 msgstr "Renderovať cez režim drm."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:355
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Získať informácie o lokalizácii z locale1 a nie z konfigurácie používateľa"
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:382
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Vstupná metóda, ktorú KWin spustí."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:388
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Spustí sedenie v zamknutom režime."
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:392
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Spustí sedenie bez podpory zaknutia obrazovky."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:397
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Spustí sedenie bez podpory globálnych skratiek."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:402
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Zakázať integrácoi KActivities."
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:407
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Ukončiť po použití sedenia, ktoré je spustené Kwin, zatvorené."
 
-#: main_wayland.cpp:410
+#: main_wayland.cpp:412
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Aplikácie na jedno spustenie servera Wayland a Xwayland sú spustené"
@@ -2537,31 +2537,31 @@ msgstr "Zvislo:"
 msgid "Slide desktop background"
 msgstr "Posúvať pozadie plochy"
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
 
-#: plugins/stickykeys/stickykeys.cpp:28
+#: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
@@ -4386,7 +4386,7 @@ msgstr ""
 "Prosím zadajte dolu poskytnuté informácie na službu pastebin\n"
 "ako http://paste.kde.org namiesto vloženia do fóra podpory.\n"
 
-#: xwayland/xwaylandlauncher.cpp:270
+#: xwayland/xwaylandlauncher.cpp:295
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadol"

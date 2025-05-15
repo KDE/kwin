@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-16 00:43+0000\n"
+"POT-Creation-Date: 2025-05-15 00:44+0000\n"
 "PO-Revision-Date: 2022-12-24 07:21+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -18,7 +18,19 @@ msgstr ""
 "X-POFile-SpellExtra: Control\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:27
+#, kde-format
+msgctxt "@info"
+msgid "Changes will take effect the next time you log in."
+msgstr ""
+
+#: ui/main.qml:31
+#, kde-format
+msgctxt "@action:button"
+msgid "Log Out Now"
+msgstr ""
+
+#: ui/main.qml:52
 #, fuzzy, kde-format
 #| msgid ""
 #| "Legacy X11 apps require the ability to read keystrokes typed in other "
@@ -41,25 +53,25 @@ msgstr ""
 "poderá escolher aí o seu ponto de equilíbrio entre segurança e "
 "funcionalidade."
 
-#: ui/main.qml:45
+#: ui/main.qml:69
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Permitir às aplicações de X11 antigas lerem o texto escrito em todas as "
 "aplicações"
 
-#: ui/main.qml:46
+#: ui/main.qml:70
 #, kde-format
 msgid "Never"
 msgstr "Nunca"
 
-#: ui/main.qml:57
+#: ui/main.qml:81
 #, fuzzy, kde-format
 #| msgid "Only Meta, Control, Alt, and Shift keys"
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Apenas as teclas Meta, Control, Alt e Shift"
 
-#: ui/main.qml:68
+#: ui/main.qml:92
 #, fuzzy, kde-format
 #| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgid ""
@@ -68,17 +80,17 @@ msgstr ""
 "Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
 "estiverem carregadas"
 
-#: ui/main.qml:80
+#: ui/main.qml:104
 #, kde-format
 msgid "Always"
 msgstr "Sempre"
 
-#: ui/main.qml:95
+#: ui/main.qml:119
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr ""
 
-#: ui/main.qml:111
+#: ui/main.qml:135
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -89,6 +101,13 @@ msgstr ""
 "à da sessão de X11, permitindo que algumas aplicações maliciosas roubem as "
 "senhas e olhem para o texto que escreve. Certifique-se que compreende e "
 "aceita esse risco."
+
+#: ui/main.qml:147
+#, kde-format
+msgctxt "@option:check"
+msgid ""
+"Allow controlling the pointer and keyboard without asking for permission"
+msgstr ""
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "
