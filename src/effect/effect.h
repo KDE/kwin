@@ -28,6 +28,10 @@ class RenderTarget;
 class PointerButtonEvent;
 class PointerMotionEvent;
 class RenderViewport;
+struct StrokeGestureBeginEvent;
+struct StrokeGestureUpdateEvent;
+struct StrokeGestureEndEvent;
+struct StrokeGestureCancelEvent;
 struct TabletToolProximityEvent;
 struct TabletToolTipEvent;
 struct TabletToolAxisEvent;
@@ -933,6 +937,28 @@ public:
      * \since 6.3
      */
     virtual void touchCancel();
+
+    /*!
+     * Stroke gesture recognition has been initiated.
+     * @since 6.8
+     */
+    virtual void strokeGestureBegin(const StrokeGestureBeginEvent *event);
+    /*!
+     * The previously initiated stroke gesture is updated with a new point along the stroke path.
+     * \since 6.8
+     */
+    virtual void strokeGestureUpdate(const StrokeGestureUpdateEvent *event);
+    /*!
+     * Stroke gesture recognition completed, having matched a registered stroke and executing its
+     * associated action.
+     * \since 6.8
+     */
+    virtual void strokeGestureEnd(const StrokeGestureEndEvent *event);
+    /*!
+     * Stroke gesture recognition completed without having matched a registered stroke.
+     * \since 6.8
+     */
+    virtual void strokeGestureCancelled(const StrokeGestureCancelEvent *event);
 
     /*!
      * There has been a proximity tablet tool event.

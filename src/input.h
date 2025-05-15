@@ -40,6 +40,7 @@ class InputEventSpy;
 class KeyboardInputRedirection;
 class PointerInputRedirection;
 class SeatInterface;
+class StrokeInputFilter;
 class TabletInputRedirection;
 class TouchInputRedirection;
 class Window;
@@ -113,6 +114,7 @@ public:
     void registerTouchpadPinchShortcut(PinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerStrokeShortcut(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, QAction *action);
     ConfigurableGesture *registerGesture(QAction *shortcutAction);
 
     bool supportsPointerWarping() const;
@@ -315,6 +317,7 @@ private:
     std::unique_ptr<InputEventFilter> m_lockscreenFilter;
 #endif
     std::unique_ptr<InputEventFilter> m_screenEdgeFilter;
+    std::unique_ptr<StrokeInputFilter> m_strokeInputFilter;
     std::unique_ptr<InputEventFilter> m_tabboxFilter;
     std::unique_ptr<InputEventFilter> m_globalShortcutFilter;
     std::unique_ptr<InputEventFilter> m_effectsFilter;
@@ -360,6 +363,7 @@ enum Order {
     VirtualTerminal,
     LockScreen,
     ScreenEdge,
+    Stroke,
     DragAndDrop,
     WindowSelector,
     TabBox,

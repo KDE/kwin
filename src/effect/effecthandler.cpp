@@ -605,6 +605,34 @@ void EffectsHandler::touchCancel()
     }
 }
 
+void EffectsHandler::strokeGestureBegin(const KWin::StrokeGestureBeginEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureBegin(event);
+    }
+}
+
+void EffectsHandler::strokeGestureUpdate(const KWin::StrokeGestureUpdateEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureUpdate(event);
+    }
+}
+
+void EffectsHandler::strokeGestureEnd(const KWin::StrokeGestureEndEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureEnd(event);
+    }
+}
+
+void EffectsHandler::strokeGestureCancelled(const KWin::StrokeGestureCancelEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureCancelled(event);
+    }
+}
+
 bool EffectsHandler::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     // TODO: reverse call order?
@@ -716,6 +744,11 @@ void EffectsHandler::registerTouchpadPinchShortcut(PinchDirection dir, uint fing
 void EffectsHandler::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
     input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
+}
+
+void EffectsHandler::registerStrokeShortcut(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, QAction *action)
+{
+    input()->registerStrokeShortcut(modifiers, points, action);
 }
 
 bool EffectsHandler::hasKeyboardGrab() const
