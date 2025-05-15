@@ -109,6 +109,7 @@ private:
     bool screenExistsAt(const QPoint &point) const;
     void realtimeZoom(double delta);
 
+    QPointF calculateCursorItemPosition() const;
     void showCursor();
     void hideCursor();
     GLTexture *ensureCursorTexture();
@@ -137,6 +138,8 @@ private:
     QTimeLine m_timeline;
     int m_xMove = 0;
     int m_yMove = 0;
+    int m_xTranslation = 0;
+    int m_yTranslation = 0;
     double m_moveFactor = 20.0;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
     std::map<Output *, OffscreenData> m_offscreenData;
