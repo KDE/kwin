@@ -474,6 +474,55 @@ void PointerInputRedirection::processHoldGestureCancelled(std::chrono::microseco
     input()->processFilters(&InputEventFilter::holdGestureCancelled, time);
 }
 
+void PointerInputRedirection::processStrokeGestureBegin(Qt::KeyboardModifiers modifiers, const QPointF &initial, const QPointF &latest, std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(&InputEventSpy::strokeGestureBegin, modifiers, initial, latest, time);
+    input()->processFilters(&InputEventFilter::strokeGestureBegin, modifiers, initial, latest, time);
+}
+
+void PointerInputRedirection::processStrokeGestureUpdate(const QPointF &latest, StrokeGestureUpdate type, std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    bool startingNewSegment = type == StrokeGestureUpdate::StartingNewSegment;
+    input()->processSpies(&InputEventSpy::strokeGestureUpdate, latest, startingNewSegment, time);
+    input()->processFilters(&InputEventFilter::strokeGestureUpdate, latest, startingNewSegment, time);
+}
+
+void PointerInputRedirection::processStrokeGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(&InputEventSpy::strokeGestureEnd, time);
+    input()->processFilters(&InputEventFilter::strokeGestureEnd, time);
+}
+
+void PointerInputRedirection::processStrokeGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
+{
+    input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+    update();
+
+    input()->processSpies(&InputEventSpy::strokeGestureCancelled, time);
+    input()->processFilters(&InputEventFilter::strokeGestureCancelled, time);
+}
+
 void PointerInputRedirection::processFrame(KWin::InputDevice *device)
 {
     if (!inited()) {
