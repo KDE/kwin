@@ -217,6 +217,7 @@ target_sources(kwin PRIVATE
     shadow.cpp
     sm.cpp
     stroke_gestures.cpp
+    stroke_input_filter.cpp
     swapchain.cpp
     tablet_input.cpp
     tabletmodemanager.cpp

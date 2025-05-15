@@ -34,6 +34,11 @@ class SurfaceCursorSource;
 class PointerSurfaceCursor;
 class SurfaceInterface;
 
+enum StrokeGestureUpdate {
+    StartingNewSegment,
+    UpdatingCurrentSegment,
+};
+
 namespace Decoration
 {
 
