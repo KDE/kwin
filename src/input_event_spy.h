@@ -9,6 +9,7 @@
 #pragma once
 #include <kwin_export.h>
 
+#include <Qt>
 #include <QtGlobal>
 #include <chrono>
 

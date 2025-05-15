@@ -38,6 +38,10 @@ namespace Decoration
 class DecoratedWindowImpl;
 }
 
+enum StrokeGestureUpdate {
+    StartingNewSegment,
+    UpdatingCurrentSegment,
+};
 
 class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
 {

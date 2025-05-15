@@ -141,6 +141,33 @@ struct TouchUpEvent
     std::chrono::microseconds time;
 };
 
+struct StrokeGestureBeginEvent
+{
+    Qt::KeyboardModifiers modifiers;
+    QPointF origin;
+    QPointF latestPos;
+    std::chrono::microseconds time;
+};
+
+struct StrokeGestureUpdateEvent
+{
+    QPointF segmentOrigin;
+    QPointF latestPos;
+    bool startingNewSegment;
+    std::chrono::microseconds time;
+};
+
+struct StrokeGestureEndEvent
+{
+    const QAction *triggeredAction;
+    std::chrono::microseconds time;
+};
+
+struct StrokeGestureCancelEvent
+{
+    std::chrono::microseconds time;
+};
+
 struct KeyboardKeyEvent
 {
     InputDevice *device;

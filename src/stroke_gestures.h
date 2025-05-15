@@ -12,10 +12,13 @@
 #pragma once
 
 #include <QList>
+#include <QMultiMap>
 #include <QObject>
 #include <QPointF>
 
 #include <memory> // std::unique_ptr
+
+class QAction;
 
 namespace KWin
 {
@@ -35,7 +38,7 @@ class StrokeGesture : public QObject
     Q_OBJECT
 
 public:
-    explicit StrokeGesture(const QList<QPointF> &points, QObject *parent = nullptr);
+    explicit StrokeGesture(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, const QAction *actionInfo = nullptr, QObject *parent = nullptr);
     ~StrokeGesture() override;
 
     StrokeGesture(const StrokeGesture &) = delete;
@@ -43,8 +46,10 @@ public:
 
     bool operator==(const StrokeGesture &) const;
 
+    Qt::KeyboardModifiers modifiers() const;
     const QList<QPointF> &points() const;
     double time(int n) const;
+    const QAction *actionInfo() const; // not triggered directly by this class, for informational use only
 
     static Stroke make_stroke(const QList<QPointF> &points);
     static double min_matching_score();
@@ -52,13 +57,15 @@ public:
 
 Q_SIGNALS:
     /**
-     * Gesture matching ended and this Gesture matched.
+     * Gesture matching ended and this StrokeGesture matched.
      */
     void triggered();
 
 private:
     QList<QPointF> m_points;
+    Qt::KeyboardModifiers m_modifiers;
     Stroke m_stroke;
+    const QAction *m_actionInfo;
 };
 
 class StrokeGestures : public QObject
@@ -66,19 +73,21 @@ class StrokeGestures : public QObject
     Q_OBJECT
 
 public:
-    StrokeGestures();
+    StrokeGestures(QObject *parent = nullptr);
     ~StrokeGestures() override;
 
     bool isEmpty() const;
-    const QList<StrokeGesture *> &list() const;
+    bool isEmpty(Qt::KeyboardModifiers modifiers) const;
+    const QList<StrokeGesture *> list() const;
+    const QList<StrokeGesture *> list(Qt::KeyboardModifiers modifiers) const;
 
     void add(StrokeGesture *gesture);
     void remove(StrokeGesture *gesture);
 
-    StrokeGesture *bestMatch(const QList<QPointF> &points, double &bestScore) const;
+    StrokeGesture *bestMatch(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, double &bestScore) const;
 
 private:
-    QList<StrokeGesture *> m_gestures;
+    QMultiMap<Qt::KeyboardModifiers, StrokeGesture *> m_gestures;
 };
 
 } // namespace KWin
