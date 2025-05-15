@@ -589,6 +589,34 @@ void EffectsHandler::touchCancel()
     }
 }
 
+void EffectsHandler::strokeGestureBegin(const KWin::StrokeGestureBeginEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureBegin(event);
+    }
+}
+
+void EffectsHandler::strokeGestureUpdate(const KWin::StrokeGestureUpdateEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureUpdate(event);
+    }
+}
+
+void EffectsHandler::strokeGestureEnd(const KWin::StrokeGestureEndEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureEnd(event);
+    }
+}
+
+void EffectsHandler::strokeGestureCancelled(const KWin::StrokeGestureCancelEvent *event)
+{
+    for (const auto &[name, effect] : std::as_const(loaded_effects)) {
+        effect->strokeGestureCancelled(event);
+    }
+}
+
 bool EffectsHandler::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     // TODO: reverse call order?
@@ -700,6 +728,11 @@ void EffectsHandler::registerTouchpadPinchShortcut(PinchDirection dir, uint fing
 void EffectsHandler::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
     input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
+}
+
+void EffectsHandler::registerStrokeShortcut(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, QAction *action)
+{
+    input()->registerStrokeShortcut(modifiers, points, action);
 }
 
 bool EffectsHandler::hasKeyboardGrab() const
@@ -1009,8 +1042,8 @@ QList<EffectWindow *> EffectsHandler::currentTabBoxWindowList() const
     std::transform(std::cbegin(clients), std::cend(clients),
                    std::back_inserter(ret),
                    [](auto client) {
-                       return client->effectWindow();
-                   });
+        return client->effectWindow();
+    });
     return ret;
 #else
     return QList<EffectWindow *>();
@@ -1193,8 +1226,8 @@ QStringList EffectsHandler::loadedEffects() const
     std::transform(loaded_effects.constBegin(), loaded_effects.constEnd(),
                    std::back_inserter(listModules),
                    [](const EffectPair &pair) {
-                       return pair.first;
-                   });
+        return pair.first;
+    });
     return listModules;
 }
 
@@ -1215,8 +1248,8 @@ void EffectsHandler::unloadEffect(const QString &name)
 {
     auto it = std::find_if(effect_order.begin(), effect_order.end(),
                            [name](EffectPair &pair) {
-                               return pair.first == name;
-                           });
+        return pair.first == name;
+    });
     if (it == effect_order.end()) {
         qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Effect not loaded :" << name;
         return;
@@ -1278,8 +1311,8 @@ bool EffectsHandler::isEffectLoaded(const QString &name) const
 {
     auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(),
                            [&name](const EffectPair &pair) {
-                               return pair.first == name;
-                           });
+        return pair.first == name;
+    });
     return it != loaded_effects.constEnd();
 }
 
@@ -1303,8 +1336,8 @@ QList<bool> EffectsHandler::areEffectsSupported(const QStringList &names)
     std::transform(names.constBegin(), names.constEnd(),
                    std::back_inserter(retList),
                    [this](const QString &name) {
-                       return isEffectSupported(name);
-                   });
+        return isEffectSupported(name);
+    });
     return retList;
 }
 
@@ -1396,8 +1429,8 @@ QString EffectsHandler::supportInformation(const QString &name) const
 {
     auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(),
                            [name](const EffectPair &pair) {
-                               return pair.first == name;
-                           });
+        return pair.first == name;
+    });
     if (it == loaded_effects.constEnd()) {
         return QString();
     }

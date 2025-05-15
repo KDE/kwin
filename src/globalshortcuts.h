@@ -26,6 +26,8 @@ namespace KWin
 class GlobalShortcut;
 class SwipeGesture;
 class PinchGesture;
+class StrokeGesture;
+class StrokeGestures;
 class GestureRecognizer;
 
 enum class DeviceType {
@@ -75,6 +77,8 @@ public:
     void registerTouchscreenSwipe(SwipeGesture *swipeGesture);
     void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
 
+    void registerStroke(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, QAction *action);
+
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
      *
@@ -113,6 +117,8 @@ public:
 
     void cancelModiferOnlySequence();
 
+    StrokeGestures *strokeGestures() const;
+
 private:
     void objectDeleted(QObject *object);
     bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
@@ -125,33 +131,25 @@ private:
 #endif
     std::unique_ptr<GestureRecognizer> m_touchpadGestureRecognizer;
     std::unique_ptr<GestureRecognizer> m_touchscreenGestureRecognizer;
+    std::unique_ptr<StrokeGestures> m_strokeGestures;
 };
 
 struct KeyboardShortcut
 {
     QKeySequence sequence;
-    bool operator==(const KeyboardShortcut &rhs) const
-    {
-        return sequence == rhs.sequence;
-    }
+    bool operator==(const KeyboardShortcut &) const = default;
 };
 struct PointerButtonShortcut
 {
     Qt::KeyboardModifiers pointerModifiers;
     Qt::MouseButtons pointerButtons;
-    bool operator==(const PointerButtonShortcut &rhs) const
-    {
-        return pointerModifiers == rhs.pointerModifiers && pointerButtons == rhs.pointerButtons;
-    }
+    bool operator==(const PointerButtonShortcut &) const = default;
 };
 struct PointerAxisShortcut
 {
     Qt::KeyboardModifiers axisModifiers;
     PointerAxisDirection axisDirection;
-    bool operator==(const PointerAxisShortcut &rhs) const
-    {
-        return axisModifiers == rhs.axisModifiers && axisDirection == rhs.axisDirection;
-    }
+    bool operator==(const PointerAxisShortcut &rhs) const = default;
 };
 struct RealtimeFeedbackSwipeShortcut
 {
@@ -178,8 +176,14 @@ struct RealtimeFeedbackPinchShortcut
         return direction == rhs.direction && fingerCount == rhs.fingerCount;
     }
 };
+struct StrokeShortcut
+{
+    Qt::KeyboardModifiers modifiers;
+    QList<QPointF> points;
+    bool operator==(const StrokeShortcut &rhs) const = default;
+};
 
-using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, RealtimeFeedbackSwipeShortcut, RealtimeFeedbackPinchShortcut>;
+using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, RealtimeFeedbackSwipeShortcut, RealtimeFeedbackPinchShortcut, StrokeShortcut>;
 
 class GlobalShortcut
 {
@@ -192,10 +196,12 @@ public:
     const Shortcut &shortcut() const;
     SwipeGesture *swipeGesture() const;
     PinchGesture *pinchGesture() const;
+    StrokeGesture *strokeGesture() const;
 
 private:
     std::shared_ptr<SwipeGesture> m_swipeGesture;
     std::shared_ptr<PinchGesture> m_pinchGesture;
+    std::shared_ptr<StrokeGesture> m_strokeGesture;
     Shortcut m_shortcut = {};
     QAction *m_action = nullptr;
 };

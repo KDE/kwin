@@ -480,6 +480,22 @@ bool Effect::perform(Feature feature, const QVariantList &arguments)
     return false;
 }
 
+void Effect::strokeGestureBegin(const KWin::StrokeGestureBeginEvent *event)
+{
+}
+
+void Effect::strokeGestureUpdate(const KWin::StrokeGestureUpdateEvent *event)
+{
+}
+
+void Effect::strokeGestureEnd(const KWin::StrokeGestureEndEvent *event)
+{
+}
+
+void Effect::strokeGestureCancelled(const KWin::StrokeGestureCancelEvent *event)
+{
+}
+
 bool Effect::tabletToolProximity(TabletToolProximityEvent *event)
 {
     return false;

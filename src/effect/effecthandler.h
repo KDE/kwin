@@ -16,6 +16,8 @@
 
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
+#include "input_event.h"
+#include "stroke_gestures.h"
 
 #include <QEasingCurve>
 #include <QIcon>
@@ -43,6 +45,7 @@ class QMatrix4x4;
 class QMouseEvent;
 class QWheelEvent;
 class QAction;
+class QPointF;
 class QQmlEngine;
 
 /**
@@ -220,7 +223,7 @@ public:
     /**
      * @brief Registers a global pointer shortcut with the provided @p action.
      *
-     * @param modifiers The keyboard modifiers which need to be holded
+     * @param modifiers The keyboard modifiers which need to be held while pressing pointer buttons
      * @param pointerButtons The pointer buttons which need to be pressed
      * @param action The action which gets triggered when the shortcut matches
      */
@@ -228,7 +231,7 @@ public:
     /**
      * @brief Registers a global axis shortcut with the provided @p action.
      *
-     * @param modifiers The keyboard modifiers which need to be holded
+     * @param modifiers The keyboard modifiers which need to be held during axis movement
      * @param axis The direction in which the axis needs to be moved
      * @param action The action which gets triggered when the shortcut matches
      */
@@ -253,6 +256,16 @@ public:
      * @since 5.25
      */
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
+
+    /**
+     * @brief Registers a global stroke gesture shortcut with the provided @p action.
+     *
+     * @param modifiers The keyboard modifiers which need to be held while drawing the stroke
+     * @param points The (approximate) pointer movement shape to match against
+     * @param action The action which gets triggered when the gesture triggers
+     * @since 6.5
+     */
+    void registerStrokeShortcut(Qt::KeyboardModifiers modifiers, const QList<QPointF> &points, QAction *action);
 
     void reserveElectricBorder(ElectricBorder border, Effect *effect);
     void unreserveElectricBorder(ElectricBorder border, Effect *effect);
@@ -749,6 +762,11 @@ public:
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool touchUp(qint32 id, std::chrono::microseconds time);
     void touchCancel();
+
+    void strokeGestureBegin(const KWin::StrokeGestureBeginEvent *event);
+    void strokeGestureUpdate(const KWin::StrokeGestureUpdateEvent *event);
+    void strokeGestureEnd(const KWin::StrokeGestureEndEvent *event);
+    void strokeGestureCancelled(const KWin::StrokeGestureCancelEvent *event);
 
     bool tabletToolProximityEvent(KWin::TabletToolProximityEvent *event);
     bool tabletToolAxisEvent(KWin::TabletToolAxisEvent *event);

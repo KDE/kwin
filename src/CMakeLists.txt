@@ -196,6 +196,7 @@ target_sources(kwin PRIVATE
     shadow.cpp
     sm.cpp
     stroke_gestures.cpp
+    stroke_input_filter.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
     tiles/customtile.cpp
