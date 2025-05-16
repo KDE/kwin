@@ -6,3 +6,5 @@ sourcedirs += .
 headerdirs += .
 
 documentationinheaders = true
+
+navigation.landingpage = "KWin"
