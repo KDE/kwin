@@ -57,6 +57,12 @@ ZoomEffect::ZoomEffect()
 
     m_touchpadAction = std::make_unique<QAction>();
     connect(m_touchpadAction.get(), &QAction::triggered, this, [this]() {
+        if (m_zoom < 1.15) {
+            setTargetZoom(1.0);
+            // FIXME: this shouldn't be necessary and setTargetZoom should just do an animation
+            m_zoom = 1.0;
+            showCursor();
+        }
         m_lastPinchProgress = 0;
     });
     effects->registerTouchpadPinchShortcut(PinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
