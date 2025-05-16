@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-15 00:44+0000\n"
-"PO-Revision-Date: 2025-02-11 10:23+0200\n"
+"PO-Revision-Date: 2025-04-20 16:40+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -1482,7 +1482,7 @@ msgstr "Ikkunoidun tilan korkeus. Oletuskorkeus on 768."
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Asetetaanko ikkunoitu tila koko näytölle"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -2948,15 +2948,14 @@ msgid "Move Down"
 msgstr "Siirrä alemmas"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Nuolipiirron muuntonäppäimet:"
+msgstr "Vierityseleen muuntonäppäimet:"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "Lähennä vierittämällä ja painamalla muuntonäppäintä"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
