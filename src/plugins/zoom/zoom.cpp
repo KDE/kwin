@@ -57,6 +57,10 @@ ZoomEffect::ZoomEffect()
 
     m_touchpadAction = std::make_unique<QAction>();
     connect(m_touchpadAction.get(), &QAction::triggered, this, [this]() {
+        const double threshold = 1.15;
+        if (m_targetZoom < threshold) {
+            zoomTo(1.0);
+        }
         m_lastPinchProgress = 0;
     });
     effects->registerTouchpadPinchShortcut(PinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
