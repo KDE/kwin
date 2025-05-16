@@ -61,8 +61,11 @@ KCM.SimpleKCM {
 
         Kirigami.FormLayout {
             id: eavesdropLayout
+
             Layout.leftMargin: Kirigami.Units.gridUnit
             Layout.rightMargin: Kirigami.Units.gridUnit
+
+            twinFormLayouts: bottomLayout
 
             QQC2.RadioButton {
                 id: never
@@ -136,17 +139,24 @@ KCM.SimpleKCM {
             visible: always.checked
         }
 
-        Kirigami.Separator {
-            Layout.fillWidth: true
+        Kirigami.FormLayout {
+            id: bottomLayout
+
             Layout.leftMargin: Kirigami.Units.gridUnit
             Layout.rightMargin: Kirigami.Units.gridUnit
-        }
 
-        QQC2.CheckBox {
-            Layout.margins: Kirigami.Units.gridUnit
-            text: i18nc("@option:check", "Allow controlling the pointer and keyboard without asking for permission")
-            checked: kcm.settings.xwaylandEisNoPrompt
-            onToggled: kcm.settings.xwaylandEisNoPrompt = checked
+            twinFormLayouts: eavesdropLayout
+
+            Item {
+                Kirigami.FormData.isSection: true
+            }
+
+            QQC2.CheckBox {
+                Kirigami.FormData.label: i18nc("@title:group", "Control of pointer and keyboard:")
+                text: i18nc("@option:check Allow control of pointer and keyboard without asking for permission", "Allow without asking for permission")
+                checked: kcm.settings.xwaylandEisNoPrompt
+                onToggled: kcm.settings.xwaylandEisNoPrompt = checked
+            }
         }
     }
 }
