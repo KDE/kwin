@@ -28,20 +28,22 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
 {
     const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
     const double maxOutputLuminance = to.maxHdrLuminance().value_or(to.referenceLuminance());
+    const auto rgbInputSpace = from.transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB;
     ColorPipeline ret(ValueRange{
-        .min = from.transferFunction().nitsToEncoded(range1.min),
-        .max = from.transferFunction().nitsToEncoded(range1.max),
-    });
-    ret.addTransferFunction(from.transferFunction());
+                          .min = from.transferFunction().nitsToEncoded(range1.min),
+                          .max = from.transferFunction().nitsToEncoded(range1.max),
+                      },
+                      rgbInputSpace);
+    ret.addTransferFunction(from.transferFunction(), ColorspaceType::LinearRGB);
 
     // FIXME this assumes that the range stays the same with matrix multiplication
     // that's not necessarily true, and figuring out the actual range could be complicated..
-    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()));
+    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()), ColorspaceType::LinearRGB);
     if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
         ret.addTonemapper(to.containerColorimetry(), to.referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
     }
 
-    ret.addInverseTransferFunction(to.transferFunction());
+    ret.addInverseTransferFunction(to.transferFunction(), to.transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB);
     return ret;
 }
 
@@ -50,17 +52,24 @@ ColorPipeline::ColorPipeline()
           .min = 0,
           .max = 1,
       })
+    , inputSpace(ColorspaceType::AnyNonRGB)
 {
 }
 
-ColorPipeline::ColorPipeline(const ValueRange &inputRange)
+ColorPipeline::ColorPipeline(const ValueRange &inputRange, ColorspaceType inputSpace)
     : inputRange(inputRange)
+    , inputSpace(inputSpace)
 {
 }
 
 const ValueRange &ColorPipeline::currentOutputRange() const
 {
     return ops.empty() ? inputRange : ops.back().output;
+}
+
+ColorspaceType ColorPipeline::currentOutputSpace() const
+{
+    return ops.empty() ? inputSpace : ops.back().outputSpace;
 }
 
 void ColorPipeline::addMultiplier(double factor)
@@ -84,7 +93,7 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
             newMat.scale(factors);
             newMat *= mat->mat;
             ops.erase(ops.end() - 1);
-            addMatrix(newMat, output);
+            addMatrix(newMat, output, currentOutputSpace());
             return;
         } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
             mult->factors *= factors;
@@ -110,12 +119,14 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
     }
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
+        .inputSpace = currentOutputSpace(),
         .operation = ColorMultiplier(factors),
         .output = output,
+        .outputSpace = currentOutputSpace(),
     });
 }
 
-void ColorPipeline::addTransferFunction(TransferFunction tf)
+void ColorPipeline::addTransferFunction(TransferFunction tf, ColorspaceType outputType)
 {
     if (!ops.empty()) {
         if (const auto invTf = std::get_if<InverseColorTransferFunction>(&ops.back().operation)) {
@@ -132,20 +143,23 @@ void ColorPipeline::addTransferFunction(TransferFunction tf)
         addMatrix(mat, ValueRange{
                            .min = (mat * QVector3D(currentOutputRange().min, 0, 0)).x(),
                            .max = (mat * QVector3D(currentOutputRange().max, 0, 0)).x(),
-                       });
+                       },
+                  outputType);
     } else {
         ops.push_back(ColorOp{
             .input = currentOutputRange(),
+            .inputSpace = currentOutputSpace(),
             .operation = ColorTransferFunction(tf),
             .output = ValueRange{
                 .min = tf.encodedToNits(currentOutputRange().min),
                 .max = tf.encodedToNits(currentOutputRange().max),
             },
+            .outputSpace = outputType,
         });
     }
 }
 
-void ColorPipeline::addInverseTransferFunction(TransferFunction tf)
+void ColorPipeline::addInverseTransferFunction(TransferFunction tf, ColorspaceType outputType)
 {
     if (!ops.empty()) {
         if (const auto otherTf = std::get_if<ColorTransferFunction>(&ops.back().operation)) {
@@ -162,15 +176,18 @@ void ColorPipeline::addInverseTransferFunction(TransferFunction tf)
         addMatrix(mat, ValueRange{
                            .min = (mat * QVector3D(currentOutputRange().min, 0, 0)).x(),
                            .max = (mat * QVector3D(currentOutputRange().max, 0, 0)).x(),
-                       });
+                       },
+                  outputType);
     } else {
         ops.push_back(ColorOp{
             .input = currentOutputRange(),
+            .inputSpace = currentOutputSpace(),
             .operation = InverseColorTransferFunction(tf),
             .output = ValueRange{
                 .min = tf.nitsToEncoded(currentOutputRange().min),
                 .max = tf.nitsToEncoded(currentOutputRange().max),
             },
+            .outputSpace = outputType,
         });
     }
 }
@@ -203,7 +220,7 @@ static bool isFuzzyScalingOnly(const QMatrix4x4 &mat)
     return true;
 }
 
-void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
+void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output, ColorspaceType outputType)
 {
     if (isFuzzyIdentity(mat)) {
         return;
@@ -213,13 +230,13 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
         if (const auto otherMat = std::get_if<ColorMatrix>(lastOp)) {
             const auto newMat = mat * otherMat->mat;
             ops.erase(ops.end() - 1);
-            addMatrix(newMat, output);
+            addMatrix(newMat, output, outputType);
             return;
         } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
             QMatrix4x4 scaled = mat;
             scaled.scale(mult->factors);
             ops.erase(ops.end() - 1);
-            addMatrix(scaled, output);
+            addMatrix(scaled, output, outputType);
             return;
         } else if (std::abs(mat(0, 3)) >= s_maxResolution
                    && std::abs(mat(0, 3) - mat(1, 3)) < s_maxResolution
@@ -236,7 +253,7 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
                     newMat(0, 3) = 0;
                     newMat(1, 3) = 0;
                     newMat(2, 3) = 0;
-                    addMatrix(newMat, output);
+                    addMatrix(newMat, output, outputType);
                     return;
                 } else if (const auto invTf = std::get_if<InverseColorTransferFunction>(lastOp)) {
                     invTf->tf.minLuminance += inverse(0, 3);
@@ -245,7 +262,7 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
                     newMat(0, 3) = 0;
                     newMat(1, 3) = 0;
                     newMat(2, 3) = 0;
-                    addMatrix(newMat, output);
+                    addMatrix(newMat, output, outputType);
                     return;
                 }
             }
@@ -258,8 +275,10 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
     }
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
+        .inputSpace = currentOutputSpace(),
         .operation = ColorMatrix(mat),
         .output = output,
+        .outputSpace = outputType,
     });
 }
 
@@ -273,10 +292,11 @@ static const QMatrix4x4 s_fromICtCp = s_toICtCp.inverted();
 void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
 {
     // convert from rgb to ICtCp
-    addMatrix(containerColorimetry.toLMS(), currentOutputRange());
+    Q_ASSERT(currentOutputSpace() == ColorspaceType::LinearRGB);
+    addMatrix(containerColorimetry.toLMS(), currentOutputRange(), currentOutputSpace());
     const TransferFunction PQ(TransferFunction::PerceptualQuantizer, 0, 10'000);
-    addInverseTransferFunction(PQ);
-    addMatrix(s_toICtCp, currentOutputRange());
+    addInverseTransferFunction(PQ, ColorspaceType::AnyNonRGB);
+    addMatrix(s_toICtCp, currentOutputRange(), ColorspaceType::ICtCp);
     // apply the tone mapping to the intensity component
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
@@ -287,22 +307,24 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
         },
     });
     // convert back to rgb
-    addMatrix(s_fromICtCp, currentOutputRange());
-    addTransferFunction(PQ);
-    addMatrix(containerColorimetry.fromLMS(), currentOutputRange());
+    addMatrix(s_fromICtCp, currentOutputRange(), ColorspaceType::AnyNonRGB);
+    addTransferFunction(PQ, ColorspaceType::AnyNonRGB);
+    addMatrix(containerColorimetry.fromLMS(), currentOutputRange(), ColorspaceType::LinearRGB);
 }
 
-void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform)
+void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform, ColorspaceType outputType)
 {
     const auto min = transform->transform(QVector3D(currentOutputRange().min, currentOutputRange().min, currentOutputRange().min));
     const auto max = transform->transform(QVector3D(currentOutputRange().max, currentOutputRange().max, currentOutputRange().max));
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
+        .inputSpace = currentOutputSpace(),
         .operation = transform,
         .output = ValueRange{
             .min = std::min({min.x(), min.y(), min.z()}),
             .max = std::max({max.x(), max.y(), max.z()}),
         },
+        .outputSpace = outputType,
     });
 }
 
@@ -314,13 +336,13 @@ bool ColorPipeline::isIdentity() const
 void ColorPipeline::add(const ColorOp &op)
 {
     if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
-        addMatrix(mat->mat, op.output);
+        addMatrix(mat->mat, op.output, op.outputSpace);
     } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
         addMultiplier(mult->factors);
     } else if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
-        addTransferFunction(tf->tf);
+        addTransferFunction(tf->tf, op.outputSpace);
     } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
-        addInverseTransferFunction(tf->tf);
+        addInverseTransferFunction(tf->tf, op.outputSpace);
     } else {
         ops.push_back(op);
     }
@@ -335,7 +357,7 @@ void ColorPipeline::add(const ColorPipeline &pipeline)
 
 ColorPipeline ColorPipeline::merged(const ColorPipeline &onTop) const
 {
-    ColorPipeline ret{inputRange};
+    ColorPipeline ret{inputRange, inputSpace};
     ret.ops = ops;
     for (const auto &op : onTop.ops) {
         ret.add(op);
