@@ -14,20 +14,20 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwinxwayland.pot\n"
-"X-Crowdin-File-ID: 43323\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kcm_kwinxwayland.pot\n"
+"X-Crowdin-File-ID: 52300\n"
 
 #: ui/main.qml:27
 #, kde-format
 msgctxt "@info"
 msgid "Changes will take effect the next time you log in."
-msgstr ""
+msgstr "更改将在下次登录时生效。"
 
 #: ui/main.qml:31
 #, kde-format
 msgctxt "@action:button"
 msgid "Log Out Now"
-msgstr ""
+msgstr "立即注销"
 
 #: ui/main.qml:52
 #, kde-format
@@ -94,4 +94,4 @@ msgstr ""
 msgctxt "@option:check"
 msgid ""
 "Allow controlling the pointer and keyboard without asking for permission"
-msgstr ""
+msgstr "允许在不请求用户授权的情况下控制光标和键盘"
