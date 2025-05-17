@@ -717,11 +717,11 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         return;
     }
     if (usesICC) {
-        colorPipeline.addTransferFunction(encoding->transferFunction());
+        colorPipeline.addTransferFunction(encoding->transferFunction(), ColorspaceType::LinearRGB);
         colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
-        colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction());
+        colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
         if (next.iccProfile->vcgt()) {
-            colorPipeline.add1DLUT(next.iccProfile->vcgt());
+            colorPipeline.add1DLUT(next.iccProfile->vcgt(), ColorspaceType::NonLinearRGB);
         }
     }
     m_pipeline->setCrtcColorPipeline(colorPipeline);
@@ -735,8 +735,8 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         // Allow falling back to applying night light in non-linear space.
         // This isn't technically correct, but the difference is quite small and not worth
         // losing a lot of performance and battery life over
-        ColorPipeline simplerPipeline;
-        simplerPipeline.addMatrix(next.blendingColor->toOther(*encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation), colorPipeline.currentOutputRange());
+        ColorPipeline simplerPipeline(ValueRange{0, 1}, ColorspaceType::NonLinearRGB);
+        simplerPipeline.addMatrix(next.blendingColor->toOther(*encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation), colorPipeline.currentOutputRange(), ColorspaceType::NonLinearRGB);
         m_pipeline->setCrtcColorPipeline(simplerPipeline);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
