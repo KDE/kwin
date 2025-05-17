@@ -1272,9 +1272,6 @@ void X11Window::updateShape()
 
 void X11Window::updateInputShape()
 {
-    if (hiddenPreview()) { // Sets it to none, don't change
-        return;
-    }
     if (Xcb::Extensions::self()->isShapeInputAvailable()) {
         xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT, frameId(), 0, 0, window());
     }
@@ -1435,11 +1432,11 @@ void X11Window::updateVisibility()
     }
     info->setState(NET::States(), NET::Hidden);
     if (!isOnCurrentDesktop()) {
-        internalKeep();
+        internalHide();
         return;
     }
     if (!isOnCurrentActivity()) {
-        internalKeep();
+        internalHide();
         return;
     }
     internalShow();
@@ -1475,9 +1472,6 @@ void X11Window::internalShow()
     if (old == Unmapped || old == Withdrawn) {
         map();
     }
-    if (old == Kept) {
-        updateHiddenPreview();
-    }
 }
 
 void X11Window::internalHide()
@@ -1487,28 +1481,9 @@ void X11Window::internalHide()
     }
     MappingState old = mapping_state;
     mapping_state = Unmapped;
-    if (old == Mapped || old == Kept) {
+    if (old == Mapped) {
         unmap();
     }
-    if (old == Kept) {
-        updateHiddenPreview();
-    }
-}
-
-void X11Window::internalKeep()
-{
-    if (mapping_state == Kept) {
-        return;
-    }
-    MappingState old = mapping_state;
-    mapping_state = Kept;
-    if (old == Unmapped || old == Withdrawn) {
-        map();
-    }
-    if (isActive()) {
-        workspace()->focusToNull(); // get rid of input focus, bug #317484
-    }
-    updateHiddenPreview();
 }
 
 /**
@@ -1545,31 +1520,6 @@ void X11Window::unmap()
     m_client.unmap();
     m_wrapper.selectInput(wrapperEventMask());
     exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
-}
-
-/**
- * XComposite doesn't keep window pixmaps of unmapped windows, which means
- * there wouldn't be any previews of windows that are minimized or on another
- * virtual desktop. Therefore rawHide() actually keeps such windows mapped.
- * However special care needs to be taken so that such windows don't interfere.
- * Therefore they're put very low in the stacking order and they have input shape
- * set to none, which hopefully is enough. If there's no input shape available,
- * then it's hoped that there will be some other desktop above it *shrug*.
- * Using normal shape would be better, but that'd affect other things, e.g. painting
- * of the actual preview.
- */
-void X11Window::updateHiddenPreview()
-{
-    if (hiddenPreview()) {
-        workspace()->forceRestacking();
-        if (Xcb::Extensions::self()->isShapeInputAvailable()) {
-            xcb_shape_rectangles(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
-                                 XCB_CLIP_ORDERING_UNSORTED, frameId(), 0, 0, 0, nullptr);
-        }
-    } else {
-        workspace()->forceRestacking();
-        updateInputShape();
-    }
 }
 
 void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
