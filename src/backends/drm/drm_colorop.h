@@ -29,7 +29,7 @@ public:
     };
     Q_DECLARE_FLAGS(Features, Feature);
 
-    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, Features features);
+    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, Features features, const QString &name);
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
@@ -40,10 +40,12 @@ public:
     DrmAbstractColorOp *next() const;
     bool canBypass() const;
     bool supportsMultipleOps() const;
+    QString name() const;
 
 protected:
     DrmAbstractColorOp *const m_next;
     const Features m_features;
+    const QString m_name;
 
     std::optional<ColorPipeline> m_cachedPipeline;
     std::unique_ptr<DrmAtomicCommit> m_cache;
