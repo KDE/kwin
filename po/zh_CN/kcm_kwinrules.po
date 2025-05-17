@@ -224,7 +224,7 @@ msgstr "机器 (主机名)"
 #: rulesmodel.cpp:440
 #, kde-format
 msgid "Window tag"
-msgstr ""
+msgstr "窗口标签"
 
 #: rulesmodel.cpp:447
 #, kde-format

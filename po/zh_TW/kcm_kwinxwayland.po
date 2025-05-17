@@ -1,13 +1,13 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2022, 2023, 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-15 00:44+0000\n"
-"PO-Revision-Date: 2024-03-12 02:23+0900\n"
+"PO-Revision-Date: 2025-05-16 15:31+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -15,19 +15,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 25.07.70\n"
 
 #: ui/main.qml:27
 #, kde-format
 msgctxt "@info"
 msgid "Changes will take effect the next time you log in."
-msgstr ""
+msgstr "變更會在下次登入時生效。"
 
 #: ui/main.qml:31
 #, kde-format
 msgctxt "@action:button"
 msgid "Log Out Now"
-msgstr ""
+msgstr "立即登出"
 
 #: ui/main.qml:52
 #, kde-format
@@ -90,7 +90,7 @@ msgstr ""
 msgctxt "@option:check"
 msgid ""
 "Allow controlling the pointer and keyboard without asking for permission"
-msgstr ""
+msgstr "允許不事先詢問權限即控制指標與鍵盤"
 
 #~ msgid "Only non-character keys"
 #~ msgstr "僅非字元按鍵"

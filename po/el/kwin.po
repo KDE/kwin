@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-15 00:44+0000\n"
+"POT-Creation-Date: 2025-05-17 00:43+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2924,35 +2924,35 @@ msgstr "Λιγότερη"
 msgid "More"
 msgstr "Περισσότερη"
 
-#: plugins/zoom/zoom.cpp:75
+#: plugins/zoom/zoom.cpp:79
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:86
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:93
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Μετακίνηση εστιασμένης περιοχής προς τα επάνω"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:100
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Μετακίνηση εστιασμένης περιοχής προς τα κάτω"
 
-#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Χωρίς κουμπιά ποντικιού"
 
-#: plugins/zoom/zoom.cpp:111 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"
