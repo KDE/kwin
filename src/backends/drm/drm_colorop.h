@@ -23,7 +23,13 @@ class DrmAtomicCommit;
 class DrmAbstractColorOp
 {
 public:
-    explicit DrmAbstractColorOp(DrmAbstractColorOp *next);
+    enum class Feature {
+        Bypass = 1 << 0,
+        MultipleOps = 1 << 1,
+    };
+    Q_DECLARE_FLAGS(Features, Feature);
+
+    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, Features features);
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
@@ -32,9 +38,12 @@ public:
     virtual void bypass(DrmAtomicCommit *commit) = 0;
 
     DrmAbstractColorOp *next() const;
+    bool canBypass() const;
+    bool supportsMultipleOps() const;
 
 protected:
-    DrmAbstractColorOp *m_next = nullptr;
+    DrmAbstractColorOp *const m_next;
+    const Features m_features;
 
     std::optional<ColorPipeline> m_cachedPipeline;
     std::unique_ptr<DrmAtomicCommit> m_cache;
