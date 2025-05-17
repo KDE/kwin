@@ -452,26 +452,38 @@ double ColorTonemapper::map(double pqEncodedLuminance) const
 }
 }
 
+QDebug operator<<(QDebug debug, const KWin::ColorOp &op)
+{
+    if (auto tf = std::get_if<KWin::ColorTransferFunction>(&op.operation)) {
+        debug << tf->tf;
+    } else if (auto tf = std::get_if<KWin::InverseColorTransferFunction>(&op.operation)) {
+        debug << "inverse" << tf->tf;
+    } else if (auto mat = std::get_if<KWin::ColorMatrix>(&op.operation)) {
+        debug << mat->mat;
+    } else if (auto mult = std::get_if<KWin::ColorMultiplier>(&op.operation)) {
+        debug << mult->factors;
+    } else if (auto tonemap = std::get_if<KWin::ColorTonemapper>(&op.operation)) {
+        debug << "tonemapper(" << tonemap->m_inputReferenceLuminance << tonemap->m_maxInputLuminance << tonemap->m_maxOutputLuminance << ")";
+    } else if (std::holds_alternative<std::shared_ptr<KWin::ColorTransformation>>(op.operation)) {
+        debug << "lut1d";
+    } else if (std::holds_alternative<std::shared_ptr<KWin::ColorLUT3D>>(op.operation)) {
+        debug << "lut3d";
+    }
+    return debug;
+}
+
 QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
 {
     debug << "ColorPipeline(";
     for (const auto &op : pipeline.ops) {
-        if (auto tf = std::get_if<KWin::ColorTransferFunction>(&op.operation)) {
-            debug << tf->tf;
-        } else if (auto tf = std::get_if<KWin::InverseColorTransferFunction>(&op.operation)) {
-            debug << "inverse" << tf->tf;
-        } else if (auto mat = std::get_if<KWin::ColorMatrix>(&op.operation)) {
-            debug << mat->mat;
-        } else if (auto mult = std::get_if<KWin::ColorMultiplier>(&op.operation)) {
-            debug << mult->factors;
-        } else if (auto tonemap = std::get_if<KWin::ColorTonemapper>(&op.operation)) {
-            debug << "tonemapper(" << tonemap->m_inputReferenceLuminance << tonemap->m_maxInputLuminance << tonemap->m_maxOutputLuminance << ")";
-        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorTransformation>>(op.operation)) {
-            debug << "lut1d";
-        } else if (std::holds_alternative<std::shared_ptr<KWin::ColorLUT3D>>(op.operation)) {
-            debug << "lut3d";
-        }
+        debug << op;
     }
     debug << ")";
+    return debug;
+}
+
+QDebug operator<<(QDebug debug, const KWin::ValueRange &range)
+{
+    debug << "[" << range.min << "," << range.max << "]";
     return debug;
 }
