@@ -139,7 +139,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
 
     newWindowStack << manual_overlays;
 
-    newWindowStack.reserve(newWindowStack.size() + 2 * stacking_order.size()); // *2 for inputWindow
+    newWindowStack.reserve(newWindowStack.size() + stacking_order.size());
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
         X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
