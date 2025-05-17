@@ -369,23 +369,35 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
 {
     QVector3D ret = input;
     for (const auto &op : ops) {
-        if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
-            ret = mat->mat * ret;
-        } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
-            ret *= mult->factors;
-        } else if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
-            ret = tf->tf.encodedToNits(ret);
-        } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
-            ret = tf->tf.nitsToEncoded(ret);
-        } else if (const auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
-            ret.setX(tonemap->map(ret.x()));
-        } else if (const auto transform1D = std::get_if<std::shared_ptr<ColorTransformation>>(&op.operation)) {
-            ret = (*transform1D)->transform(ret);
-        } else if (const auto transform3D = std::get_if<std::shared_ptr<ColorLUT3D>>(&op.operation)) {
-            ret = (*transform3D)->sample(ret);
-        }
+        ret = op.apply(ret);
     }
     return ret;
+}
+
+QVector3D ColorOp::apply(const QVector3D input) const
+{
+    return applyOperation(operation, input);
+}
+
+QVector3D ColorOp::applyOperation(const ColorOp::Operation &operation, const QVector3D &input)
+{
+    if (const auto mat = std::get_if<ColorMatrix>(&operation)) {
+        return mat->mat * input;
+    } else if (const auto mult = std::get_if<ColorMultiplier>(&operation)) {
+        return mult->factors * input;
+    } else if (const auto tf = std::get_if<ColorTransferFunction>(&operation)) {
+        return tf->tf.encodedToNits(input);
+    } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&operation)) {
+        return tf->tf.nitsToEncoded(input);
+    } else if (const auto tonemap = std::get_if<ColorTonemapper>(&operation)) {
+        return QVector3D(tonemap->map(input.x()), input.y(), input.z());
+    } else if (const auto transform1D = std::get_if<std::shared_ptr<ColorTransformation>>(&operation)) {
+        return (*transform1D)->transform(input);
+    } else if (const auto transform3D = std::get_if<std::shared_ptr<ColorLUT3D>>(&operation)) {
+        return (*transform3D)->sample(input);
+    } else {
+        Q_UNREACHABLE();
+    }
 }
 
 ColorTransferFunction::ColorTransferFunction(TransferFunction tf)
