@@ -16,8 +16,9 @@
 namespace KWin
 {
 
-DrmAbstractColorOp::DrmAbstractColorOp(DrmAbstractColorOp *next)
+DrmAbstractColorOp::DrmAbstractColorOp(DrmAbstractColorOp *next, Features features)
     : m_next(next)
+    , m_features(features)
 {
 }
 
@@ -28,6 +29,16 @@ DrmAbstractColorOp::~DrmAbstractColorOp()
 DrmAbstractColorOp *DrmAbstractColorOp::next() const
 {
     return m_next;
+}
+
+bool DrmAbstractColorOp::canBypass() const
+{
+    return m_features & Feature::Bypass;
+}
+
+bool DrmAbstractColorOp::supportsMultipleOps() const
+{
+    return m_features & Feature::MultipleOps;
 }
 
 bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline)
@@ -127,7 +138,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
 }
 
 DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize)
-    : DrmAbstractColorOp(next)
+    : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | Feature::Bypass)
     , m_prop(prop)
     , m_maxSize(maxSize)
     , m_components(m_maxSize)
@@ -189,7 +200,7 @@ void DrmLutColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 LegacyMatrixColorOp::LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop)
-    : DrmAbstractColorOp(next)
+    : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | Feature::Bypass)
     , m_prop(prop)
 {
 }
