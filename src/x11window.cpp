@@ -1421,7 +1421,7 @@ void X11Window::updateVisibility()
     if (isHidden()) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true); // Also hide from taskbar
-        internalKeep();
+        internalHide();
         return;
     }
     if (isHiddenByShowDesktop()) {
@@ -1430,7 +1430,7 @@ void X11Window::updateVisibility()
     setSkipTaskbar(originalSkipTaskbar()); // Reset from 'hidden'
     if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
-        internalKeep();
+        internalHide();
         return;
     }
     info->setState(NET::States(), NET::Hidden);
