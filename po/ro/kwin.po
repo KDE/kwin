@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-15 00:44+0000\n"
+"POT-Creation-Date: 2025-05-18 02:39+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -3059,37 +3059,37 @@ msgstr "Mai puțin"
 msgid "More"
 msgstr "Mai mult"
 
-#: plugins/zoom/zoom.cpp:75
+#: plugins/zoom/zoom.cpp:79
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Fereastra cu un birou la stânga"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:86
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Fereastra cu un birou la dreapta"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:93
 #, fuzzy, kde-format
 #| msgid "Move Zoomed Area Upwards"
 msgid "Move Zoomed Area Upwards"
 msgstr "Mută zona mărită în sus"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:100
 #, fuzzy, kde-format
 #| msgid "Move Zoomed Area Downwards"
 msgid "Move Zoomed Area Downwards"
 msgstr "Mută zona mărită în jos"
 
-#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Niciun buton de maus"
 
-#: plugins/zoom/zoom.cpp:111 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-15 00:44+0000\n"
+"POT-Creation-Date: 2025-05-18 02:39+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -2861,32 +2861,32 @@ msgstr "न्यूनम्‌"
 msgid "More"
 msgstr "अधिकः"
 
-#: plugins/zoom/zoom.cpp:75
+#: plugins/zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Zoomed Area इत्येतत् Left - मध्ये चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Zoomed Area इत्येतत् Right - मध्ये चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:93
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "जूम कृतक्षेत्रं ऊर्ध्वं चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:100
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "जूम कृतक्षेत्रं अधः गच्छन्तु"
 
-#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "मूषकं फोकस प्रति चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:111 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "मूषकं केन्द्रं प्रति स्थानान्तरयन्तु"
