@@ -161,17 +161,10 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         kwinApp()->updateXTime();
 
         const auto *event = reinterpret_cast<xcb_map_request_event_t *>(e);
-        if (X11Window *window = findClient(event->window)) {
-            // e->xmaprequest.window is different from e->xany.window
-            // TODO this shouldn't be necessary now
-            window->windowEvent(e);
-            m_focusChain->update(window, FocusChain::Update);
-        } else {
-            if (!createX11Window(event->window, false)) {
-                xcb_map_window(kwinApp()->x11Connection(), event->window);
-                const uint32_t values[] = {XCB_STACK_MODE_ABOVE};
-                xcb_configure_window(kwinApp()->x11Connection(), event->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
-            }
+        if (!createX11Window(event->window, false)) {
+            xcb_map_window(kwinApp()->x11Connection(), event->window);
+            const uint32_t values[] = {XCB_STACK_MODE_ABOVE};
+            xcb_configure_window(kwinApp()->x11Connection(), event->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
         }
         return true;
     }
