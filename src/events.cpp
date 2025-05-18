@@ -347,8 +347,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
             break;
         default: {
             if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
-                detectShape();
-                Q_EMIT shapeChanged();
+                shapeNotifyEvent(reinterpret_cast<xcb_shape_notify_event_t *>(e));
             }
             break;
         }
@@ -432,9 +431,8 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         clientMessageEvent(reinterpret_cast<xcb_client_message_event_t *>(e));
         break;
     default:
-        if (eventType == Xcb::Extensions::self()->shapeNotifyEvent() && reinterpret_cast<xcb_shape_notify_event_t *>(e)->affected_window == window()) {
-            detectShape(); // workaround for #19644
-            updateShape();
+        if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
+            shapeNotifyEvent(reinterpret_cast<xcb_shape_notify_event_t *>(e));
         }
         break;
     }
@@ -729,6 +727,38 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
         });
     }
     m_focusOutTimer->start();
+}
+
+void X11Window::shapeNotifyEvent(xcb_shape_notify_event_t *e)
+{
+    if (e->affected_window != window()) {
+        return;
+    }
+
+    // TODO: See if some shape logic can be unified for managed and unmanaged function. You
+    // will need to be very careful when touching logic in the manage() function.
+    if (isUnmanaged()) {
+        switch (e->shape_kind) {
+        case XCB_SHAPE_SK_BOUNDING:
+        case XCB_SHAPE_SK_CLIP:
+            detectShape();
+            Q_EMIT shapeChanged();
+            break;
+        case XCB_SHAPE_SK_INPUT:
+            break;
+        }
+    } else {
+        switch (e->shape_kind) {
+        case XCB_SHAPE_SK_BOUNDING:
+        case XCB_SHAPE_SK_CLIP:
+            detectShape();
+            updateBoundingShape();
+            break;
+        case XCB_SHAPE_SK_INPUT:
+            updateInputShape();
+            break;
+        }
+    }
 }
 
 // performs _NET_WM_MOVERESIZE

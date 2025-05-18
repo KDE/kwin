@@ -811,7 +811,8 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         moveResize(keepInArea(moveResizeGeometry(), area, partial_keep_in_area));
     }
 
-    updateShape();
+    updateBoundingShape();
+    updateInputShape();
 
     // CT: Extra check for stupid jdk 1.3.1. But should make sense in general
     // if client has initial state set to Iconic and is transient with a parent
@@ -1236,7 +1237,7 @@ void X11Window::detectShape()
     is_shape = Xcb::Extensions::self()->hasShape(window());
 }
 
-void X11Window::updateShape()
+void X11Window::updateBoundingShape()
 {
     if (is_shape) {
         // Workaround for #19644 - Shaped windows shouldn't have decoration
@@ -1264,9 +1265,6 @@ void X11Window::updateShape()
         updateDecoration(true);
     }
 
-    // Decoration mask (i.e. 'else' here) setting is done in setMask()
-    // when the decoration calls it or when the decoration is created/destroyed
-    updateInputShape();
     Q_EMIT shapeChanged();
 }
 
