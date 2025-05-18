@@ -1215,10 +1215,12 @@ void X11Window::detectShape()
 
 void X11Window::updateBoundingShape()
 {
-    if (is_shape) {
-        xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, window());
-    } else {
-        xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
+    if (!isUnmanaged()) {
+        if (is_shape) {
+            xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, window());
+        } else {
+            xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
+        }
     }
 
     Q_EMIT shapeChanged();
@@ -1226,6 +1228,9 @@ void X11Window::updateBoundingShape()
 
 void X11Window::updateInputShape()
 {
+    if (isUnmanaged()) {
+        return;
+    }
     if (Xcb::Extensions::self()->isShapeInputAvailable()) {
         xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT, frameId(), 0, 0, window());
     }
