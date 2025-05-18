@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-01-29 08:06+0100\n"
-"Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
+"PO-Revision-Date: 2025-05-17 13:12+0200\n"
+"Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.1\n"
+"X-Generator: Lokalize 25.04.1\n"
 
 #: layoutpreview.cpp:27
 #, kde-format
@@ -32,7 +32,7 @@ msgstr ""
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Amosar tamén unha miniatura para o escritorio."
 
 #: layoutpreview.cpp:156
 #, kde-format
@@ -245,7 +245,7 @@ msgstr "Inverter"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
