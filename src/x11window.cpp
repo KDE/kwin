@@ -800,7 +800,8 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         moveResize(keepInArea(moveResizeGeometry(), area, partial_keep_in_area));
     }
 
-    updateShape();
+    updateBoundingShape();
+    updateInputShape();
 
     // CT: Extra check for stupid jdk 1.3.1. But should make sense in general
     // if client has initial state set to Iconic and is transient with a parent
@@ -1212,7 +1213,7 @@ void X11Window::detectShape()
     is_shape = Xcb::Extensions::self()->hasShape(window());
 }
 
-void X11Window::updateShape()
+void X11Window::updateBoundingShape()
 {
     if (is_shape) {
         xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, window());
@@ -1220,9 +1221,6 @@ void X11Window::updateShape()
         xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
     }
 
-    // Decoration mask (i.e. 'else' here) setting is done in setMask()
-    // when the decoration calls it or when the decoration is created/destroyed
-    updateInputShape();
     Q_EMIT shapeChanged();
 }
 

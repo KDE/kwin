@@ -165,7 +165,8 @@ public:
     void invalidateDecoration() override;
 
     void detectShape();
-    void updateShape();
+    void updateBoundingShape();
+    void updateInputShape();
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) const override;
@@ -272,6 +273,7 @@ private:
     void clientMessageEvent(xcb_client_message_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
     void focusOutEvent(xcb_focus_out_event_t *e);
+    void shapeNotifyEvent(xcb_shape_notify_event_t *e);
 
 protected:
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
@@ -347,7 +349,6 @@ private:
     void map();
     void unmap();
 
-    void updateInputShape();
     void configure(const QRect &nativeFrame, const QRect &nativeClient);
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
