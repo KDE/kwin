@@ -932,7 +932,7 @@ double EffectsHandler::animationTimeFactor() const
 EffectWindow *EffectsHandler::findWindow(WId id) const
 {
 #if KWIN_BUILD_X11
-    if (X11Window *w = Workspace::self()->findClient(Predicate::WindowMatch, id)) {
+    if (X11Window *w = Workspace::self()->findClient(id)) {
         return w->effectWindow();
     }
     if (X11Window *w = Workspace::self()->findUnmanaged(id)) {

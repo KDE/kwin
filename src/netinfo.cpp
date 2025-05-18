@@ -150,7 +150,7 @@ void RootInfo::changeCurrentDesktop(int d)
 void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_timestamp_t timestamp, xcb_window_t active_window)
 {
     Workspace *workspace = Workspace::self();
-    if (X11Window *c = workspace->findClient(Predicate::WindowMatch, w)) {
+    if (X11Window *c = workspace->findClient(w)) {
         if (timestamp == XCB_CURRENT_TIME) {
             timestamp = c->userTime();
         }
@@ -167,7 +167,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
                 workspace->activateWindow(c);
                 // if activation of the requestor's window would be allowed, allow activation too
             } else if (active_window != XCB_WINDOW_NONE
-                       && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
+                       && (c2 = workspace->findClient(active_window)) != nullptr
                        && c2->allowWindowActivation(timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false)) {
                 workspace->activateWindow(c);
             } else {
@@ -179,7 +179,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
 
 void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t above, int detail, xcb_timestamp_t timestamp)
 {
-    if (X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
+    if (X11Window *c = Workspace::self()->findClient(w)) {
         if (timestamp == XCB_CURRENT_TIME) {
             timestamp = c->userTime();
         }
@@ -192,7 +192,7 @@ void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t abo
 
 void RootInfo::closeWindow(xcb_window_t w)
 {
-    X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
+    X11Window *c = Workspace::self()->findClient(w);
     if (c) {
         c->closeWindow();
     }
@@ -200,7 +200,7 @@ void RootInfo::closeWindow(xcb_window_t w)
 
 void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction, xcb_button_t button, RequestSource source)
 {
-    X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
+    X11Window *c = Workspace::self()->findClient(w);
     if (c) {
         kwinApp()->updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
         c->NETMoveResize(Xcb::fromXNative(x_root), Xcb::fromXNative(y_root), (Direction)direction, button);
@@ -209,7 +209,7 @@ void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long 
 
 void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height)
 {
-    X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
+    X11Window *c = Workspace::self()->findClient(w);
     if (c) {
         c->NETMoveResizeWindow(flags, Xcb::fromXNative(x), Xcb::fromXNative(y), Xcb::fromXNative(width), Xcb::fromXNative(height));
     }
@@ -217,14 +217,14 @@ void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int wid
 
 void RootInfo::showWindowMenu(xcb_window_t w, int device_id, int x_root, int y_root)
 {
-    if (X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
+    if (X11Window *c = Workspace::self()->findClient(w)) {
         c->GTKShowWindowMenu(Xcb::fromXNative(x_root), Xcb::fromXNative(y_root));
     }
 }
 
 void RootInfo::gotPing(xcb_window_t w, xcb_timestamp_t timestamp)
 {
-    if (X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
+    if (X11Window *c = Workspace::self()->findClient(w)) {
         c->gotPing(timestamp);
     }
 }

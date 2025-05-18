@@ -131,11 +131,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 
     const xcb_window_t eventWindow = findEventWindow(e);
     if (eventWindow != XCB_WINDOW_NONE) {
-        if (X11Window *window = findClient(Predicate::WindowMatch, eventWindow)) {
-            if (window->windowEvent(e)) {
-                return true;
-            }
-        } else if (X11Window *window = findClient(Predicate::FrameIdMatch, eventWindow)) {
+        if (X11Window *window = findClient(eventWindow)) {
             if (window->windowEvent(e)) {
                 return true;
             }
@@ -161,28 +157,16 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         const auto *event = reinterpret_cast<xcb_unmap_notify_event_t *>(e);
         return (event->event != event->window); // hide wm typical event from Qt
     }
-    case XCB_REPARENT_NOTIFY: {
-        // do not confuse Qt with these events. After all, _we_ are the
-        // window manager who does the reparenting.
-        return true;
-    }
     case XCB_MAP_REQUEST: {
         kwinApp()->updateXTime();
 
         const auto *event = reinterpret_cast<xcb_map_request_event_t *>(e);
-        if (X11Window *window = findClient(Predicate::WindowMatch, event->window)) {
+        if (X11Window *window = findClient(event->window)) {
             // e->xmaprequest.window is different from e->xany.window
             // TODO this shouldn't be necessary now
             window->windowEvent(e);
             m_focusChain->update(window, FocusChain::Update);
-        } else if (true /*|| e->xmaprequest.parent != root */) {
-            // NOTICE don't check for the parent being the root window, this breaks when some app unmaps
-            // a window, changes something and immediately maps it back, without giving KWin
-            // a chance to reparent it back to root
-            // since KWin can get MapRequest only for root window children and
-            // children of WindowWrapper (=clients), the check is AFAIK useless anyway
-            // NOTICE: The save-set support in X11Window::mapRequestEvent() actually requires that
-            // this code doesn't check the parent to be root.
+        } else {
             if (!createX11Window(event->window, false)) {
                 xcb_map_window(kwinApp()->x11Connection(), event->window);
                 const uint32_t values[] = {XCB_STACK_MODE_ABOVE};
@@ -351,51 +335,49 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         return false; // don't eat events, even our own unmanaged widgets are tracked
     }
 
-    if (findEventWindow(e) == window()) { // avoid doing stuff on frame
-        NET::Properties dirtyProperties;
-        NET::Properties2 dirtyProperties2;
-        info->event(e, &dirtyProperties, &dirtyProperties2); // pass through the NET stuff
+    NET::Properties dirtyProperties;
+    NET::Properties2 dirtyProperties2;
+    info->event(e, &dirtyProperties, &dirtyProperties2); // pass through the NET stuff
 
-        if ((dirtyProperties & NET::WMName) != 0) {
-            fetchName();
-        }
-        if ((dirtyProperties & NET::WMIconName) != 0) {
-            fetchIconicName();
-        }
-        if ((dirtyProperties & NET::WMIcon) != 0) {
-            getIcons();
-        }
-        if ((dirtyProperties2 & NET::WM2UserTime) != 0) {
-            updateUserTime(info->userTime());
-        }
-        if ((dirtyProperties2 & NET::WM2StartupId) != 0) {
-            startupIdChanged();
-        }
-        if (dirtyProperties2 & NET::WM2Opacity) {
-            setOpacity(info->opacityF());
-        }
-        if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
-            Q_EMIT windowRoleChanged();
-        }
-        if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
-            getResourceClass();
-        }
-        if (dirtyProperties2.testFlag(NET::WM2GroupLeader)) {
-            checkGroup();
-            updateAllowedActions(); // Group affects isMinimizable()
-        }
-        if (dirtyProperties2.testFlag(NET::WM2Urgency)) {
-            updateUrgency();
-        }
-        if (dirtyProperties2 & NET::WM2OpaqueRegion) {
-            getWmOpaqueRegion();
-        }
-        if (dirtyProperties2 & NET::WM2DesktopFileName) {
-            setDesktopFileName(QString::fromUtf8(info->desktopFileName()));
-        }
-        if (dirtyProperties2 & NET::WM2GTKFrameExtents) {
-            setClientFrameExtents(info->gtkFrameExtents());
-        }
+    if ((dirtyProperties & NET::WMName) != 0) {
+        fetchName();
+    }
+    if ((dirtyProperties & NET::WMIconName) != 0) {
+        fetchIconicName();
+    }
+    if ((dirtyProperties & NET::WMIcon) != 0) {
+        getIcons();
+    }
+    if ((dirtyProperties2 & NET::WM2UserTime) != 0) {
+        updateUserTime(info->userTime());
+    }
+    if ((dirtyProperties2 & NET::WM2StartupId) != 0) {
+        startupIdChanged();
+    }
+    if (dirtyProperties2 & NET::WM2Opacity) {
+        setOpacity(info->opacityF());
+    }
+    if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
+        Q_EMIT windowRoleChanged();
+    }
+    if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
+        getResourceClass();
+    }
+    if (dirtyProperties2.testFlag(NET::WM2GroupLeader)) {
+        checkGroup();
+        updateAllowedActions(); // Group affects isMinimizable()
+    }
+    if (dirtyProperties2.testFlag(NET::WM2Urgency)) {
+        updateUrgency();
+    }
+    if (dirtyProperties2 & NET::WM2OpaqueRegion) {
+        getWmOpaqueRegion();
+    }
+    if (dirtyProperties2 & NET::WM2DesktopFileName) {
+        setDesktopFileName(QString::fromUtf8(info->desktopFileName()));
+    }
+    if (dirtyProperties2 & NET::WM2GTKFrameExtents) {
+        setClientFrameExtents(info->gtkFrameExtents());
     }
 
     const uint8_t eventType = e->response_type & ~0x80;
@@ -407,8 +389,8 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         destroyNotifyEvent(reinterpret_cast<xcb_destroy_notify_event_t *>(e));
         break;
     case XCB_MAP_REQUEST:
-        // this one may pass the event to workspace
-        return mapRequestEvent(reinterpret_cast<xcb_map_request_event_t *>(e));
+        mapRequestEvent(reinterpret_cast<xcb_map_request_event_t *>(e));
+        break;
     case XCB_CONFIGURE_REQUEST:
         configureRequestEvent(reinterpret_cast<xcb_configure_request_event_t *>(e));
         break;
@@ -438,25 +420,8 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
 /**
  * Handles map requests of the client window
  */
-bool X11Window::mapRequestEvent(xcb_map_request_event_t *e)
+void X11Window::mapRequestEvent(xcb_map_request_event_t *e)
 {
-    if (e->window != window()) {
-        // Special support for the save-set feature, which is a bit broken.
-        // If there's a window from one client embedded in another one,
-        // e.g. using XEMBED, and the embedder suddenly loses its X connection,
-        // save-set will reparent the embedded window to its closest ancestor
-        // that will remains. Unfortunately, with reparenting window managers,
-        // this is not the root window, but the frame. In this case,
-        // the frame will get ReparentNotify for a window it won't know,
-        // which will be ignored, and then it gets MapRequest, as save-set
-        // always maps. Returning true here means that Workspace::workspaceEvent()
-        // will handle this MapRequest and manage this window (i.e. act as if
-        // it was reparented to root window).
-        if (e->parent == frameId()) {
-            return false;
-        }
-        return true; // no messing with frame etc.
-    }
     // also copied in clientMessage()
     if (isMinimized()) {
         setMinimized(false);
@@ -471,7 +436,6 @@ bool X11Window::mapRequestEvent(xcb_map_request_event_t *e)
             demandAttention();
         }
     }
-    return true;
 }
 
 /**
@@ -479,37 +443,15 @@ bool X11Window::mapRequestEvent(xcb_map_request_event_t *e)
  */
 void X11Window::unmapNotifyEvent(xcb_unmap_notify_event_t *e)
 {
-    if (e->window != window()) {
-        return;
-    }
-    if (e->event != frameId()) {
-        // most probably event from root window when initially reparenting
-        bool ignore = true;
-        if (e->event == kwinApp()->x11RootWindow() && (e->response_type & 0x80)) {
-            ignore = false; // XWithdrawWindow()
-        }
-        if (ignore) {
-            return;
-        }
-    }
-
-    // check whether this is result of an XReparentWindow - window then won't be parented by frame window
-    // in this case do not release the window (causes reparent to root, removal from saveSet and what not)
-    // but just destroy the window
-    Xcb::Tree tree(m_client);
-    xcb_window_t daddy = tree.parent();
-    if (daddy == m_frame) {
-        releaseWindow(); // unmapped from a regular window state
+    if (m_inflightUnmaps == 0) {
+        releaseWindow();
     } else {
-        destroyWindow(); // the window was moved to some other parent
+        m_inflightUnmaps--;
     }
 }
 
 void X11Window::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
 {
-    if (e->window != window()) {
-        return;
-    }
     destroyWindow();
 }
 
@@ -525,10 +467,6 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
         }
     }
 
-    if (e->window != window()) {
-        return; // ignore frame
-    }
-    // WM_STATE
     if (e->type == atoms->wm_change_state) {
         if (e->data.data32[0] == XCB_ICCCM_WM_STATE_ICONIC) {
             setMinimized(true);
@@ -560,9 +498,6 @@ void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
  */
 void X11Window::configureRequestEvent(xcb_configure_request_event_t *e)
 {
-    if (e->window != window()) {
-        return; // ignore frame
-    }
     if (isInteractiveResize() || isInteractiveMove()) {
         return; // we have better things to do right now
     }
@@ -606,9 +541,6 @@ void X11Window::configureRequestEvent(xcb_configure_request_event_t *e)
  */
 void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
-    if (e->window != window()) {
-        return; // ignore frame
-    }
     switch (e->atom) {
     case XCB_ATOM_WM_NORMAL_HINTS:
         getWmNormalHints();
@@ -651,9 +583,6 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
 
 void X11Window::focusInEvent(xcb_focus_in_event_t *e)
 {
-    if (e->event != window()) {
-        return; // only window gets focus
-    }
     if (e->mode == XCB_NOTIFY_MODE_GRAB || e->mode == XCB_NOTIFY_MODE_UNGRAB) {
         return; // we don't care
     }
@@ -683,9 +612,6 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
 
 void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
 {
-    if (e->event != window()) {
-        return; // only window gets focus
-    }
     if (e->mode == XCB_NOTIFY_MODE_GRAB || e->mode == XCB_NOTIFY_MODE_UNGRAB) {
         return; // we don't care
     }
@@ -734,10 +660,9 @@ void X11Window::shapeNotifyEvent(xcb_shape_notify_event_t *e)
     case XCB_SHAPE_SK_BOUNDING:
     case XCB_SHAPE_SK_CLIP:
         detectShape();
-        updateBoundingShape();
+        Q_EMIT shapeChanged();
         break;
     case XCB_SHAPE_SK_INPUT:
-        updateInputShape();
         break;
     }
 }

@@ -147,7 +147,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
             continue;
         }
 
-        newWindowStack << window->frameId();
+        newWindowStack << window->window();
     }
 
     // TODO isn't it too inefficient to restack always all windows?

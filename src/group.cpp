@@ -32,7 +32,7 @@ Group::Group(xcb_window_t leader_P)
     , refcount(0)
 {
     if (leader_P != XCB_WINDOW_NONE) {
-        leader_client = workspace()->findClient(Predicate::WindowMatch, leader_P);
+        leader_client = workspace()->findClient(leader_P);
         leader_info = std::make_unique<NETWinInfo>(kwinApp()->x11Connection(), leader_P, kwinApp()->x11RootWindow(),
                                                    NET::Properties(), NET::WM2StartupId);
     }

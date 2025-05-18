@@ -66,7 +66,6 @@ class X11EventFilter;
 class FocusChain;
 class ApplicationMenu;
 class PlacementTracker;
-enum class Predicate;
 class Outline;
 class RuleBook;
 class ScreenEdges;
@@ -102,52 +101,10 @@ public:
 #if KWIN_BUILD_X11
     bool workspaceEvent(xcb_generic_event_t *);
 
-    /**
-     * @brief Finds the first Client matching the condition expressed by passed in @p func.
-     *
-     * Internally findClient uses the std::find_if algorithm and that determines how the function
-     * needs to be implemented. An example usage for finding a Client with a matching windowId
-     * @code
-     * xcb_window_t w; // our test window
-     * X11Window *client = findClient([w](const X11Window *c) -> bool {
-     *     return c->window() == w;
-     * });
-     * @endcode
-     *
-     * For the standard cases of matching the window id with one of the Client's windows use
-     * the simplified overload method findClient(Predicate, xcb_window_t). Above example
-     * can be simplified to:
-     * @code
-     * xcb_window_t w; // our test window
-     * X11Window *client = findClient(Predicate::WindowMatch, w);
-     * @endcode
-     *
-     * @param func Unary function that accepts a X11Window *as argument and
-     * returns a value convertible to bool. The value returned indicates whether the
-     * X11Window *is considered a match in the context of this function.
-     * The function shall not modify its argument.
-     * This can either be a function pointer or a function object.
-     * @return KWin::X11Window *The found Client or @c null
-     * @see findClient(Predicate, xcb_window_t)
-     */
     X11Window *findClient(std::function<bool(const X11Window *)> func) const;
-    /**
-     * @brief Finds the Client matching the given match @p predicate for the given window.
-     *
-     * @param predicate Which window should be compared
-     * @param w The window id to test against
-     * @return KWin::X11Window *The found Client or @c null
-     * @see findClient(std::function<bool (const X11Window *)>)
-     */
-    X11Window *findClient(Predicate predicate, xcb_window_t w) const;
+    X11Window *findClient(xcb_window_t w) const;
     void forEachClient(std::function<void(X11Window *)> func);
     X11Window *findUnmanaged(std::function<bool(const X11Window *)> func) const;
-    /**
-     * @brief Finds the Unmanaged with the given window id.
-     *
-     * @param w The window id to search for
-     * @return KWin::Unmanaged* Found Unmanaged or @c null if there is no Unmanaged with given Id.
-     */
     X11Window *findUnmanaged(xcb_window_t w) const;
 #endif
 

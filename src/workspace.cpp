@@ -1901,19 +1901,11 @@ X11Window *Workspace::findUnmanaged(xcb_window_t w) const
     });
 }
 
-X11Window *Workspace::findClient(Predicate predicate, xcb_window_t w) const
+X11Window *Workspace::findClient(xcb_window_t w) const
 {
-    switch (predicate) {
-    case Predicate::WindowMatch:
-        return findClient([w](const X11Window *c) {
-            return c->window() == w;
-        });
-    case Predicate::FrameIdMatch:
-        return findClient([w](const X11Window *c) {
-            return c->frameId() == w;
-        });
-    }
-    return nullptr;
+    return findClient([w](const X11Window *c) {
+        return c->window() == w;
+    });
 }
 #endif
 

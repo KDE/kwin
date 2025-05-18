@@ -28,7 +28,7 @@ bool WindowPropertyNotifyX11Filter::event(xcb_generic_event_t *event)
     }
     if (pe->window == kwinApp()->x11RootWindow()) {
         Q_EMIT m_effects->propertyNotify(nullptr, pe->atom);
-    } else if (const auto c = workspace()->findClient(Predicate::WindowMatch, pe->window)) {
+    } else if (const auto c = workspace()->findClient(pe->window)) {
         Q_EMIT m_effects->propertyNotify(c->effectWindow(), pe->atom);
     } else if (const auto c = workspace()->findUnmanaged(pe->window)) {
         Q_EMIT m_effects->propertyNotify(c->effectWindow(), pe->atom);

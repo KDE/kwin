@@ -40,16 +40,6 @@ namespace KWin
 class KillPrompt;
 class XwaylandSurfaceV1Interface;
 
-/**
- * @brief Defines Predicates on how to search for a Client.
- *
- * Used by Workspace::findClient.
- */
-enum class Predicate {
-    WindowMatch,
-    FrameIdMatch,
-};
-
 class KWIN_EXPORT X11Window : public Window
 {
     Q_OBJECT
@@ -60,7 +50,6 @@ public:
 
     void associate(XwaylandSurfaceV1Interface *shellSurface);
 
-    xcb_window_t frameId() const;
     xcb_window_t window() const;
 
     int desktopId() const;
@@ -165,8 +154,6 @@ public:
     void invalidateDecoration() override;
 
     void detectShape();
-    void updateBoundingShape();
-    void updateInputShape();
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) const override;
@@ -263,8 +250,7 @@ public Q_SLOTS:
     void updateCaption() override;
 
 private:
-    // Handlers for X11 events
-    bool mapRequestEvent(xcb_map_request_event_t *e);
+    void mapRequestEvent(xcb_map_request_event_t *e);
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
     void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
     void configureNotifyEvent(xcb_configure_notify_event_t *e);
@@ -349,7 +335,7 @@ private:
     void map();
     void unmap();
 
-    void configure(const QRect &nativeFrame, const QRect &nativeClient);
+    void configure(const QRect &nativeGeometry);
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
                                              bool session) const;
@@ -370,7 +356,6 @@ private:
     void setAllowCommits(bool allow);
 
     Xcb::Window m_client;
-    Xcb::Window m_frame;
     qreal m_bufferScale = 1;
     xcb_window_t m_wmClientLeader = XCB_WINDOW_NONE;
     bool m_managed;
@@ -448,6 +433,7 @@ private:
     bool m_unmanaged = false;
     bool m_outline = false;
     quint64 m_surfaceSerial = 0;
+    int m_inflightUnmaps = 0;
 };
 
 /**

@@ -312,7 +312,7 @@ void WorkspaceWrapper::raiseWindow(KWin::Window *window)
 #if KWIN_BUILD_X11
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
-    auto window = Workspace::self()->findClient(Predicate::WindowMatch, windowId);
+    auto window = Workspace::self()->findClient(windowId);
     QJSEngine::setObjectOwnership(window, QJSEngine::CppOwnership);
     return window;
 }
