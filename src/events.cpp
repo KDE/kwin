@@ -735,29 +735,15 @@ void X11Window::shapeNotifyEvent(xcb_shape_notify_event_t *e)
         return;
     }
 
-    // TODO: See if some shape logic can be unified for managed and unmanaged function. You
-    // will need to be very careful when touching logic in the manage() function.
-    if (isUnmanaged()) {
-        switch (e->shape_kind) {
-        case XCB_SHAPE_SK_BOUNDING:
-        case XCB_SHAPE_SK_CLIP:
-            detectShape();
-            Q_EMIT shapeChanged();
-            break;
-        case XCB_SHAPE_SK_INPUT:
-            break;
-        }
-    } else {
-        switch (e->shape_kind) {
-        case XCB_SHAPE_SK_BOUNDING:
-        case XCB_SHAPE_SK_CLIP:
-            detectShape();
-            updateBoundingShape();
-            break;
-        case XCB_SHAPE_SK_INPUT:
-            updateInputShape();
-            break;
-        }
+    switch (e->shape_kind) {
+    case XCB_SHAPE_SK_BOUNDING:
+    case XCB_SHAPE_SK_CLIP:
+        detectShape();
+        updateBoundingShape();
+        break;
+    case XCB_SHAPE_SK_INPUT:
+        updateInputShape();
+        break;
     }
 }
 

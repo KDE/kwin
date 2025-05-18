@@ -1239,30 +1239,32 @@ void X11Window::detectShape()
 
 void X11Window::updateBoundingShape()
 {
-    if (is_shape) {
-        // Workaround for #19644 - Shaped windows shouldn't have decoration
-        if (!app_noborder) {
-            // Only when shape is detected for the first time, still let the user to override
-            app_noborder = true;
-            noborder = rules()->checkNoBorder(true);
+    if (!isUnmanaged()) {
+        if (is_shape) {
+            // Workaround for #19644 - Shaped windows shouldn't have decoration
+            if (!app_noborder) {
+                // Only when shape is detected for the first time, still let the user to override
+                app_noborder = true;
+                noborder = rules()->checkNoBorder(true);
+                updateDecoration(true);
+            }
+            if (!isDecorated()) {
+                xcb_shape_combine(kwinApp()->x11Connection(),
+                                  XCB_SHAPE_SO_SET,
+                                  XCB_SHAPE_SK_BOUNDING,
+                                  XCB_SHAPE_SK_BOUNDING,
+                                  frameId(),
+                                  m_wrapper.x(),
+                                  m_wrapper.y(),
+                                  window());
+            }
+        } else if (app_noborder) {
+            xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
+            detectNoBorder();
+            app_noborder = noborder;
+            noborder = rules()->checkNoBorder(noborder || m_motif.noDecorations());
             updateDecoration(true);
         }
-        if (!isDecorated()) {
-            xcb_shape_combine(kwinApp()->x11Connection(),
-                              XCB_SHAPE_SO_SET,
-                              XCB_SHAPE_SK_BOUNDING,
-                              XCB_SHAPE_SK_BOUNDING,
-                              frameId(),
-                              m_wrapper.x(),
-                              m_wrapper.y(),
-                              window());
-        }
-    } else if (app_noborder) {
-        xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
-        detectNoBorder();
-        app_noborder = noborder;
-        noborder = rules()->checkNoBorder(noborder || m_motif.noDecorations());
-        updateDecoration(true);
     }
 
     Q_EMIT shapeChanged();
@@ -1270,6 +1272,9 @@ void X11Window::updateBoundingShape()
 
 void X11Window::updateInputShape()
 {
+    if (isUnmanaged()) {
+        return;
+    }
     if (Xcb::Extensions::self()->isShapeInputAvailable()) {
         xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT, frameId(), 0, 0, window());
     }
