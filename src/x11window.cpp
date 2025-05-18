@@ -54,16 +54,9 @@ static uint32_t frameEventMask()
 {
     return XCB_EVENT_MASK_FOCUS_CHANGE
         | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+        | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
         | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
         | XCB_EVENT_MASK_PROPERTY_CHANGE;
-}
-
-static uint32_t wrapperEventMask()
-{
-    return XCB_EVENT_MASK_FOCUS_CHANGE
-        | XCB_EVENT_MASK_STRUCTURE_NOTIFY
-        | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
-        | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
 }
 
 static uint32_t clientEventMask()
@@ -128,7 +121,6 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask
 X11Window::X11Window()
     : Window()
     , m_client()
-    , m_wrapper()
     , m_frame()
     , m_managed(false)
     , m_transientForId(XCB_WINDOW_NONE)
@@ -287,7 +279,6 @@ void X11Window::releaseWindow(bool on_shutdown)
             m_client.unmap();
         }
         m_client.reset();
-        m_wrapper.reset();
         m_frame.reset();
         ungrabXServer();
     }
@@ -336,7 +327,6 @@ void X11Window::destroyWindow()
             cinfo->disable();
         }
         m_client.reset(); // invalidate
-        m_wrapper.reset();
         m_frame.reset();
     }
 
@@ -369,7 +359,6 @@ bool X11Window::track(xcb_window_t w)
     m_unmanaged = true;
 
     m_frame.reset(w, false);
-    m_wrapper.reset(w, false);
     m_client.reset(w, false);
 
     auto pidCookie = fetchPid();
@@ -993,7 +982,6 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
 {
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
     Q_ASSERT(frameId() == XCB_WINDOW_NONE);
-    Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
 
     m_client.reset(w, false, nativeGeometry);
 
@@ -1026,19 +1014,12 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_frame.reset(frame);
 
-    // Create the wrapper window
-    xcb_window_t wrapperId = xcb_generate_id(conn);
-    xcb_create_window(conn, depth, wrapperId, frame, 0, 0, 1, 1, 0,
-                      XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
-    m_wrapper.reset(wrapperId);
-
-    m_client.reparent(m_wrapper);
+    m_client.reparent(m_frame);
 
     // We could specify the event masks when we create the windows, but the original
     // Xlib code didn't.  Let's preserve that behavior here for now so we don't end up
-    // receiving any unexpected events from the wrapper creation or the reparenting.
+    // receiving any unexpected events from the frame creation or the reparenting.
     m_frame.selectInput(frameEventMask());
-    m_wrapper.selectInput(wrapperEventMask());
     m_client.selectInput(clientEventMask());
 }
 
@@ -1326,10 +1307,10 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
         shade_geometry_change = true;
         QSizeF s(implicitSize());
         s.setHeight(borderTop() + borderBottom());
-        m_wrapper.selectInput(wrapperEventMask() & ~XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY); // Avoid getting UnmapNotify
-        m_wrapper.unmap();
+        m_frame.selectInput(frameEventMask() & ~XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY); // Avoid getting UnmapNotify
+        m_frame.unmap();
         m_client.unmap();
-        m_wrapper.selectInput(wrapperEventMask());
+        m_frame.selectInput(frameEventMask());
         exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
         resize(s);
         shade_geometry_change = false;
@@ -1372,7 +1353,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
                 shade_below = nullptr;
             }
         }
-        m_wrapper.map();
+        m_frame.map();
         m_client.map();
         exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
         if (isActive()) {
@@ -1470,7 +1451,6 @@ void X11Window::map()
 {
     m_frame.map();
     if (!isShade()) {
-        m_wrapper.map();
         m_client.map();
         exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
     } else {
@@ -1489,11 +1469,10 @@ void X11Window::unmap()
     // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
     // will be missed is also very minimal, so I don't think it's needed to grab the server
     // here.
-    m_wrapper.selectInput(wrapperEventMask() & ~XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY); // Avoid getting UnmapNotify
+    m_frame.selectInput(frameEventMask() & ~XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY); // Avoid getting UnmapNotify
     m_frame.unmap();
-    m_wrapper.unmap();
     m_client.unmap();
-    m_wrapper.selectInput(wrapperEventMask());
+    m_frame.selectInput(frameEventMask());
     exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
 }
 
@@ -2278,11 +2257,6 @@ xcb_window_t X11Window::frameId() const
 xcb_window_t X11Window::window() const
 {
     return m_client;
-}
-
-xcb_window_t X11Window::wrapperId() const
-{
-    return m_wrapper;
 }
 
 QPointF X11Window::framePosToClientPos(const QPointF &point) const
@@ -3368,8 +3342,8 @@ void X11Window::sendSyntheticConfigureNotify()
     u.event.response_type = XCB_CONFIGURE_NOTIFY;
     u.event.event = window();
     u.event.window = window();
-    u.event.x = m_frame.x() + m_wrapper.x() + m_client.x();
-    u.event.y = m_frame.y() + m_wrapper.y() + m_client.y();
+    u.event.x = m_frame.x() + m_client.x();
+    u.event.y = m_frame.y() + m_client.y();
     u.event.width = m_client.width();
     u.event.height = m_client.height();
     u.event.border_width = 0;
@@ -3791,9 +3765,8 @@ void X11Window::blockGeometryUpdates(bool block)
     } else {
         if (--m_blockGeometryUpdates == 0) {
             const QRect nativeFrameGeometry = Xcb::toXNative(m_bufferGeometry);
-            const QRect nativeWrapperGeometry = Xcb::toXNative(m_clientGeometry.translated(-m_bufferGeometry.topLeft()));
-            const QRect nativeClientGeometry = QRect(0, 0, nativeWrapperGeometry.width(), nativeWrapperGeometry.height());
-            configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
+            const QRect nativeClientGeometry = Xcb::toXNative(m_clientGeometry.translated(-m_bufferGeometry.topLeft()));
+            configure(nativeFrameGeometry, nativeClientGeometry);
         }
     }
 }
@@ -3855,9 +3828,8 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 
     if (!areGeometryUpdatesBlocked()) {
         const QRect nativeFrameGeometry = Xcb::toXNative(m_bufferGeometry);
-        const QRect nativeWrapperGeometry = Xcb::toXNative(m_clientGeometry.translated(-m_bufferGeometry.topLeft()));
-        const QRect nativeClientGeometry = QRect(0, 0, nativeWrapperGeometry.width(), nativeWrapperGeometry.height());
-        configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
+        const QRect nativeClientGeometry = Xcb::toXNative(m_clientGeometry.translated(-m_bufferGeometry.topLeft()));
+        configure(nativeFrameGeometry, nativeClientGeometry);
     }
 
     updateWindowRules(Rules::Position | Rules::Size);
@@ -3882,17 +3854,14 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     Q_EMIT shapeChanged();
 }
 
-void X11Window::configure(const QRect &nativeFrame, const QRect &nativeWrapper, const QRect &nativeClient)
+void X11Window::configure(const QRect &nativeFrame, const QRect &nativeClient)
 {
-    if (m_frame.size() != nativeFrame.size() || m_wrapper.geometry() != nativeWrapper) {
+    if (m_frame.size() != nativeFrame.size() || m_client.geometry() != nativeClient) {
         if (m_frame.geometry() != nativeFrame) {
             m_frame.setGeometry(nativeFrame);
         }
         if (!isShade()) {
             const bool resized = m_client.size() != nativeClient.size();
-            if (m_wrapper.geometry() != nativeWrapper) {
-                m_wrapper.setGeometry(nativeWrapper);
-            }
             if (m_client.geometry() != nativeClient) {
                 m_client.setGeometry(nativeClient);
             }
@@ -4229,10 +4198,9 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
     const QRectF moveResizeBufferGeometry = nextFrameRectToBufferRect(moveResizeFrameGeometry);
 
     const QRect nativeFrameGeometry = Xcb::toXNative(moveResizeBufferGeometry);
-    const QRect nativeWrapperGeometry = Xcb::toXNative(moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft()));
-    const QRect nativeClientGeometry = Xcb::toXNative(QRectF(QPointF(0, 0), moveResizeClientGeometry.size()));
+    const QRect nativeClientGeometry = Xcb::toXNative(moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft()));
 
-    if (m_frame.geometry() == nativeFrameGeometry && m_wrapper.geometry() == nativeWrapperGeometry && m_client.geometry() == nativeClientGeometry) {
+    if (m_frame.geometry() == nativeFrameGeometry && m_client.geometry() == nativeClientGeometry) {
         return;
     }
 
@@ -4241,7 +4209,7 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
     } else {
         setMoveResizeGeometry(moveResizeFrameGeometry);
         sendSyncRequest();
-        configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
+        configure(nativeFrameGeometry, nativeClientGeometry);
     }
 }
 

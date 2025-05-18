@@ -47,7 +47,6 @@ class XwaylandSurfaceV1Interface;
  */
 enum class Predicate {
     WindowMatch,
-    WrapperIdMatch,
     FrameIdMatch,
 };
 
@@ -63,7 +62,6 @@ public:
 
     xcb_window_t frameId() const;
     xcb_window_t window() const;
-    xcb_window_t wrapperId() const;
 
     int desktopId() const;
     QByteArray sessionId() const;
@@ -350,7 +348,7 @@ private:
     void unmap();
 
     void updateInputShape();
-    void configure(const QRect &nativeFrame, const QRect &nativeWrapper, const QRect &nativeClient);
+    void configure(const QRect &nativeFrame, const QRect &nativeClient);
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
                                              bool session) const;
@@ -371,7 +369,6 @@ private:
     void setAllowCommits(bool allow);
 
     Xcb::Window m_client;
-    Xcb::Window m_wrapper;
     Xcb::Window m_frame;
     qreal m_bufferScale = 1;
     xcb_window_t m_wmClientLeader = XCB_WINDOW_NONE;

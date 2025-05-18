@@ -1908,10 +1908,6 @@ X11Window *Workspace::findClient(Predicate predicate, xcb_window_t w) const
         return findClient([w](const X11Window *c) {
             return c->window() == w;
         });
-    case Predicate::WrapperIdMatch:
-        return findClient([w](const X11Window *c) {
-            return c->wrapperId() == w;
-        });
     case Predicate::FrameIdMatch:
         return findClient([w](const X11Window *c) {
             return c->frameId() == w;
