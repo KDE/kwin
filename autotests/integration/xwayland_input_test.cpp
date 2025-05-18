@@ -191,9 +191,6 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
     }
-    if (!Xcb::Extensions::self()->isShapeAvailable()) {
-        QSKIP("SHAPE extension is required");
-    }
 
     X11EventReaderHelper eventReader(c.get());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
@@ -206,7 +203,6 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     clientFrameExtent.top = 5;
     clientFrameExtent.bottom = 20;
 
-    // Need to set the bounding shape in order to create a window without decoration.
     xcb_rectangle_t boundingRect;
     boundingRect.x = 0;
     boundingRect.y = 0;
@@ -223,8 +219,10 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     xcb_icccm_size_hints_set_position(&hints, 1, boundingRect.x, boundingRect.y);
     xcb_icccm_size_hints_set_size(&hints, 1, boundingRect.width, boundingRect.height);
     xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
-    xcb_shape_rectangles(c.get(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING,
-                         XCB_CLIP_ORDERING_UNSORTED, windowId, 0, 0, 1, &boundingRect);
+    Test::applyMotifHints(c.get(), windowId, Test::MotifHints{
+                                                 .flags = Test::MWM_HINTS_DECORATIONS,
+                                                 .decorations = 0,
+                                             });
     NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
     info.setGtkFrameExtents(clientFrameExtent);

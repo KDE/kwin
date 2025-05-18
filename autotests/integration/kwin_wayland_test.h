@@ -929,6 +929,38 @@ struct XcbConnectionDeleter
 };
 typedef std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> XcbConnectionPtr;
 XcbConnectionPtr createX11Connection();
+
+enum {
+    MWM_HINTS_FUNCTIONS = (1L << 0),
+
+    MWM_FUNC_ALL = (1L << 0),
+    MWM_FUNC_RESIZE = (1L << 1),
+    MWM_FUNC_MOVE = (1L << 2),
+    MWM_FUNC_MINIMIZE = (1L << 3),
+    MWM_FUNC_MAXIMIZE = (1L << 4),
+    MWM_FUNC_CLOSE = (1L << 5),
+
+    MWM_HINTS_DECORATIONS = (1L << 1),
+
+    MWM_DECOR_ALL = (1L << 0),
+    MWM_DECOR_BORDER = (1L << 1),
+    MWM_DECOR_RESIZEH = (1L << 2),
+    MWM_DECOR_TITLE = (1L << 3),
+    MWM_DECOR_MENU = (1L << 4),
+    MWM_DECOR_MINIMIZE = (1L << 5),
+    MWM_DECOR_MAXIMIZE = (1L << 6),
+};
+
+struct MotifHints
+{
+    uint32_t flags = 0;
+    uint32_t functions = 0;
+    uint32_t decorations = 0;
+    int32_t input_mode = 0;
+    uint32_t status = 0;
+};
+
+void applyMotifHints(xcb_connection_t *connection, xcb_window_t window, const MotifHints &hints);
 #endif
 
 MockInputMethod *inputMethod();
