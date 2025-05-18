@@ -135,10 +135,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             if (window->windowEvent(e)) {
                 return true;
             }
-        } else if (X11Window *window = findClient(Predicate::WrapperIdMatch, eventWindow)) {
-            if (window->windowEvent(e)) {
-                return true;
-            }
         } else if (X11Window *window = findClient(Predicate::FrameIdMatch, eventWindow)) {
             if (window->windowEvent(e)) {
                 return true;
@@ -356,7 +352,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         return false; // don't eat events, even our own unmanaged widgets are tracked
     }
 
-    if (findEventWindow(e) == window()) { // avoid doing stuff on frame or wrapper
+    if (findEventWindow(e) == window()) { // avoid doing stuff on frame
         NET::Properties dirtyProperties;
         NET::Properties2 dirtyProperties2;
         info->event(e, &dirtyProperties, &dirtyProperties2); // pass through the NET stuff
@@ -452,14 +448,13 @@ bool X11Window::mapRequestEvent(xcb_map_request_event_t *e)
         // e.g. using XEMBED, and the embedder suddenly loses its X connection,
         // save-set will reparent the embedded window to its closest ancestor
         // that will remains. Unfortunately, with reparenting window managers,
-        // this is not the root window, but the frame (or in KWin's case,
-        // it's the wrapper for the client window). In this case,
-        // the wrapper will get ReparentNotify for a window it won't know,
+        // this is not the root window, but the frame. In this case,
+        // the frame will get ReparentNotify for a window it won't know,
         // which will be ignored, and then it gets MapRequest, as save-set
         // always maps. Returning true here means that Workspace::workspaceEvent()
         // will handle this MapRequest and manage this window (i.e. act as if
         // it was reparented to root window).
-        if (e->parent == wrapperId()) {
+        if (e->parent == frameId()) {
             return false;
         }
         return true; // no messing with frame etc.
@@ -489,7 +484,7 @@ void X11Window::unmapNotifyEvent(xcb_unmap_notify_event_t *e)
     if (e->window != window()) {
         return;
     }
-    if (e->event != wrapperId()) {
+    if (e->event != frameId()) {
         // most probably event from root window when initially reparenting
         bool ignore = true;
         if (e->event == kwinApp()->x11RootWindow() && (e->response_type & 0x80)) {
@@ -500,12 +495,12 @@ void X11Window::unmapNotifyEvent(xcb_unmap_notify_event_t *e)
         }
     }
 
-    // check whether this is result of an XReparentWindow - window then won't be parented by wrapper
+    // check whether this is result of an XReparentWindow - window then won't be parented by frame window
     // in this case do not release the window (causes reparent to root, removal from saveSet and what not)
     // but just destroy the window
     Xcb::Tree tree(m_client);
     xcb_window_t daddy = tree.parent();
-    if (daddy == m_wrapper) {
+    if (daddy == m_frame) {
         releaseWindow(); // unmapped from a regular window state
     } else {
         destroyWindow(); // the window was moved to some other parent
@@ -533,7 +528,7 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
     }
 
     if (e->window != window()) {
-        return; // ignore frame/wrapper
+        return; // ignore frame
     }
     // WM_STATE
     if (e->type == atoms->wm_change_state) {
@@ -568,7 +563,7 @@ void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
 void X11Window::configureRequestEvent(xcb_configure_request_event_t *e)
 {
     if (e->window != window()) {
-        return; // ignore frame/wrapper
+        return; // ignore frame
     }
     if (isInteractiveResize() || isInteractiveMove()) {
         return; // we have better things to do right now
@@ -614,7 +609,7 @@ void X11Window::configureRequestEvent(xcb_configure_request_event_t *e)
 void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
     if (e->window != window()) {
-        return; // ignore frame/wrapper
+        return; // ignore frame
     }
     switch (e->atom) {
     case XCB_ATOM_WM_NORMAL_HINTS:
