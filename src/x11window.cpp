@@ -1108,11 +1108,6 @@ void X11Window::destroyDecoration()
 
 void X11Window::detectNoBorder()
 {
-    if (is_shape) {
-        noborder = true;
-        app_noborder = true;
-        return;
-    }
     switch (windowType()) {
     case WindowType::Desktop:
     case WindowType::Dock:
@@ -1239,29 +1234,9 @@ void X11Window::detectShape()
 void X11Window::updateShape()
 {
     if (is_shape) {
-        // Workaround for #19644 - Shaped windows shouldn't have decoration
-        if (!app_noborder) {
-            // Only when shape is detected for the first time, still let the user to override
-            app_noborder = true;
-            noborder = rules()->checkNoBorder(true);
-            updateDecoration(true);
-        }
-        if (!isDecorated()) {
-            xcb_shape_combine(kwinApp()->x11Connection(),
-                              XCB_SHAPE_SO_SET,
-                              XCB_SHAPE_SK_BOUNDING,
-                              XCB_SHAPE_SK_BOUNDING,
-                              frameId(),
-                              m_wrapper.x(),
-                              m_wrapper.y(),
-                              window());
-        }
-    } else if (app_noborder) {
+        xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, window());
+    } else {
         xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
-        detectNoBorder();
-        app_noborder = noborder;
-        noborder = rules()->checkNoBorder(noborder || m_motif.noDecorations());
-        updateDecoration(true);
     }
 
     // Decoration mask (i.e. 'else' here) setting is done in setMask()

@@ -12,6 +12,9 @@
 
 #include "kwin_wayland_test.h"
 
+#if KWIN_BUILD_X11
+#include "atoms.h"
+#endif
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
@@ -1304,6 +1307,15 @@ Test::XcbConnectionPtr createX11Connection()
     watcher.setFuture(future);
     e.exec();
     return Test::XcbConnectionPtr(future.result());
+}
+
+void applyMotifHints(xcb_connection_t *connection, xcb_window_t window, const MotifHints &hints)
+{
+    if (hints.flags) {
+        xcb_change_property(connection, XCB_PROP_MODE_REPLACE, window, atoms->motif_wm_hints, atoms->motif_wm_hints, 32, 5, &hints);
+    } else {
+        xcb_delete_property(connection, window, atoms->motif_wm_hints);
+    }
 }
 #endif
 
