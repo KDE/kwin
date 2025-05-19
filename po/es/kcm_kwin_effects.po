@@ -1,15 +1,15 @@
 # Spanish translations for kcm_kwin_effects.po package.
-# Copyright (C) 2019 This file is copyright:
+# Copyright (C) 2019-2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-#
 # Automatically generated, 2019.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2019, 2023.
+#
+# SPDX-FileCopyrightText: 2019, 2023, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-26 00:43+0000\n"
-"PO-Revision-Date: 2023-06-06 12:24+0200\n"
+"PO-Revision-Date: 2025-05-18 14:53+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -32,13 +32,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "Configurar..."
+msgstr "Configurar…"
 
 #: ui/main.qml:25
 #, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr "Obtener novedades..."
+msgstr "Obtener novedades…"
 
 #: ui/main.qml:54
 #, kde-format
@@ -49,46 +49,3 @@ msgstr "Configurar filtro"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Excluir los efectos no permitidos"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Show/Hide Video"
-#~ msgstr "Mostrar/ocultar vídeo"
-
-#~ msgid ""
-#~ "Hint: To find out or configure how to activate an effect, look at the "
-#~ "effect's settings."
-#~ msgstr ""
-#~ "Consejo: Para descubrir o configurar cómo activar un efecto, consulte las "
-#~ "preferencias del efecto."
-
-#~ msgid "Exclude internal effects"
-#~ msgstr "Excluir los efectos internos"
-
-#~ msgid "Get New Desktop Effects..."
-#~ msgstr "Obtener nuevos efectos de escritorio..."
-
-#~ msgid "This module lets you configure desktop effects."
-#~ msgstr "Este módulo le permite configurar los efectos del escritorio."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Eloy Cuadra"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "ecuadra@eloihr.net"
-
-#~ msgid "Desktop Effects"
-#~ msgstr "Efectos del escritorio"
-
-#~ msgid "Vlad Zahorodnii"
-#~ msgstr "Vlad Zahorodnii"
-
-#~ msgid "Download New Desktop Effects"
-#~ msgstr "Descargar nuevos efectos de escritorio"
-
-#~ msgid "Exclude Desktop Effects not supported by the Compositor"
-#~ msgstr "Excluir los efectos de escritorio no permitidos por el compositor"
-
-#~ msgid "Search..."
-#~ msgstr "Buscar..."

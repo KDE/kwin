@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-05-17 13:12+0200\n"
+"PO-Revision-Date: 2025-05-18 10:05+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -23,11 +23,12 @@ msgstr ""
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
 msgstr ""
+"Iniciar unha vista previa interactiva dun selector de grupo de separadores."
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Ruta do ficheiro principal de QML do selector de xanelas."
 
 #: layoutpreview.cpp:29
 #, kde-format

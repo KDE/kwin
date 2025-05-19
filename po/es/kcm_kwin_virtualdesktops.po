@@ -1,16 +1,16 @@
-# translation of kcm_kwindesktop.po to Spanish
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
+# Spanish translations for kcm_kwin_virtualdesktops.po package.
+# Copyright (C) 2007-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
 #
-# Jaime Robles <jaime@robles.nu>, 2007.
-# SPDX-FileCopyrightText: 2010, 2013, 2014, 2018, 2019, 2021, 2022, 2024 Eloy Cuadra <ecuadra@eloihr.net>
-# Javier Vinal <fjvinal@gmail.com>, 2012.
+# SPDX-FileCopyrightText: 2007 Jaime Robles <jaime@robles.nu>
+# SPDX-FileCopyrightText: 2010, 2013, 2014, 2018, 2019, 2021, 2022, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2012 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
-"Project-Id-Version: kcm_kwindesktop\n"
+"Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-01 00:42+0000\n"
-"PO-Revision-Date: 2024-04-28 01:00+0200\n"
+"PO-Revision-Date: 2025-05-18 14:54+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -127,154 +127,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostrar indicadores de disposición de escritorio"
-
-#~ msgid "1 Row"
-#~ msgid_plural "%1 Rows"
-#~ msgstr[0] "1 fila"
-#~ msgstr[1] "%1 filas"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "Añadir"
-
-#~ msgid ""
-#~ "This module lets you configure the navigation, number and layout of "
-#~ "virtual desktops."
-#~ msgstr ""
-#~ "Este módulo le permite configurar la navegación, el número y el esquema "
-#~ "de los escritorios virtuales."
-
-#~ msgid "Virtual Desktops"
-#~ msgstr "Escritorios virtuales"
-
-#~ msgid "Configure Virtual Desktops"
-#~ msgstr "Configurar los escritorios virtuales"
-
-#~ msgid "Desktop %1:"
-#~ msgstr "Escritorio %1:"
-
-#~ msgid "Here you can enter the name for desktop %1"
-#~ msgstr "Aquí puede introducir el nombre del escritorio %1"
-
-#~ msgid ""
-#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
-#~ "virtual desktops you want and how these should be labeled."
-#~ msgstr ""
-#~ "<h1>Múltiples escritorios</h1>En este módulo, puede configurar el número "
-#~ "de escritorios virtuales que desea y cómo se deberían etiquetar."
-
-#~ msgid "KWin"
-#~ msgstr "KWin"
-
-#~ msgid "Switch to Next Desktop"
-#~ msgstr "Cambiar a escritorio siguiente"
-
-#~ msgid "Switch to Previous Desktop"
-#~ msgstr "Cambiar a escritorio anterior"
-
-#~ msgid "Switch One Desktop to the Right"
-#~ msgstr "Cambiar a escritorio de la derecha"
-
-#~ msgid "Switch One Desktop to the Left"
-#~ msgstr "Cambiar a escritorio de la izquierda"
-
-#~ msgid "Switch One Desktop Up"
-#~ msgstr "Cambiar al escritorio superior"
-
-#~ msgid "Switch One Desktop Down"
-#~ msgstr "Cambiar al escritorio inferior"
-
-#~ msgid "Walk Through Desktops"
-#~ msgstr "Recorrer los escritorios"
-
-#~ msgid "Walk Through Desktops (Reverse)"
-#~ msgstr "Recorrer los escritorios (en orden inverso)"
-
-#~ msgid "Walk Through Desktop List"
-#~ msgstr "Recorrer la lista de escritorios"
-
-#~ msgid "Walk Through Desktop List (Reverse)"
-#~ msgstr "Recorrer la lista de escritorios (en orden inverso)"
-
-#~ msgid "Desktop Switching"
-#~ msgstr "Cambio de escritorio"
-
-#~ msgid "Switch to Desktop %1"
-#~ msgstr "Cambiar al escritorio %1"
-
-#~ msgid "No Animation"
-#~ msgstr "Sin animación"
-
-#~ msgid "No suitable Shortcut for Desktop %1 found"
-#~ msgstr "No se ha encontrado un acceso rápido adecuado para el escritorio %1"
-
-#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
-#~ msgstr "Acceso rápido global «%1» asignado al escritorio %2"
-
-#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
-#~ msgstr ""
-#~ "Conflicto de acceso rápido: No se puede asignar el acceso rápido %1 al "
-#~ "escritorio %2"
-
-#~ msgid "KWin development team"
-#~ msgstr "Equipo de desarrollo de KWin"
-
-#~ msgid "Layout"
-#~ msgstr "Disposición"
-
-#~ msgid ""
-#~ "Here you can set how many virtual desktops you want on your KDE desktop."
-#~ msgstr ""
-#~ "Aquí puede fijar cuántos escritorios virtuales desea en su escritorio KDE."
-
-#~ msgid "&Number of desktops:"
-#~ msgstr "&Número de escritorios:"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "Nú&mero de filas:"
-
-#~ msgid "Desktop Names"
-#~ msgstr "Nombres de escritorios"
-
-#~ msgid "Switching"
-#~ msgstr "Cambio"
-
-#~ msgid ""
-#~ "Enable this option if you want keyboard or active desktop border "
-#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
-#~ "of the new desktop."
-#~ msgstr ""
-#~ "Active esta opción si quiere que el teclado o la navegación por los "
-#~ "bordes activos del escritorio más allá del borde le lleven al borde "
-#~ "opuesto del nuevo escritorio."
-
-#~ msgid "Desktop Effect Animation"
-#~ msgstr "Efecto de animación del escritorio"
-
-#~ msgid "Animation:"
-#~ msgstr "Animación:"
-
-#~ msgid "Desktop Switch On-Screen Display"
-#~ msgstr "Información en pantalla del cambio de escritorio"
-
-#~ msgid "Duration:"
-#~ msgstr "Duración:"
-
-#~ msgid " msec"
-#~ msgstr " msec"
-
-#~ msgid ""
-#~ "Enabling this option will show a small preview of the desktop layout "
-#~ "indicating the selected desktop."
-#~ msgstr ""
-#~ "Si activa esta opción se mostrará una pequeña previsualización de la "
-#~ "disposición del escritorio, indicando el escritorio seleccionado."
-
-#~ msgid "Shortcuts"
-#~ msgstr "Accesos rápidos"
-
-#~ msgid "Show shortcuts for all possible desktops"
-#~ msgstr "Mostrar accesos rápidos de todos los escritorios posibles"
-
-#~ msgid "Different widgets for each desktop"
-#~ msgstr "Componentes gráficos distintos para cada escritorio"

@@ -1,15 +1,15 @@
 # Spanish translations for kcmkwincommon.po package.
-# Copyright (C) 2019 This file is copyright:
+# Copyright (C) 2019-2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-#
 # Automatically generated, 2019.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2019, 2022, 2023.
+#
+# SPDX-FileCopyrightText: 2019, 2022, 2023, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincommon\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-26 00:43+0000\n"
-"PO-Revision-Date: 2023-04-20 17:25+0200\n"
+"PO-Revision-Date: 2025-05-18 14:55+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -99,7 +99,3 @@ msgstr "%1 no contiene un archivo metadata.json válido"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 no existe"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Candy"
-#~ msgstr "Adornos"
