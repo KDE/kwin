@@ -427,8 +427,8 @@ std::pair<ColorDescription, QVector3D> DrmOutput::createColorDescription(const s
     const double sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     const auto iccProfile = props->iccProfile.value_or(m_state.iccProfile);
     if (colorSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && iccProfile) {
-        const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
+        const double minBrightness = iccProfile->relativeBlackPoint().value_or(0) * maxBrightness;
         const auto sdrColor = Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(iccProfile->colorimetry(), sdrGamutWideness);
         const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
         const double brightnessFactor = (!m_brightnessDevice && allowSdrSoftwareBrightness) ? brightness : 1.0;
