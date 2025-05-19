@@ -460,6 +460,11 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool effectiveWcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
     const double brightness = next.currentBrightness.value_or(next.brightnessSetting);
+    double maxPossibleArtificialHeadroom = 1.0;
+    if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
+        maxPossibleArtificialHeadroom = 1.0 / next.currentBrightness.value_or(next.brightnessSetting);
+    }
+
     if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
         const double maxBrightness = next.iccProfile->maxBrightness().value_or(200);
         const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxBrightness;
@@ -468,22 +473,17 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
         const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
         return ColorDescription{
             next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, 0, maxBrightness),
+            TransferFunction(TransferFunction::gamma22, 0, maxBrightness * next.artificialHdrHeadroom),
             effectiveReferenceLuminance,
-            minBrightness,
-            maxBrightness,
-            maxBrightness,
+            minBrightness * next.artificialHdrHeadroom,
+            maxBrightness * maxPossibleArtificialHeadroom,
+            maxBrightness * maxPossibleArtificialHeadroom,
             next.iccProfile->colorimetry(),
             sdrColor,
         };
     }
+
     const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::BT709);
-
-    double maxPossibleArtificialHeadroom = 1.0;
-    if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
-        maxPossibleArtificialHeadroom = 1.0 / next.currentBrightness.value_or(next.brightnessSetting);
-    }
-
     const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::BT2020 : (next.colorProfileSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::BT709);
     const Colorimetry masteringColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::BT709;
     const Colorimetry sdrColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness) : Colorimetry::BT709;
