@@ -81,7 +81,6 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_resizeOperation(nullptr)
     , m_moveOperation(nullptr)
     , m_maximizeOperation(nullptr)
-    , m_shadeOperation(nullptr)
     , m_keepAboveOperation(nullptr)
     , m_keepBelowOperation(nullptr)
     , m_fullScreenOperation(nullptr)
@@ -242,12 +241,6 @@ void UserActionsMenu::init()
     m_fullScreenOperation->setCheckable(true);
     m_fullScreenOperation->setData(Options::FullScreenOp);
 
-    m_shadeOperation = advancedMenu->addAction(i18n("&Shade"));
-    m_shadeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-shade")));
-    setShortcut(m_shadeOperation, QStringLiteral("Window Shade"));
-    m_shadeOperation->setCheckable(true);
-    m_shadeOperation->setData(Options::ShadeOp);
-
     m_noBorderOperation = advancedMenu->addAction(i18n("&No Titlebar and Frame"));
     m_noBorderOperation->setIcon(QIcon::fromTheme(QStringLiteral("edit-none-border")));
     setShortcut(m_noBorderOperation, QStringLiteral("Window No Border"));
@@ -335,8 +328,6 @@ void UserActionsMenu::menuAboutToShow()
     m_moveOperation->setEnabled(m_window->isMovableAcrossScreens());
     m_maximizeOperation->setEnabled(m_window->isMaximizable());
     m_maximizeOperation->setChecked(m_window->maximizeMode() == MaximizeFull);
-    m_shadeOperation->setEnabled(m_window->isShadeable());
-    m_shadeOperation->setChecked(m_window->shadeMode() != ShadeNone);
     m_keepAboveOperation->setChecked(m_window->keepAbove());
     m_keepBelowOperation->setChecked(m_window->keepBelow());
     m_fullScreenOperation->setEnabled(m_window->isFullScreenable());

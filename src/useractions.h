@@ -194,7 +194,6 @@ private:
     QAction *m_resizeOperation;
     QAction *m_moveOperation;
     QAction *m_maximizeOperation;
-    QAction *m_shadeOperation;
     QAction *m_keepAboveOperation;
     QAction *m_keepBelowOperation;
     QAction *m_fullScreenOperation;
