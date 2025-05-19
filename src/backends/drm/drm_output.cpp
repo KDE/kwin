@@ -461,8 +461,8 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
     const bool effectiveWcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
     const double brightness = next.currentBrightness.value_or(next.brightnessSetting);
     if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
-        const double minBrightness = next.iccProfile->minBrightness().value_or(0);
         const double maxBrightness = next.iccProfile->maxBrightness().value_or(200);
+        const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxBrightness;
         const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
         const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
         const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
