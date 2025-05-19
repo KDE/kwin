@@ -27,7 +27,15 @@ static const Colorimetry CIEXYZD50 = Colorimetry{
 
 const ColorDescription IccProfile::s_connectionSpace = ColorDescription(CIEXYZD50, TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> relativeBlackPoint, std::optional<double> maxBrightness)
+IccProfile::IccProfile(cmsHPROFILE handle,
+                       const Colorimetry &colorimetry,
+                       std::optional<ColorPipeline> &&bToA0Tag,
+                       std::optional<ColorPipeline> &&bToA1Tag,
+                       const std::shared_ptr<ColorTransformation> &inverseEOTF,
+                       const std::shared_ptr<ColorTransformation> &vcgt,
+                       std::optional<double> relativeBlackPoint,
+                       std::optional<double> maxBrightness,
+                       std::optional<BacklightCurve> &&backlightCurve)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_bToA0Tag(std::move(bToA0Tag))
@@ -36,6 +44,7 @@ IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::
     , m_vcgt(vcgt)
     , m_relativeBlackPoint(relativeBlackPoint)
     , m_maxBrightness(maxBrightness)
+    , m_backlightCurve(std::move(backlightCurve))
 {
 }
 
@@ -67,6 +76,22 @@ std::shared_ptr<ColorTransformation> IccProfile::inverseTransferFunction() const
 std::shared_ptr<ColorTransformation> IccProfile::vcgt() const
 {
     return m_vcgt;
+}
+
+const std::optional<IccProfile::BacklightCurve> &IccProfile::backlightCurve() const
+{
+    return m_backlightCurve;
+}
+
+std::pair<double, double> IccProfile::BacklightCurve::sample(double backlight) const
+{
+    const size_t lowerIndex = std::clamp<size_t>(std::floor(backlight * (black.size() - 1)), 0, black.size());
+    const size_t higherIndex = std::clamp<size_t>(std::ceil(backlight * (black.size() - 1)), 0, black.size());
+    if (lowerIndex == higherIndex) {
+        return std::make_pair(black[lowerIndex], white[higherIndex]);
+    }
+    const double t = backlight * (black.size() - 1) - lowerIndex;
+    return std::make_pair(std::lerp(black[lowerIndex], black[higherIndex], t), std::lerp(white[lowerIndex], white[higherIndex], t));
 }
 
 const ColorPipeline *IccProfile::BToATag(RenderingIntent intent) const
@@ -229,6 +254,66 @@ static std::optional<ColorPipeline> parseBToATag(cmsHPROFILE profile, cmsTagSign
         } break;
         default:
             qCWarning(KWIN_CORE, "unknown stage type %u", stageType);
+            return std::nullopt;
+        }
+    }
+    return ret;
+}
+
+static cmsTagSignature stringToSignature(std::string_view str)
+{
+    return cmsTagSignature((uint32_t(str[3]) << 0) | (uint32_t(str[2]) << 8) | (uint32_t(str[1]) << 16) | (uint32_t(str[0]) << 24));
+}
+
+static int32_t dataTypeSig(std::string_view str)
+{
+    return (int32_t(str[3]) << 0) | (int32_t(str[2]) << 8) | (int32_t(str[1]) << 16) | (int32_t(str[0]) << 24);
+}
+
+static std::optional<IccProfile::BacklightCurve> parseBacklightCurve(cmsHPROFILE profile)
+{
+    const auto signature = stringToSignature("KDEb");
+    const uint32_t bufferSize = cmsReadRawTag(profile, signature, nullptr, 0);
+    if (!bufferSize) {
+        // tag not found
+        return std::nullopt;
+    }
+    if (bufferSize < 16) {
+        // definitely incorrect
+        return std::nullopt;
+    }
+    std::vector<uint8_t> data(bufferSize);
+    cmsReadRawTag(profile, signature, reinterpret_cast<void *>(data.data()), data.size());
+    const auto dataType = read<int32_t>(data, 0);
+    if (dataType != dataTypeSig("BCKL")) {
+        qCWarning(KWIN_CORE, "Wrong data type found in backlight ICC tag");
+        return std::nullopt;
+    }
+    const uint32_t version = read<uint32_t>(data, 4);
+    if (version != 1) {
+        qCWarning(KWIN_CORE, "Found unsupported backlight tag version %u", version);
+        return std::nullopt;
+    }
+    const size_t steps = read<uint32_t>(data, 8);
+    constexpr size_t preamble = 12;
+    const size_t expectedSize = 12 + steps * 4 + 4;
+    if (bufferSize <= expectedSize) {
+        qCWarning(KWIN_CORE, "Backlight tag has unexpected number of entries %lu", steps);
+        return std::nullopt;
+    }
+    IccProfile::BacklightCurve ret;
+    ret.maxLuminance = readS15Fixed16(data, preamble + steps * 4 + 2);
+    if (ret.maxLuminance < 5) {
+        qCWarning(KWIN_CORE, "Detected invalid max luminance in the backlight tag: %f", ret.maxLuminance);
+        return std::nullopt;
+    }
+    for (size_t i = 0; i < steps; i++) {
+        const double black = read<uint16_t>(data, preamble + i * 4) / double(std::numeric_limits<uint16_t>::max()) * ret.maxLuminance;
+        const double white = read<uint16_t>(data, preamble + i * 4 + 2) / double(std::numeric_limits<uint16_t>::max()) * ret.maxLuminance;
+        ret.black.push_back(black);
+        ret.white.push_back(white);
+        if (black >= white || white < 1) {
+            qCWarning(KWIN_CORE, "Detected invalid backlight curve entry at [%lu / %lu]: [%f; %f]", i, steps, black, white);
             return std::nullopt;
         }
     }
@@ -404,7 +489,7 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
     stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, toneCurves.size(), toneCurves.data())));
     const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, vcgt, relativeBlackPoint, maxBrightness);
+    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, vcgt, relativeBlackPoint, maxBrightness, parseBacklightCurve(handle));
 }
 
 }
