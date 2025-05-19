@@ -27,14 +27,14 @@ static const Colorimetry CIEXYZD50 = Colorimetry{
 
 const ColorDescription IccProfile::s_connectionSpace = ColorDescription(CIEXYZD50, TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> relativeBlackPoint, std::optional<double> maxBrightness)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_bToA0Tag(std::move(bToA0Tag))
     , m_bToA1Tag(std::move(bToA1Tag))
     , m_inverseEOTF(inverseEOTF)
     , m_vcgt(vcgt)
-    , m_minBrightness(minBrightness)
+    , m_relativeBlackPoint(relativeBlackPoint)
     , m_maxBrightness(maxBrightness)
 {
 }
@@ -44,9 +44,9 @@ IccProfile::~IccProfile()
     cmsCloseProfile(m_handle);
 }
 
-std::optional<double> IccProfile::minBrightness() const
+std::optional<double> IccProfile::relativeBlackPoint() const
 {
-    return m_minBrightness;
+    return m_relativeBlackPoint;
 }
 
 std::optional<double> IccProfile::maxBrightness() const
@@ -341,16 +341,16 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
         return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
     }
 
-    std::optional<double> minBrightness;
     std::optional<double> maxBrightness;
     if (cmsCIEXYZ *luminance = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigLuminanceTag))) {
         // for some reason, lcms exposes the luminance as a XYZ triple...
         // only Y is non-zero, and it's the brightness in nits
         maxBrightness = luminance->Y;
-        cmsCIEXYZ blackPoint;
-        if (cmsDetectDestinationBlackPoint(&blackPoint, handle, INTENT_RELATIVE_COLORIMETRIC, 0)) {
-            minBrightness = blackPoint.Y * luminance->Y;
-        }
+    }
+    std::optional<double> relativeBlackPoint;
+    cmsCIEXYZ blackPoint;
+    if (cmsDetectDestinationBlackPoint(&blackPoint, handle, INTENT_RELATIVE_COLORIMETRIC, 0)) {
+        relativeBlackPoint = blackPoint.Y;
     }
 
     if (cmsIsTag(handle, cmsSigBToD1Tag) && !cmsIsTag(handle, cmsSigBToA1Tag) && !cmsIsTag(handle, cmsSigBToA0Tag)) {
@@ -404,7 +404,7 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
     stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, toneCurves.size(), toneCurves.data())));
     const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, vcgt, minBrightness, maxBrightness);
+    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, vcgt, relativeBlackPoint, maxBrightness);
 }
 
 }
