@@ -89,6 +89,7 @@ public:
      */
     Qt::Edges anchors() const;
 
+    bool isRoot() const;
     bool isLayout() const;
     bool canBeRemoved() const;
 

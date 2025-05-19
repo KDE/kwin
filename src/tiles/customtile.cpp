@@ -323,7 +323,7 @@ void CustomTile::remove()
     }
 
     // On linear layouts remove the last one and promote the layout as leaf
-    if (parentT->layoutDirection() != Tile::LayoutDirection::Floating && parentT->childCount() == 1) {
+    if (!parentT->isRoot() && parentT->childCount() == 1 && parentT->layoutDirection() != Tile::LayoutDirection::Floating) {
         auto *lastTile = static_cast<CustomTile *>(parentT->childTile(0));
         if (lastTile->childCount() == 0) {
             lastTile->remove();

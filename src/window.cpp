@@ -3630,6 +3630,8 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
         Tile *tile = workspace()->rootTile(output)->pick(pos);
         if (tile) {
             return tile->windowGeometry();
+        } else {
+            return QRectF();
         }
     }
 

@@ -210,6 +210,11 @@ Qt::Edges Tile::anchors() const
     return anchors;
 }
 
+bool Tile::isRoot() const
+{
+    return !m_parentTile;
+}
+
 bool Tile::isLayout() const
 {
     // Items with a single child are not allowed, unless the root which is *always* layout
