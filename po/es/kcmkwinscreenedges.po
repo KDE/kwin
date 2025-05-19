@@ -1,6 +1,8 @@
-# Translation of kcmkwinscreenedges to Spanish
+# Spanish translations for kcmkwinscreenedges.po package.
+# Copyright (C) 2009-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2009, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2009, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 # SPDX-FileCopyrightText: 2009 Jaime Robles <jaime@kde.org>
 # SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
 # SPDX-FileCopyrightText: 2011 Javier Vinal <fjvinal@gmail.com>
@@ -9,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-28 00:40+0000\n"
-"PO-Revision-Date: 2024-08-29 01:04+0200\n"
+"PO-Revision-Date: 2025-05-18 15:02+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -313,14 +315,3 @@ msgid ""
 msgstr ""
 "Puede provocar una acción al deslizar el dedo desde el borde de la pantalla "
 "hacia el centro de la misma."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Eloy Cuadra"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "ecuadra@eloihr.net"
-
-#~ msgid "Show Desktop"
-#~ msgstr "Mostrar el escritorio"

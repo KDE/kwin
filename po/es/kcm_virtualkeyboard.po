@@ -1,15 +1,15 @@
 # Spanish translations for kcm_virtualkeyboard.po package.
-# Copyright (C) 2021 This file is copyright:
+# Copyright (C) 2021-2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-#
 # Automatically generated, 2021.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2021.
+#
+# SPDX-FileCopyrightText: 2021, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_virtualkeyboard\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-31 02:17+0000\n"
-"PO-Revision-Date: 2021-04-27 19:49+0200\n"
+"PO-Revision-Date: 2025-05-18 15:01+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -28,20 +28,3 @@ msgstr "Ninguno"
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "No usar ningún teclado virtual"
-
-#~ msgid "This module lets you choose the virtual keyboard to use."
-#~ msgstr "Este módulo le permite escoger el teclado virtual a usar."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Eloy Cuadra"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "ecuadra@eloihr.net"
-
-#~ msgid "Virtual Keyboard"
-#~ msgstr "Teclado virtual"
-
-#~ msgid "Choose Virtual Keyboard"
-#~ msgstr "Escoger teclado virtual"
