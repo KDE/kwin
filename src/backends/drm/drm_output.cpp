@@ -460,32 +460,41 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool effectiveWcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
     const double brightness = next.currentBrightness.value_or(next.brightnessSetting);
-    double maxPossibleArtificialHeadroom = 1.0;
-    if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
-        maxPossibleArtificialHeadroom = 1.0 / next.currentBrightness.value_or(next.brightnessSetting);
-    }
 
     if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
         double maxBrightness = next.iccProfile->maxBrightness().value_or(200);
         double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxBrightness;
+        double normalMaxBrightness = maxBrightness;
         if (const auto &curve = next.iccProfile->backlightCurve(); curve && next.brightnessDevice) {
-            const auto [min, max] = curve->sample(brightness);
+            // without artificial hdr headroom
+            normalMaxBrightness = curve->sample(brightness).second;
+            // with artificial hdr headroom
+            const auto [min, max] = curve->sample(calculateBacklight(brightness, next.artificialHdrHeadroom));
             minBrightness = min;
             maxBrightness = max;
+        } else {
+            minBrightness *= next.artificialHdrHeadroom;
+            maxBrightness *= next.artificialHdrHeadroom;
         }
         const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
         const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
-        const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
+        const double effectiveReferenceLuminance = 5 + (normalMaxBrightness - 5) * brightnessFactor;
+        const double maxPossibleArtificialHeadroom = maxArificialHdrHeadroom();
         return ColorDescription{
             next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, 0, maxBrightness * next.artificialHdrHeadroom),
+            TransferFunction(TransferFunction::gamma22, 0, maxBrightness),
             effectiveReferenceLuminance,
-            minBrightness * next.artificialHdrHeadroom,
-            maxBrightness * maxPossibleArtificialHeadroom,
-            maxBrightness * maxPossibleArtificialHeadroom,
+            minBrightness,
+            normalMaxBrightness * maxPossibleArtificialHeadroom,
+            normalMaxBrightness * maxPossibleArtificialHeadroom,
             next.iccProfile->colorimetry(),
             sdrColor,
         };
+    }
+
+    double maxPossibleArtificialHeadroom = 1.0;
+    if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
+        maxPossibleArtificialHeadroom = 1.0 / next.currentBrightness.value_or(next.brightnessSetting);
     }
 
     const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::BT709);
@@ -602,12 +611,59 @@ void DrmOutput::unsetBrightnessDevice()
     updateInformation();
 }
 
+double DrmOutput::maxArificialHdrHeadroom() const
+{
+    if (m_state.highDynamicRange && (m_information.capabilities & Capability::HighDynamicRange)) {
+        return 1.0;
+    }
+    const double brightness = m_state.currentBrightness.value_or(m_state.brightnessSetting);
+    if (m_state.colorProfileSource == Output::ColorProfileSource::ICC && m_state.iccProfile && m_state.iccProfile->backlightCurve()) {
+        const auto &curve = m_state.iccProfile->backlightCurve();
+        const auto [currentBlack, currentWhite] = curve->sample(brightness);
+        return curve->maxLuminance / currentWhite;
+    } else {
+        // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
+        constexpr double relativeLuminanceAtZeroBrightness = 0.04;
+        // = the headroom at 100% backlight
+        return (1 + relativeLuminanceAtZeroBrightness) / (relativeLuminanceAtZeroBrightness + brightness);
+    }
+}
+
+double DrmOutput::calculateBacklight(double brightnessSetting, double artificialHdrHeadroom) const
+{
+    if (m_state.highDynamicRange && (m_information.capabilities & Capability::HighDynamicRange)) {
+        return 1.0;
+    }
+    if (m_state.colorProfileSource == Output::ColorProfileSource::ICC && m_state.iccProfile && m_state.iccProfile->backlightCurve()) {
+        // we have the brightness curve -> use it to find the needed backlight level
+        const auto &curve = m_state.iccProfile->backlightCurve();
+        const auto [currentBlack, currentWhite] = curve->sample(brightnessSetting);
+        const double desiredWhite = currentWhite * artificialHdrHeadroom;
+        for (size_t i = 0; i < curve->white.size(); i++) {
+            if (curve->white[i] < desiredWhite) {
+                continue;
+            }
+            if (i == 0) {
+                return 0.0;
+            }
+            // the desired level is between white[i] and white[i - 1]
+            const double higher = curve->white[i];
+            const double lower = curve->white[i - 1];
+            const double f = (desiredWhite - lower) / (higher - lower);
+            return (i - 1 + f) / double(curve->white.size() - 1);
+        }
+        return 1.0;
+    } else {
+        // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
+        constexpr double relativeLuminanceAtZeroBrightness = 0.04;
+        return (relativeLuminanceAtZeroBrightness + brightnessSetting) * artificialHdrHeadroom - relativeLuminanceAtZeroBrightness;
+    }
+}
+
 void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom)
 {
     if (m_state.brightnessDevice && !m_state.highDynamicRange) {
-        constexpr double minLuminance = 0.04;
-        const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
-        m_state.brightnessDevice->setBrightness(effectiveBrightness);
+        m_state.brightnessDevice->setBrightness(calculateBacklight(newBrightness, newArtificialHdrHeadroom));
     }
     State next = m_state;
     next.currentBrightness = newBrightness;

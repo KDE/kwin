@@ -876,6 +876,11 @@ Output::EdrPolicy Output::edrPolicy() const
     return m_state.edrPolicy;
 }
 
+double Output::maxArificialHdrHeadroom() const
+{
+    return 1.0;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"

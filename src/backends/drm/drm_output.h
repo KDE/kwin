@@ -76,6 +76,8 @@ public:
 
     void removePipeline();
 
+    double maxArificialHdrHeadroom() const override;
+
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
@@ -88,6 +90,7 @@ private:
     void setScanoutColorDescription(const ColorDescription &description);
     void setBlendingColorDescription(const ColorDescription &description);
     std::optional<uint32_t> decideAutomaticBpcLimit() const;
+    double calculateBacklight(double brightnessSetting, double artificialHdrHeadroom) const;
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 
