@@ -216,7 +216,7 @@ target_sources(kwin PRIVATE
     scripting/workspace_wrapper.cpp
     shadow.cpp
     sm.cpp
-    stroke.cpp
+    stroke_gestures.cpp
     swapchain.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
