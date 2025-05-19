@@ -9,7 +9,7 @@
     SPDX-License-Identifier: MIT
 */
 
-#include "stroke.h"
+#include "stroke_gestures.h"
 
 #include <assert.h>
 #include <math.h>
@@ -435,4 +435,4 @@ double stroke_compare(const stroke_t *a, const stroke_t *b, int *path_x, int *pa
 
 } // namespace KWin
 
-#include "moc_stroke.cpp"
+#include "moc_stroke_gestures.cpp"
