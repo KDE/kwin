@@ -568,6 +568,11 @@ DrmOutputLayer *DrmOutput::primaryLayer() const
 
 DrmOutputLayer *DrmOutput::cursorLayer() const
 {
+    if (!m_pipeline) {
+        // this can happen when the output gets hot-unplugged
+        // FIXME fix output lifetimes so that this doesn't happen anymore...
+        return nullptr;
+    }
     return m_pipeline->cursorLayer();
 }
 
