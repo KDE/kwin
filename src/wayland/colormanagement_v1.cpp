@@ -534,7 +534,7 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
         wp_image_description_info_v1_send_target_max_cll(resource, *maxcll);
     }
     wp_image_description_info_v1_send_luminances(resource, std::round(m_description->transferFunction().minLuminance / s_minLuminanceUnit), std::round(m_description->transferFunction().maxLuminance), std::round(m_description->referenceLuminance()));
-    wp_image_description_info_v1_send_target_luminance(resource, m_description->minLuminance(), m_description->maxHdrLuminance().value_or(800));
+    wp_image_description_info_v1_send_target_luminance(resource, std::round(m_description->minLuminance() / s_minLuminanceUnit), std::round(m_description->maxHdrLuminance().value_or(800)));
     wp_image_description_info_v1_send_tf_named(resource, kwinTFtoProtoTF(m_description->transferFunction()));
     wp_image_description_info_v1_send_done(resource);
     wl_resource_destroy(resource);
