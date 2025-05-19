@@ -7,18 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-// kwin
-#include "effect/globals.h"
+
+#include "kwin_export.h"
+
 // Qt
 #include <QHash>
 #include <QObject>
 #include <QPoint>
-// KF
-#include <KSharedConfig>
-// xcb
-#include <xcb/xcb.h>
-
-class QTimer;
 
 namespace KWin
 {
@@ -118,13 +113,6 @@ public:
     QPointF pos();
     void setPos(const QPointF &pos);
 
-    xcb_cursor_t x11Cursor(CursorShape shape);
-    /**
-     * Notice: if available always use the CursorShape variant to avoid cache duplicates for
-     * ambiguous cursor names in the non existing cursor name specification
-     */
-    xcb_cursor_t x11Cursor(const QByteArray &name);
-
     QPointF hotspot() const;
     QRectF geometry() const;
     QRectF rect() const;
@@ -150,7 +138,6 @@ private:
     void updateTheme(const QString &name, int size);
     void loadThemeFromKConfig();
     CursorSource *m_source = nullptr;
-    QHash<QByteArray, xcb_cursor_t> m_cursors;
     QPointF m_pos;
     QString m_themeName;
     int m_themeSize;

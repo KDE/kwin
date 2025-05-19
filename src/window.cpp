@@ -417,10 +417,12 @@ bool Window::belongToSameApplication(const Window *c1, const Window *c2, SameApp
     return c1->belongsToSameApplication(c2, checks);
 }
 
+#if KWIN_BUILD_X11
 xcb_timestamp_t Window::userTime() const
 {
     return XCB_TIME_CURRENT_TIME;
 }
+#endif
 
 void Window::setSkipSwitcher(bool set)
 {

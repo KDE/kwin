@@ -9,27 +9,15 @@
 
 #include "cursor.h"
 // kwin
-#include "compositor.h"
 #include "core/output.h"
 #include "cursorsource.h"
-#include "input.h"
-#include "keyboard_input.h"
 #include "main.h"
-#include "scene/workspacescene.h"
-#include "utils/common.h"
 
-#if KWIN_BUILD_X11
-#include "utils/xcbutils.h"
-#include <xcb/xcb_cursor.h>
-#endif
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
 // Qt
-#include <QAbstractEventDispatcher>
 #include <QDBusConnection>
-#include <QScreen>
-#include <QTimer>
 
 namespace KWin
 {
@@ -121,10 +109,6 @@ Cursor::Cursor()
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int, int)));
-
-    connect(kwinApp(), &Application::x11ConnectionChanged, this, [this]() {
-        m_cursors.clear();
-    });
 }
 
 void Cursor::loadThemeSettings()
@@ -154,7 +138,6 @@ void Cursor::updateTheme(const QString &name, int size)
     if (m_themeName != name || m_themeSize != size) {
         m_themeName = name;
         m_themeSize = size;
-        m_cursors.clear();
         Q_EMIT themeChanged();
     }
 }
@@ -210,48 +193,6 @@ void Cursor::setPos(const QPointF &pos)
     m_pos = pos;
     Q_EMIT posChanged(m_pos);
 }
-
-#if KWIN_BUILD_X11
-xcb_cursor_t Cursor::x11Cursor(CursorShape shape)
-{
-    return x11Cursor(shape.name());
-}
-
-xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
-{
-    Q_ASSERT(kwinApp()->x11Connection());
-    auto it = m_cursors.constFind(name);
-    if (it != m_cursors.constEnd()) {
-        return it.value();
-    }
-
-    if (name.isEmpty()) {
-        return XCB_CURSOR_NONE;
-    }
-
-    xcb_cursor_context_t *ctx;
-    if (xcb_cursor_context_new(kwinApp()->x11Connection(), Xcb::defaultScreen(), &ctx) < 0) {
-        return XCB_CURSOR_NONE;
-    }
-
-    xcb_cursor_t cursor = xcb_cursor_load_cursor(ctx, name.constData());
-    if (cursor == XCB_CURSOR_NONE) {
-        const auto &names = CursorShape::alternatives(name);
-        for (const QByteArray &cursorName : names) {
-            cursor = xcb_cursor_load_cursor(ctx, cursorName.constData());
-            if (cursor != XCB_CURSOR_NONE) {
-                break;
-            }
-        }
-    }
-    if (cursor != XCB_CURSOR_NONE) {
-        m_cursors.insert(name, cursor);
-    }
-
-    xcb_cursor_context_free(ctx);
-    return cursor;
-}
-#endif
 
 QString Cursor::defaultThemeName()
 {

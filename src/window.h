@@ -30,6 +30,10 @@
 #include <QTimer>
 #include <QUuid>
 
+#if KWIN_BUILD_X11
+#include <xcb/xcb.h>
+#endif
+
 class QMouseEvent;
 
 namespace KDecoration3
@@ -1111,7 +1115,9 @@ public:
     virtual bool takeFocus() = 0;
     virtual bool wantsInput() const = 0;
     void checkWorkspacePosition(QRectF oldGeometry = QRectF(), const VirtualDesktop *oldDesktop = nullptr);
+#if KWIN_BUILD_X11
     virtual xcb_timestamp_t userTime() const;
+#endif
 
     void keyPressEvent(QKeyCombination key_code);
 
