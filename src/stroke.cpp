@@ -1,20 +1,13 @@
 /*
- * Copyright (c) 2008-2009, Thomas Jaeger <ThJaeger@gmail.com>
- * Copyright (c) 2020-2023, Daniel Kondor <kondor.dani@gmail.com>
- * Copyright (c) 2024, Jakob Petsovits <jpetso@petsovits.com>
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
- * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
- * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
- * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- */
+    KWin - the KDE window manager
+    This file is part of the KDE project.
+
+    SPDX-FileCopyrightText: 2009 Thomas Jaeger <ThJaeger@gmail.com>
+    SPDX-FileCopyrightText: 2023 Daniel Kondor <kondor.dani@gmail.com>
+    SPDX-FileCopyrightText: 2025 Jakob Petsovits <jpetso@petsovits.com>
+
+    SPDX-License-Identifier: MIT
+*/
 
 #include "stroke.h"
 
@@ -23,6 +16,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+namespace KWin
+{
 
 //
 // C functions originally from Easystroke, adapted from wstroke almost verbatim
@@ -52,63 +48,110 @@ void stroke_deleter::operator()(stroke_t *s) const
     stroke_free(s);
 }
 
-Stroke::Stroke(const QList<QPointF> &ps)
-    : stroke(nullptr, stroke_deleter())
+StrokeGesture::StrokeGesture(const QList<QPointF> &points, QObject *parent)
+    : QObject(parent)
+    , m_points(points)
+    , m_stroke(StrokeGesture::make_stroke(points))
 {
-    if (ps.size() >= 2) {
-        stroke_t *s = stroke_alloc(ps.size());
-        for (const auto &t : ps)
-            stroke_add_point(s, t.x(), t.y());
-        stroke_finish(s);
-        stroke.reset(s);
-    }
 }
 
-Stroke Stroke::clone() const
+StrokeGesture::~StrokeGesture() = default;
+
+bool StrokeGesture::operator==(const StrokeGesture &other) const
 {
-    Stroke s;
-    if (stroke)
-        s.stroke.reset(stroke_copy(stroke.get()));
+    return m_points == other.m_points;
+}
+
+const QList<QPointF> &StrokeGesture::points() const
+{
+    return m_points;
+}
+
+double StrokeGesture::time(int n) const
+{
+    return m_stroke ? stroke_get_time(m_stroke.get(), n) : 0.0;
+}
+
+Stroke StrokeGesture::make_stroke(const QList<QPointF> &points)
+{
+    Stroke s{nullptr, stroke_deleter()};
+
+    if (points.size() >= 2) {
+        s.reset(stroke_alloc(points.size()));
+        for (const auto &t : points)
+            stroke_add_point(s.get(), t.x(), t.y());
+        stroke_finish(s.get());
+    }
     return s;
 }
 
-bool Stroke::compare(const Stroke &a, const Stroke &b, double &score)
+double StrokeGesture::min_matching_score()
+{
+    return 0.7;
+}
+
+bool StrokeGesture::compare(const Stroke &drawn, double &score) const
 {
     score = 0.0;
-    if (!a.stroke || !b.stroke) {
-        if (!a.stroke && !b.stroke) {
+    if (!m_stroke || !drawn) {
+        if (!m_stroke && !drawn) {
             score = 1.0;
             return true;
         }
         return false;
     }
-    double cost = stroke_compare(a.stroke.get(), b.stroke.get(), nullptr, nullptr);
-    if (cost >= stroke_infinity)
+
+    double cost = stroke_compare(m_stroke.get(), drawn.get(), nullptr, nullptr);
+    if (cost >= stroke_infinity) {
         return false;
+    }
     score = std::max(1.0 - 2.5 * cost, 0.0);
     return true;
 }
 
-double Stroke::min_matching_score()
+StrokeGestures::StrokeGestures() = default;
+StrokeGestures::~StrokeGestures() = default;
+
+bool StrokeGestures::isEmpty() const
 {
-    return 0.7;
+    return m_gestures.empty();
 }
 
-unsigned int Stroke::size() const
+const QList<StrokeGesture *> &StrokeGestures::list() const
 {
-    return stroke ? stroke_get_size(stroke.get()) : 0;
+    return m_gestures;
 }
 
-QPointF Stroke::pointAt(int n) const
+void StrokeGestures::add(StrokeGesture *gesture)
 {
-    QPointF p;
-    stroke_get_point(stroke.get(), n, &p.rx(), &p.ry());
-    return p;
+    m_gestures.push_back(gesture);
+    QObject::connect(gesture, &StrokeGesture::destroyed, this, [this, gesture] {
+        remove(gesture);
+    });
 }
 
-double Stroke::time(int n) const
+void StrokeGestures::remove(StrokeGesture *gesture)
 {
-    return stroke_get_time(stroke.get(), n);
+    QObject::disconnect(gesture, &StrokeGesture::destroyed, this, nullptr);
+    m_gestures.removeAll(gesture);
+}
+
+StrokeGesture *StrokeGestures::bestMatch(const QList<QPointF> &points, double &bestScore) const
+{
+    StrokeGesture *bestGesture = nullptr;
+    Stroke stroke = StrokeGesture::make_stroke(points);
+
+    for (StrokeGesture *candidate : m_gestures) {
+        double score;
+        if (!candidate->compare(stroke, score) || score < StrokeGesture::min_matching_score()) {
+            continue;
+        }
+        if (score > bestScore) {
+            bestScore = score;
+            bestGesture = candidate;
+        }
+    }
+    return bestGesture;
 }
 
 // end of C++ wrapper, back to Easystroke C types and functions
@@ -389,3 +432,7 @@ double stroke_compare(const stroke_t *a, const stroke_t *b, int *path_x, int *pa
 
     return cost;
 }
+
+} // namespace KWin
+
+#include "moc_stroke.cpp"
