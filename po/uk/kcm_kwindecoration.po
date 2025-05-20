@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-18 00:41+0000\n"
+"POT-Creation-Date: 2025-05-20 02:37+0000\n"
 "PO-Revision-Date: 2024-09-18 09:22+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -23,57 +23,52 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: declarative-plugin/buttonsmodel.cpp:56
+#: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "More actions for this window"
 msgstr "Додаткові дії для цього вікна"
 
-#: declarative-plugin/buttonsmodel.cpp:58
+#: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
 msgid "Application menu"
 msgstr "Меню програм"
 
-#: declarative-plugin/buttonsmodel.cpp:60
+#: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "On all desktops"
 msgstr "На всіх стільницях"
 
-#: declarative-plugin/buttonsmodel.cpp:62
+#: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Minimize"
 msgstr "Мінімізувати"
 
-#: declarative-plugin/buttonsmodel.cpp:64
+#: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format
 msgid "Maximize"
 msgstr "Максимізувати"
 
-#: declarative-plugin/buttonsmodel.cpp:66
+#: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Close"
 msgstr "Закрити"
 
-#: declarative-plugin/buttonsmodel.cpp:68
+#: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Context help"
 msgstr "Контекстна довідка"
 
-#: declarative-plugin/buttonsmodel.cpp:70
-#, kde-format
-msgid "Shade"
-msgstr "Згорнути"
-
-#: declarative-plugin/buttonsmodel.cpp:72
+#: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Утримувати під іншими вікнами"
 
-#: declarative-plugin/buttonsmodel.cpp:74
+#: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Утримувати над іншими вікнами"
 
-#: declarative-plugin/buttonsmodel.cpp:76
+#: declarative-plugin/buttonsmodel.cpp:73
 #, kde-format
 msgid "Spacer"
 msgstr "Розпірка"
@@ -269,6 +264,9 @@ msgstr "Гігантські рамки вікон"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Надмірні рамки вікон"
+
+#~ msgid "Shade"
+#~ msgstr "Згорнути"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

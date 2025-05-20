@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-15 00:44+0000\n"
+"POT-Creation-Date: 2025-05-20 02:37+0000\n"
 "PO-Revision-Date: 2023-12-02 20:12+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -51,25 +51,25 @@ msgstr ""
 "nastavení zakázané. Ak potrebujete používať takéto aplikácie, môžete si tu "
 "zvoliť preferovanú rovnováhu medzi bezpečnosťou a funkčnosťou."
 
-#: ui/main.qml:69
+#: ui/main.qml:72
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Umožniť starším aplikáciám X11 čítať stlačené klávesy zadané vo všetkých "
 "aplikáciách:"
 
-#: ui/main.qml:70
+#: ui/main.qml:73
 #, kde-format
 msgid "Never"
 msgstr "Nikdy"
 
-#: ui/main.qml:81
+#: ui/main.qml:84
 #, fuzzy, kde-format
 #| msgid "Only Meta, Control, Alt, and Shift keys"
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Len klávesy Meta, Control, Alt a Shift"
 
-#: ui/main.qml:92
+#: ui/main.qml:95
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -77,17 +77,17 @@ msgstr ""
 "Ako vyššie, okrem toho akýkoľvek kláves napísaný pri stlačených klávesoch "
 "Control, Alt alebo Meta."
 
-#: ui/main.qml:104
+#: ui/main.qml:107
 #, kde-format
 msgid "Always"
 msgstr "Vždy"
 
-#: ui/main.qml:119
+#: ui/main.qml:122
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr ""
 
-#: ui/main.qml:135
+#: ui/main.qml:138
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -99,11 +99,18 @@ msgstr ""
 "špehovať text, ktorý zadávate. Uistite sa, že tomuto riziku rozumiete a "
 "akceptujete ho."
 
-#: ui/main.qml:147
+#: ui/main.qml:155
 #, kde-format
-msgctxt "@option:check"
-msgid ""
-"Allow controlling the pointer and keyboard without asking for permission"
+msgctxt "@title:group"
+msgid "Control of pointer and keyboard:"
+msgstr ""
+
+#: ui/main.qml:156
+#, kde-format
+msgctxt ""
+"@option:check Allow control of pointer and keyboard without asking for "
+"permission"
+msgid "Allow without asking for permission"
 msgstr ""
 
 #~ msgid "Only non-character keys"

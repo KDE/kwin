@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-18 00:41+0000\n"
+"POT-Creation-Date: 2025-05-20 02:37+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -16,57 +16,52 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 23.08.5\n"
 
-#: declarative-plugin/buttonsmodel.cpp:56
+#: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "More actions for this window"
 msgstr "இச்சாளரத்திற்கான கூடுதல் செயல்கள்"
 
-#: declarative-plugin/buttonsmodel.cpp:58
+#: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
 msgid "Application menu"
 msgstr "செயலி பட்டி"
 
-#: declarative-plugin/buttonsmodel.cpp:60
+#: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "On all desktops"
 msgstr "எல்லா பணிமேடைகளிலும்"
 
-#: declarative-plugin/buttonsmodel.cpp:62
+#: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Minimize"
 msgstr "ஒதுக்கு"
 
-#: declarative-plugin/buttonsmodel.cpp:64
+#: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format
 msgid "Maximize"
 msgstr "அதிகபட்ச பெரிதாக்கு"
 
-#: declarative-plugin/buttonsmodel.cpp:66
+#: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Close"
 msgstr "மூடு"
 
-#: declarative-plugin/buttonsmodel.cpp:68
+#: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Context help"
 msgstr "சூழலை பொறுத்த உதவி"
 
-#: declarative-plugin/buttonsmodel.cpp:70
-#, kde-format
-msgid "Shade"
-msgstr "நிழலிடு"
-
-#: declarative-plugin/buttonsmodel.cpp:72
+#: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
 msgstr "மற்ற சாளரங்களுக்கு கீழே வை"
 
-#: declarative-plugin/buttonsmodel.cpp:74
+#: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
 msgstr "மற்ற சாளரங்களுக்கு மேலே வை"
 
-#: declarative-plugin/buttonsmodel.cpp:76
+#: declarative-plugin/buttonsmodel.cpp:73
 #, kde-format
 msgid "Spacer"
 msgstr "இடைவெளி"
@@ -269,6 +264,9 @@ msgstr "மிகபிரம்மாண்டமான சாளர விள�
 #| msgid "Oversized Window Borders"
 msgid "Oversized window borders"
 msgstr "அதிகபட்ச அளவிலான சாளர விளிம்புகள்"
+
+#~ msgid "Shade"
+#~ msgstr "நிழலிடு"
 
 #, fuzzy
 #~| msgid "&Window Decoration"

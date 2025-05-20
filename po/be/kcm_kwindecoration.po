@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-18 00:41+0000\n"
+"POT-Creation-Date: 2025-05-20 02:37+0000\n"
 "PO-Revision-Date: 2024-02-27 07:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -24,57 +24,52 @@ msgstr ""
 "kcm_kwindecoration.po\n"
 "X-Crowdin-File-ID: 10422\n"
 
-#: declarative-plugin/buttonsmodel.cpp:56
+#: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "More actions for this window"
 msgstr "Яшчэ дзеянні для гэтага акна"
 
-#: declarative-plugin/buttonsmodel.cpp:58
+#: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
 msgid "Application menu"
 msgstr "Меню праграмы"
 
-#: declarative-plugin/buttonsmodel.cpp:60
+#: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "On all desktops"
 msgstr "На ўсіх працоўных сталах"
 
-#: declarative-plugin/buttonsmodel.cpp:62
+#: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Minimize"
 msgstr "Згарнуць"
 
-#: declarative-plugin/buttonsmodel.cpp:64
+#: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format
 msgid "Maximize"
 msgstr "Разгарнуць"
 
-#: declarative-plugin/buttonsmodel.cpp:66
+#: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Close"
 msgstr "Закрыць"
 
-#: declarative-plugin/buttonsmodel.cpp:68
+#: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Context help"
 msgstr "Кантэкстная даведка"
 
-#: declarative-plugin/buttonsmodel.cpp:70
-#, kde-format
-msgid "Shade"
-msgstr "Згарнуць у загаловак"
-
-#: declarative-plugin/buttonsmodel.cpp:72
+#: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Размяшчаць ніжэй астатніх акон"
 
-#: declarative-plugin/buttonsmodel.cpp:74
+#: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Размяшчаць вышэй астатніх акон"
 
-#: declarative-plugin/buttonsmodel.cpp:76
+#: declarative-plugin/buttonsmodel.cpp:73
 #, kde-format
 msgid "Spacer"
 msgstr "Прамежак"
@@ -282,6 +277,9 @@ msgstr "Велізарныя межы акон"
 #| msgid "Oversized Window Borders"
 msgid "Oversized window borders"
 msgstr "Празмерныя межы акон"
+
+#~ msgid "Shade"
+#~ msgstr "Згарнуць у загаловак"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

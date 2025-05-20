@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-15 00:44+0000\n"
+"POT-Creation-Date: 2025-05-20 02:37+0000\n"
 "PO-Revision-Date: 2025-05-15 16:39+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -46,23 +46,23 @@ msgstr ""
 "uitgeschakeld vanwege beveiliging. Als u zulke apps nodig hebt, dan kunt u "
 "kunt u hier uw voorkeur afwegen tussen beveiliging en functionaliteit."
 
-#: ui/main.qml:69
+#: ui/main.qml:72
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Verouderde X11 apps toestaan om toetsaanslagen te lezen getypt in alle apps:"
 
-#: ui/main.qml:70
+#: ui/main.qml:73
 #, kde-format
 msgid "Never"
 msgstr "Nooit"
 
-#: ui/main.qml:81
+#: ui/main.qml:84
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Alleen toetsen Meta, Ctrl, Alt en Shift"
 
-#: ui/main.qml:92
+#: ui/main.qml:95
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -70,17 +70,17 @@ msgstr ""
 "Zoals bovenstaand, plus elke getypte toets terwijl de Ctrl, Alt of Meta-"
 "toets is ingedrukt"
 
-#: ui/main.qml:104
+#: ui/main.qml:107
 #, kde-format
 msgid "Always"
 msgstr "Altijd"
 
-#: ui/main.qml:119
+#: ui/main.qml:122
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Neem ook muisknoppen mee"
 
-#: ui/main.qml:135
+#: ui/main.qml:138
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -92,11 +92,21 @@ msgstr ""
 "steelt en spioneert op de tekst die u typt. Ga na dat u dit begrijpt en dit "
 "risico accepteert."
 
-#: ui/main.qml:147
+#: ui/main.qml:155
 #, kde-format
-msgctxt "@option:check"
-msgid ""
-"Allow controlling the pointer and keyboard without asking for permission"
+msgctxt "@title:group"
+msgid "Control of pointer and keyboard:"
+msgstr ""
+
+#: ui/main.qml:156
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid ""
+#| "Allow controlling the pointer and keyboard without asking for permission"
+msgctxt ""
+"@option:check Allow control of pointer and keyboard without asking for "
+"permission"
+msgid "Allow without asking for permission"
 msgstr ""
 "Sta besturing van aanwijzer en toetsenbord toe zonder om toestemming te "
 "vragen"

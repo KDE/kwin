@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-18 00:41+0000\n"
+"POT-Creation-Date: 2025-05-20 02:37+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -17,57 +17,52 @@ msgstr ""
 "X-Crowdin-File: /kf6-stable/messages/kwin/kcm_kwindecoration.pot\n"
 "X-Crowdin-File-ID: 52328\n"
 
-#: declarative-plugin/buttonsmodel.cpp:56
+#: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "More actions for this window"
 msgstr "此窗口的更多操作"
 
-#: declarative-plugin/buttonsmodel.cpp:58
+#: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
 msgid "Application menu"
 msgstr "应用程序菜单"
 
-#: declarative-plugin/buttonsmodel.cpp:60
+#: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "On all desktops"
 msgstr "在全部桌面"
 
-#: declarative-plugin/buttonsmodel.cpp:62
+#: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Minimize"
 msgstr "最小化"
 
-#: declarative-plugin/buttonsmodel.cpp:64
+#: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format
 msgid "Maximize"
 msgstr "最大化"
 
-#: declarative-plugin/buttonsmodel.cpp:66
+#: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Close"
 msgstr "关闭"
 
-#: declarative-plugin/buttonsmodel.cpp:68
+#: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Context help"
 msgstr "帮助提示"
 
-#: declarative-plugin/buttonsmodel.cpp:70
-#, kde-format
-msgid "Shade"
-msgstr "折叠"
-
-#: declarative-plugin/buttonsmodel.cpp:72
+#: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
 msgstr "保持在其他窗口之下"
 
-#: declarative-plugin/buttonsmodel.cpp:74
+#: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
 msgstr "保持在其他窗口之上"
 
-#: declarative-plugin/buttonsmodel.cpp:76
+#: declarative-plugin/buttonsmodel.cpp:73
 #, kde-format
 msgid "Spacer"
 msgstr "间隔"
@@ -257,3 +252,6 @@ msgstr "超特大窗口边框"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "极大窗口边框"
+
+#~ msgid "Shade"
+#~ msgstr "折叠"

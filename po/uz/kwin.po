@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-18 02:39+0000\n"
+"POT-Creation-Date: 2025-05-20 02:37+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -3778,7 +3778,7 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: useractions.cpp:163
+#: useractions.cpp:162
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3791,7 +3791,7 @@ msgstr ""
 "oynaning amallar menyusi yordamida oldingi holatiga qaytarishingiz mumkin. "
 "Buning uchun %1 tugmalaridan foydalaning."
 
-#: useractions.cpp:170
+#: useractions.cpp:169
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3804,142 +3804,136 @@ msgstr ""
 "holatiga qaytarib boʻlmaydi. Uni oynaning amallar menyusi yordamida oldingi "
 "holatiga qaytarishingiz mumkin. Buning uchun %1 tugmalaridan foydalaning."
 
-#: useractions.cpp:217
+#: useractions.cpp:216
 #, kde-format
 msgid "&Move"
 msgstr "Koʻchi&rish"
 
-#: useractions.cpp:222
+#: useractions.cpp:221
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "Oʻl&chamini oʻzgartirish"
 
-#: useractions.cpp:227
+#: useractions.cpp:226
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Eng &yuqorida"
 
-#: useractions.cpp:233
+#: useractions.cpp:232
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "&Eng pastda"
 
-#: useractions.cpp:239
+#: useractions.cpp:238
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Butun ekranga"
 
-#: useractions.cpp:245
-#, fuzzy, kde-format
-#| msgid "Shade"
-msgid "&Shade"
-msgstr "Soyalash"
-
-#: useractions.cpp:251
+#: useractions.cpp:244
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:259
+#: useractions.cpp:252
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
 msgstr "Oynaning &tugmalar birikmasi"
 
-#: useractions.cpp:265
+#: useractions.cpp:258
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "&Maxsus oyna moslamalari"
 
-#: useractions.cpp:270
+#: useractions.cpp:263
 #, fuzzy, kde-format
 #| msgid "&Special Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "Maxsus &dastur moslamalari"
 
-#: useractions.cpp:276
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Yoy&ish"
 
-#: useractions.cpp:282
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Yigʻish"
 
-#: useractions.cpp:288
+#: useractions.cpp:281
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:293
+#: useractions.cpp:286
 #, kde-format
 msgid "&Close"
 msgstr ""
 
-#: useractions.cpp:363
+#: useractions.cpp:354
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:413
+#: useractions.cpp:404
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "&Hamma ish stollari"
 
-#: useractions.cpp:429
+#: useractions.cpp:420
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Screen"
 msgstr "&Ish stoliga"
 
-#: useractions.cpp:445
+#: useractions.cpp:436
 #, kde-format
 msgid "Show in &Activities"
 msgstr ""
 
-#: useractions.cpp:462
+#: useractions.cpp:453
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move &To Current Desktop"
 msgstr "&Ish stoliga"
 
-#: useractions.cpp:472 useractions.cpp:531
+#: useractions.cpp:463 useractions.cpp:522
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Hamma ish stollari"
 
-#: useractions.cpp:504
+#: useractions.cpp:495
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "1 Ish stoliga oʻtish"
 
-#: useractions.cpp:565 useractions.cpp:695
+#: useractions.cpp:556 useractions.cpp:686
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to %1"
 msgstr "&Ish stoliga"
 
-#: useractions.cpp:578
+#: useractions.cpp:569
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "1 Ish stoliga oʻtish"
 
-#: useractions.cpp:590
+#: useractions.cpp:581
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "&Ish stoliga"
 
-#: useractions.cpp:621
+#: useractions.cpp:612
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgctxt ""
@@ -3948,393 +3942,393 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Oynani 1 ish stoliga"
 
-#: useractions.cpp:647
+#: useractions.cpp:638
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:814
+#: useractions.cpp:805
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:816
+#: useractions.cpp:807
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:896
+#: useractions.cpp:887
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Oynaning amallar menyusi"
 
-#: useractions.cpp:898
+#: useractions.cpp:889
 #, kde-format
 msgid "Close Window"
 msgstr "Oynani yopish"
 
-#: useractions.cpp:900
+#: useractions.cpp:891
 #, kde-format
 msgid "Maximize Window"
 msgstr "Oynani yoyish"
 
-#: useractions.cpp:902
+#: useractions.cpp:893
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Oynani boʻyiga yoyish"
 
-#: useractions.cpp:904
+#: useractions.cpp:895
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Oynani eniga yoyish"
 
-#: useractions.cpp:906
+#: useractions.cpp:897
 #, kde-format
 msgid "Minimize Window"
 msgstr "Oynani yigʻish"
 
-#: useractions.cpp:908
+#: useractions.cpp:899
 #, kde-format
 msgid "Shade Window"
 msgstr "Oynani soyalash"
 
-#: useractions.cpp:910
+#: useractions.cpp:901
 #, kde-format
 msgid "Move Window"
 msgstr "Oynani joyidan koʻchirish"
 
-#: useractions.cpp:912
+#: useractions.cpp:903
 #, kde-format
 msgid "Resize Window"
 msgstr "Oynaning oʻlchamini oʻzgartirish"
 
-#: useractions.cpp:914
+#: useractions.cpp:905
 #, kde-format
 msgid "Raise Window"
 msgstr "Oyna oldinga"
 
-#: useractions.cpp:916
+#: useractions.cpp:907
 #, kde-format
 msgid "Lower Window"
 msgstr "Oyna orqaga"
 
-#: useractions.cpp:918
+#: useractions.cpp:909
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Oyna oldinga/orqaga"
 
-#: useractions.cpp:920
+#: useractions.cpp:911
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Oyna butun ekranga"
 
-#: useractions.cpp:922
+#: useractions.cpp:913
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Oynaning chegarasini bekitish"
 
-#: useractions.cpp:924
+#: useractions.cpp:915
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Oyna eng yuqorida"
 
-#: useractions.cpp:926
+#: useractions.cpp:917
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Oyna eng pastda"
 
-#: useractions.cpp:928
+#: useractions.cpp:919
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Oynaga eʼtibor qilishni qoʻllash"
 
-#: useractions.cpp:930
+#: useractions.cpp:921
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Oynaning tugmalar birikmasini moslash"
 
-#: useractions.cpp:932
+#: useractions.cpp:923
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window to the Center"
 msgstr "Oynani joyidan koʻchirish"
 
-#: useractions.cpp:934
+#: useractions.cpp:925
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Oynani joyidan koʻchirish"
 
-#: useractions.cpp:936
+#: useractions.cpp:927
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Oynani joyidan koʻchirish"
 
-#: useractions.cpp:938
+#: useractions.cpp:929
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Oynani joyidan koʻchirish"
 
-#: useractions.cpp:940
+#: useractions.cpp:931
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Oynani joyidan koʻchirish"
 
-#: useractions.cpp:942
+#: useractions.cpp:933
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Oynani eniga yoyish"
 
-#: useractions.cpp:944
+#: useractions.cpp:935
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Oynani boʻyiga yoyish"
 
-#: useractions.cpp:946
+#: useractions.cpp:937
 #, fuzzy, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Oynani gorizontaliga qisqartirish"
 
-#: useractions.cpp:948
+#: useractions.cpp:939
 #, fuzzy, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Oynani vertikaliga qisqartirish"
 
-#: useractions.cpp:950
+#: useractions.cpp:941
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:952
+#: useractions.cpp:943
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Oynani yuqoriga tirash"
 
-#: useractions.cpp:954
+#: useractions.cpp:945
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:956
+#: useractions.cpp:947
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:958
+#: useractions.cpp:949
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:960
+#: useractions.cpp:951
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:962
+#: useractions.cpp:953
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Oynani yuqoriga tirash"
 
-#: useractions.cpp:964
+#: useractions.cpp:955
 #, fuzzy, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Oynani yuqoriga tirash"
 
-#: useractions.cpp:966
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Window Above"
 msgstr "10 Ish stoliga oʻtish"
 
-#: useractions.cpp:968
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Window Below"
 msgstr "Oldingi ish stoliga oʻtish"
 
-#: useractions.cpp:970
+#: useractions.cpp:961
 #, fuzzy, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Oynani yuqoriga tirash"
 
-#: useractions.cpp:972
+#: useractions.cpp:963
 #, fuzzy, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:974
+#: useractions.cpp:965
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:976
+#: useractions.cpp:967
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:979
+#: useractions.cpp:970
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Oyna hamma ish stollariga"
 
-#: useractions.cpp:982
+#: useractions.cpp:973
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:984
+#: useractions.cpp:975
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Oynani yuqoriga tirash"
 
-#: useractions.cpp:986
+#: useractions.cpp:977
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:988
+#: useractions.cpp:979
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:999
+#: useractions.cpp:990
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Oynani 1 ish stoliga"
 
-#: useractions.cpp:1001
+#: useractions.cpp:992
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Oynani keyingi ish stoliga"
 
-#: useractions.cpp:1002
+#: useractions.cpp:993
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Oynani oldingi ish stoliga"
 
-#: useractions.cpp:1003
+#: useractions.cpp:994
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Oyna oʻngdagi ish stoliga"
 
-#: useractions.cpp:1005
+#: useractions.cpp:996
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Oyna chapdagi ish stoliga"
 
-#: useractions.cpp:1007
+#: useractions.cpp:998
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Oyna yuqoridagi ish stoliga"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1000
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Oyna pastdagi ish stoliga"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1004
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Move Window to Screen %1"
 msgstr "Oynani 1 ish stoliga"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1011
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
 msgid "Move Window to Next Screen"
 msgstr "Oynani keyingi ish stoliga"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1013
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "Oynani oldingi ish stoliga"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1015
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Oyna oʻngdagi ish stoliga"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1017
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Oyna chapdagi ish stoliga"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1019
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 2"
 msgid "Move Window One Screen Up"
 msgstr "Oynani 2 ish stoliga"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1021
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Oyna pastdagi ish stoliga"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1025
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Screen %1"
 msgstr "1 Ish stoliga oʻtish"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1032
 #, fuzzy, kde-format
 #| msgid "Switch to Next Desktop"
 msgid "Switch to Next Screen"
 msgstr "Keyingi ish stoliga oʻtish"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1033
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Oldingi ish stoliga oʻtish"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1034
 #, fuzzy, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Oynani yuqoriga tirash"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1036
 #, fuzzy, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Oynani chap yonga tirash"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1038
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Screen Above"
 msgstr "10 Ish stoliga oʻtish"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1040
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Screen Below"
 msgstr "10 Ish stoliga oʻtish"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1043
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "&Ish stoliga"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1046
 #, kde-format
 msgid "Kill Window"
 msgstr "Oynani oʻldirish"
 
-#: useractions.cpp:1123
+#: useractions.cpp:1114
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""
@@ -4435,6 +4429,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "&Shade"
+#~ msgstr "Soyalash"
 
 #~ msgid ""
 #~ "kwin: unable to claim manager selection, another wm running? (try using --"
