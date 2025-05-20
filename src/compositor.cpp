@@ -483,12 +483,7 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         // slowly adjust the artificial HDR headroom for the next frame
         // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
-        if (!output->highDynamicRange()
-            && output->brightnessDevice()
-            && output->currentBrightness()
-            && output->artificialHdrHeadroom()
-            && output->isInternal()
-            && output->colorProfileSource() != Output::ColorProfileSource::ICC) {
+        if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->isInternal()) {
             const auto desiredHdrHeadroom = output->edrPolicy() == Output::EdrPolicy::Always ? superLayer->delegate()->desiredHdrHeadroom() : 1.0;
             // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
             constexpr double relativeLuminanceAtZeroBrightness = 0.04;
