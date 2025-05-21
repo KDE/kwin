@@ -2070,6 +2070,11 @@ void X11Window::getSyncCounter()
         return;
     }
 
+    static bool noXsync = qEnvironmentVariableIntValue("KWIN_X11_NO_SYNC_REQUEST") == 1;
+    if (noXsync) {
+        return;
+    }
+
     Xcb::Property syncProp(false, window(), atoms->net_wm_sync_request_counter, XCB_ATOM_CARDINAL, 0, 1);
     const xcb_sync_counter_t counter = syncProp.value<xcb_sync_counter_t>(XCB_NONE);
     if (counter != XCB_NONE) {
