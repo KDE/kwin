@@ -467,31 +467,51 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
     Q_UNREACHABLE();
 }
 
-static uint32_t kwinPrimariesToProtoPrimaires(NamedColorimetry primaries)
+static bool compareXY(double left, double right)
 {
-    switch (primaries) {
-    case NamedColorimetry::BT709:
+    return std::round(left / s_primaryUnit) == std::round(right / s_primaryUnit);
+}
+
+static bool compareXY(xy left, xy right)
+{
+    return compareXY(left.x, right.x) && compareXY(left.y, right.y);
+}
+
+static bool comparePrimaries(const Colorimetry &left, const Colorimetry &right)
+{
+    // this can't just use Colorimetry::operator==
+    // as that has a different resolution from the Wayland protocol
+    return compareXY(left.red().toxy(), right.red().toxy())
+        && compareXY(left.green().toxy(), right.green().toxy())
+        && compareXY(left.blue().toxy(), right.blue().toxy())
+        && compareXY(left.white().toxy(), right.white().toxy());
+}
+
+static std::optional<uint32_t> kwinPrimariesToProtoPrimaires(const Colorimetry &primaries)
+{
+    if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::BT709))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_srgb;
-    case NamedColorimetry::PAL_M:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::PAL_M))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_pal_m;
-    case NamedColorimetry::PAL:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::PAL))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_pal;
-    case NamedColorimetry::NTSC:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::NTSC))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_ntsc;
-    case NamedColorimetry::GenericFilm:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::GenericFilm))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_generic_film;
-    case NamedColorimetry::BT2020:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::BT2020))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_bt2020;
-    case NamedColorimetry::CIEXYZ:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::CIEXYZ))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_cie1931_xyz;
-    case NamedColorimetry::DCIP3:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::DCIP3))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_dci_p3;
-    case NamedColorimetry::DisplayP3:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::DisplayP3))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_display_p3;
-    case NamedColorimetry::AdobeRGB:
+    } else if (comparePrimaries(primaries, Colorimetry::fromName(NamedColorimetry::AdobeRGB))) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_adobe_rgb;
+    } else {
+        return std::nullopt;
     }
-    Q_UNREACHABLE();
 }
 
 void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtResource, uint32_t information)
@@ -513,8 +533,8 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
                                                 round(containerGreen.x), round(containerGreen.y),
                                                 round(containerBlue.x), round(containerBlue.y),
                                                 round(containerWhite.x), round(containerWhite.y));
-    if (auto name = m_description->containerColorimetry().name()) {
-        wp_image_description_info_v1_send_primaries_named(resource, kwinPrimariesToProtoPrimaires(*name));
+    if (auto name = kwinPrimariesToProtoPrimaires(m_description->containerColorimetry())) {
+        wp_image_description_info_v1_send_primaries_named(resource, *name);
     }
     if (auto m = m_description->masteringColorimetry()) {
         const xyY masterRed = m->red().toxyY();
