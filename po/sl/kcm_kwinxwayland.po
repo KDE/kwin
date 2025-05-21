@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 00:44+0000\n"
-"PO-Revision-Date: 2025-05-15 07:18+0200\n"
+"PO-Revision-Date: 2025-05-20 07:28+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -98,18 +98,15 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Kontrola kazalca in tipkovnice:"
 
 #: ui/main.qml:156
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid ""
-#| "Allow controlling the pointer and keyboard without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr "Dovoli upravljanje kazalca in tipkovnice brez zahteve za dovoljenje"
+msgstr "Dovoli brez vprašanja za dovoljenje"
 
 #~ msgid "Only non-character keys"
 #~ msgstr "Samo tipke brez znakov"

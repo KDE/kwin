@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 00:44+0000\n"
-"PO-Revision-Date: 2025-05-16 13:43+0300\n"
+"PO-Revision-Date: 2025-05-20 07:54+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -92,18 +92,15 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "שליטה בסמן ובמקלדת:"
 
 #: ui/main.qml:156
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid ""
-#| "Allow controlling the pointer and keyboard without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr "לאפשר שליטה בסמן ובמקלדת מבלי לבקש אישור"
+msgstr "לאפשר מבלי לבקש הרשאה"
 
 #~ msgid "Only non-character keys"
 #~ msgstr "רק מקשים בלי תווים"

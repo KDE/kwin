@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 00:44+0000\n"
-"PO-Revision-Date: 2025-05-18 15:01+0100\n"
+"PO-Revision-Date: 2025-05-21 01:09+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -101,15 +101,12 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Control del puntero y del teclado:"
 
 #: ui/main.qml:156
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid ""
-#| "Allow controlling the pointer and keyboard without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr "Permitir el control del puntero y del teclado sin solicitar permiso"
+msgstr "Permitir sin solicitar permiso"

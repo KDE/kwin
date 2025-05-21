@@ -252,6 +252,3 @@ msgstr "超特大窗口边框"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "极大窗口边框"
-
-#~ msgid "Shade"
-#~ msgstr "折叠"

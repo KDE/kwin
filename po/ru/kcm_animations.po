@@ -1,0 +1,118 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2025 Alexander Yavorsky <kekcuha@gmail.com>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
+"PO-Revision-Date: 2025-05-20 13:46+0300\n"
+"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
+"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 25.04.1\n"
+
+#: ui/AnimationComboBox.qml:49
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "Не использовать"
+
+#: ui/main.qml:37
+#, kde-format
+msgid "Global animation speed:"
+msgstr "Скорость воспроизведения эффектов:"
+
+#: ui/main.qml:69
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Some applications do not support this setting: In particular, GTK "
+"applications cannot change animation duration, but will still disable "
+"animations when <interface>animation speed</interface> is "
+"<interface>Instant</interface>."
+msgstr ""
+"Некоторые приложения не поддерживают этот параметр: в частности, приложения "
+"на GTK не могут изменить скорость воспроизведения эффектов, но всё равно "
+"отключают анимации, если значение параметра <interface>Скорость "
+"воспроизведения эффектов</interface> установлено в <interface>Быстро</"
+"interface>."
+
+#: ui/main.qml:76
+#, kde-format
+msgctxt "Animation speed"
+msgid "Slow"
+msgstr "Медленно"
+
+#: ui/main.qml:85
+#, kde-format
+msgctxt "Animation speed"
+msgid "Instant"
+msgstr "Быстро"
+
+#: ui/main.qml:93
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "Эффекты:"
+
+#: ui/main.qml:97
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window open/close:"
+msgstr "Открытие и закрытие окон:"
+
+#: ui/main.qml:98
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window maximize:"
+msgstr "Распахивание окон:"
+
+#: ui/main.qml:99
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window minimize:"
+msgstr "Сворачивание окон:"
+
+#: ui/main.qml:100
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window full screen:"
+msgstr "Переход в полноэкранный режим:"
+
+#: ui/main.qml:101
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "Взглянуть на рабочий стол:"
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Virtual desktop switching:"
+msgstr "Переключение виртуальных рабочих столов:"
+
+#: ui/main.qml:130 ui/main.qml:197
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure…"
+msgstr "Настроить…"
+
+#: ui/main.qml:157
+#, kde-format
+msgctxt ""
+"@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
+msgid "%1:"
+msgstr "%1:"
+
+#: ui/main.qml:224
+#, kde-format
+msgctxt "@title:group translate as short as possible"
+msgid "More effects settings:"
+msgstr "Дополнительные параметры:"
