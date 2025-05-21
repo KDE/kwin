@@ -467,27 +467,47 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
     Q_UNREACHABLE();
 }
 
+static bool compareXY(double left, double right)
+{
+    return std::round(left / s_primaryUnit) == std::round(right / s_primaryUnit);
+}
+
+static bool compareXY(xy left, xy right)
+{
+    return compareXY(left.x, right.x) && compareXY(left.y, right.y);
+}
+
+static bool comparePrimaries(const Colorimetry &left, const Colorimetry &right)
+{
+    // this can't just use Colorimetry::operator==
+    // as that has a different resolution from the Wayland protocol
+    return compareXY(left.red().toxy(), right.red().toxy())
+        && compareXY(left.green().toxy(), right.green().toxy())
+        && compareXY(left.blue().toxy(), right.blue().toxy())
+        && compareXY(left.white().toxy(), right.white().toxy());
+}
+
 static std::optional<uint32_t> kwinPrimariesToProtoPrimaires(const Colorimetry &primaries)
 {
-    if (primaries == Colorimetry::BT709) {
+    if (comparePrimaries(primaries, Colorimetry::BT709)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_srgb;
-    } else if (primaries == Colorimetry::PAL_M) {
+    } else if (comparePrimaries(primaries, Colorimetry::PAL_M)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_pal_m;
-    } else if (primaries == Colorimetry::PAL) {
+    } else if (comparePrimaries(primaries, Colorimetry::PAL)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_pal;
-    } else if (primaries == Colorimetry::NTSC) {
+    } else if (comparePrimaries(primaries, Colorimetry::NTSC)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_ntsc;
-    } else if (primaries == Colorimetry::GenericFilm) {
+    } else if (comparePrimaries(primaries, Colorimetry::GenericFilm)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_generic_film;
-    } else if (primaries == Colorimetry::BT2020) {
+    } else if (comparePrimaries(primaries, Colorimetry::BT2020)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_bt2020;
-    } else if (primaries == Colorimetry::CIEXYZ) {
+    } else if (comparePrimaries(primaries, Colorimetry::CIEXYZ)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_cie1931_xyz;
-    } else if (primaries == Colorimetry::DCIP3) {
+    } else if (comparePrimaries(primaries, Colorimetry::DCIP3)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_dci_p3;
-    } else if (primaries == Colorimetry::DisplayP3) {
+    } else if (comparePrimaries(primaries, Colorimetry::DisplayP3)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_display_p3;
-    } else if (primaries == Colorimetry::AdobeRGB) {
+    } else if (comparePrimaries(primaries, Colorimetry::AdobeRGB)) {
         return QtWaylandServer::wp_color_manager_v1::primaries::primaries_adobe_rgb;
     } else {
         return std::nullopt;
