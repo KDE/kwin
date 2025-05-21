@@ -4279,6 +4279,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "&Shade"
-#~ msgstr "&Rulle bajás"

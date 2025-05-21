@@ -259,7 +259,3 @@ msgstr "Gigantiske vindaugsrammer"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Altfor store vindaugsrammer"
-
-# «Fald saman» er rett omsetjing her
-#~ msgid "Shade"
-#~ msgstr "Fald saman"

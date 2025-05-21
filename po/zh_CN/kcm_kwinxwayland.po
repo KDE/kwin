@@ -96,12 +96,9 @@ msgid "Control of pointer and keyboard:"
 msgstr ""
 
 #: ui/main.qml:156
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid ""
-#| "Allow controlling the pointer and keyboard without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr "允许在不请求用户授权的情况下控制光标和键盘"
+msgstr ""

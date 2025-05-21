@@ -246,6 +246,3 @@ msgstr ""
 #, kde-format
 msgid "Oversized window borders"
 msgstr ""
-
-#~ msgid "Shade"
-#~ msgstr "Rulle bajás"

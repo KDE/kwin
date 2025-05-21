@@ -4301,6 +4301,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "&Shade"
-#~ msgstr "折叠(&S)"
