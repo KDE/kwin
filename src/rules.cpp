@@ -55,7 +55,6 @@ Rules::Rules()
     , maximizevertrule(UnusedSetRule)
     , maximizehorizrule(UnusedSetRule)
     , minimizerule(UnusedSetRule)
-    , shaderule(UnusedSetRule)
     , skiptaskbarrule(UnusedSetRule)
     , skippagerrule(UnusedSetRule)
     , skipswitcherrule(UnusedSetRule)
@@ -136,7 +135,6 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(maximizevert);
     READ_SET_RULE(maximizehoriz);
     READ_SET_RULE(minimize);
-    READ_SET_RULE(shade);
     READ_SET_RULE(skiptaskbar);
     READ_SET_RULE(skippager);
     READ_SET_RULE(skipswitcher);
@@ -223,7 +221,6 @@ void Rules::write(RuleSettings *settings) const
     WRITE_SET_RULE(maximizevert, Maximizevert, );
     WRITE_SET_RULE(maximizehoriz, Maximizehoriz, );
     WRITE_SET_RULE(minimize, Minimize, );
-    WRITE_SET_RULE(shade, Shade, );
     WRITE_SET_RULE(skiptaskbar, Skiptaskbar, );
     WRITE_SET_RULE(skippager, Skippager, );
     WRITE_SET_RULE(skipswitcher, Skipswitcher, );
@@ -276,7 +273,6 @@ bool Rules::isEmpty() const
         && maximizevertrule == UnusedSetRule
         && maximizehorizrule == UnusedSetRule
         && minimizerule == UnusedSetRule
-        && shaderule == UnusedSetRule
         && skiptaskbarrule == UnusedSetRule
         && skippagerrule == UnusedSetRule
         && skipswitcherrule == UnusedSetRule
@@ -550,10 +546,6 @@ bool Rules::update(Window *c, int selection)
         updated = updated || minimize != c->isMinimized();
         minimize = c->isMinimized();
     }
-    if NOW_REMEMBER (Shade, shade) {
-        updated = updated || (shade != (c->shadeMode() != ShadeNone));
-        shade = c->shadeMode() != ShadeNone;
-    }
     if NOW_REMEMBER (SkipTaskbar, skiptaskbar) {
         updated = updated || skiptaskbar != c->skipTaskbar();
         skiptaskbar = c->skipTaskbar();
@@ -681,20 +673,6 @@ bool Rules::applyMaximizeVert(MaximizeMode &mode, bool init) const
 }
 
 APPLY_RULE(minimize, Minimize, bool)
-
-bool Rules::applyShade(ShadeMode &sh, bool init) const
-{
-    if (checkSetRule(shaderule, init)) {
-        if (!this->shade) {
-            sh = ShadeNone;
-        }
-        if (this->shade && sh == ShadeNone) {
-            sh = ShadeNormal;
-        }
-    }
-    return checkSetStop(shaderule);
-}
-
 APPLY_RULE(skiptaskbar, SkipTaskbar, bool)
 APPLY_RULE(skippager, SkipPager, bool)
 APPLY_RULE(skipswitcher, SkipSwitcher, bool)
@@ -753,7 +731,6 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(maximizevert);
     DISCARD_USED_SET_RULE(maximizehoriz);
     DISCARD_USED_SET_RULE(minimize);
-    DISCARD_USED_SET_RULE(shade);
     DISCARD_USED_SET_RULE(skiptaskbar);
     DISCARD_USED_SET_RULE(skippager);
     DISCARD_USED_SET_RULE(skipswitcher);
@@ -902,7 +879,6 @@ Output *WindowRules::checkOutput(Output *output, bool init) const
 }
 
 CHECK_RULE(Minimize, bool)
-CHECK_RULE(Shade, ShadeMode)
 CHECK_RULE(SkipTaskbar, bool)
 CHECK_RULE(SkipPager, bool)
 CHECK_RULE(SkipSwitcher, bool)

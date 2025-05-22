@@ -66,7 +66,6 @@ public:
     QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
     QSizeF nextClientSizeToFrameSize(const QSizeF &size) const override;
     QRectF nextFrameRectToBufferRect(const QRectF &rect) const;
-    QSizeF implicitSize() const;
 
     void blockGeometryUpdates(bool block);
     void blockGeometryUpdates();
@@ -117,7 +116,6 @@ public:
     void doSetOnActivities(const QStringList &newActivitiesList) override;
     void updateActivities(bool includeTransients) override;
 
-    bool isShadeable() const override;
     bool isMaximizable() const override;
     MaximizeMode maximizeMode() const override;
     void maximize(MaximizeMode mode, const QRectF &restore = QRectF()) override;
@@ -163,7 +161,6 @@ public:
 
     bool providesContextHelp() const override;
 
-    /// Updates visibility depending on being shaded, virtual desktop, etc.
     void updateVisibility();
 
     QString captionNormal() const override
@@ -266,7 +263,6 @@ protected:
     void doSetActive() override;
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
-    void doSetShade(ShadeMode previousShadeMode) override;
     void doSetDesktop() override;
     void doMinimize() override;
     void doSetSkipPager() override;
@@ -315,7 +311,6 @@ private:
     void getSkipCloseAnimation();
 
     void configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool);
-    int checkShadeGeometry(int w, int h);
     void getSyncCounter();
     void sendSyncRequest();
 
@@ -384,7 +379,6 @@ private:
     NETWinInfo *info = nullptr;
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
-    X11Window *shade_below;
     Xcb::MotifHints m_motif;
     uint noborder : 1;
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
@@ -405,7 +399,6 @@ private:
     xcb_timestamp_t m_userTime;
     pid_t m_pid = 0;
     NET::Actions allowed_actions;
-    bool shade_geometry_change;
     SyncRequest m_syncRequest;
     static bool check_active_modal; ///< \see X11Window::checkActiveModal()
     int sm_stacking_order;

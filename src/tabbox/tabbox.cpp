@@ -200,16 +200,6 @@ void TabBoxHandlerImpl::raiseClient(Window *c) const
     Workspace::self()->raiseWindow(c);
 }
 
-void TabBoxHandlerImpl::shadeClient(Window *c, bool b) const
-{
-    c->cancelShadeHoverTimer(); // stop core shading action
-    if (!b && c->shadeMode() == ShadeNormal) {
-        c->setShade(ShadeHover);
-    } else if (b && c->shadeMode() == ShadeHover) {
-        c->setShade(ShadeNormal);
-    }
-}
-
 Window *TabBoxHandlerImpl::desktopClient() const
 {
     const auto stackingOrder = Workspace::self()->stackingOrder();
@@ -728,13 +718,6 @@ void TabBox::slotWalkBackThroughCurrentAppWindowsAlternative()
     navigatingThroughWindows(false, m_cutWalkThroughCurrentAppWindowsAlternativeReverse, TabBoxCurrentAppWindowsAlternativeMode);
 }
 
-void TabBox::shadeActivate(Window *c)
-{
-    if ((c->shadeMode() == ShadeNormal || c->shadeMode() == ShadeHover) && options->isShadeHover()) {
-        c->setShade(ShadeActivated);
-    }
-}
-
 bool TabBox::toggle(ElectricBorder eb)
 {
     if (m_borderAlternativeActivate.contains(eb)) {
@@ -808,7 +791,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             continue;
         }
         if (t->isClient() && t->isOnCurrentActivity() && t->isOnCurrentDesktop() && !t->isSpecialWindow()
-            && !t->isShade() && t->isShown() && t->wantsTabFocus()
+            && t->isShown() && t->wantsTabFocus()
             && !t->keepAbove() && !t->keepBelow()) {
             c = t;
             break;
@@ -840,7 +823,6 @@ void TabBox::CDEWalkThroughWindows(bool forward)
         }
         if (options->focusPolicyIsReasonable()) {
             Workspace::self()->activateWindow(nc);
-            shadeActivate(nc);
         } else {
             if (!nc->isOnCurrentDesktop()) {
                 VirtualDesktopManager::self()->setCurrent(nc->desktops().constLast());
@@ -861,7 +843,6 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
 
     if (Window *c = currentClient()) {
         Workspace::self()->activateWindow(c);
-        shadeActivate(c);
     }
 }
 
@@ -1000,7 +981,6 @@ void TabBox::accept(bool closeTabBox)
     }
     if (c) {
         Workspace::self()->activateWindow(c);
-        shadeActivate(c);
         if (c->isDesktop()) {
             Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop(), !m_defaultConfig.isHighlightWindows());
         }

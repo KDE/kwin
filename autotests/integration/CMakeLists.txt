@@ -127,7 +127,6 @@ integrationTest(NAME testOutputChanges SRCS outputchanges_test.cpp LIBS XCB::ICC
 integrationTest(NAME testTiles SRCS tiles_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testFractionalScaling SRCS fractional_scaling_test.cpp)
 integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)
-integrationTest(NAME testShade SRCS shade_test.cpp LIBS XCB::ICCCM KDecoration3::KDecoration)
 integrationTest(NAME testDontCrashAuroraeDestroyDeco SRCS dont_crash_aurorae_destroy_deco.cpp LIBS XCB::ICCCM KDecoration3::KDecoration)
 integrationTest(NAME testPlasmaWindow SRCS plasmawindow_test.cpp LIBS XCB::ICCCM)
 integrationTest(NAME testX11DesktopWindow SRCS desktop_window_x11_test.cpp LIBS XCB::ICCCM)

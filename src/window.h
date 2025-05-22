@@ -349,17 +349,6 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
 
     /**
-     * Whether the Window can be shaded. The property is evaluated each time it is invoked.
-     * Because of that there is no notify signal.
-     */
-    Q_PROPERTY(bool shadeable READ isShadeable NOTIFY shadeableChanged)
-
-    /**
-     * Whether the Window is shaded.
-     */
-    Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
-
-    /**
      * Whether the Window can be minimized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
@@ -1079,23 +1068,6 @@ public:
      */
     virtual bool isMovableAcrossScreens() const = 0;
 
-    /**
-     * Returns @c true if the window is shaded and shadeMode is @c ShadeNormal; otherwise returns @c false.
-     */
-    bool isShade() const
-    {
-        return shadeMode() == ShadeNormal;
-    }
-    ShadeMode shadeMode() const; // Prefer isShade()
-    void setShade(bool set);
-    void setShade(ShadeMode mode);
-    void toggleShade();
-    void cancelShadeHoverTimer();
-    /**
-     * Whether the Window can be shaded. Default implementation returns @c false.
-     */
-    virtual bool isShadeable() const;
-
     const WindowRules *rules() const
     {
         return &m_rules;
@@ -1389,7 +1361,6 @@ protected Q_SLOTS:
 
 Q_SIGNALS:
     void stackingOrderChanged();
-    void shadeChanged();
     void opacityChanged(KWin::Window *window, qreal oldOpacity);
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
@@ -1483,7 +1454,6 @@ Q_SIGNALS:
     void interactiveMoveResizeFinished();
     void closeableChanged(bool);
     void minimizeableChanged(bool);
-    void shadeableChanged(bool);
     void maximizeableChanged(bool);
     void desktopFileNameChanged();
     void applicationMenuChanged();
@@ -1543,13 +1513,6 @@ protected:
      * Default implementation does nothing.
      */
     virtual void doSetKeepBelow();
-    /**
-     * Called from setShade() once the shadeMode value got updated, but before the changed signal
-     * is emitted.
-     *
-     * Default implementation does nothing.
-     */
-    virtual void doSetShade(ShadeMode previousShadeMode);
     /**
      * Called from setDeskop once the desktop value got updated, but before the changed signal
      * is emitted.
@@ -1772,11 +1735,6 @@ protected:
     QString shortcutCaptionSuffix() const;
     virtual void updateCaption() = 0;
 
-    void startShadeHoverTimer();
-    void startShadeUnhoverTimer();
-    void shadeHover();
-    void shadeUnhover();
-
     // The geometry that the window should be restored when the virtual keyboard closes
     QRectF keyboardGeometryRestore() const;
     void setKeyboardGeometryRestore(const QRectF &geom);
@@ -1836,8 +1794,6 @@ protected:
     bool m_minimized = false;
     bool m_suspended = false;
     QTimer *m_autoRaiseTimer = nullptr;
-    QTimer *m_shadeHoverTimer = nullptr;
-    ShadeMode m_shadeMode = ShadeNone;
     QList<VirtualDesktop *> m_desktops;
 
     QStringList m_activityList;

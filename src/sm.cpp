@@ -166,7 +166,6 @@ void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
     cg.writeEntry(QLatin1String("opacity") + n, c->opacity());
     // the config entry is called "sticky" for back. comp. reasons
     cg.writeEntry(QLatin1String("sticky") + n, c->isOnAllDesktops());
-    cg.writeEntry(QLatin1String("shaded") + n, c->isShade());
     // the config entry is called "staysOnTop" for back. comp. reasons
     cg.writeEntry(QLatin1String("staysOnTop") + n, c->keepAbove());
     cg.writeEntry(QLatin1String("keepBelow") + n, c->keepBelow());
@@ -260,7 +259,6 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         info->minimized = cg.readEntry(QLatin1String("iconified") + n, false);
         info->opacity = cg.readEntry(QLatin1String("opacity") + n, 1.0);
         info->onAllDesktops = cg.readEntry(QLatin1String("sticky") + n, false);
-        info->shaded = cg.readEntry(QLatin1String("shaded") + n, false);
         info->keepAbove = cg.readEntry(QLatin1String("staysOnTop") + n, false);
         info->keepBelow = cg.readEntry(QLatin1String("keepBelow") + n, false);
         info->skipTaskbar = cg.readEntry(QLatin1String("skipTaskbar") + n, false);

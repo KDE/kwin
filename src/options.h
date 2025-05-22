@@ -84,14 +84,6 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(int delayFocusInterval READ delayFocusInterval WRITE setDelayFocusInterval NOTIFY delayFocusIntervalChanged)
     /**
-     * Whether shade hover is enabled or not.
-     */
-    Q_PROPERTY(bool shadeHover READ isShadeHover WRITE setShadeHover NOTIFY shadeHoverChanged)
-    /**
-     * Shade hover interval.
-     */
-    Q_PROPERTY(int shadeHoverInterval READ shadeHoverInterval WRITE setShadeHoverInterval NOTIFY shadeHoverIntervalChanged)
-    /**
      * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      */
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
@@ -285,22 +277,6 @@ public:
     }
 
     /**
-     * Whether shade hover is enabled or not.
-     */
-    bool isShadeHover() const
-    {
-        return m_shadeHover;
-    }
-
-    /**
-     * Shade hover interval.
-     */
-    int shadeHoverInterval()
-    {
-        return m_shadeHoverInterval;
-    }
-
-    /**
      * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      */
     bool isSeparateScreenFocus() const
@@ -406,10 +382,8 @@ public:
         UnrestrictedResizeOp,
         CloseOp,
         OnAllDesktopsOp,
-        ShadeOp,
         KeepAboveOp,
         KeepBelowOp,
-        OperationsOp,
         WindowRulesOp,
         ToggleStoreSettingsOp = WindowRulesOp, ///< @obsolete
         HMaximizeOp,
@@ -462,9 +436,6 @@ public:
         MouseActivateRaiseAndUnrestrictedMove,
         MouseResize,
         MouseUnrestrictedResize,
-        MouseShade,
-        MouseSetShade,
-        MouseUnsetShade,
         MouseMaximize,
         MouseRestore,
         MouseMinimize,
@@ -482,7 +453,6 @@ public:
 
     enum MouseWheelCommand {
         MouseWheelRaiseLower,
-        MouseWheelShadeUnshade,
         MouseWheelMaximizeRestore,
         MouseWheelAboveBelow,
         MouseWheelPreviousNextDesktop,
@@ -647,8 +617,6 @@ public:
     void setAutoRaise(bool autoRaise);
     void setAutoRaiseInterval(int autoRaiseInterval);
     void setDelayFocusInterval(int delayFocusInterval);
-    void setShadeHover(bool shadeHover);
-    void setShadeHoverInterval(int shadeHoverInterval);
     void setSeparateScreenFocus(bool separateScreenFocus);
     void setPlacement(PlacementPolicy placement);
     void setActivationDesktopPolicy(ActivationDesktopPolicy activationDesktopPolicy);
@@ -819,8 +787,6 @@ Q_SIGNALS:
     void autoRaiseChanged();
     void autoRaiseIntervalChanged();
     void delayFocusIntervalChanged();
-    void shadeHoverChanged();
-    void shadeHoverIntervalChanged();
     void separateScreenFocusChanged(bool);
     void placementChanged();
     void activationDesktopPolicyChanged();
@@ -875,8 +841,6 @@ private:
     bool m_autoRaise;
     int m_autoRaiseInterval;
     int m_delayFocusInterval;
-    bool m_shadeHover;
-    int m_shadeHoverInterval;
     bool m_separateScreenFocus;
     PlacementPolicy m_placement;
     ActivationDesktopPolicy m_activationDesktopPolicy;

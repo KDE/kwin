@@ -71,7 +71,6 @@ static void initButtons()
     s_buttonNames[KDecoration3::DecorationButtonType::Close] = QChar('X');
     s_buttonNames[KDecoration3::DecorationButtonType::KeepAbove] = QChar('F');
     s_buttonNames[KDecoration3::DecorationButtonType::KeepBelow] = QChar('B');
-    s_buttonNames[KDecoration3::DecorationButtonType::Shade] = QChar('L');
     s_buttonNames[KDecoration3::DecorationButtonType::Spacer] = QChar('_');
 }
 

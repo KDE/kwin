@@ -38,8 +38,6 @@ Options::Options(QObject *parent)
     , m_autoRaise(false)
     , m_autoRaiseInterval(0)
     , m_delayFocusInterval(0)
-    , m_shadeHover(false)
-    , m_shadeHoverInterval(0)
     , m_separateScreenFocus(true)
     , m_placement(PlacementNone)
     , m_activationDesktopPolicy(Options::defaultActivationDesktopPolicy())
@@ -219,24 +217,6 @@ void Options::setDelayFocusInterval(int delayFocusInterval)
     }
     m_delayFocusInterval = delayFocusInterval;
     Q_EMIT delayFocusIntervalChanged();
-}
-
-void Options::setShadeHover(bool shadeHover)
-{
-    if (m_shadeHover == shadeHover) {
-        return;
-    }
-    m_shadeHover = shadeHover;
-    Q_EMIT shadeHoverChanged();
-}
-
-void Options::setShadeHoverInterval(int shadeHoverInterval)
-{
-    if (m_shadeHoverInterval == shadeHoverInterval) {
-        return;
-    }
-    m_shadeHoverInterval = shadeHoverInterval;
-    Q_EMIT shadeHoverIntervalChanged();
 }
 
 void Options::setSeparateScreenFocus(bool separateScreenFocus)
@@ -692,8 +672,6 @@ void Options::syncFromKcfgc()
     setAutoRaise(m_settings->autoRaise());
     setAutoRaiseInterval(m_settings->autoRaiseInterval());
     setDelayFocusInterval(m_settings->delayFocusInterval());
-    setShadeHover(m_settings->shadeHover());
-    setShadeHoverInterval(m_settings->shadeHoverInterval());
     setClickRaise(m_settings->clickRaise());
     setBorderSnapZone(m_settings->borderSnapZone());
     setWindowSnapZone(m_settings->windowSnapZone());
@@ -729,10 +707,6 @@ Options::WindowOperation Options::windowOperation(const QString &name, bool rest
         return CloseOp;
     } else if (name == QLatin1StringView("OnAllDesktops")) {
         return OnAllDesktopsOp;
-    } else if (name == QLatin1StringView("Shade")) {
-        return ShadeOp;
-    } else if (name == QLatin1StringView("Operations")) {
-        return OperationsOp;
     } else if (name == QLatin1StringView("Maximize (vertical only)")) {
         return VMaximizeOp;
     } else if (name == QLatin1StringView("Maximize (horizontal only)")) {
@@ -794,9 +768,6 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == QLatin1StringView("resize")) {
         return restricted ? MouseResize : MouseUnrestrictedResize;
     }
-    if (lowerName == QLatin1StringView("shade")) {
-        return MouseShade;
-    }
     if (lowerName == QLatin1StringView("minimize")) {
         return MouseMinimize;
     }
@@ -820,9 +791,6 @@ Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
     QString lowerName = name.toLower();
     if (lowerName == QLatin1StringView("raise/lower")) {
         return MouseWheelRaiseLower;
-    }
-    if (lowerName == QLatin1StringView("shade/unshade")) {
-        return MouseWheelShadeUnshade;
     }
     if (lowerName == QLatin1StringView("maximize/restore")) {
         return MouseWheelMaximizeRestore;
@@ -852,8 +820,6 @@ Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, qreal 
     switch (com) {
     case MouseWheelRaiseLower:
         return delta > 0 ? MouseRaise : MouseLower;
-    case MouseWheelShadeUnshade:
-        return delta > 0 ? MouseSetShade : MouseUnsetShade;
     case MouseWheelMaximizeRestore:
         return delta > 0 ? MouseMaximize : MouseRestore;
     case MouseWheelAboveBelow:

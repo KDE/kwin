@@ -89,8 +89,6 @@ public:
         return KDecoration3::DecoratedWindowPrivate::window();
     }
 
-    void signalShadeChange();
-
 private Q_SLOTS:
     void delayedRequestToggleMaximization(Options::WindowOperation operation);
 
