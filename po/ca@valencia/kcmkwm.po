@@ -45,7 +45,7 @@ msgid ""
 "In this row you can customize left click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"En esta fila podeu personalitzar el comportament quan es fa clic esquerre a "
+"En esta fila podeu personalitzar el comportament quan es fa clic esquerre "
 "dins d'una finestra inactiva interna («interna» significa: ni la barra de "
 "títol, ni el marc)."
 
@@ -119,7 +119,7 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"En esta fila podeu personalitzar el comportament quan es fa clic del mig a "
+"En esta fila podeu personalitzar el comportament quan es fa clic del mig "
 "dins d'una finestra inactiva interna («interna» significa: ni la barra de "
 "títol, ni el marc)."
 
@@ -137,7 +137,7 @@ msgid ""
 "In this row you can customize right click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"En esta fila podeu personalitzar el comportament quan es fa clic dret a dins "
+"En esta fila podeu personalitzar el comportament quan es fa clic dret dins "
 "d'una finestra inactiva interna («interna» significa: ni la barra de títol, "
 "ni el marc)."
 
@@ -231,7 +231,7 @@ msgid ""
 "In this row you can customize left click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"En esta fila podeu personalitzar el comportament quan es fa clic esquerre a "
+"En esta fila podeu personalitzar el comportament quan es fa clic esquerre "
 "dins de la barra de títol o en el marc."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -387,7 +387,7 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"En esta fila podeu personalitzar el comportament quan es fa clic del mig a "
+"En esta fila podeu personalitzar el comportament quan es fa clic del mig "
 "dins de la barra de títol o en el marc."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -404,7 +404,7 @@ msgid ""
 "In this row you can customize right click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"En esta fila podeu personalitzar el comportament quan es fa clic dret a dins "
+"En esta fila podeu personalitzar el comportament quan es fa clic dret dins "
 "de la barra de títol o en el marc."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -685,13 +685,13 @@ msgstr ""
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr "Clic al focus"
+msgstr "Clic damunt del focus"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr "Clic al focus (prioritat al ratolí)"
+msgstr "Clic damunt del focus (prioritat al ratolí)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
@@ -860,8 +860,8 @@ msgid ""
 "windows, you need to change the settings in the Actions tab."
 msgstr ""
 "Quan es marca esta opció, la finestra activa es passarà a primer pla quan "
-"cliqueu en qualsevol lloc del contingut de la finestra. Per a canviar-ho per "
-"a finestres inactives, heu de canviar la configuració de la pestanya "
+"cliqueu damunt de qualsevol lloc del contingut de la finestra. Per a canviar-"
+"ho per a finestres inactives, heu de canviar la configuració de la pestanya "
 "d'accions."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
@@ -975,7 +975,7 @@ msgstr "&Doble clic:"
 #: mouse.ui:39
 #, kde-format
 msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr "Comportament del <em>doble</em> clic a dins de la barra de títol."
+msgstr "Comportament del <em>doble</em> clic dins de la barra de títol."
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1077,8 +1077,8 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
 "em> window."
 msgstr ""
-"Comportament en fer clic <em>esquerre</em> a dins de la barra de títol o en "
-"el marc d'una finestra <em>activa</em>."
+"Comportament quan es faça clic <em>esquerre</em> a dins de la barra de títol "
+"o en el marc d'una finestra <em>activa</em>."
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1089,8 +1089,8 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an "
 "<em>inactive</em> window."
 msgstr ""
-"Comportament en fer clic <em>esquerre</em> a dins de la barra de títol o en "
-"el marc d'una finestra <em>inactiva</em>."
+"Comportament quan es faça clic <em>esquerre</em> a dins de la barra de títol "
+"o en el marc d'una finestra <em>inactiva</em>."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1104,7 +1104,7 @@ msgstr "Activa i abaixa"
 #: mouse.ui:577
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr "Maximitza la finestra fent doble clic en el seu marc"
+msgstr "Maximitza la finestra fent doble clic damunt del seu marc"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:602
@@ -1230,9 +1230,9 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<em>Clic al focus:</em> Una finestra esdevé activa quan hi cliqueu. Este "
-"comportament és comú en altres sistemes operatius i segurament és el que "
-"voldreu."
+"<em>Clic damunt del focus:</em> Una finestra esdevé activa quan hi cliqueu. "
+"Este comportament és comú en altres sistemes operatius i segurament és el "
+"que voldreu."
 
 #: windows.cpp:95
 #, kde-format
@@ -1243,11 +1243,11 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<em>Clic al focus (prioritat al ratolí):</em> En general, és similar a "
-"<em>Clic al focus</em>. Si el sistema ha de seleccionar una finestra activa "
-"(p. ex., perquè l'actualment activa s'ha tancat) la candidata preferida serà "
-"la finestra que hi ha davall el ratolí. No és habitual, però és una possible "
-"variació de <em>Clic al focus</em>."
+"<em>Clic damunt del focus (prioritat al ratolí):</em> En general, és similar "
+"a <em>Clic damunt del focus</em>. Si el sistema ha de seleccionar una "
+"finestra activa (p. ex., perquè l'actualment activa s'ha tancat) la "
+"candidata preferida serà la finestra que hi ha davall el ratolí. No és "
+"habitual, però és una possible variació de <em>Clic damunt del focus</em>."
 
 #: windows.cpp:98
 #, kde-format
@@ -1260,8 +1260,8 @@ msgstr ""
 "<em>El focus seguix el ratolí:</em> Movent el ratolí dins una finestra, esta "
 "s'activarà. P. ex., les finestres que apareguen a l'atzar davall el ratolí "
 "no obtindran el focus. La <em>Prevenció de robatori de focus</em> funciona "
-"com és habitual. Penseu en <em>Clic al focus</em> però sense que calga fer "
-"clic."
+"com és habitual. Penseu en <em>Clic damunt del focus</em> però sense que "
+"calga clicar."
 
 #: windows.cpp:101
 #, kde-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 02:37+0000\n"
-"PO-Revision-Date: 2025-05-17 13:11+0200\n"
+"PO-Revision-Date: 2025-05-21 08:53+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -97,18 +97,15 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Control do punteiro e do teclado:"
 
 #: ui/main.qml:156
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid ""
-#| "Allow controlling the pointer and keyboard without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr "Permitir controlar o punteiro e o teclado sen pedir permiso."
+msgstr "Permitir sen pedir permiso."
 
 #~ msgid "Only non-character keys"
 #~ msgstr "Só teclas que non son letras"
