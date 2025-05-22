@@ -60,11 +60,6 @@
         </item>
         <item>
          <property name="text">
-          <string extracomment="@item:inlistbox behavior on double click">Shade</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string extracomment="@item:inlistbox behavior on double click">Lower</string>
          </property>
         </item>
@@ -103,11 +98,6 @@
         <item>
          <property name="text">
           <string>Raise/lower</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Shade/unshade</string>
          </property>
         </item>
         <item>
@@ -259,11 +249,6 @@
           </item>
           <item>
            <property name="text">
-            <string>Shade</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>Close</string>
            </property>
           </item>
@@ -321,11 +306,6 @@
           </item>
           <item>
            <property name="text">
-            <string>Shade</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>Close</string>
            </property>
           </item>
@@ -370,11 +350,6 @@
           <item>
            <property name="text">
             <string>Minimize</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Shade</string>
            </property>
           </item>
           <item>
@@ -436,11 +411,6 @@
           </item>
           <item>
            <property name="text">
-            <string>Shade</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>Close</string>
            </property>
           </item>
@@ -485,11 +455,6 @@
           <item>
            <property name="text">
             <string>Minimize</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Shade</string>
            </property>
           </item>
           <item>
@@ -547,11 +512,6 @@
           <item>
            <property name="text">
             <string>Minimize</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Shade</string>
            </property>
           </item>
           <item>

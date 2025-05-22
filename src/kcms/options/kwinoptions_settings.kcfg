@@ -28,15 +28,6 @@
         <default>false</default>
     </entry>
 
-    <entry key="ShadeHover" type="Bool">
-        <default>false</default>
-    </entry>
-
-    <entry key="ShadeHoverInterval" type="Int">
-        <default>250</default>
-        <min>0</min>
-    </entry>
-
     <entry name="Placement" type="Enum">
         <choices name="PlacementChoices">
             <choice name="Smart"></choice>
@@ -64,7 +55,6 @@
             <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
             <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
             <choice name="Minimize"></choice>
-            <choice name="Shade"></choice>
             <choice name="Lower"></choice>
             <choice name="Close"></choice>
             <choice name="OnAllDesktops"></choice>
@@ -152,7 +142,6 @@
          <choice name="Lower"></choice>
          <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
          <choice name="Minimize"></choice>
-         <choice name="Shade"></choice>
          <choice name="Close"></choice>
          <choice name="OperationsMenu" value="Operations menu"></choice>
          <choice name="Nothing"></choice>
@@ -166,7 +155,6 @@
             <choice name="Lower"></choice>
             <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
             <choice name="Minimize"></choice>
-            <choice name="Shade"></choice>
             <choice name="Close"></choice>
             <choice name="OperationsMenu" value="Operations menu"></choice>
             <choice name="Nothing"></choice>
@@ -180,7 +168,6 @@
             <choice name="Lower"></choice>
             <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
             <choice name="Minimize"></choice>
-            <choice name="Shade"></choice>
             <choice name="Close"></choice>
             <choice name="OperationsMenu" value="Operations menu"></choice>
             <choice name="Nothing"></choice>
@@ -191,7 +178,6 @@
         <default>Nothing</default>
         <choices>
         <choice name="RaiseLower" value="Raise/Lower"></choice>
-        <choice name="ShadeUnshade" value="Shade/Unshade"></choice>
         <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
         <choice name="AboveBelow" value="Above/Below"></choice>
         <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>
@@ -210,7 +196,6 @@
             <choice name="Lower"></choice>
             <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
             <choice name="Minimize"></choice>
-            <choice name="Shade"></choice>
             <choice name="Close"></choice>
             <choice name="OperationsMenu" value="Operations menu"></choice>
             <choice name="Nothing"></choice>
@@ -227,7 +212,6 @@
             <choice name="Lower"></choice>
             <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
             <choice name="Minimize"></choice>
-            <choice name="Shade"></choice>
             <choice name="Close"></choice>
             <choice name="OperationsMenu" value="Operations menu"></choice>
             <choice name="Nothing"></choice>
@@ -244,7 +228,6 @@
           <choice name="Lower"></choice>
           <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
           <choice name="Minimize"></choice>
-          <choice name="Shade"></choice>
           <choice name="Close"></choice>
           <choice name="OperationsMenu" value="Operations menu"></choice>
           <choice name="Nothing"></choice>
@@ -354,7 +337,6 @@
       <default>Nothing</default>
       <choices>
           <choice name="RaiseLower" value="Raise/Lower"></choice>
-          <choice name="ShadeUnshade" value="Shade/Unshade"></choice>
           <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
           <choice name="AboveBelow" value="Above/Below"></choice>
           <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>

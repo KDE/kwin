@@ -15,52 +15,6 @@
     <set>Qt::AlignHCenter|Qt::AlignTop</set>
    </property>
    <item row="0" column="0">
-    <widget class="QLabel" name="shadeHoverLabel">
-     <property name="text">
-      <string>Window &amp;unshading:</string>
-     </property>
-     <property name="buddy">
-      <cstring>kcfg_ShadeHover</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_1">
-     <item>
-      <widget class="QCheckBox" name="kcfg_ShadeHover">
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this option is enabled, a shaded window will unshade automatically when the mouse pointer has been over the titlebar for some time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>On titlebar hover after:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="kcfg_ShadeHoverInterval">
-       <property name="whatsThis">
-        <string>Sets the time in milliseconds before the window unshades when the mouse pointer goes over the shaded window.</string>
-       </property>
-       <property name="suffix">
-        <string> ms</string>
-       </property>
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>3000</number>
-       </property>
-       <property name="singleStep">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>250</number>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
     <widget class="QLabel" name="windowPlacementLabel">
      <property name="text">
       <string>Window &amp;placement:</string>
@@ -70,7 +24,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="0" column="1">
     <widget class="QComboBox" name="kcfg_Placement">
      <property name="whatsThis">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The placement policy determines where a new window will appear on the desktop.&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Smart&lt;/span&gt; will try to achieve a minimum overlap of windows&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Maximizing&lt;/span&gt; will try to maximize every window to fill the whole screen. It might be useful to selectively affect placement of some windows using the window-specific settings.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Random&lt;/span&gt; will use a random position&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Centered&lt;/span&gt; will place the window centered&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Zero-cornered&lt;/span&gt; will place the window in the top-left corner&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Under mouse&lt;/span&gt; will place the window under the pointer&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -107,7 +61,7 @@
      </item>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="1" column="1">
     <widget class="QCheckBox" name="kcfg_AllowKDEAppsToRememberWindowPositions">
      <property name="whatsThis">
       <string>When turned on, apps which are able to remember the positions of their windows are allowed to do so. This will override the window placement mode defined above.</string>
@@ -117,7 +71,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="activationDesktopPolicyLabel">
      <property name="text">
       <string>Virtual Desktop behavior:</string>
@@ -127,14 +81,14 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="2" column="1">
     <widget class="QLabel" name="activationDesktopPolicyDescriptionLabel">
      <property name="text">
       <string>When activating a window on a different Virtual Desktop:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="3" column="1">
     <widget class="QComboBox" name="kcfg_ActivationDesktopPolicy">
      <property name="whatsThis">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls what happens when an open window located on a Virtual Desktop other than the current one is activated. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Switch to that Virtual Desktop&lt;/span&gt; will switch to the Virtual Desktop where the window is currently located. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Bring window to current Virtual Desktop&lt;/span&gt; will cause the window to jump to the active Virtual Desktop. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
