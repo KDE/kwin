@@ -1563,6 +1563,16 @@ void Workspace::focusToNull()
 #endif
 }
 
+#if KWIN_BUILD_X11
+xcb_window_t Workspace::nullFocusWindow() const
+{
+    if (!m_nullFocus) {
+        return XCB_WINDOW_NONE;
+    }
+    return *m_nullFocus;
+}
+#endif
+
 bool Workspace::breaksShowingDesktop(Window *window) const
 {
     return !(window->isUnmanaged() || window->isDock() || window->isDesktop() || window->belongsToDesktop() || window->isInputMethod());

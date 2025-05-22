@@ -15,6 +15,7 @@
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"
+#include "waylandwindow.h"
 // Qt
 #include <QDebug>
 
@@ -239,6 +240,8 @@ void RootInfo::setActiveClient(Window *client)
     xcb_window_t windowId = XCB_WINDOW_NONE;
     if (auto x11Window = qobject_cast<X11Window *>(client)) {
         windowId = x11Window->window();
+    } else if (qobject_cast<WaylandWindow *>(client)) {
+        windowId = Workspace::self()->nullFocusWindow();
     }
     if (m_activeWindow == windowId) {
         return;

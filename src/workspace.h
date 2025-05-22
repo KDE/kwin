@@ -350,6 +350,9 @@ public:
     void addDeleted(Window *);
 
     void focusToNull(); // SELI TODO: Public?
+#if KWIN_BUILD_X11
+    xcb_window_t nullFocusWindow() const;
+#endif
 
     void windowShortcutUpdated(Window *window);
     bool shortcutAvailable(const QKeySequence &cut, Window *ignore = nullptr) const;
