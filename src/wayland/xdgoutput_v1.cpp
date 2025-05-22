@@ -185,7 +185,7 @@ void XdgOutputV1Interface::sendLogicalPosition(Resource *resource)
     ClientConnection *connection = ClientConnection::get(resource->client());
     qreal scaleOverride = connection->scaleOverride();
 
-    send_logical_position(resource->handle, pos.x() * scaleOverride, pos.y() * scaleOverride);
+    send_logical_position(resource->handle, std::round(pos.x() * scaleOverride), std::round(pos.y() * scaleOverride));
 }
 
 void XdgOutputV1Interface::sendDone(Resource *resource)
