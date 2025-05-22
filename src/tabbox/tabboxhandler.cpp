@@ -169,14 +169,6 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 {
     Window *currentClient = q->client(index);
-    if (isHighlightWindows()) {
-        const auto stackingOrder = q->stackingOrder();
-        for (Window *window : stackingOrder) {
-            if (window != currentClient) { // to not mess up with wanted ShadeActive/ShadeHover state
-                q->shadeClient(window, true);
-            }
-        }
-    }
     QWindow *w = window();
     if (currentClient) {
         q->elevateClient(currentClient, w, false);
@@ -340,10 +332,6 @@ void TabBoxHandler::show()
 
 void TabBoxHandler::initHighlightWindows()
 {
-    const auto stack = stackingOrder();
-    for (Window *window : stack) {
-        shadeClient(window, false);
-    }
     d->updateHighlightWindows();
 }
 

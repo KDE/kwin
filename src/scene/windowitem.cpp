@@ -212,15 +212,12 @@ void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
     m_surfaceItem = std::move(surfaceItem);
 
     if (m_surfaceItem) {
-        connect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
         connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
         addSurfaceItemDamageConnects(m_surfaceItem.get());
 
         updateSurfacePosition();
-        updateSurfaceVisibility();
     } else {
-        disconnect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
         disconnect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         disconnect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
     }
@@ -232,11 +229,6 @@ void WindowItem::updateSurfacePosition()
     const QRectF frameGeometry = m_window->frameGeometry();
 
     m_surfaceItem->setPosition(bufferGeometry.topLeft() - frameGeometry.topLeft());
-}
-
-void WindowItem::updateSurfaceVisibility()
-{
-    m_surfaceItem->setVisible(!m_window->isShade());
 }
 
 void WindowItem::updateShadowItem()

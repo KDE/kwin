@@ -156,7 +156,6 @@ QVariantMap clientToVariantMap(const Window *c)
             {QStringLiteral("height"), c->height()},
             {QStringLiteral("desktops"), c->desktopIds()},
             {QStringLiteral("minimized"), c->isMinimized()},
-            {QStringLiteral("shaded"), c->isShade()},
             {QStringLiteral("fullscreen"), c->isFullScreen()},
             {QStringLiteral("keepAbove"), c->keepAbove()},
             {QStringLiteral("keepBelow"), c->keepBelow()},

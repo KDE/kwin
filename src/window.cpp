@@ -502,10 +502,6 @@ void Window::setActive(bool act)
         cancelAutoRaise();
     }
 
-    if (!m_active && shadeMode() == ShadeActivated) {
-        setShade(ShadeNormal);
-    }
-
     StackingUpdatesBlocker blocker(workspace());
     updateLayer(); // active windows may get different layer
     auto mainwindows = mainWindows();
@@ -831,105 +827,6 @@ bool Window::isOnCurrentDesktop() const
     return isOnDesktop(VirtualDesktopManager::self()->currentDesktop());
 }
 
-ShadeMode Window::shadeMode() const
-{
-    return m_shadeMode;
-}
-
-bool Window::isShadeable() const
-{
-    return false;
-}
-
-void Window::setShade(bool set)
-{
-    set ? setShade(ShadeNormal) : setShade(ShadeNone);
-}
-
-void Window::setShade(ShadeMode mode)
-{
-    if (!isShadeable()) {
-        return;
-    }
-    if (mode == ShadeHover && isInteractiveMove()) {
-        return; // causes geometry breaks and is probably nasty
-    }
-    if (isSpecialWindow() || !isDecorated()) {
-        mode = ShadeNone;
-    }
-
-    mode = rules()->checkShade(mode);
-    if (m_shadeMode == mode) {
-        return;
-    }
-
-    const bool wasShade = isShade();
-    const ShadeMode previousShadeMode = shadeMode();
-    m_shadeMode = mode;
-
-    if (wasShade == isShade()) {
-        // Decoration may want to update after e.g. hover-shade changes
-        Q_EMIT shadeChanged();
-        return; // No real change in shaded state
-    }
-
-    Q_ASSERT(isDecorated());
-
-    doSetShade(previousShadeMode);
-    updateWindowRules(Rules::Shade);
-
-    Q_EMIT shadeChanged();
-}
-
-void Window::doSetShade(ShadeMode previousShadeMode)
-{
-}
-
-void Window::shadeHover()
-{
-    setShade(ShadeHover);
-    cancelShadeHoverTimer();
-}
-
-void Window::shadeUnhover()
-{
-    setShade(ShadeNormal);
-    cancelShadeHoverTimer();
-}
-
-void Window::startShadeHoverTimer()
-{
-    if (!isShade()) {
-        return;
-    }
-    m_shadeHoverTimer = new QTimer(this);
-    connect(m_shadeHoverTimer, &QTimer::timeout, this, &Window::shadeHover);
-    m_shadeHoverTimer->setSingleShot(true);
-    m_shadeHoverTimer->start(options->shadeHoverInterval());
-}
-
-void Window::startShadeUnhoverTimer()
-{
-    if (m_shadeMode == ShadeHover && !isInteractiveMoveResize() && !isInteractiveMoveResizePointerButtonDown()) {
-        m_shadeHoverTimer = new QTimer(this);
-        connect(m_shadeHoverTimer, &QTimer::timeout, this, &Window::shadeUnhover);
-        m_shadeHoverTimer->setSingleShot(true);
-        m_shadeHoverTimer->start(options->shadeHoverInterval());
-    }
-}
-
-void Window::cancelShadeHoverTimer()
-{
-    delete m_shadeHoverTimer;
-    m_shadeHoverTimer = nullptr;
-}
-
-void Window::toggleShade()
-{
-    // If the mode is ShadeHover or ShadeActive, cancel shade too.
-    setShade(shadeMode() == ShadeNone ? ShadeNormal : ShadeNone);
-}
-
 Qt::Edge Window::titlebarPosition() const
 {
     // TODO: still needed, remove?
@@ -1153,7 +1050,7 @@ bool Window::startInteractiveMoveResize()
         return false;
     }
     if ((interactiveMoveResizeGravity() == Gravity::None && !isMovableAcrossScreens())
-        || (interactiveMoveResizeGravity() != Gravity::None && (isShade() || !isResizable()))) {
+        || (interactiveMoveResizeGravity() != Gravity::None && !isResizable())) {
         return false;
     }
     if (!doStartInteractiveMoveResize()) {
@@ -1293,12 +1190,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
     setInteractiveMoveResizeAnchor(global);
     setInteractiveMoveResizeModifiers(modifiers);
 
-    // ShadeHover or ShadeActive, ShadeNormal was already avoided above
     const Gravity gravity = interactiveMoveResizeGravity();
-    if (gravity != Gravity::None && shadeMode() != ShadeNone) {
-        setShade(ShadeNone);
-    }
-
     const QRectF currentMoveResizeGeom = moveResizeGeometry();
     QRectF nextMoveResizeGeom = currentMoveResizeGeom;
 
@@ -1673,7 +1565,7 @@ QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     QRectF nextMoveResizeGeom = moveResizeGeometry();
 
     const Gravity gravity = interactiveMoveResizeGravity();
-    if (gravity == Gravity::None || isShade() || !isResizable()) {
+    if (gravity == Gravity::None || !isResizable()) {
         return nextMoveResizeGeom;
     }
 
@@ -1860,8 +1752,6 @@ void Window::setupWindowManagementInterface()
     w->setSkipTaskbar(skipTaskbar());
     w->setSkipSwitcher(skipSwitcher());
     w->setPid(pid());
-    w->setShadeable(isShadeable());
-    w->setShaded(isShade());
     w->setResizable(isResizable());
     w->setMovable(isMovable());
     w->setVirtualDesktopChangeable(true); // FIXME Matches X11Window::actionSupported(), but both should be implemented.
@@ -1902,9 +1792,6 @@ void Window::setupWindowManagementInterface()
     });
     connect(this, &Window::windowClassChanged, w, updateAppId);
     connect(this, &Window::desktopFileNameChanged, w, updateAppId);
-    connect(this, &Window::shadeChanged, w, [w, this] {
-        w->setShaded(isShade());
-    });
     connect(this, &Window::noBorderChanged, w, [w, this] {
         w->setNoBorder(noBorder());
     });
@@ -1953,9 +1840,6 @@ void Window::setupWindowManagementInterface()
         if (set) {
             workspace()->activateWindow(this, true);
         }
-    });
-    connect(w, &PlasmaWindowInterface::shadedRequested, this, [this](bool set) {
-        setShade(set);
     });
     connect(w, &PlasmaWindowInterface::noBorderRequested, this, [this](bool set) {
         setNoBorder(set);
@@ -2096,9 +1980,6 @@ bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
     case Options::MouseClose:
     case Options::MouseResize:
     case Options::MouseUnrestrictedResize:
-    case Options::MouseShade:
-    case Options::MouseSetShade:
-    case Options::MouseUnsetShade:
         return true;
     case Options::MouseActivateRaiseAndPassClick:
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
@@ -2269,7 +2150,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
     }
     case Options::MouseResize:
     case Options::MouseUnrestrictedResize: {
-        if (!isResizable() || isShade()) {
+        if (!isResizable()) {
             break;
         }
         if (isInteractiveMoveResize()) {
@@ -2301,18 +2182,6 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         updateCursor();
         break;
     }
-    case Options::MouseShade:
-        toggleShade();
-        cancelShadeHoverTimer();
-        break;
-    case Options::MouseSetShade:
-        setShade(ShadeNormal);
-        cancelShadeHoverTimer();
-        break;
-    case Options::MouseUnsetShade:
-        setShade(ShadeNone);
-        cancelShadeHoverTimer();
-        break;
     case Options::MouseNothing:
         break;
     }
@@ -2496,7 +2365,7 @@ void Window::updateCursor()
         return;
     }
     Gravity gravity = interactiveMoveResizeGravity();
-    if (!isResizable() || isShade()) {
+    if (!isResizable()) {
         gravity = Gravity::None;
     }
     CursorShape c = Qt::ArrowCursor;
@@ -2987,11 +2856,6 @@ void Window::setDecoratedWindow(Decoration::DecoratedWindowImpl *client)
 
 void Window::pointerEnterEvent(const QPointF &globalPos)
 {
-    if (options->isShadeHover()) {
-        cancelShadeHoverTimer();
-        startShadeHoverTimer();
-    }
-
     if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown()) {
         return;
     }
@@ -3015,8 +2879,6 @@ void Window::pointerLeaveEvent()
 {
     cancelAutoRaise();
     workspace()->cancelDelayFocus();
-    cancelShadeHoverTimer();
-    startShadeUnhoverTimer();
     // TODO: send hover leave to deco
     // TODO: handle Options::FocusStrictlyUnderMouse
 }
@@ -4275,9 +4137,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
 
     checkOffscreenPosition(&newGeom, screenArea);
     // Obey size hints. TODO: We really should make sure it stays in the right place
-    if (!isShade()) {
-        newGeom.setSize(constrainFrameSize(newGeom.size()));
-    }
+    newGeom.setSize(constrainFrameSize(newGeom.size()));
 
     moveResize(m_rules.checkGeometry(newGeom));
 }
@@ -4561,7 +4421,6 @@ void Window::applyWindowRules()
     // Type
     maximize(requestedMaximizeMode());
     setMinimized(isMinimized());
-    setShade(shadeMode());
     setOriginalSkipTaskbar(skipTaskbar());
     setSkipPager(skipPager());
     setSkipSwitcher(skipSwitcher());

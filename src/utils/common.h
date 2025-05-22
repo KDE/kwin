@@ -59,13 +59,6 @@ private:
 };
 typedef QList<StrutRect> StrutRects;
 
-enum ShadeMode {
-    ShadeNone, // not shaded
-    ShadeNormal, // normally shaded - isShade() is true only here
-    ShadeHover, // "shaded", but visible due to hover unshade
-    ShadeActivated // "shaded", but visible due to alt+tab to the window
-};
-
 KWIN_EXPORT QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity);
 
 } // namespace

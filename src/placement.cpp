@@ -138,7 +138,6 @@ static inline bool isIrrelevant(const Window *window, const Window *regarding, V
     return window == regarding
         || !window->isClient()
         || !window->isShown()
-        || window->isShade()
         || !window->isOnDesktop(desktop)
         || !window->isOnCurrentActivity()
         || window->isDesktop();
@@ -634,7 +633,7 @@ void Workspace::slotWindowExpandHorizontal()
 
 void Window::growHorizontal()
 {
-    if (!isResizable() || isShade()) {
+    if (!isResizable()) {
         return;
     }
     QRectF geom = moveResizeGeometry();
@@ -668,7 +667,7 @@ void Workspace::slotWindowShrinkHorizontal()
 
 void Window::shrinkHorizontal()
 {
-    if (!isResizable() || isShade()) {
+    if (!isResizable()) {
         return;
     }
     QRectF geom = moveResizeGeometry();
@@ -693,7 +692,7 @@ void Workspace::slotWindowExpandVertical()
 
 void Window::growVertical()
 {
-    if (!isResizable() || isShade()) {
+    if (!isResizable()) {
         return;
     }
     QRectF geom = moveResizeGeometry();
@@ -725,7 +724,7 @@ void Workspace::slotWindowShrinkVertical()
 
 void Window::shrinkVertical()
 {
-    if (!isResizable() || isShade()) {
+    if (!isResizable()) {
         return;
     }
     QRectF geom = moveResizeGeometry();

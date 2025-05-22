@@ -289,9 +289,6 @@ void WinInfo::changeState(NET::States state, NET::States mask)
         m_client->setMaximize(m_client->requestedMaximizeMode() & MaximizeVertical, state & NET::MaxHoriz);
     }
 
-    if (mask & NET::Shaded) {
-        m_client->setShade(state & NET::Shaded ? ShadeNormal : ShadeNone);
-    }
     if (mask & NET::KeepAbove) {
         m_client->setKeepAbove((state & NET::KeepAbove) != 0);
     }

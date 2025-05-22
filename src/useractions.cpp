@@ -896,8 +896,6 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotWindowMaximizeHorizontal);
     initShortcut("Window Minimize", i18n("Minimize Window"),
                  Qt::META | Qt::Key_PageDown, &Workspace::slotWindowMinimize);
-    initShortcut("Window Shade", i18n("Shade Window"),
-                 0, &Workspace::slotWindowShade);
     initShortcut("Window Move", i18n("Move Window"),
                  0, &Workspace::slotWindowMove);
     initShortcut("Window Resize", i18n("Resize Window"),
@@ -1174,9 +1172,6 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
     case Options::MinimizeOp:
         window->setMinimized(true);
         break;
-    case Options::ShadeOp:
-        window->performMousePressCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
-        break;
     case Options::OnAllDesktopsOp:
         window->setOnAllDesktops(!window->isOnAllDesktops());
         break;
@@ -1206,9 +1201,6 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         }
         break;
     }
-    case Options::OperationsOp:
-        window->performMousePressCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
-        break;
     case Options::WindowRulesOp:
         m_rulebook->edit(window, false);
         break;
@@ -1363,16 +1355,6 @@ void Workspace::slotWindowMinimize()
 {
     if (USABLE_ACTIVE_WINDOW) {
         performWindowOperation(m_activeWindow, Options::MinimizeOp);
-    }
-}
-
-/**
- * Shades/unshades the active window respectively.
- */
-void Workspace::slotWindowShade()
-{
-    if (USABLE_ACTIVE_WINDOW) {
-        performWindowOperation(m_activeWindow, Options::ShadeOp);
     }
 }
 

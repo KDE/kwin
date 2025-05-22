@@ -54,7 +54,6 @@ public:
     void elevateClient(Window *c, QWindow *tabbox, bool elevate) const override;
     void raiseClient(Window *client) const override;
     void restack(Window *c, Window *under) override;
-    void shadeClient(Window *c, bool b) const override;
     Window *clientToAddToList(Window *client) const override;
     Window *desktopClient() const override;
     void activateAndClose() override;
@@ -254,8 +253,6 @@ private:
     void key(const KLazyLocalizedString &actionName, Slot slot, const QList<QKeySequence> &shortcuts = QList<QKeySequence>());
 
     Direction matchShortcuts(const KeyboardKeyEvent &keyEvent, const QList<QKeySequence> &forward, const QList<QKeySequence> &backward) const;
-
-    void shadeActivate(Window *c);
 
     bool toggleMode(TabBoxMode mode);
 

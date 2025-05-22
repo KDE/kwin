@@ -137,13 +137,6 @@ public:
      */
     virtual void restack(Window *c, Window *under) = 0;
 
-    /**
-     * Toggle between ShadeHover and ShadeNormal - not shaded windows are unaffected
-     * @param c The client to be shaded
-     * @param b Whether to un- or shade
-     */
-    virtual void shadeClient(Window *c, bool b) const = 0;
-
     virtual void highlightWindows(Window *window = nullptr, QWindow *controller = nullptr) = 0;
 
     /**
