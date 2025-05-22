@@ -51,7 +51,7 @@ static QStringList atomToMimeTypes(xcb_atom_t atom)
     } else if (atom == atoms->netscape_url) {
         mimeTypes << QStringLiteral("_NETSCAPE_URL");
     } else {
-        mimeTypes << Selection::atomName(atom);
+        mimeTypes << Xcb::atomName(atom);
     }
     return mimeTypes;
 }
