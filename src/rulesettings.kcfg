@@ -226,17 +226,6 @@
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
 
-    <entry name="shade" type="Bool">
-      <label>Shaded</label>
-      <default>false</default>
-    </entry>
-    <entry name="shaderule" type="Int">
-      <label>Shaded rule type</label>
-      <min code="true">Rules::UnusedSetRule</min>
-      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
-      <default code="true">Rules::UnusedSetRule</default>
-    </entry>
-
     <entry name="skiptaskbar" type="Bool">
       <label>Skip taskbar</label>
       <default>false</default>

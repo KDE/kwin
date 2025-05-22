@@ -149,12 +149,6 @@
         <entry name="DelayFocusInterval" type="Int">
             <default>300</default>
         </entry>
-        <entry name="ShadeHover" type="Bool">
-            <default>false</default>
-        </entry>
-        <entry name="ShadeHoverInterval" type="Int">
-            <default>250</default>
-        </entry>
         <entry name="ClickRaise" type="Bool">
             <default>true</default>
         </entry>

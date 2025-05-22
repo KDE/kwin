@@ -134,22 +134,6 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QSignalSpy unmappedSpy(m_windowManagement->windows().first(), &KWayland::Client::PlasmaWindow::unmapped);
     QSignalSpy destroyedSpy(m_windowManagement->windows().first(), &QObject::destroyed);
 
-    // now shade the window
-    const QRectF geoBeforeShade = window->frameGeometry();
-    QVERIFY(geoBeforeShade.isValid());
-    QVERIFY(!geoBeforeShade.isEmpty());
-    workspace()->slotWindowShade();
-    QVERIFY(window->isShade());
-    QVERIFY(window->frameGeometry() != geoBeforeShade);
-    QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(pw->geometry(), window->frameGeometry());
-    // and unshade again
-    workspace()->slotWindowShade();
-    QVERIFY(!window->isShade());
-    QCOMPARE(window->frameGeometry(), geoBeforeShade);
-    QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(pw->geometry(), geoBeforeShade);
-
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());

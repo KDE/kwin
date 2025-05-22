@@ -419,9 +419,6 @@ void X11Window::mapRequestEvent(xcb_map_request_event_t *e)
     if (isMinimized()) {
         setMinimized(false);
     }
-    if (isShade()) {
-        setShade(ShadeNone);
-    }
     if (!isOnCurrentDesktop()) {
         if (allowWindowActivation()) {
             workspace()->activateWindow(this);
@@ -582,7 +579,7 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
     if (e->detail == XCB_NOTIFY_DETAIL_POINTER) {
         return; // we don't care
     }
-    if (isShade() || !isShown() || !isOnCurrentDesktop()) { // we unmapped it, but it got focus meanwhile ->
+    if (!isShown() || !isOnCurrentDesktop()) { // we unmapped it, but it got focus meanwhile ->
         return; // activateNextWindow() already transferred focus elsewhere
     }
     workspace()->forEachClient([](X11Window *window) {
@@ -607,9 +604,6 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
 {
     if (e->mode == XCB_NOTIFY_MODE_GRAB || e->mode == XCB_NOTIFY_MODE_UNGRAB) {
         return; // we don't care
-    }
-    if (isShade()) {
-        return; // here neither
     }
     if (e->detail != XCB_NOTIFY_DETAIL_NONLINEAR
         && e->detail != XCB_NOTIFY_DETAIL_NONLINEAR_VIRTUAL) {
@@ -694,7 +688,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
                 Gravity::Bottom,
                 Gravity::BottomLeft,
                 Gravity::Left};
-            if (!isResizable() || isShade()) {
+            if (!isResizable()) {
                 return;
             }
             if (isInteractiveMoveResize()) {

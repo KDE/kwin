@@ -109,14 +109,12 @@ X11Window::X11Window()
     , m_managed(false)
     , m_transientForId(XCB_WINDOW_NONE)
     , m_originalTransientForId(XCB_WINDOW_NONE)
-    , shade_below(nullptr)
     , m_motif(atoms->motif_wm_hints)
     , in_group(nullptr)
     , ping_timer(nullptr)
     , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
     , m_userTime(XCB_TIME_CURRENT_TIME) // Not known yet
     , allowed_actions()
-    , shade_geometry_change(false)
     , sm_stacking_order(-1)
     , activitiesDefined(false)
     , sessionActivityOverride(false)
@@ -803,7 +801,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         setOriginalSkipTaskbar(session->skipTaskbar);
         setSkipPager(session->skipPager);
         setSkipSwitcher(session->skipSwitcher);
-        setShade(session->shaded ? ShadeNormal : ShadeNone);
         setOpacity(session->opacity);
         setGeometryRestore(session->restore);
         if (session->maximized != MaximizeRestore) {
@@ -835,7 +832,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         }
 
         // Read other initial states
-        setShade(rules()->checkShade(info->state() & NET::Shaded ? ShadeNormal : ShadeNone, !isMapped));
         setKeepAbove(rules()->checkKeepAbove(info->state() & NET::KeepAbove, !isMapped));
         setKeepBelow(rules()->checkKeepBelow(info->state() & NET::KeepBelow, !isMapped));
         setOriginalSkipTaskbar(rules()->checkSkipTaskbar(info->state() & NET::SkipTaskbar, !isMapped));
@@ -986,9 +982,7 @@ void X11Window::createDecoration()
                 return;
             }
             const QRectF oldGeometry = moveResizeGeometry();
-            if (!isShade()) {
-                checkWorkspacePosition(oldGeometry);
-            }
+            checkWorkspacePosition(oldGeometry);
             updateFrameExtents();
         });
 
@@ -1072,8 +1066,7 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     // We should resize the client when its custom frame extents are changed so
     // the logical bounds remain the same. This however means that we will send
     // several configure requests to the application upon restoring it from the
-    // maximized or fullscreen state. Notice that a client-side decorated client
-    // cannot be shaded, therefore it's okay not to use the adjusted size here.
+    // maximized or fullscreen state.
     moveResize(moveResizeGeometry());
 }
 
@@ -1110,7 +1103,7 @@ bool X11Window::userCanSetNoBorder() const
         return false;
     }
 
-    return !isFullScreen() && !isShade();
+    return !isFullScreen();
 }
 
 void X11Window::setNoBorder(bool set)
@@ -1188,81 +1181,9 @@ void X11Window::doMinimize()
             workspace()->activateNextWindow(this);
         }
     }
-    if (isShade()) {
-        // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(isMinimized() ? NET::States() : NET::Shaded, NET::Shaded);
-    }
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
-}
-
-bool X11Window::isShadeable() const
-{
-    return !isSpecialWindow() && isDecorated() && (rules()->checkShade(ShadeNormal) != rules()->checkShade(ShadeNone));
-}
-
-void X11Window::doSetShade(ShadeMode previousShadeMode)
-{
-    if (isDeleted()) {
-        return;
-    }
-    // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
-    if (isShade()) {
-        shade_geometry_change = true;
-        unmap();
-        QSizeF s(implicitSize());
-        s.setHeight(borderTop() + borderBottom());
-        resize(s);
-        shade_geometry_change = false;
-        if (previousShadeMode == ShadeHover) {
-            if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1) {
-                workspace()->stackBelow(this, shade_below);
-            }
-            if (isActive()) {
-                workspace()->activateNextWindow(this);
-            }
-        } else if (isActive()) {
-            workspace()->focusToNull();
-        }
-    } else {
-        shade_geometry_change = true;
-        if (decoratedWindow()) {
-            decoratedWindow()->signalShadeChange();
-        }
-        QSizeF s(implicitSize());
-        shade_geometry_change = false;
-        resize(s);
-        setGeometryRestore(moveResizeGeometry());
-        if ((shadeMode() == ShadeHover || shadeMode() == ShadeActivated) && rules()->checkAcceptFocus(info->input())) {
-            setActive(true);
-        }
-        if (shadeMode() == ShadeHover) {
-            QList<Window *> order = workspace()->stackingOrder();
-            // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
-            shade_below = nullptr;
-            // this is likely related to the index parameter?!
-            for (int idx = order.indexOf(this) + 1; idx < order.count(); ++idx) {
-                shade_below = qobject_cast<X11Window *>(order.at(idx));
-                if (shade_below) {
-                    break;
-                }
-            }
-            if (shade_below && shade_below->isNormalWindow()) {
-                workspace()->raiseWindow(this);
-            } else {
-                shade_below = nullptr;
-            }
-        }
-        map();
-        if (isActive()) {
-            workspace()->requestFocus(this);
-        }
-    }
-    info->setState(isShade() ? NET::Shaded : NET::States(), NET::Shaded);
-    info->setState((isShade() || !isShown()) ? NET::Hidden : NET::States(), NET::Hidden);
-    updateVisibility();
-    updateAllowedActions();
 }
 
 void X11Window::updateVisibility()
@@ -1343,12 +1264,8 @@ void X11Window::internalHide()
 
 void X11Window::map()
 {
-    if (!isShade()) {
-        m_client.map();
-        exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
-    } else {
-        exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
-    }
+    m_client.map();
+    exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
 }
 
 void X11Window::unmap()
@@ -2014,9 +1931,6 @@ void X11Window::updateAllowedActions(bool force)
     if (isMinimizable()) {
         allowed_actions |= NET::ActionMinimize;
     }
-    if (isShadeable()) {
-        allowed_actions |= NET::ActionShade;
-    }
     // Sticky state not supported
     if (isMaximizable()) {
         allowed_actions |= NET::ActionMax;
@@ -2038,9 +1952,6 @@ void X11Window::updateAllowedActions(bool force)
     if ((allowed_actions & relevant) != (old_allowed_actions & relevant)) {
         if ((allowed_actions & NET::ActionMinimize) != (old_allowed_actions & NET::ActionMinimize)) {
             Q_EMIT minimizeableChanged(allowed_actions & NET::ActionMinimize);
-        }
-        if ((allowed_actions & NET::ActionShade) != (old_allowed_actions & NET::ActionShade)) {
-            Q_EMIT shadeableChanged(allowed_actions & NET::ActionShade);
         }
         if ((allowed_actions & NET::ActionMax) != (old_allowed_actions & NET::ActionMax)) {
             Q_EMIT maximizeableChanged(allowed_actions & NET::ActionMax);
@@ -2257,15 +2168,6 @@ QSizeF X11Window::nextClientSizeToFrameSize(const QSizeF &size) const
 QRectF X11Window::nextFrameRectToBufferRect(const QRectF &rect) const
 {
     return nextFrameRectToClientRect(rect);
-}
-
-/**
- * Returns the natural size of the window, if the window is not shaded it's the same
- * as size().
- */
-QSizeF X11Window::implicitSize() const
-{
-    return clientSizeToFrameSize(Xcb::fromXNative(m_client.geometry().size()));
 }
 
 pid_t X11Window::pid() const
@@ -3487,12 +3389,6 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
 
 QRectF X11Window::resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb_gravity_t gravity) const
 {
-    Q_ASSERT(!shade_geometry_change);
-    if (isShade()) {
-        if (h == borderTop() + borderBottom()) {
-            qCWarning(KWIN_CORE) << "Shaded geometry passed for size:";
-        }
-    }
     qreal newx = geometry.x();
     qreal newy = geometry.y();
     QRectF area = workspace()->clientArea(WorkArea, this, geometry.center());
@@ -3679,36 +3575,13 @@ void X11Window::blockGeometryUpdates(bool block)
  */
 void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    // Ok, the shading geometry stuff. Generally, code doesn't care about shaded geometry,
-    // simply because there are too many places dealing with geometry. Those places
-    // ignore shaded state and use normal geometry, which they usually should get
-    // from adjustedSize(). Such geometry comes here, and if the window is shaded,
-    // the geometry is used only for client_size, since that one is not used when
-    // shading. Then the frame geometry is adjusted for the shaded geometry.
-    // This gets more complicated in the case the code does only something like
-    // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
-    // Such code is wrong and should be changed to handle the case when the window is shaded,
-    // for example using X11Window::clientSize()
-
     if (isUnmanaged()) {
         qCWarning(KWIN_CORE) << "Cannot move or resize unmanaged window" << this;
         return;
     }
 
-    QRectF frameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
-    QRectF clientGeometry = m_clientGeometry;
-    if (shade_geometry_change) {
-        ; // nothing
-    } else if (isShade()) {
-        if (frameGeometry.height() == borderTop() + borderBottom()) {
-            qCDebug(KWIN_CORE) << "Shaded geometry passed for size:";
-        } else {
-            clientGeometry = nextFrameRectToClientRect(frameGeometry);
-            frameGeometry.setHeight(borderTop() + borderBottom());
-        }
-    } else {
-        clientGeometry = nextFrameRectToClientRect(frameGeometry);
-    }
+    const QRectF frameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
+    const QRectF clientGeometry = nextFrameRectToClientRect(frameGeometry);
     const QRectF bufferGeometry = nextFrameRectToBufferRect(frameGeometry);
     const qreal bufferScale = kwinApp()->xwaylandScale();
 
@@ -3757,10 +3630,6 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 
 void X11Window::configure(const QRect &nativeGeometry)
 {
-    if (shade_geometry_change || isShade()) {
-        return;
-    }
-
     if (m_client.size() != nativeGeometry.size()) {
         m_client.setGeometry(nativeGeometry);
     } else if (m_client.position() != nativeGeometry.topLeft()) {
@@ -3815,12 +3684,7 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
     max_mode = mode;
 
     // save sizes for restoring, if maximalizing
-    QSizeF sz;
-    if (isShade()) {
-        sz = implicitSize();
-    } else {
-        sz = size();
-    }
+    QSizeF sz = size();
 
     if (!restore.isNull()) {
         setGeometryRestore(restore);
@@ -3992,8 +3856,6 @@ void X11Window::setFullScreen(bool set)
     if (!isFullScreenable()) {
         return;
     }
-
-    setShade(ShadeNone);
 
     if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
@@ -4295,7 +4157,6 @@ void X11Window::updateUserTime(xcb_timestamp_t time)
         && (m_userTime == XCB_TIME_CURRENT_TIME
             || NET::timestampCompare(time, m_userTime) > 0)) { // time > user_time
         m_userTime = time;
-        shade_below = nullptr; // do not hover re-shade a window after it got interaction
     }
     group()->updateUserTime(m_userTime);
 }

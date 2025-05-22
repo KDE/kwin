@@ -55,7 +55,6 @@ public:
     QStringList checkActivity(QStringList activity, bool init = false) const;
     MaximizeMode checkMaximize(MaximizeMode mode, bool init = false) const;
     bool checkMinimize(bool minimized, bool init = false) const;
-    ShadeMode checkShade(ShadeMode shade, bool init = false) const;
     bool checkSkipTaskbar(bool skip, bool init = false) const;
     bool checkSkipPager(bool skip, bool init = false) const;
     bool checkSkipSwitcher(bool skip, bool init = false) const;
@@ -100,7 +99,6 @@ public:
         MaximizeVert = 1 << 3,
         MaximizeHoriz = 1 << 4,
         Minimize = 1 << 5,
-        Shade = 1 << 6,
         SkipTaskbar = 1 << 7,
         SkipPager = 1 << 8,
         SkipSwitcher = 1 << 9,
@@ -167,7 +165,6 @@ public:
     bool applyMaximizeVert(MaximizeMode &mode, bool init) const;
     bool applyMaximizeHoriz(MaximizeMode &mode, bool init) const;
     bool applyMinimize(bool &minimized, bool init) const;
-    bool applyShade(ShadeMode &shade, bool init) const;
     bool applySkipTaskbar(bool &skip, bool init) const;
     bool applySkipPager(bool &skip, bool init) const;
     bool applySkipSwitcher(bool &skip, bool init) const;
@@ -257,8 +254,6 @@ private:
     SetRule maximizehorizrule;
     bool minimize;
     SetRule minimizerule;
-    bool shade;
-    SetRule shaderule;
     bool skiptaskbar;
     SetRule skiptaskbarrule;
     bool skippager;

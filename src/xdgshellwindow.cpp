@@ -686,7 +686,7 @@ bool XdgToplevelWindow::isTransient() const
 
 bool XdgToplevelWindow::userCanSetNoBorder() const
 {
-    return (m_serverDecoration || m_xdgDecoration) && !isFullScreen() && !isShade();
+    return (m_serverDecoration || m_xdgDecoration) && !isFullScreen();
 }
 
 bool XdgToplevelWindow::noBorder() const
@@ -1012,7 +1012,7 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, Gravity gravi
     if (!anchor) {
         return;
     }
-    if (!isResizable() || isShade()) {
+    if (!isResizable()) {
         return;
     }
     if (isInteractiveMoveResize()) {

@@ -404,14 +404,6 @@ bool Workspace::takeActivity(Window *window, ActivityFlags flags)
     if (!flags.testFlag(ActivityFocusForce) && window->isSplash()) {
         flags &= ~ActivityFocus; // toplevel menus don't take focus if not forced
     }
-    if (window->isShade()) {
-        if (window->wantsInput() && (flags & ActivityFocus)) {
-            // window cannot accept focus, but at least the window should be active (window menu, et. al. )
-            window->setActive(true);
-            focusToNull();
-        }
-        flags &= ~ActivityFocus;
-    }
     if (!window->isShown()) { // shouldn't happen, call activateWindow() if needed
         qCWarning(KWIN_CORE) << "takeActivity: not shown";
         return false;
@@ -444,7 +436,7 @@ Window *Workspace::windowUnderMouse(Output *output) const
 
         // rule out windows which are not really visible.
         // the screen test is rather superfluous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
-        if (!(window->isShown() && window->isOnCurrentDesktop() && window->isOnCurrentActivity() && window->isOnOutput(output) && !window->isShade())) {
+        if (!(window->isShown() && window->isOnCurrentDesktop() && window->isOnCurrentActivity() && window->isOnOutput(output))) {
             continue;
         }
 

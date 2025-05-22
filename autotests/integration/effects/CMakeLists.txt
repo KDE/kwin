@@ -1,6 +1,5 @@
 integrationTest(NAME testTranslucency SRCS translucency_test.cpp LIBS XCB::ICCCM BUILTIN_EFFECTS)
 integrationTest(NAME testSlidingPopups SRCS slidingpopups_test.cpp BUILTIN_EFFECTS)
-integrationTest(NAME testShadeWobblyWindows SRCS wobbly_shade_test.cpp LIBS XCB::ICCCM BUILTIN_EFFECTS)
 integrationTest(NAME testScriptedEffects SRCS scripted_effects_test.cpp LIBS KF6::GlobalAccel BUILTIN_EFFECTS)
 integrationTest(NAME testToplevelOpenCloseAnimation SRCS toplevel_open_close_animation_test.cpp BUILTIN_EFFECTS)
 integrationTest(NAME testPopupOpenCloseAnimation SRCS popup_open_close_animation_test.cpp LIBS KF6::I18n KDecoration3::KDecoration3Private BUILTIN_EFFECTS)
