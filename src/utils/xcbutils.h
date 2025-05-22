@@ -1265,6 +1265,13 @@ public:
         }
         return xcb_randr_get_screen_resources_names(data());
     }
+    inline xcb_randr_output_t *outputs()
+    {
+        if (isNull()) {
+            return nullptr;
+        }
+        return xcb_randr_get_screen_resources_outputs(data());
+    }
 };
 
 XCB_WRAPPER_DATA(CrtcGammaData, xcb_randr_get_crtc_gamma, xcb_randr_crtc_t)

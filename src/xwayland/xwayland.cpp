@@ -649,27 +649,23 @@ void Xwayland::updatePrimary()
         return;
     }
     Xcb::RandR::ScreenResources resources(kwinApp()->x11RootWindow());
-    xcb_randr_crtc_t *crtcs = resources.crtcs();
-    if (!crtcs) {
+    auto outputs = resources.outputs();
+    if (!outputs) {
         qCWarning(KWIN_XWL) << "Failed to get RandR screen resources or CRTCs for updating primary output.";
         return;
     }
 
     Output *const primaryOutput = workspace()->outputOrder().front();
-    const QRect primaryOutputGeometry = Xcb::toXNative(primaryOutput->geometryF());
-    for (int i = 0; i < resources->num_crtcs; ++i) {
-        Xcb::RandR::CrtcInfo crtcInfo(crtcs[i], resources->config_timestamp);
-        const QRect geometry = crtcInfo.rect();
-        if (geometry.topLeft() == primaryOutputGeometry.topLeft()) {
-            auto outputs = crtcInfo.outputs();
-            if (outputs && crtcInfo->num_outputs > 0) {
-                qCDebug(KWIN_XWL) << "Setting primary" << primaryOutput << outputs[0];
-                xcb_randr_set_output_primary(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), outputs[0]);
-                return;
-            }
+    const QString primaryOutputName = primaryOutput->name();
+    for (int i = 0; i < resources->num_outputs; i++) {
+        Xcb::RandR::OutputInfo outputInfo(outputs[i], resources->config_timestamp);
+        if (outputInfo.name() == primaryOutputName) {
+            qCDebug(KWIN_XWL) << "Setting primary" << primaryOutput << outputs[i];
+            xcb_randr_set_output_primary(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), outputs[i]);
+            return;
         }
     }
-    qCDebug(KWIN_XWL) << "Could not find a matching X RandR CRTC/output to set as primary for" << primaryOutput;
+    qCWarning(KWIN_XWL) << "Could not find a matching X RandR CRTC/output to set as primary for" << primaryOutput;
 }
 
 bool Xwayland::createX11Connection()
