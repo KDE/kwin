@@ -267,14 +267,8 @@ IccProfile::Expected IccProfile::load(const QString &path)
     std::shared_ptr<ColorTransformation> vcgt;
     cmsToneCurve **vcgtTag = static_cast<cmsToneCurve **>(cmsReadTag(handle, cmsSigVcgtTag));
     if (vcgtTag && vcgtTag[0]) {
-        // Need to duplicate the VCGT tone curves as they are owned by the profile.
-        cmsToneCurve *toneCurves[] = {
-            cmsDupToneCurve(vcgtTag[0]),
-            cmsDupToneCurve(vcgtTag[1]),
-            cmsDupToneCurve(vcgtTag[2]),
-        };
         std::vector<std::unique_ptr<ColorPipelineStage>> stages;
-        stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves)));
+        stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, vcgtTag)));
         vcgt = std::make_shared<ColorTransformation>(std::move(stages));
     }
 
@@ -403,6 +397,9 @@ IccProfile::Expected IccProfile::load(const QString &path)
     }
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
     stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, toneCurves.size(), toneCurves.data())));
+    for (auto toneCurve : toneCurves) {
+        cmsFreeToneCurve(toneCurve);
+    }
     const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
     return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, vcgt, relativeBlackPoint, maxBrightness);
 }
