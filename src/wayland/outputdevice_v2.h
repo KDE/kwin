@@ -85,6 +85,8 @@ private:
     void updateDdcCiAllowed();
     void updateMaxBpc();
     void updateEdrPolicy();
+    void updateSupportedPixelEncodings();
+    void updatePixelEncoding();
 
     void scheduleDone();
 

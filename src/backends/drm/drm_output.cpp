@@ -562,6 +562,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
     next.automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
     next.edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
+    next.pixelEncoding = props->pixelEncoding.value_or(m_state.pixelEncoding);
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     setState(next);

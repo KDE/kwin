@@ -116,6 +116,12 @@ public:
         BT2020_RGB,
         BT2020_YCC,
     };
+    enum class PixelEncoding : uint64_t {
+        Auto = 0,
+        RGB,
+        YCbCr444,
+        YCbCr420,
+    };
 
     DrmProperty crtcId;
     DrmProperty nonDesktop;
@@ -135,6 +141,7 @@ public:
     DrmEnumProperty<ScalingMode> scalingMode;
     DrmEnumProperty<Colorspace> colorspace;
     DrmProperty path;
+    DrmEnumProperty<PixelEncoding> pixelEncoding;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);

@@ -60,6 +60,7 @@ public:
     std::optional<bool> allowDdcCi;
     std::optional<uint32_t> maxBitsPerColor;
     std::optional<Output::EdrPolicy> edrPolicy;
+    std::optional<Output::PixelEncoding> pixelEncoding;
 };
 
 class KWIN_EXPORT OutputConfiguration

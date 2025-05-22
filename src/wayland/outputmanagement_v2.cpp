@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 16;
+static const quint32 s_version = 17;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -76,6 +76,7 @@ protected:
     void kde_output_configuration_v2_set_ddc_ci_allowed(Resource *resource, ::wl_resource *outputdevice, uint32_t allow_ddc_ci) override;
     void kde_output_configuration_v2_set_max_bits_per_color(Resource *resource, struct ::wl_resource *outputdevice, uint32_t max_bpc) override;
     void kde_output_configuration_v2_set_edr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t edrPolicy) override;
+    void kde_output_configuration_v2_set_pixel_encoding(Resource *resource, struct ::wl_resource *outputdevice, uint32_t pixelEncoding) override;
 
     void sendFailure(Resource *resource, const QString &reason);
 };
@@ -459,6 +460,40 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_edr_policy(
         config.changeSet(output->handle())->edrPolicy = Output::EdrPolicy::Always;
         break;
     }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_pixel_encoding(Resource *resource, struct ::wl_resource *outputdevice, uint32_t pixelEncoding)
+{
+    if (invalid) {
+        return;
+    }
+    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
+    if (!output) {
+        return;
+    }
+    Output::PixelEncoding value = Output::PixelEncoding::Auto;
+    switch (pixelEncoding) {
+    case pixel_encoding_auto:
+        value = Output::PixelEncoding::Auto;
+        break;
+    case pixel_encoding_rgb:
+        value = Output::PixelEncoding::RGB;
+        break;
+    case pixel_encoding_ycbcr444:
+        value = Output::PixelEncoding::YCbCr444;
+        break;
+    case pixel_encoding_ycbcr420:
+        value = Output::PixelEncoding::YCbCr420;
+        break;
+    default:
+        failureReason = i18n("Attempted to set invalid pixel encoding");
+        return;
+    }
+    if (!output->handle()->supportedPixelEncodings().contains(value)) {
+        failureReason = i18n("Attempted to set unsupported pixel encoding");
+        return;
+    }
+    config.changeSet(output->handle())->pixelEncoding = value;
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resource *resource)

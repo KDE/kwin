@@ -17,13 +17,14 @@
 #include <QPointer>
 #include <QString>
 #include <QTimer>
+#include <ranges>
 
 #include "qwayland-server-kde-output-device-v2.h"
 
 namespace KWin
 {
 
-static const quint32 s_version = 16;
+static const quint32 s_version = 17;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -97,6 +98,11 @@ static QtWaylandServer::kde_output_device_v2::edr_policy kwinEdrPolicyToOutputDe
     return static_cast<QtWaylandServer::kde_output_device_v2::edr_policy>(policy);
 }
 
+static QtWaylandServer::kde_output_device_v2::pixel_encoding kwinPixelEncodingToOutputDevice(Output::PixelEncoding encoding)
+{
+    return static_cast<QtWaylandServer::kde_output_device_v2::pixel_encoding>(encoding);
+}
+
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
 {
 public:
@@ -134,6 +140,8 @@ public:
     void sendDdcCiAllowed(Resource *resource);
     void sendMaxBpc(Resource *resource);
     void sendEdrPolicy(Resource *resource);
+    void sendSupportedPixelEncodings(Resource *resource);
+    void sendPixelEncoding(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -180,6 +188,8 @@ public:
     Output::BpcRange m_maxBpcRange;
     std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
     Output::EdrPolicy m_edrPolicy = Output::EdrPolicy::Always;
+    QList<Output::PixelEncoding> m_supportedPixelEncodings;
+    Output::PixelEncoding m_pixelEncoding = Output::PixelEncoding::Auto;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -273,6 +283,8 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateDdcCiAllowed();
     updateMaxBpc();
     updateEdrPolicy();
+    updateSupportedPixelEncodings();
+    updatePixelEncoding();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -311,6 +323,8 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
     connect(handle, &Output::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
     connect(handle, &Output::edrPolicyChanged, this, &OutputDeviceV2Interface::updateEdrPolicy);
+    connect(handle, &Output::supportedPixelEncodingsChanged, this, &OutputDeviceV2Interface::updateSupportedPixelEncodings);
+    connect(handle, &Output::pixelEncodingChanged, this, &OutputDeviceV2Interface::updatePixelEncoding);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -394,6 +408,8 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendDdcCiAllowed(resource);
     sendMaxBpc(resource);
     sendEdrPolicy(resource);
+    sendSupportedPixelEncodings(resource);
+    sendPixelEncoding(resource);
     sendDone(resource);
 }
 
@@ -602,6 +618,23 @@ void OutputDeviceV2InterfacePrivate::sendEdrPolicy(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_EDR_POLICY_SINCE_VERSION) {
         send_edr_policy(resource->handle, kwinEdrPolicyToOutputDevice(m_edrPolicy));
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendSupportedPixelEncodings(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_SUPPORTED_PIXEL_ENCODINGS_SINCE_VERSION) {
+        QList<uint32_t> array = m_supportedPixelEncodings | std::views::transform([](Output::PixelEncoding value) {
+            return uint32_t(value);
+        }) | std::ranges::to<QList<uint32_t>>();
+        send_supported_pixel_encodings(resource->handle, QByteArray::fromRawData(reinterpret_cast<const char *>(array.data()), array.size() * sizeof(uint32_t)));
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendPixelEncoding(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_PIXEL_ENCODING_SINCE_VERSION) {
+        send_pixel_encoding(resource->handle, uint32_t(m_pixelEncoding));
     }
 }
 
@@ -1040,6 +1073,30 @@ void OutputDeviceV2Interface::updateEdrPolicy()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendEdrPolicy(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateSupportedPixelEncodings()
+{
+    if (d->m_supportedPixelEncodings != d->m_handle->supportedPixelEncodings()) {
+        d->m_supportedPixelEncodings = d->m_handle->supportedPixelEncodings();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendSupportedPixelEncodings(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updatePixelEncoding()
+{
+    if (d->m_pixelEncoding != d->m_handle->pixelEncoding()) {
+        d->m_pixelEncoding = d->m_handle->pixelEncoding();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendPixelEncoding(resource);
         }
         scheduleDone();
     }

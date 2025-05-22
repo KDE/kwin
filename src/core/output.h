@@ -210,6 +210,14 @@ public:
     };
     Q_ENUM(EdrPolicy);
 
+    enum class PixelEncoding {
+        Auto = 0,
+        RGB,
+        YCbCr444,
+        YCbCr420,
+    };
+    Q_ENUM(PixelEncoding);
+
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
 
@@ -409,6 +417,9 @@ public:
     std::optional<uint32_t> automaticMaxBitsPerColorLimit() const;
     EdrPolicy edrPolicy() const;
 
+    QList<PixelEncoding> supportedPixelEncodings() const;
+    PixelEncoding pixelEncoding() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -480,6 +491,8 @@ Q_SIGNALS:
     void allowDdcCiChanged();
     void maxBitsPerColorChanged();
     void edrPolicyChanged();
+    void pixelEncodingChanged();
+    void supportedPixelEncodingsChanged();
 
 protected:
     struct Information
@@ -502,6 +515,7 @@ protected:
         std::optional<double> maxAverageBrightness;
         double minBrightness = 0;
         BpcRange bitsPerColorRange;
+        QList<PixelEncoding> supportedPixelEncodings = {PixelEncoding::Auto};
     };
 
     struct State
@@ -551,6 +565,7 @@ protected:
         uint32_t maxBitsPerColor = 0;
         std::optional<uint32_t> automaticMaxBitsPerColorLimit;
         EdrPolicy edrPolicy = EdrPolicy::Always;
+        PixelEncoding pixelEncoding = PixelEncoding::Auto;
     };
 
     void setInformation(const Information &information);

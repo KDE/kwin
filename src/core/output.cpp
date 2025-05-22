@@ -558,6 +558,9 @@ void Output::setInformation(const Information &information)
     if (oldInfo.capabilities != information.capabilities) {
         Q_EMIT capabilitiesChanged();
     }
+    if (oldInfo.supportedPixelEncodings != information.supportedPixelEncodings) {
+        Q_EMIT supportedPixelEncodingsChanged();
+    }
 }
 
 void Output::setState(const State &state)
@@ -651,6 +654,9 @@ void Output::setState(const State &state)
     }
     if (oldState.edrPolicy != state.edrPolicy) {
         Q_EMIT edrPolicyChanged();
+    }
+    if (oldState.pixelEncoding != state.pixelEncoding) {
+        Q_EMIT pixelEncodingChanged();
     }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
@@ -874,6 +880,16 @@ std::optional<uint32_t> Output::automaticMaxBitsPerColorLimit() const
 Output::EdrPolicy Output::edrPolicy() const
 {
     return m_state.edrPolicy;
+}
+
+QList<Output::PixelEncoding> Output::supportedPixelEncodings() const
+{
+    return m_information.supportedPixelEncodings;
+}
+
+Output::PixelEncoding Output::pixelEncoding() const
+{
+    return m_state.pixelEncoding;
 }
 
 } // namespace KWin

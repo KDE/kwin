@@ -378,6 +378,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
                 .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
                 .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
+                .pixelEncoding = changeSet->pixelEncoding.value_or(output->pixelEncoding()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -428,6 +429,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowDdcCi = output->allowDdcCi(),
                 .maxBitsPerColor = output->maxBitsPerColor(),
                 .edrPolicy = output->edrPolicy(),
+                .pixelEncoding = output->pixelEncoding(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -492,6 +494,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .allowDdcCi = state.allowDdcCi,
             .maxBitsPerColor = state.maxBitsPerColor,
             .edrPolicy = state.edrPolicy,
+            .pixelEncoding = state.pixelEncoding,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -623,6 +626,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .allowDdcCi = existingData.allowDdcCi.value_or(true),
             .maxBitsPerColor = existingData.maxBitsPerColor,
             .edrPolicy = existingData.edrPolicy.value_or(Output::EdrPolicy::Always),
+            .pixelEncoding = existingData.pixelEncoding.value_or(Output::PixelEncoding::Auto),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -1016,6 +1020,18 @@ void OutputConfigurationStore::load()
                 state.edrPolicy = Output::EdrPolicy::Always;
             }
         }
+        if (const auto it = data.find("pixelEncoding"); it != data.end()) {
+            const auto str = it->toString();
+            if (str == "auto") {
+                state.pixelEncoding = Output::PixelEncoding::Auto;
+            } else if (str == "rgb") {
+                state.pixelEncoding = Output::PixelEncoding::RGB;
+            } else if (str == "ycbcr444") {
+                state.pixelEncoding = Output::PixelEncoding::YCbCr444;
+            } else if (str == "ycbcr420") {
+                state.pixelEncoding = Output::PixelEncoding::YCbCr420;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1296,6 +1312,22 @@ void OutputConfigurationStore::save()
                 break;
             case Output::EdrPolicy::Always:
                 o["edrPolicy"] = "always";
+                break;
+            }
+        }
+        if (output.pixelEncoding.has_value()) {
+            switch (*output.pixelEncoding) {
+            case Output::PixelEncoding::Auto:
+                o["pixelEncoding"] = "auto";
+                break;
+            case Output::PixelEncoding::RGB:
+                o["pixelEncoding"] = "rgb";
+                break;
+            case Output::PixelEncoding::YCbCr444:
+                o["pixelEncoding"] = "ycbcr444";
+                break;
+            case Output::PixelEncoding::YCbCr420:
+                o["pixelEncoding"] = "ycbcr420";
                 break;
             }
         }
