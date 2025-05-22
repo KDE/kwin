@@ -86,6 +86,11 @@ std::unique_ptr<ColorTransformation> ColorTransformation::createScalingTransform
     auto g = cmsBuildParametricToneCurve(nullptr, 2, curveParams.data());
     curveParams = {1.0, scale.z(), 0.0};
     auto b = cmsBuildParametricToneCurve(nullptr, 2, curveParams.data());
+    const auto guard = qScopeGuard([r, g, b]() {
+        cmsFreeToneCurve(r);
+        cmsFreeToneCurve(g);
+        cmsFreeToneCurve(b);
+    });
     if (!r || !g || !b) {
         qCWarning(KWIN_CORE) << "Failed to build tone curves";
         return nullptr;

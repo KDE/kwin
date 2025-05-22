@@ -14,8 +14,6 @@
 
 #include <QTimer>
 
-#include <lcms2.h>
-
 namespace KWin
 {
 
