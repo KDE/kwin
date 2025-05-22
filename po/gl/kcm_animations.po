@@ -1,33 +1,32 @@
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2025 Alexander Yavorsky <kekcuha@gmail.com>
+# SPDX-FileCopyrightText: 2025 Adrián Chaves (Gallaecio)
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-25 00:43+0000\n"
-"PO-Revision-Date: 2025-05-20 13:46+0300\n"
-"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
-"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
-"Language: ru\n"
+"PO-Revision-Date: 2025-05-21 09:01+0200\n"
+"Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
+"Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
-"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 25.04.1\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "None"
-msgstr "Не использовать"
+msgstr "Ningunha"
 
 #: ui/main.qml:37
 #, kde-format
 msgid "Global animation speed:"
-msgstr "Скорость воспроизведения эффектов:"
+msgstr "Velocidade global das animacións:"
 
 #: ui/main.qml:69
 #, kde-kuit-format
@@ -38,71 +37,70 @@ msgid ""
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
 msgstr ""
-"Некоторые приложения не поддерживают этот параметр: в частности, приложения "
-"на GTK не могут изменить скорость воспроизведения эффектов, но всё равно "
-"отключают анимации, если значение параметра <interface>Скорость "
-"воспроизведения эффектов</interface> установлено в <interface>Быстро</"
-"interface>."
+"Algunhas aplicacións non son compatíbeis con esta opción: en concreto, as "
+"aplicacións de GTK non poden cambiar a duración das animación, aínda que si "
+"poden desactivar as animacións se a <interface>velocidade das animacións</"
+"interface> é <interface>instantánea</interface>."
 
 #: ui/main.qml:76
 #, kde-format
 msgctxt "Animation speed"
 msgid "Slow"
-msgstr "Медленно"
+msgstr "Lenta"
 
 #: ui/main.qml:85
 #, kde-format
 msgctxt "Animation speed"
 msgid "Instant"
-msgstr "Быстро"
+msgstr "Instantánea"
 
 #: ui/main.qml:93
 #, kde-format
 msgctxt "@title:group"
 msgid "Desktop animations"
-msgstr "Эффекты:"
+msgstr "Animacións do escritorio"
 
 #: ui/main.qml:97
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window open/close:"
-msgstr "Открытие и закрытие окон:"
+msgstr "Apertura e peche de xanelas:"
 
 #: ui/main.qml:98
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window maximize:"
-msgstr "Распахивание окон:"
+msgstr "Maximizar xanelas:"
 
 #: ui/main.qml:99
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window minimize:"
-msgstr "Сворачивание окон:"
+msgstr "Minimizar xanelas:"
 
 #: ui/main.qml:100
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window full screen:"
-msgstr "Переход в полноэкранный режим:"
+msgstr "Xanela a pantalla completa:"
 
 #: ui/main.qml:101
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Peek at desktop:"
-msgstr "Взглянуть на рабочий стол:"
+msgstr "Ollar o escritorio:"
 
 #: ui/main.qml:102
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Virtual desktop switching:"
-msgstr "Переключение виртуальных рабочих столов:"
+msgstr "Cambio de escritorio virtual:"
 
 #: ui/main.qml:130 ui/main.qml:197
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "Настроить…"
+msgstr "Configurar…"
 
 #: ui/main.qml:157
 #, kde-format
@@ -115,4 +113,4 @@ msgstr "%1:"
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"
-msgstr "Дополнительные параметры:"
+msgstr "Configuración de efectos adicionais:"
