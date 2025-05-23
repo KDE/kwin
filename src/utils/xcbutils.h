@@ -61,6 +61,8 @@ qreal KWIN_EXPORT nativeRound(qreal value);
  */
 QRectF KWIN_EXPORT nativeFloor(const QRectF &value);
 
+QString KWIN_EXPORT atomName(xcb_atom_t atom);
+
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());

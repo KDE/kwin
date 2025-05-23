@@ -82,8 +82,6 @@
 #include <QDBusConnection>
 #include <QDBusPendingCall>
 #include <QMetaProperty>
-// xcb
-#include <xcb/xinerama.h>
 
 namespace KWin
 {
@@ -1118,6 +1116,16 @@ Output *Workspace::outputAt(const QPointF &pos) const
         }
     }
     return bestOutput;
+}
+
+Output *Workspace::findOutput(const QString &name) const
+{
+    for (Output *output : std::as_const(m_outputs)) {
+        if (output->name() == name) {
+            return output;
+        }
+    }
+    return nullptr;
 }
 
 Output *Workspace::findOutput(Output *reference, Direction direction, bool wrapAround) const
@@ -2423,31 +2431,26 @@ Output *Workspace::xineramaIndexToOutput(int index) const
         return nullptr;
     }
 
-    const UniqueCPtr<xcb_xinerama_is_active_reply_t> active{xcb_xinerama_is_active_reply(connection, xcb_xinerama_is_active(connection), nullptr)};
-    if (!active || !active->state) {
+    xcb_randr_get_monitors_cookie_t cookie = xcb_randr_get_monitors(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), 1);
+    const UniqueCPtr<xcb_randr_get_monitors_reply_t> monitors(xcb_randr_get_monitors_reply(kwinApp()->x11Connection(), cookie, nullptr));
+    if (!monitors) {
         return nullptr;
     }
 
-    const UniqueCPtr<xcb_xinerama_query_screens_reply_t> screens(xcb_xinerama_query_screens_reply(connection, xcb_xinerama_query_screens(connection), nullptr));
-    if (!screens) {
-        return nullptr;
-    }
-
-    const int infoCount = xcb_xinerama_query_screens_screen_info_length(screens.get());
-    if (index < 0 || index >= infoCount) {
-        return nullptr;
-    }
-
-    const xcb_xinerama_screen_info_t *infos = xcb_xinerama_query_screens_screen_info(screens.get());
-    const QRect needle(infos[index].x_org, infos[index].y_org, infos[index].width, infos[index].height);
-
-    for (Output *output : std::as_const(m_outputs)) {
-        if (Xcb::toXNative(output->geometryF()) == needle) {
-            return output;
+    xcb_randr_monitor_info_t *monitorInfo = nullptr;
+    for (auto it = xcb_randr_get_monitors_monitors_iterator(monitors.get()); it.rem; xcb_randr_monitor_info_next(&it)) {
+        const int current = monitors->nMonitors - it.rem;
+        if (current == index) {
+            monitorInfo = it.data;
+            break;
         }
     }
 
-    return nullptr;
+    if (!monitorInfo) {
+        return nullptr;
+    }
+
+    return findOutput(Xcb::atomName(monitorInfo->name));
 }
 #endif
 
