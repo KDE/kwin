@@ -155,6 +155,9 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         if (m_connector->contentType.isValid()) {
             m_connector->contentType.setEnumLegacy(m_pending.contentType);
         }
+        if (m_connector->maxBpc.isValid()) {
+            m_connector->maxBpc.setPropertyLegacy(8);
+        }
         setCursorLegacy();
     }
     if (!m_connector->dpms.setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {

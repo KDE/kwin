@@ -70,8 +70,8 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, DrmPipeline *pip
         .maxAverageBrightness = edid->desiredMaxFrameAverageLuminance(),
         .minBrightness = edid->desiredMinLuminance(),
         .bitsPerColorRange = BpcRange{
-            .min = uint32_t(m_connector->maxBpc.minValue()),
-            .max = uint32_t(m_connector->maxBpc.maxValue()),
+            .min = m_gpu->atomicModeSetting() ? uint32_t(m_connector->maxBpc.minValue()) : 8,
+            .max = m_gpu->atomicModeSetting() ? uint32_t(m_connector->maxBpc.maxValue()) : 8,
         },
     });
     updateConnectorProperties();
@@ -318,8 +318,8 @@ void DrmOutput::updateInformation()
     nextInfo.minBrightness = edid->desiredMinLuminance();
     // TODO narrow that down by parsing the EDID and checking what the display supports
     nextInfo.bitsPerColorRange = BpcRange{
-        .min = uint32_t(m_connector->maxBpc.minValue()),
-        .max = uint32_t(m_connector->maxBpc.maxValue()),
+        .min = m_gpu->atomicModeSetting() ? uint32_t(m_connector->maxBpc.minValue()) : 8,
+        .max = m_gpu->atomicModeSetting() ? uint32_t(m_connector->maxBpc.maxValue()) : 8,
     };
     setInformation(nextInfo);
 }
