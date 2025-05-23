@@ -581,6 +581,12 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     if (!slot) {
         return nullptr;
     }
+    if (!m_gpu->atomicModeSetting()) {
+        EglContext::currentContext()->pushFramebuffer(slot->framebuffer());
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EglContext::currentContext()->popFramebuffer();
+    }
     if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr, infiniteRegion())) {
         surface->currentSlot = slot;
         surface->currentFramebuffer = ret;
