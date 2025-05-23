@@ -672,5 +672,20 @@ QRectF nativeFloor(const QRectF &rect)
                                       nativeFloor(outputRect.width()), nativeFloor(outputRect.height())));
 }
 
+QString atomName(xcb_atom_t atom)
+{
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+    xcb_get_atom_name_cookie_t nameCookie = xcb_get_atom_name(xcbConn, atom);
+    xcb_get_atom_name_reply_t *nameReply = xcb_get_atom_name_reply(xcbConn, nameCookie, nullptr);
+    if (!nameReply) {
+        return QString();
+    }
+
+    const size_t length = xcb_get_atom_name_name_length(nameReply);
+    QString name = QString::fromLatin1(xcb_get_atom_name_name(nameReply), length);
+    free(nameReply);
+    return name;
+}
+
 } // namespace Xcb
 } // namespace KWin

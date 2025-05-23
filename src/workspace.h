@@ -357,6 +357,7 @@ public:
         DirectionNext
     };
     Output *findOutput(Output *reference, Direction direction, bool wrapAround = false) const;
+    Output *findOutput(const QString &name) const;
     void switchToOutput(Output *output);
 
     QList<Output *> outputs() const;

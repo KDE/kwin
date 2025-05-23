@@ -45,21 +45,6 @@ xcb_atom_t Selection::mimeTypeToAtomLiteral(const QString &mimeType)
     return Xcb::Atom(mimeType.toLatin1(), false, kwinApp()->x11Connection());
 }
 
-QString Selection::atomName(xcb_atom_t atom)
-{
-    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
-    xcb_get_atom_name_cookie_t nameCookie = xcb_get_atom_name(xcbConn, atom);
-    xcb_get_atom_name_reply_t *nameReply = xcb_get_atom_name_reply(xcbConn, nameCookie, nullptr);
-    if (!nameReply) {
-        return QString();
-    }
-
-    const size_t length = xcb_get_atom_name_name_length(nameReply);
-    QString name = QString::fromLatin1(xcb_get_atom_name_name(nameReply), length);
-    free(nameReply);
-    return name;
-}
-
 QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
 {
     QStringList mimeTypes;
@@ -74,7 +59,7 @@ QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
     } else if (atom == atoms->targets || atom == atoms->timestamp) {
         // Ignore known ICCCM internal atoms
     } else {
-        const QString atomNameName = atomName(atom);
+        const QString atomNameName = Xcb::atomName(atom);
         // Ignore other non-mimetype atoms
         if (atomNameName.contains(QLatin1Char('/'))) {
             mimeTypes << atomNameName;
