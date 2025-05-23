@@ -93,7 +93,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "控制指针和键盘："
 
 #: ui/main.qml:156
 #, kde-format
@@ -101,4 +101,4 @@ msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "允许控制，无需询问用户授权"
