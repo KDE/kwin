@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1709310 $
+# Version: $Revision: 1709502 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 02:37+0000\n"
+"POT-Creation-Date: 2025-05-23 02:39+0000\n"
 "PO-Revision-Date: 2025-05-10 12:07+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -115,18 +115,18 @@ msgstr ""
 "Profil ICC \"%1\" jest uszkodzony, wejściowa/wyjściowa przestrzeń barw to "
 "nie RGB"
 
-#: core/iccprofile.cpp:283
+#: core/iccprofile.cpp:277
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "Profil ICC \"%1\" jest uszkodzony, bo nie zawiera punktu bieli"
 
-#: core/iccprofile.cpp:286
+#: core/iccprofile.cpp:280
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
 "Profil ICC \"%1\" jest uszkodzony, bo jego punkt bieli jest nieprawidłowy"
 
-#: core/iccprofile.cpp:299
+#: core/iccprofile.cpp:293
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -134,7 +134,7 @@ msgstr ""
 "Profil ICC \"%1\" jest uszkodzony, bo nie udało się przetworzyć macierzy "
 "chromatycznego dostosowania"
 
-#: core/iccprofile.cpp:304
+#: core/iccprofile.cpp:298
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -142,29 +142,29 @@ msgstr ""
 "Profil ICC \"%1\" jest uszkodzony, bo nie udało się odwrócić macierzy "
 "chromatycznego dostosowania"
 
-#: core/iccprofile.cpp:317
+#: core/iccprofile.cpp:311
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "Profil ICC \"%1\" jest uszkodzony, bo nie zawiera barw głównych"
 
-#: core/iccprofile.cpp:332
+#: core/iccprofile.cpp:326
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "Profil ICC \"%1\" jest uszkodzony, bo nie można obliczyć jego barw głównych"
 
-#: core/iccprofile.cpp:341
+#: core/iccprofile.cpp:335
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
 "Profil ICC \"%1\" jest uszkodzony, bo jego barwy główne są nieprawidłowe"
 
-#: core/iccprofile.cpp:357
+#: core/iccprofile.cpp:351
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "Profil ICC \"%1\" tylko ze znacznikami BToD jest nieobsługiwany"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:390
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Brakuje znaczników TRC w profilu barw"

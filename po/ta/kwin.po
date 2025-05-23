@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 02:37+0000\n"
+"POT-Creation-Date: 2025-05-23 02:39+0000\n"
 "PO-Revision-Date: 2025-04-13 18:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -106,21 +106,21 @@ msgstr ""
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. நிறவீச்சு RGB-யாக இல்லை"
 
-#: core/iccprofile.cpp:283
+#: core/iccprofile.cpp:277
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. வெள்ளை நிறம் எது என்பதை அது "
 "குறிப்பிடவில்லை."
 
-#: core/iccprofile.cpp:286
+#: core/iccprofile.cpp:280
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அது குறிப்பிடும் வெள்ளை நிறம் "
 "செல்லுபடியாகாதது."
 
-#: core/iccprofile.cpp:299
+#: core/iccprofile.cpp:293
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -128,7 +128,7 @@ msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் நிறமாற்ற அணியை (chromatic "
 "adaptation matrix-ஐ) புரிந்துகொள்ள முடியவில்லை."
 
-#: core/iccprofile.cpp:304
+#: core/iccprofile.cpp:298
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -136,31 +136,31 @@ msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் நிறமாற்ற அணியின் (chromatic "
 "adaptation matrix-இன்) நேர்மாறு அணியைக் கணிக்க முடியவில்லை."
 
-#: core/iccprofile.cpp:317
+#: core/iccprofile.cpp:311
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. முதன்மை நிரங்கள் எவை என்பதை அது "
 "குறிப்பிடவில்லை"
 
-#: core/iccprofile.cpp:332
+#: core/iccprofile.cpp:326
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் முதன்மை நிரங்களை கணிக்க முடியவில்லை"
 
-#: core/iccprofile.cpp:341
+#: core/iccprofile.cpp:335
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் முதன்மை நிரங்கள் செல்லுபடியாகாதவை"
 
-#: core/iccprofile.cpp:357
+#: core/iccprofile.cpp:351
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "BToD குறிச்சொற்களை மட்டும் கொண்ட \"%1\" எனும் ICC பயன்முறை ஆதரிக்கப்படாதது"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:390
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "நிறப்பயன்முறையில் TRC குறிச்சொற்களை காணவில்லை."
