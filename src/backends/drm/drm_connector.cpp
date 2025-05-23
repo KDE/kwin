@@ -372,27 +372,34 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
 {
     QList<std::shared_ptr<DrmConnectorMode>> ret;
     QSize maxSize;
-    uint32_t maxSizeRefreshRate = 0;
+    uint64_t maxSizeRefreshRate = 0;
     for (const auto &mode : std::as_const(m_driverModes)) {
         if (mode->size().width() >= maxSize.width() && mode->size().height() >= maxSize.height() && mode->refreshRate() >= maxSizeRefreshRate) {
             maxSize = mode->size();
             maxSizeRefreshRate = mode->refreshRate();
         }
     }
-    const uint64_t maxBandwidthEstimation = maxSize.width() * maxSize.height() * uint64_t(maxSizeRefreshRate);
+    const uint64_t maxBandwidthEstimation = maxSize.width() * maxSize.height() * maxSizeRefreshRate;
+    QList<uint64_t> refreshRates = {60000ul};
+    if (maxSizeRefreshRate > 60000ul) {
+        refreshRates.push_back(maxSizeRefreshRate);
+    }
     for (const auto size : s_commonModes) {
-        const uint64_t bandwidthEstimation = size.width() * size.height() * 60000ull;
-        if (size.width() > maxSize.width() || size.height() > maxSize.height() || bandwidthEstimation > maxBandwidthEstimation) {
-            continue;
+        for (uint64_t refreshRate : refreshRates) {
+            const uint64_t bandwidthEstimation = size.width() * size.height() * refreshRate;
+            if (size.width() > maxSize.width() || size.height() > maxSize.height() || bandwidthEstimation > maxBandwidthEstimation) {
+                continue;
+            }
+            const auto generatedMode = generateMode(size, refreshRate / 1000.0);
+            const bool alreadyExists = std::ranges::any_of(m_driverModes, [generatedMode](const auto &mode) {
+                return mode->size() == generatedMode->size()
+                    && std::round(mode->refreshRate() / 1000.0) == std::round(generatedMode->refreshRate() / 1000.0);
+            });
+            if (alreadyExists) {
+                continue;
+            }
+            ret.push_back(generatedMode);
         }
-        const auto generatedMode = generateMode(size, 60);
-        const bool alreadyExists = std::ranges::any_of(m_driverModes, [generatedMode](const auto &mode) {
-            return mode->size() == generatedMode->size() && mode->refreshRate() == generatedMode->refreshRate();
-        });
-        if (alreadyExists) {
-            continue;
-        }
-        ret << generatedMode;
     }
     return ret;
 }
