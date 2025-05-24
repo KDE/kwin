@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-29 00:42+0000\n"
+"POT-Creation-Date: 2025-05-24 00:43+0000\n"
 "PO-Revision-Date: 2024-07-07 21:15-0400\n"
 "Last-Translator: Janet Blackquill <uhhadd@gmail.com>\n"
 "Language-Team: C <kde-i18n-doc@kde.org>\n"
@@ -227,8 +227,8 @@ msgstr ""
 
 #: rulesmodel.cpp:447 rulesmodel.cpp:453 rulesmodel.cpp:459 rulesmodel.cpp:464
 #: rulesmodel.cpp:472 rulesmodel.cpp:478 rulesmodel.cpp:497 rulesmodel.cpp:513
-#: rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528 rulesmodel.cpp:533
-#: rulesmodel.cpp:540 rulesmodel.cpp:554 rulesmodel.cpp:559 rulesmodel.cpp:564
+#: rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528 rulesmodel.cpp:535
+#: rulesmodel.cpp:549 rulesmodel.cpp:554 rulesmodel.cpp:559
 #, kde-format
 msgid "Size & Position"
 msgstr "suli & poka"
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Screen"
 msgstr ""
 
-#: rulesmodel.cpp:518 rulesmodel.cpp:933
+#: rulesmodel.cpp:518 rulesmodel.cpp:927
 #, kde-format
 msgid "Fullscreen"
 msgstr ""
@@ -280,20 +280,15 @@ msgstr ""
 
 #: rulesmodel.cpp:528
 #, kde-format
-msgid "Shaded"
-msgstr ""
-
-#: rulesmodel.cpp:533
-#, kde-format
 msgid "Initial placement"
 msgstr ""
 
-#: rulesmodel.cpp:540
+#: rulesmodel.cpp:535
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr ""
 
-#: rulesmodel.cpp:543
+#: rulesmodel.cpp:538
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -305,22 +300,22 @@ msgid ""
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
 
-#: rulesmodel.cpp:554
+#: rulesmodel.cpp:549
 #, kde-format
 msgid "Minimum Size"
 msgstr ""
 
-#: rulesmodel.cpp:559
+#: rulesmodel.cpp:554
 #, kde-format
 msgid "Maximum Size"
 msgstr ""
 
-#: rulesmodel.cpp:564
+#: rulesmodel.cpp:559
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr ""
 
-#: rulesmodel.cpp:566
+#: rulesmodel.cpp:561
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -331,51 +326,51 @@ msgid ""
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
 
-#: rulesmodel.cpp:577
+#: rulesmodel.cpp:572
 #, kde-format
 msgid "Keep above other windows"
 msgstr ""
 
-#: rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:587 rulesmodel.cpp:593
-#: rulesmodel.cpp:599 rulesmodel.cpp:605
+#: rulesmodel.cpp:572 rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:588
+#: rulesmodel.cpp:594 rulesmodel.cpp:600
 #, kde-format
 msgid "Arrangement & Access"
 msgstr ""
 
-#: rulesmodel.cpp:582
+#: rulesmodel.cpp:577
 #, kde-format
 msgid "Keep below other windows"
 msgstr ""
 
-#: rulesmodel.cpp:587
+#: rulesmodel.cpp:582
 #, kde-format
 msgid "Skip taskbar"
 msgstr ""
 
-#: rulesmodel.cpp:589
+#: rulesmodel.cpp:584
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr ""
 
-#: rulesmodel.cpp:593
+#: rulesmodel.cpp:588
 #, kde-format
 msgid "Skip pager"
 msgstr ""
 
-#: rulesmodel.cpp:595
+#: rulesmodel.cpp:590
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
 
-#: rulesmodel.cpp:599
+#: rulesmodel.cpp:594
 #, kde-format
 msgid "Skip switcher"
 msgstr ""
 
-#: rulesmodel.cpp:601
+#: rulesmodel.cpp:596
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -383,45 +378,45 @@ msgid ""
 "shortcut> window list."
 msgstr ""
 
-#: rulesmodel.cpp:605
+#: rulesmodel.cpp:600
 #, kde-format
 msgid "Shortcut"
 msgstr ""
 
-#: rulesmodel.cpp:611
+#: rulesmodel.cpp:606
 #, kde-format
 msgid "No titlebar and frame"
 msgstr ""
 
-#: rulesmodel.cpp:611 rulesmodel.cpp:616 rulesmodel.cpp:622 rulesmodel.cpp:627
-#: rulesmodel.cpp:633 rulesmodel.cpp:660 rulesmodel.cpp:688 rulesmodel.cpp:694
-#: rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716 rulesmodel.cpp:721
-#: rulesmodel.cpp:727 rulesmodel.cpp:732
+#: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
+#: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
+#: rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716
+#: rulesmodel.cpp:722 rulesmodel.cpp:727
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr ""
 
-#: rulesmodel.cpp:616
+#: rulesmodel.cpp:611
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr ""
 
-#: rulesmodel.cpp:622
+#: rulesmodel.cpp:617
 #, kde-format
 msgid "Active opacity"
 msgstr ""
 
-#: rulesmodel.cpp:627
+#: rulesmodel.cpp:622
 #, kde-format
 msgid "Inactive opacity"
 msgstr ""
 
-#: rulesmodel.cpp:633
+#: rulesmodel.cpp:628
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr ""
 
-#: rulesmodel.cpp:635
+#: rulesmodel.cpp:630
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -443,12 +438,12 @@ msgid ""
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:660
+#: rulesmodel.cpp:655
 #, kde-format
 msgid "Focus protection"
 msgstr ""
 
-#: rulesmodel.cpp:662
+#: rulesmodel.cpp:657
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -472,22 +467,22 @@ msgid ""
 "item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:688
+#: rulesmodel.cpp:683
 #, kde-format
 msgid "Accept focus"
 msgstr ""
 
-#: rulesmodel.cpp:690
+#: rulesmodel.cpp:685
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
 
-#: rulesmodel.cpp:694
+#: rulesmodel.cpp:689
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr ""
 
-#: rulesmodel.cpp:696
+#: rulesmodel.cpp:691
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -499,42 +494,42 @@ msgid ""
 "activate KRunner."
 msgstr ""
 
-#: rulesmodel.cpp:706
+#: rulesmodel.cpp:701
 #, kde-format
 msgid "Closeable"
 msgstr ""
 
-#: rulesmodel.cpp:711
+#: rulesmodel.cpp:706
 #, kde-format
 msgid "Desktop file name"
 msgstr ""
 
-#: rulesmodel.cpp:716
+#: rulesmodel.cpp:711
 #, kde-format
 msgid "Block compositing"
 msgstr ""
 
-#: rulesmodel.cpp:721
+#: rulesmodel.cpp:716
 #, kde-format
 msgid "Layer"
 msgstr ""
 
-#: rulesmodel.cpp:727
+#: rulesmodel.cpp:722
 #, kde-format
 msgid "Adaptive sync"
 msgstr ""
 
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:727
 #, kde-format
 msgid "Allow tearing"
 msgstr ""
 
-#: rulesmodel.cpp:784
+#: rulesmodel.cpp:778
 #, kde-format
 msgid "Window class not available"
 msgstr ""
 
-#: rulesmodel.cpp:785
+#: rulesmodel.cpp:779
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -544,190 +539,190 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "All window types"
 msgstr ""
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Normal window"
 msgstr ""
 
-#: rulesmodel.cpp:821
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Dialog window"
 msgstr ""
 
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Utility window"
 msgstr ""
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Dock (panel)"
 msgstr ""
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Toolbar"
 msgstr ""
 
-#: rulesmodel.cpp:825
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Torn-off menu"
 msgstr ""
 
-#: rulesmodel.cpp:826
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Splash screen"
 msgstr ""
 
-#: rulesmodel.cpp:827 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:922
 #, kde-format
 msgid "Desktop"
 msgstr ""
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:829
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Standalone menubar"
 msgstr ""
 
-#: rulesmodel.cpp:830 rulesmodel.cpp:936
+#: rulesmodel.cpp:824 rulesmodel.cpp:930
 #, kde-format
 msgid "On-screen display"
 msgstr ""
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:834
 #, kde-format
 msgid "All desktops"
 msgstr ""
 
-#: rulesmodel.cpp:842
+#: rulesmodel.cpp:836
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr ""
 
-#: rulesmodel.cpp:861
+#: rulesmodel.cpp:855
 #, kde-format
 msgid "All activities"
 msgstr ""
 
-#: rulesmodel.cpp:863
+#: rulesmodel.cpp:857
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr ""
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Default"
 msgstr ""
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "No placement"
 msgstr ""
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Minimal overlapping"
 msgstr ""
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Maximized"
 msgstr ""
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Centered"
 msgstr ""
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "Random"
 msgstr ""
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "In top-left corner"
 msgstr ""
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Under mouse"
 msgstr ""
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "On main window"
 msgstr ""
 
-#: rulesmodel.cpp:899
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "None"
 msgstr ""
 
-#: rulesmodel.cpp:900
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Low"
 msgstr ""
 
-#: rulesmodel.cpp:901 rulesmodel.cpp:930
+#: rulesmodel.cpp:895 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
 msgstr ""
 
-#: rulesmodel.cpp:902
+#: rulesmodel.cpp:896
 #, kde-format
 msgid "High"
 msgstr ""
 
-#: rulesmodel.cpp:903
+#: rulesmodel.cpp:897
 #, kde-format
 msgid "Extreme"
 msgstr ""
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
 msgstr ""
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
 msgstr ""
 
-#: rulesmodel.cpp:932
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Notification"
 msgstr ""
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
 msgstr ""
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical notification"
 msgstr ""
 
-#: rulesmodel.cpp:937
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:962
+#: rulesmodel.cpp:956
 #, kde-format
 msgid "Unmanaged window"
 msgstr ""
 
-#: rulesmodel.cpp:963
+#: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

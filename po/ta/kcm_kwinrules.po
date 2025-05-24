@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-29 00:42+0000\n"
+"POT-Creation-Date: 2025-05-24 00:43+0000\n"
 "PO-Revision-Date: 2024-10-27 12:38+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -236,8 +236,8 @@ msgstr "இருப்பிடம்"
 
 #: rulesmodel.cpp:447 rulesmodel.cpp:453 rulesmodel.cpp:459 rulesmodel.cpp:464
 #: rulesmodel.cpp:472 rulesmodel.cpp:478 rulesmodel.cpp:497 rulesmodel.cpp:513
-#: rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528 rulesmodel.cpp:533
-#: rulesmodel.cpp:540 rulesmodel.cpp:554 rulesmodel.cpp:559 rulesmodel.cpp:564
+#: rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528 rulesmodel.cpp:535
+#: rulesmodel.cpp:549 rulesmodel.cpp:554 rulesmodel.cpp:559
 #, kde-format
 msgid "Size & Position"
 msgstr "அளவும் இருப்பிடமும்"
@@ -279,7 +279,7 @@ msgstr "செயல்பாடுகள்"
 msgid "Screen"
 msgstr "திரை"
 
-#: rulesmodel.cpp:518 rulesmodel.cpp:933
+#: rulesmodel.cpp:518 rulesmodel.cpp:927
 #, kde-format
 msgid "Fullscreen"
 msgstr "முழுத்திரை"
@@ -291,20 +291,15 @@ msgstr "ஒதுக்கப்பட்டதா"
 
 #: rulesmodel.cpp:528
 #, kde-format
-msgid "Shaded"
-msgstr "நிழலிடப்பட்டதா"
-
-#: rulesmodel.cpp:533
-#, kde-format
 msgid "Initial placement"
 msgstr "துவக்கத்தில் வைக்கப்படுவது"
 
-#: rulesmodel.cpp:540
+#: rulesmodel.cpp:535
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "கோரும் அளவை பொருட்படுத்தாதே"
 
-#: rulesmodel.cpp:543
+#: rulesmodel.cpp:538
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -316,22 +311,22 @@ msgid ""
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
 
-#: rulesmodel.cpp:554
+#: rulesmodel.cpp:549
 #, kde-format
 msgid "Minimum Size"
 msgstr "குறைந்தபட்ச அளவு"
 
-#: rulesmodel.cpp:559
+#: rulesmodel.cpp:554
 #, kde-format
 msgid "Maximum Size"
 msgstr "அதிகபட்ச அளவு"
 
-#: rulesmodel.cpp:564
+#: rulesmodel.cpp:559
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "வடிவ வரம்புகளை பின்பற்று"
 
-#: rulesmodel.cpp:566
+#: rulesmodel.cpp:561
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -342,51 +337,51 @@ msgid ""
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
 
-#: rulesmodel.cpp:577
+#: rulesmodel.cpp:572
 #, kde-format
 msgid "Keep above other windows"
 msgstr "மற்ற சாளரங்களுக்கு மேலே வை"
 
-#: rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:587 rulesmodel.cpp:593
-#: rulesmodel.cpp:599 rulesmodel.cpp:605
+#: rulesmodel.cpp:572 rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:588
+#: rulesmodel.cpp:594 rulesmodel.cpp:600
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "அடுக்குவதும் அணுகுவதும்"
 
-#: rulesmodel.cpp:582
+#: rulesmodel.cpp:577
 #, kde-format
 msgid "Keep below other windows"
 msgstr "மற்ற சாளரங்களுக்கு கீழே வை"
 
-#: rulesmodel.cpp:587
+#: rulesmodel.cpp:582
 #, kde-format
 msgid "Skip taskbar"
 msgstr "பணிப்பட்டையில் காட்டாதே"
 
-#: rulesmodel.cpp:589
+#: rulesmodel.cpp:584
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr ""
 
-#: rulesmodel.cpp:593
+#: rulesmodel.cpp:588
 #, kde-format
 msgid "Skip pager"
 msgstr "பணி மாற்றியில் காட்டாதே"
 
-#: rulesmodel.cpp:595
+#: rulesmodel.cpp:590
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
 
-#: rulesmodel.cpp:599
+#: rulesmodel.cpp:594
 #, kde-format
 msgid "Skip switcher"
 msgstr "மாற்றியில் காட்டாதே"
 
-#: rulesmodel.cpp:601
+#: rulesmodel.cpp:596
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -394,45 +389,45 @@ msgid ""
 "shortcut> window list."
 msgstr ""
 
-#: rulesmodel.cpp:605
+#: rulesmodel.cpp:600
 #, kde-format
 msgid "Shortcut"
 msgstr "சுருக்குவழி"
 
-#: rulesmodel.cpp:611
+#: rulesmodel.cpp:606
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "விளிம்பும் தலைப்புப்பட்டையும் வேண்டாம்"
 
-#: rulesmodel.cpp:611 rulesmodel.cpp:616 rulesmodel.cpp:622 rulesmodel.cpp:627
-#: rulesmodel.cpp:633 rulesmodel.cpp:660 rulesmodel.cpp:688 rulesmodel.cpp:694
-#: rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716 rulesmodel.cpp:721
-#: rulesmodel.cpp:727 rulesmodel.cpp:732
+#: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
+#: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
+#: rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716
+#: rulesmodel.cpp:722 rulesmodel.cpp:727
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "தோற்றமும் திருத்தங்களும்"
 
-#: rulesmodel.cpp:616
+#: rulesmodel.cpp:611
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "தலைப்புப்பட்டையின் நிறத்திட்டம்"
 
-#: rulesmodel.cpp:622
+#: rulesmodel.cpp:617
 #, kde-format
 msgid "Active opacity"
 msgstr "செயலிலுள்ளபோது ஒளிபுகாமை"
 
-#: rulesmodel.cpp:627
+#: rulesmodel.cpp:622
 #, kde-format
 msgid "Inactive opacity"
 msgstr "செயலிலில்லாதபோது ஒளிபுகாமை"
 
-#: rulesmodel.cpp:633
+#: rulesmodel.cpp:628
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "குவியத் திருட்டைத் தடுப்பது"
 
-#: rulesmodel.cpp:635
+#: rulesmodel.cpp:630
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -454,12 +449,12 @@ msgid ""
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:660
+#: rulesmodel.cpp:655
 #, kde-format
 msgid "Focus protection"
 msgstr "குவியப் பாதுகாப்பு"
 
-#: rulesmodel.cpp:662
+#: rulesmodel.cpp:657
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -483,22 +478,22 @@ msgid ""
 "item></list>"
 msgstr ""
 
-#: rulesmodel.cpp:688
+#: rulesmodel.cpp:683
 #, kde-format
 msgid "Accept focus"
 msgstr "குவியத்தை ஏற்பது"
 
-#: rulesmodel.cpp:690
+#: rulesmodel.cpp:685
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
 
-#: rulesmodel.cpp:694
+#: rulesmodel.cpp:689
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "பொதுவான சுருக்குவழிகளை பொருட்படுத்தாதே"
 
-#: rulesmodel.cpp:696
+#: rulesmodel.cpp:691
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -510,43 +505,43 @@ msgid ""
 "activate KRunner."
 msgstr ""
 
-#: rulesmodel.cpp:706
+#: rulesmodel.cpp:701
 #, kde-format
 msgid "Closeable"
 msgstr "மூடக்கூடியது"
 
-#: rulesmodel.cpp:711
+#: rulesmodel.cpp:706
 #, kde-format
 msgid "Desktop file name"
 msgstr "Desktop கோப்பின் பெயர்"
 
-#: rulesmodel.cpp:716
+#: rulesmodel.cpp:711
 #, fuzzy, kde-format
 msgid "Block compositing"
 msgstr "சாளரநிரலைத் தடு"
 
-#: rulesmodel.cpp:721
+#: rulesmodel.cpp:716
 #, kde-format
 msgid "Layer"
 msgstr "அடுக்கு"
 
-#: rulesmodel.cpp:727
+#: rulesmodel.cpp:722
 #, fuzzy, kde-format
 #| msgid "Adaptive Sync"
 msgid "Adaptive sync"
 msgstr "சூழறி ஒத்திசைவு"
 
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:727
 #, kde-format
 msgid "Allow tearing"
 msgstr ""
 
-#: rulesmodel.cpp:784
+#: rulesmodel.cpp:778
 #, kde-format
 msgid "Window class not available"
 msgstr "சாளர வகுப்பு கிடைக்கவில்லை"
 
-#: rulesmodel.cpp:785
+#: rulesmodel.cpp:779
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -556,206 +551,206 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:813
 #, fuzzy, kde-format
 #| msgid "All Window Types"
 msgid "All window types"
 msgstr "அனைத்து சாளர வகைகள்"
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:814
 #, fuzzy, kde-format
 #| msgid "Normal Window"
 msgid "Normal window"
 msgstr "இயல்பான சாளரம்"
 
-#: rulesmodel.cpp:821
+#: rulesmodel.cpp:815
 #, fuzzy, kde-format
 #| msgid "Dialog Window"
 msgid "Dialog window"
 msgstr "உரையாடல் பெட்டி சாளரம்"
 
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:816
 #, fuzzy, kde-format
 #| msgid "Utility Window"
 msgid "Utility window"
 msgstr "பயனுள்ள சாளரம்"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Dock (panel)"
 msgstr "டாக் (பலகம்)"
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Toolbar"
 msgstr "கருவிப்பட்டை"
 
-#: rulesmodel.cpp:825
+#: rulesmodel.cpp:819
 #, fuzzy, kde-format
 #| msgid "Torn-Off Menu"
 msgid "Torn-off menu"
 msgstr "`"
 
-#: rulesmodel.cpp:826
+#: rulesmodel.cpp:820
 #, fuzzy, kde-format
 #| msgid "Splash Screen"
 msgid "Splash screen"
 msgstr "தோன்றும் திரை"
 
-#: rulesmodel.cpp:827 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:922
 #, kde-format
 msgid "Desktop"
 msgstr "பணிமேடை"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:829
+#: rulesmodel.cpp:823
 #, fuzzy, kde-format
 #| msgid "Standalone Menubar"
 msgid "Standalone menubar"
 msgstr "தனியான பட்டிப்பட்டை"
 
-#: rulesmodel.cpp:830 rulesmodel.cpp:936
+#: rulesmodel.cpp:824 rulesmodel.cpp:930
 #, fuzzy, kde-format
 #| msgid "On Screen Display"
 msgid "On-screen display"
 msgstr "திரையில் காட்டப்படும் தகவல்"
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:834
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "All desktops"
 msgstr "அனைத்து பணிமேடைகளிலும்"
 
-#: rulesmodel.cpp:842
+#: rulesmodel.cpp:836
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr ""
 
-#: rulesmodel.cpp:861
+#: rulesmodel.cpp:855
 #, fuzzy, kde-format
 #| msgid "All Activities"
 msgid "All activities"
 msgstr "அனைத்து செயல்பாடுகளிலும்"
 
-#: rulesmodel.cpp:863
+#: rulesmodel.cpp:857
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr ""
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Default"
 msgstr "இயல்பிருப்பு"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:879
 #, fuzzy, kde-format
 #| msgid "No Placement"
 msgid "No placement"
 msgstr "ஏதுமில்லை"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:880
 #, fuzzy, kde-format
 #| msgid "Minimal Overlapping"
 msgid "Minimal overlapping"
 msgstr "ஒன்றன்மேல் ஒன்று இல்லாமல்"
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Maximized"
 msgstr "அதிகபட்ச பெரிதாக்கி"
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Centered"
 msgstr "மையப்படுத்தப்பட்டது"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "Random"
 msgstr "சமவாய்ப்பாக"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:884
 #, fuzzy, kde-format
 #| msgid "In Top-Left Corner"
 msgid "In top-left corner"
 msgstr "மேல்-இடது மூலையில்"
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:885
 #, fuzzy, kde-format
 #| msgid "Under Mouse"
 msgid "Under mouse"
 msgstr "சுட்டிக்கு அடியில்"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:886
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "On main window"
 msgstr "பிரதான சாளரத்தில்"
 
-#: rulesmodel.cpp:899
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "None"
 msgstr "ஏதுமில்லை"
 
-#: rulesmodel.cpp:900
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Low"
 msgstr "குறைவானது"
 
-#: rulesmodel.cpp:901 rulesmodel.cpp:930
+#: rulesmodel.cpp:895 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
 msgstr "சாதாரணது"
 
-#: rulesmodel.cpp:902
+#: rulesmodel.cpp:896
 #, kde-format
 msgid "High"
 msgstr "அதிகமானது"
 
-#: rulesmodel.cpp:903
+#: rulesmodel.cpp:897
 #, kde-format
 msgid "Extreme"
 msgstr "மிக அதிகமானது"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
 msgstr "கீழே"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
 msgstr "மேலே"
 
-#: rulesmodel.cpp:932
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Notification"
 msgstr "அறிவிப்பு"
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
 msgstr "மேல்தோன்றுவது"
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:929
 #, fuzzy, kde-format
 #| msgid "Critical Notification"
 msgid "Critical notification"
 msgstr "நெருக்கடியான அறிவிப்பு"
 
-#: rulesmodel.cpp:937
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:962
+#: rulesmodel.cpp:956
 #, kde-format
 msgid "Unmanaged window"
 msgstr "கையாளப்படா சாளரம்"
 
-#: rulesmodel.cpp:963
+#: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "சாளரத்தின் பண்புகளைக் கண்டறிய முடியவில்லை. இச்சாளரத்தை கேவின் கையாளவில்லை."
@@ -953,6 +948,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Shaded"
+#~ msgstr "நிழலிடப்பட்டதா"
 
 #~ msgid "OSD"
 #~ msgstr "திரையில் காட்டப்படும் தகவல்"

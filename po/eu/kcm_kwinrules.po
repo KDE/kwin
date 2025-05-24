@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-29 00:42+0000\n"
+"POT-Creation-Date: 2025-05-24 00:43+0000\n"
 "PO-Revision-Date: 2024-08-30 10:00+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -249,8 +249,8 @@ msgstr "Kokalekua"
 
 #: rulesmodel.cpp:447 rulesmodel.cpp:453 rulesmodel.cpp:459 rulesmodel.cpp:464
 #: rulesmodel.cpp:472 rulesmodel.cpp:478 rulesmodel.cpp:497 rulesmodel.cpp:513
-#: rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528 rulesmodel.cpp:533
-#: rulesmodel.cpp:540 rulesmodel.cpp:554 rulesmodel.cpp:559 rulesmodel.cpp:564
+#: rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528 rulesmodel.cpp:535
+#: rulesmodel.cpp:549 rulesmodel.cpp:554 rulesmodel.cpp:559
 #, kde-format
 msgid "Size & Position"
 msgstr "Tamaina eta kokalekua"
@@ -290,7 +290,7 @@ msgstr "Jarduerak"
 msgid "Screen"
 msgstr "Pantaila"
 
-#: rulesmodel.cpp:518 rulesmodel.cpp:933
+#: rulesmodel.cpp:518 rulesmodel.cpp:927
 #, kde-format
 msgid "Fullscreen"
 msgstr "Pantaila-betea"
@@ -302,20 +302,15 @@ msgstr "Ikonotuta"
 
 #: rulesmodel.cpp:528
 #, kde-format
-msgid "Shaded"
-msgstr "Bilduta"
-
-#: rulesmodel.cpp:533
-#, kde-format
 msgid "Initial placement"
 msgstr "Hasierako kokapena"
 
-#: rulesmodel.cpp:540
+#: rulesmodel.cpp:535
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "Ez-ikusi egin eskatutako geometriari"
 
-#: rulesmodel.cpp:543
+#: rulesmodel.cpp:538
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -334,22 +329,22 @@ msgstr ""
 "interface> egoerei.<nl/><nl/>Kontuan izan kokapena beste "
 "<interface>Pantaila</interface> batera mapatzeko ere erabil daitekeela."
 
-#: rulesmodel.cpp:554
+#: rulesmodel.cpp:549
 #, kde-format
 msgid "Minimum Size"
 msgstr "Gutxieneko tamaina"
 
-#: rulesmodel.cpp:559
+#: rulesmodel.cpp:554
 #, kde-format
 msgid "Maximum Size"
 msgstr "Gehieneko tamaina"
 
-#: rulesmodel.cpp:564
+#: rulesmodel.cpp:559
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Obeditu geometria murrizpenei"
 
-#: rulesmodel.cpp:566
+#: rulesmodel.cpp:561
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -367,39 +362,39 @@ msgstr ""
 "daiteke, maximizatuta daudenean pantaila osoko azalerara ondo egokitu ezin "
 "diren leihoetarako."
 
-#: rulesmodel.cpp:577
+#: rulesmodel.cpp:572
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Eutsi beste leihoen gainetik"
 
-#: rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:587 rulesmodel.cpp:593
-#: rulesmodel.cpp:599 rulesmodel.cpp:605
+#: rulesmodel.cpp:572 rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:588
+#: rulesmodel.cpp:594 rulesmodel.cpp:600
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "Antolamendua eta atzitzea"
 
-#: rulesmodel.cpp:582
+#: rulesmodel.cpp:577
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Eutsi beste leiho batzuen azpian"
 
-#: rulesmodel.cpp:587
+#: rulesmodel.cpp:582
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Saihestu ataza-barra"
 
-#: rulesmodel.cpp:589
+#: rulesmodel.cpp:584
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr "Leihoa ataza-kudeatzailean agertzen den edo ez kontrolatzen du."
 
-#: rulesmodel.cpp:593
+#: rulesmodel.cpp:588
 #, kde-format
 msgid "Skip pager"
 msgstr "Saihestu orrialdekatzailea"
 
-#: rulesmodel.cpp:595
+#: rulesmodel.cpp:590
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -407,12 +402,12 @@ msgid ""
 msgstr ""
 "Leihoa alegiazko mahaigain kudeatzailean agertzen den edo ez kontrolatzen du."
 
-#: rulesmodel.cpp:599
+#: rulesmodel.cpp:594
 #, kde-format
 msgid "Skip switcher"
 msgstr "Saihestu aldatzailea"
 
-#: rulesmodel.cpp:601
+#: rulesmodel.cpp:596
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -422,45 +417,45 @@ msgstr ""
 "Leihoa <shortcut>Alt+Tab</shortcut> leiho-zerrendan agertzen den edo ez "
 "kontrolatzen du."
 
-#: rulesmodel.cpp:605
+#: rulesmodel.cpp:600
 #, kde-format
 msgid "Shortcut"
 msgstr "Lasterbidea"
 
-#: rulesmodel.cpp:611
+#: rulesmodel.cpp:606
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Titulu-barrarik eta markorik ez"
 
-#: rulesmodel.cpp:611 rulesmodel.cpp:616 rulesmodel.cpp:622 rulesmodel.cpp:627
-#: rulesmodel.cpp:633 rulesmodel.cpp:660 rulesmodel.cpp:688 rulesmodel.cpp:694
-#: rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716 rulesmodel.cpp:721
-#: rulesmodel.cpp:727 rulesmodel.cpp:732
+#: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
+#: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
+#: rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716
+#: rulesmodel.cpp:722 rulesmodel.cpp:727
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Itxura eta konponketak"
 
-#: rulesmodel.cpp:616
+#: rulesmodel.cpp:611
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Titulu-barrako kolore-antolaera"
 
-#: rulesmodel.cpp:622
+#: rulesmodel.cpp:617
 #, kde-format
 msgid "Active opacity"
 msgstr "Opakutasun aktiboa"
 
-#: rulesmodel.cpp:627
+#: rulesmodel.cpp:622
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Opakutasuna inaktiboa"
 
-#: rulesmodel.cpp:633
+#: rulesmodel.cpp:628
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Fokua-lapurtze prebentzioa"
 
-#: rulesmodel.cpp:635
+#: rulesmodel.cpp:630
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -499,12 +494,12 @@ msgstr ""
 "badagokio.</item><item><emphasis strong='true'>Muturrekoa:</emphasis> Leihoa "
 "ez da inoiz altxatuko ez eta fokua hartuko ere.</item></list>"
 
-#: rulesmodel.cpp:660
+#: rulesmodel.cpp:655
 #, kde-format
 msgid "Focus protection"
 msgstr "Fokuaren babesa"
 
-#: rulesmodel.cpp:662
+#: rulesmodel.cpp:657
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -546,22 +541,22 @@ msgstr ""
 "item><item><emphasis strong='true'>Muturrekoa:</emphasis> Leiho ireki "
 "berriak ez dira inoiz altxatuko ez eta fokua hartuko ere.</item></list>"
 
-#: rulesmodel.cpp:688
+#: rulesmodel.cpp:683
 #, kde-format
 msgid "Accept focus"
 msgstr "Onartu fokua"
 
-#: rulesmodel.cpp:690
+#: rulesmodel.cpp:685
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr "Klik egitean leihoak fokua jasotzen duen edo ez kontrolatzen du."
 
-#: rulesmodel.cpp:694
+#: rulesmodel.cpp:689
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ez ikusi egin lasterbide orokorrei"
 
-#: rulesmodel.cpp:696
+#: rulesmodel.cpp:691
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -579,42 +574,42 @@ msgstr ""
 "kanpora <shortcut>Alt+Tab</shortcut> egin, ez eta «KRunner» aktibatzeko "
 "<shortcut>Alt+Zuriunea</shortcut> gisako beste lasterbide orokorrik erabili."
 
-#: rulesmodel.cpp:706
+#: rulesmodel.cpp:701
 #, kde-format
 msgid "Closeable"
 msgstr "Itxigarria"
 
-#: rulesmodel.cpp:711
+#: rulesmodel.cpp:706
 #, kde-format
 msgid "Desktop file name"
 msgstr "Mahaiganeko fitxategiaren izena"
 
-#: rulesmodel.cpp:716
+#: rulesmodel.cpp:711
 #, kde-format
 msgid "Block compositing"
 msgstr "Bloke-konposizioa"
 
-#: rulesmodel.cpp:721
+#: rulesmodel.cpp:716
 #, kde-format
 msgid "Layer"
 msgstr "Geruza"
 
-#: rulesmodel.cpp:727
+#: rulesmodel.cpp:722
 #, kde-format
 msgid "Adaptive sync"
 msgstr "Sinkronizatze moldakorra"
 
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:727
 #, kde-format
 msgid "Allow tearing"
 msgstr "Urradura baimendu"
 
-#: rulesmodel.cpp:784
+#: rulesmodel.cpp:778
 #, kde-format
 msgid "Window class not available"
 msgstr "Leiho klasea ez dago erabilgarri"
 
-#: rulesmodel.cpp:785
+#: rulesmodel.cpp:779
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -629,190 +624,190 @@ msgstr ""
 "batzuekin parekatzen, leihoaren titulua esaterako.<nl/><nl/>Mesedez, kontuan "
 "hartu akats hau aplikazioaren garatzaileei jakinarazteko aukera."
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "All window types"
 msgstr "Leiho mota denak"
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Normal window"
 msgstr "Leiho arrunta"
 
-#: rulesmodel.cpp:821
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Dialog window"
 msgstr "Elkarrizketa-leihoa"
 
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Utility window"
 msgstr "Utilitate-leihoa"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Atrakatu (panela)"
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Toolbar"
 msgstr "Tresna-barra"
 
-#: rulesmodel.cpp:825
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Torn-off menu"
 msgstr "Bereizitako menua"
 
-#: rulesmodel.cpp:826
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Splash screen"
 msgstr "Plasta pantaila"
 
-#: rulesmodel.cpp:827 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:922
 #, kde-format
 msgid "Desktop"
 msgstr "Mahaigaina"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:829
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Standalone menubar"
 msgstr "Menu-barra autonomoa"
 
-#: rulesmodel.cpp:830 rulesmodel.cpp:936
+#: rulesmodel.cpp:824 rulesmodel.cpp:930
 #, kde-format
 msgid "On-screen display"
 msgstr "Pantaila gainean bistaratzea"
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:834
 #, kde-format
 msgid "All desktops"
 msgstr "Mahaigain denak"
 
-#: rulesmodel.cpp:842
+#: rulesmodel.cpp:836
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Jarri leihoa mahaigain guztietan erabilgarri"
 
-#: rulesmodel.cpp:861
+#: rulesmodel.cpp:855
 #, kde-format
 msgid "All activities"
 msgstr "Jarduera denak"
 
-#: rulesmodel.cpp:863
+#: rulesmodel.cpp:857
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Jarri leihoa ekintza guztietan erabilgarri"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Default"
 msgstr "Lehenetsia"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "No placement"
 msgstr "Kokapenik gabe"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Minimal overlapping"
 msgstr "Gutxieneko gainezarpena"
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Maximized"
 msgstr "Maximizatuta"
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Centered"
 msgstr "Erdiratuta"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "Random"
 msgstr "Ausazkoa"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "In top-left corner"
 msgstr "Goi-ezkerreko izkinan"
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Under mouse"
 msgstr "Saguaren azpian"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "On main window"
 msgstr "Leiho nagusian"
 
-#: rulesmodel.cpp:899
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "None"
 msgstr "Bat ere ez"
 
-#: rulesmodel.cpp:900
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Low"
 msgstr "Txikia"
 
-#: rulesmodel.cpp:901 rulesmodel.cpp:930
+#: rulesmodel.cpp:895 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
 msgstr "Arrunta"
 
-#: rulesmodel.cpp:902
+#: rulesmodel.cpp:896
 #, kde-format
 msgid "High"
 msgstr "Altua"
 
-#: rulesmodel.cpp:903
+#: rulesmodel.cpp:897
 #, kde-format
 msgid "Extreme"
 msgstr "Muturrekoa"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
 msgstr "Azpian"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
 msgstr "Gainean"
 
-#: rulesmodel.cpp:932
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Notification"
 msgstr "Jakinarazpena"
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
 msgstr "Gainerakorra"
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical notification"
 msgstr "Jakinarazpen kritikoa"
 
-#: rulesmodel.cpp:937
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
 msgstr "Estalgarria"
 
-#: rulesmodel.cpp:962
+#: rulesmodel.cpp:956
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Kudeatu gabeko leihoa"
 
-#: rulesmodel.cpp:963
+#: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -1009,6 +1004,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Shaded"
+#~ msgstr "Bilduta"
 
 #~ msgid "OSD"
 #~ msgstr "OSD"

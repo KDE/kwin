@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-01 00:43+0000\n"
+"POT-Creation-Date: 2025-05-24 00:43+0000\n"
 "PO-Revision-Date: 2010-12-17 20:58+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -31,7 +31,7 @@ msgstr "ส่วนต่าง ๆ ภายในหน้าต่างท�
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:29 mouse.ui:183
+#: actions.ui:29 mouse.ui:173
 #, fuzzy, kde-format
 #| msgid "&Titlebar double-click:"
 msgid "&Left click:"
@@ -78,8 +78,8 @@ msgstr "เรียกให้ทำงาน และส่งสัญญ�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:63 actions.ui:112 actions.ui:152 mouse.ui:299 mouse.ui:414
-#: mouse.ui:529
+#: actions.ui:63 actions.ui:112 actions.ui:152 mouse.ui:284 mouse.ui:389
+#: mouse.ui:494
 #, kde-format
 msgid "Activate"
 msgstr "เรียกให้ทำงาน"
@@ -90,8 +90,8 @@ msgstr "เรียกให้ทำงาน"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:68 actions.ui:117 actions.ui:157 mouse.ui:289 mouse.ui:404
-#: mouse.ui:519
+#: actions.ui:68 actions.ui:117 actions.ui:157 mouse.ui:274 mouse.ui:379
+#: mouse.ui:484
 #, fuzzy, kde-format
 #| msgid "Activate & Raise"
 msgid "Activate and raise"
@@ -107,7 +107,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:85 mouse.ui:206
+#: actions.ui:85 mouse.ui:196
 #, fuzzy, kde-format
 #| msgid "&Titlebar double-click:"
 msgid "&Middle click:"
@@ -125,7 +125,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:125 mouse.ui:219
+#: actions.ui:125 mouse.ui:209
 #, kde-format
 msgid "&Right click:"
 msgstr ""
@@ -142,7 +142,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:165 mouse.ui:91
+#: actions.ui:165 mouse.ui:86
 #, fuzzy, kde-format
 #| msgid "Mouse wheel:"
 msgid "Mouse &wheel:"
@@ -221,7 +221,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:270 mouse.ui:617
+#: actions.ui:270 mouse.ui:577
 #, fuzzy, kde-format
 #| msgid "&Titlebar double-click:"
 msgid "L&eft click:"
@@ -262,8 +262,8 @@ msgstr "เรียกให้ทำงาน, ปรับมาอยู่�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:297 actions.ui:372 actions.ui:447 mouse.ui:252 mouse.ui:314
-#: mouse.ui:367 mouse.ui:429 mouse.ui:482 mouse.ui:544
+#: actions.ui:297 actions.ui:372 actions.ui:447 mouse.ui:242 mouse.ui:299
+#: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
 #, fuzzy, kde-format
 #| msgid "Toggle Raise & Lower"
 msgid "Toggle raise and lower"
@@ -286,8 +286,8 @@ msgstr "ปรับขนาด"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:307 actions.ui:382 actions.ui:457 mouse.ui:242 mouse.ui:304
-#: mouse.ui:357 mouse.ui:419 mouse.ui:472 mouse.ui:534
+#: actions.ui:307 actions.ui:382 actions.ui:457 mouse.ui:232 mouse.ui:289
+#: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
 #, kde-format
 msgid "Raise"
 msgstr "ให้อยู่ด้านบน"
@@ -303,8 +303,8 @@ msgstr "ให้อยู่ด้านบน"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:312 actions.ui:387 actions.ui:462 mouse.ui:68 mouse.ui:247
-#: mouse.ui:309 mouse.ui:362 mouse.ui:424 mouse.ui:477 mouse.ui:539
+#: actions.ui:312 actions.ui:387 actions.ui:462 mouse.ui:63 mouse.ui:237
+#: mouse.ui:294 mouse.ui:342 mouse.ui:399 mouse.ui:447 mouse.ui:504
 #, kde-format
 msgid "Lower"
 msgstr "ให้หน้าต่างอยู่ด้านล่าง"
@@ -320,8 +320,8 @@ msgstr "ให้หน้าต่างอยู่ด้านล่าง"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:317 actions.ui:392 actions.ui:467 mouse.ui:58 mouse.ui:257
-#: mouse.ui:319 mouse.ui:372 mouse.ui:434 mouse.ui:487 mouse.ui:549
+#: actions.ui:317 actions.ui:392 actions.ui:467 mouse.ui:58 mouse.ui:247
+#: mouse.ui:304 mouse.ui:352 mouse.ui:409 mouse.ui:457 mouse.ui:514
 #, kde-format
 msgid "Minimize"
 msgstr "ย่อเล็กสุด"
@@ -353,8 +353,8 @@ msgstr "เปลี่ยนระดับความโปร่งแสง
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:272 mouse.ui:334
-#: mouse.ui:387 mouse.ui:449 mouse.ui:502 mouse.ui:564
+#: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
+#: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
 #| msgid "Operations Menu"
 msgid "Show actions menu"
@@ -374,9 +374,9 @@ msgstr "เมนูปฏิบัติการต่าง ๆ"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:337 actions.ui:412 actions.ui:487 actions.ui:542 advanced.ui:154
-#: mouse.ui:83 mouse.ui:135 mouse.ui:277 mouse.ui:339 mouse.ui:392 mouse.ui:454
-#: mouse.ui:507 mouse.ui:569
+#: actions.ui:337 actions.ui:412 actions.ui:487 actions.ui:537 advanced.ui:108
+#: mouse.ui:78 mouse.ui:125 mouse.ui:262 mouse.ui:319 mouse.ui:367 mouse.ui:424
+#: mouse.ui:472 mouse.ui:529
 #, fuzzy, kde-format
 #| msgid "Nothing"
 msgid "Do nothing"
@@ -400,7 +400,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:420 mouse.ui:687
+#: actions.ui:420 mouse.ui:647
 #, kde-format
 msgid "Right clic&k:"
 msgstr ""
@@ -434,7 +434,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:512 mouse.ui:105
+#: actions.ui:512 mouse.ui:100
 #, fuzzy, kde-format
 #| msgid "Raise/Lower"
 msgid "Raise/lower"
@@ -442,15 +442,7 @@ msgstr "สลับให้อยู่ด้านบนและล่าง
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:517 mouse.ui:110
-#, fuzzy, kde-format
-#| msgid "Shade/Unshade"
-msgid "Shade/unshade"
-msgstr "พับเก็บ/ยกเลิกพับเก็บหน้าต่าง"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:522 mouse.ui:115
+#: actions.ui:517 mouse.ui:105
 #, fuzzy, kde-format
 #| msgid "Maximize/Restore"
 msgid "Maximize/restore"
@@ -458,7 +450,7 @@ msgstr "ขยายใหญ่สุด/เรียกคืนขนาด�
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:527 mouse.ui:120
+#: actions.ui:522 mouse.ui:110
 #, fuzzy, kde-format
 #| msgid "Keep Above/Below"
 msgid "Keep above/below"
@@ -466,7 +458,7 @@ msgstr "คงให้อยู่เหนือหรือด้านล่
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:532 mouse.ui:125
+#: actions.ui:527 mouse.ui:115
 #, fuzzy, kde-format
 #| msgid "Move to Previous/Next Desktop"
 msgid "Move to previous/next desktop"
@@ -474,66 +466,21 @@ msgstr "ย้ายไปยังพื้นที่ทำงานก่อ
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:537 mouse.ui:130
+#: actions.ui:532 mouse.ui:120
 #, fuzzy, kde-format
 #| msgid "Change Opacity"
 msgid "Change opacity"
 msgstr "เปลี่ยนระดับความโปร่งแสง"
 
-#. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
-#: advanced.ui:20
-#, fuzzy, kde-format
-#| msgid "Window Tabbing"
-msgid "Window &unshading:"
-msgstr "การทำแท็บให้หน้าต่าง"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
-#: advanced.ui:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
-#| "when the mouse pointer has been over the title bar for some time."
-msgid ""
-"<html><head/><body><p>If this option is enabled, a shaded window will "
-"unshade automatically when the mouse pointer has been over the titlebar for "
-"some time.</p></body></html>"
-msgstr ""
-"เมื่อเปิดใช้การยกเลิกพับเก็บเมื่อเมาส์อยู่ หน้าต่างที่พับเก็บอยู่ จะยกเลิกการพับเก็บอัตโนมัติ "
-"เมื่อเลื่อนตัวชี้ของเมาส์มาอยู่เหนือแถบหัวเรื่องเป็นช่วงเวลาหนึ่ง"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
-#: advanced.ui:35
-#, kde-format
-msgid "On titlebar hover after:"
-msgstr ""
-
-#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
-#: advanced.ui:42
-#, kde-format
-msgid ""
-"Sets the time in milliseconds before the window unshades when the mouse "
-"pointer goes over the shaded window."
-msgstr ""
-"ตั้งค่าช่วงเวลา เป็นมิลลิวินาที ก่อนที่จะให้หน้าต่างยกเลิกการพับเก็บ เมื่อตัวชี้ของเมาส์ "
-"มาอยู่เหนือหน้าต่างที่พับเก็บ"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
-#: advanced.ui:45 focus.ui:85 focus.ui:181
-#, kde-format
-msgid " ms"
-msgstr " มิลลิวินาที"
-
 #. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
-#: advanced.ui:66
+#: advanced.ui:20
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Window &placement:"
 msgstr "การ&จัดวาง:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
-#: advanced.ui:76
+#: advanced.ui:30
 #, fuzzy, kde-format
 #| msgid ""
 #| "<p>This option specifies how much KWin will try to prevent unwanted focus "
@@ -594,14 +541,14 @@ msgstr ""
 "การแจ้งให้ทราบของระบบ</p>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:80
+#: advanced.ui:34
 #, fuzzy, kde-format
 #| msgid "Snap windows onl&y when overlapping"
 msgid "Minimal Overlapping"
 msgstr "ให้กรอบหน้าต่างแนบกัน เมื่อมีการซ้อนทับกันเท่านั้น"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:85
+#: advanced.ui:39
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox behavior on double click"
 #| msgid "Maximize"
@@ -609,32 +556,32 @@ msgid "Maximized"
 msgstr "ขยายใหญ่สุด"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:90
+#: advanced.ui:44
 #, kde-format
 msgid "Random"
 msgstr "สุ่ม"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:95
+#: advanced.ui:49
 #, kde-format
 msgid "Centered"
 msgstr "กึ่งกลาง"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:100
+#: advanced.ui:54
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
-#: advanced.ui:105
+#: advanced.ui:59
 #, fuzzy, kde-format
 #| msgid "Focus Under Mouse"
 msgid "Under mouse"
 msgstr "หน้าต่างใต้เมาส์ได้รับโฟกัส"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:113
+#: advanced.ui:67
 #, kde-format
 msgid ""
 "When turned on, apps which are able to remember the positions of their "
@@ -643,26 +590,26 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
-#: advanced.ui:116
+#: advanced.ui:70
 #, kde-format
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:123
+#: advanced.ui:77
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:133
+#: advanced.ui:87
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:140
+#: advanced.ui:94
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -675,13 +622,13 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:144
+#: advanced.ui:98
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:149
+#: advanced.ui:103
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr ""
@@ -753,6 +700,13 @@ msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
 msgstr "นี่เป็นค่าหน่วงเวลา ก่อนที่จะให้หน้าต่างที่ตัวชี้ของเมาส์อยู่เหนือมันจะได้รับโฟกัส"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#: focus.ui:85 focus.ui:181
+#, kde-format
+msgid " ms"
+msgstr " มิลลิวินาที"
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
@@ -1023,7 +977,7 @@ msgstr "สิ่งที่จะให้ทำเมื่อ<em>ดับ�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:43 mouse.ui:631 mouse.ui:666 mouse.ui:701
+#: mouse.ui:43 mouse.ui:591 mouse.ui:626 mouse.ui:661
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox behavior on double click"
 #| msgid "Maximize"
@@ -1035,7 +989,7 @@ msgstr "ขยายใหญ่สุด"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:48 mouse.ui:636 mouse.ui:671 mouse.ui:706
+#: mouse.ui:48 mouse.ui:596 mouse.ui:631 mouse.ui:666
 #, kde-format
 msgid "Vertically maximize"
 msgstr ""
@@ -1045,7 +999,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:53 mouse.ui:641 mouse.ui:676 mouse.ui:711
+#: mouse.ui:53 mouse.ui:601 mouse.ui:636 mouse.ui:671
 #, kde-format
 msgid "Horizontally maximize"
 msgstr ""
@@ -1058,29 +1012,15 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:63 mouse.ui:262 mouse.ui:324 mouse.ui:377 mouse.ui:439 mouse.ui:492
-#: mouse.ui:554
-#, kde-format
-msgid "Shade"
-msgstr "พับเก็บ"
-
-#. i18n: @item:inlistbox behavior on double click
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:73 mouse.ui:267 mouse.ui:329 mouse.ui:382 mouse.ui:444 mouse.ui:497
-#: mouse.ui:559
+#: mouse.ui:68 mouse.ui:252 mouse.ui:309 mouse.ui:357 mouse.ui:414 mouse.ui:462
+#: mouse.ui:519
 #, kde-format
 msgid "Close"
 msgstr "ปิด"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:78
+#: mouse.ui:73
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox behavior on double click"
 #| msgid "On All Desktops"
@@ -1088,27 +1028,27 @@ msgid "Show on all desktops"
 msgstr "อยู่บนพื้นที่ทำงานทั้งหมด"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: mouse.ui:101
+#: mouse.ui:96
 #, fuzzy, kde-format
 #| msgid "Behavior on <em>double</em> click into the titlebar."
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
 msgstr "สิ่งที่จะให้ทำเมื่อ<em>ดับเบิลคลิก</em>ที่แถบหัวเรื่อง"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: mouse.ui:146
+#: mouse.ui:136
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar and Frame Actions"
 msgstr "การกระทำบนแถบ&หัวเรื่อง"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: mouse.ui:173
+#: mouse.ui:163
 #, kde-format
 msgid "Active"
 msgstr "ทำงานอยู่"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: mouse.ui:196
+#: mouse.ui:186
 #, kde-format
 msgid "Inactive"
 msgstr "ไม่ได้ทำงาน"
@@ -1116,7 +1056,7 @@ msgstr "ไม่ได้ทำงาน"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#: mouse.ui:238 mouse.ui:353 mouse.ui:468
+#: mouse.ui:228 mouse.ui:333 mouse.ui:438
 #, kde-format
 msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
@@ -1128,7 +1068,7 @@ msgstr ""
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:285 mouse.ui:400 mouse.ui:515
+#: mouse.ui:270 mouse.ui:375 mouse.ui:480
 #, kde-format
 msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an "
@@ -1140,20 +1080,20 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:294 mouse.ui:409 mouse.ui:524
+#: mouse.ui:279 mouse.ui:384 mouse.ui:489
 #, fuzzy, kde-format
 #| msgid "Activate & Lower"
 msgid "Activate and lower"
 msgstr "เรียกให้ทำงานแต่ปรับให้อยู่ด้านล่าง"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DoubleClickBorderToMaximize)
-#: mouse.ui:577
+#: mouse.ui:537
 #, kde-format
 msgid "Maximize window by double clicking its frame"
 msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:602
+#: mouse.ui:562
 #, fuzzy, kde-format
 #| msgid "Maximize Button"
 msgid "Maximize Button Actions"
@@ -1161,20 +1101,20 @@ msgstr "ปุ่มขยายใหญ่สุด"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:614 mouse.ui:627
+#: mouse.ui:574 mouse.ui:587
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
 msgstr "สิ่งที่จะให้ทำ เมื่อคลิก<em>เมาส์ปุ่มซ้าย</em> บนปุ่มขยายใหญ่สุด"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:649 mouse.ui:662
+#: mouse.ui:609 mouse.ui:622
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
 msgstr "สิ่งที่จะให้ทำ เมื่อคลิก<em>เมาส์ปุ่มกลาง</em> บนปุ่มขยายใหญ่สุด"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:652
+#: mouse.ui:612
 #, fuzzy, kde-format
 #| msgid "Middle button:"
 msgid "Middle c&lick:"
@@ -1182,7 +1122,7 @@ msgstr "เมาส์ปุ่มกลาง:"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:684 mouse.ui:697
+#: mouse.ui:644 mouse.ui:657
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
 msgstr "สิ่งที่จะให้ทำ เมื่อคลิก<em>เมาส์ปุ่มขวา</em> บนปุ่มขยายใหญ่สุด"
@@ -1333,6 +1273,38 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Shade/Unshade"
+#~ msgid "Shade/unshade"
+#~ msgstr "พับเก็บ/ยกเลิกพับเก็บหน้าต่าง"
+
+#, fuzzy
+#~| msgid "Window Tabbing"
+#~ msgid "Window &unshading:"
+#~ msgstr "การทำแท็บให้หน้าต่าง"
+
+#, fuzzy
+#~| msgid ""
+#~| "If Shade Hover is enabled, a shaded window will un-shade automatically "
+#~| "when the mouse pointer has been over the title bar for some time."
+#~ msgid ""
+#~ "<html><head/><body><p>If this option is enabled, a shaded window will "
+#~ "unshade automatically when the mouse pointer has been over the titlebar "
+#~ "for some time.</p></body></html>"
+#~ msgstr ""
+#~ "เมื่อเปิดใช้การยกเลิกพับเก็บเมื่อเมาส์อยู่ หน้าต่างที่พับเก็บอยู่ จะยกเลิกการพับเก็บอัตโนมัติ "
+#~ "เมื่อเลื่อนตัวชี้ของเมาส์มาอยู่เหนือแถบหัวเรื่องเป็นช่วงเวลาหนึ่ง"
+
+#~ msgid ""
+#~ "Sets the time in milliseconds before the window unshades when the mouse "
+#~ "pointer goes over the shaded window."
+#~ msgstr ""
+#~ "ตั้งค่าช่วงเวลา เป็นมิลลิวินาที ก่อนที่จะให้หน้าต่างยกเลิกการพับเก็บ เมื่อตัวชี้ของเมาส์ "
+#~ "มาอยู่เหนือหน้าต่างที่พับเก็บ"
+
+#~ msgid "Shade"
+#~ msgstr "พับเก็บ"
 
 #, fuzzy
 #~| msgid "Windows"
