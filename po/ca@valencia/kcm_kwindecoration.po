@@ -190,13 +190,13 @@ msgstr "Botons de la barra de títol"
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr "Tanca les finestres amb doble clic en el botó del menú"
+msgstr "Tanca les finestres amb doble clic damunt del botó del menú"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr "Feu clic i manteniu premut el botó del menú per a mostrar el menú."
+msgstr "Cliqueu i manteniu premut el botó del menú per a mostrar el menú."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
@@ -271,6 +271,3 @@ msgstr "Vores molt enormes de finestres"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Vores fora de mida de les finestres"
-
-#~ msgid "Shade"
-#~ msgstr "Plega"

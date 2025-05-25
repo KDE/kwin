@@ -37,12 +37,12 @@ msgstr "alviboi@gmail.com,sps@sastia.com"
 #: backends/wayland/wayland_output.cpp:466
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr "Premeu la tecla «Ctrl»tdret per a deixar anar el punter"
+msgstr "Premeu la tecla «Ctrl» dret per a deixar anar el punter"
 
 #: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr "Premeu la tecla «Ctrl»tdret per a agafar el punter"
+msgstr "Premeu la tecla «Ctrl» dret per a agafar el punter"
 
 #: backends/wayland/wayland_output.cpp:472
 #, kde-format
@@ -64,12 +64,12 @@ msgstr "- Eixida enfosquida"
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr "Premeu la tecla «Ctrl»tdret per a deixar anar l'entrada"
+msgstr "Premeu la tecla «Ctrl» dret per a deixar anar l'entrada"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr "Premeu la tecla «Ctrl»tdret per a agafar l'entrada"
+msgstr "Premeu la tecla «Ctrl» dret per a agafar l'entrada"
 
 #: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
@@ -4361,9 +4361,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Toggle Show Paint"
-#~ msgstr "Canvia la mostra del pintat"
-
-#~ msgid "&Shade"
-#~ msgstr "&Plega"
