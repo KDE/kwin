@@ -233,19 +233,19 @@ msgstr "Mida de la vora de la finestra:"
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
-msgstr "Obtín decoracions noves de finestra..."
+msgstr "Obtín decoracions noves de finestra…"
 
 #: package/contents/ui/main.qml:139
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr "Tanca les finestres amb doble clic en el botó del menú"
+msgstr "Tanca les finestres amb doble clic damunt del botó del menú"
 
 #: package/contents/ui/main.qml:156
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr "Feu clic i manteniu premut el botó del menú per a mostrar el menú."
+msgstr "Cliqueu i manteniu premut el botó del menú per a mostrar el menú."
 
 #: package/contents/ui/main.qml:163
 #, kde-format

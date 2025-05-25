@@ -542,7 +542,7 @@ msgstr "&Color:"
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
 msgstr ""
-"Dibuixa amb el ratolí prement les tecles «Maj+Meta» i movent el ratolí."
+"Dibuixa amb el ratolí prement les tecles «Majús+Meta» i movent el ratolí."
 
 #: outputlocator/outputlocator.cpp:48
 #, kde-format

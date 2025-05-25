@@ -1381,7 +1381,7 @@ msgstr "Inicia la sessió en mode bloquejat."
 #: main_wayland.cpp:396
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr "Inicia la sessió sense el suport del bloqueig de pantalla."
+msgstr "Inicia la sessió sense el suport del bloqueig de la pantalla."
 
 #: main_wayland.cpp:401
 #, kde-format
@@ -1644,7 +1644,7 @@ msgstr "Classe de finestra (aplicació)"
 #: rulesettings.kcfg:23
 #, kde-format
 msgid "Window class string match type"
-msgstr "Tipus de coincidència de la cadena de classe de finestra"
+msgstr "Tipus de coincidència de la cadena classe de la finestra"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:29
@@ -1662,7 +1662,7 @@ msgstr "Funció de la finestra"
 #: rulesettings.kcfg:37
 #, kde-format
 msgid "Window role string match type"
-msgstr "Tipus de coincidència de la cadena de funció de finestra"
+msgstr "Tipus de coincidència de la cadena funció de la finestra"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
@@ -1674,7 +1674,7 @@ msgstr "Títol de la finestra"
 #: rulesettings.kcfg:47
 #, kde-format
 msgid "Window title string match type"
-msgstr "Tipus de coincidència de la cadena de títol de finestra"
+msgstr "Tipus de coincidència de la cadena títol de la finestra"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:54
@@ -1686,7 +1686,7 @@ msgstr "Màquina (nom de l'amfitrió)"
 #: rulesettings.kcfg:57
 #, kde-format
 msgid "Machine string match type"
-msgstr "Tipus de coincidència de cadena de la màquina"
+msgstr "Tipus de coincidència de la cadena màquina"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:64

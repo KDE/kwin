@@ -238,8 +238,8 @@ msgstr "Actualment no s'han definit regles per a finestres específiques"
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr ""
-"Feu clic en el botó <interface>Afig nova…</interface> de davall per a afegir-"
-"ne"
+"Cliqueu damunt del botó <interface>Afig nova…</interface> de davall per a "
+"afegir-ne"
 
 #: package/contents/ui/main.qml:68
 #, kde-format
@@ -335,8 +335,9 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"Feu clic en el botó <interface>Afig propietat…</interface> de davall per a "
-"afegir diverses propietats de les finestres que seran afectades per la regla"
+"Cliqueu damunt del botó <interface>Afig propietat…</interface> de davall per "
+"a afegir diverses propietats de les finestres que seran afectades per la "
+"regla"
 
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
@@ -824,7 +825,7 @@ msgstr "Finestra normal"
 #: rulesmodel.cpp:740
 #, kde-format
 msgid "Dialog Window"
-msgstr "Finestra de diàleg"
+msgstr "Diàleg"
 
 #: rulesmodel.cpp:741
 #, kde-format
