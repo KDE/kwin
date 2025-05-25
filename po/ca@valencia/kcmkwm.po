@@ -1252,31 +1252,3 @@ msgstr ""
 "<em>quadro de pestanyes («Alt+Tab»)</em> entren en contradicció amb la "
 "política i no funcionaran. En el seu lloc, segurament voldreu utilitzar el "
 "<em>Focus seguix el ratolí (prioritat al ratolí)</em>."
-
-#~ msgid "Shade/unshade"
-#~ msgstr "Plega/desplega"
-
-#~ msgid "Window &unshading:"
-#~ msgstr "Des&plegat de la finestra:"
-
-#~ msgid ""
-#~ "<html><head/><body><p>If this option is enabled, a shaded window will "
-#~ "unshade automatically when the mouse pointer has been over the titlebar "
-#~ "for some time.</p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>Si el desplegat automàtic està activat, una "
-#~ "finestra plegada es desplegarà automàticament quan el punter del ratolí "
-#~ "estiga damunt de la barra de títol durant un temps</p></body></html>"
-
-#~ msgid "On titlebar hover after:"
-#~ msgstr "Després de passar per damunt de la barra de títol:"
-
-#~ msgid ""
-#~ "Sets the time in milliseconds before the window unshades when the mouse "
-#~ "pointer goes over the shaded window."
-#~ msgstr ""
-#~ "Establix el temps en mil·lisegons abans que la finestra es desplegue si "
-#~ "el punter del ratolí està per damunt de la finestra plegada."
-
-#~ msgid "Shade"
-#~ msgstr "Plega"
