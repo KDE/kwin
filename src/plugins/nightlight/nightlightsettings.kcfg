@@ -14,6 +14,7 @@
                 <choice name="Location"/>
                 <choice name="Times"/>
                 <choice name="Constant"/>
+                <choice name="DarkLight"/>
             </choices>
             <default>NightLightMode::Automatic</default>
         </entry>

@@ -16,7 +16,9 @@
 #include "nightlightdbusinterface.h"
 #include "nightlightlogging.h"
 #include "nightlightsettings.h"
+#include "nightlightstate.h"
 
+#include <KDarkLightScheduleProvider>
 #include <KGlobalAccel>
 #include <KHolidays/SunEvents>
 #include <KLocalizedString>
@@ -210,12 +212,30 @@ void NightLightManager::readConfig()
     case NightLightMode::Location:
     case NightLightMode::Timings:
     case NightLightMode::Constant:
+    case NightLightMode::DarkLight:
         setMode(mode);
         break;
     default:
         // Fallback for invalid setting values.
         setMode(NightLightMode::Automatic);
         break;
+    }
+
+    if (m_active && m_mode == NightLightMode::DarkLight) {
+        if (!m_stateConfig) {
+            m_stateConfig = std::make_unique<NightLightState>();
+        }
+        if (!m_darkLightScheduler) {
+            m_darkLightScheduler = std::make_unique<KDarkLightScheduleProvider>(m_stateConfig->state());
+            connect(m_darkLightScheduler.get(), &KDarkLightScheduleProvider::scheduleChanged, this, [this]() {
+                m_stateConfig->setState(m_darkLightScheduler->state());
+                m_stateConfig->save();
+                resetAllTimers();
+            });
+        }
+    } else {
+        m_stateConfig.reset();
+        m_darkLightScheduler.reset();
     }
 
     m_dayTargetTemperature = std::clamp(settings->dayTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
@@ -480,7 +500,41 @@ void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
     // there yet by a few microseconds or milliseconds.
     const int granularity = 1;
 
-    if (m_mode == NightLightMode::Constant) {
+    if (m_mode == NightLightMode::DarkLight) {
+        const auto previousTransition = m_darkLightScheduler->schedule().previousTransition(dateTime);
+        const auto nextTransition = m_darkLightScheduler->schedule().nextTransition(dateTime);
+
+        bool passedMorning = false;
+        bool passedEvening = false;
+
+        switch (previousTransition->test(dateTime)) {
+        case KDarkLightTransition::Upcoming:
+            break;
+        case KDarkLightTransition::InProgress:
+        case KDarkLightTransition::Passed:
+            if (previousTransition->type() == KDarkLightTransition::Morning) {
+                passedMorning = true;
+            } else {
+                passedEvening = true;
+            }
+        }
+
+        switch (nextTransition->test(dateTime)) {
+        case KDarkLightTransition::Upcoming:
+            break;
+        case KDarkLightTransition::InProgress:
+        case KDarkLightTransition::Passed:
+            if (nextTransition->type() == KDarkLightTransition::Morning) {
+                passedMorning = true;
+            } else {
+                passedEvening = true;
+            }
+        }
+
+        setDaylight(passedMorning && !passedEvening);
+        m_prev = DateTimes(previousTransition->startDateTime(), previousTransition->endDateTime());
+        m_next = DateTimes(nextTransition->startDateTime(), nextTransition->endDateTime());
+    } else if (m_mode == NightLightMode::Constant) {
         setDaylight(false);
         m_next = DateTimes();
         m_prev = DateTimes();

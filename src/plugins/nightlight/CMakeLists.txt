@@ -14,12 +14,19 @@ ecm_qt_declare_logging_category(nightlight
 
 kconfig_add_kcfg_files(nightlight nightlightsettings.kcfgc)
 
+kconfig_target_kcfg_file(nightlight
+    FILE nightlightstate.kcfg
+    CLASS_NAME NightLightState
+    MUTATORS
+)
+
 set(nightlight_xml_SOURCES)
 qt_add_dbus_adaptor(nightlight_xml_SOURCES org.kde.KWin.NightLight.xml nightlightdbusinterface.h KWin::NightLightDBusInterface)
 target_sources(nightlight PRIVATE ${nightlight_xml_SOURCES})
 
 target_link_libraries(nightlight
     kwin
+    KNightTime
     KF6::ConfigGui
     KF6::GlobalAccel
     KF6::Holidays

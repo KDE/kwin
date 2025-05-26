@@ -19,7 +19,9 @@
 #include <QObject>
 #include <QPair>
 
+class KDarkLightScheduleProvider;
 class KSystemClockSkewNotifier;
+class NightLightState;
 class QTimer;
 
 namespace KWin
@@ -55,6 +57,7 @@ enum NightLightMode {
      * Color temperature is constant thoughout the day.
      */
     Constant,
+    DarkLight,
 };
 
 /**
@@ -267,6 +270,9 @@ private:
 
     NightLightDBusInterface *m_iface;
     KSystemClockSkewNotifier *m_skewNotifier;
+
+    std::unique_ptr<NightLightState> m_stateConfig;
+    std::unique_ptr<KDarkLightScheduleProvider> m_darkLightScheduler;
 
     // Specifies whether Night Light is enabled.
     bool m_active = false;
