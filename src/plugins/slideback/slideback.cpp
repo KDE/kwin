@@ -67,7 +67,8 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
                 currentFound = true;
             }
         } else {
-            if (isWindowUsable(tmp) && tmp->isOnCurrentDesktop() && w->isOnCurrentDesktop()) {
+            if (isWindowUsable(tmp) && tmp->isOnCurrentDesktop() && w->isOnCurrentDesktop()
+                && tmp->isOnCurrentActivity() && w->isOnCurrentActivity()) {
                 // Do we have to move it?
                 if (intersects(w, tmp->frameGeometry().toRect())) {
                     QRect slideRect;
