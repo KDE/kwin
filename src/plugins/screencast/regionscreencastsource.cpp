@@ -94,24 +94,37 @@ void RegionScreenCastSource::blit(Output *output)
     m_last = output->renderLoop()->lastPresentationTimestamp();
 
     if (m_renderedTexture) {
-        const auto [outputTexture, colorDescription] = Compositor::self()->backend()->textureForOutput(output);
-        const auto outputGeometry = snapToPixelGridF(scaledRect(output->geometryF(), m_scale));
-        if (!outputTexture) {
+        const auto layer = Compositor::self()->backend()->textureForOutput(output);
+        if (!layer.texture) {
             return;
         }
-
         GLFramebuffer::pushFramebuffer(m_target.get());
 
-        ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        const QRect scaledRegion = snapToPixelGridF(scaledRect(m_region, m_scale)).toRect();
+        const QRect outputGeometry = snapToPixelGridF(scaledRect(output->geometryF(), m_scale)).toRect();
+        const QRectF logicalDst = scaledRect(QRectF(layer.dstRect), 1.0 / output->scale()).translated(output->geometryF().topLeft());
+        const QRect dstGeometry = snapToPixelGridF(scaledRect(logicalDst, m_scale)).toRect();
+
+        if (dstGeometry != outputGeometry) {
+            // clear the background first, as the output texture doesn't cover the entire region
+            const QRect bufferRect = outputGeometry.translated(-scaledRegion.topLeft());
+            glEnable(GL_SCISSOR_TEST);
+            glScissor(bufferRect.x(), bufferRect.y(), bufferRect.width(), bufferRect.height());
+            glClearColor(0, 0, 0, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glDisable(GL_SCISSOR_TEST);
+        }
+
         QMatrix4x4 projectionMatrix;
         projectionMatrix.scale(1, -1);
         projectionMatrix.ortho(snapToPixelGridF(scaledRect(m_region, m_scale)));
-        projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
+        projectionMatrix.translate(dstGeometry.left(), dstGeometry.top());
 
+        ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-        shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
+        shaderBinder.shader()->setColorspaceUniforms(layer.color, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
 
-        outputTexture->render(outputGeometry.size());
+        layer.texture->render(dstGeometry.size());
         GLFramebuffer::popFramebuffer();
     }
 }

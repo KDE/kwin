@@ -55,28 +55,50 @@ qreal OutputScreenCastSource::devicePixelRatio() const
 
 void OutputScreenCastSource::render(QImage *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->backend()->textureForOutput(m_output);
-    if (outputTexture) {
-        grabTexture(outputTexture.get(), target);
+    const auto layer = Compositor::self()->backend()->textureForOutput(m_output);
+    if (!layer.texture) {
+        return;
     }
+    if (layer.srcRect == QRect(QPoint(), layer.texture->size())
+        && layer.dstRect == QRect(QPoint(0, 0), m_output->pixelSize())
+        && layer.color == ColorDescription::sRGB) {
+        // shortcut, we don't need to render anything
+        grabTexture(layer.texture.get(), target);
+        return;
+    }
+    // this is more complicated, render to a temporary framebuffer instead
+    const auto shadowTexture = GLTexture::allocate(GL_RGBA8, target->size());
+    if (!shadowTexture) {
+        return;
+    }
+    GLFramebuffer tmp(shadowTexture.get());
+    render(&tmp);
+    grabTexture(shadowTexture.get(), target);
 }
 
 void OutputScreenCastSource::render(GLFramebuffer *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->backend()->textureForOutput(m_output);
-    if (!outputTexture) {
+    const auto layer = Compositor::self()->backend()->textureForOutput(m_output);
+    if (!layer.texture) {
         return;
     }
 
-    const bool yuv = colorDescription.yuvCoefficients() != YUVMatrixCoefficients::Identity;
+    if (layer.dstRect != QRect(QPoint(0, 0), m_output->pixelSize())) {
+        // clear the background first, as the output texture doesn't cover the entire region
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    const bool yuv = layer.color.yuvCoefficients() != YUVMatrixCoefficients::Identity;
     ShaderBinder shaderBinder((yuv ? ShaderTrait::MapYUVTexture : ShaderTrait::MapTexture) | ShaderTrait::TransformColorspace);
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
     projectionMatrix.ortho(QRect(QPoint(), textureSize()));
+    projectionMatrix.translate(layer.dstRect.x(), layer.dstRect.y());
     shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
+    shaderBinder.shader()->setColorspaceUniforms(layer.color, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
     if (yuv) {
-        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::YuvToRgb, colorDescription.yuvMatrix());
+        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::YuvToRgb, layer.color.yuvMatrix());
         shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler, 0);
         shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler1, 1);
     } else {
@@ -84,7 +106,7 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
     }
 
     GLFramebuffer::pushFramebuffer(target);
-    outputTexture->render(textureSize());
+    layer.texture->render(layer.dstRect.size());
     GLFramebuffer::popFramebuffer();
 }
 

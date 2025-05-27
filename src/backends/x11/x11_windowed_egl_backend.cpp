@@ -296,6 +296,8 @@ RenderBackend::LayerTexture X11WindowedEglBackend::textureForOutput(Output *outp
     return LayerTexture{
         .texture = it->second.primaryLayer->texture(),
         .color = ColorDescription::sRGB,
+        .srcRect = it->second.primaryLayer->sourceRect(),
+        .dstRect = it->second.primaryLayer->targetRect(),
     };
 }
 

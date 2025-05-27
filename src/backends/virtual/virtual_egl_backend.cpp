@@ -185,6 +185,8 @@ RenderBackend::LayerTexture VirtualEglBackend::textureForOutput(Output *output) 
     return LayerTexture{
         .texture = it->second->texture(),
         .color = ColorDescription::sRGB,
+        .srcRect = it->second->sourceRect(),
+        .dstRect = it->second->targetRect(),
     };
 }
 
