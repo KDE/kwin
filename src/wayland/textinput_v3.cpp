@@ -201,7 +201,14 @@ void TextInputV3InterfacePrivate::sendPreEdit(const QString &text, const quint32
 
     const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
     for (auto resource : textInputs) {
-        send_preedit_string(resource->handle, text, cursorBegin, cursorEnd);
+        // Special handling for empty preedit, send null instead of empty string.
+        // text in preedit_string is defined as allow-null, however qt wayland can't generate a
+        // null ptr call from either null QString() or empty QString().
+        if (text.isEmpty()) {
+            zwp_text_input_v3_send_preedit_string(resource->handle, nullptr, cursorBegin, cursorEnd);
+        } else {
+            send_preedit_string(resource->handle, text, cursorBegin, cursorEnd);
+        }
     }
 }
 
