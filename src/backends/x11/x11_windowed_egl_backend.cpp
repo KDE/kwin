@@ -287,13 +287,16 @@ OutputLayer *X11WindowedEglBackend::cursorLayer(Output *output)
     return m_outputs[output].cursorLayer.get();
 }
 
-std::pair<std::shared_ptr<GLTexture>, ColorDescription> X11WindowedEglBackend::textureForOutput(Output *output) const
+RenderBackend::LayerTexture X11WindowedEglBackend::textureForOutput(Output *output) const
 {
     auto it = m_outputs.find(output);
     if (it == m_outputs.end()) {
-        return {nullptr, ColorDescription::sRGB};
+        return {};
     }
-    return std::make_pair(it->second.primaryLayer->texture(), ColorDescription::sRGB);
+    return LayerTexture{
+        .texture = it->second.primaryLayer->texture(),
+        .color = ColorDescription::sRGB,
+    };
 }
 
 } // namespace

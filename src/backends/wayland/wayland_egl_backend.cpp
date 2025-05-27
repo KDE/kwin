@@ -324,9 +324,12 @@ bool WaylandEglBackend::initRenderingContext()
     return openglContext()->makeCurrent();
 }
 
-std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> WaylandEglBackend::textureForOutput(KWin::Output *output) const
+RenderBackend::LayerTexture WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
-    return std::make_pair(m_outputs.at(output).primaryLayer->texture(), ColorDescription::sRGB);
+    return LayerTexture{
+        .texture = m_outputs.at(output).primaryLayer->texture(),
+        .color = ColorDescription::sRGB,
+    };
 }
 
 bool WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)

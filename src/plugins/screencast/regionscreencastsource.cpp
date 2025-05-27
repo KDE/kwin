@@ -7,17 +7,18 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
+#include "compositor.h"
+#include "core/output.h"
 #include "core/pixelgrid.h"
+#include "core/renderbackend.h"
 #include "cursor.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
-#include <compositor.h>
-#include <core/output.h>
-#include <drm_fourcc.h>
-#include <scene/workspacescene.h>
-#include <workspace.h>
+#include "scene/workspacescene.h"
+#include "workspace.h"
 
 #include <QPainter>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -93,7 +94,7 @@ void RegionScreenCastSource::blit(Output *output)
     m_last = output->renderLoop()->lastPresentationTimestamp();
 
     if (m_renderedTexture) {
-        const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(output);
+        const auto [outputTexture, colorDescription] = Compositor::self()->backend()->textureForOutput(output);
         const auto outputGeometry = snapToPixelGridF(scaledRect(output->geometryF(), m_scale));
         if (!outputTexture) {
             return;

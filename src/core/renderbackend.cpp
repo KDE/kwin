@@ -197,6 +197,11 @@ void RenderBackend::repairPresentation(Output *output)
 {
 }
 
+RenderBackend::LayerTexture RenderBackend::textureForOutput(Output *output) const
+{
+    return {};
+}
+
 } // namespace KWin
 
 #include "moc_renderbackend.cpp"

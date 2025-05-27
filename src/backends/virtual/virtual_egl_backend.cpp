@@ -176,13 +176,16 @@ bool VirtualEglBackend::present(Output *output, const std::shared_ptr<OutputFram
     return true;
 }
 
-std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> VirtualEglBackend::textureForOutput(Output *output) const
+RenderBackend::LayerTexture VirtualEglBackend::textureForOutput(Output *output) const
 {
     auto it = m_outputs.find(output);
     if (it == m_outputs.end()) {
-        return {nullptr, ColorDescription::sRGB};
+        return {};
     }
-    return std::make_pair(it->second->texture(), ColorDescription::sRGB);
+    return LayerTexture{
+        .texture = it->second->texture(),
+        .color = ColorDescription::sRGB,
+    };
 }
 
 } // namespace
