@@ -31,26 +31,5 @@ target_link_libraries(kcm_kwin_taskswitching PRIVATE
     KF6::WidgetsAddons
 )
 
-# TabBox preview helper
-add_executable(kwin-tabbox-preview
-    preview/layoutpreview.cpp
-    preview/thumbnailitem.cpp
-)
-qt_add_resources(kwin-tabbox-preview "thumbnails"
-    PREFIX "/kwin-tabbox-preview"
-    BASE "preview/thumbnails"
-    FILES
-        preview/thumbnails/falkon.png
-        preview/thumbnails/kmail.png
-        preview/thumbnails/systemsettings.png
-        preview/thumbnails/dolphin.png
-        preview/thumbnails/desktop.png
-)
-target_link_libraries(kwin-tabbox-preview
-    Qt::Quick
-    KF6::I18n
-)
-install(TARGETS kwin-tabbox-preview DESTINATION ${KDE_INSTALL_LIBEXECDIR})
-
 # KNewStuff
 install(FILES kwinswitcher.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
