@@ -26,46 +26,26 @@ Kirigami.FormLayout {
         Kirigami.FormData.isSection: true
     }
 
-    RowLayout {
-        spacing: Kirigami.Units.smallSpacing
+    TabBoxLayoutsComboBox {
         Kirigami.FormData.label: i18nc("Task switcher style", "Switcher style:")
-        Kirigami.FormData.buddyFor: layoutNameComboBox
+        Layout.minimumWidth: Kirigami.Units.gridUnit * 12
 
-        TabBoxLayoutsComboBox {
-            id: layoutNameComboBox
-            Layout.minimumWidth: Kirigami.Units.gridUnit * 12
+        tabBoxSettings: root.tabBoxSettings
 
-            tabBoxSettings: root.tabBoxSettings
-
-            KCM.SettingStateProxy {
-                id: layoutNameComboBoxShowTabBoxState
-                configObject: root.tabBoxSettings
-                settingName: "ShowTabBox"
-            }
-
-            KCM.SettingStateProxy {
-                id: layoutNameComboBoxLayoutNameState
-                configObject: root.tabBoxSettings
-                settingName: "LayoutName"
-            }
-
-            KCM.SettingHighlighter {
-                highlight: !layoutNameComboBoxShowTabBoxState.defaulted || !layoutNameComboBoxLayoutNameState.defaulted
-            }
+        KCM.SettingStateProxy {
+            id: layoutNameComboBoxShowTabBoxState
+            configObject: root.tabBoxSettings
+            settingName: "ShowTabBox"
         }
 
-        QQC2.Button {
-            icon.name: "view-preview-symbolic"
-            text: i18nc("@info:tooltip", "Preview Switcher…")
-            display: QQC2.AbstractButton.IconOnly
+        KCM.SettingStateProxy {
+            id: layoutNameComboBoxLayoutNameState
+            configObject: root.tabBoxSettings
+            settingName: "LayoutName"
+        }
 
-            QQC2.ToolTip.text: text
-            QQC2.ToolTip.visible: hovered
-            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
-
-            enabled: root.tabBoxSettings.showTabBox && layoutNameComboBox.path.length > 0
-
-            onClicked: kcm.previewTabBoxLayout(layoutNameComboBox.path, root.tabBoxSettings.showDesktopMode)
+        KCM.SettingHighlighter {
+            highlight: !layoutNameComboBoxShowTabBoxState.defaulted || !layoutNameComboBoxLayoutNameState.defaulted
         }
     }
 

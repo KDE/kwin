@@ -111,41 +111,6 @@ void TaskSwitchingKCM::save()
     }
 }
 
-void TaskSwitchingKCM::previewTabBoxLayout(const QString &path, const bool showDesktopMode)
-{
-    // The process will close when losing focus, but check in case of multiple calls
-    if (m_tabBoxLayoutPreviewProcess && m_tabBoxLayoutPreviewProcess->state() != QProcess::NotRunning) {
-        return;
-    }
-
-    // Launch the preview helper executable with the required env var
-    // that allows the PlasmaDialog to position itself
-    // QT_WAYLAND_DISABLE_FIXED_POSITIONS=1 kwin-tabbox-preview <path> [--show-desktop]
-
-    const QString previewHelper = QStandardPaths::findExecutable("kwin-tabbox-preview", {LIBEXEC_DIR});
-    if (previewHelper.isEmpty()) {
-        qWarning() << "Cannot find tabbox preview helper executable \"kwin-tabbox-preview\" in" << LIBEXEC_DIR;
-        return;
-    }
-
-    QStringList args;
-    args << path;
-    if (showDesktopMode) {
-        args << QStringLiteral("--show-desktop");
-    }
-
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert(QStringLiteral("QT_WAYLAND_DISABLE_FIXED_POSITIONS"),
-               QStringLiteral("1"));
-
-    m_tabBoxLayoutPreviewProcess = std::make_unique<QProcess>();
-    m_tabBoxLayoutPreviewProcess->setArguments(args);
-    m_tabBoxLayoutPreviewProcess->setProgram(previewHelper);
-    m_tabBoxLayoutPreviewProcess->setProcessEnvironment(env);
-    m_tabBoxLayoutPreviewProcess->setProcessChannelMode(QProcess::ForwardedChannels);
-    m_tabBoxLayoutPreviewProcess->start();
-}
-
 void TaskSwitchingKCM::configureTabBoxShortcuts(const bool showAlternative)
 {
     KShortcutsDialog *dialog = new KShortcutsDialog(KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);

@@ -16,13 +16,6 @@ QQC2.ComboBox {
     required property var tabBoxSettings
     readonly property var tabBoxLayouts: kcm.tabBoxLayouts
 
-    readonly property string path: _private.path
-
-    QtObject {
-        id: _private
-        property string path: ""
-    }
-
     Connections {
         target: tabBoxLayouts
         function onModelReset() { updateModel(); }
@@ -67,8 +60,6 @@ QQC2.ComboBox {
             // We've chosen 'none'
             tabBoxSettings.showTabBox = false;
         }
-
-        updateLayoutData();
     }
 
     function updateCurrentIndex() {
@@ -90,18 +81,6 @@ QQC2.ComboBox {
             }
         } else {
             currentIndex = 0; // 'None'
-        }
-
-        updateLayoutData();
-    }
-
-    function updateLayoutData() {
-        let chosenModelIndex = currentIndex - 1;
-        if (chosenModelIndex >= 0) {
-            let index = tabBoxLayouts.index(chosenModelIndex, 0);
-            _private.path = tabBoxLayouts.data(index, TabBoxLayoutsModel.PathRole);
-        } else {
-            _private.path = "";
         }
     }
 
