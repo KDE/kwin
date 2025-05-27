@@ -329,6 +329,8 @@ RenderBackend::LayerTexture WaylandEglBackend::textureForOutput(KWin::Output *ou
     return LayerTexture{
         .texture = m_outputs.at(output).primaryLayer->texture(),
         .color = ColorDescription::sRGB,
+        .srcRect = m_outputs.at(output).primaryLayer->sourceRect(),
+        .dstRect = m_outputs.at(output).primaryLayer->targetRect(),
     };
 }
 

@@ -142,6 +142,10 @@ public:
     {
         std::shared_ptr<GLTexture> texture;
         ColorDescription color = ColorDescription::sRGB;
+        // in buffer-local coordinates
+        QRectF srcRect;
+        // in device coordinates
+        QRect dstRect;
     };
     virtual LayerTexture textureForOutput(Output *output) const;
 };

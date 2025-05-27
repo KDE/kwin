@@ -165,12 +165,16 @@ RenderBackend::LayerTexture EglGbmBackend::textureForOutput(Output *output) cons
         return LayerTexture{
             .texture = virtualLayer->texture(),
             .color = virtualLayer->colorDescription(),
+            .srcRect = virtualLayer->sourceRect(),
+            .dstRect = virtualLayer->targetRect(),
         };
     }
     const auto layer = static_cast<EglGbmLayer *>(drmOutput->primaryLayer());
     return LayerTexture{
         .texture = layer->texture(),
         .color = layer->colorDescription(),
+        .srcRect = layer->sourceRect(),
+        .dstRect = layer->targetRect(),
     };
 }
 
