@@ -1185,28 +1185,3 @@ msgstr ""
 "strong><em>阻止焦点抢占</em> 和 <em>任务切换器 (Alt+Tab)</em> 与本策略冲突，"
 "它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠标 (鼠标优"
 "先)</em> 模式。"
-
-#~ msgid "Shade/unshade"
-#~ msgstr "折叠/展开"
-
-#~ msgid "Window &unshading:"
-#~ msgstr "窗口展开(&U)："
-
-#~ msgid ""
-#~ "<html><head/><body><p>If this option is enabled, a shaded window will "
-#~ "unshade automatically when the mouse pointer has been over the titlebar "
-#~ "for some time.</p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>如果此选项被启用，当鼠标光标在标题栏上悬停片刻后，折"
-#~ "叠窗口将自动展开。</p></body></html>"
-
-#~ msgid "On titlebar hover after:"
-#~ msgstr "标题栏悬停后："
-
-#~ msgid ""
-#~ "Sets the time in milliseconds before the window unshades when the mouse "
-#~ "pointer goes over the shaded window."
-#~ msgstr "设置鼠标光标在折叠的窗口上悬停多少毫秒后自动展开窗口。"
-
-#~ msgid "Shade"
-#~ msgstr "折叠"
