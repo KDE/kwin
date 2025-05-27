@@ -12,6 +12,7 @@
 #include "scene/surfaceitem_internal.h"
 #include "scene/surfaceitem_wayland.h"
 #include "virtualdesktops.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -316,9 +317,16 @@ void WindowItemX11::initialize()
 {
     if (!window()->surface()) {
         updateSurfaceItem(nullptr);
+    } else if (!window()->surface()->isMapped()) {
+        connect(window()->surface(), &SurfaceInterface::mapped, this, &WindowItemX11::delayedInitialize, Qt::SingleShotConnection);
     } else {
         updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), this));
     }
+}
+
+void WindowItemX11::delayedInitialize()
+{
+    updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), this));
 }
 #endif
 

@@ -106,6 +106,7 @@ public:
 
 private Q_SLOTS:
     void initialize();
+    void delayedInitialize();
 };
 #endif
 
