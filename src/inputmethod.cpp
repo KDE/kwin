@@ -802,8 +802,9 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
                     }
                 }
             }
-
             t3->sendPreEditString(text, cursor, cursorEnd);
+        } else {
+            t3->sendPreEditString(text, 0, 0);
         }
         t3->done();
     }
