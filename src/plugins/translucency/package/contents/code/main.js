@@ -212,7 +212,7 @@ var translucencyEffect = {
 
         window.minimizedChanged.connect(() => {
             if (window.minimized) {
-                translucencyEffect.cancelAnimations();
+                translucencyEffect.cancelAnimations(window);
             } else {
                 translucencyEffect.startAnimation(window);
                 translucencyEffect.inactive.animate(window);
