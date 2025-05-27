@@ -24,6 +24,7 @@ class PresentationFeedback;
 class RenderLoop;
 class DrmDevice;
 class SyncTimeline;
+class GLTexture;
 
 class PresentationFeedback
 {
@@ -136,6 +137,13 @@ public:
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer);
     virtual QHash<uint32_t, QList<uint64_t>> supportedFormats() const;
+
+    struct LayerTexture
+    {
+        std::shared_ptr<GLTexture> texture;
+        ColorDescription color = ColorDescription::sRGB;
+    };
+    virtual LayerTexture textureForOutput(Output *output) const;
 };
 
 } // namespace KWin

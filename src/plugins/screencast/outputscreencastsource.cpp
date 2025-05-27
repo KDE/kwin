@@ -9,6 +9,7 @@
 
 #include "compositor.h"
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "cursor.h"
 #include "opengl/gltexture.h"
@@ -54,7 +55,7 @@ qreal OutputScreenCastSource::devicePixelRatio() const
 
 void OutputScreenCastSource::render(QImage *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
+    const auto [outputTexture, colorDescription] = Compositor::self()->backend()->textureForOutput(m_output);
     if (outputTexture) {
         grabTexture(outputTexture.get(), target);
     }
@@ -62,7 +63,7 @@ void OutputScreenCastSource::render(QImage *target)
 
 void OutputScreenCastSource::render(GLFramebuffer *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
+    const auto [outputTexture, colorDescription] = Compositor::self()->backend()->textureForOutput(m_output);
     if (!outputTexture) {
         return;
     }
