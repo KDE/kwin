@@ -36,7 +36,6 @@ public:
     bool isDefaults() const override;
     void save() override;
 
-    Q_INVOKABLE void previewTabBoxLayout(const QString &path, const bool showDesktopMode);
     Q_INVOKABLE void configureTabBoxShortcuts(const bool showAlternative);
     Q_INVOKABLE void configureOverviewShortcuts();
     Q_INVOKABLE void ghnsEntryChanged();
