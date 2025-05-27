@@ -791,7 +791,6 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         m_downsamplePass.shader->setUniform(m_downsamplePass.mvpMatrixLocation, projectionMatrix);
         m_downsamplePass.shader->setUniform(m_downsamplePass.offsetLocation, float(m_offset));
 
-        GLFramebuffer::pushFramebuffer(renderInfo.framebuffers[0].get());
         for (size_t i = 1; i < renderInfo.framebuffers.size(); ++i) {
             const auto &read = renderInfo.framebuffers[i - 1];
             const auto &draw = renderInfo.framebuffers[i];
@@ -819,7 +818,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         m_upsamplePass.shader->setUniform(m_upsamplePass.mvpMatrixLocation, projectionMatrix);
         m_upsamplePass.shader->setUniform(m_upsamplePass.offsetLocation, float(m_offset));
 
-        for (size_t i = renderInfo.framebuffers.size() - 1; i > 0; --i) {
+        for (size_t i = renderInfo.framebuffers.size() - 1; i > 1; --i) {
             GLFramebuffer::popFramebuffer();
             const auto &read = renderInfo.framebuffers[i];
 
@@ -844,7 +843,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             m_contrastPass.shader->setUniform(m_contrastPass.colorMatrixLocation, colorMatrix);
 
             GLFramebuffer::popFramebuffer();
-            const auto &read = renderInfo.framebuffers[0];
+            const auto &read = renderInfo.framebuffers[1];
 
             read->colorAttachment()->bind();
 
