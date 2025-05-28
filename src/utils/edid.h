@@ -108,6 +108,8 @@ public:
 
     QByteArray pnpId() const;
 
+    std::optional<uint32_t> minVrrRefreshRateHz() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;
@@ -127,6 +129,7 @@ private:
     };
     std::optional<HDRMetadata> m_hdrMetadata;
     std::optional<QSize> m_nativeResolution;
+    std::optional<uint32_t> m_minVrrRefreshRateHz;
 
     QByteArray m_identifier;
 

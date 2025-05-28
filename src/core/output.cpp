@@ -876,6 +876,11 @@ Output::EdrPolicy Output::edrPolicy() const
     return m_state.edrPolicy;
 }
 
+std::optional<uint32_t> Output::minVrrRefreshRateHz() const
+{
+    return m_information.minVrrRefreshRateHz;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"
