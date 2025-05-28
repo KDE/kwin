@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Tommi Nieminen <translator@legisign.org>, 2023, 2024.
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Tommi Nieminen <translator@legisign.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 02:37+0000\n"
-"PO-Revision-Date: 2024-03-12 10:41+0200\n"
+"PO-Revision-Date: 2025-05-25 17:49+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -15,18 +15,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: ui/main.qml:27
 #, kde-format
 msgctxt "@info"
 msgid "Changes will take effect the next time you log in."
-msgstr ""
+msgstr "Muutokset tulevat voimaan kirjautuessasi takaisin sisään."
 
 #: ui/main.qml:31
 #, kde-format
 msgctxt "@action:button"
 msgid "Log Out Now"
-msgstr ""
+msgstr "Kirjaudu ulos nyt"
 
 #: ui/main.qml:52
 #, kde-format
@@ -95,7 +96,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Osoittimen ja näppäimistön hallinta:"
 
 #: ui/main.qml:156
 #, kde-format
@@ -103,7 +104,7 @@ msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "salli kysymättä lupaa"
 
 #~ msgid "Only non-character keys"
 #~ msgstr "Vain ei-merkkinäppäimet"
