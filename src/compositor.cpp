@@ -615,8 +615,12 @@ void Compositor::addOutput(Output *output)
     auto updateCursorLayer = [this, output, cursorLayer]() {
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
-            // TODO use the output's minimum VRR range for this
-            maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / 30;
+            const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
+                // this is intentionally using a tiny bit higher refresh rate than the minimum
+                // so that slight differences in timing don't drop us below the minimum
+                return value + 2;
+            }).value_or(30);
+            maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
         }
         const Cursor *cursor = Cursors::self()->currentCursor();
         const QRectF outputLocalRect = output->mapFromGlobal(cursor->geometry());

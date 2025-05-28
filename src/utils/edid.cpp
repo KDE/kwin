@@ -211,6 +211,19 @@ Edid::Edid(QByteArrayView data)
         m_hdrMetadata->supportsBT2020 = *s_forceHdrSupport;
     }
 
+    const di_edid_display_descriptor *const *descriptors = di_edid_get_display_descriptors(edid);
+    const di_edid_display_range_limits *limits = nullptr;
+    for (; *descriptors != nullptr; descriptors++) {
+        if (!limits && (limits = di_edid_display_descriptor_get_range_limits(*descriptors))) {
+            break;
+        }
+    }
+    if (limits && limits->min_vert_rate_hz) {
+        m_minVrrRefreshRateHz = limits->min_vert_rate_hz;
+    } else {
+        m_minVrrRefreshRateHz.reset();
+    }
+
     const di_displayid *displayid = nullptr;
     const di_edid_ext *const *exts = di_edid_get_extensions(edid);
     for (; *exts != nullptr; exts++) {
@@ -371,6 +384,11 @@ QByteArray Edid::identifier() const
 QByteArray Edid::pnpId() const
 {
     return m_pnpId;
+}
+
+std::optional<uint32_t> Edid::minVrrRefreshRateHz() const
+{
+    return m_minVrrRefreshRateHz;
 }
 
 } // namespace KWin

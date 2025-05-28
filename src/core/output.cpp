@@ -879,6 +879,12 @@ Output::EdrPolicy Output::edrPolicy() const
 void Output::setAutoRotateAvailable(bool isAvailable)
 {
 }
+
+std::optional<uint32_t> Output::minVrrRefreshRateHz() const
+{
+    return m_information.minVrrRefreshRateHz;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"
