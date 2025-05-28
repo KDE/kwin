@@ -408,6 +408,7 @@ public:
     BpcRange bitsPerColorRange() const;
     std::optional<uint32_t> automaticMaxBitsPerColorLimit() const;
     EdrPolicy edrPolicy() const;
+    std::optional<uint32_t> minVrrRefreshRateHz() const;
 
 Q_SIGNALS:
     /**
@@ -502,6 +503,7 @@ protected:
         std::optional<double> maxAverageBrightness;
         double minBrightness = 0;
         BpcRange bitsPerColorRange;
+        std::optional<uint32_t> minVrrRefreshRateHz;
     };
 
     struct State
