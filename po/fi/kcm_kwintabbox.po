@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-04-20 16:39+0300\n"
+"PO-Revision-Date: 2025-05-25 17:49+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -26,17 +26,17 @@ msgstr ""
 #: layoutpreview.cpp:27
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "Käynnistä ikkunavaihdon vuorovaikutteinen esikatselu"
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Ikkunavaihdon QML-päätiedoston sijainti"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Näytä työpöydällä myös pienoiskuva"
 
 #: layoutpreview.cpp:156
 #, kde-format
