@@ -25,6 +25,7 @@
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_plane.h"
+#include "utils/drm_format_helper.h"
 #include "utils/envvar.h"
 #include "utils/kernel.h"
 
@@ -525,6 +526,8 @@ bool DrmPipeline::pruneModifier()
     if (modifiers == implicitModifier) {
         return false;
     } else {
+        qCDebug(KWIN_DRM) << "Pruning modifiers for format" << FormatInfo::drmFormatName(dmabufAttributes->format)
+                          << "on" << m_connector->connectorName();
         modifiers = implicitModifier;
         return true;
     }
