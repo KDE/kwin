@@ -104,7 +104,7 @@ VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, con
 
         for (auto i = m_layouts.constBegin(); i != m_layouts.constEnd(); ++i) {
             if (const uint layout = *i) {
-                m_config.writeEntry(defaultLayoutEntryKey() % QString::number(i.key()->x11DesktopNumber()), layout);
+                m_config.writeEntry(defaultLayoutEntryKey() % i.key()->id(), layout);
             }
         }
     });
@@ -113,7 +113,7 @@ VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, con
         if (xkb->numberOfLayouts() > 1) {
             const auto &desktops = VirtualDesktopManager::self()->desktops();
             for (KWin::VirtualDesktop *const desktop : desktops) {
-                const uint layout = m_config.readEntry(defaultLayoutEntryKey() % QString::number(desktop->x11DesktopNumber()), 0u);
+                const uint layout = m_config.readEntry(defaultLayoutEntryKey() % desktop->id(), 0u);
                 if (layout) {
                     m_layouts.insert(desktop, layout);
                     connect(desktop, &VirtualDesktop::aboutToBeDestroyed, this, [this, desktop]() {
