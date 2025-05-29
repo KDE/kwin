@@ -575,7 +575,7 @@ Closes the window.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Show actions menu</guilabel></term>
+<term><guilabel>Window menu</guilabel></term>
 <listitem>
 <para>
 Will bring up a small submenu where you can choose window related
@@ -845,6 +845,16 @@ Makes the window more transparent.
 <listitem>
 <para>
 Makes the window less transparent.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Window menu</guilabel></term>
+<listitem>
+<para>
+Will bring up a small submenu where you can choose window related
+commands (&ie; Move to Desktop, Move to Screen, Maximize, Minimize, Close, &etc;).
 </para>
 </listitem>
 </varlistentry>

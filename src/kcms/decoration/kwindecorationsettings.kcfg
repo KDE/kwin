@@ -22,7 +22,7 @@
       <default>true</default>
     </entry>
     <entry name="closeOnDoubleClickOnMenu" key="CloseOnDoubleClickOnMenu" type="Bool">
-      <label>Close windows by double clicking the menu button</label>
+      <label>Close windows by double clicking the window menu button</label>
       <default>false</default>
     </entry>
     <entry name="showToolTips" key="ShowToolTips" type="Bool">

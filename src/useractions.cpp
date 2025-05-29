@@ -13,7 +13,7 @@
 
  This file contains things relevant to direct user actions, such as
  responses to global keyboard shortcuts, or selecting actions
- from the window operations menu.
+ from the window menu.
 
 */
 
@@ -156,12 +156,12 @@ void UserActionsMenu::helperDialog(const QString &message)
         QAction *action = Workspace::self()->findChild<QAction *>(name);
         Q_ASSERT(action != nullptr);
         const auto shortcuts = KGlobalAccel::self()->shortcut(action);
-        return QStringLiteral("%1 (%2)").arg(action->text(), shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
+        return QStringLiteral("%1").arg(shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
     };
     if (message == QLatin1StringView("noborderaltf3")) {
         args << QStringLiteral("--msgbox") << i18n("You have selected to show a window without its border.\n"
                                                    "Without the border, you will not be able to enable the border "
-                                                   "again using the mouse: use the window operations menu instead, "
+                                                   "again using the mouse: use the window menu instead, "
                                                    "activated using the %1 keyboard shortcut.",
                                                    shortcut(QStringLiteral("Window Operations Menu")));
         type = QStringLiteral("altf3warning");
@@ -169,7 +169,7 @@ void UserActionsMenu::helperDialog(const QString &message)
         args << QStringLiteral("--msgbox") << i18n("You have selected to show a window in fullscreen mode.\n"
                                                    "If the application itself does not have an option to turn the fullscreen "
                                                    "mode off you will not be able to disable it "
-                                                   "again using the mouse: use the window operations menu instead, "
+                                                   "again using the mouse: use the window menu instead, "
                                                    "activated using the %1 keyboard shortcut.",
                                                    shortcut(QStringLiteral("Window Operations Menu")));
         type = QStringLiteral("altf3warning");
@@ -726,7 +726,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
         helperDialog(type);
     }
     // need to delay performing the window operation as we need to have the
-    // user actions menu closed before we destroy the decoration. Otherwise Qt crashes
+    // window menu closed before we destroy the decoration. Otherwise Qt crashes
     QMetaObject::invokeMethod(
         workspace(), [c, op]() {
             workspace()->performWindowOperation(c, op);
@@ -884,7 +884,7 @@ void Workspace::initShortcuts()
     // PLEASE NOTE: Never change the ID of an existing shortcut! It will cause users'
     // custom shortcuts to be lost. Instead, only change the description
 
-    initShortcut("Window Operations Menu", i18n("Window Operations Menu"),
+    initShortcut("Window Operations Menu", i18n("Window Menu"),
                  Qt::ALT | Qt::Key_F3, &Workspace::slotWindowOperations);
     initShortcut("Window Close", i18n("Close Window"),
                  Qt::ALT | Qt::Key_F4, &Workspace::slotWindowClose);

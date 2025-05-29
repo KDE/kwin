@@ -289,8 +289,7 @@ public:
 #endif
 
     /**
-     * Shows the menu operations menu for the window and makes it active if
-     * it's not already.
+     * Shows the window menu and makes it active if it's not already.
      */
     void showWindowMenu(const QRect &pos, Window *cl);
     UserActionsMenu *userActionsMenu() const

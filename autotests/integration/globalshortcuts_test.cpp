@@ -209,7 +209,7 @@ void GlobalShortcutsTest::testRepeatedTrigger()
 
 void GlobalShortcutsTest::testUserActionsMenu()
 {
-    // this test tries to trigger the user actions menu with Alt+F3
+    // this test tries to trigger the window menu with Alt+F3
     // the problem here is that pressing F3 consumes modifiers as it's part of the
     // Ctrl+alt+F3 keysym for vt switching. xkbcommon considers all modifiers as consumed
     // which a transformation to any keysym would cause

@@ -52,7 +52,7 @@ static QString buttonToName(DecorationButtonType type)
 {
     switch (type) {
     case DecorationButtonType::Menu:
-        return i18n("More actions for this window");
+        return i18n("Window menu");
     case DecorationButtonType::ApplicationMenu:
         return i18n("Application menu");
     case DecorationButtonType::OnAllDesktops:

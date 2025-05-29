@@ -32,7 +32,7 @@ KCM.AbstractKCM {
     footer: ColumnLayout {
         QQC2.CheckBox {
             id: closeOnDoubleClickOnMenuCheckBox
-            text: i18nc("checkbox label", "Close windows by double clicking the menu button")
+            text: i18nc("checkbox label", "Close windows by double clicking the window menu button")
             checked: kcm.settings.closeOnDoubleClickOnMenu
             onToggled: {
                 kcm.settings.closeOnDoubleClickOnMenu = checked;
@@ -49,7 +49,7 @@ KCM.AbstractKCM {
             Layout.fillWidth: true
             id: infoLabel
             type: Kirigami.MessageType.Information
-            text: i18nc("popup tip", "Click and hold on the menu button to show the menu.")
+            text: i18nc("popup tip", "Click and hold on the window menu button to show the menu.")
             showCloseButton: true
             visible: false
         }

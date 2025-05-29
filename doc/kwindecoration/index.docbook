@@ -7,6 +7,7 @@
 
 <article id="kwindecoration" lang="&language;">
 <articleinfo>
+<title>Window Decorations</title>
 <authorgroup>
 <author>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
 <author>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
@@ -135,7 +136,7 @@ buttons until you have the order that makes you comfortable.
   </mediaobject>
 </screenshot>
 
-<para>Enable <guilabel>Close windows by double clicking the menu button</guilabel>
+<para>Enable <guilabel>Close windows by double clicking the window menu button</guilabel>
 to have an additional option to the Close button or if you have removed the Close button from the titlebar.
 </para>
 
