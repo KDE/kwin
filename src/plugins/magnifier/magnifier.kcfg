@@ -11,6 +11,13 @@
         <entry name="Height" type="UInt">
             <default>200</default>
         </entry>
+    </group>
+
+    <!-- Shared with zoom effect for convenience -->
+    <group name="Effect-zoom">
+        <entry name="ZoomFactor" type="Double">
+            <default>1.2</default>
+        </entry>
         <entry name="InitialZoom" type="Double">
             <default>1.0</default>
         </entry>

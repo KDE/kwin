@@ -5,6 +5,7 @@
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
     <group name="Effect-zoom">
+        <!-- This is shared with the magnifier effect -->
         <entry name="ZoomFactor" type="Double">
             <default>1.2</default>
         </entry>
@@ -26,6 +27,7 @@
         <entry name="MoveFactor" type="Double">
             <default>20.0</default>
         </entry>
+        <!-- This is shared with the magnifier effect -->
         <entry name="InitialZoom" type="Double">
             <default>1.0</default>
         </entry>

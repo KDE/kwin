@@ -50,6 +50,7 @@ private:
     QRect magnifierArea(QPointF pos = cursorPos()) const;
     double m_zoom;
     double m_targetZoom;
+    double m_zoomFactor;
     std::chrono::milliseconds m_lastPresentTime;
     QSize m_magnifierSize;
     std::unique_ptr<GLTexture> m_texture;

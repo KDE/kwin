@@ -82,6 +82,7 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     height = MagnifierConfig::height();
     m_magnifierSize = QSize(width, height);
     // Load the saved zoom value.
+    m_zoomFactor = MagnifierConfig::zoomFactor();
     m_targetZoom = MagnifierConfig::initialZoom();
     if (m_targetZoom != m_zoom) {
         toggle();
@@ -202,7 +203,7 @@ QRect MagnifierEffect::magnifierArea(QPointF pos) const
 
 void MagnifierEffect::zoomIn()
 {
-    m_targetZoom *= 1.2;
+    m_targetZoom *= m_zoomFactor;
     if (effects->isOpenGLCompositing() && !m_texture) {
         effects->makeOpenGLContextCurrent();
         m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
@@ -217,7 +218,7 @@ void MagnifierEffect::zoomIn()
 
 void MagnifierEffect::zoomOut()
 {
-    m_targetZoom /= 1.2;
+    m_targetZoom /= m_zoomFactor;
     if (m_targetZoom <= 1) {
         m_targetZoom = 1;
         if (m_zoom == m_targetZoom) {
