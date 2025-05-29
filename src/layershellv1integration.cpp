@@ -162,6 +162,11 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
     }
 }
 
+static int weightForWindow(const LayerShellV1Window *window)
+{
+    return (window->shellSurface()->anchor() & AnchorHorizontal) == AnchorHorizontal ? 1 : 0;
+}
+
 static QList<LayerShellV1Window *> windowsForOutput(Output *output)
 {
     QList<LayerShellV1Window *> result;
@@ -175,12 +180,8 @@ static QList<LayerShellV1Window *> windowsForOutput(Output *output)
             result.append(layerShellWindow);
         }
     }
-    std::sort(result.begin(), result.end(), [](LayerShellV1Window *a, LayerShellV1Window *b) {
-        if ((a->shellSurface()->anchor() & AnchorHorizontal) == AnchorHorizontal
-            && (b->shellSurface()->anchor() & AnchorHorizontal) != AnchorHorizontal) {
-            return true;
-        }
-        return a->internalId() < b->internalId();
+    std::stable_sort(result.begin(), result.end(), [](LayerShellV1Window *a, LayerShellV1Window *b) {
+        return weightForWindow(a) > weightForWindow(b);
     });
     return result;
 }
