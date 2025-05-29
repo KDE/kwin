@@ -265,6 +265,11 @@ public:
     Q_SCRIPTABLE void removeDesktop(KWin::VirtualDesktop *desktop) const;
 
     /**
+     * Moves the @a desktop to the specified @a position.
+     */
+    Q_SCRIPTABLE void moveDesktop(KWin::VirtualDesktop *desktop, int position);
+
+    /**
      * Provides support information about the currently running KWin instance.
      */
     Q_SCRIPTABLE QString supportInformation() const;

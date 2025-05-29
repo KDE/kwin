@@ -304,6 +304,11 @@ public:
     void removeVirtualDesktop(VirtualDesktop *desktop);
 
     /**
+     * Moves the specified @a desktop to the given @a position.
+     */
+    void moveVirtualDesktop(VirtualDesktop *desktop, int position);
+
+    /**
      * Updates the net root info for new number of desktops
      */
     void updateRootInfo();
@@ -406,6 +411,11 @@ Q_SIGNALS:
      *          but it's about to be deleted.
      */
     void desktopRemoved(KWin::VirtualDesktop *desktop);
+
+    /**
+     * This signal is emitted when a @a desktop is moved to the specified @a position.
+     */
+    void desktopMoved(KWin::VirtualDesktop *desktop, int position);
 
     /**
      * Signal emitted whenever the current desktop changes.

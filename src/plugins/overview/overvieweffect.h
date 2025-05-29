@@ -56,8 +56,6 @@ public:
     bool borderActivated(ElectricBorder border) override;
     void reconfigure(ReconfigureFlags flags) override;
 
-    Q_INVOKABLE void swapDesktops(KWin::VirtualDesktop *from, KWin::VirtualDesktop *to);
-
 Q_SIGNALS:
     void animationDurationChanged();
     void overviewPartialActivationFactorChanged();
