@@ -1297,7 +1297,6 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
     if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
         return;
     }
-    originSurface = originSurface->mainSurface();
 
     if (hasImplicitPointerGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
