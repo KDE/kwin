@@ -60,7 +60,7 @@ void ColorManagerV1::wp_color_manager_v1_destroy(Resource *resource)
 
 void ColorManagerV1::wp_color_manager_v1_get_output(Resource *resource, uint32_t id, struct ::wl_resource *output)
 {
-    new ColorManagementOutputV1(resource->client(), id, resource->version(), OutputInterface::get(output)->handle());
+    new ColorManagementOutputV1(resource->client(), id, resource->version(), OutputInterface::get(output));
 }
 
 void ColorManagerV1::wp_color_manager_v1_get_surface(Resource *resource, uint32_t id, struct ::wl_resource *surface)
@@ -574,12 +574,15 @@ ImageDescriptionV1 *ImageDescriptionV1::get(wl_resource *resource)
     }
 }
 
-ColorManagementOutputV1::ColorManagementOutputV1(wl_client *client, uint32_t id, uint32_t version, Output *output)
+ColorManagementOutputV1::ColorManagementOutputV1(wl_client *client, uint32_t id, uint32_t version, OutputInterface *output)
     : QtWaylandServer::wp_color_management_output_v1(client, id, version)
     , m_output(output)
-    , m_colorDescription(output->colorDescription())
 {
-    connect(output, &Output::colorDescriptionChanged, this, &ColorManagementOutputV1::colorDescriptionChanged);
+    if (m_output->isRemoved()) {
+        return;
+    }
+
+    connect(output->handle(), &Output::colorDescriptionChanged, this, &ColorManagementOutputV1::colorDescriptionChanged);
 }
 
 void ColorManagementOutputV1::wp_color_management_output_v1_destroy_resource(Resource *resource)
@@ -594,12 +597,19 @@ void ColorManagementOutputV1::wp_color_management_output_v1_destroy(Resource *re
 
 void ColorManagementOutputV1::wp_color_management_output_v1_get_image_description(Resource *resource, uint32_t image_description)
 {
-    new ImageDescriptionV1(resource->client(), image_description, resource->version(), m_colorDescription);
+    if (!m_output || m_output->isRemoved()) {
+        new ImageDescriptionV1(resource->client(), image_description, resource->version(), std::nullopt);
+    } else {
+        new ImageDescriptionV1(resource->client(), image_description, resource->version(), m_output->handle()->colorDescription());
+    }
 }
 
 void ColorManagementOutputV1::colorDescriptionChanged()
 {
-    m_colorDescription = m_output->colorDescription();
+    if (!m_output || m_output->isRemoved()) {
+        return;
+    }
+
     send_image_description_changed();
 }
 
