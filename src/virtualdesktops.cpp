@@ -509,6 +509,36 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
     desktop->deleteLater();
 }
 
+void VirtualDesktopManager::moveVirtualDesktop(VirtualDesktop *desktop, int position)
+{
+    const int sourcePosition = m_desktops.indexOf(desktop);
+    if (sourcePosition == -1) {
+        return;
+    }
+
+    if (position < 0 || position >= m_desktops.size()) {
+        return;
+    }
+
+    if (sourcePosition == position) {
+        return;
+    }
+
+    m_desktops.move(sourcePosition, position);
+
+    for (int i = 0; i < m_desktops.size(); ++i) {
+        m_desktops[i]->setX11DesktopNumber(i + 1);
+#if KWIN_BUILD_X11
+        if (m_rootInfo) {
+            m_rootInfo->setDesktopName(m_desktops[i]->x11DesktopNumber(), m_desktops[i]->name().toUtf8().data());
+        }
+#endif
+    }
+
+    save();
+    Q_EMIT desktopMoved(desktop, position);
+}
+
 uint VirtualDesktopManager::current() const
 {
     return m_current ? m_current->x11DesktopNumber() : 0;

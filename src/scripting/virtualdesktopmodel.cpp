@@ -19,6 +19,8 @@ VirtualDesktopModel::VirtualDesktopModel(QObject *parent)
             this, &VirtualDesktopModel::handleVirtualDesktopAdded);
     connect(manager, &VirtualDesktopManager::desktopRemoved,
             this, &VirtualDesktopModel::handleVirtualDesktopRemoved);
+    connect(manager, &VirtualDesktopManager::desktopMoved,
+            this, &VirtualDesktopModel::handleVirtualDesktopMoved);
 
     m_virtualDesktops = manager->desktops();
 }
@@ -51,6 +53,16 @@ void VirtualDesktopModel::handleVirtualDesktopRemoved(VirtualDesktop *desktop)
     beginRemoveRows(QModelIndex(), index, index);
     m_virtualDesktops.removeAt(index);
     endRemoveRows();
+}
+
+void VirtualDesktopModel::handleVirtualDesktopMoved(VirtualDesktop *desktop, int position)
+{
+    const int sourcePosition = m_virtualDesktops.indexOf(desktop);
+    Q_ASSERT(sourcePosition != -1);
+
+    beginMoveRows(QModelIndex(), sourcePosition, sourcePosition, QModelIndex(), sourcePosition < position ? position + 1 : position);
+    m_virtualDesktops.move(sourcePosition, position);
+    endMoveRows();
 }
 
 QHash<int, QByteArray> VirtualDesktopModel::roleNames() const

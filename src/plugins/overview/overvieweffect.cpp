@@ -337,28 +337,6 @@ void OverviewEffect::reverseCycle()
     }
 }
 
-void OverviewEffect::swapDesktops(VirtualDesktop *from, VirtualDesktop *to)
-{
-    QList<EffectWindow *> fromList;
-    QList<EffectWindow *> toList;
-    for (auto *w : effects->stackingOrder()) {
-        if (!w->isNormalWindow() || !w->isOnCurrentActivity()) {
-            continue;
-        }
-        if (w->isOnDesktop(from)) {
-            fromList << w;
-        } else if (w->isOnDesktop(to)) {
-            toList << w;
-        }
-    }
-    for (auto *w : fromList) {
-        effects->windowToDesktops(w, {to});
-    }
-    for (auto *w : toList) {
-        effects->windowToDesktops(w, {from});
-    }
-}
-
 } // namespace KWin
 
 #include "moc_overvieweffect.cpp"

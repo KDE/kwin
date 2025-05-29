@@ -41,6 +41,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::windowActivated);
     connect(vds, &VirtualDesktopManager::desktopAdded, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &WorkspaceWrapper::desktopsChanged);
+    connect(vds, &VirtualDesktopManager::desktopMoved, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentDesktopChanged);
 #if KWIN_BUILD_ACTIVITIES
@@ -275,6 +276,15 @@ void WorkspaceWrapper::removeDesktop(VirtualDesktop *desktop) const
         return;
     }
     VirtualDesktopManager::self()->removeVirtualDesktop(desktop->id());
+}
+
+void WorkspaceWrapper::moveDesktop(VirtualDesktop *desktop, int position)
+{
+    if (!desktop) {
+        qCWarning(KWIN_SCRIPTING) << "Invalid desktop passed to moveDesktop";
+        return;
+    }
+    VirtualDesktopManager::self()->moveVirtualDesktop(desktop, position);
 }
 
 QString WorkspaceWrapper::supportInformation() const
