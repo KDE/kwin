@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-04-13 18:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -3722,24 +3722,35 @@ msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "நீங்கள் ஒரு சாளரத்தை விளிம்பு இல்லாமல் காட்டுமாறு கோரியுள்ளீர்கள்.\n"
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது. பதிலாக, "
 "%1 என்ற சுருக்குவழியை அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்துங்கள்."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "நீங்கள் ஒரு சாளரத்தை முழுத்திரை முறையில் காட்டுமாறு கோரியுள்ளீர்கள்.\n"
 "முழுத்திரை முறையை முடக்கும் வசதி அச்செயலியிலேயே இல்லாத பட்சத்தில், சுட்டியை மட்டும் "
@@ -3890,9 +3901,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> %2 என்பதால் %3 என்பதற்கு பயன்படுத்தப்படுகிறது"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "சாளர இயக்கப்பட்டி"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "சாளர வகை"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4347,6 +4359,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "சாளர இயக்கப்பட்டி"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "திரைப்புதுப்பிபுகளைக் காட்டுவதை இயக்கு/முடக்கு"

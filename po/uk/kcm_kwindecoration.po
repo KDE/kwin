@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 09:22+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -24,9 +24,11 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Додаткові дії для цього вікна"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Меню вікна"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -180,15 +182,19 @@ msgid "Titlebar Buttons"
 msgstr "Кнопки у заголовку"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Закривати вікна у відповідь на подвійне клацання на кнопці меню"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Натисніть і утримуйте кнопку меню, щоб отримати доступ до меню."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -264,6 +270,9 @@ msgstr "Гігантські рамки вікон"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Надмірні рамки вікон"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Додаткові дії для цього вікна"
 
 #~ msgid "Shade"
 #~ msgstr "Згорнути"
@@ -419,10 +428,6 @@ msgstr "Надмірні рамки вікон"
 
 #~ msgid "Help"
 #~ msgstr "Довідка"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Меню вікна"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- роздільник ---"

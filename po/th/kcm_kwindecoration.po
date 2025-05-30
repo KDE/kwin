@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-03-03 20:07+0700\n"
 "Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
 "Language-Team: Thai\n"
@@ -21,9 +21,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Window menu"
+msgstr "หาชุดตกแต่งใหม่ ๆ ..."
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -167,13 +168,13 @@ msgstr "ปุ่มต่าง ๆ"
 #: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -325,11 +326,6 @@ msgstr "ขนาดของกรอบ:"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "donga.nb@gmail.com"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgid "Window Decorations"
-#~ msgstr "หาชุดตกแต่งใหม่ ๆ ..."
 
 #~ msgid "Menu"
 #~ msgstr "เมนู"

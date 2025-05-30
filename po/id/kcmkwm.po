@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-10-02 08:19+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: https://t.me/Localizations_KDE_Indonesia\n"
@@ -342,9 +342,10 @@ msgstr "Tambahi opasitas"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Tampilkan menu tindakan"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&Penempatan jendela:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1266,6 +1267,9 @@ msgstr ""
 "em>bertentangan dengan kebijakan dan tidak akan manjur. Sebagai gantinya "
 "mungkin kamu ingin menggunakan <em>Fokus Mengikuti Mouse (mengutamakan "
 "mouse)</em>!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Tampilkan menu tindakan"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Tiraikan/Lepas-tirai"

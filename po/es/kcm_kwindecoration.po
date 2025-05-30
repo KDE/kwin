@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-05-18 15:01+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -28,8 +28,8 @@ msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
-msgid "More actions for this window"
-msgstr "Más acciones para esta ventana"
+msgid "Window menu"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -191,15 +191,19 @@ msgid "Titlebar Buttons"
 msgstr "Botones de la barra de título"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Cerrar ventanas al hacer doble clic en el botón de menú"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Mantenga pulsado el botón del menú para mostrar el menú."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -275,6 +279,9 @@ msgstr "Bordes de ventana gigantescos"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Bordes de ventana desmesurados"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Más acciones para esta ventana"
 
 #~ msgid "Shade"
 #~ msgstr "Recoger"

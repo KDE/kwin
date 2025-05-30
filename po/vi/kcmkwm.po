@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2023-01-08 17:48+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -341,9 +341,10 @@ msgstr "Tăng độ mờ đục"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Hiện trình đơn các hành động"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&Xếp chỗ cửa sổ:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1235,6 +1236,9 @@ msgstr ""
 "thuẫn với chính sách kích hoạt này và sẽ không hoạt động. Rất nhiều khả năng "
 "là bạn muốn dùng <em>Nhắm đi theo chuột (ưu tiên chuột)</em> chứ không phải "
 "cái này!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Hiện trình đơn các hành động"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Che/bỏ che"

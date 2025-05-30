@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-03-15 16:17+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -29,8 +29,8 @@ msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
-msgid "More actions for this window"
-msgstr "その他のアクション"
+msgid "Window menu"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -183,15 +183,19 @@ msgid "Titlebar Buttons"
 msgstr "タイトルバーのボタン"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "メニューボタンをダブルクリックしてウィンドウを閉じる"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "メニューボタンを長押ししてメニューを表示。"
 
 #: ui/ConfigureTitlebar.qml:59
@@ -267,6 +271,9 @@ msgstr "さらに大きいウィンドウの枠"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "特大のウィンドウの枠"
+
+#~ msgid "More actions for this window"
+#~ msgstr "その他のアクション"
 
 #~ msgid "Shade"
 #~ msgstr "シェード"

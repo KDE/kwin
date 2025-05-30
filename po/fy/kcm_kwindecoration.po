@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2010-07-11 13:38+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -20,9 +20,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Window menu"
+msgstr "Krij nije dekoraasjes..."
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -166,13 +167,13 @@ msgstr "Knoppen"
 #: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -324,11 +325,6 @@ msgstr "Râne grutte:"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "berendy@bigfoot.com"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgid "Window Decorations"
-#~ msgstr "Krij nije dekoraasjes..."
 
 #~ msgid "Menu"
 #~ msgstr "Menu"

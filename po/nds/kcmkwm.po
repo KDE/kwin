@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2014-02-18 00:50+0100\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-doc@kde.org>\n"
@@ -356,9 +356,9 @@ msgstr "Mehr Deckstärk"
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
-#| msgid "Operations Menu"
-msgid "Show actions menu"
-msgstr "Akschonen-Menü"
+#| msgid "&Placement:"
+msgid "Window menu"
+msgstr "&Platzeren:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1385,6 +1385,11 @@ msgstr ""
 "gaht dor nich mit tosamen un <b>funkscheneert nich</b>.<br><br>\n"
 "Hööchstwohrschienlich wullt Du ansteed<br>\n"
 "<i>Fokus folgt Muus - Muus geiht vör</i> bruken!"
+
+#, fuzzy
+#~| msgid "Operations Menu"
+#~ msgid "Show actions menu"
+#~ msgstr "Akschonen-Menü"
 
 #, fuzzy
 #~| msgid "Shade/Unshade"

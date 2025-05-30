@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-02-27 07:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -25,9 +25,10 @@ msgstr ""
 "X-Crowdin-File-ID: 10422\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Яшчэ дзеянні для гэтага акна"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "Аздабленне акон"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -183,15 +184,19 @@ msgid "Titlebar Buttons"
 msgstr "Кнопкі панэлі загалоўка"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Закрываць вокны падвойным пстрыканнем па кнопцы меню"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Націсніце і ўтрымлівайце кнопку меню, каб паглядзець меню."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -278,6 +283,9 @@ msgstr "Велізарныя межы акон"
 msgid "Oversized window borders"
 msgstr "Празмерныя межы акон"
 
+#~ msgid "More actions for this window"
+#~ msgstr "Яшчэ дзеянні для гэтага акна"
+
 #~ msgid "Shade"
 #~ msgstr "Згарнуць у загаловак"
 
@@ -319,9 +327,6 @@ msgstr "Празмерныя межы акон"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "symbol@akeeri.tk, nashtlumach@gmail.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Аздабленне акон"
 
 #~ msgid "Valerio Pilo"
 #~ msgstr "Valerio Pilo"

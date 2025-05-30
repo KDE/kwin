@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2007-10-22 15:23+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@yahoo.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
@@ -19,9 +19,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgid "Window menu"
+msgstr "विंडो सजावट (&W)"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -165,13 +166,13 @@ msgstr "बटन्स"
 #: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -316,11 +317,6 @@ msgstr "किनारा आकार:"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "raviratlami@aol.in,"
-
-#, fuzzy
-#~| msgid "&Window Decoration"
-#~ msgid "Window Decorations"
-#~ msgstr "विंडो सजावट (&W)"
 
 #~ msgid "Menu"
 #~ msgstr "मेन्यू"

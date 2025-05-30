@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2015-02-03 11:42+0100\n"
 "Last-Translator: Samir Ribic <sribic@etf.unsa.ba>\n"
 "Language-Team: Bosnian <kde-i18n-doc@kde.org>\n"
@@ -24,9 +24,11 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Meni prozora"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, fuzzy, kde-format
@@ -170,13 +172,13 @@ msgstr "Dugmad"
 #: ui/ConfigureTitlebar.qml:35
 #, fuzzy, kde-format
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Dvoklik na dugme menija zatvara prozor"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -421,10 +423,6 @@ msgstr "Veličina &ivica:"
 
 #~ msgid "Help"
 #~ msgstr "Pomoć"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Meni prozora"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- razmaknica ---"

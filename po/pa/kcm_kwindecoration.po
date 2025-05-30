@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-01-28 17:10-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -19,9 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "ਇਸ ਵਿੰਡੋ ਲਈ ਹੋਰ ਕਾਰਵਾਈਆਂ"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "ਵਿੰਡੋ ਮੇਨੂ"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -163,15 +165,17 @@ msgid "Titlebar Buttons"
 msgstr "ਟਾਇਟਲ-ਬਾਰ ਬਟਨ"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "ਮੇਨੂ ਬਟਨ ਨੂੰ ਦੋ ਵਾਰ ਦਬਾ ਕੇ ਵਿੰਡੋਆਂ ਨੂੰ ਬੰਦ ਕਰੋ"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -257,6 +261,9 @@ msgstr "ਬਹੁਤ ਵਿਸ਼ਾਲ ਵਿੰਡੋ ਬਾਰਡਰ"
 #| msgid "Oversized Window Borders"
 msgid "Oversized window borders"
 msgstr "ਓਵਰ-ਸਾਈਜ਼ ਵਿੰਡੋ ਬਾਰਡਰ"
+
+#~ msgid "More actions for this window"
+#~ msgstr "ਇਸ ਵਿੰਡੋ ਲਈ ਹੋਰ ਕਾਰਵਾਈਆਂ"
 
 #~ msgid "Shade"
 #~ msgstr "ਸ਼ੇਡ"
@@ -420,10 +427,6 @@ msgstr "ਓਵਰ-ਸਾਈਜ਼ ਵਿੰਡੋ ਬਾਰਡਰ"
 
 #~ msgid "Help"
 #~ msgstr "ਮੱਦਦ"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "ਵਿੰਡੋ ਮੇਨੂ"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- ਵੱਖਰੇਵਾਂ ---"

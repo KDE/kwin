@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-24 17:38+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -337,9 +337,10 @@ msgstr "불투명도 증가"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "작업 메뉴 표시"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "창 배치(&P):"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1207,6 +1208,9 @@ msgstr ""
 "스 훔치기 방지</em> 및 <em>탭 상자(\"Alt+Tab\")</em>는 이 정책에 모순되며 작"
 "동하지 않습니다. 만약 위 설정을 사용해야 한다면 <em>마우스가 포커스를 따라감"
 "(마우스 우선)</em> 설정을 사용하십시오!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "작업 메뉴 표시"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "말아 올림/풀어 내림"

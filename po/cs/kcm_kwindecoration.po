@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 15:27+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -24,8 +24,8 @@ msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
-msgid "More actions for this window"
-msgstr "Více činností pro toto okno"
+msgid "Window menu"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -167,15 +167,17 @@ msgid "Titlebar Buttons"
 msgstr "Tlačítka titulkového pruhu"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Zavřít okno dvojklikem na tlačítko nabídky"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -251,6 +253,9 @@ msgstr "Více než obrovské okraje oken"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Nadměrné okraje oken"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Více činností pro toto okno"
 
 #~ msgid "Shade"
 #~ msgstr "Sbalit"

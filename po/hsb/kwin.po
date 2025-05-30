@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2008-11-21 01:39+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -3771,24 +3771,35 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Chceće wokno bjez kromy pokazać.\n"
 "Bjez kromy njebudźe móžno ju z myšku zaso zwołać: Wužiwajće město toho meni "
 "z woknowymi operacijemi, kotryž dóstanjeće ze skrótšenku '%1'."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Chceće wokno w cyłowobrazowkowym modusu pokazać.\n"
 "Jeli aplikacija sama přešaltowanje do normalneho woknoweho  modusa "
@@ -3951,9 +3962,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "Meni za woknowe operacije"
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window Menu"
+msgstr "Wokna"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4437,6 +4449,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "Meni za woknowe operacije"
 
 #, fuzzy
 #~| msgid "Show help"

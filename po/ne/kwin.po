@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -3806,24 +3806,35 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "सञ्झ्यालको किनारा नदेखाईकन तपाईँले चयन गर्नुपर्छ ।\n"
 "किनारा बिना, तपाईँले माउस प्रयोग गरेर फेरि किनारा सक्षम पार्न सक्नुहुन्न: यसको सट्टामा "
 "%1 कुञ्जीपाटी प्रयोग गरेर सक्रिय गरिएको, सञ्चालन मेनु प्रयोग गर्नुहोस् ।"
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "तपाईँले पूरा पर्दा मोडमा सञ्झ्याल देखाउन चयन गर्नुपर्छ ।\n"
 "यदि अनुप्रयोग आफैसँग पूरा पर्दा मोड बन्द गर्न कुनै विकल्प छैन भने तपाईँ माउस प्रयोग गरेर "
@@ -3986,9 +3997,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "सञ्झ्याल सञ्चालन मेनुहरू"
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window Menu"
+msgstr "सञ्झ्याल"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4472,6 +4484,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "सञ्झ्याल सञ्चालन मेनुहरू"
 
 #, fuzzy
 #~| msgid "Toggle Expose effect (incl other desktops)"

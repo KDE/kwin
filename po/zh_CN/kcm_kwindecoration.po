@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -19,8 +19,8 @@ msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
-msgid "More actions for this window"
-msgstr "此窗口的更多操作"
+msgid "Window menu"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -168,15 +168,19 @@ msgid "Titlebar Buttons"
 msgstr "标题栏按钮"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "双击菜单按钮关闭窗口"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "点击并按住菜单按钮以显示菜单。"
 
 #: ui/ConfigureTitlebar.qml:59
@@ -252,3 +256,6 @@ msgstr "超特大窗口边框"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "极大窗口边框"
+
+#~ msgid "More actions for this window"
+#~ msgstr "此窗口的更多操作"

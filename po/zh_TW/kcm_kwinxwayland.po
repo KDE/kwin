@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-05-22 13:56+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -30,74 +30,169 @@ msgid "Log Out Now"
 msgstr "立即登出"
 
 #: ui/main.qml:52
-#, kde-format
+#, kde-kuit-format
+msgctxt "@info:usagetip"
 msgid ""
-"Some legacy X11 apps require the ability to read keystrokes typed in other "
-"apps for certain features, such as handling global keyboard shortcuts. This "
-"is allowed by default. However other features may require the ability to "
-"read all keys, and this is disabled by default for security reasons. If you "
-"need to use such apps, you can choose your preferred balance of security and "
-"functionality here."
+"Legacy X11 apps with global shortcuts and other features accessed while "
+"running in the background need to be able to listen for keystrokes all the "
+"time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
+"balance of security and compatibility here."
 msgstr ""
-"某些舊式 X11 應用程式會需要讀取在其他應用程式的鍵盤輸入來提供一些功能，像是處"
-"理全域鍵盤快捷鍵等等——這是預設允許的。然而其他功能可能需要讀取所有按鍵，而這"
-"種權限為了安全性考量預設不允許。如果您需要使用這樣的應用程式，您可以在這裡對"
-"安全性與功能性間選擇您所偏好的平衡。"
-
-#: ui/main.qml:72
-#, kde-format
-msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
-msgstr "允許舊式 X11 應用程式讀取在所有應用程式內的鍵盤輸入："
 
 #: ui/main.qml:73
 #, kde-format
-msgid "Never"
-msgstr "永不"
+msgctxt "@title:group"
+msgid "Listening for keystrokes:"
+msgstr ""
 
-#: ui/main.qml:84
+#: ui/main.qml:80
 #, kde-format
-msgid "Only Meta, Control, Alt and Shift keys"
+msgctxt "@option:radio Listening for keystrokes is prohibited"
+msgid "Prohibited"
+msgstr ""
+
+#: ui/main.qml:96
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Most secure; global shortcuts will not work in X11 apps"
+msgstr ""
+
+#: ui/main.qml:110
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt and Shift keys"
+msgctxt "@option:radio Listening for keystrokes is allowed for…"
+msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "僅 Meta、Control、Alt 與 Shift 鍵"
 
-#: ui/main.qml:95
+#: ui/main.qml:126
 #, kde-format
+msgctxt "@info:usagetip"
 msgid ""
-"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
+"High security; push-to-talk and other modifier-only global shortcuts will "
+"work in X11 apps"
+msgstr ""
+
+#: ui/main.qml:140
+#, fuzzy, kde-format
+#| msgid ""
+#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
+#| "pressed"
+msgctxt "@option:radio Listening for keystrokes is allowed for…"
+msgid ""
+"As above, plus any key pressed while the Control, Alt, or Meta key is also "
+"pressed"
 msgstr "同上，加上按下 Control、Alt 或 Meta 鍵時所輸入的任何按鍵"
 
-#: ui/main.qml:107
+#: ui/main.qml:156
 #, kde-format
-msgid "Always"
+msgctxt "@info:usagetip"
+msgid "Moderate security; all global shortcuts will work in X11 apps"
+msgstr ""
+
+#: ui/main.qml:170
+#, fuzzy, kde-format
+#| msgid "Always"
+msgctxt "@option:radio Listening for keystrokes is always allowed"
+msgid "Always allowed"
 msgstr "總是"
 
-#: ui/main.qml:122
+#: ui/main.qml:186
 #, kde-format
-msgid "Additionally include mouse buttons"
-msgstr "額外包含滑鼠按鈕"
-
-#: ui/main.qml:138
-#, kde-format
+msgctxt "@info:usagetip"
 msgid ""
-"Note that using this setting will reduce system security to that of the X11 "
-"session by permitting malicious software to steal passwords and spy on the "
-"text that you type. Make sure you understand and accept this risk."
+"Least secure; all X11 apps will be able to see any text you type into any "
+"application"
+msgstr ""
+
+#: ui/main.qml:200
+#, fuzzy, kde-format
+#| msgid ""
+#| "Note that using this setting will reduce system security to that of the "
+#| "X11 session by permitting malicious software to steal passwords and spy "
+#| "on the text that you type. Make sure you understand and accept this risk."
+msgctxt "@info:usagetip"
+msgid ""
+"Note that using this setting will reduce system security and permit "
+"malicious software to steal passwords and spy on the text that you type. "
+"Make sure you understand and accept this risk."
 msgstr ""
 "請注意，使用這個設定將會使系統安全性降低至與 X11 工作階段相同：惡意軟體執行時"
 "可以監視您所輸入的文字並盜取密碼。請確保您理解並接受這個風險。"
 
-#: ui/main.qml:155
+#: ui/main.qml:216
+#, fuzzy, kde-format
+#| msgid "Additionally include mouse buttons"
+msgctxt "@title:group"
+msgid "Listening for mouse buttons:"
+msgstr "額外包含滑鼠按鈕"
+
+#: ui/main.qml:222
+#, kde-format
+msgctxt "@option:radio Listening for mouse buttons is allowed"
+msgid "Allowed"
+msgstr ""
+
+#: ui/main.qml:238
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Moderate security; global shortcuts involving mouse buttons will work in X11 "
+"apps"
+msgstr ""
+
+#: ui/main.qml:252
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "控制滑鼠游標與鍵盤："
 
-#: ui/main.qml:156
+#: ui/main.qml:258
 #, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
 msgstr "不用事先詢問權限即允許控制"
+
+#: ui/main.qml:268
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Least secure; all X11 apps will be able to take control of the computer"
+msgstr ""
+
+#: ui/main.qml:282
+#, fuzzy, kde-format
+#| msgid ""
+#| "Note that using this setting will reduce system security to that of the "
+#| "X11 session by permitting malicious software to steal passwords and spy "
+#| "on the text that you type. Make sure you understand and accept this risk."
+msgctxt "@info:usagetip"
+msgid ""
+"Note that using this setting will drastically reduce system security and "
+"permit malicious software to take complete control of your pointer and "
+"keyboard. Make sure you understand and accept this risk."
+msgstr ""
+"請注意，使用這個設定將會使系統安全性降低至與 X11 工作階段相同：惡意軟體執行時"
+"可以監視您所輸入的文字並盜取密碼。請確保您理解並接受這個風險。"
+
+#~ msgid ""
+#~ "Some legacy X11 apps require the ability to read keystrokes typed in "
+#~ "other apps for certain features, such as handling global keyboard "
+#~ "shortcuts. This is allowed by default. However other features may require "
+#~ "the ability to read all keys, and this is disabled by default for "
+#~ "security reasons. If you need to use such apps, you can choose your "
+#~ "preferred balance of security and functionality here."
+#~ msgstr ""
+#~ "某些舊式 X11 應用程式會需要讀取在其他應用程式的鍵盤輸入來提供一些功能，像"
+#~ "是處理全域鍵盤快捷鍵等等——這是預設允許的。然而其他功能可能需要讀取所有按"
+#~ "鍵，而這種權限為了安全性考量預設不允許。如果您需要使用這樣的應用程式，您可"
+#~ "以在這裡對安全性與功能性間選擇您所偏好的平衡。"
+
+#~ msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+#~ msgstr "允許舊式 X11 應用程式讀取在所有應用程式內的鍵盤輸入："
+
+#~ msgid "Never"
+#~ msgstr "永不"
 
 #~ msgid "Only non-character keys"
 #~ msgstr "僅非字元按鍵"

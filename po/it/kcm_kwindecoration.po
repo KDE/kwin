@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 13:00+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -22,9 +22,11 @@ msgstr ""
 "X-Generator: Lokalize 24.08.1\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Altre azioni per questa finestra"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Menu della finestra"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -185,15 +187,19 @@ msgid "Titlebar Buttons"
 msgstr "Pulsanti della barra del titolo"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Chiudi le finestre con un doppio clic sul pulsante del menu"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Fai clic e tieni premuto il pulsante del menu per visualizzarlo."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -269,6 +275,9 @@ msgstr "Dimensione del bordo giganti"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Bordi delle finestre sovradimensionati"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Altre azioni per questa finestra"
 
 #~ msgid "Shade"
 #~ msgstr "Arrotola"
@@ -417,10 +426,6 @@ msgstr "Bordi delle finestre sovradimensionati"
 
 #~ msgid "Help"
 #~ msgstr "Aiuto"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Menu della finestra"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "—spazio—"

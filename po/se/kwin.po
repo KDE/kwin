@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -3660,12 +3660,17 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Don leat válljen ahte láse galgá leat rávddaid haga.\n"
 "Go rávdalinnjá lea cihkon, de it sáhtte čajehit dan fas geavahettiin "
@@ -3673,12 +3678,18 @@ msgstr ""
 "jođánisboalu %1."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Leat válljen čájehit láse dievasšearbmamodusas.\n"
 "Jus ieš prográmmas ii leat molssaeaktu mainna guođát dán modusa, de it sáhte "
@@ -3829,8 +3840,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
+#, fuzzy, kde-format
+#| msgid "Window Operations Menu"
+msgid "Window Menu"
 msgstr "Lásiid doaimmafállu"
 
 #: useractions.cpp:889

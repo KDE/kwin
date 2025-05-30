@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -3703,24 +3703,35 @@ msgid "Tablets switched outputs"
 msgstr "टैब्लेट् आउटपुट् स्विच् कृतवन्तः"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "भवता तस्य सीमां विना विण्डो दर्शयितुं चितम् ।\n"
 "सीमां विना, भवन्तः मूषकस्य उपयोगेन पुनः सीमां सक्षमं कर्तुं न शक्नुवन्ति: तस्य स्थाने विण्डो "
 "ऑपरेशन्स मेन्यू उपयुज्यताम्, %1 कीबोर्ड शॉर्टकट् इत्यस्य उपयोगेन सक्रियम् ।"
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "भवता पूर्णपर्दे मोड् मध्ये विण्डो दर्शयितुं चितम् ।\n"
 "यदि अनुप्रयोगे एव पूर्णपर्दे मोडं निष्क्रियं कर्तुं विकल्पः नास्ति तर्हि भवान् मूषकस्य उपयोगेन "
@@ -3871,9 +3882,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> %3 मध्ये %2 इत्यनेन उपयुज्यते"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "विण्डो ऑपरेशन्स मेनू"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "खिडकी भूमिका"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4321,6 +4333,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland दुर्घटना अभवत्"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "विण्डो ऑपरेशन्स मेनू"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "Toggle Show Paint इति"

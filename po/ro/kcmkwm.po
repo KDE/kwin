@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2022-04-01 10:28+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -347,9 +347,10 @@ msgstr "Crește opacitatea"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Arată meniul de acțiuni"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "Am&plasare fereastră:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1224,6 +1225,9 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#~ msgid "Show actions menu"
+#~ msgstr "Arată meniul de acțiuni"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Strânge/desfășoară"

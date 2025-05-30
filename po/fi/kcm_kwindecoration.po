@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-10-16 21:12+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -26,9 +26,11 @@ msgstr ""
 "X-Generator: Lokalize 24.08.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Lisätoimintoja tälle ikkunalle"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Ikkunan valikko"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -181,15 +183,19 @@ msgid "Titlebar Buttons"
 msgstr "Otsikkopalkin painikkeet"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Sulje ikkunat kaksoisnapsauttamalla valikkopainiketta"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Näytä valikko napsauttamalla ja pitämällä pohjassa valikkopainiketta"
 
 #: ui/ConfigureTitlebar.qml:59
@@ -265,6 +271,9 @@ msgstr "Aivan valtavat ikkunareunukset"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Ylisuuret ikkunareunukset"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Lisätoimintoja tälle ikkunalle"
 
 #~ msgid "Shade"
 #~ msgstr "Rullaa"
@@ -421,10 +430,6 @@ msgstr "Ylisuuret ikkunareunukset"
 
 #~ msgid "Help"
 #~ msgstr "Ohje"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Ikkunan valikko"
 
 # Vanha käännös ”väliviiva”, mutta kyse on painikkeiden väliin tulevasta tyhjästä tilasta
 #~ msgid "--- spacer ---"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -3678,24 +3678,35 @@ msgid "Tablets switched outputs"
 msgstr "数位板已切换输出设备"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "您选择了显示没有边框的窗口。\n"
 "如果窗口没有边框，您将无法使用鼠标再次显示边框。你可以使用快捷键 %1 激活窗口"
 "的操作菜单来显示窗口边框。"
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "您选择了以全屏模式显示窗口。\n"
 "如果应用程序自身没有提供退出全屏模式的选项，您将无法使用鼠标退出全屏模式。你"
@@ -3845,9 +3856,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> 已被 %3 的 %2 使用"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "窗口操作菜单"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "窗口角色"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4295,3 +4307,6 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "窗口操作菜单"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-19 18:18+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -343,9 +343,10 @@ msgstr "增加不透明度"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "顯示動作選單"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "視窗放置(&P)："
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1193,6 +1194,9 @@ msgstr ""
 "strong><em>防止盜取焦點</em> 及 <em>tabbox ('Alt+Tab')</em> 會與啟用策略相衝"
 "突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在位置 (滑鼠優先)</em>代"
 "替！"
+
+#~ msgid "Show actions menu"
+#~ msgstr "顯示動作選單"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "遮蔽/取消遮蔽"

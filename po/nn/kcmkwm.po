@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-07-12 20:45+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -339,9 +339,10 @@ msgstr "Auk tettleiken"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Vis handlingsmeny"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "Vindaugs&plassering:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1229,30 +1230,5 @@ msgstr ""
 "em> er mot denne praksisen og vil ikkje verka. Du vil truleg heller vilja "
 "bruka <em>Fokuset følgjer musa – musprioritet</em> i staden."
 
-#~ msgid "Shade/unshade"
-#~ msgstr "Rull opp/ned"
-
-#~ msgid "Window &unshading:"
-#~ msgstr "Vindaugs&nedrulling:"
-
-#~ msgid ""
-#~ "<html><head/><body><p>If this option is enabled, a shaded window will "
-#~ "unshade automatically when the mouse pointer has been over the titlebar "
-#~ "for some time.</p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>Viss det er kryssa av her, vil eit opprulla "
-#~ "vindauge automatisk rullast ned når musepeikaren har lege over "
-#~ "tittellinja ei viss tid.</p></body></html>"
-
-#~ msgid "On titlebar hover after:"
-#~ msgstr "Når peikaren er over tittellinja i:"
-
-#~ msgid ""
-#~ "Sets the time in milliseconds before the window unshades when the mouse "
-#~ "pointer goes over the shaded window."
-#~ msgstr ""
-#~ "Vel kor lenge musepeikaren skal liggja over tittellinja før vindauget "
-#~ "vert rulla ned. Verdien er i millisekund."
-
-#~ msgid "Shade"
-#~ msgstr "Rull opp"
+#~ msgid "Show actions menu"
+#~ msgstr "Vis handlingsmeny"

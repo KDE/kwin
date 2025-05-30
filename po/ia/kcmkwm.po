@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-17 12:31+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -340,9 +340,10 @@ msgstr "Augmenta opacitate"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Monstra menu de actiones"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&Placiamento de Fenestra:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1244,6 +1245,9 @@ msgstr ""
 "de foco</em> e le <em>tabbox (\"Alt+Tab\")</em>contradice le politica e non "
 "functionara.Probabilmente tu volerea usar in su loco <em>Foco seque mus - "
 "Precedentia de mus</em>!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Monstra menu de actiones"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Umbra/De-Umbra"

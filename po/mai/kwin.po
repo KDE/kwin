@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2010-09-24 21:47+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -3809,25 +3809,38 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "अहाँ बिनु किनारा विंडो देखाओल जएनाइ चुननए छी.\n"
 "बिनु किनार, अहाँ फिनु सँ माउसक मद्दति सँ बार्डर नहि बनाए सकम. एकर बदला विंडो संचालन "
 "मेनू प्रयोग करू, जे %1 कुँजी शार्टकट सँ सक्रिय हाइछ."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
+"अहाँ बिनु किनारा विंडो देखाओल जएनाइ चुननए छी.\n"
+"बिनु किनार, अहाँ फिनु सँ माउसक मद्दति सँ बार्डर नहि बनाए सकम. एकर बदला विंडो संचालन "
+"मेनू प्रयोग करू, जे %1 कुँजी शार्टकट सँ सक्रिय हाइछ."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3985,9 +3998,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "विंडोज संचालनक मेनू"
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window Menu"
+msgstr "विंडोज"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4471,6 +4485,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "विंडोज संचालनक मेनू"
 
 #, fuzzy
 #~| msgid "Show Desktop Grid"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2017-09-28 17:58+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -359,9 +359,9 @@ msgstr "povećaj neprozirnost"
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
-#| msgid "Operations Menu"
-msgid "Show actions menu"
-msgstr "meni radnji"
+#| msgid "&Placement:"
+msgid "Window menu"
+msgstr "&Postavljanje:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1359,6 +1359,11 @@ msgstr ""
 "+Tab<br />sukobljeni su ovoj opciji, te <b>neće raditi</b>.<br /><br />Od "
 "ovoga će vam vrlo verovatno više odgovarati da<br />fokus prati miš, uz "
 "prednost mišu."
+
+#, fuzzy
+#~| msgid "Operations Menu"
+#~ msgid "Show actions menu"
+#~ msgstr "meni radnji"
 
 #, fuzzy
 #~| msgid "Shade/Unshade"

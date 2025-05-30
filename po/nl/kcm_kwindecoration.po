@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 10:27+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -28,9 +28,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Meer acties voor dit venster"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Venstermenu"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -189,15 +191,19 @@ msgid "Titlebar Buttons"
 msgstr "Titelbalkknoppen"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Vensters sluiten door te dubbelklikken op de menuknop"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Klik en houd ingedrukt op de menuknop om het menu te tonen."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -273,6 +279,9 @@ msgstr "Enorm grote vensterranden"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Bovenmatig grote vensterranden"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Meer acties voor dit venster"
 
 #~ msgid "Shade"
 #~ msgstr "Oprollen"
@@ -431,10 +440,6 @@ msgstr "Bovenmatig grote vensterranden"
 
 #~ msgid "Help"
 #~ msgstr "Help"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Venstermenu"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- scheiding ---"

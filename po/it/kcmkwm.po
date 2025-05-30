@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-10 17:48+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -345,9 +345,10 @@ msgstr "Aumenta opacità"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Mostra menu delle azioni"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&Posizionamento delle finestre:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1251,6 +1252,9 @@ msgstr ""
 "<em>prevenzione della cattura del fuoco</em> e la <em>tabbox (\"Alt+Tab\")</"
 "em> contraddicono questa regola e non funzioneranno. Molto probabilmente "
 "vorrai usare invece<em>Il fuoco segue il mouse (precedenza al mouse)</em>!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Mostra menu delle azioni"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Arrotola/Srotola"

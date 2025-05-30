@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -333,9 +333,10 @@ msgstr "提高不透明度"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "显示操作菜单"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "窗口放置(&P)："
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1185,3 +1186,6 @@ msgstr ""
 "strong><em>阻止焦点抢占</em> 和 <em>任务切换器 (Alt+Tab)</em> 与本策略冲突，"
 "它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠标 (鼠标优"
 "先)</em> 模式。"
+
+#~ msgid "Show actions menu"
+#~ msgstr "显示操作菜单"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-10-01 19:06+0300\n"
 "Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -24,9 +24,10 @@ msgstr ""
 "2);\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Vairāk darbību ar šo logu"
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Window menu"
+msgstr "Iegūt jaunu apdari..."
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -179,15 +180,19 @@ msgid "Titlebar Buttons"
 msgstr "Virsrakstjoslas pogas"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Aizveriet logus, veicot dubultklikšķi uz izvēlnes pogas"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Nospiediet un turiet uz izvēlnes pogas, lai atvērtu izvēlni."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -264,6 +269,9 @@ msgstr "Pavisam milzīgas logu apmales"
 msgid "Oversized window borders"
 msgstr "Pārmērīgi lielas logu apmales"
 
+#~ msgid "More actions for this window"
+#~ msgstr "Vairāk darbību ar šo logu"
+
 #~ msgid "Shade"
 #~ msgstr "Saritināt"
 
@@ -327,11 +335,6 @@ msgstr "Pārmērīgi lielas logu apmales"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "andzha@latnet.lv, locale@aleksejs.id.lv"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgid "Window Decorations"
-#~ msgstr "Iegūt jaunu apdari..."
 
 #~ msgid "Menu"
 #~ msgstr "Izvēlne"

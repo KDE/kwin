@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-01-27 21:06+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -345,9 +345,10 @@ msgstr "Átlátszatlanság növelése"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Műveletek menü megjelenítése"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "Ablak&elhelyezés:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1243,6 +1244,9 @@ msgstr ""
 "megakadályozása</em> és a <em>tabdoboz („Alt+Tab”)</em> sérti a szabályokat, "
 "és nem fog működni. Valószínűleg inkább a <em>Fókuszálás egérkövetéssel - "
 "Egérprecedencia</em> az Önnek való!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Műveletek menü megjelenítése"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Felgördítés/legördítés"

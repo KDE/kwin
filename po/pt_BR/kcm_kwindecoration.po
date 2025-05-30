@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-02-04 16:14-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -27,9 +27,10 @@ msgstr ""
 "X-Generator: Lokalize 24.12.1\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Mais ações para esta janela"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "Decorações de janela"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -190,15 +191,19 @@ msgid "Titlebar Buttons"
 msgstr "Botões da barra de título"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Fechar as janelas com um duplo clique no botão do menu"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Clique e segure no botão de menu para mostrar o menu."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -275,6 +280,9 @@ msgstr "Bordas de janelas gigantes"
 msgid "Oversized window borders"
 msgstr "Bordas de janelas de tamanho extra grande "
 
+#~ msgid "More actions for this window"
+#~ msgstr "Mais ações para esta janela"
+
 #~ msgid "Shade"
 #~ msgstr "Sombrear"
 
@@ -320,9 +328,6 @@ msgstr "Bordas de janelas de tamanho extra grande "
 #~ msgid "Your emails"
 #~ msgstr ""
 #~ "elchevive@opensuse.org, alvarenga@kde.org, jsantiago12tone@gmail.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Decorações de janela"
 
 #~ msgid "Valerio Pilo"
 #~ msgstr "Valerio Pilo"

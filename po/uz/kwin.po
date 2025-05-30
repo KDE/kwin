@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -3772,12 +3772,17 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Siz oynani chegarasiz koʻrsatishni tanladingiz.\n"
 "Sichqoncha bilan chegaralarni oldingi holatiga qaytarib boʻlmaydi. Ularni "
@@ -3785,12 +3790,18 @@ msgstr ""
 "Buning uchun %1 tugmalaridan foydalaning."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Siz oynani butun ekranga koʻrsatishni tanladingiz.\n"
 "Agar dasturda shunday imkoniyat boʻlmasa, sichqoncha bilan oynani oldingi "
@@ -3953,9 +3964,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "Oynaning amallar menyusi"
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window Menu"
+msgstr "Oynalar"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4422,6 +4434,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "Oynaning amallar menyusi"
 
 #, fuzzy
 #~| msgid "Window to Next Desktop"

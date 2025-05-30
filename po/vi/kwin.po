@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -3839,24 +3839,35 @@ msgid "Tablets switched outputs"
 msgstr "Máy tính bảng đã đổi đầu ra"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Bạn vừa chọn hiển thị một cửa sổ không có viền.\n"
 "Khi không có viền, bạn sẽ không thể hiển thị lại viền bằng chuột: thay vào "
 "đó, hãy dùng trình đơn thao tác cửa sổ, kích hoạt bằng phím tắt %1."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Bạn vừa chọn hiển thị một cửa sổ ở chế độ toàn màn hình.\n"
 "Nếu bản thân ứng dụng không có một lựa chọn để tắt chế độ này, bạn sẽ không "
@@ -4010,9 +4021,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> được dùng bởi %2 trong %3"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "Trình đơn thao tác cửa sổ"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "Vai trò cửa sổ"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4477,6 +4489,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "Trình đơn thao tác cửa sổ"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "Bật/tắt \"Hiện sơn\""

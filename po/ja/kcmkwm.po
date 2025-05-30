@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-02-15 12:48+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -343,9 +343,10 @@ msgstr "不透明度を上げる"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "アクションメニューを表示"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "ウィンドウの配置(&P):"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1254,6 +1255,9 @@ msgstr ""
 "クス ('Alt+Tab') はアクティブ化ポリシーに反するため機能しません。代わりに"
 "<strong>マウスに従ってフォーカス (マウス優先)</strong> を使用するべきでしょ"
 "う。"
+
+#~ msgid "Show actions menu"
+#~ msgstr "アクションメニューを表示"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "シェード/シェード解除"

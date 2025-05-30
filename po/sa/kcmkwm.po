@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -339,9 +339,10 @@ msgstr "अपारदर्शिता वर्धयतु"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "क्रियाणां मेनू दर्शयतु"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "खिडकी &स्थापनम् :"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1218,6 +1219,9 @@ msgstr ""
 "+Tab&#39;)</em> सक्रियणनीतेः विरोधं करोति तथा च कार्यं न करिष्यति। भवान् अत्यन्तं "
 "सम्भाव्यते यत् तस्य स्थाने <em>Focus follows mouse (mouse precedence) इत्यस्य</em> "
 "उपयोगं कर्तुम् इच्छति!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "क्रियाणां मेनू दर्शयतु"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "छाया/अनछाया"

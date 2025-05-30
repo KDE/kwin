@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-10 05:49+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -338,9 +338,10 @@ msgstr "გაუმჭვირვალობის აწევა"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "ქმედებების მენიუს ჩვენება"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "ფანჯრის &მდებარეობა:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1230,6 +1231,9 @@ msgstr ""
 "აცილება</em> და <em>ამოცანების გადართვა ('Alt+Tab')</em> ხელს უშლიან "
 "აქტივაციის პოლიტიკას და არ იმუშავებენ. ალბათ <em>ფოკუსი თაგუნას დაყვება</em> "
 "პოლიტიკა გირჩევნიათ!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "ქმედებების მენიუს ჩვენება"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "დაჩრდილვა/განჩრდილვა"

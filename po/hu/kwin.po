@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-05-21 21:47+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -3715,12 +3715,17 @@ msgid "Tablets switched outputs"
 msgstr "A rajztáblák kimenetet váltottak"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Keret nélküli ablakmegjelenítést választott.\n"
 "Keret nélkül módban csak az egér használatával nem lehet visszakapcsolni a "
@@ -3728,12 +3733,18 @@ msgstr ""
 "előhívásához nyomja meg ezt a billentyűkombinációt: %1"
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Teljes képernyős ablakmegjelenítést választott.\n"
 "Ha az alkalmazásból nem lehet valamilyen külön opcióval normál méretre "
@@ -3887,9 +3898,10 @@ msgstr ""
 "alkalmazásban"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "Az ablakműveletek menü"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "Ablakszerep"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4338,6 +4350,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Az Xwayland összeomlott"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "Az ablakműveletek menü"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "Rajzolásmegjelenítés ki-be"

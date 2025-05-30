@@ -1,7 +1,7 @@
 # translation of kcmkwm.po to Slovenian
 # Translation of kcmkwm.po to Slovenian
 # KDEBASE translation to Slovenian language.
-# $Id: kcmkwm.po 1709594 2025-05-24 01:23:03Z scripty $
+# $Id: kcmkwm.po 1710037 2025-05-30 01:23:10Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-10 07:14+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -349,9 +349,10 @@ msgstr "Povečaj neprosojnost"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Prikaži meni opravil"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&Postavitev okna:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1242,6 +1243,9 @@ msgstr ""
 "kraje osredotočnosti</em> in <em>tabbox ('Alt+Tab') </em>nasprotujejo "
 "politiki aktiviranja in ne bodo delovali. Zelo verjetno bi želeli "
 "uporabljati <em>Osredotočenost sledi miški (prednost miške)</em>!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Prikaži meni opravil"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Osenči/osvetli"

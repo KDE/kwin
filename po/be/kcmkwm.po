@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -347,9 +347,10 @@ msgstr "Павылічыць непразрыстасць"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Паказаць меню дзеянняў"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&Размяшчэнне акна:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1248,6 +1249,9 @@ msgstr ""
 "перахоплівання фокуса</em> і <em>Alt+Tab</em> супярэчаць правілам актывацыі "
 "і не будуць працаваць. Напэўна, вам патрэбна <em>Факусавацца ўслед за мышшу "
 "(прыярытэт мышы)</em>!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Паказаць меню дзеянняў"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Згарнуць у загаловак/разгарнуць з загалоўка"

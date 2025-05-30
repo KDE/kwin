@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2023-02-15 15:25+0000\n"
 "Last-Translator: José Nuno Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -16,9 +16,10 @@ msgstr ""
 "X-POFile-SpellExtra: Form Valerio KWin\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Mais acções para esta janela"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "Decorações das Janelas"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -180,15 +181,19 @@ msgid "Titlebar Buttons"
 msgstr "Botões da Barra de Título"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Fechar as janelas com um duplo-click no botão do menu"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Carregue e mantenha carregado sobre o botão do menu para o mostrar."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -281,6 +286,9 @@ msgstr "Tamanho do contorno da janela:"
 msgid "Oversized window borders"
 msgstr "Tamanho do contorno da janela:"
 
+#~ msgid "More actions for this window"
+#~ msgstr "Mais acções para esta janela"
+
 #~ msgid "Shade"
 #~ msgstr "Enrolar"
 
@@ -322,9 +330,6 @@ msgstr "Tamanho do contorno da janela:"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "zepires@gmail.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Decorações das Janelas"
 
 #~ msgid "Valerio Pilo"
 #~ msgstr "Valerio Pilo"

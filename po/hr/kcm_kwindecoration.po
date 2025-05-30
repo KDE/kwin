@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2011-03-19 10:00+0100\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -25,9 +25,10 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Window menu"
+msgstr "Preuzmi nove dekoracije…"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -171,13 +172,13 @@ msgstr "Gumbi"
 #: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -334,11 +335,6 @@ msgstr "Veličina ruba:"
 #~ "lokalizacija@linux.hr, lokalizacija@linux.hr, lokalizacija@linux.hr, "
 #~ "lokalizacija@linux.hr, lokalizacija@linux.hr, lokalizacija@linux.hr, "
 #~ "lokalizacija@linux.hr, DoDoEntertainment@gmail.com, marko@dimjasevic.net"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgid "Window Decorations"
-#~ msgstr "Preuzmi nove dekoracije…"
 
 #~ msgid "Menu"
 #~ msgstr "Izbornik"

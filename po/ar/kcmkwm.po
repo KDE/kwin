@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-12 09:37+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -344,9 +344,10 @@ msgstr "زِد الشّفافيّة"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "أظهر قائمة العمليات"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&موضع النافذة:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1223,6 +1224,9 @@ msgstr ""
 "التركيز </em> و <em> صندوق التبويب ('Alt + Tab') </em> تتعارض مع سياسة "
 "التنشيط ولن تعمل. من المحتمل جدًا أنك تريد استخدام <em> التركيز يتبع الفأرة "
 "(أولوية الفأرة) </em> بدلاً من ذلك!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "أظهر قائمة العمليات"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "ظلّل/لا تظلّل"

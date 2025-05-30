@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 02:02+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -22,9 +22,10 @@ msgstr ""
 "X-Generator: Poedit 3.4.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Daugiau veiksmų su šiuo langu"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "Langų dekoracijos"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -185,15 +186,19 @@ msgid "Titlebar Buttons"
 msgstr "Antraštės juostos mygtukai"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Užverti langus du kartus spustelėjus meniu mygtuką"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 "Spustelėkite ir palaikykite nuspaudę meniu mygtuką, norėdami rodyti meniu."
 
@@ -271,6 +276,9 @@ msgstr "Milžiniški lango rėmeliai"
 msgid "Oversized window borders"
 msgstr "Per dideli lango rėmeliai"
 
+#~ msgid "More actions for this window"
+#~ msgstr "Daugiau veiksmų su šiuo langu"
+
 #~ msgid "Shade"
 #~ msgstr "Slėpti lango turinį"
 
@@ -315,9 +323,6 @@ msgstr "Per dideli lango rėmeliai"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "<>"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Langų dekoracijos"
 
 #~ msgid "Valerio Pilo"
 #~ msgstr "Valerio Pilo"

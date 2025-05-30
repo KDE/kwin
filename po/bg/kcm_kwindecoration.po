@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-01-31 11:31+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -21,8 +21,8 @@ msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
-msgid "More actions for this window"
-msgstr "Допълнителни действия за този прозорец"
+msgid "Window menu"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -177,15 +177,19 @@ msgid "Titlebar Buttons"
 msgstr "Бутони на заглавната лента"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Затваряне на прозорците при двукратно щракане върху бутона на менюто"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Щракнете и задръжте меню бутона, за да бъде показано менюто."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -261,6 +265,9 @@ msgstr "Много огромни рамки на прозорци"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Извънгабаритни  рамки на прозорци"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Допълнителни действия за този прозорец"
 
 #~ msgid "Shade"
 #~ msgstr "Сгъване"

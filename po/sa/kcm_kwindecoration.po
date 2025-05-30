@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -21,8 +21,8 @@ msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
-msgid "More actions for this window"
-msgstr "अस्य विण्डो कृते अधिकानि क्रियाणि"
+msgid "Window menu"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -172,15 +172,19 @@ msgid "Titlebar Buttons"
 msgstr "शीर्षकपट्टिका बटन"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "मेनू बटन् द्विवारं क्लिक् कृत्वा विण्डोज पिधातु"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "मेनू दर्शयितुं मेनू बटन् नुत्वा धारयन्तु ।"
 
 #: ui/ConfigureTitlebar.qml:59
@@ -256,6 +260,9 @@ msgstr "अतीव विशालाः खिडकीसीमाः"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "अतिप्रमाणस्य खिडकीसीमाः"
+
+#~ msgid "More actions for this window"
+#~ msgstr "अस्य विण्डो कृते अधिकानि क्रियाणि"
 
 #~ msgid "Shade"
 #~ msgstr "छाया"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 19:10+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -26,9 +26,11 @@ msgstr ""
 "X-Generator: Lokalize 24.05.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Máis accións para esta xanela"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Menú da xanela"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -184,15 +186,19 @@ msgid "Titlebar Buttons"
 msgstr "Botóns da barra de título"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Pechar as xanelas cun dobre clic no botón do menú"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Manteña premido o botón do menú para amosar o menú."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -268,6 +274,9 @@ msgstr "Bordos de xanela enormes"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Bordos de xanela descomunais"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Máis accións para esta xanela"
 
 #~ msgid "Shade"
 #~ msgstr "Recoller"
@@ -422,10 +431,6 @@ msgstr "Bordos de xanela descomunais"
 
 #~ msgid "Help"
 #~ msgstr "Axuda"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Menú da xanela"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- espazador ---"

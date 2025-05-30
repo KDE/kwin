@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-10-01 18:41+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -25,9 +25,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Leiho honetarako ekintza gehiago"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Leiho-menua"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -184,15 +186,19 @@ msgid "Titlebar Buttons"
 msgstr "Titulu-barrako botoiak"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Itxi leihoak menu-botoian klik bikoitza eginez"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Egin klik eta eutsi menu botoia menua erakusteko"
 
 #: ui/ConfigureTitlebar.qml:59
@@ -268,6 +274,9 @@ msgstr "Leiho-ertz oso itzelak"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Neurriz kanpoko leiho-ertzak"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Leiho honetarako ekintza gehiago"
 
 #~ msgid "Shade"
 #~ msgstr "Bildu"
@@ -426,10 +435,6 @@ msgstr "Neurriz kanpoko leiho-ertzak"
 
 #~ msgid "Help"
 #~ msgstr "Laguntza"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Leiho-menua"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- bereizgailua ---"

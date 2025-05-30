@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 19:03+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -24,8 +24,8 @@ msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
-msgid "More actions for this window"
-msgstr "Pli da agoj por ĉi tiu fenestro"
+msgid "Window menu"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -181,15 +181,19 @@ msgid "Titlebar Buttons"
 msgstr "Butonoj de Titolobreto"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Fermi fenestrojn per duobla klako de la menubutono"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Alklaku kaj tenu premu la menubutonon por montri la menuon."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -265,6 +269,9 @@ msgstr "Enormegaj fenestroborderoj"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Troigite grandaj fenestroborderoj"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Pli da agoj por ĉi tiu fenestro"
 
 #~ msgid "Shade"
 #~ msgstr "Ombrigi"

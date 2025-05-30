@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2022-09-27 18:04+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -20,9 +20,11 @@ msgstr ""
 "X-Generator: Lokalize 21.12.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Aksi selebihnya untuk jendela ini"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Menu Jendela"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -183,15 +185,19 @@ msgid "Titlebar Buttons"
 msgstr "Tombol Bilah Judul"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Tutup jendela dengan klik ganda tombol menu"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Klik dan tahan di tombol menu untuk menampilkan menu."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -285,6 +291,9 @@ msgstr "Ukuran bingkai jendela:"
 #| msgid "Window border size:"
 msgid "Oversized window borders"
 msgstr "Ukuran bingkai jendela:"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Aksi selebihnya untuk jendela ini"
 
 #~ msgid "Shade"
 #~ msgstr "Tiraikan"
@@ -435,10 +444,6 @@ msgstr "Ukuran bingkai jendela:"
 
 #~ msgid "Help"
 #~ msgstr "Bantuan"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Menu Jendela"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- pemisah ---"

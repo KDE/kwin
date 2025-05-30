@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-05-04 12:03+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -3768,12 +3768,17 @@ msgid "Tablets switched outputs"
 msgstr "Sorties commutées des tablettes"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Vous avez choisi d'afficher une fenêtre sans sa bordure.\n"
 "Sans la bordure, vous ne pourrez plus retrouver la bordure au moyen de la "
@@ -3781,12 +3786,18 @@ msgstr ""
 "utilisant le raccourci clavier %1."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Vous avez choisi d'afficher une fenêtre en mode « Plein écran ».\n"
 "Si l'application elle-même n'a pas d'option pour annuler le mode « Plein "
@@ -3938,9 +3949,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> est utilisé par %2 dans %3"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "Menu des opérations de fenêtres"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "Rôle de fenêtre"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4394,6 +4406,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland s'est planté."
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "Menu des opérations de fenêtres"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "Basculer la peinture d'affichage"

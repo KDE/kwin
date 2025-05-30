@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -17,9 +17,10 @@ msgstr ""
 "X-Generator: Lokalize 23.08.5\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "இச்சாளரத்திற்கான கூடுதல் செயல்கள்"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "சாளர விளிம்புகள்"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -170,15 +171,19 @@ msgid "Titlebar Buttons"
 msgstr "தலைப்புப்பட்டையிலுள்ள பட்டன்கள்"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "பட்டி பட்டனில் இரட்டை க்ளிக் செய்தல் அவற்றை மூடும்"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "பட்டியை காட்ட பட்டி பட்டனில் க்ளிக் செய்தபடியே பிடித்திருக்கவும்."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -265,6 +270,9 @@ msgstr "மிகபிரம்மாண்டமான சாளர விள�
 msgid "Oversized window borders"
 msgstr "அதிகபட்ச அளவிலான சாளர விளிம்புகள்"
 
+#~ msgid "More actions for this window"
+#~ msgstr "இச்சாளரத்திற்கான கூடுதல் செயல்கள்"
+
 #~ msgid "Shade"
 #~ msgstr "நிழலிடு"
 
@@ -314,9 +322,6 @@ msgstr "அதிகபட்ச அளவிலான சாளர விளி
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "t_vasee@yahoo.com, prabu_anand2000@yahoo.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "சாளர விளிம்புகள்"
 
 #~ msgid "Author"
 #~ msgstr "இயற்றியவர்"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2023-05-14 16:06+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -341,9 +341,10 @@ msgstr "Zvýšiť nepriehľadnosť"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Zobraziť ponuku akcií"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "Umiestnenie okien:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1222,6 +1223,9 @@ msgstr ""
 "strong><em>Ochrana pred kradnutím zamerania</em> a <em>tabbox (\"Alt+Tab\")</"
 "em> odporujú politike a nebudú fungovať. Veľmi pravdepodobne budete chcieť "
 "použiť <em>Zameranie sleduje myš (prednosť myši)</em> namiesto tohto!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Zobraziť ponuku akcií"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Zabaliť/rozbaliť"

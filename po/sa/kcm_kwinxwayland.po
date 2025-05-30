@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-13 19:10+0530\n"
 "Last-Translator: Kali <EMAIL@ADDRESS>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -30,73 +30,169 @@ msgid "Log Out Now"
 msgstr ""
 
 #: ui/main.qml:52
-#, kde-format
+#, kde-kuit-format
+msgctxt "@info:usagetip"
 msgid ""
-"Some legacy X11 apps require the ability to read keystrokes typed in other "
-"apps for certain features, such as handling global keyboard shortcuts. This "
-"is allowed by default. However other features may require the ability to "
-"read all keys, and this is disabled by default for security reasons. If you "
-"need to use such apps, you can choose your preferred balance of security and "
-"functionality here."
+"Legacy X11 apps with global shortcuts and other features accessed while "
+"running in the background need to be able to listen for keystrokes all the "
+"time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
+"balance of security and compatibility here."
 msgstr ""
-"केषाञ्चन विरासतां X11 एप्स् कृते अन्येषु एप्स् मध्ये टङ्कितान् कील-स्ट्रोक् पठितुं क्षमता आवश्यकी "
-"भवति, यथा वैश्विक-कीबोर्ड-शॉर्टकट्-नियन्त्रणम् । एतत् पूर्वनिर्धारितरूपेण अनुमतम् अस्ति । "
-"तथापि अन्येषां विशेषतानां कृते सर्वाणि कीलानि पठितुं क्षमता आवश्यकी भवेत्, सुरक्षाकारणात् एतत् "
-"पूर्वनिर्धारितरूपेण निष्क्रियं भवति । यदि भवान् एतादृशानि एप्स् उपयोक्तुं इच्छति तर्हि भवान् "
-"अत्र स्वस्य इष्टं सुरक्षा-कार्यक्षमता-सन्तुलनं चिन्वतु ।"
-
-#: ui/main.qml:72
-#, kde-format
-msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
-msgstr "विरासतः X11 एप्स् सर्वेषु एप्स् मध्ये टङ्कितान् कील-स्ट्रोक् पठितुं अनुमतिं ददातु:"
 
 #: ui/main.qml:73
 #, kde-format
-msgid "Never"
-msgstr "कदापि न"
+msgctxt "@title:group"
+msgid "Listening for keystrokes:"
+msgstr ""
 
-#: ui/main.qml:84
+#: ui/main.qml:80
 #, kde-format
-msgid "Only Meta, Control, Alt and Shift keys"
+msgctxt "@option:radio Listening for keystrokes is prohibited"
+msgid "Prohibited"
+msgstr ""
+
+#: ui/main.qml:96
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Most secure; global shortcuts will not work in X11 apps"
+msgstr ""
+
+#: ui/main.qml:110
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt and Shift keys"
+msgctxt "@option:radio Listening for keystrokes is allowed for…"
+msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "केवलं Meta, Control, Alt तथा Shift कीलानि"
 
-#: ui/main.qml:95
+#: ui/main.qml:126
 #, kde-format
+msgctxt "@info:usagetip"
 msgid ""
-"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
+"High security; push-to-talk and other modifier-only global shortcuts will "
+"work in X11 apps"
+msgstr ""
+
+#: ui/main.qml:140
+#, fuzzy, kde-format
+#| msgid ""
+#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
+#| "pressed"
+msgctxt "@option:radio Listening for keystrokes is allowed for…"
+msgid ""
+"As above, plus any key pressed while the Control, Alt, or Meta key is also "
+"pressed"
 msgstr "यथा उपरि, अपि च Control, Alt, Meta कीलानि नुदन्ते सति टङ्कितं किमपि कीलम्"
 
-#: ui/main.qml:107
+#: ui/main.qml:156
 #, kde-format
-msgid "Always"
+msgctxt "@info:usagetip"
+msgid "Moderate security; all global shortcuts will work in X11 apps"
+msgstr ""
+
+#: ui/main.qml:170
+#, fuzzy, kde-format
+#| msgid "Always"
+msgctxt "@option:radio Listening for keystrokes is always allowed"
+msgid "Always allowed"
 msgstr "सर्वदा"
 
-#: ui/main.qml:122
+#: ui/main.qml:186
 #, kde-format
-msgid "Additionally include mouse buttons"
-msgstr "अतिरिक्तरूपेण मूषकस्य बटन् अपि समाविष्टं कुर्वन्तु"
-
-#: ui/main.qml:138
-#, kde-format
+msgctxt "@info:usagetip"
 msgid ""
-"Note that using this setting will reduce system security to that of the X11 "
-"session by permitting malicious software to steal passwords and spy on the "
-"text that you type. Make sure you understand and accept this risk."
+"Least secure; all X11 apps will be able to see any text you type into any "
+"application"
+msgstr ""
+
+#: ui/main.qml:200
+#, fuzzy, kde-format
+#| msgid ""
+#| "Note that using this setting will reduce system security to that of the "
+#| "X11 session by permitting malicious software to steal passwords and spy "
+#| "on the text that you type. Make sure you understand and accept this risk."
+msgctxt "@info:usagetip"
+msgid ""
+"Note that using this setting will reduce system security and permit "
+"malicious software to steal passwords and spy on the text that you type. "
+"Make sure you understand and accept this risk."
 msgstr ""
 "ध्यानं कुर्वन्तु यत् एतस्य सेटिङ्ग् इत्यस्य उपयोगेन दुर्भावनापूर्णं सॉफ्टवेयरं गुप्तशब्दं चोरयित्वा "
 "भवता टङ्कितस्य पाठस्य गुप्तचर्यायाः अनुमतिं दत्त्वा X11 सत्रस्य सुरक्षां न्यूनीकरिष्यति "
 "सुनिश्चितं कुरुत यत् भवन्तः एतत् जोखिमं अवगच्छन्ति, स्वीकुर्वन्ति च।"
 
-#: ui/main.qml:155
+#: ui/main.qml:216
+#, fuzzy, kde-format
+#| msgid "Additionally include mouse buttons"
+msgctxt "@title:group"
+msgid "Listening for mouse buttons:"
+msgstr "अतिरिक्तरूपेण मूषकस्य बटन् अपि समाविष्टं कुर्वन्तु"
+
+#: ui/main.qml:222
+#, kde-format
+msgctxt "@option:radio Listening for mouse buttons is allowed"
+msgid "Allowed"
+msgstr ""
+
+#: ui/main.qml:238
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Moderate security; global shortcuts involving mouse buttons will work in X11 "
+"apps"
+msgstr ""
+
+#: ui/main.qml:252
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr ""
 
-#: ui/main.qml:156
+#: ui/main.qml:258
 #, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
 msgstr ""
+
+#: ui/main.qml:268
+#, kde-format
+msgctxt "@info:usagetip"
+msgid "Least secure; all X11 apps will be able to take control of the computer"
+msgstr ""
+
+#: ui/main.qml:282
+#, fuzzy, kde-format
+#| msgid ""
+#| "Note that using this setting will reduce system security to that of the "
+#| "X11 session by permitting malicious software to steal passwords and spy "
+#| "on the text that you type. Make sure you understand and accept this risk."
+msgctxt "@info:usagetip"
+msgid ""
+"Note that using this setting will drastically reduce system security and "
+"permit malicious software to take complete control of your pointer and "
+"keyboard. Make sure you understand and accept this risk."
+msgstr ""
+"ध्यानं कुर्वन्तु यत् एतस्य सेटिङ्ग् इत्यस्य उपयोगेन दुर्भावनापूर्णं सॉफ्टवेयरं गुप्तशब्दं चोरयित्वा "
+"भवता टङ्कितस्य पाठस्य गुप्तचर्यायाः अनुमतिं दत्त्वा X11 सत्रस्य सुरक्षां न्यूनीकरिष्यति "
+"सुनिश्चितं कुरुत यत् भवन्तः एतत् जोखिमं अवगच्छन्ति, स्वीकुर्वन्ति च।"
+
+#~ msgid ""
+#~ "Some legacy X11 apps require the ability to read keystrokes typed in "
+#~ "other apps for certain features, such as handling global keyboard "
+#~ "shortcuts. This is allowed by default. However other features may require "
+#~ "the ability to read all keys, and this is disabled by default for "
+#~ "security reasons. If you need to use such apps, you can choose your "
+#~ "preferred balance of security and functionality here."
+#~ msgstr ""
+#~ "केषाञ्चन विरासतां X11 एप्स् कृते अन्येषु एप्स् मध्ये टङ्कितान् कील-स्ट्रोक् पठितुं क्षमता "
+#~ "आवश्यकी भवति, यथा वैश्विक-कीबोर्ड-शॉर्टकट्-नियन्त्रणम् । एतत् पूर्वनिर्धारितरूपेण अनुमतम् "
+#~ "अस्ति । तथापि अन्येषां विशेषतानां कृते सर्वाणि कीलानि पठितुं क्षमता आवश्यकी भवेत्, "
+#~ "सुरक्षाकारणात् एतत् पूर्वनिर्धारितरूपेण निष्क्रियं भवति । यदि भवान् एतादृशानि एप्स् "
+#~ "उपयोक्तुं इच्छति तर्हि भवान् अत्र स्वस्य इष्टं सुरक्षा-कार्यक्षमता-सन्तुलनं चिन्वतु ।"
+
+#~ msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+#~ msgstr "विरासतः X11 एप्स् सर्वेषु एप्स् मध्ये टङ्कितान् कील-स्ट्रोक् पठितुं अनुमतिं ददातु:"
+
+#~ msgid "Never"
+#~ msgstr "कदापि न"

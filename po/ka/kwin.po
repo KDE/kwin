@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-04-30 04:33+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -3711,12 +3711,17 @@ msgid "Tablets switched outputs"
 msgstr "ტაბლეტებმა გამოტანები გადართეს"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "აირჩიეთ, რომ ფანჯრები მისი საზღვრის გარეშე იყოს ნაჩვენები.\n"
 "საზღვრის გარეშე საზღვარს თაგუნას გამოყენებით ვეღარ ჩართავთ. ამის მაგიერ "
@@ -3724,12 +3729,18 @@ msgstr ""
 "აქტიურდება."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "აირჩიეთ, რომ ფანჯარა სრულ ეკრანზე გამოჩნდეს.\n"
 "თუ აპლიკაციას თვითონ არ გააჩნია შესაძლებლობა, სრულეკრანიანი რეჟიმი გამორთოს, "
@@ -3880,9 +3891,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> გამოიყენება %2 -ის მიერ %3-ში"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "ფანჯრის ოპერაციების მენიუ"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "ფანჯრის როლი"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4333,6 +4345,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ავარიულად დასრულდა"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "ფანჯრის ოპერაციების მენიუ"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "ნახატის ჩვენების გადართვა"

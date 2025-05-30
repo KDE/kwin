@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-05-27 23:38+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -3730,12 +3730,17 @@ msgid "Tablets switched outputs"
 msgstr "Tabletit vaihtoivat ulostuloja"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Olet valinnut, että ikkuna näytetään ilman reunusta.\n"
 "Reunuksen puuttumisen takia et voi tuoda reunusta uudelleen näkyviin hiiren "
@@ -3743,12 +3748,18 @@ msgstr ""
 "pikanäppäintä %1."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Olet valinnut, että ikkuna näytetään koko näytön tilassa.\n"
 "Jos ohjelmassa itsessään ei ole keinoa poistua koko näytön tilasta, et voi "
@@ -3900,9 +3911,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "%3 käyttää näppäinyhdistelmää <b>%1</b> toiminnossa %2"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "Ikkunan pikavalikko"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "Ikkunan rooli"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4360,6 +4372,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland on kaatunut"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "Ikkunan pikavalikko"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "Näytä tai poista näkyvistä näytönpiirto"

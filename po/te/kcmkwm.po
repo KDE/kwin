@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2009-01-16 22:16+0530\n"
 "Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
 "Language-Team: Telugu <en@li.org>\n"
@@ -367,9 +367,9 @@ msgstr "ఓపాసిటీని మార్చుము"
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
-#| msgid "Operations Menu"
-msgid "Show actions menu"
-msgstr "కార్యముల మెనూ"
+#| msgid "Windows"
+msgid "Window menu"
+msgstr "విండోలు"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1200,6 +1200,11 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~| msgid "Operations Menu"
+#~ msgid "Show actions menu"
+#~ msgstr "కార్యముల మెనూ"
+
+#, fuzzy
 #~| msgid "Shade/Unshade"
 #~ msgid "Shade/unshade"
 #~ msgstr "షేడ్‌చేయి/షేడ్‌తీయి"
@@ -1401,9 +1406,6 @@ msgstr ""
 #~| msgid "&Border snap zone:"
 #~ msgid "no border snap zone"
 #~ msgstr "(&B) సరిహద్దు స్నాప్ జోన్:"
-
-#~ msgid "Windows"
-#~ msgstr "విండోలు"
 
 #~ msgid "Snap Zones"
 #~ msgstr "స్నాప్ జోన్స్"

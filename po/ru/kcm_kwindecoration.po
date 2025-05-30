@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-20 11:47+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -35,9 +35,11 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Дополнительные действия для этого окна"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Меню окна"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -191,15 +193,19 @@ msgid "Titlebar Buttons"
 msgstr "Кнопки в заголовке"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Закрывать окна двойным щелчком по кнопке меню"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Для показа меню нажмите и удерживайте кнопку мыши на кнопке меню."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -275,6 +281,9 @@ msgstr "Гигантские рамки"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Колоссальные рамки"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Дополнительные действия для этого окна"
 
 #~ msgid "Shade"
 #~ msgstr "Свернуть в заголовок"
@@ -426,10 +435,6 @@ msgstr "Колоссальные рамки"
 
 #~ msgid "Help"
 #~ msgstr "Справка"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Меню окна"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- разделитель ---"

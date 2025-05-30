@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -3752,12 +3752,17 @@ msgid "Tablets switched outputs"
 msgstr "Пераключаныя вывады планшэтаў"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "Вы абралі паказ акон без рамкі.\n"
 "Без рамкі вы не зможаце зноў уключыць рамку з дапамогай мышы. Вы зможаце "
@@ -3765,12 +3770,18 @@ msgstr ""
 "клавіш %1."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Вы абралі паказ акна ў рэжыме на ўвесь экран.\n"
 "Калі ў самой праграме няма параметра для адключэння гэтага рэжыму, вы не "
@@ -3921,9 +3932,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> выкарыстоўваецца %2 у %3"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "Меню аперацый з вокнамі"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "Роля акна"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4377,6 +4389,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Адбыўся збой Xwayland"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "Меню аперацый з вокнамі"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "Пераключэнне паказу малявання"

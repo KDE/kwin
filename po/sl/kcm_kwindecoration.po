@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to
 # Translation of kcmkwindecoration.po to Slovenian
 # SLOVENIAN TRANSLATION OF K DESKTOP ENVIRONMENT.
-# $Id: kcm_kwindecoration.po 1709300 2025-05-20 01:22:34Z scripty $
+# $Id: kcm_kwindecoration.po 1710037 2025-05-30 01:23:10Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 07:22+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -28,9 +28,11 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Več dejavnosti za to okno"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Meni okna"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -186,15 +188,19 @@ msgid "Titlebar Buttons"
 msgstr "Gumbi naslovne vrstice"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Zapri okna z dvojnim klikom na menijski gumb"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Kliknite in držite na gumbu za meni, da se meni prikaže."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -270,6 +276,9 @@ msgstr "Zelo ogromne okenske obrobe"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Prevelike okenske obrobe"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Več dejavnosti za to okno"
 
 #~ msgid "Shade"
 #~ msgstr "Zvij"
@@ -429,10 +438,6 @@ msgstr "Prevelike okenske obrobe"
 
 #~ msgid "Help"
 #~ msgstr "Pomoč"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Meni okna"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- praznina ---"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2008-11-27 23:55+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -361,9 +361,9 @@ msgstr "Opaknosć změnić"
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
-#| msgid "Operations Menu"
-msgid "Show actions menu"
-msgstr "Meni operacijow"
+#| msgid "Windows"
+msgid "Window menu"
+msgstr "Wokna"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1169,6 +1169,11 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~| msgid "Operations Menu"
+#~ msgid "Show actions menu"
+#~ msgstr "Meni operacijow"
+
+#, fuzzy
 #~| msgid "Shade/Unshade"
 #~ msgid "Shade/unshade"
 #~ msgstr "Sćin kłasć/wotstronić"
@@ -1345,9 +1350,6 @@ msgstr ""
 #~| msgid "&Titlebar Actions"
 #~ msgid "Titlebar"
 #~ msgstr "&Akcije za titulowy pask"
-
-#~ msgid "Windows"
-#~ msgstr "Wokna"
 
 #~ msgid "kcmkwinoptions"
 #~ msgstr "kcmkwinoptions"

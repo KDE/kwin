@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-03-01 14:53+0700\n"
 "Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
 "Language-Team: Thai\n"
@@ -3833,24 +3833,35 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "คุณได้เลือกให้แสดงหน้าต่างโดยไม่แสดงกรอบของหน้าต่าง\n"
 "หากหน้าต่างไม่มีกรอบ จะทำให้คุณไม่สามารถเปิดใช้กรอบของมันผ่านเมาส์ได้อีก "
 "ดังนั้นให้ใช้เมนูปฏิบัติการของหน้าต่างแทน โดยเรียกใช้เมนูผ่านทางปุ่มพิมพ์ลัด %1"
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "คุณได้เลือกให้แสดงหน้าต่างในโหมดแสดงเต็มจอภาพ\n"
 "และหากโปรแกรมที่เป็นเจ้าของหน้าต่างไม่มีตัวเลือกให้สลับโหมดการแสดงผลเต็มจอ "
@@ -4014,9 +4025,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ถูกใช้งานโดย %2 ใน %3"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "เมนูปฎิบัติการของหน้าต่าง"
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window Menu"
+msgstr "หน้าต่างต่าง ๆ"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4490,6 +4502,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "เมนูปฎิบัติการของหน้าต่าง"
 
 #, fuzzy
 #~| msgid "Toggle Floating"

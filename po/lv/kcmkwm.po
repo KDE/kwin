@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-16 17:29+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -345,9 +345,10 @@ msgstr "Palielināt necaurspīdīgumu"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Parādīt darbību izvēlni"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "Loga &novietojums:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1235,6 +1236,9 @@ msgstr ""
 "novēršana</em> un <em>Alt+Tab lodziņš</em> ir pretrunā aktivācijas politikai "
 "un nedarbosies. Ļoti iespējams, ka tā vietā vēlēsieties izmantot <em>Fokuss "
 "seko pelei (peles priekšroka)</em>!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Parādīt darbību izvēlni"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Saritināt/atritināt"

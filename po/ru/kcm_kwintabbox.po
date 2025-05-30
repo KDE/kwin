@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-02-13 11:22+0300\n"
-"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
+"PO-Revision-Date: 2025-05-29 21:51+0200\n"
+"Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -28,17 +28,17 @@ msgstr ""
 #: layoutpreview.cpp:27
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "Запустить интерактивный предварительный просмотр переключателя окон"
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Путь к основному файлу QML переключателя окон"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Показывать также миниатюру рабочего стола"
 
 #: layoutpreview.cpp:156
 #, kde-format

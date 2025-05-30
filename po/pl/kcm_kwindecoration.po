@@ -1,5 +1,5 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1709616 $
+# Version: $Revision: 1710037 $
 # translation of kcmkwindecoration.po to
 # SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>\n"
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-21 12:08+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -23,9 +23,11 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Więcej działań dla tego okna"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Menu okna"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -180,15 +182,19 @@ msgid "Titlebar Buttons"
 msgstr "Przyciski paska tytułu"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Zamknij okno po dwukrotnym naciśnięciu na przycisk menu"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Naciśnij i przytrzymaj przycisk menu, aby pokazać menu."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -264,6 +270,9 @@ msgstr "Bardziej ogromnie szerokie obramowanie okien"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Przewymiarowanie obramowanie okien"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Więcej działań dla tego okna"
 
 #~ msgid "Shade"
 #~ msgstr "Zwiń"
@@ -417,10 +426,6 @@ msgstr "Przewymiarowanie obramowanie okien"
 
 #~ msgid "Help"
 #~ msgstr "Pomoc"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Menu okna"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- odstęp ---"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2023-02-20 11:16+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -20,9 +20,10 @@ msgstr ""
 "X-Generator: Lokalize 22.12.0\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Các hành động khác cho cửa sổ này"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "Trang trí cửa sổ"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -178,15 +179,19 @@ msgid "Titlebar Buttons"
 msgstr "Các nút ở thanh tiêu đề"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Đóng cửa sổ bằng cách bấm đúp vào nút trình đơn"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Bấm và giữ nút trình đơn để hiện trình đơn."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -279,6 +284,9 @@ msgstr "Kích thước viền cửa sổ:"
 msgid "Oversized window borders"
 msgstr "Kích thước viền cửa sổ:"
 
+#~ msgid "More actions for this window"
+#~ msgstr "Các hành động khác cho cửa sổ này"
+
 #~ msgid "Shade"
 #~ msgstr "Che"
 
@@ -320,9 +328,6 @@ msgstr "Kích thước viền cửa sổ:"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "phu.nguyen@kdemail.net,teppi82@gmail.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Trang trí cửa sổ"
 
 #~ msgid "Valerio Pilo"
 #~ msgstr "Valerio Pilo"

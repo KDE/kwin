@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-11-13 22:44+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -21,9 +21,11 @@ msgstr ""
 "X-Generator: Lokalize 24.08.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "További műveletek"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Ablak menü"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -180,15 +182,19 @@ msgid "Titlebar Buttons"
 msgstr "Címsorgombok"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Az ablakok bezárhatók legyenek a menügombra történő dupla kattintással"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Kattintson és tartsa lenyomva a menü gombot a menü megjelenítéséhez."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -264,6 +270,9 @@ msgstr "Nagyon hatalmas ablakszegélyek"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Túlméretezett ablakszegélyek"
+
+#~ msgid "More actions for this window"
+#~ msgstr "További műveletek"
 
 #~ msgid "Shade"
 #~ msgstr "Felgördítés"
@@ -421,10 +430,6 @@ msgstr "Túlméretezett ablakszegélyek"
 
 #~ msgid "Help"
 #~ msgstr "Súgó"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Ablak menü"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- elválasztó ---"

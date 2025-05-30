@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-10-18 17:13+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -20,9 +20,11 @@ msgstr ""
 "X-Generator: Lokalize 24.08.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "More actions for this window"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Window Menu"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -179,15 +181,19 @@ msgid "Titlebar Buttons"
 msgstr "Titlebar Buttons"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Close windows by double clicking the menu button"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Click and hold on the menu button to show the menu."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -263,6 +269,9 @@ msgstr "Very huge window borders"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Oversized window borders"
+
+#~ msgid "More actions for this window"
+#~ msgstr "More actions for this window"
 
 #~ msgid "Shade"
 #~ msgstr "Shade"
@@ -417,10 +426,6 @@ msgstr "Oversized window borders"
 
 #~ msgid "Help"
 #~ msgstr "Help"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Window Menu"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- spacer ---"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-15 17:10+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -342,9 +342,10 @@ msgstr "ஒளிபுகாமையை கூட்டும்"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "செயல்களுக்கான பட்டியை காட்டு"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "சாளர &இருப்பிடம்:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1245,6 +1246,9 @@ msgstr ""
 "<em>'Alt+Tab'</em> கொண்டு சாளரங்களுக்கிடையே தாவுவதும் வேலை செய்யாது.  "
 "பெரும்பாலானோர் <em>குவியத்தை சுட்டி கட்டுப்படுத்தும் (சுட்டி முன்னிலை)</em> எனும் "
 "கொள்கையை இதைவிட விரும்புவர்!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "செயல்களுக்கான பட்டியை காட்டு"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "நிழலிடு/நிழல்நீக்கு"

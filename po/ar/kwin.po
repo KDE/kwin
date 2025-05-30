@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-05-04 06:22+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -3691,24 +3691,35 @@ msgid "Tablets switched outputs"
 msgstr "بدلت اللوحيات المخرجات"
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "لقد اخترت إظهار نافذة بلا حدّ.\n"
 "بدون الحدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة: استخدم قائمة عمليّات "
 "النّافذة بدل ذلك، لتنشيطها استخدم اختصار لوحة المفاتيح %1."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "لقد اخترت إظهار نافذة بوضع ملء الشّاشة.\n"
 "إن لم يحوي التّطبيق نفسه خيارًا لإطفاء وقت ملء الشّاشة لن تستطيع تعطيله مجدّدًا "
@@ -3859,9 +3870,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> يستخدمه %2 في %3"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "قائمة عمليّات النّافذة"
+#, fuzzy, kde-format
+#| msgid "Window role"
+msgid "Window Menu"
+msgstr "دور النافذة"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4311,6 +4323,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "إنهار ويلاند_اكس"
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "قائمة عمليّات النّافذة"
 
 #~ msgid "Toggle Show Paint"
 #~ msgstr "بدّل رسم العرض"

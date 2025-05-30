@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-09-23 20:40+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -23,9 +23,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "此視窗的更多動作"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "視窗裝飾"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -174,15 +175,19 @@ msgid "Titlebar Buttons"
 msgstr "標題列按鈕"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "雙擊視窗選單按鈕時關閉視窗"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "點擊並按住選單按鈕以顯示選單。"
 
 #: ui/ConfigureTitlebar.qml:59
@@ -259,6 +264,9 @@ msgstr "極大視窗邊框"
 msgid "Oversized window borders"
 msgstr "超級大視窗邊框"
 
+#~ msgid "More actions for this window"
+#~ msgstr "此視窗的更多動作"
+
 #~ msgid "Shade"
 #~ msgstr "收起"
 
@@ -300,9 +308,6 @@ msgstr "超級大視窗邊框"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "pan93412@gmail.com, s8321414@gmail.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "視窗裝飾"
 
 #~ msgid "Valerio Pilo"
 #~ msgstr "Valerio Pilo"

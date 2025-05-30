@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-02-27 21:32+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -22,9 +22,11 @@ msgstr ""
 "X-Generator: Lokalize 21.12.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Acțiuni suplimentare pentru această fereastră"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Meniu fereastră"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -173,15 +175,19 @@ msgid "Titlebar Buttons"
 msgstr "Butoane pe bara de titlu"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Închide ferestrele prin dublu clic pe butonul de meniu"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Apăsați și țineți pe butonul meniului pentru a arăta meniul."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -267,6 +273,9 @@ msgstr "Contur ferestre foarte imens"
 #| msgid "Oversized Window Borders"
 msgid "Oversized window borders"
 msgstr "Contur ferestre supradimensionat"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Acțiuni suplimentare pentru această fereastră"
 
 #~ msgid "Shade"
 #~ msgstr "Strânge"
@@ -427,10 +436,6 @@ msgstr "Contur ferestre supradimensionat"
 
 #~ msgid "Help"
 #~ msgstr "Ajutor"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Meniu fereastră"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- spațiator ---"

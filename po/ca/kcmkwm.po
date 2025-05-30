@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-10 10:34+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -349,9 +349,10 @@ msgstr "Augmenta l'opacitat"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Mostra el menú de les accions"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "Co&l·locació de la finestra:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1253,6 +1254,9 @@ msgstr ""
 "pestanyes («Alt+Tab»)</em> entren en contradicció amb la política i no "
 "funcionaran. En el seu lloc, segurament voldreu usar el <em>Focus segueix el "
 "ratolí (prioritat al ratolí)</em>."
+
+#~ msgid "Show actions menu"
+#~ msgstr "Mostra el menú de les accions"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Plega/desplega"

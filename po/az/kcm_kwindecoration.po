@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2021-06-10 11:34+0400\n"
 "Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -18,9 +18,10 @@ msgstr ""
 "X-Generator: Lokalize 21.04.1\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Bu pəncərə üçün daha çoc əməllər"
+#, fuzzy, kde-format
+#| msgid "Window Decorations"
+msgid "Window menu"
+msgstr "Pəncərə dekorasiyası"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -180,15 +181,19 @@ msgid "Titlebar Buttons"
 msgstr "Başlıq paneli düymələri"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Menyu düyməsinə iki dəfə vuraraq pəncərəni bağlamaq"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Menyunu göstərmək üçün menyu düyməsini basıb saxlayın."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -283,6 +288,9 @@ msgstr "Pəncərə çərçivəsinin ölçüsü:"
 msgid "Oversized window borders"
 msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
+#~ msgid "More actions for this window"
+#~ msgstr "Bu pəncərə üçün daha çoc əməllər"
+
 #~ msgid "Shade"
 #~ msgstr "Başlığa yığmaq"
 
@@ -327,9 +335,6 @@ msgstr "Pəncərə çərçivəsinin ölçüsü:"
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
 #~ msgstr "xxmn77@gmail.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Pəncərə dekorasiyası"
 
 #~ msgid "Valerio Pilo"
 #~ msgstr "Valerio Pilo"

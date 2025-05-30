@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration trunk\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2019-12-12 22:21+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
@@ -20,9 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr ""
+#, fuzzy, kde-format
+msgid "Window menu"
+msgstr "പുതിയ അലങ്കാരങ്ങള്‍ നേടുക"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -164,13 +164,13 @@ msgstr "ബട്ടണുകള്‍"
 #: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -295,10 +295,6 @@ msgstr "വക്കിന്റെ വലുപ്പം:"
 #~ msgid "Your emails"
 #~ msgstr ""
 #~ "shijualexonline@gmail.com,snalledam@dataone.in,vivekkj2004@gmail.com"
-
-#, fuzzy
-#~ msgid "Window Decorations"
-#~ msgstr "പുതിയ അലങ്കാരങ്ങള്‍ നേടുക"
 
 #~ msgid "Menu"
 #~ msgstr "മെനു"

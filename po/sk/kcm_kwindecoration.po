@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2023-05-06 18:16+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -23,9 +23,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "Viac akcií pre toto okno"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "Ponuka okna"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -183,15 +185,19 @@ msgid "Titlebar Buttons"
 msgstr "Tlačidlá záhlavia"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Zavrieť okná dvojklikom na tlačidlo ponuky"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "Ponuku zobrazíte kliknutím a podržaním na tlačidla ponuky."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -277,6 +283,9 @@ msgstr "Veľmi obrovské okraje okien"
 #| msgid "Oversized Window Borders"
 msgid "Oversized window borders"
 msgstr "Nadrozmerné okraje okien"
+
+#~ msgid "More actions for this window"
+#~ msgstr "Viac akcií pre toto okno"
 
 #~ msgid "Shade"
 #~ msgstr "Zabaliť"
@@ -432,10 +441,6 @@ msgstr "Nadrozmerné okraje okien"
 
 #~ msgid "Help"
 #~ msgstr "Pomocník"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Ponuka okna"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- medzera ---"

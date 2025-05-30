@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-02-02 23:44+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -342,9 +342,10 @@ msgstr "Padidinti nepermatomumą"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Rodyti veiksmų meniu"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "Langų iš&dėstymas:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1242,6 +1243,9 @@ msgstr ""
 "<em>langų perjungiklis („Alt+Tab“)</em> prieštarauja aktyvavimo politikai ir "
 "todėl jie neveiks. Vietoj to, greičiausiai, norėtumėte naudoti "
 "<em>Fokusavimas seka paskui pelę (pelės pirmenybė)</em>!"
+
+#~ msgid "Show actions menu"
+#~ msgstr "Rodyti veiksmų meniu"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Pridengti/atidengti"

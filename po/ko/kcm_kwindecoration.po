@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2024-12-10 01:14+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -19,9 +19,11 @@ msgstr ""
 "X-Generator: Lokalize 23.08.5\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr "이 창의 더 많은 동작"
+#, fuzzy, kde-format
+#| msgctxt "Button showing window actions menu"
+#| msgid "Window Menu"
+msgid "Window menu"
+msgstr "창 메뉴"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -172,15 +174,19 @@ msgid "Titlebar Buttons"
 msgstr "제목 표시줄 단추"
 
 #: ui/ConfigureTitlebar.qml:35
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "checkbox label"
+#| msgid "Close windows by double clicking the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "메뉴 단추를 두 번 클릭해서 창 닫기"
 
 #: ui/ConfigureTitlebar.qml:52
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "popup tip"
+#| msgid "Click and hold on the menu button to show the menu."
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr "메뉴 단추를 클릭하고 있으면 메뉴를 표시합니다."
 
 #: ui/ConfigureTitlebar.qml:59
@@ -256,6 +262,9 @@ msgstr "매우 매우 매우 큰 창 경계선"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "과다하게 큰 창 경계선"
+
+#~ msgid "More actions for this window"
+#~ msgstr "이 창의 더 많은 동작"
 
 #~ msgid "Shade"
 #~ msgstr "말아 올리기"
@@ -409,10 +418,6 @@ msgstr "과다하게 큰 창 경계선"
 
 #~ msgid "Help"
 #~ msgstr "도움말"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "창 메뉴"
 
 #~ msgid "--- spacer ---"
 #~ msgstr "--- 구분자 ---"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -3802,24 +3802,35 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "អ្នក​បាន​ជ្រើស ដើម្បី​បង្ហាញ​បង្អួច​គ្មាន​ស៊ុម ។\n"
 "គ្មាន​ស៊ុម អ្នក​នឹង​មិន​អាច​អនុញ្ញាត​ស៊ុម​ម្ដង​ទៀត ដោយ​ប្រើ​កណ្ដុរ ៖ ប្រើ​ម៉ឺនុយ​ប្រតិបត្តិ​បង្អួច​ជំនួស​វិញ ធ្វើ​ឲ្យ​សកម្ម​"
 "ដោយ​ប្រើ %1 គ្រាប់​ចុច​ផ្លូវ​កាត់ ។"
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "អ្នក​បាន​ជ្រើស ដើម្បី​បង្ហាញ​បង្អួច​ក្នុង​របៀប​ពេញ​អេក្រង់ ។\n"
 "បើ​កម្មវិធី​ខ្លួន​វា​មិន​មាន​ជម្រើស​ដើម្បី​បិទ​របៀប​ពេញ​អេក្រង់​ទេ​នោះ អ្នក​នឹង​មិន​អាច មិន​អនុញ្ញាត ម្ដង​ទៀត​ឡើយ "
@@ -3986,9 +3997,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ត្រូ​វបានប្រើ​ដោយ %2 នៅ​ក្នុង %3"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "ម៉ឺនុយ​ប្រតិបត្តិការ​បង្អួច"
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window Menu"
+msgstr "បង្អួច"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4481,6 +4493,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "ម៉ឺនុយ​ប្រតិបត្តិការ​បង្អួច"
 
 #, fuzzy
 #~| msgid "Show &panels"

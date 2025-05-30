@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2025-02-04 16:13-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -351,9 +351,10 @@ msgstr "Aumentar opacidade"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, kde-format
-msgid "Show actions menu"
-msgstr "Mostrar o menu de ações"
+#, fuzzy, kde-format
+#| msgid "Window &placement:"
+msgid "Window menu"
+msgstr "&Posicionamento da janela:"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1256,6 +1257,9 @@ msgstr ""
 "em> e o <em>seletor de janelas ('Alt+Tab') </em> contrariam a política e não "
 "funcionam. Em vez disso, você provavelmente vai querer usar a opção <em>Foco "
 "segue o mouse (precedência do mouse)</em>."
+
+#~ msgid "Show actions menu"
+#~ msgstr "Mostrar o menu de ações"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "Enrolar/desenrolar"

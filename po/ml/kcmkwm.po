@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2019-12-12 22:45+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
@@ -342,9 +342,9 @@ msgstr "തെളിച്ചം മാറ്റുക"
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
-#| msgid "Operations Menu"
-msgid "Show actions menu"
-msgstr "പ്രക്രിയകള്‍ക്കുള്ള മെനു"
+#| msgid "Windows"
+msgid "Window menu"
+msgstr "ജാലകങ്ങള്‍"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1144,6 +1144,11 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+#~| msgid "Operations Menu"
+#~ msgid "Show actions menu"
+#~ msgstr "പ്രക്രിയകള്‍ക്കുള്ള മെനു"
+
+#, fuzzy
 #~| msgid "Shade/Unshade"
 #~ msgid "Shade/unshade"
 #~ msgstr "നിഴല്‍ വീഴ്ത്തുക/മങ്ങുക"
@@ -1332,9 +1337,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Titlebar"
 #~ msgstr "&തലപ്പട്ടയിലുള്ള പ്രവൃത്തികള്‍"
-
-#~ msgid "Windows"
-#~ msgstr "ജാലകങ്ങള്‍"
 
 #~ msgid "kcmkwinoptions"
 #~ msgstr "kcmkwinoptions"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 00:43+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -3814,24 +3814,35 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
-"the mouse: use the window operations menu instead, activated using the %1 "
-"keyboard shortcut."
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
 msgstr ""
 "ನೀವು ಅಂಚುಗಳಿಲ್ಲದೆ ಕಿಟಕಿಯನ್ನು ತೋರಿಸಲು ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ \n"
 "  ಅಂಚುಗಳಿಲ್ಲದೆ ನೀವು ಮೌಸ್ ಬಳಸಿ ಅಂಚನ್ನು ಶಕ್ತಗೊಳಿಸಲಾರಿರಿದಿಲ್ಲ.ಬದಲಿಗೆ ಕಿಟಕಿ ಕಾರ್ಯಾಚರಣೆ "
 "ಪರಿವಿಡಿ ಉಪಯೋಗಿಸಿ. ಇದನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು %1 ಸಮೀಪ ಮಾರ್ಗ ಬಳಸಿ."
 
 #: useractions.cpp:169
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
-"window operations menu instead, activated using the %1 keyboard shortcut."
+"window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "ನೀವು ಪೂರ್ಣತೆರೆಯಲ್ಲಿ ಕಿಟಕಿಯನ್ನು ತೋರಿಸಲು ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ \n"
 "  ಅನ್ವಯವು ಪೂರ್ಣತೆರೆಯನ್ನು  ಅಶಕ್ತಗೊಳಿಸುವ ಆಯ್ಕೆ ಹೊಂದಿರದಿದ್ದಲ್ಲಿ ನೀವು ಮೌಸ್ ಬಳಸಿ "
@@ -3995,9 +4006,10 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ಎನ್ನುವುದು %2 ಇಂದ %3 ರಲ್ಲಿ ಬಳಸಲ್ಪಟ್ಟಿದೆ"
 
 #: useractions.cpp:887
-#, kde-format
-msgid "Window Operations Menu"
-msgstr "ಕಿಟಕಿ ಕಾರ್ಯಾಚರಣೆ ಪರಿವಿಡಿ"
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window Menu"
+msgstr "ಕಿಟಕಿಗಳು"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4470,6 +4482,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Window Operations Menu"
+#~ msgstr "ಕಿಟಕಿ ಕಾರ್ಯಾಚರಣೆ ಪರಿವಿಡಿ"
 
 #, fuzzy
 #~| msgid "Toggle Floating"

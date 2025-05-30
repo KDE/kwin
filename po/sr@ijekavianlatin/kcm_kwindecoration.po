@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-20 00:44+0000\n"
+"POT-Creation-Date: 2025-05-30 00:44+0000\n"
 "PO-Revision-Date: 2015-10-14 18:13+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -22,9 +22,10 @@ msgstr ""
 "X-Environment: kde\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, kde-format
-msgid "More actions for this window"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Window menu"
+msgstr "Dobavi nove dekoracije..."
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -169,13 +170,13 @@ msgstr "Naslovna traka"
 #, fuzzy, kde-format
 #| msgid "Close windows by double clicking &the menu button"
 msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
+msgid "Close windows by double clicking the window menu button"
 msgstr "Zatvori prozor dvoklikom na &dugme menija"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
+msgid "Click and hold on the window menu button to show the menu."
 msgstr ""
 
 #: ui/ConfigureTitlebar.qml:59
@@ -336,11 +337,6 @@ msgstr "bez bočnih ivica"
 
 #~ msgid "Keep above"
 #~ msgstr "Drži iznad"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgid "Window Decorations"
-#~ msgstr "Dobavi nove dekoracije..."
 
 #, fuzzy
 #~| msgid "Get New Decorations..."
