@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 02:37+0000\n"
-"PO-Revision-Date: 2025-05-21 21:47+0200\n"
+"PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -799,15 +799,12 @@ msgid "Tablet Pad Ring"
 msgstr "Rajztábla kör"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Rajztábla kör"
+msgstr "Rajztábla tárcsázó"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1267,11 +1264,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Ezt a segédprogram nem közvetlen használatra való."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1279,15 +1272,12 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Az alkalmazás leállítása bezárja az összes "
-"ablakát. A nem mentett adatok elvesznek.</emphasis></para>"
+"<para>A(z) <application>%1</application> nem válaszol. Szeretné bezárni ezt "
+"az alkalmazást?</para><para><emphasis strong='true'>Az alkalmazás leállítása "
+"bezárja az összes ablakát. A nem mentett adatok elvesznek.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1295,8 +1285,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Az alkalmazás leállítása bezárja az összes "
-"ablakát. A nem mentett adatok elvesznek.</emphasis></para>"
+"<para>A(z) „%1” (<application>%2</application>) nem válaszol. Szeretné "
+"bezárni ezt az alkalmazást?</para><para><emphasis strong='true'>Az "
+"alkalmazás leállítása bezárja az összes ablakát. A nem mentett adatok "
+"elvesznek.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -1464,7 +1456,7 @@ msgstr "Az ablakos mód magassága. Alapértelmezett érték: 768."
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Legyen-e ablakos teljes képernyős mód vagy sem"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -2922,15 +2914,14 @@ msgid "Move Down"
 msgstr "Mozgatás lefelé"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Nyílrajz módosítóbillentyűk:"
+msgstr "Görgetési mozdulat módosítóbillentyűi:"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "Görgetés a módosító billentyűk lenyomásakor a nagyításhoz"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
