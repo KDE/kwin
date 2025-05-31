@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-04-29 08:54+0300\n"
+"PO-Revision-Date: 2025-05-30 09:48+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -3732,12 +3732,7 @@ msgid "Tablets switched outputs"
 msgstr "Виконано перемикання виведення планшетів"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3746,17 +3741,11 @@ msgid ""
 msgstr ""
 "Ви вибрали відображення вікна без рамки.\n"
 "Коли рамка не відображається, неможливо ввімкнути її за допомогою мишки. "
-"Натомість використовуйте меню дій над вікнами, яке активується скороченням "
-"клавіатури %1."
+"Натомість використовуйте меню вікна, яке активується скороченням клавіатури "
+"%1."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3766,7 +3755,7 @@ msgstr ""
 "Ви вибрали повноекранний режим для вікна.\n"
 "Якщо програма не має можливості вимкнути повноекранний режим, буде неможливо "
 "перейти в звичайний режим за допомогою мишки. Натомість використовуйте меню "
-"дій над вікнами, яке активується скороченням клавіатури %1."
+"вікна, яке активується скороченням клавіатури %1."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3912,10 +3901,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> використовується для дії %2 у %3"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Роль вікна"
+msgstr "Меню вікна"
 
 #: useractions.cpp:889
 #, kde-format

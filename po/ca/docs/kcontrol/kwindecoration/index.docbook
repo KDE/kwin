@@ -8,6 +8,8 @@
 
 <article id="kwindecoration" lang="&language;">
 <articleinfo>
+<title
+>Decoració de les finestres</title>
 <authorgroup>
 <author
 >&Rik.Hemsley; &Rik.Hemsley.mail;</author>
@@ -160,7 +162,7 @@
 
 <para
 >Habiliteu <guilabel
->Tanca les finestres amb doble clic al botó menú</guilabel
+>Tanca les finestres amb doble clic al botó de menú de finestra</guilabel
 > per a tenir una opció addicional al botó «Tanca» o si l'heu eliminat de la barra de títol. </para>
 
 <para

@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1710037 2025-05-30 01:23:10Z scripty $
+# $Id: kwin.po 1710108 2025-05-31 01:22:54Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-04-29 07:12+0200\n"
+"PO-Revision-Date: 2025-05-30 06:54+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -3730,12 +3730,7 @@ msgid "Tablets switched outputs"
 msgstr "Tablični računalniki so preklopili izhode"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3743,17 +3738,11 @@ msgid ""
 "shortcut."
 msgstr ""
 "Izbrali ste prikaz okna brez njegove obrobe.\n"
-"Brez obrobe ne boste mogli več omogočiti obrobe z uporabo miške. Uporabite "
-"meni okenskih dejanj, ki ga omogočite s tipkovno bližnjico %1."
+"Brez obrobe ne boste mogli več omogočiti obrobe z uporabo miške. Namesto "
+"tega uporabite meni okna, ki ga omogočite s tipkovno bližnjico %1."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3762,8 +3751,8 @@ msgid ""
 msgstr ""
 "Izbrali ste prikaz okna v celozaslonskem načinu.\n"
 "Če program sam nima možnosti izklopa celozaslonskega načina, ga ne boste "
-"mogli izklopiti z uporabo miške. Uporabite meni okenskih dejanj, ki ga "
-"omogočite s tipkovno bližnjico %1."
+"mogli izklopiti z uporabo miške. Uporabite meni okna, ki ga omogočite s "
+"tipkovno bližnjico %1."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3783,12 +3772,12 @@ msgstr "Ohrani n&ad vsemi"
 #: useractions.cpp:232
 #, kde-format
 msgid "Keep &Below Others"
-msgstr "Ohrani po&d vsemi"
+msgstr "Ohrani pod vsemi"
 
 #: useractions.cpp:238
 #, kde-format
 msgid "&Fullscreen"
-msgstr "&Celozaslonski način"
+msgstr "Celozaslonski način"
 
 #: useractions.cpp:244
 #, kde-format
@@ -3798,12 +3787,12 @@ msgstr "Brez &naslovne letvice in okvirja"
 #: useractions.cpp:252
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Nastavi &bližnjico okna …"
+msgstr "Nastavi bližnjico okna…"
 
 #: useractions.cpp:258
 #, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Posebne nastavitve &oken …"
+msgstr "Posebne nastavitve oken…"
 
 #: useractions.cpp:263
 #, kde-format
@@ -3909,10 +3898,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> je uporabljena za %2 v %3"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Vloga okna"
+msgstr "Meni okna"
 
 #: useractions.cpp:889
 #, kde-format

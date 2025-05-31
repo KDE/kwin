@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-24 22:24+0200\n"
+"PO-Revision-Date: 2025-05-30 22:48+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -41,28 +41,32 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Laster-tekla globalak eta atzeko planoan exekutatu bitartean atzitutako "
+"beste ezaugarri batzuk dituzten X11 aplikazioak, denbora guztian, tekla- "
+"sakatzeak entzuteko  gai izan behar dira.<nl/><nl/>Aplikazio hauetako "
+"edozein erabiltzen baduzu, segurtasuna eta bateragarritasunaren arteko oreka "
+"hobetsia hemen aukera dezakezu."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Tekla-sakatzeak entzuten:"
 
 #: ui/main.qml:80
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Debekatuta"
 
 #: ui/main.qml:96
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr ""
+msgstr "Seguruena; laster-tekla globalak ez dira ibiliko X11 aplikazioekin."
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Meta, Kontrol, Alt, eta Maius teklak bakarrik"
@@ -74,32 +78,32 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Segurtasun handia; sakatu-hitz-egiteko eta beste laster-tekla  global, "
+"aldarazle bakarrik, batzuk X11 aplikazioetan ibiliko dira"
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
 msgstr ""
-"Gainekoa bezala, Kontrol, Alt, edo Meta teklekin batera sakatutako teklak "
-"erantsita"
+"Goikoa bezala, Kontrol, Alt, edo Meta teklekin batera sakatutako teklak "
+"gehituta"
 
 #: ui/main.qml:156
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Segurtasun moderatua; laster-tekla global guztiak X11 aplikazioekin ibiliko "
+"dira"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Beti"
+msgstr "Beti baimenduta"
 
 #: ui/main.qml:186
 #, kde-format
@@ -108,36 +112,33 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Segurtasun txikienekoa; X11 aplikazio guztiak gai izango dira edozein "
+"aplikaziotan tekleatzen duzun testua ikusteko"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Kontuan izan konfigurazio hori erabiliz gero sistemaren segurtasuna X11 "
-"saioko segurtasunera murriztuko dela, software maltzurrei pasahitzak "
-"lapurtzea eta tekleatzen duzun testua zelatatzea utziko dielarik. Ziurtatu "
-"arrisku hori ulertzen duzula eta onartzen duzula."
+"Kontuan izan konfigurazio hori erabiliz gero sistemaren segurtasuna "
+"murriztuko dela, software maltzurrei pasahitzak lapurtzen eta tekleatzen "
+"duzun testua zelatatzen utziko die. Ziurtatu arriskua ulertzen eta onartzen "
+"duzula."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Saguaren botoiak barne"
+msgstr "Saguaren botoiak entzutea:"
 
 #: ui/main.qml:222
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Baimenduta"
 
 #: ui/main.qml:238
 #, kde-format
@@ -146,6 +147,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Segurtasun moderatua; saguaren botoiak erabiltzen dituzten laster-tekla "
+"globalak X11 aplikazioetan ibiliko dira"
 
 #: ui/main.qml:252
 #, kde-format
@@ -166,23 +169,21 @@ msgstr "Baimenik eskatu gabe baimendu"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Segurtasun txikienekoa; X11 aplikazio guztiak ordenagailuaren kontrola "
+"hartzeko gai izango dira"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Kontuan izan konfigurazio hori erabiliz gero sistemaren segurtasuna X11 "
-"saioko segurtasunera murriztuko dela, software maltzurrei pasahitzak "
-"lapurtzea eta tekleatzen duzun testua zelatatzea utziko dielarik. Ziurtatu "
-"arrisku hori ulertzen duzula eta onartzen duzula."
+"Kontuan izan konfigurazio hori erabiliz gero sistemaren segurtasuna nabarmen "
+"murriztuko dela eta software maltzurrei zure saguaren eta teklatuaren "
+"kontrol osoa hartzeko aukera emango diela. Ziurtatu arrisku hori ulertzen "
+"eta onartzen duzula."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "

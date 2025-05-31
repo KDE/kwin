@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-20 03:47+0200\n"
+"PO-Revision-Date: 2025-05-30 04:44+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -39,31 +39,34 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"მოძველებული X11-ის აპები გლობალური მალსახმობებით და სხვა ფუნქციებით, "
+"რომლებთანაც წვდომა განხორციელდა მაშინ, როცა ისინი ფონურად ეშვებოდნენ, "
+"საჭიროა, რომ ღილაკის დაჭერებს ყოველთვის უსმენდნენ.<nl/><nl/>თუ იყენებთ ასეთ "
+"აპებს, აქ შეგიძლიათ, აირჩიოთ ბალანსი უსაფრთხოებასა და თავსებადობას შორის."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "უსმენს ღილაკის დაჭერებს:"
 
 #: ui/main.qml:80
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "აკრძალულია"
 
 #: ui/main.qml:96
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr ""
+msgstr "ყველაზე დაცული, გლობალური მალსახმობები არ იმუშავებს X11-ის აპებში"
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
-msgstr "მხოლოდ Meta, Control, Alt და Shift ღილაკები"
+msgstr "მხოლოდ ღილაკები Meta, Control, Alt და Shift"
 
 #: ui/main.qml:126
 #, kde-format
@@ -72,32 +75,31 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"მაღალი უსაფრთხოება: დააწექით-სალაპარაკოდ და სხვა მხოლოდ-მოდიფიკატორის მქონე "
+"გლობალური მალსახმობები არ იმუშავებს X11-ის აპებში"
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
 msgstr ""
-"როგორც ზემოთ, დამატებით ნებისმიერი ღილაკი, რომელზეც Ctrl, Alt ან Meta "
-"ღილაკთან ერთად დააჭირეთ"
+"იგივე, რაც ზემოთ, დამატებული ნებისმიერი ღილაკი, სანამ გიჭირავთ Control, Alt, "
+"ან Meta ღილაკიც"
 
 #: ui/main.qml:156
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"საშუალო უსაფრთხოება: ყველა გლობალური მალსახმობი იმუშავებს X11-ის აპებში"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "ყოველთვის"
+msgstr "ყოველთვის დაშვებულია"
 
 #: ui/main.qml:186
 #, kde-format
@@ -106,36 +108,32 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"ყველაზე ნაკლებად დაცული. ყველა X11-ის აპი დაინახავს ყველა ტექსტს, რომელიც "
+"სხვა აპლიკაციაში აკრიფეს"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"დაიმახსოვრეთ, რომ ამ პარამეტრის დაყენება სისტემის უსაფრთხოებას შეამცირებს. "
-"X11-ის სესია, რომელიც საეჭვო პროგრამებს პაროლების მოპარვის და თქვენზე "
-"ჯაშუშობის უფლებას აძლევს, ცუდი იდეაა. დარწმუნდით, რომ იაზრებთ და ეთანხმებით "
-"ამ რისკს."
+"დაიმახსოვრეთ, რომ ამ პარამეტრის გამოყენება შეამცირებს სისტემის უსაფრთხოებას "
+"და დაუშვებს, რომ მავნე პროგრამებმა მოიპაროს პაროლები და იჯაშუშოს ტექსტზე, "
+"რომელსაც კრეფთ. დარწმუნდით, რომ იცით, რას აკეთებთ."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "დამატებით თაგუნას ღილაკების ჩასმა"
+msgstr "თაგუნას ღილაკების მოსმენა:"
 
 #: ui/main.qml:222
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "დაშვებულია"
 
 #: ui/main.qml:238
 #, kde-format
@@ -144,6 +142,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"შუალედური უსაფრთხოება: X11-ის აპებში იმუშავებს გლობალური მალსახმობები, "
+"რომლებიც თაგუნას ღილაკებს შეიცავს"
 
 #: ui/main.qml:252
 #, kde-format
@@ -164,23 +164,20 @@ msgstr "დაშვება წვდომის მოთხოვნის 
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"ნაკლებად დაცული: ყველა X11-ის აპს ექნება საშუალება, კომპიუტერის მართვა თავის "
+"თავზე აიღოს"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"დაიმახსოვრეთ, რომ ამ პარამეტრის დაყენება სისტემის უსაფრთხოებას შეამცირებს. "
-"X11-ის სესია, რომელიც საეჭვო პროგრამებს პაროლების მოპარვის და თქვენზე "
-"ჯაშუშობის უფლებას აძლევს, ცუდი იდეაა. დარწმუნდით, რომ იაზრებთ და ეთანხმებით "
-"ამ რისკს."
+"დაიმახსოვრეთ, რომ ამ პარამეტრის გამოყენება მკვეთრად შეამცირებს სისტემის "
+"უსაფრთხოებას და დაუშვებს, რომ მავნე პროგრამამ აიღოს თქვენი კურსორისა და "
+"კლავიატურის კონტროლი თავის ხელში. დარწმუნდით, რომ იცით, რას აკეთებთ."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "

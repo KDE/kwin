@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-27 12:32+0200\n"
+"PO-Revision-Date: 2025-05-30 18:46+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -49,7 +49,7 @@ msgstr ""
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Prohibite"
 
 #: ui/main.qml:96
 #, kde-format
@@ -58,11 +58,10 @@ msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
-msgstr "Solmente claves  Meta, Control, Alt, e Shift"
+msgstr "Solmente le claves  Meta, Control, Alt, e Shift"
 
 #: ui/main.qml:126
 #, kde-format
@@ -73,17 +72,14 @@ msgid ""
 msgstr ""
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
 msgstr ""
-"Como supra, plus ulle clave typate durante que Control,ALt o Meta Claves es "
-"premite"
+"Como supra, plus ulle clave pressate durante que clave de Control,ALt o Meta "
+"Claves es anque premite"
 
 #: ui/main.qml:156
 #, kde-format
@@ -92,11 +88,10 @@ msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Sempre"
+msgstr "Sempre permittite"
 
 #: ui/main.qml:186
 #, kde-format
@@ -133,7 +128,7 @@ msgstr "Include additionalmente buttones de mus"
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Permittite"
 
 #: ui/main.qml:238
 #, kde-format

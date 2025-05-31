@@ -664,7 +664,7 @@
 <varlistentry>
 <term
 ><guilabel
->Mostra el menú de les accions</guilabel
+>El menú de finestra</guilabel
 ></term>
 <listitem>
 <para
@@ -975,6 +975,17 @@
 <listitem>
 <para
 >Fa la finestra menys transparent. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>El menú de finestra</guilabel
+></term>
+<listitem>
+<para
+>Obrirà un petit submenú, on podeu triar ordres relacionades amb la finestra (&ead;, Mou a l'escriptori, Mou a la pantalla, Maximitza, Minimitza, Tanca, &etc;). </para>
 </listitem>
 </varlistentry>
 

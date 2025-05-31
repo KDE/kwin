@@ -11,26 +11,24 @@
 # Rinse de Vries <rinsedevries@kde.nl>, 2004, 2005, 2007.
 # Tom Albers <tomalbers@kde.nl>, 2004.
 # Kristof Bal <kristof.bal@gmail.com>, 2008.
-# SPDX-FileCopyrightText: 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023, 2024 Freek de Kruijf <freekdekruijf@kde.nl>
+# SPDX-FileCopyrightText: 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023, 2024, 2025 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2024-09-18 10:27+0200\n"
+"PO-Revision-Date: 2025-05-30 23:36+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 25.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Button showing window actions menu"
-#| msgid "Window Menu"
+#, kde-format
 msgid "Window menu"
 msgstr "Venstermenu"
 
@@ -191,20 +189,16 @@ msgid "Titlebar Buttons"
 msgstr "Titelbalkknoppen"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Vensters sluiten door te dubbelklikken op de menuknop"
+msgstr "Vensters sluiten door te dubbelklikken op de venstermenuknop"
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "Klik en houd ingedrukt op de menuknop om het menu te tonen."
+msgstr "Klik en houd ingedrukt op de venstermenuknop om het menu te tonen."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format

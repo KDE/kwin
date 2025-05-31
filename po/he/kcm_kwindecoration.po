@@ -13,13 +13,13 @@
 # Diego Iastrubni <elcuco@kde.org>, 2005, 2006, 2008, 2012, 2013.
 # elkana bardugo <ttv200@gmail.com>, 2016.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
-# SPDX-FileCopyrightText: 2024 Yaron Shahrabani <sh.yaron@gmail.com>
+# SPDX-FileCopyrightText: 2024, 2025 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2024-09-18 22:19+0300\n"
+"PO-Revision-Date: 2025-05-30 07:59+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -28,13 +28,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 25.04.1\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
+#, kde-format
 msgid "Window menu"
-msgstr "קבל קישוטים חדשים..."
+msgstr "תפריט חלון"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -186,20 +185,16 @@ msgid "Titlebar Buttons"
 msgstr "כפתורי שורת הכותרת"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "סגירת חלונות בלחיצה כפולה על כפתור התפריט"
+msgstr "אפשר לסגור חלונות בלחיצה כפולה על כפתור תפריט החלון"
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "יש ללחוץ ולהחזיק את כפתור התפריט כדי להציג את התפריט."
+msgstr "יש ללחוץ ולהחזיק את כפתור תפריט החלון כדי להציג את התפריט."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format

@@ -676,7 +676,7 @@
 <varlistentry>
 <term
 ><guilabel
->Actiesmenu tonen</guilabel
+>Venstermenu</guilabel
 ></term>
 <listitem>
 <para
@@ -989,6 +989,17 @@
 <listitem>
 <para
 >Maakt het venster minder transparant. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Venstermenu</guilabel
+></term>
+<listitem>
+<para
+>Brengt een klein submenu op, waarin u kunt kiezen uit venstercommando's (&ie; Naar bureaublad verplaatsen, Naar scherm verplaatsen, Maximaliseren, Minimaliseren, Sluiten, &etc;). </para>
 </listitem>
 </varlistentry>
 

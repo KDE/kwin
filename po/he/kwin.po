@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-04-30 09:36+0300\n"
+"PO-Revision-Date: 2025-05-30 08:00+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3702,12 +3702,7 @@ msgid "Tablets switched outputs"
 msgstr "מחשבי הלוח החליפו אמצעי פלט"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3716,16 +3711,10 @@ msgid ""
 msgstr ""
 "בחרת להציג חלון ללא המסגרת שלו.\n"
 "ללא המסגרת, אי אפשר להציג חזרה את המסגרת עם העכבר בלבד: כדי להשתמש בתפריט "
-"פעולת החלון, יש להשתמש במקשי הקיצור %1."
+"החלון, יש להשתמש במקשי הקיצור %1."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3734,7 +3723,7 @@ msgid ""
 msgstr ""
 "בחרת להציג חלון במצב מסך מלא.\n"
 "אם התוכנה לא כוללת אפשרות ליציאה ממסך מלא, אי אפשר להציג חזרה את המסגרת עם "
-"העכבר בלבד: כדי להשתמש בתפריט פעולת החלון, יש להשתמש במקשי הקיצור %1."
+"העכבר בלבד: כדי להשתמש בתפריט החלון, יש להשתמש במקשי הקיצור %1."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3880,10 +3869,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "‏<b>%1</b> כבר בשימוש על ידי %2 ב־%3"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "תפקיד חלון"
+msgstr "תפריט חלון"
 
 #: useractions.cpp:889
 #, kde-format

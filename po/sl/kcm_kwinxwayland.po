@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-20 07:28+0200\n"
+"PO-Revision-Date: 2025-05-30 07:09+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -39,28 +39,31 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Starejše aplikacije X11 z globalnimi bližnjicami in drugimi funkcijami, do "
+"katerih dostopate med delovanjem v ozadju, morajo imeti možnost ves čas "
+"poslušati pritiske tipk.<nl/><nl/>Če uporabljate katero od teh aplikacij, "
+"lahko tukaj izberete želeno ravnovesje med varnostjo in združljivostjo."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Poslušanje pritiskov tipk:"
 
 #: ui/main.qml:80
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Prepovedano"
 
 #: ui/main.qml:96
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr ""
+msgstr "Najbolj varno; globalne bližnjice ne bodo delovale v aplikacijah X11"
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Samo tipke Meta, kontrolka, Alt in dvigalka"
@@ -72,12 +75,12 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Visoka varnost; bližnjice za pritisni in govori ter druge globalne "
+"bližnjice, ki jih je mogoče uporabljati samo za modifikatorje, bodo delovale "
+"v aplikacijah X11"
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
@@ -90,14 +93,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
-msgstr ""
+msgstr "Zmerna varnost; vse globalne bližnjice bodo delovale v aplikacijah X11"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Vedno"
+msgstr "Vedno dovoljeno"
 
 #: ui/main.qml:186
 #, kde-format
@@ -106,13 +108,11 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Najmanj varno; vse aplikacije X11 bodo lahko videle katero koli besedilo, ki "
+"ga vnesete v katero koli aplikacijo"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
@@ -121,20 +121,19 @@ msgid ""
 msgstr ""
 "Upoštevajte, da bo ta nastavitev zmanjšala varnost sistema seje X11, ker "
 "dovoljuje zlonamernim programom krajo gesel in vohunjenje za besedilom, ki "
-"ga tipkate. Prepričajte se, če razumete in sprejemate to tveganje."
+"ga tipkate. Prepričajte se, da razumete in sprejemate to tveganje."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Dodatno vključi miškine gumbe"
+msgstr "Poslušanje miškinih gumbov:"
 
 #: ui/main.qml:222
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Dovoljeno"
 
 #: ui/main.qml:238
 #, kde-format
@@ -143,6 +142,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Zmerna varnost; globalne bližnjice z gumbi miške bodo delovale v aplikacijah "
+"X11"
 
 #: ui/main.qml:252
 #, kde-format
@@ -163,22 +164,19 @@ msgstr "Dovoli brez vprašanja za dovoljenje"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Najmanj varno; vse aplikacije X11 bodo lahko prevzele nadzor nad računalnikom"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Upoštevajte, da bo ta nastavitev zmanjšala varnost sistema seje X11, ker "
-"dovoljuje zlonamernim programom krajo gesel in vohunjenje za besedilom, ki "
-"ga tipkate. Prepričajte se, če razumete in sprejemate to tveganje."
+"Upoštevajte, da bo uporaba te nastavitve drastično zmanjšala varnost sistema "
+"in zlonamerni programski opremi omogočila popoln nadzor nad vašim kazalcem "
+"in tipkovnico. Prepričajte se, da razumete in sprejemate to tveganje."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "

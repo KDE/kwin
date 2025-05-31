@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-24 23:36+0200\n"
+"PO-Revision-Date: 2025-05-30 22:16+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -3733,41 +3733,29 @@ msgid "Tablets switched outputs"
 msgstr "Tabletek irteerakoak trukatu dituzte"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"Leiho bat ertzik gabe erakustea hautatu duzu. \n"
-"Ertzik ez duenez, ezingo duzu ertza berriz gaitu sagua erabiliz: horren "
-"ordez, erabil ezazu leihoaren eragiketa-menua, %1 laster-teklaren bidez "
-"aktibatzen dena."
+"Leiho bat haren ertzik gabe erakustea hautatu duzu.\n"
+"Ertzik gabe, ezingo duzu sagua erabiliz ertza berriz gaitu: horren ordez, "
+"erabil ezazu leihoaren menua, %1 laster-teklaren bidez aktibatzen dena."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"Leiho bat pantaila osoko ikuspegian erakustea hautatu duzu. \n"
-"Aplikazioak ez badu aukerarik pantaila osoko ikuspegia desaktibatzeko, "
-"ezingo duzu desgaitu sagua erabiliz. Horren ordez, erabil ezazu leihoaren "
-"eragiketa-menua, %1 laster-teklaren bidez aktibatzen dena."
+"Leiho bat pantaila osoko moduan erakustea hautatu duzu.\n"
+"Aplikazioak pantaila osoko modua itzaltzeko aukerarik ez badu, ezingo sagua "
+"erabiliz berriz ezgaitu: horren ordez, erabil ezazu leihoaren menua, %1 "
+"laster-teklaren bidez aktibatzen dena."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3913,10 +3901,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "%2 <b>%1</b> erabiltzen ari da %3(e)n"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Leihoaren betekizuna"
+msgstr "Leihoaren menua"
 
 #: useractions.cpp:889
 #, kde-format

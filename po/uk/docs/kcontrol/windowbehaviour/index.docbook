@@ -688,7 +688,7 @@
 <varlistentry>
 <term
 ><guilabel
->Показати меню дій</guilabel
+>Меню вікна</guilabel
 ></term>
 <listitem>
 <para
@@ -1001,6 +1001,17 @@
 <listitem>
 <para
 >Зробити вікно менш прозорим. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Меню вікна</guilabel
+></term>
+<listitem>
+<para
+>Викликає невеличке підменю, з якого ви зможете обрати команди, що стосуються вікон (тобто Пересунути на стільницю, Пересунути на екран, Максимізувати, Мінімізувати, Закрити тощо). </para>
 </listitem>
 </varlistentry>
 
