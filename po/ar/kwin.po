@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 02:37+0000\n"
-"PO-Revision-Date: 2025-05-04 06:22+0400\n"
+"PO-Revision-Date: 2025-05-31 10:58+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1561,7 +1561,7 @@ msgstr "قوي"
 #: plugins/blur/blur_config.ui:83
 #, kde-format
 msgid "Noise strength:"
-msgstr "القوّة الضوضاء:"
+msgstr "قوة الضوضاء:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
