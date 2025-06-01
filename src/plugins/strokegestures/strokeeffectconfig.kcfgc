@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2025 Jakob Petsovits <jpetso@petsovits.com>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+File=strokeeffectconfig.kcfg
+ClassName=StrokeEffectConfig
+NameSpace=KWin
+Singleton=true
