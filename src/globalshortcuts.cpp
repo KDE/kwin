@@ -82,8 +82,8 @@ PinchGesture *GlobalShortcut::pinchGesture() const
 
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
-    , m_touchpadGestureRecognizer(new GestureRecognizer(this))
-    , m_touchscreenGestureRecognizer(new GestureRecognizer(this))
+    , m_touchpadGestureRecognizer(std::make_unique<GestureRecognizer>())
+    , m_touchscreenGestureRecognizer(std::make_unique<GestureRecognizer>())
 {
 }
 
