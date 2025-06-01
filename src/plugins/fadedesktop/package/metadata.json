@@ -71,6 +71,7 @@
         "Description[nl]": "Laat virtuele bureaubladen vervagen en opkomen bij het wisselen",
         "Description[ru]": "Постепенная смена изображения при переключении на другой рабочий стол",
         "Description[sl]": "Obledi med navideznimi namizji, med preklopom med njimi",
+        "Description[sv]": "Tona mellan virtuella skrivbord vid byte",
         "Description[tr]": "Geçiş yaparken sanal masaüstlerini soldur",
         "Description[uk]": "Затемнення під час перемикання між віртуальними стільницями",
         "Description[x-test]": "xxFade between virtual desktops when switchingxx",

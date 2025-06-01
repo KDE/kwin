@@ -71,6 +71,7 @@
         "Description[nl]": "Laat vensters vloeiend opkomen/vervagen als ze worden weergegeven of verborgen",
         "Description[ru]": "Закрывающиеся окна будут становиться всё более прозрачными, а потом совсем исчезать",
         "Description[sl]": "Naj okna zbledijo in se spet obarvajo, ko so prikazana ali skrita",
+        "Description[sv]": "Gör att fönster tonas när de visas eller döljs",
         "Description[tr]": "Pencereler gösterilirken veya gizlenirken solarak geçiş yapmalarını sağla",
         "Description[uk]": "Затемнення або освітлення при появі або зникненні вікон",
         "Description[x-test]": "xxMake windows fade in and out when they are shown or hiddenxx",
