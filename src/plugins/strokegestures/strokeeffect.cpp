@@ -63,6 +63,27 @@ void StrokeEffect::reconfigure(ReconfigureFlags)
     StrokeEffectConfig::self()->read();
 
     setAnimationDurationMsec(animationTime(std::chrono::milliseconds(StrokeEffectConfig::animationDurationMsec())));
+
+    // FIXME: example strokes, until we get them through some other means (config, D-Bus, etc.)
+    qDebug() << "StrokeEffect::reconfigure(): registering example strokes";
+    QList<QPointF> rightwardPoints;
+    QList<QPointF> leftwardPoints;
+    for (int i = 0; i < 9; ++i) {
+        rightwardPoints.push_back(QPointF(i / 8.0, 0.5));
+        leftwardPoints.push_back(QPointF(1.0 - (i / 8.0), 0.5));
+    }
+    m_actions.clear();
+    m_actions.push_back(std::make_unique<QAction>());
+    connect(m_actions.back().get(), &QAction::triggered, this, [] {
+        qDebug() << "STROKE RIGHT!";
+    });
+    effects->registerStrokeShortcut(Qt::NoModifier, rightwardPoints, m_actions.back().get());
+
+    m_actions.push_back(std::make_unique<QAction>());
+    connect(m_actions.back().get(), &QAction::triggered, this, [] {
+        qDebug() << "STROKE LEFT!";
+    });
+    effects->registerStrokeShortcut(Qt::NoModifier, leftwardPoints, m_actions.back().get());
 }
 
 void StrokeEffect::activate()
