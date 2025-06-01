@@ -12,14 +12,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-04-05 08:52+0200\n"
+"PO-Revision-Date: 2025-05-31 12:37+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -802,15 +802,12 @@ msgid "Tablet Pad Ring"
 msgstr "Ritplattering"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Ritplattering"
+msgstr "Ritplattevisare"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1270,11 +1267,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Det är inte meningen att det här hjälpverktyget ska anropas direkt."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1282,15 +1275,12 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Att avsluta programmet stänger alla dess "
-"fönster. All osparad data kommer att gå förlorad.</emphasis></para>"
+"<para><application>%1</application> svarar inte. Vill du avsluta programmet?"
+"</para><para><emphasis strong='true'>Att avsluta programmet stänger alla "
+"dess fönster. All osparad data kommer att gå förlorad.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1298,8 +1288,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Att avsluta programmet stänger alla dess "
-"fönster. All osparad data kommer att gå förlorad.</emphasis></para>"
+"<para>\"%1\" i <application>%2</application> svarar inte. Vill du avsluta "
+"programmet?</para><para><emphasis strong='true'>Att avsluta programmet "
+"stänger alla dess fönster. All osparad data kommer att gå förlorad.</"
+"emphasis></para>>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -3142,17 +3134,15 @@ msgstr "Dator strängmatchningstyp"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Fönsterhanterare"
+msgstr "Fönsteretikett"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Fönstertitel strängmatchningstyp"
+msgstr "Fönsteretikett strängmatchningstyp"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3721,12 +3711,7 @@ msgid "Tablets switched outputs"
 msgstr "Ritplattor bytte utgångar"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3734,17 +3719,11 @@ msgid ""
 "shortcut."
 msgstr ""
 "Du har valt att visa ett fönster utan ram.\n"
-"Utan ramen kan du inte aktivera den igen med musen. Använd menyn med "
-"fönsteråtgärder istället, som aktiveras med snabbtangenten %1."
+"Utan ramen kan du inte aktivera den igen med musen. Använd fönstermenyn "
+"istället, som aktiveras med snabbtangenten %1."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3753,8 +3732,8 @@ msgid ""
 msgstr ""
 "Du har valt att visa ett fönster med fullskärmsläge.\n"
 "Om programmet själv inte har ett alternativ för att stänga av "
-"fullskärmsläge, kommer du inte kunna stänga av det med musen. Använd menyn "
-"med fönsteråtgärder istället, som aktiveras med snabbtangenten %1."
+"fullskärmsläge, kommer du inte kunna stänga av det med musen. Använd "
+"fönstermenyn istället, som aktiveras med snabbtangenten %1."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3900,10 +3879,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> används av %2 i %3"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Fönsterroll"
+msgstr "Fönstermeny"
 
 #: useractions.cpp:889
 #, kde-format

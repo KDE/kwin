@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-18 15:01+0100\n"
+"PO-Revision-Date: 2025-05-31 16:27+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -23,13 +23,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Pablo de Vicente <pvicentea@nexo.es>\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 25.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Window menu"
-msgstr ""
+msgstr "Menú de la ventana"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -191,20 +191,16 @@ msgid "Titlebar Buttons"
 msgstr "Botones de la barra de título"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Cerrar ventanas al hacer doble clic en el botón de menú"
+msgstr "Cerrar ventanas al hacer doble clic en el botón de menú de la ventana"
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "Mantenga pulsado el botón del menú para mostrar el menú."
+msgstr "Mantenga pulsado el botón del menú de la ventana para mostrar el menú."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
@@ -279,9 +275,3 @@ msgstr "Bordes de ventana gigantescos"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Bordes de ventana desmesurados"
-
-#~ msgid "More actions for this window"
-#~ msgstr "Más acciones para esta ventana"
-
-#~ msgid "Shade"
-#~ msgstr "Recoger"

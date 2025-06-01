@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-04 06:22+0400\n"
+"PO-Revision-Date: 2025-05-31 10:58+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1560,7 +1560,7 @@ msgstr "قوي"
 #: plugins/blur/blur_config.ui:83
 #, kde-format
 msgid "Noise strength:"
-msgstr "القوّة الضوضاء:"
+msgstr "قوة الضوضاء:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -3691,12 +3691,7 @@ msgid "Tablets switched outputs"
 msgstr "بدلت اللوحيات المخرجات"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3704,17 +3699,11 @@ msgid ""
 "shortcut."
 msgstr ""
 "لقد اخترت إظهار نافذة بلا حدّ.\n"
-"بدون الحدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة: استخدم قائمة عمليّات "
-"النّافذة بدل ذلك، لتنشيطها استخدم اختصار لوحة المفاتيح %1."
+"في حالة عدم وجود الحدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة: استخدم "
+"قائمة النّافذة بدل ذلك، لتنشيطها استخدم اختصار لوحة المفاتيح %1."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3722,9 +3711,9 @@ msgid ""
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "لقد اخترت إظهار نافذة بوضع ملء الشّاشة.\n"
-"إن لم يحوي التّطبيق نفسه خيارًا لإطفاء وقت ملء الشّاشة لن تستطيع تعطيله مجدّدًا "
-"باستخدام الفأرة: استخدم قائمة عمليّات النّافذة بدل ذلك، لتنشيطها استخدم اختصار "
-"لوحة المفاتيح %1."
+"إن لم يحوِ التّطبيق نفسه خيارًا لإطفاء وقت ملء الشّاشة لن تستطيع تعطيله مجدّدًا "
+"باستخدام الفأرة: استخدم قائمة النّافذة بدل ذلك، لتنشيطها استخدم اختصار لوحة "
+"المفاتيح %1."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3870,10 +3859,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> يستخدمه %2 في %3"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "دور النافذة"
+msgstr "قائمة النافذة"
 
 #: useractions.cpp:889
 #, kde-format
