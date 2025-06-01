@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Draw stroke gestures on screen as they are being recognized",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Stroke Gesture Visualization"
+    }
+}

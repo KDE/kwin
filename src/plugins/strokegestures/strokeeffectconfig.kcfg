@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2024, 2025 Jakob Petsovits <jpetso@petsovits.com>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile arg="true"/>
+    <group name="Effect-stroke">
+        <entry name="AnimationDurationMsec" type="UInt">
+            <label>Effect animation time</label>
+            <min>100</min>
+            <default>200</default>
+        </entry>
+        <entry name="StartButtonlessStrokeTimeoutMsec" type="UInt">
+            <label>Milliseconds to start buttonless strokes</label>
+            <tooltip>For touchpads, it's easier to first click the activation button, and draw a stroke shape only after releasing it. If this is set to a value greater than 0, pointer movements will be recognized as a stroke if the stroke is started within this many milliseconds after clicking the activation button.</tooltip>
+            <min>0</min>
+            <default>0</default>
+        </entry>
+        <entry name="EndButtonlessStrokeTimeoutMsec" type="UInt">
+            <label>Milliseconds without movement to end buttonless strokes</label>
+            <tooltip>If a buttonless stroke was started, it will take this many milliseconds without further mouse movement in order to end stroke recognition. When this is left unchanged at the default value, the time to end buttonless strokes will be the same as the time to start them.</tooltip>
+            <min>0</min>
+            <default>0</default>
+        </entry>
+    </group>
+</kcfg>
