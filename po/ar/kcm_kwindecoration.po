@@ -7,7 +7,7 @@
 # محمد سعد  Mohamed SAAD <metehyi@free.fr>, 2006.
 # AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
-# SPDX-FileCopyrightText: 2008, 2024 zayed <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2008, 2024, 2025 zayed <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2023.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2016.
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2021-07-20 00:38+0400\n"
+"PO-Revision-Date: 2025-05-31 11:01+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -94,7 +94,7 @@ msgstr "زخارف النوافذ"
 #: kcm.cpp:53
 #, kde-format
 msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
+msgstr "فاليريو بيلو"
 
 #: kcm.cpp:54
 #, kde-format

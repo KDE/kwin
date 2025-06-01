@@ -6,14 +6,14 @@
 # محمد سعد  Mohamed SAAD <metehyi@free.fr>, 2006.
 # AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
-# SPDX-FileCopyrightText: 2008, 2024 zayed <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2008, 2024, 2025 zayed <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-22 11:14+0400\n"
+"PO-Revision-Date: 2025-05-31 11:00+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -964,47 +964,47 @@ msgstr "(c) 1997 - 2002 KWin and KControl مؤلفو"
 #: main.cpp:105
 #, kde-format
 msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
+msgstr "ماتياس إتريش"
 
 #: main.cpp:106
 #, kde-format
 msgid "Waldo Bastian"
-msgstr "Waldo Bastian"
+msgstr "والدو باستيان"
 
 #: main.cpp:107
 #, kde-format
 msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
+msgstr "كريستيان تيبيرنا"
 
 #: main.cpp:108
 #, kde-format
 msgid "Matthias Kalle Dalheimer"
-msgstr "Matthias Kalle Dalheimer"
+msgstr "ماتياس كالي دالهامر"
 
 #: main.cpp:109
 #, kde-format
 msgid "Daniel Molkentin"
-msgstr "Daniel Molkentin"
+msgstr "دانييل مولكنتين"
 
 #: main.cpp:110
 #, kde-format
 msgid "Wynn Wilkes"
-msgstr "Wynn Wilkes"
+msgstr "وين ويلكس"
 
 #: main.cpp:111
 #, kde-format
 msgid "Pat Dowler"
-msgstr "Pat Dowler"
+msgstr "بات دولر"
 
 #: main.cpp:112
 #, kde-format
 msgid "Bernd Wuebben"
-msgstr "Bernd Wuebben"
+msgstr "بيرند فويبن"
 
 #: main.cpp:113
 #, kde-format
 msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Matthias Hoelzer-Kluepfel"
+msgstr "ماتياس هويلزر-كلويبفيل"
 
 #: main.cpp:161
 #, kde-format
