@@ -35,7 +35,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy(const std::shared_ptr<OutputFrame>
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
     if (!commit->doPageflip(m_pending.presentationMode)) {
-        qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
+        qCDebug(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
     }
     m_commitThread->setPendingCommit(std::move(commit));
