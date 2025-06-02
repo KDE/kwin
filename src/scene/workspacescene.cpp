@@ -269,7 +269,7 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
                 continue;
             }
             Window *window = static_cast<WindowItem *>(item)->window();
-            if (!window->isOnOutput(output)) {
+            if (window->moveResizeOutput() != output) {
                 continue;
             }
             if (auto surface = window->surface()) {
