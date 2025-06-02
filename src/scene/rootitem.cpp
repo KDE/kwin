@@ -14,4 +14,13 @@ RootItem::RootItem(Scene *scene)
     setScene(scene);
 }
 
+void RootItem::framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+{
+    handleFramePainted(output, frame, timestamp);
+    const auto children = childItems();
+    for (const auto child : children) {
+        child->framePainted(output, frame, timestamp);
+    }
+}
+
 } // namespace KWin

@@ -9,6 +9,7 @@
 #include "core/renderlayer.h"
 #include "scene/scene.h"
 #include "utils/common.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -633,7 +634,7 @@ void Item::removeEffect()
 
 void Item::framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
-    if (!isVisible() || !boundingRect().intersects(mapFromScene(output->geometryF()))) {
+    if (!isVisible() || workspace()->outputAt(mapToScene(boundingRect()).center()) != output) {
         return;
     }
     handleFramePainted(output, frame, timestamp);
