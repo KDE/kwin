@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-20 09:27+0200\n"
+"PO-Revision-Date: 2025-05-30 10:34+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -40,28 +40,33 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Les aplicacions X11 antigues amb dreceres globals i altres funcions a les "
+"quals s'accedix mentre s'executen en segon pla han de ser capaces d'escoltar "
+"les pulsacions de tecla tot el temps.<nl/><nl/>Si utilitzeu alguna d'estes "
+"aplicacions, podeu triar ací el balanç preferit entre seguretat i "
+"compatibilitat."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Escoltament de pulsacions de tecla:"
 
 #: ui/main.qml:80
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Prohibit"
 
 #: ui/main.qml:96
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
+"El més segur, les dreceres globals no funcionaran a les aplicacions X11"
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Només les tecles «Meta», «Control», «Alt» i «Majúscules»"
@@ -73,18 +78,17 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Alta seguretat; només funcionaran les dreceres globals prémer per a parlar i "
+"altres modificadors a les aplicacions X11"
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
 msgstr ""
-"Com l'anterior, a més de qualsevol tecla teclejada mentre es premen les "
+"Com l'anterior, a més de qualsevol tecla premuda mentre també es premen les "
 "tecles «Control», «Alt» o «Meta»"
 
 #: ui/main.qml:156
@@ -92,13 +96,14 @@ msgstr ""
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Seguretat moderada; totes les dreceres globals funcionaran a les aplicacions "
+"X11"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Sempre"
+msgstr "Sempre permeses"
 
 #: ui/main.qml:186
 #, kde-format
@@ -107,13 +112,11 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Menys segur; totes les aplicacions X11 podran veure qualsevol text que "
+"teclegeu en qualsevol aplicació"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
@@ -121,22 +124,20 @@ msgid ""
 "Make sure you understand and accept this risk."
 msgstr ""
 "Cal tindre en compte que l'ús d'este paràmetre reduirà la seguretat del "
-"sistema a la de la sessió X11 permetent que programari maliciós robe "
-"contrasenyes i espie el text que escriviu. Assegureu-vos d'entendre i "
-"acceptar este risc."
+"sistema i permetrà que programari maliciós robe contrasenyes i espie el text "
+"que escriviu. Assegureu-vos que enteneu i accepteu este risc."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Inclou de manera addicional els botons del ratolí"
+msgstr "Escoltament dels botons del ratolí:"
 
 #: ui/main.qml:222
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Permés"
 
 #: ui/main.qml:238
 #, kde-format
@@ -145,6 +146,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Seguretat moderada; totes les dreceres globals que involucren botons del "
+"ratolí funcionaran a les aplicacions X11"
 
 #: ui/main.qml:252
 #, kde-format
@@ -165,45 +168,18 @@ msgstr "Permet sense demanar permís"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Menys segur; totes les aplicacions X11 podran prendre el control de "
+"l'ordinador"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Cal tindre en compte que l'ús d'este paràmetre reduirà la seguretat del "
-"sistema a la de la sessió X11 permetent que programari maliciós robe "
-"contrasenyes i espie el text que escriviu. Assegureu-vos d'entendre i "
-"acceptar este risc."
-
-#~ msgid ""
-#~ "Some legacy X11 apps require the ability to read keystrokes typed in "
-#~ "other apps for certain features, such as handling global keyboard "
-#~ "shortcuts. This is allowed by default. However other features may require "
-#~ "the ability to read all keys, and this is disabled by default for "
-#~ "security reasons. If you need to use such apps, you can choose your "
-#~ "preferred balance of security and functionality here."
-#~ msgstr ""
-#~ "Algunes aplicacions X11 antigues requerixen la capacitat de llegir les "
-#~ "pulsacions de tecles teclejades en altres aplicacions perquè funcionen "
-#~ "determinades funcionalitats, com la gestió de les dreceres globals de "
-#~ "teclat. Açò està permés de manera predeterminada. Tanmateix, altres "
-#~ "característiques poden requerir la capacitat de llegir totes les tecles, "
-#~ "i açò està desactivada per motius de seguretat. Si necessiteu utilitzar "
-#~ "estes aplicacions, podeu triar ací l'equilibri preferit entre seguretat i "
-#~ "funcionalitat."
-
-#~ msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
-#~ msgstr ""
-#~ "Permet que les aplicacions X11 antigues lligen les pulsacions de tecles "
-#~ "teclejades en totes aplicacions:"
-
-#~ msgid "Never"
-#~ msgstr "Mai"
+"Cal tindre en compte que l'ús d'este paràmetre reduirà dràsticament la "
+"seguretat del sistema i permetrà que programari maliciós prenga un control "
+"complet del punter i del teclat. Assegureu-vos que enteneu i accepteu este "
+"risc."
