@@ -144,7 +144,7 @@ public:
     void addEffect();
     void removeEffect();
 
-    void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+    virtual void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
     void childAdded(Item *item);
@@ -165,6 +165,7 @@ Q_SIGNALS:
 
 protected:
     virtual WindowQuadList buildQuads() const;
+    virtual void handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
     void discardQuads();
     void setColorDescription(const ColorDescription &description);
     void setRenderingIntent(RenderingIntent intent);
@@ -184,8 +185,6 @@ private:
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
     void removeRepaints(SceneDelegate *delegate);
-
-    virtual void handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     Scene *m_scene = nullptr;
     QPointer<Item> m_parentItem;

@@ -20,6 +20,8 @@ class KWIN_EXPORT RootItem : public Item
 
 public:
     explicit RootItem(Scene *scene);
+
+    void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp) override;
 };
 
 } // namespace KWin
