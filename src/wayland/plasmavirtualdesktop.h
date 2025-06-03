@@ -63,10 +63,9 @@ public:
     QList<PlasmaVirtualDesktopInterface *> desktops() const;
 
     /**
-     * Inform the clients that all the properties have been sent, and
-     * their client-side representation is complete.
+     * Schedules the done event to be sent at the next available opportunity.
      */
-    void sendDone();
+    void scheduleDone();
 
 Q_SIGNALS:
     /**

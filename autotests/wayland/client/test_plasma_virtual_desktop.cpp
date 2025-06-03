@@ -179,7 +179,7 @@ void TestVirtualDesktop::testCreate()
     QList<QVariant> arguments = desktopCreatedSpy.takeFirst();
     QCOMPARE(arguments.at(0).toString(), QStringLiteral("0-1"));
     QCOMPARE(arguments.at(1).toUInt(), (quint32)0);
-    m_plasmaVirtualDesktopManagementInterface->sendDone();
+    m_plasmaVirtualDesktopManagementInterface->scheduleDone();
     QVERIFY(managementDoneSpy.wait());
 
     QCOMPARE(m_plasmaVirtualDesktopManagement->desktops().length(), 1);
@@ -208,7 +208,7 @@ void TestVirtualDesktop::testCreate()
     QCOMPARE(arguments.at(0).toString(), QStringLiteral("0-3"));
     QCOMPARE(m_plasmaVirtualDesktopManagement->desktops().length(), 3);
 
-    m_plasmaVirtualDesktopManagementInterface->sendDone();
+    m_plasmaVirtualDesktopManagementInterface->scheduleDone();
     QVERIFY(managementDoneSpy.wait());
 
     // get the clients
