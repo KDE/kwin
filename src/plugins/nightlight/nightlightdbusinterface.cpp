@@ -180,7 +180,7 @@ quint32 NightLightDBusInterface::scheduledTransitionDuration() const
 
 void NightLightDBusInterface::setLocation(double latitude, double longitude)
 {
-    m_manager->autoLocationUpdate(latitude, longitude);
+    // This method is left blank intentionally.
 }
 
 uint NightLightDBusInterface::inhibit()

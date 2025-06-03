@@ -29,7 +29,6 @@ target_link_libraries(nightlight
     KNightTime
     KF6::ConfigGui
     KF6::GlobalAccel
-    KF6::Holidays
     KF6::I18n
 )
 
