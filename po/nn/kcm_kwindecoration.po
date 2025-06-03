@@ -263,6 +263,3 @@ msgstr "Gigantiske vindaugsrammer"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Altfor store vindaugsrammer"
-
-#~ msgid "More actions for this window"
-#~ msgstr "Fleire handlingar for vindauget"

@@ -1239,6 +1239,3 @@ msgstr ""
 "<em>Hindring av fokusstjeling</em> og <em>programbyttevinduet («Alt + Tab»)</"
 "em> er mot denne praksisen og vil ikke virke. Du vil trulig heller ville "
 "bruke <em>Fokuset følger musa – musprioritet</em> i stedet."
-
-#~ msgid "Show actions menu"
-#~ msgstr "Vis handlingsmeny"
