@@ -15,7 +15,7 @@
 
 namespace KWin
 {
-static const quint32 s_version = 2;
+static const quint32 s_version = 3;
 
 class PlasmaVirtualDesktopInterfacePrivate : public QtWaylandServer::org_kde_plasma_virtual_desktop
 {
@@ -26,6 +26,7 @@ public:
     PlasmaVirtualDesktopInterface *q;
     QString id;
     QString name;
+    uint position = 0;
     bool active = false;
 
 protected:
@@ -253,6 +254,10 @@ void PlasmaVirtualDesktopInterfacePrivate::org_kde_plasma_virtual_desktop_bind_r
     if (active) {
         send_activated(resource->handle);
     }
+
+    if (resource->version() >= ORG_KDE_PLASMA_VIRTUAL_DESKTOP_POSITION_SINCE_VERSION) {
+        send_position(resource->handle, position);
+    }
 }
 
 PlasmaVirtualDesktopInterface::PlasmaVirtualDesktopInterface()
@@ -311,6 +316,27 @@ void PlasmaVirtualDesktopInterface::setActive(bool active)
 bool PlasmaVirtualDesktopInterface::isActive() const
 {
     return d->active;
+}
+
+void PlasmaVirtualDesktopInterface::setPosition(uint position)
+{
+    if (d->position == position) {
+        return;
+    }
+
+    d->position = position;
+
+    const auto clientResources = d->resourceMap();
+    for (auto resource : clientResources) {
+        if (resource->version() >= ORG_KDE_PLASMA_VIRTUAL_DESKTOP_POSITION_SINCE_VERSION) {
+            d->send_position(resource->handle, position);
+        }
+    }
+}
+
+uint PlasmaVirtualDesktopInterface::position() const
+{
+    return d->position;
 }
 
 void PlasmaVirtualDesktopInterface::sendDone()

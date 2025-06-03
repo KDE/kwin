@@ -54,11 +54,17 @@ void VirtualDesktopManager::setVirtualDesktopManagement(PlasmaVirtualDesktopMana
     auto createPlasmaVirtualDesktop = [this](VirtualDesktop *desktop) {
         PlasmaVirtualDesktopInterface *pvd = m_virtualDesktopManagement->createDesktop(desktop->id(), desktop->x11DesktopNumber() - 1);
         pvd->setName(desktop->name());
+        pvd->setPosition(desktop->x11DesktopNumber() - 1);
         pvd->sendDone();
         m_virtualDesktopManagement->scheduleDone();
 
         connect(desktop, &VirtualDesktop::nameChanged, pvd, [this, desktop, pvd]() {
             pvd->setName(desktop->name());
+            pvd->sendDone();
+            m_virtualDesktopManagement->scheduleDone();
+        });
+        connect(desktop, &VirtualDesktop::x11DesktopNumberChanged, pvd, [this, desktop, pvd]() {
+            pvd->setPosition(desktop->x11DesktopNumber() - 1);
             pvd->sendDone();
             m_virtualDesktopManagement->scheduleDone();
         });

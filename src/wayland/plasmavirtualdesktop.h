@@ -126,6 +126,16 @@ public:
     bool isActive() const;
 
     /**
+     * Sets the position of this desktop to @a position.
+     */
+    void setPosition(uint position);
+
+    /**
+     * Returns the position of this virtual desktop.
+     */
+    uint position() const;
+
+    /**
      * Inform the clients that all the properties have been sent, and
      * their client-side representation is complete.
      */
