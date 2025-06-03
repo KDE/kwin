@@ -27,8 +27,6 @@
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
 #include "qpainter/qpainterbackend.h"
-#include "scene/cursordelegate_opengl.h"
-#include "scene/cursordelegate_qpainter.h"
 #include "scene/cursorscene.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
@@ -600,19 +598,9 @@ void Compositor::addOutput(Output *output)
         workspaceLayer->setGeometry(output->rectF());
     });
 
-    auto cursorLayer = new RenderLayer(output->renderLoop());
-    cursorLayer->setVisible(false);
-    if (m_backend->compositingType() == OpenGLCompositing) {
-        cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(m_cursorScene.get(), output));
-    } else {
-        cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(m_cursorScene.get(), output));
-    }
-    cursorLayer->setParent(workspaceLayer);
-    cursorLayer->setSuperlayer(workspaceLayer);
-
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
 
-    auto updateCursorLayer = [this, output, cursorLayer]() {
+    auto updateCursorLayer = [this, output, workspaceLayer]() {
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
             const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
@@ -630,7 +618,6 @@ void Compositor::addOutput(Output *output)
                 outputLayer->setEnabled(false);
                 output->updateCursorLayer(maxVrrCursorDelay);
             }
-            cursorLayer->setVisible(false);
             return true;
         }
         const auto renderHardwareCursor = [&]() {
@@ -678,7 +665,7 @@ void Compositor::addOutput(Output *output)
         };
         const bool wasHardwareCursor = outputLayer && outputLayer->isEnabled();
         if (renderHardwareCursor()) {
-            cursorLayer->setVisible(false);
+            workspaceLayer->delegate()->hideItem(scene()->cursorItem());
             return true;
         } else {
             if (outputLayer) {
@@ -687,12 +674,11 @@ void Compositor::addOutput(Output *output)
                     output->updateCursorLayer(maxVrrCursorDelay);
                 }
             }
-            cursorLayer->setVisible(cursor->isOnOutput(output));
-            cursorLayer->setGeometry(outputLocalRect);
+            workspaceLayer->delegate()->showItem(scene()->cursorItem());
             return false;
         }
     };
-    auto moveCursorLayer = [this, output, cursorLayer, updateCursorLayer]() {
+    auto moveCursorLayer = [this, output, workspaceLayer, updateCursorLayer]() {
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
             // TODO use the output's minimum VRR range for this
@@ -727,14 +713,20 @@ void Compositor::addOutput(Output *output)
                 output->updateCursorLayer(maxVrrCursorDelay);
             }
         }
-        cursorLayer->setVisible(shouldBeVisible && !hardwareCursor);
-        cursorLayer->setGeometry(outputLocalRect);
+        if (!shouldBeVisible) {
+            return;
+        }
+        if (hardwareCursor) {
+            workspaceLayer->delegate()->hideItem(scene()->cursorItem());
+        } else {
+            workspaceLayer->delegate()->showItem(scene()->cursorItem());
+        }
     };
     updateCursorLayer();
-    connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, moveCursorLayer);
+    connect(output, &Output::geometryChanged, workspaceLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::currentCursorChanged, workspaceLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::hiddenChanged, workspaceLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::positionChanged, workspaceLayer, moveCursorLayer);
 
     addSuperLayer(workspaceLayer);
 }

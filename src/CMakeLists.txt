@@ -154,8 +154,6 @@ target_sources(kwin PRIVATE
     resources.qrc
     rulebooksettings.cpp
     rules.cpp
-    scene/cursordelegate_opengl.cpp
-    scene/cursordelegate_qpainter.cpp
     scene/cursoritem.cpp
     scene/cursorscene.cpp
     scene/decorationitem.cpp
@@ -606,8 +604,6 @@ install(FILES
 )
 
 install(FILES
-    scene/cursordelegate_opengl.h
-    scene/cursordelegate_qpainter.h
     scene/cursoritem.h
     scene/cursorscene.h
     scene/decorationitem.h

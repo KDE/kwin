@@ -20,6 +20,7 @@ class RenderTarget;
 class RenderViewport;
 class SurfaceItem;
 class OutputFrame;
+class Item;
 
 /**
  * The RenderLayerDelegate class represents a render layer's contents.
@@ -63,8 +64,17 @@ public:
 
     virtual double desiredHdrHeadroom() const;
 
+    void hideItem(Item *item);
+    void showItem(Item *item);
+    /**
+     * @returns whether or not the Item should be rendered for this delegate specifically.
+     * If it returns true, the Item is already rendered in some other way (like on a hardware plane)
+     */
+    bool shouldRenderItem(Item *item) const;
+
 private:
     RenderLayer *m_layer = nullptr;
+    QList<Item *> m_hiddenItems;
 };
 
 } // namespace KWin

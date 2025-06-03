@@ -154,6 +154,11 @@ void Item::setScene(Scene *scene)
         }
         m_repaints.clear();
         disconnect(m_scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
+        // remove this from the delegate's list
+        const auto delegates = m_scene->delegates();
+        for (const auto delegate : delegates) {
+            delegate->showItem(this);
+        }
     }
     if (scene) {
         connect(scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
@@ -416,6 +421,9 @@ void Item::scheduleRepaintInternal(const QRegion &region)
     }
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
+        if (!delegate->shouldRenderItem(this)) {
+            continue;
+        }
         const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
         if (!dirtyRegion.isEmpty()) {
             m_repaints[delegate] += dirtyRegion;
@@ -426,7 +434,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
 
 void Item::scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &region)
 {
-    if (Q_UNLIKELY(!m_scene)) {
+    if (Q_UNLIKELY(!m_scene) || !delegate->shouldRenderItem(this)) {
         return;
     }
     const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
@@ -446,6 +454,9 @@ void Item::scheduleFrame()
     }
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
+        if (!delegate->shouldRenderItem(this)) {
+            continue;
+        }
         const QRect geometry = paintedArea(delegate, rect());
         if (delegate->viewport().intersects(geometry)) {
             delegate->layer()->scheduleRepaint(this);
@@ -460,6 +471,9 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
     }
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
+        if (!delegate->shouldRenderItem(this)) {
+            continue;
+        }
         const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
         if (!dirtyRegion.isEmpty()) {
             m_scene->addRepaint(delegate, dirtyRegion);

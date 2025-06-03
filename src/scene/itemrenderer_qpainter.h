@@ -28,7 +28,7 @@ public:
     void endFrame() override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
-    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
+    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter) override;
 
     std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) override;
 
@@ -36,7 +36,7 @@ private:
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
     void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
     void renderImageItem(QPainter *painter, ImageItem *imageItem) const;
-    void renderItem(QPainter *painter, Item *item) const;
+    void renderItem(QPainter *painter, Item *item, const std::function<bool(Item *)> &filter) const;
 
     std::unique_ptr<QPainter> m_painter;
 };

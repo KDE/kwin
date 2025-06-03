@@ -35,7 +35,7 @@ public:
     virtual void endFrame();
 
     virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) = 0;
-    virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
+    virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter) = 0;
 
     virtual std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) = 0;
 };

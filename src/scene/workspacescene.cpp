@@ -59,6 +59,7 @@
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
+#include "cursoritem.h"
 #include "effect/effecthandler.h"
 #include "opengl/eglbackend.h"
 #include "opengl/eglcontext.h"
@@ -86,16 +87,21 @@ WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
     : Scene(std::move(renderer))
     , m_containerItem(std::make_unique<RootItem>(this))
     , m_overlayItem(std::make_unique<RootItem>(this))
+    , m_cursorItem(std::make_unique<CursorItem>(m_overlayItem.get()))
 {
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
     });
 
-    if (waylandServer()) {
-        connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
-        connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
-    }
+    connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
+    connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
+
+    // make sure it's over the dnd icon
+    m_cursorItem->setZ(1);
+    connect(Cursors::self(), &Cursors::hiddenChanged, this, &WorkspaceScene::updateCursor);
+    connect(Cursors::self(), &Cursors::positionChanged, this, &WorkspaceScene::updateCursor);
+    updateCursor();
 }
 
 WorkspaceScene::~WorkspaceScene()
@@ -136,6 +142,16 @@ void WorkspaceScene::destroyDndIconItem()
     m_dndIcon.reset();
 }
 
+void WorkspaceScene::updateCursor()
+{
+    if (Cursors::self()->isCursorHidden()) {
+        m_cursorItem->setVisible(false);
+    } else {
+        m_cursorItem->setVisible(true);
+        m_cursorItem->setPosition(Cursors::self()->currentCursor()->pos());
+    }
+}
+
 Item *WorkspaceScene::containerItem() const
 {
     return m_containerItem.get();
@@ -146,6 +162,11 @@ Item *WorkspaceScene::overlayItem() const
     return m_overlayItem.get();
 }
 
+Item *WorkspaceScene::cursorItem() const
+{
+    return m_cursorItem.get();
+}
+
 static bool regionActuallyContains(const QRegion &region, const QRect &rect)
 {
     // QRegion::contains does **not** actually check if the region contains the rect
@@ -153,7 +174,7 @@ static bool regionActuallyContains(const QRegion &region, const QRect &rect)
     return (region & rect) == rect;
 }
 
-static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded)
+static bool addCandidates(SceneDelegate *delegate, SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded)
 {
     const QList<Item *> children = item->sortedChildItems();
     auto it = children.rbegin();
@@ -162,8 +183,11 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
         if (child->z() < 0) {
             break;
         }
+        if (!delegate->shouldRenderItem(child)) {
+            continue;
+        }
         if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
-            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
+            if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
                 return false;
             }
         }
@@ -174,12 +198,17 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
     if (regionActuallyContains(occluded, item->mapToScene(item->boundingRect()).toAlignedRect())) {
         return true;
     }
-    candidates.push_back(item);
+    if (delegate->shouldRenderItem(item)) {
+        candidates.push_back(item);
+    }
     occluded += item->mapToScene(item->opaque());
     for (; it != children.rend(); it++) {
         Item *const child = *it;
+        if (!delegate->shouldRenderItem(child)) {
+            continue;
+        }
         if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
-            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
+            if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
                 return false;
             }
         }
@@ -192,11 +221,21 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     if (!waylandServer()) {
         return {};
     }
+    const auto overlayItems = m_overlayItem->childItems();
+    const bool needsRendering = std::ranges::any_of(overlayItems, [this](Item *child) {
+        return painted_delegate->shouldRenderItem(child);
+    });
+    if (needsRendering) {
+        return {};
+    }
     QList<SurfaceItem *> ret;
     if (!effects->blocksDirectScanout()) {
         QRegion occlusion;
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             WindowItem *windowItem = stacking_order[i];
+            if (!painted_delegate->shouldRenderItem(windowItem)) {
+                continue;
+            }
             Window *window = windowItem->window();
             if (window->isOnOutput(painted_screen) && window->opacity() > 0 && windowItem->isVisible()) {
                 if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen() || window->windowItem()->hasEffects()) {
@@ -208,7 +247,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
                     continue;
                 }
 
-                if (!addCandidates(surfaceItem, ret, maxCount, occlusion)) {
+                if (!addCandidates(painted_delegate, surfaceItem, ret, maxCount, occlusion)) {
                     return {};
                 }
                 if (occlusion.contains(painted_screen->geometry())) {
@@ -256,8 +295,8 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
         Output *output = delegate->output();
         const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
         m_containerItem->framePainted(output, frame, frameTime);
-        if (m_dndIcon) {
-            m_dndIcon->framePainted(output, frame, frameTime);
+        if (m_overlayItem) {
+            m_overlayItem->framePainted(output, frame, frameTime);
         }
     }
 }
@@ -303,6 +342,9 @@ QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
 
 static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
 {
+    if (!delegate->shouldRenderItem(item)) {
+        return;
+    }
     item->resetRepaints(delegate);
 
     const auto childItems = item->childItems();
@@ -313,6 +355,9 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
 
 static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints)
 {
+    if (!delegate->shouldRenderItem(item)) {
+        return;
+    }
     *repaints += item->takeRepaints(delegate);
 
     const auto childItems = item->childItems();
@@ -409,7 +454,9 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
     if (m_overlayItem) {
         const QRegion repaint = region & m_overlayItem->mapToScene(m_overlayItem->boundingRect()).toRect();
         if (!repaint.isEmpty()) {
-            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, repaint, WindowPaintData{});
+            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, repaint, WindowPaintData{}, [this](Item *item) {
+                return !painted_delegate->shouldRenderItem(item);
+            });
         }
     }
 
@@ -507,7 +554,9 @@ void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const Re
 // will be eventually called from drawWindow()
 void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, region, data);
+    m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, region, data, [this](Item *item) {
+        return !painted_delegate->shouldRenderItem(item);
+    });
 }
 
 EglContext *WorkspaceScene::openglContext() const

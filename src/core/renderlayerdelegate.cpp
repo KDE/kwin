@@ -5,6 +5,7 @@
 */
 
 #include "renderlayerdelegate.h"
+#include "scene/item.h"
 
 namespace KWin
 {
@@ -40,6 +41,26 @@ QList<SurfaceItem *> RenderLayerDelegate::scanoutCandidates(ssize_t maxCount) co
 double RenderLayerDelegate::desiredHdrHeadroom() const
 {
     return 1;
+}
+
+void RenderLayerDelegate::hideItem(Item *item)
+{
+    if (!m_hiddenItems.contains(item)) {
+        item->scheduleSceneRepaint(item->rect());
+        m_hiddenItems.push_back(item);
+    }
+}
+
+void RenderLayerDelegate::showItem(Item *item)
+{
+    if (m_hiddenItems.removeOne(item)) {
+        item->scheduleRepaint(item->rect());
+    }
+}
+
+bool RenderLayerDelegate::shouldRenderItem(Item *item) const
+{
+    return !m_hiddenItems.contains(item);
 }
 
 } // namespace KWin

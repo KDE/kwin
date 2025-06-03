@@ -21,6 +21,7 @@ class Item;
 class SurfaceItem;
 class WindowItem;
 class WindowPaintData;
+class CursorItem;
 
 class KWIN_EXPORT WorkspaceScene : public Scene
 {
@@ -34,6 +35,7 @@ public:
 
     Item *containerItem() const;
     Item *overlayItem() const;
+    Item *cursorItem() const;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     QRegion prePaint(SceneDelegate *delegate) override;
@@ -102,6 +104,7 @@ protected:
 private:
     void createDndIconItem();
     void destroyDndIconItem();
+    void updateCursor();
 
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     // how many times finalPaintScreen() has been called
@@ -110,6 +113,7 @@ private:
     std::unique_ptr<Item> m_containerItem;
     std::unique_ptr<Item> m_overlayItem;
     std::unique_ptr<DragAndDropIconItem> m_dndIcon;
+    std::unique_ptr<CursorItem> m_cursorItem;
 };
 
 } // namespace

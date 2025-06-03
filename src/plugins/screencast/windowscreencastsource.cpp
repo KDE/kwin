@@ -78,7 +78,7 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
     Compositor::self()->scene()->renderer()->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{});
+    Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {});
     Compositor::self()->scene()->renderer()->endFrame();
 }
 

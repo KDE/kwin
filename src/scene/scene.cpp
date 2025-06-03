@@ -7,6 +7,7 @@
 #include "scene/scene.h"
 #include "core/output.h"
 #include "core/renderlayer.h"
+#include "scene/item.h"
 #include "scene/itemrenderer.h"
 
 namespace KWin

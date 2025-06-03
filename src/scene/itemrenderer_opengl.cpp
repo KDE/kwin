@@ -120,8 +120,11 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
     return geometry;
 }
 
-void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
+void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter)
 {
+    if (filter && filter(item)) {
+        return;
+    }
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
     const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
@@ -146,7 +149,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
             break;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context);
+            createRenderNode(childItem, context, filter);
         }
     }
 
@@ -219,7 +222,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
             continue;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context);
+            createRenderNode(childItem, context, filter);
         }
     }
 
@@ -247,7 +250,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter)
 {
     if (region.isEmpty()) {
         return;
@@ -264,7 +267,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    createRenderNode(item, &renderContext);
+    createRenderNode(item, &renderContext, filter);
 
     int totalVertexCount = 0;
     for (const RenderNode &node : std::as_const(renderContext.renderNodes)) {
