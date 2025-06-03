@@ -1967,9 +1967,12 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    QSignalSpy frameCallback(surface.get(), &KWayland::Client::Surface::frameRendered);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     QVERIFY(external->geometryF().contains(window->frameGeometry()));
+
+    surface->setupFrameCallback();
 
     // possibly tile it
     QFETCH(QuickTileFlag, tileMode);
@@ -1999,6 +2002,11 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
         QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+
+        // before committing, wait for the frame callback
+        // like some real-world clients do (like Firefox)
+        QVERIFY(frameCallback.count() || frameCallback.wait(100));
+
         Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
         QVERIFY(frameGeometryChangedSpy.wait());
     }
