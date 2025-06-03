@@ -16,6 +16,7 @@
 #include "workspace.h"
 #include "xkb.h"
 
+#include <KConfig>
 #include <KConfigGroup>
 #include <KGlobalAccel>
 
@@ -75,10 +76,6 @@ private:
 
 void KeyboardLayoutTest::reconfigureLayouts()
 {
-    // create DBus signal to reload
-    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Layouts"), QStringLiteral("org.kde.keyboard"), QStringLiteral("reloadConfig"));
-    QVERIFY(QDBusConnection::sessionBus().send(message));
-
     QVERIFY(layoutsReconfiguredSpy.wait(1000));
     QCOMPARE(layoutsReconfiguredSpy.count(), 1);
     layoutsReconfiguredSpy.clear();
@@ -94,13 +91,15 @@ void KeyboardLayoutTest::resetLayouts()
     const QString policy = layoutGroup.readEntry("SwitchMode", "Global");
 
     if (policy == QLatin1String("Global")) {
-        layoutGroup.writeEntry("SwitchMode", "Desktop");
+        layoutGroup.writeEntry("SwitchMode", "Desktop", KConfig::Notify);
     } else {
-        layoutGroup.deleteEntry("SwitchMode");
+        layoutGroup.deleteEntry("SwitchMode", KConfig::Notify);
     }
+    layoutGroup.sync();
     reconfigureLayouts();
 
-    layoutGroup.writeEntry("SwitchMode", policy);
+    layoutGroup.writeEntry("SwitchMode", policy, KConfig::Notify);
+    layoutGroup.sync();
     reconfigureLayouts();
 
     callSession(QStringLiteral("loadSession"));
@@ -131,14 +130,14 @@ void KeyboardLayoutTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
 
-    kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
-    kwinApp()->setKxkbConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
-    kwinApp()->setInputConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
+    kwinApp()->setKxkbConfig(KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals));
 
     layoutGroup = kwinApp()->kxkbConfig()->group(QStringLiteral("Layout"));
     layoutGroup.deleteGroup();
+    layoutGroup.sync();
 
     kwinApp()->start();
+
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
@@ -173,10 +172,10 @@ void KeyboardLayoutTest::testReconfigure()
 
     // create a new keymap
     KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group(QStringLiteral("Layout"));
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("de,us"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("de,us"), KConfig::Notify);
     layoutGroup.sync();
-
     reconfigureLayouts();
+
     // now we should have two layouts
     QCOMPARE(xkb->numberOfLayouts(), 2u);
     // default layout is German
@@ -196,7 +195,7 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
         de_neo,
         bad,
     };
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("de,us,de(neo)"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("de,us,de(neo)"), KConfig::Notify);
     layoutGroup.sync();
     reconfigureLayouts();
     // now we should have three layouts
@@ -207,7 +206,7 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
 
     // place garbage to layout entry
-    layoutGroup.writeEntry("LayoutDefaultFoo", "garbage");
+    layoutGroup.writeEntry("LayoutDefaultFoo", "garbage", KConfig::Notify);
     // make sure the garbage is wiped out on saving
     resetLayouts();
     QVERIFY(!layoutGroup.hasKey("LayoutDefaultFoo"));
@@ -260,7 +259,7 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
 
     // this test verifies that per-layout global shortcuts are working correctly.
     // first configure layouts
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"), KConfig::Notify);
     layoutGroup.sync();
 
     // and create the global shortcuts
@@ -306,9 +305,10 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
 
 void KeyboardLayoutTest::testVirtualDesktopPolicy()
 {
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
-    layoutGroup.writeEntry("SwitchMode", QStringLiteral("Desktop"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"), KConfig::Notify);
+    layoutGroup.writeEntry("SwitchMode", QStringLiteral("Desktop"), KConfig::Notify);
     layoutGroup.sync();
+
     reconfigureLayouts();
     auto xkb = input()->keyboard()->xkb();
     QCOMPARE(xkb->numberOfLayouts(), 3u);
@@ -378,8 +378,8 @@ void KeyboardLayoutTest::testWindowPolicy()
         de_neo,
         bad,
     };
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
-    layoutGroup.writeEntry("SwitchMode", QStringLiteral("Window"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"), KConfig::Notify);
+    layoutGroup.writeEntry("SwitchMode", QStringLiteral("Window"), KConfig::Notify);
     layoutGroup.sync();
     reconfigureLayouts();
     auto xkb = input()->keyboard()->xkb();
@@ -424,8 +424,8 @@ void KeyboardLayoutTest::testApplicationPolicy()
         de_neo,
         bad,
     };
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
-    layoutGroup.writeEntry("SwitchMode", QStringLiteral("WinClass"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"), KConfig::Notify);
+    layoutGroup.writeEntry("SwitchMode", QStringLiteral("WinClass"), KConfig::Notify);
     layoutGroup.sync();
     reconfigureLayouts();
     auto xkb = input()->keyboard()->xkb();
@@ -483,7 +483,7 @@ void KeyboardLayoutTest::testApplicationPolicy()
 void KeyboardLayoutTest::testNumLock()
 {
     qputenv("KWIN_FORCE_NUM_LOCK_EVALUATION", "1");
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us"), KConfig::Notify);
     layoutGroup.sync();
     reconfigureLayouts();
 
@@ -505,7 +505,7 @@ void KeyboardLayoutTest::testNumLock()
 
     // let's reconfigure to enable through config
     auto group = kwinApp()->inputConfig()->group(QStringLiteral("Keyboard"));
-    group.writeEntry("NumLock", 0);
+    group.writeEntry("NumLock", 0, KConfig::Notify);
     group.sync();
     xkb->reconfigure();
     // now it should be on
@@ -521,7 +521,7 @@ void KeyboardLayoutTest::testNumLock()
     QVERIFY(xkb->leds().testFlag(LED::NumLock));
 
     // now reconfigure to disable on load
-    group.writeEntry("NumLock", 1);
+    group.writeEntry("NumLock", 1, KConfig::Notify);
     group.sync();
     xkb->reconfigure();
     QVERIFY(!xkb->leds().testFlag(LED::NumLock));

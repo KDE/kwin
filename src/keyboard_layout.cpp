@@ -26,6 +26,7 @@ namespace KWin
 KeyboardLayout::KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config)
     : QObject()
     , m_xkb(xkb)
+    , m_configWatcher(KConfigWatcher::create(config))
     , m_configGroup(config->group(QStringLiteral("Layout")))
 {
 }
@@ -59,12 +60,7 @@ void KeyboardLayout::init()
 
     connect(switchLastUsedKeyboardAction, &QAction::triggered, this, &KeyboardLayout::switchToLastUsedLayout);
 
-    QDBusConnection::sessionBus().connect(QString(),
-                                          QStringLiteral("/Layouts"),
-                                          QStringLiteral("org.kde.keyboard"),
-                                          QStringLiteral("reloadConfig"),
-                                          this,
-                                          SLOT(reconfigure()));
+    connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, &KeyboardLayout::handleXkbConfigChanged);
 
     reconfigure();
 
@@ -103,6 +99,13 @@ void KeyboardLayout::switchToLastUsedLayout()
         switchToPreviousLayout();
     } else {
         switchToLayout(*m_lastUsedLayout);
+    }
+}
+
+void KeyboardLayout::handleXkbConfigChanged(const KConfigGroup &group)
+{
+    if (group.name() == QStringLiteral("Layout")) {
+        reconfigure();
     }
 }
 

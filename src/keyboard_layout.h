@@ -15,6 +15,7 @@
 #include <optional>
 
 #include <KConfigGroup>
+#include <KConfigWatcher>
 #include <KSharedConfig>
 typedef uint32_t xkb_layout_index_t;
 
@@ -52,14 +53,16 @@ Q_SIGNALS:
     void layoutsReconfigured();
 
 private Q_SLOTS:
-    void reconfigure();
+    void handleXkbConfigChanged(const KConfigGroup &group);
 
 private:
     void notifyLayoutChange();
     void switchToLayout(xkb_layout_index_t index);
     void loadShortcuts();
+    void reconfigure();
     Xkb *m_xkb;
     xkb_layout_index_t m_layout = 0;
+    KConfigWatcher::Ptr m_configWatcher;
     KConfigGroup m_configGroup;
     QList<QAction *> m_layoutShortcuts;
     KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
