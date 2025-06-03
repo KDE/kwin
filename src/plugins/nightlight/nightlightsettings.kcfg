@@ -10,40 +10,16 @@
         </entry>
         <entry name="Mode" type="Enum">
             <choices name="KWin::NightLightMode">
-                <choice name="Automatic"/>
-                <choice name="Location"/>
-                <choice name="Times"/>
                 <choice name="Constant"/>
                 <choice name="DarkLight"/>
             </choices>
-            <default>NightLightMode::Automatic</default>
+            <default>NightLightMode::DarkLight</default>
         </entry>
         <entry name="DayTemperature" type="Int">
             <default>6500</default>
         </entry>
         <entry name="NightTemperature" type="Int">
             <default>4500</default>
-        </entry>
-        <entry name="LatitudeAuto" type="Double">
-            <default>0.</default>
-        </entry>
-        <entry name="LongitudeAuto" type="Double">
-            <default>0.</default>
-        </entry>
-        <entry name="LatitudeFixed" type="Double">
-            <default>0.</default>
-        </entry>
-        <entry name="LongitudeFixed" type="Double">
-            <default>0.</default>
-        </entry>
-        <entry name="MorningBeginFixed" type="String">
-            <default>0600</default>
-        </entry>
-        <entry name="EveningBeginFixed" type="String">
-            <default>1800</default>
-        </entry>
-        <entry name="TransitionTime" type="Int">
-            <default>30</default>
         </entry>
     </group>
 </kcfg>

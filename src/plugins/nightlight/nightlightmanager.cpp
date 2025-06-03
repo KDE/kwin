@@ -20,7 +20,6 @@
 
 #include <KDarkLightScheduleProvider>
 #include <KGlobalAccel>
-#include <KHolidays/SunEvents>
 #include <KLocalizedString>
 #include <KSystemClockSkewNotifier>
 
@@ -36,11 +35,6 @@ namespace KWin
 
 static const int QUICK_ADJUST_DURATION = 2000;
 static const int TEMPERATURE_STEP = 50;
-
-static bool checkLocation(double latitude, double longitude)
-{
-    return -90 <= latitude && latitude <= 90 && -180 <= longitude && longitude <= 180;
-}
 
 NightLightManager::NightLightManager()
 {
@@ -208,16 +202,13 @@ void NightLightManager::readConfig()
 
     const NightLightMode mode = settings->mode();
     switch (settings->mode()) {
-    case NightLightMode::Automatic:
-    case NightLightMode::Location:
-    case NightLightMode::Timings:
     case NightLightMode::Constant:
     case NightLightMode::DarkLight:
         setMode(mode);
         break;
     default:
         // Fallback for invalid setting values.
-        setMode(NightLightMode::Automatic);
+        setMode(NightLightMode::DarkLight);
         break;
     }
 
@@ -240,41 +231,6 @@ void NightLightManager::readConfig()
 
     m_dayTargetTemperature = std::clamp(settings->dayTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
     m_nightTargetTemperature = std::clamp(settings->nightTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
-
-    if (checkLocation(settings->latitudeAuto(), settings->longitudeAuto())) {
-        m_latitudeAuto = settings->latitudeAuto();
-        m_longitudeAuto = settings->longitudeAuto();
-    } else {
-        m_latitudeAuto = 0;
-        m_longitudeAuto = 0;
-    }
-
-    if (checkLocation(settings->latitudeFixed(), settings->longitudeFixed())) {
-        m_latitudeFixed = settings->latitudeFixed();
-        m_longitudeFixed = settings->longitudeFixed();
-    } else {
-        m_latitudeFixed = 0;
-        m_longitudeFixed = 0;
-    }
-
-    // fixed timings
-    QTime morning = QTime::fromString(settings->morningBeginFixed(), "hhmm");
-    QTime evening = QTime::fromString(settings->eveningBeginFixed(), "hhmm");
-
-    const int dayDuration = morning < evening ? morning.msecsTo(evening) : (MSC_DAY - evening.msecsTo(morning));
-    const int nightDuration = MSC_DAY - dayDuration;
-    const int maximumTransitionDuration = std::min(dayDuration, nightDuration);
-
-    int transitionDuration = std::max(settings->transitionTime() * 1000 * 60, MIN_TRANSITION_DURATION);
-    if (maximumTransitionDuration <= transitionDuration) {
-        morning = QTime(6, 0);
-        evening = QTime(18, 0);
-        transitionDuration = DEFAULT_TRANSITION_DURATION;
-    }
-
-    m_morning = morning;
-    m_evening = evening;
-    m_transitionDuration = transitionDuration;
 }
 
 void NightLightManager::resetAllTimers()
@@ -461,135 +417,61 @@ void NightLightManager::updateTargetTemperature()
     Q_EMIT targetTemperatureChanged();
 }
 
-static DateTimes morningAtLocationAndTime(const QDateTime &dateTime, qreal latitude, qreal longitude)
-{
-    const KHolidays::SunEvents events(dateTime, latitude, longitude);
-
-    QDateTime start = events.civilDawn();
-    QDateTime end = events.sunrise();
-    if (start.isNull() || end.isNull()) {
-        end = QDateTime(dateTime.date(), QTime(6, 0));
-        start = end.addMSecs(-DEFAULT_TRANSITION_DURATION);
-    }
-
-    return DateTimes(start, end);
-}
-
-static DateTimes eveningAtLocationAndTime(const QDateTime &dateTime, qreal latitude, qreal longitude)
-{
-    const KHolidays::SunEvents events(dateTime, latitude, longitude);
-
-    QDateTime start = events.sunset();
-    QDateTime end = events.civilDusk();
-    if (start.isNull() || end.isNull()) {
-        start = QDateTime(dateTime.date(), QTime(18, 0));
-        end = start.addMSecs(DEFAULT_TRANSITION_DURATION);
-    }
-
-    return DateTimes(start, end);
-}
-
 void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
 {
     const auto oldPrev = m_prev;
     const auto oldNext = m_next;
 
-    // QTimer is not precise, it can timeout slightly earlier than expected. For example, if the
-    // morning time is 6:00, the timer can fire at 5:59:59. The purpose of this fudge factor is to
-    // make night light think that the morning transition has been reached even though we are not
-    // there yet by a few microseconds or milliseconds.
-    const int granularity = 1;
-
     if (!m_active) {
         setDaylight(true);
         m_next = DateTimes();
         m_prev = DateTimes();
-    } else if (m_mode == NightLightMode::Constant) {
-        setDaylight(false);
-        m_next = DateTimes();
-        m_prev = DateTimes();
-    } else if (m_mode == NightLightMode::Timings) {
-        const bool passedMorning = dateTime.time().secsTo(m_morning) <= granularity;
-        const bool passedEvening = dateTime.time().secsTo(m_evening) <= granularity;
-
-        const QDateTime nextEarlyMorning = QDateTime(dateTime.date().addDays(passedMorning), m_morning);
-        const QDateTime nextLateMorning = nextEarlyMorning.addMSecs(m_transitionDuration);
-        const QDateTime nextEarlyEvening = QDateTime(dateTime.date().addDays(passedEvening), m_evening);
-        const QDateTime nextLateEvening = nextEarlyEvening.addMSecs(m_transitionDuration);
-
-        if (nextEarlyEvening < nextEarlyMorning) {
-            setDaylight(true);
-            m_next = DateTimes(nextEarlyEvening, nextLateEvening);
-            m_prev = DateTimes(nextEarlyMorning.addDays(-1), nextLateMorning.addDays(-1));
-        } else {
+    } else {
+        switch (m_mode) {
+        case NightLightMode::Constant: {
             setDaylight(false);
-            m_next = DateTimes(nextEarlyMorning, nextLateMorning);
-            m_prev = DateTimes(nextEarlyEvening.addDays(-1), nextLateEvening.addDays(-1));
-        }
-    } else if (m_mode == NightLightMode::Automatic || m_mode == NightLightMode::Location) {
-        double latitude, longitude;
-        if (m_mode == NightLightMode::Automatic) {
-            latitude = m_latitudeAuto;
-            longitude = m_longitudeAuto;
-        } else {
-            latitude = m_latitudeFixed;
-            longitude = m_longitudeFixed;
-        }
-
-        const DateTimes morning = morningAtLocationAndTime(dateTime, latitude, longitude);
-        if (dateTime.secsTo(morning.first) > granularity) {
-            // have not reached the morning yet
-            setDaylight(false);
-            m_prev = eveningAtLocationAndTime(dateTime.addDays(-1), latitude, longitude);
-            m_next = morning;
-        } else {
-            const DateTimes evening = eveningAtLocationAndTime(dateTime, latitude, longitude);
-            if (dateTime.secsTo(evening.first) > granularity) {
-                // have not reached the evening yet, it's daylight
-                setDaylight(true);
-                m_prev = morning;
-                m_next = evening;
-            } else {
-                // we are passed the evening, it's night time
-                setDaylight(false);
-                m_prev = evening;
-                m_next = morningAtLocationAndTime(dateTime.addDays(1), latitude, longitude);
-            }
-        }
-    } else if (m_mode == NightLightMode::DarkLight) {
-        const auto previousTransition = m_darkLightScheduler->schedule().previousTransition(dateTime);
-        const auto nextTransition = m_darkLightScheduler->schedule().nextTransition(dateTime);
-
-        bool passedMorning = false;
-        bool passedEvening = false;
-
-        switch (previousTransition->test(dateTime)) {
-        case KDarkLightTransition::Upcoming:
+            m_next = DateTimes();
+            m_prev = DateTimes();
             break;
-        case KDarkLightTransition::InProgress:
-        case KDarkLightTransition::Passed:
-            if (previousTransition->type() == KDarkLightTransition::Morning) {
-                passedMorning = true;
-            } else {
-                passedEvening = true;
-            }
         }
 
-        switch (nextTransition->test(dateTime)) {
-        case KDarkLightTransition::Upcoming:
+        case NightLightMode::DarkLight: {
+            const auto previousTransition = m_darkLightScheduler->schedule().previousTransition(dateTime);
+            const auto nextTransition = m_darkLightScheduler->schedule().nextTransition(dateTime);
+
+            bool passedMorning = false;
+            bool passedEvening = false;
+
+            switch (previousTransition->test(dateTime)) {
+            case KDarkLightTransition::Upcoming:
+                break;
+            case KDarkLightTransition::InProgress:
+            case KDarkLightTransition::Passed:
+                if (previousTransition->type() == KDarkLightTransition::Morning) {
+                    passedMorning = true;
+                } else {
+                    passedEvening = true;
+                }
+            }
+
+            switch (nextTransition->test(dateTime)) {
+            case KDarkLightTransition::Upcoming:
+                break;
+            case KDarkLightTransition::InProgress:
+            case KDarkLightTransition::Passed:
+                if (nextTransition->type() == KDarkLightTransition::Morning) {
+                    passedMorning = true;
+                } else {
+                    passedEvening = true;
+                }
+            }
+
+            setDaylight(passedMorning && !passedEvening);
+            m_prev = DateTimes(previousTransition->startDateTime(), previousTransition->endDateTime());
+            m_next = DateTimes(nextTransition->startDateTime(), nextTransition->endDateTime());
             break;
-        case KDarkLightTransition::InProgress:
-        case KDarkLightTransition::Passed:
-            if (nextTransition->type() == KDarkLightTransition::Morning) {
-                passedMorning = true;
-            } else {
-                passedEvening = true;
-            }
         }
-
-        setDaylight(passedMorning && !passedEvening);
-        m_prev = DateTimes(previousTransition->startDateTime(), previousTransition->endDateTime());
-        m_next = DateTimes(nextTransition->startDateTime(), nextTransition->endDateTime());
+        }
     }
 
     if (oldPrev != m_prev) {
@@ -644,30 +526,6 @@ void NightLightManager::commitGammaRamps(int temperature)
     }
 
     setCurrentTemperature(temperature);
-}
-
-void NightLightManager::autoLocationUpdate(double latitude, double longitude)
-{
-    qCDebug(KWIN_NIGHTLIGHT, "Received new location (lat: %f, lng: %f)", latitude, longitude);
-
-    if (!checkLocation(latitude, longitude)) {
-        return;
-    }
-
-    // we tolerate small deviations with minimal impact on sun timings
-    if (std::abs(m_latitudeAuto - latitude) < 2 && std::abs(m_longitudeAuto - longitude) < 1) {
-        return;
-    }
-    cancelAllTimers();
-    m_latitudeAuto = latitude;
-    m_longitudeAuto = longitude;
-
-    NightLightSettings *s = NightLightSettings::self();
-    s->setLatitudeAuto(latitude);
-    s->setLongitudeAuto(longitude);
-    s->save();
-
-    resetAllTimers();
 }
 
 void NightLightManager::setEnabled(bool enabled)

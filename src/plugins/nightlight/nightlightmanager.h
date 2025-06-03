@@ -36,27 +36,12 @@ typedef QPair<QDateTime, QDateTime> DateTimes;
  */
 enum NightLightMode {
     /**
-     * Color temperature is computed based on the current position of the Sun.
-     *
-     * Location of the user is provided by Plasma.
-     */
-    Automatic,
-    /**
-     * Color temperature is computed based on the current position of the Sun.
-     *
-     * Location of the user is provided by themselves.
-     */
-    Location,
-    /**
-     * Color temperature is computed based on the current time.
-     *
-     * Sunrise and sunset times have to be specified by the user.
-     */
-    Timings,
-    /**
      * Color temperature is constant thoughout the day.
      */
     Constant,
+    /**
+     * The color temperature is adjusted based on time of day.
+     */
     DarkLight,
 };
 
@@ -83,8 +68,6 @@ class KWIN_EXPORT NightLightManager : public Plugin
 public:
     explicit NightLightManager();
     ~NightLightManager() override;
-
-    void autoLocationUpdate(double latitude, double longitude);
 
     /**
      * Toggles the active state of the filter.
@@ -283,7 +266,7 @@ private:
     // Specifies whether Night Light is inhibited globally.
     bool m_isGloballyInhibited = false;
 
-    NightLightMode m_mode = NightLightMode::Automatic;
+    NightLightMode m_mode = NightLightMode::DarkLight;
 
     // the previous and next sunrise/sunset intervals - in UTC time
     DateTimes m_prev = DateTimes();
@@ -291,18 +274,6 @@ private:
 
     // whether it is currently day or night
     bool m_daylight = true;
-
-    // manual times from config
-    QTime m_morning = QTime(6, 0);
-    QTime m_evening = QTime(18, 0);
-    int m_transitionDuration = DEFAULT_TRANSITION_DURATION; // in milliseconds
-
-    // auto location provided by work space
-    double m_latitudeAuto;
-    double m_longitudeAuto;
-    // manual location from config
-    double m_latitudeFixed;
-    double m_longitudeFixed;
 
     std::unique_ptr<QTimer> m_slowUpdateStartTimer;
     std::unique_ptr<QTimer> m_slowUpdateTimer;
