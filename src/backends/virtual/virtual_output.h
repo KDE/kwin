@@ -29,7 +29,7 @@ public:
     ~VirtualOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool present(const std::shared_ptr<OutputFrame> &frame) override;
+    bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes);
 

@@ -346,13 +346,7 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
 
 bool X11WindowedOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
-    const auto layer = Compositor::self()->backend()->cursorLayer(this);
-    if (layer->isEnabled()) {
-        xcb_xfixes_show_cursor(m_backend->connection(), m_window);
-        // the cursor layers update the image on their own already
-    } else {
-        xcb_xfixes_hide_cursor(m_backend->connection(), m_window);
-    }
+    // Xorg moves the cursor, there's nothing to do
     return true;
 }
 
@@ -448,16 +442,19 @@ void X11WindowedOutput::setPrimaryBuffer(GraphicsBuffer *buffer)
     m_pendingBuffer = importBuffer(buffer);
 }
 
-bool X11WindowedOutput::present(const std::shared_ptr<OutputFrame> &frame)
+bool X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     const auto cursorLayer = Compositor::self()->backend()->cursorLayer(this);
-    if (cursorLayer->isEnabled()) {
-        xcb_xfixes_show_cursor(m_backend->connection(), m_window);
-        // the cursor layers update the image on their own already
-    } else {
-        xcb_xfixes_hide_cursor(m_backend->connection(), m_window);
+    if (layersToUpdate.contains(cursorLayer)) {
+        if (cursorLayer->isEnabled()) {
+            xcb_xfixes_show_cursor(m_backend->connection(), m_window);
+            // the cursor layers update the image on their own already
+        } else {
+            xcb_xfixes_hide_cursor(m_backend->connection(), m_window);
+        }
     }
-
+    // we still present the window, even if the primary layer isn't in the list
+    // in order to get presentation feedback
     if (!m_pendingBuffer) {
         return false;
     }

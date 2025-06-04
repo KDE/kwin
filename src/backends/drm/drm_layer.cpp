@@ -36,4 +36,9 @@ DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex ty
     , m_type(type)
 {
 }
+
+DrmPlane::TypeIndex DrmPipelineLayer::type() const
+{
+    return m_type;
+}
 }
