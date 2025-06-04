@@ -532,9 +532,8 @@ void Compositor::addOutput(Output *output)
             }).value_or(30);
             maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
         }
-        const Cursor *cursor = Cursors::self()->currentCursor();
         const auto outputLayer = m_backend->cursorLayer(output);
-        if (!cursor->isOnOutput(output)) {
+        if (!cursorView->viewport().intersects(output->geometryF())) {
             if (outputLayer && outputLayer->isEnabled()) {
                 outputLayer->setEnabled(false);
                 output->updateCursorLayer(maxVrrCursorDelay);
@@ -547,7 +546,7 @@ void Compositor::addOutput(Output *output)
             }
             const QRectF outputLocalGeometry = output->mapFromGlobal(cursorView->viewport());
             const QRect nativeCursorRect = output->transform().map(scaledRect(outputLocalGeometry, output->scale()), output->pixelSize()).toRect();
-            outputLayer->setHotspot(output->transform().map(cursor->hotspot() * output->scale(), nativeCursorRect.size()));
+            outputLayer->setHotspot(output->transform().map(cursorView->hotspot() * output->scale(), nativeCursorRect.size()));
             outputLayer->setTargetRect(nativeCursorRect);
             if (auto beginInfo = outputLayer->beginFrame()) {
                 const RenderTarget &renderTarget = beginInfo->renderTarget;
@@ -588,11 +587,10 @@ void Compositor::addOutput(Output *output)
             // TODO use the output's minimum VRR range for this
             maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / 30;
         }
-        const Cursor *cursor = Cursors::self()->currentCursor();
         const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
         const auto outputLayer = m_backend->cursorLayer(output);
         bool hardwareCursor = false;
-        const bool shouldBeVisible = cursor->isOnOutput(output);
+        const bool shouldBeVisible = cursorView->viewport().intersects(output->geometryF());
         if (outputLayer && !forceSoftwareCursor) {
             if (shouldBeVisible) {
                 const bool enabledBefore = outputLayer->isEnabled();

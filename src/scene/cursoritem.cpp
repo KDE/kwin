@@ -65,6 +65,17 @@ void CursorItem::setImage(const QImage &image, const QPointF &hotspot)
     m_imageItem->setSize(image.size() / image.devicePixelRatio());
 }
 
+QPointF CursorItem::hotspot() const
+{
+    if (m_surfaceItem) {
+        return -m_surfaceItem->position();
+    } else if (m_imageItem) {
+        return -m_imageItem->position();
+    } else {
+        return QPointF{};
+    }
+}
+
 } // namespace KWin
 
 #include "moc_cursoritem.cpp"
