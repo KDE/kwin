@@ -147,7 +147,7 @@ void SurfaceItem::addDamage(const QRegion &region)
     const QRegion logicalDamage = mapFromBuffer(region);
 
     const auto views = scene()->views();
-    for (SceneView *view : views) {
+    for (RenderView *view : views) {
         QRegion viewDamage = logicalDamage;
         const qreal viewScale = view->scale();
         if (xScale != viewScale || yScale != viewScale) {

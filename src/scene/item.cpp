@@ -146,22 +146,17 @@ void Item::setScene(Scene *scene)
     }
     if (m_scene) {
         for (auto it = m_repaints.constBegin(); it != m_repaints.constEnd(); ++it) {
-            SceneView *delegate = it.key();
+            RenderView *view = it.key();
             const QRegion &dirty = it.value();
             if (!dirty.isEmpty()) {
-                m_scene->addRepaint(delegate, dirty);
+                m_scene->addRepaint(view, dirty);
             }
         }
         m_repaints.clear();
-        disconnect(m_scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
-        // remove this from the delegate's list
-        const auto views = m_scene->views();
-        for (const auto view : views) {
-            view->showItem(this);
-        }
+        disconnect(m_scene, &Scene::viewRemoved, this, &Item::removeRepaints);
     }
     if (scene) {
-        connect(scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
+        connect(scene, &Scene::viewRemoved, this, &Item::removeRepaints);
     }
 
     m_scene = scene;
@@ -301,9 +296,9 @@ QRectF Item::mapFromScene(const QRectF &rect) const
     return m_sceneToItemTransform.mapRect(rect);
 }
 
-QRect Item::paintedArea(SceneView *delegate, const QRectF &rect) const
+QRect Item::paintedArea(RenderView *view, const QRectF &rect) const
 {
-    const qreal scale = delegate->scale();
+    const qreal scale = view->scale();
 
     QRectF snapped = snapToPixelGridF(scaledRect(rect, scale));
     for (const Item *item = this; item; item = item->parentItem()) {
@@ -315,13 +310,13 @@ QRect Item::paintedArea(SceneView *delegate, const QRectF &rect) const
     return scaledRect(snapped, 1.0 / scale).toAlignedRect();
 }
 
-QRegion Item::paintedArea(SceneView *delegate, const QRegion &region) const
+QRegion Item::paintedArea(RenderView *view, const QRegion &region) const
 {
     if (region.isEmpty()) {
         return QRegion();
     }
 
-    const qreal scale = delegate->scale();
+    const qreal scale = view->scale();
 
     QList<QRectF> parts;
     parts.reserve(region.rectCount());
@@ -407,10 +402,10 @@ void Item::scheduleRepaint(const QRegion &region)
     }
 }
 
-void Item::scheduleRepaint(SceneView *delegate, const QRegion &region)
+void Item::scheduleRepaint(RenderView *view, const QRegion &region)
 {
     if (isVisible()) {
-        scheduleRepaintInternal(delegate, region);
+        scheduleRepaintInternal(view, region);
     }
 }
 
@@ -419,28 +414,28 @@ void Item::scheduleRepaintInternal(const QRegion &region)
     if (Q_UNLIKELY(!m_scene)) {
         return;
     }
-    const QList<SceneView *> delegates = m_scene->views();
-    for (SceneView *delegate : delegates) {
-        if (!delegate->shouldRenderItem(this)) {
+    const QList<RenderView *> views = m_scene->views();
+    for (RenderView *view : views) {
+        if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
+        const QRegion dirtyRegion = paintedArea(view, region) & view->viewport();
         if (!dirtyRegion.isEmpty()) {
-            m_repaints[delegate] += dirtyRegion;
-            delegate->scheduleRepaint(this);
+            m_repaints[view] += dirtyRegion;
+            view->scheduleRepaint(this);
         }
     }
 }
 
-void Item::scheduleRepaintInternal(SceneView *delegate, const QRegion &region)
+void Item::scheduleRepaintInternal(RenderView *view, const QRegion &region)
 {
-    if (Q_UNLIKELY(!m_scene) || !delegate->shouldRenderItem(this)) {
+    if (Q_UNLIKELY(!m_scene) || !view->shouldRenderItem(this)) {
         return;
     }
-    const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
+    const QRegion dirtyRegion = paintedArea(view, region) & view->viewport();
     if (!dirtyRegion.isEmpty()) {
-        m_repaints[delegate] += dirtyRegion;
-        delegate->scheduleRepaint(this);
+        m_repaints[view] += dirtyRegion;
+        view->scheduleRepaint(this);
     }
 }
 
@@ -452,14 +447,14 @@ void Item::scheduleFrame()
     if (Q_UNLIKELY(!m_scene)) {
         return;
     }
-    const QList<SceneView *> delegates = m_scene->views();
-    for (SceneView *delegate : delegates) {
-        if (!delegate->shouldRenderItem(this)) {
+    const QList<RenderView *> views = m_scene->views();
+    for (RenderView *view : views) {
+        if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRect geometry = paintedArea(delegate, rect());
-        if (delegate->viewport().intersects(geometry)) {
-            delegate->scheduleRepaint(this);
+        const QRect geometry = paintedArea(view, rect());
+        if (view->viewport().intersects(geometry)) {
+            view->scheduleRepaint(this);
         }
     }
 }
@@ -469,14 +464,14 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
     if (Q_UNLIKELY(!m_scene)) {
         return;
     }
-    const QList<SceneView *> delegates = m_scene->views();
-    for (SceneView *delegate : delegates) {
-        if (!delegate->shouldRenderItem(this)) {
+    const QList<RenderView *> views = m_scene->views();
+    for (RenderView *view : views) {
+        if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRegion dirtyRegion = paintedArea(delegate, region) & delegate->viewport();
+        const QRegion dirtyRegion = paintedArea(view, region) & view->viewport();
         if (!dirtyRegion.isEmpty()) {
-            m_scene->addRepaint(delegate, dirtyRegion);
+            m_scene->addRepaint(view, dirtyRegion);
         }
     }
 }
@@ -503,22 +498,22 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
-QRegion Item::takeRepaints(SceneView *delegate)
+QRegion Item::takeRepaints(RenderView *view)
 {
-    auto &repaints = m_repaints[delegate];
+    auto &repaints = m_repaints[view];
     QRegion reg;
     std::swap(reg, repaints);
     return reg;
 }
 
-void Item::resetRepaints(SceneView *delegate)
+void Item::resetRepaints(RenderView *view)
 {
-    m_repaints.insert(delegate, QRegion());
+    m_repaints.insert(view, QRegion());
 }
 
-void Item::removeRepaints(SceneView *delegate)
+void Item::removeRepaints(RenderView *view)
 {
-    m_repaints.remove(delegate);
+    m_repaints.remove(view);
 }
 
 bool Item::explicitVisible() const

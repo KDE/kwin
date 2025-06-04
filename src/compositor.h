@@ -24,7 +24,6 @@ namespace KWin
 class ColorDescription;
 class GLTexture;
 class Output;
-class CursorScene;
 class RenderBackend;
 class OutputLayer;
 class RenderLoop;
@@ -33,6 +32,7 @@ class WorkspaceScene;
 class Window;
 class OutputFrame;
 class SceneView;
+class ItemTreeView;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -68,10 +68,6 @@ public:
     WorkspaceScene *scene() const
     {
         return m_scene.get();
-    }
-    CursorScene *cursorScene() const
-    {
-        return m_cursorScene.get();
     }
     RenderBackend *backend() const
     {
@@ -112,9 +108,9 @@ protected:
 
     State m_state = State::Off;
     std::unique_ptr<WorkspaceScene> m_scene;
-    std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;
+    std::unordered_map<RenderLoop *, std::unique_ptr<ItemTreeView>> m_cursorViews;
 };
 
 } // namespace KWin
