@@ -41,7 +41,7 @@ public:
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
 
-    bool present(const std::shared_ptr<OutputFrame> &frame) override;
+    bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void repairPresentation() override;
     DrmOutputLayer *primaryLayer() const override;
     DrmOutputLayer *cursorLayer() const override;

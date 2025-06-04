@@ -334,7 +334,7 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
     setState(next);
 }
 
-bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
+bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_desiredPresentationMode = frame->presentationMode();
     const bool needsModeset = m_gpu->needsModeset();
@@ -354,16 +354,16 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
                 m_pipeline->setPresentationMode(PresentationMode::VSync);
             }
         }
-        DrmPipeline::Error err = m_pipeline->present(frame);
+        DrmPipeline::Error err = m_pipeline->present(layersToUpdate, frame);
         if (err != DrmPipeline::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
             // tearing can fail in various circumstances, but vrr shouldn't
             m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
-            err = m_pipeline->present(frame);
+            err = m_pipeline->present(layersToUpdate, frame);
         }
         if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
             // retry with the most basic presentation mode
             m_pipeline->setPresentationMode(PresentationMode::VSync);
-            err = m_pipeline->present(frame);
+            err = m_pipeline->present(layersToUpdate, frame);
         }
         success = err == DrmPipeline::Error::None;
     }
