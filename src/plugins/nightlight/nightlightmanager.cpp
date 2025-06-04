@@ -480,7 +480,11 @@ void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
     // there yet by a few microseconds or milliseconds.
     const int granularity = 1;
 
-    if (m_mode == NightLightMode::Constant) {
+    if (!m_active) {
+        setDaylight(true);
+        m_next = DateTimes();
+        m_prev = DateTimes();
+    } else if (m_mode == NightLightMode::Constant) {
         setDaylight(false);
         m_next = DateTimes();
         m_prev = DateTimes();
