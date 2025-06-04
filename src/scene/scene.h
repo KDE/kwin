@@ -49,6 +49,11 @@ public:
      */
     void addRepaint(const QRegion &region);
     void scheduleRepaint(Item *item);
+    /**
+     * @returns true if the layer can be moved with the Item
+     * and thus no repaint is necessary
+     */
+    virtual bool canSkipMoveRepaint(Item *item);
 
     virtual void setExclusive(bool enable);
 
@@ -104,6 +109,8 @@ public:
     void setExclusive(bool enable) override;
 
     Item *item() const;
+
+    bool canSkipMoveRepaint(Item *item) override;
 
 private:
     SceneView *const m_parentView;

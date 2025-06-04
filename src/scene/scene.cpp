@@ -52,6 +52,11 @@ void RenderView::scheduleRepaint(Item *item)
     m_layer->scheduleRepaint(item);
 }
 
+bool RenderView::canSkipMoveRepaint(Item *item)
+{
+    return false;
+}
+
 bool RenderView::shouldRenderItem(Item *item) const
 {
     return true;
@@ -242,6 +247,12 @@ void ItemTreeView::setExclusive(bool enable)
 Item *ItemTreeView::item() const
 {
     return m_item;
+}
+
+bool ExclusiveItemTreeView::canSkipMoveRepaint(Item *item)
+{
+    // this could be more generic, but it's all we need for now
+    return m_layer && item == m_item;
 }
 
 Scene::Scene(std::unique_ptr<ItemRenderer> &&renderer)

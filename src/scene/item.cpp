@@ -174,13 +174,13 @@ QPointF Item::position() const
 void Item::setPosition(const QPointF &point)
 {
     if (m_position != point) {
-        scheduleRepaint(boundingRect());
+        scheduleMoveRepaint(boundingRect());
         m_position = point;
         updateItemToSceneTransform();
         if (m_parentItem) {
             m_parentItem->updateBoundingRect();
         }
-        scheduleRepaint(boundingRect());
+        scheduleMoveRepaint(boundingRect());
         Q_EMIT positionChanged();
     }
 }
@@ -422,6 +422,26 @@ void Item::scheduleRepaintInternal(const QRegion &region)
         const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();
         if (!dirtyRegion.isEmpty()) {
             m_repaints[view] += dirtyRegion;
+            view->scheduleRepaint(this);
+        }
+    }
+}
+
+void Item::scheduleMoveRepaint(const QRectF &region)
+{
+    if (Q_UNLIKELY(!m_scene) || !isVisible()) {
+        return;
+    }
+    const QList<RenderView *> views = m_scene->views();
+    for (RenderView *view : views) {
+        if (!view->shouldRenderItem(this)) {
+            continue;
+        }
+        const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();
+        if (!dirtyRegion.isEmpty()) {
+            if (!view->canSkipMoveRepaint(this)) {
+                m_repaints[view] += dirtyRegion;
+            }
             view->scheduleRepaint(this);
         }
     }
