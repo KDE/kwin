@@ -144,7 +144,7 @@ private:
     Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
     Error prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
-    void prepareAtomicCursor(DrmAtomicCommit *commit);
+    Error prepareAtomicPlane(DrmAtomicCommit *commit, DrmPlane *plane, DrmPipelineLayer *layer, const std::shared_ptr<OutputFrame> &frame);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
     static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects);
 
