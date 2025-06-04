@@ -35,7 +35,7 @@ public:
     qreal scale() const;
     OutputLayer *layer() const;
 
-    virtual QRect viewport() const = 0;
+    virtual QRectF viewport() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
     virtual void frame(OutputFrame *frame) = 0;
     virtual QRegion prePaint() = 0;
@@ -61,7 +61,7 @@ public:
     explicit SceneView(Scene *scene, Output *output, OutputLayer *layer);
     ~SceneView() override;
 
-    QRect viewport() const override;
+    QRectF viewport() const override;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
@@ -91,9 +91,9 @@ public:
     explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
     ~ItemTreeView() override;
 
-    void setViewport(const QRect &viewport);
+    void setViewport(const QRectF &viewport);
 
-    QRect viewport() const override;
+    QRectF viewport() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
@@ -106,7 +106,7 @@ public:
 private:
     SceneView *const m_parentView;
     Item *const m_item;
-    QRect m_viewport;
+    QRectF m_viewport;
 };
 
 class KWIN_EXPORT Scene : public QObject

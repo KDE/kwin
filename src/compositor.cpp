@@ -570,8 +570,7 @@ void Compositor::addOutput(Output *output)
 
                 const QRectF scaled = scaledRect(outputLayer->targetRect(), 1.0 / output->scale());
                 const QRectF logicalLocalTarget = output->transform().inverted().map(scaled, output->geometryF().size());
-                // FIXME we shouldn't round the viewport
-                cursorView->setViewport(output->mapToGlobal(logicalLocalTarget).toRect());
+                cursorView->setViewport(output->mapToGlobal(logicalLocalTarget));
                 cursorView->prePaint();
                 cursorView->paint(renderTarget, infiniteRegion());
                 cursorView->postPaint();
