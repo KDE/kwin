@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-class SceneView;
+class RenderView;
 class Scene;
 class SyncReleasePoint;
 class DrmDevice;
@@ -122,17 +122,17 @@ public:
     bool isVisible() const;
     void setVisible(bool visible);
 
-    QRect paintedArea(SceneView *delegate, const QRectF &rect) const;
-    QRegion paintedArea(SceneView *delegate, const QRegion &region) const;
+    QRect paintedArea(RenderView *delegate, const QRectF &rect) const;
+    QRegion paintedArea(RenderView *delegate, const QRegion &region) const;
 
     void scheduleRepaint(const QRectF &region);
     void scheduleSceneRepaint(const QRectF &region);
     void scheduleRepaint(const QRegion &region);
     void scheduleSceneRepaint(const QRegion &region);
-    void scheduleRepaint(SceneView *delegate, const QRegion &region);
+    void scheduleRepaint(RenderView *delegate, const QRegion &region);
     void scheduleFrame();
-    QRegion takeRepaints(SceneView *delegate);
-    void resetRepaints(SceneView *delegate);
+    QRegion takeRepaints(RenderView *delegate);
+    void resetRepaints(RenderView *delegate);
 
     WindowQuadList quads() const;
     virtual void preprocess();
@@ -178,13 +178,13 @@ private:
     void updateBoundingRect();
     void updateItemToSceneTransform();
     void scheduleRepaintInternal(const QRegion &region);
-    void scheduleRepaintInternal(SceneView *delegate, const QRegion &region);
+    void scheduleRepaintInternal(RenderView *delegate, const QRegion &region);
     void scheduleSceneRepaintInternal(const QRegion &region);
     void markSortedChildItemsDirty();
 
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
-    void removeRepaints(SceneView *delegate);
+    void removeRepaints(RenderView *delegate);
 
     Scene *m_scene = nullptr;
     QPointer<Item> m_parentItem;
@@ -199,7 +199,7 @@ private:
     int m_z = 0;
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
-    QMap<SceneView *, QRegion> m_repaints;
+    QMap<RenderView *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     ColorDescription m_colorDescription = ColorDescription::sRGB;

@@ -25,24 +25,49 @@ class OutputFrame;
 class Item;
 class SurfaceItem;
 
-class KWIN_EXPORT SceneView : public QObject
+class KWIN_EXPORT RenderView : public QObject
+{
+    Q_OBJECT
+public:
+    explicit RenderView(Output *output, OutputLayer *layer);
+
+    Output *output() const;
+    qreal scale() const;
+    OutputLayer *layer() const;
+
+    virtual QRect viewport() const = 0;
+    virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
+    virtual void frame(OutputFrame *frame) = 0;
+    virtual QRegion prePaint() = 0;
+    virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+    virtual void postPaint() = 0;
+    virtual bool shouldRenderItem(Item *item) const;
+
+    /**
+     * add a repaint in layer-local logical coordinates
+     */
+    void addRepaint(const QRegion &region);
+    void scheduleRepaint(Item *item);
+
+protected:
+    Output *m_output = nullptr;
+    OutputLayer *m_layer = nullptr;
+};
+
+class KWIN_EXPORT SceneView : public RenderView
 {
     Q_OBJECT
 public:
     explicit SceneView(Scene *scene, Output *output, OutputLayer *layer);
     ~SceneView() override;
 
-    OutputLayer *layer() const;
+    QRect viewport() const override;
 
-    Output *output() const;
-    qreal scale() const;
-    QRect viewport() const;
-
-    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
-    void frame(OutputFrame *frame);
-    QRegion prePaint();
-    void postPaint();
-    void paint(const RenderTarget &renderTarget, const QRegion &region);
+    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    void frame(OutputFrame *frame) override;
+    QRegion prePaint() override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    void postPaint() override;
     double desiredHdrHeadroom() const;
 
     void hideItem(Item *item);
@@ -51,19 +76,34 @@ public:
      * @returns whether or not the Item should be rendered for this delegate specifically.
      * If it returns true, the Item is already rendered in some other way (like on a hardware plane)
      */
-    bool shouldRenderItem(Item *item) const;
-
-    /**
-     * add a repaint in layer-local logical coordinates
-     */
-    void addRepaint(const QRegion &region);
-    void scheduleRepaint(Item *item);
+    bool shouldRenderItem(Item *item) const override;
 
 private:
     Scene *m_scene;
     Output *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
     QList<Item *> m_hiddenItems;
+};
+
+class KWIN_EXPORT ItemTreeView : public RenderView
+{
+public:
+    explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    ~ItemTreeView() override;
+
+    void setViewport(const QRect &viewport);
+
+    QRect viewport() const override;
+    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    void frame(OutputFrame *frame) override;
+    QRegion prePaint() override;
+    void postPaint() override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+
+private:
+    SceneView *const m_parentView;
+    Item *const m_item;
+    QRect m_viewport;
 };
 
 class KWIN_EXPORT Scene : public QObject
@@ -96,7 +136,7 @@ public:
     ItemRenderer *renderer() const;
 
     void addRepaint(const QRegion &region);
-    void addRepaint(SceneView *delegate, const QRegion &region);
+    void addRepaint(RenderView *delegate, const QRegion &region);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     virtual QRegion damage() const;
@@ -104,23 +144,23 @@ public:
     QRect geometry() const;
     void setGeometry(const QRect &rect);
 
-    QList<SceneView *> views() const;
-    void addView(SceneView *delegate);
-    void removeView(SceneView *delegate);
+    QList<RenderView *> views() const;
+    void addView(RenderView *view);
+    void removeView(RenderView *view);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
     virtual QRegion prePaint(SceneView *delegate) = 0;
-    virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+    virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame);
     virtual double desiredHdrHeadroom() const;
 
 Q_SIGNALS:
-    void delegateRemoved(SceneView *delegate);
+    void viewRemoved(RenderView *delegate);
 
 protected:
     std::unique_ptr<ItemRenderer> m_renderer;
-    QList<SceneView *> m_delegates;
+    QList<RenderView *> m_views;
     QRect m_geometry;
 };
 
