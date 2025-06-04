@@ -113,7 +113,7 @@ public:
     void handlePresentIdleNotify(xcb_present_idle_notify_event_t *event);
 
     void setPrimaryBuffer(GraphicsBuffer *buffer);
-    bool present(const std::shared_ptr<OutputFrame> &frame) override;
+    bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
 private:
     void initXInputForWindow();
