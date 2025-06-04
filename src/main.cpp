@@ -660,7 +660,6 @@ static PlatformCursorImage grabCursorOpenGL()
 
     SceneView sceneView(scene, output, nullptr);
     ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
-    cursorView.setViewport(cursor->geometry());
     cursorView.prePaint();
     cursorView.paint(renderTarget, infiniteRegion());
     cursorView.postPaint();
@@ -685,7 +684,6 @@ static PlatformCursorImage grabCursorSoftware()
 
     SceneView sceneView(scene, output, nullptr);
     ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
-    cursorView.setViewport(cursor->geometry());
     cursorView.prePaint();
     cursorView.paint(renderTarget, infiniteRegion());
     cursorView.postPaint();
