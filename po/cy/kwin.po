@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-24 02:37+0000\n"
+"POT-Creation-Date: 2025-06-04 02:35+0000\n"
 "PO-Revision-Date: 2003-12-27 10:16+0000\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -4345,7 +4345,7 @@ msgstr "Lladd Ffenestr"
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: utils/edid.cpp:327
+#: utils/edid.cpp:340
 #, kde-format
 msgid "unknown"
 msgstr ""
