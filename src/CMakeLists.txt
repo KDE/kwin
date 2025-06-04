@@ -153,7 +153,6 @@ target_sources(kwin PRIVATE
     rulebooksettings.cpp
     rules.cpp
     scene/cursoritem.cpp
-    scene/cursorscene.cpp
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
     scene/imageitem.cpp
@@ -601,7 +600,6 @@ install(FILES
 
 install(FILES
     scene/cursoritem.h
-    scene/cursorscene.h
     scene/decorationitem.h
     scene/dndiconitem.h
     scene/imageitem.h
