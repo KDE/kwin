@@ -30,7 +30,7 @@
 #include "outline.h"
 #include "pluginmanager.h"
 #include "pointer_input.h"
-#include "scene/cursorscene.h"
+#include "scene/workspacescene.h"
 #include "screenedge.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
@@ -643,11 +643,10 @@ ScreenLockerWatcher *Application::screenLockerWatcher() const
 
 static PlatformCursorImage grabCursorOpenGL()
 {
-    CursorScene *scene = Compositor::self()->cursorScene();
+    auto scene = Compositor::self()->scene();
     if (!scene) {
-        return PlatformCursorImage();
+        return PlatformCursorImage{};
     }
-
     Cursor *cursor = Cursors::self()->currentCursor();
     Output *output = workspace()->outputAt(cursor->pos());
 
@@ -659,10 +658,13 @@ static PlatformCursorImage grabCursorOpenGL()
     GLFramebuffer framebuffer(texture.get());
     RenderTarget renderTarget(&framebuffer);
 
-    SceneView delegate(scene, output, nullptr);
-    scene->prePaint(&delegate);
-    scene->paint(renderTarget, infiniteRegion());
-    scene->postPaint();
+    SceneView sceneView(scene, output, nullptr);
+    ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
+    // TODO don't round this
+    cursorView.setViewport(cursor->geometry().toRect());
+    cursorView.prePaint();
+    cursorView.paint(renderTarget, infiniteRegion());
+    cursorView.postPaint();
 
     QImage image = texture->toImage();
     image.setDevicePixelRatio(output->scale());
@@ -672,21 +674,23 @@ static PlatformCursorImage grabCursorOpenGL()
 
 static PlatformCursorImage grabCursorSoftware()
 {
-    CursorScene *scene = Compositor::self()->cursorScene();
+    auto scene = Compositor::self()->scene();
     if (!scene) {
-        return PlatformCursorImage();
+        return PlatformCursorImage{};
     }
-
     Cursor *cursor = Cursors::self()->currentCursor();
     Output *output = workspace()->outputAt(cursor->pos());
 
     QImage image((cursor->geometry().size() * output->scale()).toSize(), QImage::Format_ARGB32_Premultiplied);
     RenderTarget renderTarget(&image);
 
-    SceneView delegate(scene, output, nullptr);
-    scene->prePaint(&delegate);
-    scene->paint(renderTarget, infiniteRegion());
-    scene->postPaint();
+    SceneView sceneView(scene, output, nullptr);
+    ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
+    // TODO don't round this
+    cursorView.setViewport(cursor->geometry().toRect());
+    cursorView.prePaint();
+    cursorView.paint(renderTarget, infiniteRegion());
+    cursorView.postPaint();
 
     image.setDevicePixelRatio(output->scale());
     return PlatformCursorImage(image, cursor->hotspot());

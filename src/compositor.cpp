@@ -26,7 +26,6 @@
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
 #include "qpainter/qpainterbackend.h"
-#include "scene/cursorscene.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
 #include "scene/surfaceitem.h"
@@ -225,10 +224,8 @@ void Compositor::createScene()
 {
     if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
         m_scene = std::make_unique<WorkspaceScene>(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
-        m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
     } else {
         m_scene = std::make_unique<WorkspaceScene>(std::make_unique<ItemRendererQPainter>());
-        m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererQPainter>());
     }
     Q_EMIT sceneCreated();
 }
@@ -327,9 +324,9 @@ void Compositor::stop()
         disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     }
 
+    m_cursorViews.clear();
     m_primaryViews.clear();
     m_scene.reset();
-    m_cursorScene.reset();
     m_backend.reset();
 
     m_state = State::Off;
@@ -518,10 +515,14 @@ void Compositor::addOutput(Output *output)
     }
 
     auto sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+    std::unique_ptr<ItemTreeView> cursorView;
+    if (auto layer = m_backend->cursorLayer(output)) {
+        cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+    }
 
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
 
-    auto updateCursorLayer = [this, output, sceneView = sceneView.get()]() {
+    auto updateCursorLayer = [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
             const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
@@ -567,8 +568,10 @@ void Compositor::addOutput(Output *output)
             if (auto beginInfo = outputLayer->beginFrame()) {
                 const RenderTarget &renderTarget = beginInfo->renderTarget;
 
-                auto cursorView = std::make_unique<SceneView>(m_cursorScene.get(), output, outputLayer);
-
+                const QRectF scaled = scaledRect(outputLayer->targetRect(), 1.0 / output->scale());
+                const QRectF logicalLocalTarget = output->transform().inverted().map(scaled, output->geometryF().size());
+                // FIXME we shouldn't round the viewport
+                cursorView->setViewport(output->mapToGlobal(logicalLocalTarget).toRect());
                 cursorView->prePaint();
                 cursorView->paint(renderTarget, infiniteRegion());
                 cursorView->postPaint();
@@ -584,7 +587,7 @@ void Compositor::addOutput(Output *output)
         };
         const bool wasHardwareCursor = outputLayer && outputLayer->isEnabled();
         if (renderHardwareCursor()) {
-            sceneView->hideItem(scene()->cursorItem());
+            cursorView->setExclusive(true);
             return true;
         } else {
             if (outputLayer) {
@@ -593,11 +596,11 @@ void Compositor::addOutput(Output *output)
                     output->updateCursorLayer(maxVrrCursorDelay);
                 }
             }
-            sceneView->showItem(scene()->cursorItem());
+            cursorView->setExclusive(false);
             return false;
         }
     };
-    auto moveCursorLayer = [this, output, sceneView = sceneView.get(), updateCursorLayer]() {
+    auto moveCursorLayer = [this, output, sceneView = sceneView.get(), cursorView = cursorView.get(), updateCursorLayer]() {
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
             // TODO use the output's minimum VRR range for this
@@ -635,11 +638,7 @@ void Compositor::addOutput(Output *output)
         if (!shouldBeVisible) {
             return;
         }
-        if (hardwareCursor) {
-            sceneView->hideItem(scene()->cursorItem());
-        } else {
-            sceneView->showItem(scene()->cursorItem());
-        }
+        cursorView->setExclusive(hardwareCursor);
     };
     updateCursorLayer();
     connect(output, &Output::geometryChanged, sceneView.get(), updateCursorLayer);
@@ -648,6 +647,7 @@ void Compositor::addOutput(Output *output)
     connect(Cursors::self(), &Cursors::positionChanged, sceneView.get(), moveCursorLayer);
 
     m_primaryViews[output->renderLoop()] = std::move(sceneView);
+    m_cursorViews[output->renderLoop()] = std::move(cursorView);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
 
@@ -657,6 +657,7 @@ void Compositor::removeOutput(Output *output)
         return;
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    m_cursorViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
 }
 
