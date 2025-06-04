@@ -52,6 +52,11 @@ void RenderView::scheduleRepaint(Item *item)
     m_layer->scheduleRepaint(item);
 }
 
+bool RenderView::canSkipMoveRepaint(Item *item)
+{
+    return false;
+}
+
 bool RenderView::shouldRenderItem(Item *item) const
 {
     return true;
@@ -127,15 +132,22 @@ bool SceneView::shouldRenderItem(Item *item) const
     return !m_hiddenItems.contains(item);
 }
 
+Scene *SceneView::scene() const
+{
+    return m_scene;
+}
+
 ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_parentView(parentView)
     , m_item(item)
 {
+    parentView->scene()->addView(this);
 }
 
 ItemTreeView::~ItemTreeView()
 {
+    m_parentView->scene()->removeView(this);
 }
 
 QRectF ItemTreeView::viewport() const
@@ -219,6 +231,12 @@ bool ItemTreeView::shouldRenderItem(Item *item) const
         item = item->parentItem();
     }
     return false;
+}
+
+bool ItemTreeView::canSkipMoveRepaint(Item *item)
+{
+    // this could be more generic, but it's all we need for now
+    return m_layer && item == m_item;
 }
 
 Scene::Scene(std::unique_ptr<ItemRenderer> &&renderer)
