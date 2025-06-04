@@ -36,6 +36,7 @@ public:
     qreal scale() const;
     OutputLayer *layer() const;
 
+    virtual QPointF hotspot() const;
     virtual QRectF viewport() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
     virtual void frame(OutputFrame *frame) = 0;
@@ -99,6 +100,7 @@ public:
     explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
     ~ItemTreeView() override;
 
+    QPointF hotspot() const override;
     QRectF viewport() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
