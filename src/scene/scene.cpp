@@ -9,6 +9,7 @@
 #include "core/outputlayer.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
+#include "scene/cursoritem.h"
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
 
@@ -60,6 +61,11 @@ bool RenderView::canSkipMoveRepaint(Item *item)
 bool RenderView::shouldRenderItem(Item *item) const
 {
     return true;
+}
+
+QPointF RenderView::hotspot() const
+{
+    return QPointF{};
 }
 
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
@@ -148,6 +154,15 @@ ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, Output *output, Ou
 ItemTreeView::~ItemTreeView()
 {
     m_parentView->scene()->removeView(this);
+}
+
+QPointF ItemTreeView::hotspot() const
+{
+    if (auto cursor = qobject_cast<CursorItem *>(m_item)) {
+        return cursor->hotspot();
+    } else {
+        return QPointF{};
+    }
 }
 
 QRectF ItemTreeView::viewport() const
