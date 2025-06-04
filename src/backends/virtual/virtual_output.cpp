@@ -48,7 +48,7 @@ RenderLoop *VirtualOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool VirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
+bool VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
     m_vsyncMonitor->arm();
