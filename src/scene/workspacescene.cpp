@@ -336,7 +336,9 @@ QRegion WorkspaceScene::prePaint(SceneView *delegate)
         preparePaintSimpleScreen();
     }
 
-    return m_paintContext.damage.translated(-delegate->viewport().topLeft());
+    // FIXME damage in logical coordinates may cause issues here
+    // if the viewport is on a non-integer position!
+    return m_paintContext.damage.translated(-delegate->viewport().topLeft().toPoint());
 }
 
 static void resetRepaintsHelper(Item *item, SceneView *delegate)
