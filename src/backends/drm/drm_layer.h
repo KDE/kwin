@@ -40,6 +40,8 @@ public:
 
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
 
+    DrmPlane::TypeIndex type() const;
+
 protected:
     DrmPipeline *const m_pipeline;
     const DrmPlane::TypeIndex m_type;

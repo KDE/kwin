@@ -174,10 +174,16 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
     if (m_defunct) {
         return;
     }
+    // de-duplicate frames, so that two planes committed
+    // together don't cause problems
+    std::set<OutputFrame *> frames;
     for (const auto &[plane, frame] : m_frames) {
         if (frame) {
-            frame->presented(timestamp, m_mode);
+            frames.insert(frame.get());
         }
+    }
+    for (const auto &frame : frames) {
+        frame->presented(timestamp, m_mode);
     }
     m_frames.clear();
     for (const auto pipeline : std::as_const(m_pipelines)) {

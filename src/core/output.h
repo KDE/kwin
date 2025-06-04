@@ -31,6 +31,7 @@ class IccProfile;
 class OutputChangeSet;
 class BrightnessDevice;
 class OutputFrame;
+class OutputLayer;
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
@@ -415,7 +416,7 @@ public:
     virtual void setAutoRotateAvailable(bool isAvailable);
 
     virtual bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
-    virtual bool present(const std::shared_ptr<OutputFrame> &frame) = 0;
+    virtual bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual void repairPresentation();
 
     /**

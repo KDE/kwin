@@ -54,7 +54,7 @@ DrmPipeline::~DrmPipeline()
     m_commitThread.reset();
 }
 
-DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &frame)
+DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
@@ -67,23 +67,35 @@ DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &fram
         if (Error err = prepareAtomicPresentation(partialUpdate.get(), frame); err != Error::None) {
             return err;
         }
-        if (Error err = prepareAtomicPlane(partialUpdate.get(), m_pending.crtc->primaryPlane(), m_primaryLayer.get(), frame); err != Error::None) {
-            return err;
+        for (const auto layer : layersToUpdate) {
+            const auto pipelineLayer = static_cast<DrmPipelineLayer *>(layer);
+            // FIXME figure out a more generic way for this
+            DrmPlane *plane = nullptr;
+            switch (pipelineLayer->type()) {
+            case DrmPlane::TypeIndex::Primary:
+                plane = m_pending.crtc->primaryPlane();
+                break;
+            case DrmPlane::TypeIndex::Cursor:
+                plane = m_pending.crtc->cursorPlane();
+                break;
+            case DrmPlane::TypeIndex::Overlay:
+                Q_UNREACHABLE();
+            }
+            if (Error err = prepareAtomicPlane(partialUpdate.get(), plane, pipelineLayer, frame); err != Error::None) {
+                return err;
+            }
         }
-        if (m_pending.needsModesetProperties) {
-            if (!prepareAtomicModeset(partialUpdate.get())) {
-                return Error::InvalidArguments;
-            }
-            // we can't do partial updates for modesets
-            // all planes need to be added
-            if (const auto cursor = m_pending.crtc->cursorPlane()) {
-                prepareAtomicPlane(partialUpdate.get(), cursor, m_cursorLayer.get(), nullptr);
-            }
+        if (m_pending.needsModesetProperties && !prepareAtomicModeset(partialUpdate.get())) {
+            return Error::InvalidArguments;
         }
         m_next.needsModesetProperties = m_pending.needsModesetProperties = false;
         m_commitThread->addCommit(std::move(partialUpdate));
         return Error::None;
     } else {
+        if (layersToUpdate.contains(m_cursorLayer.get()) && !setCursorLegacy()) {
+            return Error::InvalidArguments;
+        }
+        // always present on the crtc, for presentation feedback
         return presentLegacy(frame);
     }
 }
