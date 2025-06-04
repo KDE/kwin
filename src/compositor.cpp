@@ -533,7 +533,6 @@ void Compositor::addOutput(Output *output)
             maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
         }
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRectF outputLocalRect = output->mapFromGlobal(cursor->geometry());
         const auto outputLayer = m_backend->cursorLayer(output);
         if (!cursor->isOnOutput(output)) {
             if (outputLayer && outputLayer->isEnabled()) {
@@ -546,31 +545,13 @@ void Compositor::addOutput(Output *output)
             if (!outputLayer || forceSoftwareCursor) {
                 return false;
             }
-            QRectF nativeCursorRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize());
-            QSize bufferSize(std::ceil(nativeCursorRect.width()), std::ceil(nativeCursorRect.height()));
-            const auto recommendedSizes = outputLayer->recommendedSizes();
-            if (!recommendedSizes.empty()) {
-                auto bigEnough = recommendedSizes | std::views::filter([bufferSize](const auto &size) {
-                    return size.width() >= bufferSize.width() && size.height() >= bufferSize.height();
-                });
-                const auto it = std::ranges::min_element(bigEnough, [](const auto &left, const auto &right) {
-                    return left.width() * left.height() < right.width() * right.height();
-                });
-                if (it == bigEnough.end()) {
-                    // no size found, this most likely won't work
-                    return false;
-                }
-                bufferSize = *it;
-                nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), bufferSize), output->pixelSize());
-            }
-            outputLayer->setHotspot(output->transform().map(cursor->hotspot() * output->scale(), bufferSize));
-            outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), bufferSize));
+            const QRectF outputLocalGeometry = output->mapFromGlobal(cursorView->viewport());
+            const QRect nativeCursorRect = output->transform().map(scaledRect(outputLocalGeometry, output->scale()), output->pixelSize()).toRect();
+            outputLayer->setHotspot(output->transform().map(cursor->hotspot() * output->scale(), nativeCursorRect.size()));
+            outputLayer->setTargetRect(nativeCursorRect);
             if (auto beginInfo = outputLayer->beginFrame()) {
                 const RenderTarget &renderTarget = beginInfo->renderTarget;
 
-                const QRectF scaled = scaledRect(outputLayer->targetRect(), 1.0 / output->scale());
-                const QRectF logicalLocalTarget = output->transform().inverted().map(scaled, output->geometryF().size());
-                cursorView->setViewport(output->mapToGlobal(logicalLocalTarget));
                 cursorView->prePaint();
                 cursorView->paint(renderTarget, infiniteRegion());
                 cursorView->postPaint();
@@ -601,14 +582,14 @@ void Compositor::addOutput(Output *output)
             return false;
         }
     };
-    auto moveCursorLayer = [this, output, sceneView = sceneView.get(), updateCursorLayer]() {
+    auto moveCursorLayer = [this, output, sceneView = sceneView.get(), cursorView = cursorView.get(), updateCursorLayer]() {
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
             // TODO use the output's minimum VRR range for this
             maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / 30;
         }
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRectF outputLocalRect = output->mapFromGlobal(cursor->geometry());
+        const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
         const auto outputLayer = m_backend->cursorLayer(output);
         bool hardwareCursor = false;
         const bool shouldBeVisible = cursor->isOnOutput(output);
