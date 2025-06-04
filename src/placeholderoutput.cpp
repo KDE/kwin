@@ -42,7 +42,7 @@ RenderLoop *PlaceholderOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool PlaceholderOutput::present(const std::shared_ptr<OutputFrame> &frame)
+bool PlaceholderOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     return false;
 }
