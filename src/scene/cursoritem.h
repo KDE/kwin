@@ -23,6 +23,8 @@ public:
     explicit CursorItem(Item *parent = nullptr);
     ~CursorItem() override;
 
+    QPointF hotspot() const;
+
 private:
     void refresh();
     void setSurface(SurfaceInterface *surface, const QPointF &hotspot);

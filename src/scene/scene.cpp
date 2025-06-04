@@ -9,6 +9,7 @@
 #include "core/outputlayer.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
+#include "scene/cursoritem.h"
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
 
@@ -64,6 +65,11 @@ bool RenderView::shouldRenderItem(Item *item) const
 
 void RenderView::setExclusive(bool enable)
 {
+}
+
+QPointF RenderView::hotspot() const
+{
+    return QPointF{};
 }
 
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
@@ -154,6 +160,15 @@ ItemTreeView::~ItemTreeView()
         if (m_item) {
             m_item->scheduleRepaint(m_item->rect());
         }
+    }
+}
+
+QPointF ItemTreeView::hotspot() const
+{
+    if (auto cursor = qobject_cast<CursorItem *>(m_item)) {
+        return cursor->hotspot();
+    } else {
+        return QPointF{};
     }
 }
 
@@ -249,7 +264,7 @@ Item *ItemTreeView::item() const
     return m_item;
 }
 
-bool ExclusiveItemTreeView::canSkipMoveRepaint(Item *item)
+bool ItemTreeView::canSkipMoveRepaint(Item *item)
 {
     // this could be more generic, but it's all we need for now
     return m_layer && item == m_item;
