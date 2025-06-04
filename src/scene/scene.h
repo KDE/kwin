@@ -94,8 +94,6 @@ public:
     explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
     ~ItemTreeView() override;
 
-    void setViewport(const QRectF &viewport);
-
     QRectF viewport() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
@@ -110,7 +108,6 @@ public:
 private:
     SceneView *const m_parentView;
     const QPointer<Item> m_item;
-    QRectF m_viewport;
     bool m_exclusive = false;
 };
 
