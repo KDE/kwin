@@ -138,14 +138,23 @@ ItemTreeView::~ItemTreeView()
 {
 }
 
-void ItemTreeView::setViewport(const QRectF &viewport)
-{
-    m_viewport = viewport;
-}
-
 QRectF ItemTreeView::viewport() const
 {
-    return m_viewport;
+    const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
+    if (!recommendedSizes.empty()) {
+        const auto bufferSize = scaledRect(m_item->boundingRect(), scale()).size();
+        auto bigEnough = recommendedSizes | std::views::filter([bufferSize](const auto &size) {
+            return size.width() >= bufferSize.width() && size.height() >= bufferSize.height();
+        });
+        const auto it = std::ranges::min_element(bigEnough, [](const auto &left, const auto &right) {
+            return left.width() * left.height() < right.width() * right.height();
+        });
+        if (it != bigEnough.end()) {
+            const auto logicalSize = *it / scale();
+            return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize));
+        }
+    }
+    return m_item->mapToScene(m_item->boundingRect());
 }
 
 QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
