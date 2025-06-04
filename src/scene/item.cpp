@@ -419,7 +419,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
         if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRegion dirtyRegion = paintedArea(view, region) & view->viewport();
+        const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();
         if (!dirtyRegion.isEmpty()) {
             m_repaints[view] += dirtyRegion;
             view->scheduleRepaint(this);
@@ -432,7 +432,7 @@ void Item::scheduleRepaintInternal(RenderView *view, const QRegion &region)
     if (Q_UNLIKELY(!m_scene) || !view->shouldRenderItem(this)) {
         return;
     }
-    const QRegion dirtyRegion = paintedArea(view, region) & view->viewport();
+    const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();
     if (!dirtyRegion.isEmpty()) {
         m_repaints[view] += dirtyRegion;
         view->scheduleRepaint(this);
@@ -469,7 +469,7 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
         if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRegion dirtyRegion = paintedArea(view, region) & view->viewport();
+        const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();
         if (!dirtyRegion.isEmpty()) {
             m_scene->addRepaint(view, dirtyRegion);
         }
