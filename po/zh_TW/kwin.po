@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-03 00:44+0000\n"
-"PO-Revision-Date: 2025-04-30 03:14+0900\n"
+"POT-Creation-Date: 2025-06-04 00:44+0000\n"
+"PO-Revision-Date: 2025-06-04 07:42+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -39,29 +39,29 @@ msgstr ""
 "kenduest@i18n.linux.org.tw,iitze@hotmail.com, s8321414@gmail.com, "
 "pan93412@gmail.com, mail@kisaragi-hiu.com"
 
-#: backends/wayland/wayland_output.cpp:466
+#: backends/wayland/wayland_output.cpp:467
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "按下右側 Ctrl 來取消抓取游標"
 
-#: backends/wayland/wayland_output.cpp:468
+#: backends/wayland/wayland_output.cpp:469
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "按下右側 Ctrl 鍵來抓取游標"
 
-#: backends/wayland/wayland_output.cpp:472
+#: backends/wayland/wayland_output.cpp:473
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland 合成器 %1"
 
-#: backends/wayland/wayland_output.cpp:475
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgid "- Output disabled"
 msgstr "- 輸出已停用"
 
-#: backends/wayland/wayland_output.cpp:477
+#: backends/wayland/wayland_output.cpp:478
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- 輸出已暗化"
@@ -1326,7 +1326,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主機名稱：%1"
 
-#: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "鍵盤佈局切換器"
@@ -3693,12 +3693,7 @@ msgid "Tablets switched outputs"
 msgstr "繪圖板已切換輸出"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3706,17 +3701,11 @@ msgid ""
 "shortcut."
 msgstr ""
 "您已經選擇顯示無邊框的視窗。\n"
-"沒有邊框，您將無法使用滑鼠讓邊框再次出現：要使用視窗操作選單來代替，使用 %1 "
-"鍵盤捷徑來作用它。"
+"沒有邊框，您將無法使用滑鼠讓邊框再次出現：要使用視窗選單來代替，使用 %1 鍵盤"
+"捷徑來作用它。"
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3725,7 +3714,7 @@ msgid ""
 msgstr ""
 "您已經選擇要視窗以全螢幕模式顯示。\n"
 "如果該應用程式本身沒有關閉全螢幕模式的選項，您將無法使用滑鼠將其關閉：要使用"
-"視窗操作選單來代替，使用 %1 鍵盤捷徑來作用它。"
+"視窗選單來代替，使用 %1 鍵盤捷徑來作用它。"
 
 #: useractions.cpp:216
 #, kde-format
@@ -3871,10 +3860,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> 已被 %2 於 %3 使用"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "視窗角色"
+msgstr "視窗選單"
 
 #: useractions.cpp:889
 #, kde-format
