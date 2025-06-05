@@ -48,6 +48,11 @@ RenderLoop *VirtualOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
+bool VirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+{
+    return true;
+}
+
 bool VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;

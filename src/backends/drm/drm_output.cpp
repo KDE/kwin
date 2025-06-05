@@ -334,6 +334,42 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
     setState(next);
 }
 
+bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+{
+    m_desiredPresentationMode = frame->presentationMode();
+    if (m_gpu->needsModeset()) {
+        // modesets should be done with only the primary plane
+        // as additional planes may mean we can't power all outputs
+        if (cursorLayer()->isEnabled()) {
+            return false;
+        }
+        // the atomic test for the modeset has already been done before
+        // so testing again isn't super useful
+        return true;
+    }
+    m_pipeline->setPresentationMode(frame->presentationMode());
+    if (m_pipeline->cursorLayer()->isEnabled()) {
+        // the cursor plane needs to be disabled before we enable tearing; see DrmOutput::updateCursorLayer
+        if (frame->presentationMode() == PresentationMode::AdaptiveAsync) {
+            m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
+        } else if (frame->presentationMode() == PresentationMode::Async) {
+            m_pipeline->setPresentationMode(PresentationMode::VSync);
+        }
+    }
+    DrmPipeline::Error err = m_pipeline->testPresent(frame);
+    if (err != DrmPipeline::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
+        // tearing can fail in various circumstances, but vrr shouldn't
+        m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
+        err = m_pipeline->testPresent(frame);
+    }
+    if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
+        // retry with the most basic presentation mode
+        m_pipeline->setPresentationMode(PresentationMode::VSync);
+        err = m_pipeline->testPresent(frame);
+    }
+    return err == DrmPipeline::Error::None;
+}
+
 bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_desiredPresentationMode = frame->presentationMode();

@@ -54,12 +54,24 @@ DrmPipeline::~DrmPipeline()
     m_commitThread.reset();
 }
 
+DrmPipeline::Error DrmPipeline::testPresent(const std::shared_ptr<OutputFrame> &frame)
+{
+    if (!gpu()->atomicModeSetting()) {
+        // we can do nothing but hope for the best
+        // the compositor will have to do a fallback for when the real present fails
+        return Error::None;
+    }
+    // test the full state with all planes, to take pending commits into account
+    return DrmPipeline::commitPipelinesAtomic({this}, CommitMode::Test, frame, {});
+}
+
 DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
-        // test the full state, to take pending commits into account
-        if (auto err = DrmPipeline::commitPipelinesAtomic({this}, CommitMode::Test, frame, {}); err != Error::None) {
+        // TODO once the compositor tests presentation,
+        // drop this unnecessary additional test
+        if (auto err = testPresent(frame); err != Error::None) {
             return err;
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
