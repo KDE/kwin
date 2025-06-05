@@ -17,6 +17,7 @@ class FakeOutput : public KWin::Output
 public:
     FakeOutput();
 
+    bool testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame) override;
     bool present(const QList<KWin::OutputLayer *> &layersToUpdate, const std::shared_ptr<KWin::OutputFrame> &frame) override;
     KWin::RenderLoop *renderLoop() const override;
     void setName(const QString &name);
