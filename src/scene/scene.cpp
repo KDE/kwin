@@ -264,6 +264,27 @@ Item *ItemTreeView::item() const
     return m_item;
 }
 
+static bool recursiveNeedsRepaint(Item *item, RenderView *view)
+{
+    if (item->hasRepaints(view)) {
+        return true;
+    }
+    const auto children = item->childItems();
+    return std::ranges::any_of(children, [view](Item *childItem) {
+        return recursiveNeedsRepaint(childItem, view);
+    });
+}
+
+bool ItemTreeView::needsRepaint()
+{
+    return recursiveNeedsRepaint(m_item, this);
+}
+
+bool ItemTreeView::isVisible() const
+{
+    return m_item->isVisible();
+}
+
 bool ItemTreeView::canSkipMoveRepaint(Item *item)
 {
     // this could be more generic, but it's all we need for now

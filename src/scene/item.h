@@ -133,6 +133,7 @@ public:
     void scheduleSceneRepaint(const QRegion &region);
     void scheduleRepaint(RenderView *delegate, const QRegion &region);
     void scheduleFrame();
+    bool hasRepaints(RenderView *view) const;
     QRegion takeRepaints(RenderView *delegate);
     void resetRepaints(RenderView *delegate);
 

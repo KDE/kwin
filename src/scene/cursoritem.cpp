@@ -20,11 +20,20 @@ CursorItem::CursorItem(Item *parent)
     : Item(parent)
 {
     refresh();
+    connect(Cursors::self(), &Cursors::hiddenChanged, this, &CursorItem::updateVisibility);
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &CursorItem::refresh);
 }
 
 CursorItem::~CursorItem()
 {
+}
+
+void CursorItem::updateVisibility()
+{
+    const auto children = childItems();
+    setVisible(!Cursors::self()->isCursorHidden() && std::ranges::any_of(children, [](Item *child) {
+        return child->isVisible();
+    }));
 }
 
 void CursorItem::refresh()
@@ -35,6 +44,7 @@ void CursorItem::refresh()
     } else if (auto shapeSource = qobject_cast<const ShapeCursorSource *>(source)) {
         setImage(shapeSource->image(), shapeSource->hotspot());
     }
+    updateVisibility();
 }
 
 void CursorItem::setSurface(SurfaceInterface *surface, const QPointF &hotspot)
