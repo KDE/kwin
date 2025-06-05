@@ -58,6 +58,7 @@ public:
      * if the test fails, there is a guarantee for no lasting changes
      */
     Error present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
+    Error testPresent(const std::shared_ptr<OutputFrame> &frame);
     void maybeModeset(const std::shared_ptr<OutputFrame> &frame);
     void forceLegacyModeset();
 

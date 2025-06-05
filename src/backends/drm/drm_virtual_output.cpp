@@ -47,6 +47,11 @@ DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
+bool DrmVirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+{
+    return false;
+}
+
 bool DrmVirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;

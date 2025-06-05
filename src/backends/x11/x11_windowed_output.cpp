@@ -442,6 +442,11 @@ void X11WindowedOutput::setPrimaryBuffer(GraphicsBuffer *buffer)
     m_pendingBuffer = importBuffer(buffer);
 }
 
+bool X11WindowedOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+{
+    return true;
+}
+
 bool X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     const auto cursorLayer = Compositor::self()->backend()->cursorLayer(this);
