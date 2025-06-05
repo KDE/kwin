@@ -13,6 +13,8 @@
 
 #include "core/colorspace.h"
 #include "effect/effect.h"
+#include "effect/offscreenquickview.h"
+#include "shortcutshintmodel.h"
 
 #include <QAction>
 #include <QTime>
@@ -33,14 +35,18 @@ class GLShader;
 class ZoomEffect : public Effect
 {
     Q_OBJECT
-    Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor)
+    Q_PROPERTY(qreal targetZoom READ targetZoom NOTIFY targetZoomChanged)
+    Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor NOTIFY zoomFactorChanged)
+    Q_PROPERTY(double pixelGridZoom READ pixelGridZoom NOTIFY pixelGridZoomChanged)
+    Q_PROPERTY(ShortcutsHintModel *shortcutsHintModel READ shortcutsHintModel CONSTANT)
+
+    // TODO: Unused?
     Q_PROPERTY(int mousePointer READ configuredMousePointer)
     Q_PROPERTY(int mouseTracking READ configuredMouseTracking)
     Q_PROPERTY(bool focusTrackingEnabled READ isFocusTrackingEnabled)
     Q_PROPERTY(bool textCaretTrackingEnabled READ isTextCaretTrackingEnabled)
     Q_PROPERTY(int focusDelay READ configuredFocusDelay)
     Q_PROPERTY(qreal moveFactor READ configuredMoveFactor)
-    Q_PROPERTY(qreal targetZoom READ targetZoom)
 
 public:
     ZoomEffect();
@@ -62,6 +68,13 @@ public:
     int configuredFocusDelay() const;
     qreal configuredMoveFactor() const;
     qreal targetZoom() const;
+    double pixelGridZoom() const;
+    ShortcutsHintModel *shortcutsHintModel() const;
+
+Q_SIGNALS:
+    void zoomFactorChanged();
+    void targetZoomChanged();
+    void pixelGridZoomChanged();
 
 private Q_SLOTS:
     void zoomIn();
@@ -147,6 +160,10 @@ private:
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
     double m_lastPinchProgress = 0;
+    ShortcutsHintModel *m_shortcutsHintModel;
+    bool m_enableHintOverlay = true;
+
+    std::unique_ptr<OffscreenQuickScene> m_overlay;
 };
 
 } // namespace

@@ -37,5 +37,8 @@
         <entry name="PointerAxisGestureModifiers" type="String">
             <default>Meta+Control</default>
         </entry>
+        <entry name="EnableHintOverlay" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

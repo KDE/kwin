@@ -8,11 +8,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include <QQuickItem>
+
 #include "zoom.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/glutils.h"
+#include "shortcutshintmodel.h"
 #include "zoomconfig.h"
 
 #if HAVE_ACCESSIBILITY
@@ -38,22 +41,27 @@ namespace KWin
 {
 
 ZoomEffect::ZoomEffect()
+    : m_shortcutsHintModel(new ShortcutsHintModel(this))
 {
     ensureResources();
 
     ZoomConfig::instance(effects->config());
     QAction *a = nullptr;
+
     a = KStandardActions::zoomIn(this, &ZoomEffect::zoomIn, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
+    m_shortcutsHintModel->addAction(a);
 
     a = KStandardActions::zoomOut(this, &ZoomEffect::zoomOut, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
+    m_shortcutsHintModel->addAction(a);
 
     a = KStandardActions::actualSize(this, &ZoomEffect::actualSize, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
+    m_shortcutsHintModel->addAction(a);
 
     m_touchpadAction = std::make_unique<QAction>();
     connect(m_touchpadAction.get(), &QAction::triggered, this, [this]() {
@@ -80,6 +88,7 @@ ZoomEffect::ZoomEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
     connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomLeft);
+    m_shortcutsHintModel->addAction(a);
 
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomRight"));
@@ -87,6 +96,7 @@ ZoomEffect::ZoomEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
     connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomRight);
+    m_shortcutsHintModel->addAction(a);
 
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomUp"));
@@ -94,6 +104,7 @@ ZoomEffect::ZoomEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
     connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomUp);
+    m_shortcutsHintModel->addAction(a);
 
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomDown"));
@@ -101,6 +112,7 @@ ZoomEffect::ZoomEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
     connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomDown);
+    m_shortcutsHintModel->addAction(a);
 
     // TODO: these two actions don't belong into the effect. They need to be moved into KWin core
     a = new QAction(this);
@@ -143,6 +155,15 @@ ZoomEffect::ZoomEffect()
     if (initialZoom > 1.0) {
         zoomTo(initialZoom);
     }
+
+    // TODO d_ed: OLIVER HERE, we probably want to scope this to only be when we're zooming
+    // but we're only painted when effect is active?
+    m_overlay = std::make_unique<OffscreenQuickScene>();
+    const auto url = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin-wayland/effects/zoom/qml/overlay.qml")));
+    m_overlay->setSource(url, {{QStringLiteral("effect"), QVariant::fromValue(this)}});
+    connect(m_overlay.get(), &OffscreenQuickScene::repaintNeeded, this, []() {
+        effects->addRepaintFull();
+    });
 }
 
 ZoomEffect::~ZoomEffect()
@@ -251,27 +272,38 @@ static Qt::KeyboardModifiers stringToKeyboardModifiers(const QString &string)
 void ZoomEffect::reconfigure(ReconfigureFlags)
 {
     ZoomConfig::self()->read();
+
     // On zoom-in and zoom-out change the zoom by the defined zoom-factor.
     m_zoomFactor = std::max(0.1, ZoomConfig::zoomFactor());
+    Q_EMIT zoomFactorChanged();
+
     m_pixelGridZoom = ZoomConfig::pixelGridZoom();
+    Q_EMIT pixelGridZoomChanged();
+
     // Visibility of the mouse-pointer.
     m_mousePointer = MousePointerType(ZoomConfig::mousePointer());
+
     // Track moving of the mouse.
     m_mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
+
 #if HAVE_ACCESSIBILITY
     if (m_accessibilityIntegration) {
         // Enable tracking of the focused location.
         m_accessibilityIntegration->setFocusTrackingEnabled(ZoomConfig::enableFocusTracking());
+
         // Enable tracking of the text caret.
         m_accessibilityIntegration->setTextCaretTrackingEnabled(ZoomConfig::enableTextCaretTracking());
     }
 #endif
+
     // The time in milliseconds to wait before a focus-event takes away a mouse-move.
     m_focusDelay = std::max(uint(0), ZoomConfig::focusDelay());
+
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
     m_moveFactor = std::max(0.1, ZoomConfig::moveFactor());
 
     const Qt::KeyboardModifiers pointerAxisModifiers = stringToKeyboardModifiers(ZoomConfig::pointerAxisGestureModifiers());
+    m_shortcutsHintModel->setPointerAxisGestureModifiers(pointerAxisModifiers);
     if (m_axisModifiers != pointerAxisModifiers) {
         m_zoomInAxisAction.reset();
         m_zoomOutAxisAction.reset();
@@ -287,6 +319,9 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
             effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisDown, m_zoomOutAxisAction.get());
         }
     }
+
+    // Enable the hint overlay shown during zoom
+    m_enableHintOverlay = ZoomConfig::enableHintOverlay();
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
@@ -492,6 +527,14 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
             ShaderManager::instance()->popShader();
             glDisable(GL_BLEND);
         }
+    }
+
+    if (m_enableHintOverlay && m_overlay->rootItem()) {
+        // TODO: A check is likely needed here to avoid 'effect: OffscreenQuickView has no fbo!'
+        // TODO: RTL?
+        const qreal overlayMargins = m_overlay->rootItem()->property("margins").toReal();
+        m_overlay->setGeometry(QRect(overlayMargins, overlayMargins, m_overlay->rootItem()->implicitWidth(), m_overlay->rootItem()->implicitHeight()));
+        effects->renderOffscreenQuickView(renderTarget, viewport, m_overlay.get());
     }
 }
 
@@ -699,6 +742,16 @@ qreal ZoomEffect::targetZoom() const
     return m_targetZoom;
 }
 
+double ZoomEffect::pixelGridZoom() const
+{
+    return m_pixelGridZoom;
+}
+
+ShortcutsHintModel *ZoomEffect::shortcutsHintModel() const
+{
+    return m_shortcutsHintModel;
+}
+
 bool ZoomEffect::screenExistsAt(const QPoint &point) const
 {
     const Output *output = effects->screenAt(point);
@@ -720,6 +773,7 @@ void ZoomEffect::setTargetZoom(double value)
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     }
     m_targetZoom = value;
+    Q_EMIT targetZoomChanged();
     effects->addRepaintFull();
 }
 
