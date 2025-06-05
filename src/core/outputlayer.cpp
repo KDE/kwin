@@ -41,6 +41,7 @@ void OutputLayer::scheduleRepaint(Item *item)
 {
     m_repaintScheduled = true;
     m_output->renderLoop()->scheduleRepaint(item, this);
+    Q_EMIT repaintScheduled();
 }
 
 void OutputLayer::addRepaint(const QRegion &region)
@@ -50,6 +51,7 @@ void OutputLayer::addRepaint(const QRegion &region)
     }
     m_repaints += region;
     m_output->renderLoop()->scheduleRepaint(nullptr, this);
+    Q_EMIT repaintScheduled();
 }
 
 void OutputLayer::resetRepaints()
