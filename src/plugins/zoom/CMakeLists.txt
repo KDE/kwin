@@ -26,6 +26,8 @@ target_link_libraries(zoom PRIVATE
     KF6::I18n
 )
 
+install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin-wayland/effects/zoom)
+
 if (HAVE_ACCESSIBILITY)
     target_link_libraries(zoom PRIVATE QAccessibilityClient6)
 endif()

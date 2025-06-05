@@ -143,6 +143,14 @@ ZoomEffect::ZoomEffect()
     if (initialZoom > 1.0) {
         zoomTo(initialZoom);
     }
+
+    // OLIVER HERE, we probably want to scope this to only be when we're zooming
+    m_overlay = std::make_unique<OffscreenQuickScene>();
+    const auto url = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin-wayland/effects/zoom/qml/overlay.qml")));
+    m_overlay->setSource(url, {{QStringLiteral("effect"), QVariant::fromValue(this)}}); // so we we can expose zoom levels and whatnot
+    connect(m_overlay.get(), &OffscreenQuickScene::repaintNeeded, this, []() {
+        effects->addRepaintFull();
+    });
 }
 
 ZoomEffect::~ZoomEffect()
@@ -492,6 +500,11 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
             glDisable(GL_BLEND);
         }
     }
+
+    // OLIVER! look here and fix
+    // you can get m_overlay->rootItem()->implicitWidth
+    m_overlay->setGeometry(QRect(20, 20, 200, 200));
+    effects->renderOffscreenQuickView(renderTarget, viewport, m_overlay.get());
 }
 
 void ZoomEffect::postPaintScreen()
@@ -719,6 +732,7 @@ void ZoomEffect::setTargetZoom(double value)
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     }
     m_targetZoom = value;
+    Q_EMIT targetZoomChanged();
     effects->addRepaintFull();
 }
 
