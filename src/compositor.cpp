@@ -376,8 +376,11 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     Output *output = findOutput(renderLoop);
     OutputLayer *primaryLayer = m_backend->primaryLayer(output);
-    const auto &primaryDelegate = m_primaryViews[renderLoop];
+    OutputLayer *cursorLayer = m_backend->cursorLayer(output);
+    const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
+
+    QList<OutputLayer *> toUpdate;
 
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
@@ -400,17 +403,55 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting() * output->dimming(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
 
+    auto cursorViewIt = m_cursorViews.find(renderLoop);
+    if (cursorViewIt != m_cursorViews.end() && cursorLayer->needsRepaint()) {
+        toUpdate.push_back(cursorLayer);
+        const auto cursorView = cursorViewIt->second.get();
+        const auto renderHardwareCursor = [&]() {
+            // TODO do proper damage tracking for this layer too!
+            cursorLayer->resetRepaints();
+            if (!cursorView->isVisible() || !cursorView->viewport().intersects(output->geometryF())) {
+                cursorLayer->setEnabled(false);
+                return true;
+            }
+            const QRectF outputLocalGeometry = output->mapFromGlobal(cursorView->viewport());
+            const QRect nativeCursorRect = output->transform().map(scaledRect(outputLocalGeometry, output->scale()), output->pixelSize()).toRect();
+            cursorLayer->setHotspot(output->transform().map(cursorView->hotspot() * output->scale(), nativeCursorRect.size()));
+            cursorLayer->setTargetRect(nativeCursorRect);
+            auto beginInfo = cursorLayer->beginFrame();
+            if (!beginInfo) {
+                return false;
+            }
+            cursorView->prePaint();
+            cursorView->paint(beginInfo->renderTarget, infiniteRegion());
+            cursorView->postPaint();
+
+            if (!cursorLayer->endFrame(infiniteRegion(), infiniteRegion(), nullptr)) {
+                return false;
+            }
+            cursorLayer->setEnabled(true);
+            return output->testPresentation(frame);
+        };
+        if (renderHardwareCursor()) {
+            cursorView->setExclusive(true);
+        } else {
+            cursorLayer->setEnabled(false);
+            cursorView->setExclusive(false);
+        }
+    }
+
     if (primaryLayer->needsRepaint()) {
+        toUpdate.push_back(primaryLayer);
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
 
-        const QRegion surfaceDamage = primaryLayer->repaints() | primaryDelegate->prePaint();
+        const QRegion surfaceDamage = primaryLayer->repaints() | primaryView->prePaint();
         primaryLayer->resetRepaints();
         frame->setDamage(surfaceDamage);
 
         // slowly adjust the artificial HDR headroom for the next frame
         // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
         if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->isInternal()) {
-            const auto desiredHdrHeadroom = output->edrPolicy() == Output::EdrPolicy::Always ? primaryDelegate->desiredHdrHeadroom() : 1.0;
+            const auto desiredHdrHeadroom = output->edrPolicy() == Output::EdrPolicy::Always ? primaryView->desiredHdrHeadroom() : 1.0;
             // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
             constexpr double relativeLuminanceAtZeroBrightness = 0.04;
             // the higher this is, the more likely the user is to notice the change in backlight brightness
@@ -443,7 +484,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
 
         const uint32_t planeCount = 1;
-        if (const auto scanoutCandidates = primaryDelegate->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
+        if (const auto scanoutCandidates = primaryView->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
             bool scanoutPossible = scanoutCandidates.size() <= planeCount || checkForBlackBackground(scanoutCandidates.back());
             if (scanoutPossible) {
                 const auto geometry = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).translated(-output->geometryF().topLeft());
@@ -456,7 +497,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                     frame->addRenderTimeQuery(std::move(totalTimeQuery));
                     totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
 
-                    directScanout &= output->present({primaryLayer}, frame);
+                    directScanout &= output->present(toUpdate, frame);
                 }
             }
         } else {
@@ -470,43 +511,63 @@ void Compositor::composite(RenderLoop *renderLoop)
 
                 const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(output->rectF().toAlignedRect());
 
-                primaryDelegate->paint(renderTarget, bufferDamage);
+                primaryView->paint(renderTarget, bufferDamage);
                 primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
             }
         }
 
-        primaryDelegate->postPaint();
+        primaryView->postPaint();
         if (!directScanout) {
             totalTimeQuery->end();
             frame->addRenderTimeQuery(std::move(totalTimeQuery));
         }
     }
 
-    if (!directScanout) {
-        if (!output->present({primaryLayer}, frame)) {
+    if (!directScanout && !output->present(toUpdate, frame)) {
+        // presentation failed. If the cursor layer is enabled, try again without it
+        bool success = false;
+        if (cursorViewIt != m_cursorViews.end() && cursorLayer->isEnabled() && toUpdate.contains(cursorLayer)) {
+            cursorLayer->setEnabled(false);
+
+            // re-render, so the software cursor is included in the image
+            // this could also use damage tracking, but it's not worth it
+            // for what should be very rare
+            primaryView->prePaint();
+            if (auto beginInfo = primaryLayer->beginFrame()) {
+                auto &[renderTarget, repaint] = beginInfo.value();
+                primaryView->paint(renderTarget, infiniteRegion());
+                success = primaryLayer->endFrame(infiniteRegion(), infiniteRegion(), frame.get());
+            }
+            if (success) {
+                success &= output->present(toUpdate, frame);
+            }
+        }
+        if (success) {
+            // disabling the cursor layer helped... so disable it permanently,
+            // to prevent constantly attempting to render the hardware cursor again
+            // this should only ever happen with legacy modesetting, where
+            // presentation can't be tested
+            qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
+            m_cursorViews.erase(renderLoop);
+            cursorViewIt = m_cursorViews.end();
+        } else {
             output->repairPresentation();
         }
     }
 
-    primaryDelegate->frame(frame.get());
+    primaryView->frame(frame.get());
+    if (cursorViewIt != m_cursorViews.end()) {
+        cursorViewIt->second->frame(frame.get());
+    }
 
     if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
     }
-
-    // TODO: move this into the cursor layer
-    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
-    if (!Cursors::self()->isCursorHidden()) {
-        Cursor *cursor = Cursors::self()->currentCursor();
-        if (cursor->geometry().intersects(output->geometry())) {
-            if (CursorSource *source = cursor->source()) {
-                source->frame(frameTime);
-            }
-        }
-    }
 }
+
+static const bool s_forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
 
 void Compositor::addOutput(Output *output)
 {
@@ -515,117 +576,43 @@ void Compositor::addOutput(Output *output)
     }
 
     auto sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
-    std::unique_ptr<ItemTreeView> cursorView;
-    if (auto layer = m_backend->cursorLayer(output)) {
-        cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+    if (auto layer = m_backend->cursorLayer(output); layer && !s_forceSoftwareCursor) {
+        auto cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+
+        connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
+            // this just deals with moving the plane asynchronously, for improved latency.
+            // enabling, disabling and updating the cursor image happen in composite()
+            const auto outputLayer = m_backend->cursorLayer(output);
+            if (!outputLayer->isEnabled()
+                || !outputLayer->repaints().isEmpty()
+                || !cursorView->isVisible()
+                || cursorView->needsRepaint()) {
+                // composite() handles this
+                return;
+            }
+            std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
+            if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
+                const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
+                    // this is intentionally using a tiny bit higher refresh rate than the minimum
+                    // so that slight differences in timing don't drop us below the minimum
+                    return value + 2;
+                }).value_or(30);
+                maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
+            }
+            const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
+            const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
+            outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
+            outputLayer->setEnabled(true);
+            if (output->updateCursorLayer(maxVrrCursorDelay)) {
+                // prevent composite() from also pushing an update with the cursor layer
+                // to avoid adding cursor updates that are synchronized with primary layer updates
+                outputLayer->resetRepaints();
+            }
+        });
+        m_cursorViews[output->renderLoop()] = std::move(cursorView);
     }
 
-    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
-
-    auto updateCursorLayer = [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
-        std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
-        if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
-            const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
-                // this is intentionally using a tiny bit higher refresh rate than the minimum
-                // so that slight differences in timing don't drop us below the minimum
-                return value + 2;
-            }).value_or(30);
-            maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
-        }
-        const auto outputLayer = m_backend->cursorLayer(output);
-        if (!cursorView->viewport().intersects(output->geometryF())) {
-            if (outputLayer && outputLayer->isEnabled()) {
-                outputLayer->setEnabled(false);
-                output->updateCursorLayer(maxVrrCursorDelay);
-            }
-            return true;
-        }
-        const auto renderHardwareCursor = [&]() {
-            if (!outputLayer || forceSoftwareCursor) {
-                return false;
-            }
-            const QRectF outputLocalGeometry = output->mapFromGlobal(cursorView->viewport());
-            const QRect nativeCursorRect = output->transform().map(scaledRect(outputLocalGeometry, output->scale()), output->pixelSize()).toRect();
-            outputLayer->setHotspot(output->transform().map(cursorView->hotspot() * output->scale(), nativeCursorRect.size()));
-            outputLayer->setTargetRect(nativeCursorRect);
-            if (auto beginInfo = outputLayer->beginFrame()) {
-                const RenderTarget &renderTarget = beginInfo->renderTarget;
-
-                cursorView->prePaint();
-                cursorView->paint(renderTarget, infiniteRegion());
-                cursorView->postPaint();
-
-                if (!outputLayer->endFrame(infiniteRegion(), infiniteRegion(), nullptr)) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-            outputLayer->setEnabled(true);
-            return output->updateCursorLayer(maxVrrCursorDelay);
-        };
-        const bool wasHardwareCursor = outputLayer && outputLayer->isEnabled();
-        if (renderHardwareCursor()) {
-            cursorView->setExclusive(true);
-            return true;
-        } else {
-            if (outputLayer) {
-                outputLayer->setEnabled(false);
-                if (wasHardwareCursor) {
-                    output->updateCursorLayer(maxVrrCursorDelay);
-                }
-            }
-            cursorView->setExclusive(false);
-            return false;
-        }
-    };
-    auto moveCursorLayer = [this, output, sceneView = sceneView.get(), cursorView = cursorView.get(), updateCursorLayer]() {
-        std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
-        if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
-            // TODO use the output's minimum VRR range for this
-            maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / 30;
-        }
-        const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
-        const auto outputLayer = m_backend->cursorLayer(output);
-        bool hardwareCursor = false;
-        const bool shouldBeVisible = cursorView->viewport().intersects(output->geometryF());
-        if (outputLayer && !forceSoftwareCursor) {
-            if (shouldBeVisible) {
-                const bool enabledBefore = outputLayer->isEnabled();
-                if (enabledBefore) {
-                    // just move it
-                    const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
-                    outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
-                    outputLayer->setEnabled(true);
-                    hardwareCursor = output->updateCursorLayer(maxVrrCursorDelay);
-                    if (!hardwareCursor) {
-                        outputLayer->setEnabled(false);
-                        if (enabledBefore) {
-                            output->updateCursorLayer(maxVrrCursorDelay);
-                        }
-                    }
-                } else {
-                    // do the full update
-                    hardwareCursor = updateCursorLayer();
-                }
-            } else if (outputLayer->isEnabled()) {
-                outputLayer->setEnabled(false);
-                output->updateCursorLayer(maxVrrCursorDelay);
-            }
-        }
-        if (!shouldBeVisible) {
-            return;
-        }
-        cursorView->setExclusive(hardwareCursor);
-    };
-    updateCursorLayer();
-    connect(output, &Output::geometryChanged, sceneView.get(), updateCursorLayer);
-    connect(Cursors::self(), &Cursors::currentCursorChanged, sceneView.get(), updateCursorLayer);
-    connect(Cursors::self(), &Cursors::hiddenChanged, sceneView.get(), updateCursorLayer);
-    connect(Cursors::self(), &Cursors::positionChanged, sceneView.get(), moveCursorLayer);
-
     m_primaryViews[output->renderLoop()] = std::move(sceneView);
-    m_cursorViews[output->renderLoop()] = std::move(cursorView);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
 

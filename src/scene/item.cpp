@@ -518,6 +518,12 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
+bool Item::hasRepaints(RenderView *view) const
+{
+    const auto it = m_repaints.find(view);
+    return it != m_repaints.end() && !it->isEmpty();
+}
+
 QRegion Item::takeRepaints(RenderView *view)
 {
     auto &repaints = m_repaints[view];
