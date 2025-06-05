@@ -571,6 +571,11 @@ std::unique_ptr<PresentationFeedback> SurfaceInterface::takePresentationFeedback
     return std::move(d->current->presentationFeedback);
 }
 
+bool SurfaceInterface::hasPresentationFeedback() const
+{
+    return d->current->presentationFeedback.get();
+}
+
 bool SurfaceInterface::hasFrameCallbacks() const
 {
     return !wl_list_empty(&d->current->frameCallbacks);

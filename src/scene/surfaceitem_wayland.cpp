@@ -112,11 +112,10 @@ void SurfaceItemWayland::handleBufferTransformChanged()
 
 void SurfaceItemWayland::handleSurfaceCommitted()
 {
-    if (m_surface->hasFrameCallbacks()) {
-        scheduleFrame();
-    }
     if (m_surface->hasFifoBarrier()) {
         m_fifoFallbackTimer.start();
+    }
+    if (m_surface->hasFrameCallbacks() || m_surface->hasFifoBarrier() || m_surface->hasPresentationFeedback()) {
         scheduleFrame();
     }
 }

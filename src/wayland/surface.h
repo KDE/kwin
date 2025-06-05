@@ -139,6 +139,7 @@ public:
     bool hasFrameCallbacks() const;
 
     std::unique_ptr<PresentationFeedback> takePresentationFeedback(Output *output);
+    bool hasPresentationFeedback() const;
 
     QRegion opaque() const;
     QRegion input() const;
