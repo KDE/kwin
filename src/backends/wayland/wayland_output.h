@@ -89,6 +89,7 @@ public:
     void setDpmsMode(DpmsMode mode) override;
     void updateDpmsMode(DpmsMode dpmsMode);
 
+    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void setPrimaryBuffer(wl_buffer *buffer);
 

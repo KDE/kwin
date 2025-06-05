@@ -416,6 +416,7 @@ public:
     virtual void setAutoRotateAvailable(bool isAvailable);
 
     virtual bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
+    virtual bool testPresentation(const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual void repairPresentation();
 

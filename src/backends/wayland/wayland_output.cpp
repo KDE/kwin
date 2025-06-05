@@ -274,6 +274,15 @@ static constexpr struct wp_presentation_feedback_listener s_presentationListener
     .discarded = handleDiscarded,
 };
 
+bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+{
+    auto cursorLayer = Compositor::self()->backend()->cursorLayer(this);
+    if (m_hasPointerLock && cursorLayer->isEnabled()) {
+        return false;
+    }
+    return true;
+}
+
 bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     auto cursorLayer = Compositor::self()->backend()->cursorLayer(this);
