@@ -105,6 +105,9 @@ public:
     RenderingIntent renderIntent() const;
     void setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline);
 
+Q_SIGNALS:
+    void repaintScheduled();
+
 protected:
     virtual bool doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame);
     virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;

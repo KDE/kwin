@@ -110,6 +110,8 @@ public:
 
     Item *item() const;
 
+    bool needsRepaint();
+    bool isVisible() const;
     bool canSkipMoveRepaint(Item *item) override;
 
 private:
