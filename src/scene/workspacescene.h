@@ -40,6 +40,7 @@ public:
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     QRegion prePaint(SceneView *delegate) override;
+    QRegion updatePrePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     void frame(SceneView *delegate, OutputFrame *frame) override;
