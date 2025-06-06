@@ -64,7 +64,10 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setBufferTransform(surface->bufferTransform());
     setBufferSourceBox(surface->bufferSourceBox());
     setBuffer(surface->buffer());
+    m_bufferReleasePoint = m_surface->bufferReleasePoint();
     setColorDescription(surface->colorDescription());
+    setRenderingIntent(surface->renderingIntent());
+    setPresentationHint(surface->presentationModeHint());
     setOpacity(surface->alphaMultiplier());
 
     m_fifoFallbackTimer.setInterval(1000 / 20);
