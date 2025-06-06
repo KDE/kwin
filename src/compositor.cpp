@@ -44,6 +44,8 @@
 #endif
 
 #include <QQuickWindow>
+#include <optional>
+#include <ranges>
 
 namespace KWin
 {
@@ -363,6 +365,58 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
+static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, Output *output, const std::shared_ptr<OutputFrame> &frame)
+{
+    if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
+        return false;
+    }
+    const auto outputLocalRect = view->viewport().translated(-output->geometryF().topLeft());
+    const auto nativeRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->modeSize()).toRect();
+    const bool coversEntireOutput = nativeRect == QRect(QPoint(), output->pixelSize());
+    // the background of the output can be assumed to be black
+    const auto scanoutCandidates = view->scanoutCandidates(coversEntireOutput ? 2 : 1);
+    if (scanoutCandidates.isEmpty()) {
+        layer->notifyNoScanoutCandidate();
+        return false;
+    }
+    if (coversEntireOutput && scanoutCandidates.size() == 2 && !checkForBlackBackground(scanoutCandidates.back())) {
+        return false;
+    }
+    const auto geometry = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).translated(-output->geometryF().topLeft());
+    layer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->modeSize()).toRect());
+    layer->setEnabled(true);
+    return layer->importScanoutBuffer(scanoutCandidates.front(), frame);
+}
+
+static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *output)
+{
+    if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
+        return false;
+    }
+    const auto outputLocalRect = view->viewport().translated(-output->geometryF().topLeft());
+    const auto nativeRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->modeSize()).toRect();
+    layer->setSourceRect(QRect(QPoint(0, 0), nativeRect.size()));
+    layer->setTargetRect(nativeRect);
+    layer->setHotspot(output->transform().map(view->hotspot() * output->scale(), nativeRect.size()));
+    layer->setEnabled(true);
+    layer->setOffloadTransform(OutputTransform::Normal);
+    layer->setBufferTransform(output->transform());
+    layer->setColor(output->layerBlendingColor(), RenderingIntent::AbsoluteColorimetric, ColorPipeline{});
+    return layer->preparePresentationTest();
+}
+
+static bool renderLayer(OutputLayer *layer, RenderView *view, Output *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
+{
+    auto beginInfo = layer->beginFrame();
+    if (!beginInfo) {
+        return false;
+    }
+    auto &[renderTarget, repaint] = beginInfo.value();
+    const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(QRectF(QPointF(), view->viewport().size()).toAlignedRect());
+    view->paint(renderTarget, bufferDamage);
+    return layer->endFrame(bufferDamage, surfaceDamage, frame.get());
+}
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -375,16 +429,14 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     Output *output = findOutput(renderLoop);
-    OutputLayer *primaryLayer = m_backend->primaryLayer(output);
-    OutputLayer *cursorLayer = m_backend->cursorLayer(output);
     const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
 
     QList<OutputLayer *> toUpdate;
 
     renderLoop->prepareNewFrame();
+    auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
-    bool directScanout = false;
     std::optional<double> desiredArtificalHdrHeadroom;
 
     // brightness animations should be skipped when
@@ -403,162 +455,202 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting() * output->dimming(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
 
-    const auto cursorViewIt = m_cursorViews.find(renderLoop);
-    if (cursorViewIt != m_cursorViews.end() && cursorLayer->needsRepaint()) {
-        toUpdate.push_back(cursorLayer);
-        const auto cursorView = cursorViewIt->second.get();
-        const auto renderHardwareCursor = [&]() {
-            // TODO do proper damage tracking for this layer too!
-            cursorLayer->resetRepaints();
-            if (!cursorView->isVisible() || !cursorView->viewport().intersects(output->geometryF())) {
-                cursorLayer->setEnabled(false);
-                return true;
-            }
-            const QRectF outputLocalGeometry = output->mapFromGlobal(cursorView->viewport());
-            const QRect nativeCursorRect = output->transform().map(scaledRect(outputLocalGeometry, output->scale()), output->pixelSize()).toRect();
-            cursorLayer->setHotspot(output->transform().map(cursorView->hotspot() * output->scale(), nativeCursorRect.size()));
-            cursorLayer->setTargetRect(nativeCursorRect);
-            auto beginInfo = cursorLayer->beginFrame();
-            if (!beginInfo) {
-                return false;
-            }
-            cursorView->prePaint();
-            cursorView->paint(beginInfo->renderTarget, infiniteRegion());
-            cursorView->postPaint();
+    // slowly adjust the artificial HDR headroom for the next frame
+    // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
+    if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->isInternal()) {
+        const auto desiredHdrHeadroom = output->edrPolicy() == Output::EdrPolicy::Always ? primaryView->desiredHdrHeadroom() : 1.0;
+        // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
+        constexpr double relativeLuminanceAtZeroBrightness = 0.04;
+        // the higher this is, the more likely the user is to notice the change in backlight brightness
+        // at the same time, if it's too low, it takes ages until the user sees the HDR effect
+        constexpr double changePerSecond = 0.5;
+        // to restrict HDR videos from using all the battery and burning your eyes
+        // TODO make it a setting, and/or dependent on the power management state?
+        constexpr double maxHdrHeadroom = 3.0;
+        // = the headroom at 100% backlight
+        const double maxPossibleHeadroom = (1 + relativeLuminanceAtZeroBrightness) / (relativeLuminanceAtZeroBrightness + *output->currentBrightness());
+        desiredArtificalHdrHeadroom = std::clamp(desiredHdrHeadroom, 1.0, std::min(maxPossibleHeadroom, maxHdrHeadroom));
+        const double changePerFrame = changePerSecond * double(frame->refreshDuration().count()) / 1'000'000'000;
+        const double newHeadroom = std::clamp(*desiredArtificalHdrHeadroom, output->artificialHdrHeadroom() - changePerFrame, output->artificialHdrHeadroom() + changePerFrame);
+        frame->setArtificialHdrHeadroom(newHeadroom);
+    } else {
+        frame->setArtificialHdrHeadroom(1);
+    }
 
-            if (!cursorLayer->endFrame(infiniteRegion(), infiniteRegion(), nullptr)) {
-                return false;
-            }
-            cursorLayer->setEnabled(true);
-            return output->testPresentation(frame);
-        };
-        if (renderHardwareCursor()) {
-            primaryView->hideItem(scene()->cursorItem());
+    Window *const activeWindow = workspace()->activeWindow();
+    SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
+    frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
+
+    const bool wantsAdaptiveSync = activeWindow && activeWindow->isOnOutput(output) && activeWindow->wantsAdaptiveSync();
+    const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
+    const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
+    if (vrr) {
+        frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
+    } else {
+        frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
+    }
+
+    // collect all the layers we may use
+    struct LayerData
+    {
+        OutputLayer *layer;
+        RenderView *view;
+        bool directScanout = false;
+        QRegion surfaceDamage;
+    };
+    QList<LayerData> layers;
+
+    layers.push_back(LayerData{
+        .layer = m_backend->primaryLayer(output),
+        .view = primaryView,
+        .directScanout = false,
+        .surfaceDamage = primaryView->prePaint() | m_backend->primaryLayer(output)->repaints(),
+    });
+
+    const auto cursorViewIt = m_cursorViews.find(renderLoop);
+    if (cursorViewIt != m_cursorViews.end()) {
+        layers.push_back(LayerData{
+            .layer = m_backend->cursorLayer(output),
+            .view = cursorViewIt->second.get(),
+            .directScanout = false,
+            .surfaceDamage = cursorViewIt->second->prePaint() | m_backend->cursorLayer(output)->repaints(),
+        });
+    }
+
+    // update all of them for the ideal configuration
+    for (auto &layer : layers) {
+        if (prepareDirectScanout(layer.layer, layer.view, output, frame)) {
+            layer.directScanout = true;
+        } else if (prepareRendering(layer.layer, layer.view, output)) {
+            layer.directScanout = false;
         } else {
-            cursorLayer->setEnabled(false);
-            // TODO make the view show and hide the item instead
-            // -> requires doing atomic test *before* creating the view though, which might not be ideal either...
-            primaryView->showItem(scene()->cursorItem());
+            layer.layer->setEnabled(false);
         }
     }
 
-    if (primaryLayer->needsRepaint()) {
-        toUpdate.push_back(primaryLayer);
-        auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
-
-        const QRegion surfaceDamage = primaryLayer->repaints() | primaryView->prePaint();
-        primaryLayer->resetRepaints();
-        frame->setDamage(surfaceDamage);
-
-        // slowly adjust the artificial HDR headroom for the next frame
-        // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
-        if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->isInternal()) {
-            const auto desiredHdrHeadroom = output->edrPolicy() == Output::EdrPolicy::Always ? primaryView->desiredHdrHeadroom() : 1.0;
-            // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
-            constexpr double relativeLuminanceAtZeroBrightness = 0.04;
-            // the higher this is, the more likely the user is to notice the change in backlight brightness
-            // at the same time, if it's too low, it takes ages until the user sees the HDR effect
-            constexpr double changePerSecond = 0.5;
-            // to restrict HDR videos from using all the battery and burning your eyes
-            // TODO make it a setting, and/or dependent on the power management state?
-            constexpr double maxHdrHeadroom = 3.0;
-            // = the headroom at 100% backlight
-            const double maxPossibleHeadroom = (1 + relativeLuminanceAtZeroBrightness) / (relativeLuminanceAtZeroBrightness + *output->currentBrightness());
-            desiredArtificalHdrHeadroom = std::clamp(desiredHdrHeadroom, 1.0, std::min(maxPossibleHeadroom, maxHdrHeadroom));
-            const double changePerFrame = changePerSecond * double(frame->refreshDuration().count()) / 1'000'000'000;
-            const double newHeadroom = std::clamp(*desiredArtificalHdrHeadroom, output->artificialHdrHeadroom() - changePerFrame, output->artificialHdrHeadroom() + changePerFrame);
-            frame->setArtificialHdrHeadroom(newHeadroom);
-        } else {
-            frame->setArtificialHdrHeadroom(1);
+    // test and downgrade the configuration until the test is successful
+    bool testResult = output->testPresentation(frame);
+    if (!testResult) {
+        bool primaryFailure = false;
+        auto &primary = layers.front();
+        if (primary.directScanout) {
+            if (prepareRendering(primary.layer, primary.view, output)) {
+                primary.directScanout = false;
+                testResult = output->testPresentation(frame);
+            } else {
+                primaryFailure = true;
+                // this should be very rare, but could happen with GPU resets
+                qCWarning(KWIN_CORE, "Preparing the primary layer failed!");
+            }
         }
-
-        Window *const activeWindow = workspace()->activeWindow();
-        SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
-        frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
-
-        const bool wantsAdaptiveSync = activeWindow && activeWindow->isOnOutput(output) && activeWindow->wantsAdaptiveSync();
-        const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
-        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
-        if (vrr) {
-            frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
-        } else {
-            frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
-        }
-
-        const uint32_t planeCount = 1;
-        if (const auto scanoutCandidates = primaryView->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
-            bool scanoutPossible = scanoutCandidates.size() <= planeCount || checkForBlackBackground(scanoutCandidates.back());
-            if (scanoutPossible) {
-                const auto geometry = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).translated(-output->geometryF().topLeft());
-                primaryLayer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->modeSize()).toRect());
-                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
-                if (directScanout) {
-                    // if present works, we don't want to touch the frame object again afterwards,
-                    // so end the time query here instead of later
-                    totalTimeQuery->end();
-                    frame->addRenderTimeQuery(std::move(totalTimeQuery));
-                    totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
-
-                    directScanout &= output->present(toUpdate, frame);
+        if (!testResult && !primaryFailure) {
+            // we don't want to render the other layers if they fail direct scanout,
+            // so just remove them one by one
+            for (auto &layer : layers | std::views::drop(1)) {
+                if (!layer.layer->isEnabled()) {
+                    continue;
+                }
+                layer.layer->setEnabled(false);
+                testResult = output->testPresentation(frame);
+                if (testResult) {
+                    break;
                 }
             }
-        } else {
-            primaryLayer->notifyNoScanoutCandidate();
-        }
-
-        if (!directScanout) {
-            primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
-            if (auto beginInfo = primaryLayer->beginFrame()) {
-                auto &[renderTarget, repaint] = beginInfo.value();
-
-                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(output->rectF().toAlignedRect());
-
-                primaryView->paint(renderTarget, bufferDamage);
-                primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
-            }
-        }
-
-        primaryView->postPaint();
-        if (!directScanout) {
-            totalTimeQuery->end();
-            frame->addRenderTimeQuery(std::move(totalTimeQuery));
         }
     }
 
-    if (!directScanout && !output->present(toUpdate, frame)) {
-        // presentation failed. If the cursor layer is enabled, try again without it
-        bool success = false;
-        if (cursorViewIt != m_cursorViews.end() && cursorLayer->isEnabled()) {
-            cursorLayer->setEnabled(false);
-
-            // re-render, so the software cursor is included in the image
-            // this could also use damage tracking, but it's not worth it
-            // for what should be very rare
-            primaryView->prePaint();
-            if (auto beginInfo = primaryLayer->beginFrame()) {
-                auto &[renderTarget, repaint] = beginInfo.value();
-                primaryView->paint(renderTarget, infiniteRegion());
-                success = primaryLayer->endFrame(infiniteRegion(), infiniteRegion(), frame.get());
+    // now actually render the layers that need rendering
+    if (testResult) {
+        // before rendering, enable and disable all the views that need it
+        // which may add repaints to other layers
+        for (auto &layer : layers) {
+            if (!layer.layer->isEnabled()) {
+                layer.view->setEnabled(false);
+                continue;
             }
-            if (success) {
-                success &= output->present(toUpdate, frame);
+            layer.view->setEnabled(true);
+        }
+
+        for (auto &layer : layers) {
+            if (!layer.layer->needsRepaint()) {
+                continue;
+            }
+            toUpdate.push_back(layer.layer);
+            if (!layer.layer->isEnabled()) {
+                continue;
+            }
+            layer.surfaceDamage |= layer.view->updatePrePaint() | layer.layer->repaints();
+            layer.layer->resetRepaints();
+            if (!layer.directScanout) {
+                testResult &= renderLayer(layer.layer, layer.view, output, frame, layer.surfaceDamage);
             }
         }
-        if (success) {
-            // disabling the cursor layer helped... so disable it permanently,
-            // to prevent constantly attempting to render the hardware cursor again
-            // this should only ever happen with legacy modesetting, where
-            // presentation can't be tested
-            qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
-            m_cursorViews.erase(renderLoop);
-        } else {
+    }
+
+    // NOTE that this does not count the time spent in Output::present,
+    // but the drm backend, where that's necessary, tracks that time itself
+    totalTimeQuery->end();
+    frame->addRenderTimeQuery(std::move(totalTimeQuery));
+    if (!testResult) {
+        qCWarning(KWIN_CORE, "Failed to find a working output layer configuration!");
+        output->repairPresentation();
+    } else if (!output->present(toUpdate, frame)) {
+        // legacy modesetting can't do (useful) presentation tests
+        // and even with atomic modesetting, drivers are buggy and atomic tests
+        // sometimes have false positives
+        bool fixed = false;
+        bool removedLayers = false;
+        // remove all layers we attempted direct scanout with
+        for (auto &layer : layers | std::views::drop(1)) {
+            if (layer.directScanout) {
+                layer.layer->setEnabled(false);
+                layer.view->setEnabled(false);
+                removedLayers = true;
+            }
+        }
+        const auto &primary = layers.front();
+        if (primary.directScanout || removedLayers) {
+            // re-render without direct scanout
+            if (prepareRendering(primary.layer, primary.view, output)
+                && renderLayer(primary.layer, primary.view, output, frame, primary.surfaceDamage)) {
+                fixed = output->present(toUpdate, frame);
+            } else {
+                qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
+            }
+        }
+
+        if (!fixed && layers.size() == 2 && layers[1].layer->isEnabled()) {
+            // presentation failed even without direct scanout.
+            // try again even without the cursor layer
+            layers[1].layer->setEnabled(false);
+            layers[1].view->setEnabled(false);
+            if (prepareRendering(primary.layer, primary.view, output)
+                && renderLayer(primary.layer, primary.view, output, frame, primary.surfaceDamage)) {
+                fixed = output->present(toUpdate, frame);
+                if (fixed) {
+                    // disabling the cursor layer helped... so disable it permanently,
+                    // to prevent constantly attempting to render the hardware cursor again
+                    // this should only ever happen with legacy modesetting, where
+                    // presentation can't be tested
+                    qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
+                    m_cursorViews.erase(renderLoop);
+                }
+            } else {
+                qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
+            }
+        }
+
+        if (!fixed) {
+            qCWarning(KWIN_CORE, "All presentation attempts failed!");
             output->repairPresentation();
         }
     }
 
-    primaryView->frame(frame.get());
-    if (cursorViewIt != m_cursorViews.end()) {
-        cursorViewIt->second->frame(frame.get());
+    for (auto &layer : layers) {
+        layer.view->postPaint();
+        if (layer.layer->isEnabled()) {
+            layer.view->frame(frame.get());
+        }
     }
 
     if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
