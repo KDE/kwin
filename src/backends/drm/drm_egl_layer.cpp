@@ -48,13 +48,6 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPl
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 {
-    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->output()->shouldDisableCursorPlane()) {
-        return std::nullopt;
-    }
-    // note that this allows blending to happen in sRGB or PQ encoding with the cursor plane.
-    // That's technically incorrect, but it looks okay and is intentionally allowed
-    // as the hardware cursor is more important than an incorrectly blended cursor edge
-
     m_scanoutBuffer.reset();
     return m_surface.startRendering(targetRect().size(),
                                     m_pipeline->output()->transform().combine(OutputTransform::FlipY),
@@ -74,6 +67,9 @@ bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damag
 
 bool EglGbmLayer::preparePresentationTest()
 {
+    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->output()->shouldDisableCursorPlane()) {
+        return false;
+    }
     m_scanoutBuffer.reset();
     return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff()) != nullptr;
 }
@@ -95,6 +91,9 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::share
 {
     static const bool directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);
     if (directScanoutDisabled) {
+        return false;
+    }
+    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->output()->shouldDisableCursorPlane()) {
         return false;
     }
     if (m_pipeline->gpu()->needsModeset()) {

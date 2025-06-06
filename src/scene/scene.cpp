@@ -72,6 +72,11 @@ QPointF RenderView::hotspot() const
     return QPointF{};
 }
 
+bool RenderView::isVisible() const
+{
+    return true;
+}
+
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)
@@ -93,6 +98,11 @@ QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
 QRegion SceneView::prePaint()
 {
     return m_scene->prePaint(this);
+}
+
+QRegion SceneView::updatePrePaint()
+{
+    return m_scene->updatePrePaint();
 }
 
 void SceneView::postPaint()
@@ -220,6 +230,14 @@ QRegion ItemTreeView::prePaint()
     // FIXME damage tracking for this layer still has some bugs, this effectively disables it
     ret = viewport().toAlignedRect();
     // FIXME this should really not be rounded!
+    return ret.translated(-viewport().topLeft().toPoint());
+}
+
+QRegion ItemTreeView::updatePrePaint()
+{
+    QRegion ret;
+    accumulateRepaints(m_item, this, &ret);
+    // FIXME this offset should really not be rounded
     return ret.translated(-viewport().topLeft().toPoint());
 }
 
