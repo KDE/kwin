@@ -255,6 +255,76 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     return ret;
 }
 
+static SurfaceItem *findOverlayCandidate(SceneView *delegate, Item *item, QRegion &occupied)
+{
+    if (!item || !item->isVisible()) {
+        return nullptr;
+    }
+    if (item->hasEffects()) {
+        // can't put this item or any children on an overlay
+        // if an effect transforms the window geometry, it should
+        // inhibit direct scanout anyways, so this *should* be safe
+        occupied += item->mapToScene(item->boundingRect()).toAlignedRect();
+        return nullptr;
+    }
+    // TODO make "occupied" be in device pixels instead?
+    const QList<Item *> children = item->sortedChildItems();
+    auto it = children.rbegin();
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        if (child->z() < 0) {
+            break;
+        }
+        auto ret = findOverlayCandidate(delegate, child, occupied);
+        if (ret) {
+            return ret;
+        }
+    }
+    // for the Item to be possibly relevant for overlays, it needs to
+    // - be a SurfaceItem (for now at least)
+    // - be the topmost item in the relevant screen area
+    // - regularly get updates
+    // - use dmabufs
+    // - be entirely opaque, as the Compositor is still missing checks for the blending space (FIXME)
+    SurfaceItem *surfaceItem = dynamic_cast<SurfaceItem *>(item);
+    if (surfaceItem
+        && !occupied.intersects(surfaceItem->mapToScene(surfaceItem->rect()).toAlignedRect())
+        && surfaceItem->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 20
+        && surfaceItem->buffer()->dmabufAttributes()
+        && surfaceItem->opacity() == 1.0
+        && regionActuallyContains(surfaceItem->opaque(), surfaceItem->rect().toAlignedRect())) {
+        return surfaceItem;
+    }
+    occupied += item->mapToScene(item->rect()).toAlignedRect();
+
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        auto ret = findOverlayCandidate(delegate, child, occupied);
+        if (ret) {
+            return ret;
+        }
+    }
+    return nullptr;
+}
+
+SurfaceItem *WorkspaceScene::overlayCandidate() const
+{
+    if (effects->blocksDirectScanout()) {
+        return nullptr;
+    }
+    QRegion occupied;
+    for (const auto &data : std::as_const(m_paintContext.phase2Data) | std::views::reverse) {
+        Window *window = data.item->window();
+        if (window->isOnOutput(painted_screen) && window->opacity() > 0 && data.item->isVisible()) {
+            auto candidate = findOverlayCandidate(painted_delegate, data.item, occupied);
+            if (candidate) {
+                return candidate;
+            }
+        }
+    }
+    return nullptr;
+}
+
 static double getDesiredHdrHeadroom(Item *item)
 {
     if (!item->isVisible()) {

@@ -151,9 +151,19 @@ OutputTransform OutputLayer::offloadTransform() const
     return m_offloadTransform;
 }
 
+void OutputLayer::setOffloadTransform(const OutputTransform &transform)
+{
+    m_offloadTransform = transform;
+}
+
 OutputTransform OutputLayer::bufferTransform() const
 {
     return m_bufferTransform;
+}
+
+void OutputLayer::setBufferTransform(const OutputTransform &transform)
+{
+    m_bufferTransform = transform;
 }
 
 QRect OutputLayer::targetRect() const
@@ -169,16 +179,6 @@ void OutputLayer::setTargetRect(const QRect &rect)
 QHash<uint32_t, QList<uint64_t>> OutputLayer::supportedAsyncDrmFormats() const
 {
     return supportedDrmFormats();
-}
-
-void OutputLayer::setOffloadTransform(const OutputTransform &transform)
-{
-    m_offloadTransform = transform;
-}
-
-void OutputLayer::setBufferTransform(const OutputTransform &transform)
-{
-    m_bufferTransform = transform;
 }
 
 const ColorPipeline &OutputLayer::colorPipeline() const
