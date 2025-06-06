@@ -84,9 +84,10 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
-    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer);
+    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer, const std::shared_ptr<DrmPipelineLayer> &overlayLayer);
     DrmPipelineLayer *primaryLayer() const;
     DrmPipelineLayer *cursorLayer() const;
+    DrmPipelineLayer *overlayLayer() const;
     std::chrono::nanoseconds presentationDeadline() const;
 
     DrmCrtc *crtc() const;
@@ -183,6 +184,7 @@ private:
     std::unique_ptr<DrmCommitThread> m_commitThread;
     std::shared_ptr<DrmPipelineLayer> m_primaryLayer;
     std::shared_ptr<DrmPipelineLayer> m_cursorLayer;
+    std::shared_ptr<DrmPipelineLayer> m_overlayLayer;
 };
 
 }

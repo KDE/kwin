@@ -24,6 +24,11 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
 {
     return m_renderLoop.get();
 }
+
+DrmOutputLayer *DrmAbstractOutput::overlayLayer() const
+{
+    return nullptr;
+}
 }
 
 #include "moc_drm_abstract_output.cpp"

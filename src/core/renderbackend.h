@@ -129,6 +129,7 @@ public:
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
     virtual OutputLayer *cursorLayer(Output *output);
+    virtual OutputLayer *overlayLayer(Output *output);
 
     virtual DrmDevice *drmDevice() const;
 

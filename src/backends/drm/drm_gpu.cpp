@@ -225,7 +225,11 @@ void DrmGpu::initDrmResources()
         if (cursor) {
             assignedPlanes.push_back(cursor);
         }
-        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, primary, cursor);
+        DrmPlane *overlay = findBestPlane(overlayCandidates);
+        if (overlay) {
+            assignedPlanes.push_back(overlay);
+        }
+        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, primary, cursor, overlay);
         if (!crtc->init()) {
             continue;
         }
@@ -432,7 +436,8 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     }
     for (DrmPipeline *pipeline : m_pipelines) {
         if (!pipeline->primaryLayer()) {
-            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
+            const auto overlay = m_crtcs.front()->overlayPlane() ? m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Overlay) : nullptr;
+            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor), overlay);
         }
         if (!pipeline->output()->lease()) {
             // reset all outputs to their most basic configuration (primary plane without scaling)
@@ -828,7 +833,10 @@ void DrmGpu::releaseBuffers()
 void DrmGpu::recreateSurfaces()
 {
     for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
-        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
+        const auto overlay = m_crtcs.front()->overlayPlane() ? m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Overlay) : nullptr;
+        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary),
+                            m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor),
+                            overlay);
         pipeline->applyPendingChanges();
     }
 }

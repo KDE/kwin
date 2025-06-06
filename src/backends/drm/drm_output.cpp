@@ -680,6 +680,11 @@ DrmOutputLayer *DrmOutput::cursorLayer() const
     return m_pipeline->cursorLayer();
 }
 
+DrmOutputLayer *DrmOutput::overlayLayer() const
+{
+    return m_pipeline->overlayLayer();
+}
+
 bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
     if (rgb != m_sRgbChannelFactors) {

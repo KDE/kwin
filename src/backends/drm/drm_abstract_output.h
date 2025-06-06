@@ -27,6 +27,7 @@ public:
 
     virtual DrmOutputLayer *primaryLayer() const = 0;
     virtual DrmOutputLayer *cursorLayer() const = 0;
+    virtual DrmOutputLayer *overlayLayer() const;
 
 protected:
     friend class DrmGpu;

@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane)
+DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane, DrmPlane *overlayPlane)
     : DrmObject(gpu, crtcId, DRM_MODE_OBJECT_CRTC)
     , modeId(this, QByteArrayLiteral("MODE_ID"))
     , active(this, QByteArrayLiteral("ACTIVE"))
@@ -31,7 +31,13 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
     , m_cursorPlane(cursorPlane)
+    , m_overlayPlane(overlayPlane)
 {
+}
+
+void DrmCrtc::setOverlayPlane(DrmPlane *plane)
+{
+    m_overlayPlane = plane;
 }
 
 bool DrmCrtc::init()
@@ -122,6 +128,11 @@ DrmPlane *DrmCrtc::primaryPlane() const
 DrmPlane *DrmCrtc::cursorPlane() const
 {
     return m_cursorPlane;
+}
+
+DrmPlane *DrmCrtc::overlayPlane() const
+{
+    return m_overlayPlane;
 }
 
 void DrmCrtc::disable(DrmAtomicCommit *commit)

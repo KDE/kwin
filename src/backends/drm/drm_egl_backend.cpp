@@ -40,7 +40,7 @@ EglGbmBackend::~EglGbmBackend()
     const auto outputs = m_backend->outputs();
     for (const auto output : outputs) {
         if (auto drmOutput = dynamic_cast<DrmOutput *>(output)) {
-            drmOutput->pipeline()->setLayers(nullptr, nullptr);
+            drmOutput->pipeline()->setLayers(nullptr, nullptr, nullptr);
         }
     }
     m_contexts.clear();
@@ -149,6 +149,11 @@ OutputLayer *EglGbmBackend::primaryLayer(Output *output)
 OutputLayer *EglGbmBackend::cursorLayer(Output *output)
 {
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
+}
+
+OutputLayer *EglGbmBackend::overlayLayer(Output *output)
+{
+    return static_cast<DrmAbstractOutput *>(output)->overlayLayer();
 }
 
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::textureForOutput(Output *output) const

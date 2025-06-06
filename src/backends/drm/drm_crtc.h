@@ -26,7 +26,9 @@ class DrmPlane;
 class DrmCrtc : public DrmObject
 {
 public:
-    explicit DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane);
+    explicit DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane, DrmPlane *overlayPlane);
+
+    void setOverlayPlane(DrmPlane *plane);
 
     bool init();
 
@@ -37,6 +39,7 @@ public:
     int gammaRampSize() const;
     DrmPlane *primaryPlane() const;
     DrmPlane *cursorPlane() const;
+    DrmPlane *overlayPlane() const;
     drmModeModeInfo queryCurrentMode();
 
     std::shared_ptr<DrmFramebuffer> current() const;
@@ -60,6 +63,7 @@ private:
     int m_pipeIndex;
     DrmPlane *m_primaryPlane;
     DrmPlane *m_cursorPlane;
+    DrmPlane *m_overlayPlane;
 
     std::vector<std::unique_ptr<DrmAbstractColorOp>> m_postBlendingColorOps;
 };
