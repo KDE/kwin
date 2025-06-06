@@ -67,6 +67,8 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setBufferSourceBox(surface->bufferSourceBox());
     setBufferSize(surface->bufferSize());
     setColorDescription(surface->colorDescription());
+    setRenderingIntent(surface->renderingIntent());
+    setPresentationHint(surface->presentationModeHint());
     setOpacity(surface->alphaMultiplier());
 }
 
