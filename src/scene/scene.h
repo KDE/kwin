@@ -12,6 +12,7 @@
 #include <QList>
 #include <QObject>
 #include <QRegion>
+#include <QPointer>
 #include <memory>
 
 namespace KWin
@@ -35,11 +36,13 @@ public:
     qreal scale() const;
     OutputLayer *layer() const;
 
+    virtual bool isVisible() const;
     virtual QPointF hotspot() const;
     virtual QRectF viewport() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
     virtual void frame(OutputFrame *frame) = 0;
     virtual QRegion prePaint() = 0;
+    virtual QRegion updatePrePaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
     virtual void postPaint() = 0;
     virtual bool shouldRenderItem(Item *item) const;
@@ -55,6 +58,8 @@ public:
      */
     virtual bool canSkipMoveRepaint(Item *item);
 
+    virtual void setEnabled(bool enable);
+
 protected:
     Output *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
@@ -68,10 +73,10 @@ public:
     ~SceneView() override;
 
     QRectF viewport() const override;
-
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
+    QRegion updatePrePaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     void postPaint() override;
     double desiredHdrHeadroom() const;
@@ -101,9 +106,11 @@ public:
 
     QPointF hotspot() const override;
     QRectF viewport() const override;
+    bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
+    QRegion updatePrePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     bool shouldRenderItem(Item *item) const override;
@@ -111,12 +118,13 @@ public:
     Item *item() const;
 
     bool needsRepaint();
-    bool isVisible() const;
     bool canSkipMoveRepaint(Item *item) override;
+
+    void setEnabled(bool enable) override;
 
 private:
     SceneView *const m_parentView;
-    Item *const m_item;
+    const QPointer<Item> m_item;
 };
 
 class KWIN_EXPORT Scene : public QObject
@@ -163,6 +171,11 @@ public:
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
     virtual QRegion prePaint(SceneView *delegate) = 0;
+    /**
+     * While prePaint returns damage, some layer-related actions may cause
+     * damage to be added after prePaint
+     */
+    virtual QRegion updatePrePaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
     virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame);
