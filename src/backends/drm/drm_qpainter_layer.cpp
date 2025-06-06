@@ -110,11 +110,6 @@ QList<QSize> DrmQPainterLayer::recommendedSizes() const
     return m_pipeline->recommendedSizes(m_type);
 }
 
-const ColorPipeline &DrmQPainterLayer::colorPipeline() const
-{
-    return m_colorPipeline;
-}
-
 ColorDescription DrmQPainterLayer::colorDescription() const
 {
     return m_pipeline->output()->layerBlendingColor();

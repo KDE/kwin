@@ -37,7 +37,6 @@ public:
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     QList<QSize> recommendedSizes() const override;
-    const ColorPipeline &colorPipeline() const override;
     QHash<uint32_t, QList<uint64_t>> supportedAsyncDrmFormats() const override;
 
 private:
@@ -45,7 +44,6 @@ private:
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
     ColorDescription m_scanoutColor = ColorDescription::sRGB;
-    ColorPipeline m_colorPipeline;
 
     EglGbmLayerSurface m_surface;
 };

@@ -94,6 +94,14 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
                 plane = m_pending.crtc->overlayPlane();
                 break;
             }
+            // FIXME this should be enforced on a higher level
+            // there should only be layers for which there are also planes!
+            if (!plane) {
+                if (pipelineLayer->isEnabled()) {
+                    return Error::InvalidArguments;
+                }
+                continue;
+            }
             if (Error err = prepareAtomicPlane(partialUpdate.get(), plane, pipelineLayer, frame); err != Error::None) {
                 return err;
             }
@@ -236,6 +244,9 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
 
     if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
         return DrmPipeline::Error::InvalidArguments;
+    }
+    if (m_overlayLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_overlayLayer->colorPipeline()) {
+        return Error::InvalidArguments;
     }
     const ColorPipeline colorPipeline = m_primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
     if (!m_pending.crtc->postBlendingPipeline) {

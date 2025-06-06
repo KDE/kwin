@@ -326,6 +326,7 @@ void Compositor::stop()
         disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     }
 
+    m_overlayViews.clear();
     m_cursorViews.clear();
     m_primaryViews.clear();
     m_scene.reset();
@@ -399,6 +400,9 @@ static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *outpu
     layer->setTargetRect(nativeRect);
     layer->setHotspot(output->transform().map(view->hotspot() * output->scale(), nativeRect.size()));
     layer->setEnabled(true);
+    layer->setBufferTransform(output->transform());
+    layer->setOffloadTransform(OutputTransform::Kind::Normal);
+    layer->setColorPipeline(ColorPipeline{});
     return layer->preparePresentationTest();
 }
 
@@ -524,14 +528,44 @@ void Compositor::composite(RenderLoop *renderLoop)
             layer.layer->setEnabled(false);
         }
     }
+    // overlays are a bit special - we don't (currently) ever want to render on them
+    if (auto overlay = m_backend->overlayLayer(output)) {
+        const auto candidate = primaryView->overlayCandidate();
+        // leave fullscreen direct scanout to the primary plane
+        if (candidate && !candidate->mapToScene(candidate->rect()).contains(output->geometryF())) {
+            auto &view = m_overlayViews[output->renderLoop()];
+            if (!view || view->item() != candidate) {
+                view = std::make_unique<ItemTreeView>(primaryView, candidate, output, overlay);
+            }
+            if (prepareDirectScanout(overlay, view.get(), output, frame)) {
+                view->setEnabled(true);
+            } else {
+                overlay->setEnabled(false);
+                view->setEnabled(false);
+            }
+            layers.push_back(LayerData{
+                .layer = overlay,
+                .view = view.get(),
+                .directScanout = true,
+                .surfaceDamage = view->prePaint() | overlay->repaints(),
+            });
+        } else {
+            m_overlayViews.erase(output->renderLoop());
+            if (overlay->isEnabled()) {
+                overlay->setEnabled(false);
+                toUpdate.push_back(overlay);
+            }
+        }
+    }
 
     // test and downgrade the configuration until the test is successful
     bool testResult = output->testPresentation(frame);
     if (!testResult) {
         bool primaryFailure = false;
-        const auto &primary = layers.front();
+        auto &primary = layers.front();
         if (primary.directScanout) {
             if (prepareRendering(primary.layer, primary.view, output)) {
+                primary.directScanout = false;
                 testResult = output->testPresentation(frame);
             } else {
                 primaryFailure = true;
@@ -710,8 +744,9 @@ void Compositor::removeOutput(Output *output)
         return;
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    m_primaryViews.erase(output->renderLoop());
+    m_overlayViews.erase(output->renderLoop());
     m_cursorViews.erase(output->renderLoop());
+    m_primaryViews.erase(output->renderLoop());
 }
 
 std::pair<std::shared_ptr<GLTexture>, ColorDescription> Compositor::textureForOutput(Output *output) const

@@ -109,9 +109,8 @@ bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::share
 
 std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
 {
-    m_sourceRect = QRectF(QPointF(0, 0), m_targetRect.size());
-    m_bufferTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
-    m_offloadTransform = OutputTransform::Kind::Normal;
+    // TODO make beginFrame virtual again and remove doBeginFrame
+    // same for endFrame
     return doBeginFrame();
 }
 
@@ -153,9 +152,19 @@ OutputTransform OutputLayer::offloadTransform() const
     return m_offloadTransform;
 }
 
+void OutputLayer::setOffloadTransform(const OutputTransform &transform)
+{
+    m_offloadTransform = transform;
+}
+
 OutputTransform OutputLayer::bufferTransform() const
 {
     return m_bufferTransform;
+}
+
+void OutputLayer::setBufferTransform(const OutputTransform &transform)
+{
+    m_bufferTransform = transform;
 }
 
 QRect OutputLayer::targetRect() const
@@ -176,6 +185,16 @@ QHash<uint32_t, QList<uint64_t>> OutputLayer::supportedAsyncDrmFormats() const
 bool OutputLayer::preparePresentationTest()
 {
     return true;
+}
+
+const ColorPipeline &OutputLayer::colorPipeline() const
+{
+    return m_colorPipeline;
+}
+
+void OutputLayer::setColorPipeline(const ColorPipeline &pipeline)
+{
+    m_colorPipeline = pipeline;
 }
 
 } // namespace KWin

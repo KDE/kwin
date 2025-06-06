@@ -8,6 +8,7 @@
 
 #include <QList>
 #include <QObject>
+#include <QPointer>
 #include <QRegion>
 #include <QPointer>
 #include <memory>
@@ -40,6 +41,7 @@ public:
     virtual QPointF hotspot() const;
     virtual QRectF viewport() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
+    virtual SurfaceItem *overlayCandidate() const;
     virtual void frame(OutputFrame *frame) = 0;
     virtual QRegion prePaint() = 0;
     virtual QRegion updatePrePaint() = 0;
@@ -74,6 +76,7 @@ public:
 
     QRectF viewport() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    SurfaceItem *overlayCandidate() const override;
     void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
     QRegion updatePrePaint() override;
@@ -119,7 +122,6 @@ public:
 
     bool needsRepaint();
     bool canSkipMoveRepaint(Item *item) override;
-
     void setEnabled(bool enable) override;
 
 private:
@@ -170,6 +172,7 @@ public:
     void removeView(RenderView *view);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
+    virtual SurfaceItem *overlayCandidate() const = 0;
     virtual QRegion prePaint(SceneView *delegate) = 0;
     /**
      * While prePaint returns damage, some layer-related actions may cause

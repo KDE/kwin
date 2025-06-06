@@ -12,6 +12,7 @@
 #include "scene/cursoritem.h"
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
+#include "scene/surfaceitem.h"
 
 namespace KWin
 {
@@ -77,6 +78,11 @@ void RenderView::setEnabled(bool enable)
 {
 }
 
+SurfaceItem *RenderView::overlayCandidate() const
+{
+    return nullptr;
+}
+
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)
@@ -93,6 +99,11 @@ SceneView::~SceneView()
 QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
 {
     return m_scene->scanoutCandidates(maxCount);
+}
+
+SurfaceItem *SceneView::overlayCandidate() const
+{
+    return m_scene->overlayCandidate();
 }
 
 QRegion SceneView::prePaint()
@@ -203,7 +214,15 @@ QRectF ItemTreeView::viewport() const
 
 QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
 {
-    // TODO
+    if (dynamic_cast<SurfaceItem *>(m_item.get())) {
+        const bool visibleChildren = std::ranges::any_of(m_item->childItems(), [](Item *child) {
+            return child->isVisible();
+        });
+        if (visibleChildren) {
+            return {};
+        }
+        return {static_cast<SurfaceItem *>(m_item.get())};
+    }
     return {};
 }
 

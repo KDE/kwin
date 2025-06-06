@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/colorpipeline.h"
 #include "core/rendertarget.h"
 #include "kwin_export.h"
 
@@ -98,10 +99,15 @@ public:
      * Returns the transform this layer will apply to content passed to it
      */
     OutputTransform offloadTransform() const;
+    void setOffloadTransform(const OutputTransform &transform);
     /**
      * Returns the transform a buffer passed into this layer already has
      */
     OutputTransform bufferTransform() const;
+    void setBufferTransform(const OutputTransform &transform);
+
+    const ColorPipeline &colorPipeline() const;
+    void setColorPipeline(const ColorPipeline &pipeline);
 
 Q_SIGNALS:
     void repaintScheduled();
@@ -119,6 +125,7 @@ protected:
     bool m_enabled = false;
     OutputTransform m_offloadTransform = OutputTransform::Kind::Normal;
     OutputTransform m_bufferTransform = OutputTransform::Kind::Normal;
+    ColorPipeline m_colorPipeline;
     QPointer<SurfaceItem> m_scanoutCandidate;
     Output *const m_output;
     bool m_repaintScheduled = false;

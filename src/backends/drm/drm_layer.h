@@ -39,7 +39,6 @@ public:
     explicit DrmPipelineLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type);
 
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
-    virtual const ColorPipeline &colorPipeline() const = 0;
     virtual ColorDescription colorDescription() const = 0;
 
     DrmPlane::TypeIndex type() const;

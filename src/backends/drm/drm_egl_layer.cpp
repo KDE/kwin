@@ -56,7 +56,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     // as the hardware cursor is more important than an incorrectly blended cursor edge
 
     m_scanoutBuffer.reset();
-    m_colorPipeline = ColorPipeline{};
     return m_surface.startRendering(targetRect().size(),
                                     m_pipeline->output()->transform().combine(OutputTransform::FlipY),
                                     m_pipeline->formats(m_type),
@@ -172,10 +171,5 @@ QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedAsyncDrmFormats() const
 QList<QSize> EglGbmLayer::recommendedSizes() const
 {
     return m_pipeline->recommendedSizes(m_type);
-}
-
-const ColorPipeline &EglGbmLayer::colorPipeline() const
-{
-    return m_colorPipeline;
 }
 }
