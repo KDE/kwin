@@ -120,10 +120,6 @@ bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::share
 
 std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
 {
-    m_sourceRect = QRectF(QPointF(0, 0), m_targetRect.size());
-    m_bufferTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
-    m_offloadTransform = OutputTransform::Kind::Normal;
-    setColor(m_output->layerBlendingColor(), RenderingIntent::AbsoluteColorimetric, ColorPipeline{});
     return doBeginFrame();
 }
 
