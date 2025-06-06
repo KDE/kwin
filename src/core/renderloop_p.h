@@ -48,6 +48,7 @@ public:
     RenderJournal renderJournal;
     int refreshRate = 60000;
     int pendingFrameCount = 0;
+    bool preparingNewFrame = false;
     int inhibitCount = 0;
     bool pendingReschedule = false;
     std::chrono::nanoseconds safetyMargin{0};

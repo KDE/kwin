@@ -48,7 +48,7 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
 
 void RenderLoopPrivate::scheduleNextRepaint()
 {
-    if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
+    if (kwinApp()->isTerminating() || compositeTimer.isActive() || preparingNewFrame) {
         return;
     }
     scheduleRepaint(nextPresentationTimestamp);
@@ -222,6 +222,12 @@ void RenderLoop::uninhibit()
 void RenderLoop::prepareNewFrame()
 {
     d->pendingFrameCount++;
+    d->preparingNewFrame = true;
+}
+
+void RenderLoop::newFramePrepared()
+{
+    d->preparingNewFrame = false;
 }
 
 int RenderLoop::refreshRate() const

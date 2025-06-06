@@ -79,7 +79,8 @@ QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     if (!beginInfo) {
         return QRegion{};
     }
-    const auto logicalDamage = m_layer->repaints() | m_sceneView->prePaint();
+    m_sceneView->prePaint();
+    const auto logicalDamage = m_layer->repaints() | m_sceneView->collectDamage();
     const auto repaints = beginInfo->repaint | logicalDamage;
     m_layer->resetRepaints();
     m_sceneView->paint(beginInfo->renderTarget, repaints);

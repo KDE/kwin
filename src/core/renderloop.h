@@ -50,10 +50,16 @@ public:
     void uninhibit();
 
     /**
-     * This function must be called before the Compositor sumbits the next
-     * frame.
+     * This function must be called before the Compositor prepares a new frame.
+     * Note that this inhibits scheduleRepaint requests, without re-applying the
+     * missed requests afterwards
      */
     void prepareNewFrame();
+
+    /**
+     * This function must be called after the Compositor, and uninhibits the renderloop
+     */
+    void newFramePrepared();
 
     /**
      * Returns the refresh rate at which the output is being updated, in millihertz.
