@@ -193,6 +193,22 @@ void ItemTreeView::postPaint()
 {
 }
 
+Item *ItemTreeView::item() const
+{
+    return m_item;
+}
+
+bool ItemTreeView::shouldRenderItem(Item *item) const
+{
+    while (item) {
+        if (item == m_item) {
+            return true;
+        }
+        item = item->parentItem();
+    }
+    return false;
+}
+
 Scene::Scene(std::unique_ptr<ItemRenderer> &&renderer)
     : m_renderer(std::move(renderer))
 {
