@@ -39,6 +39,7 @@ private:
 
     void handleVirtualDesktopAdded(KWin::VirtualDesktop *desktop);
     void handleVirtualDesktopRemoved(KWin::VirtualDesktop *desktop);
+    void handleVirtualDesktopMoved(KWin::VirtualDesktop *desktop, int position);
 
     QList<KWin::VirtualDesktop *> m_virtualDesktops;
 };

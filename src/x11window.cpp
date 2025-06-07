@@ -1744,8 +1744,32 @@ void X11Window::doSetDesktop()
     if (isDeleted()) {
         return;
     }
-    info->setDesktop(desktopId());
+    setNetWmDesktop(m_desktops.isEmpty() ? nullptr : m_desktops.last());
     updateVisibility();
+}
+
+void X11Window::setNetWmDesktop(VirtualDesktop *desktop)
+{
+    if (m_netWmDesktop == desktop) {
+        return;
+    }
+    if (m_netWmDesktop) {
+        disconnect(m_netWmDesktop, &VirtualDesktop::x11DesktopNumberChanged, this, &X11Window::updateNetWmDesktopId);
+    }
+    if (desktop) {
+        connect(desktop, &VirtualDesktop::x11DesktopNumberChanged, this, &X11Window::updateNetWmDesktopId);
+    }
+
+    m_netWmDesktop = desktop;
+    updateNetWmDesktopId();
+}
+
+void X11Window::updateNetWmDesktopId()
+{
+    if (isDeleted()) {
+        return;
+    }
+    info->setDesktop(m_netWmDesktop ? m_netWmDesktop->x11DesktopNumber() : -1);
 }
 
 void X11Window::doSetDemandsAttention()

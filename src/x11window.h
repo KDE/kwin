@@ -399,6 +399,8 @@ private:
     void cleanGrouping();
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
+    void setNetWmDesktop(VirtualDesktop *desktop);
+    void updateNetWmDesktopId();
 
     NETWinInfo *info = nullptr;
     xcb_window_t m_transientForId;
@@ -445,6 +447,7 @@ private:
 
     QTimer *m_focusOutTimer;
     QTimer m_releaseTimer;
+    QPointer<VirtualDesktop> m_netWmDesktop;
 
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
