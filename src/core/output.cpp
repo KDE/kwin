@@ -652,6 +652,9 @@ void Output::setState(const State &state)
     if (oldState.edrPolicy != state.edrPolicy) {
         Q_EMIT edrPolicyChanged();
     }
+    if (oldState.blendingColor != state.blendingColor) {
+        Q_EMIT blendingColorChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }

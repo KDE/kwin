@@ -3534,14 +3534,14 @@ void Window::setMoveResizeOutput(Output *output)
     if (m_moveResizeOutput) {
         disconnect(m_moveResizeOutput, &Output::scaleChanged, this, &Window::updateNextTargetScale);
         disconnect(m_moveResizeOutput, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
-        disconnect(m_moveResizeOutput, &Output::colorDescriptionChanged, this, &Window::updatePreferredColorDescription);
+        disconnect(m_moveResizeOutput, &Output::blendingColorChanged, this, &Window::updatePreferredColorDescription);
     }
 
     m_moveResizeOutput = output;
     if (output) {
         connect(output, &Output::scaleChanged, this, &Window::updateNextTargetScale);
         connect(output, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
-        connect(output, &Output::colorDescriptionChanged, this, &Window::updatePreferredColorDescription);
+        connect(output, &Output::blendingColorChanged, this, &Window::updatePreferredColorDescription);
     }
 
     updateNextTargetScale();
@@ -4795,7 +4795,7 @@ void Window::doSetPreferredColorDescription()
 
 void Window::updatePreferredColorDescription()
 {
-    setPreferredColorDescription(m_moveResizeOutput->colorDescription());
+    setPreferredColorDescription(m_moveResizeOutput->blendingColor());
 }
 
 QString Window::tag() const

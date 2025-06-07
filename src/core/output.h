@@ -490,6 +490,7 @@ Q_SIGNALS:
     void brightnessMetadataChanged();
     void sdrGamutWidenessChanged();
     void colorDescriptionChanged();
+    void blendingColorChanged();
     void colorProfileSourceChanged();
     void brightnessChanged();
     void colorPowerTradeoffChanged();
