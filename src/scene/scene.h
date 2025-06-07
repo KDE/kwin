@@ -105,6 +105,8 @@ public:
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
 
+    Item *item() const;
+
 private:
     SceneView *const m_parentView;
     const QPointer<Item> m_item;

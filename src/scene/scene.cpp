@@ -227,6 +227,11 @@ void ItemTreeView::setExclusive(bool enable)
     }
 }
 
+Item *ExclusiveItemTreeView::item() const
+{
+    return m_item;
+}
+
 Scene::Scene(std::unique_ptr<ItemRenderer> &&renderer)
     : m_renderer(std::move(renderer))
 {
