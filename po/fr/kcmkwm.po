@@ -10,7 +10,7 @@
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005, 2007, 2008, 2010.
 # Sébastien Renard <Sebastien.Renard@digitalfox.org>, 2008, 2012.
 # Anne-Marie Mahfouf <annma@kde.org>, 2012.
-# SPDX-FileCopyrightText: 2013, 2023, 2024 Xavier Besnard <xavier.besnard@kde.org>
+# SPDX-FileCopyrightText: 2013, 2023, 2024, 2025 Xavier Besnard <xavier.besnard@kde.org>
 # Ludovic Grossard <ludovic.grossard@unilim.fr>, 2014.
 # Sebastien Renard <renard@kde.org>, 2015.
 # Simon Depiets <sdepiets@gmail.com>, 2019, 2020.
@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2024-12-11 08:54+0100\n"
+"PO-Revision-Date: 2025-06-05 17:10+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 24.11.90\n"
+"X-Generator: Lokalize 25.04.1\n"
 "X-Text-Markup: kde4\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -360,10 +360,9 @@ msgstr "Augmenter l'opacité"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, fuzzy, kde-format
-#| msgid "Window &placement:"
+#, kde-format
 msgid "Window menu"
-msgstr "&Placement de la fenêtre :"
+msgstr "Menu « Fenêtre »"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)

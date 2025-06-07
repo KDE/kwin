@@ -7,7 +7,7 @@
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2004, 2005.
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2007, 2008, 2010.
 # Sébastien Renard <renard@kde.org>, 2010, 2014, 2015.
-# SPDX-FileCopyrightText: 2013, 2024 Xavier Besnard <xavier.besnard@kde.org>
+# SPDX-FileCopyrightText: 2013, 2024, 2025 Xavier Besnard <xavier.besnard@kde.org>
 # Vincent PINON <vincent.pinon@st.com>, 2013.
 # Simon Depiets <sdepiets@gmail.com>, 2018, 2019.
 # SPDX-FileCopyrightText: 2020, 2021, 2023 Xavier Besnard <xavier.besnard@kde.org>
@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2024-09-19 14:16+0200\n"
+"PO-Revision-Date: 2025-06-05 17:11+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -26,17 +26,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.04.1\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Button showing window actions menu"
-#| msgid "Window Menu"
+#, kde-format
 msgid "Window menu"
-msgstr "Menu de fenêtre"
+msgstr "Menu « Fenêtre »"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -200,20 +198,19 @@ msgid "Titlebar Buttons"
 msgstr "Boutons de la barre de titre"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Fermer les fenêtres en faisant un double clic sur le bouton de menu"
+msgstr ""
+"Fermer les fenêtres par un double clic sur le bouton de menu de la fenêtre"
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "Cliquez et maintenez le bouton de menu pour afficher le menu."
+msgstr ""
+"Cliquez et maintenez le bouton de menu de fenêtre enfoncé pour afficher le "
+"menu."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
