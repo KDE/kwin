@@ -889,6 +889,16 @@ void Output::repairPresentation()
 {
 }
 
+const ColorDescription &Output::blendingColor() const
+{
+    return m_state.blendingColor;
+}
+
+const ColorDescription &Output::layerBlendingColor() const
+{
+    return m_state.layerBlendingColor;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"

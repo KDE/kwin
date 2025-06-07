@@ -117,7 +117,7 @@ const ColorPipeline &DrmQPainterLayer::colorPipeline() const
 
 ColorDescription DrmQPainterLayer::colorDescription() const
 {
-    return m_pipeline->output()->scanoutColorDescription();
+    return m_pipeline->output()->layerBlendingColor();
 }
 
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)

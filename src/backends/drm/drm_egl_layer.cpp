@@ -60,8 +60,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     return m_surface.startRendering(targetRect().size(),
                                     m_pipeline->output()->transform().combine(OutputTransform::FlipY),
                                     m_pipeline->formats(m_type),
-                                    m_pipeline->output()->blendingColorDescription(),
-                                    m_pipeline->output()->scanoutColorDescription(),
+                                    m_pipeline->output()->blendingColor(),
+                                    m_pipeline->output()->layerBlendingColor(),
                                     m_pipeline->output()->needsShadowBuffer() ? m_pipeline->iccProfile() : nullptr,
                                     m_pipeline->output()->scale(),
                                     m_pipeline->output()->colorPowerTradeoff(),
@@ -126,7 +126,7 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         // Right now this just assumes all buffers are on the primary GPU
         return false;
     }
-    m_colorPipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
+    m_colorPipeline = ColorPipeline::create(color, m_pipeline->output()->layerBlendingColor(), intent);
     if (!m_colorPipeline.isIdentity() && m_pipeline->output()->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy) {
         return false;
     }

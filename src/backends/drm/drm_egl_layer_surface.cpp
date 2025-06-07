@@ -110,7 +110,7 @@ static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64
     return ret;
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &scanoutColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer)
 {
     if (!checkSurface(bufferSize, formats, tradeoff)) {
         return std::nullopt;
@@ -133,12 +133,12 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     m_surface->currentSlot = slot;
     m_surface->scale = scale;
 
-    if (m_surface->blendingColor != blendingColor || m_surface->scanoutColor != scanoutColor || m_surface->iccProfile != iccProfile) {
+    if (m_surface->blendingColor != blendingColor || m_surface->layerBlendingColor != layerBlendingColor || m_surface->iccProfile != iccProfile) {
         m_surface->damageJournal.clear();
         m_surface->shadowDamageJournal.clear();
         m_surface->needsShadowBuffer = useShadowBuffer;
         m_surface->blendingColor = blendingColor;
-        m_surface->scanoutColor = scanoutColor;
+        m_surface->layerBlendingColor = layerBlendingColor;
         m_surface->iccProfile = iccProfile;
         if (iccProfile) {
             if (!m_surface->iccShader) {
@@ -272,7 +272,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         if (m_surface->iccShader) {
             m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->blendingColor, RenderingIntent::AbsoluteColorimetric);
         } else {
-            binder.shader()->setColorspaceUniforms(m_surface->blendingColor, m_surface->scanoutColor, RenderingIntent::AbsoluteColorimetric);
+            binder.shader()->setColorspaceUniforms(m_surface->blendingColor, m_surface->layerBlendingColor, RenderingIntent::AbsoluteColorimetric);
         }
         QMatrix4x4 mat;
         mat.scale(1, -1);

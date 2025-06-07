@@ -64,14 +64,6 @@ public:
     void updateConnectorProperties();
 
     /**
-     * @returns the color description / encoding that the buffers passed to the CRTC need to have, without a color pipeline to change it
-     */
-    const ColorDescription &scanoutColorDescription() const;
-    /**
-     * @returns the color description that compositing and blending need to happen in
-     */
-    const ColorDescription &blendingColorDescription() const;
-    /**
      * @returns whether or not the renderer should apply channel factors
      */
     bool needsShadowBuffer() const;
@@ -81,14 +73,13 @@ public:
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
-    void tryKmsColorOffloading();
+    void tryKmsColorOffloading(State &next);
     ColorDescription createColorDescription(const State &next) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
     void unsetBrightnessDevice() override;
     void updateBrightness(double newBrightness, double newArtificialHdrHeadroom);
-    void setScanoutColorDescription(const ColorDescription &description);
-    void setBlendingColorDescription(const ColorDescription &description);
+    void maybeScheduleRepaints(const State &next);
     std::optional<uint32_t> decideAutomaticBpcLimit() const;
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
@@ -103,8 +94,6 @@ private:
 
     QVector3D m_sRgbChannelFactors = {1, 1, 1};
     bool m_needsShadowBuffer = false;
-    ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
-    ColorDescription m_blendingColorDescription = ColorDescription::sRGB;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
     bool m_autoRotateAvailable = false;
 };

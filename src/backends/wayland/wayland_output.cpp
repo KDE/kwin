@@ -223,6 +223,9 @@ void WaylandOutput::updateColor()
         preferred.maxHdrLuminance(),
     };
     next.originalColorDescription = next.colorDescription;
+    next.blendingColor = next.colorDescription;
+    // we don't actually know this, but we have to assume *something*
+    next.layerBlendingColor = next.colorDescription;
     setState(next);
     if (m_colorSurface) {
         const auto imageDescription = m_backend->display()->colorManager()->createImageDescription(next.colorDescription);

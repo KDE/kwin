@@ -389,8 +389,6 @@ public:
     bool detectedDdcCi() const;
     bool allowDdcCi() const;
 
-    const ColorDescription &colorDescription() const;
-
     BrightnessDevice *brightnessDevice() const;
     virtual void unsetBrightnessDevice();
     bool allowSdrSoftwareBrightness() const;
@@ -414,6 +412,21 @@ public:
     virtual bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
     virtual bool present(const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual void repairPresentation();
+
+    /**
+     * The color space in which the scene is blended
+     */
+    const ColorDescription &blendingColor() const;
+    /**
+     * The color space in which output layers are blended.
+     * Note that this may be different from blendingColor.
+     */
+    const ColorDescription &layerBlendingColor() const;
+    /**
+     * The color space that is sent to the output, after blending
+     * has happened. May be different from layerBlendingColor.
+     */
+    const ColorDescription &colorDescription() const;
 
 Q_SIGNALS:
     /**
@@ -536,6 +549,8 @@ protected:
         // color description without night light applied
         ColorDescription originalColorDescription = ColorDescription::sRGB;
         ColorDescription colorDescription = ColorDescription::sRGB;
+        ColorDescription blendingColor = ColorDescription::sRGB;
+        ColorDescription layerBlendingColor = ColorDescription::sRGB;
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;
         std::optional<double> minBrightnessOverride;

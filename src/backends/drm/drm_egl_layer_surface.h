@@ -56,7 +56,7 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &scanoutColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer);
     bool endRendering(const QRegion &damagedRegion, OutputFrame *frame);
 
     std::shared_ptr<GLTexture> texture() const;
@@ -101,7 +101,7 @@ private:
         bool needsShadowBuffer = false;
         std::shared_ptr<EglSwapchain> shadowSwapchain;
         std::shared_ptr<EglSwapchainSlot> currentShadowSlot;
-        ColorDescription scanoutColor = ColorDescription::sRGB;
+        ColorDescription layerBlendingColor = ColorDescription::sRGB;
         ColorDescription blendingColor = ColorDescription::sRGB;
         double brightness = 1.0;
         std::unique_ptr<IccShader> iccShader;
