@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 02:37+0000\n"
-"PO-Revision-Date: 2025-05-15 04:17+0200\n"
+"PO-Revision-Date: 2025-06-06 06:08+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -99,18 +99,15 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "კურსორის და კლავიატურის მართვა:"
 
 #: ui/main.qml:156
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid ""
-#| "Allow controlling the pointer and keyboard without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr "კურსორის და კლავიატურის მართვის დაშვება წვდომის მოთხოვნის გარეშე"
+msgstr "დაშვება წვდომის მოთხოვნის გარეშე"
 
 #~ msgid "Only non-character keys"
 #~ msgstr "მხოლოდ არა-სიმბოლოს ღილაკები"
