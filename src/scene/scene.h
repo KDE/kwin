@@ -99,6 +99,9 @@ public:
     QRegion prePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    bool shouldRenderItem(Item *item) const override;
+
+    Item *item() const;
 
 private:
     SceneView *const m_parentView;
