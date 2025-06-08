@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-04 02:35+0000\n"
+"POT-Creation-Date: 2025-06-08 02:38+0000\n"
 "PO-Revision-Date: 2025-05-23 10:23+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -4259,42 +4259,42 @@ msgstr "Activar a xanela (%1)"
 msgid "unknown"
 msgstr "descoñecido"
 
-#: virtualdesktops.cpp:664 virtualdesktops.cpp:739
+#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
 #, kde-format
 msgid "Desktop %1"
 msgstr "Escritorio %1"
 
-#: virtualdesktops.cpp:746
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Ir ao seguinte escritorio"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:777
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Ir ao anterior escritorio"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:780
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Ir un escritorio á dereita"
 
-#: virtualdesktops.cpp:751
+#: virtualdesktops.cpp:781
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Ir un escritorio á esquerda"
 
-#: virtualdesktops.cpp:752
+#: virtualdesktops.cpp:782
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Ir un escritorio cara riba"
 
-#: virtualdesktops.cpp:753
+#: virtualdesktops.cpp:783
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Ir un escritorio cara baixo"
 
-#: virtualdesktops.cpp:841
+#: virtualdesktops.cpp:871
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Ir ao escritorio %1"

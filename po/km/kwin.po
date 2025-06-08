@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-04 02:35+0000\n"
+"POT-Creation-Date: 2025-06-08 02:38+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -4378,42 +4378,42 @@ msgstr "ធ្វើ​ឲ្យ​បង្អួច​សកម្ម (%1)"
 msgid "unknown"
 msgstr ""
 
-#: virtualdesktops.cpp:664 virtualdesktops.cpp:739
+#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
 #, kde-format
 msgid "Desktop %1"
 msgstr "ផ្ទៃតុ %1"
 
-#: virtualdesktops.cpp:746
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "ប្តូរ​ទៅ​ផ្ទៃតុ​បន្ទាប់"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:777
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "ប្តូរ​ទៅ​ផ្ទៃតុ​មុន"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:780
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "ប្ដូរ​ទៅ​ស្ដាំ​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:751
+#: virtualdesktops.cpp:781
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "ប្ដូរ​ទៅ​ឆ្វេង​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:752
+#: virtualdesktops.cpp:782
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "ប្ដូរ​ឡើង​លើ​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:753
+#: virtualdesktops.cpp:783
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "ប្ដូរ​ចុះ​ក្រោម​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:841
+#: virtualdesktops.cpp:871
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "ប្ដូរ​ទៅ​ផ្ទៃតុ %1"

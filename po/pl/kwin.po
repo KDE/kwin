@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1710399 $
+# Version: $Revision: 1710633 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-04 02:35+0000\n"
+"POT-Creation-Date: 2025-06-08 02:38+0000\n"
 "PO-Revision-Date: 2025-05-10 12:07+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -4273,42 +4273,42 @@ msgstr "Uaktywnij okno (%1)"
 msgid "unknown"
 msgstr "nieznany"
 
-#: virtualdesktops.cpp:664 virtualdesktops.cpp:739
+#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
 #, kde-format
 msgid "Desktop %1"
 msgstr "Pulpit %1"
 
-#: virtualdesktops.cpp:746
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Przełącz na następny pulpit"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:777
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Przełącz na poprzedni pulpit"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:780
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Przełącz na pulpit po prawej"
 
-#: virtualdesktops.cpp:751
+#: virtualdesktops.cpp:781
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Przełącz na pulpit po lewej"
 
-#: virtualdesktops.cpp:752
+#: virtualdesktops.cpp:782
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Przełącz jeden pulpit wyżej"
 
-#: virtualdesktops.cpp:753
+#: virtualdesktops.cpp:783
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Przełącz jeden pulpit niżej"
 
-#: virtualdesktops.cpp:841
+#: virtualdesktops.cpp:871
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Przełącz na pulpit %1"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-04 02:35+0000\n"
+"POT-Creation-Date: 2025-06-08 02:38+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -4205,42 +4205,42 @@ msgstr "活动窗口 (%1)"
 msgid "unknown"
 msgstr "未知"
 
-#: virtualdesktops.cpp:664 virtualdesktops.cpp:739
+#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
 #, kde-format
 msgid "Desktop %1"
 msgstr "桌面 %1"
 
-#: virtualdesktops.cpp:746
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "切换到下一桌面"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:777
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "切换到上一桌面"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:780
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "切换到右侧桌面"
 
-#: virtualdesktops.cpp:751
+#: virtualdesktops.cpp:781
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "切换到左侧桌面"
 
-#: virtualdesktops.cpp:752
+#: virtualdesktops.cpp:782
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "切换到上方桌面"
 
-#: virtualdesktops.cpp:753
+#: virtualdesktops.cpp:783
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "切换到下方桌面"
 
-#: virtualdesktops.cpp:841
+#: virtualdesktops.cpp:871
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
