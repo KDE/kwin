@@ -81,20 +81,58 @@ static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *w
     }
 }
 
-static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *workArea, bool exclusive)
+static int weightForWindow(const LayerShellV1Window *window)
 {
-    for (LayerShellV1Window *window : windows) {
-        LayerSurfaceV1Interface *shellSurface = window->shellSurface();
+    return (window->shellSurface()->anchor() & AnchorHorizontal) == AnchorHorizontal ? 1 : 0;
+}
 
-        if (exclusive != (shellSurface->exclusiveZone() > 0)) {
+static QList<LayerShellV1Window *> windowsForOutput(Output *output)
+{
+    QList<LayerShellV1Window *> result;
+    const QList<Window *> windows = waylandServer()->windows();
+    for (Window *window : windows) {
+        LayerShellV1Window *layerShellWindow = qobject_cast<LayerShellV1Window *>(window);
+        if (!layerShellWindow || layerShellWindow->desiredOutput() != output) {
             continue;
         }
+        if (layerShellWindow->shellSurface()->isCommitted()) {
+            result.append(layerShellWindow);
+        }
+    }
+    std::stable_sort(result.begin(), result.end(), [](LayerShellV1Window *a, LayerShellV1Window *b) {
+        const bool exclusiveA = a->shellSurface()->exclusiveZone() > 0;
+        const bool exclusiveB = b->shellSurface()->exclusiveZone() > 0;
+
+        if (exclusiveA && !exclusiveB) {
+            return true;
+        } else if (!exclusiveA && exclusiveB) {
+            return false;
+        }
+
+        if (a->layer() < b->layer()) {
+            return false;
+        } else if (a->layer() > b->layer()) {
+            return true;
+        }
+
+        return weightForWindow(a) > weightForWindow(b);
+    });
+    return result;
+}
+
+static void rearrangeOutput(Output *output)
+{
+    const QList<LayerShellV1Window *> windows = windowsForOutput(output);
+    QRect workArea = output->geometry();
+
+    for (LayerShellV1Window *window : windows) {
+        LayerSurfaceV1Interface *shellSurface = window->shellSurface();
 
         QRect bounds;
         if (shellSurface->exclusiveZone() == -1) {
             bounds = window->desiredOutput()->geometry();
         } else {
-            bounds = *workArea;
+            bounds = workArea;
         }
 
         QRect geometry(QPoint(0, 0), shellSurface->desiredSize());
@@ -152,50 +190,9 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
             continue;
         }
 
-        if (exclusive && shellSurface->exclusiveZone() > 0) {
-            adjustWorkArea(shellSurface, workArea);
+        if (shellSurface->exclusiveZone() > 0) {
+            adjustWorkArea(shellSurface, &workArea);
         }
-    }
-}
-
-static int weightForWindow(const LayerShellV1Window *window)
-{
-    return (window->shellSurface()->anchor() & AnchorHorizontal) == AnchorHorizontal ? 1 : 0;
-}
-
-static QList<LayerShellV1Window *> windowsForOutput(Output *output)
-{
-    QList<LayerShellV1Window *> result;
-    const QList<Window *> windows = waylandServer()->windows();
-    for (Window *window : windows) {
-        LayerShellV1Window *layerShellWindow = qobject_cast<LayerShellV1Window *>(window);
-        if (!layerShellWindow || layerShellWindow->desiredOutput() != output) {
-            continue;
-        }
-        if (layerShellWindow->shellSurface()->isCommitted()) {
-            result.append(layerShellWindow);
-        }
-    }
-    std::stable_sort(result.begin(), result.end(), [](LayerShellV1Window *a, LayerShellV1Window *b) {
-        if (a->layer() < b->layer()) {
-            return false;
-        } else if (a->layer() > b->layer()) {
-            return true;
-        } else {
-            return weightForWindow(a) > weightForWindow(b);
-        }
-    });
-    return result;
-}
-
-static void rearrangeOutput(Output *output)
-{
-    const QList<LayerShellV1Window *> windows = windowsForOutput(output);
-    if (!windows.isEmpty()) {
-        QRect workArea = output->geometry();
-
-        rearrangeLayer(windows, &workArea, true);
-        rearrangeLayer(windows, &workArea, false);
     }
 }
 
