@@ -81,15 +81,11 @@ static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *w
     }
 }
 
-static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *workArea,
-                           LayerSurfaceV1Interface::Layer layer, bool exclusive)
+static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *workArea, bool exclusive)
 {
     for (LayerShellV1Window *window : windows) {
         LayerSurfaceV1Interface *shellSurface = window->shellSurface();
 
-        if (shellSurface->layer() != layer) {
-            continue;
-        }
         if (exclusive != (shellSurface->exclusiveZone() > 0)) {
             continue;
         }
@@ -198,15 +194,8 @@ static void rearrangeOutput(Output *output)
     if (!windows.isEmpty()) {
         QRect workArea = output->geometry();
 
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::OverlayLayer, true);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::TopLayer, true);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BottomLayer, true);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BackgroundLayer, true);
-
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::OverlayLayer, false);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::TopLayer, false);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BottomLayer, false);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BackgroundLayer, false);
+        rearrangeLayer(windows, &workArea, true);
+        rearrangeLayer(windows, &workArea, false);
     }
 }
 
