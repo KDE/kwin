@@ -85,6 +85,13 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
                 return err;
             }
         }
+        if (layersToUpdate.isEmpty()) {
+            // work around amdgpu not giving us a valid pageflip timestamp
+            // if the commit doesn't contain a drm plane
+            if (Error err = prepareAtomicPlane(partialUpdate.get(), m_pending.crtc->primaryPlane(), m_primaryLayer.get(), frame); err != Error::None) {
+                return err;
+            }
+        }
         if (m_pending.needsModesetProperties && !prepareAtomicModeset(partialUpdate.get())) {
             return Error::InvalidArguments;
         }
