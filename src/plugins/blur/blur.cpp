@@ -258,7 +258,6 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     m_offset = blurStrengthValues[blurStrength].offset;
     m_expandSize = blurOffsets[m_iterationCount - 1].expandSize;
     m_noiseStrength = BlurConfig::noiseStrength();
-    m_useContrastEffects = BlurConfig::useContrastEffects();
 
     // Update all windows for the blur to take effect
     effects->addRepaintFull();
@@ -832,7 +831,10 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
             vbo->draw(GL_TRIANGLES, 0, 6);
         }
-        if (m_useContrastEffects) {
+
+        ShaderManager::instance()->popShader();
+
+        {
             ShaderManager::instance()->pushShader(m_contrastPass.shader.get());
 
             QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
@@ -869,38 +871,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             }
 
             ShaderManager::instance()->popShader();
-        } else {
-            // The last upsampling pass is rendered on the screen, not in framebuffers[0].
-            GLFramebuffer::popFramebuffer();
-            const auto &read = renderInfo.framebuffers[1];
-
-            projectionMatrix = viewport.projectionMatrix();
-            projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
-            m_upsamplePass.shader->setUniform(m_upsamplePass.mvpMatrixLocation, projectionMatrix);
-
-            const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
-                                      0.5 / read->colorAttachment()->height());
-            m_upsamplePass.shader->setUniform(m_upsamplePass.halfpixelLocation, halfpixel);
-
-            read->colorAttachment()->bind();
-
-            // Modulate the blurred texture with the window opacity if the window isn't opaque
-            if (opacity < 1.0) {
-                glEnable(GL_BLEND);
-                float o = 1.0f - (opacity);
-                o = 1.0f - o * o;
-                glBlendColor(0, 0, 0, o);
-                glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-            }
-
-            vbo->draw(GL_TRIANGLES, 6, vertexCount);
-
-            if (opacity < 1.0) {
-                glDisable(GL_BLEND);
-            }
         }
-
-        ShaderManager::instance()->popShader();
     }
 
     if (m_noiseStrength > 0) {
