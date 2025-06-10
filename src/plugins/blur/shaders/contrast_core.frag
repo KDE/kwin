@@ -1,4 +1,5 @@
 #version 140
+#include "colormanagement.glsl"
 
 uniform sampler2D texUnit;
 uniform mat4 colorMatrix;
@@ -20,5 +21,6 @@ void main(void)
     sum += texture(texUnit, uv + vec2(0.0, -halfpixel.y * 2.0) * offset);
     sum += texture(texUnit, uv + vec2(-halfpixel.x, -halfpixel.y) * offset) * 2.0;
 
-    fragColor = (sum / 12.0) * colorMatrix;
+    vec4 linear = sourceEncodingToNitsInDestinationColorspace(sum / 12);
+    fragColor = nitsToDestinationEncoding(linear * colorMatrix);
 }

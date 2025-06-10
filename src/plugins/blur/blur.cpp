@@ -852,6 +852,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             m_contrastPass.shader->setUniform(m_contrastPass.colorMatrixLocation, colorMatrix);
             m_contrastPass.shader->setUniform(m_contrastPass.halfpixelLocation, halfpixel);
             m_contrastPass.shader->setUniform(m_contrastPass.offsetLocation, float(m_offset));
+            m_contrastPass.shader->setColorspaceUniforms(renderTarget.colorDescription(), renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
             read->colorAttachment()->bind();
 
