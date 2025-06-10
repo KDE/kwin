@@ -258,6 +258,8 @@ void PlasmaVirtualDesktopInterfacePrivate::org_kde_plasma_virtual_desktop_bind_r
     if (resource->version() >= ORG_KDE_PLASMA_VIRTUAL_DESKTOP_POSITION_SINCE_VERSION) {
         send_position(resource->handle, position);
     }
+
+    send_done(resource->handle);
 }
 
 PlasmaVirtualDesktopInterface::PlasmaVirtualDesktopInterface()
