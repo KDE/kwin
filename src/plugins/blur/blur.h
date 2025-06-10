@@ -98,8 +98,8 @@ private:
         int colorMatrixLocation;
         int offsetLocation;
         int halfpixelLocation;
-        qreal contrast = 0.2;
-        qreal saturation = 10;
+        qreal contrast = 0.1;
+        qreal saturation = 5;
     } m_contrastPass;
 
     struct
