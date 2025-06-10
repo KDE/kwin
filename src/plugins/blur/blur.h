@@ -81,7 +81,7 @@ public Q_SLOTS:
 
 private:
     void initBlurStrengthValues();
-    QMatrix4x4 colorMatrix(qreal contrast, qreal saturation);
+    QMatrix4x4 colorMatrix(const ColorDescription &color, qreal contrast, qreal saturation);
     QRegion blurRegion(EffectWindow *w) const;
     QRegion decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;

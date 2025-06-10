@@ -217,16 +217,16 @@ void BlurEffect::initBlurStrengthValues()
     }
 }
 
-QMatrix4x4 BlurEffect::colorMatrix(qreal contrast, qreal saturation)
+QMatrix4x4 BlurEffect::colorMatrix(const ColorDescription &color, qreal contrast, qreal saturation)
 {
     QMatrix4x4 satMatrix; // saturation
     QMatrix4x4 contMatrix; // contrast
 
     // Saturation matrix
     if (!qFuzzyCompare(saturation, 1.0)) {
-        const qreal rval = (1.0 - saturation) * .2126;
-        const qreal gval = (1.0 - saturation) * .7152;
-        const qreal bval = (1.0 - saturation) * .0722;
+        const qreal rval = (1.0 - saturation) * color.containerColorimetry().red().toxyY().Y;
+        const qreal gval = (1.0 - saturation) * color.containerColorimetry().green().toxyY().Y;
+        const qreal bval = (1.0 - saturation) * color.containerColorimetry().blue().toxyY().Y;
 
         satMatrix = QMatrix4x4(rval + saturation, rval, rval, 0.0,
                                gval, gval + saturation, gval, 0.0,
@@ -840,7 +840,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
             projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-            QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrastPass.contrast, m_contrastPass.saturation);
+            QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(renderTarget.colorDescription(), m_contrastPass.contrast, m_contrastPass.saturation);
 
             GLFramebuffer::popFramebuffer();
             const auto &read = renderInfo.framebuffers[1];
