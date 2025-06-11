@@ -24,6 +24,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-order-v1.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screen-edge-v1.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-virtual-desktop-v2.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/keystate.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/org-kde-plasma-virtual-desktop.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-shell.xml
@@ -161,6 +162,7 @@ target_sources(kwin PRIVATE
     touch.cpp
     transaction.cpp
     viewporter.cpp
+    virtualdesktop_v2.cpp
     xdgactivation_v1.cpp
     xdgdecoration_v1.cpp
     xdgdialog_v1.cpp
@@ -247,6 +249,7 @@ install(FILES
     textinput_v3.h
     touch.h
     viewporter.h
+    virtualdesktop_v2.h
     xdgactivation_v1.h
     xdgdecoration_v1.h
     xdgdialog_v1.h

@@ -59,7 +59,6 @@
 #include "wayland/outputdevice_v2.h"
 #include "wayland/outputmanagement_v2.h"
 #include "wayland/plasmashell.h"
-#include "wayland/plasmavirtualdesktop.h"
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/pointerconstraints_v1.h"
 #include "wayland/pointergestures_v1.h"
@@ -77,6 +76,7 @@
 #include "wayland/tablet_v2.h"
 #include "wayland/tearingcontrol_v1.h"
 #include "wayland/viewporter.h"
+#include "wayland/virtualdesktop_v2.h"
 #include "wayland/xdgactivation_v1.h"
 #include "wayland/xdgdecoration_v1.h"
 #include "wayland/xdgdialog_v1.h"
@@ -454,8 +454,8 @@ bool WaylandServer::init()
         workspace()->setShowingDesktop(set);
     });
 
-    m_virtualDesktopManagement = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
-    m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
+    m_virtualDesktopManagerV2 = new VirtualDesktopManagerV2(m_display, m_display);
+    // m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
 
     m_plasmaActivationFeedback = new PlasmaWindowActivationFeedbackInterface(m_display, m_display);
 
@@ -583,7 +583,7 @@ void WaylandServer::initWorkspace()
 
     new KeyStateInterface(m_display, m_display);
 
-    VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagement);
+    VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagerV2);
 
     if (m_windowManagement) {
         connect(workspace(), &Workspace::showingDesktopChanged, this, [this](bool set) {

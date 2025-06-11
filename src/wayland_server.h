@@ -33,7 +33,6 @@ class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
 class PlasmaWindowActivationFeedbackInterface;
-class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class OutputDeviceV2Interface;
 class OutputManagementV2Interface;
@@ -54,6 +53,7 @@ class OutputOrderV1Interface;
 class XdgDialogWmV1Interface;
 class ExternalBrightnessV1;
 class XdgToplevelTagManagerV1;
+class VirtualDesktopManagerV2;
 
 class Window;
 class Output;
@@ -105,9 +105,9 @@ public:
     {
         return m_plasmaActivationFeedback;
     }
-    PlasmaVirtualDesktopManagementInterface *virtualDesktopManagement() const
+    VirtualDesktopManagerV2 *virtualDesktopManagerV2() const
     {
-        return m_virtualDesktopManagement;
+        return m_virtualDesktopManagerV2;
     }
     PlasmaWindowManagementInterface *windowManagement() const
     {
@@ -261,7 +261,7 @@ private:
     PlasmaShellInterface *m_plasmaShell = nullptr;
     PlasmaWindowActivationFeedbackInterface *m_plasmaActivationFeedback = nullptr;
     PlasmaWindowManagementInterface *m_windowManagement = nullptr;
-    PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
+    VirtualDesktopManagerV2 *m_virtualDesktopManagerV2 = nullptr;
     ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
     OutputManagementV2Interface *m_outputManagement = nullptr;
     AppMenuManagerInterface *m_appMenuManager = nullptr;
