@@ -6,7 +6,6 @@
 #include "plasmawindowmanagement.h"
 #include "display.h"
 #include "output.h"
-#include "plasmavirtualdesktop.h"
 #include "surface.h"
 #include "utils/common.h"
 #include "wayland/quirks.h"
@@ -42,7 +41,6 @@ public:
 
     PlasmaWindowManagementInterface::ShowingDesktopState state = PlasmaWindowManagementInterface::ShowingDesktopState::Disabled;
     QList<PlasmaWindowInterface *> windows;
-    QPointer<PlasmaVirtualDesktopManagementInterface> plasmaVirtualDesktopManagementInterface = nullptr;
     quint32 windowIdCounter = 0;
     QList<quint32> stackingOrder;
     QList<QString> stackingOrderUuids;
@@ -351,19 +349,6 @@ void PlasmaWindowManagementInterface::setStackingOrderUuids(const QList<QString>
     d->stackingOrderUuids = stackingOrderUuids;
     d->sendStackingOrderUuidsChanged();
     d->sendStackingOrderChanged2();
-}
-
-void PlasmaWindowManagementInterface::setPlasmaVirtualDesktopManagementInterface(PlasmaVirtualDesktopManagementInterface *manager)
-{
-    if (d->plasmaVirtualDesktopManagementInterface == manager) {
-        return;
-    }
-    d->plasmaVirtualDesktopManagementInterface = manager;
-}
-
-PlasmaVirtualDesktopManagementInterface *PlasmaWindowManagementInterface::plasmaVirtualDesktopManagementInterface() const
-{
-    return d->plasmaVirtualDesktopManagementInterface;
 }
 
 //////PlasmaWindow
@@ -861,38 +846,6 @@ void PlasmaWindowInterface::setOnAllDesktops(bool set)
 {
     // the deprecated vd management
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_ON_ALL_DESKTOPS, set);
-
-    if (!d->wm->plasmaVirtualDesktopManagementInterface()) {
-        return;
-    }
-    const auto clientResources = d->resourceMap();
-    // the current vd management
-    if (set) {
-        if (d->plasmaVirtualDesktops.isEmpty()) {
-            return;
-        }
-        // leaving everything means on all desktops
-        for (auto desk : plasmaVirtualDesktops()) {
-            for (auto resource : clientResources) {
-                d->send_virtual_desktop_left(resource->handle, desk);
-            }
-        }
-        d->plasmaVirtualDesktops.clear();
-    } else {
-        if (!d->plasmaVirtualDesktops.isEmpty()) {
-            return;
-        }
-        // enters the desktops which are active (usually only one  but not a given)
-        const auto desktops = d->wm->plasmaVirtualDesktopManagementInterface()->desktops();
-        for (const auto desktop : desktops) {
-            if (desktop->isActive() && !d->plasmaVirtualDesktops.contains(desktop->id())) {
-                d->plasmaVirtualDesktops << desktop->id();
-                for (auto resource : clientResources) {
-                    d->send_virtual_desktop_entered(resource->handle, desktop->id());
-                }
-            }
-        }
-    }
 }
 
 void PlasmaWindowInterface::setDemandsAttention(bool set)
@@ -943,22 +896,15 @@ void PlasmaWindowInterface::setResourceName(const QString &resourceName)
 void PlasmaWindowInterface::addPlasmaVirtualDesktop(const QString &id)
 {
     // don't add a desktop we're not sure it exists
-    if (!d->wm->plasmaVirtualDesktopManagementInterface() || d->plasmaVirtualDesktops.contains(id)) {
+    if (d->plasmaVirtualDesktops.contains(id)) {
         return;
     }
 
-    PlasmaVirtualDesktopInterface *desktop = d->wm->plasmaVirtualDesktopManagementInterface()->desktop(id);
-
-    if (!desktop) {
-        return;
+    if (d->plasmaVirtualDesktops.isEmpty()) {
+        setOnAllDesktops(false);
     }
 
     d->plasmaVirtualDesktops << id;
-
-    // if the desktop dies, remove it from or list
-    connect(desktop, &QObject::destroyed, this, [this, id]() {
-        removePlasmaVirtualDesktop(id);
-    });
 
     const auto clientResources = d->resourceMap();
     for (auto resource : clientResources) {

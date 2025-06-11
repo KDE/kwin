@@ -719,21 +719,16 @@ void Window::setDesktops(QList<VirtualDesktop *> desktops)
     m_desktops = desktops;
 
     if (windowManagementInterface()) {
-        if (m_desktops.isEmpty()) {
-            windowManagementInterface()->setOnAllDesktops(true);
-        } else {
-            windowManagementInterface()->setOnAllDesktops(false);
-            auto currentDesktops = windowManagementInterface()->plasmaVirtualDesktops();
-            for (auto desktop : std::as_const(m_desktops)) {
-                if (!currentDesktops.contains(desktop->id())) {
-                    windowManagementInterface()->addPlasmaVirtualDesktop(desktop->id());
-                } else {
-                    currentDesktops.removeOne(desktop->id());
-                }
+        auto currentDesktops = windowManagementInterface()->plasmaVirtualDesktops();
+        for (auto desktop : std::as_const(m_desktops)) {
+            if (!currentDesktops.contains(desktop->id())) {
+                windowManagementInterface()->addPlasmaVirtualDesktop(desktop->id());
+            } else {
+                currentDesktops.removeOne(desktop->id());
             }
-            for (const auto &desktopId : std::as_const(currentDesktops)) {
-                windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
-            }
+        }
+        for (const auto &desktopId : std::as_const(currentDesktops)) {
+            windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
         }
     }
 

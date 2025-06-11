@@ -455,8 +455,6 @@ bool WaylandServer::init()
     });
 
     m_virtualDesktopManagement = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
-    m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
-
     m_plasmaActivationFeedback = new PlasmaWindowActivationFeedbackInterface(m_display, m_display);
 
     new ShadowManagerInterface(m_display, m_display);

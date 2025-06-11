@@ -123,7 +123,6 @@ void TestVirtualDesktop::init()
                                                                                      this);
 
     m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display, m_display);
-    m_windowManagementInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface);
 
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement =
@@ -399,10 +398,6 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 2);
     QCOMPARE(m_window->plasmaVirtualDesktops()[1], QStringLiteral("0-3"));
 
-    // try to add an invalid desktop
-    m_windowInterface->addPlasmaVirtualDesktop(QStringLiteral("invalid"));
-    QCOMPARE(m_window->plasmaVirtualDesktops().length(), 2);
-
     // remove a desktop
     QSignalSpy leaveRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested);
     m_window->requestLeaveVirtualDesktop(QStringLiteral("0-1"));
@@ -422,13 +417,6 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
     QCOMPARE(virtualDesktopLeftSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 1);
     QCOMPARE(m_window->plasmaVirtualDesktops().first(), QStringLiteral("0-3"));
-
-    // Destroy desktop 2
-    m_plasmaVirtualDesktopManagementInterface->removeDesktop(QStringLiteral("0-3"));
-    // the window should receive a left signal from the destroyed desktop
-    QVERIFY(virtualDesktopLeftSpy.wait());
-
-    QCOMPARE(m_window->plasmaVirtualDesktops().length(), 0);
 }
 
 void TestVirtualDesktop::testAllDesktops()
@@ -442,10 +430,10 @@ void TestVirtualDesktop::testAllDesktops()
     m_windowInterface->addPlasmaVirtualDesktop(QStringLiteral("0-3"));
     QVERIFY(virtualDesktopEnteredSpy.wait());
 
-    // setting on all desktops
+    // if the window is removed from all desktops, it'll be considered on all desktops
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 2);
-    m_windowInterface->setOnAllDesktops(true);
-    // setting on all desktops, the window will leave every desktop
+    m_windowInterface->removePlasmaVirtualDesktop(QStringLiteral("0-1"));
+    m_windowInterface->removePlasmaVirtualDesktop(QStringLiteral("0-3"));
 
     QVERIFY(virtualDesktopLeftSpy.wait());
     QCOMPARE(virtualDesktopLeftSpy.count(), 2);
@@ -456,7 +444,7 @@ void TestVirtualDesktop::testAllDesktops()
     QVERIFY(m_window->isOnAllDesktops());
 
     // return to the active desktop (0-1)
-    m_windowInterface->setOnAllDesktops(false);
+    m_windowInterface->addPlasmaVirtualDesktop(QStringLiteral("0-1"));
     QVERIFY(virtualDesktopEnteredSpy.wait());
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 1);
     QCOMPARE(m_windowInterface->plasmaVirtualDesktops().first(), QStringLiteral("0-1"));
