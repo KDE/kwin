@@ -453,6 +453,12 @@ DrmPipeline::Error DrmGpu::testPipelines()
         // nothing to do
         return DrmPipeline::Error::None;
     }
+    // ensure we have suitable buffers for the test
+    for (DrmPipeline *pipeline : m_pipelines) {
+        if (pipeline->activePending() && !pipeline->primaryLayer()->preparePresentationTest()) {
+            return DrmPipeline::Error::InvalidArguments;
+        }
+    }
     QList<DrmPipeline *> inactivePipelines;
     std::ranges::copy_if(m_pipelines, std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();

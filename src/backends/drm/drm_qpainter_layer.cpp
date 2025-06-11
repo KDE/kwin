@@ -62,7 +62,7 @@ bool DrmQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &
     return m_currentFramebuffer != nullptr;
 }
 
-bool DrmQPainterLayer::checkTestBuffer()
+bool DrmQPainterLayer::preparePresentationTest()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), targetRect().size(), m_pipeline->formats(m_type).contains(DRM_FORMAT_ARGB8888) ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888);

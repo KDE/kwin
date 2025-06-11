@@ -52,10 +52,10 @@ void DrmPipeline::forceLegacyModeset()
 
 DrmPipeline::Error DrmPipeline::legacyModeset()
 {
-    if (!m_primaryLayer->checkTestBuffer()) {
-        return Error::TestBufferFailed;
-    }
     const auto buffer = m_primaryLayer->currentBuffer();
+    if (!buffer) {
+        return Error::InvalidArguments;
+    }
     if (m_primaryLayer->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }

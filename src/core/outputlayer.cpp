@@ -207,6 +207,11 @@ void OutputLayer::setColor(const ColorDescription &color, RenderingIntent intent
     m_colorPipeline = pipeline;
 }
 
+bool OutputLayer::preparePresentationTest()
+{
+    return true;
+}
+
 } // namespace KWin
 
 #include "moc_outputlayer.cpp"

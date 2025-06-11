@@ -256,8 +256,8 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         plane->disable(commit);
         return Error::None;
     }
-    if (!layer->checkTestBuffer()) {
-        qCWarning(KWIN_DRM) << "Checking test buffer failed!";
+    if (!layer->currentBuffer()) {
+        qCWarning(KWIN_DRM) << "An enabled plane has no buffer!";
         return Error::TestBufferFailed;
     }
     const auto fb = layer->currentBuffer();

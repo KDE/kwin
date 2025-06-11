@@ -60,6 +60,12 @@ public:
     void setEnabled(bool enable);
     bool isEnabled() const;
 
+    /**
+     * If the output backend needs to test presentations,
+     * the layer should override this function to allocate buffers for the test
+     */
+    virtual bool preparePresentationTest();
+
     std::optional<OutputLayerBeginFrameInfo> beginFrame();
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame);
 
