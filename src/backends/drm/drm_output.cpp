@@ -674,9 +674,9 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     // absolute colorimetric to preserve the whitepoint adjustments made during compositing
     ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetric);
 
-    const bool hdr = m_state.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
-    const bool wcg = m_state.wideColorGamut && (capabilities() & Capability::WideColorGamut);
-    const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !hdr && !wcg;
+    const bool hdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
+    const bool wcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
+    const bool usesICC = next.colorProfileSource == ColorProfileSource::ICC && next.iccProfile && !hdr && !wcg;
     if (next.colorPowerTradeoff == ColorPowerTradeoff::PreferAccuracy) {
         next.layerBlendingColor = encoding;
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
@@ -692,9 +692,9 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     if (usesICC) {
         colorPipeline.addTransferFunction(encoding.transferFunction());
         colorPipeline.addMultiplier(1.0 / encoding.transferFunction().maxLuminance);
-        colorPipeline.add1DLUT(m_state.iccProfile->inverseTransferFunction());
-        if (m_state.iccProfile->vcgt()) {
-            colorPipeline.add1DLUT(m_state.iccProfile->vcgt());
+        colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction());
+        if (next.iccProfile->vcgt()) {
+            colorPipeline.add1DLUT(next.iccProfile->vcgt());
         }
     }
     m_pipeline->setCrtcColorPipeline(colorPipeline);
