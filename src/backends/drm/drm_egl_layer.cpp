@@ -116,6 +116,16 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         // it's likely not worth making this code more complicated to handle those edge cases
         return false;
     }
+    if (m_pipeline->gpu() != m_pipeline->gpu()->platform()->primaryGpu()) {
+        // Disable direct scanout between GPUs, as
+        // - there are some significant driver bugs with direct scanout from other GPUs,
+        //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
+        // - with implicit modifiers, direct scanout on secondary GPUs
+        //   is also very unlikely to yield the correct results.
+        // TODO once we know what buffer a GPU is meant for, loosen this check again
+        // Right now this just assumes all buffers are on the primary GPU
+        return false;
+    }
     m_colorPipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
     if (!m_colorPipeline.isIdentity() && m_pipeline->output()->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy) {
         return false;
@@ -129,10 +139,6 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
     }
     const auto plane = m_type == DrmPlane::TypeIndex::Primary ? m_pipeline->crtc()->primaryPlane() : m_pipeline->crtc()->cursorPlane();
     if (offloadTransform() != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(offloadTransform()))) {
-        return false;
-    }
-    // importing a buffer from another GPU without an explicit modifier can mess up the buffer format
-    if (buffer->dmabufAttributes()->modifier == DRM_FORMAT_MOD_INVALID && m_pipeline->gpu()->platform()->gpuCount() > 1) {
         return false;
     }
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
