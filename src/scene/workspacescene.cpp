@@ -222,7 +222,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     }
     const auto overlayItems = m_overlayItem->childItems();
     const bool needsRendering = std::ranges::any_of(overlayItems, [this](Item *child) {
-        return painted_delegate->shouldRenderItem(child);
+        return child->isVisible() && painted_delegate->shouldRenderItem(child);
     });
     if (needsRendering) {
         return {};

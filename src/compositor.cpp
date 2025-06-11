@@ -447,7 +447,7 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         const uint32_t planeCount = 1;
         if (const auto scanoutCandidates = primaryDelegate->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
-            bool scanoutPossible = scanoutCandidates.size() < planeCount || checkForBlackBackground(scanoutCandidates.back());
+            bool scanoutPossible = scanoutCandidates.size() <= planeCount || checkForBlackBackground(scanoutCandidates.back());
             if (scanoutPossible) {
                 const auto geometry = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).translated(-output->geometryF().topLeft());
                 primaryLayer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->modeSize()).toRect());
