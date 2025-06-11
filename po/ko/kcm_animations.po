@@ -1,0 +1,115 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# SPDX-FileCopyrightText: 2025 Shinjo Park <kde@peremen.name>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2025-04-25 00:43+0000\n"
+"PO-Revision-Date: 2025-06-10 22:49+0200\n"
+"Last-Translator: Shinjo Park <kde@peremen.name>\n"
+"Language-Team: Korean <kde-kr@kde.org>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 24.12.3\n"
+
+#: ui/AnimationComboBox.qml:49
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "없음"
+
+#: ui/main.qml:37
+#, kde-format
+msgid "Global animation speed:"
+msgstr "전역 애니메이션 속도:"
+
+#: ui/main.qml:69
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Some applications do not support this setting: In particular, GTK "
+"applications cannot change animation duration, but will still disable "
+"animations when <interface>animation speed</interface> is "
+"<interface>Instant</interface>."
+msgstr ""
+"일부 앱에서 이 설정을 지원하지 않습니다. GTK 앱에서는 애니메이션 지속 시간을 "
+"변경할 수 없으나, <interface>애니메이션 속도</interface>가 <interface>즉시</"
+"interface>로 설정되면 애니메이션이 비활성화됩니다."
+
+#: ui/main.qml:76
+#, kde-format
+msgctxt "Animation speed"
+msgid "Slow"
+msgstr "느리게"
+
+#: ui/main.qml:85
+#, kde-format
+msgctxt "Animation speed"
+msgid "Instant"
+msgstr "즉시"
+
+#: ui/main.qml:93
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "데스크톱 애니메이션"
+
+#: ui/main.qml:97
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window open/close:"
+msgstr "창 열기/닫기:"
+
+#: ui/main.qml:98
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window maximize:"
+msgstr "창 최대화:"
+
+#: ui/main.qml:99
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window minimize:"
+msgstr "창 최소화:"
+
+#: ui/main.qml:100
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window full screen:"
+msgstr "창 전체 화면:"
+
+#: ui/main.qml:101
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "바탕 화면 엿보기:"
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Virtual desktop switching:"
+msgstr "가상 바탕 화면 전환:"
+
+#: ui/main.qml:130 ui/main.qml:197
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure…"
+msgstr "설정…"
+
+#: ui/main.qml:157
+#, kde-format
+msgctxt ""
+"@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
+msgid "%1:"
+msgstr "%1:"
+
+#: ui/main.qml:224
+#, kde-format
+msgctxt "@title:group translate as short as possible"
+msgid "More effects settings:"
+msgstr "더 많은 효과 설정:"
