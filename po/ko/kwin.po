@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-08 02:38+0000\n"
-"PO-Revision-Date: 2025-04-22 01:27+0200\n"
+"PO-Revision-Date: 2025-06-10 22:56+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -795,17 +795,14 @@ msgid "Tablet Pad Ring"
 msgstr "태블릿 패드 링"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "태블릿 패드 링"
+msgstr "태블릿 패드 다이얼"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
-msgstr "상대 위치"
+msgstr "델타"
 
 #: debug_console.cpp:654
 #, kde-format
@@ -3117,17 +3114,15 @@ msgstr "머신 문자열 일치 형식"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "창 관리자"
+msgstr "창 태그"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "창 제목 문자열 일치 형식"
+msgstr "창 태그 문자열 일치 형식"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3703,8 +3698,8 @@ msgid ""
 "keyboard shortcut."
 msgstr ""
 "창의 경계선이 보이지 않게 하도록 설정했습니다.\n"
-"경계선이 없을 때는 마우스를 사용해서 경계선을 다시 보이게 할 수 없습니다: 키"
-"보드 단축키 %1을(를) 사용해서 창 동작 메뉴를 부르십시오."
+"경계선이 없을 때는 마우스를 사용해서 경계선을 다시 보이게 할 수 없습니다. 키"
+"보드 단축키 %1을(를) 사용해서 창 동작 메뉴를 호출하십시오."
 
 #: useractions.cpp:169
 #, kde-format
@@ -3716,8 +3711,8 @@ msgid ""
 msgstr ""
 "창을 전체 화면 모드로 보이도록 설정했습니다.\n"
 "앱에서 전체 화면 모드를 제어할 수 없을 때에는 마우스를 사용해서 전체 화면 모"
-"드에서 벗어날 수 없습니다: 키보드 단축키 %1을(를) 사용해서 창 동작 메뉴를 부"
-"르십시오."
+"드에서 벗어날 수 없습니다. 키보드 단축키 %1을(를) 사용해서 창 동작 메뉴를 호"
+"출하십시오."
 
 #: useractions.cpp:216
 #, kde-format

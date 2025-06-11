@@ -1,14 +1,14 @@
 # Translation of kcmkwinrules to Korean.
 # Copyright (C) 2007-2008 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kdebase package.
-# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Shinjo Park <kde@peremen.name>
+# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Shinjo Park <kde@peremen.name>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 02:37+0000\n"
-"PO-Revision-Date: 2024-12-10 01:15+0100\n"
+"PO-Revision-Date: 2025-06-10 22:49+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -228,10 +228,9 @@ msgid "Machine (hostname)"
 msgstr "머신(호스트 이름)"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window types"
+#, kde-format
 msgid "Window tag"
-msgstr "창 종류"
+msgstr "창 태그"
 
 #: rulesmodel.cpp:447
 #, kde-format
