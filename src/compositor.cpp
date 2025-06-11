@@ -376,16 +376,46 @@ static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, Output *o
     // the background of the output can be assumed to be black
     const auto scanoutCandidates = view->scanoutCandidates(coversEntireOutput ? 2 : 1);
     if (scanoutCandidates.isEmpty()) {
-        layer->notifyNoScanoutCandidate();
+        layer->setScanoutCandidate(nullptr);
         return false;
     }
     if (coversEntireOutput && scanoutCandidates.size() == 2 && !checkForBlackBackground(scanoutCandidates.back())) {
         return false;
     }
-    const auto geometry = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).translated(-output->geometryF().topLeft());
+    SurfaceItem *candidate = scanoutCandidates.front();
+    SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(candidate);
+    if (!wayland || !wayland->surface()) {
+        return false;
+    }
+    const auto buffer = wayland->surface()->buffer();
+    if (!buffer) {
+        return false;
+    }
+    const auto attrs = buffer->dmabufAttributes();
+    if (!attrs) {
+        return false;
+    }
+    const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
+    const auto formats = tearing ? layer->supportedAsyncDrmFormats() : layer->supportedDrmFormats();
+    if (auto it = formats.find(attrs->format); it != formats.end() && !it->contains(attrs->modifier)) {
+        layer->setScanoutCandidate(candidate);
+        candidate->setScanoutHint(layer->scanoutDevice(), formats);
+        return false;
+    }
+    const auto geometry = candidate->mapToScene(QRectF(QPointF(0, 0), candidate->size())).translated(-output->geometryF().topLeft());
     layer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->pixelSize()).toRect());
     layer->setEnabled(true);
-    return layer->importScanoutBuffer(scanoutCandidates.front(), frame);
+    layer->setSourceRect(candidate->bufferSourceBox());
+    layer->setBufferTransform(candidate->bufferTransform());
+    layer->setOffloadTransform(candidate->bufferTransform().combine(output->transform().inverted()));
+    layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), output->layerBlendingColor(), candidate->renderingIntent()));
+    const bool ret = layer->importScanoutBuffer(candidate->buffer(), frame);
+    if (ret) {
+        candidate->resetDamage();
+        // ensure the pixmap is updated when direct scanout ends
+        candidate->destroyPixmap();
+    }
+    return ret;
 }
 
 static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *output)
