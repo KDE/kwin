@@ -21,7 +21,6 @@ class Display;
 class OutputInterface;
 class PlasmaWindowActivationFeedbackInterfacePrivate;
 class PlasmaWindowInterface;
-class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowActivationInterfacePrivate;
 class PlasmaWindowManagementInterfacePrivate;
 class PlasmaWindowInterfacePrivate;
@@ -76,18 +75,6 @@ public:
 
     PlasmaWindowInterface *createWindow(QObject *parent, const QUuid &uuid);
     QList<PlasmaWindowInterface *> windows() const;
-
-    /**
-     * Associate a PlasmaVirtualDesktopManagementInterface to this window management.
-     * It's necessary to associate one in orderto use the plasma virtual desktop features
-     * of PlasmaWindowInterface, as a window must know what are the deasktops available
-     */
-    void setPlasmaVirtualDesktopManagementInterface(PlasmaVirtualDesktopManagementInterface *manager);
-
-    /**
-     * @returns the PlasmaVirtualDesktopManagementInterface associated to this PlasmaWindowManagementInterface
-     */
-    PlasmaVirtualDesktopManagementInterface *plasmaVirtualDesktopManagementInterface() const;
 
     /**
      * Associate stacking order to this window management
