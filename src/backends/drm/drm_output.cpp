@@ -195,7 +195,7 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
             m_renderLoop->uninhibit();
             m_renderLoop->scheduleRepaint();
             // re-set KMS color pipeline stuff
-            State next;
+            State next = m_state;
             tryKmsColorOffloading(next);
             maybeScheduleRepaints(next);
             setState(next);
