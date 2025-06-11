@@ -70,42 +70,9 @@ bool OutputLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::share
     return false;
 }
 
-bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::shared_ptr<OutputFrame> &frame)
+bool OutputLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
-    SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem);
-    if (!wayland || !wayland->surface()) {
-        return false;
-    }
-    const auto buffer = wayland->surface()->buffer();
-    if (!buffer) {
-        return false;
-    }
-    const auto attrs = buffer->dmabufAttributes();
-    if (!attrs) {
-        return false;
-    }
-    const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
-    const auto formats = tearing ? supportedAsyncDrmFormats() : supportedDrmFormats();
-    if (auto it = formats.find(attrs->format); it != formats.end() && !it->contains(attrs->modifier)) {
-        if (m_scanoutCandidate && m_scanoutCandidate != surfaceItem) {
-            m_scanoutCandidate->setScanoutHint(nullptr, {});
-        }
-        m_scanoutCandidate = surfaceItem;
-        surfaceItem->setScanoutHint(scanoutDevice(), formats);
-        return false;
-    }
-    m_sourceRect = surfaceItem->bufferSourceBox();
-    m_bufferTransform = surfaceItem->bufferTransform();
-    const auto desiredTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
-    m_offloadTransform = m_bufferTransform.combine(desiredTransform.inverted());
-    setColor(surfaceItem->colorDescription(), surfaceItem->renderingIntent(), ColorPipeline::create(surfaceItem->colorDescription(), m_output->layerBlendingColor(), surfaceItem->renderingIntent()));
-    const bool ret = doImportScanoutBuffer(buffer, frame);
-    if (ret) {
-        surfaceItem->resetDamage();
-        // ensure the pixmap is updated when direct scanout ends
-        surfaceItem->destroyPixmap();
-    }
-    return ret;
+    return doImportScanoutBuffer(buffer, frame);
 }
 
 std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
@@ -118,12 +85,12 @@ bool OutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damaged
     return doEndFrame(renderedRegion, damagedRegion, frame);
 }
 
-void OutputLayer::notifyNoScanoutCandidate()
+void OutputLayer::setScanoutCandidate(SurfaceItem *item)
 {
-    if (m_scanoutCandidate) {
+    if (m_scanoutCandidate && item != m_scanoutCandidate) {
         m_scanoutCandidate->setScanoutHint(nullptr, {});
-        m_scanoutCandidate = nullptr;
     }
+    m_scanoutCandidate = item;
 }
 
 void OutputLayer::setEnabled(bool enable)
