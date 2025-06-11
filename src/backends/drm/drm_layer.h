@@ -38,7 +38,6 @@ class DrmPipelineLayer : public DrmOutputLayer
 public:
     explicit DrmPipelineLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type);
 
-    virtual bool checkTestBuffer() = 0;
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
 
 protected:

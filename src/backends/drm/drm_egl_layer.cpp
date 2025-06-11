@@ -72,8 +72,9 @@ bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damag
     return m_surface.endRendering(damagedRegion, frame);
 }
 
-bool EglGbmLayer::checkTestBuffer()
+bool EglGbmLayer::preparePresentationTest()
 {
+    m_scanoutBuffer.reset();
     return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff()) != nullptr;
 }
 
