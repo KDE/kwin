@@ -659,30 +659,30 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 void DrmOutput::tryKmsColorOffloading(State &next)
 {
     constexpr TransferFunction::Type blendingSpace = TransferFunction::gamma22;
-    const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
-    if (colorDescription().transferFunction().type == blendingSpace) {
-        next.blendingColor = colorDescription();
+    const double maxLuminance = next.colorDescription.maxHdrLuminance().value_or(next.colorDescription.referenceLuminance());
+    if (next.colorDescription.transferFunction().type == blendingSpace) {
+        next.blendingColor = next.colorDescription;
     } else {
-        next.blendingColor = colorDescription().withTransferFunction(TransferFunction(blendingSpace, 0, maxLuminance));
+        next.blendingColor = next.colorDescription.withTransferFunction(TransferFunction(blendingSpace, 0, maxLuminance));
     }
 
     // we can't use the original color description without modifications
     // as that would un-do any brightness adjustments we did for night light
     // note that we also can't use ColorDescription::dimmed, as we must avoid clipping to this luminance!
-    const ColorDescription encoding = m_state.originalColorDescription.withReference(colorDescription().referenceLuminance());
+    const ColorDescription encoding = next.originalColorDescription.withReference(next.colorDescription.referenceLuminance());
 
     // absolute colorimetric to preserve the whitepoint adjustments made during compositing
-    ColorPipeline colorPipeline = ColorPipeline::create(blendingColor(), encoding, RenderingIntent::AbsoluteColorimetric);
+    ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetric);
 
     const bool hdr = m_state.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool wcg = m_state.wideColorGamut && (capabilities() & Capability::WideColorGamut);
     const bool usesICC = m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile && !hdr && !wcg;
-    if (colorPowerTradeoff() == ColorPowerTradeoff::PreferAccuracy) {
+    if (next.colorPowerTradeoff == ColorPowerTradeoff::PreferAccuracy) {
         next.layerBlendingColor = encoding;
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
         m_needsShadowBuffer = usesICC
-            || colorDescription().transferFunction().type != blendingSpace
+            || next.colorDescription.transferFunction().type != blendingSpace
             || !colorPipeline.isIdentity();
         return;
     }
@@ -700,20 +700,20 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     m_pipeline->setCrtcColorPipeline(colorPipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
-        next.layerBlendingColor = blendingColor();
+        next.layerBlendingColor = next.blendingColor;
         m_needsShadowBuffer = false;
         return;
     }
-    if (colorDescription().transferFunction().type == blendingSpace && !usesICC) {
+    if (next.colorDescription.transferFunction().type == blendingSpace && !usesICC) {
         // Allow falling back to applying night light in non-linear space.
         // This isn't technically correct, but the difference is quite small and not worth
         // losing a lot of performance and battery life over
         ColorPipeline simplerPipeline;
-        simplerPipeline.addMatrix(blendingColor().toOther(encoding, RenderingIntent::AbsoluteColorimetric), colorPipeline.currentOutputRange());
+        simplerPipeline.addMatrix(next.blendingColor.toOther(encoding, RenderingIntent::AbsoluteColorimetric), colorPipeline.currentOutputRange());
         m_pipeline->setCrtcColorPipeline(colorPipeline);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
-            next.layerBlendingColor = blendingColor();
+            next.layerBlendingColor = next.blendingColor;
             m_needsShadowBuffer = false;
             return;
         }
@@ -723,7 +723,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     m_pipeline->applyPendingChanges();
     next.layerBlendingColor = encoding;
     m_needsShadowBuffer = usesICC
-        || colorDescription().transferFunction().type != blendingSpace
+        || next.colorDescription.transferFunction().type != blendingSpace
         || !colorPipeline.isIdentity();
 }
 
