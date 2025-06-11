@@ -126,7 +126,7 @@ bool VirtualEglGbmLayer::doesGbmSwapchainFit(EglSwapchain *swapchain) const
     return swapchain && swapchain->size() == m_output->modeSize();
 }
 
-bool VirtualEglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool VirtualEglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;

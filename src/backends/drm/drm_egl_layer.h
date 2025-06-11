@@ -38,7 +38,7 @@ public:
     QHash<uint32_t, QList<uint64_t>> supportedAsyncDrmFormats() const override;
 
 private:
-    bool doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
+    bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
 

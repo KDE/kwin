@@ -74,7 +74,7 @@ bool EglGbmLayer::preparePresentationTest()
     return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff()) != nullptr;
 }
 
-bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     static const bool directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);
     if (directScanoutDisabled) {

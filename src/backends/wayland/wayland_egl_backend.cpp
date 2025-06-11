@@ -110,7 +110,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     return true;
 }
 
-bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool WaylandEglPrimaryLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     // TODO use viewporter to relax this check
     if (sourceRect() != targetRect() || targetRect() != QRectF(QPointF(0, 0), m_output->modeSize())) {
