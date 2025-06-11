@@ -80,6 +80,8 @@ private:
     {
         ~Surface();
 
+        bool needsRecreation = false;
+
         std::shared_ptr<EglContext> context;
         std::shared_ptr<EglSwapchain> gbmSwapchain;
         std::shared_ptr<EglSwapchainSlot> currentSlot;

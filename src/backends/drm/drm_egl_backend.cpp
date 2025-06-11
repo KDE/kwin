@@ -131,6 +131,11 @@ std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
     return ret;
 }
 
+void EglGbmBackend::resetContextForGpu(DrmGpu *gpu)
+{
+    m_contexts.erase(gpu->eglDisplay());
+}
+
 DrmDevice *EglGbmBackend::drmDevice() const
 {
     return gpu()->drmDevice();

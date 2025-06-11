@@ -59,6 +59,7 @@ public:
 
     EglDisplay *displayForGpu(DrmGpu *gpu);
     std::shared_ptr<EglContext> contextForGpu(DrmGpu *gpu);
+    void resetContextForGpu(DrmGpu *gpu);
 
 private:
     bool initializeEgl();
