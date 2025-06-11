@@ -41,10 +41,9 @@ public:
     void releaseBuffers() override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
-    const ColorDescription &colorDescription() const;
 
 private:
-    bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame) override;
+    bool doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
     std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
     bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
 

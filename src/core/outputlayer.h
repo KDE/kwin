@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/colorpipeline.h"
 #include "core/rendertarget.h"
 #include "kwin_export.h"
 
@@ -92,13 +93,20 @@ public:
      * Returns the transform this layer will apply to content passed to it
      */
     OutputTransform offloadTransform() const;
+    void setOffloadTransform(const OutputTransform &transform);
     /**
      * Returns the transform a buffer passed into this layer already has
      */
     OutputTransform bufferTransform() const;
+    void setBufferTransform(const OutputTransform &transform);
+
+    const ColorPipeline &colorPipeline() const;
+    const ColorDescription &colorDescription() const;
+    RenderingIntent renderIntent() const;
+    void setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline);
 
 protected:
-    virtual bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame);
+    virtual bool doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame);
     virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;
     virtual bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) = 0;
 
@@ -110,6 +118,9 @@ protected:
     bool m_enabled = false;
     OutputTransform m_offloadTransform = OutputTransform::Kind::Normal;
     OutputTransform m_bufferTransform = OutputTransform::Kind::Normal;
+    ColorPipeline m_colorPipeline;
+    ColorDescription m_color = ColorDescription::sRGB;
+    RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
     Output *const m_output;
     bool m_repaintScheduled = false;

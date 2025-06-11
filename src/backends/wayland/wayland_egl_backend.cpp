@@ -110,13 +110,13 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     return true;
 }
 
-bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
+bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     // TODO use viewporter to relax this check
     if (sourceRect() != targetRect() || targetRect() != QRectF(QPointF(0, 0), m_output->modeSize())) {
         return false;
     }
-    if (offloadTransform() != OutputTransform::Kind::Normal || color != ColorDescription::sRGB) {
+    if (offloadTransform() != OutputTransform::Kind::Normal || colorDescription() != m_output->layerBlendingColor()) {
         return false;
     }
     auto presentationBuffer = m_backend->backend()->importBuffer(buffer);

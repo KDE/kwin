@@ -56,7 +56,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     // as the hardware cursor is more important than an incorrectly blended cursor edge
 
     m_scanoutBuffer.reset();
-    m_colorPipeline = ColorPipeline{};
     return m_surface.startRendering(targetRect().size(),
                                     m_pipeline->output()->transform().combine(OutputTransform::FlipY),
                                     m_pipeline->formats(m_type),
@@ -91,16 +90,7 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
     }
 }
 
-ColorDescription EglGbmLayer::colorDescription() const
-{
-    if (m_scanoutBuffer) {
-        return m_scanoutColor;
-    } else {
-        return m_surface.colorDescription();
-    }
-}
-
-bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     static const bool directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);
     if (directScanoutDisabled) {
@@ -126,11 +116,9 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         // Right now this just assumes all buffers are on the primary GPU
         return false;
     }
-    m_colorPipeline = ColorPipeline::create(color, m_pipeline->output()->layerBlendingColor(), intent);
     if (!m_colorPipeline.isIdentity() && m_pipeline->output()->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy) {
         return false;
     }
-    m_scanoutColor = color;
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
     // so we need to make sure that doesn't cause a difference vs the composited result
@@ -177,10 +165,5 @@ QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedAsyncDrmFormats() const
 QList<QSize> EglGbmLayer::recommendedSizes() const
 {
     return m_pipeline->recommendedSizes(m_type);
-}
-
-const ColorPipeline &EglGbmLayer::colorPipeline() const
-{
-    return m_colorPipeline;
 }
 }

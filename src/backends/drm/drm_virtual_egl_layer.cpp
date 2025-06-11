@@ -136,7 +136,7 @@ std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
     return nullptr;
 }
 
-bool VirtualEglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
+bool VirtualEglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -148,7 +148,6 @@ bool VirtualEglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const Col
         return false;
     }
     m_scanoutBuffer = buffer;
-    m_scanoutColor = color;
     return true;
 }
 
@@ -172,10 +171,5 @@ DrmDevice *VirtualEglGbmLayer::scanoutDevice() const
 QHash<uint32_t, QList<uint64_t>> VirtualEglGbmLayer::supportedDrmFormats() const
 {
     return m_eglBackend->supportedFormats();
-}
-
-const ColorDescription &VirtualEglGbmLayer::colorDescription() const
-{
-    return m_scanoutBuffer ? m_scanoutColor : ColorDescription::sRGB;
 }
 }

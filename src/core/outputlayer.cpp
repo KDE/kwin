@@ -63,7 +63,7 @@ bool OutputLayer::needsRepaint() const
     return m_repaintScheduled || !m_repaints.isEmpty();
 }
 
-bool OutputLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
+bool OutputLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     return false;
 }
@@ -96,7 +96,8 @@ bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::share
     m_bufferTransform = surfaceItem->bufferTransform();
     const auto desiredTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
     m_offloadTransform = m_bufferTransform.combine(desiredTransform.inverted());
-    const bool ret = doImportScanoutBuffer(buffer, surfaceItem->colorDescription(), surfaceItem->renderingIntent(), frame);
+    setColor(surfaceItem->colorDescription(), surfaceItem->renderingIntent(), ColorPipeline::create(surfaceItem->colorDescription(), m_output->layerBlendingColor(), surfaceItem->renderingIntent()));
+    const bool ret = doImportScanoutBuffer(buffer, frame);
     if (ret) {
         surfaceItem->resetDamage();
         // ensure the pixmap is updated when direct scanout ends
@@ -110,6 +111,7 @@ std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
     m_sourceRect = QRectF(QPointF(0, 0), m_targetRect.size());
     m_bufferTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
     m_offloadTransform = OutputTransform::Kind::Normal;
+    setColor(m_output->layerBlendingColor(), RenderingIntent::AbsoluteColorimetric, ColorPipeline{});
     return doBeginFrame();
 }
 
@@ -169,6 +171,38 @@ void OutputLayer::setTargetRect(const QRect &rect)
 QHash<uint32_t, QList<uint64_t>> OutputLayer::supportedAsyncDrmFormats() const
 {
     return supportedDrmFormats();
+}
+
+void OutputLayer::setOffloadTransform(const OutputTransform &transform)
+{
+    m_offloadTransform = transform;
+}
+
+void OutputLayer::setBufferTransform(const OutputTransform &transform)
+{
+    m_bufferTransform = transform;
+}
+
+const ColorPipeline &OutputLayer::colorPipeline() const
+{
+    return m_colorPipeline;
+}
+
+const ColorDescription &OutputLayer::colorDescription() const
+{
+    return m_color;
+}
+
+RenderingIntent OutputLayer::renderIntent() const
+{
+    return m_renderingIntent;
+}
+
+void OutputLayer::setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline)
+{
+    m_color = color;
+    m_renderingIntent = intent;
+    m_colorPipeline = pipeline;
 }
 
 } // namespace KWin
