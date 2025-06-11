@@ -74,12 +74,9 @@ public:
      * for whether or not direct scanout *could* be successful
      * A presentation request on the output must however be used afterwards to find out if it's actually successful!
      */
-    bool importScanoutBuffer(SurfaceItem *item, const std::shared_ptr<OutputFrame> &frame);
+    bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame);
 
-    /**
-     * Notify that there's no scanout candidate this frame
-     */
-    void notifyNoScanoutCandidate();
+    void setScanoutCandidate(SurfaceItem *item);
 
     virtual DrmDevice *scanoutDevice() const = 0;
     virtual QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const = 0;
