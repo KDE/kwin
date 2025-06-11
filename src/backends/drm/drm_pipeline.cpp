@@ -473,9 +473,16 @@ DrmOutput *DrmPipeline::output() const
 
 QHash<uint32_t, QList<uint64_t>> DrmPipeline::formats(DrmPlane::TypeIndex planeType) const
 {
+    if (!m_pending.crtc) {
+        return {};
+    }
     switch (planeType) {
     case DrmPlane::TypeIndex::Primary:
-        return m_pending.formats;
+        if (auto plane = m_pending.crtc->primaryPlane()) {
+            return gpu()->forceImplicitModifiers() ? plane->implicitModifierOnlyFormats() : plane->formats();
+        } else {
+            return legacyFormats;
+        }
     case DrmPlane::TypeIndex::Cursor:
         if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
             return m_pending.crtc->cursorPlane()->formats();
@@ -507,23 +514,6 @@ QHash<uint32_t, QList<uint64_t>> DrmPipeline::asyncFormats(DrmPlane::TypeIndex p
         return {};
     }
     Q_UNREACHABLE();
-}
-
-bool DrmPipeline::pruneModifier()
-{
-    const DmaBufAttributes *dmabufAttributes = m_primaryLayer->currentBuffer() ? m_primaryLayer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;
-    if (!dmabufAttributes) {
-        return false;
-    }
-    auto &modifiers = m_pending.formats[dmabufAttributes->format];
-    if (modifiers == implicitModifier) {
-        return false;
-    } else {
-        qCDebug(KWIN_DRM) << "Pruning modifiers for format" << FormatInfo::drmFormatName(dmabufAttributes->format)
-                          << "on" << m_connector->connectorName();
-        modifiers = implicitModifier;
-        return true;
-    }
 }
 
 QList<QSize> DrmPipeline::recommendedSizes(DrmPlane::TypeIndex planeType) const
@@ -635,11 +625,6 @@ const std::shared_ptr<IccProfile> &DrmPipeline::iccProfile() const
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     m_pending.crtc = crtc;
-    if (crtc) {
-        m_pending.formats = crtc->primaryPlane() ? crtc->primaryPlane()->formats() : legacyFormats;
-    } else {
-        m_pending.formats = {};
-    }
 }
 
 void DrmPipeline::setMode(const std::shared_ptr<DrmConnectorMode> &mode)

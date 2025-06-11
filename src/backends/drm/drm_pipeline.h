@@ -77,7 +77,6 @@ public:
 
     QHash<uint32_t, QList<uint64_t>> formats(DrmPlane::TypeIndex planeType) const;
     QHash<uint32_t, QList<uint64_t>> asyncFormats(DrmPlane::TypeIndex planeType) const;
-    bool pruneModifier();
     QList<QSize> recommendedSizes(DrmPlane::TypeIndex planeType) const;
 
     void setOutput(DrmOutput *output);
@@ -157,7 +156,6 @@ private:
     struct State
     {
         DrmCrtc *crtc = nullptr;
-        QHash<uint32_t, QList<uint64_t>> formats;
         bool active = true; // whether or not the pipeline should be currently used
         bool enabled = true; // whether or not the pipeline needs a crtc
         bool needsModeset = false;

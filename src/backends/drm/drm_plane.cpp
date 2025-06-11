@@ -135,6 +135,11 @@ bool DrmPlane::updateProperties()
             m_supportedFormats.insert(DRM_FORMAT_XRGB8888, modifiers);
         }
     }
+    m_implicitModifierOnlyFormats.clear();
+    for (auto it = m_supportedFormats.begin(); it != m_supportedFormats.end(); it++) {
+        m_implicitModifierOnlyFormats.insert(it.key(), {DRM_FORMAT_MOD_INVALID});
+    }
+
     m_sizeHints.clear();
     if (sizeHints.isValid() && sizeHints.immutableBlob()) {
         // TODO switch to drm_plane_size_hint once we require libdrm 2.4.122
@@ -180,6 +185,11 @@ void DrmPlane::set(DrmAtomicCommit *commit, const QRect &src, const QRect &dst)
 bool DrmPlane::isCrtcSupported(int pipeIndex) const
 {
     return (m_possibleCrtcs & (1 << pipeIndex));
+}
+
+QHash<uint32_t, QList<uint64_t>> DrmPlane::implicitModifierOnlyFormats() const
+{
+    return m_implicitModifierOnlyFormats;
 }
 
 QHash<uint32_t, QList<uint64_t>> DrmPlane::formats() const

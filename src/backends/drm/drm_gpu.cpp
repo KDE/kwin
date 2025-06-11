@@ -378,12 +378,10 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
             qCDebug(KWIN_DRM) << "Assigning CRTC" << currentCrtc->id() << "to connector" << connector->id();
-            do {
-                DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
-                if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
-                    return err;
-                }
-            } while (pipeline->pruneModifier());
+            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
+            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+                return err;
+            }
         }
     }
     for (DrmCrtc *crtc : std::as_const(crtcs)) {
@@ -392,12 +390,10 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
             qCDebug(KWIN_DRM) << "Assigning CRTC" << crtc->id() << "to connector" << connector->id();
-            do {
-                DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
-                if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
-                    return err;
-                }
-            } while (pipeline->pruneModifier());
+            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
+            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+                return err;
+            }
         }
     }
     return DrmPipeline::Error::InvalidArguments;
@@ -444,7 +440,18 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             pipeline->output()->cursorLayer()->setEnabled(false);
         }
     }
-    return checkCrtcAssignment(connectors, crtcs);
+    m_forceImplicitModifiers = false;
+    auto err = checkCrtcAssignment(connectors, crtcs);
+    if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+        return err;
+    }
+    if (m_addFB2ModifiersSupported) {
+        // Mesa usually picks the modifier with lowest bandwidth requirements
+        // so implicit modifiers might work where explicit ones don't
+        m_forceImplicitModifiers = true;
+        err = checkCrtcAssignment(connectors, crtcs);
+    }
+    return err;
 }
 
 DrmPipeline::Error DrmGpu::testPipelines()
@@ -650,6 +657,11 @@ void DrmGpu::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
 bool DrmGpu::addFB2ModifiersSupported() const
 {
     return m_addFB2ModifiersSupported;
+}
+
+bool DrmGpu::forceImplicitModifiers() const
+{
+    return m_forceImplicitModifiers;
 }
 
 bool DrmGpu::asyncPageflipSupported() const
