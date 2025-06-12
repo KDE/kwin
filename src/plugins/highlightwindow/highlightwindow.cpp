@@ -147,8 +147,10 @@ void HighlightWindowEffect::highlightWindows(const QList<KWin::EffectWindow *> &
     m_monitorWindow = nullptr;
     m_highlightedWindows.clear();
     m_highlightedIds.clear();
-    for (auto w : windows) {
-        m_highlightedWindows << w;
+    for (EffectWindow *window : windows) {
+        for (EffectWindow *current = window; current; current = current->findModal()) {
+            m_highlightedWindows << current;
+        }
     }
     prepareHighlighting();
 }
