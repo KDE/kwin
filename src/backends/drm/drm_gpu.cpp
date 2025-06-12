@@ -427,20 +427,6 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             return c1->crtcId.value() > c2->crtcId.value();
         });
     }
-    for (DrmPipeline *pipeline : m_pipelines) {
-        if (!pipeline->primaryLayer()) {
-            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
-        }
-        if (!pipeline->output()->lease()) {
-            // reset all outputs to their most basic configuration (primary plane without scaling)
-            // for the test, and set the target rects appropriately
-            const auto primary = pipeline->output()->primaryLayer();
-            primary->setTargetRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
-            primary->setSourceRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
-            primary->setEnabled(true);
-            pipeline->output()->cursorLayer()->setEnabled(false);
-        }
-    }
     m_forceImplicitModifiers = false;
     auto err = checkCrtcAssignment(connectors, crtcs);
     if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
@@ -455,15 +441,50 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     return err;
 }
 
+void DrmGpu::releaseUnusedBuffers()
+{
+    const auto isLayerUsed = [this](DrmPipelineLayer *layer) {
+        return std::ranges::any_of(m_pipelines, [layer](const auto &pipeline) {
+            return layer == pipeline->primaryLayer() || layer == pipeline->cursorLayer();
+        });
+    };
+    for (const auto &[plane, layer] : m_planeLayerMap) {
+        if (!isLayerUsed(layer.get())) {
+            layer->releaseBuffers();
+        }
+    }
+    for (const auto &[crtc, layer] : m_legacyLayerMap) {
+        if (!isLayerUsed(layer.get())) {
+            layer->releaseBuffers();
+        }
+    }
+    for (const auto &[crtc, layer] : m_legacyCursorLayerMap) {
+        if (!isLayerUsed(layer.get())) {
+            layer->releaseBuffers();
+        }
+    }
+}
+
 DrmPipeline::Error DrmGpu::testPipelines()
 {
     if (m_pipelines.empty()) {
         // nothing to do
         return DrmPipeline::Error::None;
     }
-    // ensure we have suitable buffers for the test
+    assignOutputLayers();
     for (DrmPipeline *pipeline : m_pipelines) {
-        if (pipeline->enabled() && !pipeline->primaryLayer()->preparePresentationTest()) {
+        if (pipeline->output()->lease() || !pipeline->enabled()) {
+            continue;
+        }
+        // reset all outputs to their most basic configuration (primary plane without scaling)
+        // for the test, and set the target rects appropriately
+        const auto primary = pipeline->primaryLayer();
+        primary->setTargetRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
+        primary->setSourceRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
+        primary->setEnabled(true);
+        pipeline->cursorLayer()->setEnabled(false);
+        // ensure we have suitable buffers for the test
+        if (!pipeline->primaryLayer()->preparePresentationTest()) {
             return DrmPipeline::Error::InvalidArguments;
         }
     }
@@ -830,27 +851,49 @@ QSize DrmGpu::cursorSize() const
 
 void DrmGpu::releaseBuffers()
 {
+    for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
+        pipeline->setLayers(nullptr, nullptr);
+        pipeline->applyPendingChanges();
+    }
     for (const auto &plane : std::as_const(m_planes)) {
         plane->releaseCurrentBuffer();
+        m_planeLayerMap.erase(plane.get());
     }
     for (const auto &crtc : std::as_const(m_crtcs)) {
         crtc->releaseCurrentBuffer();
-    }
-    for (const DrmPipeline *pipeline : std::as_const(m_pipelines)) {
-        if (DrmPipelineLayer *layer = pipeline->primaryLayer()) {
-            layer->releaseBuffers();
-        }
-        if (DrmPipelineLayer *layer = pipeline->cursorLayer()) {
-            layer->releaseBuffers();
-        }
+        m_legacyLayerMap.erase(crtc.get());
+        m_legacyCursorLayerMap.erase(crtc.get());
     }
 }
 
-void DrmGpu::recreateSurfaces()
+void DrmGpu::createLayers()
 {
+    if (m_atomicModeSetting) {
+        for (const auto &plane : m_planes) {
+            m_planeLayerMap[plane.get()] = m_platform->renderBackend()->createDrmPlaneLayer(plane.get());
+        }
+    } else {
+        for (const auto &crtc : m_crtcs) {
+            m_legacyLayerMap[crtc.get()] = m_platform->renderBackend()->createDrmPlaneLayer(this, DrmPlane::TypeIndex::Primary);
+            m_legacyCursorLayerMap[crtc.get()] = m_platform->renderBackend()->createDrmPlaneLayer(this, DrmPlane::TypeIndex::Cursor);
+        }
+    }
+    assignOutputLayers();
     for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
-        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
         pipeline->applyPendingChanges();
+    }
+}
+
+void DrmGpu::assignOutputLayers()
+{
+    if (m_atomicModeSetting) {
+        for (DrmPipeline *pipeline : std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::crtc)) {
+            pipeline->setLayers(m_planeLayerMap[pipeline->crtc()->primaryPlane()].get(), m_planeLayerMap[pipeline->crtc()->cursorPlane()].get());
+        }
+    } else {
+        for (DrmPipeline *pipeline : std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::crtc)) {
+            pipeline->setLayers(m_legacyLayerMap[pipeline->crtc()].get(), m_legacyCursorLayerMap[pipeline->crtc()].get());
+        }
     }
 }
 
