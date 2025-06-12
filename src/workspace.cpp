@@ -415,6 +415,7 @@ Workspace::~Workspace()
     m_tileManagers.clear();
 
     for (Output *output : std::as_const(m_outputs)) {
+        Q_EMIT outputRemoved(output);
         output->unref();
     }
 

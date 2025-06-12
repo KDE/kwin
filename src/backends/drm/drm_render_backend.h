@@ -25,8 +25,9 @@ class DrmRenderBackend
 public:
     virtual ~DrmRenderBackend() = default;
 
-    virtual std::shared_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type) = 0;
-    virtual std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
+    virtual std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPlane *plane) = 0;
+    virtual std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type) = 0;
+    virtual std::unique_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
 };
 
 }

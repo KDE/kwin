@@ -29,20 +29,26 @@
 namespace KWin
 {
 
-static EglGbmLayerSurface::BufferTarget targetFor(DrmPipeline *pipeline, DrmPlane::TypeIndex planeType)
+static EglGbmLayerSurface::BufferTarget targetFor(DrmGpu *gpu, DrmPlane::TypeIndex planeType)
 {
     if (planeType != DrmPlane::TypeIndex::Cursor) {
         return EglGbmLayerSurface::BufferTarget::Normal;
     }
-    if (pipeline->gpu()->atomicModeSetting() && !pipeline->gpu()->isVirtualMachine()) {
+    if (gpu->atomicModeSetting() && !gpu->isVirtualMachine()) {
         return EglGbmLayerSurface::BufferTarget::Linear;
     }
     return EglGbmLayerSurface::BufferTarget::Dumb;
 }
 
-EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPlane::TypeIndex type)
-    : DrmPipelineLayer(pipeline, type)
-    , m_surface(pipeline->gpu(), eglBackend, targetFor(pipeline, type))
+EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPlane *plane)
+    : DrmPipelineLayer(plane)
+    , m_surface(plane->gpu(), eglBackend, EglGbmLayerSurface::BufferTarget::Normal)
+{
+}
+
+EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeIndex type)
+    : DrmPipelineLayer(type)
+    , m_surface(gpu, eglBackend, targetFor(gpu, type))
 {
 }
 
@@ -50,14 +56,14 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 {
     m_scanoutBuffer.reset();
     return m_surface.startRendering(targetRect().size(),
-                                    m_pipeline->output()->transform().combine(OutputTransform::FlipY),
-                                    m_pipeline->formats(m_type),
-                                    m_pipeline->output()->blendingColor(),
-                                    m_pipeline->output()->layerBlendingColor(),
-                                    m_pipeline->output()->needsShadowBuffer() ? m_pipeline->iccProfile() : nullptr,
-                                    m_pipeline->output()->scale(),
-                                    m_pipeline->output()->colorPowerTradeoff(),
-                                    m_pipeline->output()->needsShadowBuffer(),
+                                    drmOutput()->transform().combine(OutputTransform::FlipY),
+                                    supportedDrmFormats(),
+                                    drmOutput()->blendingColor(),
+                                    drmOutput()->layerBlendingColor(),
+                                    drmOutput()->needsShadowBuffer() ? pipeline()->iccProfile() : nullptr,
+                                    drmOutput()->scale(),
+                                    drmOutput()->colorPowerTradeoff(),
+                                    drmOutput()->needsShadowBuffer(),
                                     m_requiredAlphaBits);
 }
 
@@ -68,11 +74,11 @@ bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damag
 
 bool EglGbmLayer::preparePresentationTest()
 {
-    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->output()->shouldDisableCursorPlane()) {
+    if (m_type == DrmPlane::TypeIndex::Cursor && drmOutput()->shouldDisableCursorPlane()) {
         return false;
     }
     m_scanoutBuffer.reset();
-    return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff(), m_requiredAlphaBits) != nullptr;
+    return m_surface.renderTestBuffer(targetRect().size(), supportedDrmFormats(), drmOutput()->colorPowerTradeoff(), m_requiredAlphaBits) != nullptr;
 }
 
 bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
@@ -81,20 +87,20 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->output()->shouldDisableCursorPlane()) {
+    if (m_type == DrmPlane::TypeIndex::Cursor && drmOutput()->shouldDisableCursorPlane()) {
         return false;
     }
-    if (m_pipeline->gpu()->needsModeset()) {
+    if (gpu()->needsModeset()) {
         // don't do direct scanout with modeset, it might lead to locking
         // the hardware to some buffer format we can't switch away from
         return false;
     }
-    if (m_pipeline->output()->needsShadowBuffer()) {
+    if (drmOutput()->needsShadowBuffer()) {
         // while there are cases where this could still work (if the client prepares the buffer to match the output exactly)
         // it's likely not worth making this code more complicated to handle those edge cases
         return false;
     }
-    if (m_pipeline->gpu() != m_pipeline->gpu()->platform()->primaryGpu()) {
+    if (gpu() != gpu()->platform()->primaryGpu()) {
         // Disable direct scanout between GPUs, as
         // - there are some significant driver bugs with direct scanout from other GPUs,
         //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
@@ -104,7 +110,7 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
         // Right now this just assumes all buffers are on the primary GPU
         return false;
     }
-    if (!m_colorPipeline.isIdentity() && m_pipeline->output()->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy) {
+    if (!m_colorPipeline.isIdentity() && drmOutput()->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy) {
         return false;
     }
     // kernel documentation says that
@@ -113,11 +119,10 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     if (sourceRect() != sourceRect().toRect()) {
         return false;
     }
-    const auto plane = m_type == DrmPlane::TypeIndex::Primary ? m_pipeline->crtc()->primaryPlane() : m_pipeline->crtc()->cursorPlane();
-    if (offloadTransform() != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(offloadTransform()))) {
+    if (offloadTransform() != OutputTransform::Kind::Normal && (!m_plane || !m_plane->supportsTransformation(offloadTransform()))) {
         return false;
     }
-    m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
+    m_scanoutBuffer = gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer) {
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
     }
@@ -133,25 +138,5 @@ void EglGbmLayer::releaseBuffers()
 {
     m_scanoutBuffer.reset();
     m_surface.destroyResources();
-}
-
-DrmDevice *EglGbmLayer::scanoutDevice() const
-{
-    return m_pipeline->gpu()->drmDevice();
-}
-
-QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedDrmFormats() const
-{
-    return m_pipeline->formats(m_type);
-}
-
-QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedAsyncDrmFormats() const
-{
-    return m_pipeline->asyncFormats(m_type);
-}
-
-QList<QSize> EglGbmLayer::recommendedSizes() const
-{
-    return m_pipeline->recommendedSizes(m_type);
 }
 }

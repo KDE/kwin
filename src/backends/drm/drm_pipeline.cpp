@@ -37,10 +37,6 @@ using namespace std::literals;
 namespace KWin
 {
 
-static const QList<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
-static const QHash<uint32_t, QList<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, implicitModifier}};
-static const QHash<uint32_t, QList<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_ARGB8888, implicitModifier}};
-
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
     , m_commitThread(std::make_unique<DrmCommitThread>(conn->gpu(), conn->connectorName()))
@@ -107,7 +103,7 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
         if (layersToUpdate.isEmpty()) {
             // work around amdgpu not giving us a valid pageflip timestamp
             // if the commit doesn't contain a drm plane
-            if (Error err = prepareAtomicPlane(partialUpdate.get(), m_pending.crtc->primaryPlane(), m_primaryLayer.get(), frame); err != Error::None) {
+            if (Error err = prepareAtomicPlane(partialUpdate.get(), m_pending.crtc->primaryPlane(), m_pending.primaryLayer, frame); err != Error::None) {
                 return err;
             }
         }
@@ -118,7 +114,7 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
         m_commitThread->addCommit(std::move(partialUpdate));
         return Error::None;
     } else {
-        if (layersToUpdate.contains(m_cursorLayer.get()) && !setCursorLegacy()) {
+        if (layersToUpdate.contains(m_pending.cursorLayer) && !setCursorLegacy()) {
             return Error::InvalidArguments;
         }
         // always present on the crtc, for presentation feedback
@@ -211,11 +207,11 @@ DrmPipeline::Error DrmPipeline::prepareAtomicCommit(DrmAtomicCommit *commit, Com
         if (Error err = prepareAtomicPresentation(commit, frame); err != Error::None) {
             return err;
         }
-        if (Error err = prepareAtomicPlane(commit, m_pending.crtc->primaryPlane(), m_primaryLayer.get(), frame); err != Error::None) {
+        if (Error err = prepareAtomicPlane(commit, m_pending.crtc->primaryPlane(), m_pending.primaryLayer, frame); err != Error::None) {
             return err;
         }
         if (auto plane = m_pending.crtc->cursorPlane()) {
-            prepareAtomicPlane(commit, plane, m_cursorLayer.get(), frame);
+            prepareAtomicPlane(commit, plane, m_pending.cursorLayer, frame);
         }
         if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset || m_pending.needsModesetProperties) {
             if (!prepareAtomicModeset(commit)) {
@@ -239,10 +235,10 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
-    if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
+    if (m_pending.cursorLayer->isEnabled() && m_pending.primaryLayer->colorPipeline() != m_pending.cursorLayer->colorPipeline()) {
         return DrmPipeline::Error::InvalidArguments;
     }
-    const ColorPipeline colorPipeline = m_primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
+    const ColorPipeline colorPipeline = m_pending.primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
     if (!m_pending.crtc->postBlendingPipeline) {
         if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
@@ -454,7 +450,7 @@ bool DrmPipeline::updateCursor(std::optional<std::chrono::nanoseconds> allowedVr
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
         auto cursorOnly = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
-        prepareAtomicPlane(cursorOnly.get(), m_pending.crtc->cursorPlane(), m_cursorLayer.get(), nullptr);
+        prepareAtomicPlane(cursorOnly.get(), m_pending.crtc->cursorPlane(), m_pending.cursorLayer, nullptr);
         cursorOnly->setAllowedVrrDelay(allowedVrrDelay);
         m_commitThread->addCommit(std::move(cursorOnly));
         return true;
@@ -465,10 +461,15 @@ bool DrmPipeline::updateCursor(std::optional<std::chrono::nanoseconds> allowedVr
 
 void DrmPipeline::applyPendingChanges()
 {
+    const bool layersChanged = m_next.primaryLayer != m_pending.primaryLayer
+        || m_next.cursorLayer != m_pending.cursorLayer;
     m_next = m_pending;
     m_commitThread->setModeInfo(m_pending.mode->refreshRate(), m_pending.mode->vblankTime());
     m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
     m_output->renderLoop()->setRefreshRate(m_pending.mode->refreshRate());
+    if (layersChanged) {
+        Q_EMIT m_output->outputLayersChanged();
+    }
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -495,77 +496,17 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 void DrmPipeline::setOutput(DrmOutput *output)
 {
     m_output = output;
+    if (m_pending.primaryLayer) {
+        m_pending.primaryLayer->setOutput(m_output);
+    }
+    if (m_pending.cursorLayer) {
+        m_pending.cursorLayer->setOutput(m_output);
+    }
 }
 
 DrmOutput *DrmPipeline::output() const
 {
     return m_output;
-}
-
-QHash<uint32_t, QList<uint64_t>> DrmPipeline::formats(DrmPlane::TypeIndex planeType) const
-{
-    if (!m_pending.crtc) {
-        return {};
-    }
-    switch (planeType) {
-    case DrmPlane::TypeIndex::Primary:
-        if (auto plane = m_pending.crtc->primaryPlane()) {
-            return gpu()->forceImplicitModifiers() ? plane->implicitModifierOnlyFormats() : plane->formats();
-        } else {
-            return legacyFormats;
-        }
-    case DrmPlane::TypeIndex::Cursor:
-        if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
-            return m_pending.crtc->cursorPlane()->formats();
-        } else {
-            return legacyCursorFormats;
-        }
-    case DrmPlane::TypeIndex::Overlay:
-        return {};
-    }
-    Q_UNREACHABLE();
-}
-
-QHash<uint32_t, QList<uint64_t>> DrmPipeline::asyncFormats(DrmPlane::TypeIndex planeType) const
-{
-    switch (planeType) {
-    case DrmPlane::TypeIndex::Primary:
-        if (m_pending.crtc && m_pending.crtc->primaryPlane()) {
-            return m_pending.crtc->primaryPlane()->tearingFormats();
-        } else {
-            return legacyFormats;
-        }
-    case DrmPlane::TypeIndex::Cursor:
-        if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
-            return m_pending.crtc->cursorPlane()->tearingFormats();
-        } else {
-            return legacyCursorFormats;
-        }
-    case DrmPlane::TypeIndex::Overlay:
-        return {};
-    }
-    Q_UNREACHABLE();
-}
-
-QList<QSize> DrmPipeline::recommendedSizes(DrmPlane::TypeIndex planeType) const
-{
-    switch (planeType) {
-    case DrmPlane::TypeIndex::Primary:
-        if (m_pending.crtc && m_pending.crtc->primaryPlane()) {
-            return m_pending.crtc->primaryPlane()->recommendedSizes();
-        } else {
-            return QList<QSize>{};
-        }
-    case DrmPlane::TypeIndex::Cursor:
-        if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
-            return m_pending.crtc->cursorPlane()->recommendedSizes();
-        } else {
-            return QList<QSize>{gpu()->cursorSize()};
-        }
-    case DrmPlane::TypeIndex::Overlay:
-        return QList<QSize>{};
-    }
-    Q_UNREACHABLE();
 }
 
 bool DrmPipeline::needsModeset() const
@@ -620,12 +561,12 @@ bool DrmPipeline::enabled() const
 
 DrmPipelineLayer *DrmPipeline::primaryLayer() const
 {
-    return m_primaryLayer.get();
+    return m_pending.primaryLayer;
 }
 
 DrmPipelineLayer *DrmPipeline::cursorLayer() const
 {
-    return m_cursorLayer.get();
+    return m_pending.cursorLayer;
 }
 
 PresentationMode DrmPipeline::presentationMode() const
@@ -673,10 +614,16 @@ void DrmPipeline::setEnable(bool enable)
     m_pending.enabled = enable;
 }
 
-void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer)
+void DrmPipeline::setLayers(DrmPipelineLayer *primaryLayer, DrmPipelineLayer *cursorLayer)
 {
-    m_primaryLayer = primaryLayer;
-    m_cursorLayer = cursorLayer;
+    m_pending.primaryLayer = primaryLayer;
+    m_pending.cursorLayer = cursorLayer;
+    if (primaryLayer) {
+        primaryLayer->setOutput(m_output);
+    }
+    if (cursorLayer) {
+        cursorLayer->setOutput(m_output);
+    }
 }
 
 void DrmPipeline::setPresentationMode(PresentationMode mode)
