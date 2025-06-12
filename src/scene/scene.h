@@ -36,6 +36,7 @@ public:
     Output *output() const;
     qreal scale() const;
     OutputLayer *layer() const;
+    void setLayer(OutputLayer *layer);
 
     virtual bool isVisible() const;
     virtual QPointF hotspot() const;
