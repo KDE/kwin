@@ -211,6 +211,8 @@ target_sources(kwin PRIVATE
     xdgshellintegration.cpp
     xdgshellwindow.cpp
     xkb.cpp
+    xxpipv1integration.cpp
+    xxpipv1window.cpp
 )
 
 target_link_libraries(kwin

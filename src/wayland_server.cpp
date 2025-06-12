@@ -91,6 +91,7 @@
 #include "xdgactivationv1.h"
 #include "xdgshellintegration.h"
 #include "xdgshellwindow.h"
+#include "xxpipv1integration.h"
 #if KWIN_BUILD_X11
 #include "wayland/xwaylandkeyboardgrab_v1.h"
 #include "wayland/xwaylandshell_v1.h"
@@ -580,6 +581,12 @@ void WaylandServer::initWorkspace()
     auto layerShellV1Integration = new LayerShellV1Integration(this);
     connect(layerShellV1Integration, &LayerShellV1Integration::windowCreated,
             this, &WaylandServer::registerWindow);
+
+    if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_PIP_V1") == 1) {
+        auto pipV1Integration = new XXPipV1Integration(this);
+        connect(pipV1Integration, &XXPipV1Integration::windowCreated,
+                this, &WaylandServer::registerWindow);
+    }
 
     new KeyStateInterface(m_display, m_display);
 

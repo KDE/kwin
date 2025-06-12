@@ -44,6 +44,7 @@ private:
     std::optional<PlacementCommand> placeDialog(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeUtility(const Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeOnScreenDisplay(const Window *c, const QRect &area);
+    std::optional<PlacementCommand> placePictureInPicture(const Window *c, const QRect &area);
 };
 
 } // namespace

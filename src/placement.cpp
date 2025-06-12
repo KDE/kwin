@@ -48,6 +48,8 @@ std::optional<PlacementCommand> Placement::place(const Window *c, const QRectF &
         return placeOnScreenDisplay(c, area.toRect());
     } else if (c->isTransient() && c->surface()) {
         return placeDialog(c, area.toRect(), options->placement());
+    } else if (c->isPictureInPicture()) {
+        return placePictureInPicture(c, area.toRect());
     } else {
         return place(c, area, options->placement());
     }
@@ -402,6 +404,22 @@ std::optional<PlacementCommand> Placement::placeDialog(const Window *c, const QR
 {
     return placeOnMainWindow(c, area, nextPlacement);
 }
+
+std::optional<PlacementCommand> Placement::placePictureInPicture(const Window *c, const QRect &area)
+{
+    Q_ASSERT(area.isValid());
+
+    const QSizeF size = c->size();
+    if (size.isEmpty()) {
+        return std::nullopt;
+    }
+
+    const qreal x = area.x() + area.width() - size.width();
+    const qreal y = area.y() + area.height() - size.height();
+
+    return QPointF(x, y);
+}
+
 
 std::optional<PlacementCommand> Placement::placeUnderMouse(const Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
