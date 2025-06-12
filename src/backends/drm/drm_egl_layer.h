@@ -21,11 +21,13 @@ namespace KWin
 {
 
 class EglGbmBackend;
+class DrmPlane;
 
 class EglGbmLayer : public DrmPipelineLayer
 {
 public:
-    explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPlane::TypeIndex type);
+    explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmPlane *plane);
+    explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeIndex type);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
@@ -33,17 +35,12 @@ public:
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
-    DrmDevice *scanoutDevice() const override;
-    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
-    QList<QSize> recommendedSizes() const override;
-    QHash<uint32_t, QList<uint64_t>> supportedAsyncDrmFormats() const override;
 
 private:
     bool doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
 
-    std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
-
     EglGbmLayerSurface m_surface;
+    std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
 };
 
 }

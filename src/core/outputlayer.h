@@ -36,6 +36,8 @@ class KWIN_EXPORT OutputLayer : public QObject
 public:
     explicit OutputLayer(Output *output);
 
+    void setOutput(Output *output);
+
     QPointF hotspot() const;
     void setHotspot(const QPointF &hotspot);
 
@@ -128,7 +130,7 @@ protected:
     ColorDescription m_color = ColorDescription::sRGB;
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
-    Output *const m_output;
+    QPointer<Output> m_output;
     bool m_repaintScheduled = false;
 };
 

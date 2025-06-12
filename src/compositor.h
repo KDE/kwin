@@ -103,6 +103,8 @@ protected:
     bool attemptQPainterCompositing();
     void addOutput(Output *output);
     void removeOutput(Output *output);
+    void assignOutputLayers(Output *output);
+    void reassignOutputLayers();
 
     CompositingType m_selectedCompositor = NoCompositing;
 
