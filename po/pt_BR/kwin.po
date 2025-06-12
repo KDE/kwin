@@ -19,16 +19,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-07 00:44+0000\n"
-"PO-Revision-Date: 2025-02-27 20:16-0300\n"
-"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
+"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"PO-Revision-Date: 2025-06-11 07:55-0300\n"
+"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -46,29 +46,29 @@ msgstr ""
 "alvarenga@kde.org, camila.moura@kde.org, elchevive@opensuse.org, "
 "geraldosimiao@fedoraproject.org, guimarcalsilva@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pressione o control direito para soltar o cursor"
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pressione a tecla control direita para capturar o cursor"
 
-#: backends/wayland/wayland_output.cpp:473
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Compositor KDE Wayland %1"
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:479
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Saída desabilitada"
 
-#: backends/wayland/wayland_output.cpp:478
+#: backends/wayland/wayland_output.cpp:481
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Saída esmaecida"
@@ -88,7 +88,7 @@ msgstr "Pressione a tecla control direita para capturar a entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor Wayland KDE"
 
-#: compositor.cpp:442
+#: compositor.cpp:374
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -826,9 +826,7 @@ msgid "Tablet Pad Dial"
 msgstr "Anel do painel do tablet"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1483,7 +1481,7 @@ msgstr "A altura do modo em janelas. A altura padrão é 768."
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Se o modo de janela deve ou não ser exibido em tela cheia"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -1587,14 +1585,14 @@ msgstr ""
 #: plugins/blur/blur_config.ui:17
 #, kde-format
 msgid "Blur strength:"
-msgstr "Força do borrado:"
+msgstr "Intensidade do borrado:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
 #, kde-format
 msgid "Light"
-msgstr "Luz"
+msgstr "Suave"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1607,7 +1605,7 @@ msgstr "Forte"
 #: plugins/blur/blur_config.ui:83
 #, kde-format
 msgid "Noise strength:"
-msgstr "Força do ruído:"
+msgstr "Intensidade do ruído:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -1622,7 +1620,7 @@ msgstr ""
 #: plugins/diminactive/diminactive_config.ui:17
 #, kde-format
 msgid "Strength:"
-msgstr "Força:"
+msgstr "Intensidade:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:40
@@ -2957,7 +2955,7 @@ msgstr "Teclas modificadoras para desenho de setas:"
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "Rolar enquanto as teclas modificadoras são pressionadas para ampliar"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3170,17 +3168,15 @@ msgstr "Tipo de correspondência de texto de máquina"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Gerenciador de janelas"
+msgstr "Rótulo da  janela"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Tipo de correspondência de texto de título da janela"
+msgstr "Tipo de correspondência de texto do rótulo da janela"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3929,10 +3925,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "O <b>%1</b> está em uso por %2 em %3"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Função da janela"
+msgstr "Menu da janela"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4284,42 +4279,42 @@ msgstr "Ativar a janela (%1)"
 msgid "unknown"
 msgstr "desconhecido"
 
-#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
+#: virtualdesktops.cpp:704 virtualdesktops.cpp:779
 #, kde-format
 msgid "Desktop %1"
 msgstr "Área de trabalho %1"
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:786
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Mudar para a área de trabalho seguinte"
 
-#: virtualdesktops.cpp:777
+#: virtualdesktops.cpp:787
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Mudar para a área de trabalho anterior"
 
-#: virtualdesktops.cpp:780
+#: virtualdesktops.cpp:790
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Mudar para a área de trabalho à direita"
 
-#: virtualdesktops.cpp:781
+#: virtualdesktops.cpp:791
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Mudar para a área de trabalho à esquerda"
 
-#: virtualdesktops.cpp:782
+#: virtualdesktops.cpp:792
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Mudar para a área de trabalho acima"
 
-#: virtualdesktops.cpp:783
+#: virtualdesktops.cpp:793
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Mudar para a área de trabalho abaixo"
 
-#: virtualdesktops.cpp:871
+#: virtualdesktops.cpp:881
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Mudar para a área de trabalho %1"

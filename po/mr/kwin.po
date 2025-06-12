@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-07 00:44+0000\n"
+"POT-Creation-Date: 2025-06-12 00:43+0000\n"
 "PO-Revision-Date: 2013-02-24 11:33+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -33,29 +33,29 @@ msgstr ""
 "sandeep.shedmake@gmail.com, \n"
 "chetan@kompkin.com"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:473
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:479
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:478
+#: backends/wayland/wayland_output.cpp:481
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -75,7 +75,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:442
+#: compositor.cpp:374
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4370,42 +4370,42 @@ msgstr "(%1) ही चौकट सक्रिय करा"
 msgid "unknown"
 msgstr ""
 
-#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
+#: virtualdesktops.cpp:704 virtualdesktops.cpp:779
 #, kde-format
 msgid "Desktop %1"
 msgstr "डेस्कटॉप %1"
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:786
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "पुढीक डेस्कटॉप वर जा"
 
-#: virtualdesktops.cpp:777
+#: virtualdesktops.cpp:787
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "मागील डेस्कटॉप वर जा"
 
-#: virtualdesktops.cpp:780
+#: virtualdesktops.cpp:790
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "उजव्या डेस्कटॉप वर जा"
 
-#: virtualdesktops.cpp:781
+#: virtualdesktops.cpp:791
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "डाव्या डेस्कटॉप वर जा"
 
-#: virtualdesktops.cpp:782
+#: virtualdesktops.cpp:792
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "वरच्या डेस्कटॉप वर जा"
 
-#: virtualdesktops.cpp:783
+#: virtualdesktops.cpp:793
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "खालच्या डेस्कटॉप वर जा"
 
-#: virtualdesktops.cpp:871
+#: virtualdesktops.cpp:881
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "%1 डेस्कटॉप वर जा"

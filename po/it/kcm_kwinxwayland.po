@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-20 14:20+0200\n"
+"PO-Revision-Date: 2025-05-31 07:54+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -38,28 +38,33 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Le applicazioni originarie X11 con scorciatoie globali e altre funzionalità "
+"a cui si accede mentre sono in esecuzione in background devono essere in "
+"grado di intercettare in qualsiasi momento le sequenze di tasti.<nl/><nl/>Se "
+"utilizzi una di queste applicazioni, puoi scegliere qui il tuo bilanciamento "
+"preferito tra sicurezza e compatibilità."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "In ascolto dei tasti digitati:"
 
 #: ui/main.qml:80
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Proibito"
 
 #: ui/main.qml:96
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
+"Più sicuro; le scorciatoie globali non funzioneranno nelle applicazioni X11"
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Solo i tasti Meta, Control, Alt e Maiusc"
@@ -71,12 +76,11 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Elevata sicurezza; push-to-talk e altre scorciatoie globali con solo "
+"modificatori funzioneranno nelle applicazioni X11."
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
@@ -90,13 +94,14 @@ msgstr ""
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Sicurezza moderata; tutte le scorciatoie globali funzioneranno nelle "
+"applicazioni X11"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Sempre"
+msgstr "Sempre consentito"
 
 #: ui/main.qml:186
 #, kde-format
@@ -105,36 +110,32 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Meno sicuro: tutte le applicazioni X11 saranno in grado di vedere qualsiasi "
+"testo digitato in qualsiasi applicazione."
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Tieni presente che l'utilizzo di questa impostazione ridurrà la sicurezza "
-"del sistema a quella della sessione X11 consentendo a software dannoso di "
-"rubare le password e spiare il testo digitato. Assicurati di comprendere e "
-"accettare questo rischio."
+"Nota che l'utilizzo di questa impostazione ridurrà la sicurezza del sistema "
+"e consentirà a software dannosi di rubare password e spiare il testo che "
+"digiti. Assicurati di comprendere e accettare questo rischio."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Includi inoltre i pulsanti del mouse"
+msgstr "In ascolto dei pulsanti del mouse:"
 
 #: ui/main.qml:222
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Consentito"
 
 #: ui/main.qml:238
 #, kde-format
@@ -143,6 +144,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Sicurezza moderata; le scorciatoie globali che coinvolgono i pulsanti del "
+"mouse funzioneranno nelle applicazioni X11."
 
 #: ui/main.qml:252
 #, kde-format
@@ -163,23 +166,21 @@ msgstr "Consenti senza chiedere il permesso"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Meno sicuro; tutte le applicazioni X11 saranno in grado di prendere il "
+"controllo del computer"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Tieni presente che l'utilizzo di questa impostazione ridurrà la sicurezza "
-"del sistema a quella della sessione X11 consentendo a software dannoso di "
-"rubare le password e spiare il testo digitato. Assicurati di comprendere e "
-"accettare questo rischio."
+"Nota che l'utilizzo di questa impostazione ridurrà drasticamente la "
+"sicurezza del sistema e consentirà a software dannosi di assumere il "
+"controllo completo del puntatore e della tastiera. Assicurati di comprendere "
+"e accettare questo rischio."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "

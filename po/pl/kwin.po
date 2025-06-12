@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1710571 $
+# Version: $Revision: 1711006 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-07 00:44+0000\n"
+"POT-Creation-Date: 2025-06-12 00:43+0000\n"
 "PO-Revision-Date: 2025-05-10 12:07+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -37,29 +37,29 @@ msgid "Your emails"
 msgstr ""
 "mrudolf@kdewebdev.org, norbert@kde.com.pl, lukasz.wojnilowicz@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Naciśnij prawy przycisk Ctrl, aby zwolnić wskaźnik"
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wskaźnik"
 
-#: backends/wayland/wayland_output.cpp:473
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Kompozytor KDE Wayland %1"
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:479
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Wyjście wyłączone"
 
-#: backends/wayland/wayland_output.cpp:478
+#: backends/wayland/wayland_output.cpp:481
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Wyjście przyciemnione"
@@ -79,7 +79,7 @@ msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wprowadzanie"
 msgid "KDE Wayland Compositor"
 msgstr "Kompozytor KDE Wayland"
 
-#: compositor.cpp:442
+#: compositor.cpp:374
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Wczytano efekty pulpitu na nowo po wyłączeniu grafiki"
@@ -4279,42 +4279,42 @@ msgstr "Uaktywnij okno (%1)"
 msgid "unknown"
 msgstr "nieznany"
 
-#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
+#: virtualdesktops.cpp:704 virtualdesktops.cpp:779
 #, kde-format
 msgid "Desktop %1"
 msgstr "Pulpit %1"
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:786
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Przełącz na następny pulpit"
 
-#: virtualdesktops.cpp:777
+#: virtualdesktops.cpp:787
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Przełącz na poprzedni pulpit"
 
-#: virtualdesktops.cpp:780
+#: virtualdesktops.cpp:790
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Przełącz na pulpit po prawej"
 
-#: virtualdesktops.cpp:781
+#: virtualdesktops.cpp:791
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Przełącz na pulpit po lewej"
 
-#: virtualdesktops.cpp:782
+#: virtualdesktops.cpp:792
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Przełącz jeden pulpit wyżej"
 
-#: virtualdesktops.cpp:783
+#: virtualdesktops.cpp:793
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Przełącz jeden pulpit niżej"
 
-#: virtualdesktops.cpp:871
+#: virtualdesktops.cpp:881
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Przełącz na pulpit %1"

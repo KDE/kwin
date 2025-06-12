@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-07 00:44+0000\n"
+"POT-Creation-Date: 2025-06-12 00:43+0000\n"
 "PO-Revision-Date: 2025-05-29 21:55+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -50,29 +50,29 @@ msgid "Your emails"
 msgstr ""
 "asm@som.kiev.ua,mokhin@bog.msu.ru,kekcuHa@gmail.com,gammaray@basealt.ru"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Чтобы освободить указатель нажмите правую клавишу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:469
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Чтобы захватить указатель нажмите правую клавишу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:473
+#: backends/wayland/wayland_output.cpp:476
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Графический сервер Wayland для KDE %1"
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:479
 #, kde-format
 msgid "- Output disabled"
 msgstr "- вывод отключён"
 
-#: backends/wayland/wayland_output.cpp:478
+#: backends/wayland/wayland_output.cpp:481
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- вывод затемнён"
@@ -92,7 +92,7 @@ msgstr "Чтобы захватить ввод нажмите правую кл�
 msgid "KDE Wayland Compositor"
 msgstr "Графический сервер Wayland для KDE"
 
-#: compositor.cpp:442
+#: compositor.cpp:374
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4298,42 +4298,42 @@ msgstr "Активировать окно (%1)"
 msgid "unknown"
 msgstr "неизвестный"
 
-#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
+#: virtualdesktops.cpp:704 virtualdesktops.cpp:779
 #, kde-format
 msgid "Desktop %1"
 msgstr "Рабочий стол %1"
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:786
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Переключиться на следующий рабочий стол"
 
-#: virtualdesktops.cpp:777
+#: virtualdesktops.cpp:787
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Переключиться на предыдущий рабочий стол"
 
-#: virtualdesktops.cpp:780
+#: virtualdesktops.cpp:790
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Переключиться на один рабочий стол вправо"
 
-#: virtualdesktops.cpp:781
+#: virtualdesktops.cpp:791
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Переключиться на один рабочий стол влево"
 
-#: virtualdesktops.cpp:782
+#: virtualdesktops.cpp:792
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Переключиться на один рабочий стол вверх"
 
-#: virtualdesktops.cpp:783
+#: virtualdesktops.cpp:793
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Переключиться на один рабочий стол вниз"
 
-#: virtualdesktops.cpp:871
+#: virtualdesktops.cpp:881
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Переключиться на рабочий стол %1"
