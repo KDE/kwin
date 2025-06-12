@@ -148,16 +148,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     Window *currentClient = q->client(index);
     QWindow *w = window();
 
-    if (lastRaisedClient) {
-        q->elevateClient(lastRaisedClient, w, false);
-    }
     lastRaisedClient = currentClient;
-
-    // don't elevate desktop
-    const auto desktop = q->desktopClient();
-    if (currentClient && (!desktop || currentClient->internalId() != desktop->internalId())) {
-        q->elevateClient(currentClient, w, true);
-    }
 
     if (config.isShowTabBox() && w) {
         q->highlightWindows(currentClient, w);
@@ -176,10 +167,6 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
                 q->shadeClient(window, true);
             }
         }
-    }
-    QWindow *w = window();
-    if (currentClient) {
-        q->elevateClient(currentClient, w, false);
     }
     if (abort && lastRaisedClient && lastRaisedClientSucc) {
         q->restack(lastRaisedClient, lastRaisedClientSucc);

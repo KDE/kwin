@@ -122,11 +122,6 @@ public:
     virtual QString desktopName(Window *client) const = 0;
 
     /**
-     * De-/Elevate a client using the compositor (if enabled)
-     */
-    virtual void elevateClient(Window *c, QWindow *tabbox, bool elevate) const = 0;
-
-    /**
      * Raise a client (w/o activating it)
      */
     virtual void raiseClient(Window *c) const = 0;

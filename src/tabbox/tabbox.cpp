@@ -165,17 +165,9 @@ Window *TabBoxHandlerImpl::clientToAddToList(Window *client) const
         && checkApplications(client)
         && checkMinimized(client)
         && checkMultiScreen(client);
-    addClient = addClient && client->wantsTabFocus() && !client->skipSwitcher();
+    addClient = addClient && client->wantsTabFocus() && !client->skipSwitcher() && !client->isModal();
     if (addClient) {
-        // don't add windows that have modal dialogs
-        Window *modal = client->findModal();
-        if (modal == nullptr || modal == client) {
-            ret = client;
-        } else if (!clientList().contains(modal)) {
-            ret = modal;
-        } else {
-            // nothing
-        }
+        ret = client;
     }
     return ret;
 }
@@ -203,14 +195,6 @@ void TabBoxHandlerImpl::raiseClient(Window *c) const
 void TabBoxHandlerImpl::restack(Window *c, Window *under)
 {
     Workspace::self()->stackBelow(c, under);
-}
-
-void TabBoxHandlerImpl::elevateClient(Window *c, QWindow *tabbox, bool b) const
-{
-    c->elevate(b);
-    if (Window *w = Workspace::self()->findInternal(tabbox)) {
-        w->elevate(b);
-    }
 }
 
 void TabBoxHandlerImpl::shadeClient(Window *c, bool b) const

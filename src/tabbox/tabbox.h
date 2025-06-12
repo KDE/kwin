@@ -51,7 +51,6 @@ public:
     Window *firstClientFocusChain() const override;
     bool isInFocusChain(Window *client) const override;
     QList<Window *> stackingOrder() const override;
-    void elevateClient(Window *c, QWindow *tabbox, bool elevate) const override;
     void raiseClient(Window *client) const override;
     void restack(Window *c, Window *under) override;
     void shadeClient(Window *c, bool b) const override;
