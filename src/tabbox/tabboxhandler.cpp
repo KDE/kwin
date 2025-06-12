@@ -181,9 +181,6 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
     if (currentClient) {
         q->elevateClient(currentClient, w, false);
     }
-    if (abort && lastRaisedClient && lastRaisedClientSucc) {
-        q->restack(lastRaisedClient, lastRaisedClientSucc);
-    }
     lastRaisedClient = nullptr;
     lastRaisedClientSucc = nullptr;
     // highlight windows

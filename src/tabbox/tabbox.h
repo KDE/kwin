@@ -53,7 +53,6 @@ public:
     QList<Window *> stackingOrder() const override;
     void elevateClient(Window *c, QWindow *tabbox, bool elevate) const override;
     void raiseClient(Window *client) const override;
-    void restack(Window *c, Window *under) override;
     void shadeClient(Window *c, bool b) const override;
     Window *clientToAddToList(Window *client) const override;
     Window *desktopClient() const override;

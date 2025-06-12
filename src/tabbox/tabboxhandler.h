@@ -132,12 +132,6 @@ public:
     virtual void raiseClient(Window *c) const = 0;
 
     /**
-     * @param c The client to be restacked
-     * @param under The client the other one will be placed below
-     */
-    virtual void restack(Window *c, Window *under) = 0;
-
-    /**
      * Toggle between ShadeHover and ShadeNormal - not shaded windows are unaffected
      * @param c The client to be shaded
      * @param b Whether to un- or shade
