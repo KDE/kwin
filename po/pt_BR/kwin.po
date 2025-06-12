@@ -20,15 +20,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-08 02:38+0000\n"
-"PO-Revision-Date: 2025-02-27 20:16-0300\n"
-"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
+"PO-Revision-Date: 2025-06-11 07:55-0300\n"
+"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -826,9 +826,7 @@ msgid "Tablet Pad Dial"
 msgstr "Anel do painel do tablet"
 
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1484,7 +1482,7 @@ msgstr "A altura do modo em janelas. A altura padrão é 768."
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Se o modo de janela deve ou não ser exibido em tela cheia"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -1588,14 +1586,14 @@ msgstr ""
 #: plugins/blur/blur_config.ui:17
 #, kde-format
 msgid "Blur strength:"
-msgstr "Força do borrado:"
+msgstr "Intensidade do borrado:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
 #, kde-format
 msgid "Light"
-msgstr "Luz"
+msgstr "Suave"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1608,7 +1606,7 @@ msgstr "Forte"
 #: plugins/blur/blur_config.ui:83
 #, kde-format
 msgid "Noise strength:"
-msgstr "Força do ruído:"
+msgstr "Intensidade do ruído:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -1623,7 +1621,7 @@ msgstr ""
 #: plugins/diminactive/diminactive_config.ui:17
 #, kde-format
 msgid "Strength:"
-msgstr "Força:"
+msgstr "Intensidade:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:40
@@ -2963,7 +2961,7 @@ msgstr "Teclas modificadoras para desenho de setas:"
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
+msgstr "Rolar enquanto as teclas modificadoras são pressionadas para ampliar"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3176,17 +3174,15 @@ msgstr "Tipo de correspondência de texto de máquina"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Gerenciador de janelas"
+msgstr "Rótulo da  janela"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Tipo de correspondência de texto de título da janela"
+msgstr "Tipo de correspondência de texto do rótulo da janela"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
