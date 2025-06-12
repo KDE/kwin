@@ -17,6 +17,14 @@ OutputLayer::OutputLayer(Output *output)
 {
 }
 
+void OutputLayer::setOutput(Output *output)
+{
+    m_output = output;
+    if (output) {
+        addRepaint(infiniteRegion());
+    }
+}
+
 QPointF OutputLayer::hotspot() const
 {
     return m_hotspot;
@@ -39,6 +47,9 @@ QRegion OutputLayer::repaints() const
 
 void OutputLayer::scheduleRepaint(Item *item)
 {
+    if (!m_output) {
+        return;
+    }
     m_repaintScheduled = true;
     m_output->renderLoop()->scheduleRepaint(item, this);
     Q_EMIT repaintScheduled();
@@ -46,7 +57,7 @@ void OutputLayer::scheduleRepaint(Item *item)
 
 void OutputLayer::addRepaint(const QRegion &region)
 {
-    if (region.isEmpty()) {
+    if (region.isEmpty() || !m_output) {
         return;
     }
     m_repaints += region;

@@ -22,6 +22,7 @@ class SurfaceItem;
 class DrmFramebuffer;
 class GLTexture;
 class DrmPipeline;
+class DrmOutput;
 
 class DrmOutputLayer : public OutputLayer
 {
@@ -36,14 +37,24 @@ public:
 class DrmPipelineLayer : public DrmOutputLayer
 {
 public:
-    explicit DrmPipelineLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type);
+    explicit DrmPipelineLayer(DrmPlane *plane);
+    explicit DrmPipelineLayer(DrmPlane::TypeIndex type);
+
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    QList<QSize> recommendedSizes() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedAsyncDrmFormats() const override;
 
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
 
     DrmPlane::TypeIndex type() const;
 
 protected:
-    DrmPipeline *const m_pipeline;
+    DrmPipeline *pipeline() const;
+    DrmGpu *gpu() const;
+    DrmOutput *drmOutput() const;
+
     const DrmPlane::TypeIndex m_type;
+    DrmPlane *m_plane = nullptr;
 };
 }

@@ -37,6 +37,11 @@ OutputLayer *RenderView::layer() const
     return m_layer;
 }
 
+void RenderView::setLayer(OutputLayer *layer)
+{
+    m_layer = layer;
+}
+
 void RenderView::addRepaint(const QRegion &region)
 {
     if (!m_layer) {

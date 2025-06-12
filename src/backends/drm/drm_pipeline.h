@@ -76,14 +76,10 @@ public:
     void resetModesetPresentPending();
     DrmCommitThread *commitThread() const;
 
-    QHash<uint32_t, QList<uint64_t>> formats(DrmPlane::TypeIndex planeType) const;
-    QHash<uint32_t, QList<uint64_t>> asyncFormats(DrmPlane::TypeIndex planeType) const;
-    QList<QSize> recommendedSizes(DrmPlane::TypeIndex planeType) const;
-
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
-    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer);
+    void setLayers(DrmPipelineLayer *primaryLayer, DrmPipelineLayer *cursorLayer);
     DrmPipelineLayer *primaryLayer() const;
     DrmPipelineLayer *cursorLayer() const;
     std::chrono::nanoseconds presentationDeadline() const;
@@ -172,6 +168,9 @@ private:
         bool hdr = false;
         bool wcg = false;
         uint32_t maxBpc = 10;
+
+        DrmPipelineLayer *primaryLayer = nullptr;
+        DrmPipelineLayer *cursorLayer = nullptr;
     };
     // the state that is to be tested next
     State m_pending;
@@ -179,8 +178,6 @@ private:
     State m_next;
 
     std::unique_ptr<DrmCommitThread> m_commitThread;
-    std::shared_ptr<DrmPipelineLayer> m_primaryLayer;
-    std::shared_ptr<DrmPipelineLayer> m_cursorLayer;
 };
 
 }

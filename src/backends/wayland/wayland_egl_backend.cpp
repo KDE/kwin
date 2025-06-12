@@ -103,7 +103,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     glFlush();
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
-    static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()));
+    static_cast<WaylandOutput *>(m_output.get())->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()));
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
 
     m_damageJournal.add(damagedRegion);
@@ -121,7 +121,7 @@ bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const
     }
     auto presentationBuffer = m_backend->backend()->importBuffer(buffer);
     if (presentationBuffer) {
-        static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(presentationBuffer);
+        static_cast<WaylandOutput *>(m_output.get())->setPrimaryBuffer(presentationBuffer);
     }
     return presentationBuffer;
 }
@@ -202,7 +202,7 @@ bool WaylandEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const QReg
     wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->buffer());
     Q_ASSERT(buffer);
 
-    static_cast<WaylandOutput *>(m_output)->cursor()->update(buffer, m_buffer->buffer()->size() / m_output->scale(), hotspot().toPoint());
+    static_cast<WaylandOutput *>(m_output.get())->cursor()->update(buffer, m_buffer->buffer()->size() / m_output->scale(), hotspot().toPoint());
 
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());

@@ -322,12 +322,13 @@ void Compositor::stop()
         static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
     }
 
-    for (auto &[loop, layer] : m_primaryViews) {
-        disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    const auto loops = m_primaryViews | std::views::transform([](const auto &pair) {
+        return pair.first;
+    }) | std::ranges::to<QList>();
+    for (RenderLoop *loop : loops) {
+        removeOutput(findOutput(loop));
     }
 
-    m_cursorViews.clear();
-    m_primaryViews.clear();
     m_scene.reset();
     m_backend.reset();
 
@@ -707,15 +708,44 @@ void Compositor::addOutput(Output *output)
     if (output->isPlaceholder()) {
         return;
     }
+    assignOutputLayers(output);
+    connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    connect(output, &Output::outputLayersChanged, this, [this, output]() {
+        assignOutputLayers(output);
+    });
+}
 
-    auto sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+void Compositor::removeOutput(Output *output)
+{
+    if (output->isPlaceholder()) {
+        return;
+    }
+    disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    disconnect(output, &Output::outputLayersChanged, this, nullptr);
+    m_cursorViews.erase(output->renderLoop());
+    m_primaryViews.erase(output->renderLoop());
+}
+
+void Compositor::assignOutputLayers(Output *output)
+{
+    auto &sceneView = m_primaryViews[output->renderLoop()];
+    if (sceneView) {
+        sceneView->setLayer(m_backend->primaryLayer(output));
+    } else {
+        sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+    }
     if (auto layer = m_backend->cursorLayer(output); layer && !s_forceSoftwareCursor) {
-        auto cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
-
-        connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
+        auto &cursorView = m_cursorViews[output->renderLoop()];
+        if (cursorView) {
+            disconnect(cursorView->layer(), &OutputLayer::repaintScheduled, cursorView.get(), nullptr);
+            cursorView->setLayer(layer);
+        } else {
+            cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+        }
+        connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
             // this just deals with moving the plane asynchronously, for improved latency.
             // enabling, disabling and updating the cursor image happen in composite()
-            const auto outputLayer = m_backend->cursorLayer(output);
+            const auto outputLayer = cursorView->layer();
             if (!outputLayer->isEnabled()
                 || !outputLayer->repaints().isEmpty()
                 || !cursorView->isVisible()
@@ -742,21 +772,9 @@ void Compositor::addOutput(Output *output)
                 outputLayer->resetRepaints();
             }
         });
-        m_cursorViews[output->renderLoop()] = std::move(cursorView);
+    } else {
+        m_cursorViews.erase(output->renderLoop());
     }
-
-    m_primaryViews[output->renderLoop()] = std::move(sceneView);
-    connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-}
-
-void Compositor::removeOutput(Output *output)
-{
-    if (output->isPlaceholder()) {
-        return;
-    }
-    disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    m_cursorViews.erase(output->renderLoop());
-    m_primaryViews.erase(output->renderLoop());
 }
 
 std::pair<std::shared_ptr<GLTexture>, ColorDescription> Compositor::textureForOutput(Output *output) const

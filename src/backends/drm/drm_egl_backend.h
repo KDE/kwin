@@ -48,8 +48,9 @@ public:
     OutputLayer *cursorLayer(Output *output) override;
 
     void init() override;
-    std::shared_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type) override;
-    std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
+    std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPlane *plane) override;
+    std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type) override;
+    std::unique_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
     std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *requestedOutput) const override;
 

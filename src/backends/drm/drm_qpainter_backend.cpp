@@ -48,16 +48,20 @@ OutputLayer *DrmQPainterBackend::cursorLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
 }
 
-std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type)
+std::unique_ptr<DrmPipelineLayer> DrmQPainterBackend::createDrmPlaneLayer(DrmPlane *plane)
 {
-    return std::make_shared<DrmQPainterLayer>(pipeline, type);
+    return std::make_unique<DrmQPainterLayer>(plane);
 }
 
-std::shared_ptr<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)
+std::unique_ptr<DrmPipelineLayer> DrmQPainterBackend::createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type)
 {
-    return std::make_shared<DrmVirtualQPainterLayer>(output);
+    return std::make_unique<DrmQPainterLayer>(type);
 }
 
+std::unique_ptr<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)
+{
+    return std::make_unique<DrmVirtualQPainterLayer>(output);
+}
 }
 
 #include "moc_drm_qpainter_backend.cpp"
