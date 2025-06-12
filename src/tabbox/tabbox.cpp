@@ -200,14 +200,6 @@ void TabBoxHandlerImpl::raiseClient(Window *c) const
     Workspace::self()->raiseWindow(c);
 }
 
-void TabBoxHandlerImpl::elevateClient(Window *c, QWindow *tabbox, bool b) const
-{
-    c->elevate(b);
-    if (Window *w = Workspace::self()->findInternal(tabbox)) {
-        w->elevate(b);
-    }
-}
-
 void TabBoxHandlerImpl::shadeClient(Window *c, bool b) const
 {
     c->cancelShadeHoverTimer(); // stop core shading action

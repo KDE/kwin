@@ -302,17 +302,6 @@ bool Window::isUnmanaged() const
     return false;
 }
 
-void Window::elevate(bool elevate)
-{
-    if (m_windowItem) {
-        if (elevate) {
-            m_windowItem->elevate();
-        } else {
-            m_windowItem->deelevate();
-        }
-    }
-}
-
 pid_t Window::pid() const
 {
     return -1;

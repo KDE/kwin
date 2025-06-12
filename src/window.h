@@ -829,11 +829,6 @@ public:
     const EffectWindow *effectWindow() const;
     SurfaceItem *surfaceItem() const;
     WindowItem *windowItem() const;
-    /**
-     * Window will be temporarily painted as if being at the top of the stack.
-     * Only available if Compositor is active, if not active, this method is a no-op.
-     */
-    void elevate(bool elevate);
 
     /**
      * Returns the Shadow associated with this Window or @c null if it has no shadow.
