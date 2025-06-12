@@ -14,13 +14,24 @@ namespace KWin
 
 OutputLayer::OutputLayer(Output *output)
     : m_output(output)
-    , m_renderLoop(output->renderLoop())
+    , m_renderLoop(output ? output->renderLoop() : nullptr)
 {
 }
 
 void OutputLayer::setRenderLoop(RenderLoop *loop)
 {
     m_renderLoop = loop;
+}
+
+void OutputLayer::setOutput(Output *output)
+{
+    m_output = output;
+    if (output) {
+        m_renderLoop = output->renderLoop();
+        addRepaint(infiniteRegion());
+    } else {
+        m_renderLoop = nullptr;
+    }
 }
 
 QPointF OutputLayer::hotspot() const
@@ -45,6 +56,9 @@ QRegion OutputLayer::repaints() const
 
 void OutputLayer::scheduleRepaint(Item *item)
 {
+    if (!m_output) {
+        return;
+    }
     m_repaintScheduled = true;
     if (m_renderLoop) {
         m_renderLoop->scheduleRepaint(item, this);
@@ -54,7 +68,7 @@ void OutputLayer::scheduleRepaint(Item *item)
 
 void OutputLayer::addRepaint(const QRegion &region)
 {
-    if (region.isEmpty()) {
+    if (region.isEmpty() || !m_output) {
         return;
     }
     m_repaints += region;

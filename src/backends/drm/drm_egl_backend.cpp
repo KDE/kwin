@@ -151,14 +151,19 @@ OutputLayer *EglGbmBackend::cursorLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
 }
 
-std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type)
+std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPlane *plane)
 {
-    return std::make_shared<EglGbmLayer>(this, pipeline, type);
+    return std::make_unique<EglGbmLayer>(this, plane);
 }
 
-std::shared_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
+std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type)
 {
-    return std::make_shared<VirtualEglGbmLayer>(this, output);
+    return std::make_unique<EglGbmLayer>(this, gpu, type);
+}
+
+std::unique_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
+{
+    return std::make_unique<VirtualEglGbmLayer>(this, output);
 }
 
 DrmGpu *EglGbmBackend::gpu() const

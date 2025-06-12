@@ -111,13 +111,14 @@ public:
     void removeOutputs();
 
     DrmPipeline::Error testPendingConfiguration();
+    void releaseUnusedBuffers();
     bool needsModeset() const;
     void maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFrame> &frame);
 
     std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer, FileDescriptor &&explicitFence);
     void forgetBuffer(GraphicsBuffer *buf);
     void releaseBuffers();
-    void recreateSurfaces();
+    void createLayers();
 
     FileDescriptor createNonMasterFd() const;
     std::unique_ptr<DrmLease> leaseOutputs(const QList<DrmOutput *> &outputs);
@@ -140,6 +141,7 @@ private:
     DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs);
     DrmPipeline::Error testPipelines();
     QList<DrmObject *> unusedObjects() const;
+    void assignOutputLayers();
 
     static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
 
@@ -168,6 +170,9 @@ private:
     std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;
     std::vector<std::shared_ptr<DrmConnector>> m_connectors;
     std::unordered_map<DrmConnector *, std::unique_ptr<DrmPipeline>> m_pipelineMap;
+    std::unordered_map<DrmPlane *, std::unique_ptr<DrmPipelineLayer>> m_planeLayerMap;
+    std::unordered_map<DrmCrtc *, std::unique_ptr<DrmPipelineLayer>> m_legacyLayerMap;
+    std::unordered_map<DrmCrtc *, std::unique_ptr<DrmPipelineLayer>> m_legacyCursorLayerMap;
     QList<DrmObject *> m_allObjects;
     QList<DrmPipeline *> m_pipelines;
 
