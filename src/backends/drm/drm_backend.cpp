@@ -415,6 +415,9 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
             output->applyQueuedChanges(changeset);
         }
     }
+    for (const auto &gpu : m_gpus) {
+        gpu->releaseUnusedBuffers();
+    }
     // only then apply changes to the virtual outputs
     for (DrmVirtualOutput *output : std::as_const(m_virtualOutputs)) {
         output->applyChanges(config);
@@ -435,7 +438,7 @@ DrmRenderBackend *DrmBackend::renderBackend() const
 void DrmBackend::createLayers()
 {
     for (const auto &gpu : m_gpus) {
-        gpu->recreateSurfaces();
+        gpu->createLayers();
     }
     for (DrmVirtualOutput *virt : std::as_const(m_virtualOutputs)) {
         virt->recreateSurface();

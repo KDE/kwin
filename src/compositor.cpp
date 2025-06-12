@@ -697,45 +697,9 @@ void Compositor::addOutput(Output *output)
     if (output->isPlaceholder()) {
         return;
     }
-
-    auto sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
-    if (auto layer = m_backend->cursorLayer(output); layer && !s_forceSoftwareCursor) {
-        auto cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
-
-        connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
-            // this just deals with moving the plane asynchronously, for improved latency.
-            // enabling, disabling and updating the cursor image happen in composite()
-            const auto outputLayer = m_backend->cursorLayer(output);
-            if (!outputLayer->isEnabled()
-                || !outputLayer->repaints().isEmpty()
-                || !cursorView->isVisible()
-                || cursorView->needsRepaint()) {
-                // composite() handles this
-                return;
-            }
-            std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
-            if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
-                const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
-                    // this is intentionally using a tiny bit higher refresh rate than the minimum
-                    // so that slight differences in timing don't drop us below the minimum
-                    return value + 2;
-                }).value_or(30);
-                maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
-            }
-            const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
-            const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
-            outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
-            outputLayer->setEnabled(true);
-            output->updateCursorLayer(maxVrrCursorDelay);
-            // prevent composite() from also pushing an update with the cursor layer
-            // to avoid adding cursor updates that are synchronized with primary layer updates
-            outputLayer->resetRepaints();
-        });
-        m_cursorViews[output->renderLoop()] = std::move(cursorView);
-    }
-
-    m_primaryViews[output->renderLoop()] = std::move(sceneView);
+    assignOutputLayers(output);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    connect(output, &Output::outputLayersChanged, this, &Compositor::reassignOutputLayers);
 }
 
 void Compositor::removeOutput(Output *output)
@@ -744,8 +708,66 @@ void Compositor::removeOutput(Output *output)
         return;
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    disconnect(output, &Output::outputLayersChanged, this, &Compositor::reassignOutputLayers);
     m_cursorViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
+}
+
+void Compositor::reassignOutputLayers()
+{
+    for (auto &[renderloop, view] : m_primaryViews) {
+        assignOutputLayers(findOutput(renderloop));
+    }
+}
+
+void Compositor::assignOutputLayers(Output *output)
+{
+    auto &sceneView = m_primaryViews[output->renderLoop()];
+    if (sceneView) {
+        sceneView->setLayer(m_backend->primaryLayer(output));
+    } else {
+        sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+    }
+    if (auto layer = m_backend->cursorLayer(output); layer && !s_forceSoftwareCursor) {
+        auto &cursorView = m_cursorViews[output->renderLoop()];
+        if (cursorView) {
+            cursorView->setLayer(layer);
+        } else {
+            cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+            connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
+                // this just deals with moving the plane asynchronously, for improved latency.
+                // enabling, disabling and updating the cursor image happen in composite()
+                const auto outputLayer = m_backend->cursorLayer(output);
+                if (!outputLayer
+                    || !outputLayer->isEnabled()
+                    || !outputLayer->repaints().isEmpty()
+                    || !cursorView->isVisible()
+                    || cursorView->needsRepaint()) {
+                    // composite() handles this
+                    return;
+                }
+                std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
+                if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
+                    const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
+                        // this is intentionally using a tiny bit higher refresh rate than the minimum
+                        // so that slight differences in timing don't drop us below the minimum
+                        return value + 2;
+                    }).value_or(30);
+                    maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
+                }
+                const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
+                const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
+                outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
+                outputLayer->setEnabled(true);
+                output->updateCursorLayer(maxVrrCursorDelay);
+                // prevent composite() from also pushing an update with the cursor layer
+                // to avoid adding cursor updates that are synchronized with primary layer updates
+                outputLayer->resetRepaints();
+            });
+        }
+    } else {
+        m_cursorViews.erase(output->renderLoop());
+    }
 }
 
 std::pair<std::shared_ptr<GLTexture>, ColorDescription> Compositor::textureForOutput(Output *output) const
