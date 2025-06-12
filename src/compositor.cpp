@@ -322,12 +322,13 @@ void Compositor::stop()
         static_cast<EglBackend *>(m_backend.get())->openglContext()->makeCurrent();
     }
 
-    for (auto &[loop, layer] : m_primaryViews) {
-        disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    const auto loops = m_primaryViews | std::views::transform([](const auto &pair) {
+        return pair.first;
+    }) | std::ranges::to<QList>();
+    for (RenderLoop *loop : loops) {
+        removeOutput(findOutput(loop));
     }
 
-    m_cursorViews.clear();
-    m_primaryViews.clear();
     m_scene.reset();
     m_backend.reset();
 
@@ -560,21 +561,21 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     // test and downgrade the configuration until the test is successful
-    bool testResult = output->testPresentation(frame);
-    if (!testResult) {
+    bool result = output->testPresentation(frame);
+    if (!result) {
         bool primaryFailure = false;
         auto &primary = layers.front();
         if (primary.directScanout) {
             if (prepareRendering(primary.layer, primary.view, output)) {
                 primary.directScanout = false;
-                testResult = output->testPresentation(frame);
+                result = output->testPresentation(frame);
             } else {
                 primaryFailure = true;
                 // this should be very rare, but could happen with GPU resets
                 qCWarning(KWIN_CORE, "Preparing the primary layer failed!");
             }
         }
-        if (!testResult && !primaryFailure) {
+        if (!result && !primaryFailure) {
             // we don't want to render the other layers if they fail direct scanout,
             // so just remove them one by one
             for (auto &layer : layers | std::views::drop(1)) {
@@ -582,8 +583,8 @@ void Compositor::composite(RenderLoop *renderLoop)
                     continue;
                 }
                 layer.layer->setEnabled(false);
-                testResult = output->testPresentation(frame);
-                if (testResult) {
+                result = output->testPresentation(frame);
+                if (result) {
                     break;
                 }
             }
@@ -591,7 +592,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     // now actually render the layers that need rendering
-    if (testResult) {
+    if (result) {
         // before rendering, enable and disable all the views that need it
         // which may add repaints to other layers
         for (auto &layer : layers) {
@@ -613,7 +614,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             layer.surfaceDamage |= layer.view->updatePrePaint() | layer.layer->repaints();
             layer.layer->resetRepaints();
             if (!layer.directScanout) {
-                testResult &= renderLayer(layer.layer, layer.view, output, frame, layer.surfaceDamage);
+                result &= renderLayer(layer.layer, layer.view, output, frame, layer.surfaceDamage);
             }
         }
     }
@@ -622,14 +623,12 @@ void Compositor::composite(RenderLoop *renderLoop)
     // but the drm backend, where that's necessary, tracks that time itself
     totalTimeQuery->end();
     frame->addRenderTimeQuery(std::move(totalTimeQuery));
-    if (!testResult) {
-        qCWarning(KWIN_CORE, "Failed to find a working output layer configuration!");
-        output->repairPresentation();
-    } else if (!output->present(toUpdate, frame)) {
+    bool disableHardwareCursor = false;
+    if (result && !output->present(toUpdate, frame)) {
         // legacy modesetting can't do (useful) presentation tests
         // and even with atomic modesetting, drivers are buggy and atomic tests
         // sometimes have false positives
-        bool fixed = false;
+        result = false;
         bool removedLayers = false;
         // remove all layers we attempted direct scanout with
         for (auto &layer : layers | std::views::drop(1)) {
@@ -644,37 +643,30 @@ void Compositor::composite(RenderLoop *renderLoop)
             // re-render without direct scanout
             if (prepareRendering(primary.layer, primary.view, output)
                 && renderLayer(primary.layer, primary.view, output, frame, primary.surfaceDamage)) {
-                fixed = output->present(toUpdate, frame);
+                result = output->present(toUpdate, frame);
             } else {
                 qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
             }
         }
 
-        if (!fixed && layers.size() == 2 && layers[1].layer->isEnabled()) {
+        if (!result && layers.size() == 2 && layers[1].layer->isEnabled()) {
             // presentation failed even without direct scanout.
             // try again even without the cursor layer
             layers[1].layer->setEnabled(false);
             layers[1].view->setEnabled(false);
             if (prepareRendering(primary.layer, primary.view, output)
                 && renderLayer(primary.layer, primary.view, output, frame, primary.surfaceDamage)) {
-                fixed = output->present(toUpdate, frame);
-                if (fixed) {
+                result = output->present(toUpdate, frame);
+                if (result) {
                     // disabling the cursor layer helped... so disable it permanently,
                     // to prevent constantly attempting to render the hardware cursor again
                     // this should only ever happen with legacy modesetting, where
                     // presentation can't be tested
-                    qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
-                    layers.remove(1);
-                    m_cursorViews.erase(renderLoop);
+                    disableHardwareCursor = true;
                 }
             } else {
                 qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
             }
-        }
-
-        if (!fixed) {
-            qCWarning(KWIN_CORE, "All presentation attempts failed!");
-            output->repairPresentation();
         }
     }
 
@@ -683,6 +675,16 @@ void Compositor::composite(RenderLoop *renderLoop)
         if (layer.layer->isEnabled()) {
             layer.view->frame(frame.get());
         }
+    }
+
+    // the layers have to stay valid until after postPaint, so these need to happen after it
+    if (disableHardwareCursor) {
+        qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
+        m_cursorViews.erase(renderLoop);
+    }
+    if (!result) {
+        qCWarning(KWIN_CORE, "Failed to find a working output layer configuration!");
+        output->repairPresentation();
     }
 
     if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
@@ -699,15 +701,44 @@ void Compositor::addOutput(Output *output)
     if (output->isPlaceholder()) {
         return;
     }
+    assignOutputLayers(output);
+    connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    connect(output, &Output::outputLayersChanged, this, [this, output]() {
+        assignOutputLayers(output);
+    });
+}
 
-    auto sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+void Compositor::removeOutput(Output *output)
+{
+    if (output->isPlaceholder()) {
+        return;
+    }
+    disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    disconnect(output, &Output::outputLayersChanged, this, nullptr);
+    m_cursorViews.erase(output->renderLoop());
+    m_primaryViews.erase(output->renderLoop());
+}
+
+void Compositor::assignOutputLayers(Output *output)
+{
+    auto &sceneView = m_primaryViews[output->renderLoop()];
+    if (sceneView) {
+        sceneView->setLayer(m_backend->primaryLayer(output));
+    } else {
+        sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+    }
     if (auto layer = m_backend->cursorLayer(output); layer && !s_forceSoftwareCursor) {
-        auto cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
-
-        connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
+        auto &cursorView = m_cursorViews[output->renderLoop()];
+        if (cursorView) {
+            disconnect(cursorView->layer(), &OutputLayer::repaintScheduled, cursorView.get(), nullptr);
+            cursorView->setLayer(layer);
+        } else {
+            cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+        }
+        connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
             // this just deals with moving the plane asynchronously, for improved latency.
             // enabling, disabling and updating the cursor image happen in composite()
-            const auto outputLayer = m_backend->cursorLayer(output);
+            const auto outputLayer = cursorView->layer();
             if (!outputLayer->isEnabled()
                 || !outputLayer->repaints().isEmpty()
                 || !cursorView->isVisible()
@@ -733,21 +764,9 @@ void Compositor::addOutput(Output *output)
             // to avoid adding cursor updates that are synchronized with primary layer updates
             outputLayer->resetRepaints();
         });
-        m_cursorViews[output->renderLoop()] = std::move(cursorView);
+    } else {
+        m_cursorViews.erase(output->renderLoop());
     }
-
-    m_primaryViews[output->renderLoop()] = std::move(sceneView);
-    connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-}
-
-void Compositor::removeOutput(Output *output)
-{
-    if (output->isPlaceholder()) {
-        return;
-    }
-    disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    m_cursorViews.erase(output->renderLoop());
-    m_primaryViews.erase(output->renderLoop());
 }
 
 std::pair<std::shared_ptr<GLTexture>, ColorDescription> Compositor::textureForOutput(Output *output) const
