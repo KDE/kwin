@@ -38,6 +38,7 @@ public:
     explicit OutputLayer(Output *output);
 
     void setRenderLoop(RenderLoop *loop);
+    void setOutput(Output *output);
 
     QPointF hotspot() const;
     void setHotspot(const QPointF &hotspot);
@@ -137,7 +138,7 @@ protected:
     ColorDescription m_color = ColorDescription::sRGB;
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
-    Output *const m_output;
+    QPointer<Output> m_output;
     uint32_t m_requiredAlphaBits = 0;
     bool m_repaintScheduled = false;
     RenderLoop *m_renderLoop = nullptr;
