@@ -29,8 +29,8 @@ DrmPipeline::Error DrmPipeline::presentLegacy(const std::shared_ptr<OutputFrame>
     if (Error err = applyPendingChangesLegacy(); err != Error::None) {
         return err;
     }
-    const auto buffer = m_primaryLayer->currentBuffer();
-    if (m_primaryLayer->sourceRect() != m_primaryLayer->targetRect() || m_primaryLayer->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    const auto buffer = m_pending.primaryLayer->currentBuffer();
+    if (m_pending.primaryLayer->sourceRect() != m_pending.primaryLayer->targetRect() || m_pending.primaryLayer->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
@@ -52,11 +52,11 @@ void DrmPipeline::forceLegacyModeset()
 
 DrmPipeline::Error DrmPipeline::legacyModeset()
 {
-    const auto buffer = m_primaryLayer->currentBuffer();
+    const auto buffer = m_pending.primaryLayer->currentBuffer();
     if (!buffer) {
         return Error::InvalidArguments;
     }
-    if (m_primaryLayer->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    if (m_pending.primaryLayer->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, nullptr);
@@ -104,7 +104,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), 0, 0, 0);
     }
     if (activePending()) {
-        if (!m_primaryLayer->colorPipeline().isIdentity() || !m_cursorLayer->colorPipeline().isIdentity()) {
+        if (!m_pending.primaryLayer->colorPipeline().isIdentity() || !m_pending.cursorLayer->colorPipeline().isIdentity()) {
             // while it's technically possible to set CRTC color management properties,
             // it may result in glitches
             return DrmPipeline::Error::InvalidArguments;
@@ -214,13 +214,13 @@ bool DrmPipeline::setCursorLegacy()
     struct drm_mode_cursor2 arg = {
         .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
         .crtc_id = m_pending.crtc->id(),
-        .x = int32_t(m_cursorLayer->targetRect().x()),
-        .y = int32_t(m_cursorLayer->targetRect().y()),
+        .x = int32_t(m_pending.cursorLayer->targetRect().x()),
+        .y = int32_t(m_pending.cursorLayer->targetRect().y()),
         .width = (uint32_t)gpu()->cursorSize().width(),
         .height = (uint32_t)gpu()->cursorSize().height(),
         .handle = handle,
-        .hot_x = int32_t(m_cursorLayer->hotspot().x()),
-        .hot_y = int32_t(m_cursorLayer->hotspot().y()),
+        .hot_x = int32_t(m_pending.cursorLayer->hotspot().x()),
+        .hot_y = int32_t(m_pending.cursorLayer->hotspot().y()),
     };
     const int ret = drmIoctl(gpu()->fd(), DRM_IOCTL_MODE_CURSOR2, &arg);
 
