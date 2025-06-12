@@ -137,7 +137,7 @@ bool X11WindowedEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const 
     context->glReadnPixels(0, 0, buffer.width(), buffer.height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer.sizeInBytes(), buffer.bits());
     GLFramebuffer::popFramebuffer();
 
-    static_cast<X11WindowedOutput *>(m_output)->cursor()->update(buffer.mirrored(false, true), hotspot());
+    static_cast<X11WindowedOutput *>(m_output.get())->cursor()->update(buffer.mirrored(false, true), hotspot());
     m_query->end();
     if (frame) {
         frame->addRenderTimeQuery(std::move(m_query));

@@ -36,6 +36,8 @@ public:
     Output *output() const;
     OutputLayer *layer() const;
 
+    void setLayer(OutputLayer *layer);
+
     virtual bool isVisible() const;
     virtual QPointF hotspot() const;
     virtual QRectF viewport() const = 0;
