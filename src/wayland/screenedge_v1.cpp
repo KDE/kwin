@@ -8,7 +8,7 @@
 #include "wayland/display.h"
 #include "wayland/surface.h"
 
-#include "qwayland-server-kde-screen-edge-v1.h"
+#include "qwayland-server-kde-screen-edge-v2.h"
 
 #include <QPointer>
 
@@ -17,30 +17,30 @@ namespace KWin
 
 static const int s_version = 1;
 
-class ScreenEdgeManagerV1InterfacePrivate : public QtWaylandServer::kde_screen_edge_manager_v1
+class ScreenEdgeManagerV2InterfacePrivate : public QtWaylandServer::kde_screen_edge_manager_v2
 {
 public:
-    ScreenEdgeManagerV1InterfacePrivate(ScreenEdgeManagerV1Interface *q, Display *display);
+    ScreenEdgeManagerV2InterfacePrivate(ScreenEdgeManagerV2Interface *q, Display *display);
 
-    ScreenEdgeManagerV1Interface *q;
+    ScreenEdgeManagerV2Interface *q;
 
 protected:
-    void kde_screen_edge_manager_v1_destroy(Resource *resource) override;
-    void kde_screen_edge_manager_v1_get_auto_hide_screen_edge(Resource *resource, uint32_t id, uint32_t border, struct ::wl_resource *surface) override;
+    void kde_screen_edge_manager_v2_destroy(Resource *resource) override;
+    void kde_screen_edge_manager_v2_get_screen_edge(Resource *resource, uint32_t id, uint32_t border, struct ::wl_resource *surface) override;
 };
 
-ScreenEdgeManagerV1InterfacePrivate::ScreenEdgeManagerV1InterfacePrivate(ScreenEdgeManagerV1Interface *q, Display *display)
-    : QtWaylandServer::kde_screen_edge_manager_v1(*display, s_version)
+ScreenEdgeManagerV2InterfacePrivate::ScreenEdgeManagerV2InterfacePrivate(ScreenEdgeManagerV2Interface *q, Display *display)
+    : QtWaylandServer::kde_screen_edge_manager_v2(*display, s_version)
     , q(q)
 {
 }
 
-void ScreenEdgeManagerV1InterfacePrivate::kde_screen_edge_manager_v1_destroy(Resource *resource)
+void ScreenEdgeManagerV2InterfacePrivate::kde_screen_edge_manager_v2_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-void ScreenEdgeManagerV1InterfacePrivate::kde_screen_edge_manager_v1_get_auto_hide_screen_edge(Resource *resource, uint32_t id, uint32_t border, struct ::wl_resource *surface_resource)
+void ScreenEdgeManagerV2InterfacePrivate::kde_screen_edge_manager_v2_get_screen_edge(Resource *resource, uint32_t id, uint32_t border, struct ::wl_resource *surface_resource)
 {
     ElectricBorder electricBorder;
     switch (border) {
@@ -68,79 +68,79 @@ void ScreenEdgeManagerV1InterfacePrivate::kde_screen_edge_manager_v1_get_auto_hi
         return;
     }
 
-    wl_resource *edgeResource = wl_resource_create(resource->client(), &kde_auto_hide_screen_edge_v1_interface, resource->version(), id);
-    auto edge = new AutoHideScreenEdgeV1Interface(surface, electricBorder, edgeResource);
+    wl_resource *edgeResource = wl_resource_create(resource->client(), &kde_screen_edge_v2_interface, resource->version(), id);
+    auto edge = new ScreenEdgeV2Interface(surface, electricBorder, edgeResource);
     Q_EMIT q->edgeRequested(edge);
 }
 
-ScreenEdgeManagerV1Interface::ScreenEdgeManagerV1Interface(Display *display, QObject *parent)
-    : d(new ScreenEdgeManagerV1InterfacePrivate(this, display))
+ScreenEdgeManagerV2Interface::ScreenEdgeManagerV2Interface(Display *display, QObject *parent)
+    : d(new ScreenEdgeManagerV2InterfacePrivate(this, display))
 {
 }
 
-ScreenEdgeManagerV1Interface::~ScreenEdgeManagerV1Interface()
+ScreenEdgeManagerV2Interface::~ScreenEdgeManagerV2Interface()
 {
 }
 
-class AutoHideScreenEdgeV1InterfacePrivate : public QtWaylandServer::kde_auto_hide_screen_edge_v1
+class ScreenEdgeV2InterfacePrivate : public QtWaylandServer::kde_screen_edge_v2
 {
 public:
-    AutoHideScreenEdgeV1InterfacePrivate(AutoHideScreenEdgeV1Interface *q, SurfaceInterface *surface, ElectricBorder border, wl_resource *resource);
+    ScreenEdgeV2InterfacePrivate(ScreenEdgeV2Interface *q, SurfaceInterface *surface, ElectricBorder border, wl_resource *resource);
 
-    AutoHideScreenEdgeV1Interface *q;
+    ScreenEdgeV2Interface *q;
     QPointer<SurfaceInterface> surface;
     ElectricBorder border;
 
 protected:
-    void kde_auto_hide_screen_edge_v1_destroy_resource(Resource *resource) override;
-    void kde_auto_hide_screen_edge_v1_destroy(Resource *resource) override;
-    void kde_auto_hide_screen_edge_v1_deactivate(Resource *resource) override;
-    void kde_auto_hide_screen_edge_v1_activate(Resource *resource) override;
+    void kde_screen_edge_v2_destroy_resource(Resource *resource) override;
+    void kde_screen_edge_v2_destroy(Resource *resource) override;
+    void kde_screen_edge_v2_show(Resource *resource) override;
+    void kde_screen_edge_v2_hide(Resource *resource) override;
 };
 
-AutoHideScreenEdgeV1InterfacePrivate::AutoHideScreenEdgeV1InterfacePrivate(AutoHideScreenEdgeV1Interface *q, SurfaceInterface *surface, ElectricBorder border, wl_resource *resource)
-    : QtWaylandServer::kde_auto_hide_screen_edge_v1(resource)
+ScreenEdgeV2InterfacePrivate::ScreenEdgeV2InterfacePrivate(ScreenEdgeV2Interface *q, SurfaceInterface *surface, ElectricBorder border, wl_resource *resource)
+    : QtWaylandServer::kde_screen_edge_v2(resource)
     , q(q)
     , surface(surface)
     , border(border)
 {
 }
 
-void AutoHideScreenEdgeV1InterfacePrivate::kde_auto_hide_screen_edge_v1_destroy_resource(Resource *resource)
+void ScreenEdgeV2InterfacePrivate::kde_screen_edge_v2_destroy_resource(Resource *resource)
 {
     delete q;
 }
 
-void AutoHideScreenEdgeV1InterfacePrivate::kde_auto_hide_screen_edge_v1_destroy(Resource *resource)
+void ScreenEdgeV2InterfacePrivate::kde_screen_edge_v2_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-void AutoHideScreenEdgeV1InterfacePrivate::kde_auto_hide_screen_edge_v1_deactivate(Resource *resource)
+void ScreenEdgeV2InterfacePrivate::kde_screen_edge_v2_show(Resource *resource)
 {
-    Q_EMIT q->deactivateRequested();
+    Q_EMIT q->showRequested();
 }
 
-void AutoHideScreenEdgeV1InterfacePrivate::kde_auto_hide_screen_edge_v1_activate(Resource *resource)
+void ScreenEdgeV2InterfacePrivate::kde_screen_edge_v2_hide(Resource *resource)
 {
-    Q_EMIT q->activateRequested();
+    Q_EMIT q->hideRequested();
 }
 
-AutoHideScreenEdgeV1Interface::AutoHideScreenEdgeV1Interface(SurfaceInterface *surface, ElectricBorder border, wl_resource *resource)
-    : d(new AutoHideScreenEdgeV1InterfacePrivate(this, surface, border, resource))
-{
-}
-
-AutoHideScreenEdgeV1Interface::~AutoHideScreenEdgeV1Interface()
+ScreenEdgeV2Interface::ScreenEdgeV2Interface(SurfaceInterface *surface, ElectricBorder border, wl_resource *resource)
+    : d(new ScreenEdgeV2InterfacePrivate(this, surface, border, resource))
 {
 }
 
-SurfaceInterface *AutoHideScreenEdgeV1Interface::surface() const
+ScreenEdgeV2Interface::~ScreenEdgeV2Interface()
+{
+}
+
+SurfaceInterface *ScreenEdgeV2Interface::surface() const
 {
     return d->surface;
 }
 
-ElectricBorder AutoHideScreenEdgeV1Interface::border() const
+ElectricBorder ScreenEdgeV2Interface::border() const
 {
     return d->border;
 }

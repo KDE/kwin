@@ -1867,6 +1867,7 @@ public:
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
+        workspace()->screenEdges()->touchDown(pos);
         // TODO: better check whether a touch sequence is in progress
         if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
             // cancel existing touch

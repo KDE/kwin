@@ -104,8 +104,7 @@ Edge::Edge(ScreenEdges *parent)
         m_gesture.get(), &Gesture::triggered, this, [this]() {
             stopApproaching();
             if (m_client) {
-                m_client->showOnScreenEdge();
-                unreserve();
+                reveal();
                 return;
             }
             handleTouchAction();
@@ -145,6 +144,21 @@ Edge::Edge(ScreenEdges *parent)
 Edge::~Edge()
 {
     stopApproaching();
+}
+
+void Edge::reveal()
+{
+    stopApproaching();
+
+    m_revealed = true;
+    m_client->setHidden(false);
+}
+
+void Edge::unreveal()
+{
+    m_client->setHidden(true);
+    m_revealed = false;
+    m_clientInteracted = false;
 }
 
 void Edge::reserve()
@@ -391,8 +405,7 @@ void Edge::handle(const QPoint &cursorPos)
 
     if (m_client) {
         pushCursorBack(cursorPos);
-        m_client->showOnScreenEdge();
-        unreserve();
+        reveal();
         return;
     }
 
@@ -730,6 +743,11 @@ void Edge::setClient(Window *client)
     if (wasTouch != activatesForTouchGesture()) {
         Q_EMIT activatesForTouchGestureChanged();
     }
+}
+
+void Edge::setClientInteracted(bool interacted)
+{
+    m_clientInteracted = interacted;
 }
 
 void Edge::setOutput(Output *output)
@@ -1093,9 +1111,7 @@ void ScreenEdges::recreateEdges()
     }
     // copy over the window reservations from the old edges
     for (const auto &oldEdge : std::span(split, oldEdges.end())) {
-        if (!reserve(oldEdge->client(), oldEdge->border())) {
-            oldEdge->client()->showOnScreenEdge();
-        }
+        reserve(oldEdge->client(), oldEdge->border());
     }
 }
 
@@ -1270,18 +1286,77 @@ void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
     }
 }
 
-bool ScreenEdges::reserve(Window *client, ElectricBorder border)
+void ScreenEdges::reserve(Window *client, ElectricBorder border)
 {
-    const auto it = std::remove_if(m_edges.begin(), m_edges.end(), [client](const auto &edge) {
-        return edge->client() == client;
-    });
-    const bool hadBorder = it != m_edges.end();
-    m_edges.erase(it, m_edges.end());
-
-    if (border != ElectricNone) {
-        return createEdgeForClient(client, border);
+    if (border == ElectricNone) {
+        deleteEdgeForClient(client);
     } else {
-        return hadBorder;
+        Edge *edge = edgeForClient(client);
+        if (!edge) {
+            edge = createEdgeForClient(client);
+        }
+
+        int y = 0;
+        int x = 0;
+        int width = 0;
+        int height = 0;
+
+        Output *output = client->output();
+        const QRect geo = client->frameGeometry().toRect();
+
+        const QRect screen = output->geometry();
+        switch (border) {
+        case ElectricTop:
+            y = screen.y();
+            x = geo.x();
+            height = 1;
+            width = geo.width();
+            break;
+        case ElectricBottom:
+            y = screen.y() + screen.height() - 1;
+            x = geo.x();
+            height = 1;
+            width = geo.width();
+            break;
+        case ElectricLeft:
+            x = screen.x();
+            y = geo.y();
+            width = 1;
+            height = geo.height();
+            break;
+        case ElectricRight:
+            x = screen.x() + screen.width() - 1;
+            y = geo.y();
+            width = 1;
+            height = geo.height();
+            break;
+        default:
+            break;
+        }
+
+        // Edges can not have negative size.
+        Q_ASSERT(width >= 0);
+        Q_ASSERT(height >= 0);
+
+        edge->setClient(client);
+        edge->setBorder(border);
+        edge->setGeometry(QRect(x, y, width, height));
+        edge->setOutput(output);
+        edge->checkBlocking();
+    }
+}
+
+void ScreenEdges::reveal(Window *window)
+{
+    if (Edge *edge = edgeForClient(window)) {
+        edge->reveal();
+    }
+}
+
+void ScreenEdges::unreveal(Window *window)
+{
+    if (Edge *edge = edgeForClient(window)) {
+        edge->unreveal();
     }
 }
 
@@ -1303,57 +1378,28 @@ void ScreenEdges::unreserveTouch(ElectricBorder border, QAction *action)
     }
 }
 
-bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
+Edge *ScreenEdges::edgeForClient(Window *client) const
 {
-    if (client->isDeleted()) {
-        return false;
+    for (const auto &edge : m_edges) {
+        if (edge->client() == client) {
+            return edge.get();
+        }
     }
+    return nullptr;
+}
 
-    int y = 0;
-    int x = 0;
-    int width = 0;
-    int height = 0;
-
-    Output *output = client->output();
-    const QRect geo = client->frameGeometry().toRect();
-
-    const QRect screen = output->geometry();
-    switch (border) {
-    case ElectricTop:
-        y = screen.y();
-        x = geo.x();
-        height = 1;
-        width = geo.width();
-        break;
-    case ElectricBottom:
-        y = screen.y() + screen.height() - 1;
-        x = geo.x();
-        height = 1;
-        width = geo.width();
-        break;
-    case ElectricLeft:
-        x = screen.x();
-        y = geo.y();
-        width = 1;
-        height = geo.height();
-        break;
-    case ElectricRight:
-        x = screen.x() + screen.width() - 1;
-        y = geo.y();
-        width = 1;
-        height = geo.height();
-        break;
-    default:
-        return false;
-    }
-
-    const auto &edge = m_edges.emplace_back(createEdge(border, x, y, width, height, output, false));
-    edge->setClient(client);
-    edge->reserve();
+Edge *ScreenEdges::createEdgeForClient(Window *client)
+{
+    const auto &edge = m_edges.emplace_back(new Edge(this));
     connect(client, &Window::closed, edge.get(), [this, client]() {
         deleteEdgeForClient(client);
     });
-    return true;
+
+    connect(edge.get(), &Edge::approaching, this, &ScreenEdges::approaching);
+    connect(this, &ScreenEdges::checkBlocking, edge.get(), &Edge::checkBlocking);
+
+    edge->reserve();
+    return edge.get();
 }
 
 void ScreenEdges::deleteEdgeForClient(Window *window)
@@ -1388,11 +1434,25 @@ bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timest
             }
             continue;
         }
-        if (edge->client() && effects->activeFullScreenEffect()) {
-            if (edge->isApproaching()) {
-                edge->stopApproaching();
+        if (edge->client()) {
+            if (effects->activeFullScreenEffect()) {
+                if (edge->isApproaching()) {
+                    edge->stopApproaching();
+                }
+                continue;
             }
-            continue;
+
+            if (edge->isRevealed()) {
+                const bool interacted = edge->client()->hitTest(pos);
+                if (edge->isClientInteracted() != interacted) {
+                    if (interacted) {
+                        edge->setClientInteracted(interacted);
+                    } else {
+                        edge->unreveal();
+                    }
+                }
+                continue;
+            }
         }
         if (edge->approachGeometry().contains(pos.toPoint())) {
             if (!edge->isApproaching()) {
@@ -1415,11 +1475,25 @@ bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timest
     if (activatedForClient) {
         for (const auto &edge : m_edges) {
             if (edge->client()) {
+                edge->setClientInteracted(edge->client()->hitTest(pos));
                 edge->markAsTriggered(pos.toPoint(), timestamp);
             }
         }
     }
     return activated;
+}
+
+bool ScreenEdges::touchDown(const QPointF &pos)
+{
+    for (const auto &edge : m_edges) {
+        if (edge->client()) {
+            if (!edge->client()->hitTest(pos)) {
+                edge->unreveal();
+            }
+        }
+    }
+
+    return false;
 }
 
 void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)
