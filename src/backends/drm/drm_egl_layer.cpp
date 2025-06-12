@@ -130,9 +130,6 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::share
         return false;
     }
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
-    if (m_scanoutBuffer) {
-        m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
-    }
     return m_scanoutBuffer != nullptr;
 }
 
