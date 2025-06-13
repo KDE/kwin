@@ -23,7 +23,7 @@ namespace KWin
 {
 
 VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
 {
 }
