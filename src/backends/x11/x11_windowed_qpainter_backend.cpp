@@ -23,7 +23,7 @@ namespace KWin
 {
 
 X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output, X11WindowedQPainterBackend *backend)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_output(output)
     , m_backend(backend)
 {
@@ -74,7 +74,7 @@ QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterPrimaryLayer::supportedDrmFo
 }
 
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_output(output)
 {
 }

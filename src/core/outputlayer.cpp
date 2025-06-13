@@ -12,10 +12,16 @@
 namespace KWin
 {
 
-OutputLayer::OutputLayer(Output *output)
-    : m_output(output)
+OutputLayer::OutputLayer(Output *output, OutputLayerType type)
+    : m_type(type)
+    , m_output(output)
     , m_renderLoop(output ? output->renderLoop() : nullptr)
 {
+}
+
+OutputLayerType OutputLayer::type() const
+{
+    return m_type;
 }
 
 void OutputLayer::setRenderLoop(RenderLoop *loop)
