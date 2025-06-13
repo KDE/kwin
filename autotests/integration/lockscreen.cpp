@@ -229,7 +229,7 @@ void LockScreenTest::testStackingOrder()
     Window *window = windowAddedSpy.first().first().value<Window *>();
     QVERIFY(window);
     QVERIFY(window->isLockScreen());
-    QCOMPARE(window->layer(), OverlayLayer);
+    QCOMPARE(window->layer(), AboveLayer);
 
     UNLOCK;
 }
