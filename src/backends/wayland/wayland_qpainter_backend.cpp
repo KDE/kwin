@@ -26,7 +26,7 @@ namespace Wayland
 {
 
 WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_waylandOutput(output)
     , m_backend(backend)
 {
@@ -81,7 +81,7 @@ QHash<uint32_t, QList<uint64_t>> WaylandQPainterPrimaryLayer::supportedDrmFormat
 }
 
 WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_backend(backend)
 {
 }

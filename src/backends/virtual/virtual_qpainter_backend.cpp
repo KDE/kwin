@@ -21,7 +21,7 @@ namespace KWin
 {
 
 VirtualQPainterLayer::VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
 {
 }

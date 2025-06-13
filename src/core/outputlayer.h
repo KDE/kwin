@@ -30,11 +30,35 @@ struct OutputLayerBeginFrameInfo
     QRegion repaint;
 };
 
+enum class OutputLayerType {
+    /**
+     * Required for driving an output
+     */
+    Primary,
+    /**
+     * Can only be used for cursor, or cursor-attached items,
+     * as the layer may be moved asynchronously by a different process
+     * (like the host compositor in a nested session)
+     */
+    CursorOnly,
+    /**
+     * Should be preferred to normal overlays when possible, as they're
+     * often more efficient (but often come with size restrictions)
+     */
+    EfficientOverlay,
+    /**
+     * Generic over- or underlay
+     */
+    GenericLayer,
+};
+
 class KWIN_EXPORT OutputLayer : public QObject
 {
     Q_OBJECT
 public:
-    explicit OutputLayer(Output *output);
+    explicit OutputLayer(Output *output, OutputLayerType type);
+
+    OutputLayerType type() const;
 
     void setOutput(Output *output);
 
@@ -118,6 +142,7 @@ protected:
     virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;
     virtual bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) = 0;
 
+    const OutputLayerType m_type;
     QRegion m_repaints;
     QPointF m_hotspot;
     QRectF m_sourceRect;
