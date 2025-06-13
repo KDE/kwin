@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 22:16+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1349,16 +1349,13 @@ msgstr ""
 "Hautatu itxiera behartu beharreko leihoa, ezkerreko klik edo sartu bidez.\n"
 "Ihes edo eskuineko klik uzteko."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1769,12 +1766,12 @@ msgstr "Ezkutatu kurtsorea ekintza ezagatik:"
 msgid "Hide cursor on typing"
 msgstr "Ezkutatu kurtsorea tekleatu bitartean"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Txandakatu alderantzikatzeko efektua"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Txandakatu leihoan alderantzikatzeko efektua"
@@ -1997,32 +1994,6 @@ msgstr "Beltzera urtu (pantaila osoko plasta pantailak bakarrik)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Lehenetsia"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Neurria"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "&Zabalera:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&Altuera:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2902,165 +2873,15 @@ msgstr "Mugitu zoom-eremua gorantz"
 msgid "Move Zoomed Area Downwards"
 msgstr "Mugitu zoom-eremua beherantz"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Eraman sagua fokurantz"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mugitu sagua erdialdera"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Mugitu ezkerrera"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Mugitu eskuinera"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Mugitu gora"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Mugitu behera"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "Kiribiltze keinua aldarazteko teklak:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "Kiribildu, tekla aldarazleak zoom egiteko sakatu bitartean"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
-"Zooma gerturatu eta urruntzean, aldatu zooma definitutako zoom-faktorearen "
-"arabera."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "Zoom-proportzioa:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "Erakutsi pixel-sareta zoom maila honetan:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "Saguaren erakuslea:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Sagu-erakuslearen ikusgaitasuna."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Eskala"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Mantendu"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Ezkutatu"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "Saguaren jarraipena:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Saguaren mugimenduaren jarraipena."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "Proportzionala"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Erdiratuta"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Bultzatu"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Ezgaituta"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Gaitu fokuratutako kokapenaren jarraipena. Horretarako, QAccessible gaitu "
-"behar da aplikazio bakoitzean (\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "Gaitu fokuaren jarraipena"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Gaitu testu-kurtsorearen jarraipena. Horretarako, QAccessible gaitu behar da "
-"aplikazio bakoitzean (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "Gaitu testu-kurtsorearen jarraipena"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4320,13 +4141,13 @@ msgstr "Emandako irteera-hurrenkera baliogabea da"
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ez du erantzuten)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4355,6 +4176,101 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland kraskatu egin da"
+
+#~ msgid "Size"
+#~ msgstr "Neurria"
+
+#~ msgid "&Width:"
+#~ msgstr "&Zabalera:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#~ msgid "&Height:"
+#~ msgstr "&Altuera:"
+
+#~ msgid "Move Left"
+#~ msgstr "Mugitu ezkerrera"
+
+#~ msgid "Move Right"
+#~ msgstr "Mugitu eskuinera"
+
+#~ msgid "Move Up"
+#~ msgstr "Mugitu gora"
+
+#~ msgid "Move Down"
+#~ msgstr "Mugitu behera"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Kiribiltze keinua aldarazteko teklak:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr "Kiribildu, tekla aldarazleak zoom egiteko sakatu bitartean"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "Zooma gerturatu eta urruntzean, aldatu zooma definitutako zoom-"
+#~ "faktorearen arabera."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "Zoom-proportzioa:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "Erakutsi pixel-sareta zoom maila honetan:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "Saguaren erakuslea:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Sagu-erakuslearen ikusgaitasuna."
+
+#~ msgid "Scale"
+#~ msgstr "Eskala"
+
+#~ msgid "Keep"
+#~ msgstr "Mantendu"
+
+#~ msgid "Hide"
+#~ msgstr "Ezkutatu"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "Saguaren jarraipena:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Saguaren mugimenduaren jarraipena."
+
+#~ msgid "Proportional"
+#~ msgstr "Proportzionala"
+
+#~ msgid "Centered"
+#~ msgstr "Erdiratuta"
+
+#~ msgid "Push"
+#~ msgstr "Bultzatu"
+
+#~ msgid "Disabled"
+#~ msgstr "Ezgaituta"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Gaitu fokuratutako kokapenaren jarraipena. Horretarako, QAccessible gaitu "
+#~ "behar da aplikazio bakoitzean (\"export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "Gaitu fokuaren jarraipena"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Gaitu testu-kurtsorearen jarraipena. Horretarako, QAccessible gaitu behar "
+#~ "da aplikazio bakoitzean (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Gaitu testu-kurtsorearen jarraipena"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Leiho-eragiketen menua"

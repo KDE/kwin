@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-04-06 17:47+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -1347,16 +1347,13 @@ msgstr ""
 "Atlasiet logu, kuru aizvērt piespiedu kārtā, un nospiediet „Enter“.\n"
 "Lai atceltu darbību, spiediet „Escape“ vai peles labo taustiņu."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1762,12 +1759,12 @@ msgstr "Paslēpt kursoru, kad nav aktīvs:"
 msgid "Hide cursor on typing"
 msgstr "Paslēpt kursoru, kad raksta"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Iesl./izsl. invertēšanas efektu"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Iesl./izsl. loga invertēšanas efektu"
@@ -1990,32 +1987,6 @@ msgstr "Izgaist uz melnu (tikai pilnekrāna ielādēšanās ekrāniem)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Noklusētais"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Izmērs"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "&Platums:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&Augstums"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2894,165 +2865,15 @@ msgstr "Pārvietot pietuvināto apgabalu augšup"
 msgid "Move Zoomed Area Downwards"
 msgstr "Pārvietot pietuvināto apgabalu lejup"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Pārvietot peli uz fokusu"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Pārvietot peli uz centru"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Pārvietot pa kreisi"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Pārvietot pa labi"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Pārvietot augšup"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Pārvietot lejup"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "Ritināšanas žestu modifikatora taustiņi:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "Lai mainītu tuvinājumu, ritiniet ar nospiestu modifikatora taustiņu"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
-"Tālinot un tuvinot tālummaiņu mainīt pēc iepriekš definēta tāllummaiņas "
-"koeficienta."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "Tālummaiņās koeficients:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "Rādīt pikseļu tīklu pie tuvinājuma līmeņa:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "Peles rādītājs:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Peles rādītāja redzamība."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Mērogot"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Paturēt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Paslēpt"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "Peles izsekošana:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Izsekot peles kustību."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "Proporcionāls"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Centrēts"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Spiest"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Izslēgts"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Ieslēgt fokusā esošās vietas izsekošanu. Lai šī funkcija darbotos, katrā "
-"programmā jābūt ieslēgtam „QAccessible“ („export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1“)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "Ieslēgt fokusa izsekošanu"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Ieslēgt teksta kursora izsekošanu. Lai šī funkcija darbotos, katrā programmā "
-"jābūt ieslēgtam „QAccessible“ („export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1“)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "Ieslēgt teksta kursora izsekošanu"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4324,13 +4145,13 @@ msgstr "Sniegtā izvades secība nav derīga"
 msgid "The driver rejected the output configuration"
 msgstr "Draiveris noraidīja izvades konfigurāciju"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nereaģē)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4358,6 +4179,102 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "„Xwayland“ ir avarējis"
+
+#~ msgid "Size"
+#~ msgstr "Izmērs"
+
+#~ msgid "&Width:"
+#~ msgstr "&Platums:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#~ msgid "&Height:"
+#~ msgstr "&Augstums"
+
+#~ msgid "Move Left"
+#~ msgstr "Pārvietot pa kreisi"
+
+#~ msgid "Move Right"
+#~ msgstr "Pārvietot pa labi"
+
+#~ msgid "Move Up"
+#~ msgstr "Pārvietot augšup"
+
+#~ msgid "Move Down"
+#~ msgstr "Pārvietot lejup"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Ritināšanas žestu modifikatora taustiņi:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr "Lai mainītu tuvinājumu, ritiniet ar nospiestu modifikatora taustiņu"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "Tālinot un tuvinot tālummaiņu mainīt pēc iepriekš definēta tāllummaiņas "
+#~ "koeficienta."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "Tālummaiņās koeficients:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "Rādīt pikseļu tīklu pie tuvinājuma līmeņa:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "Peles rādītājs:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Peles rādītāja redzamība."
+
+#~ msgid "Scale"
+#~ msgstr "Mērogot"
+
+#~ msgid "Keep"
+#~ msgstr "Paturēt"
+
+#~ msgid "Hide"
+#~ msgstr "Paslēpt"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "Peles izsekošana:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Izsekot peles kustību."
+
+#~ msgid "Proportional"
+#~ msgstr "Proporcionāls"
+
+#~ msgid "Centered"
+#~ msgstr "Centrēts"
+
+#~ msgid "Push"
+#~ msgstr "Spiest"
+
+#~ msgid "Disabled"
+#~ msgstr "Izslēgts"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Ieslēgt fokusā esošās vietas izsekošanu. Lai šī funkcija darbotos, katrā "
+#~ "programmā jābūt ieslēgtam „QAccessible“ („export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1“)."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "Ieslēgt fokusa izsekošanu"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Ieslēgt teksta kursora izsekošanu. Lai šī funkcija darbotos, katrā "
+#~ "programmā jābūt ieslēgtam „QAccessible“ („export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1“)."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Ieslēgt teksta kursora izsekošanu"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Loga darbību izvēlne"

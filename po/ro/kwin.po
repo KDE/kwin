@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1358,16 +1358,13 @@ msgstr ""
 "Alegeți fereastra de închis forțat cu clic stâng sau Enter.\n"
 "Apăsați Escape sau clic drept pentru a renunța."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1801,13 +1798,13 @@ msgstr ""
 msgid "Hide cursor on typing"
 msgstr ""
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgid "Toggle Invert Effect"
 msgstr "Comută inversare efect"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect on Window"
 msgid "Toggle Invert Effect on Window"
@@ -2034,37 +2031,6 @@ msgstr "Estompează spre nergu (doar ecranele de început în mod ecran complet)
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Implicită"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Size"
-msgid "Size"
-msgstr "Dimensiune"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, fuzzy, kde-format
-#| msgid "&Width:"
-msgid "&Width:"
-msgstr "&Lățime:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, fuzzy, kde-format
-#| msgid " px"
-msgid " px"
-msgstr "px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "&Height:"
-msgstr "Drept"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -3076,195 +3042,17 @@ msgstr "Mută zona mărită în sus"
 msgid "Move Zoomed Area Downwards"
 msgstr "Mută zona mărită în jos"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Niciun buton de maus"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"
 msgstr "Mută fereastra la centru"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, fuzzy, kde-format
-#| msgid "Left"
-msgid "Move Left"
-msgstr "Stânga"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, fuzzy, kde-format
-#| msgid "Right"
-msgid "Move Right"
-msgstr "Dreapta"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, fuzzy, kde-format
-#| msgid "&Move"
-msgid "Move Up"
-msgstr "M&ută"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, fuzzy, kde-format
-#| msgid "Move Window"
-msgid "Move Down"
-msgstr "Mută fereastra"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Modifiers"
-msgid "Scroll gesture modifier keys:"
-msgstr "Modificatori"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, fuzzy, kde-format
-#| msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
-"La mărire sau micșorare modifică panoramarea cu factorul definit de "
-"panoramare."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
-msgid "Zoom factor:"
-msgstr "Factor panoramare:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
-msgid "Mouse pointer:"
-msgstr "Indicator de maus:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, fuzzy, kde-format
-#| msgid "Visibility of the mouse-pointer."
-msgid "Visibility of the mouse-pointer."
-msgstr "Vizibilitatea indicatorului de mausului."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
-msgid "Scale"
-msgstr "Scalare"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, fuzzy, kde-format
-#| msgid "Keep"
-msgid "Keep"
-msgstr "Ține"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, fuzzy, kde-format
-#| msgid "Hide"
-msgid "Hide"
-msgstr "Ascunde"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
-msgid "Mouse tracking:"
-msgstr "Urmărire maus:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, fuzzy, kde-format
-#| msgid "Track moving of the mouse."
-msgid "Track moving of the mouse."
-msgstr "Urmărește deplasarea mausului."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, fuzzy, kde-format
-#| msgid "Position"
-msgid "Proportional"
-msgstr "Poziție"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, fuzzy, kde-format
-#| msgid "Center"
-msgid "Centered"
-msgstr "Centrat"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, fuzzy, kde-format
-#| msgid "Push"
-msgid "Push"
-msgstr "Împinge"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, fuzzy, kde-format
-#| msgid "Tiling Disabled"
-msgid "Disabled"
-msgstr "Mozaic dezactivat"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Activează urmărirea locului focalizat. Pentru aceasta este nevoie ca "
-"QAccessible să fie activat pentru aplicație („export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
-msgid "Enable focus tracking"
-msgstr "Activează urmărirea focalizării"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the text cursor. This needs QAccessible to be enabled "
-#| "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Activează urmărirea cursorului textual. Pentru aceasta este nevoie ca "
-"QAccessible să fie activat pentru aplicație („export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
-msgid "Enable text cursor tracking"
-msgstr "Activează urmărirea cursorului textual"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4580,13 +4368,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(nu răspunde)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4605,6 +4393,154 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Size"
+#~ msgid "Size"
+#~ msgstr "Dimensiune"
+
+#, fuzzy
+#~| msgid "&Width:"
+#~ msgid "&Width:"
+#~ msgstr "&Lățime:"
+
+#, fuzzy
+#~| msgid " px"
+#~ msgid " px"
+#~ msgstr "px"
+
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Right"
+#~ msgid "&Height:"
+#~ msgstr "Drept"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "Move Left"
+#~ msgstr "Stânga"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "Move Right"
+#~ msgstr "Dreapta"
+
+#, fuzzy
+#~| msgid "&Move"
+#~ msgid "Move Up"
+#~ msgstr "M&ută"
+
+#, fuzzy
+#~| msgid "Move Window"
+#~ msgid "Move Down"
+#~ msgstr "Mută fereastra"
+
+#, fuzzy
+#~| msgid "Modifiers"
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Modificatori"
+
+#, fuzzy
+#~| msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "La mărire sau micșorare modifică panoramarea cu factorul definit de "
+#~ "panoramare."
+
+#, fuzzy
+#~| msgid "Zoom Factor:"
+#~ msgid "Zoom factor:"
+#~ msgstr "Factor panoramare:"
+
+#, fuzzy
+#~| msgid "Mouse Pointer:"
+#~ msgid "Mouse pointer:"
+#~ msgstr "Indicator de maus:"
+
+#, fuzzy
+#~| msgid "Visibility of the mouse-pointer."
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Vizibilitatea indicatorului de mausului."
+
+#, fuzzy
+#~| msgctxt "Current scale in pinch gesture"
+#~| msgid "Scale"
+#~ msgid "Scale"
+#~ msgstr "Scalare"
+
+#, fuzzy
+#~| msgid "Keep"
+#~ msgid "Keep"
+#~ msgstr "Ține"
+
+#, fuzzy
+#~| msgid "Hide"
+#~ msgid "Hide"
+#~ msgstr "Ascunde"
+
+#, fuzzy
+#~| msgid "Mouse Tracking:"
+#~ msgid "Mouse tracking:"
+#~ msgstr "Urmărire maus:"
+
+#, fuzzy
+#~| msgid "Track moving of the mouse."
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Urmărește deplasarea mausului."
+
+#, fuzzy
+#~| msgid "Position"
+#~ msgid "Proportional"
+#~ msgstr "Poziție"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "Centered"
+#~ msgstr "Centrat"
+
+#, fuzzy
+#~| msgid "Push"
+#~ msgid "Push"
+#~ msgstr "Împinge"
+
+#, fuzzy
+#~| msgid "Tiling Disabled"
+#~ msgid "Disabled"
+#~ msgstr "Mozaic dezactivat"
+
+#, fuzzy
+#~| msgid ""
+#~| "Enable tracking of the focused location. This needs QAccessible to be "
+#~| "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Activează urmărirea locului focalizat. Pentru aceasta este nevoie ca "
+#~ "QAccessible să fie activat pentru aplicație („export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#, fuzzy
+#~| msgid "Enable Focus Tracking"
+#~ msgid "Enable focus tracking"
+#~ msgstr "Activează urmărirea focalizării"
+
+#, fuzzy
+#~| msgid ""
+#~| "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~| "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Activează urmărirea cursorului textual. Pentru aceasta este nevoie ca "
+#~ "QAccessible să fie activat pentru aplicație („export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#, fuzzy
+#~| msgid "Enable Text Cursor Tracking"
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Activează urmărirea cursorului textual"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Meniul de operații al ferestrei"

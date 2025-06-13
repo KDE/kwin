@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 18:47+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1339,16 +1339,13 @@ msgstr ""
 "Selige le fenestra pro clausura fortiate per cliccar a sinistre o Enter.\n"
 "Escappa o clicca a dextere pro cancellar."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1761,12 +1758,12 @@ msgstr "Cela cursor sur inactivitate:"
 msgid "Hide cursor on typing"
 msgstr "Cela cursor sur typar"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Commuta effecto de inverter"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Commuta effecto de inverter sur fenestra"
@@ -1989,32 +1986,6 @@ msgstr "Pallide a nigre (solmente pro splash screens a schermo plen)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Predefinite"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Dimension"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "Lar&gessa:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr "px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&Altessa:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2895,164 +2866,15 @@ msgstr "Move area sub zoom in alto"
 msgid "Move Zoomed Area Downwards"
 msgstr "Move area sub zoom a basso"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Move mus pro focalisar"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Move mus pro centrar"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Move a sinistra"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Move a dextera"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Move Su"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Mover a basso "
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "Claves de Modificar de gesto (gesture) de rolar:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "Rola durante que le claves de modificator es pressate per facer zoom"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
-"Durante que il face zoom avante e zoom retro on cambia le zoom per le "
-"definite factor de zoom."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "Factor de zoom:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "Monstra grillia de pixel a nivello de zoom:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "Punctator de mus:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Visibilitate del punctator de mus."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Scala"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Mantene"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Cela"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "Traciar de Mus:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Tracia le movimento del mus."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "Proportional"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Centrate"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Preme"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Dishabilitate"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Activa tracia de location focalisate. Isto necessita que QAccessible es "
-"activate pro le application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "Activa tracia de foco"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Activa tracia de location focalisate. Isto necessita que  QAccessible es "
-"activate pro le application (\"export QT_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "Activa tracia de cursor de texto"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4324,13 +4146,13 @@ msgstr "Leordine de exito fornite es invalide"
 msgid "The driver rejected the output configuration"
 msgstr "Le driver refusava le configuration de exito"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non respondente)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4358,6 +4180,102 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fracassate"
+
+#~ msgid "Size"
+#~ msgstr "Dimension"
+
+#~ msgid "&Width:"
+#~ msgstr "Lar&gessa:"
+
+#~ msgid " px"
+#~ msgstr "px"
+
+#~ msgid "&Height:"
+#~ msgstr "&Altessa:"
+
+#~ msgid "Move Left"
+#~ msgstr "Move a sinistra"
+
+#~ msgid "Move Right"
+#~ msgstr "Move a dextera"
+
+#~ msgid "Move Up"
+#~ msgstr "Move Su"
+
+#~ msgid "Move Down"
+#~ msgstr "Mover a basso "
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Claves de Modificar de gesto (gesture) de rolar:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr ""
+#~ "Rola durante que le claves de modificator es pressate per facer zoom"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "Durante que il face zoom avante e zoom retro on cambia le zoom per le "
+#~ "definite factor de zoom."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "Factor de zoom:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "Monstra grillia de pixel a nivello de zoom:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "Punctator de mus:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Visibilitate del punctator de mus."
+
+#~ msgid "Scale"
+#~ msgstr "Scala"
+
+#~ msgid "Keep"
+#~ msgstr "Mantene"
+
+#~ msgid "Hide"
+#~ msgstr "Cela"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "Traciar de Mus:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Tracia le movimento del mus."
+
+#~ msgid "Proportional"
+#~ msgstr "Proportional"
+
+#~ msgid "Centered"
+#~ msgstr "Centrate"
+
+#~ msgid "Push"
+#~ msgstr "Preme"
+
+#~ msgid "Disabled"
+#~ msgstr "Dishabilitate"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Activa tracia de location focalisate. Isto necessita que QAccessible es "
+#~ "activate pro le application (\"export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "Activa tracia de foco"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Activa tracia de location focalisate. Isto necessita que  QAccessible es "
+#~ "activate pro le application (\"export QT_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Activa tracia de cursor de texto"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Menu de operationes de fenestra"

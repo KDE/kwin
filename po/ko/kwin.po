@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-06-10 22:56+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1329,16 +1329,13 @@ msgstr ""
 "왼쪽 단추를 누르거나 Enter 키를 눌러서 강제로 닫을 창을 선택합니다.\n"
 "Esc 키나 오른쪽 단추를 클릭하면 취소합니다."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1738,12 +1735,12 @@ msgstr "활동 중단 시 커서 숨기기:"
 msgid "Hide cursor on typing"
 msgstr "입력할 때 커서 숨기기"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "반전 효과 전환"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "창 반전 효과 전환"
@@ -1966,32 +1963,6 @@ msgstr "검은색으로 페이드 (전체 화면 시작 화면만)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "기본값"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "크기"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "너비(&W):"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr "픽셀"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "높이(&H):"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2859,162 +2830,15 @@ msgstr "크기 조정된 영역을 위로 이동"
 msgid "Move Zoomed Area Downwards"
 msgstr "크기 조정된 영역을 아래로 이동"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "마우스를 포커스로 이동"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "마우스를 가운데로 이동"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "왼쪽으로 이동"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "오른쪽으로 이동"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "위로 이동"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "아래로 이동"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "스크롤 제스처 수정자 키:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "수정자 키를 누르면서 스크롤 시 확대/축소로 전달"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "확대 및 축소 시 사용할 배율입니다."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "확대/축소 배율:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "다음 확대/축소 단계에서 픽셀 격자 표시:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "마우스 포인터:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "마우스 포인터를 보일지 여부입니다."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "크기 조정"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "유지"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "숨기기"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "마우스 추적:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "마우스의 움직임을 추적합니다."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "비례"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "가운데"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "푸시"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "사용 안 함"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"포커스 위치 추적을 사용합니다. 앱마다 QAccessible을 사용할 수 있어야 합니다"
-"(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "포커스 위치 추적 활성화"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"텍스트 커서 추적을 사용합니다. 앱마다 QAccessible을 사용할 수 있어야 합니다"
-"(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "텍스트 커서 추적 활성화"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4271,13 +4095,13 @@ msgstr "지정한 출력 순서가 잘못됨"
 msgid "The driver rejected the output configuration"
 msgstr "드라이버에서 출력 설정을 거부함"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(응답 없음)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4304,6 +4128,98 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland가 충돌함"
+
+#~ msgid "Size"
+#~ msgstr "크기"
+
+#~ msgid "&Width:"
+#~ msgstr "너비(&W):"
+
+#~ msgid " px"
+#~ msgstr "픽셀"
+
+#~ msgid "&Height:"
+#~ msgstr "높이(&H):"
+
+#~ msgid "Move Left"
+#~ msgstr "왼쪽으로 이동"
+
+#~ msgid "Move Right"
+#~ msgstr "오른쪽으로 이동"
+
+#~ msgid "Move Up"
+#~ msgstr "위로 이동"
+
+#~ msgid "Move Down"
+#~ msgstr "아래로 이동"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "스크롤 제스처 수정자 키:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr "수정자 키를 누르면서 스크롤 시 확대/축소로 전달"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr "확대 및 축소 시 사용할 배율입니다."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "확대/축소 배율:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "다음 확대/축소 단계에서 픽셀 격자 표시:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "마우스 포인터:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "마우스 포인터를 보일지 여부입니다."
+
+#~ msgid "Scale"
+#~ msgstr "크기 조정"
+
+#~ msgid "Keep"
+#~ msgstr "유지"
+
+#~ msgid "Hide"
+#~ msgstr "숨기기"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "마우스 추적:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "마우스의 움직임을 추적합니다."
+
+#~ msgid "Proportional"
+#~ msgstr "비례"
+
+#~ msgid "Centered"
+#~ msgstr "가운데"
+
+#~ msgid "Push"
+#~ msgstr "푸시"
+
+#~ msgid "Disabled"
+#~ msgstr "사용 안 함"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "포커스 위치 추적을 사용합니다. 앱마다 QAccessible을 사용할 수 있어야 합니"
+#~ "다(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "포커스 위치 추적 활성화"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "텍스트 커서 추적을 사용합니다. 앱마다 QAccessible을 사용할 수 있어야 합니"
+#~ "다(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "텍스트 커서 추적 활성화"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "창 동작 메뉴"

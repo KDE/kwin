@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-05-27 23:38+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -1354,16 +1354,13 @@ msgstr ""
 "Pakota ikkunan sulkeminen hiiripainikkeella tai Enterillä.\n"
 "Peru hiiren oikealla painikkeella tai Esc:llä."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1770,12 +1767,12 @@ msgstr "Piilota osoitin, kun passiivisena:"
 msgid "Hide cursor on typing"
 msgstr "Piilota osoitin näppäiltäessä"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Vaihda Käännä värit -tehosteen tilaa"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Vaihda Käännä värit -tehosteen tilaa ikkunalle"
@@ -1998,32 +1995,6 @@ msgstr "Häivytys mustaan (vain koko näytön tervetuloikkunat)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Oletus"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Koko"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "&Leveys:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&Korkeus:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2902,164 +2873,15 @@ msgstr "Siirrä lähennettyä aluetta ylös"
 msgid "Move Zoomed Area Downwards"
 msgstr "Siirrä lähennettyä aluetta alas"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Siirrä hiiri kohdistukseen"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Siirrä hiiri keskelle"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Siirrä vasemmalle"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Siirrä oikealle"
-
-# *** TARKISTA: Voi olla myös ”ylös”
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Siirrä ylemmäs"
-
-# *** TARKISTA: Voi olla myös ”alas”
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Siirrä alemmas"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "Vierityseleen muuntonäppäimet:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "Lähennä vierittämällä ja painamalla muuntonäppäintä"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "Lähennä ja loitonna määritetyn kertoimen mukaisesti."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "Lähennyskerroin:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "Näytä kuvapisteruudukko lähennystasolla:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "Hiiriosoitin:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Hiirikohdistimen näkyvyys."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Mittakaava"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Säilytä"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Piilota"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "Hiiren jäljitys:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Jäljitä hiiren liike."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "Suhteellinen"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Keskitetty"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Työnnä"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Ei käytössä"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Käytä kohdistetun sijainnin seurantaa. Tämä vaatii, että QAccessible on "
-"sovelluksittain käytössä (”export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "Käytä kohdistuksen jäljitystä"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Käytä kohdistetun sijainnin seurantaa. Tämä vaatii, että QAccessible on "
-"sovelluksittain käytössä (”export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "Käytä tekstikohdistimen jäljitystä"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4338,13 +4160,13 @@ msgstr "Tarjottu ulostulojärjestys on virheellinen"
 msgid "The driver rejected the output configuration"
 msgstr "Ajuri hylkäsi ulostulomäärityksen"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ei vastaa)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4372,6 +4194,100 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland on kaatunut"
+
+#~ msgid "Size"
+#~ msgstr "Koko"
+
+#~ msgid "&Width:"
+#~ msgstr "&Leveys:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#~ msgid "&Height:"
+#~ msgstr "&Korkeus:"
+
+#~ msgid "Move Left"
+#~ msgstr "Siirrä vasemmalle"
+
+#~ msgid "Move Right"
+#~ msgstr "Siirrä oikealle"
+
+# *** TARKISTA: Voi olla myös ”ylös”
+#~ msgid "Move Up"
+#~ msgstr "Siirrä ylemmäs"
+
+# *** TARKISTA: Voi olla myös ”alas”
+#~ msgid "Move Down"
+#~ msgstr "Siirrä alemmas"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Vierityseleen muuntonäppäimet:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr "Lähennä vierittämällä ja painamalla muuntonäppäintä"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr "Lähennä ja loitonna määritetyn kertoimen mukaisesti."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "Lähennyskerroin:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "Näytä kuvapisteruudukko lähennystasolla:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "Hiiriosoitin:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Hiirikohdistimen näkyvyys."
+
+#~ msgid "Scale"
+#~ msgstr "Mittakaava"
+
+#~ msgid "Keep"
+#~ msgstr "Säilytä"
+
+#~ msgid "Hide"
+#~ msgstr "Piilota"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "Hiiren jäljitys:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Jäljitä hiiren liike."
+
+#~ msgid "Proportional"
+#~ msgstr "Suhteellinen"
+
+#~ msgid "Centered"
+#~ msgstr "Keskitetty"
+
+#~ msgid "Push"
+#~ msgstr "Työnnä"
+
+#~ msgid "Disabled"
+#~ msgstr "Ei käytössä"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Käytä kohdistetun sijainnin seurantaa. Tämä vaatii, että QAccessible on "
+#~ "sovelluksittain käytössä (”export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "Käytä kohdistuksen jäljitystä"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Käytä kohdistetun sijainnin seurantaa. Tämä vaatii, että QAccessible on "
+#~ "sovelluksittain käytössä (”export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Käytä tekstikohdistimen jäljitystä"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Ikkunan pikavalikko"

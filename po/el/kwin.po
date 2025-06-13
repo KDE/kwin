@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1357,16 +1357,13 @@ msgstr ""
 "Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
 "Esc ή δεξί κλικ για ακύρωση."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1783,12 +1780,12 @@ msgstr "Απόκρυψη δρομέα κατά την αδράνεια:"
 msgid "Hide cursor on typing"
 msgstr "Απόκρυψη δρομέα κατά την πληκτρολόγηση"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Εναλλαγή εφέ αντιστροφής"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Εναλλαγή εφέ αντιστροφής στο παράθυρο"
@@ -2011,32 +2008,6 @@ msgstr "Ομαλή μετάβαση σε μαύρο (μόνο αρχικές ο�
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Προκαθορισμένο"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Μέγεθος"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "Π&λάτος:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "Ύ&ψος"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2939,176 +2910,17 @@ msgstr "Μετακίνηση εστιασμένης περιοχής προς τ
 msgid "Move Zoomed Area Downwards"
 msgstr "Μετακίνηση εστιασμένης περιοχής προς τα κάτω"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Χωρίς κουμπιά ποντικιού"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"
 msgstr "Μετακίνηση παραθύρου στην ομάδα"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Μετακίνηση αριστερά"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Μετακίνηση δεξιά"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Μετακίνηση πάνω"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Μετακίνηση κάτω"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
-msgid "Scroll gesture modifier keys:"
-msgstr "Πλήκτρα τροποποιητές της σχεδίασης βέλων:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
-"Στο πλησίασμα και στην απομάκρυνση να αλλάζει τη μεγέθυνση με βάση το "
-"καθορισμένο παράγοντα μεγέθυνσης."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "Παράγοντας εστίασης:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "Δείκτης ποντικιού:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Ορατότητα του δείκτη ποντικιού."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Κλίμακα"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Διατήρηση"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Απόκρυψη"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "Εντοπισμός ποντικιού:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Εντοπισμός κίνησης ποντικιού."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, fuzzy, kde-format
-#| msgctxt "The global mouse pointer position"
-#| msgid "Global Position"
-msgid "Proportional"
-msgstr "Καθολική θέση"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Στο κέντρο"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Ώθηση"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Ανενεργό"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Ενεργοποίηση εντοπισμού της εστιασμένης τοποθεσίας. Χρειάζεται να είναι "
-"ενεργοποιημένα ανά εφαρμογή το QAccessible (\"export QT_ACCESSIBILITY=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "Ενεργοποίηση εντοπισμού εστίασης"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Ενεργοποίηση εντοπισμού της εστιασμένης τοποθεσίας. Χρειάζεται να είναι "
-"ενεργοποιημένα ανά εφαρμογή το QAccessible (\"export QT_ACCESSIBILITY=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
-msgid "Enable text cursor tracking"
-msgstr "Ενεργοποίηση εντοπισμού εστίασης"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4419,13 +4231,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Δεν ανταποκρίνεται)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4454,6 +4266,111 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Το Xwayland κατάρρευσε"
+
+#~ msgid "Size"
+#~ msgstr "Μέγεθος"
+
+#~ msgid "&Width:"
+#~ msgstr "Π&λάτος:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#~ msgid "&Height:"
+#~ msgstr "Ύ&ψος"
+
+#~ msgid "Move Left"
+#~ msgstr "Μετακίνηση αριστερά"
+
+#~ msgid "Move Right"
+#~ msgstr "Μετακίνηση δεξιά"
+
+#~ msgid "Move Up"
+#~ msgstr "Μετακίνηση πάνω"
+
+#~ msgid "Move Down"
+#~ msgstr "Μετακίνηση κάτω"
+
+#, fuzzy
+#~| msgid "Arrow draw modifier keys:"
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Πλήκτρα τροποποιητές της σχεδίασης βέλων:"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "Στο πλησίασμα και στην απομάκρυνση να αλλάζει τη μεγέθυνση με βάση το "
+#~ "καθορισμένο παράγοντα μεγέθυνσης."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "Παράγοντας εστίασης:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "Δείκτης ποντικιού:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Ορατότητα του δείκτη ποντικιού."
+
+#~ msgid "Scale"
+#~ msgstr "Κλίμακα"
+
+#~ msgid "Keep"
+#~ msgstr "Διατήρηση"
+
+#~ msgid "Hide"
+#~ msgstr "Απόκρυψη"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "Εντοπισμός ποντικιού:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Εντοπισμός κίνησης ποντικιού."
+
+#, fuzzy
+#~| msgctxt "The global mouse pointer position"
+#~| msgid "Global Position"
+#~ msgid "Proportional"
+#~ msgstr "Καθολική θέση"
+
+#~ msgid "Centered"
+#~ msgstr "Στο κέντρο"
+
+#~ msgid "Push"
+#~ msgstr "Ώθηση"
+
+#~ msgid "Disabled"
+#~ msgstr "Ανενεργό"
+
+#, fuzzy
+#~| msgid ""
+#~| "Enable tracking of the focused location. This needs QAccessible to be "
+#~| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Ενεργοποίηση εντοπισμού της εστιασμένης τοποθεσίας. Χρειάζεται να είναι "
+#~ "ενεργοποιημένα ανά εφαρμογή το QAccessible (\"export "
+#~ "QT_ACCESSIBILITY=1\")."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "Ενεργοποίηση εντοπισμού εστίασης"
+
+#, fuzzy
+#~| msgid ""
+#~| "Enable tracking of the focused location. This needs QAccessible to be "
+#~| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Ενεργοποίηση εντοπισμού της εστιασμένης τοποθεσίας. Χρειάζεται να είναι "
+#~ "ενεργοποιημένα ανά εφαρμογή το QAccessible (\"export "
+#~ "QT_ACCESSIBILITY=1\")."
+
+#, fuzzy
+#~| msgid "Enable Focus Tracking"
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Ενεργοποίηση εντοπισμού εστίασης"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Μενού λειτουργιών παραθύρου"

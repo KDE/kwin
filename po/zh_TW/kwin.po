@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-06-04 07:42+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -1340,16 +1340,13 @@ msgstr ""
 "用滑鼠左鍵或 Enter 來選取視窗以強制關閉。\n"
 "按 Esc 或右鍵來取消。"
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1747,12 +1744,12 @@ msgstr "無動作時隱藏游標："
 msgid "Hide cursor on typing"
 msgstr "打字時隱藏游標"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "切換反轉效果"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "在視窗上切換反轉效果"
@@ -1975,32 +1972,6 @@ msgstr "淡出至全黑（僅全螢幕啟動時）"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "預設"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "大小"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "寬度(&W)："
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " 像素"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "高度(&H)："
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2868,162 +2839,15 @@ msgstr "將縮放區域移到上方"
 msgid "Move Zoomed Area Downwards"
 msgstr "將縮放區域移到下方"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "將滑鼠移至焦點"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "將滑鼠移至中央"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "向左移動"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "向右移動"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "向上移動"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "向下移動"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "捲動手勢修飾鍵："
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "按著該修飾鍵時捲動來進行螢幕縮放"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "縮放時用已定義的縮放係數來做變更。"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "縮放係數："
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "在此縮放層級顯示像素格線："
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "滑鼠指標："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "滑鼠指標的可見度。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "縮放"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "保留"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "隱藏"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "滑鼠追蹤："
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "追蹤滑鼠移動。"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "比例"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "置中"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "推"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "已關閉"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"開啟焦點位置追蹤。需要在每個應用程式中開啟 QAccessible（\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\"）。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "啟用焦點追蹤"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"開啟文字游標追蹤。需要在每個應用程式中開啟 QAccessible（\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\"）。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "啟用文字游標追蹤"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4279,13 +4103,13 @@ msgstr "提供的輸出順序是無效的"
 msgid "The driver rejected the output configuration"
 msgstr "驅動程式回絕了提供的輸出配置"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4311,6 +4135,98 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩潰"
+
+#~ msgid "Size"
+#~ msgstr "大小"
+
+#~ msgid "&Width:"
+#~ msgstr "寬度(&W)："
+
+#~ msgid " px"
+#~ msgstr " 像素"
+
+#~ msgid "&Height:"
+#~ msgstr "高度(&H)："
+
+#~ msgid "Move Left"
+#~ msgstr "向左移動"
+
+#~ msgid "Move Right"
+#~ msgstr "向右移動"
+
+#~ msgid "Move Up"
+#~ msgstr "向上移動"
+
+#~ msgid "Move Down"
+#~ msgstr "向下移動"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "捲動手勢修飾鍵："
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr "按著該修飾鍵時捲動來進行螢幕縮放"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr "縮放時用已定義的縮放係數來做變更。"
+
+#~ msgid "Zoom factor:"
+#~ msgstr "縮放係數："
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "在此縮放層級顯示像素格線："
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "滑鼠指標："
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "滑鼠指標的可見度。"
+
+#~ msgid "Scale"
+#~ msgstr "縮放"
+
+#~ msgid "Keep"
+#~ msgstr "保留"
+
+#~ msgid "Hide"
+#~ msgstr "隱藏"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "滑鼠追蹤："
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "追蹤滑鼠移動。"
+
+#~ msgid "Proportional"
+#~ msgstr "比例"
+
+#~ msgid "Centered"
+#~ msgstr "置中"
+
+#~ msgid "Push"
+#~ msgstr "推"
+
+#~ msgid "Disabled"
+#~ msgstr "已關閉"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "開啟焦點位置追蹤。需要在每個應用程式中開啟 QAccessible（\"export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\"）。"
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "啟用焦點追蹤"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "開啟文字游標追蹤。需要在每個應用程式中開啟 QAccessible（\"export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\"）。"
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "啟用文字游標追蹤"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "視窗操作選單"

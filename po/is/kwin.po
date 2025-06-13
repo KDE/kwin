@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2024-09-26 14:15+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1354,16 +1354,13 @@ msgstr ""
 "Veldu glugga til að þvinga lokun með vinstrismelli eða færsluhnappi.\n"
 "Ýttu á Esc eða hægrismelltu til að hætta við."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1770,12 +1767,12 @@ msgstr "Fela bendil við aðgerðaleysi:"
 msgid "Hide cursor on typing"
 msgstr "Fela bendil við innslátt"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Víxla umsnúningsáhrifum"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Víxla umsnúningsáhrifum á glugga"
@@ -1998,32 +1995,6 @@ msgstr "Dofna í svart (einungis upphafsskjáir á öllum skjánum)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Sjálfgefið"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Stærð"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "&Breidd:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&Hæð:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2899,169 +2870,15 @@ msgstr "Færa stækkað svæði upp á við"
 msgid "Move Zoomed Area Downwards"
 msgstr "Færa stækkað svæði niður á við"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Færa mús til að fá fókus"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Færa mús á miðju"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Færa til vinstri"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Færa til hægri"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Færa upp"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Færa niður"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Arrow draw modifier keys:"
-msgid "Scroll gesture modifier keys:"
-msgstr "Breytilyklar fyrir örvateikningu:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "Auka og minnka aðdrátt í samræmi við tilgreindan aðdráttarstuðul."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
-msgid "Zoom factor:"
-msgstr "Aðdráttarstuðull:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
-msgid "Mouse pointer:"
-msgstr "Músarbendill:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Sýnileiki músarbendils."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Kvarði"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Óbreyttur"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Falinn"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
-msgid "Mouse tracking:"
-msgstr "Músarrakning:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Rekja hreyfingar músarinnar"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "Hlutfallslegt"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Miðjað"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Ýta til"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Óvirkt"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Kveikja á rakningu á staðnum sem er í fókus. Þetta krefst þess að "
-"QAccessible sé virkt fyrir hvert forrit (\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
-msgid "Enable focus tracking"
-msgstr "Kveikja á fókusrakningu"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Kveikja á rakningu á textabendli. Þetta krefst þess að QAccessible sé virkt "
-"fyrir hvert forrit (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
-msgid "Enable text cursor tracking"
-msgstr "Kveikja á rakningu textabendils"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4339,13 +4156,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar ekki)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4372,6 +4189,105 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland hrundi"
+
+#~ msgid "Size"
+#~ msgstr "Stærð"
+
+#~ msgid "&Width:"
+#~ msgstr "&Breidd:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#~ msgid "&Height:"
+#~ msgstr "&Hæð:"
+
+#~ msgid "Move Left"
+#~ msgstr "Færa til vinstri"
+
+#~ msgid "Move Right"
+#~ msgstr "Færa til hægri"
+
+#~ msgid "Move Up"
+#~ msgstr "Færa upp"
+
+#~ msgid "Move Down"
+#~ msgstr "Færa niður"
+
+#, fuzzy
+#~| msgid "Arrow draw modifier keys:"
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Breytilyklar fyrir örvateikningu:"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr "Auka og minnka aðdrátt í samræmi við tilgreindan aðdráttarstuðul."
+
+#, fuzzy
+#~| msgid "Zoom Factor:"
+#~ msgid "Zoom factor:"
+#~ msgstr "Aðdráttarstuðull:"
+
+#, fuzzy
+#~| msgid "Mouse Pointer:"
+#~ msgid "Mouse pointer:"
+#~ msgstr "Músarbendill:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Sýnileiki músarbendils."
+
+#~ msgid "Scale"
+#~ msgstr "Kvarði"
+
+#~ msgid "Keep"
+#~ msgstr "Óbreyttur"
+
+#~ msgid "Hide"
+#~ msgstr "Falinn"
+
+#, fuzzy
+#~| msgid "Mouse Tracking:"
+#~ msgid "Mouse tracking:"
+#~ msgstr "Músarrakning:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Rekja hreyfingar músarinnar"
+
+#~ msgid "Proportional"
+#~ msgstr "Hlutfallslegt"
+
+#~ msgid "Centered"
+#~ msgstr "Miðjað"
+
+#~ msgid "Push"
+#~ msgstr "Ýta til"
+
+#~ msgid "Disabled"
+#~ msgstr "Óvirkt"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Kveikja á rakningu á staðnum sem er í fókus. Þetta krefst þess að "
+#~ "QAccessible sé virkt fyrir hvert forrit (\"export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#, fuzzy
+#~| msgid "Enable Focus Tracking"
+#~ msgid "Enable focus tracking"
+#~ msgstr "Kveikja á fókusrakningu"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Kveikja á rakningu á textabendli. Þetta krefst þess að QAccessible sé "
+#~ "virkt fyrir hvert forrit (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#, fuzzy
+#~| msgid "Enable Text Cursor Tracking"
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Kveikja á rakningu textabendils"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Aðgerðavalmynd glugga"

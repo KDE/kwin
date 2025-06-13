@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1335,16 +1335,13 @@ msgstr ""
 "enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1754,12 +1751,12 @@ msgstr "Kurzor elrejtése inaktivitáskor:"
 msgid "Hide cursor on typing"
 msgstr "Kurzor elrejtése gépeléskor"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Invertálás ki-be"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Invertálás az ablakon ki-be"
@@ -1982,32 +1979,6 @@ msgstr "Elhalványulás feketébe (csak teljes képernyős betöltőképernyőkn
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Alapértelmezés"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Méret"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "S&zélesség:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " képpont"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&Magasság:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2877,165 +2848,15 @@ msgstr "Nagyított terület mozgatása felfelé"
 msgid "Move Zoomed Area Downwards"
 msgstr "Nagyított terület mozgatása lefelé"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Egér mozgatása a fókuszra"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Egér mozgatása középre"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Mozgatás balra"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Mozgatás jobbra"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Mozgatás felfelé"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Mozgatás lefelé"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "Görgetési mozdulat módosítóbillentyűi:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "Görgetés a módosító billentyűk lenyomásakor a nagyításhoz"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
-"Nagyítás módosítása nagyításkor és kicsinyítéskor a megadott nagyítási "
-"tényezővel."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "Nagyítási arány:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "Képpontrács megjelenítése nagyítási szinten:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "Egérmutató:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Az egérmutató láthatósága."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Méretezés"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Megtartás"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Elrejtés"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "Egérkövetés:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Az egér mozgásának követése."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "Arányos"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Középre"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Görgetés"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Kikapcsolva"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"A fókuszált hely követésének bekapcsolása. Ehhez alkalmazásonként "
-"engedélyezni kell a QAccessible-t („export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "Fókuszkövetés engedélyezése"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"A szövegkurzor követésének bekapcsolása. Ehhez alkalmazásonként engedélyezni "
-"kell a QAccessible-t („export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "Szövegkurzor követésének bekapcsolása"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4309,13 +4130,13 @@ msgstr "A megadott kimenetsorrend érvénytelen"
 msgid "The driver rejected the output configuration"
 msgstr "Az illesztőprogram elutasította a kimenetbeállítást"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nem válaszol)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4341,6 +4162,102 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Az Xwayland összeomlott"
+
+#~ msgid "Size"
+#~ msgstr "Méret"
+
+#~ msgid "&Width:"
+#~ msgstr "S&zélesség:"
+
+#~ msgid " px"
+#~ msgstr " képpont"
+
+#~ msgid "&Height:"
+#~ msgstr "&Magasság:"
+
+#~ msgid "Move Left"
+#~ msgstr "Mozgatás balra"
+
+#~ msgid "Move Right"
+#~ msgstr "Mozgatás jobbra"
+
+#~ msgid "Move Up"
+#~ msgstr "Mozgatás felfelé"
+
+#~ msgid "Move Down"
+#~ msgstr "Mozgatás lefelé"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Görgetési mozdulat módosítóbillentyűi:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr "Görgetés a módosító billentyűk lenyomásakor a nagyításhoz"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "Nagyítás módosítása nagyításkor és kicsinyítéskor a megadott nagyítási "
+#~ "tényezővel."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "Nagyítási arány:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "Képpontrács megjelenítése nagyítási szinten:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "Egérmutató:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Az egérmutató láthatósága."
+
+#~ msgid "Scale"
+#~ msgstr "Méretezés"
+
+#~ msgid "Keep"
+#~ msgstr "Megtartás"
+
+#~ msgid "Hide"
+#~ msgstr "Elrejtés"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "Egérkövetés:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Az egér mozgásának követése."
+
+#~ msgid "Proportional"
+#~ msgstr "Arányos"
+
+#~ msgid "Centered"
+#~ msgstr "Középre"
+
+#~ msgid "Push"
+#~ msgstr "Görgetés"
+
+#~ msgid "Disabled"
+#~ msgstr "Kikapcsolva"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "A fókuszált hely követésének bekapcsolása. Ehhez alkalmazásonként "
+#~ "engedélyezni kell a QAccessible-t („export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "Fókuszkövetés engedélyezése"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "A szövegkurzor követésének bekapcsolása. Ehhez alkalmazásonként "
+#~ "engedélyezni kell a QAccessible-t („export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Szövegkurzor követésének bekapcsolása"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Az ablakműveletek menü"

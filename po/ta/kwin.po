@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-04-13 18:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1357,16 +1357,13 @@ msgstr ""
 "இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "கேவின்"
@@ -1770,12 +1767,12 @@ msgstr "ஒன்றும் செய்யாதபோது சுட்ட�
 msgid "Hide cursor on typing"
 msgstr "தட்டச்சிடும்போது சுட்டிக்குறியை மறை"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "நிற்ப்புரட்டலை நிலைமாற்று"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "சாளரத்திற்கான நிறப்புரட்டலை நிலைமாற்று"
@@ -1998,32 +1995,6 @@ msgstr "மங்கச்செய்து கருப்பு திரை�
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "இயல்பிருப்பு"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "அளவு"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "&அகலம்:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&உயரம்:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2893,164 +2864,15 @@ msgstr "உருப்பெருக்கப்பட்ட பரப்ப�
 msgid "Move Zoomed Area Downwards"
 msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை கீழே நகர்த்து"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "குவியத்திற்கு சுட்டியை நகர்த்து"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "மையத்திற்கு சுட்டியை நகர்த்து"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "இடதுபுறமாக நகர்"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "வலதுபுறமாக நகர்"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "மேலே நகர்"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "கீழே நகர்"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "உருள்வதற்கான மாற்றிவிசைகள்:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "இம்மாற்றிவிசைகளை அழுத்தியபடியே சுட்டிச்சக்கரத்தை உருட்டி உருப்பெருக்கத்தை மாற்றலாம்"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "பெரிதாக்கும்போதோ சிறிதாக்கும்போதோ குறிப்பிட்ட விகித‍த்தையே பயன்படுத்து."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "உருப்பெருக்க விகிதம்:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "இந்த உருப்பெருக்க விகிதத்திற்கு மேல் பிக்செல்களை கோடிட்டு குறி"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "சுட்டிக்குறி:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "சுட்டிக்குறி காட்டப்படுவது."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "அளவுமாற்று"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "வைத்திரு"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "மறை"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "சுட்டியை பின்தொடர்வது:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "சுட்டி நகர்வதை பொறுத்து நகர வேண்டுமா?"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "விகிதசம‍மாக நகர்"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "நடுப்படுத்து"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "சுட்டியை கொண்டு தள்ளு"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "முடக்கு"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"இத்தேர்வு இயக்கப்பட்டால், குவியத்தையே காட்சிப்பகுதி தொடரும். இதை பயன்படுத்த, ஒவ்வொரு "
-"செயலிக்கும் QAccessible என்பதை இயக்க வேண்டும் (\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "குவியத்தை தொடர்வதை இயக்கு"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"இத்தேர்வு இயக்கப்பட்டால், உரைப்பகுதியிலுள்ள இடஞ்சுட்டியை காட்சிப்பகுதி தொடரும். இதை "
-"பயன்படுத்த, ஒவ்வொரு செயலிக்கும் QAccessible என்பதை இயக்க வேண்டும் (\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "உரைக்கான இடஞ்சுட்டியை தொடர்வதை இயக்கு"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4325,13 +4147,13 @@ msgstr "குறிப்பிட்ட வெளியீட்டு வர�
 msgid "The driver rejected the output configuration"
 msgstr "சாதனநிரல் அமைப்புகளை நிராகரித்தது"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4359,6 +4181,101 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
+
+#~ msgid "Size"
+#~ msgstr "அளவு"
+
+#~ msgid "&Width:"
+#~ msgstr "&அகலம்:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#~ msgid "&Height:"
+#~ msgstr "&உயரம்:"
+
+#~ msgid "Move Left"
+#~ msgstr "இடதுபுறமாக நகர்"
+
+#~ msgid "Move Right"
+#~ msgstr "வலதுபுறமாக நகர்"
+
+#~ msgid "Move Up"
+#~ msgstr "மேலே நகர்"
+
+#~ msgid "Move Down"
+#~ msgstr "கீழே நகர்"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "உருள்வதற்கான மாற்றிவிசைகள்:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr ""
+#~ "இம்மாற்றிவிசைகளை அழுத்தியபடியே சுட்டிச்சக்கரத்தை உருட்டி உருப்பெருக்கத்தை மாற்றலாம்"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr "பெரிதாக்கும்போதோ சிறிதாக்கும்போதோ குறிப்பிட்ட விகித‍த்தையே பயன்படுத்து."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "உருப்பெருக்க விகிதம்:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "இந்த உருப்பெருக்க விகிதத்திற்கு மேல் பிக்செல்களை கோடிட்டு குறி"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "சுட்டிக்குறி:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "சுட்டிக்குறி காட்டப்படுவது."
+
+#~ msgid "Scale"
+#~ msgstr "அளவுமாற்று"
+
+#~ msgid "Keep"
+#~ msgstr "வைத்திரு"
+
+#~ msgid "Hide"
+#~ msgstr "மறை"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "சுட்டியை பின்தொடர்வது:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "சுட்டி நகர்வதை பொறுத்து நகர வேண்டுமா?"
+
+#~ msgid "Proportional"
+#~ msgstr "விகிதசம‍மாக நகர்"
+
+#~ msgid "Centered"
+#~ msgstr "நடுப்படுத்து"
+
+#~ msgid "Push"
+#~ msgstr "சுட்டியை கொண்டு தள்ளு"
+
+#~ msgid "Disabled"
+#~ msgstr "முடக்கு"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "இத்தேர்வு இயக்கப்பட்டால், குவியத்தையே காட்சிப்பகுதி தொடரும். இதை பயன்படுத்த, ஒவ்வொரு "
+#~ "செயலிக்கும் QAccessible என்பதை இயக்க வேண்டும் (\"export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "குவியத்தை தொடர்வதை இயக்கு"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "இத்தேர்வு இயக்கப்பட்டால், உரைப்பகுதியிலுள்ள இடஞ்சுட்டியை காட்சிப்பகுதி தொடரும். இதை "
+#~ "பயன்படுத்த, ஒவ்வொரு செயலிக்கும் QAccessible என்பதை இயக்க வேண்டும் (\"export "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "உரைக்கான இடஞ்சுட்டியை தொடர்வதை இயக்கு"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "சாளர இயக்கப்பட்டி"

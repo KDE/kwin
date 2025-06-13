@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -1359,16 +1359,13 @@ msgstr ""
 "Bấm trái hoặc enter để chọn cửa sổ để ép đóng.\n"
 "Escape hoặc bấm phải để huỷ."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1796,12 +1793,12 @@ msgstr ""
 msgid "Hide cursor on typing"
 msgstr ""
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Bật/tắt hiệu ứng đảo"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Bật/tắt hiệu ứng đảo cho cửa sổ"
@@ -2024,34 +2021,6 @@ msgstr "Tối dần (chỉ cho các màn hình khởi động toàn màn hình)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Mặc định"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Kích thước"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "Chiều &rộng:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
-msgid "&Height:"
-msgstr "Phải"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2996,177 +2965,17 @@ msgstr "Di chuyển vùng được thu phóng lên trên"
 msgid "Move Zoomed Area Downwards"
 msgstr "Di chuyển vùng được thu phóng xuống dưới"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Không có nút chuột nào"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"
 msgstr "Di chuyển cửa sổ vào tâm"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, fuzzy, kde-format
-#| msgid "Move Window Left"
-msgid "Move Left"
-msgstr "Di chuyển cửa sổ sang trái"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, fuzzy, kde-format
-#| msgid "Move Window Right"
-msgid "Move Right"
-msgstr "Di chuyển cửa sổ sang phải"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, fuzzy, kde-format
-#| msgid "Move Window Up"
-msgid "Move Up"
-msgstr "Di chuyển cửa sổ lên trên"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, fuzzy, kde-format
-#| msgid "Move Window Down"
-msgid "Move Down"
-msgstr "Di chuyển cửa sổ xuống dưới"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
-#| msgid "Modifiers"
-msgid "Scroll gesture modifier keys:"
-msgstr "Phím bổ trợ"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "Khi thu phóng, thay đổi một lượng bằng hệ số thu phóng được chỉ định."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
-msgid "Zoom factor:"
-msgstr "Hệ số thu phóng:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr ""
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
-msgid "Mouse pointer:"
-msgstr "Con trỏ chuột:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Cách hiển thị con trỏ chuột."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
-msgid "Scale"
-msgstr "Tỉ lệ"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Giữ nguyên"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Ẩn"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
-msgid "Mouse tracking:"
-msgstr "Theo dõi chuột"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Theo dõi di chuyển của chuột."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, fuzzy, kde-format
-#| msgid "Position"
-msgid "Proportional"
-msgstr "Vị trí"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Đặt vào giữa"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Đẩy"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Tắt"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Bật tính năng theo dõi vị trí nhắm. Cần QAccessible được bật cho từng ứng "
-"dụng (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
-msgid "Enable focus tracking"
-msgstr "Bật tính năng theo dõi nhắm"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Bật tính năng theo dõi con trỏ văn bản. Cần QAccessible được bật cho từng "
-"ứng dụng (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
-msgid "Enable text cursor tracking"
-msgstr "Bật tính năng theo dõi con trỏ văn bản"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4445,13 +4254,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Không hồi đáp)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -4489,6 +4298,121 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Size"
+#~ msgstr "Kích thước"
+
+#~ msgid "&Width:"
+#~ msgstr "Chiều &rộng:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#, fuzzy
+#~| msgctxt "A mouse button"
+#~| msgid "Right"
+#~ msgid "&Height:"
+#~ msgstr "Phải"
+
+#, fuzzy
+#~| msgid "Move Window Left"
+#~ msgid "Move Left"
+#~ msgstr "Di chuyển cửa sổ sang trái"
+
+#, fuzzy
+#~| msgid "Move Window Right"
+#~ msgid "Move Right"
+#~ msgstr "Di chuyển cửa sổ sang phải"
+
+#, fuzzy
+#~| msgid "Move Window Up"
+#~ msgid "Move Up"
+#~ msgstr "Di chuyển cửa sổ lên trên"
+
+#, fuzzy
+#~| msgid "Move Window Down"
+#~ msgid "Move Down"
+#~ msgstr "Di chuyển cửa sổ xuống dưới"
+
+#, fuzzy
+#~| msgid "Modifiers"
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Phím bổ trợ"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "Khi thu phóng, thay đổi một lượng bằng hệ số thu phóng được chỉ định."
+
+#, fuzzy
+#~| msgid "Zoom Factor:"
+#~ msgid "Zoom factor:"
+#~ msgstr "Hệ số thu phóng:"
+
+#, fuzzy
+#~| msgid "Mouse Pointer:"
+#~ msgid "Mouse pointer:"
+#~ msgstr "Con trỏ chuột:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Cách hiển thị con trỏ chuột."
+
+#, fuzzy
+#~| msgctxt "Current scale in pinch gesture"
+#~| msgid "Scale"
+#~ msgid "Scale"
+#~ msgstr "Tỉ lệ"
+
+#~ msgid "Keep"
+#~ msgstr "Giữ nguyên"
+
+#~ msgid "Hide"
+#~ msgstr "Ẩn"
+
+#, fuzzy
+#~| msgid "Mouse Tracking:"
+#~ msgid "Mouse tracking:"
+#~ msgstr "Theo dõi chuột"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Theo dõi di chuyển của chuột."
+
+#, fuzzy
+#~| msgid "Position"
+#~ msgid "Proportional"
+#~ msgstr "Vị trí"
+
+#~ msgid "Centered"
+#~ msgstr "Đặt vào giữa"
+
+#~ msgid "Push"
+#~ msgstr "Đẩy"
+
+#~ msgid "Disabled"
+#~ msgstr "Tắt"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Bật tính năng theo dõi vị trí nhắm. Cần QAccessible được bật cho từng ứng "
+#~ "dụng (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#, fuzzy
+#~| msgid "Enable Focus Tracking"
+#~ msgid "Enable focus tracking"
+#~ msgstr "Bật tính năng theo dõi nhắm"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Bật tính năng theo dõi con trỏ văn bản. Cần QAccessible được bật cho từng "
+#~ "ứng dụng (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#, fuzzy
+#~| msgid "Enable Text Cursor Tracking"
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Bật tính năng theo dõi con trỏ văn bản"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Trình đơn thao tác cửa sổ"

@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 08:00+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1339,16 +1339,13 @@ msgstr ""
 "בחירת חלון לכפיית סגירה בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1753,12 +1750,12 @@ msgstr "הסתרת סמן בעת חוסר פעילות:"
 msgid "Hide cursor on typing"
 msgstr "הסתרת סמן עם ההקלדה"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "החלפת מצב אפקט היפוך צבע"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "החלפת מצב אפקט היפוך צבע על חלון"
@@ -1981,32 +1978,6 @@ msgstr "עמעום לשחור (מסכי פתיחה במסך מלא בלבד)"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "ברירת־מחדל"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "גודל"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "&רוחב:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " פיקסלים"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&גובה:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2877,162 +2848,15 @@ msgstr "העברת האזור בתקריב למעלה"
 msgid "Move Zoomed Area Downwards"
 msgstr "העברת האזור בתקריב למטה"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "העברת העכבר למיקוד"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "העברת העכבר למרכז"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "העברה שמאלה"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "העברה ימינה"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "העברה למעלה"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "העברה למטה"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "מקשי החלפה עם מחוות גלילה:"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr "אפשר לגלול תוך כדי לחיצה על מקשי ההחלפה כדי לשנות את התקריב"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "בשינויים התקרבות והתרחקות לשנות את התקריב לפי מקדם התקריב המוגדר."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "מקדם תקריב:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "הצגת רשת פיקסלים ברמת תקריב:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "סמן העכבר:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "חשיפת סמן העכבר."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "קנה מידה"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "שימור"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "הסתרה"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "מעקב אחרי עכבר:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "מעקב אחר תנועת העכבר."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "יחסי"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "ממורכז"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "נעיצה"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "מושבת"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"הפעלת מעקב אחר המקום עם המיקוד. דורש את הפעלת QAccessible בכל יישומון בנפרד "
-"(„export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "הפעלת מעקב מיקוד"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"הפעלת מעקב אחר סמן הטקסט. דורש את הפעלת QAccessible בכל יישומון בנפרד "
-"(„export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "הפעלת מעקב סמן טקסט"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4288,13 +4112,13 @@ msgstr "סדר הפלט שסופק שגוי"
 msgid "The driver rejected the output configuration"
 msgstr "מנהל ההתקן דחה את הגדרות הפלט"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4319,6 +4143,98 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland קרס"
+
+#~ msgid "Size"
+#~ msgstr "גודל"
+
+#~ msgid "&Width:"
+#~ msgstr "&רוחב:"
+
+#~ msgid " px"
+#~ msgstr " פיקסלים"
+
+#~ msgid "&Height:"
+#~ msgstr "&גובה:"
+
+#~ msgid "Move Left"
+#~ msgstr "העברה שמאלה"
+
+#~ msgid "Move Right"
+#~ msgstr "העברה ימינה"
+
+#~ msgid "Move Up"
+#~ msgstr "העברה למעלה"
+
+#~ msgid "Move Down"
+#~ msgstr "העברה למטה"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "מקשי החלפה עם מחוות גלילה:"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr "אפשר לגלול תוך כדי לחיצה על מקשי ההחלפה כדי לשנות את התקריב"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr "בשינויים התקרבות והתרחקות לשנות את התקריב לפי מקדם התקריב המוגדר."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "מקדם תקריב:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "הצגת רשת פיקסלים ברמת תקריב:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "סמן העכבר:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "חשיפת סמן העכבר."
+
+#~ msgid "Scale"
+#~ msgstr "קנה מידה"
+
+#~ msgid "Keep"
+#~ msgstr "שימור"
+
+#~ msgid "Hide"
+#~ msgstr "הסתרה"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "מעקב אחרי עכבר:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "מעקב אחר תנועת העכבר."
+
+#~ msgid "Proportional"
+#~ msgstr "יחסי"
+
+#~ msgid "Centered"
+#~ msgstr "ממורכז"
+
+#~ msgid "Push"
+#~ msgstr "נעיצה"
+
+#~ msgid "Disabled"
+#~ msgstr "מושבת"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "הפעלת מעקב אחר המקום עם המיקוד. דורש את הפעלת QAccessible בכל יישומון "
+#~ "בנפרד („export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "הפעלת מעקב מיקוד"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "הפעלת מעקב אחר סמן הטקסט. דורש את הפעלת QAccessible בכל יישומון בנפרד "
+#~ "(„export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "הפעלת מעקב סמן טקסט"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "תפריט פעולות חלון"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-12 00:43+0000\n"
+"POT-Creation-Date: 2025-06-13 00:43+0000\n"
 "PO-Revision-Date: 2025-05-31 10:28+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1341,16 +1341,13 @@ msgstr ""
 "Изберете прозорец за принудително затваряне с ляв бутон или бутон Enter.\n"
 "Escape бутон  или щракнете с десния бутон, за да отмените."
 
-#: main.cpp:175 plugins/invert/invert_config.cpp:35
-#: plugins/magnifier/magnifier_config.cpp:46
-#: plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
-#: plugins/zoom/zoom_config.cpp:145
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
@@ -1758,12 +1755,12 @@ msgstr "Скриване показалеца на мишката при неа�
 msgid "Hide cursor on typing"
 msgstr "Скриване показалеца на мишката при писане"
 
-#: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
+#: plugins/invert/invert.cpp:43
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Превключване на ефект обръщане на цветовете"
 
-#: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
+#: plugins/invert/invert.cpp:50
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Превключване на ефект обръщане на цветовете за прозорец"
@@ -1986,32 +1983,6 @@ msgstr "Избледняване до черно (само за цял нача�
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "По подразбиране"
-
-#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
-#: plugins/magnifier/magnifier_config.ui:17
-#, kde-format
-msgid "Size"
-msgstr "Размер"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/magnifier/magnifier_config.ui:23
-#, kde-format
-msgid "&Width:"
-msgstr "&Широчина:"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
-#: plugins/magnifier/magnifier_config.ui:42
-#: plugins/magnifier/magnifier_config.ui:74
-#, kde-format
-msgid " px"
-msgstr " px"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/magnifier/magnifier_config.ui:55
-#, kde-format
-msgid "&Height:"
-msgstr "&Височина:"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2882,168 +2853,15 @@ msgstr "Преместване на увеличената област наго
 msgid "Move Zoomed Area Downwards"
 msgstr "Преместване на намалената зона надолу"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:195
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Преместване на мишката във фокуса"
 
-#: plugins/zoom/zoom.cpp:115 plugins/zoom/zoom_config.cpp:202
+#: plugins/zoom/zoom.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Преместване на мишката в центъра"
-
-#: plugins/zoom/zoom_config.cpp:167
-#, kde-format
-msgid "Move Left"
-msgstr "Преместване наляво"
-
-#: plugins/zoom/zoom_config.cpp:174
-#, kde-format
-msgid "Move Right"
-msgstr "Преместване надясно"
-
-#: plugins/zoom/zoom_config.cpp:181
-#, kde-format
-msgid "Move Up"
-msgstr "Преместване нагоре"
-
-#: plugins/zoom/zoom_config.cpp:188
-#, kde-format
-msgid "Move Down"
-msgstr "Преместване надолу"
-
-#: plugins/zoom/zoom_config.cpp:210
-#, kde-format
-msgid "Scroll gesture modifier keys:"
-msgstr "Модификационни клавиши за жест за превъртане :"
-
-#: plugins/zoom/zoom_config.cpp:212
-#, kde-format
-msgid "Scroll while the modifier keys are pressed to zoom"
-msgstr ""
-"Превъртане, докато клавишите за модификация са натиснати, за увеличаване на "
-"мащаба"
-
-#. i18n: ectx: property (whatsThis), widget (QLabel, label)
-#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
-#: plugins/zoom/zoom_config.ui:22 plugins/zoom/zoom_config.ui:35
-#, kde-format
-msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr ""
-"Увеличаване и намаляване на мащаба се променя според дефинирания коефициент "
-"на мащабиране."
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/zoom/zoom_config.ui:25
-#, kde-format
-msgid "Zoom factor:"
-msgstr "Коефициент на мащабиране:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: plugins/zoom/zoom_config.ui:57
-#, kde-format
-msgid "Show pixel grid at zoom level:"
-msgstr "Показване на пикселната мрежа при ниво на мащабиране:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: plugins/zoom/zoom_config.ui:70
-#, kde-format
-msgid "Mouse pointer:"
-msgstr "Курсор на мишката:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:80
-#, kde-format
-msgid "Visibility of the mouse-pointer."
-msgstr "Видимост на курсора на мишката"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:84
-#, kde-format
-msgid "Scale"
-msgstr "Мащаб"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:89
-#, kde-format
-msgid "Keep"
-msgstr "Запазване"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
-#: plugins/zoom/zoom_config.ui:94
-#, kde-format
-msgid "Hide"
-msgstr "Скриване"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: plugins/zoom/zoom_config.ui:102
-#, kde-format
-msgid "Mouse tracking:"
-msgstr "Следене на мишката:"
-
-#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:112
-#, kde-format
-msgid "Track moving of the mouse."
-msgstr "Проследяване на движението на мишката."
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:116
-#, kde-format
-msgid "Proportional"
-msgstr "Пропорционално"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:121
-#, kde-format
-msgid "Centered"
-msgstr "Центрирано"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:126
-#, kde-format
-msgid "Push"
-msgstr "Натиснат"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
-#: plugins/zoom/zoom_config.ui:131
-#, kde-format
-msgid "Disabled"
-msgstr "Изключено"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:142
-#, kde-format
-msgid ""
-"Enable tracking of the focused location. This needs QAccessible to be "
-"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Активиране на проследяването на фокусираното местоположение. Това изисква "
-"QAccessible да е активирано за приложението (\"export  "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON = 1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
-#: plugins/zoom/zoom_config.ui:145
-#, kde-format
-msgid "Enable focus tracking"
-msgstr "Включване следене на фокуса"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:152
-#, kde-format
-msgid ""
-"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
-"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-msgstr ""
-"Активиране на проследяването на текстовия курсор. Това изисква QAccessible "
-"да е активирано за приложението (\"export  QT_LINUX_ACCESSIBILITY_ALWAYS_ON "
-"= 1\")."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
-#: plugins/zoom/zoom_config.ui:155
-#, kde-format
-msgid "Enable text cursor tracking"
-msgstr "Активиране на проследяването на курсора на текст"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4303,13 +4121,13 @@ msgstr "Предоставеният изходен ред е невалиден
 msgid "The driver rejected the output configuration"
 msgstr "Драйверът отхвърли изходната конфигурация"
 
-#: window.cpp:3250
+#: window.cpp:3253
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не отговаря)"
 
-#: workspace.cpp:1632
+#: workspace.cpp:1642
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4337,6 +4155,104 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
+
+#~ msgid "Size"
+#~ msgstr "Размер"
+
+#~ msgid "&Width:"
+#~ msgstr "&Широчина:"
+
+#~ msgid " px"
+#~ msgstr " px"
+
+#~ msgid "&Height:"
+#~ msgstr "&Височина:"
+
+#~ msgid "Move Left"
+#~ msgstr "Преместване наляво"
+
+#~ msgid "Move Right"
+#~ msgstr "Преместване надясно"
+
+#~ msgid "Move Up"
+#~ msgstr "Преместване нагоре"
+
+#~ msgid "Move Down"
+#~ msgstr "Преместване надолу"
+
+#~ msgid "Scroll gesture modifier keys:"
+#~ msgstr "Модификационни клавиши за жест за превъртане :"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr ""
+#~ "Превъртане, докато клавишите за модификация са натиснати, за увеличаване "
+#~ "на мащаба"
+
+#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+#~ msgstr ""
+#~ "Увеличаване и намаляване на мащаба се променя според дефинирания "
+#~ "коефициент на мащабиране."
+
+#~ msgid "Zoom factor:"
+#~ msgstr "Коефициент на мащабиране:"
+
+#~ msgid "Show pixel grid at zoom level:"
+#~ msgstr "Показване на пикселната мрежа при ниво на мащабиране:"
+
+#~ msgid "Mouse pointer:"
+#~ msgstr "Курсор на мишката:"
+
+#~ msgid "Visibility of the mouse-pointer."
+#~ msgstr "Видимост на курсора на мишката"
+
+#~ msgid "Scale"
+#~ msgstr "Мащаб"
+
+#~ msgid "Keep"
+#~ msgstr "Запазване"
+
+#~ msgid "Hide"
+#~ msgstr "Скриване"
+
+#~ msgid "Mouse tracking:"
+#~ msgstr "Следене на мишката:"
+
+#~ msgid "Track moving of the mouse."
+#~ msgstr "Проследяване на движението на мишката."
+
+#~ msgid "Proportional"
+#~ msgstr "Пропорционално"
+
+#~ msgid "Centered"
+#~ msgstr "Центрирано"
+
+#~ msgid "Push"
+#~ msgstr "Натиснат"
+
+#~ msgid "Disabled"
+#~ msgstr "Изключено"
+
+#~ msgid ""
+#~ "Enable tracking of the focused location. This needs QAccessible to be "
+#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Активиране на проследяването на фокусираното местоположение. Това изисква "
+#~ "QAccessible да е активирано за приложението (\"export  "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON = 1\")."
+
+#~ msgid "Enable focus tracking"
+#~ msgstr "Включване следене на фокуса"
+
+#~ msgid ""
+#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
+#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+#~ msgstr ""
+#~ "Активиране на проследяването на текстовия курсор. Това изисква "
+#~ "QAccessible да е активирано за приложението (\"export  "
+#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON = 1\")."
+
+#~ msgid "Enable text cursor tracking"
+#~ msgstr "Активиране на проследяването на курсора на текст"
 
 #~ msgid "Window Operations Menu"
 #~ msgstr "Показване меню на прозорец"
