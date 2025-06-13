@@ -8,7 +8,6 @@ Dependencies:
     'frameworks/extra-cmake-modules': '@latest-kf6'
     'frameworks/kcmutils': '@latest-kf6'
     'frameworks/kconfig': '@latest-kf6'
-    'frameworks/kconfigwidgets': '@latest-kf6'
     'frameworks/kcoreaddons': '@latest-kf6'
     'frameworks/kcrash': '@latest-kf6'
     'frameworks/kdeclarative': '@latest-kf6'
