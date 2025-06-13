@@ -21,7 +21,7 @@ namespace KWin
 {
 
 X11WindowedEglPrimaryLayer::X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_output(output)
     , m_backend(backend)
 {
@@ -92,7 +92,7 @@ QHash<uint32_t, QList<uint64_t>> X11WindowedEglPrimaryLayer::supportedDrmFormats
 }
 
 X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_backend(backend)
 {
 }
@@ -138,7 +138,7 @@ bool X11WindowedEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const 
     context->glReadnPixels(0, 0, buffer.width(), buffer.height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer.sizeInBytes(), buffer.bits());
     GLFramebuffer::popFramebuffer();
 
-    static_cast<X11WindowedOutput *>(m_output)->cursor()->update(buffer.mirrored(false, true), hotspot());
+    static_cast<X11WindowedOutput *>(m_output.get())->cursor()->update(buffer.mirrored(false, true), hotspot());
     m_query->end();
     if (frame) {
         frame->addRenderTimeQuery(std::move(m_query));
