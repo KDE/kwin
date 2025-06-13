@@ -101,7 +101,7 @@ void DrmQPainterLayer::releaseBuffers()
 }
 
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
-    : DrmOutputLayer(output)
+    : DrmOutputLayer(output, OutputLayerType::Primary)
 {
 }
 

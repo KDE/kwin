@@ -9,7 +9,7 @@ namespace KWin
 {
 
 ScreencastLayer::ScreencastLayer(Output *output, const QHash<uint32_t, QList<uint64_t>> &formats)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_formats(formats)
 {
 }

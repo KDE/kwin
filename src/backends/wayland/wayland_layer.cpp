@@ -26,8 +26,8 @@ namespace KWin
 namespace Wayland
 {
 
-WaylandLayer::WaylandLayer(WaylandOutput *output)
-    : OutputLayer(output)
+WaylandLayer::WaylandLayer(WaylandOutput *output, OutputLayerType type)
+    : OutputLayer(output, type)
     , m_surface(output->backend()->display()->compositor()->createSurface())
     , m_subSurface(output->backend()->display()->subCompositor()->createSubSurface(m_surface.get(), output->surface()))
 {
