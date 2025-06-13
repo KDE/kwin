@@ -21,7 +21,7 @@ namespace KWin
 {
 
 X11WindowedEglPrimaryLayer::X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_output(output)
     , m_backend(backend)
 {
@@ -92,7 +92,7 @@ QHash<uint32_t, QList<uint64_t>> X11WindowedEglPrimaryLayer::supportedDrmFormats
 }
 
 X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_backend(backend)
 {
 }
