@@ -19,22 +19,39 @@
 namespace KWin
 {
 
-DrmOutputLayer::DrmOutputLayer(Output *output)
-    : OutputLayer(output)
+DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type)
+    : OutputLayer(output, type)
 {
 }
 
 DrmOutputLayer::~DrmOutputLayer() = default;
 
+static OutputLayerType planeToLayerType(DrmPlane *plane, DrmPlane::TypeIndex type)
+{
+    switch (type) {
+    case DrmPlane::TypeIndex::Overlay:
+        return OutputLayerType::GenericLayer;
+    case DrmPlane::TypeIndex::Primary:
+        return OutputLayerType::Primary;
+    case DrmPlane::TypeIndex::Cursor:
+        if (plane && plane->gpu()->isVirtualMachine()) {
+            return OutputLayerType::CursorOnly;
+        } else {
+            return OutputLayerType::EfficientOverlay;
+        }
+    }
+    Q_UNREACHABLE();
+}
+
 DrmPipelineLayer::DrmPipelineLayer(DrmPlane *plane)
-    : DrmOutputLayer(nullptr)
+    : DrmOutputLayer(nullptr, planeToLayerType(plane, plane->type.enumValue()))
     , m_type(plane->type.enumValue())
     , m_plane(plane)
 {
 }
 
 DrmPipelineLayer::DrmPipelineLayer(DrmPlane::TypeIndex type)
-    : DrmOutputLayer(nullptr)
+    : DrmOutputLayer(nullptr, planeToLayerType(nullptr, type))
     , m_type(type)
 {
 }
