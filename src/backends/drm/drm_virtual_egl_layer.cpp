@@ -27,7 +27,7 @@ namespace KWin
 {
 
 VirtualEglGbmLayer::VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output)
-    : DrmOutputLayer(output)
+    : DrmOutputLayer(output, OutputLayerType::Primary)
     , m_eglBackend(eglBackend)
 {
 }
