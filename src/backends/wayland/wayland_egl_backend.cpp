@@ -36,7 +36,7 @@ namespace Wayland
 static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
 
 WaylandEglPrimaryLayer::WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
 {
 }
@@ -137,7 +137,7 @@ QHash<uint32_t, QList<uint64_t>> WaylandEglPrimaryLayer::supportedDrmFormats() c
 }
 
 WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
-    : OutputLayer(output)
+    : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_backend(backend)
 {
 }
