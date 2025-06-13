@@ -80,6 +80,7 @@ private:
 
     static QTimer *s_systemBellRemoveTimer;
     QTimer m_audioThrottleTimer;
+    QTimer m_visualThrottleTimer;
     static XdgSystemBellV1Interface *s_systemBell;
 };
 

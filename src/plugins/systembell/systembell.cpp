@@ -106,6 +106,13 @@ SystemBellEffect::SystemBellEffect()
 
     m_audioThrottleTimer.setInterval(100ms);
     m_audioThrottleTimer.setSingleShot(true);
+
+    // The Web Content Accessibility Guidelines (WCAG) recommend that any
+    // element that flashes in the screen must have a maximum period of
+    // 3Hz to avoid the risk of Photosensitivity Seizures.
+    // 3Hz is 333ms, double that to account for the window un-inverting, and round up
+    m_visualThrottleTimer.setInterval(700ms);
+    m_visualThrottleTimer.setSingleShot(true);
 }
 
 SystemBellEffect::~SystemBellEffect()
@@ -192,6 +199,12 @@ void SystemBellEffect::triggerScreen()
     if (m_visibleBell) {
         m_allWindows = true;
 
+        if (m_visualThrottleTimer.isActive()) {
+            return;
+        }
+
+        m_visualThrottleTimer.start();
+
         const auto windows = effects->stackingOrder();
         for (EffectWindow *window : windows) {
             flash(window);
@@ -226,6 +239,12 @@ void SystemBellEffect::triggerWindow(EffectWindow *window)
     }
 
     if (m_visibleBell) {
+        if (m_visualThrottleTimer.isActive()) {
+            return;
+        }
+
+        m_visualThrottleTimer.start();
+
         m_windows.append(window);
         flash(window);
 
