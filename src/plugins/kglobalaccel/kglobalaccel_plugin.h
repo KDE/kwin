@@ -26,7 +26,7 @@ public:
     void setEnabled(bool) override;
 
 public Q_SLOTS:
-    bool checkKeyPressed(int keyQt);
+    bool checkKeyPressed(int keyQt, bool isRepeated);
     bool checkKeyReleased(int keyQt);
     bool checkPointerPressed(Qt::MouseButtons buttons);
     bool checkAxisTriggered(int axis);

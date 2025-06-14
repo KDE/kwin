@@ -189,20 +189,21 @@ void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(SwipeDirection direct
     m_shortcuts.push_back(std::move(shortcut));
 }
 
-bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
+bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt, bool isKeyRepeated)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
     if (m_kglobalAccelInterface) {
-        auto check = [this](Qt::KeyboardModifiers mods, int keyQt) {
+        auto check = [this](Qt::KeyboardModifiers mods, int keyQt, bool isRepeated) {
             bool retVal = false;
             QMetaObject::invokeMethod(m_kglobalAccelInterface,
                                       "checkKeyPressed",
                                       Qt::DirectConnection,
                                       Q_RETURN_ARG(bool, retVal),
-                                      Q_ARG(int, int(mods) | keyQt));
+                                      Q_ARG(int, int(mods) | keyQt),
+                                      Q_ARG(bool, isRepeated));
             return retVal;
         };
-        if (check(mods, keyQt)) {
+        if (check(mods, keyQt, isKeyRepeated)) {
             return true;
         } else if (keyQt == Qt::Key_Backtab) {
             // KGlobalAccel on X11 has some workaround for Backtab
@@ -212,10 +213,10 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
             // in addition KWin registers the shortcut incorrectly as Alt+Shift+Backtab
             // this should be changed to either Alt+Backtab or Alt+Shift+Tab to match KKeySequenceWidget
             // trying the variants
-            if (check(mods | Qt::ShiftModifier, keyQt)) {
+            if (check(mods | Qt::ShiftModifier, keyQt, isKeyRepeated)) {
                 return true;
             }
-            if (check(mods | Qt::ShiftModifier, Qt::Key_Tab)) {
+            if (check(mods | Qt::ShiftModifier, Qt::Key_Tab, isKeyRepeated)) {
                 return true;
             }
         }

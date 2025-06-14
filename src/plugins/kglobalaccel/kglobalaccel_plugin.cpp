@@ -42,7 +42,7 @@ void KGlobalAccelImpl::setEnabled(bool enabled)
     s_input->registerGlobalAccel(enabled ? this : nullptr);
 }
 
-bool KGlobalAccelImpl::checkKeyPressed(int keyQt)
+bool KGlobalAccelImpl::checkKeyPressed(int keyQt, bool isRepeated)
 {
     return keyPressed(keyQt);
 }
