@@ -84,7 +84,7 @@ public:
      * @param keyQt The Qt::Key which got pressed
      * @return @c true if a shortcut triggered, @c false otherwise
      */
-    bool processKey(Qt::KeyboardModifiers modifiers, int keyQt);
+    bool processKey(Qt::KeyboardModifiers modifiers, int keyQt, bool isKeyRepeated);
     bool processKeyRelease(Qt::KeyboardModifiers modifiers, int keyQt);
     bool processPointerPressed(Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
     /**
