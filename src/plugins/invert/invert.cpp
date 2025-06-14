@@ -39,6 +39,7 @@ InvertEffect::InvertEffect()
     , m_allWindows(false)
 {
     QAction *a = new QAction(this);
+    a->setAutoRepeat(false);
     a->setObjectName(QStringLiteral("Invert"));
     a->setText(i18n("Toggle Invert Effect"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_I));
@@ -46,6 +47,7 @@ InvertEffect::InvertEffect()
     connect(a, &QAction::triggered, this, &InvertEffect::toggleScreenInversion);
 
     QAction *b = new QAction(this);
+    b->setAutoRepeat(false);
     b->setObjectName(QStringLiteral("InvertWindow"));
     b->setText(i18n("Toggle Invert Effect on Window"));
     KGlobalAccel::self()->setDefaultShortcut(b, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_U));
