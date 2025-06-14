@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-14 00:43+0000\n"
 "PO-Revision-Date: 2025-05-31 12:37+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -3476,40 +3476,40 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Inga öppna fönster"
 
-#: tabbox/tabbox.cpp:333
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows"
 msgstr "Stega genom fönster"
 
-#: tabbox/tabbox.cpp:334
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows (Reverse)"
 msgstr "Stega genom fönster (omvänd ordning)"
 
-#: tabbox/tabbox.cpp:335
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows Alternative"
 msgstr "Stega genom fönster alternativt"
 
-#: tabbox/tabbox.cpp:336
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Stega genom fönster alternativt (omvänd ordning)"
 
-#: tabbox/tabbox.cpp:337
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows of Current Application"
 msgstr "Stega genom det nuvarande programmets fönster"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Stega genom det nuvarande programmets fönster (omvänd ordning)"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Stega genom det nuvarande programmets fönster alternativt"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:327
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Stega genom det nuvarande programmets fönster alternativt (omvänd ordning)"
 
-#: tabbox/tabboxhandler.cpp:223
+#: tabbox/tabboxhandler.cpp:199
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4121,7 +4121,7 @@ msgstr "Tillhandahållen utgångsordning är ogiltig"
 msgid "The driver rejected the output configuration"
 msgstr "Drivrutinen förkastade utgångsinställningen"
 
-#: window.cpp:3253
+#: window.cpp:3242
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

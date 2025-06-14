@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-14 00:43+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -3678,43 +3678,43 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Ferestre"
 
-#: tabbox/tabbox.cpp:333
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows"
 msgstr "Comută printre ferestre"
 
-#: tabbox/tabbox.cpp:334
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows (Reverse)"
 msgstr "Comută printre ferestre (invers)"
 
-#: tabbox/tabbox.cpp:335
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows Alternative"
 msgstr "Comută printre alternative ferestre"
 
-#: tabbox/tabbox.cpp:336
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Comută printre alternative ferestre (invers)"
 
-#: tabbox/tabbox.cpp:337
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows of Current Application"
 msgstr "Comută printre ferestrele aplicației curente"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Comută printre ferestrele aplicației curente (invers)"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:326
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Comută printre ferestrele aplicației curente "
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:327
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Comută printre alternative ferestre (invers)"
 
-#: tabbox/tabboxhandler.cpp:223
+#: tabbox/tabboxhandler.cpp:199
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4368,7 +4368,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3253
+#: window.cpp:3242
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

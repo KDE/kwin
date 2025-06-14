@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-14 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 23:57+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -3499,39 +3499,39 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Geen open vensters"
 
-#: tabbox/tabbox.cpp:333
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows"
 msgstr "Door vensters wandelen"
 
-#: tabbox/tabbox.cpp:334
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows (Reverse)"
 msgstr "Door vensters wandelen (omgekeerd)"
 
-#: tabbox/tabbox.cpp:335
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows Alternative"
 msgstr "Alternatief door vensters wandelen"
 
-#: tabbox/tabbox.cpp:336
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Alternatief door vensters wandelen (omgekeerd)"
 
-#: tabbox/tabbox.cpp:337
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows of Current Application"
 msgstr "Door vensters van de huidige toepassing lopen"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Door vensters van de huidige toepassing lopen (omgekeerd)"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Alternatief door vensters van de huidige toepassing lopen"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:327
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Alternatief door vensters van de huidige toepassing lopen (omgekeerd)"
 
-#: tabbox/tabboxhandler.cpp:223
+#: tabbox/tabboxhandler.cpp:199
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4147,7 +4147,7 @@ msgstr "De geleverde uitvoervolgorde is ongeldig"
 msgid "The driver rejected the output configuration"
 msgstr "Het apparaatstuurprogramma verwierp de uitvoerconfiguratie"
 
-#: window.cpp:3253
+#: window.cpp:3242
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

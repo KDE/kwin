@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-14 00:43+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -3526,51 +3526,51 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Prenester"
 
-#: tabbox/tabbox.cpp:333
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows"
 msgstr "Mont-dont e-mesk ar prenester"
 
-#: tabbox/tabbox.cpp:334
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:335
+#: tabbox/tabbox.cpp:322
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:336
+#: tabbox/tabbox.cpp:323
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:337
+#: tabbox/tabbox.cpp:324
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:325
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:326
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:327
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Mont-dont e-mesk ar prenester (urzh eilpennet)"
 
-#: tabbox/tabboxhandler.cpp:223
+#: tabbox/tabboxhandler.cpp:199
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4229,7 +4229,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3253
+#: window.cpp:3242
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

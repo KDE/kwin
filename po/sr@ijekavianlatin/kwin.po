@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-14 00:43+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -3808,39 +3808,39 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Pomjeri prozor"
 
-#: tabbox/tabbox.cpp:333
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows"
 msgstr "Mijenjaj prozore"
 
-#: tabbox/tabbox.cpp:334
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows (Reverse)"
 msgstr "Mijenjaj prozore (obratno)"
 
-#: tabbox/tabbox.cpp:335
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows Alternative"
 msgstr "Mijenjaj prozore alternativno"
 
-#: tabbox/tabbox.cpp:336
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Mijenjaj prozore alternativno (obratno)"
 
-#: tabbox/tabbox.cpp:337
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows of Current Application"
 msgstr "Mijenjaj prozore tekućeg programa"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Mijenjaj prozore tekućeg programa (obratno)"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Mijenjaj prozore tekućeg programa alternativno"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:327
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Mijenjaj prozore tekućeg programa alternativno (obratno)"
 
-#: tabbox/tabboxhandler.cpp:223
+#: tabbox/tabboxhandler.cpp:199
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4509,7 +4509,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3253
+#: window.cpp:3242
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-13 00:43+0000\n"
+"POT-Creation-Date: 2025-06-14 00:43+0000\n"
 "PO-Revision-Date: 2025-06-05 17:14+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -3528,42 +3528,42 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Aucune fenêtre ouverte"
 
-#: tabbox/tabbox.cpp:333
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows"
 msgstr "Naviguer parmi les fenêtres"
 
-#: tabbox/tabbox.cpp:334
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows (Reverse)"
 msgstr "Naviguer parmi les fenêtres (en ordre inverse)"
 
-#: tabbox/tabbox.cpp:335
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows Alternative"
 msgstr "Naviguer parmi les alternatives de fenêtres"
 
-#: tabbox/tabbox.cpp:336
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Naviguer parmi les alternatives de fenêtres (en ordre inverse)"
 
-#: tabbox/tabbox.cpp:337
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows of Current Application"
 msgstr "Naviguer parmi les fenêtres de l'application courante"
 
-#: tabbox/tabbox.cpp:338
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr ""
 "Naviguer parmi les fenêtres de l'application courante (en ordre inverse)"
 
-#: tabbox/tabbox.cpp:339
+#: tabbox/tabbox.cpp:326
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Naviguer parmi les fenêtres de l'application alternative courante"
 
-#: tabbox/tabbox.cpp:340
+#: tabbox/tabbox.cpp:327
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Naviguer parmi les fenêtres de l'application alternative courante (en ordre "
 "inverse)"
 
-#: tabbox/tabboxhandler.cpp:223
+#: tabbox/tabboxhandler.cpp:199
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -4180,7 +4180,7 @@ msgstr "L'ordre de sortie fourni n'est pas valable."
 msgid "The driver rejected the output configuration"
 msgstr "Le pilote a rejeté la configuration de sortie."
 
-#: window.cpp:3253
+#: window.cpp:3242
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
