@@ -450,7 +450,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             bool scanoutPossible = scanoutCandidates.size() <= planeCount || checkForBlackBackground(scanoutCandidates.back());
             if (scanoutPossible) {
                 const auto geometry = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).translated(-output->geometryF().topLeft());
-                primaryLayer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->modeSize()).toRect());
+                primaryLayer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->pixelSize()).toRect());
                 directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
                 if (directScanout) {
                     // if present works, we don't want to touch the frame object again afterwards,
