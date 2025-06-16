@@ -223,7 +223,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
     QRectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
-            frameGeometry = gravitateGeometry(frameGeometry, configureEvent->bounds, configureEvent->gravity);
+            frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
         }
     }
 

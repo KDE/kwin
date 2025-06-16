@@ -19,6 +19,7 @@
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/xdgshell.h"
 // server
+#include "utils/gravity.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/output.h"
@@ -372,7 +373,7 @@ void XdgShellTest::testMove()
 void XdgShellTest::testResize_data()
 {
     QTest::addColumn<Qt::Edges>("edges");
-    QTest::addColumn<KWin::Gravity>("gravity");
+    QTest::addColumn<KWin::Gravity::Kind>("gravity");
 
     QTest::newRow("none") << Qt::Edges() << KWin::Gravity::None;
     QTest::newRow("top") << Qt::Edges(Qt::TopEdge) << KWin::Gravity::Top;
@@ -398,11 +399,12 @@ void XdgShellTest::testResize()
 
     // TODO: the serial needs to be a proper one
     QFETCH(Qt::Edges, edges);
+    QFETCH(KWin::Gravity::Kind, gravity);
     xdgSurface->requestResize(m_seat, 60, edges);
     QVERIFY(resizeSpy.wait());
     QCOMPARE(resizeSpy.count(), 1);
     QCOMPARE(resizeSpy.first().at(0).value<SeatInterface *>(), m_seatInterface);
-    QTEST(resizeSpy.first().at(1).value<Gravity>(), "gravity");
+    QCOMPARE(resizeSpy.first().at(1).value<Gravity>(), gravity);
     QCOMPARE(resizeSpy.first().at(2).value<quint32>(), 60u);
 }
 

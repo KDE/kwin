@@ -19,6 +19,7 @@ struct wl_resource;
 namespace KWin
 {
 class Display;
+class Gravity;
 class OutputInterface;
 class SeatInterface;
 class SurfaceInterface;
@@ -32,8 +33,6 @@ class XdgToplevelInterface;
 class XdgPopupInterface;
 class XdgSurfaceInterface;
 class XdgToplevelSessionV1Interface;
-
-enum class Gravity;
 
 /**
  * The XdgShellInterface class represents an extension for destrop-style user interfaces.

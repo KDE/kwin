@@ -18,6 +18,7 @@ namespace KWin
 {
 
 class Display;
+class Gravity;
 class SeatInterface;
 class SurfaceInterface;
 class SurfaceRole;
@@ -25,8 +26,6 @@ class XXPipV1Interface;
 class XXPipV1InterfacePrivate;
 class XdgSurfaceInterface;
 class XXPipShellV1InterfacePrivate;
-
-enum class Gravity;
 
 /**
  * The XXPipShellV1Interface extension provides clients a way to create picture-in-picture

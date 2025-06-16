@@ -384,7 +384,7 @@ void InternalWindow::present(const InternalWindowFrame &frame)
 {
     QRectF geometry(clientRectToFrameRect(m_handle->geometry()));
     if (isInteractiveResize()) {
-        geometry = gravitateGeometry(geometry, moveResizeGeometry(), interactiveMoveResizeGravity());
+        geometry = interactiveMoveResizeGravity().apply(geometry, moveResizeGeometry());
     }
 
     commitGeometry(geometry);

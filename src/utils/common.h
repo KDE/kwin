@@ -66,8 +66,6 @@ enum ShadeMode {
     ShadeActivated // "shaded", but visible due to alt+tab to the window
 };
 
-KWIN_EXPORT QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity);
-
 } // namespace
 
 // Must be outside namespace

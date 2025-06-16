@@ -10,6 +10,7 @@
 #include "display.h"
 #include "output.h"
 #include "seat.h"
+#include "utils/gravity.h"
 #include "utils/resource.h"
 
 #include <QTimer>

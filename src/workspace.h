@@ -52,6 +52,7 @@ namespace TabBox
 class TabBox;
 }
 
+class Gravity;
 class Window;
 class Output;
 class Compositor;

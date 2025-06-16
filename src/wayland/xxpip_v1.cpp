@@ -5,6 +5,7 @@
 */
 
 #include "wayland/xxpip_v1.h"
+#include "utils/gravity.h"
 #include "utils/resource.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"

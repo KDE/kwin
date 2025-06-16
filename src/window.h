@@ -15,6 +15,7 @@
 #include "options.h"
 #include "rules.h"
 #include "utils/common.h"
+#include "utils/gravity.h"
 
 #include <functional>
 #include <memory>

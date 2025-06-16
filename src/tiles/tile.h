@@ -12,7 +12,6 @@
 #include "effect/globals.h"
 #include "virtualdesktops.h"
 #include <kwin_export.h>
-#include <utils/common.h>
 
 #include <QObject>
 #include <QRectF>
@@ -20,6 +19,7 @@
 namespace KWin
 {
 
+class Gravity;
 class TileManager;
 class VirtualDesktop;
 class Window;

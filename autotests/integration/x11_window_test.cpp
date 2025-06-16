@@ -1649,7 +1649,7 @@ void X11WindowTest::testNetWmButtonMoveCancel()
 
 void X11WindowTest::testNetWmButtonSize_data()
 {
-    QTest::addColumn<Gravity>("gravity");
+    QTest::addColumn<Gravity::Kind>("gravity");
     QTest::addColumn<NET::Direction>("direction");
 
     QTest::addRow("top-left") << Gravity::TopLeft << NET::Direction::TopLeft;
@@ -1714,6 +1714,7 @@ void X11WindowTest::testNetWmButtonSize()
 {
     // This test verifies that a client can initiate an interactive move operation controlled by the pointer.
 
+    QFETCH(Gravity::Kind, gravity);
     QFETCH(NET::Direction, direction);
 
     // Create an xcb window.
@@ -1738,7 +1739,7 @@ void X11WindowTest::testNetWmButtonSize()
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
-    QTEST(window->interactiveMoveResizeGravity(), "gravity");
+    QCOMPARE(window->interactiveMoveResizeGravity(), gravity);
 
     // Resize the window a tiny bit.
     Test::pointerMotionRelative(directionToVector(direction, QSizeF(8, 8)), timestamp++);
