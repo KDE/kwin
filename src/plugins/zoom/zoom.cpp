@@ -155,15 +155,6 @@ ZoomEffect::ZoomEffect()
     if (initialZoom > 1.0) {
         zoomTo(initialZoom);
     }
-
-    // TODO d_ed: OLIVER HERE, we probably want to scope this to only be when we're zooming
-    // but we're only painted when effect is active?
-    m_overlay = std::make_unique<OffscreenQuickScene>();
-    const auto url = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin-wayland/effects/zoom/qml/overlay.qml")));
-    m_overlay->setSource(url, {{QStringLiteral("effect"), QVariant::fromValue(this)}});
-    connect(m_overlay.get(), &OffscreenQuickScene::repaintNeeded, this, []() {
-        effects->addRepaintFull();
-    });
 }
 
 ZoomEffect::~ZoomEffect()
@@ -322,6 +313,16 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 
     // Enable the hint overlay shown during zoom
     m_enableHintOverlay = ZoomConfig::enableHintOverlay();
+    if (m_enableHintOverlay && !m_overlay) {
+        m_overlay = std::make_unique<OffscreenQuickScene>();
+        const auto url = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin-wayland/effects/zoom/qml/overlay.qml")));
+        m_overlay->setSource(url, {{QStringLiteral("effect"), QVariant::fromValue(this)}});
+        connect(m_overlay.get(), &OffscreenQuickScene::repaintNeeded, this, []() {
+            effects->addRepaintFull();
+        });
+    } else if (!m_enableHintOverlay && m_overlay) {
+        m_overlay.reset();
+    }
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
@@ -529,7 +530,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         }
     }
 
-    if (m_enableHintOverlay && m_overlay->rootItem()) {
+    if (m_enableHintOverlay && m_overlay && m_overlay->rootItem()) {
         // TODO: A check is likely needed here to avoid 'effect: OffscreenQuickView has no fbo!'
         // TODO: RTL?
         const qreal overlayMargins = m_overlay->rootItem()->property("margins").toReal();
