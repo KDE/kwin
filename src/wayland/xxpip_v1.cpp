@@ -310,3 +310,5 @@ XXPipV1Interface *XXPipV1Interface::get(::wl_resource *resource)
 }
 
 } // namespace KWin
+
+#include "moc_xxpip_v1.cpp"
