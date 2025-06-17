@@ -316,6 +316,26 @@ public:
      */
     Q_INVOKABLE bool isEffectActive(const QString &pluginId) const;
 
+    /**
+     * Defines that a window needs to remain under another
+     *
+     * @param below the window that will be underneath
+     * @param above the window that will be over
+     *
+     * @since 6.5
+     */
+    Q_INVOKABLE void constrain(KWin::Window *below, KWin::Window *above);
+
+    /**
+     * Breaks the constraint where a window is to remain under another
+     *
+     * @param below the window that was set to be underneath
+     * @param above the window that was set to be over
+     *
+     * @since 6.5
+     */
+    Q_INVOKABLE void unconstrain(KWin::Window *below, KWin::Window *above);
+
 public Q_SLOTS:
     // all the available key bindings
     void slotSwitchDesktopNext();

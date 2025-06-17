@@ -319,6 +319,16 @@ void WorkspaceWrapper::raiseWindow(KWin::Window *window)
     }
 }
 
+void WorkspaceWrapper::constrain(KWin::Window *below, KWin::Window *above)
+{
+    KWin::Workspace::self()->constrain(below, above);
+}
+
+void WorkspaceWrapper::unconstrain(KWin::Window *below, KWin::Window *above)
+{
+    KWin::Workspace::self()->unconstrain(below, above);
+}
+
 #if KWIN_BUILD_X11
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
