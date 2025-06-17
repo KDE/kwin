@@ -247,6 +247,15 @@ XwaylandInterface *ApplicationWayland::xwayland() const
 {
     return m_xwayland.get();
 }
+
+pid_t ApplicationWayland::xwaylandPid() const
+{
+    if (m_xwayland && m_xwayland->xwaylandLauncher()->process() && m_xwayland->xwaylandLauncher()->process()->state() == QProcess::Running) {
+        return m_xwayland->xwaylandLauncher()->process()->processId();
+    }
+    return -1;
+}
+
 #endif
 
 } // namespace
