@@ -56,7 +56,6 @@ RootInfo *RootInfo::create()
         | NET::WMDesktop
         | NET::WMWindowType
         | NET::WMState
-        | NET::WMIconGeometry
         | NET::WMIcon
         | NET::WMPid
         | NET::WMMoveResize
