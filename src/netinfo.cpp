@@ -56,7 +56,6 @@ RootInfo *RootInfo::create()
         | NET::WMDesktop
         | NET::WMWindowType
         | NET::WMState
-        | NET::WMStrut
         | NET::WMIconGeometry
         | NET::WMIcon
         | NET::WMPid
@@ -92,7 +91,6 @@ RootInfo *RootInfo::create()
         | NET::WM2AllowedActions
         | NET::WM2RestackWindow
         | NET::WM2MoveResizeWindow
-        | NET::WM2ExtendedStrut
         | NET::WM2ShowingDesktop
         | NET::WM2DesktopLayout
         | NET::WM2FullPlacement
