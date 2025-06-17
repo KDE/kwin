@@ -25,10 +25,15 @@ class EisContext
 {
 public:
     EisContext(EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities);
-    ~EisContext();
+    virtual ~EisContext();
 
     void updateScreens();
     void updateKeymap();
+
+    virtual bool allowConnection(eis_client *client) const
+    {
+        return true;
+    }
 
 protected:
     eis *m_eisContext;
@@ -57,6 +62,7 @@ class XWaylandEisContext : public EisContext
 {
 public:
     XWaylandEisContext(EisBackend *backend);
+    bool allowConnection(eis_client *client) const override;
 
     const QByteArray socketName;
 };
