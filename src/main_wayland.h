@@ -55,6 +55,8 @@ public:
         m_xwaylandFds.push_back(std::move(fd));
     }
     XwaylandInterface *xwayland() const override;
+
+    pid_t xwaylandPid() const override;
 #endif
     void setApplicationsToStart(const QStringList &applications)
     {
