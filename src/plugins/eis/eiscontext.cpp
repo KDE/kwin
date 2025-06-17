@@ -8,6 +8,7 @@
 #include "eisbackend.h"
 #include "eisdevice.h"
 #include "libeis_logging.h"
+#include "main.h"
 
 #include <unistd.h>
 
@@ -72,6 +73,16 @@ XWaylandEisContext::XWaylandEisContext(KWin::EisBackend *backend)
     , socketName(qgetenv("XDG_RUNTIME_DIR") + QByteArrayLiteral("/kwin-xwayland-eis-socket.") + QByteArray::number(getpid()))
 {
     eis_setup_backend_socket(m_eisContext, socketName.constData());
+}
+
+bool XWaylandEisContext::allowConnection(eis_client *client) const
+{
+    const auto pid = eis_backend_socket_get_client_pid(client);
+    if (kwinApp()->xwaylandPid() != pid) {
+        qCWarning(KWIN_EIS) << "Non-xwayland process" << pid << "trying to connect to Xwayland socket - disconnecting";
+        return false;
+    }
+    return true;
 }
 
 EisContext::EisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities)
@@ -143,6 +154,11 @@ void EisContext::handleEvents()
                 eis_client_disconnect(client);
                 break;
             }
+            if (!allowConnection(client)) {
+                eis_client_disconnect(client);
+                break;
+            }
+
             eis_client_connect(client);
 
             auto seat = eis_client_new_seat(client, QByteArrayLiteral(" seat").prepend(clientName));

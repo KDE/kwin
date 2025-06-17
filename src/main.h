@@ -197,6 +197,12 @@ public:
     {
         m_compositeWindow = window;
     }
+
+    virtual pid_t xwaylandPid() const
+    {
+        return -1;
+    }
+
 #endif
 
     qreal xwaylandScale() const
