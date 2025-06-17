@@ -116,11 +116,6 @@ private Q_SLOTS:
     void menuAboutToHide();
 
     /**
-     * Adjusts the desktop popup to the current values and the location of
-     * the Window.
-     */
-    void desktopPopupAboutToShow();
-    /**
      * Adjusts the multipleDesktopsMenu popup to the current values and the location of
      * the Window, Wayland only.
      */
@@ -171,10 +166,6 @@ private:
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */
     QMenu *m_menu;
-    /**
-     * The move to desktop sub menu.
-     */
-    QMenu *m_desktopMenu;
     /**
      * The move to desktop sub menu, with the Wayland protocol.
      */

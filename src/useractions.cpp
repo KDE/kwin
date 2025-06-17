@@ -73,7 +73,6 @@ namespace KWin
 UserActionsMenu::UserActionsMenu(QObject *parent)
     : QObject(parent)
     , m_menu(nullptr)
-    , m_desktopMenu(nullptr)
     , m_multipleDesktopsMenu(nullptr)
     , m_screenMenu(nullptr)
     , m_activityMenu(nullptr)
@@ -293,7 +292,6 @@ void UserActionsMenu::discard()
 {
     delete m_menu;
     m_menu = nullptr;
-    m_desktopMenu = nullptr;
     m_multipleDesktopsMenu = nullptr;
     m_screenMenu = nullptr;
     m_activityMenu = nullptr;
@@ -309,8 +307,6 @@ void UserActionsMenu::menuAboutToShow()
     m_window->blockActivityUpdates(true);
 
     if (VirtualDesktopManager::self()->count() == 1) {
-        delete m_desktopMenu;
-        m_desktopMenu = nullptr;
         delete m_multipleDesktopsMenu;
         m_multipleDesktopsMenu = nullptr;
     } else {
@@ -435,76 +431,6 @@ void UserActionsMenu::initActivityPopup()
     m_menu->insertAction(m_maximizeOperation, action);
     action->setText(i18n("Show in &Activities"));
     action->setIcon(QIcon::fromTheme(QStringLiteral("activities")));
-}
-
-void UserActionsMenu::desktopPopupAboutToShow()
-{
-    if (!m_desktopMenu) {
-        return;
-    }
-    const VirtualDesktopManager *vds = VirtualDesktopManager::self();
-
-    m_desktopMenu->clear();
-    if (m_window) {
-        m_desktopMenu->setPalette(m_window->palette());
-    }
-    QActionGroup *group = new QActionGroup(m_desktopMenu);
-
-    QAction *action = m_desktopMenu->addAction(i18n("Move &To Current Desktop"));
-    action->setEnabled(m_window && (m_window->isOnAllDesktops() || !m_window->isOnDesktop(vds->currentDesktop())));
-    connect(action, &QAction::triggered, this, [this]() {
-        if (!m_window) {
-            return;
-        }
-        VirtualDesktopManager *vds = VirtualDesktopManager::self();
-        workspace()->sendWindowToDesktops(m_window, {vds->currentDesktop()}, false);
-    });
-
-    action = m_desktopMenu->addAction(i18n("&All Desktops"));
-    connect(action, &QAction::triggered, this, [this]() {
-        if (m_window) {
-            m_window->setOnAllDesktops(!m_window->isOnAllDesktops());
-        }
-    });
-    action->setCheckable(true);
-    if (m_window && m_window->isOnAllDesktops()) {
-        action->setChecked(true);
-    }
-    group->addAction(action);
-
-    m_desktopMenu->addSeparator();
-
-    const auto desktops = vds->desktops();
-    for (VirtualDesktop *desktop : desktops) {
-        action = m_desktopMenu->addAction(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&")));
-        connect(action, &QAction::triggered, this, [this, desktop]() {
-            if (m_window) {
-                workspace()->sendWindowToDesktops(m_window, {desktop}, false);
-            }
-        });
-        action->setCheckable(true);
-        group->addAction(action);
-
-        if (m_window && !m_window->isOnAllDesktops() && m_window->isOnDesktop(desktop)) {
-            action->setChecked(true);
-        }
-    }
-
-    m_desktopMenu->addSeparator();
-
-    action = m_desktopMenu->addAction(i18nc("Create a new desktop and move the window there", "&New Desktop"));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
-    connect(action, &QAction::triggered, this, [this]() {
-        if (!m_window) {
-            return;
-        }
-        VirtualDesktopManager *vds = VirtualDesktopManager::self();
-        VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
-        if (desktop) {
-            workspace()->sendWindowToDesktops(m_window, {desktop}, false);
-        }
-    });
-    action->setEnabled(vds->count() < vds->maximum());
 }
 
 void UserActionsMenu::multipleDesktopsPopupAboutToShow()
