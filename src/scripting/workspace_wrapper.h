@@ -35,7 +35,7 @@ class WorkspaceWrapper : public QObject
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
     Q_PROPERTY(int desktopGridWidth READ desktopGridWidth NOTIFY desktopLayoutChanged)
-    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight NOTIFY desktopLayoutChanged)
+    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight WRITE setDesktopGridHeight NOTIFY desktopLayoutChanged)
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
@@ -199,7 +199,10 @@ public:
 
     QSize desktopGridSize() const;
     int desktopGridWidth() const;
+
     int desktopGridHeight() const;
+    void setDesktopGridHeight(int height);
+
     int workspaceWidth() const;
     int workspaceHeight() const;
     QSize workspaceSize() const;

@@ -380,6 +380,11 @@ int WorkspaceWrapper::desktopGridHeight() const
     return desktopGridSize().height();
 }
 
+void WorkspaceWrapper::setDesktopGridHeight(int height)
+{
+    VirtualDesktopManager::self()->setRows(height);
+}
+
 int WorkspaceWrapper::workspaceHeight() const
 {
     return desktopGridHeight() * workspace()->geometry().height();
