@@ -786,6 +786,11 @@ void Edge::setClient(Window *client)
     }
 }
 
+void Edge::setClientInteracted(bool interacted)
+{
+    m_clientInteracted = interacted;
+}
+
 void Edge::setOutput(Output *output)
 {
     m_output = output;
@@ -1454,6 +1459,14 @@ bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timest
                 edge->stopApproaching();
                 continue;
             } else if (edge->isRevealed()) {
+                const bool interacted = edge->client()->hitTest(pos);
+                if (edge->isClientInteracted() != interacted) {
+                    if (interacted) {
+                        edge->setClientInteracted(interacted);
+                    } else {
+                        edge->unreveal();
+                    }
+                }
                 continue;
             }
         }
@@ -1478,11 +1491,25 @@ bool ScreenEdges::isEntered(const QPointF &pos, std::chrono::microseconds timest
     if (activatedForClient) {
         for (const auto &edge : m_edges) {
             if (edge->client()) {
+                edge->setClientInteracted(edge->client()->hitTest(pos));
                 edge->markAsTriggered(pos.toPoint(), timestamp);
             }
         }
     }
     return activated;
+}
+
+bool ScreenEdges::touchDown(const QPointF &pos)
+{
+    for (const auto &edge : m_edges) {
+        if (edge->client()) {
+            if (!edge->client()->hitTest(pos)) {
+                edge->unreveal();
+            }
+        }
+    }
+
+    return false;
 }
 
 void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)

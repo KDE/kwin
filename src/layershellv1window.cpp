@@ -353,12 +353,13 @@ void LayerShellV1Window::setVirtualKeyboardGeometry(const QRectF &geo)
     scheduleRearrange();
 }
 
-void LayerShellV1Window::installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interface *edge)
+void LayerShellV1Window::installScreenEdgeV2(ScreenEdgeV2Interface *edge)
 {
     m_screenEdge = edge;
 
     workspace()->screenEdges()->reserve(this, m_screenEdge->border());
-    connect(edge, &AutoHideScreenEdgeV1Interface::destroyed, this, [this]() {
+    workspace()->screenEdges()->unreveal(this);
+    connect(edge, &ScreenEdgeV2Interface::destroyed, this, [this]() {
         workspace()->screenEdges()->reveal(this);
         workspace()->screenEdges()->unreserve(this);
     });
@@ -367,11 +368,11 @@ void LayerShellV1Window::installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interfa
         workspace()->screenEdges()->reserve(this, m_screenEdge->border());
     });
 
-    connect(edge, &AutoHideScreenEdgeV1Interface::activateRequested, this, [this]() {
+    connect(edge, &ScreenEdgeV2Interface::hideRequested, this, [this]() {
         workspace()->screenEdges()->unreveal(this);
     });
 
-    connect(edge, &AutoHideScreenEdgeV1Interface::deactivateRequested, this, [this]() {
+    connect(edge, &ScreenEdgeV2Interface::showRequested, this, [this]() {
         workspace()->screenEdges()->reveal(this);
     });
 }

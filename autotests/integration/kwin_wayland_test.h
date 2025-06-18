@@ -29,7 +29,7 @@
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
-#include "qwayland-kde-screen-edge-v1.h"
+#include "qwayland-kde-screen-edge-v2.h"
 #include "qwayland-presentation-time.h"
 #include "qwayland-security-context-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
@@ -531,19 +531,19 @@ private:
     uint m_preferredScale = 120;
 };
 
-class ScreenEdgeManagerV1 : public QObject, public QtWayland::kde_screen_edge_manager_v1
+class ScreenEdgeManagerV2 : public QObject, public QtWayland::kde_screen_edge_manager_v2
 {
     Q_OBJECT
 public:
-    ~ScreenEdgeManagerV1() override;
+    ~ScreenEdgeManagerV2() override;
 };
 
-class AutoHideScreenEdgeV1 : public QObject, public QtWayland::kde_auto_hide_screen_edge_v1
+class ScreenEdgeV2 : public QObject, public QtWayland::kde_screen_edge_v2
 {
     Q_OBJECT
 public:
-    AutoHideScreenEdgeV1(ScreenEdgeManagerV1 *manager, KWayland::Client::Surface *surface, uint32_t border);
-    ~AutoHideScreenEdgeV1() override;
+    ScreenEdgeV2(ScreenEdgeManagerV2 *manager, KWayland::Client::Surface *surface, uint32_t border);
+    ~ScreenEdgeV2() override;
 };
 
 class CursorShapeManagerV1 : public QObject, public QtWayland::wp_cursor_shape_manager_v1
@@ -603,7 +603,7 @@ enum class AdditionalWaylandInterface {
     OutputDeviceV2 = 1 << 14,
     FractionalScaleManagerV1 = 1 << 15,
     ScreencastingV1 = 1 << 16,
-    ScreenEdgeV1 = 1 << 17,
+    ScreenEdgeV2 = 1 << 17,
     CursorShapeV1 = 1 << 18,
     FakeInput = 1 << 19,
     SecurityContextManagerV1 = 1 << 20,
@@ -733,7 +733,7 @@ struct Connection
     TextInputManagerV3 *textInputManagerV3 = nullptr;
     FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
     ScreencastingV1 *screencastingV1 = nullptr;
-    ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
+    ScreenEdgeManagerV2 *screenEdgeManagerV2 = nullptr;
     CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
     FakeInput *fakeInput = nullptr;
     SecurityContextManagerV1 *securityContextManagerV1 = nullptr;
@@ -860,7 +860,7 @@ std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surfa
 
 std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplevel *toplevel);
 std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface *surface);
-std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
+std::unique_ptr<ScreenEdgeV2> createScreenEdgeV2(KWayland::Client::Surface *surface, uint32_t border);
 std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
 std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel);
 

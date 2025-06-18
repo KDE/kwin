@@ -17,7 +17,7 @@ struct LayerShellV1ConfigureEvent
     QSize size;
 };
 
-class AutoHideScreenEdgeV1Interface;
+class ScreenEdgeV2Interface;
 class LayerSurfaceV1Interface;
 class Output;
 class LayerShellV1Integration;
@@ -48,7 +48,7 @@ public:
     void closeWindow() override;
     void setVirtualKeyboardGeometry(const QRectF &geo) override;
 
-    void installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interface *edge);
+    void installScreenEdgeV2(ScreenEdgeV2Interface *edge);
 
 protected:
     Layer belongsToLayer() const override;
@@ -71,7 +71,7 @@ private:
     Output *m_desiredOutput;
     LayerShellV1Integration *m_integration;
     LayerSurfaceV1Interface *m_shellSurface;
-    QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;
+    QPointer<ScreenEdgeV2Interface> m_screenEdge;
     bool m_screenEdgeActive = false;
     WindowType m_windowType;
     QList<LayerShellV1ConfigureEvent> m_configureEvents;

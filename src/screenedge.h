@@ -85,6 +85,8 @@ public:
     bool isApproaching() const;
     void setClient(Window *client);
     Window *client() const;
+    void setClientInteracted(bool interacted);
+    bool isClientInteracted() const;
     void setOutput(Output *output);
     Output *output() const;
     const QRect &geometry() const;
@@ -151,6 +153,7 @@ private:
     int m_lastApproachingFactor;
     bool m_blocked;
     bool m_revealed = true;
+    bool m_clientInteracted = false;
     bool m_pushBackBlocked;
     Window *m_client;
     Output *m_output;
@@ -302,6 +305,7 @@ public:
      */
     void reserveDesktopSwitching(bool isToReserve, Qt::Orientations o);
     bool isEntered(const QPointF &pos, std::chrono::microseconds timestamp);
+    bool touchDown(const QPointF &pos);
 
     bool isDesktopSwitching() const;
     bool isDesktopSwitchingMovingClients() const;
@@ -491,6 +495,11 @@ inline bool Edge::isBlocked() const
 inline Window *Edge::client() const
 {
     return m_client;
+}
+
+inline bool Edge::isClientInteracted() const
+{
+    return m_clientInteracted;
 }
 
 inline bool Edge::isApproaching() const

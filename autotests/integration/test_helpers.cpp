@@ -235,17 +235,17 @@ IdleInhibitorV1::~IdleInhibitorV1()
     destroy();
 }
 
-ScreenEdgeManagerV1::~ScreenEdgeManagerV1()
+ScreenEdgeManagerV2::~ScreenEdgeManagerV2()
 {
     destroy();
 }
 
-AutoHideScreenEdgeV1::AutoHideScreenEdgeV1(ScreenEdgeManagerV1 *manager, KWayland::Client::Surface *surface, uint32_t border)
-    : QtWayland::kde_auto_hide_screen_edge_v1(manager->get_auto_hide_screen_edge(border, *surface))
+ScreenEdgeV2::ScreenEdgeV2(ScreenEdgeManagerV2 *manager, KWayland::Client::Surface *surface, uint32_t border)
+    : QtWayland::kde_screen_edge_v2(manager->get_screen_edge(border, *surface))
 {
 }
 
-AutoHideScreenEdgeV1::~AutoHideScreenEdgeV1()
+ScreenEdgeV2::~ScreenEdgeV2()
 {
     destroy();
 }
@@ -489,10 +489,10 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 return;
             }
         }
-        if (flags & AdditionalWaylandInterface::ScreenEdgeV1) {
-            if (interface == kde_screen_edge_manager_v1_interface.name) {
-                c->screenEdgeManagerV1 = new ScreenEdgeManagerV1();
-                c->screenEdgeManagerV1->init(*c->registry, name, version);
+        if (flags & AdditionalWaylandInterface::ScreenEdgeV2) {
+            if (interface == kde_screen_edge_manager_v2_interface.name) {
+                c->screenEdgeManagerV2 = new ScreenEdgeManagerV2();
+                c->screenEdgeManagerV2->init(*c->registry, name, version);
                 return;
             }
         }
@@ -652,8 +652,8 @@ Connection::~Connection()
     fractionalScaleManagerV1 = nullptr;
     delete screencastingV1;
     screencastingV1 = nullptr;
-    delete screenEdgeManagerV1;
-    screenEdgeManagerV1 = nullptr;
+    delete screenEdgeManagerV2;
+    screenEdgeManagerV2 = nullptr;
     delete cursorShapeManagerV1;
     cursorShapeManagerV1 = nullptr;
     delete fakeInput;
@@ -1160,15 +1160,15 @@ std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface
     return std::make_unique<IdleInhibitorV1>(manager, surface);
 }
 
-std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border)
+std::unique_ptr<ScreenEdgeV2> createScreenEdgeV2(KWayland::Client::Surface *surface, uint32_t border)
 {
-    ScreenEdgeManagerV1 *manager = s_waylandConnection->screenEdgeManagerV1;
+    ScreenEdgeManagerV2 *manager = s_waylandConnection->screenEdgeManagerV2;
     if (!manager) {
         qWarning() << "Could not create an kde_auto_hide_screen_edge_v1 because kde_screen_edge_manager_v1 global is not bound";
         return nullptr;
     }
 
-    return std::make_unique<AutoHideScreenEdgeV1>(manager, surface, border);
+    return std::make_unique<ScreenEdgeV2>(manager, surface, border);
 }
 
 std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)

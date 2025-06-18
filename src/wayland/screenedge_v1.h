@@ -17,43 +17,43 @@ namespace KWin
 {
 
 class Display;
-class ScreenEdgeManagerV1InterfacePrivate;
-class AutoHideScreenEdgeV1Interface;
-class AutoHideScreenEdgeV1InterfacePrivate;
+class ScreenEdgeManagerV2InterfacePrivate;
+class ScreenEdgeV2Interface;
+class ScreenEdgeV2InterfacePrivate;
 class SurfaceInterface;
 
-class KWIN_EXPORT ScreenEdgeManagerV1Interface : public QObject
+class KWIN_EXPORT ScreenEdgeManagerV2Interface : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ScreenEdgeManagerV1Interface(Display *display, QObject *parent = nullptr);
-    ~ScreenEdgeManagerV1Interface() override;
+    explicit ScreenEdgeManagerV2Interface(Display *display, QObject *parent = nullptr);
+    ~ScreenEdgeManagerV2Interface() override;
 
 Q_SIGNALS:
-    void edgeRequested(AutoHideScreenEdgeV1Interface *edge);
+    void edgeRequested(ScreenEdgeV2Interface *edge);
 
 private:
-    std::unique_ptr<ScreenEdgeManagerV1InterfacePrivate> d;
+    std::unique_ptr<ScreenEdgeManagerV2InterfacePrivate> d;
 };
 
-class KWIN_EXPORT AutoHideScreenEdgeV1Interface : public QObject
+class KWIN_EXPORT ScreenEdgeV2Interface : public QObject
 {
     Q_OBJECT
 
 public:
-    AutoHideScreenEdgeV1Interface(SurfaceInterface *surface, ElectricBorder border, wl_resource *resource);
-    ~AutoHideScreenEdgeV1Interface() override;
+    ScreenEdgeV2Interface(SurfaceInterface *surface, ElectricBorder border, wl_resource *resource);
+    ~ScreenEdgeV2Interface() override;
 
     SurfaceInterface *surface() const;
     ElectricBorder border() const;
 
 Q_SIGNALS:
-    void deactivateRequested();
-    void activateRequested();
+    void showRequested();
+    void hideRequested();
 
 private:
-    std::unique_ptr<AutoHideScreenEdgeV1InterfacePrivate> d;
+    std::unique_ptr<ScreenEdgeV2InterfacePrivate> d;
 };
 
 } // namespace KWin

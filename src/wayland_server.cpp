@@ -505,10 +505,10 @@ bool WaylandServer::init()
 
     new XdgToplevelIconManagerV1Interface(m_display, this);
 
-    auto screenEdgeManager = new ScreenEdgeManagerV1Interface(m_display, m_display);
-    connect(screenEdgeManager, &ScreenEdgeManagerV1Interface::edgeRequested, this, [this](AutoHideScreenEdgeV1Interface *edge) {
+    auto screenEdgeManager = new ScreenEdgeManagerV2Interface(m_display, m_display);
+    connect(screenEdgeManager, &ScreenEdgeManagerV2Interface::edgeRequested, this, [this](ScreenEdgeV2Interface *edge) {
         if (auto window = qobject_cast<LayerShellV1Window *>(findWindow(edge->surface()))) {
-            window->installAutoHideScreenEdgeV1(edge);
+            window->installScreenEdgeV2(edge);
         }
     });
 
