@@ -802,6 +802,7 @@ void LayerShellV1WindowTest::testScreenEdge()
     {
         screenEdge->activate();
         QVERIFY(hiddenChangedSpy.wait());
+        QCOMPARE(hiddenChangedSpy.count(), 3);
         QVERIFY(!window->isShown());
 
         Test::pointerMotion(QPointF(640, 1023), timestamp);
@@ -809,7 +810,7 @@ void LayerShellV1WindowTest::testScreenEdge()
         Test::pointerMotion(QPointF(640, 1023), timestamp);
         timestamp += 160;
         Test::pointerMotion(QPointF(640, 512), timestamp);
-        QVERIFY(hiddenChangedSpy.wait());
+        QCOMPARE(hiddenChangedSpy.count(), 4);
         QVERIFY(window->isShown());
     }
 

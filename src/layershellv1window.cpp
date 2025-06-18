@@ -353,56 +353,27 @@ void LayerShellV1Window::setVirtualKeyboardGeometry(const QRectF &geo)
     scheduleRearrange();
 }
 
-void LayerShellV1Window::showOnScreenEdge()
-{
-    // ShowOnScreenEdge can be called by an Edge, and setHidden could destroy the Edge
-    // Use the singleshot to avoid use-after-free
-    QTimer::singleShot(0, this, &LayerShellV1Window::deactivateScreenEdge);
-}
-
 void LayerShellV1Window::installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interface *edge)
 {
     m_screenEdge = edge;
 
-    connect(edge, &AutoHideScreenEdgeV1Interface::destroyed,
-            this, &LayerShellV1Window::deactivateScreenEdge);
-    connect(edge, &AutoHideScreenEdgeV1Interface::activateRequested,
-            this, &LayerShellV1Window::activateScreenEdge);
-    connect(edge, &AutoHideScreenEdgeV1Interface::deactivateRequested,
-            this, &LayerShellV1Window::deactivateScreenEdge);
+    workspace()->screenEdges()->reserve(this, m_screenEdge->border());
+    connect(edge, &AutoHideScreenEdgeV1Interface::destroyed, this, [this]() {
+        workspace()->screenEdges()->reveal(this);
+        workspace()->screenEdges()->unreserve(this);
+    });
 
     connect(this, &LayerShellV1Window::frameGeometryChanged, edge, [this]() {
-        if (m_screenEdgeActive) {
-            reserveScreenEdge();
-        }
+        workspace()->screenEdges()->reserve(this, m_screenEdge->border());
     });
-}
 
-void LayerShellV1Window::reserveScreenEdge()
-{
-    if (workspace()->screenEdges()->reserve(this, m_screenEdge->border())) {
-        setHidden(true);
-    } else {
-        setHidden(false);
-    }
-}
+    connect(edge, &AutoHideScreenEdgeV1Interface::activateRequested, this, [this]() {
+        workspace()->screenEdges()->unreveal(this);
+    });
 
-void LayerShellV1Window::unreserveScreenEdge()
-{
-    setHidden(false);
-    workspace()->screenEdges()->reserve(this, ElectricNone);
-}
-
-void LayerShellV1Window::activateScreenEdge()
-{
-    m_screenEdgeActive = true;
-    reserveScreenEdge();
-}
-
-void LayerShellV1Window::deactivateScreenEdge()
-{
-    m_screenEdgeActive = false;
-    unreserveScreenEdge();
+    connect(edge, &AutoHideScreenEdgeV1Interface::deactivateRequested, this, [this]() {
+        workspace()->screenEdges()->reveal(this);
+    });
 }
 
 void LayerShellV1Window::handleTargetScaleChange()

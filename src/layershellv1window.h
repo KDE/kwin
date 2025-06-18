@@ -47,7 +47,6 @@ public:
     void destroyWindow() override;
     void closeWindow() override;
     void setVirtualKeyboardGeometry(const QRectF &geo) override;
-    void showOnScreenEdge() override;
 
     void installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interface *edge);
 
@@ -67,10 +66,6 @@ private:
     void handleAcceptsFocusChanged();
     void handleOutputRemoved(Output *output);
     void scheduleRearrange();
-    void activateScreenEdge();
-    void deactivateScreenEdge();
-    void reserveScreenEdge();
-    void unreserveScreenEdge();
     void handleTargetScaleChange();
 
     Output *m_desiredOutput;

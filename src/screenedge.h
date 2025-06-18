@@ -72,6 +72,7 @@ public:
     bool check(const QPoint &cursorPos, const std::chrono::microseconds &triggerTime, bool forceNoPushBack = false);
     void markAsTriggered(const QPoint &cursorPos, const std::chrono::microseconds &triggerTime);
     bool isReserved() const;
+    bool isRevealed() const;
     const QRect &approachGeometry() const;
 
     ElectricBorder border() const;
@@ -93,6 +94,8 @@ public:
     bool activatesForTouchGesture() const;
 
 public Q_SLOTS:
+    void reveal();
+    void unreveal();
     void reserve();
     void unreserve();
     void unreserve(QObject *object);
@@ -147,6 +150,7 @@ private:
     bool m_approaching;
     int m_lastApproachingFactor;
     bool m_blocked;
+    bool m_revealed = true;
     bool m_pushBackBlocked;
     Window *m_client;
     Output *m_output;
@@ -264,14 +268,14 @@ public:
      * On subsequent calls for the client no new Edge is created, but the existing one gets reused
      * and if the client is already hidden, the Edge gets reserved.
      *
-     * Once the Edge for the client triggers, the client gets shown again and the Edge unreserved.
-     * The idea is that the Edge can only get activated if the client is currently hidden.
-     *
      * The Edge gets automatically destroyed if the client gets released.
      * @param client The Client for which an Edge should be reserved
      * @param border The border which the client wants to use, only proper borders are supported (no corners)
      */
     bool reserve(KWin::Window *client, ElectricBorder border);
+    void unreserve(KWin::Window *client);
+    void reveal(KWin::Window *client);
+    void unreveal(KWin::Window *client);
 
     /**
      * Mark the specified screen edge as reserved for touch gestures. This method is provided for
@@ -369,7 +373,8 @@ private:
     void setRemainActiveOnFullscreen(bool remainActive);
     ElectricBorderAction actionForEdge(Edge *edge) const;
     ElectricBorderAction actionForTouchEdge(Edge *edge) const;
-    bool createEdgeForClient(Window *client, ElectricBorder border);
+    Edge *edgeForClient(Window *client) const;
+    Edge *createEdgeForClient(Window *client);
     void deleteEdgeForClient(Window *client);
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;
@@ -436,6 +441,11 @@ inline bool Edge::isScreenEdge() const
 inline bool Edge::isReserved() const
 {
     return m_reserved != 0;
+}
+
+inline bool Edge::isRevealed() const
+{
+    return m_revealed;
 }
 
 inline void Edge::setAction(ElectricBorderAction action)

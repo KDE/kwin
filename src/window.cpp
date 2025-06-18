@@ -4473,11 +4473,6 @@ void Window::checkNoBorder()
     setNoBorder(false);
 }
 
-void Window::showOnScreenEdge()
-{
-    qCWarning(KWIN_CORE, "%s doesn't support screen edge activation", metaObject()->className());
-}
-
 bool Window::isPlaceable() const
 {
     return true;

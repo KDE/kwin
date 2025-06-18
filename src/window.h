@@ -1260,13 +1260,6 @@ public:
      */
     virtual void setVirtualKeyboardGeometry(const QRectF &geo);
 
-    /**
-     * Restores the Window after it had been hidden due to show on screen edge functionality.
-     * The Window also gets raised (e.g. Panel mode windows can cover) and the Window
-     * gets informed in a window specific way that it is shown and raised again.
-     */
-    virtual void showOnScreenEdge();
-
     QString desktopFileName() const
     {
         return m_desktopFileName;
