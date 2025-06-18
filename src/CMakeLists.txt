@@ -549,6 +549,7 @@ install(FILES
     utils/edid.h
     utils/executable_path.h
     utils/filedescriptor.h
+    utils/gravity.h
     utils/kernel.h
     utils/memorymap.h
     utils/orientationsensor.h
