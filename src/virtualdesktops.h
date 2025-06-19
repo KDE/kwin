@@ -425,7 +425,7 @@ Q_SIGNALS:
     void currentChanged(KWin::VirtualDesktop *previousDesktop, KWin::VirtualDesktop *newDesktop);
 
     /**
-     * Signal emmitted for realtime desktop switching animations.
+     * Signal emitted for realtime desktop switching animations.
      * @param currentDesktop The current virtual desktop
      * @param offset The current total change in desktop coordinate
      * Offset x and y are negative if switching Left and Down.

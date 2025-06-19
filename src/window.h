@@ -74,7 +74,7 @@ class KWIN_EXPORT Window : public QObject
     Q_OBJECT
 
     /**
-     * This property holds rectangle that the pixmap or buffer of this Window
+     * This property holds the rectangle that the pixmap or buffer of this Window
      * occupies on the screen. This rectangle includes invisible portions of the
      * window, e.g. client-side drop shadows, etc.
      */
@@ -179,7 +179,7 @@ class KWIN_EXPORT Window : public QObject
 
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
-     * from the applications menubar).
+     * from the application's menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     Q_PROPERTY(bool dropdownMenu READ isDropdownMenu CONSTANT)
@@ -230,7 +230,7 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool dndIcon READ isDNDIcon CONSTANT)
 
     /**
-     * Returns the NETWM window type
+     * Returns the NETWM window type.
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     Q_PROPERTY(WindowType windowType READ windowType CONSTANT)
@@ -248,7 +248,7 @@ class KWIN_EXPORT Window : public QObject
 
     /**
      * Whether the window does not want to be animated on window close.
-     * There are legit reasons for this like a screenshot application which does not want it's
+     * There are legit reasons for this like a screenshot application which does not want its
      * window being captured.
      */
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
@@ -547,7 +547,7 @@ class KWIN_EXPORT Window : public QObject
      * The color scheme set on this window
      * Absolute file path, or name of palette in the user's config directory following KColorSchemes format.
      * An empty string indicates the default palette from kdeglobals is used.
-     * @note this indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
+     * @note This indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
      */
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
@@ -564,7 +564,7 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(KWin::Tile *tile READ requestedTile WRITE setTileCompatibility NOTIFY tileChanged)
 
     /**
-     * Returns whether this window is a input method window.
+     * Returns whether this window is an input method window.
      * This is only used for Wayland.
      */
     Q_PROPERTY(bool inputMethod READ isInputMethod)
@@ -1437,7 +1437,7 @@ Q_SIGNALS:
     void clientGeometryChanged(const QRectF &oldGeometry);
 
     /**
-     * This signal is emitted when the frame geometry is about to change. the new geometry is not known yet
+     * This signal is emitted when the frame geometry is about to change. The new geometry is not known yet
      */
     void frameGeometryAboutToChange();
 

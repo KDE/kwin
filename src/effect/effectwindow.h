@@ -105,7 +105,7 @@ class KWIN_EXPORT EffectWindow : public QObject
     Q_PROPERTY(bool utility READ isUtility)
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
-     * from the applications menubar).
+     * from the application's menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     Q_PROPERTY(bool dropdownMenu READ isDropdownMenu)
@@ -145,7 +145,7 @@ class KWIN_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(bool dndIcon READ isDNDIcon)
     /**
-     * Returns the NETWM window type
+     * Returns the NETWM window type.
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     Q_PROPERTY(int windowType READ windowTypeInt)
@@ -494,7 +494,7 @@ public:
     bool isUtility() const;
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
-     * from the applications menubar).
+     * from the application's menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     bool isDropdownMenu() const;
@@ -538,7 +538,7 @@ public:
      */
     bool isDNDIcon() const;
     /**
-     * Returns the NETWM window type
+     * Returns the NETWM window type.
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     WindowType windowType() const;
@@ -790,7 +790,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the keep above state of @p w was changed.
      *
-     * @param w The window whose the keep above state was changed.
+     * @param w The window whose  keep above state was changed.
      */
     void windowKeepAboveChanged(KWin::EffectWindow *w);
 

@@ -60,7 +60,7 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
 
     /**
-     * List of Clients currently managed by KWin, orderd by
+     * List of Clients currently managed by KWin, ordered by
      * their visibility (later ones cover earlier ones).
      */
     Q_PROPERTY(QList<KWin::Window *> stackingOrder READ stackingOrder)

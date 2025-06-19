@@ -120,7 +120,7 @@ For convenience you can pass a single quint64 as well.
                 <argsstring>(int duration)</argsstring>
                 <name>animationTime</name>
                 <read></read>
-                <detaileddescription>Adjusts the passed in duration to the global animation time facator.</detaileddescription>
+                <detaileddescription>Adjusts the passed in duration to the global animation time factor.</detaileddescription>
             </memberdef>
             <memberdef kind="function">
                 <type>Q_SCRIPTABLE int</type>
