@@ -3678,10 +3678,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> je již používáno %2 v %3"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Role okna"
+msgstr "Nabídka Okno"
 
 #: useractions.cpp:889
 #, kde-format
