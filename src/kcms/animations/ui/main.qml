@@ -201,6 +201,7 @@ KCM.SimpleKCM {
                         QQC2.ToolTip.visible: hovered
                         QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
 
+                        enabled: animationCheckBox.checked
                         visible: animationCheckBox.isConfigurable
                         onClicked: kcm.configure(animationCheckBox.configurePluginId, root)
                     }
