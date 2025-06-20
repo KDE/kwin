@@ -38,14 +38,13 @@ DrmDevice *DrmQPainterBackend::drmDevice() const
     return m_backend->primaryGpu()->drmDevice();
 }
 
-OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
+QList<OutputLayer *> DrmQPainterBackend::compatibleOutputLayers(Output *output)
 {
-    return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
-}
-
-OutputLayer *DrmQPainterBackend::cursorLayer(Output *output)
-{
-    return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
+    if (auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
+        return {virtualOutput->primaryLayer()};
+    } else {
+        return static_cast<DrmOutput *>(output)->pipeline()->gpu()->compatibleOutputLayers(output);
+    }
 }
 
 std::unique_ptr<DrmPipelineLayer> DrmQPainterBackend::createDrmPlaneLayer(DrmPlane *plane)
