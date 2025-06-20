@@ -50,9 +50,9 @@ GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
     return m_buffer->framebuffer();
 }
 
-std::shared_ptr<GLTexture> WaylandEglPrimaryLayer::texture() const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> WaylandEglPrimaryLayer::texture() const
 {
-    return m_buffer->texture();
+    return std::make_pair(m_buffer->texture(), colorDescription());
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::doBeginFrame()
@@ -323,14 +323,9 @@ bool WaylandEglBackend::initRenderingContext()
     return openglContext()->makeCurrent();
 }
 
-OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
+QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].primaryLayer.get();
-}
-
-OutputLayer *WaylandEglBackend::cursorLayer(Output *output)
-{
-    return m_outputs[output].cursorLayer.get();
+    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
 }
 
 }

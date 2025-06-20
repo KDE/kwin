@@ -46,14 +46,13 @@ public:
 
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
 
-    DrmPlane::TypeIndex type() const;
+    DrmPlane *plane() const;
 
 protected:
     DrmPipeline *pipeline() const;
     DrmGpu *gpu() const;
     DrmOutput *drmOutput() const;
 
-    const DrmPlane::TypeIndex m_type;
     DrmPlane *m_plane = nullptr;
 };
 }

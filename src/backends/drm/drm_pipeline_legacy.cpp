@@ -24,13 +24,26 @@
 namespace KWin
 {
 
-DrmPipeline::Error DrmPipeline::presentLegacy(const std::shared_ptr<OutputFrame> &frame)
+static DrmPipelineLayer *findLayer(const auto &layers, OutputLayerType type)
+{
+    const auto it = std::ranges::find_if(layers, [type](OutputLayer *layer) {
+        return layer->type() == type;
+    });
+    return it == layers.end() ? nullptr : static_cast<DrmPipelineLayer *>(*it);
+}
+
+DrmPipeline::Error DrmPipeline::presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
     if (Error err = applyPendingChangesLegacy(); err != Error::None) {
         return err;
     }
-    const auto buffer = m_pending.primaryLayer->currentBuffer();
-    if (m_pending.primaryLayer->sourceRect() != m_pending.primaryLayer->targetRect() || m_pending.primaryLayer->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    if (auto cursor = findLayer(layersToUpdate, OutputLayerType::CursorOnly); cursor && !setCursorLegacy(cursor)) {
+        return Error::InvalidArguments;
+    }
+    // always present on the crtc, for presentation feedback
+    const auto primary = findLayer(m_pending.layers, OutputLayerType::Primary);
+    const auto buffer = primary->currentBuffer();
+    if (primary->sourceRect() != primary->targetRect() || primary->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
@@ -52,11 +65,12 @@ void DrmPipeline::forceLegacyModeset()
 
 DrmPipeline::Error DrmPipeline::legacyModeset()
 {
-    const auto buffer = m_pending.primaryLayer->currentBuffer();
+    const auto primary = findLayer(m_pending.layers, OutputLayerType::Primary);
+    const auto buffer = primary->currentBuffer();
     if (!buffer) {
         return Error::InvalidArguments;
     }
-    if (m_pending.primaryLayer->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    if (primary->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, nullptr);
@@ -104,7 +118,10 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), 0, 0, 0);
     }
     if (activePending()) {
-        if (!m_pending.primaryLayer->colorPipeline().isIdentity() || !m_pending.cursorLayer->colorPipeline().isIdentity()) {
+        const bool colorTransforms = std::ranges::any_of(m_pending.layers, [](DrmPipelineLayer *layer) {
+            return !layer->colorPipeline().isIdentity();
+        });
+        if (colorTransforms) {
             // while it's technically possible to set CRTC color management properties,
             // it may result in glitches
             return DrmPipeline::Error::InvalidArguments;
@@ -158,7 +175,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         if (m_connector->maxBpc.isValid()) {
             m_connector->maxBpc.setPropertyLegacy(8);
         }
-        setCursorLegacy();
+        setCursorLegacy(findLayer(m_pending.layers, OutputLayerType::CursorOnly));
     }
     if (!m_connector->dpms.setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
@@ -199,11 +216,11 @@ DrmPipeline::Error DrmPipeline::setLegacyGamma()
     return DrmPipeline::Error::None;
 }
 
-bool DrmPipeline::setCursorLegacy()
+bool DrmPipeline::setCursorLegacy(DrmPipelineLayer *layer)
 {
-    const auto bo = cursorLayer()->currentBuffer();
+    const auto bo = layer->currentBuffer();
     uint32_t handle = 0;
-    if (bo && bo->buffer() && cursorLayer()->isEnabled()) {
+    if (bo && bo->buffer() && layer->isEnabled()) {
         const DmaBufAttributes *attributes = bo->buffer()->dmabufAttributes();
         if (drmPrimeFDToHandle(gpu()->fd(), attributes->fd[0].get(), &handle) != 0) {
             qCWarning(KWIN_DRM) << "drmPrimeFDToHandle() failed";
@@ -214,13 +231,13 @@ bool DrmPipeline::setCursorLegacy()
     struct drm_mode_cursor2 arg = {
         .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
         .crtc_id = m_pending.crtc->id(),
-        .x = int32_t(m_pending.cursorLayer->targetRect().x()),
-        .y = int32_t(m_pending.cursorLayer->targetRect().y()),
+        .x = int32_t(layer->targetRect().x()),
+        .y = int32_t(layer->targetRect().y()),
         .width = (uint32_t)gpu()->cursorSize().width(),
         .height = (uint32_t)gpu()->cursorSize().height(),
         .handle = handle,
-        .hot_x = int32_t(m_pending.cursorLayer->hotspot().x()),
-        .hot_y = int32_t(m_pending.cursorLayer->hotspot().y()),
+        .hot_x = int32_t(layer->hotspot().x()),
+        .hot_y = int32_t(layer->hotspot().y()),
     };
     const int ret = drmIoctl(gpu()->fd(), DRM_IOCTL_MODE_CURSOR2, &arg);
 
