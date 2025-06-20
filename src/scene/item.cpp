@@ -631,6 +631,13 @@ void Item::removeEffect()
     m_effectCount--;
 }
 
+bool Item::isAncestorOf(const Item *item) const
+{
+    return std::ranges::any_of(m_childItems, [item](const Item *child) {
+        return child == item || child->isAncestorOf(item);
+    });
+}
+
 } // namespace KWin
 
 #include "moc_item.cpp"

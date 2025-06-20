@@ -142,6 +142,8 @@ public:
     void addEffect();
     void removeEffect();
 
+    bool isAncestorOf(const Item *item) const;
+
 Q_SIGNALS:
     void childAdded(Item *item);
     /**

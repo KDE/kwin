@@ -264,8 +264,8 @@ void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer, OutputLayer *ou
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
     if ((vrr || tearing) && workspace() && workspace()->activeWindow() && d->output) {
-        Window *const activeWindow = workspace()->activeWindow();
-        if ((item || layer || outputLayer) && activeWindowControlsVrrRefreshRate() && item != activeWindow->surfaceItem()) {
+        SurfaceItem *const surfaceItem = workspace()->activeWindow()->surfaceItem();
+        if ((item || layer || outputLayer) && activeWindowControlsVrrRefreshRate() && item != surfaceItem && !surfaceItem->isAncestorOf(item)) {
             d->delayedVrrTimer.start();
             return;
         }
