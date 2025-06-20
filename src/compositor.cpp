@@ -725,9 +725,12 @@ void Compositor::removeOutput(Output *output)
     m_primaryViews.erase(output->renderLoop());
 }
 
-static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type)
+static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type, std::optional<int> minZPos)
 {
-    const auto it = std::ranges::find_if(layers, [type](OutputLayer *layer) {
+    const auto it = std::ranges::find_if(layers, [type, minZPos](OutputLayer *layer) {
+        if (minZPos && layer->zpos() < *minZPos) {
+            return false;
+        }
         return layer->type() == type;
     });
     return it == layers.end() ? nullptr : *it;
@@ -736,7 +739,7 @@ static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerT
 void Compositor::assignOutputLayers(Output *output)
 {
     const auto layers = m_backend->compatibleOutputLayers(output);
-    const auto primaryLayer = findLayer(layers, OutputLayerType::Primary);
+    const auto primaryLayer = findLayer(layers, OutputLayerType::Primary, std::nullopt);
     Q_ASSERT(primaryLayer);
     auto &sceneView = m_primaryViews[output->renderLoop()];
     if (sceneView) {
@@ -745,12 +748,12 @@ void Compositor::assignOutputLayers(Output *output)
         sceneView = std::make_unique<SceneView>(m_scene.get(), output, primaryLayer);
     }
 
-    auto cursorLayer = findLayer(layers, OutputLayerType::CursorOnly);
+    auto cursorLayer = findLayer(layers, OutputLayerType::CursorOnly, primaryLayer->zpos() + 1);
     if (!cursorLayer) {
-        cursorLayer = findLayer(layers, OutputLayerType::EfficientOverlay);
+        cursorLayer = findLayer(layers, OutputLayerType::EfficientOverlay, primaryLayer->zpos() + 1);
     }
     if (!cursorLayer) {
-        cursorLayer = findLayer(layers, OutputLayerType::GenericLayer);
+        cursorLayer = findLayer(layers, OutputLayerType::GenericLayer, primaryLayer->zpos() + 1);
     }
     if (cursorLayer && !s_forceSoftwareCursor) {
         auto &cursorView = m_cursorViews[output->renderLoop()];
