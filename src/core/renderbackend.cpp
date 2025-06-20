@@ -158,11 +158,6 @@ void OutputFrame::setArtificialHdrHeadroom(double edr)
     m_artificialHdrHeadroom = edr;
 }
 
-OutputLayer *RenderBackend::cursorLayer(Output *output)
-{
-    return nullptr;
-}
-
 bool RenderBackend::checkGraphicsReset()
 {
     return false;

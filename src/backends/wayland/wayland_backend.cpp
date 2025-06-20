@@ -512,8 +512,14 @@ std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {
-        const auto primaryLayer = Compositor::self()->backend()->primaryLayer(output);
-        if (static_cast<WaylandLayer *>(primaryLayer)->surface() == nativeSurface) {
+        const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+        const bool isALayer = std::ranges::any_of(layers, [nativeSurface](OutputLayer *layer) {
+            if (layer->type() == OutputLayerType::CursorOnly) {
+                return false;
+            }
+            return static_cast<WaylandLayer *>(layer)->surface() == nativeSurface;
+        });
+        if (isALayer) {
             return output;
         }
         if (output->surface() == nativeSurface) {

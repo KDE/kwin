@@ -17,6 +17,7 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_egl_layer.h"
+#include "drm_virtual_output.h"
 // system
 #include <drm_fourcc.h>
 #include <gbm.h>
@@ -37,12 +38,6 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
 EglGbmBackend::~EglGbmBackend()
 {
     m_backend->releaseBuffers();
-    const auto outputs = m_backend->outputs();
-    for (const auto output : outputs) {
-        if (auto drmOutput = dynamic_cast<DrmOutput *>(output)) {
-            drmOutput->pipeline()->setLayers(nullptr, nullptr);
-        }
-    }
     m_contexts.clear();
     cleanup();
     m_backend->setRenderBackend(nullptr);
@@ -141,14 +136,13 @@ DrmDevice *EglGbmBackend::drmDevice() const
     return gpu()->drmDevice();
 }
 
-OutputLayer *EglGbmBackend::primaryLayer(Output *output)
+QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(Output *output)
 {
-    return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
-}
-
-OutputLayer *EglGbmBackend::cursorLayer(Output *output)
-{
-    return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
+    if (auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
+        return {virtualOutput->primaryLayer()};
+    } else {
+        return static_cast<DrmOutput *>(output)->pipeline()->gpu()->compatibleOutputLayers(output);
+    }
 }
 
 std::unique_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPlane *plane)

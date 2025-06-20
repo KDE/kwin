@@ -229,14 +229,9 @@ void X11WindowedEglBackend::init()
     }
 }
 
-OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)
+QList<OutputLayer *> X11WindowedEglBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].primaryLayer.get();
-}
-
-OutputLayer *X11WindowedEglBackend::cursorLayer(Output *output)
-{
-    return m_outputs[output].cursorLayer.get();
+    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
 }
 
 } // namespace
