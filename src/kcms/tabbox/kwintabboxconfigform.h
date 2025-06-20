@@ -107,7 +107,7 @@ private:
     TabBox::ShortcutSettings *m_shortcuts = nullptr;
     bool m_showDefaultIndicator = false;
 
-    bool m_isHighlightWindowsEnabled = true;
+    bool m_isHighlightWindowsEnabled = false;
     Ui::KWinTabBoxConfigForm *ui;
 };
 

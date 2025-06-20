@@ -38,7 +38,7 @@
            <default code="true">TabBoxConfig::defaultShowTabBox()</default>
        </entry>
        <entry key="HighlightWindows" type="Bool">
-           <default code="true">TabBoxConfig::defaultHighlightWindow()</default>
+           <default code="false">TabBoxConfig::defaultHighlightWindow()</default>
        </entry>
     </group>
 </kcfg>

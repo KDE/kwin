@@ -275,7 +275,7 @@ public:
     }
     static bool defaultHighlightWindow()
     {
-        return true;
+        return false;
     }
     static QString defaultLayoutName()
     {
