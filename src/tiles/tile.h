@@ -31,6 +31,7 @@ class KWIN_EXPORT Tile : public QObject
     Q_PROPERTY(QRectF absoluteGeometry READ absoluteGeometry NOTIFY absoluteGeometryChanged)
     Q_PROPERTY(QRectF absoluteGeometryInScreen READ absoluteGeometryInScreen NOTIFY absoluteGeometryChanged)
     Q_PROPERTY(qreal padding READ padding WRITE setPadding NOTIFY paddingChanged)
+    Q_PROPERTY(QSizeF minimumSize READ minimumSize WRITE setMinimumSize NOTIFY minimumSizeChanged)
     Q_PROPERTY(int positionInLayout READ row NOTIFY rowChanged)
     Q_PROPERTY(Tile *parent READ parentTile CONSTANT)
     Q_PROPERTY(QList<KWin::Tile *> tiles READ childTiles NOTIFY childTilesChanged)
@@ -96,6 +97,9 @@ public:
     qreal padding() const;
     void setPadding(qreal padding);
 
+    QSizeF minimumSize() const;
+    void setMinimumSize(const QSizeF &size);
+
     QuickTileMode quickTileMode() const;
     void setQuickTileMode(QuickTileMode mode);
 
@@ -133,11 +137,6 @@ public:
     Tile *parentTile() const;
     TileManager *manager() const;
 
-    static inline QSizeF minimumSize()
-    {
-        return s_minimumSize;
-    }
-
     void destroyChild(Tile *tile);
 
     template<class T>
@@ -155,6 +154,7 @@ Q_SIGNALS:
     void absoluteGeometryChanged();
     void windowGeometryChanged();
     void paddingChanged(qreal padding);
+    void minimumSizeChanged(const QSizeF &size);
     void rowChanged(int row);
     void isLayoutChanged(bool isLayout);
     void childTilesChanged();
@@ -176,7 +176,7 @@ protected:
     VirtualDesktop *m_desktop = nullptr;
     TileManager *m_tiling;
     QRectF m_relativeGeometry;
-    static QSizeF s_minimumSize;
+    QSizeF m_minimumSize = QSizeF(0.15, 0.15);
     QuickTileMode m_quickTileMode = QuickTileFlag::None;
     qreal m_padding = 4.0;
 };

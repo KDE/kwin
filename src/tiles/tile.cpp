@@ -20,8 +20,6 @@
 namespace KWin
 {
 
-QSizeF Tile::s_minimumSize = QSizeF(0.15, 0.15);
-
 Tile::Tile(TileManager *tiling, Tile *parent)
     : QObject(parent)
     , m_parentTile(parent)
@@ -29,6 +27,7 @@ Tile::Tile(TileManager *tiling, Tile *parent)
 {
     if (m_parentTile) {
         m_padding = m_parentTile->padding();
+        m_minimumSize = m_parentTile->m_minimumSize;
         m_desktop = m_parentTile->desktop();
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
@@ -125,8 +124,8 @@ void Tile::setGeometryFromAbsolute(const QRectF &geom)
 void Tile::setRelativeGeometry(const QRectF &geom)
 {
     QRectF constrainedGeom = geom;
-    constrainedGeom.setWidth(std::max(constrainedGeom.width(), s_minimumSize.width()));
-    constrainedGeom.setHeight(std::max(constrainedGeom.height(), s_minimumSize.height()));
+    constrainedGeom.setWidth(std::max(constrainedGeom.width(), m_minimumSize.width()));
+    constrainedGeom.setHeight(std::max(constrainedGeom.height(), m_minimumSize.height()));
 
     if (m_relativeGeometry == constrainedGeom) {
         return;
@@ -253,6 +252,27 @@ void Tile::setPadding(qreal padding)
 
     Q_EMIT paddingChanged(padding);
     Q_EMIT windowGeometryChanged();
+}
+
+QSizeF Tile::minimumSize() const
+{
+    return m_minimumSize;
+}
+
+void Tile::setMinimumSize(const QSizeF &size)
+{
+    QSizeF clampedSize = size;
+    clampedSize.setWidth(std::clamp(size.width(), 0.0, 1.0));
+    clampedSize.setHeight(std::clamp(size.height(), 0.0, 1.0));
+
+    if (m_minimumSize == clampedSize) {
+        return;
+    }
+
+    m_minimumSize = clampedSize;
+
+    setRelativeGeometry(m_relativeGeometry);
+    Q_EMIT minimumSizeChanged(clampedSize);
 }
 
 QuickTileMode Tile::quickTileMode() const
