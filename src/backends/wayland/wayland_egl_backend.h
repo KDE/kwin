@@ -39,7 +39,7 @@ public:
     ~WaylandEglPrimaryLayer() override;
 
     GLFramebuffer *fbo() const;
-    std::shared_ptr<GLTexture> texture() const;
+    std::pair<std::shared_ptr<GLTexture>, ColorDescription> texture() const override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
@@ -100,10 +100,7 @@ public:
     DrmDevice *drmDevice() const override;
 
     void init() override;
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
-
-    std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(KWin::Output *output) const override;
+    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
 
 private:
     bool initializeEgl();

@@ -76,7 +76,7 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
+    bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
     void init(const QSize &pixelSize, qreal scale, bool fullscreen);
 
