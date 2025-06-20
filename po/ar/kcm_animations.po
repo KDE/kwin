@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-25 00:43+0000\n"
+"POT-Creation-Date: 2025-06-20 02:33+0000\n"
 "PO-Revision-Date: 2025-04-28 17:44+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -109,7 +109,7 @@ msgctxt ""
 msgid "%1:"
 msgstr "%1:"
 
-#: ui/main.qml:224
+#: ui/main.qml:225
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"
