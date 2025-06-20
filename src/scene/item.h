@@ -146,6 +146,8 @@ public:
 
     virtual void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
+    bool isAncestorOf(const Item *item) const;
+
 Q_SIGNALS:
     void childAdded(Item *item);
     /**

@@ -643,6 +643,13 @@ void Item::framePainted(Output *output, OutputFrame *frame, std::chrono::millise
     }
 }
 
+bool Item::isAncestorOf(const Item *item) const
+{
+    return std::ranges::any_of(m_childItems, [item](const Item *child) {
+        return child == item || child->isAncestorOf(item);
+    });
+}
+
 void Item::handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
 }
