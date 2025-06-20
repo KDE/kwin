@@ -109,7 +109,7 @@ protected:
     std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;
-    std::unordered_map<RenderLoop *, std::unique_ptr<ItemTreeView>> m_cursorViews;
+    std::unordered_map<RenderLoop *, std::unordered_map<OutputLayer *, std::unique_ptr<ItemTreeView>>> m_overlayViews;
     std::unordered_map<RenderLoop *, bool> m_brokenCursors;
 };
 
