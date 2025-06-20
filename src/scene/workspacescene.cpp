@@ -55,6 +55,7 @@
 #include "scene/workspacescene.h"
 #include "compositor.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
@@ -179,6 +180,22 @@ struct ClipCorner
     BorderRadius radius;
 };
 
+static void maybePushCorners(Item *item, QStack<ClipCorner> &corners)
+{
+    if (!item->borderRadius().isNull()) {
+        corners.push({
+            .box = item->rect(),
+            .radius = item->borderRadius(),
+        });
+    } else if (!corners.isEmpty()) {
+        const auto &top = corners.top();
+        corners.push({
+            .box = item->transform().inverted().mapRect(top.box.translated(-item->position())),
+            .radius = top.radius,
+        });
+    }
+}
+
 static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded, QStack<ClipCorner> &corners)
 {
     if (item->opacity() != 1.0 || item->hasEffects()) {
@@ -214,18 +231,7 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         }
     }
 
-    if (!item->borderRadius().isNull()) {
-        corners.push({
-            .box = item->rect(),
-            .radius = item->borderRadius(),
-        });
-    } else if (!corners.isEmpty()) {
-        const auto &top = corners.top();
-        corners.push({
-            .box = item->transform().inverted().mapRect(top.box.translated(-item->position())),
-            .radius = top.radius,
-        });
-    }
+    maybePushCorners(item, corners);
     auto cleanupCorners = qScopeGuard([&corners]() {
         if (!corners.isEmpty()) {
             corners.pop();
@@ -277,6 +283,120 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
             if (regionActuallyContains(occlusion, painted_screen->geometry())) {
                 return ret;
             }
+        }
+    }
+    return ret;
+}
+
+static QRect mapToView(SceneView *view, Item *item, const QRectF &itemLocal)
+{
+    const QRectF localLogical = item->mapToScene(itemLocal).translated(-view->viewport().topLeft());
+    return snapToPixelGridF(scaledRect(localLogical, view->scale())).toRect();
+}
+
+static QRegion mapToView(SceneView *view, Item *item, const QRegion &itemLocal)
+{
+    QRegion ret;
+    for (const QRectF local : itemLocal) {
+        ret |= mapToView(view, item, local);
+    }
+    return ret;
+}
+
+static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxCount, QRegion &occupied, QRegion &opaque, QList<SurfaceItem *> &ret, QStack<ClipCorner> &corners)
+{
+    if (!item || !item->isVisible()) {
+        return true;
+    }
+    if (item->hasEffects()) {
+        // can't put this item or any children on an overlay
+        // if an effect transforms the window geometry, it should
+        // inhibit direct scanout anyways, so this *should* be safe
+        occupied += mapToView(view, item, item->boundingRect());
+        return true;
+    }
+    maybePushCorners(item, corners);
+    auto cleanupCorners = qScopeGuard([&corners]() {
+        if (!corners.isEmpty()) {
+            corners.pop();
+        }
+    });
+
+    const QList<Item *> children = item->sortedChildItems();
+    auto it = children.rbegin();
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        if (child->z() < 0) {
+            break;
+        }
+        if (!findOverlayCandidates(view, child, maxCount, occupied, opaque, ret, corners)) {
+            return false;
+        }
+    }
+
+    // for the Item to be possibly relevant for overlays, it needs to
+    // - be a SurfaceItem (for now at least)
+    // - not be empty
+    // - be the topmost item in the relevant screen area
+    // - regularly get updates
+    // - use dmabufs
+    // - not have any surface-wide opacity (for now)
+    // - not be entirely covered by other opaque windows
+    SurfaceItem *surfaceItem = dynamic_cast<SurfaceItem *>(item);
+    const QRect deviceRect = mapToView(view, item, item->rect());
+    if (surfaceItem
+        && !surfaceItem->rect().isEmpty()
+        && (corners.isEmpty() || !corners.top().radius.clips(item->rect(), corners.top().box))
+        && !occupied.intersects(deviceRect)
+        && surfaceItem->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 20
+        && surfaceItem->buffer()->dmabufAttributes()
+        // TODO make the compositor handle item opacity as well
+        && surfaceItem->opacity() == 1.0
+        && !regionActuallyContains(opaque, deviceRect)) {
+        ret.push_back(surfaceItem);
+        if (ret.size() > maxCount) {
+            // If we have to repaint the primary plane anyways, it's not going to provide an efficiency
+            // or latency improvement to put some but not all quickly updating surfaces on overlays,
+            // at least not with the current way we use them.
+            return false;
+        }
+    } else {
+        occupied += deviceRect;
+    }
+    opaque += mapToView(view, item, item->opaque());
+
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        if (!findOverlayCandidates(view, child, maxCount, occupied, opaque, ret, corners)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+QList<SurfaceItem *> WorkspaceScene::overlayCandidates(ssize_t maxCount) const
+{
+    if (effects->blocksDirectScanout()) {
+        return {};
+    }
+    QRegion occupied;
+    QRegion opaque;
+    QList<SurfaceItem *> ret;
+    QStack<ClipCorner> cornerStack;
+    const auto overlayItems = m_overlayItem->sortedChildItems();
+    for (Item *item : overlayItems | std::views::reverse) {
+        // the cursor is currently handled separately by the compositor
+        if (item == cursorItem() && !painted_delegate->shouldRenderItem(item)) {
+            continue;
+        }
+        if (!findOverlayCandidates(painted_delegate, item, maxCount, occupied, opaque, ret, cornerStack)) {
+            return {};
+        }
+    }
+    const auto items = m_containerItem->sortedChildItems();
+    for (Item *item : items | std::views::reverse) {
+        if (!findOverlayCandidates(painted_delegate, item, maxCount, occupied, opaque, ret, cornerStack)) {
+            return {};
         }
     }
     return ret;

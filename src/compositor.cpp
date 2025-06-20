@@ -32,6 +32,7 @@
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -462,7 +463,57 @@ static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerT
     return it == layers.end() ? nullptr : *it;
 }
 
-static const bool s_forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
+static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
+static const bool s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVERLAYS").value_or(PROJECT_VERSION_PATCH >= 80);
+
+/**
+ * items and layers need to be sorted top to bottom
+ */
+static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> items, std::span<OutputLayer *const> layers)
+{
+    if (layers.empty() || items.empty() || !s_enableOverlays) {
+        return {};
+    }
+    std::unordered_map<SurfaceItem *, OutputLayer *> ret;
+    auto layerIt = layers.begin();
+    auto itemIt = items.begin();
+    int zpos = (*layerIt)->maxZpos();
+    for (; itemIt != items.end();) {
+        SurfaceItem *item = *itemIt;
+        const QRectF sceneRect = item->mapToScene(item->rect());
+        if (sceneRect.contains(sceneView->viewport())) {
+            // leave fullscreen direct scanout to the primary plane
+            itemIt++;
+            continue;
+        }
+        if (layerIt == layers.end()) {
+            return {};
+        }
+        OutputLayer *layer = *layerIt;
+        if (layer->minZpos() > zpos) {
+            layerIt++;
+            continue;
+        }
+        if (!layer->recommendedSizes().isEmpty()) {
+            // it's likely that sizes other than the recommended ones won't work
+            const QRect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
+            if (!layer->recommendedSizes().contains(deviceRect.size())) {
+                layerIt++;
+                continue;
+            }
+        }
+        zpos = std::min(zpos - 1, layer->maxZpos());
+        layer->setZpos(zpos);
+        ret[item] = layer;
+        itemIt++;
+        layerIt++;
+    }
+    if (itemIt != items.end()) {
+        // not all items were assigned, we need to composite
+        return {};
+    }
+    return ret;
+}
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
@@ -520,6 +571,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     {
         RenderView *view;
         bool directScanout = false;
+        bool directScanoutOnly = false;
         QRegion surfaceDamage;
         uint32_t requiredAlphaBits;
     };
@@ -529,6 +581,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     layers.push_back(LayerData{
         .view = primaryView,
         .directScanout = false,
+        .directScanoutOnly = false,
         .surfaceDamage = QRegion{},
         .requiredAlphaBits = 0,
     });
@@ -560,9 +613,10 @@ void Compositor::composite(RenderLoop *renderLoop)
     // the primary output layer is currently always used for the main content
     unusedOutputLayers.removeOne(primaryView->layer());
 
+    OutputLayer *cursorLayer = nullptr;
     Item *cursorItem = m_scene->cursorItem();
-    if (!m_brokenCursors[renderLoop] && cursorItem->isVisible() && cursorItem->mapToScene(cursorItem->boundingRect()).intersects(output->geometryF())) {
-        OutputLayer *cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
+    if (!m_brokenCursors.contains(renderLoop) && cursorItem->isVisible() && cursorItem->mapToScene(cursorItem->boundingRect()).intersects(output->geometryF())) {
+        cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
         if (!cursorLayer) {
             cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::EfficientOverlay, primaryView->layer()->zpos() + 1);
         }
@@ -570,8 +624,8 @@ void Compositor::composite(RenderLoop *renderLoop)
             cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::GenericLayer, primaryView->layer()->zpos() + 1);
         }
         if (cursorLayer) {
-            auto &view = m_cursorViews[renderLoop];
-            if (!view || view->layer() != cursorLayer) {
+            auto &view = m_overlayViews[renderLoop][cursorLayer];
+            if (!view || view->item() != cursorItem) {
                 view = std::make_unique<ItemTreeView>(primaryView, cursorItem, output, cursorLayer);
                 connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [output, cursorView = view.get()]() {
                     // this just deals with moving the plane asynchronously, for improved latency.
@@ -608,20 +662,44 @@ void Compositor::composite(RenderLoop *renderLoop)
             layers.push_back(LayerData{
                 .view = view.get(),
                 .directScanout = false,
+                .directScanoutOnly = false,
                 .surfaceDamage = QRegion{},
                 .requiredAlphaBits = 8,
             });
             cursorLayer->setZpos(cursorLayer->maxZpos());
             unusedOutputLayers.removeOne(cursorLayer);
-        } else {
-            m_cursorViews.erase(renderLoop);
         }
-    } else {
-        m_cursorViews.erase(renderLoop);
+    }
+
+    QList<OutputLayer *> overlayLayers = unusedOutputLayers | std::views::filter([primaryView, cursorLayer](OutputLayer *layer) {
+        return layer->type() != OutputLayerType::Primary
+            && layer->maxZpos() > primaryView->layer()->zpos()
+            && (!cursorLayer || layer->minZpos() < cursorLayer->zpos());
+    }) | std::ranges::to<QList>();
+    std::ranges::sort(overlayLayers, [](OutputLayer *left, OutputLayer *right) {
+        return left->maxZpos() > right->maxZpos();
+    });
+    const auto overlayCandidates = primaryView->overlayCandidates(overlayLayers.size());
+    const auto overlayAssignments = assignOverlays(primaryView, overlayCandidates, overlayLayers);
+    for (const auto &[item, layer] : overlayAssignments) {
+        auto &view = m_overlayViews[output->renderLoop()][layer];
+        if (!view || view->item() != item) {
+            view = std::make_unique<ItemTreeView>(primaryView, item, output, layer);
+        }
+        view->prePaint();
+        layers.push_back(LayerData{
+            .view = view.get(),
+            .directScanout = true,
+            .directScanoutOnly = true,
+            .surfaceDamage = layer->repaints(),
+            .requiredAlphaBits = 0,
+        });
+        unusedOutputLayers.removeOne(layer);
     }
 
     // disable entirely unused output layers
     for (OutputLayer *layer : unusedOutputLayers) {
+        m_overlayViews[renderLoop].erase(layer);
         layer->setEnabled(false);
         // TODO only add the layer to `toUpdate` when necessary
         toUpdate.push_back(layer);
@@ -631,7 +709,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     for (auto &layer : layers) {
         if (prepareDirectScanout(layer.view, output, frame)) {
             layer.directScanout = true;
-        } else if (prepareRendering(layer.view, output, layer.requiredAlphaBits)) {
+        } else if (!layer.directScanoutOnly && prepareRendering(layer.view, output, layer.requiredAlphaBits)) {
             layer.directScanout = false;
         } else {
             layer.view->layer()->setEnabled(false);
@@ -744,7 +822,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                     // this should only ever happen with legacy modesetting, where
                     // presentation can't be tested
                     qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
-                    m_brokenCursors[renderLoop] = true;
+                    m_brokenCursors.insert(renderLoop);
                 }
             } else {
                 qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
@@ -788,7 +866,6 @@ void Compositor::addOutput(Output *output)
     connect(output, &Output::outputLayersChanged, this, [this, output]() {
         assignOutputLayers(output);
     });
-    m_brokenCursors[output->renderLoop()] = false;
 }
 
 void Compositor::removeOutput(Output *output)
@@ -798,7 +875,7 @@ void Compositor::removeOutput(Output *output)
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     disconnect(output, &Output::outputLayersChanged, this, nullptr);
-    m_cursorViews.erase(output->renderLoop());
+    m_overlayViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
     m_brokenCursors.erase(output->renderLoop());
 }
@@ -823,7 +900,7 @@ void Compositor::assignOutputLayers(Output *output)
         });
     }
     // will be re-assigned in the next composite() pass
-    m_cursorViews.erase(output->renderLoop());
+    m_overlayViews.erase(output->renderLoop());
 }
 
 } // namespace KWin

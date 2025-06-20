@@ -77,6 +77,26 @@ QVector4D BorderRadius::toVector() const
     return QVector4D(m_topLeft, m_topRight, m_bottomLeft, m_bottomRight);
 }
 
+static double pointLength(const QPointF &point)
+{
+    return std::hypot(point.x(), point.y());
+}
+
+bool BorderRadius::clips(const QRectF &rect, const QRectF &bounds) const
+{
+    if (rect.x() < bounds.x() || rect.y() < bounds.y()) {
+        return true;
+    }
+    if (rect.right() > bounds.right() || rect.bottom() > bounds.bottom()) {
+        return true;
+    }
+    // rect is somewhere within bounds, now check the corners
+    return pointLength(rect.topLeft() - bounds.topLeft() - QPointF(m_topLeft, m_topLeft)) > m_topLeft
+        || pointLength(rect.topRight() - bounds.topRight() - QPointF(m_topRight, m_topRight)) > m_topRight
+        || pointLength(rect.bottomRight() - bounds.bottomRight() - QPointF(m_bottomRight, m_bottomRight)) > m_bottomRight
+        || pointLength(rect.bottomLeft() - bounds.bottomLeft() - QPointF(m_bottomLeft, m_bottomLeft)) > m_bottomLeft;
+}
+
 QRegion BorderRadius::clip(const QRegion &region, const QRectF &bounds) const
 {
     if (region.isEmpty()) {
