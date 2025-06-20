@@ -83,6 +83,7 @@ public:
     void setScale(qreal scale);
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    QList<SurfaceItem *> overlayCandidates(ssize_t maxCount) const;
     void frame(OutputFrame *frame) override;
     void prePaint() override;
     QRegion collectDamage() override;
@@ -178,6 +179,7 @@ public:
     void removeView(RenderView *view);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
+    virtual QList<SurfaceItem *> overlayCandidates(ssize_t maxCount) const = 0;
     virtual void prePaint(SceneView *delegate) = 0;
     virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;

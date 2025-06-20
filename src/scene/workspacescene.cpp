@@ -179,6 +179,22 @@ struct ClipCorner
     BorderRadius radius;
 };
 
+static void maybePushCorners(Item *item, QStack<ClipCorner> &corners)
+{
+    if (!item->borderRadius().isNull()) {
+        corners.push({
+            .box = item->rect(),
+            .radius = item->borderRadius(),
+        });
+    } else if (!corners.isEmpty()) {
+        const auto &top = corners.top();
+        corners.push({
+            .box = item->transform().inverted().mapRect(top.box.translated(-item->position())),
+            .radius = top.radius,
+        });
+    }
+}
+
 static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded, QStack<ClipCorner> &corners)
 {
     if (item->opacity() != 1.0 || item->hasEffects()) {
@@ -214,18 +230,7 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         }
     }
 
-    if (!item->borderRadius().isNull()) {
-        corners.push({
-            .box = item->rect(),
-            .radius = item->borderRadius(),
-        });
-    } else if (!corners.isEmpty()) {
-        const auto &top = corners.top();
-        corners.push({
-            .box = item->transform().inverted().mapRect(top.box.translated(-item->position())),
-            .radius = top.radius,
-        });
-    }
+    maybePushCorners(item, corners);
     auto cleanupCorners = qScopeGuard([&corners]() {
         if (!corners.isEmpty()) {
             corners.pop();
@@ -276,6 +281,96 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
             }
             if (regionActuallyContains(occlusion, painted_screen->geometry())) {
                 return ret;
+            }
+        }
+    }
+    return ret;
+}
+
+static void findOverlayCandidates(SceneView *delegate, Item *item, ssize_t maxCount, QRegion &occupied, QList<SurfaceItem *> &ret, QStack<ClipCorner> &corners)
+{
+    if (!item || !item->isVisible()) {
+        return;
+    }
+    if (item->hasEffects()) {
+        // can't put this item or any children on an overlay
+        // if an effect transforms the window geometry, it should
+        // inhibit direct scanout anyways, so this *should* be safe
+        occupied += item->mapToScene(item->boundingRect()).toAlignedRect();
+        return;
+    }
+    maybePushCorners(item, corners);
+    auto cleanupCorners = qScopeGuard([&corners]() {
+        if (!corners.isEmpty()) {
+            corners.pop();
+        }
+    });
+
+    // TODO make "occupied" be in device pixels instead?
+    const QList<Item *> children = item->sortedChildItems();
+    auto it = children.rbegin();
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        if (child->z() < 0) {
+            break;
+        }
+        findOverlayCandidates(delegate, child, maxCount, occupied, ret, corners);
+        if (ret.size() > maxCount) {
+            return;
+        }
+    }
+
+    // for the Item to be possibly relevant for overlays, it needs to
+    // - be a SurfaceItem (for now at least)
+    // - be the topmost item in the relevant screen area
+    // - regularly get updates
+    // - use dmabufs
+    // - be entirely opaque, as the Compositor is still missing checks for the blending space (FIXME)
+    SurfaceItem *surfaceItem = dynamic_cast<SurfaceItem *>(item);
+    if (surfaceItem
+        && (corners.isEmpty() || !corners.top().radius.clips(item->rect(), corners.top().box))
+        && !occupied.intersects(surfaceItem->mapToScene(surfaceItem->rect()).toAlignedRect())
+        && surfaceItem->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 20
+        && surfaceItem->buffer()->dmabufAttributes()
+        && surfaceItem->opacity() == 1.0
+        && regionActuallyContains(surfaceItem->opaque(), surfaceItem->rect().toAlignedRect())) {
+        ret.push_back(surfaceItem);
+        if (ret.size() > maxCount) {
+            return;
+        }
+    }
+    // TODO we should also allow overlays that overlap each other
+    // just needs special considerations from the compositor - if it disables
+    // the overlay on top, it also has to disable all overlapping overlays below it
+    occupied += item->mapToScene(item->rect()).toAlignedRect();
+
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        findOverlayCandidates(delegate, child, maxCount, occupied, ret, corners);
+        if (ret.size() > maxCount) {
+            return;
+        }
+    }
+}
+
+QList<SurfaceItem *> WorkspaceScene::overlayCandidates(ssize_t maxCount) const
+{
+    if (effects->blocksDirectScanout()) {
+        return {};
+    }
+    QRegion occupied;
+    QList<SurfaceItem *> ret;
+    QStack<ClipCorner> cornerStack;
+    for (const auto &data : std::as_const(m_paintContext.phase2Data) | std::views::reverse) {
+        Window *window = data.item->window();
+        if (window->isOnOutput(painted_screen) && window->opacity() > 0 && data.item->isVisible()) {
+            findOverlayCandidates(painted_delegate, data.item, maxCount, occupied, ret, cornerStack);
+            if (ret.size() > maxCount) {
+                // If we have to repaint the primary plane anyways, it's not going to provide an efficiency
+                // or latency improvement - at least not with the current way we use them.
+                // On drivers where atomic tests with multiple planes are slow, it may also cause us to
+                // switch between different overlay candidates frequently, causing dropped frames.
+                return {};
             }
         }
     }
