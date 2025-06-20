@@ -45,20 +45,18 @@ static OutputLayerType planeToLayerType(DrmPlane *plane, DrmPlane::TypeIndex typ
 
 DrmPipelineLayer::DrmPipelineLayer(DrmPlane *plane)
     : DrmOutputLayer(nullptr, planeToLayerType(plane, plane->type.enumValue()))
-    , m_type(plane->type.enumValue())
     , m_plane(plane)
 {
 }
 
 DrmPipelineLayer::DrmPipelineLayer(DrmPlane::TypeIndex type)
     : DrmOutputLayer(nullptr, planeToLayerType(nullptr, type))
-    , m_type(type)
 {
 }
 
-DrmPlane::TypeIndex DrmPipelineLayer::type() const
+DrmPlane *DrmPipelineLayer::plane() const
 {
-    return m_type;
+    return m_plane;
 }
 
 DrmPipeline *DrmPipelineLayer::pipeline() const
@@ -88,7 +86,7 @@ QHash<uint32_t, QList<uint64_t>> DrmPipelineLayer::supportedDrmFormats() const
 {
     if (m_plane) {
         return m_plane->formats();
-    } else if (m_type == DrmPlane::TypeIndex::Cursor) {
+    } else if (m_type == OutputLayerType::CursorOnly) {
         return s_legacyCursorFormats;
     } else {
         return s_legacyFormats;
@@ -108,7 +106,7 @@ QList<QSize> DrmPipelineLayer::recommendedSizes() const
 {
     if (m_plane) {
         return m_plane->recommendedSizes();
-    } else if (m_type == DrmPlane::TypeIndex::Cursor) {
+    } else if (m_type == OutputLayerType::CursorOnly) {
         return {gpu()->cursorSize()};
     } else {
         return {};

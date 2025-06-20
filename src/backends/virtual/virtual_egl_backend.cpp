@@ -160,9 +160,9 @@ void VirtualEglBackend::removeOutput(Output *output)
     m_outputs.erase(output);
 }
 
-OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
+QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].get();
+    return {m_outputs[output].get()};
 }
 
 } // namespace

@@ -28,6 +28,7 @@
 #include <QPainter>
 
 #include <drm_fourcc.h>
+#include <ranges>
 #include <xcb/dri3.h>
 #include <xcb/shm.h>
 #include <xcb/xinput.h>
@@ -344,10 +345,10 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
     return (pos - hostPosition() + internalPosition()) / scale();
 }
 
-bool X11WindowedOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+bool X11WindowedOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     // Xorg moves the cursor, there's nothing to do
-    return true;
+    return layer->type() == OutputLayerType::CursorOnly;
 }
 
 xcb_pixmap_t X11WindowedOutput::importDmaBufBuffer(const DmaBufAttributes *attributes)
@@ -449,9 +450,11 @@ bool X11WindowedOutput::testPresentation(const std::shared_ptr<OutputFrame> &fra
 
 bool X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
-    const auto cursorLayer = Compositor::self()->backend()->cursorLayer(this);
-    if (layersToUpdate.contains(cursorLayer)) {
-        if (cursorLayer->isEnabled()) {
+    auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
+        return layer->type() == OutputLayerType::CursorOnly;
+    });
+    if (!cursorLayers.empty()) {
+        if (cursorLayers.front()->isEnabled()) {
             xcb_xfixes_show_cursor(m_backend->connection(), m_window);
             // the cursor layers update the image on their own already
         } else {
