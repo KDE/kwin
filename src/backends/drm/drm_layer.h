@@ -28,6 +28,7 @@ class DrmOutputLayer : public OutputLayer
 {
 public:
     explicit DrmOutputLayer(Output *output, OutputLayerType type);
+    explicit DrmOutputLayer(Output *output, OutputLayerType type, int zpos);
     virtual ~DrmOutputLayer();
 
     virtual void releaseBuffers() = 0;
