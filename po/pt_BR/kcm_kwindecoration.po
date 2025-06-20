@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-02-04 16:14-0300\n"
+"PO-Revision-Date: 2025-06-19 11:43-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -24,13 +24,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.12.1\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgid "Window Decorations"
+#, kde-format
 msgid "Window menu"
-msgstr "Decorações de janela"
+msgstr "Menu da janela"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -191,20 +190,16 @@ msgid "Titlebar Buttons"
 msgstr "Botões da barra de título"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Fechar as janelas com um duplo clique no botão do menu"
+msgstr "Fechar as janelas com um duplo clique no botão do menu da janela"
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "Clique e segure no botão de menu para mostrar o menu."
+msgstr "Clique e segure no botão de menu da janela para mostrar o menu."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
