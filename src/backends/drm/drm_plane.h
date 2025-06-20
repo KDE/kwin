@@ -103,6 +103,7 @@ public:
     DrmProperty inFenceFd;
     DrmProperty sizeHints;
     DrmProperty inFormatsForTearing;
+    DrmProperty zpos;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;

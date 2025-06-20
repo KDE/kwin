@@ -16,6 +16,17 @@ OutputLayer::OutputLayer(Output *output, OutputLayerType type)
     : m_type(type)
     , m_output(output)
     , m_renderLoop(output ? output->renderLoop() : nullptr)
+    , m_zpos(type == OutputLayerType::Primary ? 0 : 1)
+{
+}
+
+OutputLayer::OutputLayer(Output *output, OutputLayerType type, int zpos, int minZpos, int maxZpos)
+    : m_type(type)
+    , m_output(output)
+    , m_renderLoop(output ? output->renderLoop() : nullptr)
+    , m_zpos(zpos)
+    , m_minZpos(minZpos)
+    , m_maxZpos(maxZpos)
 {
 }
 
@@ -203,6 +214,28 @@ bool OutputLayer::preparePresentationTest()
 void OutputLayer::setRequiredAlphaBits(uint32_t bits)
 {
     m_requiredAlphaBits = bits;
+}
+
+void OutputLayer::setZpos(int zpos)
+{
+    Q_ASSERT(zpos >= m_minZpos);
+    Q_ASSERT(zpos <= m_maxZpos);
+    m_zpos = zpos;
+}
+
+int OutputLayer::zpos() const
+{
+    return m_zpos;
+}
+
+int OutputLayer::minZpos() const
+{
+    return m_minZpos;
+}
+
+int OutputLayer::maxZpos() const
+{
+    return m_maxZpos;
 }
 
 QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff)

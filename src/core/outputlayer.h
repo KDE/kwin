@@ -60,6 +60,7 @@ class KWIN_EXPORT OutputLayer : public QObject
     Q_OBJECT
 public:
     explicit OutputLayer(Output *output, OutputLayerType type);
+    explicit OutputLayer(Output *output, OutputLayerType type, int zpos, int minZpos, int maxZpos);
 
     OutputLayerType type() const;
 
@@ -143,6 +144,11 @@ public:
      */
     void setRequiredAlphaBits(uint32_t bits);
 
+    void setZpos(int zpos);
+    int zpos() const;
+    int minZpos() const;
+    int maxZpos() const;
+
     static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff);
 
 Q_SIGNALS:
@@ -169,6 +175,9 @@ protected:
     uint32_t m_requiredAlphaBits = 0;
     bool m_repaintScheduled = false;
     RenderLoop *m_renderLoop = nullptr;
+    int m_zpos = 0;
+    int m_minZpos = 0;
+    int m_maxZpos = 0;
 };
 
 } // namespace KWin
