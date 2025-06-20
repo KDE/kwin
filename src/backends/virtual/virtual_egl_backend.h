@@ -33,7 +33,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
 
-    std::shared_ptr<GLTexture> texture() const;
+    std::pair<std::shared_ptr<GLTexture>, ColorDescription> texture() const override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
@@ -54,8 +54,7 @@ class VirtualEglBackend : public EglBackend
 public:
     VirtualEglBackend(VirtualBackend *b);
     ~VirtualEglBackend() override;
-    std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
-    OutputLayer *primaryLayer(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
     void init() override;
 
     VirtualBackend *backend() const;

@@ -1,3 +1,4 @@
+
 /*
     SPDX-FileCopyrightText: 2022 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
@@ -23,6 +24,7 @@ class SurfaceItem;
 class DrmDevice;
 class GraphicsBuffer;
 class OutputFrame;
+class GLTexture;
 
 struct OutputLayerBeginFrameInfo
 {
@@ -133,6 +135,8 @@ public:
     const ColorDescription &colorDescription() const;
     RenderingIntent renderIntent() const;
     void setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline);
+
+    virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> texture() const;
 
 Q_SIGNALS:
     void repaintScheduled();

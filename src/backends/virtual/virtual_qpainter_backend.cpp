@@ -100,9 +100,9 @@ GraphicsBufferAllocator *VirtualQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
+QList<OutputLayer *> VirtualQPainterBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].get();
+    return {m_outputs[output].get()};
 }
 }
 

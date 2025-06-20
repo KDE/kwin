@@ -126,14 +126,14 @@ bool VirtualEglGbmLayer::doesGbmSwapchainFit(EglSwapchain *swapchain) const
     return swapchain && swapchain->size() == m_output->modeSize();
 }
 
-std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> VirtualEglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
-        return m_eglBackend->importDmaBufAsTexture(*m_scanoutBuffer->dmabufAttributes());
+        return std::make_pair(m_eglBackend->importDmaBufAsTexture(*m_scanoutBuffer->dmabufAttributes()), colorDescription());
     } else if (m_currentSlot) {
-        return m_currentSlot->texture();
+        return std::make_pair(m_currentSlot->texture(), colorDescription());
     }
-    return nullptr;
+    return std::make_pair(nullptr, colorDescription());
 }
 
 bool VirtualEglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)

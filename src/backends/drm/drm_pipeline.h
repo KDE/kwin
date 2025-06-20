@@ -66,7 +66,7 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool updateCursor(std::optional<std::chrono::nanoseconds> allowedVrrDelay);
+    bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay);
 
     DrmConnector *connector() const;
     DrmGpu *gpu() const;
@@ -79,9 +79,8 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
-    void setLayers(DrmPipelineLayer *primaryLayer, DrmPipelineLayer *cursorLayer);
-    DrmPipelineLayer *primaryLayer() const;
-    DrmPipelineLayer *cursorLayer() const;
+    QList<DrmPipelineLayer *> layers() const;
+    void setLayers(const QList<DrmPipelineLayer *> &layers);
     std::chrono::nanoseconds presentationDeadline() const;
 
     DrmCrtc *crtc() const;
@@ -129,11 +128,11 @@ private:
     std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction::Type transferFunction) const;
 
     // legacy only
-    Error presentLegacy(const std::shared_ptr<OutputFrame> &frame);
+    Error presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
     Error legacyModeset();
     Error setLegacyGamma();
     Error applyPendingChangesLegacy();
-    bool setCursorLegacy();
+    bool setCursorLegacy(DrmPipelineLayer *layer);
     static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     // atomic modesetting only
@@ -169,8 +168,7 @@ private:
         bool wcg = false;
         uint32_t maxBpc = 10;
 
-        DrmPipelineLayer *primaryLayer = nullptr;
-        DrmPipelineLayer *cursorLayer = nullptr;
+        QList<DrmPipelineLayer *> layers;
     };
     // the state that is to be tested next
     State m_pending;

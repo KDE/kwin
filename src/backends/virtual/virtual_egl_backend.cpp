@@ -28,9 +28,9 @@ VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
 {
 }
 
-std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> VirtualEglLayer::texture() const
 {
-    return m_current->texture();
+    return std::make_pair(m_current->texture(), colorDescription());
 }
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
@@ -165,18 +165,9 @@ void VirtualEglBackend::removeOutput(Output *output)
     m_outputs.erase(output);
 }
 
-OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
+QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].get();
-}
-
-std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> VirtualEglBackend::textureForOutput(Output *output) const
-{
-    auto it = m_outputs.find(output);
-    if (it == m_outputs.end()) {
-        return {nullptr, ColorDescription::sRGB};
-    }
-    return std::make_pair(it->second->texture(), ColorDescription::sRGB);
+    return {m_outputs[output].get()};
 }
 
 } // namespace

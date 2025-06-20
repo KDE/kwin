@@ -888,7 +888,7 @@ std::optional<uint32_t> Output::minVrrRefreshRateHz() const
     return m_information.minVrrRefreshRateHz;
 }
 
-bool Output::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+bool Output::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     return false;
 }

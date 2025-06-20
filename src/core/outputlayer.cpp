@@ -192,6 +192,11 @@ bool OutputLayer::preparePresentationTest()
     return true;
 }
 
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> OutputLayer::texture() const
+{
+    return std::make_pair(nullptr, ColorDescription::sRGB);
+}
+
 } // namespace KWin
 
 #include "moc_outputlayer.cpp"

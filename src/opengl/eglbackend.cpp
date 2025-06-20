@@ -47,11 +47,6 @@ void EglBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglBackend::textureForOutput(Output *output) const
-{
-    return {nullptr, ColorDescription::sRGB};
-}
-
 bool EglBackend::checkGraphicsReset()
 {
     const auto context = openglContext();
