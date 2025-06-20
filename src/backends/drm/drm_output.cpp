@@ -119,7 +119,7 @@ DrmLease *DrmOutput::lease() const
     return m_lease;
 }
 
-bool DrmOutput::shouldDisableCursorPlane() const
+bool DrmOutput::shouldDisableNonPrimaryPlanes() const
 {
     // The kernel rejects async commits that change anything but the primary plane FB_ID
     // This disables the hardware cursor, so it doesn't interfere with that
@@ -127,17 +127,17 @@ bool DrmOutput::shouldDisableCursorPlane() const
         || m_pipeline->amdgpuVrrWorkaroundActive();
 }
 
-bool DrmOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+bool DrmOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     if (!m_pipeline) {
         // this can happen when the output gets hot-unplugged
         // FIXME fix output lifetimes so that this doesn't happen anymore...
         return false;
     }
-    if (m_pipeline->gpu()->atomicModeSetting() && shouldDisableCursorPlane() && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
+    if (m_pipeline->gpu()->atomicModeSetting() && shouldDisableNonPrimaryPlanes() && layer->isEnabled()) {
         return false;
     }
-    return m_pipeline->updateCursor(allowedVrrDelay);
+    return m_pipeline->presentAsync(layer, allowedVrrDelay);
 }
 
 QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
@@ -337,10 +337,14 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
     m_desiredPresentationMode = frame->presentationMode();
+    const auto layers = m_pipeline->layers();
+    const bool nonPrimaryEnabled = std::ranges::any_of(layers, [](OutputLayer *layer) {
+        return layer->isEnabled() && layer->type() != OutputLayerType::Primary;
+    });
     if (m_gpu->needsModeset()) {
         // modesets should be done with only the primary plane
         // as additional planes may mean we can't power all outputs
-        if (cursorLayer()->isEnabled()) {
+        if (nonPrimaryEnabled) {
             return false;
         }
         // the atomic test for the modeset has already been done before
@@ -348,8 +352,8 @@ bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
         return true;
     }
     m_pipeline->setPresentationMode(frame->presentationMode());
-    if (m_pipeline->cursorLayer()->isEnabled()) {
-        // the cursor plane needs to be disabled before we enable tearing; see DrmOutput::updateCursorLayer
+    if (nonPrimaryEnabled) {
+        // the cursor plane needs to be disabled before we enable tearing; see DrmOutput::presentAsync
         if (frame->presentationMode() == PresentationMode::AdaptiveAsync) {
             m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
         } else if (frame->presentationMode() == PresentationMode::Async) {
@@ -382,8 +386,12 @@ bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::s
         success = true;
     } else {
         m_pipeline->setPresentationMode(frame->presentationMode());
-        if (m_pipeline->cursorLayer()->isEnabled()) {
-            // the cursor plane needs to be disabled before we enable tearing; see DrmOutput::updateCursorLayer
+        const auto layers = m_pipeline->layers();
+        const bool nonPrimaryEnabled = std::ranges::any_of(layers, [](OutputLayer *layer) {
+            return layer->isEnabled() && layer->type() != OutputLayerType::Primary;
+        });
+        if (nonPrimaryEnabled) {
+            // the cursor plane needs to be disabled before we enable tearing; see DrmOutput::presentAsync
             if (frame->presentationMode() == PresentationMode::AdaptiveAsync) {
                 m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
             } else if (frame->presentationMode() == PresentationMode::Async) {
@@ -665,21 +673,6 @@ void DrmOutput::revertQueuedChanges()
     m_pipeline->revertPendingChanges();
 }
 
-DrmOutputLayer *DrmOutput::primaryLayer() const
-{
-    return m_pipeline->primaryLayer();
-}
-
-DrmOutputLayer *DrmOutput::cursorLayer() const
-{
-    if (!m_pipeline) {
-        // this can happen when the output gets hot-unplugged
-        // FIXME fix output lifetimes so that this doesn't happen anymore...
-        return nullptr;
-    }
-    return m_pipeline->cursorLayer();
-}
-
 bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
     if (rgb != m_sRgbChannelFactors) {
@@ -722,7 +715,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
             || !colorPipeline.isIdentity();
         return;
     }
-    if (!m_pipeline->activePending() || !primaryLayer()) {
+    if (!m_pipeline->activePending() || m_pipeline->layers().empty()) {
         return;
     }
     if (usesICC) {
@@ -767,8 +760,10 @@ void DrmOutput::maybeScheduleRepaints(const State &next)
 {
     // TODO move the output layers to Output, and have it take care of this when updating State
     if (next.blendingColor != m_state.blendingColor || next.layerBlendingColor != m_state.layerBlendingColor) {
-        primaryLayer()->addRepaint(infiniteRegion());
-        cursorLayer()->addRepaint(infiniteRegion());
+        const auto layers = m_pipeline->layers();
+        for (const auto &layer : layers) {
+            layer->addRepaint(infiniteRegion());
+        }
     }
 }
 

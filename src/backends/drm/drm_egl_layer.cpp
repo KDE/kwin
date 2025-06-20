@@ -54,7 +54,7 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeI
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 {
-    if (m_type == DrmPlane::TypeIndex::Cursor && drmOutput()->shouldDisableCursorPlane()) {
+    if (m_type != OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
         return std::nullopt;
     }
     // note that this allows blending to happen in sRGB or PQ encoding with the cursor plane.
@@ -84,16 +84,16 @@ bool EglGbmLayer::preparePresentationTest()
     return m_surface.renderTestBuffer(targetRect().size(), supportedDrmFormats(), drmOutput()->colorPowerTradeoff()) != nullptr;
 }
 
-std::shared_ptr<GLTexture> EglGbmLayer::texture() const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
         const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
         if (ret) {
             ret->setContentTransform(offloadTransform().combine(OutputTransform::FlipY));
         }
-        return ret;
+        return std::make_pair(ret, colorDescription());
     } else {
-        return m_surface.texture();
+        return std::make_pair(m_surface.texture(), m_surface.colorDescription());
     }
 }
 

@@ -33,6 +33,7 @@
 #include <QPainter>
 
 #include <cmath>
+#include <ranges>
 
 namespace KWin
 {
@@ -276,8 +277,10 @@ static constexpr struct wp_presentation_feedback_listener s_presentationListener
 
 bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
-    auto cursorLayer = Compositor::self()->backend()->cursorLayer(this);
-    if (m_hasPointerLock && cursorLayer->isEnabled()) {
+    auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
+        return layer->type() == OutputLayerType::CursorOnly;
+    });
+    if (m_hasPointerLock && std::ranges::any_of(cursorLayers, &OutputLayer::isEnabled)) {
         return false;
     }
     return true;
@@ -285,15 +288,20 @@ bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 
 bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
-    auto cursorLayer = Compositor::self()->backend()->cursorLayer(this);
-    if (layersToUpdate.contains(cursorLayer)) {
-        if (m_hasPointerLock && cursorLayer->isEnabled()) {
+    auto cursorLayers = layersToUpdate | std::views::filter([](OutputLayer *layer) {
+        return layer->type() == OutputLayerType::CursorOnly;
+    });
+    if (!cursorLayers.empty()) {
+        if (m_hasPointerLock && cursorLayers.front()->isEnabled()) {
             return false;
         }
-        m_cursor->setEnabled(cursorLayer->isEnabled());
+        m_cursor->setEnabled(cursorLayers.front()->isEnabled());
         // TODO also move the actual cursor image update here too...
     }
-    if (!layersToUpdate.contains(Compositor::self()->backend()->primaryLayer(this))) {
+    const bool primaryupdate = std::ranges::any_of(layersToUpdate, [](OutputLayer *layer) {
+        return layer->type() == OutputLayerType::Primary;
+    });
+    if (!primaryupdate) {
         // we still need to commit the surface anyways, to get presentation feedback
         if (auto presentationTime = m_backend->display()->presentationTime()) {
             m_presentationFeedback = wp_presentation_feedback(presentationTime, *m_surface);
@@ -408,10 +416,10 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool WaylandOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+bool WaylandOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     // the host compositor moves the cursor, there's nothing to do
-    return true;
+    return layer->type() == OutputLayerType::CursorOnly;
 }
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale, bool fullscreen)
