@@ -59,6 +59,7 @@ class KWIN_EXPORT OutputLayer : public QObject
     Q_OBJECT
 public:
     explicit OutputLayer(Output *output, OutputLayerType type);
+    explicit OutputLayer(Output *output, OutputLayerType type, int zpos);
 
     OutputLayerType type() const;
 
@@ -138,6 +139,8 @@ public:
 
     virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> texture() const;
 
+    int zpos() const;
+
 Q_SIGNALS:
     void repaintScheduled();
 
@@ -161,6 +164,7 @@ protected:
     QPointer<SurfaceItem> m_scanoutCandidate;
     QPointer<Output> m_output;
     bool m_repaintScheduled = false;
+    int m_zpos = 0;
 };
 
 } // namespace KWin
