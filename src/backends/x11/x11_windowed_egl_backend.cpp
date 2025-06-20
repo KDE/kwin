@@ -76,9 +76,9 @@ bool X11WindowedEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const
     return true;
 }
 
-std::shared_ptr<GLTexture> X11WindowedEglPrimaryLayer::texture() const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> X11WindowedEglPrimaryLayer::texture() const
 {
-    return m_buffer->texture();
+    return std::make_pair(m_buffer->texture(), colorDescription());
 }
 
 DrmDevice *X11WindowedEglPrimaryLayer::scanoutDevice() const
@@ -234,14 +234,9 @@ void X11WindowedEglBackend::init()
     }
 }
 
-OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)
+QList<OutputLayer *> X11WindowedEglBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].primaryLayer.get();
-}
-
-OutputLayer *X11WindowedEglBackend::cursorLayer(Output *output)
-{
-    return m_outputs[output].cursorLayer.get();
+    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
 }
 
 } // namespace

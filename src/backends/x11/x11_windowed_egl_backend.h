@@ -33,7 +33,7 @@ public:
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
-    std::shared_ptr<GLTexture> texture() const;
+    std::pair<std::shared_ptr<GLTexture>, ColorDescription> texture() const override;
 
 private:
     std::shared_ptr<EglSwapchain> m_swapchain;
@@ -79,8 +79,7 @@ public:
 
     void init() override;
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
 
 private:
     bool initializeEgl();

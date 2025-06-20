@@ -124,8 +124,7 @@ public:
 
     virtual bool checkGraphicsReset();
 
-    virtual OutputLayer *primaryLayer(Output *output) = 0;
-    virtual OutputLayer *cursorLayer(Output *output);
+    virtual QList<OutputLayer *> compatibleOutputLayers(Output *output) = 0;
 
     virtual DrmDevice *drmDevice() const;
 

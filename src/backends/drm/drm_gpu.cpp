@@ -24,6 +24,7 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_plane.h"
+#include "drm_virtual_output.h"
 
 #include <QFile>
 #include <algorithm>
@@ -445,7 +446,7 @@ void DrmGpu::releaseUnusedBuffers()
 {
     const auto isLayerUsed = [this](DrmPipelineLayer *layer) {
         return std::ranges::any_of(m_pipelines, [layer](const auto &pipeline) {
-            return layer == pipeline->primaryLayer() || layer == pipeline->cursorLayer();
+            return pipeline->layers().contains(layer);
         });
     };
     for (const auto &[plane, layer] : m_planeLayerMap) {
@@ -478,14 +479,19 @@ DrmPipeline::Error DrmGpu::testPipelines()
         }
         // reset all outputs to their most basic configuration (primary plane without scaling)
         // for the test, and set the target rects appropriately
-        const auto primary = pipeline->primaryLayer();
-        primary->setTargetRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
-        primary->setSourceRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
-        primary->setEnabled(true);
-        pipeline->cursorLayer()->setEnabled(false);
-        // ensure we have suitable buffers for the test
-        if (!pipeline->primaryLayer()->preparePresentationTest()) {
-            return DrmPipeline::Error::InvalidArguments;
+        const auto layers = pipeline->layers();
+        for (auto layer : layers) {
+            if (layer->type() == OutputLayerType::Primary) {
+                layer->setTargetRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
+                layer->setSourceRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
+                layer->setEnabled(true);
+                // ensure we have suitable buffers for the test
+                if (!layer->preparePresentationTest()) {
+                    return DrmPipeline::Error::InvalidArguments;
+                }
+            } else {
+                layer->setEnabled(false);
+            }
         }
     }
     QList<DrmPipeline *> inactivePipelines;
@@ -852,7 +858,7 @@ QSize DrmGpu::cursorSize() const
 void DrmGpu::releaseBuffers()
 {
     for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
-        pipeline->setLayers(nullptr, nullptr);
+        pipeline->setLayers({});
         pipeline->applyPendingChanges();
     }
     for (const auto &plane : std::as_const(m_planes)) {
@@ -888,11 +894,15 @@ void DrmGpu::assignOutputLayers()
 {
     if (m_atomicModeSetting) {
         for (DrmPipeline *pipeline : std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::crtc)) {
-            pipeline->setLayers(m_planeLayerMap[pipeline->crtc()->primaryPlane()].get(), m_planeLayerMap[pipeline->crtc()->cursorPlane()].get());
+            QList<DrmPipelineLayer *> layers = {m_planeLayerMap[pipeline->crtc()->primaryPlane()].get()};
+            if (pipeline->crtc()->cursorPlane()) {
+                layers.push_back(m_planeLayerMap[pipeline->crtc()->cursorPlane()].get());
+            }
+            pipeline->setLayers(layers);
         }
     } else {
         for (DrmPipeline *pipeline : std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::crtc)) {
-            pipeline->setLayers(m_legacyLayerMap[pipeline->crtc()].get(), m_legacyCursorLayerMap[pipeline->crtc()].get());
+            pipeline->setLayers({m_legacyLayerMap[pipeline->crtc()].get(), m_legacyCursorLayerMap[pipeline->crtc()].get()});
         }
     }
 }
@@ -997,6 +1007,16 @@ void DrmGpu::forgetBufferObject(QObject *buf)
 QString DrmGpu::driverName() const
 {
     return m_driverName;
+}
+
+QList<OutputLayer *> DrmGpu::compatibleOutputLayers(Output *output) const
+{
+    if (auto virt = qobject_cast<DrmVirtualOutput *>(output)) {
+        return {virt->primaryLayer()};
+    }
+    // TODO once dynamic ownership of layers is defined somehow,
+    // additionally return planes that aren't currently in use
+    return static_cast<DrmOutput *>(output)->pipeline()->layers() | std::ranges::to<QList<OutputLayer *>>();
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)
