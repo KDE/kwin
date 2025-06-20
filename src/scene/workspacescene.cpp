@@ -255,6 +255,82 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     return ret;
 }
 
+static void findOverlayCandidates(SceneView *delegate, Item *item, ssize_t maxCount, QRegion &occupied, QList<SurfaceItem *> &ret)
+{
+    if (!item || !item->isVisible()) {
+        return;
+    }
+    if (item->hasEffects()) {
+        // can't put this item or any children on an overlay
+        // if an effect transforms the window geometry, it should
+        // inhibit direct scanout anyways, so this *should* be safe
+        occupied += item->mapToScene(item->boundingRect()).toAlignedRect();
+        return;
+    }
+    // TODO make "occupied" be in device pixels instead?
+    const QList<Item *> children = item->sortedChildItems();
+    auto it = children.rbegin();
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        if (child->z() < 0) {
+            break;
+        }
+        findOverlayCandidates(delegate, child, maxCount, occupied, ret);
+        if (ret.size() == maxCount) {
+            return;
+        }
+    }
+    // for the Item to be possibly relevant for overlays, it needs to
+    // - be a SurfaceItem (for now at least)
+    // - be the topmost item in the relevant screen area
+    // - regularly get updates
+    // - use dmabufs
+    // - be entirely opaque, as the Compositor is still missing checks for the blending space (FIXME)
+    SurfaceItem *surfaceItem = dynamic_cast<SurfaceItem *>(item);
+    if (surfaceItem
+        && !occupied.intersects(surfaceItem->mapToScene(surfaceItem->rect()).toAlignedRect())
+        && surfaceItem->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 20
+        && surfaceItem->buffer()->dmabufAttributes()
+        && surfaceItem->opacity() == 1.0
+        && regionActuallyContains(surfaceItem->opaque(), surfaceItem->rect().toAlignedRect())) {
+        ret.push_back(surfaceItem);
+        if (ret.size() == maxCount) {
+            return;
+        }
+    }
+    // TODO we should also allow overlays that overlap each other
+    // just needs special considerations from the compositor - if it disables
+    // the overlay on top, it also has to disable all overlapping overlays below it
+    occupied += item->mapToScene(item->rect()).toAlignedRect();
+
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
+        findOverlayCandidates(delegate, child, maxCount, occupied, ret);
+        if (ret.size() == maxCount) {
+            return;
+        }
+    }
+}
+
+QList<SurfaceItem *> WorkspaceScene::overlayCandidates(ssize_t maxCount) const
+{
+    if (effects->blocksDirectScanout()) {
+        return {};
+    }
+    QRegion occupied;
+    QList<SurfaceItem *> ret;
+    for (const auto &data : std::as_const(m_paintContext.phase2Data) | std::views::reverse) {
+        Window *window = data.item->window();
+        if (window->isOnOutput(painted_screen) && window->opacity() > 0 && data.item->isVisible()) {
+            findOverlayCandidates(painted_delegate, data.item, maxCount, occupied, ret);
+            if (ret.size() == maxCount) {
+                break;
+            }
+        }
+    }
+    return ret;
+}
+
 static double getDesiredHdrHeadroom(Item *item)
 {
     if (!item->isVisible()) {

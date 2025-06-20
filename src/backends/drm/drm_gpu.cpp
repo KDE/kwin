@@ -893,10 +893,23 @@ void DrmGpu::createLayers()
 void DrmGpu::assignOutputLayers()
 {
     if (m_atomicModeSetting) {
-        for (DrmPipeline *pipeline : std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::crtc)) {
+        auto enabledPipelines = std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::crtc);
+        const size_t enabledPipelinesCount = std::distance(enabledPipelines.begin(), enabledPipelines.end());
+        for (DrmPipeline *pipeline : enabledPipelines) {
             QList<DrmPipelineLayer *> layers = {m_planeLayerMap[pipeline->crtc()->primaryPlane()].get()};
             if (pipeline->crtc()->cursorPlane()) {
                 layers.push_back(m_planeLayerMap[pipeline->crtc()->cursorPlane()].get());
+            }
+            if (enabledPipelinesCount == 1) {
+                // To avoid having to deal with GPU-wide bandwidth restrictions
+                // and switching planes between outputs, for now only use overlay
+                // planes with single-output setups
+                for (const auto &plane : m_planes) {
+                    if (plane->isCrtcSupported(pipeline->crtc()->pipeIndex())
+                        && plane->type.enumValue() == DrmPlane::TypeIndex::Overlay) {
+                        layers.push_back(m_planeLayerMap[plane.get()].get());
+                    }
+                }
             }
             pipeline->setLayers(layers);
         }

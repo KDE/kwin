@@ -77,6 +77,7 @@ public:
     Scene *scene() const;
     QRectF viewport() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    QList<SurfaceItem *> overlayCandidates(ssize_t maxCount) const;
     void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
     QRegion updatePrePaint() override;
@@ -170,6 +171,7 @@ public:
     void removeView(RenderView *view);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
+    virtual QList<SurfaceItem *> overlayCandidates(ssize_t maxCount) const = 0;
     virtual QRegion prePaint(SceneView *delegate) = 0;
     /**
      * While prePaint returns damage, some layer-related actions may cause
