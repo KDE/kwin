@@ -1,3 +1,4 @@
+
 /*
     SPDX-FileCopyrightText: 2022 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
@@ -24,6 +25,7 @@ class SurfaceItem;
 class DrmDevice;
 class GraphicsBuffer;
 class OutputFrame;
+class GLTexture;
 
 struct OutputLayerBeginFrameInfo
 {

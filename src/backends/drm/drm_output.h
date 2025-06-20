@@ -44,16 +44,14 @@ public:
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void repairPresentation() override;
-    DrmOutputLayer *primaryLayer() const override;
-    DrmOutputLayer *cursorLayer() const override;
 
     bool queueChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void revertQueuedChanges();
     void updateDpmsMode(DpmsMode dpmsMode);
 
-    bool shouldDisableCursorPlane() const;
-    bool updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
+    bool shouldDisableNonPrimaryPlanes() const;
+    bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
     void setAutoRotateAvailable(bool isAvailable) override;
 
     DrmLease *lease() const;

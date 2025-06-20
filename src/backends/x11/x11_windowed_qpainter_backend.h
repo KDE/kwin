@@ -74,8 +74,7 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
 
 private:
     void addOutput(Output *output);

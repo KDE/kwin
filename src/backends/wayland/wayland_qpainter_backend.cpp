@@ -165,16 +165,10 @@ GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
+QList<OutputLayer *> WaylandQPainterBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].primaryLayer.get();
+    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
 }
-
-OutputLayer *WaylandQPainterBackend::cursorLayer(Output *output)
-{
-    return m_outputs[output].cursorLayer.get();
-}
-
 }
 }
 

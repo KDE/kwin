@@ -312,14 +312,9 @@ bool WaylandEglBackend::initRenderingContext()
     return openglContext()->makeCurrent();
 }
 
-OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
+QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].primaryLayer.get();
-}
-
-OutputLayer *WaylandEglBackend::cursorLayer(Output *output)
-{
-    return m_outputs[output].cursorLayer.get();
+    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
 }
 
 }

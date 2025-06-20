@@ -55,7 +55,7 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    VirtualQPainterLayer *primaryLayer(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
 
 private:
     void addOutput(Output *output);

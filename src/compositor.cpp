@@ -366,11 +366,12 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
-static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, Output *output, const std::shared_ptr<OutputFrame> &frame)
+static bool prepareDirectScanout(RenderView *view, Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
     }
+    const auto layer = view->layer();
     const auto outputLocalRect = view->viewport().translated(-output->geometryF().topLeft());
     const auto nativeViewport = scaledRect(outputLocalRect, output->scale()).toRect();
     const bool coversEntireOutput = nativeViewport == QRect(QPoint(), output->pixelSize());
@@ -419,11 +420,12 @@ static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, Output *o
     return ret;
 }
 
-static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *output, uint32_t requiredAlphaBits)
+static bool prepareRendering(RenderView *view, Output *output, uint32_t requiredAlphaBits)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
     }
+    const auto layer = view->layer();
     const auto outputLocalRect = view->viewport().translated(-output->geometryF().topLeft());
     const auto nativeRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize()).toRect();
     layer->setSourceRect(QRect(QPoint(0, 0), nativeRect.size()));
@@ -437,16 +439,16 @@ static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *outpu
     return layer->preparePresentationTest();
 }
 
-static bool renderLayer(OutputLayer *layer, RenderView *view, Output *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
+static bool renderLayer(RenderView *view, Output *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
 {
-    auto beginInfo = layer->beginFrame();
+    auto beginInfo = view->layer()->beginFrame();
     if (!beginInfo) {
         return false;
     }
     auto &[renderTarget, repaint] = beginInfo.value();
     const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(QRectF(QPointF(), view->viewport().size()).toAlignedRect());
     view->paint(renderTarget, bufferDamage);
-    return layer->endFrame(bufferDamage, surfaceDamage, frame.get());
+    return view->layer()->endFrame(bufferDamage, surfaceDamage, frame.get());
 }
 
 void Compositor::composite(RenderLoop *renderLoop)
@@ -503,7 +505,6 @@ void Compositor::composite(RenderLoop *renderLoop)
     // collect all the layers we may use
     struct LayerData
     {
-        OutputLayer *layer;
         RenderView *view;
         bool directScanout = false;
         QRegion surfaceDamage;
@@ -513,7 +514,6 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     primaryView->prePaint();
     layers.push_back(LayerData{
-        .layer = m_backend->primaryLayer(output),
         .view = primaryView,
         .directScanout = false,
         .surfaceDamage = QRegion{},
@@ -547,7 +547,6 @@ void Compositor::composite(RenderLoop *renderLoop)
     if (cursorViewIt != m_cursorViews.end()) {
         cursorViewIt->second->prePaint();
         layers.push_back(LayerData{
-            .layer = m_backend->cursorLayer(output),
             .view = cursorViewIt->second.get(),
             .directScanout = false,
             .surfaceDamage = QRegion{},
@@ -557,13 +556,13 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     // update all of them for the ideal configuration
     for (auto &layer : layers) {
-        if (prepareDirectScanout(layer.layer, layer.view, output, frame)) {
+        if (prepareDirectScanout(layer.view, output, frame)) {
             layer.directScanout = true;
-        } else if (prepareRendering(layer.layer, layer.view, output, layer.requiredAlphaBits)) {
+        } else if (prepareRendering(layer.view, output, layer.requiredAlphaBits)) {
             layer.directScanout = false;
         } else {
-            layer.layer->setEnabled(false);
-            layer.layer->scheduleRepaint(nullptr);
+            layer.view->layer()->setEnabled(false);
+            layer.view->layer()->scheduleRepaint(nullptr);
         }
     }
 
@@ -573,7 +572,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         bool primaryFailure = false;
         auto &primary = layers.front();
         if (primary.directScanout) {
-            if (prepareRendering(primary.layer, primary.view, output, primary.requiredAlphaBits)) {
+            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)) {
                 primary.directScanout = false;
                 result = output->testPresentation(frame);
             } else {
@@ -584,8 +583,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
         if (!result && !primaryFailure) {
             // fall back to disabling the remaining layers
-            auto toDisable = layers | std::views::drop(1) | std::views::filter([](const LayerData &layer) {
-                return layer.view->layer()->isEnabled();
+            auto toDisable = layers | std::views::filter([](const LayerData &layer) {
+                return layer.view->layer()->type() != OutputLayerType::Primary
+                    && layer.view->layer()->isEnabled();
             });
             if (!toDisable.empty()) {
                 for (const auto &layer : toDisable) {
@@ -602,21 +602,21 @@ void Compositor::composite(RenderLoop *renderLoop)
         // before rendering, enable and disable all the views that need it,
         // which may add repaints to other layers
         for (auto &layer : layers) {
-            layer.view->setExclusive(layer.layer->isEnabled());
+            layer.view->setExclusive(layer.view->layer()->isEnabled());
         }
 
         // Note that effects may schedule repaints while rendering
         renderLoop->newFramePrepared();
 
         for (auto &layer : layers) {
-            if (!layer.layer->needsRepaint()) {
+            if (!layer.view->layer()->needsRepaint()) {
                 continue;
             }
-            toUpdate.push_back(layer.layer);
-            layer.surfaceDamage = layer.view->collectDamage() | layer.layer->repaints();
-            layer.layer->resetRepaints();
-            if (layer.layer->isEnabled() && !layer.directScanout) {
-                result &= renderLayer(layer.layer, layer.view, output, frame, layer.surfaceDamage);
+            toUpdate.push_back(layer.view->layer());
+            layer.surfaceDamage |= layer.view->collectDamage() | layer.view->layer()->repaints();
+            layer.view->layer()->resetRepaints();
+            if (layer.view->layer()->isEnabled() && !layer.directScanout) {
+                result &= renderLayer(layer.view, output, frame, layer.surfaceDamage);
                 if (!result) {
                     qCWarning(KWIN_CORE, "Rendering a layer failed!");
                     break;
@@ -638,8 +638,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         // sometimes have false positives
         result = false;
         // first, remove all non-primary layers we attempted direct scanout with
-        auto toDisable = layers | std::views::drop(1) | std::views::filter([](const LayerData &layer) {
-            return layer.view->layer()->isEnabled()
+        auto toDisable = layers | std::views::filter([](const LayerData &layer) {
+            return layer.view->layer()->type() != OutputLayerType::Primary
+                && layer.view->layer()->isEnabled()
                 && layer.directScanout;
         });
         auto &primary = layers.front();
@@ -649,21 +650,21 @@ void Compositor::composite(RenderLoop *renderLoop)
                 layer.view->setExclusive(false);
             }
             // re-render without direct scanout
-            if (prepareRendering(primary.layer, primary.view, output, primary.requiredAlphaBits)
-                && renderLayer(primary.layer, primary.view, output, frame, primary.surfaceDamage)) {
+            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)
+                && renderLayer(primary.view, output, frame, primary.surfaceDamage)) {
                 result = output->present(toUpdate, frame);
             } else {
                 qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
             }
         }
 
-        if (!result && layers.size() == 2 && layers[1].layer->isEnabled()) {
+        if (!result && layers.size() == 2 && layers[1].view->layer()->isEnabled()) {
             // presentation failed even without direct scanout.
             // try again even without the cursor layer
-            layers[1].layer->setEnabled(false);
+            layers[1].view->layer()->setEnabled(false);
             layers[1].view->setExclusive(false);
-            if (prepareRendering(primary.layer, primary.view, output, primary.requiredAlphaBits)
-                && renderLayer(primary.layer, primary.view, output, frame, infiniteRegion())) {
+            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)
+                && renderLayer(primary.view, output, frame, infiniteRegion())) {
                 result = output->present(toUpdate, frame);
                 if (result) {
                     // disabling the cursor layer helped... so disable it permanently,
@@ -680,7 +681,7 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     for (auto &layer : layers) {
         layer.view->postPaint();
-        if (layer.layer->isEnabled()) {
+        if (layer.view->layer()->isEnabled()) {
             layer.view->frame(frame.get());
         }
     }
@@ -693,10 +694,10 @@ void Compositor::composite(RenderLoop *renderLoop)
     if (!result) {
         qCWarning(KWIN_CORE, "Failed to find a working output layer configuration! Enabled layers:");
         for (const auto &layer : layers) {
-            if (!layer.layer->isEnabled()) {
+            if (!layer.view->layer()->isEnabled()) {
                 continue;
             }
-            qCWarning(KWIN_CORE) << "src" << layer.layer->sourceRect() << "-> dst" << layer.layer->targetRect();
+            qCWarning(KWIN_CORE) << "src" << layer.view->layer()->sourceRect() << "-> dst" << layer.view->layer()->targetRect();
         }
         output->repairPresentation();
     }
@@ -733,13 +734,24 @@ void Compositor::removeOutput(Output *output)
     m_primaryViews.erase(output->renderLoop());
 }
 
+static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type)
+{
+    const auto it = std::ranges::find_if(layers, [type](OutputLayer *layer) {
+        return layer->type() == type;
+    });
+    return it == layers.end() ? nullptr : *it;
+}
+
 void Compositor::assignOutputLayers(Output *output)
 {
+    const auto layers = m_backend->compatibleOutputLayers(output);
+    const auto primaryLayer = findLayer(layers, OutputLayerType::Primary);
+    Q_ASSERT(primaryLayer);
     auto &sceneView = m_primaryViews[output->renderLoop()];
     if (sceneView) {
-        sceneView->setLayer(m_backend->primaryLayer(output));
+        sceneView->setLayer(primaryLayer);
     } else {
-        sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+        sceneView = std::make_unique<SceneView>(m_scene.get(), output, primaryLayer);
         sceneView->setViewport(output->geometryF());
         sceneView->setScale(output->scale());
         connect(output, &Output::geometryChanged, sceneView.get(), [output, view = sceneView.get()]() {
@@ -749,15 +761,23 @@ void Compositor::assignOutputLayers(Output *output)
             view->setScale(output->scale());
         });
     }
-    if (auto layer = m_backend->cursorLayer(output); layer && !s_forceSoftwareCursor) {
+
+    auto cursorLayer = findLayer(layers, OutputLayerType::CursorOnly);
+    if (!cursorLayer) {
+        cursorLayer = findLayer(layers, OutputLayerType::EfficientOverlay);
+    }
+    if (!cursorLayer) {
+        cursorLayer = findLayer(layers, OutputLayerType::GenericLayer);
+    }
+    if (cursorLayer && !s_forceSoftwareCursor) {
         auto &cursorView = m_cursorViews[output->renderLoop()];
         if (cursorView) {
             disconnect(cursorView->layer(), &OutputLayer::repaintScheduled, cursorView.get(), nullptr);
-            cursorView->setLayer(layer);
+            cursorView->setLayer(cursorLayer);
         } else {
-            cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+            cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, cursorLayer);
         }
-        connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
+        connect(cursorLayer, &OutputLayer::repaintScheduled, cursorView.get(), [output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
             // this just deals with moving the plane asynchronously, for improved latency.
             // enabling, disabling and updating the cursor image happen in composite()
             const auto outputLayer = cursorView->layer();
@@ -781,7 +801,7 @@ void Compositor::assignOutputLayers(Output *output)
             const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
             outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
             outputLayer->setEnabled(true);
-            if (output->updateCursorLayer(maxVrrCursorDelay)) {
+            if (output->presentAsync(outputLayer, maxVrrCursorDelay)) {
                 // prevent composite() from also pushing an update with the cursor layer
                 // to avoid adding cursor updates that are synchronized with primary layer updates
                 outputLayer->resetRepaints();

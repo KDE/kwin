@@ -44,8 +44,7 @@ public:
 
     DrmDevice *drmDevice() const override;
 
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
 
     void init() override;
     std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPlane *plane) override;

@@ -74,7 +74,7 @@ bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damag
 
 bool EglGbmLayer::preparePresentationTest()
 {
-    if (m_type == DrmPlane::TypeIndex::Cursor && drmOutput()->shouldDisableCursorPlane()) {
+    if (m_type != OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
         return false;
     }
     m_scanoutBuffer.reset();
@@ -87,7 +87,7 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_type == DrmPlane::TypeIndex::Cursor && drmOutput()->shouldDisableCursorPlane()) {
+    if (m_type == OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
         return false;
     }
     if (gpu()->needsModeset()) {

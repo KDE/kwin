@@ -151,14 +151,9 @@ GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() c
     return m_allocator.get();
 }
 
-OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)
+QList<OutputLayer *> X11WindowedQPainterBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output].primaryLayer.get();
-}
-
-OutputLayer *X11WindowedQPainterBackend::cursorLayer(Output *output)
-{
-    return m_outputs[output].cursorLayer.get();
+    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
 }
 
 }

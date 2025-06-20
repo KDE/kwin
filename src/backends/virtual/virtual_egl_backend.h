@@ -53,7 +53,7 @@ class VirtualEglBackend : public EglBackend
 public:
     VirtualEglBackend(VirtualBackend *b);
     ~VirtualEglBackend() override;
-    OutputLayer *primaryLayer(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
     void init() override;
 
     VirtualBackend *backend() const;
