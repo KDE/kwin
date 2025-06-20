@@ -15,6 +15,14 @@ namespace KWin
 OutputLayer::OutputLayer(Output *output, OutputLayerType type)
     : m_type(type)
     , m_output(output)
+    , m_zpos(type == OutputLayerType::Primary ? 0 : 1)
+{
+}
+
+OutputLayer::OutputLayer(Output *output, OutputLayerType type, int zpos)
+    : m_type(type)
+    , m_output(output)
+    , m_zpos(zpos)
 {
 }
 
@@ -195,6 +203,11 @@ bool OutputLayer::preparePresentationTest()
 std::pair<std::shared_ptr<GLTexture>, ColorDescription> OutputLayer::texture() const
 {
     return std::make_pair(nullptr, ColorDescription::sRGB);
+}
+
+int OutputLayer::zpos() const
+{
+    return m_zpos;
 }
 
 } // namespace KWin

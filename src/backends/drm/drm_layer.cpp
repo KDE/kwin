@@ -24,6 +24,11 @@ DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type)
 {
 }
 
+DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type, int zpos)
+    : OutputLayer(output, type, zpos)
+{
+}
+
 DrmOutputLayer::~DrmOutputLayer() = default;
 
 static OutputLayerType planeToLayerType(DrmPlane *plane, DrmPlane::TypeIndex type)
@@ -43,8 +48,25 @@ static OutputLayerType planeToLayerType(DrmPlane *plane, DrmPlane::TypeIndex typ
     Q_UNREACHABLE();
 }
 
+static int determineZpos(DrmPlane *plane)
+{
+    if (plane->zpos.isValid()) {
+        return plane->zpos.value();
+    } else {
+        switch (plane->type.enumValue()) {
+        case DrmPlane::TypeIndex::Primary:
+            return 0;
+        case DrmPlane::TypeIndex::Overlay:
+            return 1;
+        case DrmPlane::TypeIndex::Cursor:
+            return 255;
+        }
+        return 0;
+    }
+}
+
 DrmPipelineLayer::DrmPipelineLayer(DrmPlane *plane)
-    : DrmOutputLayer(nullptr, planeToLayerType(plane, plane->type.enumValue()))
+    : DrmOutputLayer(nullptr, planeToLayerType(plane, plane->type.enumValue()), determineZpos(plane))
     , m_plane(plane)
 {
 }

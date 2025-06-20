@@ -70,6 +70,7 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
     , inFenceFd(this, QByteArrayLiteral("IN_FENCE_FD"))
     , sizeHints(this, QByteArrayLiteral("SIZE_HINTS"))
     , inFormatsForTearing(this, QByteArrayLiteral("IN_FORMATS_ASYNC"))
+    , zpos(this, QByteArrayLiteral("zpos"))
 {
 }
 
@@ -108,6 +109,7 @@ bool DrmPlane::updateProperties()
     inFenceFd.update(props);
     sizeHints.update(props);
     inFormatsForTearing.update(props);
+    zpos.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
