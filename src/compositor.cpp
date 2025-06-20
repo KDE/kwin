@@ -399,7 +399,7 @@ static bool prepareDirectScanout(RenderView *view, Output *output, const std::sh
     }
     const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
     const auto formats = tearing ? layer->supportedAsyncDrmFormats() : layer->supportedDrmFormats();
-    if (auto it = formats.find(attrs->format); it != formats.end() && !it->contains(attrs->modifier)) {
+    if (auto it = formats.find(attrs->format); it == formats.end() || !it->contains(attrs->modifier)) {
         layer->setScanoutCandidate(candidate);
         candidate->setScanoutHint(layer->scanoutDevice(), formats);
         return false;
@@ -506,6 +506,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     {
         RenderView *view;
         bool directScanout = false;
+        bool directScanoutOnly = false;
         QRegion surfaceDamage;
     };
     QList<LayerData> layers;
@@ -513,6 +514,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     layers.push_back(LayerData{
         .view = primaryView,
         .directScanout = false,
+        .directScanoutOnly = false,
         .surfaceDamage = primaryView->prePaint() | primaryView->layer()->repaints(),
     });
 
@@ -544,15 +546,59 @@ void Compositor::composite(RenderLoop *renderLoop)
         layers.push_back(LayerData{
             .view = cursorViewIt->second.get(),
             .directScanout = false,
+            .directScanoutOnly = false,
             .surfaceDamage = cursorViewIt->second->prePaint() | cursorViewIt->second->layer()->repaints(),
         });
+    }
+
+    const auto outputLayers = m_backend->compatibleOutputLayers(output);
+    auto overlays = outputLayers | std::views::filter([&](OutputLayer *layer) {
+        return layer->type() == OutputLayerType::GenericLayer
+            && layer->zpos() > primaryView->layer()->zpos()
+            && (cursorViewIt == m_cursorViews.end() || layer->zpos() < cursorViewIt->second->layer()->zpos());
+    }) | std::ranges::to<QList>();
+    if (!overlays.empty()) {
+        // candidates are sorted from highest to lowest, make the layers match
+        std::ranges::sort(overlays, [](OutputLayer *left, OutputLayer *right) {
+            return left->zpos() > right->zpos();
+        });
+        const auto candidates = primaryView->overlayCandidates(overlays.size());
+        for (auto [candidate, overlay] : std::views::zip(candidates, overlays)) {
+            // leave fullscreen direct scanout to the primary plane
+            if (candidate->mapToScene(candidate->rect()).contains(output->geometryF())) {
+                m_overlayViews[output->renderLoop()].erase(overlay);
+                if (overlay->isEnabled()) {
+                    overlay->setEnabled(false);
+                    toUpdate.push_back(overlay);
+                }
+            } else {
+                auto &view = m_overlayViews[output->renderLoop()][overlay];
+                if (!view || view->item() != candidate) {
+                    view = std::make_unique<ItemTreeView>(primaryView, candidate, output, overlay);
+                }
+                layers.push_back(LayerData{
+                    .view = view.get(),
+                    .directScanout = true,
+                    .directScanoutOnly = true,
+                    .surfaceDamage = view->prePaint() | overlay->repaints(),
+                });
+            }
+        }
+        for (ssize_t i = candidates.size(); i < overlays.size(); i++) {
+            // disable layers that aren't used
+            m_overlayViews[output->renderLoop()].erase(overlays[i]);
+            if (overlays[i]->isEnabled()) {
+                overlays[i]->setEnabled(false);
+                toUpdate.push_back(overlays[i]);
+            }
+        }
     }
 
     // update all of them for the ideal configuration
     for (auto &layer : layers) {
         if (prepareDirectScanout(layer.view, output, frame)) {
             layer.directScanout = true;
-        } else if (prepareRendering(layer.view, output)) {
+        } else if (!layer.directScanoutOnly && prepareRendering(layer.view, output)) {
             layer.directScanout = false;
         } else {
             layer.view->layer()->setEnabled(false);
@@ -721,6 +767,7 @@ void Compositor::removeOutput(Output *output)
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     disconnect(output, &Output::outputLayersChanged, this, nullptr);
+    m_overlayViews.erase(output->renderLoop());
     m_cursorViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
 }
@@ -796,6 +843,9 @@ void Compositor::assignOutputLayers(Output *output)
     } else {
         m_cursorViews.erase(output->renderLoop());
     }
+    // will be re-assigned in the next composite() pass
+    // TODO ideally we'd assign the cursor dynamically too
+    m_overlayViews.erase(output->renderLoop());
 }
 
 std::pair<std::shared_ptr<GLTexture>, ColorDescription> Compositor::textureForOutput(Output *output) const
