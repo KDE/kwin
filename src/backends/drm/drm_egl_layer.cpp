@@ -73,23 +73,23 @@ bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damag
 
 bool EglGbmLayer::preparePresentationTest()
 {
-    if (m_type == DrmPlane::TypeIndex::Cursor && drmOutput()->shouldDisableCursorPlane()) {
+    if (m_type != OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
         return false;
     }
     m_scanoutBuffer.reset();
     return m_surface.renderTestBuffer(targetRect().size(), supportedDrmFormats(), drmOutput()->colorPowerTradeoff()) != nullptr;
 }
 
-std::shared_ptr<GLTexture> EglGbmLayer::texture() const
+std::pair<std::shared_ptr<GLTexture>, ColorDescription> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
         const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
         if (ret) {
             ret->setContentTransform(offloadTransform().combine(OutputTransform::FlipY));
         }
-        return ret;
+        return std::make_pair(ret, colorDescription());
     } else {
-        return m_surface.texture();
+        return std::make_pair(m_surface.texture(), m_surface.colorDescription());
     }
 }
 
@@ -99,7 +99,7 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::share
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_type == DrmPlane::TypeIndex::Cursor && drmOutput()->shouldDisableCursorPlane()) {
+    if (m_type == OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
         return false;
     }
     if (gpu()->needsModeset()) {

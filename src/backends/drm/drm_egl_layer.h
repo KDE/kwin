@@ -33,7 +33,7 @@ public:
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     bool preparePresentationTest() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    std::shared_ptr<GLTexture> texture() const override;
+    std::pair<std::shared_ptr<GLTexture>, ColorDescription> texture() const override;
     void releaseBuffers() override;
 
 private:

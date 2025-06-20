@@ -77,26 +77,14 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
         }
         for (const auto layer : layersToUpdate) {
             const auto pipelineLayer = static_cast<DrmPipelineLayer *>(layer);
-            // FIXME figure out a more generic way for this
-            DrmPlane *plane = nullptr;
-            switch (pipelineLayer->type()) {
-            case DrmPlane::TypeIndex::Primary:
-                plane = m_pending.crtc->primaryPlane();
-                break;
-            case DrmPlane::TypeIndex::Cursor:
-                plane = m_pending.crtc->cursorPlane();
-                break;
-            case DrmPlane::TypeIndex::Overlay:
-                Q_UNREACHABLE();
-            }
-            if (Error err = prepareAtomicPlane(partialUpdate.get(), plane, pipelineLayer, frame); err != Error::None) {
+            if (Error err = prepareAtomicPlane(partialUpdate.get(), pipelineLayer->plane(), pipelineLayer, frame); err != Error::None) {
                 return err;
             }
         }
         if (layersToUpdate.isEmpty()) {
             // work around amdgpu not giving us a valid pageflip timestamp
             // if the commit doesn't contain a drm plane
-            if (Error err = prepareAtomicPlane(partialUpdate.get(), m_pending.crtc->primaryPlane(), m_pending.primaryLayer, frame); err != Error::None) {
+            if (Error err = prepareAtomicPlane(partialUpdate.get(), m_pending.layers.front()->plane(), m_pending.layers.front(), frame); err != Error::None) {
                 return err;
             }
         }
@@ -107,11 +95,7 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
         m_commitThread->addCommit(std::move(partialUpdate));
         return Error::None;
     } else {
-        if (layersToUpdate.contains(m_pending.cursorLayer) && !setCursorLegacy()) {
-            return Error::InvalidArguments;
-        }
-        // always present on the crtc, for presentation feedback
-        return presentLegacy(frame);
+        return presentLegacy(layersToUpdate, frame);
     }
 }
 
@@ -201,11 +185,10 @@ DrmPipeline::Error DrmPipeline::prepareAtomicCommit(DrmAtomicCommit *commit, Com
         if (Error err = prepareAtomicPresentation(commit, frame); err != Error::None) {
             return err;
         }
-        if (Error err = prepareAtomicPlane(commit, m_pending.crtc->primaryPlane(), m_pending.primaryLayer, frame); err != Error::None) {
-            return err;
-        }
-        if (auto plane = m_pending.crtc->cursorPlane()) {
-            prepareAtomicPlane(commit, plane, m_pending.cursorLayer, frame);
+        for (const auto &layer : m_pending.layers) {
+            if (Error err = prepareAtomicPlane(commit, layer->plane(), layer, frame); err != Error::None) {
+                return err;
+            }
         }
         if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset || m_pending.needsModesetProperties) {
             if (!prepareAtomicModeset(commit)) {
@@ -229,10 +212,13 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
-    if (m_pending.cursorLayer->isEnabled() && m_pending.primaryLayer->colorPipeline() != m_pending.cursorLayer->colorPipeline()) {
+    const bool differentPipelines = std::ranges::any_of(m_pending.layers | std::views::drop(1), [&](OutputLayer *layer) {
+        return layer->colorPipeline() != m_pending.layers.front()->colorPipeline();
+    });
+    if (differentPipelines) {
         return DrmPipeline::Error::InvalidArguments;
     }
-    const ColorPipeline colorPipeline = m_pending.primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
+    const ColorPipeline colorPipeline = m_pending.layers.front()->colorPipeline().merged(m_pending.crtcColorPipeline);
     if (!m_pending.crtc->postBlendingPipeline) {
         if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
@@ -425,12 +411,12 @@ DrmPipeline::Error DrmPipeline::errnoToError()
     }
 }
 
-bool DrmPipeline::updateCursor(std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     if (needsModeset() || !m_pending.crtc || !m_pending.active) {
         return false;
     }
-    if (amdgpuVrrWorkaroundActive() && m_pending.cursorLayer->isEnabled()) {
+    if (amdgpuVrrWorkaroundActive() && layer->isEnabled()) {
         return false;
     }
     // We need to make sure that on vmwgfx software cursor is selected
@@ -439,20 +425,20 @@ bool DrmPipeline::updateCursor(std::optional<std::chrono::nanoseconds> allowedVr
     if (gpu()->isVmwgfx()) {
         return false;
     }
-    // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (m_pending.crtc->cursorPlane()) {
+    const auto drmLayer = static_cast<DrmPipelineLayer *>(layer);
+    if (drmLayer->plane()) {
         // test the full state, to take pending commits into account
         if (DrmPipeline::commitPipelinesAtomic({this}, CommitMode::Test, nullptr, {}) != Error::None) {
             return false;
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
-        auto cursorOnly = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
-        prepareAtomicPlane(cursorOnly.get(), m_pending.crtc->cursorPlane(), m_pending.cursorLayer, nullptr);
-        cursorOnly->setAllowedVrrDelay(allowedVrrDelay);
-        m_commitThread->addCommit(std::move(cursorOnly));
+        auto partialUpdate = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
+        prepareAtomicPlane(partialUpdate.get(), drmLayer->plane(), drmLayer, nullptr);
+        partialUpdate->setAllowedVrrDelay(allowedVrrDelay);
+        m_commitThread->addCommit(std::move(partialUpdate));
         return true;
     } else {
-        return setCursorLegacy();
+        return setCursorLegacy(drmLayer);
     }
 }
 
@@ -464,8 +450,7 @@ bool DrmPipeline::amdgpuVrrWorkaroundActive() const
 
 void DrmPipeline::applyPendingChanges()
 {
-    const bool layersChanged = m_next.primaryLayer != m_pending.primaryLayer
-        || m_next.cursorLayer != m_pending.cursorLayer;
+    const bool layersChanged = m_next.layers != m_pending.layers;
     m_next = m_pending;
     m_commitThread->setModeInfo(m_pending.mode->refreshRate(), m_pending.mode->vblankTime());
     m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
@@ -499,11 +484,8 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 void DrmPipeline::setOutput(DrmOutput *output)
 {
     m_output = output;
-    if (m_pending.primaryLayer) {
-        m_pending.primaryLayer->setOutput(m_output);
-    }
-    if (m_pending.cursorLayer) {
-        m_pending.cursorLayer->setOutput(m_output);
+    for (const auto layer : m_pending.layers) {
+        layer->setOutput(output);
     }
 }
 
@@ -562,14 +544,9 @@ bool DrmPipeline::enabled() const
     return m_pending.enabled;
 }
 
-DrmPipelineLayer *DrmPipeline::primaryLayer() const
+QList<DrmPipelineLayer *> DrmPipeline::layers() const
 {
-    return m_pending.primaryLayer;
-}
-
-DrmPipelineLayer *DrmPipeline::cursorLayer() const
-{
-    return m_pending.cursorLayer;
+    return m_pending.layers;
 }
 
 PresentationMode DrmPipeline::presentationMode() const
@@ -617,15 +594,11 @@ void DrmPipeline::setEnable(bool enable)
     m_pending.enabled = enable;
 }
 
-void DrmPipeline::setLayers(DrmPipelineLayer *primaryLayer, DrmPipelineLayer *cursorLayer)
+void DrmPipeline::setLayers(const QList<DrmPipelineLayer *> &layers)
 {
-    m_pending.primaryLayer = primaryLayer;
-    m_pending.cursorLayer = cursorLayer;
-    if (primaryLayer) {
-        primaryLayer->setOutput(m_output);
-    }
-    if (cursorLayer) {
-        cursorLayer->setOutput(m_output);
+    m_pending.layers = layers;
+    for (const auto layer : layers) {
+        layer->setOutput(m_output);
     }
 }
 

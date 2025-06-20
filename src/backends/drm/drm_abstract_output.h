@@ -25,9 +25,6 @@ public:
 
     RenderLoop *renderLoop() const override;
 
-    virtual DrmOutputLayer *primaryLayer() const = 0;
-    virtual DrmOutputLayer *cursorLayer() const = 0;
-
 protected:
     friend class DrmGpu;
 

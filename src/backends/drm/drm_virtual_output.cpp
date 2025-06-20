@@ -80,11 +80,6 @@ DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
     return m_layer.get();
 }
 
-DrmOutputLayer *DrmVirtualOutput::cursorLayer() const
-{
-    return nullptr;
-}
-
 void DrmVirtualOutput::recreateSurface()
 {
     m_layer = m_backend->renderBackend()->createLayer(this);
