@@ -63,7 +63,7 @@ class KWIN_EXPORT TabletSurfaceCursorV2 : public QObject
     Q_OBJECT
 public:
     ~TabletSurfaceCursorV2() override;
-    QPoint hotspot() const;
+    QPointF hotspot() const;
     quint32 enteredSerial() const;
     SurfaceInterface *surface() const;
 
