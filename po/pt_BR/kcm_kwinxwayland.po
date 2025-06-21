@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 02:37+0000\n"
-"PO-Revision-Date: 2025-03-14 14:22-0300\n"
+"PO-Revision-Date: 2025-06-19 23:38-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #: ui/main.qml:27
 #, kde-format
 msgctxt "@info"
 msgid "Changes will take effect the next time you log in."
-msgstr ""
+msgstr "As alterações só terão efeito na próxima vez que iniciar a sessão."
 
 #: ui/main.qml:31
 #, kde-format
 msgctxt "@action:button"
 msgid "Log Out Now"
-msgstr ""
+msgstr "Encerrar sessão agora"
 
 #: ui/main.qml:52
 #, kde-format
@@ -71,8 +71,8 @@ msgstr "Apenas teclas Meta, Control, Alt e Shift"
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"O mesmo que acima, mais qualquer outra tecla enquanto as teclas Meta, Ctrl, "
-"ou Alt ou estiverem pressionadas"
+"O mesmo que acima, mais qualquer tecla enquanto as teclas Meta, Ctrl, ou Alt "
+"ou estiverem pressionadas"
 
 #: ui/main.qml:107
 #, kde-format
@@ -100,7 +100,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Controle do ponteiro e teclado:"
 
 #: ui/main.qml:156
 #, kde-format
@@ -108,4 +108,4 @@ msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "Permitir sem pedir permissão"

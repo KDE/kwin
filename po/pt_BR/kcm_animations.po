@@ -1,0 +1,116 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2025 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2025-06-20 02:33+0000\n"
+"PO-Revision-Date: 2025-06-20 00:14-0300\n"
+"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
+"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 25.04.2\n"
+
+#: ui/AnimationComboBox.qml:49
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "Nenhuma"
+
+#: ui/main.qml:37
+#, kde-format
+msgid "Global animation speed:"
+msgstr "Velocidade global de animação:"
+
+#: ui/main.qml:69
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Some applications do not support this setting: In particular, GTK "
+"applications cannot change animation duration, but will still disable "
+"animations when <interface>animation speed</interface> is "
+"<interface>Instant</interface>."
+msgstr ""
+"Alguns aplicativos não suportam esta configuração: em particular, os "
+"aplicativos GTK não podem alterar a duração da animação, mas ainda "
+"desabilitarão as animações quando <interface>velocidade da animação</"
+"interface> for <interface>Instantânea</interface>."
+
+#: ui/main.qml:76
+#, kde-format
+msgctxt "Animation speed"
+msgid "Slow"
+msgstr "Lenta"
+
+#: ui/main.qml:85
+#, kde-format
+msgctxt "Animation speed"
+msgid "Instant"
+msgstr "Instantânea"
+
+#: ui/main.qml:93
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "Animações da área de trabalho"
+
+#: ui/main.qml:97
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window open/close:"
+msgstr "Abrir/fechar janela:"
+
+#: ui/main.qml:98
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window maximize:"
+msgstr "Maximizar janela:"
+
+#: ui/main.qml:99
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window minimize:"
+msgstr "Minimizar janela:"
+
+#: ui/main.qml:100
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window full screen:"
+msgstr "Tela inteira:"
+
+#: ui/main.qml:101
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "Espiar área de trabalho:"
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Virtual desktop switching:"
+msgstr "Trocar área de trabalho virtual:"
+
+#: ui/main.qml:130 ui/main.qml:197
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure…"
+msgstr "Configurar..."
+
+#: ui/main.qml:157
+#, kde-format
+msgctxt ""
+"@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
+msgid "%1:"
+msgstr "%1:"
+
+#: ui/main.qml:225
+#, kde-format
+msgctxt "@title:group translate as short as possible"
+msgid "More effects settings:"
+msgstr "Mais opções de efeitos:"
