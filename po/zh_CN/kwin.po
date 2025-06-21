@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-14 00:43+0000\n"
+"POT-Creation-Date: 2025-06-21 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -3501,7 +3501,7 @@ msgstr "数位板已经移动到 %1"
 msgid "Tablets switched outputs"
 msgstr "数位板已切换输出设备"
 
-#: useractions.cpp:162
+#: useractions.cpp:161
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3513,7 +3513,7 @@ msgstr ""
 "如果窗口没有边框，您将无法使用鼠标再次显示边框。\n"
 "你可以使用快捷键 %1 激活窗口菜单来显示窗口边框。"
 
-#: useractions.cpp:169
+#: useractions.cpp:168
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3525,125 +3525,114 @@ msgstr ""
 "如果应用程序本身没有关闭全屏模式的选项，您将无法使用鼠标退出全屏模式。\n"
 "请使用快捷键 %1 激活窗口菜单来退出全屏。"
 
-#: useractions.cpp:216
+#: useractions.cpp:215
 #, kde-format
 msgid "&Move"
 msgstr "移动(&M)"
 
-#: useractions.cpp:221
+#: useractions.cpp:220
 #, kde-format
 msgid "&Resize"
 msgstr "调整大小(&R)"
 
-#: useractions.cpp:226
+#: useractions.cpp:225
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "置顶(&A)"
 
-#: useractions.cpp:232
+#: useractions.cpp:231
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "置底(&B)"
 
-#: useractions.cpp:238
+#: useractions.cpp:237
 #, kde-format
 msgid "&Fullscreen"
 msgstr "全屏(&F)"
 
-#: useractions.cpp:244
+#: useractions.cpp:243
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "无标题栏和边框(&N)"
 
-#: useractions.cpp:252
+#: useractions.cpp:251
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "设置窗口快捷键(&C)…"
 
-#: useractions.cpp:258
+#: useractions.cpp:257
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "配置特殊窗口设置(&W)…"
 
-#: useractions.cpp:263
+#: useractions.cpp:262
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "配置特殊应用程序设置(&P)…"
 
-#: useractions.cpp:269
+#: useractions.cpp:268
 #, kde-format
 msgid "Ma&ximize"
 msgstr "最大化(&X)"
 
-#: useractions.cpp:275
+#: useractions.cpp:274
 #, kde-format
 msgid "Mi&nimize"
 msgstr "最小化(&N)"
 
-#: useractions.cpp:281
+#: useractions.cpp:280
 #, kde-format
 msgid "&More Actions"
 msgstr "更多操作(&M)"
 
-#: useractions.cpp:286
+#: useractions.cpp:285
 #, kde-format
 msgid "&Close"
 msgstr "关闭(&C)"
 
-#: useractions.cpp:354
+#: useractions.cpp:350
 #, kde-format
 msgid "&Extensions"
 msgstr "扩展(&E)"
 
-#: useractions.cpp:404
+#: useractions.cpp:400
 #, kde-format
 msgid "&Desktops"
 msgstr "桌面(&D)"
 
-#: useractions.cpp:420
+#: useractions.cpp:416
 #, kde-format
 msgid "Move to &Screen"
 msgstr "移动到屏幕(&S)"
 
-#: useractions.cpp:436
+#: useractions.cpp:432
 #, kde-format
 msgid "Show in &Activities"
 msgstr "在活动中显示"
 
-#: useractions.cpp:453
-#, kde-format
-msgid "Move &To Current Desktop"
-msgstr "移动到当前桌面(&T)"
-
-#: useractions.cpp:463 useractions.cpp:522
+#: useractions.cpp:448
 #, kde-format
 msgid "&All Desktops"
 msgstr "全部桌面(&A)"
 
-#: useractions.cpp:495
-#, kde-format
-msgctxt "Create a new desktop and move the window there"
-msgid "&New Desktop"
-msgstr "新建桌面(&N)"
-
-#: useractions.cpp:556 useractions.cpp:686
+#: useractions.cpp:482 useractions.cpp:612
 #, kde-format
 msgid "Move to %1"
 msgstr "移动到 %1"
 
-#: useractions.cpp:569
+#: useractions.cpp:495
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "添加到新建桌面(&N)"
 
-#: useractions.cpp:581
+#: useractions.cpp:507
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "移动到新建桌面"
 
-#: useractions.cpp:612
+#: useractions.cpp:538
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3651,369 +3640,369 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "屏幕 &%1 (%2)"
 
-#: useractions.cpp:638
+#: useractions.cpp:564
 #, kde-format
 msgid "&All Activities"
 msgstr "全部活动(&A)"
 
-#: useractions.cpp:805
+#: useractions.cpp:731
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> 已被使用"
 
-#: useractions.cpp:807
+#: useractions.cpp:733
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> 已被 %3 的 %2 使用"
 
-#: useractions.cpp:887
+#: useractions.cpp:813
 #, kde-format
 msgid "Window Menu"
 msgstr "窗口菜单"
 
-#: useractions.cpp:889
+#: useractions.cpp:815
 #, kde-format
 msgid "Close Window"
 msgstr "关闭窗口"
 
-#: useractions.cpp:891
+#: useractions.cpp:817
 #, kde-format
 msgid "Maximize Window"
 msgstr "最大化窗口"
 
-#: useractions.cpp:893
+#: useractions.cpp:819
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "垂直最大化窗口"
 
-#: useractions.cpp:895
+#: useractions.cpp:821
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "水平最大化窗口"
 
-#: useractions.cpp:897
+#: useractions.cpp:823
 #, kde-format
 msgid "Minimize Window"
 msgstr "最小化窗口"
 
-#: useractions.cpp:899
+#: useractions.cpp:825
 #, kde-format
 msgid "Shade Window"
 msgstr "折叠窗口"
 
-#: useractions.cpp:901
+#: useractions.cpp:827
 #, kde-format
 msgid "Move Window"
 msgstr "移动窗口"
 
-#: useractions.cpp:903
+#: useractions.cpp:829
 #, kde-format
 msgid "Resize Window"
 msgstr "调整窗口大小"
 
-#: useractions.cpp:905
+#: useractions.cpp:831
 #, kde-format
 msgid "Raise Window"
 msgstr "提升窗口"
 
-#: useractions.cpp:907
+#: useractions.cpp:833
 #, kde-format
 msgid "Lower Window"
 msgstr "降低窗口"
 
-#: useractions.cpp:909
+#: useractions.cpp:835
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "提升/降低窗口"
 
-#: useractions.cpp:911
+#: useractions.cpp:837
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "全屏显示窗口"
 
-#: useractions.cpp:913
+#: useractions.cpp:839
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "显示/隐藏窗口标题栏和框架"
 
-#: useractions.cpp:915
+#: useractions.cpp:841
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "窗口置顶"
 
-#: useractions.cpp:917
+#: useractions.cpp:843
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "窗口置底"
 
-#: useractions.cpp:919
+#: useractions.cpp:845
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "激活请求注意的窗口"
 
-#: useractions.cpp:921
+#: useractions.cpp:847
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "设置窗口快捷键"
 
-#: useractions.cpp:923
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "移动窗口到中央"
 
-#: useractions.cpp:925
+#: useractions.cpp:851
 #, kde-format
 msgid "Move Window Right"
 msgstr "右移窗口"
 
-#: useractions.cpp:927
+#: useractions.cpp:853
 #, kde-format
 msgid "Move Window Left"
 msgstr "左移窗口"
 
-#: useractions.cpp:929
+#: useractions.cpp:855
 #, kde-format
 msgid "Move Window Up"
 msgstr "上移窗口"
 
-#: useractions.cpp:931
+#: useractions.cpp:857
 #, kde-format
 msgid "Move Window Down"
 msgstr "下移窗口"
 
-#: useractions.cpp:933
+#: useractions.cpp:859
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "水平扩展窗口"
 
-#: useractions.cpp:935
+#: useractions.cpp:861
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "垂直扩展窗口"
 
-#: useractions.cpp:937
+#: useractions.cpp:863
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "水平缩小窗口"
 
-#: useractions.cpp:939
+#: useractions.cpp:865
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "垂直缩小窗口"
 
-#: useractions.cpp:941
+#: useractions.cpp:867
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "快速铺放窗口到左侧"
 
-#: useractions.cpp:943
+#: useractions.cpp:869
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "快速铺放窗口到右侧"
 
-#: useractions.cpp:945
+#: useractions.cpp:871
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "快速铺放窗口到上方"
 
-#: useractions.cpp:947
+#: useractions.cpp:873
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "快速铺放窗口到下方"
 
-#: useractions.cpp:949
+#: useractions.cpp:875
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "快速铺放窗口到左上方"
 
-#: useractions.cpp:951
+#: useractions.cpp:877
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "快速铺放窗口到左下方"
 
-#: useractions.cpp:953
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "快速铺放窗口到右上方"
 
-#: useractions.cpp:955
+#: useractions.cpp:881
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "快速铺放窗口到右下方"
 
-#: useractions.cpp:957
+#: useractions.cpp:883
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "切换到上面的窗口"
 
-#: useractions.cpp:959
+#: useractions.cpp:885
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "切换到下面的窗口"
 
-#: useractions.cpp:961
+#: useractions.cpp:887
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "切换到右侧的窗口"
 
-#: useractions.cpp:963
+#: useractions.cpp:889
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "切换到左侧的窗口"
 
-#: useractions.cpp:965
+#: useractions.cpp:891
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "提高活动窗口不透明度 5%"
 
-#: useractions.cpp:967
+#: useractions.cpp:893
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "降低活动窗口不透明度 5%"
 
-#: useractions.cpp:970
+#: useractions.cpp:896
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "在所有桌面上显示窗口"
 
-#: useractions.cpp:973
+#: useractions.cpp:899
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "自定义快速铺放窗口到左侧"
 
-#: useractions.cpp:975
+#: useractions.cpp:901
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "自定义快速铺放窗口到右侧"
 
-#: useractions.cpp:977
+#: useractions.cpp:903
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "自定义快速铺放窗口到上方"
 
-#: useractions.cpp:979
+#: useractions.cpp:905
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "自定义快速铺放窗口到下方"
 
-#: useractions.cpp:990
+#: useractions.cpp:916
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "窗口移动到桌面 %1"
 
-#: useractions.cpp:992
+#: useractions.cpp:918
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "窗口移动到下一桌面"
 
-#: useractions.cpp:993
+#: useractions.cpp:919
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "窗口移动到上一桌面"
 
-#: useractions.cpp:994
+#: useractions.cpp:920
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "窗口右移一个桌面"
 
-#: useractions.cpp:996
+#: useractions.cpp:922
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "窗口左移一个桌面"
 
-#: useractions.cpp:998
+#: useractions.cpp:924
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "窗口上移一个桌面"
 
-#: useractions.cpp:1000
+#: useractions.cpp:926
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "窗口下移一个桌面"
 
-#: useractions.cpp:1004
+#: useractions.cpp:930
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "移动窗口到屏幕 %1"
 
-#: useractions.cpp:1011
+#: useractions.cpp:937
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "移动窗口到下一屏幕"
 
-#: useractions.cpp:1013
+#: useractions.cpp:939
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "移动窗口到上一屏幕"
 
-#: useractions.cpp:1015
+#: useractions.cpp:941
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "移动窗口到右侧屏幕"
 
-#: useractions.cpp:1017
+#: useractions.cpp:943
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "移动窗口到左侧屏幕"
 
-#: useractions.cpp:1019
+#: useractions.cpp:945
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "移动窗口到上方屏幕"
 
-#: useractions.cpp:1021
+#: useractions.cpp:947
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "移动窗口到下方屏幕"
 
-#: useractions.cpp:1025
+#: useractions.cpp:951
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "切换到屏幕 %1"
 
-#: useractions.cpp:1032
+#: useractions.cpp:958
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "切换到下一屏幕"
 
-#: useractions.cpp:1033
+#: useractions.cpp:959
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "切换到上一屏幕"
 
-#: useractions.cpp:1034
+#: useractions.cpp:960
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "切换到右侧屏幕"
 
-#: useractions.cpp:1036
+#: useractions.cpp:962
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "切换到左侧屏幕"
 
-#: useractions.cpp:1038
+#: useractions.cpp:964
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "切换到上方屏幕"
 
-#: useractions.cpp:1040
+#: useractions.cpp:966
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "切换到下方屏幕"
 
-#: useractions.cpp:1043
+#: useractions.cpp:969
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "暂时显示桌面"
 
-#: useractions.cpp:1046
+#: useractions.cpp:972
 #, kde-format
 msgid "Kill Window"
 msgstr "强制终止窗口"
 
-#: useractions.cpp:1114
+#: useractions.cpp:1040
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "活动窗口 (%1)"
@@ -4119,3 +4108,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
+
+#~ msgid "Move &To Current Desktop"
+#~ msgstr "移动到当前桌面(&T)"
+
+#~ msgctxt "Create a new desktop and move the window there"
+#~ msgid "&New Desktop"
+#~ msgstr "新建桌面(&N)"

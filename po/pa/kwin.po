@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-14 00:43+0000\n"
+"POT-Creation-Date: 2025-06-21 00:44+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -3643,7 +3643,7 @@ msgstr "ਟੇਬਲੇਟ ਮੋਡ"
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: useractions.cpp:162
+#: useractions.cpp:161
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
@@ -3660,7 +3660,7 @@ msgstr ""
 "ਹਾਸ਼ੀਏ ਤੋਂ ਬਿਨਾਂ ਤੁਸੀਂ ਮਾਊਸ ਨਾਲ ਮੁੜ ਹਾਸ਼ੀਆ ਨਹੀਂ ਲਿਆ ਸਕਦੇ ਹੋ, ਇਸ ਦੀ ਬਜਾਏ ਕੀ-ਬੋਰਡ %1 "
 "ਸ਼ਾਰਟਕੱਟ ਵਰਤ ਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ ਵਰਤੋਂ।"
 
-#: useractions.cpp:169
+#: useractions.cpp:168
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window in fullscreen mode.\n"
@@ -3678,129 +3678,118 @@ msgstr ""
 "ਜੇਕਰ ਕਾਰਜ ਵਿੱਚ ਪੂਰੀ ਸਕਰੀਨ ਤੋਂ ਵਾਪਿਸ ਆਉਣ ਲਈ ਕੋਈ ਸਹੂਲਤ ਨਾ ਹੋਈ ਤਾਂ ਤੁਸੀਂ ਮਾਊਸ ਦੀ ਵਰਤੋਂ ਕਰਕੇ "
 "ਵਾਪਿਸ ਨਹੀਂ ਆ ਸਕਦੇ ਹੋ। ਇਸ ਕਰਕੇ ਵਿੰਡੋ ਕਾਰਵਾਈ ਮੇਨੂ, ਕੀ-ਬੋਰਡ %1 ਸ਼ਾਰਟਕੱਟ ਵਰਤੋਂ।"
 
-#: useractions.cpp:216
+#: useractions.cpp:215
 #, kde-format
 msgid "&Move"
 msgstr "ਏਧਰ-ਓਧਰ ਕਰੋ(&M)"
 
-#: useractions.cpp:221
+#: useractions.cpp:220
 #, kde-format
 msgid "&Resize"
 msgstr "ਮੁੜ-ਆਕਾਰ ਕਰੋ(&R)"
 
-#: useractions.cpp:226
+#: useractions.cpp:225
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ(&A)"
 
-#: useractions.cpp:232
+#: useractions.cpp:231
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "ਸਭ ਤੋਂ ਹੇਠਾਂ ਰੱਖੋ(&B)"
 
-#: useractions.cpp:238
+#: useractions.cpp:237
 #, kde-format
 msgid "&Fullscreen"
 msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
 
-#: useractions.cpp:244
+#: useractions.cpp:243
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:252
+#: useractions.cpp:251
 #, fuzzy, kde-format
 #| msgid "Set Window Short&cut..."
 msgid "Set Window Short&cut…"
 msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕੱਟ ਸੈਟ ਕਰੋ(&c)..."
 
-#: useractions.cpp:258
+#: useractions.cpp:257
 #, fuzzy, kde-format
 #| msgid "Configure Special &Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "ਖਾਸ ਵਿੰਡੋ ਸੈਟਿੰਗਾਂ ਦੀ ਸੰਰਚਨਾ(&W)..."
 
-#: useractions.cpp:263
+#: useractions.cpp:262
 #, fuzzy, kde-format
 #| msgid "Configure S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "ਖਾਸ ਐਪਲੀਕੇਸ਼ਨ ਸੈਟਿੰਗਾਂ(&p)..."
 
-#: useractions.cpp:269
+#: useractions.cpp:268
 #, kde-format
 msgid "Ma&ximize"
 msgstr "ਵੱਧੋ ਤੋਂ ਵੱਧ(&x)"
 
-#: useractions.cpp:275
+#: useractions.cpp:274
 #, kde-format
 msgid "Mi&nimize"
 msgstr "ਘੱਟੋ-ਘੱਟ(&n)"
 
-#: useractions.cpp:281
+#: useractions.cpp:280
 #, kde-format
 msgid "&More Actions"
 msgstr "ਹੋਰ ਕਾਰਵਾਈਆਂ(&M)"
 
-#: useractions.cpp:286
+#: useractions.cpp:285
 #, kde-format
 msgid "&Close"
 msgstr "ਬੰਦ ਕਰੋ(&C)"
 
-#: useractions.cpp:354
+#: useractions.cpp:350
 #, kde-format
 msgid "&Extensions"
 msgstr "ਇਕਸਟੈਨਸ਼ਨ(&E)"
 
-#: useractions.cpp:404
+#: useractions.cpp:400
 #, kde-format
 msgid "&Desktops"
 msgstr "ਡੈਸਕਟਾਪ(&D)"
 
-#: useractions.cpp:420
+#: useractions.cpp:416
 #, kde-format
 msgid "Move to &Screen"
 msgstr "ਸਕਰੀਨ ਉੱਤੇੇ ਭੇਜੋ(&S)"
 
-#: useractions.cpp:436
+#: useractions.cpp:432
 #, kde-format
 msgid "Show in &Activities"
 msgstr "ਸਰਗਰਮੀ ਵਿੱਚ ਵੇਖਾਓ(&A)"
 
-#: useractions.cpp:453
-#, kde-format
-msgid "Move &To Current Desktop"
-msgstr "ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&T)"
-
-#: useractions.cpp:463 useractions.cpp:522
+#: useractions.cpp:448
 #, kde-format
 msgid "&All Desktops"
 msgstr "ਸਭ ਡੈਸਕਟਾਪ(&A)"
 
-#: useractions.cpp:495
-#, kde-format
-msgctxt "Create a new desktop and move the window there"
-msgid "&New Desktop"
-msgstr "ਨਵਾਂ ਡੈਸਕਟਾਪ(&N)"
-
-#: useractions.cpp:556 useractions.cpp:686
+#: useractions.cpp:482 useractions.cpp:612
 #, fuzzy, kde-format
 #| msgid "Move to %1 %2"
 msgid "Move to %1"
 msgstr "%1 %2 ਉੱਤੇ ਭੇਜੋ"
 
-#: useractions.cpp:569
+#: useractions.cpp:495
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
 
-#: useractions.cpp:581
+#: useractions.cpp:507
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ"
 
-#: useractions.cpp:612
+#: useractions.cpp:538
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3808,393 +3797,393 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "ਸਕਰੀਨ &%1 (%2)"
 
-#: useractions.cpp:638
+#: useractions.cpp:564
 #, kde-format
 msgid "&All Activities"
 msgstr "ਸਭ ਸਰਗਰਮੀਆਂ(&A)"
 
-#: useractions.cpp:805
+#: useractions.cpp:731
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> ਪਹਿਲਾਂ ਹੀ ਵਰਤੋਂ ਅਧੀਨ ਹੈ"
 
-#: useractions.cpp:807
+#: useractions.cpp:733
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ਨੂੰ %2 ਵਲੋਂ %3 ਵਿੱਚ ਵਰਤਿਆ ਜਾ ਰਿਹਾ ਹੈ"
 
-#: useractions.cpp:887
+#: useractions.cpp:813
 #, fuzzy, kde-format
 #| msgid "Window role"
 msgid "Window Menu"
 msgstr "ਵਿੰਡੋ ਰੋਲ"
 
-#: useractions.cpp:889
+#: useractions.cpp:815
 #, kde-format
 msgid "Close Window"
 msgstr "ਵਿੰਡੋ ਬੰਦ ਕਰੋ"
 
-#: useractions.cpp:891
+#: useractions.cpp:817
 #, kde-format
 msgid "Maximize Window"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਵੱਧੋ-ਵੱਧ ਕਰੋ"
 
-#: useractions.cpp:893
+#: useractions.cpp:819
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "ਵਿੰਡੋ ਖੜ੍ਹਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧੋ-ਵੱਧ ਬਣਾਓ"
 
-#: useractions.cpp:895
+#: useractions.cpp:821
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਰੂਪ ਵਿੱਚ ਵੱਧੋ-ਵੱਧ ਬਣਾਓ"
 
-#: useractions.cpp:897
+#: useractions.cpp:823
 #, kde-format
 msgid "Minimize Window"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਘੱਟੋ-ਘੱਟ ਬਣਾਓ"
 
-#: useractions.cpp:899
+#: useractions.cpp:825
 #, kde-format
 msgid "Shade Window"
 msgstr "ਵਿੰਡੋ ਛਾਂ"
 
-#: useractions.cpp:901
+#: useractions.cpp:827
 #, kde-format
 msgid "Move Window"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਏਧਰ-ਓਧਰ ਕਰੋ"
 
-#: useractions.cpp:903
+#: useractions.cpp:829
 #, kde-format
 msgid "Resize Window"
 msgstr "ਵਿੰਡੋ ਦਾ ਮੁੜ-ਆਕਾਰ ਬਦਲੋ"
 
-#: useractions.cpp:905
+#: useractions.cpp:831
 #, kde-format
 msgid "Raise Window"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਉਭਾਰੋ"
 
-#: useractions.cpp:907
+#: useractions.cpp:833
 #, kde-format
 msgid "Lower Window"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਹੇਠਾਂ ਭੇਜੋ"
 
-#: useractions.cpp:909
+#: useractions.cpp:835
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "ਵਿੰਡੋ ਉਭਾਰੋ/ਹੇਠਾਂ ਨੂੰ ਬਦਲੋ"
 
-#: useractions.cpp:911
+#: useractions.cpp:837
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਪੂਰੀ ਸਕਰੀਨ ਉੱਤੇ ਭੇਜੋ"
 
-#: useractions.cpp:913
+#: useractions.cpp:839
 #, fuzzy, kde-format
 #| msgid "Toggle Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "ਵਿੰਡੋ ਦੇ ਹਾਸ਼ੀਏ ਨੂੰ ਬਦਲੋ"
 
-#: useractions.cpp:915
+#: useractions.cpp:841
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਹੋਰਾਂ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
 
-#: useractions.cpp:917
+#: useractions.cpp:843
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਹੋਰਾਂ ਤੋਂ ਹੇਠਾਂ ਰੱਖੋ"
 
-#: useractions.cpp:919
+#: useractions.cpp:845
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "ਸਰਗਰਮ ਵਿੰਡੋ ਧਿਆਨ ਦਿਵਾ ਰਹੀ ਹੈ"
 
-#: useractions.cpp:921
+#: useractions.cpp:847
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕੱਟ ਸੈੱਟਅੱਪ"
 
-#: useractions.cpp:923
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਕੇਂਦਰ ਵਿੱਚ ਭੇਜੋ"
 
-#: useractions.cpp:925
+#: useractions.cpp:851
 #, kde-format
 msgid "Move Window Right"
 msgstr "ਵਿੰਡੋ ਸੱਜੇ ਭੇਜੋ"
 
-#: useractions.cpp:927
+#: useractions.cpp:853
 #, kde-format
 msgid "Move Window Left"
 msgstr "ਵਿੰਡੋ ਖੱਬੇ ਭੇਜੋ"
 
-#: useractions.cpp:929
+#: useractions.cpp:855
 #, kde-format
 msgid "Move Window Up"
 msgstr "ਵਿੰਡੋ ਉੱਤੇ ਭੇਜੋ"
 
-#: useractions.cpp:931
+#: useractions.cpp:857
 #, kde-format
 msgid "Move Window Down"
 msgstr "ਵਿੰਡੋ ਹੇਠਾਂ ਭੇਜੋ"
 
-#: useractions.cpp:933
+#: useractions.cpp:859
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਰੂਪ ਵਿੱਚ ਵੱਧੋ-ਵੱਧ ਬਣਾਓ"
 
-#: useractions.cpp:935
+#: useractions.cpp:861
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "ਵਿੰਡੋ ਖੜ੍ਹਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧੋ-ਵੱਧ ਬਣਾਓ"
 
-#: useractions.cpp:937
+#: useractions.cpp:863
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "ਵਿੰਡੋ ਖਿਤੀਜੀ ਸਮੇਟੋ"
 
-#: useractions.cpp:939
+#: useractions.cpp:865
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਸਮੇਟੋ"
 
-#: useractions.cpp:941
+#: useractions.cpp:867
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:943
+#: useractions.cpp:869
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਤੁਰੰਤ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:945
+#: useractions.cpp:871
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top Left"
 msgid "Quick Tile Window to the Top"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਉੱਤੇ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:947
+#: useractions.cpp:873
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਹੇਠਾਂ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:949
+#: useractions.cpp:875
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਉੱਤੇ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:951
+#: useractions.cpp:877
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਹੇਠਾਂ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:953
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਤੁਰੰਤ ਉੱਤੇ ਸੱਜੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:955
+#: useractions.cpp:881
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਤੁਰੰਤ ਹੇਠਾਂ ਸੱਜੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:957
+#: useractions.cpp:883
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "ਉਤਲੀ ਵਿੰਡੋ ਲਈ ਬਦਲੋ"
 
-#: useractions.cpp:959
+#: useractions.cpp:885
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "ਹੇਠਲੀ ਵਿੰਡੋ ਲਈ ਬਦਲੋ"
 
-#: useractions.cpp:961
+#: useractions.cpp:887
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "ਸੱਜੇ ਪਾਸੇ ਵਾਲੀ ਵਿੰਡੋ ਉੱਤੇ ਜਾਓ"
 
-#: useractions.cpp:963
+#: useractions.cpp:889
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "ਖੱਬੇ ਪਾਸੇ ਵਾਲੀ ਵਿੰਡੋ ਉੱਤੇ ਜਾਓ"
 
-#: useractions.cpp:965
+#: useractions.cpp:891
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:967
+#: useractions.cpp:893
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:970
+#: useractions.cpp:896
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "ਵਿੰਡੋ ਸਭ ਡੈਸਕਟਾਪਾਂ ਵਿੱਚ ਭੇਜੋ"
 
-#: useractions.cpp:973
+#: useractions.cpp:899
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:975
+#: useractions.cpp:901
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਤੁਰੰਤ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:977
+#: useractions.cpp:903
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਉੱਤੇ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:979
+#: useractions.cpp:905
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "ਵਿੰਡੋ ਤੁਰੰਤ ਹੇਠਾਂ ਖੱਬੇ ਝੁਕਾਓ"
 
-#: useractions.cpp:990
+#: useractions.cpp:916
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "ਵਿੰਡੋ ਡੈਸਕਟਾਪ %1 ਵਿੱਚ"
 
-#: useractions.cpp:992
+#: useractions.cpp:918
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "ਵਿੰਡੋ ਅਗਲੇ ਡੈਸਕਟਾਪ ਵਿੱਚ"
 
-#: useractions.cpp:993
+#: useractions.cpp:919
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "ਵਿੰਡੋ ਪਿਛਲੇ ਡੈਸਕਟਾਪ ਵਿੱਚ"
 
-#: useractions.cpp:994
+#: useractions.cpp:920
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਸੱਜੇ ਕਰੋ"
 
-#: useractions.cpp:996
+#: useractions.cpp:922
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਖੱਬੇ ਕਰੋ"
 
-#: useractions.cpp:998
+#: useractions.cpp:924
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਉੱਤੇ ਕਰੋ"
 
-#: useractions.cpp:1000
+#: useractions.cpp:926
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਹੇਠਾਂ ਕਰੋ"
 
-#: useractions.cpp:1004
+#: useractions.cpp:930
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "ਵਿੰਡੋ ਸਕਰੀਨ %1 ਉੱਤੇ"
 
-#: useractions.cpp:1011
+#: useractions.cpp:937
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "ਵਿੰਡੋ ਅਗਲੀ ਸਕਰੀਨ ਵਿੱਚ"
 
-#: useractions.cpp:1013
+#: useractions.cpp:939
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "ਪਿਛਲੀ ਸਕਰੀਨ ਲਈ ਵਿੰਡੋ"
 
-#: useractions.cpp:1015
+#: useractions.cpp:941
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਸੱਜੇ ਕਰੋ"
 
-#: useractions.cpp:1017
+#: useractions.cpp:943
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਖੱਬੇ ਕਰੋ"
 
-#: useractions.cpp:1019
+#: useractions.cpp:945
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "ਵਿੰਡੋ ਸਕਰੀਨ 2 ਵਿੱਚ"
 
-#: useractions.cpp:1021
+#: useractions.cpp:947
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਹੇਠਾਂ ਕਰੋ"
 
-#: useractions.cpp:1025
+#: useractions.cpp:951
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "ਸਕਰੀਨ %1 ਉੱਤੇ ਜਾਓ"
 
-#: useractions.cpp:1032
+#: useractions.cpp:958
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "ਅਗਲੀ ਸਕਰੀਨ ਵਿੱਚ ਜਾਓ"
 
-#: useractions.cpp:1033
+#: useractions.cpp:959
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "ਪਿਛਲੀ ਸਕਰੀਨ ਉੱਤੇ ਜਾਓ"
 
-#: useractions.cpp:1034
+#: useractions.cpp:960
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "ਸੱਜੇ ਪਾਸੇ ਵਾਲੀ ਵਿੰਡੋ ਉੱਤੇ ਜਾਓ"
 
-#: useractions.cpp:1036
+#: useractions.cpp:962
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "ਖੱਬੇ ਪਾਸੇ ਵਾਲੀ ਵਿੰਡੋ ਉੱਤੇ ਜਾਓ"
 
-#: useractions.cpp:1038
+#: useractions.cpp:964
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "ਸਕਰੀਨ 0 ਵਿੱਚ ਜਾਓ"
 
-#: useractions.cpp:1040
+#: useractions.cpp:966
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "ਸਕਰੀਨ 0 ਵਿੱਚ ਜਾਓ"
 
-#: useractions.cpp:1043
+#: useractions.cpp:969
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Peek at Desktop"
 msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
 
-#: useractions.cpp:1046
+#: useractions.cpp:972
 #, kde-format
 msgid "Kill Window"
 msgstr "ਵਿੰਡੋ ਖਤਮ ਕਰੋ"
 
-#: useractions.cpp:1114
+#: useractions.cpp:1040
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "ਵਿੰਡੋ (%1) ਸਰਗਰਮ"
@@ -4294,6 +4283,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Move &To Current Desktop"
+#~ msgstr "ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&T)"
+
+#~ msgctxt "Create a new desktop and move the window there"
+#~ msgid "&New Desktop"
+#~ msgstr "ਨਵਾਂ ਡੈਸਕਟਾਪ(&N)"
 
 #~ msgid "Size"
 #~ msgstr "ਸਾਈਜ਼"

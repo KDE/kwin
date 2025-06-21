@@ -704,7 +704,7 @@
 <varlistentry>
 <term
 ><guilabel
->Mostra menu delle azioni</guilabel
+>Menu della finestra</guilabel
 ></term>
 <listitem>
 <para
@@ -1009,6 +1009,17 @@
 <listitem>
 <para
 >Rende la finestra meno trasparente. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Menu della finestra</guilabel
+></term>
+<listitem>
+<para
+>Apre un piccolo sotto-menu, dove puoi scegliere i comandi relativi alla finestra (&ie; sposta al desktop, sposta allo schermo, massimizza, minimizza, chiudi, &etc;). </para>
 </listitem>
 </varlistentry>
 

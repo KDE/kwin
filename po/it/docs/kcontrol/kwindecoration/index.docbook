@@ -8,6 +8,8 @@
 
 <article id="kwindecoration" lang="&language;">
 <articleinfo>
+<title
+>Decorazioni delle finestre</title>
 <authorgroup>
 <author
 >&Rik.Hemsley; &Rik.Hemsley.mail;</author>
@@ -198,7 +200,7 @@
 
 <para
 >Attiva <guilabel
->Chiudi la finestra con un doppio clic del pulsante del menu</guilabel
+>Chiudi la finestra con un doppio clic sul pulsante del menu della finestra</guilabel
 > per avere un'alternativa al pulsante di chiusura o se lo hai rimosso dalla barra del titolo. </para>
 
 <para

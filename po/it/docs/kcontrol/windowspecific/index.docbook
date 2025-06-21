@@ -1014,11 +1014,11 @@
   <varlistentry
 ><term
 ><emphasis role="bold"
->Schema di colori della barra dei titoli</emphasis
+>Schema di colori della barra del titolo</emphasis
 ></term>
     <listitem>
     <para
->Seleziona uno schema di colore per la barra dei titoli della finestra.</para>
+>Seleziona uno schema di colori per la barra del titolo della finestra.</para>
      </listitem>
   </varlistentry>
   <varlistentry
