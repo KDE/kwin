@@ -309,6 +309,8 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
             if (anim->attribute == CrossFadePrevious) {
                 CrossFadeEffect::redirect(window);
             }
+
+            triggerRepaint();
             return true;
         }
     }
