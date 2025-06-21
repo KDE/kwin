@@ -33,7 +33,6 @@ public:
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
-    void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
 
 private:
@@ -51,8 +50,6 @@ private:
     QHash<EffectWindow *, quint64> m_animations;
     QEasingCurve m_easingCurve;
     int m_fadeDuration;
-    EffectWindow *m_monitorWindow;
-    QList<WId> m_highlightedIds;
     float m_ghostOpacity = 0;
 };
 

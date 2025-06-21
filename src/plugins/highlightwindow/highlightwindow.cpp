@@ -23,10 +23,8 @@ namespace KWin
 HighlightWindowEffect::HighlightWindowEffect()
     : m_easingCurve(QEasingCurve::Linear)
     , m_fadeDuration(animationTime(150ms))
-    , m_monitorWindow(nullptr)
 {
     connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
-    connect(effects, &EffectsHandler::windowClosed, this, &HighlightWindowEffect::slotWindowClosed);
     connect(effects, &EffectsHandler::windowDeleted, this, &HighlightWindowEffect::slotWindowDeleted);
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/HighlightWindow"),
@@ -69,30 +67,10 @@ void HighlightWindowEffect::highlightWindows(const QStringList &windows)
 void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
 {
     if (!m_highlightedWindows.isEmpty()) {
-        // On X11, the tabbox may ask us to highlight itself before the windowAdded signal
-        // is emitted because override-redirect windows are shown after synthetic 50ms delay.
-        if (m_highlightedWindows.contains(w)) {
-            return;
-        }
-        // This window was demanded to be highlighted before it appeared on the screen.
-        for (const WId &id : std::as_const(m_highlightedIds)) {
-            if (w == effects->findWindow(id)) {
-                const quint64 animationId = startHighlightAnimation(w);
-                complete(animationId);
-                return;
-            }
-        }
         if (isHighlightWindow(w)) {
             const quint64 animationId = startGhostAnimation(w); // this window is not currently highlighted
             complete(animationId);
         }
-    }
-}
-
-void HighlightWindowEffect::slotWindowClosed(EffectWindow *w)
-{
-    if (m_monitorWindow == w) { // The monitoring window was destroyed
-        finishHighlighting();
     }
 }
 
@@ -133,7 +111,6 @@ void HighlightWindowEffect::finishHighlighting()
         m_animations.clear();
     }
 
-    m_monitorWindow = nullptr;
     m_highlightedWindows.clear();
 }
 
@@ -144,9 +121,7 @@ void HighlightWindowEffect::highlightWindows(const QList<KWin::EffectWindow *> &
         return;
     }
 
-    m_monitorWindow = nullptr;
     m_highlightedWindows.clear();
-    m_highlightedIds.clear();
     for (auto w : windows) {
         m_highlightedWindows << w;
     }
