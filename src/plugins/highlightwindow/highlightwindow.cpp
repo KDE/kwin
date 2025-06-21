@@ -77,6 +77,7 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
 void HighlightWindowEffect::slotWindowDeleted(EffectWindow *w)
 {
     m_animations.remove(w);
+    m_highlightedWindows.removeOne(w);
 }
 
 void HighlightWindowEffect::prepareHighlighting()
