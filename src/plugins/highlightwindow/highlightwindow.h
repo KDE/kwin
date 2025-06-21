@@ -11,6 +11,8 @@
 
 #include "effect/animationeffect.h"
 
+#include <QTimer>
+
 namespace KWin
 {
 
@@ -44,8 +46,13 @@ private:
 
     void prepareHighlighting();
     void finishHighlighting();
-    void highlightWindows(const QList<KWin::EffectWindow *> &windows);
+    void highlight();
+    void scheduleHighlight(const QList<QUuid> &windows);
 
+    QList<QUuid> m_scheduledHighlightedWindows;
+    QTimer m_highlightTimer;
+    std::optional<std::chrono::steady_clock::time_point> m_highlightTimestamp;
+    std::chrono::milliseconds m_highlightInterval = std::chrono::milliseconds(700);
     QList<EffectWindow *> m_highlightedWindows;
     QHash<EffectWindow *, quint64> m_animations;
     QEasingCurve m_easingCurve;

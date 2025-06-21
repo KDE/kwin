@@ -27,6 +27,10 @@ HighlightWindowEffect::HighlightWindowEffect()
     connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &HighlightWindowEffect::slotWindowDeleted);
 
+    m_highlightTimer.setInterval(1000 / 3);
+    m_highlightTimer.setSingleShot(true);
+    connect(&m_highlightTimer, &QTimer::timeout, this, &HighlightWindowEffect::highlight);
+
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/HighlightWindow"),
                                                  QStringLiteral("org.kde.KWin.HighlightWindow"),
                                                  this,
@@ -50,18 +54,24 @@ static bool isHighlightWindow(EffectWindow *window)
     return window->isNormalWindow() || window->isDialog();
 }
 
+static std::chrono::milliseconds ns2ms(std::chrono::nanoseconds nsecs)
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>(nsecs);
+}
+
 void HighlightWindowEffect::highlightWindows(const QStringList &windows)
 {
-    QList<EffectWindow *> effectWindows;
-    effectWindows.reserve(windows.count());
-    for (const auto &window : windows) {
-        if (auto effectWindow = effects->findWindow(QUuid(window)); effectWindow) {
-            effectWindows.append(effectWindow);
-        } else if (auto effectWindow = effects->findWindow(window.toLong()); effectWindow) {
-            effectWindows.append(effectWindow);
+    QList<QUuid> ids;
+    ids.reserve(windows.size());
+    for (const QString &rawId : windows) {
+        if (const QUuid id(rawId); id.isNull()) {
+            qCWarning(KWIN_HIGHLIGHTWINDOW) << "Received invalid window id:" << rawId;
+            return;
+        } else {
+            ids.append(id);
         }
     }
-    highlightWindows(effectWindows);
+    scheduleHighlight(ids);
 }
 
 void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
@@ -115,15 +125,43 @@ void HighlightWindowEffect::finishHighlighting()
     m_highlightedWindows.clear();
 }
 
-void HighlightWindowEffect::highlightWindows(const QList<KWin::EffectWindow *> &windows)
+void HighlightWindowEffect::highlight()
 {
+    QList<EffectWindow *> windows;
+    windows.reserve(m_scheduledHighlightedWindows.count());
+    for (const auto &window : m_scheduledHighlightedWindows) {
+        if (auto effectWindow = effects->findWindow(window)) {
+            windows.append(effectWindow);
+        }
+    }
+
     if (windows.isEmpty()) {
         finishHighlighting();
         return;
     }
 
     m_highlightedWindows = windows;
+    m_highlightTimestamp = std::chrono::steady_clock::now();
     prepareHighlighting();
+}
+
+void HighlightWindowEffect::scheduleHighlight(const QList<QUuid> &windows)
+{
+    m_scheduledHighlightedWindows = windows;
+
+    if (!m_highlightTimer.isActive()) {
+        if (m_highlightTimestamp) {
+            const auto diff = ns2ms(std::chrono::steady_clock::now() - *m_highlightTimestamp);
+            if (diff >= m_highlightInterval) {
+                highlight();
+            } else {
+                m_highlightTimer.start(diff);
+            }
+            return;
+        }
+
+        m_highlightTimer.start(m_highlightInterval);
+    }
 }
 
 quint64 HighlightWindowEffect::startGhostAnimation(EffectWindow *window)
@@ -187,7 +225,15 @@ bool HighlightWindowEffect::perform(Feature feature, const QVariantList &argumen
     if (arguments.size() != 1) {
         return false;
     }
-    highlightWindows(arguments.first().value<QList<EffectWindow *>>());
+    const auto windows = arguments.first().value<QList<EffectWindow *>>();
+
+    QList<QUuid> ids;
+    ids.reserve(windows.count());
+    for (const EffectWindow *window : windows) {
+        ids << window->internalId();
+    }
+
+    scheduleHighlight(ids);
     return true;
 }
 
