@@ -70,6 +70,7 @@
         "Description[ko]": "창이 보여지거나 감춰질 때 페이드 인/아웃을 사용합니다",
         "Description[lv]": "Likt logiem izgaist un lēnām parādīties, kad tos parādāt vai slēpjat.",
         "Description[nl]": "Laat vensters vloeiend opkomen/vervagen als ze worden weergegeven of verborgen",
+        "Description[pt_BR]": "Faz com que as janelas apareçam e desapareçam gradualmente quando forem mostradas ou ocultadas",
         "Description[sl]": "Naj okna zbledijo in se spet obarvajo, ko so prikazana ali skrita",
         "Description[sv]": "Gör att fönster mjukt tonas när de visas eller döljs",
         "Description[tr]": "Pencereler gösterilirken veya gizlenirken solarak geçiş yapmalarını sağla",
