@@ -121,10 +121,7 @@ void HighlightWindowEffect::highlightWindows(const QList<KWin::EffectWindow *> &
         return;
     }
 
-    m_highlightedWindows.clear();
-    for (auto w : windows) {
-        m_highlightedWindows << w;
-    }
+    m_highlightedWindows = windows;
     prepareHighlighting();
 }
 
