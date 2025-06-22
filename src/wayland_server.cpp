@@ -533,7 +533,8 @@ bool WaylandServer::init()
     return true;
 }
 
-static const bool s_reenableWlDrm = environmentVariableBoolValue("KWIN_WAYLAND_REENABLE_WL_DRM").value_or(false);
+// re-enabled by default until Mesa Amber branch no longer breaks without wl_drm
+static const bool s_reenableWlDrm = environmentVariableBoolValue("KWIN_WAYLAND_REENABLE_WL_DRM").value_or(true);
 
 DrmClientBufferIntegration *WaylandServer::drm()
 {
