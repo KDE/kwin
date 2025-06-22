@@ -261,6 +261,3 @@ msgstr "Много огромни рамки на прозорци"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Извънгабаритни  рамки на прозорци"
-
-#~ msgid "Shade"
-#~ msgstr "Сгъване"
