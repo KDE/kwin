@@ -47,14 +47,3 @@ msgstr "Конфигуриране на филтъра"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Изключване на неподдържаните ефекти"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Show/Hide Video"
-#~ msgstr "Показване/скриване на видео"
-
-#~ msgid ""
-#~ "Hint: To find out or configure how to activate an effect, look at the "
-#~ "effect's settings."
-#~ msgstr ""
-#~ "Съвет: За да разберете как да конфигурирате или да активирате даден "
-#~ "ефект, погледнете настройките на ефекта."

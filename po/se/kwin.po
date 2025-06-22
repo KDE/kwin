@@ -4102,11 +4102,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Move Up"
-#~ msgstr "&Sirdde"
-
-#, fuzzy
-#~ msgid "Move Down"
-#~ msgstr "Sirdde láse"

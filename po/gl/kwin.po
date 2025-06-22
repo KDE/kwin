@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-21 00:44+0000\n"
-"PO-Revision-Date: 2025-05-23 10:23+0200\n"
+"PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3550,12 +3550,7 @@ msgid "Tablets switched outputs"
 msgstr "As tabletas cambiaron de saída"
 
 #: useractions.cpp:161
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3564,17 +3559,10 @@ msgid ""
 msgstr ""
 "Escolleu amosar unha xanela sen a moldura.\n"
 "Sen esta, non será quen de activala de novo mediante o rato. Use o menú de "
-"operacións da xanela no seu lugar, activándoo mediante o atallo de teclado "
-"%1."
+"xanela no seu lugar, activándoo mediante o atallo de teclado %1."
 
 #: useractions.cpp:168
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3583,8 +3571,8 @@ msgid ""
 msgstr ""
 "Escolleu amosar unha xanela en modo pantalla completa.\n"
 "Se a aplicación en si non ten unha opción para desactivar este modo, non "
-"será quen de desactivalo mediante o rato. Use o menú de operacións da "
-"xanela, mediante o atallo de teclado %1."
+"será quen de desactivalo mediante o rato. Use o menú de xanela, mediante o "
+"atallo de teclado %1."
 
 #: useractions.cpp:215
 #, kde-format
@@ -3719,10 +3707,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> é usado por %2 en %3"
 
 #: useractions.cpp:813
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Rol da xanela"
+msgstr "Menú de xanela"
 
 #: useractions.cpp:815
 #, kde-format
