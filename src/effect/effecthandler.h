@@ -793,6 +793,7 @@ Q_SIGNALS:
     void desktopChangingCancelled();
     void desktopAdded(KWin::VirtualDesktop *desktop);
     void desktopRemoved(KWin::VirtualDesktop *desktop);
+    void desktopMoved(KWin::VirtualDesktop *desktop, int position);
 
     /**
      * Emitted when the virtual desktop grid layout changes

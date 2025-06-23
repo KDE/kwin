@@ -41,6 +41,8 @@ SlideEffect::SlideEffect()
             this, &SlideEffect::finishedSwitching);
     connect(effects, &EffectsHandler::desktopRemoved,
             this, &SlideEffect::finishedSwitching);
+    connect(effects, &EffectsHandler::desktopMoved,
+            this, &SlideEffect::desktopMoved);
     connect(effects, &EffectsHandler::screenAdded,
             this, &SlideEffect::finishedSwitching);
     connect(effects, &EffectsHandler::screenRemoved,
@@ -407,6 +409,11 @@ void SlideEffect::desktopChangingCancelled()
     if (effects->activeFullScreenEffect() == this) {
         startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
     }
+}
+
+void SlideEffect::desktopMoved()
+{
+    m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
 }
 
 QPointF SlideEffect::moveInsideDesktopGrid(QPointF p)
