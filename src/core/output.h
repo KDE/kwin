@@ -389,6 +389,7 @@ public:
 
     bool detectedDdcCi() const;
     bool allowDdcCi() const;
+    bool isDdcCiKnownBroken() const;
 
     const ColorDescription &colorDescription() const;
 

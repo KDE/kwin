@@ -1356,7 +1356,8 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
                 return false;
             }
             const auto changeset = outputConfig.constChangeSet(output);
-            const bool disallowDdcCi = (changeset && !changeset->allowDdcCi.value_or(output->allowDdcCi()))
+            const bool disallowDdcCi = output->isDdcCiKnownBroken()
+                || (changeset && !changeset->allowDdcCi.value_or(output->allowDdcCi()))
                 || (!changeset && !output->allowDdcCi());
             if (disallowDdcCi && device->usesDdcCi()) {
                 return false;

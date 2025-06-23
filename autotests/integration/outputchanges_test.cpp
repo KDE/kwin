@@ -1278,12 +1278,20 @@ void OutputChangesTest::testXwaylandScaleChange()
 
 using ModeInfo = std::tuple<QSize, uint64_t, OutputMode::Flags>;
 
+static QByteArray readEdid(const QString &path)
+{
+    QFile file(path);
+    (void)file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
+    return file.readAll();
+};
+
 void OutputChangesTest::testGenerateConfigs_data()
 {
     QTest::addColumn<DeviceType>("deviceType");
     QTest::addColumn<Test::OutputInfo>("outputInfo");
     QTest::addColumn<std::tuple<QSize, uint64_t, OutputMode::Flags>>("defaultMode");
     QTest::addColumn<double>("defaultScale");
+    QTest::addColumn<bool>("defaultDDCValue");
 
     QTest::addRow("1080p 27\"")
         << DeviceType::Desktop
@@ -1293,7 +1301,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(1920, 1080), 60000ul, OutputMode::Flag::Preferred) << 1.0;
+        << ModeInfo(QSize(1920, 1080), 60000ul, OutputMode::Flag::Preferred) << 1.0 << true;
 
     QTest::addRow("2160p 27\"")
         << DeviceType::Desktop
@@ -1303,7 +1311,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.70;
+        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.70 << true;
 
     QTest::addRow("2160p invalid size")
         << DeviceType::Desktop
@@ -1313,7 +1321,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.0;
+        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.0 << true;
 
     QTest::addRow("2160p impossibly tiny size")
         << DeviceType::Desktop
@@ -1323,7 +1331,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(1, 1),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.0;
+        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 1.0 << true;
 
     QTest::addRow("1080p 27\" with non-preferred high refresh option")
         << DeviceType::Desktop
@@ -1333,7 +1341,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(1920, 1080), 120000, OutputMode::Flags{})},
            }
-        << ModeInfo(QSize(1920, 1080), 120000ul, OutputMode::Flags{}) << 1.0;
+        << ModeInfo(QSize(1920, 1080), 120000ul, OutputMode::Flags{}) << 1.0 << true;
 
     QTest::addRow("2160p 27\" with 30Hz preferred mode")
         << DeviceType::Desktop
@@ -1343,7 +1351,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flags{})},
            }
-        << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{}) << 1.15;
+        << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{}) << 1.15 << true;
 
     QTest::addRow("2160p 27\" with 30Hz preferred and a generated 60Hz mode")
         << DeviceType::Desktop
@@ -1353,7 +1361,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flag::Generated)},
            }
-        << ModeInfo(QSize(3840, 2160), 30000ul, OutputMode::Flag::Preferred) << 1.70;
+        << ModeInfo(QSize(3840, 2160), 30000ul, OutputMode::Flag::Preferred) << 1.70 << true;
 
     QTest::addRow("1440p 32:9 49\" with two preferred modes")
         << DeviceType::Desktop
@@ -1363,7 +1371,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(1190, 340),
                .modes = {ModeInfo(QSize(3840, 1080), 120000, OutputMode::Flag::Preferred), ModeInfo(QSize(5120, 1440), 120000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred) << 1.10;
+        << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred) << 1.10 << true;
 
     QTest::addRow("2160p 32:9 57\" with non-native preferred mode")
         << DeviceType::Desktop
@@ -1373,7 +1381,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(1400, 400),
                .modes = {ModeInfo(QSize(3840, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(7680, 2160), 120000, OutputMode::Flags{})},
            }
-        << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.45;
+        << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.45 << true;
 
     QTest::addRow("Framework 1920p 13.5\"")
         << DeviceType::Laptop
@@ -1383,7 +1391,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(285, 190),
                .modes = {ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred) << 2.05;
+        << ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred) << 2.05 << true;
 
     QTest::addRow("DELL XPS 13 1080p 13\"")
         << DeviceType::Laptop
@@ -1393,7 +1401,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(293, 162),
                .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred) << 1.35;
+        << ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred) << 1.35 << true;
 
     QTest::addRow("DELL XPS 13 2160p 13\"")
         << DeviceType::Laptop
@@ -1403,7 +1411,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(294, 165),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred) << 2.65;
+        << ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred) << 2.65 << true;
 
     QTest::addRow("ThinkPad T14 2400p 14\"")
         << DeviceType::Laptop
@@ -1413,7 +1421,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(301, 188),
                .modes = {ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred) << 2.60;
+        << ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred) << 2.60 << true;
 
     QTest::addRow("SteamDeck OLED")
         << DeviceType::Laptop
@@ -1424,7 +1432,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .modes = {ModeInfo(QSize(800, 1280), 90000, OutputMode::Flag::Preferred)},
                .panelOrientation = OutputTransform::Kind::Rotate90,
            }
-        << ModeInfo(QSize(800, 1280), 90000ul, OutputMode::Flag::Preferred) << 1.0;
+        << ModeInfo(QSize(800, 1280), 90000ul, OutputMode::Flag::Preferred) << 1.0 << true;
 
     QTest::addRow("Pixel 3a")
         << DeviceType::Phone
@@ -1434,7 +1442,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(62, 128),
                .modes = {ModeInfo(QSize(1080, 2220), 60000, OutputMode::Flags{}), ModeInfo(QSize(1080, 2220), 120000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(1080, 2220), 120000ul, OutputMode::Flag::Preferred) << 2.95;
+        << ModeInfo(QSize(1080, 2220), 120000ul, OutputMode::Flag::Preferred) << 2.95 << true;
 
     QTest::addRow("OnePlus 6")
         << DeviceType::Phone
@@ -1444,7 +1452,18 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(68, 145),
                .modes = {ModeInfo(QSize(1080, 2280), 60000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(1080, 2280), 60000ul, OutputMode::Flag::Preferred) << 2.65;
+        << ModeInfo(QSize(1080, 2280), 60000ul, OutputMode::Flag::Preferred) << 2.65 << true;
+
+    QTest::addRow("Samsung Odyssey G5")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(),
+               .internal = false,
+               .physicalSizeInMM = QSize(698, 393),
+               .modes = {ModeInfo(QSize(2560, 1440), 164831, OutputMode::Flag::Preferred)},
+               .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
+           }
+        << ModeInfo(QSize(2560, 1440), 164831, OutputMode::Flag::Preferred) << 1.0 << false;
 }
 
 void OutputChangesTest::testGenerateConfigs()
@@ -1487,6 +1506,9 @@ void OutputChangesTest::testGenerateConfigs()
     QFETCH(double, defaultScale);
     QVERIFY(outputConfig->scale);
     QCOMPARE(*outputConfig->scale, defaultScale);
+
+    QFETCH(bool, defaultDDCValue);
+    QCOMPARE(*outputConfig->allowDdcCi, defaultDDCValue);
 }
 
 void OutputChangesTest::testAutorotate_data()
@@ -1558,12 +1580,6 @@ struct IdentificationData
 void OutputChangesTest::testSettingRestoration_data()
 {
     QTest::addColumn<QList<IdentificationData>>("outputData");
-
-    const auto readEdid = [](const QString &path) {
-        QFile file(path);
-        file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
-        return file.readAll();
-    };
 
     QTest::addRow("Same EDID ID, different hash") << QList{
         IdentificationData{
