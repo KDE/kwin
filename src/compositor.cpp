@@ -498,7 +498,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             desiredArtificalHdrHeadroom = std::clamp(desiredHdrHeadroom, 1.0, std::min(maxPossibleHeadroom, maxHdrHeadroom));
             const double changePerFrame = changePerSecond * double(frame->refreshDuration().count()) / 1'000'000'000;
             const double newHeadroom = std::clamp(*desiredArtificalHdrHeadroom, output->artificialHdrHeadroom() - changePerFrame, output->artificialHdrHeadroom() + changePerFrame);
-            frame->setArtificialHdrHeadroom(newHeadroom);
+            frame->setArtificialHdrHeadroom(std::clamp(newHeadroom, 1.0, maxPossibleHeadroom));
         } else {
             frame->setArtificialHdrHeadroom(1);
         }
