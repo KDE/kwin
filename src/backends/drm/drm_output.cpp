@@ -611,7 +611,7 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
 {
     if (m_state.brightnessDevice && !m_state.highDynamicRange) {
         constexpr double minLuminance = 0.04;
-        const double effectiveBrightness = (minLuminance + newBrightness) * m_state.artificialHdrHeadroom - minLuminance;
+        const double effectiveBrightness = (minLuminance + newBrightness) * newArtificialHdrHeadroom - minLuminance;
         m_state.brightnessDevice->setBrightness(effectiveBrightness);
     }
     State next = m_state;
