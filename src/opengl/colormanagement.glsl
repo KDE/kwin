@@ -121,7 +121,7 @@ vec3 doTonemapping(vec3 color) {
     float inputRange = maxTonemappingLuminance / destinationReferenceLuminance;
     float outputRange = maxDestinationLuminance / destinationReferenceLuminance;
     // how much dynamic range we need to decently present the content
-    float minDecentRange = min(inputRange, 1.5);
+    float minDecentRange = clamp(inputRange, 1.0, 2.0);
     // if the output doesn't provide enough HDR headroom for the tone mapper to do a good job, dim the image to create some
     float referenceDimming = 1.0 / clamp(minDecentRange / outputRange, 1.0, minDecentRange);
     float outputReferenceLuminance = destinationReferenceLuminance * referenceDimming;
