@@ -535,6 +535,8 @@ void VirtualDesktopManager::moveVirtualDesktop(VirtualDesktop *desktop, int posi
 #endif
     }
 
+    updateLayout();
+
     save();
     Q_EMIT desktopMoved(desktop, position);
 }
