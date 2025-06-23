@@ -143,7 +143,8 @@ static QList<KPluginMetaData> listBuiltinEffects()
 
 static QList<KPluginMetaData> listScriptedEffects()
 {
-    return KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin-wayland/effects/"));
+    return KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin-wayland/effects/"))
+        + KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin/effects/"));
 }
 
 void KWinScreenEdgesConfig::monitorInit()
@@ -184,8 +185,8 @@ void KWinScreenEdgesConfig::monitorInit()
         m_effectSettings[effect.pluginId()] = new KWinScreenEdgeEffectSettings(effect.pluginId(), this);
     }
 
-    const QString scriptFolder = QStringLiteral("kwin-wayland/scripts/");
-    const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
+    const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin-wayland/scripts/"))
+        + KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/scripts/"));
 
     for (const KPluginMetaData &script : scripts) {
         if (script.value(QStringLiteral("X-KWin-Border-Activate"), false) != true) {
