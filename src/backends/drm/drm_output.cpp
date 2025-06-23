@@ -463,7 +463,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
     const double brightness = next.currentBrightness.value_or(next.brightnessSetting);
     double maxPossibleArtificialHeadroom = 1.0;
     if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
-        maxPossibleArtificialHeadroom = 1.0 / next.currentBrightness.value_or(next.brightnessSetting);
+        maxPossibleArtificialHeadroom = std::min(1.0 / next.currentBrightness.value_or(next.brightnessSetting), 3.0);
     }
 
     if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
