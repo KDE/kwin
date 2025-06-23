@@ -2359,11 +2359,10 @@ public:
             return emulateTabletEvent(event);
         }
 
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
+
         if (event->type == TabletToolTipEvent::Press) {
             tool->sendMotion(surfaceLocalPos);
-            tool->sendDown();
-        } else {
-            tool->sendUp();
         }
 
         if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
@@ -2382,7 +2381,16 @@ public:
             tool->sendSlider(event->sliderPosition);
         }
 
-        tool->sendFrame(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+        tool->sendFrame(timestamp.count());
+
+        if (event->type == TabletToolTipEvent::Press) {
+            tool->sendDown();
+        } else {
+            tool->sendUp();
+        }
+
+        tool->sendFrame(timestamp.count());
+
         return true;
     }
 
