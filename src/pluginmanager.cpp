@@ -108,7 +108,7 @@ bool PluginManager::loadPlugin(const KPluginMetaData &metadata)
 
     std::unique_ptr<PluginFactory> factory(qobject_cast<PluginFactory *>(pluginLoader.instance()));
     if (!factory) {
-        qCWarning(KWIN_CORE) << "Failed to get plugin factory for" << pluginId;
+        qCWarning(KWIN_CORE) << "Failed to get plugin factory for" << pluginId << pluginLoader.errorString();
         return false;
     }
 

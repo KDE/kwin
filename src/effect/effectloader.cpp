@@ -297,11 +297,14 @@ EffectPluginFactory *PluginEffectLoader::factory(const KPluginMetaData &info) co
     if (!info.isValid()) {
         return nullptr;
     }
+    QString error;
     KPluginFactory *factory;
     if (info.isStaticPlugin()) {
         // in case of static plugins we don't need to worry about the versions, because
         // they are shipped as part of the kwin executables
-        factory = KPluginFactory::loadFactory(info).plugin;
+        const auto result = KPluginFactory::loadFactory(info);
+        factory = result.plugin;
+        error = result.errorText;
     } else {
         QPluginLoader loader(info.fileName());
         if (loader.metaData().value("IID").toString() != QLatin1String(EffectPluginFactory_iid)) {
@@ -310,9 +313,12 @@ EffectPluginFactory *PluginEffectLoader::factory(const KPluginMetaData &info) co
             return nullptr;
         }
         factory = qobject_cast<KPluginFactory *>(loader.instance());
+        if (!factory) {
+            error = loader.errorString();
+        }
     }
     if (!factory) {
-        qCDebug(KWIN_CORE) << "Did not get KPluginFactory for " << info.pluginId();
+        qCWarning(KWIN_CORE).nospace() << "Did not get KPluginFactory for " << info.pluginId() << ':' << error;
         return nullptr;
     }
     return dynamic_cast<EffectPluginFactory *>(factory);
