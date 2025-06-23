@@ -4108,10 +4108,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Move &To Current Desktop"
-#~ msgstr "移动到当前桌面(&T)"
-
-#~ msgctxt "Create a new desktop and move the window there"
-#~ msgid "&New Desktop"
-#~ msgstr "新建桌面(&N)"
