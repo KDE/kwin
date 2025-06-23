@@ -393,6 +393,7 @@ public:
 
     bool detectedDdcCi() const;
     bool allowDdcCi() const;
+    bool isDdcCiKnownBroken() const;
 
     BrightnessDevice *brightnessDevice() const;
     virtual void unsetBrightnessDevice();

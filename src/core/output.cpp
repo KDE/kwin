@@ -907,6 +907,19 @@ const ColorDescription &Output::layerBlendingColor() const
     return m_state.layerBlendingColor;
 }
 
+// TODO move these quirks to libdisplay-info?
+static const std::array s_brokenDdcCi = {
+    std::make_pair(QByteArrayLiteral("SAM"), QByteArrayLiteral("Odyssey G5")),
+};
+
+bool Output::isDdcCiKnownBroken() const
+{
+    return m_information.edid.isValid() && std::ranges::any_of(s_brokenDdcCi, [this](const auto &pair) {
+        return m_information.edid.eisaId() == pair.first
+            && m_information.edid.monitorName() == pair.second;
+    });
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"
