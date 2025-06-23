@@ -191,6 +191,11 @@ bool HighlightWindowEffect::perform(Feature feature, const QVariantList &argumen
     return true;
 }
 
+void HighlightWindowEffect::reconfigure(ReconfigureFlags flags)
+{
+    m_fadeDuration = animationTime(150ms);
+}
+
 } // namespace
 
 #include "moc_highlightwindow.cpp"

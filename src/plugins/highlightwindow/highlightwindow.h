@@ -29,6 +29,7 @@ public:
 
     bool provides(Feature feature) override;
     bool perform(Feature feature, const QVariantList &arguments) override;
+    void reconfigure(ReconfigureFlags flags) override;
     Q_SCRIPTABLE void highlightWindows(const QStringList &windows);
 
 public Q_SLOTS:
