@@ -333,8 +333,11 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
         internal->installEventFilter(this);
     }
 
-    connect(w, &EffectWindow::windowDecorationChanged, this, &BlurEffect::setupDecorationConnections);
     setupDecorationConnections(w);
+    connect(w, &EffectWindow::windowDecorationChanged, this, [this, w]() {
+        setupDecorationConnections(w);
+        updateBlurRegion(w);
+    });
 
     updateBlurRegion(w);
 }
