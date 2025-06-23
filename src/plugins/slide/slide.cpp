@@ -99,12 +99,6 @@ inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
 
 void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    std::chrono::milliseconds timeDelta = std::chrono::milliseconds::zero();
-    if (m_lastPresentTime.count()) {
-        timeDelta = presentTime - m_lastPresentTime;
-    }
-    m_lastPresentTime = presentTime;
-
     const QList<VirtualDesktop *> desktops = effects->desktops();
     const int w = effects->desktopGridWidth();
     const int h = effects->desktopGridHeight();
@@ -114,6 +108,12 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
         Q_UNREACHABLE();
 
     case State::ActiveAnimation: {
+        std::chrono::milliseconds timeDelta = std::chrono::milliseconds::zero();
+        if (m_lastPresentTime.count()) {
+            timeDelta = presentTime - m_lastPresentTime;
+        }
+        m_lastPresentTime = presentTime;
+
         m_motionX.advance(timeDelta);
         m_motionY.advance(timeDelta);
 
@@ -321,6 +321,7 @@ void SlideEffect::startAnimation(const QPointF &oldPos, VirtualDesktop *current,
     m_motionX.setPosition(m_startPos.x() * virtualSpaceSize.width());
     m_motionY.setAnchor(m_endPos.y() * virtualSpaceSize.height());
     m_motionY.setPosition(m_startPos.y() * virtualSpaceSize.height());
+    m_lastPresentTime = std::chrono::milliseconds::zero();
 
     effects->setActiveFullScreenEffect(this);
     effects->addRepaintFull();
@@ -364,7 +365,6 @@ void SlideEffect::finishedSwitching()
     m_windowData.clear();
     m_movingWindow = nullptr;
     m_state = State::Inactive;
-    m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->setActiveFullScreenEffect(nullptr);
 }
 
