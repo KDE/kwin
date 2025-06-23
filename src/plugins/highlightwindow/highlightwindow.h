@@ -35,6 +35,9 @@ public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
 
+protected:
+    void animationEnded(EffectWindow *w, Attribute a, uint meta) override;
+
 private:
     quint64 startGhostAnimation(EffectWindow *window);
     quint64 startHighlightAnimation(EffectWindow *window);

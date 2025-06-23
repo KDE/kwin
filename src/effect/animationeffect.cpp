@@ -287,7 +287,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
     return ret_id;
 }
 
-bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime)
+bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime, TerminationFlags terminationFlags)
 {
     if (animationId == d->m_justEndedAnimation) {
         return false; // this is just ending, do not try to retarget it
@@ -308,6 +308,9 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
 
             if (anim->attribute == CrossFadePrevious) {
                 CrossFadeEffect::redirect(window);
+            }
+            if (terminationFlags) {
+                anim->terminationFlags = terminationFlags;
             }
             return true;
         }

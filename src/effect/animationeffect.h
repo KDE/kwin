@@ -424,7 +424,7 @@ protected:
      * @note You can NOT retarget an animation that just has just ended!
      * @since 5.6
      */
-    bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
+    bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1, TerminationFlags terminationFlags = TerminationFlags());
 
     bool freezeInTime(quint64 animationId, qint64 frozenTime);
 
