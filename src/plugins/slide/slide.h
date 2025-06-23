@@ -75,7 +75,6 @@ public:
 private Q_SLOTS:
     void desktopChanged(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *with);
     void desktopChanging(VirtualDesktop *old, QPointF desktopOffset, EffectWindow *with);
-    void desktopMoved();
     void desktopChangingCancelled();
     void windowAdded(EffectWindow *w);
     void windowDeleted(EffectWindow *w);
@@ -90,7 +89,7 @@ private:
     QPointF forcePositivePosition(QPointF p) const;
     void optimizePath(); // Find the best path to target desktop
 
-    void startAnimation(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *movingWindow = nullptr);
+    void startAnimation(const QPointF &oldPos, VirtualDesktop *current, EffectWindow *movingWindow = nullptr);
     void prepareSwitching();
     void finishedSwitching();
 
@@ -114,12 +113,14 @@ private:
     QPointF m_startPos;
     QPointF m_endPos;
 
+    QPointF m_gesturePos;
+
     EffectWindow *m_movingWindow = nullptr;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
-    QPointF m_currentPosition; // Should always be kept up to date with where on the grid we're seeing.
 
     struct
     {
+        QPointF position;
         bool wrap;
         QList<VirtualDesktop *> visibleDesktops;
     } m_paintCtx;
