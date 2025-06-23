@@ -44,7 +44,7 @@ void KGlobalAccelImpl::setEnabled(bool enabled)
 
 bool KGlobalAccelImpl::checkKeyPressed(int keyQt, bool isRepeated)
 {
-    return keyPressed(keyQt);
+    return keyPressed(keyQt, isRepeated);
 }
 
 bool KGlobalAccelImpl::checkKeyReleased(int keyQt)
