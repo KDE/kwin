@@ -36,18 +36,18 @@ public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
 
 private:
+    void highlightWindows(const QList<KWin::EffectWindow *> &windows);
+
     quint64 startGhostAnimation(EffectWindow *window);
     quint64 startHighlightAnimation(EffectWindow *window);
-    void startRevertAnimation(EffectWindow *window);
+    quint64 startRevertAnimation(EffectWindow *window);
+    void animationEnded(EffectWindow *window, Attribute attribute, uint meta) override;
 
     bool isHighlighted(EffectWindow *window) const;
 
-    void prepareHighlighting();
-    void finishHighlighting();
-    void highlightWindows(const QList<KWin::EffectWindow *> &windows);
-
     QList<EffectWindow *> m_highlightedWindows;
     QHash<EffectWindow *, quint64> m_animations;
+    QHash<EffectWindow *, quint64> m_setAnimations;
     QEasingCurve m_easingCurve;
     std::chrono::milliseconds m_fadeDuration;
     QList<WId> m_highlightedIds;
