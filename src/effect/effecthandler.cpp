@@ -189,6 +189,7 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
     });
     connect(vds, &VirtualDesktopManager::desktopAdded, this, &EffectsHandler::desktopAdded);
     connect(vds, &VirtualDesktopManager::desktopRemoved, this, &EffectsHandler::desktopRemoved);
+    connect(vds, &VirtualDesktopManager::desktopMoved, this, &EffectsHandler::desktopMoved);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #if KWIN_BUILD_ACTIVITIES

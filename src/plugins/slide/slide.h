@@ -75,6 +75,7 @@ public:
 private Q_SLOTS:
     void desktopChanged(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *with);
     void desktopChanging(VirtualDesktop *old, QPointF desktopOffset, EffectWindow *with);
+    void desktopMoved();
     void desktopChangingCancelled();
     void windowAdded(EffectWindow *w);
     void windowDeleted(EffectWindow *w);
