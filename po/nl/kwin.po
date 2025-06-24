@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-21 00:44+0000\n"
+"POT-Creation-Date: 2025-06-24 00:44+0000\n"
 "PO-Revision-Date: 2025-05-30 23:57+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -4069,42 +4069,42 @@ msgstr "Venster (%1) activeren"
 msgid "unknown"
 msgstr "onbekend"
 
-#: virtualdesktops.cpp:704 virtualdesktops.cpp:779
+#: virtualdesktops.cpp:706 virtualdesktops.cpp:781
 #, kde-format
 msgid "Desktop %1"
 msgstr "Bureaublad %1"
 
-#: virtualdesktops.cpp:786
+#: virtualdesktops.cpp:788
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Schakelen naar volgend bureaublad"
 
-#: virtualdesktops.cpp:787
+#: virtualdesktops.cpp:789
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Schakelen naar vorig bureaublad"
 
-#: virtualdesktops.cpp:790
+#: virtualdesktops.cpp:792
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Een bureaublad naar rechts schakelen"
 
-#: virtualdesktops.cpp:791
+#: virtualdesktops.cpp:793
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Een bureaublad naar links schakelen"
 
-#: virtualdesktops.cpp:792
+#: virtualdesktops.cpp:794
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Een bureaublad omhoog schakelen"
 
-#: virtualdesktops.cpp:793
+#: virtualdesktops.cpp:795
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Een bureaublad omlaag schakelen"
 
-#: virtualdesktops.cpp:881
+#: virtualdesktops.cpp:883
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Schakel naar bureaublad %1"
@@ -4142,7 +4142,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reageert niet)"
 
-#: workspace.cpp:1642
+#: workspace.cpp:1643
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

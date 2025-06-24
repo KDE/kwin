@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-21 00:44+0000\n"
+"POT-Creation-Date: 2025-06-24 00:44+0000\n"
 "PO-Revision-Date: 2024-09-27 11:45+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -4021,42 +4021,42 @@ msgstr "Aktivovat okno (%1)"
 msgid "unknown"
 msgstr "neznámý"
 
-#: virtualdesktops.cpp:704 virtualdesktops.cpp:779
+#: virtualdesktops.cpp:706 virtualdesktops.cpp:781
 #, kde-format
 msgid "Desktop %1"
 msgstr "Plocha %1"
 
-#: virtualdesktops.cpp:786
+#: virtualdesktops.cpp:788
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Přepnout se na následující plochu"
 
-#: virtualdesktops.cpp:787
+#: virtualdesktops.cpp:789
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Přepnout se na předchozí plochu"
 
-#: virtualdesktops.cpp:790
+#: virtualdesktops.cpp:792
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Přepnout se na plochu vpravo"
 
-#: virtualdesktops.cpp:791
+#: virtualdesktops.cpp:793
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Přepnout se na plochu vlevo"
 
-#: virtualdesktops.cpp:792
+#: virtualdesktops.cpp:794
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Přepnout se na plochu nahoru"
 
-#: virtualdesktops.cpp:793
+#: virtualdesktops.cpp:795
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Přepnout se na plochu dolů"
 
-#: virtualdesktops.cpp:881
+#: virtualdesktops.cpp:883
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Přepnout se na plochu %1"
@@ -4092,7 +4092,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovídá)"
 
-#: workspace.cpp:1642
+#: workspace.cpp:1643
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

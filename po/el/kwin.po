@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-21 00:44+0000\n"
+"POT-Creation-Date: 2025-06-24 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -4155,42 +4155,42 @@ msgstr "Ενεργοποίηση παραθύρου (%1)"
 msgid "unknown"
 msgstr "άγνωστη"
 
-#: virtualdesktops.cpp:704 virtualdesktops.cpp:779
+#: virtualdesktops.cpp:706 virtualdesktops.cpp:781
 #, kde-format
 msgid "Desktop %1"
 msgstr "Επιφάνεια εργασίας %1"
 
-#: virtualdesktops.cpp:786
+#: virtualdesktops.cpp:788
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Μετάβαση στην επόμενη Επιφάνεια εργασίας"
 
-#: virtualdesktops.cpp:787
+#: virtualdesktops.cpp:789
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Μετάβαση στην προηγούμενη Επιφάνεια εργασίας"
 
-#: virtualdesktops.cpp:790
+#: virtualdesktops.cpp:792
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: virtualdesktops.cpp:791
+#: virtualdesktops.cpp:793
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: virtualdesktops.cpp:792
+#: virtualdesktops.cpp:794
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Μετάβαση μία επιφάνεια εργασίας πάνω"
 
-#: virtualdesktops.cpp:793
+#: virtualdesktops.cpp:795
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
-#: virtualdesktops.cpp:881
+#: virtualdesktops.cpp:883
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Εναλλαγή στην Επιφάνεια εργασίας %1"
@@ -4226,7 +4226,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Δεν ανταποκρίνεται)"
 
-#: workspace.cpp:1642
+#: workspace.cpp:1643
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
