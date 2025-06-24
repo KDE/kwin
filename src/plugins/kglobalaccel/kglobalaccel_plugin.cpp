@@ -42,14 +42,18 @@ void KGlobalAccelImpl::setEnabled(bool enabled)
     s_input->registerGlobalAccel(enabled ? this : nullptr);
 }
 
-bool KGlobalAccelImpl::checkKeyPressed(int keyQt, bool isRepeated)
+bool KGlobalAccelImpl::checkKeyPressed(int keyQt, KWin::KeyboardKeyState state)
 {
-    return keyPressed(keyQt, isRepeated);
-}
+    switch (state) {
+    case KWin::KeyboardKeyState::Pressed:
+        return keyPressed(keyQt, false);
+    case KWin::KeyboardKeyState::Repeated:
+        return keyPressed(keyQt, true);
+    case KWin::KeyboardKeyState::Released:
+        return keyReleased(keyQt);
+    }
 
-bool KGlobalAccelImpl::checkKeyReleased(int keyQt)
-{
-    return keyReleased(keyQt);
+    return false;
 }
 
 bool KGlobalAccelImpl::checkPointerPressed(Qt::MouseButtons buttons)
