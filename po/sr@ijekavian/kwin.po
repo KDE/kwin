@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-08 02:38+0000\n"
+"POT-Creation-Date: 2025-06-24 02:36+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -4643,42 +4643,42 @@ msgstr "Активирај прозор (%1)"
 msgid "unknown"
 msgstr "непознат"
 
-#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
+#: virtualdesktops.cpp:696 virtualdesktops.cpp:771
 #, kde-format
 msgid "Desktop %1"
 msgstr "Површ %1"
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:778
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "На наредну површ"
 
-#: virtualdesktops.cpp:777
+#: virtualdesktops.cpp:779
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "На претходну површ"
 
-#: virtualdesktops.cpp:780
+#: virtualdesktops.cpp:782
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "На прву површ десно"
 
-#: virtualdesktops.cpp:781
+#: virtualdesktops.cpp:783
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "На прву површ лијево"
 
-#: virtualdesktops.cpp:782
+#: virtualdesktops.cpp:784
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "На прву површ изнад"
 
-#: virtualdesktops.cpp:783
+#: virtualdesktops.cpp:785
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "На прву површ испод"
 
-#: virtualdesktops.cpp:871
+#: virtualdesktops.cpp:873
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "На површ %1"
@@ -4714,7 +4714,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не одазива се)"
 
-#: workspace.cpp:1626
+#: workspace.cpp:1627
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

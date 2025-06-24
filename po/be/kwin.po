@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-08 02:38+0000\n"
+"POT-Creation-Date: 2025-06-24 02:36+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -4285,42 +4285,42 @@ msgstr "Актываваць акно (%1)"
 msgid "unknown"
 msgstr "невядома"
 
-#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
+#: virtualdesktops.cpp:696 virtualdesktops.cpp:771
 #, kde-format
 msgid "Desktop %1"
 msgstr "Працоўны стол %1"
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:778
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Пераключыцца на наступны працоўны стол"
 
-#: virtualdesktops.cpp:777
+#: virtualdesktops.cpp:779
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Пераключыцца на папярэдні працоўны стол"
 
-#: virtualdesktops.cpp:780
+#: virtualdesktops.cpp:782
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Пераключыцца на працоўны стол справа"
 
-#: virtualdesktops.cpp:781
+#: virtualdesktops.cpp:783
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Пераключыцца на працоўны стол злева"
 
-#: virtualdesktops.cpp:782
+#: virtualdesktops.cpp:784
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Пераключыцца на працоўны стол вышэй"
 
-#: virtualdesktops.cpp:783
+#: virtualdesktops.cpp:785
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Пераключыцца на працоўны стол ніжэй"
 
-#: virtualdesktops.cpp:871
+#: virtualdesktops.cpp:873
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Пераключыцца на працоўны стол \"%1\""
@@ -4356,7 +4356,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не адказвае)"
 
-#: workspace.cpp:1626
+#: workspace.cpp:1627
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-08 02:38+0000\n"
+"POT-Creation-Date: 2025-06-24 02:36+0000\n"
 "PO-Revision-Date: 2025-04-13 18:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -4254,42 +4254,42 @@ msgstr "சாளரத்தை செயல்படுத்து (%1)"
 msgid "unknown"
 msgstr "தெரியாதது"
 
-#: virtualdesktops.cpp:694 virtualdesktops.cpp:769
+#: virtualdesktops.cpp:696 virtualdesktops.cpp:771
 #, kde-format
 msgid "Desktop %1"
 msgstr "பணிமேடை %1"
 
-#: virtualdesktops.cpp:776
+#: virtualdesktops.cpp:778
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "அடுத்த பணிமேடைக்கு தாவு"
 
-#: virtualdesktops.cpp:777
+#: virtualdesktops.cpp:779
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "முந்தைய பணிமேடைக்கு தாவு"
 
-#: virtualdesktops.cpp:780
+#: virtualdesktops.cpp:782
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "வலதிலுள்ள பணிமேடைக்கு தாவு"
 
-#: virtualdesktops.cpp:781
+#: virtualdesktops.cpp:783
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "இடதிலுள்ள பணிமேடைக்கு தாவு"
 
-#: virtualdesktops.cpp:782
+#: virtualdesktops.cpp:784
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "மேலுள்ள பணிமேடைக்கு தாவு"
 
-#: virtualdesktops.cpp:783
+#: virtualdesktops.cpp:785
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 
-#: virtualdesktops.cpp:871
+#: virtualdesktops.cpp:873
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
@@ -4325,7 +4325,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1626
+#: workspace.cpp:1627
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
