@@ -163,7 +163,13 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
         .reserved = 0,
         .user_data = reinterpret_cast<uint64_t>(this),
     };
-    return drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    const auto start = std::chrono::steady_clock::now();
+    const int ret = drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData);
+    const auto diff = std::chrono::steady_clock::now() - start;
+    if (diff > std::chrono::milliseconds(1)) {
+        qWarning() << ((flags & DRM_MODE_ATOMIC_TEST_ONLY) ? "atomic test commit" : "atomic commit") << "took way too long" << std::chrono::duration_cast<std::chrono::microseconds>(diff) << "with result" << ret << "on main?" << (QThread::currentThread() == QCoreApplication::instance()->thread());
+    }
+    return ret == 0;
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
