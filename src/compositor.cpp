@@ -452,6 +452,8 @@ static bool renderLayer(RenderView *view, Output *output, const std::shared_ptr<
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
+    const auto start = std::chrono::steady_clock::now();
+
     if (m_backend->checkGraphicsReset()) {
         qCDebug(KWIN_CORE) << "Graphics reset occurred";
 #if KWIN_BUILD_NOTIFICATIONS
@@ -743,6 +745,11 @@ void Compositor::composite(RenderLoop *renderLoop)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
+    }
+
+    const auto diff = std::chrono::steady_clock::now() - start;
+    if (diff > std::chrono::milliseconds(5)) {
+        qWarning() << "composite took" << std::chrono::duration_cast<std::chrono::microseconds>(diff);
     }
 }
 
