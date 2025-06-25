@@ -282,7 +282,10 @@ ExpoCell {
         TapHandler {
             acceptedButtons: Qt.LeftButton
             onTapped: {
-                KWinComponents.Workspace.activeWindow = thumb.window;
+                if (thumb.windowHeap.activateWindow) {
+                    KWinComponents.Workspace.activeWindow = thumb.window;
+                }
+                thumb.windowHeap.selectedIndex = thumb.index;
                 thumb.windowHeap.activated();
             }
             onPressedChanged: {
