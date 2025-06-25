@@ -48,6 +48,8 @@ FocusScope {
     readonly property bool effectiveOrganized: expoLayout.ready && organized
     property bool dragActive: false
 
+    property bool activateWindow: true
+
     signal activated()
 
     function activateIndex(index) {
@@ -377,7 +379,9 @@ FocusScope {
             }
             if (selectedItem) {
                 handled = true;
-                KWinComponents.Workspace.activeWindow = selectedItem.window;
+                if (heap.activateWindow) {
+                    KWinComponents.Workspace.activeWindow = selectedItem.window;
+                }
                 activated();
             }
             break;
