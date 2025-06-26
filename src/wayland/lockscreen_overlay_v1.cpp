@@ -29,7 +29,6 @@ protected:
     {
         auto surfaceIface = SurfaceInterface::get(surface);
         if (surfaceIface->isMapped()) {
-            wl_resource_post_error(resource->handle, error_invalid_surface_state, "surface is already mapped");
             return;
         }
         Q_EMIT q->allowRequested(surfaceIface);
