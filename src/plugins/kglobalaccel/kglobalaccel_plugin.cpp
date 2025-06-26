@@ -44,7 +44,6 @@ void KGlobalAccelImpl::setEnabled(bool enabled)
 
 bool KGlobalAccelImpl::checkKeyPressed(int keyQt, KWin::KeyboardKeyState state)
 {
-    // TODO: Should we consider merging keyPressed and keyReleased together, now that there's the enum?
     switch (state) {
     case KWin::KeyboardKeyState::Pressed:
         return keyPressed(keyQt, ShortcutKeyState::Pressed);
