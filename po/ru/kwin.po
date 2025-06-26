@@ -18,20 +18,20 @@
 # Julia Dronova <juliette.tux@gmail.com>, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
 # Мария Шикунова <translation-team@basealt.ru>, 2022.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2023, 2024, 2025.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-24 00:44+0000\n"
-"PO-Revision-Date: 2025-05-29 21:55+0200\n"
-"Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
-"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"PO-Revision-Date: 2025-06-25 13:18+0300\n"
+"Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
+"Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -834,10 +834,9 @@ msgid "Tablet Pad Ring"
 msgstr "Сенсорное кольцо планшета"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Сенсорное кольцо планшета"
+msgstr "Поворотная кнопка планшета"
 
 #: debug_console.cpp:601
 #, kde-format
@@ -1310,10 +1309,10 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para>Приложение <application>%1</application> не отвечает. Завершить "
-"выполнение это приложения?</para><para> <emphasis strong='true'>При "
-"завершении работы этого приложения будут закрыты все его окна. Несохранённые "
-"данные будут потеряны.</emphasis></para>"
+"<para>Приложение <application>%1</application> не отвечает. Завершить его "
+"работу?</para><para><emphasis strong='true'>При завершении работы этого "
+"приложения будут закрыты все его окна. Несохранённые данные будут потеряны.</"
+"emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
 #, kde-kuit-format
@@ -1324,10 +1323,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Окно «%1» приложения <application> %2</application> не отвечает. "
-"Завершить выполнение этого приложения?</para><para> <emphasis "
-"strong='true'>При завершении работы этого приложения будут закрыты все его "
-"окна. Несохранённые данные будут потеряны.</emphasis></para>"
+"<para>Окно «%1» приложения <application>%2</application> не отвечает. "
+"Завершить его работу?</para><para><emphasis strong='true'>При завершении "
+"работы этого приложения будут закрыты все его окна. Несохранённые данные "
+"будут потеряны.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -1491,7 +1490,7 @@ msgstr "Высота окна в случае оконного режима. З�
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Следует ли распахивать окна на весь экран при работе в оконном режиме"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -3004,17 +3003,15 @@ msgstr "Тип соответствия строки имени системы"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Диспетчер окон"
+msgstr "Метка окна"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Тип соответствия строки заголовка окна"
+msgstr "Тип соответствия строки метки окна"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3585,11 +3582,6 @@ msgstr "Переключённые выводы планшета"
 
 #: useractions.cpp:161
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3603,12 +3595,6 @@ msgstr ""
 
 #: useractions.cpp:168
 #, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3755,7 +3741,6 @@ msgstr "<b>%1</b> уже используется для действия «%2»
 
 #: useractions.cpp:813
 #, fuzzy, kde-format
-#| msgid "Window role"
 msgid "Window Menu"
 msgstr "Роль окна"
 
@@ -4241,9 +4226,8 @@ msgstr "Произошло аварийное завершение Xwayland"
 #~ msgid "Move Down"
 #~ msgstr "Переместить вниз"
 
-#, fuzzy
 #~ msgid "Scroll gesture modifier keys:"
-#~ msgstr "Клавиши-модификаторы для рисования стрелок:"
+#~ msgstr "Клавиши-модификаторы для жеста прокрутки:"
 
 #~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
 #~ msgstr ""
@@ -5394,3 +5378,8 @@ msgstr "Произошло аварийное завершение Xwayland"
 #~ msgstr ""
 #~ "<qt><b>Расширение XFixes не найдено</b><br>Вы <i>должны</i> использовать "
 #~ "XOrg &ge; 6.8, чтобы работали полупрозрачность и тени.</qt>"
+
+#~ msgid "Scroll while the modifier keys are pressed to zoom"
+#~ msgstr ""
+#~ "Когда клавиши-модификаторы нажаты, прокрутка позволяет выполнить "
+#~ "увеличение"
