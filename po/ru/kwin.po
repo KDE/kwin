@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-24 02:36+0000\n"
-"PO-Revision-Date: 2025-04-07 15:40+0300\n"
+"PO-Revision-Date: 2025-06-25 13:18+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
@@ -834,18 +834,14 @@ msgid "Tablet Pad Ring"
 msgstr "Сенсорное кольцо планшета"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Сенсорное кольцо планшета"
+msgstr "Поворотная кнопка планшета"
 
-# Использую термин "перемещение" из кинематики (англ.: displacement) --aspotashev
 #: debug_console.cpp:601
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
-msgstr "Перемещение"
+msgstr "Разность"
 
 #: debug_console.cpp:654
 #, kde-format
@@ -1305,11 +1301,7 @@ msgstr ""
 "Эта вспомогательная утилита на предназначена для непосредственного запуска."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1317,15 +1309,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para> <emphasis strong='true'>При завершении работы этого приложения будут "
-"закрыты все его окна. Несохранённые данные будут потеряны.</emphasis></para>"
+"<para>Приложение <application>%1</application> не отвечает. Завершить его "
+"работу?</para><para><emphasis strong='true'>При завершении работы этого "
+"приложения будут закрыты все его окна. Несохранённые данные будут потеряны.</"
+"emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1333,8 +1323,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para> <emphasis strong='true'>При завершении работы этого приложения будут "
-"закрыты все его окна. Несохранённые данные будут потеряны.</emphasis></para>"
+"<para>Окно «%1» приложения <application>%2</application> не отвечает. "
+"Завершить его работу?</para><para><emphasis strong='true'>При завершении "
+"работы этого приложения будут закрыты все его окна. Несохранённые данные "
+"будут потеряны.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -1502,7 +1494,7 @@ msgstr "Высота окна в случае оконного режима. З�
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Следует ли распахивать окна на весь экран при работе в оконном режиме"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -2975,14 +2967,15 @@ msgid "Move Down"
 msgstr "Переместить вниз"
 
 #: plugins/zoom/zoom_config.cpp:210
-#, fuzzy, kde-format
+#, kde-format
 msgid "Scroll gesture modifier keys:"
-msgstr "Клавиши-модификаторы для рисования стрелок:"
+msgstr "Клавиши-модификаторы для жеста прокрутки:"
 
 #: plugins/zoom/zoom_config.cpp:212
 #, kde-format
 msgid "Scroll while the modifier keys are pressed to zoom"
 msgstr ""
+"Когда клавиши-модификаторы нажаты, прокрутка позволяет выполнить увеличение"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3195,17 +3188,15 @@ msgstr "Тип соответствия строки имени системы"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Диспетчер окон"
+msgstr "Метка окна"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Тип соответствия строки заголовка окна"
+msgstr "Тип соответствия строки метки окна"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
