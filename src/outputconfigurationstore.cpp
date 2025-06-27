@@ -952,9 +952,17 @@ void OutputConfigurationStore::load()
         }
         if (const auto it = data.find("maxPeakBrightnessOverride"); it != data.end() && it->isDouble()) {
             state.maxPeakBrightnessOverride = it->toDouble();
+            if (*state.maxPeakBrightnessOverride < 50) {
+                // clearly nonsense
+                state.maxPeakBrightnessOverride.reset();
+            }
         }
         if (const auto it = data.find("maxAverageBrightnessOverride"); it != data.end() && it->isDouble()) {
             state.maxAverageBrightnessOverride = it->toDouble();
+            if (*state.maxAverageBrightnessOverride < 50) {
+                // clearly nonsense
+                state.maxAverageBrightnessOverride.reset();
+            }
         }
         if (const auto it = data.find("minBrightnessOverride"); it != data.end() && it->isDouble()) {
             state.minBrightnessOverride = it->toDouble();
