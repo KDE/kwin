@@ -328,6 +328,14 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_brightness_
     if (invalid) {
         return;
     }
+    if (max_peak_brightness != -1 && max_peak_brightness < 50) {
+        failureReason = QStringLiteral("Invalid peak brightness override requested");
+        return;
+    }
+    if (max_average_brightness != -1 && max_average_brightness < 50) {
+        failureReason = QStringLiteral("Invalid max average brightness override requested");
+        return;
+    }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->maxPeakBrightnessOverride = max_peak_brightness == -1 ? std::nullopt : std::optional<double>(max_peak_brightness);
         config.changeSet(output->handle())->maxAverageBrightnessOverride = max_average_brightness == -1 ? std::nullopt : std::optional<double>(max_average_brightness);
