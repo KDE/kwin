@@ -511,22 +511,35 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
     m_effect->freezeWindows();
 
     if (kind == 0) {
-        effects->startInteractiveWindowSelection([=, this](EffectWindow *window) {
-            effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
-
-            if (!window) {
+        m_effect->freezeWindows();
+        if (auto windowViewEffect = KWin::effects->findEffect("windowpicker")) {
+            QFuture<EffectWindow *> window;
+            QMetaObject::invokeMethod(windowViewEffect, "pickWindow", qReturnArg(window), false);
+            window.then([options, replyMessage, fileDescriptor, this](EffectWindow *window) {
+                takeScreenShot(window, screenShotFlagsFromOptions(options), new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
+            }).onCanceled([fileDescriptor, replyMessage, this] {
+                m_effect->unfreezeWindows();
                 close(fileDescriptor);
-
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
-            } else {
-                takeScreenShot(window, screenShotFlagsFromOptions(options),
-                               new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
-            }
-        });
-        effects->showOnScreenMessage(i18n("Select window to screen shot with left click or enter.\n"
-                                          "Escape or right click to cancel."),
-                                     QStringLiteral("spectacle"));
+            });
+        } else {
+            effects->startInteractiveWindowSelection([=, this](EffectWindow *window) {
+                effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
+                if (!window) {
+                    close(fileDescriptor);
+
+                    QDBusConnection bus = QDBusConnection::sessionBus();
+                    bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
+                } else {
+                    takeScreenShot(window, screenShotFlagsFromOptions(options),
+                                   new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
+                }
+            });
+            effects->showOnScreenMessage(i18n("Select window to screen shot with left click or enter.\n"
+                                              "Escape or right click to cancel."),
+                                         QStringLiteral("spectacle"));
+        }
     } else {
         effects->startInteractivePositionSelection([=, this](const QPointF &point) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
