@@ -287,7 +287,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
     return ret_id;
 }
 
-bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime)
+bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime, std::optional<TerminationFlags> terminationFlags)
 {
     if (animationId == d->m_justEndedAnimation) {
         return false; // this is just ending, do not try to retarget it
@@ -305,6 +305,10 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
             anim->timeLine.setDirection(TimeLine::Forward);
             anim->timeLine.setDuration(std::chrono::milliseconds(newRemainingTime));
             anim->timeLine.reset();
+
+            if (terminationFlags) {
+                anim->terminationFlags = terminationFlags.value();
+            }
 
             if (anim->attribute == CrossFadePrevious) {
                 CrossFadeEffect::redirect(window);

@@ -420,11 +420,13 @@ protected:
      * @param newTarget The new target.
      * @param newRemainingTime The new duration of the transition. By default (-1),
      *   the remaining time remains unchanged.
+     * @param terminationFlags Whether the animation should be terminated when it
+     *   reaches the source position after its direction was changed to go backward.
      * @returns @c true if the animation was retargetted successfully, @c false otherwise.
      * @note You can NOT retarget an animation that just has just ended!
      * @since 5.6
      */
-    bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
+    bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1, std::optional<TerminationFlags> terminationFlags = std::nullopt);
 
     bool freezeInTime(quint64 animationId, qint64 frozenTime);
 
