@@ -1,0 +1,12 @@
+{
+    "KPlugin": {
+        "Category": "Window Management",
+        "Description": "Pick a window",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Window Picker"
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}
