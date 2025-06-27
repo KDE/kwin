@@ -58,6 +58,7 @@ private:
         quint32 lastModifier;
         std::chrono::microseconds lastModifierTime;
         bool modifierWasForwarded = false;
+        QSet<quint32> pressedModifiers;
     };
 
     QHash<QString, GrabData> m_clients;

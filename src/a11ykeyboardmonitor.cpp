@@ -52,6 +52,14 @@ bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::
             emitKeyEvent(name, released, mods, keysym, unicode, key);
         }
 
+        // if any of the grabbed modifiers is currently down, grab the key
+        for (const auto grabbedMod : data.modifiers) {
+            if (grabbedMod != keysym && data.pressedModifiers.contains(grabbedMod)) {
+                emitKeyEvent(name, released, mods, keysym, unicode, key);
+                return true;
+            }
+        }
+
         // if the modifier was pressed twice within the key repeat delay process it normally
         const qint32 keyRepeatDelay = waylandServer()->seat()->keyboard()->keyRepeatDelay();
         if (state == KeyboardKeyState::Pressed && data.lastModifier == keysym && time < data.lastModifierTime + std::chrono::milliseconds(keyRepeatDelay)) {
@@ -69,6 +77,12 @@ bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::
         data.lastModifierTime = time;
 
         if (data.modifiers.contains(keysym)) {
+            if (released) {
+                data.pressedModifiers.remove(keysym);
+            } else {
+                data.pressedModifiers.insert(keysym);
+            }
+
             emitKeyEvent(name, released, mods, keysym, unicode, key);
             return true;
         }
@@ -146,6 +160,7 @@ void A11yKeyboardMonitor::SetKeyGrabs(const QList<quint32> &modifiers, const QLi
 
     m_clients[message().service()].modifiers = modifiers;
     m_clients[message().service()].keys = keystrokes;
+    m_clients[message().service()].pressedModifiers.clear();
 }
 
 void A11yKeyboardMonitor::emitKeyEvent(const QString &name, bool released, quint32 state, quint32 keysym, quint32 unichar, quint16 keycode)
