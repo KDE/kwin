@@ -508,6 +508,8 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
 
     const QDBusMessage replyMessage = message();
 
+    m_effect->freezeWindows();
+
     if (kind == 0) {
         effects->startInteractiveWindowSelection([=, this](EffectWindow *window) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
@@ -570,14 +572,16 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
 
 void ScreenShotDBusInterface2::bind(ScreenShotSinkPipe2 *sink, ScreenShotSource2 *source)
 {
-    connect(source, &ScreenShotSource2::cancelled, sink, [sink, source]() {
+    connect(source, &ScreenShotSource2::cancelled, sink, [sink, source, this]() {
+        m_effect->unfreezeWindows();
         sink->cancel();
 
         sink->deleteLater();
         source->deleteLater();
     });
 
-    connect(source, &ScreenShotSource2::completed, sink, [sink, source]() {
+    connect(source, &ScreenShotSource2::completed, sink, [sink, source, this]() {
+        m_effect->unfreezeWindows();
         source->marshal(sink);
 
         sink->deleteLater();

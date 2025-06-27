@@ -109,6 +109,32 @@ ScreenShotEffect::~ScreenShotEffect()
     cancelScreenScreenShots();
 }
 
+void ScreenShotEffect::freezeWindows()
+{
+    m_isFreezingWindows = true;
+    for (const auto &window : effects->stackingOrder()) {
+        redirect(window);
+    }
+    connect(effects, &EffectsHandler::windowAdded, this, &CrossFadeEffect::redirect);
+}
+
+void ScreenShotEffect::unfreezeWindows()
+{
+    disconnect(effects, &EffectsHandler::windowAdded, this, &CrossFadeEffect::redirect);
+    for (const auto &window : effects->stackingOrder()) {
+        unredirect(window);
+    }
+    m_isFreezingWindows = false;
+}
+
+void ScreenShotEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    if (m_isFreezingWindows) {
+        data.setCrossFadeProgress(0);
+    }
+    Effect::paintWindow(renderTarget, viewport, w, mask, region, data);
+}
+
 QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotFlags flags)
 {
     for (const ScreenShotScreenData &data : m_screenScreenShots) {
@@ -414,7 +440,7 @@ void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffs
 
 bool ScreenShotEffect::isActive() const
 {
-    return (!m_windowScreenShots.empty() || !m_areaScreenShots.empty() || !m_screenScreenShots.empty())
+    return (!m_windowScreenShots.empty() || !m_areaScreenShots.empty() || !m_screenScreenShots.empty() || m_isFreezingWindows)
         && !effects->isScreenLocked();
 }
 
