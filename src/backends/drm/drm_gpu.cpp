@@ -462,7 +462,7 @@ DrmPipeline::Error DrmGpu::testPipelines()
     }
     // ensure we have suitable buffers for the test
     for (DrmPipeline *pipeline : m_pipelines) {
-        if (pipeline->activePending() && !pipeline->primaryLayer()->preparePresentationTest()) {
+        if (pipeline->enabled() && !pipeline->primaryLayer()->preparePresentationTest()) {
             return DrmPipeline::Error::InvalidArguments;
         }
     }
