@@ -10,10 +10,10 @@ set(showcompositing_SOURCES
 
 kwin_add_builtin_effect(showcompositing ${showcompositing_SOURCES})
 
+qt_add_resources(showcompositing showcompositing_qml PREFIX "/org.kde.kwin/showcompositing" FILES qml/main.qml)
+
 target_link_libraries(showcompositing PRIVATE
     kwin
     KF6::I18n
     Qt::Quick
 )
-
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin-wayland/effects/showcompositing)

@@ -34,7 +34,7 @@ TilesEditorEffect::TilesEditorEffect()
     KGlobalAccel::self()->setShortcut(m_toggleAction.get(), {defaultToggleShortcut});
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction.get());
 
-    setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin-wayland/effects/tileseditor/qml/main.qml"))));
+    setSource(QUrl(QStringLiteral("qrc:/org.kde.kwin/tileseditor/qml/main.qml")));
 }
 
 TilesEditorEffect::~TilesEditorEffect()

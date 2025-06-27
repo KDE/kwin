@@ -19,6 +19,8 @@ qt_add_dbus_adaptor(windowview_SOURCES org.kde.KWin.Effect.WindowView1.xml windo
 
 kwin_add_builtin_effect(windowview ${windowview_SOURCES})
 
+qt_add_resources(windowview windowview_qml PREFIX "org.kde.kwin/windowview" FILES qml/main.qml)
+
 target_link_libraries(windowview PRIVATE
     kwin
 
@@ -28,5 +30,3 @@ target_link_libraries(windowview PRIVATE
 
     Qt::Quick
     )
-
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin-wayland/effects/windowview)

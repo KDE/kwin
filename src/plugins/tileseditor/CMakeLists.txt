@@ -13,6 +13,15 @@ set(tileseditor_SOURCES
 
 kwin_add_builtin_effect(tileseditor ${tileseditor_SOURCES})
 
+qt_add_resources(tileseditor tilesditor_qml PREFIX "org.kde.kwin/tileseditor"
+    FILES
+        qml/main.qml
+        qml/ResizeCorner.qml
+        qml/ResizeHandle.qml
+        qml/TileDelegate.qml
+        qml/layouts.svg
+)
+
 target_link_libraries(tileseditor PRIVATE
     kwin
 
