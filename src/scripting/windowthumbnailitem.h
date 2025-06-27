@@ -38,6 +38,8 @@ public:
 
     Frame acquire();
 
+    void setLive(bool live);
+
 Q_SIGNALS:
     void changed();
 
@@ -51,6 +53,7 @@ private:
     std::unique_ptr<GLFramebuffer> m_offscreenTarget;
     GLsync m_acquireFence = 0;
     bool m_dirty = true;
+    bool m_live = true;
 };
 
 class WindowThumbnailItem : public QQuickItem
@@ -58,6 +61,7 @@ class WindowThumbnailItem : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged)
     Q_PROPERTY(KWin::Window *client READ client WRITE setClient NOTIFY clientChanged)
+    Q_PROPERTY(bool live READ live WRITE setLive NOTIFY liveChanged)
 
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
@@ -68,6 +72,9 @@ public:
 
     Window *client() const;
     void setClient(Window *client);
+
+    bool live() const;
+    void setLive(bool live);
 
     QSGTextureProvider *textureProvider() const override;
     bool isTextureProvider() const override;
@@ -80,6 +87,7 @@ protected:
 Q_SIGNALS:
     void wIdChanged();
     void clientChanged();
+    void liveChanged();
 
 private:
     QRectF paintedRect() const;
@@ -89,6 +97,7 @@ private:
 
     QUuid m_wId;
     QPointer<Window> m_client;
+    bool m_live = true;
 
     mutable ThumbnailTextureProvider *m_provider = nullptr;
     std::shared_ptr<WindowThumbnailSource> m_source;
