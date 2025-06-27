@@ -60,7 +60,7 @@ Q_SIGNALS:
     void frameRendered();
 
 protected:
-    void createStackingOrder();
+    void createStackingOrder(SceneView *delegate);
     void clearStackingOrder();
     friend class EffectsHandler;
     // called after all effects had their paintScreen() called
