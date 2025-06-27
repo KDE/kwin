@@ -302,7 +302,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 
 QRegion WorkspaceScene::prePaint(SceneView *delegate)
 {
-    createStackingOrder();
+    createStackingOrder(delegate);
 
     painted_delegate = delegate;
     painted_screen = painted_delegate->output();
@@ -518,10 +518,13 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
     }
 }
 
-void WorkspaceScene::createStackingOrder()
+void WorkspaceScene::createStackingOrder(SceneView *delegate)
 {
     QList<Item *> items = m_containerItem->sortedChildItems();
     for (Item *item : std::as_const(items)) {
+        if (!delegate->shouldRenderItem(item)) {
+            continue;
+        }
         WindowItem *windowItem = static_cast<WindowItem *>(item);
         if (windowItem->isVisible()) {
             stacking_order.append(windowItem);
