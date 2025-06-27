@@ -55,7 +55,6 @@ static QString outputName(const Output *screen)
 
 OutputLocatorEffect::OutputLocatorEffect(QObject *parent)
     : Effect(parent)
-    , m_qmlUrl(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin-wayland/effects/outputlocator/qml/OutputLabel.qml"))))
 {
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/Effect/OutputLocator1"),
                                                  QStringLiteral("org.kde.KWin.Effect.OutputLocator1"),
@@ -79,7 +78,7 @@ void OutputLocatorEffect::show()
     const auto screens = effects->screens();
     for (const auto screen : screens) {
         auto scene = new OffscreenQuickScene();
-        scene->setSource(m_qmlUrl, {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->pixelSize()}, {QStringLiteral("scale"), screen->scale()}});
+        scene->loadFromModule(QStringLiteral("org.kde.kwin.outputlocator"), QStringLiteral("OutputLabel"), {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->pixelSize()}, {QStringLiteral("scale"), screen->scale()}});
         QRectF geometry(0, 0, scene->rootItem()->implicitWidth(), scene->rootItem()->implicitHeight());
         geometry.moveCenter(screen->geometry().center());
         scene->setGeometry(geometry.toRect());

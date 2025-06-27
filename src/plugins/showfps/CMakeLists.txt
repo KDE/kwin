@@ -9,6 +9,14 @@ set(showfps_SOURCES
 
 kwin_add_builtin_effect(showfps ${showfps_SOURCES})
 
+ecm_add_qml_module(showfps
+    URI "org.kde.kwin.showfps"
+    QML_FILES
+        qml/Main.qml
+        qml/Fallback.qml
+    QT_NO_PLUGIN
+)
+
 target_link_libraries(showfps PRIVATE
     kwin
 
@@ -16,5 +24,3 @@ target_link_libraries(showfps PRIVATE
 
     Qt::Quick
     )
-
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin-wayland/effects/showfps)

@@ -30,7 +30,6 @@ public Q_SLOTS:
     void hide();
 
 private:
-    QUrl m_qmlUrl;
     QTimer m_showTimer;
     std::unordered_map<Output *, std::unique_ptr<OffscreenQuickScene>> m_scenesByScreens;
 };

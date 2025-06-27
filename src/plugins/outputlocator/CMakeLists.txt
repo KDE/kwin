@@ -4,11 +4,17 @@
 
 
 kwin_add_builtin_effect(outputlocator main.cpp outputlocator.cpp)
+
+ecm_add_qml_module(outputlocator
+    URI org.kde.kwin.outputlocator
+    QML_FILES
+        qml/OutputLabel.qml
+    QT_NO_PLUGIN
+)
+
 target_link_libraries(outputlocator PRIVATE
     kwin
     Qt::DBus
     Qt::Quick
     KF6::I18n
 )
-
-install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin-wayland/effects/outputlocator)

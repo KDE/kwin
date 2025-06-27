@@ -196,7 +196,7 @@ FocusScope {
             property alias image: svgItem.elementId
             contentItem: KSvg.SvgItem {
                 id: svgItem
-                 imagePath: Qt.resolvedUrl("layouts.svg")
+                imagePath: Qt.resolvedUrl("layouts.svg")
                 implicitWidth: naturalSize.width
                 implicitHeight: naturalSize.height
             }
