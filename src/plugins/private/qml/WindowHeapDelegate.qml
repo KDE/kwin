@@ -54,6 +54,8 @@ ExpoCell {
     // Same as for window heap
     property bool animationEnabled: false
 
+    property bool dragEnabled: true
+
     //scale up and down the whole thumbnail without affecting layouting
     property real targetScale: 1.0
 
@@ -139,6 +141,7 @@ ExpoCell {
                 thumb.activeDragHandler.centroid.pressPosition.x,
                 thumb.activeDragHandler.centroid.pressPosition.y)
             Drag.keys: ["kwin-window"]
+            Drag.dragType: Drag.Automatic
 
             onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
             onYChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
@@ -289,7 +292,7 @@ ExpoCell {
                 thumb.windowHeap.activated();
             }
             onPressedChanged: {
-                if (pressed) {
+                if (dragEnabled && pressed) {
                     thumbSource.Drag.active = true;
                 } else if (!thumb.activeDragHandler.active) {
                     thumbSource.Drag.active = false;
@@ -299,6 +302,7 @@ ExpoCell {
 
         component DragManager : DragHandler {
             target: thumbSource
+            enabled: dragEnabled
             grabPermissions: PointerHandler.CanTakeOverFromAnything
             // This does not work when moving pointer fast and pressing along the way
             // See also QTBUG-105903, QTBUG-105904
