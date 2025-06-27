@@ -13,6 +13,8 @@
 
 #include <QDBusConnection>
 
+#include <ranges>
+
 using namespace std::chrono_literals;
 
 Q_LOGGING_CATEGORY(KWIN_HIGHLIGHTWINDOW, "kwin_effect_highlightwindow", QtWarningMsg)
@@ -22,7 +24,7 @@ namespace KWin
 
 HighlightWindowEffect::HighlightWindowEffect()
     : m_easingCurve(QEasingCurve::Linear)
-    , m_fadeDuration(animationTime(150ms))
+    , m_fadeDuration(static_cast<int>(animationTime(150ms)))
 {
     connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &HighlightWindowEffect::slotWindowDeleted);
@@ -45,7 +47,7 @@ static bool isInitiallyHidden(EffectWindow *w)
     return w->isMinimized() || !w->isOnCurrentDesktop();
 }
 
-static bool isHighlightWindow(EffectWindow *window)
+static bool isHighlightWindow(const EffectWindow *window)
 {
     return window->isNormalWindow() || window->isDialog();
 }
@@ -68,8 +70,7 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
 {
     if (!m_highlightedWindows.isEmpty()) {
         if (isHighlightWindow(w)) {
-            const quint64 animationId = startGhostAnimation(w); // this window is not currently highlighted
-            complete(animationId);
+            startGhostAnimation(w);
         }
     }
 }
@@ -82,15 +83,40 @@ void HighlightWindowEffect::slotWindowDeleted(EffectWindow *w)
 
 void HighlightWindowEffect::prepareHighlighting()
 {
-    const QList<EffectWindow *> windows = effects->stackingOrder();
-    for (EffectWindow *window : windows) {
-        if (!isHighlightWindow(window)) {
-            continue;
-        }
-        if (isHighlighted(window)) {
-            startHighlightAnimation(window);
-        } else {
-            startGhostAnimation(window);
+    QList<EffectWindow *> windows = effects->stackingOrder();
+    windows.erase(std::remove_if(windows.begin(), windows.end(), [](const EffectWindow *window) {
+        return !isHighlightWindow(window);
+    }), windows.end());
+
+    auto split = std::partition(windows.begin(), windows.end(), [this](const EffectWindow *window) {
+        return isHighlighted(window);
+    });
+
+    for (auto it = windows.begin(); it != split; ++it) {
+        startHighlightAnimation(*it);
+    }
+
+    for (auto it = split; it != windows.end(); ++it) {
+        startGhostAnimation(*it);
+    }
+
+    if (!m_highlightedWindows.isEmpty()) {
+        const bool constraint = std::ranges::all_of(m_highlightedWindows, [this](EffectWindow *window) {
+            if (auto it = m_animations.constFind(window); it != m_animations.constEnd()) {
+                return it->state == HighlightAnimation::State::Highlighted;
+            }
+            return true;
+        });
+        if (constraint) {
+            for (const auto &[window, animation] : m_animations.asKeyValueRange()) {
+                if (animation.state == HighlightAnimation::State::Ghost) {
+                    animation.state = HighlightAnimation::State::Withdrawing;
+                    animation.initialOpacity = animation.opacity;
+                    animation.finalOpacity = 0.0;
+                    animation.timeline = TimeLine(m_fadeDuration);
+                    window->addRepaintFull();
+                }
+            }
         }
     }
 }
@@ -102,14 +128,6 @@ void HighlightWindowEffect::finishHighlighting()
         if (isHighlightWindow(window)) {
             startRevertAnimation(window);
         }
-    }
-
-    // Sanity check, ideally, this should never happen.
-    if (!m_animations.isEmpty()) {
-        for (quint64 &animationId : m_animations) {
-            cancel(animationId);
-        }
-        m_animations.clear();
     }
 
     m_highlightedWindows.clear();
@@ -126,45 +144,97 @@ void HighlightWindowEffect::highlightWindows(const QList<KWin::EffectWindow *> &
     prepareHighlighting();
 }
 
-quint64 HighlightWindowEffect::startGhostAnimation(EffectWindow *window)
+void HighlightWindowEffect::startGhostAnimation(EffectWindow *window)
 {
-    quint64 &animationId = m_animations[window];
-    if (animationId) {
-        retarget(animationId, FPx2(m_ghostOpacity, m_ghostOpacity), m_fadeDuration);
+    if (auto it = m_animations.find(window); it != m_animations.end()) {
+        switch (it->state) {
+        case HighlightAnimation::State::Ghost:
+        case HighlightAnimation::State::Withdrawing:
+        case HighlightAnimation::State::Withdrawn:
+            break;
+        case HighlightAnimation::State::Highlighting:
+        case HighlightAnimation::State::Highlighted:
+        case HighlightAnimation::State::Reverting:
+        case HighlightAnimation::State::Initial:
+            it->state = HighlightAnimation::State::Ghost;
+            break;
+        }
     } else {
-        const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
-        animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(m_ghostOpacity, m_ghostOpacity),
-                          m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
+        const bool hidden = isInitiallyHidden(window);
+
+        m_animations[window] = HighlightAnimation{
+            .state = hidden ? HighlightAnimation::State::Withdrawn : HighlightAnimation::State::Ghost,
+            .timeline = TimeLine(m_fadeDuration),
+            .finalOpacity = 0.0,
+            .opacity = hidden ? 0.0 : 1.0,
+        };
     }
-    return animationId;
+
+    window->addRepaintFull();
 }
 
-quint64 HighlightWindowEffect::startHighlightAnimation(EffectWindow *window)
+void HighlightWindowEffect::startHighlightAnimation(EffectWindow *window)
 {
-    quint64 &animationId = m_animations[window];
-    if (animationId) {
-        retarget(animationId, FPx2(1.0, 1.0), m_fadeDuration);
+    if (auto it = m_animations.find(window); it != m_animations.end()) {
+        switch (it->state) {
+        case HighlightAnimation::State::Initial:
+        case HighlightAnimation::State::Ghost:
+            if (it->opacity == 1.0) {
+                it->state = HighlightAnimation::State::Highlighted;
+                it->opacity = 1.0;
+            } else {
+                it->state = HighlightAnimation::State::Highlighting;
+                it->timeline = TimeLine(m_fadeDuration);
+                it->initialOpacity = it->opacity;
+                it->finalOpacity = 1.0;
+            }
+            break;
+        case HighlightAnimation::State::Highlighting:
+        case HighlightAnimation::State::Highlighted:
+            break;
+        case HighlightAnimation::State::Withdrawing:
+            it->state = HighlightAnimation::State::Highlighting;
+            it->timeline = TimeLine(it->timeline.elapsed());
+            it->initialOpacity = it->opacity;
+            it->finalOpacity = 1.0;
+            break;
+        case HighlightAnimation::State::Withdrawn:
+            it->state = HighlightAnimation::State::Highlighting;
+            it->timeline = TimeLine(m_fadeDuration);
+            it->initialOpacity = it->opacity;
+            it->finalOpacity = 1.0;
+            break;
+        case HighlightAnimation::State::Reverting:
+            it->state = HighlightAnimation::State::Highlighting;
+            it->timeline = TimeLine(it->timeline.elapsed());
+            it->initialOpacity = it->opacity;
+            it->finalOpacity = 1.0;
+            break;
+        }
+
+        window->elevate(true);
     } else {
-        const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
-        animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(1.0, 1.0),
-                          m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
+        const bool hidden = isInitiallyHidden(window);
+
+        m_animations[window] = HighlightAnimation{
+            .state = hidden ? HighlightAnimation::State::Withdrawn : HighlightAnimation::State::Highlighted,
+            .timeline = TimeLine(std::chrono::milliseconds(m_fadeDuration)),
+            .finalOpacity = 1.0,
+            .opacity = hidden ? 0.0 : 1.0,
+        };
     }
-    return animationId;
+
+    window->addRepaintFull();
 }
 
 void HighlightWindowEffect::startRevertAnimation(EffectWindow *window)
 {
-    const quint64 animationId = m_animations.take(window);
-    if (animationId) {
-        const qreal startOpacity = isHighlighted(window) ? 1 : m_ghostOpacity;
-        const qreal endOpacity = isInitiallyHidden(window) ? 0 : 1;
-        animate(window, Opacity, 0, m_fadeDuration, FPx2(endOpacity, endOpacity),
-                m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
-        cancel(animationId);
+    for (const auto &[window, animation] : m_animations.asKeyValueRange()) {
+        window->elevate(false);
     }
 }
 
-bool HighlightWindowEffect::isHighlighted(EffectWindow *window) const
+bool HighlightWindowEffect::isHighlighted(const EffectWindow *window) const
 {
     return m_highlightedWindows.contains(window);
 }
@@ -191,9 +261,119 @@ bool HighlightWindowEffect::perform(Feature feature, const QVariantList &argumen
     return true;
 }
 
+bool HighlightWindowEffect::isActive() const
+{
+    return !m_animations.isEmpty();
+}
+
 void HighlightWindowEffect::reconfigure(ReconfigureFlags flags)
 {
-    m_fadeDuration = animationTime(150ms);
+    m_fadeDuration = std::chrono::milliseconds(static_cast<int>(animationTime(150ms)));
+}
+
+void HighlightWindowEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+{
+    for (const auto &[window, animation] : m_animations.asKeyValueRange()) {
+        switch (animation.state) {
+        case HighlightAnimation::State::Highlighting:
+        case HighlightAnimation::State::Withdrawing:
+        case HighlightAnimation::State::Reverting:
+            animation.timeline.advance(presentTime);
+            animation.opacity = std::lerp(animation.initialOpacity, animation.finalOpacity, animation.timeline.progress());
+            break;
+
+        case HighlightAnimation::State::Ghost:
+        case HighlightAnimation::State::Highlighted:
+        case HighlightAnimation::State::Withdrawn:
+        case HighlightAnimation::State::Initial:
+            break;
+        }
+    }
+
+    effects->prePaintScreen(data, presentTime);
+}
+
+void HighlightWindowEffect::postPaintScreen()
+{
+    for (const auto &[window, animation] : m_animations.asKeyValueRange()) {
+        switch (animation.state) {
+        case HighlightAnimation::State::Ghost:
+        case HighlightAnimation::State::Highlighted:
+        case HighlightAnimation::State::Withdrawn:
+        case HighlightAnimation::State::Initial:
+            break;
+        case HighlightAnimation::State::Highlighting:
+            if (animation.timeline.done()) {
+                animation.state = HighlightAnimation::State::Highlighted;
+                animation.opacity = 1.0;
+            }
+            break;
+        case HighlightAnimation::State::Withdrawing:
+            if (animation.timeline.done()) {
+                animation.state = HighlightAnimation::State::Withdrawn;
+                animation.opacity = 0.0;
+            }
+            break;
+        case HighlightAnimation::State::Reverting:
+            if (animation.timeline.done()) {
+                animation.state = HighlightAnimation::State::Initial;
+                animation.opacity = isInitiallyHidden(window) ? 0.0 : 1.0;
+            }
+            break;
+        }
+    }
+
+    if (!m_highlightedWindows.isEmpty()) {
+        const bool constraint = std::ranges::all_of(m_highlightedWindows, [this](EffectWindow *window) {
+            if (auto it = m_animations.constFind(window); it != m_animations.constEnd()) {
+                return it->state == HighlightAnimation::State::Highlighted;
+            }
+            return true;
+        });
+        if (constraint) {
+            for (const auto &[window, animation] : m_animations.asKeyValueRange()) {
+                if (animation.state == HighlightAnimation::State::Ghost) {
+                    animation.state = HighlightAnimation::State::Withdrawing;
+                    animation.initialOpacity = animation.opacity;
+                    animation.finalOpacity = 0.0;
+                    animation.timeline = TimeLine(m_fadeDuration);
+                }
+            }
+        }
+    }
+
+    for (auto it = m_animations.begin(); it != m_animations.end();) {
+        EffectWindow *window = it.key();
+        HighlightAnimation &animation = it.value();
+
+        switch (animation.state) {
+        case HighlightAnimation::State::Initial:
+            it = m_animations.erase(it);
+            break;
+        case HighlightAnimation::State::Ghost:
+        case HighlightAnimation::State::Highlighted:
+        case HighlightAnimation::State::Withdrawn:
+            ++it;
+            break;
+        case HighlightAnimation::State::Highlighting:
+        case HighlightAnimation::State::Withdrawing:
+        case HighlightAnimation::State::Reverting:
+            ++it;
+            window->addRepaintFull();
+            break;
+        }
+    }
+
+    effects->postPaintScreen();
+}
+
+void HighlightWindowEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    if (const auto it = m_animations.constFind(w); it != m_animations.constEnd()) {
+        data.multiplyOpacity(it->opacity);
+    }
+
+    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 } // namespace
