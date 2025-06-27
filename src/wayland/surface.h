@@ -389,6 +389,9 @@ public:
      */
     void removeExtension(RawSurfaceExtension *extension);
 
+    bool isLockScreenOverlay() const;
+    void setLockScreenOverlay(bool allowed);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
@@ -475,6 +478,8 @@ Q_SIGNALS:
      * for this commit are emitted.
      */
     void committed();
+
+    void isLockScreenOverlayChanged();
 
 private:
     std::unique_ptr<SurfaceInterfacePrivate> d;

@@ -516,6 +516,21 @@ void SurfaceInterface::removeExtension(RawSurfaceExtension *extension)
     }
 }
 
+bool SurfaceInterface::isLockScreenOverlay() const
+{
+    return d->isLockScreenOverlay;
+}
+
+void SurfaceInterface::setLockScreenOverlay(bool isLockScreenOverlay)
+{
+    if (isLockScreenOverlay == d->isLockScreenOverlay) {
+        return;
+    }
+
+    d->isLockScreenOverlay = isLockScreenOverlay;
+    Q_EMIT isLockScreenOverlayChanged();
+}
+
 bool SurfaceInterface::tearingDown() const
 {
     return d->m_tearingDown;

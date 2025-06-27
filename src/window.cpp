@@ -333,6 +333,13 @@ void Window::setSurface(SurfaceInterface *surface)
     }
     m_surface = surface;
     Q_EMIT surfaceChanged();
+
+    if (m_surface) {
+        connect(m_surface, &SurfaceInterface::isLockScreenOverlayChanged, this, [this]() {
+            setLockScreenOverlay(m_surface->isLockScreenOverlay());
+        });
+        setLockScreenOverlay(m_surface->isLockScreenOverlay());
+    }
 }
 
 int Window::stackingOrder() const
@@ -4467,6 +4474,10 @@ void Window::setLockScreenOverlay(bool allowed)
     }
     m_lockScreenOverlay = allowed;
     Q_EMIT lockScreenOverlayChanged();
+
+    if (m_surface) {
+        m_surface->setLockScreenOverlay(allowed);
+    }
 }
 
 bool Window::isLockScreenOverlay() const

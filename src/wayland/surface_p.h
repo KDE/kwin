@@ -210,6 +210,8 @@ public:
 
     bool m_tearingDown = false;
 
+    bool isLockScreenOverlay = false;
+
 protected:
     void surface_destroy_resource(Resource *resource) override;
     void surface_destroy(Resource *resource) override;
