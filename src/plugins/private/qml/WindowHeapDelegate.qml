@@ -56,6 +56,8 @@ ExpoCell {
 
     property bool dragEnabled: true
 
+    property alias live: thumbSource.live
+
     //scale up and down the whole thumbnail without affecting layouting
     property real targetScale: 1.0
 

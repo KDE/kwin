@@ -109,11 +109,21 @@ WindowThumbnailSource::Frame WindowThumbnailSource::acquire()
     };
 }
 
+void WindowThumbnailSource::setLive(bool live)
+{
+    m_live = live;
+}
+
 void WindowThumbnailSource::update()
 {
     if (m_acquireFence || !m_dirty || !m_handle) {
         return;
     }
+
+    if (m_offscreenTarget && !m_live) {
+        return;
+    }
+
     Q_ASSERT(m_view);
 
     const QRectF geometry = m_handle->visibleGeometry();
@@ -283,6 +293,7 @@ void WindowThumbnailItem::updateSource()
 {
     if (useGlThumbnails() && window() && m_client) {
         m_source = WindowThumbnailSource::getOrCreate(window(), m_client);
+        m_source->setLive(m_live);
         connect(m_source.get(), &WindowThumbnailSource::changed, this, &WindowThumbnailItem::update);
     } else {
         m_source.reset();
@@ -321,6 +332,22 @@ QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Upda
     node->setRect(paintedRect());
 
     return node;
+}
+
+bool WindowThumbnailItem::live() const
+{
+    return m_live;
+}
+
+void WindowThumbnailItem::setLive(bool live)
+{
+    if (live != m_live) {
+        Q_EMIT liveChanged();
+    }
+    m_live = live;
+    if (m_source) {
+        m_source->setLive(live);
+    }
 }
 
 QUuid WindowThumbnailItem::wId() const
