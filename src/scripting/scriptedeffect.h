@@ -151,10 +151,10 @@ public:
     Q_SCRIPTABLE bool freezeInTime(quint64 animationId, qint64 frozenTime);
     Q_SCRIPTABLE bool freezeInTime(const QList<quint64> &animationIds, qint64 frozenTime);
 
-    Q_SCRIPTABLE bool redirect(quint64 animationId, Direction direction,
-                               TerminationFlags terminationFlags = TerminateAtSource);
-    Q_SCRIPTABLE bool redirect(const QList<quint64> &animationIds, Direction direction,
-                               TerminationFlags terminationFlags = TerminateAtSource);
+    Q_SCRIPTABLE bool redirect(quint64 animationId, Direction direction);
+    Q_SCRIPTABLE bool redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags);
+    Q_SCRIPTABLE bool redirect(const QList<quint64> &animationIds, Direction direction);
+    Q_SCRIPTABLE bool redirect(const QList<quint64> &animationIds, Direction direction, TerminationFlags terminationFlags);
 
     Q_SCRIPTABLE bool complete(quint64 animationId);
     Q_SCRIPTABLE bool complete(const QList<quint64> &animationIds);

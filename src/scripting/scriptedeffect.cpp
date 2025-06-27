@@ -545,9 +545,21 @@ bool ScriptedEffect::freezeInTime(const QList<quint64> &animationIds, qint64 fro
     });
 }
 
+bool ScriptedEffect::redirect(quint64 animationId, Direction direction)
+{
+    return AnimationEffect::redirect(animationId, direction);
+}
+
 bool ScriptedEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
 {
     return AnimationEffect::redirect(animationId, direction, terminationFlags);
+}
+
+bool ScriptedEffect::redirect(const QList<quint64> &animationIds, Direction direction)
+{
+    return std::all_of(animationIds.begin(), animationIds.end(), [&](quint64 animationId) {
+        return redirect(animationId, direction);
+    });
 }
 
 bool ScriptedEffect::redirect(const QList<quint64> &animationIds, Direction direction, TerminationFlags terminationFlags)

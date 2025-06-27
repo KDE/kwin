@@ -338,7 +338,7 @@ bool AnimationEffect::freezeInTime(quint64 animationId, qint64 frozenTime)
     return false;
 }
 
-bool AnimationEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
+bool AnimationEffect::redirect(quint64 animationId, Direction direction, std::optional<TerminationFlags> terminationFlags)
 {
     if (animationId == d->m_justEndedAnimation) {
         return false;
@@ -357,7 +357,9 @@ bool AnimationEffect::redirect(quint64 animationId, Direction direction, Termina
                 anim->timeLine.setDirection(TimeLine::Forward);
                 break;
             }
-            anim->terminationFlags = terminationFlags & ~TerminateAtTarget;
+            if (terminationFlags) {
+                anim->terminationFlags = terminationFlags.value();
+            }
             return true;
         }
     }

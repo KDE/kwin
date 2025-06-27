@@ -435,14 +435,13 @@ protected:
      * @param direction The new direction of the animation.
      * @param terminationFlags Whether the animation should be terminated when it
      *   reaches the source position after its direction was changed to go backward.
-     *   Currently, TerminationFlag::TerminateAtTarget has no effect.
      * @returns @c true if the direction of the animation was changed successfully,
      *   otherwise @c false.
      * @since 5.15
      */
     bool redirect(quint64 animationId,
                   Direction direction,
-                  TerminationFlags terminationFlags = TerminateAtSource);
+                  std::optional<TerminationFlags> terminationFlags = std::nullopt);
 
     /**
      * Fast-forwards the animation to the target position.
