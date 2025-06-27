@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-24 00:44+0000\n"
+"POT-Creation-Date: 2025-06-27 00:44+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -1969,47 +1969,47 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "desktop"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:260
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:259
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "Alihkan ke Desktop %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Close running window on %1"
 msgstr "Tutup jendela yang berjalan pada %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "(Tak) minimalkan jendela yang berjalan pada %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "Maksimalkan/kembalikan jendela yang berjalan pada %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "Jungkit layar penuh untuk jendela yang berjalan pada %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "(Tak) berbayang jendela yang berjalan pada %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:313
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "Jungkitkan tetap di atas jendela yang berjalan pada %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:316
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "Jungkitkan tetap di bawah jendela yang berjalan pada %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:321
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "Aktifkan jendela yang berjalan pada %1"
@@ -3331,293 +3331,281 @@ msgstr "Diminimalkan"
 msgid "Minimized rule type"
 msgstr "Tipe aturan diminimalkan"
 
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:230
-#, kde-format
-msgid "Shaded"
-msgstr "Ditiraikan"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:234
-#, kde-format
-msgid "Shaded rule type"
-msgstr "Tipe aturan ditiraikan"
-
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:241
+#: rulesettings.kcfg:230
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Lewati bilah-tugas"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:245
+#: rulesettings.kcfg:234
 #, kde-format
 msgid "Skip taskbar rule type"
 msgstr "Tipe aturan lewati bilah-tugas"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:252
+#: rulesettings.kcfg:241
 #, kde-format
 msgid "Skip pager"
 msgstr "Lewati pemisah"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:256
+#: rulesettings.kcfg:245
 #, kde-format
 msgid "Skip pager rule type"
 msgstr "Tipe aturan lewati pemisah"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:263
+#: rulesettings.kcfg:252
 #, kde-format
 msgid "Skip switcher"
 msgstr "Lewati pengalih"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:267
+#: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip switcher rule type"
 msgstr "Tipe aturan lewati pengalih"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:274
+#: rulesettings.kcfg:263
 #, kde-format
 msgid "Keep above"
 msgstr "Tetap di atas"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:278
+#: rulesettings.kcfg:267
 #, kde-format
 msgid "Keep above rule type"
 msgstr "Tipe aturan tetap di atas"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:285
+#: rulesettings.kcfg:274
 #, kde-format
 msgid "Keep below"
 msgstr "Tetap di bawah"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:289
+#: rulesettings.kcfg:278
 #, kde-format
 msgid "Keep below rule type"
 msgstr "Tipe aturan tetap di bawah"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:296
+#: rulesettings.kcfg:285
 #, kde-format
 msgid "Fullscreen"
 msgstr "Layar penuh"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:300
+#: rulesettings.kcfg:289
 #, kde-format
 msgid "Fullscreen rule type"
 msgstr "Tipe aturan layar penuh"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:307
+#: rulesettings.kcfg:296
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Tanpa bilah judul dan kerangka"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:311
+#: rulesettings.kcfg:300
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "Tipe aturan tanpa bilah judul"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:307
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "Skema dan warna bilah judul"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:321
+#: rulesettings.kcfg:310
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "Tipe aturan warna bilah judul"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
+#: rulesettings.kcfg:315
 #, kde-format
 msgid "Block Compositing"
 msgstr "Pengomposisian Blokir"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:330
+#: rulesettings.kcfg:319
 #, kde-format
 msgid "Block Compositing rule type"
 msgstr "Tipe aturan Pengomposisian Blokir"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:335
+#: rulesettings.kcfg:324
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Pencegahan pencurian fokus"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:341
+#: rulesettings.kcfg:330
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Tipe aturan pencegahan pencurian fokus"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:346
+#: rulesettings.kcfg:335
 #, kde-format
 msgid "Focus protection"
 msgstr "Proteksi fokus"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:341
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Tipe aturan proteksi fokus"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:346
 #, kde-format
 msgid "Accept Focus"
 msgstr "Terima Fokus"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:350
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Tipe aturan Terima Fokus"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:355
 #, kde-format
 msgid "Closeable"
 msgstr "Bisa ditutup"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:370
+#: rulesettings.kcfg:359
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Tipe aturan bisa ditutup"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:375
+#: rulesettings.kcfg:364
 #, kde-format
 msgid "Autogroup with identical"
 msgstr "Auto kelompok dengan identik"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:379
+#: rulesettings.kcfg:368
 #, kde-format
 msgid "Autogroup with identical rule type"
 msgstr "Tipe aturan auto kelompok dengan identik"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:384
+#: rulesettings.kcfg:373
 #, kde-format
 msgid "Autogroup in foreground"
 msgstr "Auto kelompok di latar depan"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
+#: rulesettings.kcfg:377
 #, kde-format
 msgid "Autogroup in foreground rule type"
 msgstr "Tipe aturan auto kelompok di latar depan"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Autogroup by ID"
 msgstr "Auto kelompok berdasarkan ID"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:396
+#: rulesettings.kcfg:385
 #, kde-format
 msgid "Autogroup by ID rule type"
 msgstr "Tipe aturan auto kelompok berdasarkan ID"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:401
+#: rulesettings.kcfg:390
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Patuhi batasan geometri"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:405
+#: rulesettings.kcfg:394
 #, kde-format
 msgid "Obey geometry restrictions rule type"
 msgstr "Tipe aturan patuhi batasan geometri"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:399
 #, kde-format
 msgid "Shortcut"
 msgstr "Pintasan"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:413
+#: rulesettings.kcfg:402
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Tipe aturan pintasan"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:409
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Abaikan pintasan global"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:424
+#: rulesettings.kcfg:413
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Tipe aturan abaikan pintasan global"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:418
 #, kde-format
 msgid "Desktop file name"
 msgstr "Nama file desktop"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:432
+#: rulesettings.kcfg:421
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Tipe aturan nama file desktop"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:439
+#: rulesettings.kcfg:428
 #, kde-format
 msgid "Layer"
 msgstr ""
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:455
+#: rulesettings.kcfg:444
 #, fuzzy, kde-format
 #| msgid "Shaded rule type"
 msgid "Layer rule type"
 msgstr "Tipe aturan ditiraikan"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:460
+#: rulesettings.kcfg:449
 #, kde-format
 msgid "AdaptiveSync"
 msgstr ""
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:464
+#: rulesettings.kcfg:453
 #, fuzzy, kde-format
 #| msgid "Activity rule type"
 msgid "AdaptiveSync rule type"
 msgstr "Tipe aturan aktivitas"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:469
+#: rulesettings.kcfg:458
 #, fuzzy, kde-format
 #| msgid "Allow Rotation"
 msgid "Allow Tearing"
 msgstr "Memungkinkan Perotasian"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:473
+#: rulesettings.kcfg:462
 #, fuzzy, kde-format
 #| msgid "Shaded rule type"
 msgid "Tearing rule type"
@@ -3635,19 +3623,19 @@ msgstr "Dialog"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:479
+#: sm.cpp:477
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:480
+#: sm.cpp:478
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr ""
 
-#: sm.cpp:526
+#: sm.cpp:524
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3668,39 +3656,39 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Jendela"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:310
 msgid "Walk Through Windows"
 msgstr "Berjalan Antar Jendela"
 
-#: tabbox/tabbox.cpp:321
+#: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows (Reverse)"
 msgstr "Berjalan Antar Jendela (Kebalikan)"
 
-#: tabbox/tabbox.cpp:322
+#: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows Alternative"
 msgstr "Berjalan Antar Alternatif Jendela"
 
-#: tabbox/tabbox.cpp:323
+#: tabbox/tabbox.cpp:313
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Berjalan Antar Alternatif Jendela (Kebalikan)"
 
-#: tabbox/tabbox.cpp:324
+#: tabbox/tabbox.cpp:314
 msgid "Walk Through Windows of Current Application"
 msgstr "Berjalan Antar Jendela Aplikasi Saat Ini"
 
-#: tabbox/tabbox.cpp:325
+#: tabbox/tabbox.cpp:315
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Berjalan Antar Jendela Aplikasi Saat Ini (Kebalikan)"
 
-#: tabbox/tabbox.cpp:326
+#: tabbox/tabbox.cpp:316
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Berjalan Antar Alternatif Jendela Aplikasi Saat Ini"
 
-#: tabbox/tabbox.cpp:327
+#: tabbox/tabbox.cpp:317
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Berjalan Antar Alternatif Jendela Aplikasi Saat Ini (Kebalikan)"
 
-#: tabbox/tabboxhandler.cpp:199
+#: tabbox/tabboxhandler.cpp:190
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -3934,339 +3922,334 @@ msgstr "Minimalkan Jendela"
 
 #: useractions.cpp:825
 #, kde-format
-msgid "Shade Window"
-msgstr "Tiraikan Jendela"
-
-#: useractions.cpp:827
-#, kde-format
 msgid "Move Window"
 msgstr "Pindahkan Jendela"
 
-#: useractions.cpp:829
+#: useractions.cpp:827
 #, kde-format
 msgid "Resize Window"
 msgstr "Ubah Ukuran Jendela"
 
-#: useractions.cpp:831
+#: useractions.cpp:829
 #, kde-format
 msgid "Raise Window"
 msgstr "Naikkan Jendela"
 
-#: useractions.cpp:833
+#: useractions.cpp:831
 #, kde-format
 msgid "Lower Window"
 msgstr "Turunkan Jendela"
 
-#: useractions.cpp:835
+#: useractions.cpp:833
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Jungkit Naikkan/Turunkan Jendela"
 
-#: useractions.cpp:837
+#: useractions.cpp:835
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Buat Jendela Layar Penuh"
 
-#: useractions.cpp:839
+#: useractions.cpp:837
 #, fuzzy, kde-format
 #| msgid "No titlebar and frame"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Tanpa bilah judul dan kerangka"
 
-#: useractions.cpp:841
+#: useractions.cpp:839
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Jaga Jendela di Atas Lainnya"
 
-#: useractions.cpp:843
+#: useractions.cpp:841
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Jaga Jendela di Bawah Lainnya"
 
-#: useractions.cpp:845
+#: useractions.cpp:843
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktifkan Jendela Memerlukan Perhatian"
 
-#: useractions.cpp:847
+#: useractions.cpp:845
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Pengesetan Pintasan Jendela"
 
-#: useractions.cpp:849
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Pindahkan Jendela ke Tengah"
 
-#: useractions.cpp:851
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window Right"
 msgstr "Pindah Jendela Kanan"
 
-#: useractions.cpp:853
+#: useractions.cpp:851
 #, kde-format
 msgid "Move Window Left"
 msgstr "Pindah Jendela Kiri"
 
-#: useractions.cpp:855
+#: useractions.cpp:853
 #, kde-format
 msgid "Move Window Up"
 msgstr "Pindah Jendela Atas"
 
-#: useractions.cpp:857
+#: useractions.cpp:855
 #, kde-format
 msgid "Move Window Down"
 msgstr "Pindah Jendela Bawah"
 
-#: useractions.cpp:859
+#: useractions.cpp:857
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Perluas Jendela Secara Mendatar"
 
-#: useractions.cpp:861
+#: useractions.cpp:859
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Perluas Jendela Secara Tegak"
 
-#: useractions.cpp:863
+#: useractions.cpp:861
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Susutkan Jendela Secara Mendatar"
 
-#: useractions.cpp:865
+#: useractions.cpp:863
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Susutkan Jendela Secara Tegak"
 
-#: useractions.cpp:867
+#: useractions.cpp:865
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Ubin Jendela Cepat ke Kiri"
 
-#: useractions.cpp:869
+#: useractions.cpp:867
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Ubin Jendela Cepat ke Kanan"
 
-#: useractions.cpp:871
+#: useractions.cpp:869
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Ubin Jendela Cepat ke Atas"
 
-#: useractions.cpp:873
+#: useractions.cpp:871
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Ubin Jendela Cepat ke Bawah"
 
-#: useractions.cpp:875
+#: useractions.cpp:873
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Ubin Jendela Cepat ke Kiri Atas"
 
-#: useractions.cpp:877
+#: useractions.cpp:875
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Ubin Jendela Cepat ke Kiri Bawah"
 
-#: useractions.cpp:879
+#: useractions.cpp:877
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Ubin Jendela Cepat ke Kanan Atas"
 
-#: useractions.cpp:881
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Ubin Jendela Cepat ke Kanan Bawah"
 
-#: useractions.cpp:883
+#: useractions.cpp:881
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Alihkan ke Jendela di Atas"
 
-#: useractions.cpp:885
+#: useractions.cpp:883
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Alihkan ke Jendela di Bawah"
 
-#: useractions.cpp:887
+#: useractions.cpp:885
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Alihkan ke Jendela di Kanan"
 
-#: useractions.cpp:889
+#: useractions.cpp:887
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Alihkan ke Jendela di Kiri"
 
-#: useractions.cpp:891
+#: useractions.cpp:889
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Tambahi Opasitas Jendela Aktiv dengan 5 %"
 
-#: useractions.cpp:893
+#: useractions.cpp:891
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Kurangi Opasitas Jendela Aktiv dengan 5 %"
 
-#: useractions.cpp:896
+#: useractions.cpp:894
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Jaga Jendela di Semua Desktop"
 
-#: useractions.cpp:899
+#: useractions.cpp:897
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Ubin Jendela Cepat ke Kiri"
 
-#: useractions.cpp:901
+#: useractions.cpp:899
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Ubin Jendela Cepat ke Kanan"
 
-#: useractions.cpp:903
+#: useractions.cpp:901
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Ubin Jendela Cepat ke Atas"
 
-#: useractions.cpp:905
+#: useractions.cpp:903
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Ubin Jendela Cepat ke Bawah"
 
-#: useractions.cpp:916
+#: useractions.cpp:914
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Jendela ke Desktop %1"
 
-#: useractions.cpp:918
+#: useractions.cpp:916
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Jendela ke Desktop Selanjutnya"
 
-#: useractions.cpp:919
+#: useractions.cpp:917
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Jendela ke Desktop Sebelumnya"
 
-#: useractions.cpp:920
+#: useractions.cpp:918
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Jendela Satu Desktop ke Kanan"
 
-#: useractions.cpp:922
+#: useractions.cpp:920
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Jendela Satu Desktop ke Kiri"
 
-#: useractions.cpp:924
+#: useractions.cpp:922
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Jendela Satu Desktop ke Atas"
 
-#: useractions.cpp:926
+#: useractions.cpp:924
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Jendela Satu Desktop ke Bawah"
 
-#: useractions.cpp:930
+#: useractions.cpp:928
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "Jendela ke Layar %1"
 
-#: useractions.cpp:937
+#: useractions.cpp:935
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Jendela ke Layar Selanjutnya"
 
-#: useractions.cpp:939
+#: useractions.cpp:937
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "Jendela ke Layar Sebelumnya"
 
-#: useractions.cpp:941
+#: useractions.cpp:939
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Jendela Satu Desktop ke Kanan"
 
-#: useractions.cpp:943
+#: useractions.cpp:941
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Jendela Satu Desktop ke Kiri"
 
-#: useractions.cpp:945
+#: useractions.cpp:943
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Jendela ke Desktop 2"
 
-#: useractions.cpp:947
+#: useractions.cpp:945
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Jendela Satu Desktop ke Bawah"
 
-#: useractions.cpp:951
+#: useractions.cpp:949
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Alihkan ke Layar %1"
 
-#: useractions.cpp:958
+#: useractions.cpp:956
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Alihkan ke Layar Selanjutnya"
 
-#: useractions.cpp:959
+#: useractions.cpp:957
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Alihkan ke Layar Sebelumnya"
 
-#: useractions.cpp:960
+#: useractions.cpp:958
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Alihkan ke Jendela di Kanan"
 
-#: useractions.cpp:962
+#: useractions.cpp:960
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Alihkan ke Jendela di Kiri"
 
-#: useractions.cpp:964
+#: useractions.cpp:962
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Ganti ke Layar 0"
 
-#: useractions.cpp:966
+#: useractions.cpp:964
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Ganti ke Layar 0"
 
-#: useractions.cpp:969
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Peek at Desktop"
 msgstr "Pindah ke &Desktop"
 
-#: useractions.cpp:972
+#: useractions.cpp:970
 #, kde-format
 msgid "Kill Window"
 msgstr "Matikan Jendela"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1038
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktifkan Jendela (%1)"
@@ -4341,7 +4324,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3242
+#: window.cpp:3104
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4387,6 +4370,15 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Shaded"
+#~ msgstr "Ditiraikan"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "Tipe aturan ditiraikan"
+
+#~ msgid "Shade Window"
+#~ msgstr "Tiraikan Jendela"
 
 #, fuzzy
 #~| msgctxt "Create a new desktop and move the window to that desktop"

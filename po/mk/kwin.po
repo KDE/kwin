@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-24 00:44+0000\n"
+"POT-Creation-Date: 2025-06-27 00:44+0000\n"
 "PO-Revision-Date: 2010-01-30 17:37+0100\n"
 "Last-Translator: Bozidar Proevski <bobibobi@freemail.com.mk>\n"
 "Language-Team: Macedonian <mkde-l10n@lists.sourceforge.net>\n"
@@ -1943,48 +1943,48 @@ msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "&Сите површини"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:260
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:259
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to desktop %1"
 msgstr "Префрли се на површина 1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:299
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Close running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:302
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:313
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:316
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr ""
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:321
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, fuzzy, kde-format
 #| msgid "Activate Window (%1)"
 msgid "Activate running window on %1"
@@ -3221,302 +3221,289 @@ msgstr "Спушти"
 msgid "Minimized rule type"
 msgstr ""
 
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:230
-#, fuzzy, kde-format
-#| msgid "Shade"
-msgid "Shaded"
-msgstr "Засенчи"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:234
-#, kde-format
-msgid "Shaded rule type"
-msgstr ""
-
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:241
+#: rulesettings.kcfg:230
 #, kde-format
 msgid "Skip taskbar"
 msgstr ""
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:245
+#: rulesettings.kcfg:234
 #, kde-format
 msgid "Skip taskbar rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:252
+#: rulesettings.kcfg:241
 #, kde-format
 msgid "Skip pager"
 msgstr ""
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:256
+#: rulesettings.kcfg:245
 #, kde-format
 msgid "Skip pager rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:263
+#: rulesettings.kcfg:252
 #, fuzzy, kde-format
 #| msgid "Switch to window tab"
 msgid "Skip switcher"
 msgstr "Префрли се ливче од прозорец"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:267
+#: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip switcher rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:274
+#: rulesettings.kcfg:263
 #, fuzzy, kde-format
 #| msgid "Keep above others"
 msgid "Keep above"
 msgstr "Задржи над другите"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:278
+#: rulesettings.kcfg:267
 #, fuzzy, kde-format
 #| msgid "Keep above others"
 msgid "Keep above rule type"
 msgstr "Задржи над другите"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:285
+#: rulesettings.kcfg:274
 #, fuzzy, kde-format
 #| msgid "Keep below others"
 msgid "Keep below"
 msgstr "Задржи под другите"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:289
+#: rulesettings.kcfg:278
 #, fuzzy, kde-format
 #| msgid "Keep below others"
 msgid "Keep below rule type"
 msgstr "Задржи под другите"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:296
+#: rulesettings.kcfg:285
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
 msgstr "Преку цел &екран"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:300
+#: rulesettings.kcfg:289
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen rule type"
 msgstr "Преку цел &екран"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:307
+#: rulesettings.kcfg:296
 #, kde-format
 msgid "No titlebar and frame"
 msgstr ""
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:311
+#: rulesettings.kcfg:300
 #, kde-format
 msgid "No titlebar rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:307
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr ""
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:321
+#: rulesettings.kcfg:310
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:326
+#: rulesettings.kcfg:315
 #, kde-format
 msgid "Block Compositing"
 msgstr ""
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:330
+#: rulesettings.kcfg:319
 #, kde-format
 msgid "Block Compositing rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:335
+#: rulesettings.kcfg:324
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr ""
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:341
+#: rulesettings.kcfg:330
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:346
+#: rulesettings.kcfg:335
 #, kde-format
 msgid "Focus protection"
 msgstr ""
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:352
+#: rulesettings.kcfg:341
 #, kde-format
 msgid "Focus protection rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:357
+#: rulesettings.kcfg:346
 #, kde-format
 msgid "Accept Focus"
 msgstr ""
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:361
+#: rulesettings.kcfg:350
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:366
+#: rulesettings.kcfg:355
 #, fuzzy, kde-format
 #| msgid "Close"
 msgid "Closeable"
 msgstr "Затвори"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:370
+#: rulesettings.kcfg:359
 #, kde-format
 msgid "Closeable rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:375
+#: rulesettings.kcfg:364
 #, kde-format
 msgid "Autogroup with identical"
 msgstr ""
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:379
+#: rulesettings.kcfg:368
 #, kde-format
 msgid "Autogroup with identical rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:384
+#: rulesettings.kcfg:373
 #, kde-format
 msgid "Autogroup in foreground"
 msgstr ""
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:388
+#: rulesettings.kcfg:377
 #, kde-format
 msgid "Autogroup in foreground rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Autogroup by ID"
 msgstr ""
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:396
+#: rulesettings.kcfg:385
 #, kde-format
 msgid "Autogroup by ID rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:401
+#: rulesettings.kcfg:390
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr ""
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:405
+#: rulesettings.kcfg:394
 #, kde-format
 msgid "Obey geometry restrictions rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:399
 #, kde-format
 msgid "Shortcut"
 msgstr ""
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:413
+#: rulesettings.kcfg:402
 #, kde-format
 msgid "Shortcut rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:420
+#: rulesettings.kcfg:409
 #, fuzzy, kde-format
 #| msgid "Block Global Shortcuts"
 msgid "Ignore global shortcuts"
 msgstr "Блокирај глобални кратенки"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:424
+#: rulesettings.kcfg:413
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:418
 #, kde-format
 msgid "Desktop file name"
 msgstr ""
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:432
+#: rulesettings.kcfg:421
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr ""
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:439
+#: rulesettings.kcfg:428
 #, kde-format
 msgid "Layer"
 msgstr ""
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:455
+#: rulesettings.kcfg:444
 #, fuzzy, kde-format
 #| msgid "Keep above others"
 msgid "Layer rule type"
 msgstr "Задржи над другите"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:460
+#: rulesettings.kcfg:449
 #, kde-format
 msgid "AdaptiveSync"
 msgstr ""
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:464
+#: rulesettings.kcfg:453
 #, fuzzy, kde-format
 #| msgid "Keep above others"
 msgid "AdaptiveSync rule type"
 msgstr "Задржи над другите"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:469
+#: rulesettings.kcfg:458
 #, kde-format
 msgid "Allow Tearing"
 msgstr ""
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:473
+#: rulesettings.kcfg:462
 #, fuzzy, kde-format
 #| msgid "Keep above others"
 msgid "Tearing rule type"
@@ -3535,19 +3522,19 @@ msgstr "Дијалог за конфигурација"
 msgid "..."
 msgstr ""
 
-#: sm.cpp:479
+#: sm.cpp:477
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:480
+#: sm.cpp:478
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr ""
 
-#: sm.cpp:526
+#: sm.cpp:524
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3569,47 +3556,47 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Прозорци"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:310
 msgid "Walk Through Windows"
 msgstr "Движи се низ прозорци"
 
-#: tabbox/tabbox.cpp:321
+#: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows (Reverse)"
 msgstr "Движи се низ прозорци (обратно)"
 
-#: tabbox/tabbox.cpp:322
+#: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows Alternative"
 msgstr "Движи се низ прозорци алтернативно"
 
-#: tabbox/tabbox.cpp:323
+#: tabbox/tabbox.cpp:313
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Движи се низ прозорци алтернативно (обратно)"
 
-#: tabbox/tabbox.cpp:324
+#: tabbox/tabbox.cpp:314
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
 msgstr "Движи се низ прозорци алтернативно"
 
-#: tabbox/tabbox.cpp:325
+#: tabbox/tabbox.cpp:315
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Движи се низ прозорци алтернативно (обратно)"
 
-#: tabbox/tabbox.cpp:326
+#: tabbox/tabbox.cpp:316
 #, fuzzy
 #| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Движи се низ прозорци алтернативно"
 
-#: tabbox/tabbox.cpp:327
+#: tabbox/tabbox.cpp:317
 #, fuzzy
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Движи се низ прозорци алтернативно (обратно)"
 
-#: tabbox/tabboxhandler.cpp:199
+#: tabbox/tabboxhandler.cpp:190
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
@@ -3844,355 +3831,350 @@ msgstr "Спушти прозорец"
 
 #: useractions.cpp:825
 #, kde-format
-msgid "Shade Window"
-msgstr "Засенчи прозорец"
-
-#: useractions.cpp:827
-#, kde-format
 msgid "Move Window"
 msgstr "Премести прозорец"
 
-#: useractions.cpp:829
+#: useractions.cpp:827
 #, kde-format
 msgid "Resize Window"
 msgstr "Смени големина на прозорец"
 
-#: useractions.cpp:831
+#: useractions.cpp:829
 #, kde-format
 msgid "Raise Window"
 msgstr "Подигни прозорец"
 
-#: useractions.cpp:833
+#: useractions.cpp:831
 #, kde-format
 msgid "Lower Window"
 msgstr "Снижи прозорец"
 
-#: useractions.cpp:835
+#: useractions.cpp:833
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Смени подигање/снижување на прозорец"
 
-#: useractions.cpp:837
+#: useractions.cpp:835
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Рашири прозорец преку цел екран"
 
-#: useractions.cpp:839
+#: useractions.cpp:837
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Сокриј го работ на прозорецот"
 
-#: useractions.cpp:841
+#: useractions.cpp:839
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Задржи го прозорецот над другите"
 
-#: useractions.cpp:843
+#: useractions.cpp:841
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Задржи го прозорецот под другите"
 
-#: useractions.cpp:845
+#: useractions.cpp:843
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Активирај го прозорецот кој бара внимание"
 
-#: useractions.cpp:847
+#: useractions.cpp:845
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Постави кратенка за прозорец"
 
-#: useractions.cpp:849
+#: useractions.cpp:847
 #, fuzzy, kde-format
 #| msgid "Move window to group"
 msgid "Move Window to the Center"
 msgstr "Премести прозорец во група"
 
-#: useractions.cpp:851
+#: useractions.cpp:849
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Премести прозорец"
 
-#: useractions.cpp:853
+#: useractions.cpp:851
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Премести прозорец"
 
-#: useractions.cpp:855
+#: useractions.cpp:853
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Премести прозорец"
 
-#: useractions.cpp:857
+#: useractions.cpp:855
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Премести прозорец"
 
-#: useractions.cpp:859
+#: useractions.cpp:857
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Рашири прозорец хоризонтално"
 
-#: useractions.cpp:861
+#: useractions.cpp:859
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Рашири прозорец вертикално"
 
-#: useractions.cpp:863
+#: useractions.cpp:861
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Спакувај намалувачки прозорец хоризонтално"
 
-#: useractions.cpp:865
+#: useractions.cpp:863
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Спакувај намалувачки прозорец вертикално"
 
-#: useractions.cpp:867
+#: useractions.cpp:865
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr ""
 
-#: useractions.cpp:869
+#: useractions.cpp:867
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr ""
 
-#: useractions.cpp:871
+#: useractions.cpp:869
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Спакувај прозорец кон лево"
 
-#: useractions.cpp:873
+#: useractions.cpp:871
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Спакувај прозорец кон лево"
 
-#: useractions.cpp:875
+#: useractions.cpp:873
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "Спакувај прозорец кон лево"
 
-#: useractions.cpp:877
+#: useractions.cpp:875
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Спакувај прозорец кон лево"
 
-#: useractions.cpp:879
+#: useractions.cpp:877
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "Спакувај прозорец кон десно"
 
-#: useractions.cpp:881
+#: useractions.cpp:879
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Спакувај прозорец кон десно"
 
-#: useractions.cpp:883
+#: useractions.cpp:881
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Префрли се на прозорецот над"
 
-#: useractions.cpp:885
+#: useractions.cpp:883
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Префрли се на прозорецот под"
 
-#: useractions.cpp:887
+#: useractions.cpp:885
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Префрли се на прозорецот оддесно"
 
-#: useractions.cpp:889
+#: useractions.cpp:887
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Префрли се на прозорецот одлево"
 
-#: useractions.cpp:891
+#: useractions.cpp:889
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:893
+#: useractions.cpp:891
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:896
+#: useractions.cpp:894
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Задржи го прозорецот на сите површини"
 
-#: useractions.cpp:899
+#: useractions.cpp:897
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Спакувај прозорец кон лево"
 
-#: useractions.cpp:901
+#: useractions.cpp:899
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Спакувај прозорец кон десно"
 
-#: useractions.cpp:903
+#: useractions.cpp:901
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Спакувај прозорец кон лево"
 
-#: useractions.cpp:905
+#: useractions.cpp:903
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Спакувај прозорец кон лево"
 
-#: useractions.cpp:916
+#: useractions.cpp:914
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Прозорец кон површина 1"
 
-#: useractions.cpp:918
+#: useractions.cpp:916
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Прозорец кон следната површина"
 
-#: useractions.cpp:919
+#: useractions.cpp:917
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Прозорец кон претходната површина"
 
-#: useractions.cpp:920
+#: useractions.cpp:918
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Прозорец една површина надесно"
 
-#: useractions.cpp:922
+#: useractions.cpp:920
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Прозорец една површина налево"
 
-#: useractions.cpp:924
+#: useractions.cpp:922
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Прозорец една површина нагоре"
 
-#: useractions.cpp:926
+#: useractions.cpp:924
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Прозорец една површина надолу"
 
-#: useractions.cpp:930
+#: useractions.cpp:928
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "Прозорецот на екран 1"
 
-#: useractions.cpp:937
+#: useractions.cpp:935
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Прозорец кон следната површина"
 
-#: useractions.cpp:939
+#: useractions.cpp:937
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "Прозорец кон претходната површина"
 
-#: useractions.cpp:941
+#: useractions.cpp:939
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Прозорец една површина надесно"
 
-#: useractions.cpp:943
+#: useractions.cpp:941
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Прозорец една површина налево"
 
-#: useractions.cpp:945
+#: useractions.cpp:943
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Прозорецот на екран 2"
 
-#: useractions.cpp:947
+#: useractions.cpp:945
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Прозорец една површина надолу"
 
-#: useractions.cpp:951
+#: useractions.cpp:949
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "Префрли се на екран 1"
 
-#: useractions.cpp:958
+#: useractions.cpp:956
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Префрли се на следниот екран"
 
-#: useractions.cpp:959
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Префрли се на претходната површина"
 
-#: useractions.cpp:960
+#: useractions.cpp:958
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Префрли се на прозорецот оддесно"
 
-#: useractions.cpp:962
+#: useractions.cpp:960
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Префрли се на прозорецот одлево"
 
-#: useractions.cpp:964
+#: useractions.cpp:962
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Префрли се на екран 0"
 
-#: useractions.cpp:966
+#: useractions.cpp:964
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Префрли се на екран 0"
 
-#: useractions.cpp:969
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "К&он површина"
 
-#: useractions.cpp:972
+#: useractions.cpp:970
 #, kde-format
 msgid "Kill Window"
 msgstr "Уништи прозорец"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1038
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Активирање прозорец (%1)"
@@ -4268,7 +4250,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3242
+#: window.cpp:3104
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4293,6 +4275,14 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shaded"
+#~ msgstr "Засенчи"
+
+#~ msgid "Shade Window"
+#~ msgstr "Засенчи прозорец"
 
 #, fuzzy
 #~| msgid "To &Desktop"
