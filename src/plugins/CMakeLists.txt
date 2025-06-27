@@ -112,6 +112,7 @@ add_subdirectory(videowall)
 add_subdirectory(windowaperture)
 add_subdirectory(windowsystem)
 add_subdirectory(windowview)
+add_subdirectory(windowpicker)
 add_subdirectory(wobblywindows)
 add_subdirectory(zoom)
 
