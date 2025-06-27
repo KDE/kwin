@@ -104,14 +104,6 @@ void HighlightWindowEffect::finishHighlighting()
         }
     }
 
-    // Sanity check, ideally, this should never happen.
-    if (!m_animations.isEmpty()) {
-        for (quint64 &animationId : m_animations) {
-            cancel(animationId);
-        }
-        m_animations.clear();
-    }
-
     m_highlightedWindows.clear();
 }
 
@@ -130,7 +122,7 @@ quint64 HighlightWindowEffect::startGhostAnimation(EffectWindow *window)
 {
     quint64 &animationId = m_animations[window];
     if (animationId) {
-        retarget(animationId, FPx2(m_ghostOpacity, m_ghostOpacity), m_fadeDuration);
+        retarget(animationId, FPx2(m_ghostOpacity, m_ghostOpacity), m_fadeDuration, TerminateAtSource);
     } else {
         const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
         animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(m_ghostOpacity, m_ghostOpacity),
@@ -143,7 +135,7 @@ quint64 HighlightWindowEffect::startHighlightAnimation(EffectWindow *window)
 {
     quint64 &animationId = m_animations[window];
     if (animationId) {
-        retarget(animationId, FPx2(1.0, 1.0), m_fadeDuration);
+        retarget(animationId, FPx2(1.0, 1.0), m_fadeDuration, TerminateAtSource);
     } else {
         const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
         animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(1.0, 1.0),
@@ -154,13 +146,10 @@ quint64 HighlightWindowEffect::startHighlightAnimation(EffectWindow *window)
 
 void HighlightWindowEffect::startRevertAnimation(EffectWindow *window)
 {
-    const quint64 animationId = m_animations.take(window);
+    const quint64 animationId = m_animations.value(window);
     if (animationId) {
-        const qreal startOpacity = isHighlighted(window) ? 1 : m_ghostOpacity;
         const qreal endOpacity = isInitiallyHidden(window) ? 0 : 1;
-        animate(window, Opacity, 0, m_fadeDuration, FPx2(endOpacity, endOpacity),
-                m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
-        cancel(animationId);
+        retarget(animationId, FPx2(endOpacity, endOpacity), m_fadeDuration, TerminateAtSource | TerminateAtTarget);
     }
 }
 
@@ -191,9 +180,11 @@ bool HighlightWindowEffect::perform(Feature feature, const QVariantList &argumen
     return true;
 }
 
-void HighlightWindowEffect::reconfigure(ReconfigureFlags flags)
+void HighlightWindowEffect::animationEnded(EffectWindow *w, Attribute a, uint meta)
 {
-    m_fadeDuration = animationTime(150ms);
+    if (a == Attribute::Opacity) {
+        m_animations.remove(w);
+    }
 }
 
 } // namespace

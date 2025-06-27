@@ -29,12 +29,14 @@ public:
 
     bool provides(Feature feature) override;
     bool perform(Feature feature, const QVariantList &arguments) override;
-    void reconfigure(ReconfigureFlags flags) override;
     Q_SCRIPTABLE void highlightWindows(const QStringList &windows);
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
+
+protected:
+    void animationEnded(EffectWindow *w, Attribute a, uint meta) override;
 
 private:
     quint64 startGhostAnimation(EffectWindow *window);
