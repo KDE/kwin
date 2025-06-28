@@ -18,18 +18,41 @@
 #include <QGuiApplication>
 #include <QKeyEvent>
 
+#include <QProximitySensor>
+
 namespace KWin
 {
 
 DpmsInputEventFilter::DpmsInputEventFilter()
     : InputEventFilter(InputFilterOrder::Dpms)
+    , m_sensor(std::make_unique<QProximitySensor>())
+    , m_proximityClose(false)
 {
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_enableDoubleTap = kwinSettings->group(QStringLiteral("Wayland")).readEntry<bool>("DoubleTapWakeup", true);
+
+    if (m_enableDoubleTap) {
+        connect(m_sensor.get(), &QProximitySensor::readingChanged, this, &DpmsInputEventFilter::updateProximitySensor, Qt::UniqueConnection);
+        m_sensor->start();
+        updateProximitySensor();
+    }
 }
 
 DpmsInputEventFilter::~DpmsInputEventFilter()
 {
+    if (m_enableDoubleTap) {
+        disconnect(m_sensor.get(), &QProximitySensor::readingChanged, this, &DpmsInputEventFilter::updateProximitySensor);
+        m_sensor->stop();
+        m_proximityClose = false;
+    }
+}
+
+void DpmsInputEventFilter::updateProximitySensor()
+{
+    // change proximity value only if there is valid sensor backend is connected
+    if (m_sensor->isConnectedToBackend() && !m_sensor->sensorsForType(m_sensor->type()).isEmpty()) {
+        m_proximityClose = m_sensor->reading()->close();
+    }
 }
 
 bool DpmsInputEventFilter::pointerMotion(PointerMotionEvent *event)
@@ -98,7 +121,8 @@ bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
     if (m_enableDoubleTap) {
         m_touchPoints.removeAll(id);
         if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
-            if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
+            // if device in pocket, do not wake device up
+            if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval() && !m_proximityClose) {
                 notify();
             }
             m_doubleTapTimer.invalidate();
