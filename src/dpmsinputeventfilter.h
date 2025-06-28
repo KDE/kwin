@@ -14,6 +14,8 @@
 
 #include <kwin_export.h>
 
+class QProximitySensor;
+
 namespace KWin
 {
 
@@ -42,12 +44,18 @@ public:
     bool tabletPadRingEvent(TabletPadRingEvent *event) override;
     bool tabletPadDialEvent(TabletPadDialEvent *event) override;
 
+private Q_SLOTS:
+    void updateProximitySensor();
+
 private:
     void notify();
     QElapsedTimer m_doubleTapTimer;
     QList<qint32> m_touchPoints;
+    std::unique_ptr<QProximitySensor> m_sensor;
+
     bool m_secondTap = false;
     bool m_enableDoubleTap;
+    bool m_proximityClose = false;
 };
 
 }
