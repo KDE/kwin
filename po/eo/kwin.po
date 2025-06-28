@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-24 02:36+0000\n"
+"POT-Creation-Date: 2025-06-28 02:35+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -4291,27 +4291,27 @@ msgstr "Iri al suba labortablo"
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
 
-#: wayland/outputmanagement_v2.cpp:491
+#: wayland/outputmanagement_v2.cpp:499
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Unu el la rilataj eligoj ne plu disponeblas"
 
-#: wayland/outputmanagement_v2.cpp:509
+#: wayland/outputmanagement_v2.cpp:517
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Malebligi ĉiujn eligojn per agordoŝanĝoj ne estas permesita"
 
-#: wayland/outputmanagement_v2.cpp:519
+#: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "La provizita elig-sinsekvo ne enhavas ĉiujn eligojn"
 
-#: wayland/outputmanagement_v2.cpp:537
+#: wayland/outputmanagement_v2.cpp:545
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "La provizita elig-sinsekvo estas nevalida"
 
-#: wayland/outputmanagement_v2.cpp:555
+#: wayland/outputmanagement_v2.cpp:563
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "La pelilo malakceptis la eligan agordon"
