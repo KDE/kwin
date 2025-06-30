@@ -637,6 +637,7 @@ private:
 
     void closeActivePopup();
     void updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
+    void updateWindowVisibilityAndActivateOnDesktopChange(VirtualDesktop *newDesktop);
     void activateWindowOnDesktop(VirtualDesktop *desktop);
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeWindow(Window *window);

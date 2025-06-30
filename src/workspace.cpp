@@ -955,14 +955,7 @@ void Workspace::slotReconfigure()
 
 void Workspace::slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDesktop *newDesktop)
 {
-    closeActivePopup();
-    ++block_focus;
-    StackingUpdatesBlocker blocker(this);
-    updateWindowVisibilityOnDesktopChange(newDesktop);
-    // Restore the focus on this desktop
-    --block_focus;
-
-    activateWindowOnDesktop(newDesktop);
+    updateWindowVisibilityAndActivateOnDesktopChange(newDesktop);
     Q_EMIT currentDesktopChanged(oldDesktop, m_moveResizeWindow);
 }
 
@@ -985,7 +978,7 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
         if (!c) {
             continue;
         }
-        if (!c->isOnDesktop(newDesktop) && c != m_moveResizeWindow && c->isOnCurrentActivity()) {
+        if (!(c->isOnDesktop(newDesktop) && c->isOnCurrentActivity()) && c != m_moveResizeWindow) {
             (c)->updateVisibility();
         }
     }
@@ -994,6 +987,8 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
         rootInfo()->setCurrentDesktop(VirtualDesktopManager::self()->current());
     }
 #endif
+
+    // FIXME: Keep Move/Resize window across activities
 
     if (m_moveResizeWindow && !m_moveResizeWindow->isOnDesktop(newDesktop)) {
         m_moveResizeWindow->setDesktops({newDesktop});
@@ -1015,6 +1010,18 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
     }
 }
 
+void Workspace::updateWindowVisibilityAndActivateOnDesktopChange(VirtualDesktop *newDesktop)
+{
+    closeActivePopup();
+    ++block_focus;
+    StackingUpdatesBlocker blocker(this);
+    updateWindowVisibilityOnDesktopChange(newDesktop);
+    // Restore the focus on this desktop
+    --block_focus;
+
+    activateWindowOnDesktop(newDesktop);
+}
+
 void Workspace::activateWindowOnDesktop(VirtualDesktop *desktop)
 {
     Window *window = nullptr;
@@ -1024,7 +1031,7 @@ void Workspace::activateWindowOnDesktop(VirtualDesktop *desktop)
     // If "unreasonable focus policy" and m_activeWindow is on_all_desktops and
     // under mouse (Hence == old_active_window), conserve focus.
     // (Thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
-    else if (m_activeWindow && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop()) {
+    else if (m_activeWindow && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop() && m_activeWindow->isOnCurrentActivity()) {
         window = m_activeWindow;
     }
 
@@ -1045,7 +1052,7 @@ void Workspace::activateWindowOnDesktop(VirtualDesktop *desktop)
 
 Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
 {
-    if (m_moveResizeWindow != nullptr && m_activeWindow == m_moveResizeWindow && m_focusChain->contains(m_activeWindow, desktop) && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop()) {
+    if (m_moveResizeWindow != nullptr && m_activeWindow == m_moveResizeWindow && m_focusChain->contains(m_activeWindow, desktop) && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop() && m_activeWindow->isOnCurrentActivity()) {
         // A requestFocus call will fail, as the window is already active
         return m_activeWindow;
     }
@@ -1086,77 +1093,8 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     if (!m_activities) {
         return;
     }
-    // closeActivePopup();
-    ++block_focus;
-    // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date
-    StackingUpdatesBlocker blocker(this);
 
-    // Optimized Desktop switching: unmapping done from back to front
-    // mapping done from front to back => less exposure events
-    // Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
-
-#if KWIN_BUILD_X11
-    for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
-        X11Window *window = qobject_cast<X11Window *>(*it);
-        if (!window) {
-            continue;
-        }
-        if (!window->isOnActivity(new_activity) && window != m_moveResizeWindow && window->isOnCurrentDesktop()) {
-            window->updateVisibility();
-        }
-    }
-
-    // Now propagate the change, after hiding, before showing
-    // rootInfo->setCurrentDesktop( currentDesktop() );
-
-    /* TODO someday enable dragging windows to other activities
-    if ( m_moveResizeWindow && !m_moveResizeWindow->isOnDesktop( new_desktop ))
-        {
-        m_moveResizeWindow->setDesktop( new_desktop );
-        */
-
-    for (int i = stacking_order.size() - 1; i >= 0; --i) {
-        X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
-        if (!window) {
-            continue;
-        }
-        if (window->isOnActivity(new_activity)) {
-            window->updateVisibility();
-        }
-    }
-#endif
-
-    // FIXME not sure if I should do this either
-    if (showingDesktop()) { // Do this only after desktop change to avoid flicker
-        setShowingDesktop(false);
-    }
-
-    // Restore the focus on this desktop
-    --block_focus;
-    Window *window = nullptr;
-
-    // FIXME below here is a lot of focuschain stuff, probably all wrong now
-    //  Keep active window focused if it's on the new activity
-    if (m_activeWindow && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop() && m_activeWindow->isOnCurrentActivity()) {
-        window = m_activeWindow;
-    } else if (options->focusPolicyIsReasonable()) {
-        // Search in focus chain
-        window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop());
-    }
-
-    if (!window) {
-        window = findDesktop(VirtualDesktopManager::self()->currentDesktop(), activeOutput());
-    }
-
-    if (window != m_activeWindow) {
-        setActiveWindow(nullptr);
-    }
-
-    if (window) {
-        requestFocus(window);
-    } else {
-        focusToNull();
-    }
+    updateWindowVisibilityAndActivateOnDesktopChange(VirtualDesktopManager::self()->currentDesktop());
 
     Q_EMIT currentActivityChanged();
 #endif
