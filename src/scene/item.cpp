@@ -634,12 +634,13 @@ void Item::removeEffect()
 
 void Item::framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
-    if (!isVisible() || workspace()->outputAt(mapToScene(boundingRect()).center()) != output) {
-        return;
-    }
+    // The visibility of the item itself is not checked here to be able to paint hidden items for
+    // things like screncasts or thumbnails
     handleFramePainted(output, frame, timestamp);
     for (const auto child : std::as_const(m_childItems)) {
-        child->framePainted(output, frame, timestamp);
+        if (child->explicitVisible() && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == output) {
+            child->framePainted(output, frame, timestamp);
+        }
     }
 }
 
