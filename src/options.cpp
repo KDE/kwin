@@ -581,6 +581,19 @@ void Options::setInteractiveWindowMoveEnabled(bool set)
     }
 }
 
+bool Options::doubleTapWakeup() const
+{
+    return m_doubleTapWakeup;
+}
+
+void Options::setDoubleTapWakeup(bool set)
+{
+    if (m_doubleTapWakeup != set) {
+        m_doubleTapWakeup = set;
+        Q_EMIT doubleTapWakeupChanged();
+    }
+}
+
 void Options::reparseConfiguration()
 {
     m_settings->config()->reparseConfiguration();
@@ -687,6 +700,7 @@ void Options::syncFromKcfgc()
     setAllowTearing(m_settings->allowTearing());
     setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
     setDoubleClickBorderToMaximize(m_settings->doubleClickBorderToMaximize());
+    setDoubleTapWakeup(m_settings->doubleTapWakeup());
 }
 
 // restricted should be true for operations that the user may not be able to repeat

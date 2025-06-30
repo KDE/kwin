@@ -24,8 +24,6 @@ namespace KWin
 DpmsInputEventFilter::DpmsInputEventFilter()
     : InputEventFilter(InputFilterOrder::Dpms)
 {
-    KSharedConfig::Ptr kwinSettings = kwinApp()->config();
-    m_enableDoubleTap = kwinSettings->group(QStringLiteral("Wayland")).readEntry<bool>("DoubleTapWakeup", true);
 }
 
 DpmsInputEventFilter::~DpmsInputEventFilter()
@@ -70,7 +68,7 @@ bool DpmsInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
 
 bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
-    if (m_enableDoubleTap) {
+    if (options->doubleTapWakeup()) {
         if (m_touchPoints.isEmpty()) {
             if (!m_doubleTapTimer.isValid()) {
                 // this is the first tap
@@ -95,7 +93,7 @@ bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono:
 
 bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
 {
-    if (m_enableDoubleTap) {
+    if (options->doubleTapWakeup()) {
         m_touchPoints.removeAll(id);
         if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
             if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {

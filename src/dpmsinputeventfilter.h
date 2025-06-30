@@ -47,7 +47,6 @@ private:
     QElapsedTimer m_doubleTapTimer;
     QList<qint32> m_touchPoints;
     bool m_secondTap = false;
-    bool m_enableDoubleTap;
 };
 
 }

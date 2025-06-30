@@ -170,6 +170,7 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(bool allowTearing READ allowTearing WRITE setAllowTearing NOTIFY allowTearingChanged)
     Q_PROPERTY(bool interactiveWindowMoveEnabled READ interactiveWindowMoveEnabled WRITE setInteractiveWindowMoveEnabled NOTIFY interactiveWindowMoveEnabledChanged)
+    Q_PROPERTY(bool doubleTapWakeup READ doubleTapWakeup WRITE setDoubleTapWakeup NOTIFY doubleTapWakeupChanged)
 public:
     explicit Options(QObject *parent = nullptr);
     ~Options() override;
@@ -605,6 +606,8 @@ public:
     bool allowTearing() const;
     bool interactiveWindowMoveEnabled() const;
 
+    bool doubleTapWakeup() const;
+
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
     void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
@@ -656,6 +659,7 @@ public:
     void setCompositingMode(int compositingMode);
     void setAllowTearing(bool allow);
     void setInteractiveWindowMoveEnabled(bool set);
+    void setDoubleTapWakeup(bool set);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick()
@@ -828,6 +832,7 @@ Q_SIGNALS:
     void configChanged();
     void allowTearingChanged();
     void interactiveWindowMoveEnabledChanged();
+    void doubleTapWakeupChanged();
 
 private:
     void setElectricBorders(int borders);
@@ -858,6 +863,7 @@ private:
     XwaylandEavesdropsMode m_xwaylandEavesdrops;
     bool m_xwaylandEavesdropsMouse;
     bool m_xwaylandEisNoPrompt;
+    bool m_doubleTapWakeup = true;
 
     CompositingType m_compositingMode;
     WindowOperation OpTitlebarDblClick;
