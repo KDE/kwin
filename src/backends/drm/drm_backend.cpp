@@ -370,6 +370,7 @@ size_t DrmBackend::gpuCount() const
 
 OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
+    qDebug() << "<< DrmBackend::applyOutputChanges()";
     QList<DrmOutput *> toBeEnabled;
     QList<DrmOutput *> toBeDisabled;
     for (const auto &gpu : m_gpus) {
@@ -419,6 +420,7 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
     for (DrmVirtualOutput *output : std::as_const(m_virtualOutputs)) {
         output->applyChanges(config);
     }
+    qDebug() << "<<- DrmBackend::applyOutputChanges()";
     return OutputConfigurationError::None;
 }
 

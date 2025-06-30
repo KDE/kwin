@@ -61,6 +61,7 @@ void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
         qCWarning(KWIN_DRM) << "Trying to add an invalid property" << prop.name();
         return;
     }
+    qDebug() << " ->" << prop.name() << prop.drmObject()->id() << value;
     prop.checkValueInRange(value);
     m_properties[prop.drmObject()->id()][prop.propId()] = value;
 }
@@ -132,6 +133,17 @@ bool DrmAtomicCommit::commitModeset()
 
 bool DrmAtomicCommit::doCommit(uint32_t flags)
 {
+    qDebug() << "commit";
+    if (flags & DRM_MODE_ATOMIC_TEST_ONLY)
+        qDebug() << "  DRM_MODE_ATOMIC_TEST_ONLY";
+    if (flags & DRM_MODE_ATOMIC_NONBLOCK)
+        qDebug() << "  DRM_MODE_ATOMIC_NONBLOCK";
+    if (flags & DRM_MODE_ATOMIC_ALLOW_MODESET)
+        qDebug() << "  DRM_MODE_ATOMIC_ALLOW_MODESET";
+    if (flags & DRM_MODE_PAGE_FLIP_ASYNC)
+        qDebug() << "  DRM_MODE_PAGE_FLIP_ASYNC";
+    if (flags & DRM_MODE_PAGE_FLIP_EVENT)
+        qDebug() << "  DRM_MODE_PAGE_FLIP_EVENT";
     std::vector<uint32_t> objects;
     std::vector<uint32_t> propertyCounts;
     std::vector<uint32_t> propertyIds;

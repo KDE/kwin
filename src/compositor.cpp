@@ -377,6 +377,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
+    qDebug() << "<< Compositor::composite()";
+
     Output *output = findOutput(renderLoop);
     OutputLayer *primaryLayer = m_backend->primaryLayer(output);
     const auto &primaryDelegate = m_primaryViews[renderLoop];
@@ -509,6 +511,8 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
         }
     }
+
+    qDebug() << "<<- Compositor::composite()";
 }
 
 void Compositor::addOutput(Output *output)
@@ -522,6 +526,10 @@ void Compositor::addOutput(Output *output)
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
 
     auto updateCursorLayer = [this, output, sceneView = sceneView.get()]() {
+        qDebug() << "<< Compositor::updateCursorLayer()";
+        auto debug = qScopeGuard([]() {
+            qDebug() << "<<- Compositor::updateCursorLayer()";
+        });
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
             const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
@@ -545,6 +553,7 @@ void Compositor::addOutput(Output *output)
             if (!outputLayer || forceSoftwareCursor) {
                 return false;
             }
+            qDebug() << "<< Compositor::renderHardwareCursor()";
             QRectF nativeCursorRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize());
             QSize bufferSize(std::ceil(nativeCursorRect.width()), std::ceil(nativeCursorRect.height()));
             const auto recommendedSizes = outputLayer->recommendedSizes();
@@ -580,7 +589,9 @@ void Compositor::addOutput(Output *output)
                 return false;
             }
             outputLayer->setEnabled(true);
-            return output->updateCursorLayer(maxVrrCursorDelay);
+            bool ok = output->updateCursorLayer(maxVrrCursorDelay);
+            qDebug() << "<<- Compositor::renderHardwareCursor()";
+            return ok;
         };
         const bool wasHardwareCursor = outputLayer && outputLayer->isEnabled();
         if (renderHardwareCursor()) {
@@ -598,6 +609,7 @@ void Compositor::addOutput(Output *output)
         }
     };
     auto moveCursorLayer = [this, output, sceneView = sceneView.get(), updateCursorLayer]() {
+        qDebug() << "<< Compositor::moveCursorLayer()";
         std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
         if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
             // TODO use the output's minimum VRR range for this
@@ -640,6 +652,7 @@ void Compositor::addOutput(Output *output)
         } else {
             sceneView->showItem(scene()->cursorItem());
         }
+        qDebug() << "<<- Compositor::moveCursorLayer()";
     };
     updateCursorLayer();
     connect(output, &Output::geometryChanged, sceneView.get(), updateCursorLayer);

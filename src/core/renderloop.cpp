@@ -132,6 +132,7 @@ void RenderLoopPrivate::delayScheduleRepaint()
 
 void RenderLoopPrivate::notifyFrameDropped()
 {
+    qDebug() << "RenderLoopPrivate::notifyFrameDropped()";
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
 
@@ -142,6 +143,7 @@ void RenderLoopPrivate::notifyFrameDropped()
 
 void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame)
 {
+    qDebug() << "RenderLoopPrivate::notifyFrameCompleted()";
     if (output && s_printDebugInfo && !m_debugOutput) {
         m_debugOutput = std::fstream(qPrintable("kwin perf statistics " + output->name() + ".csv"), std::ios::out);
         *m_debugOutput << "target pageflip timestamp,pageflip timestamp,render start,render end,safety margin,refresh duration,vrr,tearing,predicted render time\n";

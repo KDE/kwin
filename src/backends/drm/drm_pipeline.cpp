@@ -246,6 +246,9 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
     commit->addProperty(plane->crtcId, m_pending.crtc->id());
     commit->addBuffer(plane, fb, frame);
     plane->set(commit, layer->sourceRect().toRect(), layer->targetRect());
+    if (layer == m_primaryLayer.get()) {
+        qDebug() << fb->buffer() << fb->framebufferId() << layer->targetRect() << layer->sourceRect();
+    }
     if (plane->vmHotspotX.isValid() && plane->vmHotspotY.isValid()) {
         commit->addProperty(plane->vmHotspotX, std::round(layer->hotspot().x()));
         commit->addProperty(plane->vmHotspotY, std::round(layer->hotspot().y()));
