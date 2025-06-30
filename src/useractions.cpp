@@ -966,7 +966,7 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotSwitchToBelowScreen, true);
 
     initShortcut("Show Desktop", i18n("Peek at Desktop"),
-                 Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop, true);
+                 Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop, false);
 
     initShortcut("Kill Window", i18n("Kill Window"), Qt::META | Qt::CTRL | Qt::Key_Escape, &Workspace::slotKillWindow, true);
 
