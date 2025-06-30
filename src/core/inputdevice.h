@@ -125,6 +125,9 @@ public:
     virtual void setOutputName(const QString &outputName);
 
     virtual int tabletPadButtonCount() const;
+    virtual int tabletPadDialCount() const;
+    virtual int tabletPadRingCount() const;
+    virtual int tabletPadStripCount() const;
 
     virtual QList<InputDeviceTabletPadModeGroup> modeGroups() const;
 

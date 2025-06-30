@@ -170,6 +170,9 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(QString defaultPressureCurve READ defaultPressureCurve CONSTANT)
     Q_PROPERTY(QString pressureCurve READ serializedPressureCurve WRITE setPressureCurve NOTIFY pressureCurveChanged)
     Q_PROPERTY(quint32 tabletPadButtonCount READ tabletPadButtonCount CONSTANT)
+    Q_PROPERTY(quint32 tabletPadDialCount READ tabletPadDialCount CONSTANT)
+    Q_PROPERTY(quint32 tabletPadRingCount READ tabletPadRingCount CONSTANT)
+    Q_PROPERTY(quint32 tabletPadStripCount READ tabletPadStripCount CONSTANT)
     Q_PROPERTY(bool supportsInputArea READ supportsInputArea CONSTANT)
     Q_PROPERTY(QRectF defaultInputArea READ defaultInputArea CONSTANT)
     Q_PROPERTY(QRectF inputArea READ inputArea WRITE setInputArea NOTIFY inputAreaChanged)
@@ -691,6 +694,9 @@ public:
     }
 
     int tabletPadButtonCount() const override;
+    int tabletPadDialCount() const override;
+    int tabletPadRingCount() const override;
+    int tabletPadStripCount() const override;
     QList<InputDeviceTabletPadModeGroup> modeGroups() const override;
 
     Output *output() const;

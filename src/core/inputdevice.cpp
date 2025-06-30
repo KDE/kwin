@@ -67,6 +67,21 @@ int InputDevice::tabletPadButtonCount() const
     return 0;
 }
 
+int InputDevice::tabletPadDialCount() const
+{
+    return 0;
+}
+
+int InputDevice::tabletPadRingCount() const
+{
+    return 0;
+}
+
+int InputDevice::tabletPadStripCount() const
+{
+    return 0;
+}
+
 QList<InputDeviceTabletPadModeGroup> InputDevice::modeGroups() const
 {
     return {};

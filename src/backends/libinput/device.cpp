@@ -616,6 +616,21 @@ int Device::tabletPadButtonCount() const
     return libinput_device_tablet_pad_get_num_buttons(m_device);
 }
 
+int Device::tabletPadDialCount() const
+{
+    return libinput_device_tablet_pad_get_num_dials(m_device);
+}
+
+int Device::tabletPadRingCount() const
+{
+    return libinput_device_tablet_pad_get_num_rings(m_device);
+}
+
+int Device::tabletPadStripCount() const
+{
+    return libinput_device_tablet_pad_get_num_strips(m_device);
+}
+
 QList<InputDeviceTabletPadModeGroup> Device::modeGroups() const
 {
     QList<InputDeviceTabletPadModeGroup> result;
