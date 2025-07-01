@@ -307,6 +307,11 @@ public:
         if (!m_filterMouse) {
             return false;
         }
+        if (event->button == Qt::MouseButton::LeftButton
+            || event->button == Qt::MouseButton::RightButton
+            || event->button == Qt::MouseButton::MiddleButton) {
+            return false;
+        }
 
         auto pointer = waylandServer()->seat()->pointer();
         auto surface = pointer->focusedSurface();
