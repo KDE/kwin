@@ -30,6 +30,7 @@ enum class ShaderTrait {
     TransformColorspace = (1 << 4),
     MapExternalTexture = (1 << 5),
     MapYUVTexture = (1 << 6),
+    RoundedCorners = (1 << 7),
 };
 
 Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
