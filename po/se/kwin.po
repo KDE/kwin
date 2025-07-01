@@ -4085,6 +4085,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "Shade Window"
-#~ msgstr "Máhcu láse oktii"

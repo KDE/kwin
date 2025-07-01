@@ -4153,12 +4153,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#~ msgid "Shaded"
-#~ msgstr "Foldet sammen"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Regeltype for sammenfolding"
-
-#~ msgid "Shade Window"
-#~ msgstr "Fold sammen vinduet"
