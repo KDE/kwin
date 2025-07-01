@@ -68,6 +68,11 @@ public:
 
     QPointer<QQmlComponent> delegate;
     QUrl source;
+    struct
+    {
+        QString uri;
+        QString typeName;
+    } loadInfo;
     std::map<Output *, std::unique_ptr<QQmlContext>> contexts;
     std::map<Output *, std::unique_ptr<QQmlIncubator>> incubators;
     std::map<Output *, std::unique_ptr<QuickSceneView>> views;
@@ -250,6 +255,7 @@ void QuickSceneEffect::setSource(const QUrl &url)
     if (d->source != url) {
         d->source = url;
         d->delegate.clear();
+        d->loadInfo = {};
     }
 }
 
@@ -258,10 +264,25 @@ QQmlComponent *QuickSceneEffect::delegate() const
     return d->delegate.get();
 }
 
+void QuickSceneEffect::loadFromModule(const QString &uri, const QString &typeName)
+{
+    if (isRunning()) {
+        qWarning() << "Cannot call QuickSceneEffect::loadFromModule while running";
+        return;
+    }
+    if (d->loadInfo.uri != uri && d->loadInfo.typeName != typeName) {
+        d->delegate.clear();
+        d->source = QUrl();
+        d->loadInfo.uri = uri;
+        d->loadInfo.typeName = typeName;
+    }
+}
+
 void QuickSceneEffect::setDelegate(QQmlComponent *delegate)
 {
     if (d->delegate.get() != delegate) {
         d->source = QUrl();
+        d->loadInfo = {};
         d->delegate = delegate;
         if (isRunning()) {
             auto reloadViews = [this]() {
@@ -461,19 +482,29 @@ void QuickSceneEffect::startInternal()
     }
 
     if (!d->delegate) {
-        if (Q_UNLIKELY(d->source.isEmpty())) {
-            qWarning() << "QuickSceneEffect.source is empty. Did you forget to call setSource()?";
+        if (Q_UNLIKELY(d->source.isEmpty() && d->loadInfo.uri.isEmpty())) {
+            qWarning() << "QuickSceneEffect.source is empty. Did you forget to call setSource() or loadFromModule()?";
             return;
         }
 
         d->delegate = new QQmlComponent(effects->qmlEngine(), this);
-        d->delegate->loadUrl(d->source);
 
-        if (d->delegate->isError()) {
-            qWarning().nospace() << "Failed to load " << d->source << ": " << d->delegate->errors();
-            d->delegate.clear();
-            return;
+        if (!d->source.isEmpty()) {
+            d->delegate->loadUrl(d->source);
+            if (d->delegate->isError()) {
+                qWarning().nospace() << "Failed to load " << d->source << ": " << d->delegate->errors();
+                d->delegate.clear();
+                return;
+            }
+        } else {
+            d->delegate->loadFromModule(d->loadInfo.uri, d->loadInfo.typeName);
+            if (d->delegate->isError()) {
+                qWarning().nospace() << "Failed to load " << (d->loadInfo.uri + u'.' + d->loadInfo.typeName) << d->delegate->errors();
+                d->delegate.clear();
+                return;
+            }
         }
+
         Q_EMIT delegateChanged();
     }
 

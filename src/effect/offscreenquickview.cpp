@@ -71,10 +71,14 @@ public:
 class Q_DECL_HIDDEN OffscreenQuickScene::Private
 {
 public:
-    Private()
+    Private(OffscreenQuickScene *q)
+        : q(q)
     {
     }
 
+    void createItem(const QVariantMap &initialProperties);
+
+    OffscreenQuickScene *q;
     std::unique_ptr<QQmlComponent> qmlComponent;
     std::unique_ptr<QQuickItem> quickItem;
 };
@@ -589,7 +593,7 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
 
 OffscreenQuickScene::OffscreenQuickScene(OffscreenQuickView::ExportMode exportMode, bool alpha)
     : OffscreenQuickView(exportMode, alpha)
-    , d(new OffscreenQuickScene::Private)
+    , d(new OffscreenQuickScene::Private(this))
 {
 }
 
@@ -612,32 +616,51 @@ void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initi
         d->qmlComponent.reset();
         return;
     }
+    d->createItem(initialProperties);
+}
 
-    d->quickItem.reset();
-
-    std::unique_ptr<QObject> qmlObject(d->qmlComponent->createWithInitialProperties(initialProperties));
-    QQuickItem *item = qobject_cast<QQuickItem *>(qmlObject.get());
-    if (!item) {
-        qCWarning(LIBKWINEFFECTS) << "Root object of effect quick view" << source << "is not a QQuickItem";
-        return;
+void OffscreenQuickScene::loadFromModule(const QString &uri, const QString &typeName, const QVariantMap &initialProperties)
+{
+    if (!d->qmlComponent) {
+        d->qmlComponent = std::make_unique<QQmlComponent>(effects->qmlEngine());
     }
 
-    qmlObject.release();
-    d->quickItem.reset(item);
-
-    item->setParentItem(contentItem());
-
-    auto updateSize = [item, this]() {
-        item->setSize(contentItem()->size());
-    };
-    updateSize();
-    connect(contentItem(), &QQuickItem::widthChanged, item, updateSize);
-    connect(contentItem(), &QQuickItem::heightChanged, item, updateSize);
+    d->qmlComponent->loadFromModule(uri, typeName);
+    if (d->qmlComponent->isError()) {
+        qCWarning(LIBKWINEFFECTS).nospace() << "Failed to load effect quick view " << (uri + u'.' + typeName) << ": " << d->qmlComponent->errors();
+        d->qmlComponent.reset();
+        return;
+    }
+    d->createItem(initialProperties);
 }
 
 QQuickItem *OffscreenQuickScene::rootItem() const
 {
     return d->quickItem.get();
+}
+
+void OffscreenQuickScene::Private::createItem(const QVariantMap &initialProperties)
+{
+    quickItem.reset();
+
+    std::unique_ptr<QObject> qmlObject(qmlComponent->createWithInitialProperties(initialProperties));
+    QQuickItem *item = qobject_cast<QQuickItem *>(qmlObject.get());
+    if (!item) {
+        qCWarning(LIBKWINEFFECTS) << "Root object of effect quick view" << qmlComponent->url() << "is not a QQuickItem";
+        return;
+    }
+
+    qmlObject.release();
+    quickItem.reset(item);
+
+    item->setParentItem(q->contentItem());
+
+    auto updateSize = [item, this]() {
+        item->setSize(q->contentItem()->size());
+    };
+    updateSize();
+    connect(q->contentItem(), &QQuickItem::widthChanged, item, updateSize);
+    connect(q->contentItem(), &QQuickItem::heightChanged, item, updateSize);
 }
 
 } // namespace KWin

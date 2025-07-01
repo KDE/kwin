@@ -169,6 +169,7 @@ public:
 
     void setSource(const QUrl &source);
     void setSource(const QUrl &source, const QVariantMap &initialProperties);
+    void loadFromModule(const QString &uri, const QString &typeName, const QVariantMap &initialProperties);
 
 private:
     class Private;

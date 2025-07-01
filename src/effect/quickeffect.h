@@ -137,6 +137,17 @@ public:
      */
     void setSource(const QUrl &url);
 
+    /**
+     * Use the QML component identified by @a uri and @a typename.  Note that the QML component will
+     * be loaded the next time the effect is started.
+     *
+     * Cannot be called while the effect is running.
+     *
+     * In order to provide your custom initial properties, you need to override
+     * the initialProperties() function.
+     */
+    void loadFromModule(const QString &uri, const QString &typeName);
+
     bool eventFilter(QObject *watched, QEvent *event) override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
