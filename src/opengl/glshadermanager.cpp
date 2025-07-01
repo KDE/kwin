@@ -73,11 +73,19 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
         stream << "\n";
     }
 
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << varying << " vec2 position0;\n\n";
+    }
+
     stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
 
     stream << "void main()\n{\n";
     if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture | ShaderTrait::MapYUVTexture)) {
         stream << "    texcoord0 = texcoord.st;\n";
+    }
+
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << "    position0 = position.xy;\n";
     }
 
     stream << "    gl_Position = modelViewProjectionMatrix * position;\n";
@@ -137,6 +145,13 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "uniform vec4 geometryColor;\n";
     }
+
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << "uniform vec4 box;\n";
+        stream << "uniform vec4 cornerRadius;\n";
+        stream << varying << " vec2 position0;\n";
+    }
+
     if (traits & ShaderTrait::Modulate) {
         stream << "uniform vec4 modulation;\n";
     }
@@ -151,6 +166,18 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "\nout vec4 " << output << ";\n";
     }
 
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << "float roundedBox(vec2 position, vec2 center, vec2 extents, vec4 radius) {\n";
+        stream << "    vec2 p = position - center;\n";
+        stream << "    float r = p.x > 0\n";
+        stream << "        ? (p.y < 0 ? radius.y : radius.w)\n";
+        stream << "        : (p.y < 0 ? radius.x : radius.z);\n";
+        stream << "    vec2 q = abs(p) - extents + vec2(r);\n";
+        stream << "    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;\n";
+        stream << "}\n";
+        stream << "\n";
+    }
+
     stream << "\nvoid main(void)\n{\n";
     stream << "    vec4 result;\n";
     if (traits & ShaderTrait::MapTexture) {
@@ -163,6 +190,12 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result = texture2D(sampler, texcoord0);\n";
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "    result = geometryColor;\n";
+    }
+
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << "    float f = roundedBox(position0, box.xy, box.zw, cornerRadius);\n";
+        stream << "    float df = fwidth(f);\n";
+        stream << "    result *= 1.0 - clamp(0.5 + f / df, 0.0, 1.0);\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
         stream << "    result = sourceEncodingToNitsInDestinationColorspace(result);\n";
