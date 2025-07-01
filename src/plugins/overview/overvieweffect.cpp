@@ -164,7 +164,7 @@ OverviewEffect::OverviewEffect()
             qWarning() << "Failed to load overview:" << delegate->errorString();
         }
     });
-    delegate->loadUrl(QUrl(QStringLiteral("qrc:/overview/qml/main.qml")), QQmlComponent::Asynchronous);
+    delegate->loadFromModule(QStringLiteral("org.kde.kwin.overview"), QStringLiteral("Main"), QQmlComponent::Asynchronous);
     setDelegate(delegate);
 }
 
