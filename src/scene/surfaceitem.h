@@ -8,6 +8,7 @@
 
 #include "core/graphicsbuffer.h"
 #include "core/output.h"
+#include "scene/borderradius.h"
 #include "scene/item.h"
 
 #include <deque>
@@ -67,6 +68,9 @@ public:
     std::chrono::nanoseconds recursiveFrameTimeEstimation() const;
     std::chrono::nanoseconds frameTimeEstimation() const;
 
+    BorderRadius borderRadius() const;
+    void setBorderRadius(const BorderRadius &radius);
+
 Q_SIGNALS:
     void damaged();
 
@@ -83,6 +87,7 @@ protected:
     QRectF m_bufferSourceBox;
     QSize m_bufferSize;
     QSizeF m_destinationSize;
+    BorderRadius m_borderRadius;
     std::unique_ptr<SurfacePixmap> m_pixmap;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;

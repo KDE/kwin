@@ -280,6 +280,19 @@ std::shared_ptr<SyncReleasePoint> SurfaceItem::bufferReleasePoint() const
     return m_bufferReleasePoint;
 }
 
+BorderRadius SurfaceItem::borderRadius() const
+{
+    return m_borderRadius;
+}
+
+void SurfaceItem::setBorderRadius(const BorderRadius &radius)
+{
+    if (m_borderRadius != radius) {
+        m_borderRadius = radius;
+        scheduleRepaint(rect());
+    }
+}
+
 SurfaceTexture::~SurfaceTexture()
 {
 }
