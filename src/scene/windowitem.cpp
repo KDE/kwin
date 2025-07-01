@@ -214,12 +214,15 @@ void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
     if (m_surfaceItem) {
         connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        connect(m_window, &Window::borderRadiusChanged, this, &WindowItem::updateSurfaceBorderRadius);
         addSurfaceItemDamageConnects(m_surfaceItem.get());
 
         updateSurfacePosition();
+        updateSurfaceBorderRadius();
     } else {
         disconnect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         disconnect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        disconnect(m_window, &Window::borderRadiusChanged, this, &WindowItem::updateSurfaceBorderRadius);
     }
 }
 
@@ -229,6 +232,11 @@ void WindowItem::updateSurfacePosition()
     const QRectF frameGeometry = m_window->frameGeometry();
 
     m_surfaceItem->setPosition(bufferGeometry.topLeft() - frameGeometry.topLeft());
+}
+
+void WindowItem::updateSurfaceBorderRadius()
+{
+    m_surfaceItem->setBorderRadius(m_window->borderRadius());
 }
 
 void WindowItem::updateShadowItem()
