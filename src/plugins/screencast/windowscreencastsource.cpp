@@ -202,7 +202,7 @@ QRectF WindowScreenCastSource::boundingRect() const
 {
     QRectF boundingRect;
     for (const auto &window : m_windows) {
-        boundingRect = boundingRect.united(window->clientGeometry());
+        boundingRect = boundingRect.united(window->frameGeometry());
     }
     return boundingRect;
 }
