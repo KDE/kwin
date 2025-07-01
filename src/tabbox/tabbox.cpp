@@ -638,6 +638,9 @@ static bool areModKeysDepressed(const QList<QKeySequence> &shortcuts)
     }
 
     for (const QKeySequence &seq : shortcuts) {
+        if (seq.isEmpty()) {
+            continue;
+        }
         const Qt::KeyboardModifiers mod = seq[seq.count() - 1].keyboardModifiers();
         const Qt::KeyboardModifiers mods = input()->modifiersRelevantForGlobalShortcuts();
 
