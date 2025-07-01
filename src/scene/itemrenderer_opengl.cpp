@@ -189,6 +189,18 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         SurfacePixmap *pixmap = surfaceItem->pixmap();
         if (pixmap) {
             if (!geometry.isEmpty()) {
+                QVector4D borderBox;
+                QVector4D borderRadius;
+                if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isIdentity()) {
+                    const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
+                    borderBox = QVector4D(nativeRect.x() + nativeRect.width() * 0.5,
+                                          nativeRect.y() + nativeRect.height() * 0.5,
+                                          nativeRect.width() * 0.5,
+                                          nativeRect.height() * 0.5),
+                    borderRadius = radius.scaled(context->renderTargetScale)
+                                       .rounded()
+                                       .toVector();
+                }
                 OpenGLSurfaceTexture *surfaceTexture = static_cast<OpenGLSurfaceTexture *>(pixmap->texture());
                 context->renderNodes.append(RenderNode{
                     .texture = surfaceTexture->texture(),
@@ -199,6 +211,8 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
+                    .box = borderBox,
+                    .borderRadius = borderRadius,
                 });
             }
         }
@@ -341,8 +355,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             continue;
         }
 
-        setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
-
         ShaderTraits traits = baseShaderTraits;
         if (renderNode.opacity != 1.0) {
             traits |= ShaderTrait::Modulate;
@@ -361,6 +373,12 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
                 traits |= ShaderTrait::MapYUVTexture;
             }
         }
+        if (!renderNode.borderRadius.isNull()) {
+            traits |= ShaderTrait::RoundedCorners;
+        }
+
+        setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0 || (traits & ShaderTrait::RoundedCorners));
+
         if (!shader || traits != lastTraits) {
             lastTraits = traits;
             if (shader) {
@@ -389,6 +407,10 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         }
         if (traits & ShaderTrait::MapYUVTexture) {
             shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription.yuvMatrix());
+        }
+        if (traits & ShaderTrait::RoundedCorners) {
+            shader->setUniform(GLShader::Vec4Uniform::Box, renderNode.box);
+            shader->setUniform(GLShader::Vec4Uniform::CornerRadius, renderNode.borderRadius);
         }
 
         if (std::holds_alternative<GLTexture *>(renderNode.texture)) {

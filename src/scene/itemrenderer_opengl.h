@@ -32,6 +32,8 @@ public:
         ColorDescription colorDescription;
         RenderingIntent renderingIntent;
         std::shared_ptr<SyncReleasePoint> bufferReleasePoint;
+        QVector4D box;
+        QVector4D borderRadius;
     };
 
     struct RenderContext
