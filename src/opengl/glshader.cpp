@@ -232,6 +232,8 @@ void GLShader::resolveLocations()
     m_vec3Locations[Vec3Uniform::PrimaryBrightness] = uniformLocation("primaryBrightness");
 
     m_vec4Locations[Vec4Uniform::ModulationConstant] = uniformLocation("modulation");
+    m_vec4Locations[Vec4Uniform::Box] = uniformLocation("box");
+    m_vec4Locations[Vec4Uniform::CornerRadius] = uniformLocation("cornerRadius");
 
     m_floatLocations[FloatUniform::Saturation] = uniformLocation("saturation");
     m_floatLocations[FloatUniform::MaxDestinationLuminance] = uniformLocation("maxDestinationLuminance");

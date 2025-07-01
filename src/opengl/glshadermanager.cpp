@@ -73,11 +73,19 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
         stream << "\n";
     }
 
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << varying << " vec2 position0;\n\n";
+    }
+
     stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
 
     stream << "void main()\n{\n";
     if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture | ShaderTrait::MapYUVTexture)) {
         stream << "    texcoord0 = texcoord.st;\n";
+    }
+
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << "    position0 = position.xy;\n";
     }
 
     stream << "    gl_Position = modelViewProjectionMatrix * position;\n";
@@ -110,6 +118,10 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
 
         if (glsl_es_300) {
             stream << "#version 300 es\n\n";
+        } else {
+            if (traits & ShaderTrait::RoundedCorners) {
+                stream << "#extension GL_OES_standard_derivatives : enable\n\n";
+            }
         }
 
         // From the GLSL ES specification:
@@ -137,6 +149,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "uniform vec4 geometryColor;\n";
     }
+
     if (traits & ShaderTrait::Modulate) {
         stream << "uniform vec4 modulation;\n";
     }
@@ -145,6 +158,13 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     }
     if (traits & ShaderTrait::TransformColorspace) {
         stream << "#include \"colormanagement.glsl\"\n";
+    }
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << "#include \"sdf.glsl\"\n";
+
+        stream << "uniform vec4 box;\n";
+        stream << "uniform vec4 cornerRadius;\n";
+        stream << varying << " vec2 position0;\n";
     }
 
     if (output != QByteArrayLiteral("gl_FragColor")) {
@@ -163,6 +183,12 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result = texture2D(sampler, texcoord0);\n";
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "    result = geometryColor;\n";
+    }
+
+    if (traits & ShaderTrait::RoundedCorners) {
+        stream << "    float f = sdfRoundedBox(position0, box.xy, box.zw, cornerRadius);\n";
+        stream << "    float df = fwidth(f);\n";
+        stream << "    result *= 1.0 - clamp(0.5 + f / df, 0.0, 1.0);\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
         stream << "    result = sourceEncodingToNitsInDestinationColorspace(result);\n";
