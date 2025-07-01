@@ -177,6 +177,7 @@ Edid::Edid(QByteArrayView data)
         + QByteArray::number(productInfo->manufacture_week) + " " + QByteArray::number(productInfo->manufacture_year) + " " + QByteArray::number(productInfo->model_year);
 
     // colorimetry and HDR metadata
+    m_defaultColorimetry.reset();
     const auto chromaticity = di_info_get_default_color_primaries(info);
     if (chromaticity->has_primaries && chromaticity->has_default_white_point) {
         const xy red{chromaticity->primary[0].x, chromaticity->primary[0].y};
@@ -184,7 +185,24 @@ Edid::Edid(QByteArrayView data)
         const xy blue{chromaticity->primary[2].x, chromaticity->primary[2].y};
         const xy white{chromaticity->default_white.x, chromaticity->default_white.y};
         if (Colorimetry::isReal(red, green, blue, white)) {
-            m_colorimetry = Colorimetry{
+            m_defaultColorimetry = Colorimetry{
+                red,
+                green,
+                blue,
+                white,
+            };
+        } else {
+            qCWarning(KWIN_CORE) << "EDID default colorimetry" << red << green << blue << white << "is invalid";
+        }
+    }
+    m_nativeColorimetry.reset();
+    if (const auto chromaticity = di_edid_get_chromaticity_coords(edid)) {
+        const xy red{chromaticity->red_x, chromaticity->red_y};
+        const xy green{chromaticity->green_x, chromaticity->green_y};
+        const xy blue{chromaticity->blue_x, chromaticity->blue_y};
+        const xy white{chromaticity->white_x, chromaticity->white_y};
+        if (Colorimetry::isReal(red, green, blue, white)) {
+            m_nativeColorimetry = Colorimetry{
                 red,
                 green,
                 blue,
@@ -193,8 +211,10 @@ Edid::Edid(QByteArrayView data)
         } else {
             qCWarning(KWIN_CORE) << "EDID colorimetry" << red << green << blue << white << "is invalid";
         }
-    } else {
-        m_colorimetry.reset();
+    }
+    if (!m_nativeColorimetry.has_value() && m_defaultColorimetry.has_value()) {
+        // better than nothing I guess?
+        m_nativeColorimetry = m_defaultColorimetry;
     }
 
     const auto metadata = di_info_get_hdr_static_metadata(info);
@@ -346,9 +366,14 @@ QString Edid::hash() const
     return m_hash;
 }
 
-std::optional<Colorimetry> Edid::colorimetry() const
+std::optional<Colorimetry> Edid::defaultColorimetry() const
 {
-    return m_colorimetry;
+    return m_defaultColorimetry;
+}
+
+std::optional<Colorimetry> Edid::nativeColorimetry() const
+{
+    return m_nativeColorimetry;
 }
 
 double Edid::desiredMinLuminance() const
