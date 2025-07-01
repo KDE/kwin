@@ -122,6 +122,7 @@ FileDescriptor DrmGpu::createNonMasterFd() const
 {
     char *path = drmGetDeviceNameFromFd2(m_fd);
     FileDescriptor fd{open(path, O_RDWR | O_CLOEXEC)};
+    free(path);
     if (!fd.isValid()) {
         qCWarning(KWIN_DRM) << "Could not open DRM fd for leasing!" << strerror(errno);
     } else {
