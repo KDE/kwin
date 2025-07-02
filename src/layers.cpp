@@ -210,7 +210,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     cl.clear();
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
         X11Window *window = qobject_cast<X11Window *>(*it);
-        if (window && !window->isUnmanaged()) {
+        if (window && !window->isDeleted() && !window->isUnmanaged()) {
             cl.push_back(window->window());
         }
     }
