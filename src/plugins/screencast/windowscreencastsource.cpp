@@ -72,7 +72,7 @@ void WindowScreenCastSource::add(Window *window)
     }
 
     for (const auto child : window->transients()) {
-        if (window->isPopupWindow()) {
+        if (child->isPopupWindow()) {
             add(child);
         }
     }
