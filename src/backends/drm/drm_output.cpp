@@ -292,7 +292,7 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_state.highDynamicRange || m_state.brightnessDevice || m_state.allowSdrSoftwareBrightness) {
         capabilities |= Capability::BrightnessControl;
     }
-    if (m_connector->edid()->isValid() && m_connector->edid()->colorimetry().has_value()) {
+    if (m_connector->edid()->isValid() && m_connector->edid()->defaultColorimetry().has_value()) {
         capabilities |= Capability::BuiltInColorProfile;
     }
     if (m_state.detectedDdcCi) {
@@ -484,7 +484,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
         };
     }
 
-    const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::BT709);
+    const Colorimetry nativeColorimetry = (effectiveWcg ? m_information.edid.nativeColorimetry() : m_information.edid.defaultColorimetry()).value_or(Colorimetry::BT709);
     const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::BT2020 : (next.colorProfileSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::BT709);
     const Colorimetry masteringColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::BT709;
     const Colorimetry sdrColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness) : Colorimetry::BT709;

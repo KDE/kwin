@@ -84,7 +84,8 @@ public:
 
     QString hash() const;
 
-    std::optional<Colorimetry> colorimetry() const;
+    std::optional<Colorimetry> defaultColorimetry() const;
+    std::optional<Colorimetry> nativeColorimetry() const;
 
     double desiredMinLuminance() const;
     std::optional<double> desiredMaxFrameAverageLuminance() const;
@@ -118,7 +119,8 @@ private:
     QByteArray m_monitorName;
     QByteArray m_serialNumber;
     QString m_hash;
-    std::optional<Colorimetry> m_colorimetry;
+    std::optional<Colorimetry> m_defaultColorimetry;
+    std::optional<Colorimetry> m_nativeColorimetry;
     struct HDRMetadata
     {
         double desiredContentMinLuminance;
