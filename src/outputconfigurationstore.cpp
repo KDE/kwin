@@ -755,9 +755,16 @@ double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) c
     const double maxScaleY = std::clamp(mode->size().height() / minSize, 1.0, 3.0);
     const double scaleY = std::clamp(dpiY / targetDpi, 1.0, maxScaleY);
 
-    const double scale = std::min(scaleX, scaleY);
+    double scale = std::min(scaleX, scaleY);
     const double steps = 5;
-    return std::round(100.0 * scale / steps) * steps / 100.0;
+    scale = std::round(100.0 * scale / steps) * steps / 100.0;
+
+    // Low-but-not-1 scale factors look like a blurry mess; 1x is better here
+    if (scale < 1.20) {
+        scale = 1.0;
+    }
+
+    return scale;
 }
 
 void OutputConfigurationStore::registerOutputs(const QList<Output *> &outputs)
