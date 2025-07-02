@@ -61,6 +61,7 @@ void WindowScreenCastSource::add(Window *window)
         m_windows.removeOne(window);
         if (m_active) {
             unwatch(window);
+            report();
         }
         if (m_windows.empty()) {
             Q_EMIT closed();
