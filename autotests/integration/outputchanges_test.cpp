@@ -1351,7 +1351,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flags{})},
            }
-        << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{}) << 1.15 << true;
+        << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{}) << 1.0 << true;
 
     QTest::addRow("2160p 27\" with 30Hz preferred and a generated 60Hz mode")
         << DeviceType::Desktop
@@ -1371,7 +1371,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(1190, 340),
                .modes = {ModeInfo(QSize(3840, 1080), 120000, OutputMode::Flag::Preferred), ModeInfo(QSize(5120, 1440), 120000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred) << 1.10 << true;
+        << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred) << 1.0 << true;
 
     QTest::addRow("2160p 32:9 57\" with non-native preferred mode")
         << DeviceType::Desktop
