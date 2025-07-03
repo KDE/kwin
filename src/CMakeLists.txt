@@ -17,6 +17,9 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 add_library(kwin SHARED)
+
+qt_extract_metatypes(kwin)
+
 target_include_directories(kwin INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/kwin>")
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
