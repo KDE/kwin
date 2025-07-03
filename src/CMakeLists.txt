@@ -16,7 +16,7 @@ if (KWIN_BUILD_KCMS)
     add_subdirectory(kcms)
 endif()
 
-add_library(kwin SHARED)
+qt_add_library(kwin SHARED)
 
 qt_extract_metatypes(kwin)
 
