@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-28 00:43+0000\n"
+"POT-Creation-Date: 2025-07-03 06:57+0000\n"
 "PO-Revision-Date: 2025-05-31 10:58+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -4004,7 +4004,7 @@ msgstr "اقتل النّافذة"
 msgid "Activate Window (%1)"
 msgstr "فعّل النّافذة (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:360
 #, kde-format
 msgid "unknown"
 msgstr "مجهول"

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-28 00:43+0000\n"
+"POT-Creation-Date: 2025-07-03 06:57+0000\n"
 "PO-Revision-Date: 2025-06-05 17:14+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -4080,7 +4080,7 @@ msgstr "Détruire une fenêtre"
 msgid "Activate Window (%1)"
 msgstr "Activer la fenêtre (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:360
 #, kde-format
 msgid "unknown"
 msgstr "inconnu"

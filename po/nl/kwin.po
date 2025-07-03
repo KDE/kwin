@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-28 00:43+0000\n"
+"POT-Creation-Date: 2025-07-03 06:57+0000\n"
 "PO-Revision-Date: 2025-05-30 23:57+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -4047,7 +4047,7 @@ msgstr "Venster geforceerd sluiten"
 msgid "Activate Window (%1)"
 msgstr "Venster (%1) activeren"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:360
 #, kde-format
 msgid "unknown"
 msgstr "onbekend"

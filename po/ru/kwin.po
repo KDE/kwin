@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-06-28 00:43+0000\n"
+"POT-Creation-Date: 2025-07-03 06:57+0000\n"
 "PO-Revision-Date: 2025-06-25 13:18+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -4072,7 +4072,7 @@ msgstr "Принудительно закрыть окно"
 msgid "Activate Window (%1)"
 msgstr "Активировать окно (%1)"
 
-#: utils/edid.cpp:340
+#: utils/edid.cpp:360
 #, kde-format
 msgid "unknown"
 msgstr "неизвестный"
