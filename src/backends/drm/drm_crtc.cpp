@@ -64,10 +64,9 @@ bool DrmCrtc::updateProperties()
             m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
             next = m_postBlendingColorOps.back().get();
         }
-        if (!gpu()->isNVidia() && !gpu()->isI915() && degammaLut.isValid() && degammaLutSize.isValid() && degammaLutSize.value() > 0) {
-            m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp>(next, &degammaLut, degammaLutSize.value()));
-            next = m_postBlendingColorOps.back().get();
-        }
+        // DEGAMMA_LUT is intentionally not part of the post blending pipeline
+        // as on most hardware it actually maps to pre-blending operations,
+        // and more importantly it's buggy on Intel, AMD and NVidia...
         postBlendingPipeline = next;
     }
 
