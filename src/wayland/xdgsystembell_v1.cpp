@@ -65,3 +65,5 @@ void XdgSystemBellV1Interface::remove()
     d->globalRemove();
 }
 }
+
+#include  "wayland/moc_xdgsystembell_v1.cpp"

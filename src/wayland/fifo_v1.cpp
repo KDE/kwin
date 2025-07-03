@@ -77,3 +77,4 @@ void FifoV1Surface::wp_fifo_v1_wait_barrier(Resource *resource)
 }
 
 }
+#include "wayland/moc_fifo_v1.cpp"

@@ -88,3 +88,4 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
     }
 }
 }
+#include "wayland/moc_presentationtime.cpp"

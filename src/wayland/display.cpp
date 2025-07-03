@@ -301,4 +301,5 @@ void SecurityContext::onCloseFdActivated()
 
 } // namespace KWin
 
-#include "moc_display.cpp"
+#include "wayland/moc_display.cpp"
+#include "wayland/moc_display_p.cpp"

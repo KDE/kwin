@@ -150,3 +150,5 @@ XdgToplevelInterface *XdgDialogV1Interface::toplevel() const
     return d->m_toplevel;
 }
 }
+
+#include "wayland/moc_xdgdialog_v1.cpp"

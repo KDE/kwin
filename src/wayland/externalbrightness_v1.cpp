@@ -141,3 +141,4 @@ void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_commit(Resour
     }
 }
 }
+#include "wayland/moc_externalbrightness_v1.cpp"

@@ -158,3 +158,5 @@ XdgToplevelIconManagerV1Interface::XdgToplevelIconManagerV1Interface(Display *di
 
 XdgToplevelIconManagerV1Interface::~XdgToplevelIconManagerV1Interface() = default;
 }
+
+#include  "wayland/moc_xdgtoplevelicon_v1.cpp"

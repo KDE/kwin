@@ -37,3 +37,5 @@ void XdgToplevelTagManagerV1::xdg_toplevel_tag_manager_v1_set_toplevel_descripti
     Q_EMIT interface->q->descriptionChanged();
 }
 }
+
+#include  "wayland/moc_xdgtopleveltag_v1.cpp"

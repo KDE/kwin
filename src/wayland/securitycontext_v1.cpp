@@ -156,3 +156,4 @@ void SecurityContextV1Interface::wp_security_context_v1_destroy(Resource *resour
 }
 
 }
+#include "wayland/moc_securitycontext_v1.cpp"

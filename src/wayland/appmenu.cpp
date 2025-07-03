@@ -145,3 +145,5 @@ SurfaceInterface *AppMenuInterface::surface() const
 }
 
 } // namespace
+
+#include "wayland/moc_appmenu.cpp"

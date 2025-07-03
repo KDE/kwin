@@ -53,4 +53,5 @@ FixesInterface::~FixesInterface()
 
 } // namespace KWin
 
+#include "wayland/moc_fixes.cpp"
 #endif // HAVE_WL_FIXES

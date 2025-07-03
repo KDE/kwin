@@ -155,3 +155,5 @@ bool ColorRepresentationSurfaceV1::maybeEmitProtocolErrors()
     return true;
 }
 }
+
+#include "wayland/moc_colorrepresentation_v1.cpp"

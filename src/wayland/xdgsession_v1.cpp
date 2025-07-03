@@ -394,3 +394,5 @@ void XdgSessionConfigStorageV1::sync()
 }
 
 } // namespace KWaylandServer
+
+#include "wayland/moc_xdgsession_v1.cpp"

@@ -184,3 +184,4 @@ bool LinuxDrmSyncObjSurfaceV1::maybeEmitProtocolErrors()
     return false;
 }
 }
+#include "wayland/moc_linux_drm_syncobj_v1.cpp"

@@ -101,3 +101,4 @@ SinglePixelClientBuffer *SinglePixelClientBuffer::get(wl_resource *resource)
     }
 }
 }
+#include "wayland/moc_singlepixelbuffer.cpp"

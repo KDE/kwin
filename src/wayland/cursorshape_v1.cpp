@@ -212,3 +212,5 @@ void CursorShapeDeviceV1Interface::wp_cursor_shape_device_v1_set_shape(Resource 
 }
 
 } // namespace KWin
+
+#include "wayland/moc_cursorshape_v1.cpp"
