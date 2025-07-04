@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2024-09-26 14:15+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -2314,25 +2314,25 @@ msgstr "Eyða sýndarskjáborði"
 msgid "Add Virtual Desktop"
 msgstr "Bæta við sýndarskjáborði"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Ekkert annað sýndarskjáborð til að sýna"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Bæta við sýndarskjáborði"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Grunnstilla sýndarskjáborð…"
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2420,37 +2420,37 @@ msgstr ""
 "Taktu skjáskot með vinstrismelli eða færsluhnappi.\n"
 "Ýttu á Esc eða hægrismelltu til að hætta við."
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Myndsmíði"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Þessi brella er ekki viðmið"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Tímalengd litunar"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Magn litunar"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Núverandi rammatíðni"
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2559,17 +2559,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Víxla reitaritli"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "Fylling:"
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "Hlaða yfirliti..."
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "Loka"
@@ -2775,17 +2775,17 @@ msgstr "Víxla Sýna glugga (gluggaflokkur á núverandi skjáborði)"
 msgid "Ignore &minimized windows"
 msgstr "Hunsa &minnkaða glugga"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Engar samsvaranir"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Engir gluggar"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Sía glugga…"
@@ -4134,7 +4134,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar ekki)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

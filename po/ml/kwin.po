@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -2282,25 +2282,25 @@ msgstr "&പണിയിടത്തിലേയ്ക്കു്"
 msgid "Add Virtual Desktop"
 msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, fuzzy, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "&പണിയിടത്തിലേയ്ക്കു്"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, fuzzy, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "പണിയിടം ഗ്രിഡ് കാണിക്കുക"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, fuzzy, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "ജാലകത്തിനുള്ള വിശേഷതകള്‍ ക്രമീ&കരിക്കുക..."
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
@@ -2386,38 +2386,38 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgctxt "@label"
 msgid "Compositing"
 msgstr "വേര്‍തിരിക്കല്‍ തല്‍കാലത്തേക്ക് നിര്‍ത്തുക "
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, fuzzy, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "മായല്‍ ദൈര്‍ഘ്യം:"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr ""
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, fuzzy, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "ജാലകത്തിനുള്ള വിശേഷതകള്‍ ക്രമീ&കരിക്കുക..."
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, fuzzy, kde-format
 #| msgid "Maximum &width:"
 msgctxt "@label"
@@ -2523,17 +2523,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "വീഡിയോ റിക്കോര്‍ഡ് ചെയ്യുക/ചെയ്യാതിരിക്കുക"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
@@ -2743,17 +2743,17 @@ msgstr "നിലവിലുള്ള പണിയിടത്തിലുള�
 msgid "Ignore &minimized windows"
 msgstr "ജാലകം ചെറുതാക്കുക"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, fuzzy, kde-format
 msgid "No Windows"
 msgstr "ജാലകം നീക്കുക"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, fuzzy, kde-format
 msgid "Filter windows…"
 msgstr "ജാലകങ്ങള്‍"
@@ -4105,7 +4105,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

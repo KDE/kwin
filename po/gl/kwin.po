@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -2315,25 +2315,25 @@ msgstr "Eliminar o escritorio virtual"
 msgid "Add Virtual Desktop"
 msgstr "Engadir un escritorio virtual"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Non hai máis escritorios virtuais para amosar"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Engadir un escritorio virtual"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configurar os escritorios virtuais…"
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2421,37 +2421,37 @@ msgstr ""
 "Clic esquerdo ou Intro para crear unha captura de pantalla.\n"
 "Esc ou clic secundario para cancelar."
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Composición"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Este efecto non é un banco de probas."
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Duración da pintura"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Cantidade de pintura"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "FPS actuais"
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2561,17 +2561,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Conmutar o editor de teselas"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "Recheo:"
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "Cargar unha disposición…"
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "Pechar"
@@ -2777,17 +2777,17 @@ msgstr "Conmutar presentar as xanelas (clase de xanela no escritorio actual)"
 msgid "Ignore &minimized windows"
 msgstr "Ignorar as xanelas &minimizadas."
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Non hai coincidencias"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Non hai xanelas"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtrar as xanelas…"
@@ -4116,7 +4116,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non responde)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

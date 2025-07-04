@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2273,25 +2273,25 @@ msgstr "删除虚拟桌面"
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "没有其他可显示的虚拟桌面"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "配置虚拟桌面…"
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2379,37 +2379,37 @@ msgstr ""
 "点击左键或按回车键截图。\n"
 "点击右键或按 Esc 键取消。"
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
 msgstr "显示特效合成"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "此桌面特效并非基准测试"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "绘制时长"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "绘制数量"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "当前帧速率"
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2513,17 +2513,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "磁贴编辑器开关"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "边距："
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "加载布局…"
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "关闭"
@@ -2729,17 +2729,17 @@ msgstr "显示/隐藏窗口平铺 (当前桌面的窗口类)"
 msgid "Ignore &minimized windows"
 msgstr "忽略最小化窗口(&M)"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "无匹配项"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "无窗口"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "筛选窗口…"
@@ -4066,7 +4066,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(没有响应)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

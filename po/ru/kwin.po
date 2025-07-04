@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2025-06-25 13:18+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -2342,25 +2342,25 @@ msgstr "Удалить рабочий стол"
 msgid "Add Virtual Desktop"
 msgstr "Добавить рабочий стол"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Нет ни одного рабочего стола для показа"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Добавить рабочий стол"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Настроить рабочие столы..."
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2450,37 +2450,37 @@ msgstr ""
 "сделать снимок экрана. Для отмены нажмите Esc или правую\n"
 "кнопку мыши."
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Графические эффекты"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Этот эффект — не тест производительности"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Длительность отрисовки"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Количество отрисовки"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Текущий FPS"
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2589,17 +2589,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Изменить раскладку мозаики окон"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "Отступ:"
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "Загрузить макет…"
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "Закрыть"
@@ -2806,17 +2806,17 @@ msgstr "Показать все окна одного класса с текущ
 msgid "Ignore &minimized windows"
 msgstr "Игнорировать св&ёрнутые окна"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Совпадений не найдено"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Окон нет"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Фильтровать окна…"
@@ -4150,7 +4150,7 @@ msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

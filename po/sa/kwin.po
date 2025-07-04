@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -2290,25 +2290,25 @@ msgstr "वर्चुअल् डेस्कटॉपं विलोपय�
 msgid "Add Virtual Desktop"
 msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "अन्ये Virtual Desktops दर्शयितुं न सन्ति"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "वर्चुअल् डेस्कटॉप् योजयन्तु"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "वर्चुअल् डेस्कटॉप्स् विन्यस्तं कुर्वन्तु..."
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2396,37 +2396,37 @@ msgstr ""
 "लेफ्ट क्लिक् अथवा एन्टेर् इत्यनेन स्क्रीन शॉट् रचयन्तु।\n"
 "पलायनं कुर्वन्तु अथवा रद्दं कर्तुं राइट् क्लिक् कुर्वन्तु।"
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
 msgstr "रचनाकरणम्"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "एषः प्रभावः मापदण्डः नास्ति"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "रङ्ग अवधि"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "रङ्ग राशि"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "वर्तमान FPS"
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2535,17 +2535,17 @@ msgstr " % ."
 msgid "Toggle Tiles Editor"
 msgstr "टाइल्स एडिटर टॉगल"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "गद्दी : गद्दी :"
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr "लोड लेआउट..."
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "पिधानं करोतु"
@@ -2751,17 +2751,17 @@ msgstr "Toggle Present Windows (वर्तमान डेस्कटॉप�
 msgid "Ignore &minimized windows"
 msgstr "&minimized windows इत्यस्य अवहेलना कुर्वन्तु"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "न मेलः"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "न विण्डोज"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "विण्डोज फ़िल्टर..."
@@ -4103,7 +4103,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(प्रतिक्रिया न ददाति)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

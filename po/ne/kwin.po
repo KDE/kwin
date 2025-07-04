@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -2333,28 +2333,28 @@ msgstr "डेस्कटपमा"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "डेस्कटपमा"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "सञ्झ्याल व्यवहार कन्फिगर गर्नुहोस्..."
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, fuzzy, kde-format
 #| msgid "Moved/resized windows:"
 msgctxt "@info:placeholder"
@@ -2442,39 +2442,39 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, fuzzy, kde-format
 #| msgid "Window Operations Menu"
 msgctxt "@label"
 msgid "Compositing"
 msgstr "सञ्झ्याल सञ्चालन मेनुहरू"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr ""
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr ""
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "सञ्झ्याल व्यवहार कन्फिगर गर्नुहोस्..."
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2580,17 +2580,17 @@ msgstr ""
 msgid "Toggle Tiles Editor"
 msgstr "भिडियो रेकर्डिङ टगल गर्नुहोस्"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
@@ -2807,18 +2807,18 @@ msgstr "हालको डेस्कटपमा सञ्झ्यालक�
 msgid "Ignore &minimized windows"
 msgstr "सञ्झ्याल घटाउनुहोस्"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "सञ्झ्याल"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Raise Window"
 msgid "Filter windows…"
@@ -4255,7 +4255,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

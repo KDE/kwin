@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2375,14 +2375,14 @@ msgstr "İş masasına nəzər salın"
 msgid "Add Virtual Desktop"
 msgstr "&Yeni İş masasına əlavə edin"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, fuzzy, kde-format
 #| msgid "Peek at Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "İş masasına nəzər salın"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
@@ -2390,14 +2390,14 @@ msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "&Yeni İş masasına əlavə edin"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, fuzzy, kde-format
 #| msgid "Configure virtual keyboards..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Virtual klaviaturaları ayarlamaq..."
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"
@@ -2497,20 +2497,20 @@ msgstr ""
 "Enter və ya sol kliklə məcburi bağlamaq üçün pəncərəni seçmək.\n"
 "Ləğv etmək üçün Escape düyməsinə vurun və ya sağ düyməni klikləyin."
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, fuzzy, kde-format
 #| msgid "Block Compositing"
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Effektləri əngəlləmək"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Bu effekt sürət yoxlaması deyil"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, fuzzy, kde-format
 #| msgctxt "A mouse pointer motion event"
 #| msgid "Pointer Motion"
@@ -2518,20 +2518,20 @@ msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Göstəricinin hərəkəti"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Çəkiliş sayı"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, fuzzy, kde-format
 #| msgid "Current Layout:"
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Cari klaviatura qatı:"
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2639,17 +2639,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
@@ -2867,18 +2867,18 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Pəncərəni Yığmaq"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Oxşarları yoxdur"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Pəncərələr"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"
@@ -4252,7 +4252,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Cavab Yoxdur)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

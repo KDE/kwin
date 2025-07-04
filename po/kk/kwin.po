@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2368,14 +2368,14 @@ msgstr "&Үстелге жылжыту"
 msgid "Add Virtual Desktop"
 msgstr "&Жаңа Үстел"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "&Үстелге жылжыту"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -2383,14 +2383,14 @@ msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "&Жаңа Үстел"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Т&ерезе қасиеттерін баптау..."
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
@@ -2478,42 +2478,42 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Композициялауды аялдату"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, fuzzy, kde-format
 #| msgid "This effect is not a benchmark"
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Бұл эффект бағалау сынағы емес"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, fuzzy, kde-format
 #| msgid "Ring Duration:"
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Шеңбер ұзақтығы:"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, fuzzy, kde-format
 #| msgid "Ring Count:"
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Шеңбер саны:"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Т&ерезе қасиеттерін баптау..."
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, fuzzy, kde-format
 #| msgid "Maximum &width:"
 msgctxt "@label"
@@ -2623,17 +2623,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Бейнежазуды бастау/тоқтату"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
@@ -2850,18 +2850,18 @@ msgstr "Көрсететін терезесін ауыстыру (Назарда
 msgid "Ignore &minimized windows"
 msgstr "Терезені түю"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Терезелер"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Lower Window"
 msgid "Filter windows…"
@@ -4277,7 +4277,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

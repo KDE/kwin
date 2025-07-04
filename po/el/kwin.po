@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2332,25 +2332,25 @@ msgstr "Αφαίρεση επιφάνεια εργασίας"
 msgid "Add Virtual Desktop"
 msgstr "Προσθήκη επιφάνειας εργασίας"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Δεν υπάρχει άλλη επιφάνεια εργασίας για εμφάνιση"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Προσθήκη επιφάνειας εργασίας"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Διαμόρφωση επιφανειών εργασίας…"
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"
@@ -2445,19 +2445,19 @@ msgstr ""
 "Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
 "Esc ή δεξί κλικ για ακύρωση."
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Σύνθεση"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Δεν είναι συγκριτική αξιολόγηση των επιδόσεων"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, fuzzy, kde-format
 #| msgctxt "A mouse pointer motion event"
 #| msgid "Pointer Motion"
@@ -2465,21 +2465,21 @@ msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Κίνηση δείκτη"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, fuzzy, kde-format
 #| msgid "Ring Count:"
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Αριθμός δαχτυλιδιών:"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, fuzzy, kde-format
 #| msgid "Configure Layouts..."
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Διαμόρφωση διατάξεων..."
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, fuzzy, kde-format
 #| msgid "Maximum &width:"
 msgctxt "@label"
@@ -2588,17 +2588,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Εναλλαγή εγγραφής βίντεο"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
 msgid "Close"
 msgstr "Κλείσιμο"
@@ -2811,17 +2811,17 @@ msgstr "Εναλλαγή παρουσίασης παραθύρων (τρέχου
 msgid "Ignore &minimized windows"
 msgstr "Ελαχιστοποίηση παραθύρου"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Καμιά αντιστοιχία"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Χωρίς παράθυρα"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"
@@ -4209,7 +4209,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Δεν ανταποκρίνεται)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

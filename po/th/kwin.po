@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2025-03-01 14:53+0700\n"
 "Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
 "Language-Team: Thai\n"
@@ -2351,28 +2351,28 @@ msgstr "ไปยังพื้&นที่ทำงาน"
 msgid "Add Virtual Desktop"
 msgstr "แสดงพื้นที่ทำงาน"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "ไปยังพื้&นที่ทำงาน"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "แสดงพื้นที่ทำงาน"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "ปรับแต่งพฤ&ติกรรมของหน้าต่าง..."
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
@@ -2460,40 +2460,40 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgctxt "@label"
 msgid "Compositing"
 msgstr "ยกเลิกการใช้ Composite ชั่วคราว"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, fuzzy, kde-format
 #| msgid "Toggle Orientation"
 msgctxt "@label"
 msgid "Paint Duration"
 msgstr "สลับทิศทางการจัดวาง"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr ""
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "ปรับแต่งพฤ&ติกรรมของหน้าต่าง..."
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, fuzzy, kde-format
 #| msgid "Maximum &width:"
 msgctxt "@label"
@@ -2605,17 +2605,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "สลับการปูหน้าต่าง"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
 msgstr ""
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
@@ -2833,18 +2833,18 @@ msgstr "เปิด/ปิด ลูกเล่นกับหน้าต่�
 msgid "Ignore &minimized windows"
 msgstr "ย่อหน้าต่างเล็กสุด"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "หน้าต่างต่าง ๆ"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Inactive windows:"
 msgid "Filter windows…"
@@ -4271,7 +4271,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

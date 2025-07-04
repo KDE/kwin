@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-03 06:57+0000\n"
+"POT-Creation-Date: 2025-07-04 00:44+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -2397,14 +2397,14 @@ msgstr "Espreitar o Ecrã"
 msgid "Add Virtual Desktop"
 msgstr "Adicionar a um &Novo Ecrã"
 
-#: plugins/overview/qml/main.qml:378
+#: plugins/overview/qml/Main.qml:378
 #, fuzzy, kde-format
 #| msgid "Peek at Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Espreitar o Ecrã"
 
-#: plugins/overview/qml/main.qml:384
+#: plugins/overview/qml/Main.qml:384
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and add the window to that desktop"
 #| msgid "Add to &New Desktop"
@@ -2412,14 +2412,14 @@ msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Adicionar a um &Novo Ecrã"
 
-#: plugins/overview/qml/main.qml:391
+#: plugins/overview/qml/Main.qml:391
 #, fuzzy, kde-format
 #| msgid "Peek at Desktop"
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Espreitar o Ecrã"
 
-#: plugins/overview/qml/main.qml:742
+#: plugins/overview/qml/Main.qml:742
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"
@@ -2519,20 +2519,20 @@ msgstr ""
 "Seleccione a janela onde forçar o fecho com o botão esquerdo ou o Enter.\n"
 "Carregue em Escape ou no botão direito para cancelar."
 
-#: plugins/showcompositing/qml/main.qml:12
+#: plugins/showcompositing/qml/Main.qml:12
 #, fuzzy, kde-format
 #| msgid "Block Compositing"
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Suspender a Composição"
 
-#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Este efeito não é um teste de performance"
 
-#: plugins/showfps/qml/main.qml:110
+#: plugins/showfps/qml/Main.qml:110
 #, fuzzy, kde-format
 #| msgctxt "A mouse pointer motion event"
 #| msgid "Pointer Motion"
@@ -2540,20 +2540,20 @@ msgctxt "@label"
 msgid "Paint Duration"
 msgstr "Movimento do Cursor"
 
-#: plugins/showfps/qml/main.qml:162
+#: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
 msgstr "Quantidade de Pinturas"
 
-#: plugins/showfps/qml/main.qml:175
+#: plugins/showfps/qml/Main.qml:175
 #, fuzzy, kde-format
 #| msgid "Current Layout:"
 msgctxt "@label"
 msgid "Current FPS"
 msgstr "Disposição Actual:"
 
-#: plugins/showfps/qml/main.qml:184
+#: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
@@ -2661,18 +2661,18 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Comutar o Editor de Padrões"
 
-#: plugins/tileseditor/qml/main.qml:153
+#: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
 msgstr "Preenchimento:"
 
-#: plugins/tileseditor/qml/main.qml:163
+#: plugins/tileseditor/qml/Main.qml:163
 #, fuzzy, kde-format
 #| msgid "Load Layout..."
 msgid "Load Layout…"
 msgstr "Carregar uma Disposição..."
 
-#: plugins/tileseditor/qml/main.qml:270
+#: plugins/tileseditor/qml/Main.qml:270
 #, fuzzy, kde-format
 #| msgid "&Close"
 msgid "Close"
@@ -2888,18 +2888,18 @@ msgstr "Comutar as Janelas Presentes (Classe da janela no ecrã actual)"
 msgid "Ignore &minimized windows"
 msgstr "Minimizar a Janela"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Sem Ocorrências"
 
-#: plugins/windowview/qml/main.qml:107
+#: plugins/windowview/qml/Main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Janelas"
 
-#: plugins/windowview/qml/main.qml:122
+#: plugins/windowview/qml/Main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"
@@ -4260,7 +4260,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Não Responde)"
 
-#: workspace.cpp:1643
+#: workspace.cpp:1581
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
