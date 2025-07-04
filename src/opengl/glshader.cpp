@@ -249,6 +249,7 @@ void GLShader::resolveLocations()
     m_intLocations[IntUniform::Sampler1] = uniformLocation("sampler1");
     m_intLocations[IntUniform::SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
     m_intLocations[IntUniform::DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
+    m_intLocations[IntUniform::Thickness] = uniformLocation("thickness");
 
     m_locationsResolved = true;
 }
