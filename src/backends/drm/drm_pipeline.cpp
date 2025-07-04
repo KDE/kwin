@@ -196,7 +196,6 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
     }
     case CommitMode::Test: {
         if (!commit->test()) {
-            qCDebug(KWIN_DRM) << "Atomic test failed!" << strerror(errno);
             return errnoToError();
         }
         return Error::None;
