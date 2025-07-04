@@ -216,6 +216,9 @@ private:
 ScreenShotSource2::ScreenShotSource2(const QFuture<QImage> &future)
     : m_future(future)
 {
+    // If the future is canceled, we want the cancelled() signal to be emitted after
+    // returning to the event loop, so the corresponding finished() signal connection
+    // is queued.
     m_watcher = new QFutureWatcher<QImage>(this);
     connect(m_watcher, &QFutureWatcher<QImage>::finished, this, [this]() {
         if (!m_future.isValid()) {
@@ -223,7 +226,7 @@ ScreenShotSource2::ScreenShotSource2(const QFuture<QImage> &future)
         } else {
             Q_EMIT completed();
         }
-    });
+    }, Qt::QueuedConnection);
     m_watcher->setFuture(m_future);
 }
 

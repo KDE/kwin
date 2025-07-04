@@ -81,12 +81,14 @@ private Q_SLOTS:
     void handleWindowClosed(EffectWindow *window);
     void handleScreenAdded();
     void handleScreenRemoved(Output *screen);
+    void handleScreenLockingChanged(bool locked);
 
 private:
     void takeScreenShot(ScreenShotWindowData *screenshot);
     bool takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotAreaData *screenshot);
     bool takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotScreenData *screenshot);
 
+    void cancelScreenShots();
     void cancelWindowScreenShots();
     void cancelAreaScreenShots();
     void cancelScreenScreenShots();

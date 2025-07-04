@@ -100,17 +100,20 @@ ScreenShotEffect::ScreenShotEffect()
     connect(effects, &EffectsHandler::screenAdded, this, &ScreenShotEffect::handleScreenAdded);
     connect(effects, &EffectsHandler::screenRemoved, this, &ScreenShotEffect::handleScreenRemoved);
     connect(effects, &EffectsHandler::windowClosed, this, &ScreenShotEffect::handleWindowClosed);
+    connect(effects, &EffectsHandler::screenLockingChanged, this, &ScreenShotEffect::handleScreenLockingChanged);
 }
 
 ScreenShotEffect::~ScreenShotEffect()
 {
-    cancelWindowScreenShots();
-    cancelAreaScreenShots();
-    cancelScreenScreenShots();
+    cancelScreenShots();
 }
 
 QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotFlags flags)
 {
+    if (effects->isScreenLocked()) {
+        return QFuture<QImage>();
+    }
+
     for (const ScreenShotScreenData &data : m_screenScreenShots) {
         if (data.screen == screen && data.flags == flags) {
             return data.promise.future();
@@ -132,6 +135,10 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotF
 
 QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenShotFlags flags)
 {
+    if (effects->isScreenLocked()) {
+        return QFuture<QImage>();
+    }
+
     for (const ScreenShotAreaData &data : m_areaScreenShots) {
         if (data.area == area && data.flags == flags) {
             return data.promise.future();
@@ -173,6 +180,10 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenSh
 
 QFuture<QImage> ScreenShotEffect::scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags)
 {
+    if (effects->isScreenLocked()) {
+        return QFuture<QImage>();
+    }
+
     for (const ScreenShotWindowData &data : m_windowScreenShots) {
         if (data.window == window && data.flags == flags) {
             return data.promise.future();
@@ -190,6 +201,13 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(EffectWindow *window, Scree
     window->addRepaintFull();
 
     return future;
+}
+
+void ScreenShotEffect::cancelScreenShots()
+{
+    cancelWindowScreenShots();
+    cancelAreaScreenShots();
+    cancelScreenScreenShots();
 }
 
 void ScreenShotEffect::cancelWindowScreenShots()
@@ -442,6 +460,13 @@ void ScreenShotEffect::handleWindowClosed(EffectWindow *window)
     std::erase_if(m_windowScreenShots, [window](const auto &screenshot) {
         return screenshot.window == window;
     });
+}
+
+void ScreenShotEffect::handleScreenLockingChanged(bool locked)
+{
+    if (locked) {
+        cancelScreenShots();
+    }
 }
 
 } // namespace KWin
