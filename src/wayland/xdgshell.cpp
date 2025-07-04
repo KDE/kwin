@@ -86,11 +86,6 @@ void XdgShellInterfacePrivate::xdg_wm_base_get_xdg_surface(Resource *resource, u
 {
     SurfaceInterface *surface = SurfaceInterface::get(surfaceResource);
 
-    if (surface->buffer()) {
-        wl_resource_post_error(resource->handle, XDG_SURFACE_ERROR_UNCONFIGURED_BUFFER, "xdg_surface must not have a buffer at creation");
-        return;
-    }
-
     wl_resource *xdgSurfaceResource = wl_resource_create(resource->client(), &xdg_surface_interface, resource->version(), id);
 
     XdgSurfaceInterface *xdgSurface = new XdgSurfaceInterface(q, surface, xdgSurfaceResource);
