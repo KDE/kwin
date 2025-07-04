@@ -6,3 +6,7 @@ float sdfRoundedBox(vec2 position, vec2 center, vec2 extents, vec4 radius) {
     vec2 q = abs(p) - extents + vec2(r);
     return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
 }
+
+float sdfSubtract(float f1, float f2) {
+    return max(f1, -f2);
+}

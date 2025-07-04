@@ -16,6 +16,7 @@ class Decoration;
 namespace KWin
 {
 
+class OutlinedBorderItem;
 class GLTexture;
 class Window;
 class Output;
@@ -134,6 +135,7 @@ class KWIN_EXPORT DecorationItem : public Item
 
 public:
     explicit DecorationItem(KDecoration3::Decoration *decoration, Window *window, Item *parent = nullptr);
+    ~DecorationItem() override;
 
     DecorationRenderer *renderer() const;
     Window *window() const;
@@ -144,6 +146,7 @@ public:
 private Q_SLOTS:
     void handleDecorationGeometryChanged();
     void updateScale();
+    void updateOutline();
 
 protected:
     void preprocess() override;
@@ -154,6 +157,7 @@ private:
     QPointer<Output> m_output;
     QPointer<KDecoration3::Decoration> m_decoration;
     std::unique_ptr<DecorationRenderer> m_renderer;
+    std::unique_ptr<OutlinedBorderItem> m_outlineItem;
 };
 
 } // namespace KWin
