@@ -152,6 +152,7 @@ target_sources(kwin PRIVATE
     resources.qrc
     rulebooksettings.cpp
     rules.cpp
+    scene/borderoutline.cpp
     scene/borderradius.cpp
     scene/cursoritem.cpp
     scene/cursorscene.cpp
@@ -604,6 +605,7 @@ install(FILES
 )
 
 install(FILES
+    scene/borderoutline.h
     scene/borderradius.h
     scene/cursoritem.h
     scene/cursorscene.h
