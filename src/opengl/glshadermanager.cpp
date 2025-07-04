@@ -73,7 +73,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
         stream << "\n";
     }
 
-    if (traits & ShaderTrait::RoundedCorners) {
+    if (traits & (ShaderTrait::RoundedCorners | ShaderTrait::Border)) {
         stream << varying << " vec2 position0;\n\n";
     }
 
@@ -84,7 +84,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
         stream << "    texcoord0 = texcoord.st;\n";
     }
 
-    if (traits & ShaderTrait::RoundedCorners) {
+    if (traits & (ShaderTrait::RoundedCorners | ShaderTrait::Border)) {
         stream << "    position0 = position.xy;\n";
     }
 
@@ -119,7 +119,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         if (glsl_es_300) {
             stream << "#version 300 es\n\n";
         } else {
-            if (traits & ShaderTrait::RoundedCorners) {
+            if (traits & (ShaderTrait::RoundedCorners | ShaderTrait::Border)) {
                 stream << "#extension GL_OES_standard_derivatives : enable\n\n";
             }
         }
@@ -148,6 +148,14 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << varying << " vec2 texcoord0;\n";
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "uniform vec4 geometryColor;\n";
+    } else if (traits & ShaderTrait::Border) {
+        stream << "#include \"sdf.glsl\"\n";
+
+        stream << "uniform vec4 box;\n";
+        stream << "uniform vec4 cornerRadius;\n";
+        stream << "uniform vec4 geometryColor;\n";
+        stream << "uniform int thickness;\n";
+        stream << varying << " vec2 position0;\n";
     }
 
     if (traits & ShaderTrait::Modulate) {
@@ -183,6 +191,12 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result = texture2D(sampler, texcoord0);\n";
     } else if (traits & ShaderTrait::UniformColor) {
         stream << "    result = geometryColor;\n";
+    } else if (traits & ShaderTrait::Border) {
+        stream << "    float inner = sdfRoundedBox(position0, box.xy, box.zw, cornerRadius);\n";
+        stream << "    float outer = sdfRoundedBox(position0, box.xy, box.zw + vec2(thickness), cornerRadius + vec4(thickness));\n";
+        stream << "    float f = sdfSubtract(outer, inner);\n";
+        stream << "    float df = fwidth(f);\n";
+        stream << "    result = geometryColor * (1.0 - clamp(0.5 + f / df, 0.0, 1.0));\n";
     }
 
     if (traits & ShaderTrait::RoundedCorners) {

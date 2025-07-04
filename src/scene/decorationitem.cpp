@@ -12,6 +12,7 @@
 #include "decorations/decoratedwindow.h"
 #include "opengl/eglcontext.h"
 #include "opengl/gltexture.h"
+#include "scene/outlinedborderitem.h"
 #include "scene/workspacescene.h"
 #include "window.h"
 
@@ -394,12 +395,19 @@ DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *win
             this, &DecorationItem::handleDecorationGeometryChanged);
     connect(decoration, &KDecoration3::Decoration::bordersChanged,
             this, &DecorationItem::handleDecorationGeometryChanged);
+    connect(decoration, &KDecoration3::Decoration::borderOutlineChanged,
+            this, &DecorationItem::updateOutline);
 
     connect(renderer(), &DecorationRenderer::damaged,
             this, qOverload<const QRegion &>(&Item::scheduleRepaint));
 
     setSize(decoration->size());
     updateScale();
+    updateOutline();
+}
+
+DecorationItem::~DecorationItem()
+{
 }
 
 QList<QRectF> DecorationItem::shape() const
@@ -447,10 +455,28 @@ void DecorationItem::updateScale()
     }
 }
 
+void DecorationItem::updateOutline()
+{
+    if (m_decoration->borderOutline().isNull()) {
+        m_outlineItem.reset();
+    } else {
+        const auto outline = BorderOutline::from(m_decoration->borderOutline());
+        if (!m_outlineItem) {
+            m_outlineItem = std::make_unique<OutlinedBorderItem>(rect(), outline, this);
+        } else {
+            m_outlineItem->setOutline(outline);
+        }
+    }
+}
+
 void DecorationItem::handleDecorationGeometryChanged()
 {
     setSize(m_decoration->size());
     discardQuads();
+
+    if (m_outlineItem) {
+        m_outlineItem->setInnerRect(rect());
+    }
 }
 
 DecorationRenderer *DecorationItem::renderer() const

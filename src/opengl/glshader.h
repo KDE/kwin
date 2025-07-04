@@ -126,6 +126,7 @@ public:
         DestinationNamedTransferFunction,
         Sampler,
         Sampler1,
+        Thickness,
         IntUniformCount
     };
 
