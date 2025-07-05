@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 02:37+0000\n"
-"PO-Revision-Date: 2025-06-19 23:38-0300\n"
+"PO-Revision-Date: 2025-07-03 23:41-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -72,7 +72,7 @@ msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
 "O mesmo que acima, mais qualquer tecla enquanto as teclas Meta, Ctrl, ou Alt "
-"ou estiverem pressionadas"
+"estiverem pressionadas"
 
 #: ui/main.qml:107
 #, kde-format
