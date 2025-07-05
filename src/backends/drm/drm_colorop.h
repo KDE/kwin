@@ -68,10 +68,10 @@ enum class Lut1DInterpolation {
     Linear,
 };
 
-class DrmLutColorOp : public DrmAbstractColorOp
+class DrmLutColorOp16 : public DrmAbstractColorOp
 {
 public:
-    explicit DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass);
+    explicit DrmLutColorOp16(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass);
 
     std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
@@ -85,6 +85,34 @@ private:
     DrmEnumProperty<Lut1DInterpolation> *const m_interpolationMode;
     const uint32_t m_maxSize;
     QList<drm_color_lut> m_components;
+};
+
+// TODO replace with drm_color_lut_32 once we can rely on it
+struct LutComponent32
+{
+    uint32_t red;
+    uint32_t green;
+    uint32_t blue;
+    uint32_t reserved;
+};
+
+class DrmLutColorOp32 : public DrmAbstractColorOp
+{
+public:
+    explicit DrmLutColorOp32(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass);
+
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
+    void bypass(DrmAtomicCommit *commit) override;
+    std::optional<Scaling> inputScaling(const ColorOp &op) const override;
+    std::optional<Scaling> outputScaling(const ColorOp &op) const override;
+
+private:
+    DrmProperty *const m_prop;
+    DrmProperty *const m_bypass;
+    DrmEnumProperty<Lut1DInterpolation> *const m_interpolationMode;
+    const uint32_t m_maxSize;
+    QList<LutComponent32> m_components;
 };
 
 class LegacyMatrixColorOp : public DrmAbstractColorOp
@@ -148,7 +176,7 @@ private:
     DrmProperty *const m_bypass;
     const size_t m_size;
     DrmEnumProperty<Lut3DInterpolation> *const m_interpolation;
-    QList<drm_color_lut> m_components;
+    QList<LutComponent32> m_components;
 };
 
 class DrmMultiplier : public DrmAbstractColorOp

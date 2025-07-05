@@ -232,7 +232,7 @@ bool DrmAbstractColorOp::canBeInputOrOutput(ColorspaceType type) const
     return true;
 }
 
-DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass)
+DrmLutColorOp16::DrmLutColorOp16(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass)
     : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | Feature::Bypass, QStringLiteral("1D LUT"))
     , m_prop(prop)
     , m_bypass(bypass)
@@ -242,7 +242,7 @@ DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnu
 {
 }
 
-std::optional<uint32_t> DrmLutColorOp::colorOpPreference(const ColorOp::Operation &op)
+std::optional<uint32_t> DrmLutColorOp16::colorOpPreference(const ColorOp::Operation &op)
 {
     if (std::holds_alternative<ColorTransferFunction>(op) || std::holds_alternative<InverseColorTransferFunction>(op)
         || std::holds_alternative<ColorTonemapper>(op) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op)) {
@@ -260,7 +260,7 @@ std::optional<uint32_t> DrmLutColorOp::colorOpPreference(const ColorOp::Operatio
     return std::nullopt;
 }
 
-void DrmLutColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
+void DrmLutColorOp16::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     for (uint32_t i = 0; i < m_maxSize; i++) {
         const double input = i / double(m_maxSize - 1);
@@ -276,14 +276,12 @@ void DrmLutColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp::O
         };
     }
     commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), m_components.data(), sizeof(drm_color_lut) * m_maxSize));
-    // uncomment once the property isn't immutable anymore
-    // commit->addEnum(*m_interpolationMode, Lut1DInterpolation::Linear);
     if (m_bypass) {
         commit->addProperty(*m_bypass, 0);
     }
 }
 
-void DrmLutColorOp::bypass(DrmAtomicCommit *commit)
+void DrmLutColorOp16::bypass(DrmAtomicCommit *commit)
 {
     commit->addBlob(*m_prop, nullptr);
     if (m_bypass) {
@@ -291,7 +289,7 @@ void DrmLutColorOp::bypass(DrmAtomicCommit *commit)
     }
 }
 
-std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp::inputScaling(const ColorOp &op) const
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp16::inputScaling(const ColorOp &op) const
 {
     if (op.input.max <= 1.001) {
         return std::nullopt;
@@ -311,7 +309,104 @@ std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp::inputScaling(const Col
     };
 }
 
-std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp::outputScaling(const ColorOp &op) const
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp16::outputScaling(const ColorOp &op) const
+{
+    if (op.output.max <= 1.001) {
+        return std::nullopt;
+    }
+    return Scaling{
+        .scaling = ColorMultiplier(1.0 / op.output.max),
+        .inverse = ColorOp{
+            .input = ValueRange{
+                .min = op.output.min / op.output.max,
+                .max = 1.0,
+            },
+            .inputSpace = op.outputSpace,
+            .operation = ColorMultiplier(op.output.max),
+            .output = op.output,
+            .outputSpace = op.outputSpace,
+        },
+    };
+}
+
+DrmLutColorOp32::DrmLutColorOp32(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass)
+    : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | Feature::Bypass, QStringLiteral("1D LUT"))
+    , m_prop(prop)
+    , m_bypass(bypass)
+    , m_interpolationMode(interpolation)
+    , m_maxSize(maxSize)
+    , m_components(m_maxSize)
+{
+}
+
+std::optional<uint32_t> DrmLutColorOp32::colorOpPreference(const ColorOp::Operation &op)
+{
+    if (std::holds_alternative<ColorTransferFunction>(op) || std::holds_alternative<InverseColorTransferFunction>(op)
+        || std::holds_alternative<ColorTonemapper>(op) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op)) {
+        // the required resolution depends heavily on the function and on the input and output ranges / multipliers
+        // but this is good enough for now
+        if (m_maxSize >= 1024) {
+            return 1;
+        } else {
+            return 0;
+        }
+        // TODO also check matrices for scaling + offset only, which can be represented just fine!
+    } else if (std::holds_alternative<ColorMultiplier>(op)) {
+        return 0;
+    }
+    return std::nullopt;
+}
+
+void DrmLutColorOp32::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
+{
+    for (uint32_t i = 0; i < m_maxSize; i++) {
+        const double input = i / double(m_maxSize - 1);
+        QVector3D output(input, input, input);
+        for (const auto &op : operations) {
+            output = ColorOp::applyOperation(op, output);
+        }
+        m_components[i] = {
+            .red = uint32_t(std::round(std::clamp<double>(output.x(), 0.0, 1.0) * std::numeric_limits<uint32_t>::max())),
+            .green = uint32_t(std::round(std::clamp<double>(output.y(), 0.0, 1.0) * std::numeric_limits<uint32_t>::max())),
+            .blue = uint32_t(std::round(std::clamp<double>(output.z(), 0.0, 1.0) * std::numeric_limits<uint32_t>::max())),
+            .reserved = 0,
+        };
+    }
+    commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), m_components.data(), sizeof(LutComponent32) * m_maxSize));
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 0);
+    }
+}
+
+void DrmLutColorOp32::bypass(DrmAtomicCommit *commit)
+{
+    commit->addBlob(*m_prop, nullptr);
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 1);
+    }
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp32::inputScaling(const ColorOp &op) const
+{
+    if (op.input.max <= 1.001) {
+        return std::nullopt;
+    }
+    return Scaling{
+        .scaling = ColorMultiplier(op.input.max),
+        .inverse = ColorOp{
+            .input = op.input,
+            .inputSpace = op.inputSpace,
+            .operation = ColorMultiplier(1.0 / op.input.max),
+            .output = ValueRange{
+                .min = op.input.min / op.input.max,
+                .max = 1.0,
+            },
+            .outputSpace = op.inputSpace,
+        },
+    };
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp32::outputScaling(const ColorOp &op) const
 {
     if (op.output.max <= 1.001) {
         return std::nullopt;
@@ -510,18 +605,16 @@ void DrmLut3DColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp:
                     output = ColorOp::applyOperation(op, output);
                 }
                 const size_t index = b * m_size * m_size + g * m_size + r;
-                m_components[index] = drm_color_lut{
-                    .red = uint16_t(std::round(std::clamp(output.x(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max())),
-                    .green = uint16_t(std::round(std::clamp(output.y(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max())),
-                    .blue = uint16_t(std::round(std::clamp(output.z(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max())),
+                m_components[index] = LutComponent32{
+                    .red = uint32_t(std::round(std::clamp<double>(output.x(), 0.0, 1.0) * std::numeric_limits<uint32_t>::max())),
+                    .green = uint32_t(std::round(std::clamp<double>(output.y(), 0.0, 1.0) * std::numeric_limits<uint32_t>::max())),
+                    .blue = uint32_t(std::round(std::clamp<double>(output.z(), 0.0, 1.0) * std::numeric_limits<uint32_t>::max())),
                     .reserved = 0,
                 };
             }
         }
     }
-    commit->addBlob(*m_value, DrmBlob::create(m_value->drmObject()->gpu(), m_components.data(), m_components.size() * sizeof(drm_color_lut)));
-    // uncomment once the property isn't immutable anymore
-    // commit->addEnum(*m_interpolation, Lut3DInterpolation::Tetrahedal);
+    commit->addBlob(*m_value, DrmBlob::create(m_value->drmObject()->gpu(), m_components.data(), m_components.size() * sizeof(LutComponent32)));
     if (m_bypass) {
         commit->addProperty(*m_bypass, 0);
     }
@@ -881,7 +974,7 @@ bool DrmColorOp::updateProperties()
             m_op = std::make_unique<UnknownColorOp>(next, bypassProp);
             return true;
         }
-        m_op = std::make_unique<DrmLutColorOp>(next, &m_data, &m_lut1dInterpolation, m_size.value(), bypassProp);
+        m_op = std::make_unique<DrmLutColorOp32>(next, &m_data, &m_lut1dInterpolation, m_size.value(), bypassProp);
         return true;
     case Type::Matrix3x4:
         m_op = std::make_unique<Matrix3x4ColorOp>(next, &m_data, bypassProp);
