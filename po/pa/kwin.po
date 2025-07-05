@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2022-11-19 06:00-0800\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <punjabi-users@lists.sf.net>\n"
@@ -617,7 +617,8 @@ msgstr "ਦਬਾਓ"
 msgid "Buttons"
 msgstr "ਬਟਨ"
 
-#: debug_console.cpp:517
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr "ਸੋਧਕ"
@@ -872,6 +873,164 @@ msgstr "ਵੇਲੈਂਡ ਵਿੰਡੋ"
 #, kde-format
 msgid "Internal Windows"
 msgstr "ਅੰਦਰੂਨੀ ਵਿੰਡੋ"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "ਵਿੰਡੋ"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr "ਸਤਹ"
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr "ਇਨਪੁੱਟ ਈਵੈਂਟ"
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr "ਇਨਪੁੱਟ ਡਿਵਾਈਸ"
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr "OpenGL"
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr "OpenGL (ES) ਡਰਾਇਵਰ ਜਾਣਕਾਰੀ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr "ਵੇਂਡਰ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr "ਰੈਂਡਰਰ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr "ਵਰਜ਼ਨ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr "ਡਰਾਇਵਰ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr "GPU ਕਲਾਸ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr "OpenGL ਵਰਜ਼ਨ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr "GLSL ਵਰਜ਼ਨ:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr "ਪਲੇਟਫਾਰਮ ਇਕਸਟੈਨਸ਼ਨ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr "OpenGL (ES) ਇਕਸਟੈਨਸ਼ਨਾਂ"
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr "ਕੀਬੋਰਡ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr "ਕੀਮੈਪ ਲੇਆਉਟ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, kde-format
+msgid "Current Layout:"
+msgstr "ਮੌਜੂਦਾ ਲੇਆਉਟ:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, fuzzy, kde-format
+#| msgid "Modifiers"
+msgid "Active Modifiers"
+msgstr "ਸੋਧਕ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr "LED"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr "ਸਰਗਰਮ LED"
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr "ਕਲਿੱਪਬੋਰਡ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr "ਮੁੱਢਲੀ ਚੋਣ"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1412,6 +1571,572 @@ msgstr "ਰਾਤ ਦੇ ਰੰਗ ਨੂੰ ਬਦਲੋ"
 msgid "Color Temperature Preview"
 msgstr "ਰੰਗ ਤਾਪਮਾਨ ਝਲਕ"
 
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr ""
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr ""
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr ""
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr ""
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr ""
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, fuzzy, kde-format
+#| msgid "Window position"
+msgid "Window class (application)"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, fuzzy, kde-format
+#| msgid "Window position rule type"
+msgid "Window class string match type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr ""
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, kde-format
+msgid "Window role"
+msgstr "ਵਿੰਡੋ ਰੋਲ"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, fuzzy, kde-format
+#| msgid "Window position rule type"
+msgid "Window role string match type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, kde-format
+msgid "Window title"
+msgstr "ਵਿੰਡੋ ਟਾਈਟਲ"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, fuzzy, kde-format
+#| msgid "Window position rule type"
+msgid "Window title string match type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "ਮਸ਼ੀਨ (ਹੋਸਟ-ਨਾਂ)"
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, fuzzy, kde-format
+#| msgid "Machine (hostname)"
+msgid "Machine string match type"
+msgstr "ਮਸ਼ੀਨ (ਹੋਸਟ-ਨਾਂ)"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr ""
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Initial placement"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Initial placement rule type"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, kde-format
+msgid "Window position"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, kde-format
+msgid "Window position rule type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, kde-format
+msgid "Window size"
+msgstr "ਵਿੰਡੋ ਦਾ ਆਕਾਰ"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, fuzzy, kde-format
+#| msgid "Window position rule type"
+msgid "Window size rule type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, fuzzy, kde-format
+#| msgid "Window size"
+msgid "Window minimum size"
+msgstr "ਵਿੰਡੋ ਦਾ ਆਕਾਰ"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, fuzzy, kde-format
+#| msgid "Window position rule type"
+msgid "Window minimum size rule type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, fuzzy, kde-format
+#| msgid "Window size"
+msgid "Window maximum size"
+msgstr "ਵਿੰਡੋ ਦਾ ਆਕਾਰ"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, fuzzy, kde-format
+#| msgid "Window position rule type"
+msgid "Window maximum size rule type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, fuzzy, kde-format
+#| msgid "Activity"
+msgid "Active opacity"
+msgstr "ਸਰਗਰਮੀ"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Active opacity rule type"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr ""
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Inactive opacity rule type"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr ""
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, fuzzy, kde-format
+#| msgid "Switch to Desktop 2"
+msgid "List of Desktop Ids"
+msgstr "ਡੈਸਕਟਾਪ 2 ਵਿੱਚ ਜਾਓ"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, fuzzy, kde-format
+#| msgid "Desktop Cube"
+msgid "Desktop Ids rule type"
+msgstr "ਡੈਸਕਟਾਪ ਘਣ"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr "ਸਕਰੀਨ ਦਾ ਨੰਬਰ"
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, fuzzy, kde-format
+#| msgid "Screen number"
+msgid "Screen number rule type"
+msgstr "ਸਕਰੀਨ ਦਾ ਨੰਬਰ"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr "ਸਰਗਰਮੀ"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, fuzzy, kde-format
+#| msgid "Activity"
+msgid "Activity rule type"
+msgstr "ਸਰਗਰਮੀ"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, fuzzy, kde-format
+#| msgid "Setup Window Shortcut"
+msgid "Set window type to"
+msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕੱਟ ਸੈੱਟਅੱਪ"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, fuzzy, kde-format
+#| msgid "Setup Window Shortcut"
+msgid "Set window type rule type"
+msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕੱਟ ਸੈੱਟਅੱਪ"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, kde-format
+msgid "Maximized vertically"
+msgstr "ਖੜ੍ਹਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Maximized vertically rule type"
+msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਵੱਧੋ-ਵੱਧ"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "ਲੇਟਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, fuzzy, kde-format
+#| msgid "Maximize Window Horizontally"
+msgid "Maximized horizontally rule type"
+msgstr "ਵਿੰਡੋ ਖਿਤਿਜੀ ਲੰਬਕਾਰੀ"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, kde-format
+msgid "Minimized"
+msgstr "ਘੱਟੋ-ਘੱਟ"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Minimized rule type"
+msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਵੱਧੋ-ਵੱਧ"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, kde-format
+msgid "Shaded"
+msgstr "ਸ਼ੇਡ"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Shaded rule type"
+msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr ""
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Skip taskbar rule type"
+msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, fuzzy, kde-format
+#| msgid "Skip switcher"
+msgid "Skip pager"
+msgstr "ਸਵਿੱਚਰ ਛੱਡੋ"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Skip pager rule type"
+msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, kde-format
+msgid "Skip switcher"
+msgstr "ਸਵਿੱਚਰ ਛੱਡੋ"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, fuzzy, kde-format
+#| msgid "Skip switcher"
+msgid "Skip switcher rule type"
+msgstr "ਸਵਿੱਚਰ ਛੱਡੋ"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, kde-format
+msgid "Keep above"
+msgstr "ਹੋਰਾਂ ਉੱਤੇ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Keep above rule type"
+msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, kde-format
+msgid "Keep below"
+msgstr "ਹੇਠਾਂ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgid "Keep below rule type"
+msgstr "ਸਭ ਤੋਂ ਹੇਠਾਂ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, kde-format
+msgid "Fullscreen"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, kde-format
+msgid "Fullscreen rule type"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, fuzzy, kde-format
+#| msgid "Toggle Window Border"
+msgid "No titlebar and frame"
+msgstr "ਵਿੰਡੋ ਦੇ ਹਾਸ਼ੀਏ ਨੂੰ ਬਦਲੋ"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, fuzzy, kde-format
+#| msgid "Desktop file name rule type"
+msgid "No titlebar rule type"
+msgstr "ਡੈਸਕਟਾਪ ਫਾਈਲ ਨਾਂ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr ""
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgid "Titlebar color rule type"
+msgstr "ਸਭ ਤੋਂ ਹੇਠਾਂ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Block Compositing"
+msgstr "ਸਸਪੈਂਡ ਕੰਪੋਜ਼ਿਸ਼ਨ"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Block Compositing rule type"
+msgstr "ਸਸਪੈਂਡ ਕੰਪੋਜ਼ਿਸ਼ਨ"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr ""
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, fuzzy, kde-format
+#| msgid "Fullscreen rule type"
+msgid "Focus stealing prevention rule type"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr ""
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, fuzzy, kde-format
+#| msgid "Window position rule type"
+msgid "Focus protection rule type"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr "ਫੋਕਸ ਲਵੋ"
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, fuzzy, kde-format
+#| msgid "Accept Focus"
+msgid "Accept Focus rule type"
+msgstr "ਫੋਕਸ ਲਵੋ"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, kde-format
+msgid "Closeable"
+msgstr "ਬੰਦ ਕਰਨ ਯੋਗ"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Closeable rule type"
+msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, fuzzy, kde-format
+#| msgid "Desktop Cube"
+msgid "Autogroup by ID rule type"
+msgstr "ਡੈਸਕਟਾਪ ਘਣ"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr ""
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr "ਸ਼ਾਰਟਕੱਟ"
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, fuzzy, kde-format
+#| msgid "Shortcut"
+msgid "Shortcut rule type"
+msgstr "ਸ਼ਾਰਟਕੱਟ"
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, fuzzy, kde-format
+#| msgid "Block Global Shortcuts"
+msgid "Ignore global shortcuts"
+msgstr "ਗਲੋਬਲ ਸ਼ਾਰਟਕੱਟ ਪਾਬੰਦੀ"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, fuzzy, kde-format
+#| msgid "Block Global Shortcuts"
+msgid "Ignore global shortcuts rule type"
+msgstr "ਗਲੋਬਲ ਸ਼ਾਰਟਕੱਟ ਪਾਬੰਦੀ"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, kde-format
+msgid "Desktop file name"
+msgstr "ਡੈਸਕਟਾਪ ਫਾਇਲ ਦਾ ਨਾਂ"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr "ਡੈਸਕਟਾਪ ਫਾਈਲ ਨਾਂ ਰੂਲ ਕਿਸਮ"
+
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -1430,6 +2155,18 @@ msgstr ""
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr "ਡਾਈਲਾਗ"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2102,194 +2839,6 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-
-#~ msgid "Windows"
-#~ msgstr "ਵਿੰਡੋ"
-
-#~ msgid "Surfaces"
-#~ msgstr "ਸਤਹ"
-
-#~ msgid "Input Events"
-#~ msgstr "ਇਨਪੁੱਟ ਈਵੈਂਟ"
-
-#~ msgid "Input Devices"
-#~ msgstr "ਇਨਪੁੱਟ ਡਿਵਾਈਸ"
-
-#~ msgid "OpenGL"
-#~ msgstr "OpenGL"
-
-#~ msgid "OpenGL (ES) driver information"
-#~ msgstr "OpenGL (ES) ਡਰਾਇਵਰ ਜਾਣਕਾਰੀ"
-
-#~ msgid "Vendor:"
-#~ msgstr "ਵੇਂਡਰ:"
-
-#~ msgid "Renderer:"
-#~ msgstr "ਰੈਂਡਰਰ:"
-
-#~ msgid "Version:"
-#~ msgstr "ਵਰਜ਼ਨ:"
-
-#~ msgid "Driver:"
-#~ msgstr "ਡਰਾਇਵਰ:"
-
-#~ msgid "GPU class:"
-#~ msgstr "GPU ਕਲਾਸ:"
-
-#~ msgid "OpenGL Version:"
-#~ msgstr "OpenGL ਵਰਜ਼ਨ:"
-
-#~ msgid "GLSL Version:"
-#~ msgstr "GLSL ਵਰਜ਼ਨ:"
-
-#~ msgid "Platform Extensions"
-#~ msgstr "ਪਲੇਟਫਾਰਮ ਇਕਸਟੈਨਸ਼ਨ"
-
-#~ msgid "OpenGL (ES) Extensions"
-#~ msgstr "OpenGL (ES) ਇਕਸਟੈਨਸ਼ਨਾਂ"
-
-#~ msgid "Keyboard"
-#~ msgstr "ਕੀਬੋਰਡ"
-
-#~ msgid "Keymap Layouts"
-#~ msgstr "ਕੀਮੈਪ ਲੇਆਉਟ"
-
-#~ msgid "Current Layout:"
-#~ msgstr "ਮੌਜੂਦਾ ਲੇਆਉਟ:"
-
-#~ msgid "LEDs"
-#~ msgstr "LED"
-
-#~ msgid "Active LEDs"
-#~ msgstr "ਸਰਗਰਮ LED"
-
-#~ msgid "Clipboard"
-#~ msgstr "ਕਲਿੱਪਬੋਰਡ"
-
-#~ msgid "Primary Selection"
-#~ msgstr "ਮੁੱਢਲੀ ਚੋਣ"
-
-#~ msgid "Window role"
-#~ msgstr "ਵਿੰਡੋ ਰੋਲ"
-
-#~ msgid "Window title"
-#~ msgstr "ਵਿੰਡੋ ਟਾਈਟਲ"
-
-#~ msgid "Machine (hostname)"
-#~ msgstr "ਮਸ਼ੀਨ (ਹੋਸਟ-ਨਾਂ)"
-
-#, fuzzy
-#~| msgid "&Fullscreen"
-#~ msgid "Initial placement rule type"
-#~ msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
-
-#~ msgid "Window position"
-#~ msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ"
-
-#~ msgid "Window position rule type"
-#~ msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
-
-#~ msgid "Window size"
-#~ msgstr "ਵਿੰਡੋ ਦਾ ਆਕਾਰ"
-
-#, fuzzy
-#~| msgid "Switch to Desktop 2"
-#~ msgid "List of Desktop Ids"
-#~ msgstr "ਡੈਸਕਟਾਪ 2 ਵਿੱਚ ਜਾਓ"
-
-#, fuzzy
-#~| msgid "Desktop Cube"
-#~ msgid "Desktop Ids rule type"
-#~ msgstr "ਡੈਸਕਟਾਪ ਘਣ"
-
-#~ msgid "Screen number"
-#~ msgstr "ਸਕਰੀਨ ਦਾ ਨੰਬਰ"
-
-#~ msgid "Activity"
-#~ msgstr "ਸਰਗਰਮੀ"
-
-#, fuzzy
-#~| msgid "Setup Window Shortcut"
-#~ msgid "Set window type to"
-#~ msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕੱਟ ਸੈੱਟਅੱਪ"
-
-#~ msgid "Maximized vertically"
-#~ msgstr "ਖੜ੍ਹਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ"
-
-#, fuzzy
-#~| msgid "Maximize Window Vertically"
-#~ msgid "Maximized vertically rule type"
-#~ msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਵੱਧੋ-ਵੱਧ"
-
-#~ msgid "Maximized horizontally"
-#~ msgstr "ਲੇਟਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ"
-
-#, fuzzy
-#~| msgid "Maximize Window Horizontally"
-#~ msgid "Maximized horizontally rule type"
-#~ msgstr "ਵਿੰਡੋ ਖਿਤਿਜੀ ਲੰਬਕਾਰੀ"
-
-#~ msgid "Minimized"
-#~ msgstr "ਘੱਟੋ-ਘੱਟ"
-
-#~ msgid "Shaded"
-#~ msgstr "ਸ਼ੇਡ"
-
-#~ msgid "Skip switcher"
-#~ msgstr "ਸਵਿੱਚਰ ਛੱਡੋ"
-
-#~ msgid "Keep above"
-#~ msgstr "ਹੋਰਾਂ ਉੱਤੇ ਰੱਖੋ"
-
-#, fuzzy
-#~| msgid "Keep above others"
-#~ msgid "Keep above rule type"
-#~ msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
-
-#~ msgid "Keep below"
-#~ msgstr "ਹੇਠਾਂ ਰੱਖੋ"
-
-#, fuzzy
-#~| msgid "Keep below others"
-#~ msgid "Keep below rule type"
-#~ msgstr "ਸਭ ਤੋਂ ਹੇਠਾਂ ਰੱਖੋ"
-
-#~ msgid "Fullscreen"
-#~ msgstr "ਪੂਰੀ ਸਕਰੀਨ"
-
-#~ msgid "Fullscreen rule type"
-#~ msgstr "ਪੂਰੀ ਸਕਰੀਨ ਰੂਲ ਕਿਸਮ"
-
-#, fuzzy
-#~| msgid "Suspend Compositing"
-#~ msgid "Block Compositing"
-#~ msgstr "ਸਸਪੈਂਡ ਕੰਪੋਜ਼ਿਸ਼ਨ"
-
-#~ msgid "Accept Focus"
-#~ msgstr "ਫੋਕਸ ਲਵੋ"
-
-#~ msgid "Closeable"
-#~ msgstr "ਬੰਦ ਕਰਨ ਯੋਗ"
-
-#~ msgid "Shortcut"
-#~ msgstr "ਸ਼ਾਰਟਕੱਟ"
-
-#, fuzzy
-#~| msgid "Block Global Shortcuts"
-#~ msgid "Ignore global shortcuts"
-#~ msgstr "ਗਲੋਬਲ ਸ਼ਾਰਟਕੱਟ ਪਾਬੰਦੀ"
-
-#~ msgid "Desktop file name"
-#~ msgstr "ਡੈਸਕਟਾਪ ਫਾਇਲ ਦਾ ਨਾਂ"
-
-#~ msgid "Desktop file name rule type"
-#~ msgstr "ਡੈਸਕਟਾਪ ਫਾਈਲ ਨਾਂ ਰੂਲ ਕਿਸਮ"
-
-#~ msgid "Dialog"
-#~ msgstr "ਡਾਈਲਾਗ"
-
-#~ msgid "..."
-#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "ਕੋਈ ਹਾਸ਼ੀਆ ਨਹੀਂ(&N)"

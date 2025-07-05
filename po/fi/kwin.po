@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2024-01-29 21:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -638,7 +638,8 @@ msgstr "Paine"
 msgid "Buttons"
 msgstr "Painikkeet"
 
-#: debug_console.cpp:517
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr "Muuntonäppäimet"
@@ -894,6 +895,163 @@ msgstr "Wayland-ikkunat"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Sisäiset ikkunat"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr "Lopeta virheenpaikannuskonsoli"
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "Ikkunat"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr "Pinnat"
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr "Syötetapahtumat"
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr "Syöttölaitteet"
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr "OpenGL"
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr "OpenGL-koostimia ei ole käynnissä"
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr "OpenGL (ES) -ajurin tiedot"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr "Valmistaja:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr "Hahmontaja:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr "Versio:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr "Varjostuskieliversio:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr "Ajuri:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr "GPU-luokka:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr "OpenGL-versio:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr "GLSL-versio:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr "Alustalaajennukset"
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr "OpenGL (ES) -laajennukset"
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr "Näppäimistö"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr "Näppäimistöasettelut"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, kde-format
+msgid "Current Layout:"
+msgstr "Nykyinen asettelu:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr "Aktiiviset muuntonäppäimet"
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr "Merkkivalot"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr "Aktiiviset merkkivalot"
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr "Leikepöytä"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr "Ensisijainen valinta"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1446,6 +1604,528 @@ msgstr "Käännä yöväriasetus"
 msgid "Color Temperature Preview"
 msgstr "Värilämpötilan esikatselu"
 
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr "Sääntöjä kaikkiaan (vanhentunut)"
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr "Sääntöryhmien järjestetty luettelo"
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr "Säännön kuvaus"
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr "Säännön kuvaus (vanha)"
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr "Poista tämä sääntö (tuonteja varten)"
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, kde-format
+msgid "Window class (application)"
+msgstr "Ikkunaluokka (sovellus)"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, kde-format
+msgid "Window class string match type"
+msgstr "Ikkunaluokkajonon vastaavuuden tyyppi"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr "Sovita koko ikkunaluokkaan"
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, kde-format
+msgid "Window role"
+msgstr "Ikkunan rooli"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, kde-format
+msgid "Window role string match type"
+msgstr "Ikkunaroolijonon vastaavuuden tyyppi"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, kde-format
+msgid "Window title"
+msgstr "Ikkunan otsikko"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, kde-format
+msgid "Window title string match type"
+msgstr "Ikkunan otsikkojonon vastaavuuden tyyppi"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "Kone (palvelinnimi)"
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr "Konejonon vastaavuuden tyyppi"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr "Sopivat ikkunatyypit"
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, kde-format
+msgid "Initial placement"
+msgstr "Alkusijoitus"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, kde-format
+msgid "Initial placement rule type"
+msgstr "Alkusijoitussäännön tyyppi"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, kde-format
+msgid "Window position"
+msgstr "Ikkunan sijainti"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, kde-format
+msgid "Window position rule type"
+msgstr "Ikkunan sijaintisäännön tyyppi"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, kde-format
+msgid "Window size"
+msgstr "Ikkunan koko"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, kde-format
+msgid "Window size rule type"
+msgstr "Ikkunan kokosäännön tyyppi"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, kde-format
+msgid "Window minimum size"
+msgstr "Ikkunan vähimmäiskoko"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, kde-format
+msgid "Window minimum size rule type"
+msgstr "Ikkunan vähimmäiskokosäännön tyyppi"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, kde-format
+msgid "Window maximum size"
+msgstr "Ikkunan enimmäiskoko"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, kde-format
+msgid "Window maximum size rule type"
+msgstr "Ikkunan enimmäiskokosäännön tyyppi"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, kde-format
+msgid "Active opacity"
+msgstr "Peittävyys aktiivisena"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, kde-format
+msgid "Active opacity rule type"
+msgstr "Aktiivisen peittävyyssäännön tyyppi"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr "Peittävyys passiivisena"
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, kde-format
+msgid "Inactive opacity rule type"
+msgstr "Passiivisen peittävyyssäännön tyyppi"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "Ohita pyydetty geometria"
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr "Ohita pyydetty geometria -säännön tyyppi"
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, kde-format
+msgid "List of Desktop Ids"
+msgstr "Työpöytätunnisteiden luettelo"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, kde-format
+msgid "Desktop Ids rule type"
+msgstr "Työpöytätunnisteiden sääntötyyppi"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr "Näytön numero"
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, kde-format
+msgid "Screen number rule type"
+msgstr "Näytön numero -säännön tyyppi"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr "Toiminta"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, kde-format
+msgid "Activity rule type"
+msgstr "Aktiivisuussäännön tyyppi"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, kde-format
+msgid "Set window type to"
+msgstr "Aseta ikkunatyypiksi"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, kde-format
+msgid "Set window type rule type"
+msgstr "Ikkunatyypin asetussäännön tyyppi"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, kde-format
+msgid "Maximized vertically"
+msgstr "Suurennettu pystysuunnassa"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, kde-format
+msgid "Maximized vertically rule type"
+msgstr "Suurennettu pystysuunnassa -säännön tyyppi"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "Suurennettu vaakasuunnassa"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, kde-format
+msgid "Maximized horizontally rule type"
+msgstr "Suurennettu vaakasuunnassa -säännön tyyppi"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, kde-format
+msgid "Minimized"
+msgstr "Pienennetty"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, kde-format
+msgid "Minimized rule type"
+msgstr "Pienennyssäännön tyyppi"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, kde-format
+msgid "Shaded"
+msgstr "Rullattu"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, kde-format
+msgid "Shaded rule type"
+msgstr "Rullaussäännön tyyppi"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr "Ohita tehtäväpalkki"
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, kde-format
+msgid "Skip taskbar rule type"
+msgstr "Ohita tehtäväpalkkisääntötyyppi"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, kde-format
+msgid "Skip pager"
+msgstr "Ohita sivutin"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, kde-format
+msgid "Skip pager rule type"
+msgstr "Ohita sivutin -säännön tyyppi"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, kde-format
+msgid "Skip switcher"
+msgstr "Ohita tehtävävaihto"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, kde-format
+msgid "Skip switcher rule type"
+msgstr "Ohita tehtävävaihto -säännön tyyppi"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, kde-format
+msgid "Keep above"
+msgstr "Pidä ylinnä"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, kde-format
+msgid "Keep above rule type"
+msgstr "Pidä ylinnä -säännön tyyppi"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, kde-format
+msgid "Keep below"
+msgstr "Pidä alinna"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, kde-format
+msgid "Keep below rule type"
+msgstr "Pidä alinna -säännön tyyppi"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, kde-format
+msgid "Fullscreen"
+msgstr "Koko näyttö"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, kde-format
+msgid "Fullscreen rule type"
+msgstr "Koko näyttö -säännön tyyppi"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "Ei otsikkopalkkia eikä kehystä"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, kde-format
+msgid "No titlebar rule type"
+msgstr "Ei otsikkopalkkia -säännön tyyppi"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr "Otsikkopalkin väri ja teema"
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, kde-format
+msgid "Titlebar color rule type"
+msgstr "Otsikkopalkin värisäännön tyyppi"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, kde-format
+msgid "Block Compositing"
+msgstr "Estä koostaminen"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, kde-format
+msgid "Block Compositing rule type"
+msgstr "Estä koostaminen -säännön tyyppi"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "Kohdistuksen varastamisen esto"
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, kde-format
+msgid "Focus stealing prevention rule type"
+msgstr "Kohdistuksen varastamisen esto -säännön tyyppi"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr "Kohdistuksen suojaus"
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, kde-format
+msgid "Focus protection rule type"
+msgstr "Kohdistuksen suojaus -säännön tyyppi"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr "Hyväksy kohdistus"
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, kde-format
+msgid "Accept Focus rule type"
+msgstr "Hyväksy kohdistus -säännön tyyppi"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, kde-format
+msgid "Closeable"
+msgstr "Suljettava"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, kde-format
+msgid "Closeable rule type"
+msgstr "Suljettava-säännön tyyppi"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr "Ryhmitä samanlaiset automaattisesti"
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr "Ryhmitä samanlaiset automaattisesti -säännön tyyppi"
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr "Ryhmitä edustalla automaattisesti"
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr "Ryhmitä edustalla automaattisesti -säännön tyyppi"
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr "Ryhmitä tunnisteen mukaan automaattisesti"
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, kde-format
+msgid "Autogroup by ID rule type"
+msgstr "Ryhmitä tunnisteen mukaan automaattisesti -säännön tyyppi"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Noudata geometriarajoituksia"
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr "Noudata geometriarajoituksia -säännön tyyppi"
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr "Pikanäppäin"
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr "Pikanäppäin-säännön tyyppi"
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Ohita työpöydänlaajuiset pikanäppäimet"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, kde-format
+msgid "Ignore global shortcuts rule type"
+msgstr "Ohita työpöydänlaajuiset pikanäppäimet -säännön tyyppi"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, kde-format
+msgid "Desktop file name"
+msgstr "Työpöytätiedoston nimi"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr "Työpöytätiedoston nimi -säännön tyyppi"
+
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -1464,6 +2144,18 @@ msgstr "%1 ei sisällä kelvollista metadata.json-tiedostoa"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "Tiedostoa %1 ei ole olemassa"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr "Valintaikkuna"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr "…"
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2143,351 +2835,6 @@ msgstr ""
 "Liitä tämän ohjetekstin alla olevat tiedot mieluummin pastebin-palveluun, "
 "esim.\n"
 "https://paste.kde.org/, kuin suoraan tukipalstalle.\n"
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Lopeta virheenpaikannuskonsoli"
-
-#~ msgid "Windows"
-#~ msgstr "Ikkunat"
-
-#~ msgid "Surfaces"
-#~ msgstr "Pinnat"
-
-#~ msgid "Input Events"
-#~ msgstr "Syötetapahtumat"
-
-#~ msgid "Input Devices"
-#~ msgstr "Syöttölaitteet"
-
-#~ msgid "OpenGL"
-#~ msgstr "OpenGL"
-
-#~ msgid "No OpenGL compositor running"
-#~ msgstr "OpenGL-koostimia ei ole käynnissä"
-
-#~ msgid "OpenGL (ES) driver information"
-#~ msgstr "OpenGL (ES) -ajurin tiedot"
-
-#~ msgid "Vendor:"
-#~ msgstr "Valmistaja:"
-
-#~ msgid "Renderer:"
-#~ msgstr "Hahmontaja:"
-
-#~ msgid "Version:"
-#~ msgstr "Versio:"
-
-#~ msgid "Shading Language Version:"
-#~ msgstr "Varjostuskieliversio:"
-
-#~ msgid "Driver:"
-#~ msgstr "Ajuri:"
-
-#~ msgid "GPU class:"
-#~ msgstr "GPU-luokka:"
-
-#~ msgid "OpenGL Version:"
-#~ msgstr "OpenGL-versio:"
-
-#~ msgid "GLSL Version:"
-#~ msgstr "GLSL-versio:"
-
-#~ msgid "Platform Extensions"
-#~ msgstr "Alustalaajennukset"
-
-#~ msgid "OpenGL (ES) Extensions"
-#~ msgstr "OpenGL (ES) -laajennukset"
-
-#~ msgid "Keyboard"
-#~ msgstr "Näppäimistö"
-
-#~ msgid "Keymap Layouts"
-#~ msgstr "Näppäimistöasettelut"
-
-#~ msgid "Current Layout:"
-#~ msgstr "Nykyinen asettelu:"
-
-#~ msgid "Active Modifiers"
-#~ msgstr "Aktiiviset muuntonäppäimet"
-
-#~ msgid "LEDs"
-#~ msgstr "Merkkivalot"
-
-#~ msgid "Active LEDs"
-#~ msgstr "Aktiiviset merkkivalot"
-
-#~ msgid "Clipboard"
-#~ msgstr "Leikepöytä"
-
-#~ msgid "Primary Selection"
-#~ msgstr "Ensisijainen valinta"
-
-#~ msgid "Total rules count (legacy)"
-#~ msgstr "Sääntöjä kaikkiaan (vanhentunut)"
-
-#~ msgid "Ordered list of rules groups"
-#~ msgstr "Sääntöryhmien järjestetty luettelo"
-
-#~ msgid "Rule description"
-#~ msgstr "Säännön kuvaus"
-
-#~ msgid "Rule description (legacy)"
-#~ msgstr "Säännön kuvaus (vanha)"
-
-#~ msgid "Delete this rule (for use in imports)"
-#~ msgstr "Poista tämä sääntö (tuonteja varten)"
-
-#~ msgid "Window class (application)"
-#~ msgstr "Ikkunaluokka (sovellus)"
-
-#~ msgid "Window class string match type"
-#~ msgstr "Ikkunaluokkajonon vastaavuuden tyyppi"
-
-#~ msgid "Match whole window class"
-#~ msgstr "Sovita koko ikkunaluokkaan"
-
-#~ msgid "Window role"
-#~ msgstr "Ikkunan rooli"
-
-#~ msgid "Window role string match type"
-#~ msgstr "Ikkunaroolijonon vastaavuuden tyyppi"
-
-#~ msgid "Window title"
-#~ msgstr "Ikkunan otsikko"
-
-#~ msgid "Window title string match type"
-#~ msgstr "Ikkunan otsikkojonon vastaavuuden tyyppi"
-
-#~ msgid "Machine (hostname)"
-#~ msgstr "Kone (palvelinnimi)"
-
-#~ msgid "Machine string match type"
-#~ msgstr "Konejonon vastaavuuden tyyppi"
-
-#~ msgid "Window types that match"
-#~ msgstr "Sopivat ikkunatyypit"
-
-#~ msgid "Initial placement"
-#~ msgstr "Alkusijoitus"
-
-#~ msgid "Initial placement rule type"
-#~ msgstr "Alkusijoitussäännön tyyppi"
-
-#~ msgid "Window position"
-#~ msgstr "Ikkunan sijainti"
-
-#~ msgid "Window position rule type"
-#~ msgstr "Ikkunan sijaintisäännön tyyppi"
-
-#~ msgid "Window size"
-#~ msgstr "Ikkunan koko"
-
-#~ msgid "Window size rule type"
-#~ msgstr "Ikkunan kokosäännön tyyppi"
-
-#~ msgid "Window minimum size"
-#~ msgstr "Ikkunan vähimmäiskoko"
-
-#~ msgid "Window minimum size rule type"
-#~ msgstr "Ikkunan vähimmäiskokosäännön tyyppi"
-
-#~ msgid "Window maximum size"
-#~ msgstr "Ikkunan enimmäiskoko"
-
-#~ msgid "Window maximum size rule type"
-#~ msgstr "Ikkunan enimmäiskokosäännön tyyppi"
-
-#~ msgid "Active opacity"
-#~ msgstr "Peittävyys aktiivisena"
-
-#~ msgid "Active opacity rule type"
-#~ msgstr "Aktiivisen peittävyyssäännön tyyppi"
-
-#~ msgid "Inactive opacity"
-#~ msgstr "Peittävyys passiivisena"
-
-#~ msgid "Inactive opacity rule type"
-#~ msgstr "Passiivisen peittävyyssäännön tyyppi"
-
-#~ msgid "Ignore requested geometry"
-#~ msgstr "Ohita pyydetty geometria"
-
-#~ msgid "Ignore requested geometry rule type"
-#~ msgstr "Ohita pyydetty geometria -säännön tyyppi"
-
-#~ msgid "List of Desktop Ids"
-#~ msgstr "Työpöytätunnisteiden luettelo"
-
-#~ msgid "Desktop Ids rule type"
-#~ msgstr "Työpöytätunnisteiden sääntötyyppi"
-
-#~ msgid "Screen number"
-#~ msgstr "Näytön numero"
-
-#~ msgid "Screen number rule type"
-#~ msgstr "Näytön numero -säännön tyyppi"
-
-#~ msgid "Activity"
-#~ msgstr "Toiminta"
-
-#~ msgid "Activity rule type"
-#~ msgstr "Aktiivisuussäännön tyyppi"
-
-#~ msgid "Set window type to"
-#~ msgstr "Aseta ikkunatyypiksi"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "Ikkunatyypin asetussäännön tyyppi"
-
-#~ msgid "Maximized vertically"
-#~ msgstr "Suurennettu pystysuunnassa"
-
-#~ msgid "Maximized vertically rule type"
-#~ msgstr "Suurennettu pystysuunnassa -säännön tyyppi"
-
-#~ msgid "Maximized horizontally"
-#~ msgstr "Suurennettu vaakasuunnassa"
-
-#~ msgid "Maximized horizontally rule type"
-#~ msgstr "Suurennettu vaakasuunnassa -säännön tyyppi"
-
-#~ msgid "Minimized"
-#~ msgstr "Pienennetty"
-
-#~ msgid "Minimized rule type"
-#~ msgstr "Pienennyssäännön tyyppi"
-
-#~ msgid "Shaded"
-#~ msgstr "Rullattu"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Rullaussäännön tyyppi"
-
-#~ msgid "Skip taskbar"
-#~ msgstr "Ohita tehtäväpalkki"
-
-#~ msgid "Skip taskbar rule type"
-#~ msgstr "Ohita tehtäväpalkkisääntötyyppi"
-
-#~ msgid "Skip pager"
-#~ msgstr "Ohita sivutin"
-
-#~ msgid "Skip pager rule type"
-#~ msgstr "Ohita sivutin -säännön tyyppi"
-
-#~ msgid "Skip switcher"
-#~ msgstr "Ohita tehtävävaihto"
-
-#~ msgid "Skip switcher rule type"
-#~ msgstr "Ohita tehtävävaihto -säännön tyyppi"
-
-#~ msgid "Keep above"
-#~ msgstr "Pidä ylinnä"
-
-#~ msgid "Keep above rule type"
-#~ msgstr "Pidä ylinnä -säännön tyyppi"
-
-#~ msgid "Keep below"
-#~ msgstr "Pidä alinna"
-
-#~ msgid "Keep below rule type"
-#~ msgstr "Pidä alinna -säännön tyyppi"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Koko näyttö"
-
-#~ msgid "Fullscreen rule type"
-#~ msgstr "Koko näyttö -säännön tyyppi"
-
-#~ msgid "No titlebar and frame"
-#~ msgstr "Ei otsikkopalkkia eikä kehystä"
-
-#~ msgid "No titlebar rule type"
-#~ msgstr "Ei otsikkopalkkia -säännön tyyppi"
-
-#~ msgid "Titlebar color and scheme"
-#~ msgstr "Otsikkopalkin väri ja teema"
-
-#~ msgid "Titlebar color rule type"
-#~ msgstr "Otsikkopalkin värisäännön tyyppi"
-
-#~ msgid "Block Compositing"
-#~ msgstr "Estä koostaminen"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "Estä koostaminen -säännön tyyppi"
-
-#~ msgid "Focus stealing prevention"
-#~ msgstr "Kohdistuksen varastamisen esto"
-
-#~ msgid "Focus stealing prevention rule type"
-#~ msgstr "Kohdistuksen varastamisen esto -säännön tyyppi"
-
-#~ msgid "Focus protection"
-#~ msgstr "Kohdistuksen suojaus"
-
-#~ msgid "Focus protection rule type"
-#~ msgstr "Kohdistuksen suojaus -säännön tyyppi"
-
-#~ msgid "Accept Focus"
-#~ msgstr "Hyväksy kohdistus"
-
-#~ msgid "Accept Focus rule type"
-#~ msgstr "Hyväksy kohdistus -säännön tyyppi"
-
-#~ msgid "Closeable"
-#~ msgstr "Suljettava"
-
-#~ msgid "Closeable rule type"
-#~ msgstr "Suljettava-säännön tyyppi"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "Ryhmitä samanlaiset automaattisesti"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "Ryhmitä samanlaiset automaattisesti -säännön tyyppi"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "Ryhmitä edustalla automaattisesti"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "Ryhmitä edustalla automaattisesti -säännön tyyppi"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "Ryhmitä tunnisteen mukaan automaattisesti"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "Ryhmitä tunnisteen mukaan automaattisesti -säännön tyyppi"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "Noudata geometriarajoituksia"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "Noudata geometriarajoituksia -säännön tyyppi"
-
-#~ msgid "Shortcut"
-#~ msgstr "Pikanäppäin"
-
-#~ msgid "Shortcut rule type"
-#~ msgstr "Pikanäppäin-säännön tyyppi"
-
-#~ msgid "Ignore global shortcuts"
-#~ msgstr "Ohita työpöydänlaajuiset pikanäppäimet"
-
-#~ msgid "Ignore global shortcuts rule type"
-#~ msgstr "Ohita työpöydänlaajuiset pikanäppäimet -säännön tyyppi"
-
-#~ msgid "Desktop file name"
-#~ msgstr "Työpöytätiedoston nimi"
-
-#~ msgid "Desktop file name rule type"
-#~ msgstr "Työpöytätiedoston nimi -säännön tyyppi"
-
-#~ msgid "Dialog"
-#~ msgstr "Valintaikkuna"
-
-#~ msgid "..."
-#~ msgstr "…"
 
 #~ msgid "&No Border"
 #~ msgstr "&Ei reunusta"

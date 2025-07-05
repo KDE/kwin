@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2025-06-10 22:56+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -621,7 +621,8 @@ msgstr "압력"
 msgid "Buttons"
 msgstr "단추"
 
-#: debug_console.cpp:517
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr "수정자"
@@ -876,6 +877,163 @@ msgstr "Wayland 창"
 #, kde-format
 msgid "Internal Windows"
 msgstr "내부 창"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr "디버그 콘솔 끝내기"
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "창"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr "표면"
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr "입력 이벤트"
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr "입력 장치"
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr "OpenGL"
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr "OpenGL 컴포지터가 실행 중이 아님"
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr "OpenGL (ES) 드라이버 정보"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr "제조사:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr "렌더러:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr "버전:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr "셰이더 언어 버전:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr "드라이버:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr "GPU 클래스:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr "OpenGL 버전:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr "GLSL 버전:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr "플랫폼 확장"
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr "OpenGL (ES) 확장"
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr "키보드"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr "키보드 레이아웃"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, kde-format
+msgid "Current Layout:"
+msgstr "현재 레이아웃:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr "활성 수정자"
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr "LED"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr "켜진 LED"
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr "클립보드"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr "주 선택"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1419,6 +1577,528 @@ msgstr "야간 색상 전환"
 msgid "Color Temperature Preview"
 msgstr "색 온도 미리 보기"
 
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr "전체 규칙 개수(레거시)"
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr "규칙 그룹의 정렬된 목록"
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr "규칙 설명"
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr "규칙 설명(레거시)"
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr "이 규칙 삭제(가져올 때 사용)"
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, kde-format
+msgid "Window class (application)"
+msgstr "창 클래스(앱)"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, kde-format
+msgid "Window class string match type"
+msgstr "창 클래스 문자열 일치 형식"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr "전체 창 클래스 일치"
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, kde-format
+msgid "Window role"
+msgstr "창 역할"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, kde-format
+msgid "Window role string match type"
+msgstr "창 역할 문자열 일치 형식"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, kde-format
+msgid "Window title"
+msgstr "창 제목"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, kde-format
+msgid "Window title string match type"
+msgstr "창 제목 문자열 일치 형식"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "머신(호스트 이름)"
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr "머신 문자열 일치 형식"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr "일치하는 창 종류"
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, kde-format
+msgid "Initial placement"
+msgstr "초기 배치"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, kde-format
+msgid "Initial placement rule type"
+msgstr "초기 배치 규칙 종류"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, kde-format
+msgid "Window position"
+msgstr "창 위치"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, kde-format
+msgid "Window position rule type"
+msgstr "창 위치 규칙 종류"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, kde-format
+msgid "Window size"
+msgstr "창 크기"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, kde-format
+msgid "Window size rule type"
+msgstr "창 크기 규칙 종류"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, kde-format
+msgid "Window minimum size"
+msgstr "창 최소 크기"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, kde-format
+msgid "Window minimum size rule type"
+msgstr "창 최소 크기 규칙 종류"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, kde-format
+msgid "Window maximum size"
+msgstr "창 최대 크기"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, kde-format
+msgid "Window maximum size rule type"
+msgstr "창 최대 크기 규칙 종류"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, kde-format
+msgid "Active opacity"
+msgstr "활성 불투명도"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, kde-format
+msgid "Active opacity rule type"
+msgstr "활성 불투명도 규칙 종류"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr "비활성 불투명도"
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, kde-format
+msgid "Inactive opacity rule type"
+msgstr "비활성 불투명도 규칙 종류"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "요청한 크기 및 위치 무시"
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr "요청한 크기 및 위치 무시 규칙 종류"
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, kde-format
+msgid "List of Desktop Ids"
+msgstr "바탕 화면 ID 목록"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, kde-format
+msgid "Desktop Ids rule type"
+msgstr "바탕 화면 ID 규칙 종류"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr "화면 번호"
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, kde-format
+msgid "Screen number rule type"
+msgstr "화면 번호 규칙 종류"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr "활동"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, kde-format
+msgid "Activity rule type"
+msgstr "활동 규칙 종류"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, kde-format
+msgid "Set window type to"
+msgstr "다음으로 창 종류 설정"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, kde-format
+msgid "Set window type rule type"
+msgstr "다음으로 창 종류 설정 규칙 종류"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, kde-format
+msgid "Maximized vertically"
+msgstr "수직 최대화"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, kde-format
+msgid "Maximized vertically rule type"
+msgstr "수직 최대화 규칙 종류"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "수평 최대화"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, kde-format
+msgid "Maximized horizontally rule type"
+msgstr "수평 최대화 규칙 종류"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, kde-format
+msgid "Minimized"
+msgstr "최소화됨"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, kde-format
+msgid "Minimized rule type"
+msgstr "최소화됨 규칙 종류"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, kde-format
+msgid "Shaded"
+msgstr "말아 올려짐"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, kde-format
+msgid "Shaded rule type"
+msgstr "말아 올려짐 규칙 종류"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr "작업 표시줄 건너뛰기"
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, kde-format
+msgid "Skip taskbar rule type"
+msgstr "작업 표시줄 건너뛰기 규칙 종류"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, kde-format
+msgid "Skip pager"
+msgstr "호출기 건너뛰기"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, kde-format
+msgid "Skip pager rule type"
+msgstr "호출기 건너뛰기 규칙 종류"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, kde-format
+msgid "Skip switcher"
+msgstr "전환기 건너뛰기"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, kde-format
+msgid "Skip switcher rule type"
+msgstr "전환기 건너뛰기 규칙 종류"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, kde-format
+msgid "Keep above"
+msgstr "항상 위"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, kde-format
+msgid "Keep above rule type"
+msgstr "항상 위 규칙 종류"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, kde-format
+msgid "Keep below"
+msgstr "항상 아래"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, kde-format
+msgid "Keep below rule type"
+msgstr "항상 아래 규칙 종류"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, kde-format
+msgid "Fullscreen"
+msgstr "전체 화면"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, kde-format
+msgid "Fullscreen rule type"
+msgstr "전체 화면 규칙 종류"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "제목 표시줄과 프레임 없음"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, kde-format
+msgid "No titlebar rule type"
+msgstr "제목 표시줄 없음 규칙 종류"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr "제목 표시줄 색과 색 구성표"
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, kde-format
+msgid "Titlebar color rule type"
+msgstr "제목 표시줄 색 규칙 종류"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, kde-format
+msgid "Block Compositing"
+msgstr "컴포지팅 중단하기"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, kde-format
+msgid "Block Compositing rule type"
+msgstr "컴포지팅 중단하기 규칙 종류"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "포커스 훔치기 방지"
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, kde-format
+msgid "Focus stealing prevention rule type"
+msgstr "포커스 훔치기 방지 규칙 종류"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr "포커스 보호"
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, kde-format
+msgid "Focus protection rule type"
+msgstr "포커스 보호 규칙 종류"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr "포커스 받아들이기"
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, kde-format
+msgid "Accept Focus rule type"
+msgstr "포커스 받아들이기 규칙 종류"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, kde-format
+msgid "Closeable"
+msgstr "닫을 수 있음"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, kde-format
+msgid "Closeable rule type"
+msgstr "닫을 수 있음 규칙 종류"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr "같은 속성으로 자동으로 묶기"
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr "같은 속성으로 자동으로 묶기 규칙 종류"
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr "배경에 있는 창 자동으로 묶기"
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr "배경에 있는 창 자동으로 묶기 규칙 종류"
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr "ID로 자동으로 묶기"
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, kde-format
+msgid "Autogroup by ID rule type"
+msgstr "ID로 자동으로 묶기 규칙 종류"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "크기 제한 받아들이기"
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr "크기 제한 받아들이기 규칙 종류"
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr "단축키"
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr "단축키 규칙 종류"
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "전역 단축키 무시"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, kde-format
+msgid "Ignore global shortcuts rule type"
+msgstr "전역 단축키 무시 규칙 종류"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, kde-format
+msgid "Desktop file name"
+msgstr "데스크톱 파일 이름"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr "데스크톱 파일 이름 규칙 종류"
+
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -1437,6 +2117,18 @@ msgstr "%1에 올바른 metadata.json 파일이 없음"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1이(가) 없음"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr "대화 상자"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2105,351 +2797,6 @@ msgstr ""
 "창 관리자의 상태 정보를 제공합니다.\n"
 "이 메시지 아래에 있는 지원 정보를 글에 바로 붙여넣기보다는\n"
 "https://paste.kde.org 등 외부 사이트에 링크하는 것을 권장합니다.\n"
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "디버그 콘솔 끝내기"
-
-#~ msgid "Windows"
-#~ msgstr "창"
-
-#~ msgid "Surfaces"
-#~ msgstr "표면"
-
-#~ msgid "Input Events"
-#~ msgstr "입력 이벤트"
-
-#~ msgid "Input Devices"
-#~ msgstr "입력 장치"
-
-#~ msgid "OpenGL"
-#~ msgstr "OpenGL"
-
-#~ msgid "No OpenGL compositor running"
-#~ msgstr "OpenGL 컴포지터가 실행 중이 아님"
-
-#~ msgid "OpenGL (ES) driver information"
-#~ msgstr "OpenGL (ES) 드라이버 정보"
-
-#~ msgid "Vendor:"
-#~ msgstr "제조사:"
-
-#~ msgid "Renderer:"
-#~ msgstr "렌더러:"
-
-#~ msgid "Version:"
-#~ msgstr "버전:"
-
-#~ msgid "Shading Language Version:"
-#~ msgstr "셰이더 언어 버전:"
-
-#~ msgid "Driver:"
-#~ msgstr "드라이버:"
-
-#~ msgid "GPU class:"
-#~ msgstr "GPU 클래스:"
-
-#~ msgid "OpenGL Version:"
-#~ msgstr "OpenGL 버전:"
-
-#~ msgid "GLSL Version:"
-#~ msgstr "GLSL 버전:"
-
-#~ msgid "Platform Extensions"
-#~ msgstr "플랫폼 확장"
-
-#~ msgid "OpenGL (ES) Extensions"
-#~ msgstr "OpenGL (ES) 확장"
-
-#~ msgid "Keyboard"
-#~ msgstr "키보드"
-
-#~ msgid "Keymap Layouts"
-#~ msgstr "키보드 레이아웃"
-
-#~ msgid "Current Layout:"
-#~ msgstr "현재 레이아웃:"
-
-#~ msgid "Active Modifiers"
-#~ msgstr "활성 수정자"
-
-#~ msgid "LEDs"
-#~ msgstr "LED"
-
-#~ msgid "Active LEDs"
-#~ msgstr "켜진 LED"
-
-#~ msgid "Clipboard"
-#~ msgstr "클립보드"
-
-#~ msgid "Primary Selection"
-#~ msgstr "주 선택"
-
-#~ msgid "Total rules count (legacy)"
-#~ msgstr "전체 규칙 개수(레거시)"
-
-#~ msgid "Ordered list of rules groups"
-#~ msgstr "규칙 그룹의 정렬된 목록"
-
-#~ msgid "Rule description"
-#~ msgstr "규칙 설명"
-
-#~ msgid "Rule description (legacy)"
-#~ msgstr "규칙 설명(레거시)"
-
-#~ msgid "Delete this rule (for use in imports)"
-#~ msgstr "이 규칙 삭제(가져올 때 사용)"
-
-#~ msgid "Window class (application)"
-#~ msgstr "창 클래스(앱)"
-
-#~ msgid "Window class string match type"
-#~ msgstr "창 클래스 문자열 일치 형식"
-
-#~ msgid "Match whole window class"
-#~ msgstr "전체 창 클래스 일치"
-
-#~ msgid "Window role"
-#~ msgstr "창 역할"
-
-#~ msgid "Window role string match type"
-#~ msgstr "창 역할 문자열 일치 형식"
-
-#~ msgid "Window title"
-#~ msgstr "창 제목"
-
-#~ msgid "Window title string match type"
-#~ msgstr "창 제목 문자열 일치 형식"
-
-#~ msgid "Machine (hostname)"
-#~ msgstr "머신(호스트 이름)"
-
-#~ msgid "Machine string match type"
-#~ msgstr "머신 문자열 일치 형식"
-
-#~ msgid "Window types that match"
-#~ msgstr "일치하는 창 종류"
-
-#~ msgid "Initial placement"
-#~ msgstr "초기 배치"
-
-#~ msgid "Initial placement rule type"
-#~ msgstr "초기 배치 규칙 종류"
-
-#~ msgid "Window position"
-#~ msgstr "창 위치"
-
-#~ msgid "Window position rule type"
-#~ msgstr "창 위치 규칙 종류"
-
-#~ msgid "Window size"
-#~ msgstr "창 크기"
-
-#~ msgid "Window size rule type"
-#~ msgstr "창 크기 규칙 종류"
-
-#~ msgid "Window minimum size"
-#~ msgstr "창 최소 크기"
-
-#~ msgid "Window minimum size rule type"
-#~ msgstr "창 최소 크기 규칙 종류"
-
-#~ msgid "Window maximum size"
-#~ msgstr "창 최대 크기"
-
-#~ msgid "Window maximum size rule type"
-#~ msgstr "창 최대 크기 규칙 종류"
-
-#~ msgid "Active opacity"
-#~ msgstr "활성 불투명도"
-
-#~ msgid "Active opacity rule type"
-#~ msgstr "활성 불투명도 규칙 종류"
-
-#~ msgid "Inactive opacity"
-#~ msgstr "비활성 불투명도"
-
-#~ msgid "Inactive opacity rule type"
-#~ msgstr "비활성 불투명도 규칙 종류"
-
-#~ msgid "Ignore requested geometry"
-#~ msgstr "요청한 크기 및 위치 무시"
-
-#~ msgid "Ignore requested geometry rule type"
-#~ msgstr "요청한 크기 및 위치 무시 규칙 종류"
-
-#~ msgid "List of Desktop Ids"
-#~ msgstr "바탕 화면 ID 목록"
-
-#~ msgid "Desktop Ids rule type"
-#~ msgstr "바탕 화면 ID 규칙 종류"
-
-#~ msgid "Screen number"
-#~ msgstr "화면 번호"
-
-#~ msgid "Screen number rule type"
-#~ msgstr "화면 번호 규칙 종류"
-
-#~ msgid "Activity"
-#~ msgstr "활동"
-
-#~ msgid "Activity rule type"
-#~ msgstr "활동 규칙 종류"
-
-#~ msgid "Set window type to"
-#~ msgstr "다음으로 창 종류 설정"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "다음으로 창 종류 설정 규칙 종류"
-
-#~ msgid "Maximized vertically"
-#~ msgstr "수직 최대화"
-
-#~ msgid "Maximized vertically rule type"
-#~ msgstr "수직 최대화 규칙 종류"
-
-#~ msgid "Maximized horizontally"
-#~ msgstr "수평 최대화"
-
-#~ msgid "Maximized horizontally rule type"
-#~ msgstr "수평 최대화 규칙 종류"
-
-#~ msgid "Minimized"
-#~ msgstr "최소화됨"
-
-#~ msgid "Minimized rule type"
-#~ msgstr "최소화됨 규칙 종류"
-
-#~ msgid "Shaded"
-#~ msgstr "말아 올려짐"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "말아 올려짐 규칙 종류"
-
-#~ msgid "Skip taskbar"
-#~ msgstr "작업 표시줄 건너뛰기"
-
-#~ msgid "Skip taskbar rule type"
-#~ msgstr "작업 표시줄 건너뛰기 규칙 종류"
-
-#~ msgid "Skip pager"
-#~ msgstr "호출기 건너뛰기"
-
-#~ msgid "Skip pager rule type"
-#~ msgstr "호출기 건너뛰기 규칙 종류"
-
-#~ msgid "Skip switcher"
-#~ msgstr "전환기 건너뛰기"
-
-#~ msgid "Skip switcher rule type"
-#~ msgstr "전환기 건너뛰기 규칙 종류"
-
-#~ msgid "Keep above"
-#~ msgstr "항상 위"
-
-#~ msgid "Keep above rule type"
-#~ msgstr "항상 위 규칙 종류"
-
-#~ msgid "Keep below"
-#~ msgstr "항상 아래"
-
-#~ msgid "Keep below rule type"
-#~ msgstr "항상 아래 규칙 종류"
-
-#~ msgid "Fullscreen"
-#~ msgstr "전체 화면"
-
-#~ msgid "Fullscreen rule type"
-#~ msgstr "전체 화면 규칙 종류"
-
-#~ msgid "No titlebar and frame"
-#~ msgstr "제목 표시줄과 프레임 없음"
-
-#~ msgid "No titlebar rule type"
-#~ msgstr "제목 표시줄 없음 규칙 종류"
-
-#~ msgid "Titlebar color and scheme"
-#~ msgstr "제목 표시줄 색과 색 구성표"
-
-#~ msgid "Titlebar color rule type"
-#~ msgstr "제목 표시줄 색 규칙 종류"
-
-#~ msgid "Block Compositing"
-#~ msgstr "컴포지팅 중단하기"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "컴포지팅 중단하기 규칙 종류"
-
-#~ msgid "Focus stealing prevention"
-#~ msgstr "포커스 훔치기 방지"
-
-#~ msgid "Focus stealing prevention rule type"
-#~ msgstr "포커스 훔치기 방지 규칙 종류"
-
-#~ msgid "Focus protection"
-#~ msgstr "포커스 보호"
-
-#~ msgid "Focus protection rule type"
-#~ msgstr "포커스 보호 규칙 종류"
-
-#~ msgid "Accept Focus"
-#~ msgstr "포커스 받아들이기"
-
-#~ msgid "Accept Focus rule type"
-#~ msgstr "포커스 받아들이기 규칙 종류"
-
-#~ msgid "Closeable"
-#~ msgstr "닫을 수 있음"
-
-#~ msgid "Closeable rule type"
-#~ msgstr "닫을 수 있음 규칙 종류"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "같은 속성으로 자동으로 묶기"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "같은 속성으로 자동으로 묶기 규칙 종류"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "배경에 있는 창 자동으로 묶기"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "배경에 있는 창 자동으로 묶기 규칙 종류"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "ID로 자동으로 묶기"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "ID로 자동으로 묶기 규칙 종류"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "크기 제한 받아들이기"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "크기 제한 받아들이기 규칙 종류"
-
-#~ msgid "Shortcut"
-#~ msgstr "단축키"
-
-#~ msgid "Shortcut rule type"
-#~ msgstr "단축키 규칙 종류"
-
-#~ msgid "Ignore global shortcuts"
-#~ msgstr "전역 단축키 무시"
-
-#~ msgid "Ignore global shortcuts rule type"
-#~ msgstr "전역 단축키 무시 규칙 종류"
-
-#~ msgid "Desktop file name"
-#~ msgstr "데스크톱 파일 이름"
-
-#~ msgid "Desktop file name rule type"
-#~ msgstr "데스크톱 파일 이름 규칙 종류"
-
-#~ msgid "Dialog"
-#~ msgstr "대화 상자"
-
-#~ msgid "..."
-#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "테두리 없음(&N)"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2024-05-13 11:51+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -630,7 +630,8 @@ msgstr "Þrýstingur"
 msgid "Buttons"
 msgstr "Hnappar"
 
-#: debug_console.cpp:517
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr "Breytilyklar"
@@ -885,6 +886,163 @@ msgstr "Wayland-gluggar"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Innri gluggar"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr "Hætta í villuleitarglugga"
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "Gluggar"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr "Yfirborð"
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr "Inntaksatvik"
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr "Inntakstæki"
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr "OpenGL"
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr "Enginn OpenGL-myndsmiður í gangi"
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr "Upplýsingar um OpenGL-rekil (ES)"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr "Framleiðandi:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr "Myndgerð:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr "Útgáfa:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr "Útgáfa skyggingarmáls:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr "Rekill:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr "Skjákortsflokkur:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr "Útgáfa OpenGL:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr "Útgáfa GLSL:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr "Stýrikerfisviðbætur"
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr "OpenGL (ES) viðbætur"
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr "Lyklaborð"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr "Framsetning lyklaborðs"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, kde-format
+msgid "Current Layout:"
+msgstr "Núverandi framsetning:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr "Virkir breytilyklar"
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr "LED-ljós"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr "Virk LED-ljós"
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr "Klippispjald"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr "Aðalval (primary)"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1434,6 +1592,528 @@ msgstr "Víxla næturlitum af/á"
 msgid "Color Temperature Preview"
 msgstr "Forskoðun á lithita"
 
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr "Heildarfjöldi reglna (eldra)"
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr "Raðaður listi yfir regluflokka"
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr "Lýsing reglu"
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr "Lýsing reglu (eldra)"
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr "Eyða þessari reglu (til notkunar í innflutningi)"
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, kde-format
+msgid "Window class (application)"
+msgstr "Gluggaflokkur (forrit)"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, kde-format
+msgid "Window class string match type"
+msgstr "Samsvörunargerð strengs fyrir gluggaflokk"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr "Samsvara öllum gluggaflokki"
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, kde-format
+msgid "Window role"
+msgstr "Hlutverk glugga"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, kde-format
+msgid "Window role string match type"
+msgstr "Samsvörunargerð strengs fyrir hlutverk glugga"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, kde-format
+msgid "Window title"
+msgstr "Gluggatitill"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, kde-format
+msgid "Window title string match type"
+msgstr "Samsvörunargerð strengs fyrir gluggatitil"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "Vél (vélarheiti):"
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr "Samsvörunargerð strengs fyrir vél"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr "Gluggagerðir sem eiga saman"
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, kde-format
+msgid "Initial placement"
+msgstr "Upprunaleg staðsetning"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, kde-format
+msgid "Initial placement rule type"
+msgstr "Regla af gerðinni Upphafleg staðsetning"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, kde-format
+msgid "Window position"
+msgstr "Staðsetning glugga"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, kde-format
+msgid "Window position rule type"
+msgstr "Regla af gerðinni Staðsetning glugga"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, kde-format
+msgid "Window size"
+msgstr "Gluggastærð"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, kde-format
+msgid "Window size rule type"
+msgstr "Regla af gerðinni Gluggastærð"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, kde-format
+msgid "Window minimum size"
+msgstr "Lágmarksstærð glugga"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, kde-format
+msgid "Window minimum size rule type"
+msgstr "Regla af gerðinni Lágmarksstærð glugga"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, kde-format
+msgid "Window maximum size"
+msgstr "Hámarksstærð glugga"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, kde-format
+msgid "Window maximum size rule type"
+msgstr "Regla af gerðinni Hámarksstærð glugga"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, kde-format
+msgid "Active opacity"
+msgstr "Virkt ógagnsæi"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, kde-format
+msgid "Active opacity rule type"
+msgstr "Regla af gerðinni Virkt ógagnsæi"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr "Óvirkt ógagnsæi"
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, kde-format
+msgid "Inactive opacity rule type"
+msgstr "Regla af gerðinni Óvirkt ógagnsæi"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "Hunsa umbeðna stærð og lögun"
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr "Regla af gerðinni Hunsa umbeðna stærð og lögun"
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, kde-format
+msgid "List of Desktop Ids"
+msgstr "Listi yfir skjáborðsauðkenni"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, kde-format
+msgid "Desktop Ids rule type"
+msgstr "Regla af gerðinni Skjáborðsauðkenni"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr "Skjánúmer"
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, kde-format
+msgid "Screen number rule type"
+msgstr "Regla af gerðinni Skjánúmer"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr "Athöfn"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, kde-format
+msgid "Activity rule type"
+msgstr "Regla af gerðinni Athöfn"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, kde-format
+msgid "Set window type to"
+msgstr "Stilla gerð glugga á"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, kde-format
+msgid "Set window type rule type"
+msgstr "Regla af gerðinni Stilla gerð glugga á"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, kde-format
+msgid "Maximized vertically"
+msgstr "Fullstækkaður lóðrétt"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, kde-format
+msgid "Maximized vertically rule type"
+msgstr "Regla af gerðinni Fullstækkaður lóðrétt"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "Fullstækkaður lárétt"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, kde-format
+msgid "Maximized horizontally rule type"
+msgstr "Regla af gerðinni Fullstækkaður lárétt"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, kde-format
+msgid "Minimized"
+msgstr "Falinn"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, kde-format
+msgid "Minimized rule type"
+msgstr "Regla af gerðinni Falinn"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, kde-format
+msgid "Shaded"
+msgstr "Upprúllaður"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, kde-format
+msgid "Shaded rule type"
+msgstr "Regla af gerðinni Upprúllaður"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr "Sleppa í verkstiku"
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, kde-format
+msgid "Skip taskbar rule type"
+msgstr "Regla af gerðinni Sleppa í verkstiku"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, kde-format
+msgid "Skip pager"
+msgstr "Sleppa í flettara"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, kde-format
+msgid "Skip pager rule type"
+msgstr "Regla af gerðinni Sleppa í flettara"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, kde-format
+msgid "Skip switcher"
+msgstr "Sleppa í gluggaskipti"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, kde-format
+msgid "Skip switcher rule type"
+msgstr "Regla af gerðinni Sleppa í gluggaskipti"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, kde-format
+msgid "Keep above"
+msgstr "Halda efst"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, kde-format
+msgid "Keep above rule type"
+msgstr "Regla af gerðinni Halda efst"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, kde-format
+msgid "Keep below"
+msgstr "Halda undir öðru"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, kde-format
+msgid "Keep below rule type"
+msgstr "Regla af gerðinni Halda undir öðru"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, kde-format
+msgid "Fullscreen"
+msgstr "Fylla skjá"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, kde-format
+msgid "Fullscreen rule type"
+msgstr "Regla af gerðinni Fylla skjá"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "Engin titilstika og rammi"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, kde-format
+msgid "No titlebar rule type"
+msgstr "Regla af gerðinni Engin titilstika"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr "Litastef titilstiku"
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, kde-format
+msgid "Titlebar color rule type"
+msgstr "Regla af gerðinni Litastef titilstiku"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, kde-format
+msgid "Block Compositing"
+msgstr "Loka á myndsmíði"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, kde-format
+msgid "Block Compositing rule type"
+msgstr "Regla af gerðinni Loka á myndsmíði"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "Vörn gegn fókusstuldi"
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, kde-format
+msgid "Focus stealing prevention rule type"
+msgstr "Regla af gerðinni Vörn gegn fókusstuldi"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr "Fókusvörn"
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, kde-format
+msgid "Focus protection rule type"
+msgstr "Regla af gerðinni Fókusvörn"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr "Samþykkja fókus"
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, kde-format
+msgid "Accept Focus rule type"
+msgstr "Regla af gerðinni Samþykkja fókus"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, kde-format
+msgid "Closeable"
+msgstr "Lokanlegur"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, kde-format
+msgid "Closeable rule type"
+msgstr "Regla af gerðinni Lokanlegur"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr "Flokka sjálfkrafa með eins"
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr "Regla af gerðinni Flokka sjálfkrafa með eins"
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr "Flokka sjálfkrafa í forgrunni"
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr "Regla af gerðinni Flokka sjálfkrafa í forgrunni"
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr "Flokka sjálfkrafa eftir auðkenni"
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, kde-format
+msgid "Autogroup by ID rule type"
+msgstr "Regla af gerðinni Flokka sjálfkrafa eftir auðkenni"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Virða stærðartakmarkanir"
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr "Regla af gerðinni Virða stærðartakmarkanir"
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr "Flýtilykill"
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr "Regla af gerðinni Flýtilykill"
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Hunsa altæka flýtilykla"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, kde-format
+msgid "Ignore global shortcuts rule type"
+msgstr "Regla af gerðinni Hunsa altæka flýtilykla"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, kde-format
+msgid "Desktop file name"
+msgstr "Heiti skjáborðsskrár"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr "Regla af gerðinni Heiti skjáborðsskrár"
+
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -1452,6 +2132,18 @@ msgstr "%1 inniheldur ekki gilda metadata.json-skrá"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 er ekki til"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr "Svargluggi"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2122,351 +2814,6 @@ msgstr ""
 "hvaða OpenGL-rekill og hvaða brellur eru keyrðar.\n"
 "Settu upplýsingarnar fyrir neðan þennan inngangstexta í afritunarsíðu \n"
 "eins og https://paste.kde.org í stað þess að líma þær inn í aðstoðarbeiðni.\n"
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Hætta í villuleitarglugga"
-
-#~ msgid "Windows"
-#~ msgstr "Gluggar"
-
-#~ msgid "Surfaces"
-#~ msgstr "Yfirborð"
-
-#~ msgid "Input Events"
-#~ msgstr "Inntaksatvik"
-
-#~ msgid "Input Devices"
-#~ msgstr "Inntakstæki"
-
-#~ msgid "OpenGL"
-#~ msgstr "OpenGL"
-
-#~ msgid "No OpenGL compositor running"
-#~ msgstr "Enginn OpenGL-myndsmiður í gangi"
-
-#~ msgid "OpenGL (ES) driver information"
-#~ msgstr "Upplýsingar um OpenGL-rekil (ES)"
-
-#~ msgid "Vendor:"
-#~ msgstr "Framleiðandi:"
-
-#~ msgid "Renderer:"
-#~ msgstr "Myndgerð:"
-
-#~ msgid "Version:"
-#~ msgstr "Útgáfa:"
-
-#~ msgid "Shading Language Version:"
-#~ msgstr "Útgáfa skyggingarmáls:"
-
-#~ msgid "Driver:"
-#~ msgstr "Rekill:"
-
-#~ msgid "GPU class:"
-#~ msgstr "Skjákortsflokkur:"
-
-#~ msgid "OpenGL Version:"
-#~ msgstr "Útgáfa OpenGL:"
-
-#~ msgid "GLSL Version:"
-#~ msgstr "Útgáfa GLSL:"
-
-#~ msgid "Platform Extensions"
-#~ msgstr "Stýrikerfisviðbætur"
-
-#~ msgid "OpenGL (ES) Extensions"
-#~ msgstr "OpenGL (ES) viðbætur"
-
-#~ msgid "Keyboard"
-#~ msgstr "Lyklaborð"
-
-#~ msgid "Keymap Layouts"
-#~ msgstr "Framsetning lyklaborðs"
-
-#~ msgid "Current Layout:"
-#~ msgstr "Núverandi framsetning:"
-
-#~ msgid "Active Modifiers"
-#~ msgstr "Virkir breytilyklar"
-
-#~ msgid "LEDs"
-#~ msgstr "LED-ljós"
-
-#~ msgid "Active LEDs"
-#~ msgstr "Virk LED-ljós"
-
-#~ msgid "Clipboard"
-#~ msgstr "Klippispjald"
-
-#~ msgid "Primary Selection"
-#~ msgstr "Aðalval (primary)"
-
-#~ msgid "Total rules count (legacy)"
-#~ msgstr "Heildarfjöldi reglna (eldra)"
-
-#~ msgid "Ordered list of rules groups"
-#~ msgstr "Raðaður listi yfir regluflokka"
-
-#~ msgid "Rule description"
-#~ msgstr "Lýsing reglu"
-
-#~ msgid "Rule description (legacy)"
-#~ msgstr "Lýsing reglu (eldra)"
-
-#~ msgid "Delete this rule (for use in imports)"
-#~ msgstr "Eyða þessari reglu (til notkunar í innflutningi)"
-
-#~ msgid "Window class (application)"
-#~ msgstr "Gluggaflokkur (forrit)"
-
-#~ msgid "Window class string match type"
-#~ msgstr "Samsvörunargerð strengs fyrir gluggaflokk"
-
-#~ msgid "Match whole window class"
-#~ msgstr "Samsvara öllum gluggaflokki"
-
-#~ msgid "Window role"
-#~ msgstr "Hlutverk glugga"
-
-#~ msgid "Window role string match type"
-#~ msgstr "Samsvörunargerð strengs fyrir hlutverk glugga"
-
-#~ msgid "Window title"
-#~ msgstr "Gluggatitill"
-
-#~ msgid "Window title string match type"
-#~ msgstr "Samsvörunargerð strengs fyrir gluggatitil"
-
-#~ msgid "Machine (hostname)"
-#~ msgstr "Vél (vélarheiti):"
-
-#~ msgid "Machine string match type"
-#~ msgstr "Samsvörunargerð strengs fyrir vél"
-
-#~ msgid "Window types that match"
-#~ msgstr "Gluggagerðir sem eiga saman"
-
-#~ msgid "Initial placement"
-#~ msgstr "Upprunaleg staðsetning"
-
-#~ msgid "Initial placement rule type"
-#~ msgstr "Regla af gerðinni Upphafleg staðsetning"
-
-#~ msgid "Window position"
-#~ msgstr "Staðsetning glugga"
-
-#~ msgid "Window position rule type"
-#~ msgstr "Regla af gerðinni Staðsetning glugga"
-
-#~ msgid "Window size"
-#~ msgstr "Gluggastærð"
-
-#~ msgid "Window size rule type"
-#~ msgstr "Regla af gerðinni Gluggastærð"
-
-#~ msgid "Window minimum size"
-#~ msgstr "Lágmarksstærð glugga"
-
-#~ msgid "Window minimum size rule type"
-#~ msgstr "Regla af gerðinni Lágmarksstærð glugga"
-
-#~ msgid "Window maximum size"
-#~ msgstr "Hámarksstærð glugga"
-
-#~ msgid "Window maximum size rule type"
-#~ msgstr "Regla af gerðinni Hámarksstærð glugga"
-
-#~ msgid "Active opacity"
-#~ msgstr "Virkt ógagnsæi"
-
-#~ msgid "Active opacity rule type"
-#~ msgstr "Regla af gerðinni Virkt ógagnsæi"
-
-#~ msgid "Inactive opacity"
-#~ msgstr "Óvirkt ógagnsæi"
-
-#~ msgid "Inactive opacity rule type"
-#~ msgstr "Regla af gerðinni Óvirkt ógagnsæi"
-
-#~ msgid "Ignore requested geometry"
-#~ msgstr "Hunsa umbeðna stærð og lögun"
-
-#~ msgid "Ignore requested geometry rule type"
-#~ msgstr "Regla af gerðinni Hunsa umbeðna stærð og lögun"
-
-#~ msgid "List of Desktop Ids"
-#~ msgstr "Listi yfir skjáborðsauðkenni"
-
-#~ msgid "Desktop Ids rule type"
-#~ msgstr "Regla af gerðinni Skjáborðsauðkenni"
-
-#~ msgid "Screen number"
-#~ msgstr "Skjánúmer"
-
-#~ msgid "Screen number rule type"
-#~ msgstr "Regla af gerðinni Skjánúmer"
-
-#~ msgid "Activity"
-#~ msgstr "Athöfn"
-
-#~ msgid "Activity rule type"
-#~ msgstr "Regla af gerðinni Athöfn"
-
-#~ msgid "Set window type to"
-#~ msgstr "Stilla gerð glugga á"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "Regla af gerðinni Stilla gerð glugga á"
-
-#~ msgid "Maximized vertically"
-#~ msgstr "Fullstækkaður lóðrétt"
-
-#~ msgid "Maximized vertically rule type"
-#~ msgstr "Regla af gerðinni Fullstækkaður lóðrétt"
-
-#~ msgid "Maximized horizontally"
-#~ msgstr "Fullstækkaður lárétt"
-
-#~ msgid "Maximized horizontally rule type"
-#~ msgstr "Regla af gerðinni Fullstækkaður lárétt"
-
-#~ msgid "Minimized"
-#~ msgstr "Falinn"
-
-#~ msgid "Minimized rule type"
-#~ msgstr "Regla af gerðinni Falinn"
-
-#~ msgid "Shaded"
-#~ msgstr "Upprúllaður"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Regla af gerðinni Upprúllaður"
-
-#~ msgid "Skip taskbar"
-#~ msgstr "Sleppa í verkstiku"
-
-#~ msgid "Skip taskbar rule type"
-#~ msgstr "Regla af gerðinni Sleppa í verkstiku"
-
-#~ msgid "Skip pager"
-#~ msgstr "Sleppa í flettara"
-
-#~ msgid "Skip pager rule type"
-#~ msgstr "Regla af gerðinni Sleppa í flettara"
-
-#~ msgid "Skip switcher"
-#~ msgstr "Sleppa í gluggaskipti"
-
-#~ msgid "Skip switcher rule type"
-#~ msgstr "Regla af gerðinni Sleppa í gluggaskipti"
-
-#~ msgid "Keep above"
-#~ msgstr "Halda efst"
-
-#~ msgid "Keep above rule type"
-#~ msgstr "Regla af gerðinni Halda efst"
-
-#~ msgid "Keep below"
-#~ msgstr "Halda undir öðru"
-
-#~ msgid "Keep below rule type"
-#~ msgstr "Regla af gerðinni Halda undir öðru"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Fylla skjá"
-
-#~ msgid "Fullscreen rule type"
-#~ msgstr "Regla af gerðinni Fylla skjá"
-
-#~ msgid "No titlebar and frame"
-#~ msgstr "Engin titilstika og rammi"
-
-#~ msgid "No titlebar rule type"
-#~ msgstr "Regla af gerðinni Engin titilstika"
-
-#~ msgid "Titlebar color and scheme"
-#~ msgstr "Litastef titilstiku"
-
-#~ msgid "Titlebar color rule type"
-#~ msgstr "Regla af gerðinni Litastef titilstiku"
-
-#~ msgid "Block Compositing"
-#~ msgstr "Loka á myndsmíði"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "Regla af gerðinni Loka á myndsmíði"
-
-#~ msgid "Focus stealing prevention"
-#~ msgstr "Vörn gegn fókusstuldi"
-
-#~ msgid "Focus stealing prevention rule type"
-#~ msgstr "Regla af gerðinni Vörn gegn fókusstuldi"
-
-#~ msgid "Focus protection"
-#~ msgstr "Fókusvörn"
-
-#~ msgid "Focus protection rule type"
-#~ msgstr "Regla af gerðinni Fókusvörn"
-
-#~ msgid "Accept Focus"
-#~ msgstr "Samþykkja fókus"
-
-#~ msgid "Accept Focus rule type"
-#~ msgstr "Regla af gerðinni Samþykkja fókus"
-
-#~ msgid "Closeable"
-#~ msgstr "Lokanlegur"
-
-#~ msgid "Closeable rule type"
-#~ msgstr "Regla af gerðinni Lokanlegur"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "Flokka sjálfkrafa með eins"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "Regla af gerðinni Flokka sjálfkrafa með eins"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "Flokka sjálfkrafa í forgrunni"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "Regla af gerðinni Flokka sjálfkrafa í forgrunni"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "Flokka sjálfkrafa eftir auðkenni"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "Regla af gerðinni Flokka sjálfkrafa eftir auðkenni"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "Virða stærðartakmarkanir"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "Regla af gerðinni Virða stærðartakmarkanir"
-
-#~ msgid "Shortcut"
-#~ msgstr "Flýtilykill"
-
-#~ msgid "Shortcut rule type"
-#~ msgstr "Regla af gerðinni Flýtilykill"
-
-#~ msgid "Ignore global shortcuts"
-#~ msgstr "Hunsa altæka flýtilykla"
-
-#~ msgid "Ignore global shortcuts rule type"
-#~ msgstr "Regla af gerðinni Hunsa altæka flýtilykla"
-
-#~ msgid "Desktop file name"
-#~ msgstr "Heiti skjáborðsskrár"
-
-#~ msgid "Desktop file name rule type"
-#~ msgstr "Regla af gerðinni Heiti skjáborðsskrár"
-
-#~ msgid "Dialog"
-#~ msgstr "Svargluggi"
-
-#~ msgid "..."
-#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "E&nginn rammi"

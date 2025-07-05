@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2023-12-27 14:21+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -629,7 +629,8 @@ msgstr "Baskı"
 msgid "Buttons"
 msgstr "Düğmeler"
 
-#: debug_console.cpp:517
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr "Niteleyiciler"
@@ -884,6 +885,163 @@ msgstr "Wayland Pencereleri"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Dahili Pencereler"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr "Hata Ayıklama Konsolundan Çık"
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "Pencereler"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr "Yüzeyler"
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr "Giriş Olayları"
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr "Giriş Aygıtları"
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr "OpenGL"
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr "Bir OpenGL bileşikleştiricisi çalışmıyor"
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr "OpenGL (es) sürücü bilgisi"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr "Üretici:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr "Sunucu:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr "Sürüm:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr "Gölgeleme Dil Sürümü:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr "Sürücü:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr "GPU sınıfı:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr "OpenGL Sürümü:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr "GLSL Sürümü:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr "Platform Uzantıları"
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr "OpenGL (ES) Uzantıları"
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr "Klavye"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr "Düğme Eşlem Düzenleri"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, kde-format
+msgid "Current Layout:"
+msgstr "Geçerli Düzen:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr "Etkin Niteleyiciler"
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr "LED'ler"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr "Etkin LED'ler"
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr "Pano"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr "Birincil Seçim"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1434,6 +1592,528 @@ msgstr "Gece Rengini Aç/Kapat"
 msgid "Color Temperature Preview"
 msgstr "Renk Sıcaklığı Önizlemesi"
 
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr "Toplam kural sayısı (eski)"
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr "Kurallar gruplarının sıralı listesi"
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr "Kural açıklaması"
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr "Kural açıklaması (eski)"
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr "Bu kuralı sil (içe aktarmalarda kullanmak için)"
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, kde-format
+msgid "Window class (application)"
+msgstr "Pencere sınıfı (uygulama)"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, kde-format
+msgid "Window class string match type"
+msgstr "Pencere sınıfı dizi eşleşmesi türü"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr "Tüm pencere sınıfı ile eşleş"
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, kde-format
+msgid "Window role"
+msgstr "Pencere rolü"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, kde-format
+msgid "Window role string match type"
+msgstr "Pencere sınıfı dizisi eşleşmesi türü"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, kde-format
+msgid "Window title"
+msgstr "Pencere başlığı"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, kde-format
+msgid "Window title string match type"
+msgstr "Pencere başlık dizisi eşleşmesi türü"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "Makine (makine adı)"
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr "Makine dizisi eşleşme türü"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr "Eşleşen pencere türleri"
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, kde-format
+msgid "Initial placement"
+msgstr "Başlangıç yerleşimi"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, kde-format
+msgid "Initial placement rule type"
+msgstr "Başlangıç yerleşimi kuralı türü"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, kde-format
+msgid "Window position"
+msgstr "Pencere Konumu"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, kde-format
+msgid "Window position rule type"
+msgstr "Pencere konumu kuralı türü"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, kde-format
+msgid "Window size"
+msgstr "Pencere boyutu"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, kde-format
+msgid "Window size rule type"
+msgstr "Pencere boyutu kuralı türü"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, kde-format
+msgid "Window minimum size"
+msgstr "Pencerenin en küçük boyutu"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, kde-format
+msgid "Window minimum size rule type"
+msgstr "Pencerenin en küçük boyutu kuralı türü"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, kde-format
+msgid "Window maximum size"
+msgstr "Pencere en büyük boyutu"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, kde-format
+msgid "Window maximum size rule type"
+msgstr "Pencerenin en büyük boyutu kuralı türü"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, kde-format
+msgid "Active opacity"
+msgstr "Etkin matlık"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, kde-format
+msgid "Active opacity rule type"
+msgstr "Etkin matlık kuralı türü"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr "Etkin olmayan matlık"
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, kde-format
+msgid "Inactive opacity rule type"
+msgstr "Etkin olmayan matlık kuralı türü"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "İstenen geometriyi yok say"
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr "İstenen geometri kuralı türünü yok say"
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, kde-format
+msgid "List of Desktop Ids"
+msgstr "Masaüstü Kimliklerinin Listesi"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, kde-format
+msgid "Desktop Ids rule type"
+msgstr "Masaüstü Kimlikleri kuralı türü"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr "Ekran numarası"
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, kde-format
+msgid "Screen number rule type"
+msgstr "Ekran numarası kuralı türü"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr "Etkinlik"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, kde-format
+msgid "Activity rule type"
+msgstr "Etkinlik kuralı türü"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, kde-format
+msgid "Set window type to"
+msgstr "Pencere türünü şuna ayarla:"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, kde-format
+msgid "Set window type rule type"
+msgstr "Pencere türü kuralı türünü ayarla"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, kde-format
+msgid "Maximized vertically"
+msgstr "Ekranı dikey kaplamış"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, kde-format
+msgid "Maximized vertically rule type"
+msgstr "Ekranı dikey kaplamış kuralı türü"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "Yatay ekranı kaplamış"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, kde-format
+msgid "Maximized horizontally rule type"
+msgstr "Ekranı yatay kaplamış kuralı türü"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, kde-format
+msgid "Minimized"
+msgstr "Simge burumuna küçültülmüş"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, kde-format
+msgid "Minimized rule type"
+msgstr "Simge durumuna küçültme kuralı türü"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, kde-format
+msgid "Shaded"
+msgstr "Panjuru Kapatılmış"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, kde-format
+msgid "Shaded rule type"
+msgstr "Panjur kapatılmış kuralı türü"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr "Görev çubuğunu atla"
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, kde-format
+msgid "Skip taskbar rule type"
+msgstr "Görev çubuğunu atla kuralı türü"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, kde-format
+msgid "Skip pager"
+msgstr "Sayfalayıcıyı atla"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, kde-format
+msgid "Skip pager rule type"
+msgstr "Sayfalayıcı kuralı türünü atla"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, kde-format
+msgid "Skip switcher"
+msgstr "Değiştiriciyi geç"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, kde-format
+msgid "Skip switcher rule type"
+msgstr "Değiştiriciyi atla kuralı türü"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, kde-format
+msgid "Keep above"
+msgstr "Üzerinde tut"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, kde-format
+msgid "Keep above rule type"
+msgstr "Üzerinde tut kural türü"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, kde-format
+msgid "Keep below"
+msgstr "Altında tut"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, kde-format
+msgid "Keep below rule type"
+msgstr "Kural türünün altında tut"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, kde-format
+msgid "Fullscreen"
+msgstr "Tam Ekran"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, kde-format
+msgid "Fullscreen rule type"
+msgstr "Tam Ekran kuralı türü"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "Başlık çubuğu ve çerçeve yok"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, kde-format
+msgid "No titlebar rule type"
+msgstr "Başlık çubuğu yok kuralı türü"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr "Başlık çubuğu rengi ve şeması"
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, kde-format
+msgid "Titlebar color rule type"
+msgstr "Başlık çubuğu rengi kuralı türü"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, kde-format
+msgid "Block Compositing"
+msgstr "Bileşikliği Engelle"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, kde-format
+msgid "Block Compositing rule type"
+msgstr "Bileşikleştirme kural türünü engelle"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "Odak çalmayı önleme"
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, kde-format
+msgid "Focus stealing prevention rule type"
+msgstr "Odak çalmayı önleme kuralı türü"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr "Odak koruma"
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, kde-format
+msgid "Focus protection rule type"
+msgstr "Odak koruma kuralı türü"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr "Odağı Kabul Et"
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, kde-format
+msgid "Accept Focus rule type"
+msgstr "Odağı Kabul Et kuralı türü"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, kde-format
+msgid "Closeable"
+msgstr "Kapatılabilir"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, kde-format
+msgid "Closeable rule type"
+msgstr "Kapatılabilir kuralı türü"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr "Eşdeğeriyle otomatik grupla"
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr "Eşdeğeriyle otomatik grupla kuralı türü"
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr "Ön planda otomatik grupla"
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr "Ön planda otomatik grupla kuralı türü"
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr "Kimliğe göre otomatik grupla"
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, kde-format
+msgid "Autogroup by ID rule type"
+msgstr "Kimliğe göre otomatik grupla kuralı türü"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Geometri sınırlamalarına uy"
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr "Geometri sınırlamalarına uy kuralı türü"
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr "Kısayol"
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr "Kısayol kuralı türü"
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Global kısayolları yok say"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, kde-format
+msgid "Ignore global shortcuts rule type"
+msgstr "Global kısayolları yok say kuralı türü"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, kde-format
+msgid "Desktop file name"
+msgstr "Masaüstü dosya adı"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr "Masaüstü dosya adı kuralı türü"
+
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -1452,6 +2132,18 @@ msgstr "%1, geçerli bir metadata.json dosyası içermiyor"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 yok"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr "İletişim Kutuları"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2122,351 +2814,6 @@ msgstr ""
 "bilgi sağlar. Lütfen bu tanıtım metninin altında verilen bilgileri destek\n"
 "konularına yapıştırmak yerine https://paste.kde.org gibi bir yapıştırma\n"
 "kutusu hizmetine gönderin.\n"
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Hata Ayıklama Konsolundan Çık"
-
-#~ msgid "Windows"
-#~ msgstr "Pencereler"
-
-#~ msgid "Surfaces"
-#~ msgstr "Yüzeyler"
-
-#~ msgid "Input Events"
-#~ msgstr "Giriş Olayları"
-
-#~ msgid "Input Devices"
-#~ msgstr "Giriş Aygıtları"
-
-#~ msgid "OpenGL"
-#~ msgstr "OpenGL"
-
-#~ msgid "No OpenGL compositor running"
-#~ msgstr "Bir OpenGL bileşikleştiricisi çalışmıyor"
-
-#~ msgid "OpenGL (ES) driver information"
-#~ msgstr "OpenGL (es) sürücü bilgisi"
-
-#~ msgid "Vendor:"
-#~ msgstr "Üretici:"
-
-#~ msgid "Renderer:"
-#~ msgstr "Sunucu:"
-
-#~ msgid "Version:"
-#~ msgstr "Sürüm:"
-
-#~ msgid "Shading Language Version:"
-#~ msgstr "Gölgeleme Dil Sürümü:"
-
-#~ msgid "Driver:"
-#~ msgstr "Sürücü:"
-
-#~ msgid "GPU class:"
-#~ msgstr "GPU sınıfı:"
-
-#~ msgid "OpenGL Version:"
-#~ msgstr "OpenGL Sürümü:"
-
-#~ msgid "GLSL Version:"
-#~ msgstr "GLSL Sürümü:"
-
-#~ msgid "Platform Extensions"
-#~ msgstr "Platform Uzantıları"
-
-#~ msgid "OpenGL (ES) Extensions"
-#~ msgstr "OpenGL (ES) Uzantıları"
-
-#~ msgid "Keyboard"
-#~ msgstr "Klavye"
-
-#~ msgid "Keymap Layouts"
-#~ msgstr "Düğme Eşlem Düzenleri"
-
-#~ msgid "Current Layout:"
-#~ msgstr "Geçerli Düzen:"
-
-#~ msgid "Active Modifiers"
-#~ msgstr "Etkin Niteleyiciler"
-
-#~ msgid "LEDs"
-#~ msgstr "LED'ler"
-
-#~ msgid "Active LEDs"
-#~ msgstr "Etkin LED'ler"
-
-#~ msgid "Clipboard"
-#~ msgstr "Pano"
-
-#~ msgid "Primary Selection"
-#~ msgstr "Birincil Seçim"
-
-#~ msgid "Total rules count (legacy)"
-#~ msgstr "Toplam kural sayısı (eski)"
-
-#~ msgid "Ordered list of rules groups"
-#~ msgstr "Kurallar gruplarının sıralı listesi"
-
-#~ msgid "Rule description"
-#~ msgstr "Kural açıklaması"
-
-#~ msgid "Rule description (legacy)"
-#~ msgstr "Kural açıklaması (eski)"
-
-#~ msgid "Delete this rule (for use in imports)"
-#~ msgstr "Bu kuralı sil (içe aktarmalarda kullanmak için)"
-
-#~ msgid "Window class (application)"
-#~ msgstr "Pencere sınıfı (uygulama)"
-
-#~ msgid "Window class string match type"
-#~ msgstr "Pencere sınıfı dizi eşleşmesi türü"
-
-#~ msgid "Match whole window class"
-#~ msgstr "Tüm pencere sınıfı ile eşleş"
-
-#~ msgid "Window role"
-#~ msgstr "Pencere rolü"
-
-#~ msgid "Window role string match type"
-#~ msgstr "Pencere sınıfı dizisi eşleşmesi türü"
-
-#~ msgid "Window title"
-#~ msgstr "Pencere başlığı"
-
-#~ msgid "Window title string match type"
-#~ msgstr "Pencere başlık dizisi eşleşmesi türü"
-
-#~ msgid "Machine (hostname)"
-#~ msgstr "Makine (makine adı)"
-
-#~ msgid "Machine string match type"
-#~ msgstr "Makine dizisi eşleşme türü"
-
-#~ msgid "Window types that match"
-#~ msgstr "Eşleşen pencere türleri"
-
-#~ msgid "Initial placement"
-#~ msgstr "Başlangıç yerleşimi"
-
-#~ msgid "Initial placement rule type"
-#~ msgstr "Başlangıç yerleşimi kuralı türü"
-
-#~ msgid "Window position"
-#~ msgstr "Pencere Konumu"
-
-#~ msgid "Window position rule type"
-#~ msgstr "Pencere konumu kuralı türü"
-
-#~ msgid "Window size"
-#~ msgstr "Pencere boyutu"
-
-#~ msgid "Window size rule type"
-#~ msgstr "Pencere boyutu kuralı türü"
-
-#~ msgid "Window minimum size"
-#~ msgstr "Pencerenin en küçük boyutu"
-
-#~ msgid "Window minimum size rule type"
-#~ msgstr "Pencerenin en küçük boyutu kuralı türü"
-
-#~ msgid "Window maximum size"
-#~ msgstr "Pencere en büyük boyutu"
-
-#~ msgid "Window maximum size rule type"
-#~ msgstr "Pencerenin en büyük boyutu kuralı türü"
-
-#~ msgid "Active opacity"
-#~ msgstr "Etkin matlık"
-
-#~ msgid "Active opacity rule type"
-#~ msgstr "Etkin matlık kuralı türü"
-
-#~ msgid "Inactive opacity"
-#~ msgstr "Etkin olmayan matlık"
-
-#~ msgid "Inactive opacity rule type"
-#~ msgstr "Etkin olmayan matlık kuralı türü"
-
-#~ msgid "Ignore requested geometry"
-#~ msgstr "İstenen geometriyi yok say"
-
-#~ msgid "Ignore requested geometry rule type"
-#~ msgstr "İstenen geometri kuralı türünü yok say"
-
-#~ msgid "List of Desktop Ids"
-#~ msgstr "Masaüstü Kimliklerinin Listesi"
-
-#~ msgid "Desktop Ids rule type"
-#~ msgstr "Masaüstü Kimlikleri kuralı türü"
-
-#~ msgid "Screen number"
-#~ msgstr "Ekran numarası"
-
-#~ msgid "Screen number rule type"
-#~ msgstr "Ekran numarası kuralı türü"
-
-#~ msgid "Activity"
-#~ msgstr "Etkinlik"
-
-#~ msgid "Activity rule type"
-#~ msgstr "Etkinlik kuralı türü"
-
-#~ msgid "Set window type to"
-#~ msgstr "Pencere türünü şuna ayarla:"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "Pencere türü kuralı türünü ayarla"
-
-#~ msgid "Maximized vertically"
-#~ msgstr "Ekranı dikey kaplamış"
-
-#~ msgid "Maximized vertically rule type"
-#~ msgstr "Ekranı dikey kaplamış kuralı türü"
-
-#~ msgid "Maximized horizontally"
-#~ msgstr "Yatay ekranı kaplamış"
-
-#~ msgid "Maximized horizontally rule type"
-#~ msgstr "Ekranı yatay kaplamış kuralı türü"
-
-#~ msgid "Minimized"
-#~ msgstr "Simge burumuna küçültülmüş"
-
-#~ msgid "Minimized rule type"
-#~ msgstr "Simge durumuna küçültme kuralı türü"
-
-#~ msgid "Shaded"
-#~ msgstr "Panjuru Kapatılmış"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Panjur kapatılmış kuralı türü"
-
-#~ msgid "Skip taskbar"
-#~ msgstr "Görev çubuğunu atla"
-
-#~ msgid "Skip taskbar rule type"
-#~ msgstr "Görev çubuğunu atla kuralı türü"
-
-#~ msgid "Skip pager"
-#~ msgstr "Sayfalayıcıyı atla"
-
-#~ msgid "Skip pager rule type"
-#~ msgstr "Sayfalayıcı kuralı türünü atla"
-
-#~ msgid "Skip switcher"
-#~ msgstr "Değiştiriciyi geç"
-
-#~ msgid "Skip switcher rule type"
-#~ msgstr "Değiştiriciyi atla kuralı türü"
-
-#~ msgid "Keep above"
-#~ msgstr "Üzerinde tut"
-
-#~ msgid "Keep above rule type"
-#~ msgstr "Üzerinde tut kural türü"
-
-#~ msgid "Keep below"
-#~ msgstr "Altında tut"
-
-#~ msgid "Keep below rule type"
-#~ msgstr "Kural türünün altında tut"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Tam Ekran"
-
-#~ msgid "Fullscreen rule type"
-#~ msgstr "Tam Ekran kuralı türü"
-
-#~ msgid "No titlebar and frame"
-#~ msgstr "Başlık çubuğu ve çerçeve yok"
-
-#~ msgid "No titlebar rule type"
-#~ msgstr "Başlık çubuğu yok kuralı türü"
-
-#~ msgid "Titlebar color and scheme"
-#~ msgstr "Başlık çubuğu rengi ve şeması"
-
-#~ msgid "Titlebar color rule type"
-#~ msgstr "Başlık çubuğu rengi kuralı türü"
-
-#~ msgid "Block Compositing"
-#~ msgstr "Bileşikliği Engelle"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "Bileşikleştirme kural türünü engelle"
-
-#~ msgid "Focus stealing prevention"
-#~ msgstr "Odak çalmayı önleme"
-
-#~ msgid "Focus stealing prevention rule type"
-#~ msgstr "Odak çalmayı önleme kuralı türü"
-
-#~ msgid "Focus protection"
-#~ msgstr "Odak koruma"
-
-#~ msgid "Focus protection rule type"
-#~ msgstr "Odak koruma kuralı türü"
-
-#~ msgid "Accept Focus"
-#~ msgstr "Odağı Kabul Et"
-
-#~ msgid "Accept Focus rule type"
-#~ msgstr "Odağı Kabul Et kuralı türü"
-
-#~ msgid "Closeable"
-#~ msgstr "Kapatılabilir"
-
-#~ msgid "Closeable rule type"
-#~ msgstr "Kapatılabilir kuralı türü"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "Eşdeğeriyle otomatik grupla"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "Eşdeğeriyle otomatik grupla kuralı türü"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "Ön planda otomatik grupla"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "Ön planda otomatik grupla kuralı türü"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "Kimliğe göre otomatik grupla"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "Kimliğe göre otomatik grupla kuralı türü"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "Geometri sınırlamalarına uy"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "Geometri sınırlamalarına uy kuralı türü"
-
-#~ msgid "Shortcut"
-#~ msgstr "Kısayol"
-
-#~ msgid "Shortcut rule type"
-#~ msgstr "Kısayol kuralı türü"
-
-#~ msgid "Ignore global shortcuts"
-#~ msgstr "Global kısayolları yok say"
-
-#~ msgid "Ignore global shortcuts rule type"
-#~ msgstr "Global kısayolları yok say kuralı türü"
-
-#~ msgid "Desktop file name"
-#~ msgstr "Masaüstü dosya adı"
-
-#~ msgid "Desktop file name rule type"
-#~ msgstr "Masaüstü dosya adı kuralı türü"
-
-#~ msgid "Dialog"
-#~ msgstr "İletişim Kutuları"
-
-#~ msgid "..."
-#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "Ke&narlık Yok"

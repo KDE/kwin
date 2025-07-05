@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -630,7 +630,8 @@ msgstr "Nyomás"
 msgid "Buttons"
 msgstr "Gombok"
 
-#: debug_console.cpp:517
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr "Módosítók"
@@ -886,6 +887,163 @@ msgstr "Wayland ablakok"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Belső ablakok"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr "Kilépés a hibakereső konzolból"
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "Ablakok"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr "Felületek"
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr "Beviteli események"
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr "Beviteli eszközök"
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr "OpenGL"
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr "Nem fut OpenGL kompozitor"
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr "OpenGL (ES) meghajtóinformációk"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr "Gyártó:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr "Leképező:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr "Verzió:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr "Shading nyelv verzió:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr "Illesztőprogram:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr "GPU osztály:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr "OpenGL verzió:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr "GLSL verzió:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr "Platformkiterjesztések"
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr "OpenGL (ES) kiterjesztések"
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr "Billentyűzet"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr "Billentyűzetkiosztások"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, kde-format
+msgid "Current Layout:"
+msgstr "Jelenlegi kiosztás:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr "Aktív módosítók"
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr "LED-ek"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr "Aktív LED-ek"
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr "Vágólap"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr "Elsődleges kijelölés"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1441,6 +1599,528 @@ msgstr "Éjszakai színek váltása"
 msgid "Color Temperature Preview"
 msgstr ""
 
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr "Szabályok teljes száma (régi)"
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr "Szabálycsoportok rendezett listája"
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr "Szabályleírás"
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr "Szabályleírás (régi)"
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr "Szabály törlése (importban való használatra)"
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, kde-format
+msgid "Window class (application)"
+msgstr "Ablakosztály (alkalmazás)"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, kde-format
+msgid "Window class string match type"
+msgstr "Ablakosztály illesztési típus"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr "Teljes ablakosztály illesztése"
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, kde-format
+msgid "Window role"
+msgstr "Ablakszerep"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, kde-format
+msgid "Window role string match type"
+msgstr "Ablakszerep illesztési típus"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, kde-format
+msgid "Window title"
+msgstr "Ablakcím"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, kde-format
+msgid "Window title string match type"
+msgstr "Ablakcím illesztési típus"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "Számítógép (gépnév)"
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr "Gépnév illesztési típus"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr "Illeszkedő ablaktípusok"
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, kde-format
+msgid "Initial placement"
+msgstr "Kezdeti elhelyezés"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, kde-format
+msgid "Initial placement rule type"
+msgstr "Kezdeti elhelyezés szabálytípus"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, kde-format
+msgid "Window position"
+msgstr "Ablakpozíció"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, kde-format
+msgid "Window position rule type"
+msgstr "Ablakpozíció szabálytípus"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, kde-format
+msgid "Window size"
+msgstr "Ablakméret"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, kde-format
+msgid "Window size rule type"
+msgstr "Ablakméret szabálytípus"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, kde-format
+msgid "Window minimum size"
+msgstr "Minimális ablakméret"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, kde-format
+msgid "Window minimum size rule type"
+msgstr "Minimális ablakméret szabálytípus"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, kde-format
+msgid "Window maximum size"
+msgstr "Maximális ablakméret"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, kde-format
+msgid "Window maximum size rule type"
+msgstr "Maximális ablakméret szabálytípus"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, kde-format
+msgid "Active opacity"
+msgstr "Aktív átlátszatlanság"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, kde-format
+msgid "Active opacity rule type"
+msgstr "Aktív átlátszatlanság szabálytípus"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr "Inaktív átlátszatlanság"
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, kde-format
+msgid "Inactive opacity rule type"
+msgstr "Inaktív átlátszatlanság szabálytípus"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "A kért méret és elhelyezkedés figyelmen kívül hagyása"
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr "A kért méret és elhelyezkedés figyelmen kívül hagyása szabálytípus"
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, kde-format
+msgid "List of Desktop Ids"
+msgstr "Asztalazonosítók listája"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, kde-format
+msgid "Desktop Ids rule type"
+msgstr "Asztalazonosítók szabálytípus"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr "Képernyőszám"
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, kde-format
+msgid "Screen number rule type"
+msgstr "Képernyőszám szabálytípus"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr "Aktivitás"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, kde-format
+msgid "Activity rule type"
+msgstr "Aktivitás szabálytípus"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, kde-format
+msgid "Set window type to"
+msgstr "Ablaktípus beállítása"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, kde-format
+msgid "Set window type rule type"
+msgstr "Ablaktípus beállítása szabálytípus"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, kde-format
+msgid "Maximized vertically"
+msgstr "Maximalizálva függőlegesen"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, kde-format
+msgid "Maximized vertically rule type"
+msgstr "Maximalizálva függőlegesen szabálytípus"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "Maximalizálva vízszintesen"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, kde-format
+msgid "Maximized horizontally rule type"
+msgstr "Maximalizálva vízszintesen szabálytípus"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, kde-format
+msgid "Minimized"
+msgstr "Minimalizálva"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, kde-format
+msgid "Minimized rule type"
+msgstr "Minimalizálva szabálytípus"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, kde-format
+msgid "Shaded"
+msgstr "Felgördítve"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, kde-format
+msgid "Shaded rule type"
+msgstr "Felgördítve szabálytípus"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr "Kihagyás a feladatlistából"
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, kde-format
+msgid "Skip taskbar rule type"
+msgstr "Kihagyás a feladatlistából szabálytípus"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, kde-format
+msgid "Skip pager"
+msgstr "Kihagyás a lapozóból"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, kde-format
+msgid "Skip pager rule type"
+msgstr "Kihagyás a lapozóból szabálytípus"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, kde-format
+msgid "Skip switcher"
+msgstr "Kihagyás az ablakváltóból"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, kde-format
+msgid "Skip switcher rule type"
+msgstr "Kihagyás az ablakváltóból szabálytípus"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, kde-format
+msgid "Keep above"
+msgstr "Maradjon felül"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, kde-format
+msgid "Keep above rule type"
+msgstr "Maradjon felül szabálytípus"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, kde-format
+msgid "Keep below"
+msgstr "Maradjon alul"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, kde-format
+msgid "Keep below rule type"
+msgstr "Maradjon alul szabálytípus"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, kde-format
+msgid "Fullscreen"
+msgstr "Teljes képernyő"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, kde-format
+msgid "Fullscreen rule type"
+msgstr "Teljes képernyő szabálytípus"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "Nincs címsor és keret"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, kde-format
+msgid "No titlebar rule type"
+msgstr "Nincs címsor szabálytípus"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr "Címsorszín és séma"
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, kde-format
+msgid "Titlebar color rule type"
+msgstr "Címsorszín szabálytípus"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, kde-format
+msgid "Block Compositing"
+msgstr "Kompozitálás blokkolása"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, kde-format
+msgid "Block Compositing rule type"
+msgstr "Kompozitálás blokkolása szabálytípus"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "Fókuszelvétel megakadályozása"
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, kde-format
+msgid "Focus stealing prevention rule type"
+msgstr "Fókuszelvétel megakadályozása szabálytípus"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr "Fókuszvédelem"
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, kde-format
+msgid "Focus protection rule type"
+msgstr "Fókuszvédelem szabálytípus"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr "Fókusz elfogadása"
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, kde-format
+msgid "Accept Focus rule type"
+msgstr "Fókusz elfogadása szabálytípus"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, kde-format
+msgid "Closeable"
+msgstr "Bezárható"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, kde-format
+msgid "Closeable rule type"
+msgstr "Bezárhatósági szabálytípus"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr "Azonosak automatikus csoportosítása"
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr "Azonosak automatikus csoportosítása szabálytípus"
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr "Automatikus csoportosítás előtérben"
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr "Automatikus csoportosítás előtérben szabálytípus"
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr "Automatikus csoportosítás azonosító szerint"
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, kde-format
+msgid "Autogroup by ID rule type"
+msgstr "Automatikus csoportosítás azonosító szerint szabálytípus"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Méret- és elhelyezkedéskorlátozások betartása"
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr "Méret- és elhelyezkedéskorlátozások betartása szabálytípus"
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr "Billentyűparancs"
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr "Billentyűparancs szabálytípus"
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Globális gyorsbillentyűk mellőzése"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, kde-format
+msgid "Ignore global shortcuts rule type"
+msgstr "Globális gyorsbillentyűk mellőzése szabálytípus"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, kde-format
+msgid "Desktop file name"
+msgstr "Asztali fájl neve"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr "Asztali fájl neve szabálytípus"
+
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -1459,6 +2139,18 @@ msgstr ""
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr "Párbeszédablak"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr "…"
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2148,351 +2840,6 @@ msgstr ""
 "melyik OpenGL illesztőprogram és mely effektusok futnak.\n"
 "Kérjük töltse fel az alábbi információkat egy szövegmegosztó oldalra, "
 "például a https://paste.kde.org-ra ahelyett, hogy a fórumba illesztené be.\n"
-
-#~ msgid "Quit Debug Console"
-#~ msgstr "Kilépés a hibakereső konzolból"
-
-#~ msgid "Windows"
-#~ msgstr "Ablakok"
-
-#~ msgid "Surfaces"
-#~ msgstr "Felületek"
-
-#~ msgid "Input Events"
-#~ msgstr "Beviteli események"
-
-#~ msgid "Input Devices"
-#~ msgstr "Beviteli eszközök"
-
-#~ msgid "OpenGL"
-#~ msgstr "OpenGL"
-
-#~ msgid "No OpenGL compositor running"
-#~ msgstr "Nem fut OpenGL kompozitor"
-
-#~ msgid "OpenGL (ES) driver information"
-#~ msgstr "OpenGL (ES) meghajtóinformációk"
-
-#~ msgid "Vendor:"
-#~ msgstr "Gyártó:"
-
-#~ msgid "Renderer:"
-#~ msgstr "Leképező:"
-
-#~ msgid "Version:"
-#~ msgstr "Verzió:"
-
-#~ msgid "Shading Language Version:"
-#~ msgstr "Shading nyelv verzió:"
-
-#~ msgid "Driver:"
-#~ msgstr "Illesztőprogram:"
-
-#~ msgid "GPU class:"
-#~ msgstr "GPU osztály:"
-
-#~ msgid "OpenGL Version:"
-#~ msgstr "OpenGL verzió:"
-
-#~ msgid "GLSL Version:"
-#~ msgstr "GLSL verzió:"
-
-#~ msgid "Platform Extensions"
-#~ msgstr "Platformkiterjesztések"
-
-#~ msgid "OpenGL (ES) Extensions"
-#~ msgstr "OpenGL (ES) kiterjesztések"
-
-#~ msgid "Keyboard"
-#~ msgstr "Billentyűzet"
-
-#~ msgid "Keymap Layouts"
-#~ msgstr "Billentyűzetkiosztások"
-
-#~ msgid "Current Layout:"
-#~ msgstr "Jelenlegi kiosztás:"
-
-#~ msgid "Active Modifiers"
-#~ msgstr "Aktív módosítók"
-
-#~ msgid "LEDs"
-#~ msgstr "LED-ek"
-
-#~ msgid "Active LEDs"
-#~ msgstr "Aktív LED-ek"
-
-#~ msgid "Clipboard"
-#~ msgstr "Vágólap"
-
-#~ msgid "Primary Selection"
-#~ msgstr "Elsődleges kijelölés"
-
-#~ msgid "Total rules count (legacy)"
-#~ msgstr "Szabályok teljes száma (régi)"
-
-#~ msgid "Ordered list of rules groups"
-#~ msgstr "Szabálycsoportok rendezett listája"
-
-#~ msgid "Rule description"
-#~ msgstr "Szabályleírás"
-
-#~ msgid "Rule description (legacy)"
-#~ msgstr "Szabályleírás (régi)"
-
-#~ msgid "Delete this rule (for use in imports)"
-#~ msgstr "Szabály törlése (importban való használatra)"
-
-#~ msgid "Window class (application)"
-#~ msgstr "Ablakosztály (alkalmazás)"
-
-#~ msgid "Window class string match type"
-#~ msgstr "Ablakosztály illesztési típus"
-
-#~ msgid "Match whole window class"
-#~ msgstr "Teljes ablakosztály illesztése"
-
-#~ msgid "Window role"
-#~ msgstr "Ablakszerep"
-
-#~ msgid "Window role string match type"
-#~ msgstr "Ablakszerep illesztési típus"
-
-#~ msgid "Window title"
-#~ msgstr "Ablakcím"
-
-#~ msgid "Window title string match type"
-#~ msgstr "Ablakcím illesztési típus"
-
-#~ msgid "Machine (hostname)"
-#~ msgstr "Számítógép (gépnév)"
-
-#~ msgid "Machine string match type"
-#~ msgstr "Gépnév illesztési típus"
-
-#~ msgid "Window types that match"
-#~ msgstr "Illeszkedő ablaktípusok"
-
-#~ msgid "Initial placement"
-#~ msgstr "Kezdeti elhelyezés"
-
-#~ msgid "Initial placement rule type"
-#~ msgstr "Kezdeti elhelyezés szabálytípus"
-
-#~ msgid "Window position"
-#~ msgstr "Ablakpozíció"
-
-#~ msgid "Window position rule type"
-#~ msgstr "Ablakpozíció szabálytípus"
-
-#~ msgid "Window size"
-#~ msgstr "Ablakméret"
-
-#~ msgid "Window size rule type"
-#~ msgstr "Ablakméret szabálytípus"
-
-#~ msgid "Window minimum size"
-#~ msgstr "Minimális ablakméret"
-
-#~ msgid "Window minimum size rule type"
-#~ msgstr "Minimális ablakméret szabálytípus"
-
-#~ msgid "Window maximum size"
-#~ msgstr "Maximális ablakméret"
-
-#~ msgid "Window maximum size rule type"
-#~ msgstr "Maximális ablakméret szabálytípus"
-
-#~ msgid "Active opacity"
-#~ msgstr "Aktív átlátszatlanság"
-
-#~ msgid "Active opacity rule type"
-#~ msgstr "Aktív átlátszatlanság szabálytípus"
-
-#~ msgid "Inactive opacity"
-#~ msgstr "Inaktív átlátszatlanság"
-
-#~ msgid "Inactive opacity rule type"
-#~ msgstr "Inaktív átlátszatlanság szabálytípus"
-
-#~ msgid "Ignore requested geometry"
-#~ msgstr "A kért méret és elhelyezkedés figyelmen kívül hagyása"
-
-#~ msgid "Ignore requested geometry rule type"
-#~ msgstr "A kért méret és elhelyezkedés figyelmen kívül hagyása szabálytípus"
-
-#~ msgid "List of Desktop Ids"
-#~ msgstr "Asztalazonosítók listája"
-
-#~ msgid "Desktop Ids rule type"
-#~ msgstr "Asztalazonosítók szabálytípus"
-
-#~ msgid "Screen number"
-#~ msgstr "Képernyőszám"
-
-#~ msgid "Screen number rule type"
-#~ msgstr "Képernyőszám szabálytípus"
-
-#~ msgid "Activity"
-#~ msgstr "Aktivitás"
-
-#~ msgid "Activity rule type"
-#~ msgstr "Aktivitás szabálytípus"
-
-#~ msgid "Set window type to"
-#~ msgstr "Ablaktípus beállítása"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "Ablaktípus beállítása szabálytípus"
-
-#~ msgid "Maximized vertically"
-#~ msgstr "Maximalizálva függőlegesen"
-
-#~ msgid "Maximized vertically rule type"
-#~ msgstr "Maximalizálva függőlegesen szabálytípus"
-
-#~ msgid "Maximized horizontally"
-#~ msgstr "Maximalizálva vízszintesen"
-
-#~ msgid "Maximized horizontally rule type"
-#~ msgstr "Maximalizálva vízszintesen szabálytípus"
-
-#~ msgid "Minimized"
-#~ msgstr "Minimalizálva"
-
-#~ msgid "Minimized rule type"
-#~ msgstr "Minimalizálva szabálytípus"
-
-#~ msgid "Shaded"
-#~ msgstr "Felgördítve"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Felgördítve szabálytípus"
-
-#~ msgid "Skip taskbar"
-#~ msgstr "Kihagyás a feladatlistából"
-
-#~ msgid "Skip taskbar rule type"
-#~ msgstr "Kihagyás a feladatlistából szabálytípus"
-
-#~ msgid "Skip pager"
-#~ msgstr "Kihagyás a lapozóból"
-
-#~ msgid "Skip pager rule type"
-#~ msgstr "Kihagyás a lapozóból szabálytípus"
-
-#~ msgid "Skip switcher"
-#~ msgstr "Kihagyás az ablakváltóból"
-
-#~ msgid "Skip switcher rule type"
-#~ msgstr "Kihagyás az ablakváltóból szabálytípus"
-
-#~ msgid "Keep above"
-#~ msgstr "Maradjon felül"
-
-#~ msgid "Keep above rule type"
-#~ msgstr "Maradjon felül szabálytípus"
-
-#~ msgid "Keep below"
-#~ msgstr "Maradjon alul"
-
-#~ msgid "Keep below rule type"
-#~ msgstr "Maradjon alul szabálytípus"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Teljes képernyő"
-
-#~ msgid "Fullscreen rule type"
-#~ msgstr "Teljes képernyő szabálytípus"
-
-#~ msgid "No titlebar and frame"
-#~ msgstr "Nincs címsor és keret"
-
-#~ msgid "No titlebar rule type"
-#~ msgstr "Nincs címsor szabálytípus"
-
-#~ msgid "Titlebar color and scheme"
-#~ msgstr "Címsorszín és séma"
-
-#~ msgid "Titlebar color rule type"
-#~ msgstr "Címsorszín szabálytípus"
-
-#~ msgid "Block Compositing"
-#~ msgstr "Kompozitálás blokkolása"
-
-#~ msgid "Block Compositing rule type"
-#~ msgstr "Kompozitálás blokkolása szabálytípus"
-
-#~ msgid "Focus stealing prevention"
-#~ msgstr "Fókuszelvétel megakadályozása"
-
-#~ msgid "Focus stealing prevention rule type"
-#~ msgstr "Fókuszelvétel megakadályozása szabálytípus"
-
-#~ msgid "Focus protection"
-#~ msgstr "Fókuszvédelem"
-
-#~ msgid "Focus protection rule type"
-#~ msgstr "Fókuszvédelem szabálytípus"
-
-#~ msgid "Accept Focus"
-#~ msgstr "Fókusz elfogadása"
-
-#~ msgid "Accept Focus rule type"
-#~ msgstr "Fókusz elfogadása szabálytípus"
-
-#~ msgid "Closeable"
-#~ msgstr "Bezárható"
-
-#~ msgid "Closeable rule type"
-#~ msgstr "Bezárhatósági szabálytípus"
-
-#~ msgid "Autogroup with identical"
-#~ msgstr "Azonosak automatikus csoportosítása"
-
-#~ msgid "Autogroup with identical rule type"
-#~ msgstr "Azonosak automatikus csoportosítása szabálytípus"
-
-#~ msgid "Autogroup in foreground"
-#~ msgstr "Automatikus csoportosítás előtérben"
-
-#~ msgid "Autogroup in foreground rule type"
-#~ msgstr "Automatikus csoportosítás előtérben szabálytípus"
-
-#~ msgid "Autogroup by ID"
-#~ msgstr "Automatikus csoportosítás azonosító szerint"
-
-#~ msgid "Autogroup by ID rule type"
-#~ msgstr "Automatikus csoportosítás azonosító szerint szabálytípus"
-
-#~ msgid "Obey geometry restrictions"
-#~ msgstr "Méret- és elhelyezkedéskorlátozások betartása"
-
-#~ msgid "Obey geometry restrictions rule type"
-#~ msgstr "Méret- és elhelyezkedéskorlátozások betartása szabálytípus"
-
-#~ msgid "Shortcut"
-#~ msgstr "Billentyűparancs"
-
-#~ msgid "Shortcut rule type"
-#~ msgstr "Billentyűparancs szabálytípus"
-
-#~ msgid "Ignore global shortcuts"
-#~ msgstr "Globális gyorsbillentyűk mellőzése"
-
-#~ msgid "Ignore global shortcuts rule type"
-#~ msgstr "Globális gyorsbillentyűk mellőzése szabálytípus"
-
-#~ msgid "Desktop file name"
-#~ msgstr "Asztali fájl neve"
-
-#~ msgid "Desktop file name rule type"
-#~ msgstr "Asztali fájl neve szabálytípus"
-
-#~ msgid "Dialog"
-#~ msgstr "Párbeszédablak"
-
-#~ msgid "..."
-#~ msgstr "…"
 
 #~ msgid "&No Border"
 #~ msgstr "Az &ablakkeret elrejtése"

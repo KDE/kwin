@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2011-07-12 17:48+0200\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -631,7 +631,8 @@ msgstr ""
 msgid "Buttons"
 msgstr "Emulacija miša"
 
-#: debug_console.cpp:517
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr ""
@@ -893,6 +894,166 @@ msgstr "Zasjeni prozor"
 #| msgid "Raise Window"
 msgid "Internal Windows"
 msgstr "Podigni prozor"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "Windows"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, fuzzy, kde-format
+#| msgid "Next Layout"
+msgid "Keyboard"
+msgstr "Sljedeći raspored"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, fuzzy, kde-format
+#| msgid "Next Layout"
+msgid "Keymap Layouts"
+msgstr "Sljedeći raspored"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, fuzzy, kde-format
+#| msgid "Configur&e Window Behavior..."
+msgid "Current Layout:"
+msgstr "Pod&esi ponašanje prozora …"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr ""
 
 #: helpers/killer/killer.cpp:34
 #, fuzzy, kde-format
@@ -1443,6 +1604,588 @@ msgstr ""
 msgid "Color Temperature Preview"
 msgstr ""
 
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr ""
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr ""
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr ""
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr ""
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr ""
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, fuzzy, kde-format
+#| msgid "Window Operations Menu"
+msgid "Window class (application)"
+msgstr "Izbornik operacija prozora"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window class string match type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr ""
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window role"
+msgstr "Windows"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window role string match type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window title"
+msgstr "Windows"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window title string match type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr ""
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr ""
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr ""
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Initial placement"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Initial placement rule type"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, fuzzy, kde-format
+#| msgid "Window Operations Menu"
+msgid "Window position"
+msgstr "Izbornik operacija prozora"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window position rule type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window size"
+msgstr "Windows"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window size rule type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window minimum size"
+msgstr "Windows"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window minimum size rule type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window maximum size"
+msgstr "Windows"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window maximum size rule type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, fuzzy, kde-format
+#| msgid "&All Activities"
+msgid "Active opacity"
+msgstr "Sve &aktivnosti"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Active opacity rule type"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr ""
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Inactive opacity rule type"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr ""
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, fuzzy, kde-format
+#| msgid "Switch to Desktop 2"
+msgid "List of Desktop Ids"
+msgstr "Prebaci na radnu površinu 2"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgid "Desktop Ids rule type"
+msgstr "Radna površina %1"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr ""
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Screen number rule type"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, fuzzy, kde-format
+#| msgid "&All Activities"
+msgid "Activity"
+msgstr "Sve &aktivnosti"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, fuzzy, kde-format
+#| msgid "&All Activities"
+msgid "Activity rule type"
+msgstr "Sve &aktivnosti"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, fuzzy, kde-format
+#| msgid "Setup Window Shortcut"
+msgid "Set window type to"
+msgstr "Prečac postavki prozora"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, fuzzy, kde-format
+#| msgid "Setup Window Shortcut"
+msgid "Set window type rule type"
+msgstr "Prečac postavki prozora"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Maximized vertically"
+msgstr "Uspravno maksimiziraj prozor"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Maximized vertically rule type"
+msgstr "Uspravno maksimiziraj prozor"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, fuzzy, kde-format
+#| msgid "Maximize Window Horizontally"
+msgid "Maximized horizontally"
+msgstr "Vodoravno maksimiziraj prozor"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, fuzzy, kde-format
+#| msgid "Maximize Window Horizontally"
+msgid "Maximized horizontally rule type"
+msgstr "Vodoravno maksimiziraj prozor"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, fuzzy, kde-format
+#| msgid "Minimize"
+msgid "Minimized"
+msgstr "Spusti"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Minimized rule type"
+msgstr "Uspravno maksimiziraj prozor"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, fuzzy, kde-format
+#| msgid "Shade"
+msgid "Shaded"
+msgstr "Sjenčaj"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Shaded rule type"
+msgstr "Drži iznad ostalih"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr ""
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Skip taskbar rule type"
+msgstr "Drži iznad ostalih"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, fuzzy, kde-format
+#| msgid "Switch to Window Tab"
+msgid "Skip pager"
+msgstr "Prebaci na karticu prozora"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Skip pager rule type"
+msgstr "Drži iznad ostalih"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, fuzzy, kde-format
+#| msgid "Switch to Window Tab"
+msgid "Skip switcher"
+msgstr "Prebaci na karticu prozora"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, fuzzy, kde-format
+#| msgid "Switch to Window Tab"
+msgid "Skip switcher rule type"
+msgstr "Prebaci na karticu prozora"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Keep above"
+msgstr "Drži iznad ostalih"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Keep above rule type"
+msgstr "Drži iznad ostalih"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgid "Keep below"
+msgstr "Drži ispod ostalih"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgid "Keep below rule type"
+msgstr "Drži ispod ostalih"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen rule type"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, fuzzy, kde-format
+#| msgid "Hide Window Border"
+msgid "No titlebar and frame"
+msgstr "Hide Window Border"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "No titlebar rule type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr ""
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgid "Titlebar color rule type"
+msgstr "Drži ispod ostalih"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Block Compositing"
+msgstr "Zaustavi 3D efekte"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Block Compositing rule type"
+msgstr "Zaustavi 3D efekte"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr ""
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Focus stealing prevention rule type"
+msgstr "P&reko cijelog zaslona"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr ""
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Focus protection rule type"
+msgstr "Prozor na zaslon 2"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr ""
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Accept Focus rule type"
+msgstr "Drži iznad ostalih"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, fuzzy, kde-format
+#| msgid "Close"
+msgid "Closeable"
+msgstr "Zatvori"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Closeable rule type"
+msgstr "Drži iznad ostalih"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgid "Autogroup by ID rule type"
+msgstr "Radna površina %1"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr ""
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr ""
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, fuzzy, kde-format
+#| msgid "Block Global Shortcuts"
+msgid "Ignore global shortcuts"
+msgstr "Blokiraj opće prečace"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, fuzzy, kde-format
+#| msgid "Block Global Shortcuts"
+msgid "Ignore global shortcuts rule type"
+msgstr "Blokiraj opće prečace"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgid "Desktop file name"
+msgstr "Radna površina %1"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgid "Desktop file name rule type"
+msgstr "Radna površina %1"
+
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -1460,6 +2203,18 @@ msgstr ""
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
 msgstr ""
 
 #: tabbox/tabbox.cpp:381
@@ -2160,159 +2915,6 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-
-#~ msgid "Windows"
-#~ msgstr "Windows"
-
-#, fuzzy
-#~| msgid "Next Layout"
-#~ msgid "Keyboard"
-#~ msgstr "Sljedeći raspored"
-
-#, fuzzy
-#~| msgid "Next Layout"
-#~ msgid "Keymap Layouts"
-#~ msgstr "Sljedeći raspored"
-
-#, fuzzy
-#~| msgid "Configur&e Window Behavior..."
-#~ msgid "Current Layout:"
-#~ msgstr "Pod&esi ponašanje prozora …"
-
-#, fuzzy
-#~| msgid "Windows"
-#~ msgid "Window role"
-#~ msgstr "Windows"
-
-#, fuzzy
-#~| msgid "Windows"
-#~ msgid "Window title"
-#~ msgstr "Windows"
-
-#, fuzzy
-#~| msgid "&Fullscreen"
-#~ msgid "Initial placement rule type"
-#~ msgstr "P&reko cijelog zaslona"
-
-#, fuzzy
-#~| msgid "Window Operations Menu"
-#~ msgid "Window position"
-#~ msgstr "Izbornik operacija prozora"
-
-#, fuzzy
-#~| msgid "Window to Screen 2"
-#~ msgid "Window position rule type"
-#~ msgstr "Prozor na zaslon 2"
-
-#, fuzzy
-#~| msgid "Windows"
-#~ msgid "Window size"
-#~ msgstr "Windows"
-
-#, fuzzy
-#~| msgid "Switch to Desktop 2"
-#~ msgid "List of Desktop Ids"
-#~ msgstr "Prebaci na radnu površinu 2"
-
-#, fuzzy
-#~| msgid "Desktop %1"
-#~ msgid "Desktop Ids rule type"
-#~ msgstr "Radna površina %1"
-
-#, fuzzy
-#~| msgid "&All Activities"
-#~ msgid "Activity"
-#~ msgstr "Sve &aktivnosti"
-
-#, fuzzy
-#~| msgid "Setup Window Shortcut"
-#~ msgid "Set window type to"
-#~ msgstr "Prečac postavki prozora"
-
-#, fuzzy
-#~| msgid "Maximize Window Vertically"
-#~ msgid "Maximized vertically"
-#~ msgstr "Uspravno maksimiziraj prozor"
-
-#, fuzzy
-#~| msgid "Maximize Window Vertically"
-#~ msgid "Maximized vertically rule type"
-#~ msgstr "Uspravno maksimiziraj prozor"
-
-#, fuzzy
-#~| msgid "Maximize Window Horizontally"
-#~ msgid "Maximized horizontally"
-#~ msgstr "Vodoravno maksimiziraj prozor"
-
-#, fuzzy
-#~| msgid "Maximize Window Horizontally"
-#~ msgid "Maximized horizontally rule type"
-#~ msgstr "Vodoravno maksimiziraj prozor"
-
-#, fuzzy
-#~| msgid "Minimize"
-#~ msgid "Minimized"
-#~ msgstr "Spusti"
-
-#, fuzzy
-#~| msgid "Shade"
-#~ msgid "Shaded"
-#~ msgstr "Sjenčaj"
-
-#, fuzzy
-#~| msgid "Switch to Window Tab"
-#~ msgid "Skip switcher"
-#~ msgstr "Prebaci na karticu prozora"
-
-#, fuzzy
-#~| msgid "Keep above others"
-#~ msgid "Keep above"
-#~ msgstr "Drži iznad ostalih"
-
-#, fuzzy
-#~| msgid "Keep above others"
-#~ msgid "Keep above rule type"
-#~ msgstr "Drži iznad ostalih"
-
-#, fuzzy
-#~| msgid "Keep below others"
-#~ msgid "Keep below"
-#~ msgstr "Drži ispod ostalih"
-
-#, fuzzy
-#~| msgid "Keep below others"
-#~ msgid "Keep below rule type"
-#~ msgstr "Drži ispod ostalih"
-
-#, fuzzy
-#~| msgid "&Fullscreen"
-#~ msgid "Fullscreen"
-#~ msgstr "P&reko cijelog zaslona"
-
-#, fuzzy
-#~| msgid "&Fullscreen"
-#~ msgid "Fullscreen rule type"
-#~ msgstr "P&reko cijelog zaslona"
-
-#, fuzzy
-#~| msgid "Suspend Compositing"
-#~ msgid "Block Compositing"
-#~ msgstr "Zaustavi 3D efekte"
-
-#, fuzzy
-#~| msgid "Close"
-#~ msgid "Closeable"
-#~ msgstr "Zatvori"
-
-#, fuzzy
-#~| msgid "Block Global Shortcuts"
-#~ msgid "Ignore global shortcuts"
-#~ msgstr "Blokiraj opće prečace"
-
-#, fuzzy
-#~| msgid "Desktop %1"
-#~ msgid "Desktop file name"
-#~ msgstr "Radna površina %1"
 
 #~ msgid "&No Border"
 #~ msgstr "&Bez ruba"
