@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 02:27+0000\n"
+"POT-Creation-Date: 2025-07-05 03:22+0000\n"
 "PO-Revision-Date: 2023-01-10 21:37+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -628,8 +628,7 @@ msgstr "Тиск"
 msgid "Buttons"
 msgstr "Кнопки"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:517 debug_console.ui:356
+#: debug_console.cpp:517
 #, kde-format
 msgid "Modifiers"
 msgstr "Модифікатори"
@@ -884,163 +883,6 @@ msgstr "Вікна Wayland"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Внутрішні вікна"
-
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "Вийти із діагностичної консолі"
-
-#. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
-#, kde-format
-msgid "Windows"
-msgstr "Вікна"
-
-#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
-#: debug_console.ui:59
-#, kde-format
-msgid "Surfaces"
-msgstr "Поверхні"
-
-#. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:69
-#, kde-format
-msgid "Input Events"
-msgstr "Події введення"
-
-#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:86
-#, kde-format
-msgid "Input Devices"
-msgstr "Пристрої введення"
-
-#. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:96
-#, kde-format
-msgid "OpenGL"
-msgstr "OpenGL"
-
-#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:102
-#, kde-format
-msgid "No OpenGL compositor running"
-msgstr "Засіб композиції OpenGL не запущено"
-
-#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:130
-#, kde-format
-msgid "OpenGL (ES) driver information"
-msgstr "Дані щодо драйвера OpenGL (ES)"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:136
-#, kde-format
-msgid "Vendor:"
-msgstr "Виробник:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:143
-#, kde-format
-msgid "Renderer:"
-msgstr "Засіб показу:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:150
-#, kde-format
-msgid "Version:"
-msgstr "Версія:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:157
-#, kde-format
-msgid "Shading Language Version:"
-msgstr "Версія мови шейдерів:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:164
-#, kde-format
-msgid "Driver:"
-msgstr "Драйвер:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:171
-#, kde-format
-msgid "GPU class:"
-msgstr "Клас GPU:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:178
-#, kde-format
-msgid "OpenGL Version:"
-msgstr "Версія OpenGL:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:185
-#, kde-format
-msgid "GLSL Version:"
-msgstr "Версія GLSL:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:251
-#, kde-format
-msgid "Platform Extensions"
-msgstr "Розширення платформи"
-
-#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:267
-#, kde-format
-msgid "OpenGL (ES) Extensions"
-msgstr "Розширення OpenGL (ES)"
-
-#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:288
-#, kde-format
-msgid "Keyboard"
-msgstr "Клавіатура"
-
-#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:315
-#, kde-format
-msgid "Keymap Layouts"
-msgstr "Розкладки клавіатури"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:337
-#, kde-format
-msgid "Current Layout:"
-msgstr "Поточна розкладка:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:372
-#, kde-format
-msgid "Active Modifiers"
-msgstr "Активні модифікатори"
-
-#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:388
-#, kde-format
-msgid "LEDs"
-msgstr "Світлові індикатори"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:404
-#, kde-format
-msgid "Active LEDs"
-msgstr "Активні світлові індикатори"
-
-#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:425 debug_console.ui:445
-#, kde-format
-msgid "Clipboard"
-msgstr "Буфер обміну"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:491
-#, kde-format
-msgid "Primary Selection"
-msgstr "Основне позначення"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1598,528 +1440,6 @@ msgstr "Перемкнути нічні кольори"
 msgid "Color Temperature Preview"
 msgstr "Перегляд температури кольорів"
 
-#. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
-#, kde-format
-msgid "Total rules count (legacy)"
-msgstr "Загальна кількість правил (застаріла)"
-
-#. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
-#, kde-format
-msgid "Ordered list of rules groups"
-msgstr "Упорядкований список груп правил"
-
-#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:10
-#, kde-format
-msgid "Rule description"
-msgstr "Опис правила"
-
-#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:13
-#, kde-format
-msgid "Rule description (legacy)"
-msgstr "Опис правила (застарілий)"
-
-#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:16
-#, kde-format
-msgid "Delete this rule (for use in imports)"
-msgstr "Вилучити це правило (для використання при імпортуванні)"
-
-#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:20
-#, kde-format
-msgid "Window class (application)"
-msgstr "Клас вікна (програма)"
-
-#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:23
-#, kde-format
-msgid "Window class string match type"
-msgstr "Тип відповідності рядка класу вікон"
-
-#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:29
-#, kde-format
-msgid "Match whole window class"
-msgstr "Відповідність усьому класу вікон"
-
-#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:34
-#, kde-format
-msgid "Window role"
-msgstr "Роль вікна"
-
-#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:37
-#, kde-format
-msgid "Window role string match type"
-msgstr "Тип відповідності рядка ролі вікна"
-
-#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:44
-#, kde-format
-msgid "Window title"
-msgstr "Заголовок вікна"
-
-#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:47
-#, kde-format
-msgid "Window title string match type"
-msgstr "Тип відповідності рядка заголовка вікна"
-
-#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:54
-#, kde-format
-msgid "Machine (hostname)"
-msgstr "Комп'ютер (назва вузла)"
-
-#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:57
-#, kde-format
-msgid "Machine string match type"
-msgstr "Тип відповідності рядка комп'ютера"
-
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:64
-#, kde-format
-msgid "Window types that match"
-msgstr "Типи вікон, які є відповідними"
-
-#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:69
-#, kde-format
-msgid "Initial placement"
-msgstr "Початкове розташування"
-
-#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:74
-#, kde-format
-msgid "Initial placement rule type"
-msgstr "Тип правила початкового розташування"
-
-#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:79
-#, kde-format
-msgid "Window position"
-msgstr "Розташування вікна"
-
-#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
-#, kde-format
-msgid "Window position rule type"
-msgstr "Тип правила розташування вікна"
-
-#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:90
-#, kde-format
-msgid "Window size"
-msgstr "Розмір вікна"
-
-#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:93
-#, kde-format
-msgid "Window size rule type"
-msgstr "Тип правила розмірів вікна"
-
-#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:100
-#, kde-format
-msgid "Window minimum size"
-msgstr "Мінімальний розмір вікна"
-
-#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
-#, kde-format
-msgid "Window minimum size rule type"
-msgstr "Тип правила мінімального розміру вікна"
-
-#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:109
-#, kde-format
-msgid "Window maximum size"
-msgstr "Максимальний розмір вікна"
-
-#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
-#, kde-format
-msgid "Window maximum size rule type"
-msgstr "Тип правила максимального розміру вікна"
-
-#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:118
-#, kde-format
-msgid "Active opacity"
-msgstr "Непрозорість активного"
-
-#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:124
-#, kde-format
-msgid "Active opacity rule type"
-msgstr "Тип правила непрозорості активного вікна"
-
-#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:129
-#, kde-format
-msgid "Inactive opacity"
-msgstr "Непрозорість неактивного"
-
-#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:135
-#, kde-format
-msgid "Inactive opacity rule type"
-msgstr "Тип правила непрозорості неактивного вікна"
-
-#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:140
-#, kde-format
-msgid "Ignore requested geometry"
-msgstr "Ігнорувати запитану позицію"
-
-#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
-#, kde-format
-msgid "Ignore requested geometry rule type"
-msgstr "Тип правила ігнорування запитаної позиції"
-
-#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:151
-#, kde-format
-msgid "List of Desktop Ids"
-msgstr "Список ідентифікаторів стільниць"
-
-#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
-#, kde-format
-msgid "Desktop Ids rule type"
-msgstr "Тип правила ідентифікатора стільниці"
-
-#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:162
-#, kde-format
-msgid "Screen number"
-msgstr "Номер екрана"
-
-#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
-#, kde-format
-msgid "Screen number rule type"
-msgstr "Тип правила номера екрана"
-
-#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:173
-#, kde-format
-msgid "Activity"
-msgstr "Простір дій"
-
-#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:176
-#, kde-format
-msgid "Activity rule type"
-msgstr "Тип правила простору дій"
-
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "Встановити тип вікна"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "Тип правила встановлення типу вікна"
-
-#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
-#, kde-format
-msgid "Maximized vertically"
-msgstr "Максимізація вертикально"
-
-#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
-#, kde-format
-msgid "Maximized vertically rule type"
-msgstr "Тип правила вертикальної максимізації"
-
-#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
-#, kde-format
-msgid "Maximized horizontally"
-msgstr "Максимізація горизонтально"
-
-#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
-#, kde-format
-msgid "Maximized horizontally rule type"
-msgstr "Тип правила горизонтальної максимізації"
-
-#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
-#, kde-format
-msgid "Minimized"
-msgstr "Мінімізовано"
-
-#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
-#, kde-format
-msgid "Minimized rule type"
-msgstr "Тип правила мінімізації"
-
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
-#, kde-format
-msgid "Shaded"
-msgstr "Згорнуто"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
-#, kde-format
-msgid "Shaded rule type"
-msgstr "Тип правила згортання"
-
-#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
-#, kde-format
-msgid "Skip taskbar"
-msgstr "Пропустити панель задач"
-
-#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
-#, kde-format
-msgid "Skip taskbar rule type"
-msgstr "Тип правила пропускання панелі задач"
-
-#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
-#, kde-format
-msgid "Skip pager"
-msgstr "Пропустити пейджер"
-
-#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
-#, kde-format
-msgid "Skip pager rule type"
-msgstr "Тип правила пропускання пейджера"
-
-#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
-#, kde-format
-msgid "Skip switcher"
-msgstr "Пропустити перемикач"
-
-#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
-#, kde-format
-msgid "Skip switcher rule type"
-msgstr "Тип правила пропускання перемикача"
-
-#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
-#, kde-format
-msgid "Keep above"
-msgstr "Завжди згори"
-
-#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
-#, kde-format
-msgid "Keep above rule type"
-msgstr "Тип правила утримання над іншими вікнами"
-
-#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
-#, kde-format
-msgid "Keep below"
-msgstr "Утримувати під іншими"
-
-#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
-#, kde-format
-msgid "Keep below rule type"
-msgstr "Тип правила утримання під іншими вікнами"
-
-#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
-#, kde-format
-msgid "Fullscreen"
-msgstr "На весь екран"
-
-#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
-#, kde-format
-msgid "Fullscreen rule type"
-msgstr "Тип правила розгортання на увесь екран"
-
-#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
-#, kde-format
-msgid "No titlebar and frame"
-msgstr "Без смужки заголовка і рамки"
-
-#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
-#, kde-format
-msgid "No titlebar rule type"
-msgstr "Тип правила вимикання смужки заголовка"
-
-#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
-#, kde-format
-msgid "Titlebar color and scheme"
-msgstr "Схема кольорів смужки заголовка"
-
-#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
-#, kde-format
-msgid "Titlebar color rule type"
-msgstr "Тип правила кольору смужки заголовка"
-
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
-#, kde-format
-msgid "Block Compositing"
-msgstr "Блокування композитного режиму"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "Тип правила блокування композитного відтворення"
-
-#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
-#, kde-format
-msgid "Focus stealing prevention"
-msgstr "Запобігання викраденню фокуса"
-
-#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
-#, kde-format
-msgid "Focus stealing prevention rule type"
-msgstr "Тип правила запобігання викраденню фокуса"
-
-#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
-#, kde-format
-msgid "Focus protection"
-msgstr "Захист фокусування"
-
-#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
-#, kde-format
-msgid "Focus protection rule type"
-msgstr "Тип правила захисту фокусування"
-
-#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
-#, kde-format
-msgid "Accept Focus"
-msgstr "Допускає фокус"
-
-#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
-#, kde-format
-msgid "Accept Focus rule type"
-msgstr "Тип правила прийняття фокусування"
-
-#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
-#, kde-format
-msgid "Closeable"
-msgstr "Можна закрити"
-
-#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
-#, kde-format
-msgid "Closeable rule type"
-msgstr "Тип правила можливості закриття"
-
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Автоматично групувати з тотожними"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Тип правила автоматичного групування з тотожними"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Автоматичне групування на передньому плані"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Тип правила автоматичного групування на передньому плані"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Автоматично групувати за ідентифікатором"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Тип правила автоматичного групування за ідентифікатором"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Зважати на обмеження розмірів"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Тип правила врахування обмеження розмірів"
-
-#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
-#, kde-format
-msgid "Shortcut"
-msgstr "Скорочення"
-
-#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
-#, kde-format
-msgid "Shortcut rule type"
-msgstr "Тип правила скорочення"
-
-#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
-#, kde-format
-msgid "Ignore global shortcuts"
-msgstr "Ігнорувати загальні скорочення"
-
-#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
-#, kde-format
-msgid "Ignore global shortcuts rule type"
-msgstr "Тип правила ігнорування загальних скорочень"
-
-#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
-#, kde-format
-msgid "Desktop file name"
-msgstr "Назва стільничного файла"
-
-#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
-#, kde-format
-msgid "Desktop file name rule type"
-msgstr "Тип правила назви стільничного файла"
-
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -2138,18 +1458,6 @@ msgstr "%1 не містить коректного файла metadata.json"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 не існує"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
-#: shortcutdialog.ui:14
-#, kde-format
-msgid "Dialog"
-msgstr "Вікно"
-
-#. i18n: ectx: property (text), widget (QToolButton, clearButton)
-#: shortcutdialog.ui:25
-#, kde-format
-msgid "..."
-msgstr "…"
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2823,6 +2131,351 @@ msgstr ""
 "використанням служби зберігання\n"
 "текстових фрагментів, подібної до https://paste.kde.org, замість додавання "
 "безпосередньо до тексту повідомлення.\n"
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "Вийти із діагностичної консолі"
+
+#~ msgid "Windows"
+#~ msgstr "Вікна"
+
+#~ msgid "Surfaces"
+#~ msgstr "Поверхні"
+
+#~ msgid "Input Events"
+#~ msgstr "Події введення"
+
+#~ msgid "Input Devices"
+#~ msgstr "Пристрої введення"
+
+#~ msgid "OpenGL"
+#~ msgstr "OpenGL"
+
+#~ msgid "No OpenGL compositor running"
+#~ msgstr "Засіб композиції OpenGL не запущено"
+
+#~ msgid "OpenGL (ES) driver information"
+#~ msgstr "Дані щодо драйвера OpenGL (ES)"
+
+#~ msgid "Vendor:"
+#~ msgstr "Виробник:"
+
+#~ msgid "Renderer:"
+#~ msgstr "Засіб показу:"
+
+#~ msgid "Version:"
+#~ msgstr "Версія:"
+
+#~ msgid "Shading Language Version:"
+#~ msgstr "Версія мови шейдерів:"
+
+#~ msgid "Driver:"
+#~ msgstr "Драйвер:"
+
+#~ msgid "GPU class:"
+#~ msgstr "Клас GPU:"
+
+#~ msgid "OpenGL Version:"
+#~ msgstr "Версія OpenGL:"
+
+#~ msgid "GLSL Version:"
+#~ msgstr "Версія GLSL:"
+
+#~ msgid "Platform Extensions"
+#~ msgstr "Розширення платформи"
+
+#~ msgid "OpenGL (ES) Extensions"
+#~ msgstr "Розширення OpenGL (ES)"
+
+#~ msgid "Keyboard"
+#~ msgstr "Клавіатура"
+
+#~ msgid "Keymap Layouts"
+#~ msgstr "Розкладки клавіатури"
+
+#~ msgid "Current Layout:"
+#~ msgstr "Поточна розкладка:"
+
+#~ msgid "Active Modifiers"
+#~ msgstr "Активні модифікатори"
+
+#~ msgid "LEDs"
+#~ msgstr "Світлові індикатори"
+
+#~ msgid "Active LEDs"
+#~ msgstr "Активні світлові індикатори"
+
+#~ msgid "Clipboard"
+#~ msgstr "Буфер обміну"
+
+#~ msgid "Primary Selection"
+#~ msgstr "Основне позначення"
+
+#~ msgid "Total rules count (legacy)"
+#~ msgstr "Загальна кількість правил (застаріла)"
+
+#~ msgid "Ordered list of rules groups"
+#~ msgstr "Упорядкований список груп правил"
+
+#~ msgid "Rule description"
+#~ msgstr "Опис правила"
+
+#~ msgid "Rule description (legacy)"
+#~ msgstr "Опис правила (застарілий)"
+
+#~ msgid "Delete this rule (for use in imports)"
+#~ msgstr "Вилучити це правило (для використання при імпортуванні)"
+
+#~ msgid "Window class (application)"
+#~ msgstr "Клас вікна (програма)"
+
+#~ msgid "Window class string match type"
+#~ msgstr "Тип відповідності рядка класу вікон"
+
+#~ msgid "Match whole window class"
+#~ msgstr "Відповідність усьому класу вікон"
+
+#~ msgid "Window role"
+#~ msgstr "Роль вікна"
+
+#~ msgid "Window role string match type"
+#~ msgstr "Тип відповідності рядка ролі вікна"
+
+#~ msgid "Window title"
+#~ msgstr "Заголовок вікна"
+
+#~ msgid "Window title string match type"
+#~ msgstr "Тип відповідності рядка заголовка вікна"
+
+#~ msgid "Machine (hostname)"
+#~ msgstr "Комп'ютер (назва вузла)"
+
+#~ msgid "Machine string match type"
+#~ msgstr "Тип відповідності рядка комп'ютера"
+
+#~ msgid "Window types that match"
+#~ msgstr "Типи вікон, які є відповідними"
+
+#~ msgid "Initial placement"
+#~ msgstr "Початкове розташування"
+
+#~ msgid "Initial placement rule type"
+#~ msgstr "Тип правила початкового розташування"
+
+#~ msgid "Window position"
+#~ msgstr "Розташування вікна"
+
+#~ msgid "Window position rule type"
+#~ msgstr "Тип правила розташування вікна"
+
+#~ msgid "Window size"
+#~ msgstr "Розмір вікна"
+
+#~ msgid "Window size rule type"
+#~ msgstr "Тип правила розмірів вікна"
+
+#~ msgid "Window minimum size"
+#~ msgstr "Мінімальний розмір вікна"
+
+#~ msgid "Window minimum size rule type"
+#~ msgstr "Тип правила мінімального розміру вікна"
+
+#~ msgid "Window maximum size"
+#~ msgstr "Максимальний розмір вікна"
+
+#~ msgid "Window maximum size rule type"
+#~ msgstr "Тип правила максимального розміру вікна"
+
+#~ msgid "Active opacity"
+#~ msgstr "Непрозорість активного"
+
+#~ msgid "Active opacity rule type"
+#~ msgstr "Тип правила непрозорості активного вікна"
+
+#~ msgid "Inactive opacity"
+#~ msgstr "Непрозорість неактивного"
+
+#~ msgid "Inactive opacity rule type"
+#~ msgstr "Тип правила непрозорості неактивного вікна"
+
+#~ msgid "Ignore requested geometry"
+#~ msgstr "Ігнорувати запитану позицію"
+
+#~ msgid "Ignore requested geometry rule type"
+#~ msgstr "Тип правила ігнорування запитаної позиції"
+
+#~ msgid "List of Desktop Ids"
+#~ msgstr "Список ідентифікаторів стільниць"
+
+#~ msgid "Desktop Ids rule type"
+#~ msgstr "Тип правила ідентифікатора стільниці"
+
+#~ msgid "Screen number"
+#~ msgstr "Номер екрана"
+
+#~ msgid "Screen number rule type"
+#~ msgstr "Тип правила номера екрана"
+
+#~ msgid "Activity"
+#~ msgstr "Простір дій"
+
+#~ msgid "Activity rule type"
+#~ msgstr "Тип правила простору дій"
+
+#~ msgid "Set window type to"
+#~ msgstr "Встановити тип вікна"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "Тип правила встановлення типу вікна"
+
+#~ msgid "Maximized vertically"
+#~ msgstr "Максимізація вертикально"
+
+#~ msgid "Maximized vertically rule type"
+#~ msgstr "Тип правила вертикальної максимізації"
+
+#~ msgid "Maximized horizontally"
+#~ msgstr "Максимізація горизонтально"
+
+#~ msgid "Maximized horizontally rule type"
+#~ msgstr "Тип правила горизонтальної максимізації"
+
+#~ msgid "Minimized"
+#~ msgstr "Мінімізовано"
+
+#~ msgid "Minimized rule type"
+#~ msgstr "Тип правила мінімізації"
+
+#~ msgid "Shaded"
+#~ msgstr "Згорнуто"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "Тип правила згортання"
+
+#~ msgid "Skip taskbar"
+#~ msgstr "Пропустити панель задач"
+
+#~ msgid "Skip taskbar rule type"
+#~ msgstr "Тип правила пропускання панелі задач"
+
+#~ msgid "Skip pager"
+#~ msgstr "Пропустити пейджер"
+
+#~ msgid "Skip pager rule type"
+#~ msgstr "Тип правила пропускання пейджера"
+
+#~ msgid "Skip switcher"
+#~ msgstr "Пропустити перемикач"
+
+#~ msgid "Skip switcher rule type"
+#~ msgstr "Тип правила пропускання перемикача"
+
+#~ msgid "Keep above"
+#~ msgstr "Завжди згори"
+
+#~ msgid "Keep above rule type"
+#~ msgstr "Тип правила утримання над іншими вікнами"
+
+#~ msgid "Keep below"
+#~ msgstr "Утримувати під іншими"
+
+#~ msgid "Keep below rule type"
+#~ msgstr "Тип правила утримання під іншими вікнами"
+
+#~ msgid "Fullscreen"
+#~ msgstr "На весь екран"
+
+#~ msgid "Fullscreen rule type"
+#~ msgstr "Тип правила розгортання на увесь екран"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "Без смужки заголовка і рамки"
+
+#~ msgid "No titlebar rule type"
+#~ msgstr "Тип правила вимикання смужки заголовка"
+
+#~ msgid "Titlebar color and scheme"
+#~ msgstr "Схема кольорів смужки заголовка"
+
+#~ msgid "Titlebar color rule type"
+#~ msgstr "Тип правила кольору смужки заголовка"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Блокування композитного режиму"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "Тип правила блокування композитного відтворення"
+
+#~ msgid "Focus stealing prevention"
+#~ msgstr "Запобігання викраденню фокуса"
+
+#~ msgid "Focus stealing prevention rule type"
+#~ msgstr "Тип правила запобігання викраденню фокуса"
+
+#~ msgid "Focus protection"
+#~ msgstr "Захист фокусування"
+
+#~ msgid "Focus protection rule type"
+#~ msgstr "Тип правила захисту фокусування"
+
+#~ msgid "Accept Focus"
+#~ msgstr "Допускає фокус"
+
+#~ msgid "Accept Focus rule type"
+#~ msgstr "Тип правила прийняття фокусування"
+
+#~ msgid "Closeable"
+#~ msgstr "Можна закрити"
+
+#~ msgid "Closeable rule type"
+#~ msgstr "Тип правила можливості закриття"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Автоматично групувати з тотожними"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Тип правила автоматичного групування з тотожними"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Автоматичне групування на передньому плані"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Тип правила автоматичного групування на передньому плані"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Автоматично групувати за ідентифікатором"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Тип правила автоматичного групування за ідентифікатором"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Зважати на обмеження розмірів"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Тип правила врахування обмеження розмірів"
+
+#~ msgid "Shortcut"
+#~ msgstr "Скорочення"
+
+#~ msgid "Shortcut rule type"
+#~ msgstr "Тип правила скорочення"
+
+#~ msgid "Ignore global shortcuts"
+#~ msgstr "Ігнорувати загальні скорочення"
+
+#~ msgid "Ignore global shortcuts rule type"
+#~ msgstr "Тип правила ігнорування загальних скорочень"
+
+#~ msgid "Desktop file name"
+#~ msgstr "Назва стільничного файла"
+
+#~ msgid "Desktop file name rule type"
+#~ msgstr "Тип правила назви стільничного файла"
+
+#~ msgid "Dialog"
+#~ msgstr "Вікно"
+
+#~ msgid "..."
+#~ msgstr "…"
 
 #~ msgid "&No Border"
 #~ msgstr "&Без рамок"

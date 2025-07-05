@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 02:27+0000\n"
+"POT-Creation-Date: 2025-07-05 03:22+0000\n"
 "PO-Revision-Date: 2024-03-30 19:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -616,8 +616,7 @@ msgstr "压力"
 msgid "Buttons"
 msgstr "按钮"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:517 debug_console.ui:356
+#: debug_console.cpp:517
 #, kde-format
 msgid "Modifiers"
 msgstr "修饰键"
@@ -872,163 +871,6 @@ msgstr "Wayland 窗口"
 #, kde-format
 msgid "Internal Windows"
 msgstr "内部窗口"
-
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "退出调试控制台"
-
-#. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
-#, kde-format
-msgid "Windows"
-msgstr "窗口"
-
-#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
-#: debug_console.ui:59
-#, kde-format
-msgid "Surfaces"
-msgstr "表面"
-
-#. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:69
-#, kde-format
-msgid "Input Events"
-msgstr "输入事件"
-
-#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:86
-#, kde-format
-msgid "Input Devices"
-msgstr "输入设备"
-
-#. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:96
-#, kde-format
-msgid "OpenGL"
-msgstr "OpenGL"
-
-#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:102
-#, kde-format
-msgid "No OpenGL compositor running"
-msgstr "没有正在运行的 OpenGL 显示特效合成器"
-
-#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:130
-#, kde-format
-msgid "OpenGL (ES) driver information"
-msgstr "OpenGL (ES) 驱动程序信息"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:136
-#, kde-format
-msgid "Vendor:"
-msgstr "厂商："
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:143
-#, kde-format
-msgid "Renderer:"
-msgstr "渲染程序："
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:150
-#, kde-format
-msgid "Version:"
-msgstr "版本："
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:157
-#, kde-format
-msgid "Shading Language Version:"
-msgstr "着色语言版本："
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:164
-#, kde-format
-msgid "Driver:"
-msgstr "驱动程序："
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:171
-#, kde-format
-msgid "GPU class:"
-msgstr "GPU 类："
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:178
-#, kde-format
-msgid "OpenGL Version:"
-msgstr "OpenGL 版本："
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:185
-#, kde-format
-msgid "GLSL Version:"
-msgstr "GLSL 版本："
-
-#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:251
-#, kde-format
-msgid "Platform Extensions"
-msgstr "平台扩展"
-
-#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:267
-#, kde-format
-msgid "OpenGL (ES) Extensions"
-msgstr "OpenGL (ES) 扩展"
-
-#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:288
-#, kde-format
-msgid "Keyboard"
-msgstr "键盘"
-
-#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:315
-#, kde-format
-msgid "Keymap Layouts"
-msgstr "键盘映射布局"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:337
-#, kde-format
-msgid "Current Layout:"
-msgstr "当前布局："
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:372
-#, kde-format
-msgid "Active Modifiers"
-msgstr "活动修饰键："
-
-#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:388
-#, kde-format
-msgid "LEDs"
-msgstr "LED"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:404
-#, kde-format
-msgid "Active LEDs"
-msgstr "活动的 LED"
-
-#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:425 debug_console.ui:445
-#, kde-format
-msgid "Clipboard"
-msgstr "剪贴板"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:491
-#, kde-format
-msgid "Primary Selection"
-msgstr "主要选择"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1568,528 +1410,6 @@ msgstr "夜间颜色开关"
 msgid "Color Temperature Preview"
 msgstr "色温预览"
 
-#. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
-#, kde-format
-msgid "Total rules count (legacy)"
-msgstr "总规则数量 (旧版)"
-
-#. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
-#, kde-format
-msgid "Ordered list of rules groups"
-msgstr "规则分组已排序列表"
-
-#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:10
-#, kde-format
-msgid "Rule description"
-msgstr "规则描述"
-
-#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:13
-#, kde-format
-msgid "Rule description (legacy)"
-msgstr "规则描述 (旧版)"
-
-#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:16
-#, kde-format
-msgid "Delete this rule (for use in imports)"
-msgstr "删除此规则 (用于导入)"
-
-#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:20
-#, kde-format
-msgid "Window class (application)"
-msgstr "窗口类 (应用程序)"
-
-#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:23
-#, kde-format
-msgid "Window class string match type"
-msgstr "窗口类字符串匹配类型"
-
-#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:29
-#, kde-format
-msgid "Match whole window class"
-msgstr "匹配整个窗口类"
-
-#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:34
-#, kde-format
-msgid "Window role"
-msgstr "窗口角色"
-
-#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:37
-#, kde-format
-msgid "Window role string match type"
-msgstr "窗口角色字符串匹配类型"
-
-#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:44
-#, kde-format
-msgid "Window title"
-msgstr "窗口标题"
-
-#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:47
-#, kde-format
-msgid "Window title string match type"
-msgstr "窗口标题字符串匹配类型"
-
-#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:54
-#, kde-format
-msgid "Machine (hostname)"
-msgstr "机器 (主机名)"
-
-#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:57
-#, kde-format
-msgid "Machine string match type"
-msgstr "机器字符串匹配类型"
-
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:64
-#, kde-format
-msgid "Window types that match"
-msgstr "匹配的窗口类型"
-
-#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:69
-#, kde-format
-msgid "Initial placement"
-msgstr "初始位置"
-
-#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:74
-#, kde-format
-msgid "Initial placement rule type"
-msgstr "初始位置规则类型"
-
-#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:79
-#, kde-format
-msgid "Window position"
-msgstr "窗口位置"
-
-#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
-#, kde-format
-msgid "Window position rule type"
-msgstr "窗口位置规则类型"
-
-#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:90
-#, kde-format
-msgid "Window size"
-msgstr "窗口大小"
-
-#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:93
-#, kde-format
-msgid "Window size rule type"
-msgstr "窗口大小规则类型"
-
-#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:100
-#, kde-format
-msgid "Window minimum size"
-msgstr "窗口最小尺寸"
-
-#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
-#, kde-format
-msgid "Window minimum size rule type"
-msgstr "窗口最小尺寸规则类型"
-
-#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:109
-#, kde-format
-msgid "Window maximum size"
-msgstr "窗口最大尺寸"
-
-#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
-#, kde-format
-msgid "Window maximum size rule type"
-msgstr "窗口最大尺寸规则类型"
-
-#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:118
-#, kde-format
-msgid "Active opacity"
-msgstr "活动不透明度"
-
-#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:124
-#, kde-format
-msgid "Active opacity rule type"
-msgstr "活动不透明度规则类型"
-
-#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:129
-#, kde-format
-msgid "Inactive opacity"
-msgstr "非活动不透明度"
-
-#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:135
-#, kde-format
-msgid "Inactive opacity rule type"
-msgstr "非活动不透明度规则类型"
-
-#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:140
-#, kde-format
-msgid "Ignore requested geometry"
-msgstr "忽略程序请求的大小和位置"
-
-#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
-#, kde-format
-msgid "Ignore requested geometry rule type"
-msgstr "忽略程序请求的大小和位置规则类型"
-
-#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:151
-#, kde-format
-msgid "List of Desktop Ids"
-msgstr "桌面 ID 列表"
-
-#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
-#, kde-format
-msgid "Desktop Ids rule type"
-msgstr "桌面 ID 规则类型"
-
-#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:162
-#, kde-format
-msgid "Screen number"
-msgstr "屏幕编号"
-
-#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
-#, kde-format
-msgid "Screen number rule type"
-msgstr "屏幕编号规则类型"
-
-#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:173
-#, kde-format
-msgid "Activity"
-msgstr "活动"
-
-#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:176
-#, kde-format
-msgid "Activity rule type"
-msgstr "活动规则类型"
-
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "设置窗口类型为"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "设置窗口类型规则类型"
-
-#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
-#, kde-format
-msgid "Maximized vertically"
-msgstr "垂直最大化"
-
-#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
-#, kde-format
-msgid "Maximized vertically rule type"
-msgstr "垂直最大化规则类型"
-
-#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
-#, kde-format
-msgid "Maximized horizontally"
-msgstr "水平最大化"
-
-#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
-#, kde-format
-msgid "Maximized horizontally rule type"
-msgstr "水平最大化规则类型"
-
-#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
-#, kde-format
-msgid "Minimized"
-msgstr "最小化"
-
-#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
-#, kde-format
-msgid "Minimized rule type"
-msgstr "最小化规则类型"
-
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
-#, kde-format
-msgid "Shaded"
-msgstr "折叠"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
-#, kde-format
-msgid "Shaded rule type"
-msgstr "折叠规则类型"
-
-#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
-#, kde-format
-msgid "Skip taskbar"
-msgstr "跳过任务栏"
-
-#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
-#, kde-format
-msgid "Skip taskbar rule type"
-msgstr "跳过任务栏规则类型"
-
-#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
-#, kde-format
-msgid "Skip pager"
-msgstr "跳过桌面切换"
-
-#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
-#, kde-format
-msgid "Skip pager rule type"
-msgstr "跳过桌面切换规则类型"
-
-#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
-#, kde-format
-msgid "Skip switcher"
-msgstr "跳过窗口切换器"
-
-#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
-#, kde-format
-msgid "Skip switcher rule type"
-msgstr "跳过窗口切换器规则类型"
-
-#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
-#, kde-format
-msgid "Keep above"
-msgstr "置顶"
-
-#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
-#, kde-format
-msgid "Keep above rule type"
-msgstr "置顶规则类型"
-
-#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
-#, kde-format
-msgid "Keep below"
-msgstr "置底"
-
-#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
-#, kde-format
-msgid "Keep below rule type"
-msgstr "置底规则类型"
-
-#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
-#, kde-format
-msgid "Fullscreen"
-msgstr "全屏"
-
-#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
-#, kde-format
-msgid "Fullscreen rule type"
-msgstr "全屏规则类型"
-
-#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
-#, kde-format
-msgid "No titlebar and frame"
-msgstr "无标题栏和边框"
-
-#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
-#, kde-format
-msgid "No titlebar rule type"
-msgstr "无标题栏规则类型"
-
-#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
-#, kde-format
-msgid "Titlebar color and scheme"
-msgstr "标题栏配色和方案"
-
-#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
-#, kde-format
-msgid "Titlebar color rule type"
-msgstr "标题栏配色规则类型"
-
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
-#, kde-format
-msgid "Block Compositing"
-msgstr "阻止显示特效合成"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "阻止显示特效合成规则类型"
-
-#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
-#, kde-format
-msgid "Focus stealing prevention"
-msgstr "阻止焦点抢占"
-
-#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
-#, kde-format
-msgid "Focus stealing prevention rule type"
-msgstr "阻止焦点抢占规则类型"
-
-#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
-#, kde-format
-msgid "Focus protection"
-msgstr "焦点保护"
-
-#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
-#, kde-format
-msgid "Focus protection rule type"
-msgstr "焦点保护规则类型"
-
-#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
-#, kde-format
-msgid "Accept Focus"
-msgstr "接受焦点"
-
-#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
-#, kde-format
-msgid "Accept Focus rule type"
-msgstr "接受焦点规则类型"
-
-#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
-#, kde-format
-msgid "Closeable"
-msgstr "可关闭"
-
-#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
-#, kde-format
-msgid "Closeable rule type"
-msgstr "可关闭规则类型"
-
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "相同程序自动分组"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "相同程序自动分组规则类型"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "前台自动分组"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "前台自动分组规则类型"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "按 ID 自动分组"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "按 ID 自动分组规则类型"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "服从大小和位置限制"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "服从大小和位置限制规则类型"
-
-#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
-#, kde-format
-msgid "Shortcut"
-msgstr "快捷键"
-
-#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
-#, kde-format
-msgid "Shortcut rule type"
-msgstr "快捷键规则类型"
-
-#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
-#, kde-format
-msgid "Ignore global shortcuts"
-msgstr "忽略全局快捷键"
-
-#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
-#, kde-format
-msgid "Ignore global shortcuts rule type"
-msgstr "忽略全局快捷键规则类型"
-
-#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
-#, kde-format
-msgid "Desktop file name"
-msgstr "桌面文件名"
-
-#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
-#, kde-format
-msgid "Desktop file name rule type"
-msgstr "桌面文件名规则类型"
-
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -2108,18 +1428,6 @@ msgstr "%1 不包含有效的 metadata.json 文件"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 不存在"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
-#: shortcutdialog.ui:14
-#, kde-format
-msgid "Dialog"
-msgstr "对话框"
-
-#. i18n: ectx: property (text), widget (QToolButton, clearButton)
-#: shortcutdialog.ui:25
-#, kde-format
-msgid "..."
-msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2785,3 +2093,348 @@ msgstr ""
 "使用了哪种 OpenGL 驱动程序、正在运行哪些特效等。\n"
 "请将本导语下方的信息复制到一个在线剪贴板中，\n"
 "例如 https://paste.kde.org ，而不是直接粘贴到请求支持的讨论贴中。\n"
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "退出调试控制台"
+
+#~ msgid "Windows"
+#~ msgstr "窗口"
+
+#~ msgid "Surfaces"
+#~ msgstr "表面"
+
+#~ msgid "Input Events"
+#~ msgstr "输入事件"
+
+#~ msgid "Input Devices"
+#~ msgstr "输入设备"
+
+#~ msgid "OpenGL"
+#~ msgstr "OpenGL"
+
+#~ msgid "No OpenGL compositor running"
+#~ msgstr "没有正在运行的 OpenGL 显示特效合成器"
+
+#~ msgid "OpenGL (ES) driver information"
+#~ msgstr "OpenGL (ES) 驱动程序信息"
+
+#~ msgid "Vendor:"
+#~ msgstr "厂商："
+
+#~ msgid "Renderer:"
+#~ msgstr "渲染程序："
+
+#~ msgid "Version:"
+#~ msgstr "版本："
+
+#~ msgid "Shading Language Version:"
+#~ msgstr "着色语言版本："
+
+#~ msgid "Driver:"
+#~ msgstr "驱动程序："
+
+#~ msgid "GPU class:"
+#~ msgstr "GPU 类："
+
+#~ msgid "OpenGL Version:"
+#~ msgstr "OpenGL 版本："
+
+#~ msgid "GLSL Version:"
+#~ msgstr "GLSL 版本："
+
+#~ msgid "Platform Extensions"
+#~ msgstr "平台扩展"
+
+#~ msgid "OpenGL (ES) Extensions"
+#~ msgstr "OpenGL (ES) 扩展"
+
+#~ msgid "Keyboard"
+#~ msgstr "键盘"
+
+#~ msgid "Keymap Layouts"
+#~ msgstr "键盘映射布局"
+
+#~ msgid "Current Layout:"
+#~ msgstr "当前布局："
+
+#~ msgid "Active Modifiers"
+#~ msgstr "活动修饰键："
+
+#~ msgid "LEDs"
+#~ msgstr "LED"
+
+#~ msgid "Active LEDs"
+#~ msgstr "活动的 LED"
+
+#~ msgid "Clipboard"
+#~ msgstr "剪贴板"
+
+#~ msgid "Primary Selection"
+#~ msgstr "主要选择"
+
+#~ msgid "Total rules count (legacy)"
+#~ msgstr "总规则数量 (旧版)"
+
+#~ msgid "Ordered list of rules groups"
+#~ msgstr "规则分组已排序列表"
+
+#~ msgid "Rule description"
+#~ msgstr "规则描述"
+
+#~ msgid "Rule description (legacy)"
+#~ msgstr "规则描述 (旧版)"
+
+#~ msgid "Delete this rule (for use in imports)"
+#~ msgstr "删除此规则 (用于导入)"
+
+#~ msgid "Window class (application)"
+#~ msgstr "窗口类 (应用程序)"
+
+#~ msgid "Window class string match type"
+#~ msgstr "窗口类字符串匹配类型"
+
+#~ msgid "Match whole window class"
+#~ msgstr "匹配整个窗口类"
+
+#~ msgid "Window role"
+#~ msgstr "窗口角色"
+
+#~ msgid "Window role string match type"
+#~ msgstr "窗口角色字符串匹配类型"
+
+#~ msgid "Window title"
+#~ msgstr "窗口标题"
+
+#~ msgid "Window title string match type"
+#~ msgstr "窗口标题字符串匹配类型"
+
+#~ msgid "Machine (hostname)"
+#~ msgstr "机器 (主机名)"
+
+#~ msgid "Machine string match type"
+#~ msgstr "机器字符串匹配类型"
+
+#~ msgid "Window types that match"
+#~ msgstr "匹配的窗口类型"
+
+#~ msgid "Initial placement"
+#~ msgstr "初始位置"
+
+#~ msgid "Initial placement rule type"
+#~ msgstr "初始位置规则类型"
+
+#~ msgid "Window position"
+#~ msgstr "窗口位置"
+
+#~ msgid "Window position rule type"
+#~ msgstr "窗口位置规则类型"
+
+#~ msgid "Window size"
+#~ msgstr "窗口大小"
+
+#~ msgid "Window size rule type"
+#~ msgstr "窗口大小规则类型"
+
+#~ msgid "Window minimum size"
+#~ msgstr "窗口最小尺寸"
+
+#~ msgid "Window minimum size rule type"
+#~ msgstr "窗口最小尺寸规则类型"
+
+#~ msgid "Window maximum size"
+#~ msgstr "窗口最大尺寸"
+
+#~ msgid "Window maximum size rule type"
+#~ msgstr "窗口最大尺寸规则类型"
+
+#~ msgid "Active opacity"
+#~ msgstr "活动不透明度"
+
+#~ msgid "Active opacity rule type"
+#~ msgstr "活动不透明度规则类型"
+
+#~ msgid "Inactive opacity"
+#~ msgstr "非活动不透明度"
+
+#~ msgid "Inactive opacity rule type"
+#~ msgstr "非活动不透明度规则类型"
+
+#~ msgid "Ignore requested geometry"
+#~ msgstr "忽略程序请求的大小和位置"
+
+#~ msgid "Ignore requested geometry rule type"
+#~ msgstr "忽略程序请求的大小和位置规则类型"
+
+#~ msgid "List of Desktop Ids"
+#~ msgstr "桌面 ID 列表"
+
+#~ msgid "Desktop Ids rule type"
+#~ msgstr "桌面 ID 规则类型"
+
+#~ msgid "Screen number"
+#~ msgstr "屏幕编号"
+
+#~ msgid "Screen number rule type"
+#~ msgstr "屏幕编号规则类型"
+
+#~ msgid "Activity"
+#~ msgstr "活动"
+
+#~ msgid "Activity rule type"
+#~ msgstr "活动规则类型"
+
+#~ msgid "Set window type to"
+#~ msgstr "设置窗口类型为"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "设置窗口类型规则类型"
+
+#~ msgid "Maximized vertically"
+#~ msgstr "垂直最大化"
+
+#~ msgid "Maximized vertically rule type"
+#~ msgstr "垂直最大化规则类型"
+
+#~ msgid "Maximized horizontally"
+#~ msgstr "水平最大化"
+
+#~ msgid "Maximized horizontally rule type"
+#~ msgstr "水平最大化规则类型"
+
+#~ msgid "Minimized"
+#~ msgstr "最小化"
+
+#~ msgid "Minimized rule type"
+#~ msgstr "最小化规则类型"
+
+#~ msgid "Shaded"
+#~ msgstr "折叠"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "折叠规则类型"
+
+#~ msgid "Skip taskbar"
+#~ msgstr "跳过任务栏"
+
+#~ msgid "Skip taskbar rule type"
+#~ msgstr "跳过任务栏规则类型"
+
+#~ msgid "Skip pager"
+#~ msgstr "跳过桌面切换"
+
+#~ msgid "Skip pager rule type"
+#~ msgstr "跳过桌面切换规则类型"
+
+#~ msgid "Skip switcher"
+#~ msgstr "跳过窗口切换器"
+
+#~ msgid "Skip switcher rule type"
+#~ msgstr "跳过窗口切换器规则类型"
+
+#~ msgid "Keep above"
+#~ msgstr "置顶"
+
+#~ msgid "Keep above rule type"
+#~ msgstr "置顶规则类型"
+
+#~ msgid "Keep below"
+#~ msgstr "置底"
+
+#~ msgid "Keep below rule type"
+#~ msgstr "置底规则类型"
+
+#~ msgid "Fullscreen"
+#~ msgstr "全屏"
+
+#~ msgid "Fullscreen rule type"
+#~ msgstr "全屏规则类型"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "无标题栏和边框"
+
+#~ msgid "No titlebar rule type"
+#~ msgstr "无标题栏规则类型"
+
+#~ msgid "Titlebar color and scheme"
+#~ msgstr "标题栏配色和方案"
+
+#~ msgid "Titlebar color rule type"
+#~ msgstr "标题栏配色规则类型"
+
+#~ msgid "Block Compositing"
+#~ msgstr "阻止显示特效合成"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "阻止显示特效合成规则类型"
+
+#~ msgid "Focus stealing prevention"
+#~ msgstr "阻止焦点抢占"
+
+#~ msgid "Focus stealing prevention rule type"
+#~ msgstr "阻止焦点抢占规则类型"
+
+#~ msgid "Focus protection"
+#~ msgstr "焦点保护"
+
+#~ msgid "Focus protection rule type"
+#~ msgstr "焦点保护规则类型"
+
+#~ msgid "Accept Focus"
+#~ msgstr "接受焦点"
+
+#~ msgid "Accept Focus rule type"
+#~ msgstr "接受焦点规则类型"
+
+#~ msgid "Closeable"
+#~ msgstr "可关闭"
+
+#~ msgid "Closeable rule type"
+#~ msgstr "可关闭规则类型"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "相同程序自动分组"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "相同程序自动分组规则类型"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "前台自动分组"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "前台自动分组规则类型"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "按 ID 自动分组"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "按 ID 自动分组规则类型"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "服从大小和位置限制"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "服从大小和位置限制规则类型"
+
+#~ msgid "Shortcut"
+#~ msgstr "快捷键"
+
+#~ msgid "Shortcut rule type"
+#~ msgstr "快捷键规则类型"
+
+#~ msgid "Ignore global shortcuts"
+#~ msgstr "忽略全局快捷键"
+
+#~ msgid "Ignore global shortcuts rule type"
+#~ msgstr "忽略全局快捷键规则类型"
+
+#~ msgid "Desktop file name"
+#~ msgstr "桌面文件名"
+
+#~ msgid "Desktop file name rule type"
+#~ msgstr "桌面文件名规则类型"
+
+#~ msgid "Dialog"
+#~ msgstr "对话框"
+
+#~ msgid "..."
+#~ msgstr "..."

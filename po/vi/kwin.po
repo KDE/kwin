@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 02:27+0000\n"
+"POT-Creation-Date: 2025-07-05 03:22+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -622,8 +622,7 @@ msgstr "Áp lực"
 msgid "Buttons"
 msgstr "Nút"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:517 debug_console.ui:356
+#: debug_console.cpp:517
 #, kde-format
 msgid "Modifiers"
 msgstr "Phím bổ trợ"
@@ -878,163 +877,6 @@ msgstr "Cửa sổ Wayland"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Cửa sổ nội bộ"
-
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "Thoát khỏi bàn điều khiển gỡ lỗi"
-
-#. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
-#, kde-format
-msgid "Windows"
-msgstr "Cửa sổ"
-
-#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
-#: debug_console.ui:59
-#, kde-format
-msgid "Surfaces"
-msgstr "Bề mặt"
-
-#. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:69
-#, kde-format
-msgid "Input Events"
-msgstr "Sự kiện đầu vào"
-
-#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:86
-#, kde-format
-msgid "Input Devices"
-msgstr "Thiết bị nhập"
-
-#. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:96
-#, kde-format
-msgid "OpenGL"
-msgstr "OpenGL"
-
-#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:102
-#, kde-format
-msgid "No OpenGL compositor running"
-msgstr "Không có trình kết hợp OpenGL nào đang chạy"
-
-#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:130
-#, kde-format
-msgid "OpenGL (ES) driver information"
-msgstr "Thông tin trình điều khiển OpenGL (ES)"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:136
-#, kde-format
-msgid "Vendor:"
-msgstr "Nhà cung cấp:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:143
-#, kde-format
-msgid "Renderer:"
-msgstr "Trình kết xuất:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:150
-#, kde-format
-msgid "Version:"
-msgstr "Phiên bản:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:157
-#, kde-format
-msgid "Shading Language Version:"
-msgstr "Phiên bản ngôn ngữ đổ bóng:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:164
-#, kde-format
-msgid "Driver:"
-msgstr "Trình điều khiển:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:171
-#, kde-format
-msgid "GPU class:"
-msgstr "Lớp GPU:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:178
-#, kde-format
-msgid "OpenGL Version:"
-msgstr "Phiên bản OpenGL:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:185
-#, kde-format
-msgid "GLSL Version:"
-msgstr "Phiên bản GLSL:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:251
-#, kde-format
-msgid "Platform Extensions"
-msgstr "Phần mở rộng nền tảng"
-
-#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:267
-#, kde-format
-msgid "OpenGL (ES) Extensions"
-msgstr "Phần mở rộng OpenGL (ES)"
-
-#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:288
-#, kde-format
-msgid "Keyboard"
-msgstr "Bàn phím"
-
-#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:315
-#, kde-format
-msgid "Keymap Layouts"
-msgstr "Bố cục bản đồ phím"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:337
-#, kde-format
-msgid "Current Layout:"
-msgstr "Bố cục hiện tại:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:372
-#, kde-format
-msgid "Active Modifiers"
-msgstr "Các phím bổ trợ đang hoạt động"
-
-#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:388
-#, kde-format
-msgid "LEDs"
-msgstr "LED"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:404
-#, kde-format
-msgid "Active LEDs"
-msgstr "LED hoạt động"
-
-#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:425 debug_console.ui:445
-#, kde-format
-msgid "Clipboard"
-msgstr "Bảng nháp"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:491
-#, kde-format
-msgid "Primary Selection"
-msgstr "Phần chọn chính"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1585,528 +1427,6 @@ msgstr "Bật/tắt màu buổi tối"
 msgid "Color Temperature Preview"
 msgstr "Xem thử nhiệt độ màu"
 
-#. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
-#, kde-format
-msgid "Total rules count (legacy)"
-msgstr "Tổng số luật (đời cũ)"
-
-#. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
-#, kde-format
-msgid "Ordered list of rules groups"
-msgstr "Danh sách đã sắp xếp các nhóm luật"
-
-#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:10
-#, kde-format
-msgid "Rule description"
-msgstr "Mô tả luật"
-
-#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:13
-#, kde-format
-msgid "Rule description (legacy)"
-msgstr "Mô tả luật (đời cũ)"
-
-#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:16
-#, kde-format
-msgid "Delete this rule (for use in imports)"
-msgstr "Xoá luật này (dùng khi nhập khẩu)"
-
-#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:20
-#, kde-format
-msgid "Window class (application)"
-msgstr "Lớp cửa sổ (ứng dụng)"
-
-#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:23
-#, kde-format
-msgid "Window class string match type"
-msgstr "Kiểu khớp chuỗi lớp cửa sổ"
-
-#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:29
-#, kde-format
-msgid "Match whole window class"
-msgstr "Khớp toàn bộ lớp cửa sổ"
-
-#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:34
-#, kde-format
-msgid "Window role"
-msgstr "Vai trò cửa sổ"
-
-#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:37
-#, kde-format
-msgid "Window role string match type"
-msgstr "Kiểu khớp chuỗi vai trò cửa sổ"
-
-#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:44
-#, kde-format
-msgid "Window title"
-msgstr "Tiêu đề cửa sổ"
-
-#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:47
-#, kde-format
-msgid "Window title string match type"
-msgstr "Kiểu khớp chuỗi tiêu đề cửa sổ"
-
-#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:54
-#, kde-format
-msgid "Machine (hostname)"
-msgstr "Máy (tên máy)"
-
-#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:57
-#, kde-format
-msgid "Machine string match type"
-msgstr "Kiểu khớp chuỗi máy"
-
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:64
-#, kde-format
-msgid "Window types that match"
-msgstr "Kiểu cửa sổ khớp"
-
-#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:69
-#, kde-format
-msgid "Initial placement"
-msgstr "Xếp chỗ ban đầu"
-
-#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:74
-#, kde-format
-msgid "Initial placement rule type"
-msgstr "Kiểu luật xếp chỗ ban đầu"
-
-#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:79
-#, kde-format
-msgid "Window position"
-msgstr "Vị trí cửa sổ"
-
-#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
-#, kde-format
-msgid "Window position rule type"
-msgstr "Kiểu luật vị trí cửa sổ"
-
-#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:90
-#, kde-format
-msgid "Window size"
-msgstr "Kích thước cửa sổ"
-
-#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:93
-#, kde-format
-msgid "Window size rule type"
-msgstr "Kiểu luật kích thước cửa sổ"
-
-#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:100
-#, kde-format
-msgid "Window minimum size"
-msgstr "Kích thước tối thiểu cửa sổ"
-
-#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
-#, kde-format
-msgid "Window minimum size rule type"
-msgstr "Kiểu luật kích thước tối thiểu cửa sổ"
-
-#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:109
-#, kde-format
-msgid "Window maximum size"
-msgstr "Kích thước tối đa cửa sổ"
-
-#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
-#, kde-format
-msgid "Window maximum size rule type"
-msgstr "Kiểu luật kích thước tối đa cửa sổ"
-
-#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:118
-#, kde-format
-msgid "Active opacity"
-msgstr "Độ mờ đục hoạt động"
-
-#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:124
-#, kde-format
-msgid "Active opacity rule type"
-msgstr "Kiểu luật độ mờ đục hoạt động"
-
-#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:129
-#, kde-format
-msgid "Inactive opacity"
-msgstr "Độ mờ đục bất hoạt"
-
-#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:135
-#, kde-format
-msgid "Inactive opacity rule type"
-msgstr "Kiểu luật độ mờ đục bất hoạt"
-
-#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:140
-#, kde-format
-msgid "Ignore requested geometry"
-msgstr "Bỏ qua hình dạng được yêu cầu"
-
-#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
-#, kde-format
-msgid "Ignore requested geometry rule type"
-msgstr "Kiểu luật bỏ qua hình dạng được yêu cầu"
-
-#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:151
-#, kde-format
-msgid "List of Desktop Ids"
-msgstr "Danh sách mã bàn làm việc"
-
-#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
-#, kde-format
-msgid "Desktop Ids rule type"
-msgstr "Kiểu luật mã bàn làm việc"
-
-#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:162
-#, kde-format
-msgid "Screen number"
-msgstr "Số thứ tự màn hình"
-
-#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
-#, kde-format
-msgid "Screen number rule type"
-msgstr "Kiểu luật số thứ tự màn hình"
-
-#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:173
-#, kde-format
-msgid "Activity"
-msgstr "Hoạt động"
-
-#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:176
-#, kde-format
-msgid "Activity rule type"
-msgstr "Kiểu luật Hoạt động"
-
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "Đặt kiểu cửa sổ thành"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "Kiểu luật đặt kiểu cửa sổ"
-
-#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
-#, kde-format
-msgid "Maximized vertically"
-msgstr "Phóng to theo chiều dọc"
-
-#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
-#, kde-format
-msgid "Maximized vertically rule type"
-msgstr "Kiểu luật phóng to theo chiều dọc"
-
-#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
-#, kde-format
-msgid "Maximized horizontally"
-msgstr "Phóng to theo chiều ngang"
-
-#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
-#, kde-format
-msgid "Maximized horizontally rule type"
-msgstr "Kiểu luật phóng to theo chiều ngang"
-
-#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
-#, kde-format
-msgid "Minimized"
-msgstr "Thu nhỏ"
-
-#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
-#, kde-format
-msgid "Minimized rule type"
-msgstr "Kiểu luật thu nhỏ"
-
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
-#, kde-format
-msgid "Shaded"
-msgstr "Che"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
-#, kde-format
-msgid "Shaded rule type"
-msgstr "Kiểu luật che"
-
-#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
-#, kde-format
-msgid "Skip taskbar"
-msgstr "Bỏ qua thanh tác vụ"
-
-#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
-#, kde-format
-msgid "Skip taskbar rule type"
-msgstr "Kiểu luật bỏ qua thanh tác vụ"
-
-#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
-#, kde-format
-msgid "Skip pager"
-msgstr "Bỏ qua trình tổng quan"
-
-#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
-#, kde-format
-msgid "Skip pager rule type"
-msgstr "Kiểu luật bỏ qua trình tổng quan"
-
-#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
-#, kde-format
-msgid "Skip switcher"
-msgstr "Bỏ qua trình chuyển"
-
-#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
-#, kde-format
-msgid "Skip switcher rule type"
-msgstr "Kiểu luật bỏ qua trình chuyển"
-
-#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
-#, kde-format
-msgid "Keep above"
-msgstr "Giữ trên"
-
-#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
-#, kde-format
-msgid "Keep above rule type"
-msgstr "Kiểu luật giữ trên"
-
-#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
-#, kde-format
-msgid "Keep below"
-msgstr "Giữ dưới"
-
-#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
-#, kde-format
-msgid "Keep below rule type"
-msgstr "Kiểu luật giữ dưới"
-
-#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
-#, kde-format
-msgid "Fullscreen"
-msgstr "Toàn màn hình"
-
-#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
-#, kde-format
-msgid "Fullscreen rule type"
-msgstr "Kiểu luật toàn màn hình"
-
-#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
-#, kde-format
-msgid "No titlebar and frame"
-msgstr "Không có thanh tiêu đề và khung"
-
-#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
-#, kde-format
-msgid "No titlebar rule type"
-msgstr "Kiểu luật không có thanh tiêu đề"
-
-#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
-#, kde-format
-msgid "Titlebar color and scheme"
-msgstr "Màu và quy hoạch thanh tiêu đề"
-
-#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
-#, kde-format
-msgid "Titlebar color rule type"
-msgstr "Kiểu luật màu thanh tiêu đề"
-
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
-#, kde-format
-msgid "Block Compositing"
-msgstr "Ngưng kết hợp"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "Kiểu luật ngưng kết hợp"
-
-#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
-#, kde-format
-msgid "Focus stealing prevention"
-msgstr "Ngăn chặn lấy nhắm"
-
-#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
-#, kde-format
-msgid "Focus stealing prevention rule type"
-msgstr "Kiểu luật ngăn chặn lấy nhắm"
-
-#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
-#, kde-format
-msgid "Focus protection"
-msgstr "Bảo vệ nhắm"
-
-#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
-#, kde-format
-msgid "Focus protection rule type"
-msgstr "Kiểu luật bảo vệ nhắm"
-
-#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
-#, kde-format
-msgid "Accept Focus"
-msgstr "Chấp nhận nhắm"
-
-#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
-#, kde-format
-msgid "Accept Focus rule type"
-msgstr "Kiểu luật chấp nhận nhắm"
-
-#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
-#, kde-format
-msgid "Closeable"
-msgstr "Đóng được"
-
-#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
-#, kde-format
-msgid "Closeable rule type"
-msgstr "Kiểu luật đóng được"
-
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Tự động nhóm giống nhau"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Kiểu luật tự động nhóm giống nhau"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Tự động nhóm ở tiền cảnh"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Kiểu luật tự động nhóm ở tiền cảnh"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Tự động nhóm theo mã định danh"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Kiểu luật tự động nhóm theo mã định danh"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Tuân theo các hạn chế về hình dạng"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Kiểu luật tuân theo các hạn chế về hình dạng"
-
-#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
-#, kde-format
-msgid "Shortcut"
-msgstr "Phím tắt"
-
-#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
-#, kde-format
-msgid "Shortcut rule type"
-msgstr "Kiểu luật phím tắt"
-
-#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
-#, kde-format
-msgid "Ignore global shortcuts"
-msgstr "Bỏ qua phím tắt toàn cục"
-
-#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
-#, kde-format
-msgid "Ignore global shortcuts rule type"
-msgstr "Kiểu luật bỏ qua phím tắt toàn cục"
-
-#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
-#, kde-format
-msgid "Desktop file name"
-msgstr "Tên tệp desktop"
-
-#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
-#, kde-format
-msgid "Desktop file name rule type"
-msgstr "Kiểu luật tên tệp desktop"
-
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -2125,18 +1445,6 @@ msgstr "%1 không chứa một tệp metadata.json hợp lệ"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 không tồn tại"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
-#: shortcutdialog.ui:14
-#, kde-format
-msgid "Dialog"
-msgstr "Hộp thoại"
-
-#. i18n: ectx: property (text), widget (QToolButton, clearButton)
-#: shortcutdialog.ui:25
-#, kde-format
-msgid "..."
-msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2806,6 +2114,351 @@ msgstr ""
 "Vui lòng đăng thông tin được cung cấp bên dưới phần văn bản giới thiệu này "
 "vào một dịch vụ lưu trữ văn bản,\n"
 "chẳng hạn như https://paste.kde.org, thay vì dán vào mạch bài hỗ trợ.\n"
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "Thoát khỏi bàn điều khiển gỡ lỗi"
+
+#~ msgid "Windows"
+#~ msgstr "Cửa sổ"
+
+#~ msgid "Surfaces"
+#~ msgstr "Bề mặt"
+
+#~ msgid "Input Events"
+#~ msgstr "Sự kiện đầu vào"
+
+#~ msgid "Input Devices"
+#~ msgstr "Thiết bị nhập"
+
+#~ msgid "OpenGL"
+#~ msgstr "OpenGL"
+
+#~ msgid "No OpenGL compositor running"
+#~ msgstr "Không có trình kết hợp OpenGL nào đang chạy"
+
+#~ msgid "OpenGL (ES) driver information"
+#~ msgstr "Thông tin trình điều khiển OpenGL (ES)"
+
+#~ msgid "Vendor:"
+#~ msgstr "Nhà cung cấp:"
+
+#~ msgid "Renderer:"
+#~ msgstr "Trình kết xuất:"
+
+#~ msgid "Version:"
+#~ msgstr "Phiên bản:"
+
+#~ msgid "Shading Language Version:"
+#~ msgstr "Phiên bản ngôn ngữ đổ bóng:"
+
+#~ msgid "Driver:"
+#~ msgstr "Trình điều khiển:"
+
+#~ msgid "GPU class:"
+#~ msgstr "Lớp GPU:"
+
+#~ msgid "OpenGL Version:"
+#~ msgstr "Phiên bản OpenGL:"
+
+#~ msgid "GLSL Version:"
+#~ msgstr "Phiên bản GLSL:"
+
+#~ msgid "Platform Extensions"
+#~ msgstr "Phần mở rộng nền tảng"
+
+#~ msgid "OpenGL (ES) Extensions"
+#~ msgstr "Phần mở rộng OpenGL (ES)"
+
+#~ msgid "Keyboard"
+#~ msgstr "Bàn phím"
+
+#~ msgid "Keymap Layouts"
+#~ msgstr "Bố cục bản đồ phím"
+
+#~ msgid "Current Layout:"
+#~ msgstr "Bố cục hiện tại:"
+
+#~ msgid "Active Modifiers"
+#~ msgstr "Các phím bổ trợ đang hoạt động"
+
+#~ msgid "LEDs"
+#~ msgstr "LED"
+
+#~ msgid "Active LEDs"
+#~ msgstr "LED hoạt động"
+
+#~ msgid "Clipboard"
+#~ msgstr "Bảng nháp"
+
+#~ msgid "Primary Selection"
+#~ msgstr "Phần chọn chính"
+
+#~ msgid "Total rules count (legacy)"
+#~ msgstr "Tổng số luật (đời cũ)"
+
+#~ msgid "Ordered list of rules groups"
+#~ msgstr "Danh sách đã sắp xếp các nhóm luật"
+
+#~ msgid "Rule description"
+#~ msgstr "Mô tả luật"
+
+#~ msgid "Rule description (legacy)"
+#~ msgstr "Mô tả luật (đời cũ)"
+
+#~ msgid "Delete this rule (for use in imports)"
+#~ msgstr "Xoá luật này (dùng khi nhập khẩu)"
+
+#~ msgid "Window class (application)"
+#~ msgstr "Lớp cửa sổ (ứng dụng)"
+
+#~ msgid "Window class string match type"
+#~ msgstr "Kiểu khớp chuỗi lớp cửa sổ"
+
+#~ msgid "Match whole window class"
+#~ msgstr "Khớp toàn bộ lớp cửa sổ"
+
+#~ msgid "Window role"
+#~ msgstr "Vai trò cửa sổ"
+
+#~ msgid "Window role string match type"
+#~ msgstr "Kiểu khớp chuỗi vai trò cửa sổ"
+
+#~ msgid "Window title"
+#~ msgstr "Tiêu đề cửa sổ"
+
+#~ msgid "Window title string match type"
+#~ msgstr "Kiểu khớp chuỗi tiêu đề cửa sổ"
+
+#~ msgid "Machine (hostname)"
+#~ msgstr "Máy (tên máy)"
+
+#~ msgid "Machine string match type"
+#~ msgstr "Kiểu khớp chuỗi máy"
+
+#~ msgid "Window types that match"
+#~ msgstr "Kiểu cửa sổ khớp"
+
+#~ msgid "Initial placement"
+#~ msgstr "Xếp chỗ ban đầu"
+
+#~ msgid "Initial placement rule type"
+#~ msgstr "Kiểu luật xếp chỗ ban đầu"
+
+#~ msgid "Window position"
+#~ msgstr "Vị trí cửa sổ"
+
+#~ msgid "Window position rule type"
+#~ msgstr "Kiểu luật vị trí cửa sổ"
+
+#~ msgid "Window size"
+#~ msgstr "Kích thước cửa sổ"
+
+#~ msgid "Window size rule type"
+#~ msgstr "Kiểu luật kích thước cửa sổ"
+
+#~ msgid "Window minimum size"
+#~ msgstr "Kích thước tối thiểu cửa sổ"
+
+#~ msgid "Window minimum size rule type"
+#~ msgstr "Kiểu luật kích thước tối thiểu cửa sổ"
+
+#~ msgid "Window maximum size"
+#~ msgstr "Kích thước tối đa cửa sổ"
+
+#~ msgid "Window maximum size rule type"
+#~ msgstr "Kiểu luật kích thước tối đa cửa sổ"
+
+#~ msgid "Active opacity"
+#~ msgstr "Độ mờ đục hoạt động"
+
+#~ msgid "Active opacity rule type"
+#~ msgstr "Kiểu luật độ mờ đục hoạt động"
+
+#~ msgid "Inactive opacity"
+#~ msgstr "Độ mờ đục bất hoạt"
+
+#~ msgid "Inactive opacity rule type"
+#~ msgstr "Kiểu luật độ mờ đục bất hoạt"
+
+#~ msgid "Ignore requested geometry"
+#~ msgstr "Bỏ qua hình dạng được yêu cầu"
+
+#~ msgid "Ignore requested geometry rule type"
+#~ msgstr "Kiểu luật bỏ qua hình dạng được yêu cầu"
+
+#~ msgid "List of Desktop Ids"
+#~ msgstr "Danh sách mã bàn làm việc"
+
+#~ msgid "Desktop Ids rule type"
+#~ msgstr "Kiểu luật mã bàn làm việc"
+
+#~ msgid "Screen number"
+#~ msgstr "Số thứ tự màn hình"
+
+#~ msgid "Screen number rule type"
+#~ msgstr "Kiểu luật số thứ tự màn hình"
+
+#~ msgid "Activity"
+#~ msgstr "Hoạt động"
+
+#~ msgid "Activity rule type"
+#~ msgstr "Kiểu luật Hoạt động"
+
+#~ msgid "Set window type to"
+#~ msgstr "Đặt kiểu cửa sổ thành"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "Kiểu luật đặt kiểu cửa sổ"
+
+#~ msgid "Maximized vertically"
+#~ msgstr "Phóng to theo chiều dọc"
+
+#~ msgid "Maximized vertically rule type"
+#~ msgstr "Kiểu luật phóng to theo chiều dọc"
+
+#~ msgid "Maximized horizontally"
+#~ msgstr "Phóng to theo chiều ngang"
+
+#~ msgid "Maximized horizontally rule type"
+#~ msgstr "Kiểu luật phóng to theo chiều ngang"
+
+#~ msgid "Minimized"
+#~ msgstr "Thu nhỏ"
+
+#~ msgid "Minimized rule type"
+#~ msgstr "Kiểu luật thu nhỏ"
+
+#~ msgid "Shaded"
+#~ msgstr "Che"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "Kiểu luật che"
+
+#~ msgid "Skip taskbar"
+#~ msgstr "Bỏ qua thanh tác vụ"
+
+#~ msgid "Skip taskbar rule type"
+#~ msgstr "Kiểu luật bỏ qua thanh tác vụ"
+
+#~ msgid "Skip pager"
+#~ msgstr "Bỏ qua trình tổng quan"
+
+#~ msgid "Skip pager rule type"
+#~ msgstr "Kiểu luật bỏ qua trình tổng quan"
+
+#~ msgid "Skip switcher"
+#~ msgstr "Bỏ qua trình chuyển"
+
+#~ msgid "Skip switcher rule type"
+#~ msgstr "Kiểu luật bỏ qua trình chuyển"
+
+#~ msgid "Keep above"
+#~ msgstr "Giữ trên"
+
+#~ msgid "Keep above rule type"
+#~ msgstr "Kiểu luật giữ trên"
+
+#~ msgid "Keep below"
+#~ msgstr "Giữ dưới"
+
+#~ msgid "Keep below rule type"
+#~ msgstr "Kiểu luật giữ dưới"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Toàn màn hình"
+
+#~ msgid "Fullscreen rule type"
+#~ msgstr "Kiểu luật toàn màn hình"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "Không có thanh tiêu đề và khung"
+
+#~ msgid "No titlebar rule type"
+#~ msgstr "Kiểu luật không có thanh tiêu đề"
+
+#~ msgid "Titlebar color and scheme"
+#~ msgstr "Màu và quy hoạch thanh tiêu đề"
+
+#~ msgid "Titlebar color rule type"
+#~ msgstr "Kiểu luật màu thanh tiêu đề"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Ngưng kết hợp"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "Kiểu luật ngưng kết hợp"
+
+#~ msgid "Focus stealing prevention"
+#~ msgstr "Ngăn chặn lấy nhắm"
+
+#~ msgid "Focus stealing prevention rule type"
+#~ msgstr "Kiểu luật ngăn chặn lấy nhắm"
+
+#~ msgid "Focus protection"
+#~ msgstr "Bảo vệ nhắm"
+
+#~ msgid "Focus protection rule type"
+#~ msgstr "Kiểu luật bảo vệ nhắm"
+
+#~ msgid "Accept Focus"
+#~ msgstr "Chấp nhận nhắm"
+
+#~ msgid "Accept Focus rule type"
+#~ msgstr "Kiểu luật chấp nhận nhắm"
+
+#~ msgid "Closeable"
+#~ msgstr "Đóng được"
+
+#~ msgid "Closeable rule type"
+#~ msgstr "Kiểu luật đóng được"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Tự động nhóm giống nhau"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Kiểu luật tự động nhóm giống nhau"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Tự động nhóm ở tiền cảnh"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Kiểu luật tự động nhóm ở tiền cảnh"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Tự động nhóm theo mã định danh"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Kiểu luật tự động nhóm theo mã định danh"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Tuân theo các hạn chế về hình dạng"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Kiểu luật tuân theo các hạn chế về hình dạng"
+
+#~ msgid "Shortcut"
+#~ msgstr "Phím tắt"
+
+#~ msgid "Shortcut rule type"
+#~ msgstr "Kiểu luật phím tắt"
+
+#~ msgid "Ignore global shortcuts"
+#~ msgstr "Bỏ qua phím tắt toàn cục"
+
+#~ msgid "Ignore global shortcuts rule type"
+#~ msgstr "Kiểu luật bỏ qua phím tắt toàn cục"
+
+#~ msgid "Desktop file name"
+#~ msgstr "Tên tệp desktop"
+
+#~ msgid "Desktop file name rule type"
+#~ msgstr "Kiểu luật tên tệp desktop"
+
+#~ msgid "Dialog"
+#~ msgstr "Hộp thoại"
+
+#~ msgid "..."
+#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "Không &viền"

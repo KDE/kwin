@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 02:27+0000\n"
+"POT-Creation-Date: 2025-07-05 03:22+0000\n"
 "PO-Revision-Date: 2023-02-08 08:23+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -619,8 +619,7 @@ msgstr "წნევა"
 msgid "Buttons"
 msgstr "ღილაკები"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:517 debug_console.ui:356
+#: debug_console.cpp:517
 #, kde-format
 msgid "Modifiers"
 msgstr "მოდიფიკატორები"
@@ -875,163 +874,6 @@ msgstr "Wayland -ის ფანჯრები"
 #, kde-format
 msgid "Internal Windows"
 msgstr "შიდა ფანჯრები"
-
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "გამართვის კონსოლიდან გასვლა"
-
-#. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
-#, kde-format
-msgid "Windows"
-msgstr "ფანჯრები"
-
-#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
-#: debug_console.ui:59
-#, kde-format
-msgid "Surfaces"
-msgstr "ზედაპირები"
-
-#. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:69
-#, kde-format
-msgid "Input Events"
-msgstr "შეყვანის მოვლენები"
-
-#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:86
-#, kde-format
-msgid "Input Devices"
-msgstr "შემომტანი მოწყობილობები"
-
-#. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:96
-#, kde-format
-msgid "OpenGL"
-msgstr "OpenGL"
-
-#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:102
-#, kde-format
-msgid "No OpenGL compositor running"
-msgstr "OpenGL კომპოზიტორი გაშვებული არაა"
-
-#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:130
-#, kde-format
-msgid "OpenGL (ES) driver information"
-msgstr "OpenGL (ES) დრაივერის ინფორმაცია"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:136
-#, kde-format
-msgid "Vendor:"
-msgstr "მომწოდებელი:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:143
-#, kde-format
-msgid "Renderer:"
-msgstr "რენდერერი:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:150
-#, kde-format
-msgid "Version:"
-msgstr "ვერსია:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:157
-#, kde-format
-msgid "Shading Language Version:"
-msgstr "დაჩრდილვის ენის ვერსია:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:164
-#, kde-format
-msgid "Driver:"
-msgstr "დრაივერი:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:171
-#, kde-format
-msgid "GPU class:"
-msgstr "GPU -ის კლასი:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:178
-#, kde-format
-msgid "OpenGL Version:"
-msgstr "OpenGL -ის ვერსია:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:185
-#, kde-format
-msgid "GLSL Version:"
-msgstr "GLSL -ის ვერსია:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:251
-#, kde-format
-msgid "Platform Extensions"
-msgstr "პლატფორმის გაფართოებები"
-
-#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:267
-#, kde-format
-msgid "OpenGL (ES) Extensions"
-msgstr "OpenGL (ES) -ის გაფართოებები"
-
-#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:288
-#, kde-format
-msgid "Keyboard"
-msgstr "კლავიატურა"
-
-#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:315
-#, kde-format
-msgid "Keymap Layouts"
-msgstr "კლავიატურის განლაგებები"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:337
-#, kde-format
-msgid "Current Layout:"
-msgstr "მიმდინარე განლაგება:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:372
-#, kde-format
-msgid "Active Modifiers"
-msgstr "აქტიური მოდიფიკატორები"
-
-#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:388
-#, kde-format
-msgid "LEDs"
-msgstr "LED-ები"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:404
-#, kde-format
-msgid "Active LEDs"
-msgstr "აქტიური LED-ები"
-
-#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:425 debug_console.ui:445
-#, kde-format
-msgid "Clipboard"
-msgstr "გაცვლის ბაფერი"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:491
-#, kde-format
-msgid "Primary Selection"
-msgstr "ძირითადი არჩევანი"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1581,528 +1423,6 @@ msgstr "ღამის ფერების გადართვა"
 msgid "Color Temperature Preview"
 msgstr "ფერის ტემპერატურის გადახედვა"
 
-#. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
-#, kde-format
-msgid "Total rules count (legacy)"
-msgstr "წესების ჯამური რაოდენობა (მოძველებული)"
-
-#. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
-#, kde-format
-msgid "Ordered list of rules groups"
-msgstr "წესების ჯგუფების დალაგებული სია"
-
-#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:10
-#, kde-format
-msgid "Rule description"
-msgstr "წესის აღწერა"
-
-#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:13
-#, kde-format
-msgid "Rule description (legacy)"
-msgstr "წესის აღწერა (მოძველებული)"
-
-#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:16
-#, kde-format
-msgid "Delete this rule (for use in imports)"
-msgstr "ამ წესის წაშლა (შემოტანებში გამოსაყენებლად)"
-
-#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:20
-#, kde-format
-msgid "Window class (application)"
-msgstr "ფანჯრის კლასი (აპლიკაცია)"
-
-#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:23
-#, kde-format
-msgid "Window class string match type"
-msgstr "ფანჯრის კლასის სტრიქონის დამთხვევის ტიპი"
-
-#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:29
-#, kde-format
-msgid "Match whole window class"
-msgstr "მთლიანი ფანჯრის კლასის დამთხვევა"
-
-#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:34
-#, kde-format
-msgid "Window role"
-msgstr "ფანჯრის როლი"
-
-#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:37
-#, kde-format
-msgid "Window role string match type"
-msgstr "ფანჯრის როლის სტრიქონის დამთხვევის ტიპი"
-
-#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:44
-#, kde-format
-msgid "Window title"
-msgstr "ფანჯრის სათაური"
-
-#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:47
-#, kde-format
-msgid "Window title string match type"
-msgstr "ფანჯრის სათაურის სტრიქონის დამთხვევის ტიპი"
-
-#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:54
-#, kde-format
-msgid "Machine (hostname)"
-msgstr "მანქანა (ჰოსტის სახელი)"
-
-#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:57
-#, kde-format
-msgid "Machine string match type"
-msgstr "მანქანის სტრიქონის დამთხვევის ტიპი"
-
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:64
-#, kde-format
-msgid "Window types that match"
-msgstr "ფანჯრის ტიპები, რომლებიც ემთხვევა"
-
-#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:69
-#, kde-format
-msgid "Initial placement"
-msgstr "საწყისი განთავსება"
-
-#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:74
-#, kde-format
-msgid "Initial placement rule type"
-msgstr "საწყისი მდებარეობის წესის ტიპი"
-
-#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:79
-#, kde-format
-msgid "Window position"
-msgstr "ფანჯრის მდებარეობა"
-
-#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
-#, kde-format
-msgid "Window position rule type"
-msgstr "ფანჯრის მდებარეობის წესის ტიპი"
-
-#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:90
-#, kde-format
-msgid "Window size"
-msgstr "ფანჯრის ზომა"
-
-#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:93
-#, kde-format
-msgid "Window size rule type"
-msgstr "ფანჯრის ზომის წესის ტიპი"
-
-#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:100
-#, kde-format
-msgid "Window minimum size"
-msgstr "ფანჯრის მინიმალური ზომა"
-
-#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
-#, kde-format
-msgid "Window minimum size rule type"
-msgstr "ფანჯრის მინიმალური ზომის წესის ტიპი"
-
-#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:109
-#, kde-format
-msgid "Window maximum size"
-msgstr "ფანჯრის მაქსიმალური ზომა"
-
-#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
-#, kde-format
-msgid "Window maximum size rule type"
-msgstr "ფანჯრის მაქსიმალური ზომის წესის ტიპი"
-
-#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:118
-#, kde-format
-msgid "Active opacity"
-msgstr "აქტიური გაუმჭვირვალობა"
-
-#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:124
-#, kde-format
-msgid "Active opacity rule type"
-msgstr "აქტიური გაუმჭვირვალობის წესის ტიპი"
-
-#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:129
-#, kde-format
-msgid "Inactive opacity"
-msgstr "არააქტიური გაუმჭვირვალობა"
-
-#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:135
-#, kde-format
-msgid "Inactive opacity rule type"
-msgstr "არააქტიური გაუმჭვირვალობის წესის ტიპი"
-
-#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:140
-#, kde-format
-msgid "Ignore requested geometry"
-msgstr "მოთხოვნილი გეომეტრიის უგულებელყოფა"
-
-#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
-#, kde-format
-msgid "Ignore requested geometry rule type"
-msgstr "მოთხოვნილი გეომეტრიის წესის ტიპის უგულებელყოფა"
-
-#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:151
-#, kde-format
-msgid "List of Desktop Ids"
-msgstr "სამუშაო მაგიდების ID-ების სია"
-
-#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
-#, kde-format
-msgid "Desktop Ids rule type"
-msgstr "სამუშაო მაგიდის ID-ების წესის ტიპი"
-
-#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:162
-#, kde-format
-msgid "Screen number"
-msgstr "ეკრანის ნომერი"
-
-#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
-#, kde-format
-msgid "Screen number rule type"
-msgstr "ეკრანის ნომრის წესის ტიპი"
-
-#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:173
-#, kde-format
-msgid "Activity"
-msgstr "აქტივობა"
-
-#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:176
-#, kde-format
-msgid "Activity rule type"
-msgstr "აქტივობის წესის ტიპი"
-
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "ფანჯრის ტიპის დაყენება"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "ფანჯრის ტიპის წესის ტიპის დაყენება"
-
-#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
-#, kde-format
-msgid "Maximized vertically"
-msgstr "ვერტიკალურად გაშლილი"
-
-#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
-#, kde-format
-msgid "Maximized vertically rule type"
-msgstr "ვერტიკალურად გაშლის წესის ტიპი"
-
-#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
-#, kde-format
-msgid "Maximized horizontally"
-msgstr "ჰორიზონტალურად გაშლილი"
-
-#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
-#, kde-format
-msgid "Maximized horizontally rule type"
-msgstr "ჰორიზონტალურად გაშლის წესის ტიპი"
-
-#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
-#, kde-format
-msgid "Minimized"
-msgstr "ჩაკეცვა"
-
-#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
-#, kde-format
-msgid "Minimized rule type"
-msgstr "ჩაკეცვლის წესის ტიპი"
-
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
-#, kde-format
-msgid "Shaded"
-msgstr "დაჩრდილული"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
-#, kde-format
-msgid "Shaded rule type"
-msgstr "დაჩრდილვის წესის ტიპი"
-
-#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
-#, kde-format
-msgid "Skip taskbar"
-msgstr "დავალებების პანელის გამოტოვება"
-
-#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
-#, kde-format
-msgid "Skip taskbar rule type"
-msgstr "დავალებების პანელის გამოტოვებს წესის ტიპი"
-
-#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
-#, kde-format
-msgid "Skip pager"
-msgstr "პეიჯერის გამოტოვება"
-
-#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
-#, kde-format
-msgid "Skip pager rule type"
-msgstr "პეიჯერის გამოტოვების წესის ტპი"
-
-#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
-#, kde-format
-msgid "Skip switcher"
-msgstr "გადამრთველის გამოტოვება"
-
-#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
-#, kde-format
-msgid "Skip switcher rule type"
-msgstr "გადამრთველის გამოტოვების წესის ტიპი"
-
-#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
-#, kde-format
-msgid "Keep above"
-msgstr "ზემოდან დატოვება"
-
-#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
-#, kde-format
-msgid "Keep above rule type"
-msgstr "წესის ტიპის წემოთ ქონა"
-
-#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
-#, kde-format
-msgid "Keep below"
-msgstr "ქვემოთ ქონა"
-
-#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
-#, kde-format
-msgid "Keep below rule type"
-msgstr "ქვემოთ ქონის წესის ტიპი"
-
-#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
-#, kde-format
-msgid "Fullscreen"
-msgstr "მთელ ეკრანზე"
-
-#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
-#, kde-format
-msgid "Fullscreen rule type"
-msgstr "სრული ეკრანის წესის ტიპი"
-
-#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
-#, kde-format
-msgid "No titlebar and frame"
-msgstr "სათაურისა და ჩარჩოს გარეშე"
-
-#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
-#, kde-format
-msgid "No titlebar rule type"
-msgstr "სათაურის წესის ტიპის გარეშე"
-
-#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
-#, kde-format
-msgid "Titlebar color and scheme"
-msgstr "სათაურის ზოლის ფერი და სქემა"
-
-#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
-#, kde-format
-msgid "Titlebar color rule type"
-msgstr "სათაურის ზოლის წესის ტიპი"
-
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
-#, kde-format
-msgid "Block Compositing"
-msgstr "კომპოზიტირების დაბლოკვა"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "კომპოზიტირების წესის ტიპის დაბლოკვა"
-
-#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
-#, kde-format
-msgid "Focus stealing prevention"
-msgstr "ფოკუსის მოპარვის აცილება"
-
-#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
-#, kde-format
-msgid "Focus stealing prevention rule type"
-msgstr "ფოკუსის მოპარვის აცილების წესის ტიპი"
-
-#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
-#, kde-format
-msgid "Focus protection"
-msgstr "ფოკუსის დაცვა"
-
-#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
-#, kde-format
-msgid "Focus protection rule type"
-msgstr "ფოკუსის დაცვის წესის ტიპი"
-
-#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
-#, kde-format
-msgid "Accept Focus"
-msgstr "ფოკუსის მიღება"
-
-#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
-#, kde-format
-msgid "Accept Focus rule type"
-msgstr "ფოკუსის მიღების წესის ტიპი"
-
-#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
-#, kde-format
-msgid "Closeable"
-msgstr "დახურვადი"
-
-#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
-#, kde-format
-msgid "Closeable rule type"
-msgstr "დახურვადი წესის ტიპი"
-
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "ერთნაირების ავტომატური დაჯგუფება"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "ერთნაირი წესის ტიპების მქონეების ავტომატური დაჯგუფება"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "ავტომატური დაჯგუფება წინა პლანზე"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "წინა პლანზე ავტომატური დაჯგუფების წესის ტიპი"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "ავტომატური დაჯგუფება ID-ის მიხედვით"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "ID-ის მიხედვით ავტომატური დაჯგუფების წესის ტიპი"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "გეომეტრიის შეზღუდვების დაცვა"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "გეომეტრიის შეზღუდვების დაცვის წესის ტიპი"
-
-#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
-#, kde-format
-msgid "Shortcut"
-msgstr "მალსახმობი"
-
-#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
-#, kde-format
-msgid "Shortcut rule type"
-msgstr "მალსახმობის წესის ტიპი"
-
-#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
-#, kde-format
-msgid "Ignore global shortcuts"
-msgstr "გლობალური მალსახმობების უგულებელყოფა"
-
-#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
-#, kde-format
-msgid "Ignore global shortcuts rule type"
-msgstr "იგნორირებული გლობალური მალსახმობების წესის ტიპი"
-
-#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
-#, kde-format
-msgid "Desktop file name"
-msgstr "სამუშაო მაგიდის ფაილის სახელი"
-
-#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
-#, kde-format
-msgid "Desktop file name rule type"
-msgstr "სამუშაო მაგიდის ფაილის სახელის წესის ტიპი"
-
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -2121,18 +1441,6 @@ msgstr "%1 metadata.json ფაილს არ შეიცავს"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 არ არსებობს"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
-#: shortcutdialog.ui:14
-#, kde-format
-msgid "Dialog"
-msgstr "ფანჯარა"
-
-#. i18n: ectx: property (text), widget (QToolButton, clearButton)
-#: shortcutdialog.ui:25
-#, kde-format
-msgid "..."
-msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2804,6 +2112,351 @@ msgstr ""
 "დააკოპირეთ ინფორმაცია, რომელიც ამ ტექსტის ქვეშაა, სადმე დასაკოპირებელ "
 "სერვისში, როგორიცაა, მაგალითად,\n"
 "https://paste.kde.org . სრულად ტექსტს ფორუმზე ნუ დააკოპირებთ.\n"
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "გამართვის კონსოლიდან გასვლა"
+
+#~ msgid "Windows"
+#~ msgstr "ფანჯრები"
+
+#~ msgid "Surfaces"
+#~ msgstr "ზედაპირები"
+
+#~ msgid "Input Events"
+#~ msgstr "შეყვანის მოვლენები"
+
+#~ msgid "Input Devices"
+#~ msgstr "შემომტანი მოწყობილობები"
+
+#~ msgid "OpenGL"
+#~ msgstr "OpenGL"
+
+#~ msgid "No OpenGL compositor running"
+#~ msgstr "OpenGL კომპოზიტორი გაშვებული არაა"
+
+#~ msgid "OpenGL (ES) driver information"
+#~ msgstr "OpenGL (ES) დრაივერის ინფორმაცია"
+
+#~ msgid "Vendor:"
+#~ msgstr "მომწოდებელი:"
+
+#~ msgid "Renderer:"
+#~ msgstr "რენდერერი:"
+
+#~ msgid "Version:"
+#~ msgstr "ვერსია:"
+
+#~ msgid "Shading Language Version:"
+#~ msgstr "დაჩრდილვის ენის ვერსია:"
+
+#~ msgid "Driver:"
+#~ msgstr "დრაივერი:"
+
+#~ msgid "GPU class:"
+#~ msgstr "GPU -ის კლასი:"
+
+#~ msgid "OpenGL Version:"
+#~ msgstr "OpenGL -ის ვერსია:"
+
+#~ msgid "GLSL Version:"
+#~ msgstr "GLSL -ის ვერსია:"
+
+#~ msgid "Platform Extensions"
+#~ msgstr "პლატფორმის გაფართოებები"
+
+#~ msgid "OpenGL (ES) Extensions"
+#~ msgstr "OpenGL (ES) -ის გაფართოებები"
+
+#~ msgid "Keyboard"
+#~ msgstr "კლავიატურა"
+
+#~ msgid "Keymap Layouts"
+#~ msgstr "კლავიატურის განლაგებები"
+
+#~ msgid "Current Layout:"
+#~ msgstr "მიმდინარე განლაგება:"
+
+#~ msgid "Active Modifiers"
+#~ msgstr "აქტიური მოდიფიკატორები"
+
+#~ msgid "LEDs"
+#~ msgstr "LED-ები"
+
+#~ msgid "Active LEDs"
+#~ msgstr "აქტიური LED-ები"
+
+#~ msgid "Clipboard"
+#~ msgstr "გაცვლის ბაფერი"
+
+#~ msgid "Primary Selection"
+#~ msgstr "ძირითადი არჩევანი"
+
+#~ msgid "Total rules count (legacy)"
+#~ msgstr "წესების ჯამური რაოდენობა (მოძველებული)"
+
+#~ msgid "Ordered list of rules groups"
+#~ msgstr "წესების ჯგუფების დალაგებული სია"
+
+#~ msgid "Rule description"
+#~ msgstr "წესის აღწერა"
+
+#~ msgid "Rule description (legacy)"
+#~ msgstr "წესის აღწერა (მოძველებული)"
+
+#~ msgid "Delete this rule (for use in imports)"
+#~ msgstr "ამ წესის წაშლა (შემოტანებში გამოსაყენებლად)"
+
+#~ msgid "Window class (application)"
+#~ msgstr "ფანჯრის კლასი (აპლიკაცია)"
+
+#~ msgid "Window class string match type"
+#~ msgstr "ფანჯრის კლასის სტრიქონის დამთხვევის ტიპი"
+
+#~ msgid "Match whole window class"
+#~ msgstr "მთლიანი ფანჯრის კლასის დამთხვევა"
+
+#~ msgid "Window role"
+#~ msgstr "ფანჯრის როლი"
+
+#~ msgid "Window role string match type"
+#~ msgstr "ფანჯრის როლის სტრიქონის დამთხვევის ტიპი"
+
+#~ msgid "Window title"
+#~ msgstr "ფანჯრის სათაური"
+
+#~ msgid "Window title string match type"
+#~ msgstr "ფანჯრის სათაურის სტრიქონის დამთხვევის ტიპი"
+
+#~ msgid "Machine (hostname)"
+#~ msgstr "მანქანა (ჰოსტის სახელი)"
+
+#~ msgid "Machine string match type"
+#~ msgstr "მანქანის სტრიქონის დამთხვევის ტიპი"
+
+#~ msgid "Window types that match"
+#~ msgstr "ფანჯრის ტიპები, რომლებიც ემთხვევა"
+
+#~ msgid "Initial placement"
+#~ msgstr "საწყისი განთავსება"
+
+#~ msgid "Initial placement rule type"
+#~ msgstr "საწყისი მდებარეობის წესის ტიპი"
+
+#~ msgid "Window position"
+#~ msgstr "ფანჯრის მდებარეობა"
+
+#~ msgid "Window position rule type"
+#~ msgstr "ფანჯრის მდებარეობის წესის ტიპი"
+
+#~ msgid "Window size"
+#~ msgstr "ფანჯრის ზომა"
+
+#~ msgid "Window size rule type"
+#~ msgstr "ფანჯრის ზომის წესის ტიპი"
+
+#~ msgid "Window minimum size"
+#~ msgstr "ფანჯრის მინიმალური ზომა"
+
+#~ msgid "Window minimum size rule type"
+#~ msgstr "ფანჯრის მინიმალური ზომის წესის ტიპი"
+
+#~ msgid "Window maximum size"
+#~ msgstr "ფანჯრის მაქსიმალური ზომა"
+
+#~ msgid "Window maximum size rule type"
+#~ msgstr "ფანჯრის მაქსიმალური ზომის წესის ტიპი"
+
+#~ msgid "Active opacity"
+#~ msgstr "აქტიური გაუმჭვირვალობა"
+
+#~ msgid "Active opacity rule type"
+#~ msgstr "აქტიური გაუმჭვირვალობის წესის ტიპი"
+
+#~ msgid "Inactive opacity"
+#~ msgstr "არააქტიური გაუმჭვირვალობა"
+
+#~ msgid "Inactive opacity rule type"
+#~ msgstr "არააქტიური გაუმჭვირვალობის წესის ტიპი"
+
+#~ msgid "Ignore requested geometry"
+#~ msgstr "მოთხოვნილი გეომეტრიის უგულებელყოფა"
+
+#~ msgid "Ignore requested geometry rule type"
+#~ msgstr "მოთხოვნილი გეომეტრიის წესის ტიპის უგულებელყოფა"
+
+#~ msgid "List of Desktop Ids"
+#~ msgstr "სამუშაო მაგიდების ID-ების სია"
+
+#~ msgid "Desktop Ids rule type"
+#~ msgstr "სამუშაო მაგიდის ID-ების წესის ტიპი"
+
+#~ msgid "Screen number"
+#~ msgstr "ეკრანის ნომერი"
+
+#~ msgid "Screen number rule type"
+#~ msgstr "ეკრანის ნომრის წესის ტიპი"
+
+#~ msgid "Activity"
+#~ msgstr "აქტივობა"
+
+#~ msgid "Activity rule type"
+#~ msgstr "აქტივობის წესის ტიპი"
+
+#~ msgid "Set window type to"
+#~ msgstr "ფანჯრის ტიპის დაყენება"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "ფანჯრის ტიპის წესის ტიპის დაყენება"
+
+#~ msgid "Maximized vertically"
+#~ msgstr "ვერტიკალურად გაშლილი"
+
+#~ msgid "Maximized vertically rule type"
+#~ msgstr "ვერტიკალურად გაშლის წესის ტიპი"
+
+#~ msgid "Maximized horizontally"
+#~ msgstr "ჰორიზონტალურად გაშლილი"
+
+#~ msgid "Maximized horizontally rule type"
+#~ msgstr "ჰორიზონტალურად გაშლის წესის ტიპი"
+
+#~ msgid "Minimized"
+#~ msgstr "ჩაკეცვა"
+
+#~ msgid "Minimized rule type"
+#~ msgstr "ჩაკეცვლის წესის ტიპი"
+
+#~ msgid "Shaded"
+#~ msgstr "დაჩრდილული"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "დაჩრდილვის წესის ტიპი"
+
+#~ msgid "Skip taskbar"
+#~ msgstr "დავალებების პანელის გამოტოვება"
+
+#~ msgid "Skip taskbar rule type"
+#~ msgstr "დავალებების პანელის გამოტოვებს წესის ტიპი"
+
+#~ msgid "Skip pager"
+#~ msgstr "პეიჯერის გამოტოვება"
+
+#~ msgid "Skip pager rule type"
+#~ msgstr "პეიჯერის გამოტოვების წესის ტპი"
+
+#~ msgid "Skip switcher"
+#~ msgstr "გადამრთველის გამოტოვება"
+
+#~ msgid "Skip switcher rule type"
+#~ msgstr "გადამრთველის გამოტოვების წესის ტიპი"
+
+#~ msgid "Keep above"
+#~ msgstr "ზემოდან დატოვება"
+
+#~ msgid "Keep above rule type"
+#~ msgstr "წესის ტიპის წემოთ ქონა"
+
+#~ msgid "Keep below"
+#~ msgstr "ქვემოთ ქონა"
+
+#~ msgid "Keep below rule type"
+#~ msgstr "ქვემოთ ქონის წესის ტიპი"
+
+#~ msgid "Fullscreen"
+#~ msgstr "მთელ ეკრანზე"
+
+#~ msgid "Fullscreen rule type"
+#~ msgstr "სრული ეკრანის წესის ტიპი"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "სათაურისა და ჩარჩოს გარეშე"
+
+#~ msgid "No titlebar rule type"
+#~ msgstr "სათაურის წესის ტიპის გარეშე"
+
+#~ msgid "Titlebar color and scheme"
+#~ msgstr "სათაურის ზოლის ფერი და სქემა"
+
+#~ msgid "Titlebar color rule type"
+#~ msgstr "სათაურის ზოლის წესის ტიპი"
+
+#~ msgid "Block Compositing"
+#~ msgstr "კომპოზიტირების დაბლოკვა"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "კომპოზიტირების წესის ტიპის დაბლოკვა"
+
+#~ msgid "Focus stealing prevention"
+#~ msgstr "ფოკუსის მოპარვის აცილება"
+
+#~ msgid "Focus stealing prevention rule type"
+#~ msgstr "ფოკუსის მოპარვის აცილების წესის ტიპი"
+
+#~ msgid "Focus protection"
+#~ msgstr "ფოკუსის დაცვა"
+
+#~ msgid "Focus protection rule type"
+#~ msgstr "ფოკუსის დაცვის წესის ტიპი"
+
+#~ msgid "Accept Focus"
+#~ msgstr "ფოკუსის მიღება"
+
+#~ msgid "Accept Focus rule type"
+#~ msgstr "ფოკუსის მიღების წესის ტიპი"
+
+#~ msgid "Closeable"
+#~ msgstr "დახურვადი"
+
+#~ msgid "Closeable rule type"
+#~ msgstr "დახურვადი წესის ტიპი"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "ერთნაირების ავტომატური დაჯგუფება"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "ერთნაირი წესის ტიპების მქონეების ავტომატური დაჯგუფება"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "ავტომატური დაჯგუფება წინა პლანზე"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "წინა პლანზე ავტომატური დაჯგუფების წესის ტიპი"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "ავტომატური დაჯგუფება ID-ის მიხედვით"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "ID-ის მიხედვით ავტომატური დაჯგუფების წესის ტიპი"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "გეომეტრიის შეზღუდვების დაცვა"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "გეომეტრიის შეზღუდვების დაცვის წესის ტიპი"
+
+#~ msgid "Shortcut"
+#~ msgstr "მალსახმობი"
+
+#~ msgid "Shortcut rule type"
+#~ msgstr "მალსახმობის წესის ტიპი"
+
+#~ msgid "Ignore global shortcuts"
+#~ msgstr "გლობალური მალსახმობების უგულებელყოფა"
+
+#~ msgid "Ignore global shortcuts rule type"
+#~ msgstr "იგნორირებული გლობალური მალსახმობების წესის ტიპი"
+
+#~ msgid "Desktop file name"
+#~ msgstr "სამუშაო მაგიდის ფაილის სახელი"
+
+#~ msgid "Desktop file name rule type"
+#~ msgstr "სამუშაო მაგიდის ფაილის სახელის წესის ტიპი"
+
+#~ msgid "Dialog"
+#~ msgstr "ფანჯარა"
+
+#~ msgid "..."
+#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "&საზღვრის გარეშე"

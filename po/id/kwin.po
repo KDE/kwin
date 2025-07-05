@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 02:27+0000\n"
+"POT-Creation-Date: 2025-07-05 03:22+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -623,8 +623,7 @@ msgstr "Penekanan"
 msgid "Buttons"
 msgstr "Tombol"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:517 debug_console.ui:356
+#: debug_console.cpp:517
 #, kde-format
 msgid "Modifiers"
 msgstr "Modifikasian"
@@ -879,163 +878,6 @@ msgstr "Jendela Wayland"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Jendela Internal"
-
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "Berhentikan Debug Console"
-
-#. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
-#, kde-format
-msgid "Windows"
-msgstr "Jendela"
-
-#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
-#: debug_console.ui:59
-#, kde-format
-msgid "Surfaces"
-msgstr "Permukaan"
-
-#. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:69
-#, kde-format
-msgid "Input Events"
-msgstr "Peristiwa Input"
-
-#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:86
-#, kde-format
-msgid "Input Devices"
-msgstr "Peranti Input"
-
-#. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:96
-#, kde-format
-msgid "OpenGL"
-msgstr "OpenGL"
-
-#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:102
-#, kde-format
-msgid "No OpenGL compositor running"
-msgstr "Tidak ada kompositor OpenGL yang berjalan"
-
-#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:130
-#, kde-format
-msgid "OpenGL (ES) driver information"
-msgstr "Informasi driver OpenGL (ES)"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:136
-#, kde-format
-msgid "Vendor:"
-msgstr "Vendor:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:143
-#, kde-format
-msgid "Renderer:"
-msgstr "Perender:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:150
-#, kde-format
-msgid "Version:"
-msgstr "Versi:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:157
-#, kde-format
-msgid "Shading Language Version:"
-msgstr "Versi Shading Language:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:164
-#, kde-format
-msgid "Driver:"
-msgstr "Driver:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:171
-#, kde-format
-msgid "GPU class:"
-msgstr "Kelas GPU:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:178
-#, kde-format
-msgid "OpenGL Version:"
-msgstr "Versi OpenGL:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:185
-#, kde-format
-msgid "GLSL Version:"
-msgstr "Versi GLSL:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:251
-#, kde-format
-msgid "Platform Extensions"
-msgstr "Ekstensi Platform"
-
-#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:267
-#, kde-format
-msgid "OpenGL (ES) Extensions"
-msgstr "Ekstensi OpenGL (ES)"
-
-#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:288
-#, kde-format
-msgid "Keyboard"
-msgstr "Keyboard"
-
-#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:315
-#, kde-format
-msgid "Keymap Layouts"
-msgstr "Tataletak Keymap"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:337
-#, kde-format
-msgid "Current Layout:"
-msgstr "Tataletak Saat Ini:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:372
-#, kde-format
-msgid "Active Modifiers"
-msgstr "Aktifkan Modifikasian"
-
-#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:388
-#, kde-format
-msgid "LEDs"
-msgstr "LED"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:404
-#, kde-format
-msgid "Active LEDs"
-msgstr "Aktifkan LED"
-
-#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:425 debug_console.ui:445
-#, kde-format
-msgid "Clipboard"
-msgstr "Clipboard"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:491
-#, kde-format
-msgid "Primary Selection"
-msgstr "Seleksi Primer"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1594,528 +1436,6 @@ msgstr "Jungkitan Warna Malam"
 msgid "Color Temperature Preview"
 msgstr ""
 
-#. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
-#, kde-format
-msgid "Total rules count (legacy)"
-msgstr "Total perhitungan aturan (lawas)"
-
-#. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
-#, kde-format
-msgid "Ordered list of rules groups"
-msgstr "Daftar terurut pada kelompok aturan"
-
-#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:10
-#, kde-format
-msgid "Rule description"
-msgstr "Deskripsi aturan"
-
-#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:13
-#, kde-format
-msgid "Rule description (legacy)"
-msgstr "Deakripsi aturan (lawas)"
-
-#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:16
-#, kde-format
-msgid "Delete this rule (for use in imports)"
-msgstr "Hapus aturan ini (untuk penggunaan impor)"
-
-#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:20
-#, kde-format
-msgid "Window class (application)"
-msgstr "Kelas jendela (aplikasi)"
-
-#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:23
-#, kde-format
-msgid "Window class string match type"
-msgstr "Tipe kecocokan string kelas jendela"
-
-#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:29
-#, kde-format
-msgid "Match whole window class"
-msgstr "Cocokkan seluruh kelas jendela"
-
-#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:34
-#, kde-format
-msgid "Window role"
-msgstr "Aturan jendela"
-
-#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:37
-#, kde-format
-msgid "Window role string match type"
-msgstr "Tipe kecocokan string aturan jendela"
-
-#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:44
-#, kde-format
-msgid "Window title"
-msgstr "Judul jendela"
-
-#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:47
-#, kde-format
-msgid "Window title string match type"
-msgstr "Tipe kecocokan string judul jendela"
-
-#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:54
-#, kde-format
-msgid "Machine (hostname)"
-msgstr "Mesin (nama host)"
-
-#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:57
-#, kde-format
-msgid "Machine string match type"
-msgstr "Tipe kecocokan string mesin"
-
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:64
-#, kde-format
-msgid "Window types that match"
-msgstr "Tipe jendela yang cocok"
-
-#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:69
-#, kde-format
-msgid "Initial placement"
-msgstr "Penempatan inisial"
-
-#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:74
-#, kde-format
-msgid "Initial placement rule type"
-msgstr "Tipe aturan penempatan inisial"
-
-#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:79
-#, kde-format
-msgid "Window position"
-msgstr "Posisi jendela"
-
-#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
-#, kde-format
-msgid "Window position rule type"
-msgstr "Tipe aturan posisi jendela"
-
-#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:90
-#, kde-format
-msgid "Window size"
-msgstr "Ukuran jendela"
-
-#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:93
-#, kde-format
-msgid "Window size rule type"
-msgstr "Tipe aturan ukuran jendela"
-
-#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:100
-#, kde-format
-msgid "Window minimum size"
-msgstr "Ukuran minimum jendela"
-
-#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
-#, kde-format
-msgid "Window minimum size rule type"
-msgstr "Tipe aturan ukuran minimum jendela"
-
-#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:109
-#, kde-format
-msgid "Window maximum size"
-msgstr "Ukuran aksimum jendela"
-
-#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
-#, kde-format
-msgid "Window maximum size rule type"
-msgstr "Tipe atiran ukuran maksimum jendela"
-
-#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:118
-#, kde-format
-msgid "Active opacity"
-msgstr "Opasitas aktif"
-
-#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:124
-#, kde-format
-msgid "Active opacity rule type"
-msgstr "Tipe aturan opasitas aktif"
-
-#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:129
-#, kde-format
-msgid "Inactive opacity"
-msgstr "Opasitas tak-aktif"
-
-#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:135
-#, kde-format
-msgid "Inactive opacity rule type"
-msgstr "Tipe aturan opasitas tak-aktif"
-
-#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:140
-#, kde-format
-msgid "Ignore requested geometry"
-msgstr "Abaikan geometri yang diminta"
-
-#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
-#, kde-format
-msgid "Ignore requested geometry rule type"
-msgstr "Abaikan tipe aturan geometri yang diminta"
-
-#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:151
-#, kde-format
-msgid "List of Desktop Ids"
-msgstr "Daftar Id Desktop"
-
-#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
-#, kde-format
-msgid "Desktop Ids rule type"
-msgstr "Tipe aturan Id desktop"
-
-#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:162
-#, kde-format
-msgid "Screen number"
-msgstr "Nomor layar"
-
-#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
-#, kde-format
-msgid "Screen number rule type"
-msgstr "Tipe aturan nomor layar"
-
-#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:173
-#, kde-format
-msgid "Activity"
-msgstr "Aktivitas"
-
-#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:176
-#, kde-format
-msgid "Activity rule type"
-msgstr "Tipe aturan aktivitas"
-
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "Atur tipe jendela ke"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "Atur tipe jendela tipe aturan"
-
-#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
-#, kde-format
-msgid "Maximized vertically"
-msgstr "Dimaksimalkan secara tegak"
-
-#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
-#, kde-format
-msgid "Maximized vertically rule type"
-msgstr "Tipe aturan dimaksimalkan secara tegak"
-
-#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
-#, kde-format
-msgid "Maximized horizontally"
-msgstr "Dimaksimalkan secara mendatar"
-
-#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
-#, kde-format
-msgid "Maximized horizontally rule type"
-msgstr "Tipe aturan dimaksimalkan secara mendatar"
-
-#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
-#, kde-format
-msgid "Minimized"
-msgstr "Diminimalkan"
-
-#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
-#, kde-format
-msgid "Minimized rule type"
-msgstr "Tipe aturan diminimalkan"
-
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
-#, kde-format
-msgid "Shaded"
-msgstr "Ditiraikan"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
-#, kde-format
-msgid "Shaded rule type"
-msgstr "Tipe aturan ditiraikan"
-
-#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
-#, kde-format
-msgid "Skip taskbar"
-msgstr "Lewati bilah-tugas"
-
-#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
-#, kde-format
-msgid "Skip taskbar rule type"
-msgstr "Tipe aturan lewati bilah-tugas"
-
-#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
-#, kde-format
-msgid "Skip pager"
-msgstr "Lewati pemisah"
-
-#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
-#, kde-format
-msgid "Skip pager rule type"
-msgstr "Tipe aturan lewati pemisah"
-
-#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
-#, kde-format
-msgid "Skip switcher"
-msgstr "Lewati pengalih"
-
-#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
-#, kde-format
-msgid "Skip switcher rule type"
-msgstr "Tipe aturan lewati pengalih"
-
-#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
-#, kde-format
-msgid "Keep above"
-msgstr "Tetap di atas"
-
-#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
-#, kde-format
-msgid "Keep above rule type"
-msgstr "Tipe aturan tetap di atas"
-
-#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
-#, kde-format
-msgid "Keep below"
-msgstr "Tetap di bawah"
-
-#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
-#, kde-format
-msgid "Keep below rule type"
-msgstr "Tipe aturan tetap di bawah"
-
-#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
-#, kde-format
-msgid "Fullscreen"
-msgstr "Layar penuh"
-
-#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
-#, kde-format
-msgid "Fullscreen rule type"
-msgstr "Tipe aturan layar penuh"
-
-#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
-#, kde-format
-msgid "No titlebar and frame"
-msgstr "Tanpa bilah judul dan kerangka"
-
-#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
-#, kde-format
-msgid "No titlebar rule type"
-msgstr "Tipe aturan tanpa bilah judul"
-
-#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
-#, kde-format
-msgid "Titlebar color and scheme"
-msgstr "Skema dan warna bilah judul"
-
-#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
-#, kde-format
-msgid "Titlebar color rule type"
-msgstr "Tipe aturan warna bilah judul"
-
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
-#, kde-format
-msgid "Block Compositing"
-msgstr "Pengomposisian Blokir"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "Tipe aturan Pengomposisian Blokir"
-
-#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
-#, kde-format
-msgid "Focus stealing prevention"
-msgstr "Pencegahan pencurian fokus"
-
-#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
-#, kde-format
-msgid "Focus stealing prevention rule type"
-msgstr "Tipe aturan pencegahan pencurian fokus"
-
-#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
-#, kde-format
-msgid "Focus protection"
-msgstr "Proteksi fokus"
-
-#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
-#, kde-format
-msgid "Focus protection rule type"
-msgstr "Tipe aturan proteksi fokus"
-
-#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
-#, kde-format
-msgid "Accept Focus"
-msgstr "Terima Fokus"
-
-#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
-#, kde-format
-msgid "Accept Focus rule type"
-msgstr "Tipe aturan Terima Fokus"
-
-#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
-#, kde-format
-msgid "Closeable"
-msgstr "Bisa ditutup"
-
-#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
-#, kde-format
-msgid "Closeable rule type"
-msgstr "Tipe aturan bisa ditutup"
-
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Auto kelompok dengan identik"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Tipe aturan auto kelompok dengan identik"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Auto kelompok di latar depan"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Tipe aturan auto kelompok di latar depan"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Auto kelompok berdasarkan ID"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Tipe aturan auto kelompok berdasarkan ID"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Patuhi batasan geometri"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Tipe aturan patuhi batasan geometri"
-
-#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
-#, kde-format
-msgid "Shortcut"
-msgstr "Pintasan"
-
-#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
-#, kde-format
-msgid "Shortcut rule type"
-msgstr "Tipe aturan pintasan"
-
-#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
-#, kde-format
-msgid "Ignore global shortcuts"
-msgstr "Abaikan pintasan global"
-
-#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
-#, kde-format
-msgid "Ignore global shortcuts rule type"
-msgstr "Tipe aturan abaikan pintasan global"
-
-#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
-#, kde-format
-msgid "Desktop file name"
-msgstr "Nama file desktop"
-
-#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
-#, kde-format
-msgid "Desktop file name rule type"
-msgstr "Tipe aturan nama file desktop"
-
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -2134,18 +1454,6 @@ msgstr ""
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr ""
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
-#: shortcutdialog.ui:14
-#, kde-format
-msgid "Dialog"
-msgstr "Dialog"
-
-#. i18n: ectx: property (text), widget (QToolButton, clearButton)
-#: shortcutdialog.ui:25
-#, kde-format
-msgid "..."
-msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2835,6 +2143,351 @@ msgstr ""
 "layanan tempel\n"
 "seperti https://paste.kde.org ketimbang menempelkannya di pembicaraan "
 "dukungan.\n"
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "Berhentikan Debug Console"
+
+#~ msgid "Windows"
+#~ msgstr "Jendela"
+
+#~ msgid "Surfaces"
+#~ msgstr "Permukaan"
+
+#~ msgid "Input Events"
+#~ msgstr "Peristiwa Input"
+
+#~ msgid "Input Devices"
+#~ msgstr "Peranti Input"
+
+#~ msgid "OpenGL"
+#~ msgstr "OpenGL"
+
+#~ msgid "No OpenGL compositor running"
+#~ msgstr "Tidak ada kompositor OpenGL yang berjalan"
+
+#~ msgid "OpenGL (ES) driver information"
+#~ msgstr "Informasi driver OpenGL (ES)"
+
+#~ msgid "Vendor:"
+#~ msgstr "Vendor:"
+
+#~ msgid "Renderer:"
+#~ msgstr "Perender:"
+
+#~ msgid "Version:"
+#~ msgstr "Versi:"
+
+#~ msgid "Shading Language Version:"
+#~ msgstr "Versi Shading Language:"
+
+#~ msgid "Driver:"
+#~ msgstr "Driver:"
+
+#~ msgid "GPU class:"
+#~ msgstr "Kelas GPU:"
+
+#~ msgid "OpenGL Version:"
+#~ msgstr "Versi OpenGL:"
+
+#~ msgid "GLSL Version:"
+#~ msgstr "Versi GLSL:"
+
+#~ msgid "Platform Extensions"
+#~ msgstr "Ekstensi Platform"
+
+#~ msgid "OpenGL (ES) Extensions"
+#~ msgstr "Ekstensi OpenGL (ES)"
+
+#~ msgid "Keyboard"
+#~ msgstr "Keyboard"
+
+#~ msgid "Keymap Layouts"
+#~ msgstr "Tataletak Keymap"
+
+#~ msgid "Current Layout:"
+#~ msgstr "Tataletak Saat Ini:"
+
+#~ msgid "Active Modifiers"
+#~ msgstr "Aktifkan Modifikasian"
+
+#~ msgid "LEDs"
+#~ msgstr "LED"
+
+#~ msgid "Active LEDs"
+#~ msgstr "Aktifkan LED"
+
+#~ msgid "Clipboard"
+#~ msgstr "Clipboard"
+
+#~ msgid "Primary Selection"
+#~ msgstr "Seleksi Primer"
+
+#~ msgid "Total rules count (legacy)"
+#~ msgstr "Total perhitungan aturan (lawas)"
+
+#~ msgid "Ordered list of rules groups"
+#~ msgstr "Daftar terurut pada kelompok aturan"
+
+#~ msgid "Rule description"
+#~ msgstr "Deskripsi aturan"
+
+#~ msgid "Rule description (legacy)"
+#~ msgstr "Deakripsi aturan (lawas)"
+
+#~ msgid "Delete this rule (for use in imports)"
+#~ msgstr "Hapus aturan ini (untuk penggunaan impor)"
+
+#~ msgid "Window class (application)"
+#~ msgstr "Kelas jendela (aplikasi)"
+
+#~ msgid "Window class string match type"
+#~ msgstr "Tipe kecocokan string kelas jendela"
+
+#~ msgid "Match whole window class"
+#~ msgstr "Cocokkan seluruh kelas jendela"
+
+#~ msgid "Window role"
+#~ msgstr "Aturan jendela"
+
+#~ msgid "Window role string match type"
+#~ msgstr "Tipe kecocokan string aturan jendela"
+
+#~ msgid "Window title"
+#~ msgstr "Judul jendela"
+
+#~ msgid "Window title string match type"
+#~ msgstr "Tipe kecocokan string judul jendela"
+
+#~ msgid "Machine (hostname)"
+#~ msgstr "Mesin (nama host)"
+
+#~ msgid "Machine string match type"
+#~ msgstr "Tipe kecocokan string mesin"
+
+#~ msgid "Window types that match"
+#~ msgstr "Tipe jendela yang cocok"
+
+#~ msgid "Initial placement"
+#~ msgstr "Penempatan inisial"
+
+#~ msgid "Initial placement rule type"
+#~ msgstr "Tipe aturan penempatan inisial"
+
+#~ msgid "Window position"
+#~ msgstr "Posisi jendela"
+
+#~ msgid "Window position rule type"
+#~ msgstr "Tipe aturan posisi jendela"
+
+#~ msgid "Window size"
+#~ msgstr "Ukuran jendela"
+
+#~ msgid "Window size rule type"
+#~ msgstr "Tipe aturan ukuran jendela"
+
+#~ msgid "Window minimum size"
+#~ msgstr "Ukuran minimum jendela"
+
+#~ msgid "Window minimum size rule type"
+#~ msgstr "Tipe aturan ukuran minimum jendela"
+
+#~ msgid "Window maximum size"
+#~ msgstr "Ukuran aksimum jendela"
+
+#~ msgid "Window maximum size rule type"
+#~ msgstr "Tipe atiran ukuran maksimum jendela"
+
+#~ msgid "Active opacity"
+#~ msgstr "Opasitas aktif"
+
+#~ msgid "Active opacity rule type"
+#~ msgstr "Tipe aturan opasitas aktif"
+
+#~ msgid "Inactive opacity"
+#~ msgstr "Opasitas tak-aktif"
+
+#~ msgid "Inactive opacity rule type"
+#~ msgstr "Tipe aturan opasitas tak-aktif"
+
+#~ msgid "Ignore requested geometry"
+#~ msgstr "Abaikan geometri yang diminta"
+
+#~ msgid "Ignore requested geometry rule type"
+#~ msgstr "Abaikan tipe aturan geometri yang diminta"
+
+#~ msgid "List of Desktop Ids"
+#~ msgstr "Daftar Id Desktop"
+
+#~ msgid "Desktop Ids rule type"
+#~ msgstr "Tipe aturan Id desktop"
+
+#~ msgid "Screen number"
+#~ msgstr "Nomor layar"
+
+#~ msgid "Screen number rule type"
+#~ msgstr "Tipe aturan nomor layar"
+
+#~ msgid "Activity"
+#~ msgstr "Aktivitas"
+
+#~ msgid "Activity rule type"
+#~ msgstr "Tipe aturan aktivitas"
+
+#~ msgid "Set window type to"
+#~ msgstr "Atur tipe jendela ke"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "Atur tipe jendela tipe aturan"
+
+#~ msgid "Maximized vertically"
+#~ msgstr "Dimaksimalkan secara tegak"
+
+#~ msgid "Maximized vertically rule type"
+#~ msgstr "Tipe aturan dimaksimalkan secara tegak"
+
+#~ msgid "Maximized horizontally"
+#~ msgstr "Dimaksimalkan secara mendatar"
+
+#~ msgid "Maximized horizontally rule type"
+#~ msgstr "Tipe aturan dimaksimalkan secara mendatar"
+
+#~ msgid "Minimized"
+#~ msgstr "Diminimalkan"
+
+#~ msgid "Minimized rule type"
+#~ msgstr "Tipe aturan diminimalkan"
+
+#~ msgid "Shaded"
+#~ msgstr "Ditiraikan"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "Tipe aturan ditiraikan"
+
+#~ msgid "Skip taskbar"
+#~ msgstr "Lewati bilah-tugas"
+
+#~ msgid "Skip taskbar rule type"
+#~ msgstr "Tipe aturan lewati bilah-tugas"
+
+#~ msgid "Skip pager"
+#~ msgstr "Lewati pemisah"
+
+#~ msgid "Skip pager rule type"
+#~ msgstr "Tipe aturan lewati pemisah"
+
+#~ msgid "Skip switcher"
+#~ msgstr "Lewati pengalih"
+
+#~ msgid "Skip switcher rule type"
+#~ msgstr "Tipe aturan lewati pengalih"
+
+#~ msgid "Keep above"
+#~ msgstr "Tetap di atas"
+
+#~ msgid "Keep above rule type"
+#~ msgstr "Tipe aturan tetap di atas"
+
+#~ msgid "Keep below"
+#~ msgstr "Tetap di bawah"
+
+#~ msgid "Keep below rule type"
+#~ msgstr "Tipe aturan tetap di bawah"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Layar penuh"
+
+#~ msgid "Fullscreen rule type"
+#~ msgstr "Tipe aturan layar penuh"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "Tanpa bilah judul dan kerangka"
+
+#~ msgid "No titlebar rule type"
+#~ msgstr "Tipe aturan tanpa bilah judul"
+
+#~ msgid "Titlebar color and scheme"
+#~ msgstr "Skema dan warna bilah judul"
+
+#~ msgid "Titlebar color rule type"
+#~ msgstr "Tipe aturan warna bilah judul"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Pengomposisian Blokir"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "Tipe aturan Pengomposisian Blokir"
+
+#~ msgid "Focus stealing prevention"
+#~ msgstr "Pencegahan pencurian fokus"
+
+#~ msgid "Focus stealing prevention rule type"
+#~ msgstr "Tipe aturan pencegahan pencurian fokus"
+
+#~ msgid "Focus protection"
+#~ msgstr "Proteksi fokus"
+
+#~ msgid "Focus protection rule type"
+#~ msgstr "Tipe aturan proteksi fokus"
+
+#~ msgid "Accept Focus"
+#~ msgstr "Terima Fokus"
+
+#~ msgid "Accept Focus rule type"
+#~ msgstr "Tipe aturan Terima Fokus"
+
+#~ msgid "Closeable"
+#~ msgstr "Bisa ditutup"
+
+#~ msgid "Closeable rule type"
+#~ msgstr "Tipe aturan bisa ditutup"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Auto kelompok dengan identik"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Tipe aturan auto kelompok dengan identik"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Auto kelompok di latar depan"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Tipe aturan auto kelompok di latar depan"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Auto kelompok berdasarkan ID"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Tipe aturan auto kelompok berdasarkan ID"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Patuhi batasan geometri"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Tipe aturan patuhi batasan geometri"
+
+#~ msgid "Shortcut"
+#~ msgstr "Pintasan"
+
+#~ msgid "Shortcut rule type"
+#~ msgstr "Tipe aturan pintasan"
+
+#~ msgid "Ignore global shortcuts"
+#~ msgstr "Abaikan pintasan global"
+
+#~ msgid "Ignore global shortcuts rule type"
+#~ msgstr "Tipe aturan abaikan pintasan global"
+
+#~ msgid "Desktop file name"
+#~ msgstr "Nama file desktop"
+
+#~ msgid "Desktop file name rule type"
+#~ msgstr "Tipe aturan nama file desktop"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialog"
+
+#~ msgid "..."
+#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "&Tanpa Bingkai"

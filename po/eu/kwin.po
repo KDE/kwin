@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 02:27+0000\n"
+"POT-Creation-Date: 2025-07-05 03:22+0000\n"
 "PO-Revision-Date: 2023-11-28 07:48+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -632,8 +632,7 @@ msgstr "Presioa"
 msgid "Buttons"
 msgstr "Botoiak"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:517 debug_console.ui:356
+#: debug_console.cpp:517
 #, kde-format
 msgid "Modifiers"
 msgstr "Aldatzaileak"
@@ -888,163 +887,6 @@ msgstr "Wayland leihoak"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Barneko leihoak"
-
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "Irten arazteko kontsolatik"
-
-#. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
-#, kde-format
-msgid "Windows"
-msgstr "Leihoak"
-
-#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
-#: debug_console.ui:59
-#, kde-format
-msgid "Surfaces"
-msgstr "Gainazalak"
-
-#. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:69
-#, kde-format
-msgid "Input Events"
-msgstr "Sarrerako gertaerak"
-
-#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:86
-#, kde-format
-msgid "Input Devices"
-msgstr "Sarrerako gailuak"
-
-#. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:96
-#, kde-format
-msgid "OpenGL"
-msgstr "OpenGL"
-
-#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:102
-#, kde-format
-msgid "No OpenGL compositor running"
-msgstr "OpenGL konposatzailea ez da exekutatzen ari"
-
-#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:130
-#, kde-format
-msgid "OpenGL (ES) driver information"
-msgstr "OpenGL (ES) gidariaren informazioa"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:136
-#, kde-format
-msgid "Vendor:"
-msgstr "Hornitzailea:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:143
-#, kde-format
-msgid "Renderer:"
-msgstr "Errendatzailea:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:150
-#, kde-format
-msgid "Version:"
-msgstr "Bertsioa:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:157
-#, kde-format
-msgid "Shading Language Version:"
-msgstr "Itzaldura lengoaiaren bertsioa:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:164
-#, kde-format
-msgid "Driver:"
-msgstr "Gidaria:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:171
-#, kde-format
-msgid "GPU class:"
-msgstr "PUG klasea:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:178
-#, kde-format
-msgid "OpenGL Version:"
-msgstr "OpenGL bertsioa:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:185
-#, kde-format
-msgid "GLSL Version:"
-msgstr "GLSL bertsioa:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:251
-#, kde-format
-msgid "Platform Extensions"
-msgstr "Plataformaren hedapenak"
-
-#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:267
-#, kde-format
-msgid "OpenGL (ES) Extensions"
-msgstr "OpenGL (ES) hedapenak"
-
-#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:288
-#, kde-format
-msgid "Keyboard"
-msgstr "Teklatua"
-
-#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:315
-#, kde-format
-msgid "Keymap Layouts"
-msgstr "Teklatu-mapa antolamenduak"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:337
-#, kde-format
-msgid "Current Layout:"
-msgstr "Uneko  antolamendua:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:372
-#, kde-format
-msgid "Active Modifiers"
-msgstr "Aldatzaile aktiboak"
-
-#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:388
-#, kde-format
-msgid "LEDs"
-msgstr "LEDak"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:404
-#, kde-format
-msgid "Active LEDs"
-msgstr "LED aktiboak"
-
-#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:425 debug_console.ui:445
-#, kde-format
-msgid "Clipboard"
-msgstr "Arbela"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:491
-#, kde-format
-msgid "Primary Selection"
-msgstr "Hautapen nagusia"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1600,528 +1442,6 @@ msgstr "Txandakatu gaueko kolorea"
 msgid "Color Temperature Preview"
 msgstr "Kolore-tenperaturaren aurreikuspegia"
 
-#. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
-#, kde-format
-msgid "Total rules count (legacy)"
-msgstr "Arau kopuru osoa (heredatua)"
-
-#. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
-#, kde-format
-msgid "Ordered list of rules groups"
-msgstr "Arau taldeen zerrenda ordenatua"
-
-#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:10
-#, kde-format
-msgid "Rule description"
-msgstr "Arauaren azalpena"
-
-#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:13
-#, kde-format
-msgid "Rule description (legacy)"
-msgstr "Arauaren azalpena (zaharkitua)"
-
-#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:16
-#, kde-format
-msgid "Delete this rule (for use in imports)"
-msgstr "Ezabatu arau hau (inportatzeetan erabiltzeko)"
-
-#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:20
-#, kde-format
-msgid "Window class (application)"
-msgstr "Leiho klasea (aplikazioa)"
-
-#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:23
-#, kde-format
-msgid "Window class string match type"
-msgstr "Leiho klasearen katearen bat-etortze mota"
-
-#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:29
-#, kde-format
-msgid "Match whole window class"
-msgstr "Leiho klase osoarekin bat-etortzea"
-
-#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:34
-#, kde-format
-msgid "Window role"
-msgstr "Leihoaren betekizuna"
-
-#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:37
-#, kde-format
-msgid "Window role string match type"
-msgstr "Leiho betekizunaren katearen bat-etortze mota"
-
-#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:44
-#, kde-format
-msgid "Window title"
-msgstr "Leihoaren titulua"
-
-#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:47
-#, kde-format
-msgid "Window title string match type"
-msgstr "Leiho tituluaren katearen bat-etortzea"
-
-#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:54
-#, kde-format
-msgid "Machine (hostname)"
-msgstr "Makina (ostalari-izena)"
-
-#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:57
-#, kde-format
-msgid "Machine string match type"
-msgstr "Makinaren katearen bat-etortzea"
-
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:64
-#, kde-format
-msgid "Window types that match"
-msgstr "Bat-datozen leiho motak"
-
-#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:69
-#, kde-format
-msgid "Initial placement"
-msgstr "Hasierako kokapena"
-
-#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:74
-#, kde-format
-msgid "Initial placement rule type"
-msgstr "Hasierako kokapenaren arau mota"
-
-#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:79
-#, kde-format
-msgid "Window position"
-msgstr "Leihoaren kokapena"
-
-#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
-#, kde-format
-msgid "Window position rule type"
-msgstr "Leiho kokapenaren arau mota"
-
-#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:90
-#, kde-format
-msgid "Window size"
-msgstr "Leihoaren neurria"
-
-#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:93
-#, kde-format
-msgid "Window size rule type"
-msgstr "Leihoaren neurriaren arau mota"
-
-#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:100
-#, kde-format
-msgid "Window minimum size"
-msgstr "Leihoaren gutxieneko neurria"
-
-#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
-#, kde-format
-msgid "Window minimum size rule type"
-msgstr "Leihoaren gutxieneko neurriaren arau mota"
-
-#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:109
-#, kde-format
-msgid "Window maximum size"
-msgstr "Leihoaren gehienezko neurria"
-
-#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
-#, kde-format
-msgid "Window maximum size rule type"
-msgstr "Leihoaren gehienezko neurriaren arau mota"
-
-#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:118
-#, kde-format
-msgid "Active opacity"
-msgstr "Aktiboaren opakutasuna"
-
-#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:124
-#, kde-format
-msgid "Active opacity rule type"
-msgstr "Aktiboaren opakutasunaren arau mota"
-
-#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:129
-#, kde-format
-msgid "Inactive opacity"
-msgstr "Ez-aktiboaren opakutasuna"
-
-#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:135
-#, kde-format
-msgid "Inactive opacity rule type"
-msgstr "Ez-aktiboaren opakutasunaren arau mota"
-
-#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:140
-#, kde-format
-msgid "Ignore requested geometry"
-msgstr "Ezikusi eskatutako geometria"
-
-#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
-#, kde-format
-msgid "Ignore requested geometry rule type"
-msgstr "Ezikusi eskatutako geometria arau mota"
-
-#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:151
-#, kde-format
-msgid "List of Desktop Ids"
-msgstr "Mahaigain IDen zerrenda"
-
-#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
-#, kde-format
-msgid "Desktop Ids rule type"
-msgstr "Mahaigain IDen arau mota"
-
-#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:162
-#, kde-format
-msgid "Screen number"
-msgstr "Pantaila zenbakia"
-
-#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
-#, kde-format
-msgid "Screen number rule type"
-msgstr "Pantaila zenbakiaren arau mota"
-
-#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:173
-#, kde-format
-msgid "Activity"
-msgstr "Jarduera"
-
-#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:176
-#, kde-format
-msgid "Activity rule type"
-msgstr "Jardueraren arau mota"
-
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "Ezarri leiho mota honela, "
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "Leiho mota ezartzearen arau mota"
-
-#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
-#, kde-format
-msgid "Maximized vertically"
-msgstr "Bertikalki maximizatua"
-
-#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
-#, kde-format
-msgid "Maximized vertically rule type"
-msgstr "Bertikalki maximizatua arau mota"
-
-#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
-#, kde-format
-msgid "Maximized horizontally"
-msgstr "Horizontalki maximizatua"
-
-#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
-#, kde-format
-msgid "Maximized horizontally rule type"
-msgstr "Horizontalki maximizatua arau mota"
-
-#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
-#, kde-format
-msgid "Minimized"
-msgstr "Minimizatua"
-
-#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
-#, kde-format
-msgid "Minimized rule type"
-msgstr "Minimizatua arau mota"
-
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
-#, kde-format
-msgid "Shaded"
-msgstr "Bilduta"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
-#, kde-format
-msgid "Shaded rule type"
-msgstr "Bilduaren arau mota"
-
-#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
-#, kde-format
-msgid "Skip taskbar"
-msgstr "Jauzi egin ataza-barrari"
-
-#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
-#, kde-format
-msgid "Skip taskbar rule type"
-msgstr "Jauzi egin ataza-barrari arau mota"
-
-#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
-#, kde-format
-msgid "Skip pager"
-msgstr "Jauzi egin orrialdekatzaileari"
-
-#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
-#, kde-format
-msgid "Skip pager rule type"
-msgstr "Jauzi egin orrialdekatzaileari arau mota"
-
-#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
-#, kde-format
-msgid "Skip switcher"
-msgstr "Jauzi egin aldatzaileari"
-
-#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
-#, kde-format
-msgid "Skip switcher rule type"
-msgstr "Jauzi egin aldatzaileari arau mota"
-
-#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
-#, kde-format
-msgid "Keep above"
-msgstr "Mantendu gainean"
-
-#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
-#, kde-format
-msgid "Keep above rule type"
-msgstr "Mantendu gainean arau mota"
-
-#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
-#, kde-format
-msgid "Keep below"
-msgstr "Mantendu azpian"
-
-#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
-#, kde-format
-msgid "Keep below rule type"
-msgstr "Mantendu azpian arau mota"
-
-#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
-#, kde-format
-msgid "Fullscreen"
-msgstr "Pantaila-betea"
-
-#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
-#, kde-format
-msgid "Fullscreen rule type"
-msgstr "Pantaila-betearen arau mota"
-
-#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
-#, kde-format
-msgid "No titlebar and frame"
-msgstr "Titulu-barrarik eta markorik ez"
-
-#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
-#, kde-format
-msgid "No titlebar rule type"
-msgstr "Titulu-barrarik eta markorik ez arau mota"
-
-#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
-#, kde-format
-msgid "Titlebar color and scheme"
-msgstr "Titulu-barraren kolore-antolaera"
-
-#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
-#, kde-format
-msgid "Titlebar color rule type"
-msgstr "Titulu-barraren kolore-antolaera arau mota"
-
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
-#, kde-format
-msgid "Block Compositing"
-msgstr "Bloke-konposatzea"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "Bloke-konposatzea arau mota"
-
-#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
-#, kde-format
-msgid "Focus stealing prevention"
-msgstr "Foku-lapurtze prebentzioa"
-
-#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
-#, kde-format
-msgid "Focus stealing prevention rule type"
-msgstr "Foku-lapurtze prebentzioa arau mota"
-
-#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
-#, kde-format
-msgid "Focus protection"
-msgstr "Fokuaren babesa"
-
-#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
-#, kde-format
-msgid "Focus protection rule type"
-msgstr "Fokuaren babesa arau mota"
-
-#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
-#, kde-format
-msgid "Accept Focus"
-msgstr "Onartu fokua"
-
-#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
-#, kde-format
-msgid "Accept Focus rule type"
-msgstr "Onartu fokua arau mota"
-
-#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
-#, kde-format
-msgid "Closeable"
-msgstr "Itxi daitekeena"
-
-#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
-#, kde-format
-msgid "Closeable rule type"
-msgstr "Itxi daitekeena arau mota"
-
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Taldekatu automatikoki berdin-berdinekin"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Taldekatu automatikoki berdin-berdinekin arau mota"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Taldekatu automatikoki aurreko planoan"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Taldekatu automatikoki aurreko planoan arau mota"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Taldekatu automatikoki IDaren arabera"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Taldekatu automatikoki IDaren arabera arau mota"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Obeditu geometria murrizpenei"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Obeditu geometria murrizpenei arau mota"
-
-#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
-#, kde-format
-msgid "Shortcut"
-msgstr "Lasterbidea"
-
-#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
-#, kde-format
-msgid "Shortcut rule type"
-msgstr "Lasterbidea arau mota"
-
-#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
-#, kde-format
-msgid "Ignore global shortcuts"
-msgstr "Ezikusi lasterbide orokorrak"
-
-#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
-#, kde-format
-msgid "Ignore global shortcuts rule type"
-msgstr "Ezikusi lasterbide orokorren arau mota"
-
-#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
-#, kde-format
-msgid "Desktop file name"
-msgstr "Mahaigaineko fitxategi-izena"
-
-#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
-#, kde-format
-msgid "Desktop file name rule type"
-msgstr "Mahaigaineko fitxategi-izenaren arau mota"
-
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -2140,18 +1460,6 @@ msgstr "%1(e)k ez du meta-datu.json fitxategirik"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 ez da existitzen"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
-#: shortcutdialog.ui:14
-#, kde-format
-msgid "Dialog"
-msgstr "Elkarrizketa-koadroa"
-
-#. i18n: ectx: property (text), widget (QToolButton, clearButton)
-#: shortcutdialog.ui:25
-#, kde-format
-msgid "..."
-msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2826,6 +2134,351 @@ msgstr ""
 "Mesedez, bidali sarrera-testu honen azpian dagoen informazioa kopiatu/"
 "itsatsi zerbitzu batera,\n"
 "https://paste.kde.org gisakoa, laguntza-harietan itsatsi ordez.\n"
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "Irten arazteko kontsolatik"
+
+#~ msgid "Windows"
+#~ msgstr "Leihoak"
+
+#~ msgid "Surfaces"
+#~ msgstr "Gainazalak"
+
+#~ msgid "Input Events"
+#~ msgstr "Sarrerako gertaerak"
+
+#~ msgid "Input Devices"
+#~ msgstr "Sarrerako gailuak"
+
+#~ msgid "OpenGL"
+#~ msgstr "OpenGL"
+
+#~ msgid "No OpenGL compositor running"
+#~ msgstr "OpenGL konposatzailea ez da exekutatzen ari"
+
+#~ msgid "OpenGL (ES) driver information"
+#~ msgstr "OpenGL (ES) gidariaren informazioa"
+
+#~ msgid "Vendor:"
+#~ msgstr "Hornitzailea:"
+
+#~ msgid "Renderer:"
+#~ msgstr "Errendatzailea:"
+
+#~ msgid "Version:"
+#~ msgstr "Bertsioa:"
+
+#~ msgid "Shading Language Version:"
+#~ msgstr "Itzaldura lengoaiaren bertsioa:"
+
+#~ msgid "Driver:"
+#~ msgstr "Gidaria:"
+
+#~ msgid "GPU class:"
+#~ msgstr "PUG klasea:"
+
+#~ msgid "OpenGL Version:"
+#~ msgstr "OpenGL bertsioa:"
+
+#~ msgid "GLSL Version:"
+#~ msgstr "GLSL bertsioa:"
+
+#~ msgid "Platform Extensions"
+#~ msgstr "Plataformaren hedapenak"
+
+#~ msgid "OpenGL (ES) Extensions"
+#~ msgstr "OpenGL (ES) hedapenak"
+
+#~ msgid "Keyboard"
+#~ msgstr "Teklatua"
+
+#~ msgid "Keymap Layouts"
+#~ msgstr "Teklatu-mapa antolamenduak"
+
+#~ msgid "Current Layout:"
+#~ msgstr "Uneko  antolamendua:"
+
+#~ msgid "Active Modifiers"
+#~ msgstr "Aldatzaile aktiboak"
+
+#~ msgid "LEDs"
+#~ msgstr "LEDak"
+
+#~ msgid "Active LEDs"
+#~ msgstr "LED aktiboak"
+
+#~ msgid "Clipboard"
+#~ msgstr "Arbela"
+
+#~ msgid "Primary Selection"
+#~ msgstr "Hautapen nagusia"
+
+#~ msgid "Total rules count (legacy)"
+#~ msgstr "Arau kopuru osoa (heredatua)"
+
+#~ msgid "Ordered list of rules groups"
+#~ msgstr "Arau taldeen zerrenda ordenatua"
+
+#~ msgid "Rule description"
+#~ msgstr "Arauaren azalpena"
+
+#~ msgid "Rule description (legacy)"
+#~ msgstr "Arauaren azalpena (zaharkitua)"
+
+#~ msgid "Delete this rule (for use in imports)"
+#~ msgstr "Ezabatu arau hau (inportatzeetan erabiltzeko)"
+
+#~ msgid "Window class (application)"
+#~ msgstr "Leiho klasea (aplikazioa)"
+
+#~ msgid "Window class string match type"
+#~ msgstr "Leiho klasearen katearen bat-etortze mota"
+
+#~ msgid "Match whole window class"
+#~ msgstr "Leiho klase osoarekin bat-etortzea"
+
+#~ msgid "Window role"
+#~ msgstr "Leihoaren betekizuna"
+
+#~ msgid "Window role string match type"
+#~ msgstr "Leiho betekizunaren katearen bat-etortze mota"
+
+#~ msgid "Window title"
+#~ msgstr "Leihoaren titulua"
+
+#~ msgid "Window title string match type"
+#~ msgstr "Leiho tituluaren katearen bat-etortzea"
+
+#~ msgid "Machine (hostname)"
+#~ msgstr "Makina (ostalari-izena)"
+
+#~ msgid "Machine string match type"
+#~ msgstr "Makinaren katearen bat-etortzea"
+
+#~ msgid "Window types that match"
+#~ msgstr "Bat-datozen leiho motak"
+
+#~ msgid "Initial placement"
+#~ msgstr "Hasierako kokapena"
+
+#~ msgid "Initial placement rule type"
+#~ msgstr "Hasierako kokapenaren arau mota"
+
+#~ msgid "Window position"
+#~ msgstr "Leihoaren kokapena"
+
+#~ msgid "Window position rule type"
+#~ msgstr "Leiho kokapenaren arau mota"
+
+#~ msgid "Window size"
+#~ msgstr "Leihoaren neurria"
+
+#~ msgid "Window size rule type"
+#~ msgstr "Leihoaren neurriaren arau mota"
+
+#~ msgid "Window minimum size"
+#~ msgstr "Leihoaren gutxieneko neurria"
+
+#~ msgid "Window minimum size rule type"
+#~ msgstr "Leihoaren gutxieneko neurriaren arau mota"
+
+#~ msgid "Window maximum size"
+#~ msgstr "Leihoaren gehienezko neurria"
+
+#~ msgid "Window maximum size rule type"
+#~ msgstr "Leihoaren gehienezko neurriaren arau mota"
+
+#~ msgid "Active opacity"
+#~ msgstr "Aktiboaren opakutasuna"
+
+#~ msgid "Active opacity rule type"
+#~ msgstr "Aktiboaren opakutasunaren arau mota"
+
+#~ msgid "Inactive opacity"
+#~ msgstr "Ez-aktiboaren opakutasuna"
+
+#~ msgid "Inactive opacity rule type"
+#~ msgstr "Ez-aktiboaren opakutasunaren arau mota"
+
+#~ msgid "Ignore requested geometry"
+#~ msgstr "Ezikusi eskatutako geometria"
+
+#~ msgid "Ignore requested geometry rule type"
+#~ msgstr "Ezikusi eskatutako geometria arau mota"
+
+#~ msgid "List of Desktop Ids"
+#~ msgstr "Mahaigain IDen zerrenda"
+
+#~ msgid "Desktop Ids rule type"
+#~ msgstr "Mahaigain IDen arau mota"
+
+#~ msgid "Screen number"
+#~ msgstr "Pantaila zenbakia"
+
+#~ msgid "Screen number rule type"
+#~ msgstr "Pantaila zenbakiaren arau mota"
+
+#~ msgid "Activity"
+#~ msgstr "Jarduera"
+
+#~ msgid "Activity rule type"
+#~ msgstr "Jardueraren arau mota"
+
+#~ msgid "Set window type to"
+#~ msgstr "Ezarri leiho mota honela, "
+
+#~ msgid "Set window type rule type"
+#~ msgstr "Leiho mota ezartzearen arau mota"
+
+#~ msgid "Maximized vertically"
+#~ msgstr "Bertikalki maximizatua"
+
+#~ msgid "Maximized vertically rule type"
+#~ msgstr "Bertikalki maximizatua arau mota"
+
+#~ msgid "Maximized horizontally"
+#~ msgstr "Horizontalki maximizatua"
+
+#~ msgid "Maximized horizontally rule type"
+#~ msgstr "Horizontalki maximizatua arau mota"
+
+#~ msgid "Minimized"
+#~ msgstr "Minimizatua"
+
+#~ msgid "Minimized rule type"
+#~ msgstr "Minimizatua arau mota"
+
+#~ msgid "Shaded"
+#~ msgstr "Bilduta"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "Bilduaren arau mota"
+
+#~ msgid "Skip taskbar"
+#~ msgstr "Jauzi egin ataza-barrari"
+
+#~ msgid "Skip taskbar rule type"
+#~ msgstr "Jauzi egin ataza-barrari arau mota"
+
+#~ msgid "Skip pager"
+#~ msgstr "Jauzi egin orrialdekatzaileari"
+
+#~ msgid "Skip pager rule type"
+#~ msgstr "Jauzi egin orrialdekatzaileari arau mota"
+
+#~ msgid "Skip switcher"
+#~ msgstr "Jauzi egin aldatzaileari"
+
+#~ msgid "Skip switcher rule type"
+#~ msgstr "Jauzi egin aldatzaileari arau mota"
+
+#~ msgid "Keep above"
+#~ msgstr "Mantendu gainean"
+
+#~ msgid "Keep above rule type"
+#~ msgstr "Mantendu gainean arau mota"
+
+#~ msgid "Keep below"
+#~ msgstr "Mantendu azpian"
+
+#~ msgid "Keep below rule type"
+#~ msgstr "Mantendu azpian arau mota"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Pantaila-betea"
+
+#~ msgid "Fullscreen rule type"
+#~ msgstr "Pantaila-betearen arau mota"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "Titulu-barrarik eta markorik ez"
+
+#~ msgid "No titlebar rule type"
+#~ msgstr "Titulu-barrarik eta markorik ez arau mota"
+
+#~ msgid "Titlebar color and scheme"
+#~ msgstr "Titulu-barraren kolore-antolaera"
+
+#~ msgid "Titlebar color rule type"
+#~ msgstr "Titulu-barraren kolore-antolaera arau mota"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Bloke-konposatzea"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "Bloke-konposatzea arau mota"
+
+#~ msgid "Focus stealing prevention"
+#~ msgstr "Foku-lapurtze prebentzioa"
+
+#~ msgid "Focus stealing prevention rule type"
+#~ msgstr "Foku-lapurtze prebentzioa arau mota"
+
+#~ msgid "Focus protection"
+#~ msgstr "Fokuaren babesa"
+
+#~ msgid "Focus protection rule type"
+#~ msgstr "Fokuaren babesa arau mota"
+
+#~ msgid "Accept Focus"
+#~ msgstr "Onartu fokua"
+
+#~ msgid "Accept Focus rule type"
+#~ msgstr "Onartu fokua arau mota"
+
+#~ msgid "Closeable"
+#~ msgstr "Itxi daitekeena"
+
+#~ msgid "Closeable rule type"
+#~ msgstr "Itxi daitekeena arau mota"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Taldekatu automatikoki berdin-berdinekin"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Taldekatu automatikoki berdin-berdinekin arau mota"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Taldekatu automatikoki aurreko planoan"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Taldekatu automatikoki aurreko planoan arau mota"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Taldekatu automatikoki IDaren arabera"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Taldekatu automatikoki IDaren arabera arau mota"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Obeditu geometria murrizpenei"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Obeditu geometria murrizpenei arau mota"
+
+#~ msgid "Shortcut"
+#~ msgstr "Lasterbidea"
+
+#~ msgid "Shortcut rule type"
+#~ msgstr "Lasterbidea arau mota"
+
+#~ msgid "Ignore global shortcuts"
+#~ msgstr "Ezikusi lasterbide orokorrak"
+
+#~ msgid "Ignore global shortcuts rule type"
+#~ msgstr "Ezikusi lasterbide orokorren arau mota"
+
+#~ msgid "Desktop file name"
+#~ msgstr "Mahaigaineko fitxategi-izena"
+
+#~ msgid "Desktop file name rule type"
+#~ msgstr "Mahaigaineko fitxategi-izenaren arau mota"
+
+#~ msgid "Dialog"
+#~ msgstr "Elkarrizketa-koadroa"
+
+#~ msgid "..."
+#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "Ertzik &ez"

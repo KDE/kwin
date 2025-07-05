@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-20 02:27+0000\n"
+"POT-Creation-Date: 2025-07-05 03:22+0000\n"
 "PO-Revision-Date: 2023-01-24 15:01+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -621,8 +621,7 @@ msgstr "Pression"
 msgid "Buttons"
 msgstr "Buttones"
 
-#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:517 debug_console.ui:356
+#: debug_console.cpp:517
 #, kde-format
 msgid "Modifiers"
 msgstr "Modificatores "
@@ -877,163 +876,6 @@ msgstr "Fenestras Wayland"
 #, kde-format
 msgid "Internal Windows"
 msgstr "Fenestra interne"
-
-#. i18n: ectx: property (text), widget (QPushButton, quitButton)
-#: debug_console.ui:32
-#, kde-format
-msgid "Quit Debug Console"
-msgstr "Abandona Console de Debug"
-
-#. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:45
-#, kde-format
-msgid "Windows"
-msgstr "Fenestras"
-
-#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
-#: debug_console.ui:59
-#, kde-format
-msgid "Surfaces"
-msgstr "Superficies"
-
-#. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:69
-#, kde-format
-msgid "Input Events"
-msgstr "Eventos de entrata"
-
-#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:86
-#, kde-format
-msgid "Input Devices"
-msgstr "Dispositivos de Ingresso"
-
-#. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:96
-#, kde-format
-msgid "OpenGL"
-msgstr "OpenGL"
-
-#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:102
-#, kde-format
-msgid "No OpenGL compositor running"
-msgstr "Necun compositor de OpenGL executante"
-
-#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:130
-#, kde-format
-msgid "OpenGL (ES) driver information"
-msgstr "Information de driver OpenGL (ES)"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:136
-#, kde-format
-msgid "Vendor:"
-msgstr "Venditor:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:143
-#, kde-format
-msgid "Renderer:"
-msgstr "Rendere:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:150
-#, kde-format
-msgid "Version:"
-msgstr "Version:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:157
-#, kde-format
-msgid "Shading Language Version:"
-msgstr "Version de linguage umbrante:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:164
-#, kde-format
-msgid "Driver:"
-msgstr "Driver:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:171
-#, kde-format
-msgid "GPU class:"
-msgstr "Classe de GPU:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:178
-#, kde-format
-msgid "OpenGL Version:"
-msgstr "Version OpenGL:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:185
-#, kde-format
-msgid "GLSL Version:"
-msgstr "Version de GLSL:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:251
-#, kde-format
-msgid "Platform Extensions"
-msgstr "Extensiones de platteforma"
-
-#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:267
-#, kde-format
-msgid "OpenGL (ES) Extensions"
-msgstr "Extensiones de OpenGL(ES)"
-
-#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:288
-#, kde-format
-msgid "Keyboard"
-msgstr "Claviero"
-
-#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:315
-#, kde-format
-msgid "Keymap Layouts"
-msgstr "Dispositiones de Claviero"
-
-#. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:337
-#, kde-format
-msgid "Current Layout:"
-msgstr "Dsposition currente:"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:372
-#, kde-format
-msgid "Active Modifiers"
-msgstr "Modificatores Active"
-
-#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:388
-#, kde-format
-msgid "LEDs"
-msgstr "LEDs"
-
-#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:404
-#, kde-format
-msgid "Active LEDs"
-msgstr "LEDs active"
-
-#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:425 debug_console.ui:445
-#, kde-format
-msgid "Clipboard"
-msgstr "Area de transferentia"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:491
-#, kde-format
-msgid "Primary Selection"
-msgstr "Selection Primari"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1591,528 +1433,6 @@ msgstr "Commuta color de nocte"
 msgid "Color Temperature Preview"
 msgstr "Vista preliminar de Temperatura de Color "
 
-#. i18n: ectx: label, entry (count), group (General)
-#: rulebooksettingsbase.kcfg:9
-#, kde-format
-msgid "Total rules count (legacy)"
-msgstr "Computo total de regulas (obsolescente)"
-
-#. i18n: ectx: label, entry (ruleGroupList), group (General)
-#: rulebooksettingsbase.kcfg:13
-#, kde-format
-msgid "Ordered list of rules groups"
-msgstr "Lista ordinate de gruppos de regulas"
-
-#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:10
-#, kde-format
-msgid "Rule description"
-msgstr "Description de regula"
-
-#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:13
-#, kde-format
-msgid "Rule description (legacy)"
-msgstr "Description de regula (obsolescente)"
-
-#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:16
-#, kde-format
-msgid "Delete this rule (for use in imports)"
-msgstr "Dle iste regula (per uso in importationes)"
-
-#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:20
-#, kde-format
-msgid "Window class (application)"
-msgstr "Classe de fenestra (application):"
-
-#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:23
-#, kde-format
-msgid "Window class string match type"
-msgstr "Typo de correspondentia de catena de classe de fenestra"
-
-#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:29
-#, kde-format
-msgid "Match whole window class"
-msgstr "Coincide Integre classe de fenestra"
-
-#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:34
-#, kde-format
-msgid "Window role"
-msgstr "Rolo de Fenestra:"
-
-#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:37
-#, kde-format
-msgid "Window role string match type"
-msgstr "Typo de correspondentia de catena de rolo de fenestra"
-
-#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:44
-#, kde-format
-msgid "Window title"
-msgstr "Titulo de fenestra"
-
-#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:47
-#, kde-format
-msgid "Window title string match type"
-msgstr "Typo de correspondentia de catena de titulo de fenestra"
-
-#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:54
-#, kde-format
-msgid "Machine (hostname)"
-msgstr "Machina (nomine de hospite)"
-
-#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:57
-#, kde-format
-msgid "Machine string match type"
-msgstr "Typo de correspondentia de cqtena de machina"
-
-#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:64
-#, kde-format
-msgid "Window types that match"
-msgstr "Typos de Fenestra que coincide"
-
-#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:69
-#, kde-format
-msgid "Initial placement"
-msgstr "Placiamento initial"
-
-#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:74
-#, kde-format
-msgid "Initial placement rule type"
-msgstr "Typo de regula de placiamento initial"
-
-#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:79
-#, kde-format
-msgid "Window position"
-msgstr "Position de fenestra"
-
-#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:83
-#, kde-format
-msgid "Window position rule type"
-msgstr "Typo de regula de position de fenestra"
-
-#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:90
-#, kde-format
-msgid "Window size"
-msgstr "Grandor de fenestra"
-
-#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:93
-#, kde-format
-msgid "Window size rule type"
-msgstr "Typo de regula de dimension de fenestra"
-
-#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:100
-#, kde-format
-msgid "Window minimum size"
-msgstr "Grandor minime de fenestra"
-
-#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:104
-#, kde-format
-msgid "Window minimum size rule type"
-msgstr "Typo de regula de grandor minime de fenestra"
-
-#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:109
-#, kde-format
-msgid "Window maximum size"
-msgstr "Grandor maxime de fenestra"
-
-#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:113
-#, kde-format
-msgid "Window maximum size rule type"
-msgstr "Typo de regula de grandor maxime de fenestra"
-
-#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:118
-#, kde-format
-msgid "Active opacity"
-msgstr "Opacitate active"
-
-#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:124
-#, kde-format
-msgid "Active opacity rule type"
-msgstr "Typo de regula de opacitate active"
-
-#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:129
-#, kde-format
-msgid "Inactive opacity"
-msgstr "Opacitate inactive"
-
-#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:135
-#, kde-format
-msgid "Inactive opacity rule type"
-msgstr "Typo de regula de opacitate inactive"
-
-#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:140
-#, kde-format
-msgid "Ignore requested geometry"
-msgstr "Ignora geometria requirite"
-
-#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:144
-#, kde-format
-msgid "Ignore requested geometry rule type"
-msgstr "Ignora typo de regula de geometria requirite"
-
-#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:151
-#, kde-format
-msgid "List of Desktop Ids"
-msgstr "Lista de ids de Scriptorio"
-
-#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:155
-#, kde-format
-msgid "Desktop Ids rule type"
-msgstr "Typo de Regula de ids de scriptorio"
-
-#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:162
-#, kde-format
-msgid "Screen number"
-msgstr "Numero de schermo"
-
-#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:166
-#, kde-format
-msgid "Screen number rule type"
-msgstr "Typo de regula de numero de schermo"
-
-#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:173
-#, kde-format
-msgid "Activity"
-msgstr "Activitate"
-
-#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:176
-#, kde-format
-msgid "Activity rule type"
-msgstr "Typo de regula de activitate"
-
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "Placia typo e fenestra a"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "Fixa typo de degula de typo de fenestra"
-
-#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
-#, kde-format
-msgid "Maximized vertically"
-msgstr "Maximizate verticalmente"
-
-#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
-#, kde-format
-msgid "Maximized vertically rule type"
-msgstr "Typo de regula de maximisar  verticalmente"
-
-#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
-#, kde-format
-msgid "Maximized horizontally"
-msgstr "Maximizate horizontalmente"
-
-#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
-#, kde-format
-msgid "Maximized horizontally rule type"
-msgstr "Typo de regula de maximisar horizontalmente"
-
-#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
-#, kde-format
-msgid "Minimized"
-msgstr "Minimizate"
-
-#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
-#, kde-format
-msgid "Minimized rule type"
-msgstr "Typo de regula minimisate"
-
-#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
-#, kde-format
-msgid "Shaded"
-msgstr "Adumbrate"
-
-#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
-#, kde-format
-msgid "Shaded rule type"
-msgstr "Typo de regula umbrate"
-
-#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
-#, kde-format
-msgid "Skip taskbar"
-msgstr "Salta barra de carga"
-
-#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
-#, kde-format
-msgid "Skip taskbar rule type"
-msgstr "Typo de regula salta barra de applicationes"
-
-#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
-#, kde-format
-msgid "Skip pager"
-msgstr "Salta paginator"
-
-#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
-#, kde-format
-msgid "Skip pager rule type"
-msgstr "Typo de regula salta paginator"
-
-#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
-#, kde-format
-msgid "Skip switcher"
-msgstr "Salta commutator"
-
-#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
-#, kde-format
-msgid "Skip switcher rule type"
-msgstr "Typo de regula salta commutator"
-
-#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
-#, kde-format
-msgid "Keep above"
-msgstr "Mantene supra"
-
-#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
-#, kde-format
-msgid "Keep above rule type"
-msgstr "Typo de regula de Mantener super"
-
-#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
-#, kde-format
-msgid "Keep below"
-msgstr "Mantene infra"
-
-#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
-#, kde-format
-msgid "Keep below rule type"
-msgstr "Typo de regula de Mantener infra"
-
-#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
-#, kde-format
-msgid "Fullscreen"
-msgstr "Schermo plen"
-
-#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
-#, kde-format
-msgid "Fullscreen rule type"
-msgstr "Typo de regula de Schermo plen"
-
-#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
-#, kde-format
-msgid "No titlebar and frame"
-msgstr "Nulle barra de titulo e quadro"
-
-#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
-#, kde-format
-msgid "No titlebar rule type"
-msgstr "Typo de regula necun barra de titulo"
-
-#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
-#, kde-format
-msgid "Titlebar color and scheme"
-msgstr "Color e schema de barra de titulo"
-
-#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
-#, kde-format
-msgid "Titlebar color rule type"
-msgstr "Typo de regula de color de barra de titulo"
-
-#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
-#, kde-format
-msgid "Block Compositing"
-msgstr "Bloca composition"
-
-#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
-#, kde-format
-msgid "Block Compositing rule type"
-msgstr "Typo de regula de blocar composition"
-
-#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
-#, kde-format
-msgid "Focus stealing prevention"
-msgstr "Prevention de robar de foco"
-
-#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
-#, kde-format
-msgid "Focus stealing prevention rule type"
-msgstr "Typo de regula de robar de foco"
-
-#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
-#, kde-format
-msgid "Focus protection"
-msgstr "Protection de foco"
-
-#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
-#, kde-format
-msgid "Focus protection rule type"
-msgstr "Typo de regula de protection de foco"
-
-#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
-#, kde-format
-msgid "Accept Focus"
-msgstr "Acceptar foco"
-
-#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
-#, kde-format
-msgid "Accept Focus rule type"
-msgstr "Typo de regula de Accepta Foco"
-
-#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
-#, kde-format
-msgid "Closeable"
-msgstr "Claudibile"
-
-#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
-#, kde-format
-msgid "Closeable rule type"
-msgstr "Typo de regula Claudibile"
-
-#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
-#, kde-format
-msgid "Autogroup with identical"
-msgstr "Gruppa automaticamente con identic"
-
-#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
-#, kde-format
-msgid "Autogroup with identical rule type"
-msgstr "Typo de regula gruppa con identic"
-
-#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
-#, kde-format
-msgid "Autogroup in foreground"
-msgstr "Gruppa automaticamente in fronte"
-
-#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
-#, kde-format
-msgid "Autogroup in foreground rule type"
-msgstr "Typo de regula de gruppa in prime plano"
-
-#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
-#, kde-format
-msgid "Autogroup by ID"
-msgstr "Gruppa automaticamente per ID"
-
-#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
-#, kde-format
-msgid "Autogroup by ID rule type"
-msgstr "Typo de regula gruppa per ID"
-
-#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
-#, kde-format
-msgid "Obey geometry restrictions"
-msgstr "Obedi a restrictiones de geometria"
-
-#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
-#, kde-format
-msgid "Obey geometry restrictions rule type"
-msgstr "Typo de regula obedi restrictiones de geometria"
-
-#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
-#, kde-format
-msgid "Shortcut"
-msgstr "Via Breve"
-
-#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
-#, kde-format
-msgid "Shortcut rule type"
-msgstr "Typo de regula de via breve"
-
-#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
-#, kde-format
-msgid "Ignore global shortcuts"
-msgstr "Ignora vias breve global"
-
-#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
-#, kde-format
-msgid "Ignore global shortcuts rule type"
-msgstr "Ignora typo de regula de vias breve global"
-
-#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
-#, kde-format
-msgid "Desktop file name"
-msgstr "Nomine de file de scriptorio"
-
-#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
-#, kde-format
-msgid "Desktop file name rule type"
-msgstr "Typo de regula de nomine de file de scriptorio"
-
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
@@ -2131,18 +1451,6 @@ msgstr "%1 non contine un file de metadata.json valide"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 non existe"
-
-#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
-#: shortcutdialog.ui:14
-#, kde-format
-msgid "Dialog"
-msgstr "Dialogo"
-
-#. i18n: ectx: property (text), widget (QToolButton, clearButton)
-#: shortcutdialog.ui:25
-#, kde-format
-msgid "..."
-msgstr "..."
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2816,6 +2124,351 @@ msgstr ""
 "Pro favor tu invia information fornite infra iste texto de introduction a un "
 "servicio de receptaculo como http://paste.kde.org in loco de collar a "
 "topicos de supporto.\n"
+
+#~ msgid "Quit Debug Console"
+#~ msgstr "Abandona Console de Debug"
+
+#~ msgid "Windows"
+#~ msgstr "Fenestras"
+
+#~ msgid "Surfaces"
+#~ msgstr "Superficies"
+
+#~ msgid "Input Events"
+#~ msgstr "Eventos de entrata"
+
+#~ msgid "Input Devices"
+#~ msgstr "Dispositivos de Ingresso"
+
+#~ msgid "OpenGL"
+#~ msgstr "OpenGL"
+
+#~ msgid "No OpenGL compositor running"
+#~ msgstr "Necun compositor de OpenGL executante"
+
+#~ msgid "OpenGL (ES) driver information"
+#~ msgstr "Information de driver OpenGL (ES)"
+
+#~ msgid "Vendor:"
+#~ msgstr "Venditor:"
+
+#~ msgid "Renderer:"
+#~ msgstr "Rendere:"
+
+#~ msgid "Version:"
+#~ msgstr "Version:"
+
+#~ msgid "Shading Language Version:"
+#~ msgstr "Version de linguage umbrante:"
+
+#~ msgid "Driver:"
+#~ msgstr "Driver:"
+
+#~ msgid "GPU class:"
+#~ msgstr "Classe de GPU:"
+
+#~ msgid "OpenGL Version:"
+#~ msgstr "Version OpenGL:"
+
+#~ msgid "GLSL Version:"
+#~ msgstr "Version de GLSL:"
+
+#~ msgid "Platform Extensions"
+#~ msgstr "Extensiones de platteforma"
+
+#~ msgid "OpenGL (ES) Extensions"
+#~ msgstr "Extensiones de OpenGL(ES)"
+
+#~ msgid "Keyboard"
+#~ msgstr "Claviero"
+
+#~ msgid "Keymap Layouts"
+#~ msgstr "Dispositiones de Claviero"
+
+#~ msgid "Current Layout:"
+#~ msgstr "Dsposition currente:"
+
+#~ msgid "Active Modifiers"
+#~ msgstr "Modificatores Active"
+
+#~ msgid "LEDs"
+#~ msgstr "LEDs"
+
+#~ msgid "Active LEDs"
+#~ msgstr "LEDs active"
+
+#~ msgid "Clipboard"
+#~ msgstr "Area de transferentia"
+
+#~ msgid "Primary Selection"
+#~ msgstr "Selection Primari"
+
+#~ msgid "Total rules count (legacy)"
+#~ msgstr "Computo total de regulas (obsolescente)"
+
+#~ msgid "Ordered list of rules groups"
+#~ msgstr "Lista ordinate de gruppos de regulas"
+
+#~ msgid "Rule description"
+#~ msgstr "Description de regula"
+
+#~ msgid "Rule description (legacy)"
+#~ msgstr "Description de regula (obsolescente)"
+
+#~ msgid "Delete this rule (for use in imports)"
+#~ msgstr "Dle iste regula (per uso in importationes)"
+
+#~ msgid "Window class (application)"
+#~ msgstr "Classe de fenestra (application):"
+
+#~ msgid "Window class string match type"
+#~ msgstr "Typo de correspondentia de catena de classe de fenestra"
+
+#~ msgid "Match whole window class"
+#~ msgstr "Coincide Integre classe de fenestra"
+
+#~ msgid "Window role"
+#~ msgstr "Rolo de Fenestra:"
+
+#~ msgid "Window role string match type"
+#~ msgstr "Typo de correspondentia de catena de rolo de fenestra"
+
+#~ msgid "Window title"
+#~ msgstr "Titulo de fenestra"
+
+#~ msgid "Window title string match type"
+#~ msgstr "Typo de correspondentia de catena de titulo de fenestra"
+
+#~ msgid "Machine (hostname)"
+#~ msgstr "Machina (nomine de hospite)"
+
+#~ msgid "Machine string match type"
+#~ msgstr "Typo de correspondentia de cqtena de machina"
+
+#~ msgid "Window types that match"
+#~ msgstr "Typos de Fenestra que coincide"
+
+#~ msgid "Initial placement"
+#~ msgstr "Placiamento initial"
+
+#~ msgid "Initial placement rule type"
+#~ msgstr "Typo de regula de placiamento initial"
+
+#~ msgid "Window position"
+#~ msgstr "Position de fenestra"
+
+#~ msgid "Window position rule type"
+#~ msgstr "Typo de regula de position de fenestra"
+
+#~ msgid "Window size"
+#~ msgstr "Grandor de fenestra"
+
+#~ msgid "Window size rule type"
+#~ msgstr "Typo de regula de dimension de fenestra"
+
+#~ msgid "Window minimum size"
+#~ msgstr "Grandor minime de fenestra"
+
+#~ msgid "Window minimum size rule type"
+#~ msgstr "Typo de regula de grandor minime de fenestra"
+
+#~ msgid "Window maximum size"
+#~ msgstr "Grandor maxime de fenestra"
+
+#~ msgid "Window maximum size rule type"
+#~ msgstr "Typo de regula de grandor maxime de fenestra"
+
+#~ msgid "Active opacity"
+#~ msgstr "Opacitate active"
+
+#~ msgid "Active opacity rule type"
+#~ msgstr "Typo de regula de opacitate active"
+
+#~ msgid "Inactive opacity"
+#~ msgstr "Opacitate inactive"
+
+#~ msgid "Inactive opacity rule type"
+#~ msgstr "Typo de regula de opacitate inactive"
+
+#~ msgid "Ignore requested geometry"
+#~ msgstr "Ignora geometria requirite"
+
+#~ msgid "Ignore requested geometry rule type"
+#~ msgstr "Ignora typo de regula de geometria requirite"
+
+#~ msgid "List of Desktop Ids"
+#~ msgstr "Lista de ids de Scriptorio"
+
+#~ msgid "Desktop Ids rule type"
+#~ msgstr "Typo de Regula de ids de scriptorio"
+
+#~ msgid "Screen number"
+#~ msgstr "Numero de schermo"
+
+#~ msgid "Screen number rule type"
+#~ msgstr "Typo de regula de numero de schermo"
+
+#~ msgid "Activity"
+#~ msgstr "Activitate"
+
+#~ msgid "Activity rule type"
+#~ msgstr "Typo de regula de activitate"
+
+#~ msgid "Set window type to"
+#~ msgstr "Placia typo e fenestra a"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "Fixa typo de degula de typo de fenestra"
+
+#~ msgid "Maximized vertically"
+#~ msgstr "Maximizate verticalmente"
+
+#~ msgid "Maximized vertically rule type"
+#~ msgstr "Typo de regula de maximisar  verticalmente"
+
+#~ msgid "Maximized horizontally"
+#~ msgstr "Maximizate horizontalmente"
+
+#~ msgid "Maximized horizontally rule type"
+#~ msgstr "Typo de regula de maximisar horizontalmente"
+
+#~ msgid "Minimized"
+#~ msgstr "Minimizate"
+
+#~ msgid "Minimized rule type"
+#~ msgstr "Typo de regula minimisate"
+
+#~ msgid "Shaded"
+#~ msgstr "Adumbrate"
+
+#~ msgid "Shaded rule type"
+#~ msgstr "Typo de regula umbrate"
+
+#~ msgid "Skip taskbar"
+#~ msgstr "Salta barra de carga"
+
+#~ msgid "Skip taskbar rule type"
+#~ msgstr "Typo de regula salta barra de applicationes"
+
+#~ msgid "Skip pager"
+#~ msgstr "Salta paginator"
+
+#~ msgid "Skip pager rule type"
+#~ msgstr "Typo de regula salta paginator"
+
+#~ msgid "Skip switcher"
+#~ msgstr "Salta commutator"
+
+#~ msgid "Skip switcher rule type"
+#~ msgstr "Typo de regula salta commutator"
+
+#~ msgid "Keep above"
+#~ msgstr "Mantene supra"
+
+#~ msgid "Keep above rule type"
+#~ msgstr "Typo de regula de Mantener super"
+
+#~ msgid "Keep below"
+#~ msgstr "Mantene infra"
+
+#~ msgid "Keep below rule type"
+#~ msgstr "Typo de regula de Mantener infra"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Schermo plen"
+
+#~ msgid "Fullscreen rule type"
+#~ msgstr "Typo de regula de Schermo plen"
+
+#~ msgid "No titlebar and frame"
+#~ msgstr "Nulle barra de titulo e quadro"
+
+#~ msgid "No titlebar rule type"
+#~ msgstr "Typo de regula necun barra de titulo"
+
+#~ msgid "Titlebar color and scheme"
+#~ msgstr "Color e schema de barra de titulo"
+
+#~ msgid "Titlebar color rule type"
+#~ msgstr "Typo de regula de color de barra de titulo"
+
+#~ msgid "Block Compositing"
+#~ msgstr "Bloca composition"
+
+#~ msgid "Block Compositing rule type"
+#~ msgstr "Typo de regula de blocar composition"
+
+#~ msgid "Focus stealing prevention"
+#~ msgstr "Prevention de robar de foco"
+
+#~ msgid "Focus stealing prevention rule type"
+#~ msgstr "Typo de regula de robar de foco"
+
+#~ msgid "Focus protection"
+#~ msgstr "Protection de foco"
+
+#~ msgid "Focus protection rule type"
+#~ msgstr "Typo de regula de protection de foco"
+
+#~ msgid "Accept Focus"
+#~ msgstr "Acceptar foco"
+
+#~ msgid "Accept Focus rule type"
+#~ msgstr "Typo de regula de Accepta Foco"
+
+#~ msgid "Closeable"
+#~ msgstr "Claudibile"
+
+#~ msgid "Closeable rule type"
+#~ msgstr "Typo de regula Claudibile"
+
+#~ msgid "Autogroup with identical"
+#~ msgstr "Gruppa automaticamente con identic"
+
+#~ msgid "Autogroup with identical rule type"
+#~ msgstr "Typo de regula gruppa con identic"
+
+#~ msgid "Autogroup in foreground"
+#~ msgstr "Gruppa automaticamente in fronte"
+
+#~ msgid "Autogroup in foreground rule type"
+#~ msgstr "Typo de regula de gruppa in prime plano"
+
+#~ msgid "Autogroup by ID"
+#~ msgstr "Gruppa automaticamente per ID"
+
+#~ msgid "Autogroup by ID rule type"
+#~ msgstr "Typo de regula gruppa per ID"
+
+#~ msgid "Obey geometry restrictions"
+#~ msgstr "Obedi a restrictiones de geometria"
+
+#~ msgid "Obey geometry restrictions rule type"
+#~ msgstr "Typo de regula obedi restrictiones de geometria"
+
+#~ msgid "Shortcut"
+#~ msgstr "Via Breve"
+
+#~ msgid "Shortcut rule type"
+#~ msgstr "Typo de regula de via breve"
+
+#~ msgid "Ignore global shortcuts"
+#~ msgstr "Ignora vias breve global"
+
+#~ msgid "Ignore global shortcuts rule type"
+#~ msgstr "Ignora typo de regula de vias breve global"
+
+#~ msgid "Desktop file name"
+#~ msgstr "Nomine de file de scriptorio"
+
+#~ msgid "Desktop file name rule type"
+#~ msgstr "Typo de regula de nomine de file de scriptorio"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialogo"
+
+#~ msgid "..."
+#~ msgstr "..."
 
 #~ msgid "&No Border"
 #~ msgstr "&Nulle Bordo"
