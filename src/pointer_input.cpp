@@ -275,11 +275,11 @@ void PointerInputRedirection::processButton(uint32_t button, PointerButtonState 
         return;
     }
 
+    updateButton(button, state);
+
     if (state == PointerButtonState::Pressed) {
         update();
     }
-
-    updateButton(button, state);
 
     PointerButtonEvent event{
         .device = device,
