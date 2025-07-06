@@ -202,6 +202,12 @@ void Item::setSize(const QSizeF &size)
     }
 }
 
+void Item::setGeometry(const QRectF &rect)
+{
+    setPosition(rect.topLeft());
+    setSize(rect.size());
+}
+
 QRectF Item::rect() const
 {
     return QRectF(QPoint(0, 0), size());
