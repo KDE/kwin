@@ -570,10 +570,10 @@ TabletPadDialV2Interface::TabletPadDialV2Interface(TabletPadV2Interface *parent)
 
 TabletPadDialV2Interface::~TabletPadDialV2Interface() = default;
 
-void TabletPadDialV2Interface::sendDelta(qreal delta)
+void TabletPadDialV2Interface::sendDelta(qint32 delta)
 {
     for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
-        d->send_delta(resource->handle, wl_fixed_from_double(delta));
+        d->send_delta(resource->handle, delta);
     }
 }
 
