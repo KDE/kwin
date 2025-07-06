@@ -66,6 +66,8 @@ public:
     QSizeF size() const;
     void setSize(const QSizeF &size);
 
+    void setGeometry(const QRectF &rect);
+
     int z() const;
     void setZ(int z);
 
