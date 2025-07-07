@@ -276,7 +276,7 @@ static void findOverlayCandidates(SceneView *delegate, Item *item, ssize_t maxCo
             break;
         }
         findOverlayCandidates(delegate, child, maxCount, occupied, ret);
-        if (ret.size() == maxCount) {
+        if (ret.size() > maxCount) {
             return;
         }
     }
@@ -294,7 +294,7 @@ static void findOverlayCandidates(SceneView *delegate, Item *item, ssize_t maxCo
         && surfaceItem->opacity() == 1.0
         && regionActuallyContains(surfaceItem->opaque(), surfaceItem->rect().toAlignedRect())) {
         ret.push_back(surfaceItem);
-        if (ret.size() == maxCount) {
+        if (ret.size() > maxCount) {
             return;
         }
     }
@@ -306,7 +306,7 @@ static void findOverlayCandidates(SceneView *delegate, Item *item, ssize_t maxCo
     for (; it != children.rend(); it++) {
         Item *const child = *it;
         findOverlayCandidates(delegate, child, maxCount, occupied, ret);
-        if (ret.size() == maxCount) {
+        if (ret.size() > maxCount) {
             return;
         }
     }
@@ -323,8 +323,12 @@ QList<SurfaceItem *> WorkspaceScene::overlayCandidates(ssize_t maxCount) const
         Window *window = data.item->window();
         if (window->isOnOutput(painted_screen) && window->opacity() > 0 && data.item->isVisible()) {
             findOverlayCandidates(painted_delegate, data.item, maxCount, occupied, ret);
-            if (ret.size() == maxCount) {
-                break;
+            if (ret.size() > maxCount) {
+                // If we have to repaint the primary plane anyways, it's not going to provide an efficiency
+                // or latency improvement - at least not with the current way we use them.
+                // On drivers where atomic tests with multiple planes are slow, it may also cause us to
+                // switch between different overlay candidates frequently, causing dropped frames.
+                return {};
             }
         }
     }
