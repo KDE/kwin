@@ -173,7 +173,7 @@ ExpoCell {
 
             // Not using FrameSvg hover element intentionally for stylistic reasons
             Rectangle {
-                border.width: Kirigami.Units.largeSpacing
+                border.width: 6
                 border.color: Kirigami.Theme.highlightColor
                 anchors.fill: parent
                 anchors.margins: -border.width
