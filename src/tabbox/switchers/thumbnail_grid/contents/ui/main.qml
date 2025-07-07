@@ -224,6 +224,10 @@ KWin.TabBoxSwitcher {
                     thumbnailGridView.currentIndexChanged(thumbnailGridView.currentIndex);
                 }
             } // Dialog.mainItem
+
+            onSceneGraphError: () => {
+                // This slot is intentionally left blank, otherwise QtQuick may post a qFatal() message on a graphics reset.
+            }
         } // Dialog
     } // Instantiator
 }
