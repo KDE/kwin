@@ -238,7 +238,7 @@ class KWIN_EXPORT TabletPadDialV2Interface : public QObject
 public:
     virtual ~TabletPadDialV2Interface();
 
-    void sendDelta(qreal delta);
+    void sendDelta(qint32 delta);
     void sendFrame(quint32 time);
 
 private:
