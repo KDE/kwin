@@ -244,6 +244,7 @@ install(FILES
     surface.h
     tablet_v2.h
     tearingcontrol_v1.h
+    textinput.h
     textinput_v1.h
     textinput_v2.h
     textinput_v3.h
