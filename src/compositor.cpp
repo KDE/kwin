@@ -434,7 +434,7 @@ static bool prepareRendering(RenderView *view, Output *output)
     layer->setEnabled(true);
     layer->setOffloadTransform(OutputTransform::Normal);
     layer->setBufferTransform(output->transform());
-    layer->setColor(output->layerBlendingColor(), RenderingIntent::AbsoluteColorimetric, ColorPipeline{});
+    layer->setColor(output->layerBlendingColor(), RenderingIntent::RelativeColorimetricWithBPC, ColorPipeline{});
     return layer->preparePresentationTest();
 }
 

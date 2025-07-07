@@ -527,7 +527,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
         const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
         return ColorDescription{
             next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, 0, maxBrightness * next.artificialHdrHeadroom),
+            TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness * next.artificialHdrHeadroom),
             effectiveReferenceLuminance,
             minBrightness * next.artificialHdrHeadroom,
             maxBrightness * maxPossibleArtificialHeadroom,

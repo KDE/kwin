@@ -46,9 +46,18 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
     }
     ret.addTransferFunction(from.transferFunction(), ColorspaceType::LinearRGB);
 
-    // FIXME this assumes that the range stays the same with matrix multiplication
-    // that's not necessarily true, and figuring out the actual range could be complicated..
-    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()), ColorspaceType::LinearRGB);
+    const QMatrix4x4 toOther = from.toOther(to, intent);
+    // this is an estimate. It assumes that toOther doesn't do anything too weird!
+    // FIXME it also assumes that the colorspace doesn't go into negative values
+    // (as does the input range) - that's not correct with scRGB!
+    const QVector3D black = toOther.map(QVector3D(range1.min, range1.min, range1.min));
+    const QVector3D white = toOther.map(QVector3D(range1.max, range1.max, range1.max));
+
+    ret.addMatrix(toOther, ValueRange{
+                               .min = std::min({black.x(), black.y(), black.z()}),
+                               .max = std::max({white.x(), white.y(), white.z()}),
+                           },
+                  ColorspaceType::LinearRGB);
     if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
         ret.addTonemapper(to.containerColorimetry(), to.referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
     }
@@ -259,6 +268,8 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output, C
                 if (const auto tf = std::get_if<ColorTransferFunction>(lastOp)) {
                     tf->tf.minLuminance -= inverse(0, 3);
                     tf->tf.maxLuminance -= inverse(0, 3);
+                    ops.back().output.min -= inverse(0, 3);
+                    ops.back().output.max -= inverse(0, 3);
                     QMatrix4x4 newMat = mat;
                     newMat(0, 3) = 0;
                     newMat(1, 3) = 0;
@@ -267,7 +278,9 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output, C
                     return;
                 } else if (const auto invTf = std::get_if<InverseColorTransferFunction>(lastOp)) {
                     invTf->tf.minLuminance += inverse(0, 3);
-                    tf->tf.maxLuminance += inverse(0, 3);
+                    invTf->tf.maxLuminance += inverse(0, 3);
+                    ops.back().input.min += inverse(0, 3);
+                    ops.back().input.max += inverse(0, 3);
                     QMatrix4x4 newMat = mat;
                     newMat(0, 3) = 0;
                     newMat(1, 3) = 0;
