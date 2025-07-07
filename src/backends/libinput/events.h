@@ -362,6 +362,10 @@ public:
         auto mode_group = libinput_event_tablet_pad_get_mode_group(m_tabletPadEvent);
         return libinput_tablet_pad_mode_group_get_index(mode_group);
     }
+    uint mode() const
+    {
+        return libinput_event_tablet_pad_get_mode(m_tabletPadEvent);
+    }
     std::chrono::microseconds time() const
     {
         return std::chrono::microseconds(libinput_event_tablet_pad_get_time_usec(m_tabletPadEvent));
@@ -419,6 +423,10 @@ public:
     {
         auto mode_group = libinput_event_tablet_pad_get_mode_group(m_tabletPadEvent);
         return libinput_tablet_pad_mode_group_get_index(mode_group);
+    }
+    uint mode() const
+    {
+        return libinput_event_tablet_pad_get_mode(m_tabletPadEvent);
     }
     std::chrono::microseconds time() const
     {

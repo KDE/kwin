@@ -400,7 +400,7 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, quint32 group, std::chrono::microseconds time, InputDevice *device)
+void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadStripEvent event{
         .device = device,
@@ -408,6 +408,7 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position,
         .position = position,
         .isFinger = isFinger,
         .group = group,
+        .mode = mode,
         .time = time,
     };
 
@@ -416,7 +417,7 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position,
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger, quint32 group, std::chrono::microseconds time, InputDevice *device)
+void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadRingEvent event{
         .device = device,
@@ -424,6 +425,7 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
         .position = position,
         .isFinger = isFinger,
         .group = group,
+        .mode = mode,
         .time = time,
     };
 

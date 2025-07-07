@@ -164,6 +164,7 @@ struct TabletPadStripEvent
     int position;
     bool isFinger;
     quint32 group;
+    quint32 mode;
     std::chrono::microseconds time;
 };
 
@@ -174,6 +175,7 @@ struct TabletPadRingEvent
     int position;
     bool isFinger;
     quint32 group;
+    quint32 mode;
     std::chrono::microseconds time;
 };
 
