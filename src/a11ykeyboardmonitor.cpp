@@ -74,10 +74,10 @@ bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::
             return false;
         }
 
-        data.lastModifier = keysym;
-        data.lastModifierTime = time;
-
         if (data.modifiers.contains(keysym)) {
+            data.lastModifier = keysym;
+            data.lastModifierTime = time;
+
             if (released) {
                 data.pressedModifiers.remove(keysym);
             } else {
