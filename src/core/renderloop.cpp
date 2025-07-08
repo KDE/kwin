@@ -44,6 +44,12 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     QObject::connect(&delayedVrrTimer, &QTimer::timeout, q, [q]() {
         q->scheduleRepaint(nullptr, nullptr);
     });
+
+    idleRepaintTimer.setSingleShot(true);
+    idleRepaintTimer.setInterval(1000);
+    QObject::connect(&idleRepaintTimer, &QTimer::timeout, [this]() {
+        dispatch();
+    });
 }
 
 void RenderLoopPrivate::scheduleNextRepaint()
@@ -123,6 +129,10 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
 
     const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
     compositeTimer.start(std::max(0ms, std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime)));
+    if (idleRepaintEnabled) {
+        // restart the idle timer
+        idleRepaintTimer.start();
+    }
 }
 
 void RenderLoopPrivate::delayScheduleRepaint()
@@ -298,6 +308,16 @@ void RenderLoop::setMaxPendingFrameCount(uint32_t maxCount)
 std::chrono::nanoseconds RenderLoop::predictedRenderTime() const
 {
     return d->renderJournal.result();
+}
+
+void RenderLoop::setIdleRepaint(bool enable)
+{
+    d->idleRepaintEnabled = enable;
+    if (enable && !d->idleRepaintTimer.isActive()) {
+        d->idleRepaintTimer.start();
+    } else if (!enable) {
+        d->idleRepaintTimer.stop();
+    }
 }
 
 } // namespace KWin
