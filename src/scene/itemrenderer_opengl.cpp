@@ -163,7 +163,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             OpenGLShadowTextureProvider *textureProvider = static_cast<OpenGLShadowTextureProvider *>(shadowItem->textureProvider());
             if (textureProvider->shadowTexture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .type = RenderNode::Type::Texture,
+                    .traits = ShaderTrait::MapTexture,
                     .texture = textureProvider->shadowTexture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
@@ -181,7 +181,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             auto renderer = static_cast<const SceneOpenGLDecorationRenderer *>(decorationItem->renderer());
             if (renderer->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .type = RenderNode::Type::Texture,
+                    .traits = ShaderTrait::MapTexture,
                     .texture = renderer->texture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
@@ -201,7 +201,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 OpenGLSurfaceTexture *surfaceTexture = static_cast<OpenGLSurfaceTexture *>(pixmap->texture());
                 if (surfaceTexture->isValid()) {
                     RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                        .type = RenderNode::Type::Texture,
+                        .traits = surfaceTexture->texture().planes.count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapYUVTexture,
                         .texture = surfaceTexture->texture(),
                         .geometry = geometry,
                         .transformMatrix = context->transformStack.top(),
@@ -216,6 +216,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isNull()) {
                         const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
 
+                        renderNode.traits |= ShaderTrait::RoundedCorners;
                         renderNode.hasAlpha = true;
                         renderNode.box = QVector4D(nativeRect.x() + nativeRect.width() * 0.5,
                                                    nativeRect.y() + nativeRect.height() * 0.5,
@@ -232,7 +233,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         if (!geometry.isEmpty()) {
             if (imageItem->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .type = RenderNode::Type::Texture,
+                    .traits = ShaderTrait::MapTexture,
                     .texture = imageItem->texture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
@@ -252,7 +253,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             const QRectF outerRect = snapToPixelGridF(scaledRect(borderItem->rect(), context->renderTargetScale));
             const QRectF innerRect = outerRect.adjusted(thickness, thickness, -thickness, -thickness);
             context->renderNodes.append(RenderNode{
-                .type = RenderNode::Type::Border,
+                .traits = ShaderTrait::Border,
                 .geometry = geometry,
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
@@ -376,33 +377,13 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
 
-        ShaderTraits traits = baseShaderTraits;
-        switch (renderNode.type) {
-        case RenderNode::Type::Border:
-            traits |= ShaderTrait::Border;
-            break;
-        case RenderNode::Type::Texture:
-            if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
-                traits |= ShaderTrait::MapTexture;
-            } else {
-                const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
-                if (contents.planes.size() == 1) {
-                    traits |= ShaderTrait::MapTexture;
-                } else {
-                    traits |= ShaderTrait::MapYUVTexture;
-                }
-            }
-        }
-
+        ShaderTraits traits = renderNode.traits;
         if (renderNode.opacity != 1.0) {
             traits |= ShaderTrait::Modulate;
         }
         const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), item->renderingIntent());
         if (!colorTransformation.isIdentity()) {
             traits |= ShaderTrait::TransformColorspace;
-        }
-        if (!renderNode.borderRadius.isNull() && renderNode.type != RenderNode::Type::Border) { // TODO: Lame...
-            traits |= ShaderTrait::RoundedCorners;
         }
 
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
@@ -447,7 +428,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setUniform(GLShader::ColorUniform::Color, renderNode.borderColor);
         }
 
-        if (renderNode.type == RenderNode::Type::Texture) {
+        if (renderNode.traits & (ShaderTrait::MapTexture | ShaderTrait::MapYUVTexture)) {
             if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
                 const auto texture = std::get<GLTexture *>(renderNode.texture);
                 glActiveTexture(GL_TEXTURE0);
@@ -464,7 +445,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
 
-        if (renderNode.type == RenderNode::Type::Texture) {
+        if (renderNode.traits & (ShaderTrait::MapTexture | ShaderTrait::MapYUVTexture)) {
             if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
                 auto texture = std::get<GLTexture *>(renderNode.texture);
                 glActiveTexture(GL_TEXTURE0);
