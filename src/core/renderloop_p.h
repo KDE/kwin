@@ -56,6 +56,9 @@ public:
     int maxPendingFrameCount = 1;
 
     QTimer delayedVrrTimer;
+
+    bool idleRepaintEnabled = false;
+    QTimer idleRepaintTimer;
 };
 
 } // namespace KWin

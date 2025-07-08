@@ -741,6 +741,13 @@ void Compositor::composite(RenderLoop *renderLoop)
         output->repairPresentation();
     }
 
+    // TODO also do this for the cursor
+    // On some hardware it takes non-insignificant power too.
+    renderLoop->setIdleRepaint(std::ranges::any_of(layers, [](const auto &layer) {
+        return layer.view->layer()->isEnabled()
+            && layer.view->layer()->type() == OutputLayerType::GenericLayer;
+    }));
+
     if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
         // we're currently running an animation to change the brightness
