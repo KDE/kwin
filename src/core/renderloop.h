@@ -98,6 +98,8 @@ public:
     // and then remove this again
     bool activeWindowControlsVrrRefreshRate() const;
 
+    void setIdleRepaint(bool enable);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the refresh rate of this RenderLoop has changed.
