@@ -24,12 +24,7 @@ public:
     // TODO: Store GLShader + other associated data in the RenderNode, e.g. uniforms.
     struct RenderNode
     {
-        enum class Type {
-            Texture,
-            Border,
-        };
-
-        Type type;
+        ShaderTraits traits;
         std::variant<GLTexture *, OpenGLSurfaceContents> texture;
         RenderGeometry geometry;
         QMatrix4x4 transformMatrix;
