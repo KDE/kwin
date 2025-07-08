@@ -71,6 +71,8 @@ public:
     double bottom() const;
     QRectF bounds() const;
 
+    static WindowQuad fromRect(const QRectF &rect);
+
 private:
     friend class WindowQuadList;
     WindowVertex verts[4];
@@ -280,6 +282,16 @@ inline double WindowQuad::bottom() const
 inline QRectF WindowQuad::bounds() const
 {
     return QRectF(QPointF(left(), top()), QPointF(right(), bottom()));
+}
+
+inline WindowQuad WindowQuad::fromRect(const QRectF &rect)
+{
+    WindowQuad quad;
+    quad[0] = WindowVertex(rect.topLeft(), QPointF(0, 0));
+    quad[1] = WindowVertex(rect.topRight(), QPointF(1, 0));
+    quad[2] = WindowVertex(rect.bottomRight(), QPointF(1, 1));
+    quad[3] = WindowVertex(rect.bottomLeft(), QPointF(0, 1));
+    return quad;
 }
 
 } // namespace KWin
