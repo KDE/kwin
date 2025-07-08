@@ -20,12 +20,10 @@ class EglDisplay;
 class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 {
 public:
-    // TODO: Store textures in a QVarLengthArray.
-    // TODO: Store GLShader + other associated data in the RenderNode, e.g. uniforms.
     struct RenderNode
     {
         ShaderTraits traits;
-        std::variant<GLTexture *, OpenGLSurfaceContents> texture;
+        QVarLengthArray<GLTexture *, 4> textures;
         RenderGeometry geometry;
         QMatrix4x4 transformMatrix;
         int firstVertex = 0;
