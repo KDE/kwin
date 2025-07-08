@@ -1,27 +1,24 @@
-# Translation of kcmkwm to Spanish
-# translation of kcmkwm.po to Spanish
-# traducción de kcmkwm.po a Español
-# Translation to spanish.
-# Copyright (C) 2001-2002.
+# Spanish translations for kcmkwm.po package.
+# Copyright (C) 2001-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
 #
-# Pablo de Vicente <vicente@oan.es>,2001-2002.
-# Jaime Robles <jaime@kde.org>, 2003, 2007, 2008.
-# Miguel Revilla Rodríguez <yo@miguelrevilla.com>, 2003, 2004.
-# Pablo de Vicente <vicnte@oan.es>, 2003.
-# Pablo de Vicente <p.devicente@wanadoo.es>, 2004.
-# Juan Manuel Garcia Molina <juanma@superiodico.net>, 2005.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2005, 2006, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, %Y.
-# Pablo de Vicente <pablo.devicente@gmail.com>, 2006.
-# Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007.
-# Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010.
-# Javier Vinal <fjvinal@gmail.com>, 2011, 2012.
-# Rocío Gallego <traducciones@rociogallego.com>, 2013.
+# SPDX-FileCopyrightText: 2001-2003 Pablo de Vicente <vicente@oan.es>
+# SPDX-FileCopyrightText: 2003, 2007, 2008 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2003, 2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
+# SPDX-FileCopyrightText: 2005 Juan Manuel Garcia Molina <juanma@superiodico.net>
+# SPDX-FileCopyrightText: 2005, 2006, 2009, 2010, 2012, 2013, 2015, 2019, 2020, 2021, 2022, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2006 Pablo de Vicente <pablo.devicente@gmail.com>
+# SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
+# SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2011, 2012 Javier Vinal <fjvinal@gmail.com>
+# SPDX-FileCopyrightText: 2013 Rocío Gallego <traducciones@rociogallego.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-03 12:06+0100\n"
+"PO-Revision-Date: 2025-07-07 17:10+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -624,7 +621,7 @@ msgid ""
 "with the proper window type for this feature to work."
 msgstr ""
 "Cuando se activa, las ventanas de utilidades (herramientas de ventana, menús "
-"despegados...) de aplicaciones inactivas se ocultarán y se mostrarán solo "
+"despegados…) de aplicaciones inactivas se ocultarán y se mostrarán solo "
 "cuando la aplicación se active. Advierta que las aplicaciones deben marcar "
 "las ventanas con el tipo de ventana adecuada para que esta prestación "
 "funcione."
@@ -1421,219 +1418,3 @@ msgstr ""
 "robo del foco</em> y la <em>acción de alternar entre ventanas («Alt+Tab»)</"
 "em> contradicen esta política y no funcionarán. Es muy probable que prefiera "
 "usar <em>El foco sigue al ratón (el ratón tiene prioridad)</em> en su lugar."
-
-#~ msgid "Cascaded"
-#~ msgstr "En cascada"
-
-#~ msgid "Window &geometry:"
-#~ msgstr "&Geometría de la ventana:"
-
-#~ msgid ""
-#~ "Enable this option if you want a window's geometry to be displayed while "
-#~ "it is being moved or resized. The window position relative to the top-"
-#~ "left corner of the screen is displayed together with its size."
-#~ msgstr ""
-#~ "Active esta opción si quiere que se muestre la geometría de la ventana "
-#~ "mientras se mueve o se modifica su tamaño. Se muestran la posición "
-#~ "relativa a la esquina superior izquierda y su tamaño."
-
-#~ msgid "Display when moving or resizing"
-#~ msgstr "Mostrar al mover o al cambiar de tamaño"
-
-#~ msgid "Maximize (vertical only)"
-#~ msgstr "Maximizar (solo verticalmente)"
-
-#~ msgid "Maximize (horizontal only)"
-#~ msgstr "Maximizar (solo horizontalmente)"
-
-#~ msgid "Smart"
-#~ msgstr "Inteligente"
-
-#~ msgid "Maximizing"
-#~ msgstr "Maximizando"
-
-#~ msgid "Zero-cornered"
-#~ msgstr "Esquina cero"
-
-#~ msgid "Switch to window tab to the left/right"
-#~ msgstr "Cambiar a la ventana en la pestaña de la izquierda/derecha"
-
-#~ msgid "Window tabbing:"
-#~ msgstr "Ventanas en pestañas:"
-
-#~ msgid ""
-#~ "When turned on immediately switch to any new window tabs that were "
-#~ "automatically added to the current group."
-#~ msgstr ""
-#~ "Si se activa, se cambiará inmediatamente a cualesquiera nuevas ventanas "
-#~ "en pestañas que se hubieran añadido automáticamente al grupo actual."
-
-#, fuzzy
-#~| msgid "Switch to automatically grouped windows immediately"
-#~ msgid "&Switch to automatically grouped windows immediately"
-#~ msgstr "Cambiar inmediatamente a las ventanas agrupadas automáticamente"
-
-#~ msgid "When turned on hide all tabs that are not active from the taskbar."
-#~ msgstr ""
-#~ "Si se activa, se ocultarán de la barra de tareas todas las pestañas que "
-#~ "no estén activas."
-
-#, fuzzy
-#~| msgid "Hide inactive window tabs from the taskbar"
-#~ msgid "&Hide inactive window tabs from the taskbar"
-#~ msgstr "Ocultar de la barra de tareas las ventanas en pestañas inactivas"
-
-#~ msgid ""
-#~ "When turned on attempt to automatically detect when a newly opened window "
-#~ "is related to an existing one and place them in the same window group."
-#~ msgstr ""
-#~ "Si se activa, cuando se abra una nueva ventana se intentará detectar "
-#~ "automáticamente si está relacionada con otra ya existente y las colocará "
-#~ "en el mismo grupo de ventanas."
-
-#, fuzzy
-#~| msgid "Start Window Tab Drag"
-#~ msgid "Start window tab drag"
-#~ msgstr "Iniciar arrastre de ventana en pestaña"
-
-#~ msgid "Ri&ght button:"
-#~ msgstr "Botón &derecho:"
-
-#~ msgid "&Wheel"
-#~ msgstr "&Rueda"
-
-#~ msgid "&Left button:"
-#~ msgstr "Botón i&zquierdo:"
-
-#~ msgid "&Right button:"
-#~ msgstr "Botón &derecho:"
-
-#~ msgid "M&iddle button:"
-#~ msgstr "Bo&tón central:"
-
-#~ msgid "Left &button"
-#~ msgstr "&Botón izquierdo:"
-
-#~ msgid "Automatically group similar windows"
-#~ msgstr "Agrupar automáticamente las ventanas similares"
-
-#~ msgid ""
-#~ "The placement policy determines where a new window will appear on the "
-#~ "desktop.<br><ul>\n"
-#~ "<li><em>Smart</em> will try to achieve a minimum overlap of windows</li>\n"
-#~ "<li><em>Maximizing</em> will try to maximize every window to fill the "
-#~ "whole screen. It might be useful to selectively affect placement of some "
-#~ "windows using the window-specific settings.</li>\n"
-#~ "<li><em>Cascade</em> will cascade the windows</li>\n"
-#~ "<li><em>Random</em> will use a random position</li>\n"
-#~ "<li><em>Centered</em> will place the window centered</li>\n"
-#~ "<li><em>Zero-Cornered</em> will place the window in the top-left corner</"
-#~ "li>\n"
-#~ "<li><em>Under Mouse</em> will place the window under the pointer</li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "La política de ubicación determina en qué sitio del escritorio debe "
-#~ "aparecer una ventana nueva.<br><ul>\n"
-#~ "<li><em>Inteligente</em> tratará que las ventanas se superpongan lo menos "
-#~ "posible.</li>\n"
-#~ "<li><em>Maximizando</em> intentará maximizar cada ventana para llenar "
-#~ "toda la pantalla. Puede resultarle útil para que afecte selectivamente la "
-#~ "ubicación de algunas ventanas utilizando sus opciones específicas.</li>\n"
-#~ "<li><em>Cascada</em> situará las ventanas en forma de cascada.</li>\n"
-#~ "<li><em>Aleatorio</em> usará una posición aleatoria.</li>\n"
-#~ "<li><em>Centrado</em> pondrá la ventana centrada.</li>\n"
-#~ "<li><em>Esquina cero</em> pondrá la ventana en la esquina superior "
-#~ "izquierda.</li>\n"
-#~ "<li><em>Bajo el ratón</em> pondrá la ventana bajo el puntero.</li>\n"
-#~ "</ul>"
-
-#~ msgid "Shading"
-#~ msgstr "Recogida"
-
-#~ msgid "Dela&y:"
-#~ msgstr "Retar&do:"
-
-#~ msgid "&Enable hover"
-#~ msgstr "&Extender al pasar por encima"
-
-#~ msgid "Activating windows"
-#~ msgstr "Activación de ventanas"
-
-#~ msgid "Policy"
-#~ msgstr "Política"
-
-#~ msgid "Click"
-#~ msgstr "Clic"
-
-#~ msgid "Hover"
-#~ msgstr "Pasar por encima"
-
-#~ msgid "&Moving"
-#~ msgstr "&Movimiento"
-
-#~ msgid "Wheel event:"
-#~ msgstr "Evento de la rueda:"
-
-#~ msgid "Handle mouse wheel events"
-#~ msgstr "Manejar eventos de la rueda del ratón"
-
-#~ msgid ""
-#~ "In this column you can customize mouse clicks into the titlebar or the "
-#~ "frame of an active window."
-#~ msgstr ""
-#~ "En esta columna se pueden personalizar las pulsaciones del ratón en la "
-#~ "barra de título o en el marco de la ventana activa."
-
-#~ msgid ""
-#~ "In this column you can customize mouse clicks into the titlebar or the "
-#~ "frame of an inactive window."
-#~ msgstr ""
-#~ "En esta columna se pueden personalizar las pulsaciones del ratón en la "
-#~ "barra de título o en el marco de la ventana inactiva."
-
-#~ msgid "Left button:"
-#~ msgstr "Botón izquierdo:"
-
-#~ msgid "Middle button:"
-#~ msgstr "Botón central:"
-
-#~ msgid ""
-#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
-#~ "<em>active</em> window."
-#~ msgstr ""
-#~ "Comportamiento al pulsar con el botón <em>central</em> en el borde o "
-#~ "título de una ventana <em>activa</em>."
-
-#~ msgid "Right button:"
-#~ msgstr "Botón derecho:"
-
-#~ msgid ""
-#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
-#~ "<em>active</em> window."
-#~ msgstr ""
-#~ "Comportamiento al pulsar con el botón <em>derecho</em> en el borde o "
-#~ "título de una ventana <em>activa</em>."
-
-#~ msgid "Titlebar & Frame"
-#~ msgstr "Barra de título y marco"
-
-#~ msgid "Titlebar"
-#~ msgstr "Barra de título"
-
-#~ msgid "no center snap zone"
-#~ msgstr "sin zona de adhesión en el centro"
-
-#~ msgid "no window snap zone"
-#~ msgstr "sin zona de adhesión de ventanas"
-
-#~ msgid "no border snap zone"
-#~ msgstr "sin zona de adhesión en los bordes"
-
-#~ msgid "Windows"
-#~ msgstr "Ventanas"
-
-#~ msgid "Snap Zones"
-#~ msgstr "Zonas de adhesión"
-
-#~ msgid "kcmkwinoptions"
-#~ msgstr "kcmkwinoptions"

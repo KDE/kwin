@@ -1,28 +1,27 @@
-# Translation of kcmkwindecoration to Spanish
-# translation of kcmkwindecoration.po to Spanish
-# Copyright (C) 2003, 2004, 2005, 2007, 2008 Free Software Foundation, Inc.
+# Spanish translations for kcm_kwindecoration.po package.
+# Copyright (C) 2003-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
 #
-# Jaime Robles <jaime@kde.org>, 2003, 2008, 2009.
-# Miguel Revilla Rodríguez <yo@miguelrevilla.com>, 2003.
-# Pablo de Vicente <p.devicente@wanadoo.es>, 2004.
-# Juan Manuel Garcia Molina <juanma@superiodico.net>, 2005.
-# Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007.
-# Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010, 2011.
-# Javier Vinal <fjvinal@gmail.com>, 2012.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021.
+# SPDX-FileCopyrightText: 2003, 2008, 2009 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2003 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
+# SPDX-FileCopyrightText: 2005 Juan Manuel Garcia Molina <juanma@superiodico.net>
+# SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
+# SPDX-FileCopyrightText: 2010, 2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2012 Javier Vinal <fjvinal@gmail.com>
+# SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
-"Project-Id-Version: kcmkwindecoration\n"
+"Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
-"PO-Revision-Date: 2021-06-10 13:00+0200\n"
+"PO-Revision-Date: 2025-07-07 17:07+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"com>\n"
 "First-Translator: Pablo de Vicente <pvicentea@nexo.es>\n"
 "X-Generator: Lokalize 21.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
@@ -238,7 +237,7 @@ msgstr "Tamaño del borde de las ventanas:"
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
-msgstr "Obtener nuevas decoraciones de ventanas..."
+msgstr "Obtener nuevas decoraciones de ventanas…"
 
 #: package/contents/ui/main.qml:139
 #, kde-format
@@ -307,213 +306,3 @@ msgstr "Gigantesco"
 #, kde-format
 msgid "Oversized"
 msgstr "De tamaño excesivo"
-
-#~ msgctxt "popup tip"
-#~ msgid ""
-#~ "Close by double clicking: Keep the window's Menu button pressed until it "
-#~ "appears."
-#~ msgstr ""
-#~ "Cerrar haciendo doble clic: Mantenga pulsado el botón de menú de la "
-#~ "ventana hasta que aparezca."
-
-#~ msgid "Menu"
-#~ msgstr "Menú"
-
-#~ msgid "Keep below"
-#~ msgstr "Mantener por debajo"
-
-#~ msgid "Keep above"
-#~ msgstr "Mantener por encima"
-
-#~ msgid "Download New Window Decorations"
-#~ msgstr "Descargar nuevas decoraciones de ventanas"
-
-#~ msgctxt "checkbox label"
-#~ msgid "Use theme's default window border size"
-#~ msgstr "Usar el tamaño por omisión del tema para el borde de las ventanas"
-
-#~ msgid "Configure window titlebars and borders"
-#~ msgstr "Configurar barra de título y bordes de las ventanas"
-
-#~ msgid "Search..."
-#~ msgstr "Buscar..."
-
-#~ msgid "Close windows by double clicking &the menu button"
-#~ msgstr "Cerrar las ven&tanas al hacer doble clic en el botón de menú"
-
-#~ msgid "Border si&ze:"
-#~ msgstr "&Tamaño del borde:"
-
-#~ msgid "Buttons"
-#~ msgstr "Botones"
-
-#~ msgid "Configure %1..."
-#~ msgstr "Configurar %1..."
-
-#~ msgid "Drag to re-position buttons"
-#~ msgstr "Arrastre para cambiar la posición de los botones"
-
-#~ msgid "Form"
-#~ msgstr "Formulario"
-
-#~ msgid "Button size:"
-#~ msgstr "Tamaño de botones:"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "Pequeño"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "Grande"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "Muy grande"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "Enorme"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "Gigantesco"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "De tamaño excesivo"
-
-#~ msgid "KDE"
-#~ msgstr "KDE"
-
-#~ msgid "%1 (unavailable)"
-#~ msgstr "%1 (no disponible)"
-
-#~ msgid ""
-#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
-#~ "available item list and the titlebar preview. Similarly, drag items "
-#~ "within the titlebar preview to re-position them."
-#~ msgstr ""
-#~ "Para añadir o eliminar botones de la barra del título, simplemente "
-#~ "<i>arrastre</i> elementos entre los elementos disponibles de la lista y "
-#~ "la previsualización de la barra del título. De modo similar arrastre "
-#~ "elementos dentro de la previsualización de la barra para reposicionarlos."
-
-#~ msgid "Resize"
-#~ msgstr "Redimensionar"
-
-#~ msgid "Help"
-#~ msgstr "Ayuda"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Menú de la ventana"
-
-#~ msgid "--- spacer ---"
-#~ msgstr "--- espaciador ---"
-
-#~ msgid ""
-#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
-#~ "is off, no window button tooltips will be shown."
-#~ msgstr ""
-#~ "Seleccionando esta casilla mostrará consejos de herramientas de los "
-#~ "botones de la ventana. Si la casilla está sin seleccionar, no se mostrará "
-#~ "ningún consejo de herramientas."
-
-#~ msgid "Please note that this option is not available on all styles yet."
-#~ msgstr ""
-#~ "Tenga en cuenta que esta opción aún no está disponible para todos los "
-#~ "estilos."
-
-#~ msgid "Use custom titlebar button &positions"
-#~ msgstr "Utilizar &posiciones personalizadas de botón de la barra de título"
-
-#~ msgid "B&order size:"
-#~ msgstr "Tamaño del b&orde:"
-
-#~ msgid "Use this combobox to change the border size of the decoration."
-#~ msgstr ""
-#~ "Use esta lista desplegable para cambiar el tamaño del borde de la "
-#~ "decoración."
-
-#~ msgctxt "@item:inlistbox Border size:"
-#~ msgid "No Side Border"
-#~ msgstr "Sin borde lateral"
-
-#~ msgctxt "@item:inlistbox Border size:"
-#~ msgid "No Border"
-#~ msgstr "Sin borde"
-
-#~ msgid "Decoration Options"
-#~ msgstr "Opciones de decoración"
-
-#~ msgid ""
-#~ "Select the window decoration. This is the look and feel of both the "
-#~ "window borders and the window handle."
-#~ msgstr ""
-#~ "Seleccionar el estilo de la ventana. Este se refiere al aspecto y "
-#~ "comportamiento de los bordes de la ventana y del asa de la ventana."
-
-#~ msgid "Configure Decoration..."
-#~ msgstr "Configurar decoración..."
-
-#~ msgid "Window Decoration Control Module"
-#~ msgstr "Módulo de control de decoración de ventana"
-
-#~ msgid "(c) 2001 Karol Szwed"
-#~ msgstr "© 2001 Karol Szwed"
-
-#~ msgid "Karol Szwed"
-#~ msgstr "Karol Szwed"
-
-#~ msgid ""
-#~ "<h1>Installation error</h1>The resource<h2>kwin/kcm_kwindecoration/main."
-#~ "qml</h2>could not be located in any application data path.<h2>Please "
-#~ "contact your distribution</h2>The application will now abort"
-#~ msgstr ""
-#~ "<h1>Error de instalación</h1>El recurso<h2>kwin/kcm_kwindecoration/main."
-#~ "qml</h2>no se puede localizar en ninguna ruta de datos de aplicaciones."
-#~ "<h2>Por favor, contacte con su distribución</h2>La aplicación se "
-#~ "interrumpirá ahora"
-
-#~ msgid "Installation Error"
-#~ msgstr "Error de instalación"
-
-#~ msgid "Oxygen"
-#~ msgstr "Oxígeno"
-
-#~ msgid ""
-#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
-#~ "window border decorations, as well as titlebar button positions and "
-#~ "custom decoration options.</p>To choose a theme for your window "
-#~ "decoration click on its name and apply your choice by clicking the \"Apply"
-#~ "\" button below. If you do not want to apply your choice you can click "
-#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
-#~ "theme. There are different options specific for each theme.</p><p>On the "
-#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
-#~ "and you can change the positions of the buttons to your liking.</p>"
-#~ msgstr ""
-#~ "<h1>Decoración del gestor de ventanas</h1><p>Este módulo le permite "
-#~ "elegir las decoraciones del borde de las ventanas, así como la posición "
-#~ "de los botones en la barra de título y otras opciones de decoración "
-#~ "personalizadas.</p>Para elegir un tema para la decoración de las "
-#~ "ventanas, pulse sobre su nombre y active la selección pulsando el botón "
-#~ "«Aplicar» que se encuentra más abajo. Si no desea aplicar la selección, "
-#~ "puede pulsar el botón «Reiniciar» para descartar los cambios.<p>Puede "
-#~ "configurar cada tema. Tiene diferentes opciones específicas para cada "
-#~ "tema.</p><p>En la pestaña «Botones» utilizando la opción «Utilizar "
-#~ "posiciones personalizadas de botón de la barra de título» puede colocar "
-#~ "las posiciones de los botones a su gusto.</p>"
-
-#~ msgid "Active Window"
-#~ msgstr "Ventana activa"
-
-#~ msgid "Inactive Window"
-#~ msgstr "Ventana inactiva"
-
-#~ msgid "kcmkwindecoration"
-#~ msgstr "kcmkwindecoration"

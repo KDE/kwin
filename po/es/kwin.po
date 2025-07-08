@@ -1,26 +1,23 @@
-# Translation of kwin.po to Spanish
-# Translation of kwin to Spanish
-# traducción de kwin.po a Español
-# translation of kwin.po to Spanish
-# Translation to spanish
-# Copyright (C) 1999-2002.
+# Spanish translations for kwin.po package.
+# Copyright (C) 1999-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
 #
-# Boris Wesslowski <Boris@Wesslowski.com>, 1999-2000.
-# Pablo de Vicente <vicente@oan.es>, 2001-2002,2003.
-# Jaime Robles <jaime@kde.org>, 2003, 2005, 2007, 2008, 2009.
-# Miguel Revilla Rodríguez <yo@miguelrevilla.com>, 2003, 2004.
-# Pablo de Vicente <p.devicente@wanadoo.es>, 2004.
-# Santiago Fernandez Sancho <santi@kde-es.org>, 2005.
-# Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007, 2008.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
-# Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010.
-# Javier Vinal <fjvinal@gmail.com>, 2011, 2012.
+# SPDX-FileCopyrightText: 1999-2000 Boris Wesslowski <Boris@Wesslowski.com>
+# SPDX-FileCopyrightText: 2001-2002, 2003 Pablo de Vicente <vicente@oan.es>
+# SPDX-FileCopyrightText: 2003, 2005, 2007, 2008, 2009 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2003, 2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
+# SPDX-FileCopyrightText: 2005 Santiago Fernandez Sancho <santi@kde-es.org>
+# SPDX-FileCopyrightText: 2007, 2008 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
+# SPDX-FileCopyrightText: 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2011, 2012 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-05 05:54+0000\n"
-"PO-Revision-Date: 2023-01-11 00:37+0100\n"
+"PO-Revision-Date: 2025-07-07 17:12+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -2161,7 +2158,7 @@ msgstr "Diálogo"
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2293,17 +2290,17 @@ msgstr "Si&n barra de título ni marco"
 #: useractions.cpp:280
 #, kde-format
 msgid "Set Window Short&cut..."
-msgstr "Definir a&cceso rápido de la ventana..."
+msgstr "Definir a&cceso rápido de la ventana…"
 
 #: useractions.cpp:286
 #, kde-format
 msgid "Configure Special &Window Settings..."
-msgstr "Configurar las preferencias especiales de la &ventana..."
+msgstr "Configurar las preferencias especiales de la &ventana…"
 
 #: useractions.cpp:291
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr "Configurar las &preferencias especiales de la aplicación..."
+msgstr "Configurar las &preferencias especiales de la aplicación…"
 
 #: useractions.cpp:298
 #, kde-format
@@ -2311,7 +2308,7 @@ msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
 "of KWin"
 msgid "Configure W&indow Manager..."
-msgstr "Conf&igurar el gestor de ventanas..."
+msgstr "Conf&igurar el gestor de ventanas…"
 
 #: useractions.cpp:325
 #, kde-format
@@ -2837,315 +2834,3 @@ msgstr ""
 "de introducción a un\n"
 "servicio de bandeja de pegar como https://paste.kde.org en lugar de pegarla "
 "en hilos de ayuda.\n"
-
-#~ msgid "&No Border"
-#~ msgstr "Si&n borde"
-
-#~ msgid "Toggle Window Border"
-#~ msgstr "Conmutar el borde de la ventana"
-
-#~ msgctxt "Error message"
-#~ msgid "Plugin does not provide configuration file in expected location"
-#~ msgstr ""
-#~ "El complemento no proporciona el archivo de configuración en el lugar "
-#~ "esperado"
-
-#~ msgid "Invert Screen Colors"
-#~ msgstr "Invertir los colores de la pantalla"
-
-#~ msgid "List all available backends and quit."
-#~ msgstr "Listar todos los motores disponibles y salir."
-
-#~ msgid "Show Desktop"
-#~ msgstr "Mostrar el escritorio"
-
-#~ msgid "X11 Client Windows"
-#~ msgstr "Ventanas clientes de X11"
-
-#~ msgid "unknown"
-#~ msgstr "desconocida"
-
-#~ msgid "Render to framebuffer."
-#~ msgstr "Renderizar en el «framebuffer»."
-
-#~ msgid "The framebuffer device to render to."
-#~ msgstr "El dispositivo «framebuffer» en el que renderizar"
-
-#~ msgid ""
-#~ "Enable libinput support for input events processing. Note: never use in a "
-#~ "nested session.\t(deprecated)"
-#~ msgstr ""
-#~ "Activar el uso de «libinput» para procesar los eventos de entrada. Nota: "
-#~ "no usar nunca en una sesión anidada.\t(discontinuado)"
-
-#~ msgid "Pack Window to the Right"
-#~ msgstr "Empaquetar la ventana a la derecha"
-
-#~ msgid "Pack Window to the Left"
-#~ msgstr "Empaquetar la ventana a la izquierda"
-
-#~ msgid "Pack Window Up"
-#~ msgstr "Empaquetar la ventana arriba"
-
-#~ msgid "Pack Window Down"
-#~ msgstr "Empaquetar la ventana abajo"
-
-#~ msgid "Pack Grow Window Horizontally"
-#~ msgstr "Empaquetar y extender la ventana horizontalmente"
-
-#~ msgid "Pack Grow Window Vertically"
-#~ msgstr "Empaquetar y extender la ventana verticalmente"
-
-#~ msgid "Desktop number"
-#~ msgstr "Número de escritorio"
-
-#~ msgid "Configure virtual keyboards..."
-#~ msgstr "Configurar los teclados virtuales..."
-
-#~ msgid "Virtual Keyboard"
-#~ msgstr "Teclado virtual"
-
-#~ msgid "Whether to show the virtual keyboard on demand."
-#~ msgstr "Si se debe mostrar el teclado virtual cuando se solicite."
-
-#~ msgid "Virtual Keyboard: enabled"
-#~ msgstr "Teclado virtual: activado"
-
-#~ msgid "Virtual Keyboard: disabled"
-#~ msgstr "Teclado virtual: desactivado"
-
-#~ msgid "No Virtual Keyboard configured"
-#~ msgstr "Ningún teclado virtual configurado"
-
-#~ msgctxt "Assertion failed in KWin script with given value"
-#~ msgid "Assertion failed: %1 is not null"
-#~ msgstr "Afirmación fallida: %1 no es nulo"
-
-#~ msgctxt "Assertion failed in KWin script"
-#~ msgid "Assertion failed: argument is null"
-#~ msgstr "Afirmación fallida: el argumento es nulo"
-
-#~ msgctxt "Error in KWin Script"
-#~ msgid ""
-#~ "Invalid number of arguments. At least service, path, interface and method "
-#~ "need to be provided"
-#~ msgstr ""
-#~ "Número de argumentos no válido. Debe proporcionar al menos el servicio, "
-#~ "la ruta, la interfaz y el método."
-
-#~ msgctxt "Error in KWin Script"
-#~ msgid ""
-#~ "Invalid type. Service, path, interface and method need to be string values"
-#~ msgstr ""
-#~ "Tipo no válido. El servicio, la ruta, la interfaz y el método tienen que "
-#~ "ser valores de cadena."
-
-#~ msgctxt "syntax error in KWin script"
-#~ msgid "Invalid number of arguments"
-#~ msgstr "Número de argumentos no válido"
-
-#~ msgctxt ""
-#~ "KWin Scripting function received incorrect value for an expected type"
-#~ msgid "%1 is not a variant type"
-#~ msgstr "%1 no es un tipo variante"
-
-#~ msgid "Pressed Buttons"
-#~ msgstr "Botones pulsados"
-
-#~ msgid "Use libhybris hwcomposer"
-#~ msgstr "Usar el compositor por hardware «libhybris»"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Permitir rotación"
-
-#~ msgid "Automatic screen rotation is enabled"
-#~ msgstr "La rotación automática de la pantalla está activada"
-
-#~ msgid "Undefined"
-#~ msgstr "Sin definir"
-
-#~ msgctxt "Portrait oriented display"
-#~ msgid "Vertical"
-#~ msgstr "Vertical"
-
-#~ msgctxt "Landscape oriented display"
-#~ msgid "Horizontal"
-#~ msgstr "Horizontal"
-
-#~ msgid "Automatic screen rotation is disabled"
-#~ msgstr "La rotación automática de la pantalla está desactivada"
-
-#~ msgid "Walk Through Window Tabs"
-#~ msgstr "Circular entre ventanas en pestañas"
-
-#~ msgid "Walk Through Window Tabs (Reverse)"
-#~ msgstr "Circular entre ventanas en pestañas (al revés)"
-
-#~ msgid "Remove Window From Group"
-#~ msgstr "Eliminar la ventana del grupo"
-
-#~ msgid "&Untab"
-#~ msgstr "Desprender pes&taña"
-
-#~ msgid "Close Entire &Group"
-#~ msgstr "Cerrar todo el &grupo"
-
-#~ msgctxt "Switch to tab -> Previous"
-#~ msgid "Previous"
-#~ msgstr "Anterior"
-
-#~ msgctxt "Switch to tab -> Next"
-#~ msgid "Next"
-#~ msgstr "Siguiente"
-
-#~ msgctxt "There's no window available to be attached as tab to this one"
-#~ msgid "None available"
-#~ msgstr "Ninguna disponible"
-
-#~ msgid "Switch to Tab"
-#~ msgstr "Cambiar a la pestaña"
-
-#~ msgid "&Attach as tab to"
-#~ msgstr "&Adjuntar como pestaña a"
-
-#~ msgctxt ""
-#~ "Entry in context menu of window decoration to open the configuration "
-#~ "module of KWin"
-#~ msgid "Window Manager S&ettings..."
-#~ msgstr "Pr&eferencias del gestor de ventanas..."
-
-#~ msgid "Automatic Screen Rotation"
-#~ msgstr "Rotación automática de la pantalla"
-
-#~ msgid "kwin_wayland: an X11 window manager is running on the X11 Display.\n"
-#~ msgstr ""
-#~ "kwin_wayland: un gestor de ventanas de X11 está en ejecución en la "
-#~ "pantalla X11.\n"
-
-#~ msgid "Martin Gräßlin"
-#~ msgstr "Martin Gräßlin"
-
-#~ msgid "Maintainer"
-#~ msgstr "Encargado"
-
-#~ msgid ""
-#~ "<h1>OpenGL desktop effects not possible</h1>Your system cannot perform "
-#~ "OpenGL Desktop Effects at the current resolution<br><br>You can try to "
-#~ "select the XRender backend, but it might be very slow for this resolution "
-#~ "as well.<br>Alternatively, lower the combined resolution of all screens "
-#~ "to %1x%2 "
-#~ msgstr ""
-#~ "<h1>Los efectos OpenGL del escritorio no son posibles</h1>Su sistema no "
-#~ "puede usar efectos OpenGL en el escritorio con la resolución "
-#~ "actual<br><br>Puede probar a seleccionar el motor XRender, pero es "
-#~ "posible que también sea muy lento con esta resolución.<br>Como "
-#~ "alternativa, baje la resolución combinada de todas las pantallas a %1x%2 "
-
-#~ msgid ""
-#~ "The demanded resolution exceeds the GL_MAX_VIEWPORT_DIMS limitation of "
-#~ "your GPU and is therefore not compatible with the OpenGL compositor."
-#~ "<br>XRender does not know such limitation, but the performance will "
-#~ "usually be impacted by the hardware limitations that restrict the OpenGL "
-#~ "viewport size."
-#~ msgstr ""
-#~ "La resolución solicitada excede la limitación GL_MAX_VIEWPORT_DIMS de su "
-#~ "GPU, por lo que no es compatible con el compositor de OpenGL.<br>XRender "
-#~ "no conoce dicha limitación, pero el rendimiento se verá reducido por las "
-#~ "limitaciones del hardware que limitan el tamaño del área visible de "
-#~ "OpenGL."
-
-#~ msgid ""
-#~ "<h1>OpenGL desktop effects might be unusable</h1>OpenGL Desktop Effects "
-#~ "at the current resolution are supported but might be exceptionally slow."
-#~ "<br>Also large windows will turn entirely black.<br><br>Consider to "
-#~ "suspend compositing, switch to the XRender backend or lower the "
-#~ "resolution to %1x%1."
-#~ msgstr ""
-#~ "<h1>Es posible que no pueda utilizar los efectos OpenGL en el escritorio</"
-#~ "h1>Los efectos OpenGL del escritorio con la resolución actual están "
-#~ "permitidos, pero pueden ser extremadamente lentos.<br>Además, las "
-#~ "ventanas grandes se volverán totalmente negras.<br><br>Considere "
-#~ "suspender la composición, cambiar al motor XRender o bajar la resolución "
-#~ "a %1x%1."
-
-#~ msgid ""
-#~ "The demanded resolution exceeds the GL_MAX_TEXTURE_SIZE limitation of "
-#~ "your GPU, thus windows of that size cannot be assigned to textures and "
-#~ "will be entirely black.<br>Also this limit will often be a performance "
-#~ "level barrier despite below GL_MAX_VIEWPORT_DIMS, because the driver "
-#~ "might fall back to software rendering in this case."
-#~ msgstr ""
-#~ "La resolución solicitada excede el límite GL_MAX_TEXTURE_SIZE de la GPU, "
-#~ "por lo que las ventanas de dicho tamaño no se pueden asignar a texturas y "
-#~ "se verán totalmente negras.<br>Además, este límite suele ser una barrera "
-#~ "en el nivel de rendimiento incluso por debajo de GL_MAX_VIEWPORT_DIMS, "
-#~ "porque el controlador puede recurrir a la renderización por software en "
-#~ "este caso."
-
-#~ msgid "Form"
-#~ msgstr "Formulario"
-
-#~ msgid "Use a nested compositor in windowed mode."
-#~ msgstr "Usar un compositor anidado en modo de ventanas."
-
-#~ msgctxt "notification about mouse pointer confined"
-#~ msgid ""
-#~ "Pointer motion confined to the current window.\n"
-#~ "To release pointer hold Escape for 3 seconds."
-#~ msgstr ""
-#~ "Movimiento del puntero confinado a la ventana actual.\n"
-#~ "Para liberar el puntero, mantenga pulsada la tecla Escape durante 3 "
-#~ "segundos."
-
-#~ msgctxt "notification about mouse pointer locked"
-#~ msgid ""
-#~ "Pointer locked to current position.\n"
-#~ "To end pointer lock hold Escape for 3 seconds."
-#~ msgstr ""
-#~ "Puntero bloqueado en la posición actual.\n"
-#~ "Para liberar el puntero, mantenga pulsada la tecla Escape durante 3 "
-#~ "segundos."
-
-#~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
-#~ msgstr ""
-#~ "GLX/OpenGL no están disponibles y solo está compilado el soporte OpenGL."
-
-#~ msgid "Sh&ade"
-#~ msgstr "&Recoger"
-
-#~ msgid ""
-#~ "kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY "
-#~ "is set.\n"
-#~ msgstr ""
-#~ "kwin_wayland: no se puede conectar al servidor Wayland; asegúrese de que "
-#~ "ha fijado el valor WAYLAND_DISPLAY.\n"
-
-#~ msgid ""
-#~ "The X11 Display to connect to. If not set next free number will be picked."
-#~ msgstr ""
-#~ "La pantalla X11 a la que conectarse. Si no se indica, se escogerá el "
-#~ "siguiente número libre."
-
-#~ msgid "KWin: "
-#~ msgstr "KWin: "
-
-#~ msgid "System"
-#~ msgstr "Sistema"
-
-#~ msgid "Navigation"
-#~ msgstr "Navegación"
-
-#~ msgid "Window & Desktop"
-#~ msgstr "Ventana y escritorio"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Diversos"
-
-#~ msgid "Desktop Switching"
-#~ msgstr "Cambio de escritorio"
-
-#~ msgid ""
-#~ "kwin: it looks like there's already a window manager running. kwin not "
-#~ "started.\n"
-#~ msgstr ""
-#~ "kwin: parece que ya hay un gestor de ventanas activo. kwin no se inició.\n"

@@ -1,15 +1,15 @@
 # Spanish translations for kcm_kwin_effects.po package.
-# Copyright (C) 2019 This file is copyright:
+# Copyright (C) 2019-2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-#
 # Automatically generated, 2019.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2019.
+#
+# SPDX-FileCopyrightText: 2019, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-03-26 00:45+0000\n"
-"PO-Revision-Date: 2019-09-30 19:34+0200\n"
+"PO-Revision-Date: 2025-07-07 17:06+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -58,7 +58,7 @@ msgstr "Mostrar/ocultar vídeo"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure..."
-msgstr "Configurar..."
+msgstr "Configurar…"
 
 #: package/contents/ui/main.qml:20
 #, kde-format
@@ -92,13 +92,4 @@ msgstr "Excluir los efectos internos"
 #: package/contents/ui/main.qml:125
 #, kde-format
 msgid "Get New Desktop Effects..."
-msgstr "Obtener nuevos efectos de escritorio..."
-
-#~ msgid "Download New Desktop Effects"
-#~ msgstr "Descargar nuevos efectos de escritorio"
-
-#~ msgid "Exclude Desktop Effects not supported by the Compositor"
-#~ msgstr "Excluir los efectos de escritorio no permitidos por el compositor"
-
-#~ msgid "Search..."
-#~ msgstr "Buscar..."
+msgstr "Obtener nuevos efectos de escritorio…"

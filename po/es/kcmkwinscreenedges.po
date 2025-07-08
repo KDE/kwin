@@ -1,17 +1,17 @@
-# translation of kcmkwinscreenedges.po to Spanish
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
+# Spanish translations for kcmkwinscreenedges.po package.
+# Copyright (C) 2009-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
 #
-# Eloy Cuadra <ecuadra@eloihr.net>, 2009, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2021, 2022.
-# Jaime Robles <jaime@kde.org>, 2009.
-# Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010.
-# Javier Vinal <fjvinal@gmail.com>, 2011.
+# SPDX-FileCopyrightText: 2009, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2021, 2022, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2009 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2011 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-07-15 18:21+0200\n"
+"PO-Revision-Date: 2025-07-07 17:09+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -243,6 +243,3 @@ msgid ""
 msgstr ""
 "Puede provocar una acción al deslizar el dedo desde el borde de la pantalla "
 "hacia el centro de la misma."
-
-#~ msgid "Show Desktop"
-#~ msgstr "Mostrar el escritorio"

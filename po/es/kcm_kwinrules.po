@@ -1,27 +1,28 @@
-# Translation of kcmkwinrules to Spanish
-# translation of kcmkwinrules.po to Spanish
-# Miguel Revilla Rodríguez <yo@miguelrevilla.com>, 2004.
-# Pablo de Vicente <p.devicente@wanadoo.es>, 2004.
-# Juan Manuel Garcia Molina <juanma@superiodico.net>, 2005.
-# Jaime Robles <jaime@robles.nu>, 2005.
-# Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>, 2007.
-# Jaime Robles <jaime@kde.org>, 2008.
-# Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>, 2010, 2011.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2010, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022.
-# Javier Vinal <fjvinal@gmail.com>, 2012.
+# Spanish translations for kcm_kwinrules.po package.
+# Copyright (C) 2004-2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
+# SPDX-FileCopyrightText: 2005 Juan Manuel Garcia Molina <juanma@superiodico.net>
+# SPDX-FileCopyrightText: 2005 Jaime Robles <jaime@robles.nu>
+# SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
+# SPDX-FileCopyrightText: 2008 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2010, 2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
+# SPDX-FileCopyrightText: 2010, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2012 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
-"Project-Id-Version: kcmkwinrules\n"
+"Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2022-12-11 12:07+0100\n"
+"PO-Revision-Date: 2025-07-07 17:08+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"com>\n"
 "X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
@@ -241,7 +242,7 @@ msgstr "No se han definido reglas para ventanas específicas"
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr ""
-"Pulse el botón <interface>Añadir nueva...</interface> inferior para añadir "
+"Pulse el botón <interface>Añadir nueva…</interface> inferior para añadir "
 "alguna"
 
 #: package/contents/ui/main.qml:68
@@ -267,12 +268,12 @@ msgstr "Guardar reglas"
 #: package/contents/ui/main.qml:97
 #, kde-format
 msgid "Add New..."
-msgstr "Añadir nueva..."
+msgstr "Añadir nueva…"
 
 #: package/contents/ui/main.qml:108
 #, kde-format
 msgid "Import..."
-msgstr "Importar..."
+msgstr "Importar…"
 
 #: package/contents/ui/main.qml:116
 #, kde-format
@@ -282,7 +283,7 @@ msgstr "Cancelar exportación"
 #: package/contents/ui/main.qml:116
 #, kde-format
 msgid "Export..."
-msgstr "Exportar..."
+msgstr "Exportar…"
 
 #: package/contents/ui/main.qml:206
 #, kde-format
@@ -338,8 +339,8 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"Pulse el botón <interface>Añadir propiedad...</interface> inferior para "
-"añadir alguna propiedad de la ventana que verá afectada por la regla."
+"Pulse el botón <interface>Añadir propiedad…</interface> inferior para añadir "
+"alguna propiedad de la ventana que verá afectada por la regla."
 
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
@@ -349,7 +350,7 @@ msgstr "Cerrar"
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
 msgid "Add Property..."
-msgstr "Añadir propiedad..."
+msgstr "Añadir propiedad…"
 
 #: package/contents/ui/RulesEditor.qml:98
 #, kde-format
@@ -971,244 +972,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "No se han podido detectar las propiedades de la ventana. La ventana no está "
 "gestionada por KWin."
-
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgid "Cascaded"
-#~ msgstr "En cascada"
-
-#~ msgid "Keep above"
-#~ msgstr "Mantener encima"
-
-#~ msgid "Keep below"
-#~ msgstr "Mantener debajo"
-
-#~ msgid "KWin"
-#~ msgstr "KWin"
-
-#~ msgid "KWin helper utility"
-#~ msgstr "Utilidad auxiliar de KWin"
-
-#~ msgid "Activity"
-#~ msgstr "Actividad"
-
-#~ msgid "Select properties"
-#~ msgstr "Seleccionar propiedades"
-
-#~ msgid "Override Type"
-#~ msgstr "Sobrescribir el tipo"
-
-#~ msgid "Unknown - will be treated as Normal Window"
-#~ msgstr "Desconocido - se considerará como ventana normal"
-
-#~ msgid "Information About Selected Window"
-#~ msgstr "Información sobre la ventana seleccionada"
-
-#~ msgid "Class:"
-#~ msgstr "Clase:"
-
-#~ msgid "Role:"
-#~ msgstr "Papel:"
-
-#~ msgid "Type:"
-#~ msgstr "Tipo:"
-
-#~ msgid "Title:"
-#~ msgstr "Título:"
-
-#~ msgid "Machine:"
-#~ msgstr "Máquina:"
-
-#~ msgid "Match by primary class name and"
-#~ msgstr "Coincidir con nombre de clase primario y"
-
-#~ msgid "Secondary class name  (resulting in term in brackets)"
-#~ msgstr "Nombre de clase secundario (resultado en término en paréntesis)"
-
-#~ msgid "Window role (can be used to select windows by function)"
-#~ msgstr ""
-#~ "Papel de la ventana (puede usarse para seleccionar ventanas por función)"
-
-#~ msgid "Window type (eg. all dialogs, but not the main windows)"
-#~ msgstr ""
-#~ "Tipo de ventana (por ejemplo, todos los diálogos, pero no la ventana "
-#~ "principal)"
-
-#~ msgid ""
-#~ "Window title (very specific, can fail due to content changes or "
-#~ "translation)"
-#~ msgstr ""
-#~ "Título de la ventana (muy específico, puede fallar debido a cambios de "
-#~ "contenido o traducción)"
-
-#~ msgid ""
-#~ "A single shortcut can be easily assigned or cleared using the two "
-#~ "buttons. Only shortcuts with modifiers can be used.<p>\n"
-#~ "It is possible to have several possible shortcuts, and the first "
-#~ "available shortcut will be used. The shortcuts are specified using "
-#~ "shortcut sets separated by \" - \". One set is specified as <i>base</i>"
-#~ "+(<i>list</i>), where base are modifiers and list is a list of keys.<br>\n"
-#~ "For example \"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" will first try "
-#~ "<b>Shift+Alt+1</b>, then others with <b>Shift+Ctrl+C</b> as the last one."
-#~ msgstr ""
-#~ "Un único acceso rápido se puede asignar o borrar de forma sencilla usando "
-#~ "los dos botones. Solo se pueden usar accesos rápidos con modificadores."
-#~ "<p>\n"
-#~ "Se pueden tener varios accesos rápidos posibles, y se usará el primer "
-#~ "acceso rápido disponible. Los accesos rápidos se indican usando conjuntos "
-#~ "de accesos rápidos separados por « - ». Un conjunto se especifica como "
-#~ "<i>base</i>+(<i>lista</i>), donde la base son modificadores y la lista es "
-#~ "una lista de teclas.<br>\n"
-#~ "Por ejemplo, «<b>Mayús+Alt+(123) Mayús+Ctrl+(ABC)</b>» probará primero "
-#~ "<b>Mayús+Alt+1</b> y así sucesivamente hasta el último, <b>Mayús+Ctrl+C</"
-#~ "b>."
-
-#~ msgid "&Single Shortcut"
-#~ msgstr "Acce&so rápido único"
-
-#~ msgid "C&lear"
-#~ msgstr "&Borrar"
-
-#~ msgid "Window-Specific Settings Configuration Module"
-#~ msgstr "Módulo de configuración de las preferencias de ventanas específicas"
-
-#~ msgid "(c) 2004 KWin and KControl Authors"
-#~ msgstr "© 2004 KWin y autores de KControl"
-
-#~ msgid "Lubos Lunak"
-#~ msgstr "Lubos Lunak"
-
-#~ msgid "Remember settings separately for every window"
-#~ msgstr "Recordar las preferencias separadamente para cada ventana"
-
-#~ msgid "Show internal settings for remembering"
-#~ msgstr "Mostrar las preferencias internas para recordar"
-
-#~ msgid "Internal setting for remembering"
-#~ msgstr "Preferencia interna para recordar"
-
-#~ msgid "&Modify..."
-#~ msgstr "&Modificar..."
-
-#~ msgid "Move &Up"
-#~ msgstr "S&ubir"
-
-#~ msgid "Move &Down"
-#~ msgstr "&Bajar"
-
-#~ msgid ""
-#~ "Enable this checkbox to alter this window property for the specified "
-#~ "window(s)."
-#~ msgstr ""
-#~ "Activar esta casilla para modificar esta propiedad de la ventana para "
-#~ "la(s) ventana(s) especificada(s)."
-
-#~ msgid ""
-#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
-#~ "Affect:</em> The window property will not be affected and therefore the "
-#~ "default handling for it will be used. Specifying this will block more "
-#~ "generic window settings from taking effect.</li><li><em>Apply Initially:</"
-#~ "em> The window property will be only set to the given value after the "
-#~ "window is created. No further changes will be affected.</"
-#~ "li><li><em>Remember:</em> The value of the window property will be "
-#~ "remembered and every time the window is created, the last remembered "
-#~ "value will be applied.</li><li><em>Force:</em> The window property will "
-#~ "be always forced to the given value.</li><li><em>Apply Now:</em> The "
-#~ "window property will be set to the given value immediately and will not "
-#~ "be affected later (this action will be deleted afterwards).</"
-#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
-#~ "the given value until it is hidden (this action will be deleted after the "
-#~ "window is hidden).</li></ul>"
-#~ msgstr ""
-#~ "Especificar como debería afectarle la propiedad de la ventana:"
-#~ "<ul><li><em>No le afecta:</em> La propiedad de la ventana no se verá "
-#~ "afectada y por tanto se utilizará el modo predeterminado de manejo. Al "
-#~ "especificar esto las preferencias más genéricas de la ventana se "
-#~ "bloquearán.</li> <li><em>Aplicar inicialmente:</em> La propiedad de la "
-#~ "ventana solo cambiará al valor dado después de crearse. No se aplicará "
-#~ "ningún cambio posterior.</li><li><em>Recordar:</em> Se recordará el valor "
-#~ "de la propiedad de la ventana y cada vez que la ventana se cree se "
-#~ "aplicará el último valor utilizado..</li><li><em>Forzar:</em> La "
-#~ "propiedad de la ventana se forzará a que tome el valor fijado.</li> "
-#~ "<li><em>Forzar temporalmente:</em> La propiedad de la ventana se fijará "
-#~ "al valor dado hasta que se oculte (esta acción se eliminará cuando la "
-#~ "ventana se oculte).</li> </ul>"
-
-#~ msgid ""
-#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
-#~ "Affect:</em> The window property will not be affected and therefore the "
-#~ "default handling for it will be used. Specifying this will block more "
-#~ "generic window settings from taking effect.</li><li><em>Force:</em> The "
-#~ "window property will be always forced to the given value.</"
-#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
-#~ "the given value until it is hidden (this action will be deleted after the "
-#~ "window is hidden).</li></ul>"
-#~ msgstr ""
-#~ "Especificar como debería afectarle la propiedad de la ventana:"
-#~ "<ul><li><em>No le afecta:</em> La propiedad de la ventana no se verá "
-#~ "afectada y por tanto se utilizará el modo predeterminado de manejo. Al "
-#~ "especificar esto las preferencias más genéricas de la ventana se "
-#~ "bloquearán.</li><li><em>Forzar:</em> La propiedad de la ventana se fijará "
-#~ "al valor dado.</li> <li><em>Forzar temporalmente:</em> La propiedad de la "
-#~ "ventana se fijará al valor dado hasta que se oculte (esta acción se "
-#~ "eliminará cuando la ventana se oculte).</li> </ul> "
-
-#~ msgid "Unnamed entry"
-#~ msgstr "Entrada sin nombre"
-
-#~ msgid ""
-#~ "This configuration dialog allows altering settings only for the selected "
-#~ "window or application. Find the setting you want to affect, enable the "
-#~ "setting using the checkbox, select in what way the setting should be "
-#~ "affected and to which value."
-#~ msgstr ""
-#~ "Este diálogo de configuración le permite alterar las preferencias solo "
-#~ "para la ventana o aplicación seleccionada. Encuentre la opción que desee "
-#~ "configurar, active la opción usando a casilla de selección, seleccione el "
-#~ "modo en el que desea usar la opción y con qué valor."
-
-#~ msgid "Consult the documentation for more details."
-#~ msgstr "Consulte la documentación para más detalles."
-
-#~ msgid "Edit Shortcut"
-#~ msgstr "Editar acceso rápido"
-
-#~ msgid "s delay"
-#~ msgstr "s de retraso"
-
-#~ msgid "x,y"
-#~ msgstr "x,y"
-
-#~ msgid "0123456789-+,xX:"
-#~ msgstr "0123456789-+,xX:"
-
-#~ msgid "width,height"
-#~ msgstr "anchura,altura"
-
-#~ msgid "&Desktop"
-#~ msgstr "&Escritorio"
-
-#~ msgid "Edit..."
-#~ msgstr "Editar..."
-
-#~ msgid "Autog&roup in foreground"
-#~ msgstr "Autoagrupa&r en primer plano"
-
-#~ msgid "Autogroup by I&D"
-#~ msgstr "Autoagrupar por I&D"
-
-#~ msgid "Autogroup with &identical"
-#~ msgstr "Autoagrupar con &idénticas"
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid "org.kde.kwin"
-#~ msgstr "org.kde.kwin"
-
-#~ msgid "Smart"
-#~ msgstr "Inteligente"
-
-#~ msgid "kcmkwinrules"
-#~ msgstr "kcmkwinrules"
