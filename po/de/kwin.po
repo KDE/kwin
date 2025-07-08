@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-04 02:34+0000\n"
-"PO-Revision-Date: 2025-02-17 22:05+0100\n"
+"PO-Revision-Date: 2025-06-29 12:33+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2418,28 +2418,27 @@ msgstr "Fensterskalierung beim Schließen:"
 #: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Die Hauptschleife von PipeWire kann nicht gestartet werden"
 
 #: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Der PipeWire-Kontext kann nicht erstellt werden"
 
 #: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Fehler beim Verbinden mit PipeWire-Kontext"
 
 #: plugins/screencast/screencastmanager.cpp:45
-#, fuzzy, kde-format
-#| msgid "Close running window on %1"
+#, kde-format
 msgid "Could not find window id %1"
-msgstr "Laufendes Fenster auf %1 schließen"
+msgstr "Fensterkennung %1 wurde nicht gefunden"
 
 #: plugins/screencast/screencastmanager.cpp:82
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Ausgabe wurde nicht gefunden"
 
 #: plugins/screencast/screencastmanager.cpp:115
 #, kde-format
@@ -2992,8 +2991,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:25
-#, fuzzy, kde-format
-#| msgid "Zoom Factor:"
+#, kde-format
 msgid "Zoom factor:"
 msgstr "Zoom-Faktor:"
 
@@ -3005,8 +3003,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Pointer:"
+#, kde-format
 msgid "Mouse pointer:"
 msgstr "Mauszeiger:"
 
@@ -3036,8 +3033,7 @@ msgstr "Ausblenden"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:102
-#, fuzzy, kde-format
-#| msgid "Mouse Tracking:"
+#, kde-format
 msgid "Mouse tracking:"
 msgstr "Mausverfolgung:"
 
@@ -3084,8 +3080,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable focus tracking"
 msgstr "Fokusverfolgung aktivieren"
 
@@ -3101,8 +3096,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Enable Text Cursor Tracking"
+#, kde-format
 msgid "Enable text cursor tracking"
 msgstr "Textzeigerverfolgung aktivieren"
 
@@ -3138,10 +3132,9 @@ msgstr "Diese Regel löschen (bei Importen)"
 
 #. i18n: ectx: label, entry (enabled), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
-#, fuzzy, kde-format
-#| msgid "Tiling Enabled"
+#, kde-format
 msgid "This rule is enabled"
-msgstr "Kacheln aktiviert"
+msgstr "Diese Regel ist aktiviert"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3642,7 +3635,7 @@ msgstr "Regelart für Arbeitsflächen-Dateiname"
 #: rulesettings.kcfg:439
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Ebene"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455

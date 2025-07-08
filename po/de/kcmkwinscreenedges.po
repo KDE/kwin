@@ -5,12 +5,13 @@
 # Frank Steinmetzger <dev-kde@felsenfleischer.de>, 2022.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 # SPDX-FileCopyrightText: 2024 Nicolai Weitkemper <kontakt@nicolaiweitkemper.de>
+# SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-24 02:36+0000\n"
-"PO-Revision-Date: 2024-06-02 12:35+0200\n"
+"PO-Revision-Date: 2025-06-07 13:04+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.05.0\n"
+"X-Generator: Lokalize 25.04.1\n"
 
 #: main.cpp:152 touch.cpp:118
 #, kde-format
@@ -78,7 +79,7 @@ msgstr "Übersicht"
 #: main.cpp:167 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Gitter"
 
 #: main.cpp:169 touch.cpp:135
 #, kde-format
@@ -182,15 +183,13 @@ msgstr "Deaktiviert"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
+#, kde-format
 msgid "Only when moving windows"
 msgstr "Nur beim Verschieben von Fenstern"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
 msgstr "Immer aktiviert"
 
@@ -237,7 +236,7 @@ msgstr "&Reaktivierungsverzögerung:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Eckenbarriere:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -249,19 +248,25 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Hier können Sie die virtuelle Eckenbarriere zwischen Bildschirmen aktivieren "
+"oder deaktivieren. Die Barriere verhindert, dass sich der Cursor zu einem "
+"anderen Bildschirm bewegt, wenn er bereits eine Bildschirmecke berührt. Dies "
+"erleichtert das Auslösen von Elementen der Benutzeroberfläche, wie z. B. die "
+"Schaltflächen zum Schließen maximierter Fenster, wenn mehrere Bildschirme "
+"verwendet werden."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Verhindert, dass die Cursor die Bildschirmecken überqueren."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "Randbarriere:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -273,6 +278,12 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Hier können Sie die Größe der Randbarriere zwischen verschiedenen "
+"Bildschirmen einstellen. Die Barriere fügt eine zusätzliche Distanz hinzu, "
+"die Sie mit Ihrem Mauszeiger zurücklegen müssen, bevor er die Kante zum "
+"anderen Bildschirm überquert. Dies erleichtert den Zugriff auf Elemente der "
+"Benutzeroberfläche wie z. B. Plasma-Kontrolleisten, die sich an einer Kante "
+"zwischen Bildschirmen befinden."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -280,18 +291,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Zusätzliche Distanz, die der Cursor zurücklegen muss, um den Bildschirmrand "
+"zu überqueren."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
