@@ -340,6 +340,8 @@ static const TransKey g_rgSymXToQT[] = {
     { XKB_KEY_XF86Option,              Qt::Key_Option },
     { XKB_KEY_XF86Paste,               Qt::Key_Paste },
     { XKB_KEY_XF86Phone,               Qt::Key_Phone },
+    { XKB_KEY_XF86PickupPhone,         Qt::Key_Phone },
+    { XKB_KEY_XF86HangupPhone,         Qt::Key_Hangup },
     { XKB_KEY_XF86Reply,               Qt::Key_Reply },
     { XKB_KEY_XF86Reload,              Qt::Key_Reload },
     { XKB_KEY_XF86RotateWindows,       Qt::Key_RotateWindows },
