@@ -200,19 +200,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             if (!geometry.isEmpty()) {
                 OpenGLSurfaceTexture *surfaceTexture = static_cast<OpenGLSurfaceTexture *>(pixmap->texture());
                 if (surfaceTexture->isValid()) {
-                    QVector4D borderBox;
-                    QVector4D borderRadius;
-                    if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isNull()) {
-                        const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
-                        borderBox = QVector4D(nativeRect.x() + nativeRect.width() * 0.5,
-                                              nativeRect.y() + nativeRect.height() * 0.5,
-                                              nativeRect.width() * 0.5,
-                                              nativeRect.height() * 0.5),
-                        borderRadius = radius.scaled(context->renderTargetScale)
-                                           .rounded()
-                                           .toVector();
-                    }
-
                     RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                         .type = RenderNode::Type::Texture,
                         .texture = surfaceTexture->texture(),
@@ -223,10 +210,21 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                         .colorDescription = item->colorDescription(),
                         .renderingIntent = item->renderingIntent(),
                         .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
-                        .box = borderBox,
-                        .borderRadius = borderRadius,
                     });
                     renderNode.geometry.postProcessTextureCoordinates(surfaceTexture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
+
+                    if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isNull()) {
+                        const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
+
+                        renderNode.hasAlpha = true;
+                        renderNode.box = QVector4D(nativeRect.x() + nativeRect.width() * 0.5,
+                                                   nativeRect.y() + nativeRect.height() * 0.5,
+                                                   nativeRect.width() * 0.5,
+                                                   nativeRect.height() * 0.5),
+                        renderNode.borderRadius = radius.scaled(context->renderTargetScale)
+                                                      .rounded()
+                                                      .toVector();
+                    }
                 }
             }
         }
@@ -407,7 +405,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             traits |= ShaderTrait::RoundedCorners;
         }
 
-        setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0 || (traits & ShaderTrait::RoundedCorners));
+        setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
         if (!shader || traits != lastTraits) {
             lastTraits = traits;
