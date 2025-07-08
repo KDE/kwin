@@ -162,7 +162,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         if (!geometry.isEmpty()) {
             OpenGLShadowTextureProvider *textureProvider = static_cast<OpenGLShadowTextureProvider *>(shadowItem->textureProvider());
             if (textureProvider->shadowTexture()) {
-                context->renderNodes.append(RenderNode{
+                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .type = RenderNode::Type::Texture,
                     .texture = textureProvider->shadowTexture(),
                     .geometry = geometry,
@@ -173,13 +173,14 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
                 });
+                renderNode.geometry.postProcessTextureCoordinates(textureProvider->shadowTexture()->matrix(UnnormalizedCoordinates));
             }
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
         if (!geometry.isEmpty()) {
             auto renderer = static_cast<const SceneOpenGLDecorationRenderer *>(decorationItem->renderer());
             if (renderer->texture()) {
-                context->renderNodes.append(RenderNode{
+                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .type = RenderNode::Type::Texture,
                     .texture = renderer->texture(),
                     .geometry = geometry,
@@ -190,6 +191,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
                 });
+                renderNode.geometry.postProcessTextureCoordinates(renderer->texture()->matrix(UnnormalizedCoordinates));
             }
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -211,7 +213,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                                            .toVector();
                     }
 
-                    context->renderNodes.append(RenderNode{
+                    RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                         .type = RenderNode::Type::Texture,
                         .texture = surfaceTexture->texture(),
                         .geometry = geometry,
@@ -224,13 +226,14 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                         .box = borderBox,
                         .borderRadius = borderRadius,
                     });
+                    renderNode.geometry.postProcessTextureCoordinates(surfaceTexture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
                 }
             }
         }
     } else if (auto imageItem = qobject_cast<ImageItemOpenGL *>(item)) {
         if (!geometry.isEmpty()) {
             if (imageItem->texture()) {
-                context->renderNodes.append(RenderNode{
+                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .type = RenderNode::Type::Texture,
                     .texture = imageItem->texture(),
                     .geometry = geometry,
@@ -241,6 +244,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
                 });
+                renderNode.geometry.postProcessTextureCoordinates(imageItem->texture()->matrix(UnnormalizedCoordinates));
             }
         }
     } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {
@@ -347,24 +351,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
-
-        // TODO: Encapsulate texture coordinate space logic in the RenderNode.
-        if (renderNode.type == RenderNode::Type::Texture) {
-            if (renderNode.geometry.isEmpty()
-                || (std::holds_alternative<GLTexture *>(renderNode.texture) && !std::get<GLTexture *>(renderNode.texture))
-                || (std::holds_alternative<OpenGLSurfaceContents>(renderNode.texture) && !std::get<OpenGLSurfaceContents>(renderNode.texture).isValid())) {
-                continue;
-            }
-
-            GLTexture *texture = nullptr;
-            if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
-                texture = std::get<GLTexture *>(renderNode.texture);
-            } else {
-                texture = std::get<OpenGLSurfaceContents>(renderNode.texture).planes.constFirst().get();
-            }
-            renderNode.geometry.postProcessTextureCoordinates(texture->matrix(UnnormalizedCoordinates));
-        }
-
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.geometry.count();
         renderNode.geometry.copy(map->subspan(v));
