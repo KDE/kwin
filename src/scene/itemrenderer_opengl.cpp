@@ -161,78 +161,87 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         if (!geometry.isEmpty()) {
             OpenGLShadowTextureProvider *textureProvider = static_cast<OpenGLShadowTextureProvider *>(shadowItem->textureProvider());
-            context->renderNodes.append(RenderNode{
-                .type = RenderNode::Type::Texture,
-                .texture = textureProvider->shadowTexture(),
-                .geometry = geometry,
-                .transformMatrix = context->transformStack.top(),
-                .opacity = context->opacityStack.top(),
-                .hasAlpha = true,
-                .colorDescription = item->colorDescription(),
-                .renderingIntent = item->renderingIntent(),
-                .bufferReleasePoint = nullptr,
-            });
+            if (textureProvider->shadowTexture()) {
+                context->renderNodes.append(RenderNode{
+                    .type = RenderNode::Type::Texture,
+                    .texture = textureProvider->shadowTexture(),
+                    .geometry = geometry,
+                    .transformMatrix = context->transformStack.top(),
+                    .opacity = context->opacityStack.top(),
+                    .hasAlpha = true,
+                    .colorDescription = item->colorDescription(),
+                    .renderingIntent = item->renderingIntent(),
+                    .bufferReleasePoint = nullptr,
+                });
+            }
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
         if (!geometry.isEmpty()) {
             auto renderer = static_cast<const SceneOpenGLDecorationRenderer *>(decorationItem->renderer());
-            context->renderNodes.append(RenderNode{
-                .type = RenderNode::Type::Texture,
-                .texture = renderer->texture(),
-                .geometry = geometry,
-                .transformMatrix = context->transformStack.top(),
-                .opacity = context->opacityStack.top(),
-                .hasAlpha = true,
-                .colorDescription = item->colorDescription(),
-                .renderingIntent = item->renderingIntent(),
-                .bufferReleasePoint = nullptr,
-            });
+            if (renderer->texture()) {
+                context->renderNodes.append(RenderNode{
+                    .type = RenderNode::Type::Texture,
+                    .texture = renderer->texture(),
+                    .geometry = geometry,
+                    .transformMatrix = context->transformStack.top(),
+                    .opacity = context->opacityStack.top(),
+                    .hasAlpha = true,
+                    .colorDescription = item->colorDescription(),
+                    .renderingIntent = item->renderingIntent(),
+                    .bufferReleasePoint = nullptr,
+                });
+            }
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         SurfacePixmap *pixmap = surfaceItem->pixmap();
         if (pixmap) {
             if (!geometry.isEmpty()) {
-                QVector4D borderBox;
-                QVector4D borderRadius;
-                if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isNull()) {
-                    const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
-                    borderBox = QVector4D(nativeRect.x() + nativeRect.width() * 0.5,
-                                          nativeRect.y() + nativeRect.height() * 0.5,
-                                          nativeRect.width() * 0.5,
-                                          nativeRect.height() * 0.5),
-                    borderRadius = radius.scaled(context->renderTargetScale)
-                                       .rounded()
-                                       .toVector();
-                }
                 OpenGLSurfaceTexture *surfaceTexture = static_cast<OpenGLSurfaceTexture *>(pixmap->texture());
-                context->renderNodes.append(RenderNode{
-                    .type = RenderNode::Type::Texture,
-                    .texture = surfaceTexture->texture(),
-                    .geometry = geometry,
-                    .transformMatrix = context->transformStack.top(),
-                    .opacity = context->opacityStack.top(),
-                    .hasAlpha = pixmap->hasAlphaChannel(),
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
-                    .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
-                    .box = borderBox,
-                    .borderRadius = borderRadius,
-                });
+                if (surfaceTexture->isValid()) {
+                    QVector4D borderBox;
+                    QVector4D borderRadius;
+                    if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isNull()) {
+                        const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
+                        borderBox = QVector4D(nativeRect.x() + nativeRect.width() * 0.5,
+                                              nativeRect.y() + nativeRect.height() * 0.5,
+                                              nativeRect.width() * 0.5,
+                                              nativeRect.height() * 0.5),
+                        borderRadius = radius.scaled(context->renderTargetScale)
+                                           .rounded()
+                                           .toVector();
+                    }
+
+                    context->renderNodes.append(RenderNode{
+                        .type = RenderNode::Type::Texture,
+                        .texture = surfaceTexture->texture(),
+                        .geometry = geometry,
+                        .transformMatrix = context->transformStack.top(),
+                        .opacity = context->opacityStack.top(),
+                        .hasAlpha = pixmap->hasAlphaChannel(),
+                        .colorDescription = item->colorDescription(),
+                        .renderingIntent = item->renderingIntent(),
+                        .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
+                        .box = borderBox,
+                        .borderRadius = borderRadius,
+                    });
+                }
             }
         }
     } else if (auto imageItem = qobject_cast<ImageItemOpenGL *>(item)) {
         if (!geometry.isEmpty()) {
-            context->renderNodes.append(RenderNode{
-                .type = RenderNode::Type::Texture,
-                .texture = imageItem->texture(),
-                .geometry = geometry,
-                .transformMatrix = context->transformStack.top(),
-                .opacity = context->opacityStack.top(),
-                .hasAlpha = imageItem->image().hasAlphaChannel(),
-                .colorDescription = item->colorDescription(),
-                .renderingIntent = item->renderingIntent(),
-                .bufferReleasePoint = nullptr,
-            });
+            if (imageItem->texture()) {
+                context->renderNodes.append(RenderNode{
+                    .type = RenderNode::Type::Texture,
+                    .texture = imageItem->texture(),
+                    .geometry = geometry,
+                    .transformMatrix = context->transformStack.top(),
+                    .opacity = context->opacityStack.top(),
+                    .hasAlpha = imageItem->image().hasAlphaChannel(),
+                    .colorDescription = item->colorDescription(),
+                    .renderingIntent = item->renderingIntent(),
+                    .bufferReleasePoint = nullptr,
+                });
+            }
         }
     } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {
         if (!geometry.isEmpty()) {
