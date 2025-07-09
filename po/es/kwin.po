@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-08 00:43+0000\n"
-"PO-Revision-Date: 2025-05-31 16:24+0100\n"
+"PO-Revision-Date: 2025-07-08 04:00+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.04.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -770,16 +770,14 @@ msgid "Up"
 msgstr "Arriba"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Distancia:"
+msgstr "Distancia"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Posición"
+msgstr "Posición del deslizador"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -810,17 +808,17 @@ msgstr "Botón de la tableta"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Es modo de cambio"
 
 #: debug_console.cpp:576
 #, kde-format
@@ -4186,116 +4184,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgid "Shaded"
-#~ msgstr "Recogida"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Tipo de regla para recogida"
-
-#~ msgid "Shade Window"
-#~ msgstr "Recoger la ventana"
-
-#~ msgid "Move &To Current Desktop"
-#~ msgstr "Mover al escri&torio actual"
-
-#~ msgctxt "Create a new desktop and move the window there"
-#~ msgid "&New Desktop"
-#~ msgstr "&Nuevo escritorio"
-
-#~ msgid "Size"
-#~ msgstr "Tamaño"
-
-#~ msgid "&Width:"
-#~ msgstr "Anc&hura:"
-
-#~ msgid " px"
-#~ msgstr " px"
-
-#~ msgid "&Height:"
-#~ msgstr "Al&tura:"
-
-#~ msgid "Move Left"
-#~ msgstr "Mover a la izquierda"
-
-#~ msgid "Move Right"
-#~ msgstr "Mover a la derecha"
-
-#~ msgid "Move Up"
-#~ msgstr "Mover arriba"
-
-#~ msgid "Move Down"
-#~ msgstr "Mover abajo"
-
-#~ msgid "Scroll gesture modifier keys:"
-#~ msgstr "Teclas modificadoras para gestos de desplazamiento:"
-
-#~ msgid "Scroll while the modifier keys are pressed to zoom"
-#~ msgstr ""
-#~ "Desplazar mientras las teclas modificadoras están pulsadas para ampliar"
-
-#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-#~ msgstr ""
-#~ "Al ampliar y reducir, cambiar la ampliación según el factor de ampliación "
-#~ "definido."
-
-#~ msgid "Zoom factor:"
-#~ msgstr "Factor de ampliación:"
-
-#~ msgid "Show pixel grid at zoom level:"
-#~ msgstr "Mostrar cuadrícula de píxeles en el nivel de ampliación:"
-
-#~ msgid "Mouse pointer:"
-#~ msgstr "Puntero del ratón:"
-
-#~ msgid "Visibility of the mouse-pointer."
-#~ msgstr "Visibilidad del puntero del ratón."
-
-#~ msgid "Scale"
-#~ msgstr "Escala"
-
-#~ msgid "Keep"
-#~ msgstr "Mantener"
-
-#~ msgid "Hide"
-#~ msgstr "Ocultar"
-
-#~ msgid "Mouse tracking:"
-#~ msgstr "Seguimiento del ratón:"
-
-#~ msgid "Track moving of the mouse."
-#~ msgstr "Seguir el movimiento del ratón."
-
-#~ msgid "Proportional"
-#~ msgstr "Proporcional"
-
-#~ msgid "Centered"
-#~ msgstr "Centrado"
-
-#~ msgid "Push"
-#~ msgstr "Empujar"
-
-#~ msgid "Disabled"
-#~ msgstr "Desactivado"
-
-#~ msgid ""
-#~ "Enable tracking of the focused location. This needs QAccessible to be "
-#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-#~ msgstr ""
-#~ "Activar el seguimiento de la posición que tiene el foco. Esto necesita "
-#~ "que QAccessible esté activado por aplicación («export "
-#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1»)."
-
-#~ msgid "Enable focus tracking"
-#~ msgstr "Activar seguimiento del foco"
-
-#~ msgid ""
-#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
-#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-#~ msgstr ""
-#~ "Activar el seguimiento del cursor de texto. Esto necesita que QAccessible "
-#~ "esté activado por aplicación («export "
-#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1»)."
-
-#~ msgid "Enable text cursor tracking"
-#~ msgstr "Activar seguimiento del cursor de texto"

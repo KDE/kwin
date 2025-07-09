@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-08 00:43+0000\n"
-"PO-Revision-Date: 2025-05-30 09:48+0300\n"
+"PO-Revision-Date: 2025-07-08 12:31+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -765,16 +765,14 @@ msgid "Up"
 msgstr "Вгорі"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Відстань:"
+msgstr "Відстань"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Позиція"
+msgstr "Позиція повзунка"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -805,19 +803,17 @@ msgstr "Кнопка панелі планшета"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Група"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Режим:"
+msgstr "Режим"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Перемикач режиму"
 
 #: debug_console.cpp:576
 #, kde-format
