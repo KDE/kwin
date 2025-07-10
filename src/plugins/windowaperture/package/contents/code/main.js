@@ -183,7 +183,7 @@ var badBadWindowsEffect = {
             }
         }
     },
-    animationEnded: function (w, a, meta) {
+    animationEnded: function (w) {
         // After the animation that closes the effect, reset all the parameters
         if (!badBadWindowsEffect.showingDesktop) {
             cancel(w.offToCornerId);
