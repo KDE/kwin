@@ -1978,28 +1978,9 @@ bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
     case Options::MouseActivateAndPassClick:
     case Options::MouseNothing:
         return false;
-    case Options::MouseActivateAndRaise:
-        if (isActive()) {
-            // for clickraise mode
-            return false;
-        }
-        if (!rules()->checkAcceptFocus(acceptsFocus())) {
-            const auto stackingOrder = workspace()->stackingOrder();
-            auto it = stackingOrder.end();
-            while (--it != stackingOrder.begin() && *it != this) {
-                auto window = *it;
-                if (!window->isClient() || (window->keepAbove() && !keepAbove()) || (keepBelow() && !window->keepBelow())) {
-                    continue; // can never raise above "window"
-                }
-                if (window->isOnCurrentDesktop() && window->isOnCurrentActivity() && window->frameGeometry().intersects(frameGeometry())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
     case Options::MouseActivateAndLower:
         return rules()->checkAcceptFocus(acceptsFocus());
+    case Options::MouseActivateAndRaise:
     case Options::MouseActivate:
         return !isActive() && rules()->checkAcceptFocus(acceptsFocus());
     case Options::MouseActivateRaiseAndMove:
