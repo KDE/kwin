@@ -463,9 +463,10 @@ protected:
      * @param w The animated window.
      * @param a The animated attribute.
      * @param meta Originally supplied metadata to animate() or set().
+     * @param id Animation id.
      * @since 4.8
      */
-    virtual void animationEnded(EffectWindow *w, Attribute a, uint meta);
+    virtual void animationEnded(EffectWindow *w, Attribute a, uint meta, quint64 id);
 
     /**
      * Cancels a running animation.

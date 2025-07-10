@@ -196,7 +196,7 @@ protected:
     ScriptedEffect();
     QJSEngine *engine() const;
     bool init(const QString &effectName, const QString &pathToScript);
-    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta) override;
+    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta, quint64 id) override;
 
 private:
     enum class AnimationType {

@@ -311,10 +311,9 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     return true;
 }
 
-void ScriptedEffect::animationEnded(KWin::EffectWindow *w, Attribute a, uint meta)
+void ScriptedEffect::animationEnded(KWin::EffectWindow *w, Attribute a, uint meta, quint64 id)
 {
-    AnimationEffect::animationEnded(w, a, meta);
-    Q_EMIT animationEnded(w, 0);
+    Q_EMIT animationEnded(w, id);
 }
 
 QString ScriptedEffect::pluginId() const

@@ -413,7 +413,7 @@ bool AnimationEffect::cancel(quint64 animationId)
     return false;
 }
 
-void AnimationEffect::animationEnded(EffectWindow *w, Attribute a, uint meta)
+void AnimationEffect::animationEnded(EffectWindow *w, Attribute a, uint meta, quint64 id)
 {
 }
 
@@ -651,7 +651,7 @@ void AnimationEffect::postPaintScreen()
             })) {
                 unredirect(window);
             }
-            animationEnded(window, anim->attribute, anim->meta);
+            animationEnded(window, anim->attribute, anim->meta, anim->id);
             d->m_justEndedAnimation = 0;
             // NOTICE animationEnded is an external call and might have called "::animate"
             // as a result our iterators could now point random junk on the heap
