@@ -183,12 +183,14 @@ var badBadWindowsEffect = {
             }
         }
     },
-    animationEnded: function (w) {
+    animationEnded: function (w, id) {
         // After the animation that closes the effect, reset all the parameters
         if (!badBadWindowsEffect.showingDesktop) {
-            cancel(w.offToCornerId);
-            delete w.offToCornerId;
-            delete w.apertureCorner;
+            if (w.offToCornerId?.includes(id)) {
+                cancel(w.offToCornerId);
+                delete w.offToCornerId;
+                delete w.apertureCorner;
+            }
         }
     },
     realtimeScreenEdgeCallback: function (border, deltaProgress, effectScreen) {
