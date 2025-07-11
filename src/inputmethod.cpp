@@ -172,10 +172,12 @@ void InputMethod::init()
 void InputMethod::show()
 {
     m_shouldShowPanel = true;
-    if (m_panel) {
+    if (m_panel && m_panel->canShow()) {
+        // If the view was simply hidden restore
         m_panel->show();
         updateInputPanelState();
     } else {
+        // Ensure there's an active context in place if available
         if (!isActive()) {
             refreshActive();
         }
