@@ -1979,7 +1979,6 @@ bool Window::mousePressCommandConsumesEvent(Options::MouseCommand command) const
     case Options::MouseNothing:
         return false;
     case Options::MouseActivateAndLower:
-        return rules()->checkAcceptFocus(acceptsFocus());
     case Options::MouseActivateAndRaise:
     case Options::MouseActivate:
         return !isActive() && rules()->checkAcceptFocus(acceptsFocus());
