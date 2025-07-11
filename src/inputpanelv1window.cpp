@@ -37,6 +37,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Window::reposition);
     connect(surface(), &SurfaceInterface::inputChanged, this, &InputPanelV1Window::reposition);
     connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Window::handleMapped);
+    connect(surface(), &SurfaceInterface::unmapped, this, &InputPanelV1Window::handleUnmapped);
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
@@ -74,13 +75,13 @@ void InputPanelV1Window::allow()
 
 void InputPanelV1Window::show()
 {
-    m_virtualKeyboardShouldBeShown = true;
+    m_requestedToBeShown = true;
     maybeShow();
 }
 
 void InputPanelV1Window::hide()
 {
-    m_virtualKeyboardShouldBeShown = false;
+    m_requestedToBeShown = false;
     if (readyForPainting() && m_mode != Mode::Overlay) {
         setHidden(true);
     }
@@ -243,12 +244,23 @@ void InputPanelV1Window::doSetPreferredColorDescription()
 
 void InputPanelV1Window::handleMapped()
 {
+    m_wasEverMapped = true;
     maybeShow();
+}
+
+void InputPanelV1Window::handleUnmapped()
+{
+    setHidden(true);
+}
+
+bool InputPanelV1Window::wasUnmapped() const
+{
+    return m_wasEverMapped && !surface()->isMapped();
 }
 
 void InputPanelV1Window::maybeShow()
 {
-    const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_virtualKeyboardShouldBeShown);
+    const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_requestedToBeShown);
     if (shouldShow && !isDeleted() && surface()->isMapped()) {
         resetPosition();
         markAsMapped();
