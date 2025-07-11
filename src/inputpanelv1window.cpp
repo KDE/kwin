@@ -37,6 +37,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Window::reposition);
     connect(surface(), &SurfaceInterface::inputChanged, this, &InputPanelV1Window::reposition);
     connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Window::handleMapped);
+    connect(surface(), &SurfaceInterface::unmapped, this, &InputPanelV1Window::handleUnmapped);
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
@@ -244,6 +245,16 @@ void InputPanelV1Window::doSetPreferredColorDescription()
 void InputPanelV1Window::handleMapped()
 {
     maybeShow();
+}
+
+void InputPanelV1Window::handleUnmapped()
+{
+    setHidden(true);
+}
+
+bool InputPanelV1Window::canShow() const
+{
+    return !isHidden() || (!m_virtualKeyboardShouldBeShown && surface()->isMapped());
 }
 
 void InputPanelV1Window::maybeShow()

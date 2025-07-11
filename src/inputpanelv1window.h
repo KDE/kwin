@@ -80,6 +80,7 @@ public:
     void allow();
     void show();
     void hide();
+    bool canShow() const;
 
 protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
@@ -93,6 +94,7 @@ private:
     void resetPosition();
     void reposition();
     void handleMapped();
+    void handleUnmapped();
     void maybeShow();
 
     QRectF m_windowGeometry;

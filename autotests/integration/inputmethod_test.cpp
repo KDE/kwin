@@ -57,6 +57,7 @@ private Q_SLOTS:
     void testEnableDisableV3();
     void testEnableActive();
     void testHidePanel();
+    void testUnmapPanel();
     void testReactivateFocus();
     void testSwitchFocusedSurfaces();
     void testV2V3SameClient();
@@ -300,6 +301,50 @@ void InputMethodTest::testHidePanel()
     delete ipsurface;
     QVERIFY(kwinApp()->inputMethod()->isVisible());
     QVERIFY(windowRemovedSpy.count() || windowRemovedSpy.wait());
+    QVERIFY(!kwinApp()->inputMethod()->isVisible());
+
+    // Destroy the test window.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void InputMethodTest::testUnmapPanel()
+{
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    touchNow();
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+
+    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
+
+    textInput->enable(surface.get());
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
+    textInput->showInputPanel();
+    QVERIFY(windowAddedSpy.wait());
+
+    QCOMPARE(workspace()->activeWindow(), window);
+
+    QCOMPARE(windowAddedSpy.count(), 2);
+    QVERIFY(activateSpy.count() || activateSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    auto keyboardWindow = kwinApp()->inputMethod()->panel();
+    auto ipsurface = Test::inputPanelSurface();
+    QVERIFY(keyboardWindow);
+    QVERIFY(kwinApp()->inputMethod()->isVisible());
+
+    QSignalSpy panelHiddenSpy(kwinApp()->inputMethod(), &InputMethod::visibleChanged);
+    ipsurface->attachBuffer((wl_buffer *)nullptr);
+    ipsurface->commit();
+    QVERIFY(panelHiddenSpy.count() || panelHiddenSpy.wait());
     QVERIFY(!kwinApp()->inputMethod()->isVisible());
 
     // Destroy the test window.
