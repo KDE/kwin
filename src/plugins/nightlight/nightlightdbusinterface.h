@@ -55,13 +55,6 @@ public:
 
 public Q_SLOTS:
     /**
-     * @brief For receiving auto location updates, primarily through the KDE Daemon
-     * @return void
-     * @since 5.12
-     */
-    void setLocation(double latitude, double longitude);
-
-    /**
      * @brief Temporarily blocks Night Light.
      * @since 5.18
      */
