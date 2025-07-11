@@ -172,7 +172,7 @@ void InputMethod::init()
 void InputMethod::show()
 {
     m_shouldShowPanel = true;
-    if (m_panel) {
+    if (m_panel && !m_panel->isHidden()) {
         m_panel->show();
         updateInputPanelState();
     } else {
