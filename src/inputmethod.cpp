@@ -172,10 +172,16 @@ void InputMethod::init()
 void InputMethod::show()
 {
     m_shouldShowPanel = true;
-    if (m_panel) {
+
+    // If the panel has something to display, show it (e.g. if we hid it from kwin rather than the IM hiding itself)
+    // Otherwise, ensure the input context is current and the IM will see to having itself shown if there's something to show.
+    // If there's no context available, then nothing will be shown
+    if (m_panel && !m_panel->wasUnmapped()) {
         m_panel->show();
         updateInputPanelState();
     } else {
+        // making the input context current will trigger the IM
+        // to show the panel (if there is something to show)
         if (!isActive()) {
             refreshActive();
         }

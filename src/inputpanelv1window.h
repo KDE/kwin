@@ -80,6 +80,7 @@ public:
     void allow();
     void show();
     void hide();
+    bool wasUnmapped() const;
 
 protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
@@ -93,12 +94,14 @@ private:
     void resetPosition();
     void reposition();
     void handleMapped();
+    void handleUnmapped();
     void maybeShow();
 
     QRectF m_windowGeometry;
     Mode m_mode = Mode::None;
     bool m_allowed = false;
-    bool m_virtualKeyboardShouldBeShown = false;
+    bool m_requestedToBeShown = false;
+    bool m_wasEverMapped = false;
     const QPointer<InputPanelSurfaceV1Interface> m_panelSurface;
     QTimer m_rescalingTimer;
 };
