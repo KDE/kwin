@@ -81,6 +81,8 @@ public:
     void show();
     void hide();
 
+    bool canShow() const;
+
 protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     void doSetNextTargetScale() override;
