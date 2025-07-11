@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-08 00:43+0000\n"
-"PO-Revision-Date: 2025-05-30 10:19+0200\n"
+"PO-Revision-Date: 2025-07-08 11:37+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -765,16 +765,14 @@ msgid "Up"
 msgstr "Amunt"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Distància:"
+msgstr "Distància"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Posició"
+msgstr "Posició del control lliscant"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -805,17 +803,17 @@ msgstr "Botó de teclat de tauleta"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Grup"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "Mode"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "És un canvi de mode"
 
 #: debug_console.cpp:576
 #, kde-format
@@ -4184,112 +4182,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Shaded"
-#~ msgstr "Plegada"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Tipus de regla de plegada"
-
-#~ msgid "Shade Window"
-#~ msgstr "Plega la finestra"
-
-#~ msgid "Move &To Current Desktop"
-#~ msgstr "Mou cap a l'escriptori ac&tual"
-
-#~ msgctxt "Create a new desktop and move the window there"
-#~ msgid "&New Desktop"
-#~ msgstr "Escriptori &nou"
-
-#~ msgid "Size"
-#~ msgstr "Mida"
-
-#~ msgid "&Width:"
-#~ msgstr "A&mplària:"
-
-#~ msgid " px"
-#~ msgstr " px"
-
-#~ msgid "&Height:"
-#~ msgstr "A&lçària:"
-
-#~ msgid "Move Left"
-#~ msgstr "Mou cap a l'esquerra"
-
-#~ msgid "Move Right"
-#~ msgstr "Mou cap a la dreta"
-
-#~ msgid "Move Up"
-#~ msgstr "Mou cap amunt"
-
-#~ msgid "Move Down"
-#~ msgstr "Mou cap avall"
-
-#~ msgid "Scroll gesture modifier keys:"
-#~ msgstr "Tecles modificadores de gestos de desplaçament:"
-
-#~ msgid "Scroll while the modifier keys are pressed to zoom"
-#~ msgstr "Desplaceu mentre es premen les tecles modificadores per a fer zoom"
-
-#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-#~ msgstr "En ampliar i reduir el zoom canviarà segons el seu factor definit."
-
-#~ msgid "Zoom factor:"
-#~ msgstr "Factor de zoom:"
-
-#~ msgid "Show pixel grid at zoom level:"
-#~ msgstr "Mostra la quadrícula de píxels al nivell de zoom:"
-
-#~ msgid "Mouse pointer:"
-#~ msgstr "Punter del ratolí:"
-
-#~ msgid "Visibility of the mouse-pointer."
-#~ msgstr "Visibilitat del punter del ratolí."
-
-#~ msgid "Scale"
-#~ msgstr "Escala"
-
-#~ msgid "Keep"
-#~ msgstr "Mantín"
-
-#~ msgid "Hide"
-#~ msgstr "Oculta"
-
-#~ msgid "Mouse tracking:"
-#~ msgstr "Seguiment del ratolí:"
-
-#~ msgid "Track moving of the mouse."
-#~ msgstr "Seguiment del moviment del ratolí."
-
-#~ msgid "Proportional"
-#~ msgstr "Proporcional"
-
-#~ msgid "Centered"
-#~ msgstr "Centrat"
-
-#~ msgid "Push"
-#~ msgstr "Empeny"
-
-#~ msgid "Disabled"
-#~ msgstr "Desactivat"
-
-#~ msgid ""
-#~ "Enable tracking of the focused location. This needs QAccessible to be "
-#~ "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-#~ msgstr ""
-#~ "Activa el seguiment de la ubicació amb focus. Açò necessita que "
-#~ "l'aplicació active «QAccessible» («export "
-#~ "QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1»)."
-
-#~ msgid "Enable focus tracking"
-#~ msgstr "Activa el seguiment del focus"
-
-#~ msgid ""
-#~ "Enable tracking of the text cursor. This needs QAccessible to be enabled "
-#~ "per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
-#~ msgstr ""
-#~ "Activa el seguiment del cursor de text. Açò necessita que l'aplicació "
-#~ "active «QAccessible» («export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1»)."
-
-#~ msgid "Enable text cursor tracking"
-#~ msgstr "Activa el seguiment del cursor de text"
