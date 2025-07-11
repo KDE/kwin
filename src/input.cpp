@@ -1519,6 +1519,10 @@ public:
         }
 
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
+        if (!internal) {
+            return true;
+        }
+
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
 
@@ -1534,6 +1538,10 @@ public:
         }
 
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
+        if (!internal) {
+            return true;
+        }
+
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
 
