@@ -46,11 +46,11 @@ bool KGlobalAccelImpl::checkKeyPressed(int keyQt, KWin::KeyboardKeyState state)
 {
     switch (state) {
     case KWin::KeyboardKeyState::Pressed:
-        return keyPressed(keyQt, ShortcutKeyState::Pressed);
+        return keyEvent(keyQt, ShortcutKeyState::Pressed);
     case KWin::KeyboardKeyState::Repeated:
-        return keyPressed(keyQt, ShortcutKeyState::Repeated);
+        return keyEvent(keyQt, ShortcutKeyState::Repeated);
     case KWin::KeyboardKeyState::Released:
-        return keyReleased(keyQt);
+        return keyEvent(keyQt, ShortcutKeyState::Released);
     }
 
     return false;
