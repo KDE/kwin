@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-04 02:34+0000\n"
-"PO-Revision-Date: 2025-05-27 23:38+0300\n"
+"POT-Creation-Date: 2025-07-12 02:40+0000\n"
+"PO-Revision-Date: 2025-07-11 17:19+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -818,10 +818,9 @@ msgid "Tablet Pad Ring"
 msgstr "Tabletin rengas"
 
 #: debug_console.cpp:599
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Tabletin rengas"
+msgstr "Tabletin valintakiekko"
 
 #: debug_console.cpp:601
 #, kde-format
@@ -4332,7 +4331,7 @@ msgstr "Tarjottu ulostulojärjestys on virheellinen"
 msgid "The driver rejected the output configuration"
 msgstr "Ajuri hylkäsi ulostulomäärityksen"
 
-#: window.cpp:3248
+#: window.cpp:3229
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

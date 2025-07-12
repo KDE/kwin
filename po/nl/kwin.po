@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-04 02:34+0000\n"
+"POT-Creation-Date: 2025-07-12 02:40+0000\n"
 "PO-Revision-Date: 2025-04-29 12:05+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -4329,7 +4329,7 @@ msgstr "De geleverde uitvoervolgorde is ongeldig"
 msgid "The driver rejected the output configuration"
 msgstr "Het apparaatstuurprogramma verwierp de uitvoerconfiguratie"
 
-#: window.cpp:3248
+#: window.cpp:3229
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
