@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-08 00:43+0000\n"
-"PO-Revision-Date: 2025-05-27 23:38+0300\n"
+"POT-Creation-Date: 2025-07-12 00:44+0000\n"
+"PO-Revision-Date: 2025-07-11 17:19+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -847,10 +847,9 @@ msgid "Tablet Pad Ring"
 msgstr "Tabletin rengas"
 
 #: debug_console.cpp:608
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Tabletin rengas"
+msgstr "Tabletin valintakiekko"
 
 #: debug_console.cpp:610
 #, kde-format
@@ -2241,25 +2240,25 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Nuolipiirron muuntonäppäimet:"
 
-#: plugins/nightlight/nightlightmanager.cpp:59
+#: plugins/nightlight/nightlightmanager.cpp:55
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "Yöväri keskeytetty"
 
-#: plugins/nightlight/nightlightmanager.cpp:60
+#: plugins/nightlight/nightlightmanager.cpp:56
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "Yöväriä jatkettu"
 
-#: plugins/nightlight/nightlightmanager.cpp:81
+#: plugins/nightlight/nightlightmanager.cpp:77
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Keskeytä tai jatka yöväriä"
 
-#: plugins/nightlight/nightlightmanager.cpp:417
+#: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Värilämpötilan esikatselu"
@@ -3569,41 +3568,29 @@ msgid "Tablets switched outputs"
 msgstr "Tabletit vaihtoivat ulostuloja"
 
 #: useractions.cpp:161
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"Olet valinnut, että ikkuna näytetään ilman reunusta.\n"
-"Reunuksen puuttumisen takia et voi tuoda reunusta uudelleen näkyviin hiiren "
-"avulla. Käytä ikkunatoimintojen valikkoa, jonka saat näkyville painamalla "
-"pikanäppäintä %1."
+"Ikkuna on valittu näytettäväksi reunuksetta.\n"
+"Ilman reunusta sitä ei voi palauttaa näkyviin hiirellä. Käytä sen sijaan "
+"ikkunavalikkoa, jonka saa näkyviin pikanäppäimellä %1."
 
 #: useractions.cpp:168
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"Olet valinnut, että ikkuna näytetään koko näytön tilassa.\n"
-"Jos ohjelmassa itsessään ei ole keinoa poistua koko näytön tilasta, et voi "
-"poistua siitä hiiren avulla. Käytä ikkunatoimintojen valikkoa, jonka saat "
-"näkyviin painamalla pikanäppäintä %1."
+"Ikkuna on valittu näytettäväksi koko näytön tilassa.\n"
+"Ellei ohjelmassa itsessään ole keinoa poistua koko näytön tilasta, siitä ei "
+"voi poistua hiirellä. Käytä sen sijaan ikkunavalikkoa, jonka saa näkyviin "
+"pikanäppäimellä %1."
 
 #: useractions.cpp:215
 #, kde-format
@@ -3739,10 +3726,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "%3 käyttää näppäinyhdistelmää <b>%1</b> toiminnossa %2"
 
 #: useractions.cpp:813
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Ikkunan rooli"
+msgstr "Ikkunavalikko"
 
 #: useractions.cpp:815
 #, kde-format
@@ -4161,7 +4147,7 @@ msgstr "Tarjottu ulostulojärjestys on virheellinen"
 msgid "The driver rejected the output configuration"
 msgstr "Ajuri hylkäsi ulostulomäärityksen"
 
-#: window.cpp:3104
+#: window.cpp:3084
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
