@@ -746,16 +746,14 @@ msgid "Up"
 msgstr "提起"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "距离："
+msgstr "距离"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "位置"
+msgstr "滑动条位置"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -786,17 +784,17 @@ msgstr "数位板画板按钮"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "分组"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "模式"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "是否模式开关"
 
 #: debug_console.cpp:576
 #, kde-format
