@@ -45,11 +45,10 @@ static gbm_format_name_desc formatName(uint32_t format)
     return ret;
 }
 
-EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target, FormatOption formatOption)
+EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target)
     : m_gpu(gpu)
     , m_eglBackend(eglBackend)
     , m_requestedBufferTarget(target)
-    , m_formatOption(formatOption)
 {
 }
 
@@ -74,7 +73,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, EglGbmLayerSurface::FormatOption option, Output::ColorPowerTradeoff tradeoff)
+static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff)
 {
     QList<FormatInfo> ret;
     for (auto it = formats.begin(); it != formats.end(); it++) {
@@ -82,7 +81,7 @@ static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64
         if (!info) {
             continue;
         }
-        if (option == EglGbmLayerSurface::FormatOption::RequireAlpha && !info->alphaBits) {
+        if (info->alphaBits < requiredAlphaBits) {
             continue;
         }
         if (info->bitsPerColor < 8) {
@@ -110,9 +109,9 @@ static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64
     return ret;
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t minAlphaBits)
 {
-    if (!checkSurface(bufferSize, formats, tradeoff)) {
+    if (!checkSurface(bufferSize, formats, tradeoff, minAlphaBits)) {
         return std::nullopt;
     }
     m_oldSurface.reset();
@@ -154,7 +153,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     if (m_surface->needsShadowBuffer) {
         if (!m_surface->shadowSwapchain || m_surface->shadowSwapchain->size() != m_surface->gbmSwapchain->size()) {
             const auto formats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
-            const QList<FormatInfo> sortedFormats = filterAndSortFormats(formats, m_formatOption, tradeoff);
+            const QList<FormatInfo> sortedFormats = filterAndSortFormats(formats, minAlphaBits, tradeoff);
             for (const auto format : sortedFormats) {
                 auto modifiers = formats[format.drmFormat];
                 if (format.floatingPoint && m_eglBackend->gpu()->isAmdgpu() && qEnvironmentVariableIntValue("KWIN_DRM_NO_DCC_WORKAROUND") == 0) {
@@ -339,7 +338,7 @@ std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff)
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
     EglContext *context = m_eglBackend->openglContext();
     if (!context->makeCurrent()) {
@@ -347,7 +346,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize
         return nullptr;
     }
 
-    if (checkSurface(bufferSize, formats, tradeoff)) {
+    if (checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return m_surface->currentFramebuffer;
     } else {
         return nullptr;
@@ -363,16 +362,16 @@ void EglGbmLayerSurface::forgetDamage()
     }
 }
 
-bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff)
+bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
-    if (doesSurfaceFit(m_surface.get(), size, formats, tradeoff)) {
+    if (doesSurfaceFit(m_surface.get(), size, formats, tradeoff, requiredAlphaBits)) {
         return true;
     }
-    if (doesSurfaceFit(m_oldSurface.get(), size, formats, tradeoff)) {
+    if (doesSurfaceFit(m_oldSurface.get(), size, formats, tradeoff, requiredAlphaBits)) {
         m_surface = std::move(m_oldSurface);
         return true;
     }
-    if (auto newSurface = createSurface(size, formats, tradeoff)) {
+    if (auto newSurface = createSurface(size, formats, tradeoff, requiredAlphaBits)) {
         m_oldSurface = std::move(m_surface);
         if (m_oldSurface) {
             // FIXME: Use absolute frame sequence numbers for indexing the DamageJournal
@@ -393,9 +392,14 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, Q
     return false;
 }
 
-bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff) const
+bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     if (!surface || surface->needsRecreation || !surface->gbmSwapchain || surface->gbmSwapchain->size() != size) {
+        return false;
+    }
+    if (surface->requiredAlphaBits != requiredAlphaBits) {
+        // TODO this is somewhat pessimistic, we can probably avoid
+        // re-allocating in some cases
         return false;
     }
     if (surface->tradeoff != tradeoff) {
@@ -422,9 +426,9 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
     Q_UNREACHABLE();
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
-    const QList<FormatInfo> sortedFormats = filterAndSortFormats(formats, m_formatOption, tradeoff);
+    const QList<FormatInfo> sortedFormats = filterAndSortFormats(formats, requiredAlphaBits, tradeoff);
 
     // special case: the cursor plane needs linear, but not all GPUs (NVidia) can render to linear
     auto bufferTarget = m_requestedBufferTarget;
@@ -447,9 +451,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         }
     }
 
-    const auto doTestFormats = [this, &size, &formats, bufferTarget, tradeoff](const QList<FormatInfo> &gbmFormats, MultiGpuImportMode importMode) -> std::unique_ptr<Surface> {
+    const auto doTestFormats = [this, &size, &formats, bufferTarget, tradeoff, requiredAlphaBits](const QList<FormatInfo> &gbmFormats, MultiGpuImportMode importMode) -> std::unique_ptr<Surface> {
         for (const auto &format : gbmFormats) {
-            auto surface = createSurface(size, format.drmFormat, formats[format.drmFormat], importMode, bufferTarget, tradeoff);
+            auto surface = createSurface(size, format.drmFormat, formats[format.drmFormat], importMode, bufferTarget, tradeoff, requiredAlphaBits);
             if (surface) {
                 return surface;
             }
@@ -495,7 +499,7 @@ static QList<uint64_t> filterModifiers(const QList<uint64_t> &one, const QList<u
     return ret;
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, Output::ColorPowerTradeoff tradeoff) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
     QList<uint64_t> renderModifiers;
@@ -525,6 +529,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     ret->context = m_eglBackend->contextForGpu(m_eglBackend->gpu());
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
+    ret->requiredAlphaBits = requiredAlphaBits;
     ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->openglContext(), size, format, renderModifiers, importMode, bufferTarget);
     ret->tradeoff = tradeoff;
     if (!ret->gbmSwapchain) {
