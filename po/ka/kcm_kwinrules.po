@@ -112,7 +112,7 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
-"ფანჯრის თვისება არ შეიცვლება და ამიტომ ნაგულისხმები დამუშავება იქნება "
+"ფანჯრის თვისება არ შეიცვლება და ამიტომ ნაგულისხმევი დამუშავება იქნება "
 "გამოყენებული.\n"
 "ამის მითითებას ფანჯრის კიდევ უფრო მეტი ეფექტის გამოყენებას შეუძლია, ხელი "
 "შეუშალოს."
@@ -699,7 +699,7 @@ msgstr "ამ ფანჯრის ყველა ქმედებაზე
 #: rulesmodel.cpp:878
 #, kde-format
 msgid "Default"
-msgstr "ნაგულისხმები"
+msgstr "ნაგულისხმევი"
 
 #: rulesmodel.cpp:879
 #, kde-format
