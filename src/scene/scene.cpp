@@ -83,6 +83,11 @@ bool RenderView::isVisible() const
     return true;
 }
 
+bool RenderView::shouldRenderHole(Item *item) const
+{
+    return false;
+}
+
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)
@@ -101,9 +106,9 @@ QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
     return m_scene->scanoutCandidates(maxCount);
 }
 
-QList<SurfaceItem *> SceneView::overlayCandidates(ssize_t maxCount) const
+std::pair<QList<SurfaceItem *>, QList<SurfaceItem *>> SceneView::overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const
 {
-    return m_scene->overlayCandidates(maxCount);
+    return m_scene->overlayCandidates(maxTotalCount, maxOverlayCount, maxUnderlayCount);
 }
 
 QRegion SceneView::prePaint()
@@ -151,11 +156,29 @@ void SceneView::addExclusiveView(RenderView *view)
 void SceneView::removeExclusiveView(RenderView *view)
 {
     m_exclusiveViews.removeOne(view);
+    m_underlayViews.removeOne(view);
+}
+
+void SceneView::addUnderlay(RenderView *view)
+{
+    m_underlayViews.push_back(view);
+}
+
+void SceneView::removeUnderlay(RenderView *view)
+{
+    m_underlayViews.removeOne(view);
 }
 
 bool SceneView::shouldRenderItem(Item *item) const
 {
     return std::ranges::none_of(m_exclusiveViews, [item](RenderView *view) {
+        return view->shouldRenderItem(item);
+    });
+}
+
+bool SceneView::shouldRenderHole(Item *item) const
+{
+    return std::ranges::any_of(m_underlayViews, [item](RenderView *view) {
         return view->shouldRenderItem(item);
     });
 }
@@ -196,8 +219,9 @@ QPointF ItemTreeView::hotspot() const
 QRectF ItemTreeView::viewport() const
 {
     const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
+    const QRectF effectiveRect = m_underlay ? m_item->rect() : m_item->boundingRect();
     if (!recommendedSizes.empty()) {
-        const auto bufferSize = scaledRect(m_item->boundingRect(), scale()).size();
+        const auto bufferSize = scaledRect(effectiveRect, scale()).size();
         auto bigEnough = recommendedSizes | std::views::filter([bufferSize](const auto &size) {
             return size.width() >= bufferSize.width() && size.height() >= bufferSize.height();
         });
@@ -206,14 +230,23 @@ QRectF ItemTreeView::viewport() const
         });
         if (it != bigEnough.end()) {
             const auto logicalSize = QSizeF(*it) / scale();
-            return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize));
+            // TODO split this into an `ItemView` and `ItemTreeView`...
+            // return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize));
+            return m_item->mapToScene(QRectF(effectiveRect.topLeft(), logicalSize));
         }
     }
-    return m_item->mapToScene(m_item->boundingRect());
+    return m_item->mapToScene(effectiveRect);
 }
 
 QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
 {
+    if (m_underlay) {
+        if (auto ret = dynamic_cast<SurfaceItem *>(m_item.get())) {
+            return {ret};
+        } else {
+            return {};
+        }
+    }
     if (dynamic_cast<SurfaceItem *>(m_item.get())) {
         const bool visibleChildren = std::ranges::any_of(m_item->childItems(), [](Item *child) {
             return child->isVisible();
@@ -268,7 +301,9 @@ void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, {});
+    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *item) {
+        return m_underlay && item != m_item;
+    }, {});
     renderer->endFrame();
 }
 
@@ -278,7 +313,14 @@ void ItemTreeView::postPaint()
 
 bool ItemTreeView::shouldRenderItem(Item *item) const
 {
-    return m_item && (item == m_item || m_item->isAncestorOf(item));
+    if (!m_item) {
+        return false;
+    }
+    if (m_underlay) {
+        return item == m_item;
+    } else {
+        return item == m_item || m_item->isAncestorOf(item);
+    }
 }
 
 void ItemTreeView::setExclusive(bool enable)
@@ -289,9 +331,30 @@ void ItemTreeView::setExclusive(bool enable)
     m_exclusive = enable;
     if (enable) {
         m_parentView->addExclusiveView(this);
+        if (m_underlay) {
+            m_parentView->addUnderlay(this);
+        }
         m_item->scheduleSceneRepaint(m_item->boundingRect());
     } else {
         m_parentView->removeExclusiveView(this);
+        m_item->scheduleRepaint(m_item->rect());
+    }
+}
+
+void ItemTreeView::setUnderlay(bool underlay)
+{
+    if (m_underlay == underlay) {
+        return;
+    }
+    m_underlay = underlay;
+    if (!m_exclusive) {
+        return;
+    }
+    if (m_underlay) {
+        m_parentView->addUnderlay(this);
+        m_item->scheduleSceneRepaint(m_item->rect());
+    } else {
+        m_parentView->removeUnderlay(this);
         m_item->scheduleRepaint(m_item->rect());
     }
 }

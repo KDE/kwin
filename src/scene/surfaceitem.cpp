@@ -306,6 +306,11 @@ std::pair<QRectF, BorderRadius> SurfaceItem::effectiveBorderRadius() const
     return std::make_pair(rect(), m_borderRadius);
 }
 
+bool SurfaceItem::hasFullyOpaqueBuffer() const
+{
+    return false;
+}
+
 SurfaceTexture::~SurfaceTexture()
 {
 }

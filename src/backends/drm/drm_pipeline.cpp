@@ -263,6 +263,9 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
     if (plane->pixelBlendMode.isValid()) {
         commit->addEnum(plane->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
     }
+    if (plane->zpos.isValid() && !plane->zpos.isImmutable()) {
+        commit->addProperty(plane->zpos, layer->zpos());
+    }
 
     const auto colorPipelines = plane->colorPipelines();
     if (layer->colorPipeline().isIdentity()) {

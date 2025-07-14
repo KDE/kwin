@@ -76,6 +76,8 @@ public:
      */
     std::pair<QRectF, BorderRadius> effectiveBorderRadius() const;
 
+    virtual bool hasFullyOpaqueBuffer() const;
+
 Q_SIGNALS:
     void damaged();
 

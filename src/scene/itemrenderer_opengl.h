@@ -37,6 +37,7 @@ public:
         QVector4D borderRadius;
         int borderThickness = 0;
         QColor borderColor;
+        bool paintHole = false;
     };
 
     struct RenderContext
@@ -57,14 +58,14 @@ public:
     void endFrame() override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
-    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter) override;
+    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
 
     std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) override;
 
 private:
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
-    void createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter);
+    void createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
     void visualizeFractional(const RenderViewport &viewport, const QRegion &region, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;

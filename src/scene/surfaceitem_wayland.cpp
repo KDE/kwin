@@ -261,6 +261,11 @@ void SurfaceItemWayland::handleFifoFallback()
     }
 }
 
+bool SurfaceItemWayland::hasFullyOpaqueBuffer() const
+{
+    return (m_surface->opaque() & rect().toAlignedRect()) == rect().toAlignedRect();
+}
+
 #if KWIN_BUILD_X11
 SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Item *parent)
     : SurfaceItemWayland(window->surface(), parent)

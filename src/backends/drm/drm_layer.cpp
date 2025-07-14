@@ -24,8 +24,8 @@ DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type)
 {
 }
 
-DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type, int zpos)
-    : OutputLayer(output, type, zpos)
+DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type, int zpos, std::pair<int, int> zposRange)
+    : OutputLayer(output, type, zpos, zposRange)
 {
 }
 
@@ -65,8 +65,18 @@ static int determineZpos(DrmPlane *plane)
     }
 }
 
+static std::pair<int, int> determineZposRange(DrmPlane *plane)
+{
+    if (plane->zpos.isValid()) {
+        return std::make_pair(plane->zpos.minValue(), plane->zpos.maxValue());
+    } else {
+        const int zpos = determineZpos(plane);
+        return std::make_pair(zpos, zpos);
+    }
+}
+
 DrmPipelineLayer::DrmPipelineLayer(DrmPlane *plane)
-    : DrmOutputLayer(nullptr, planeToLayerType(plane, plane->type.enumValue()), determineZpos(plane))
+    : DrmOutputLayer(nullptr, planeToLayerType(plane, plane->type.enumValue()), determineZpos(plane), determineZposRange(plane))
     , m_plane(plane)
 {
 }

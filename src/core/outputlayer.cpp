@@ -20,9 +20,15 @@ OutputLayer::OutputLayer(Output *output, OutputLayerType type)
 }
 
 OutputLayer::OutputLayer(Output *output, OutputLayerType type, int zpos)
+    : OutputLayer(output, type, zpos, std::make_pair(zpos, zpos))
+{
+}
+
+OutputLayer::OutputLayer(Output *output, OutputLayerType type, int zpos, std::pair<int, int> zposRange)
     : m_type(type)
     , m_output(output)
     , m_zpos(zpos)
+    , m_zposRange(zposRange)
 {
 }
 
@@ -190,9 +196,13 @@ RenderingIntent OutputLayer::renderIntent() const
 
 void OutputLayer::setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline)
 {
+    if (m_color == color && m_renderingIntent == intent && pipeline == m_colorPipeline) {
+        return;
+    }
     m_color = color;
     m_renderingIntent = intent;
     m_colorPipeline = pipeline;
+    m_repaintScheduled = true;
 }
 
 bool OutputLayer::preparePresentationTest()
@@ -208,6 +218,28 @@ std::pair<std::shared_ptr<GLTexture>, ColorDescription> OutputLayer::texture() c
 int OutputLayer::zpos() const
 {
     return m_zpos;
+}
+
+void OutputLayer::setZpos(int zpos)
+{
+    Q_ASSERT(zpos >= m_zposRange.first);
+    Q_ASSERT(zpos <= m_zposRange.second);
+    m_zpos = zpos;
+}
+
+int OutputLayer::minZpos() const
+{
+    return m_zposRange.first;
+}
+
+int OutputLayer::maxZpos() const
+{
+    return m_zposRange.second;
+}
+
+void OutputLayer::setRequiredAlpha(uint32_t bits)
+{
+    m_requiredAlpha = bits;
 }
 
 } // namespace KWin

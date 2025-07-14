@@ -121,10 +121,14 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
     return geometry;
 }
 
-void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter)
+void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
+    bool hole = false;
     if (filter && filter(item)) {
-        return;
+        if (!holeFilter || !holeFilter(item)) {
+            return;
+        }
+        hole = true;
     }
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
@@ -150,7 +154,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             break;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context, filter);
+            createRenderNode(childItem, context, filter, holeFilter);
         }
     }
 
@@ -172,6 +176,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
+                    .paintHole = hole,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(textureProvider->shadowTexture()->matrix(UnnormalizedCoordinates));
             }
@@ -190,6 +195,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
+                    .paintHole = hole,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(renderer->texture()->matrix(UnnormalizedCoordinates));
             }
@@ -210,6 +216,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                         .colorDescription = item->colorDescription(),
                         .renderingIntent = item->renderingIntent(),
                         .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
+                        .paintHole = hole,
                     });
                     renderNode.geometry.postProcessTextureCoordinates(surfaceTexture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
 
@@ -242,6 +249,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = nullptr,
+                    .paintHole = hole,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(imageItem->texture()->matrix(UnnormalizedCoordinates));
             }
@@ -267,6 +275,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 .borderRadius = outline.radius().scaled(context->renderTargetScale).rounded().toVector(),
                 .borderThickness = thickness,
                 .borderColor = outline.color(),
+                .paintHole = hole,
             });
         }
     }
@@ -276,7 +285,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             continue;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context, filter);
+            createRenderNode(childItem, context, filter, holeFilter);
         }
     }
 
@@ -304,7 +313,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     if (region.isEmpty()) {
         return;
@@ -321,7 +330,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    createRenderNode(item, &renderContext, filter);
+    createRenderNode(item, &renderContext, filter, holeFilter);
 
     int totalVertexCount = 0;
     for (const RenderNode &node : std::as_const(renderContext.renderNodes)) {
@@ -363,9 +372,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         glEnable(GL_SCISSOR_TEST);
     }
 
-    // Make sure the blend function is set up correctly in case we will be doing blending
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = infiniteRegion();
     if (renderContext.hardwareClipping) {
@@ -385,8 +391,14 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         if (!colorTransformation.isIdentity()) {
             traits |= ShaderTrait::TransformColorspace;
         }
-
-        setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
+        if (renderNode.paintHole) {
+            traits = ShaderTrait::UniformColor | (renderNode.traits & (ShaderTrait::Border | ShaderTrait::RoundedCorners));
+            setBlendEnabled(true);
+            glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        } else {
+            setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        }
 
         if (!shader || traits != lastTraits) {
             lastTraits = traits;
@@ -405,6 +417,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             } else if (traits & ShaderTrait::MapYUVTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
                 shader->setUniform(GLShader::IntUniform::Sampler1, 1);
+            } else if (renderNode.paintHole) {
+                shader->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0, 255));
             }
         }
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);

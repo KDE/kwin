@@ -264,6 +264,7 @@ void WindowItem::updateDecorationItem()
     }
     if (m_window->decoration()) {
         m_decorationItem = std::make_unique<DecorationItem>(m_window->decoration(), m_window, this);
+        m_decorationItem->setZ(1);
         if (m_shadowItem) {
             m_decorationItem->stackAfter(m_shadowItem.get());
         } else if (m_surfaceItem) {

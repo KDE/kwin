@@ -34,6 +34,7 @@ public:
     ContentType contentType() const override;
     void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats) override;
     void freeze() override;
+    bool hasFullyOpaqueBuffer() const override;
 
     SurfaceInterface *surface() const;
 
