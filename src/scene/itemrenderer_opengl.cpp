@@ -120,10 +120,14 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
     return geometry;
 }
 
-void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter)
+void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
+    bool hole = false;
     if (filter && filter(item)) {
-        return;
+        if (!holeFilter || !holeFilter(item)) {
+            return;
+        }
+        hole = true;
     }
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
@@ -149,7 +153,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             break;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context, filter);
+            createRenderNode(childItem, context, filter, holeFilter);
         }
     }
 
@@ -157,7 +161,21 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
 
     RenderGeometry geometry = clipQuads(item, context);
 
-    if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
+    if (hole) {
+        if (!geometry.isEmpty()) {
+            context->renderNodes.append(RenderNode{
+                .texture = nullptr,
+                .geometry = geometry,
+                .transformMatrix = context->transformStack.top(),
+                .opacity = context->opacityStack.top(),
+                .hasAlpha = true,
+                .colorDescription = item->colorDescription(),
+                .renderingIntent = item->renderingIntent(),
+                .bufferReleasePoint = nullptr,
+                .paintHole = true,
+            });
+        }
+    } else if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         if (!geometry.isEmpty()) {
             OpenGLShadowTextureProvider *textureProvider = static_cast<OpenGLShadowTextureProvider *>(shadowItem->textureProvider());
             context->renderNodes.append(RenderNode{
@@ -169,6 +187,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
+                .paintHole = false,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -183,6 +202,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
+                .paintHole = false,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -199,6 +219,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
+                    .paintHole = false,
                 });
             }
         }
@@ -213,6 +234,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
+                .paintHole = false,
             });
         }
     }
@@ -222,7 +244,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             continue;
         }
         if (childItem->explicitVisible()) {
-            createRenderNode(childItem, context, filter);
+            createRenderNode(childItem, context, filter, holeFilter);
         }
     }
 
@@ -250,7 +272,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     if (region.isEmpty()) {
         return;
@@ -267,7 +289,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    createRenderNode(item, &renderContext, filter);
+    createRenderNode(item, &renderContext, filter, holeFilter);
 
     int totalVertexCount = 0;
     for (const RenderNode &node : std::as_const(renderContext.renderNodes)) {
@@ -297,21 +319,23 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.geometry.isEmpty()
-            || (std::holds_alternative<GLTexture *>(renderNode.texture) && !std::get<GLTexture *>(renderNode.texture))
-            || (std::holds_alternative<OpenGLSurfaceContents>(renderNode.texture) && !std::get<OpenGLSurfaceContents>(renderNode.texture).isValid())) {
+            || (!renderNode.paintHole && std::holds_alternative<GLTexture *>(renderNode.texture) && !std::get<GLTexture *>(renderNode.texture))
+            || (!renderNode.paintHole && std::holds_alternative<OpenGLSurfaceContents>(renderNode.texture) && !std::get<OpenGLSurfaceContents>(renderNode.texture).isValid())) {
             continue;
         }
 
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.geometry.count();
 
-        GLTexture *texture = nullptr;
-        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
-            texture = std::get<GLTexture *>(renderNode.texture);
-        } else {
-            texture = std::get<OpenGLSurfaceContents>(renderNode.texture).planes.constFirst().get();
+        if (!renderNode.paintHole) {
+            GLTexture *texture = nullptr;
+            if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+                texture = std::get<GLTexture *>(renderNode.texture);
+            } else {
+                texture = std::get<OpenGLSurfaceContents>(renderNode.texture).planes.constFirst().get();
+            }
+            renderNode.geometry.postProcessTextureCoordinates(texture->matrix(UnnormalizedCoordinates));
         }
-        renderNode.geometry.postProcessTextureCoordinates(texture->matrix(UnnormalizedCoordinates));
 
         renderNode.geometry.copy(map->subspan(v));
         v += renderNode.geometry.count();
@@ -341,24 +365,35 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             continue;
         }
 
-        setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
+        if (renderNode.paintHole) {
+            glBlendFunc(GL_ZERO, GL_ZERO);
+            setBlendEnabled(true);
+        } else {
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
+        }
 
         ShaderTraits traits = baseShaderTraits;
-        if (renderNode.opacity != 1.0) {
-            traits |= ShaderTrait::Modulate;
-        }
-        const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), item->renderingIntent());
-        if (!colorTransformation.isIdentity()) {
-            traits |= ShaderTrait::TransformColorspace;
-        }
-        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
-            traits |= ShaderTrait::MapTexture;
+        if (renderNode.paintHole) {
+            traits = ShaderTrait::UniformColor;
         } else {
-            const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
-            if (contents.planes.size() == 1) {
+            if (renderNode.opacity != 1.0) {
+                traits |= ShaderTrait::Modulate;
+            }
+
+            const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), item->renderingIntent());
+            if (!colorTransformation.isIdentity()) {
+                traits |= ShaderTrait::TransformColorspace;
+            }
+            if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
                 traits |= ShaderTrait::MapTexture;
             } else {
-                traits |= ShaderTrait::MapYUVTexture;
+                const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
+                if (contents.planes.size() == 1) {
+                    traits |= ShaderTrait::MapTexture;
+                } else {
+                    traits |= ShaderTrait::MapYUVTexture;
+                }
             }
         }
         if (!shader || traits != lastTraits) {
@@ -381,40 +416,46 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             }
         }
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
-        if (traits & ShaderTrait::Modulate) {
-            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
-        }
-        if (traits & ShaderTrait::TransformColorspace) {
-            shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
-        }
-        if (traits & ShaderTrait::MapYUVTexture) {
-            shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription.yuvMatrix());
-        }
-
-        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
-            const auto texture = std::get<GLTexture *>(renderNode.texture);
-            glActiveTexture(GL_TEXTURE0);
-            texture->bind();
+        if (renderNode.paintHole) {
+            shader->setUniform(GLShader::ColorUniform::Color, QColor(255, 0, 0, 0));
         } else {
-            const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
-            for (int plane = 0; plane < contents.planes.count(); ++plane) {
-                glActiveTexture(GL_TEXTURE0 + plane);
-                contents.planes[plane]->bind();
+            if (traits & ShaderTrait::Modulate) {
+                shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
+            }
+            if (traits & ShaderTrait::TransformColorspace) {
+                shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
+            }
+            if (traits & ShaderTrait::MapYUVTexture) {
+                shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription.yuvMatrix());
+            }
+
+            if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+                const auto texture = std::get<GLTexture *>(renderNode.texture);
+                glActiveTexture(GL_TEXTURE0);
+                texture->bind();
+            } else {
+                const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
+                for (int plane = 0; plane < contents.planes.count(); ++plane) {
+                    glActiveTexture(GL_TEXTURE0 + plane);
+                    contents.planes[plane]->bind();
+                }
             }
         }
 
         vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
 
-        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
-            auto texture = std::get<GLTexture *>(renderNode.texture);
-            glActiveTexture(GL_TEXTURE0);
-            texture->unbind();
-        } else {
-            const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
-            for (int plane = 0; plane < contents.planes.count(); ++plane) {
-                glActiveTexture(GL_TEXTURE0 + plane);
-                contents.planes[plane]->unbind();
+        if (!renderNode.paintHole) {
+            if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+                auto texture = std::get<GLTexture *>(renderNode.texture);
+                glActiveTexture(GL_TEXTURE0);
+                texture->unbind();
+            } else {
+                const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
+                for (int plane = 0; plane < contents.planes.count(); ++plane) {
+                    glActiveTexture(GL_TEXTURE0 + plane);
+                    contents.planes[plane]->unbind();
+                }
             }
         }
         if (renderNode.bufferReleasePoint) {

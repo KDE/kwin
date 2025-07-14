@@ -11,6 +11,8 @@
 #include "utils/common.h"
 #include "workspace.h"
 
+#include "surfaceitem.h"
+
 namespace KWin
 {
 
@@ -445,6 +447,9 @@ void Item::scheduleMoveRepaint(const QRectF &region)
             view->scheduleRepaint(this);
         }
     }
+    for (Item *child : std::as_const(m_childItems)) {
+        child->scheduleMoveRepaint(child->rect());
+    }
 }
 
 void Item::scheduleRepaintInternal(RenderView *view, const QRegion &region)
@@ -486,7 +491,7 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
     }
     const QList<RenderView *> views = m_scene->views();
     for (RenderView *view : views) {
-        if (!view->shouldRenderItem(this)) {
+        if (!view->shouldRenderItem(this) && !view->shouldRenderHole(this)) {
             continue;
         }
         const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();

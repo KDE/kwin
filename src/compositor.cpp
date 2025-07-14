@@ -420,7 +420,7 @@ static bool prepareDirectScanout(RenderView *view, Output *output, const std::sh
     return ret;
 }
 
-static bool prepareRendering(RenderView *view, Output *output)
+static bool prepareRendering(RenderView *view, Output *output, uint32_t requiredAlphaBits)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
@@ -435,6 +435,7 @@ static bool prepareRendering(RenderView *view, Output *output)
     layer->setOffloadTransform(OutputTransform::Normal);
     layer->setBufferTransform(output->transform());
     layer->setColor(output->layerBlendingColor(), RenderingIntent::RelativeColorimetricWithBPC, ColorPipeline{});
+    layer->setRequiredAlpha(requiredAlphaBits);
     return layer->preparePresentationTest();
 }
 
@@ -448,6 +449,34 @@ static bool renderLayer(RenderView *view, Output *output, const std::shared_ptr<
     const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(QRectF(QPointF(), view->viewport().size()).toAlignedRect());
     view->paint(renderTarget, bufferDamage);
     return view->layer()->endFrame(bufferDamage, surfaceDamage, frame.get());
+}
+
+static bool validateSpecialLayers(int underlays, int overlays, int mainZpos, const QList<OutputLayer *> &sortedLayers)
+{
+    if (underlays + overlays == 0) {
+        return false;
+    }
+    int zpos = sortedLayers.front()->minZpos();
+    int layer = 0;
+    for (int i = 0; i < underlays; i++) {
+        if (sortedLayers[layer]->minZpos() > zpos || sortedLayers[layer]->maxZpos() < zpos) {
+            return false;
+        }
+        zpos = std::max(zpos + 1, sortedLayers[layer]->minZpos());
+        layer++;
+    }
+    if (zpos >= mainZpos) {
+        return false;
+    }
+    zpos = mainZpos + 1;
+    for (int i = 0; i < overlays; i++) {
+        if (sortedLayers[layer]->maxZpos() < zpos) {
+            return false;
+        }
+        zpos = std::max(zpos + 1, sortedLayers[layer]->minZpos());
+        layer++;
+    }
+    return true;
 }
 
 void Compositor::composite(RenderLoop *renderLoop)
@@ -510,6 +539,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         bool directScanout = false;
         bool directScanoutOnly = false;
         QRegion surfaceDamage;
+        int zpos;
+        uint32_t requiredAlphaBits;
+        bool highPriority = false;
     };
     QList<LayerData> layers;
 
@@ -518,6 +550,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         .directScanout = false,
         .directScanoutOnly = false,
         .surfaceDamage = primaryView->prePaint() | primaryView->layer()->repaints(),
+        .zpos = primaryView->layer()->zpos(),
+        .requiredAlphaBits = 0,
+        .highPriority = true,
     });
 
     // slowly adjust the artificial HDR headroom for the next frame. Note that
@@ -550,30 +585,58 @@ void Compositor::composite(RenderLoop *renderLoop)
             .directScanout = false,
             .directScanoutOnly = false,
             .surfaceDamage = cursorViewIt->second->prePaint() | cursorViewIt->second->layer()->repaints(),
+            .zpos = cursorViewIt->second->layer()->zpos(),
+            .requiredAlphaBits = 8,
+            .highPriority = true,
         });
     }
 
     const auto outputLayers = m_backend->compatibleOutputLayers(output);
-    auto overlays = outputLayers | std::views::filter([&](OutputLayer *layer) {
+    auto specialLayers = outputLayers | std::views::filter([&](OutputLayer *layer) {
         return layer->type() == OutputLayerType::GenericLayer
-            && layer->zpos() > primaryView->layer()->zpos()
-            && (cursorViewIt == m_cursorViews.end() || layer->zpos() < cursorViewIt->second->layer()->zpos());
+            && (cursorViewIt == m_cursorViews.end() || layer->minZpos() < cursorViewIt->second->layer()->zpos());
     }) | std::ranges::to<QList>();
-    if (!overlays.empty()) {
-        // candidates are sorted from highest to lowest, make the layers match
-        std::ranges::sort(overlays, [](OutputLayer *left, OutputLayer *right) {
-            return left->zpos() > right->zpos();
+    if (!specialLayers.empty()) {
+        // TODO make this more generic - include the primary plane layer in the assignments?
+        const int overlays = std::ranges::count_if(specialLayers, [&](OutputLayer *layer) {
+            return layer->maxZpos() > primaryView->layer()->zpos();
         });
-        const auto candidates = primaryView->overlayCandidates(overlays.size());
-        for (auto [candidate, overlay] : std::views::zip(candidates, overlays)) {
-            // leave fullscreen direct scanout to the primary plane
-            if (candidate->mapToScene(candidate->rect()).contains(output->geometryF())) {
-                m_overlayViews[output->renderLoop()].erase(overlay);
-                if (overlay->isEnabled()) {
-                    overlay->setEnabled(false);
-                    toUpdate.push_back(overlay);
+        const int underlays = std::ranges::count_if(specialLayers, [&](OutputLayer *layer) {
+            return layer->minZpos() < primaryView->layer()->zpos();
+        });
+        std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
+            return left->minZpos() < right->minZpos();
+        });
+        auto layerIt = specialLayers.begin();
+        const auto [overlayCandidates, underlayCandidates] = primaryView->overlayCandidates(specialLayers.size(), overlays, underlays);
+        if (validateSpecialLayers(underlayCandidates.size(), overlayCandidates.size(), primaryView->layer()->zpos(), specialLayers)) {
+            int zpos = -1;
+            for (const auto candidate : underlayCandidates) {
+                const auto underlay = *layerIt;
+                layerIt++;
+                zpos = std::max(zpos + 1, underlay->minZpos());
+                auto &view = m_overlayViews[output->renderLoop()][underlay];
+                if (!view || view->item() != candidate) {
+                    view = std::make_unique<ItemTreeView>(primaryView, candidate, output, underlay);
                 }
-            } else {
+                layers.push_back(LayerData{
+                    .view = view.get(),
+                    .directScanout = true,
+                    .directScanoutOnly = true,
+                    .surfaceDamage = view->prePaint() | underlay->repaints(),
+                    .zpos = zpos,
+                    .requiredAlphaBits = 0,
+                    .highPriority = false,
+                });
+                view->setUnderlay(true);
+                // the primary plane needs more alpha for underlays to work nicely
+                layers.front().requiredAlphaBits = 8;
+            }
+            zpos = primaryView->layer()->zpos();
+            for (const auto candidate : overlayCandidates) {
+                const auto overlay = *layerIt;
+                layerIt++;
+                zpos = std::max(zpos + 1, overlay->minZpos());
                 auto &view = m_overlayViews[output->renderLoop()][overlay];
                 if (!view || view->item() != candidate) {
                     view = std::make_unique<ItemTreeView>(primaryView, candidate, output, overlay);
@@ -583,15 +646,19 @@ void Compositor::composite(RenderLoop *renderLoop)
                     .directScanout = true,
                     .directScanoutOnly = true,
                     .surfaceDamage = view->prePaint() | overlay->repaints(),
+                    .zpos = zpos,
+                    .requiredAlphaBits = 0,
+                    .highPriority = false,
                 });
+                view->setUnderlay(false);
             }
         }
-        for (ssize_t i = candidates.size(); i < overlays.size(); i++) {
+        for (OutputLayer *unused : std::span(layerIt, specialLayers.end())) {
             // disable layers that aren't used
-            m_overlayViews[output->renderLoop()].erase(overlays[i]);
-            if (overlays[i]->isEnabled()) {
-                overlays[i]->setEnabled(false);
-                toUpdate.push_back(overlays[i]);
+            m_overlayViews[output->renderLoop()].erase(unused);
+            if (unused->isEnabled()) {
+                unused->setEnabled(false);
+                toUpdate.push_back(unused);
             }
         }
     }
@@ -600,7 +667,8 @@ void Compositor::composite(RenderLoop *renderLoop)
     for (auto &layer : layers) {
         if (prepareDirectScanout(layer.view, output, frame)) {
             layer.directScanout = true;
-        } else if (!layer.directScanoutOnly && prepareRendering(layer.view, output)) {
+            layer.view->layer()->setZpos(layer.zpos);
+        } else if (!layer.directScanoutOnly && prepareRendering(layer.view, output, layer.requiredAlphaBits)) {
             layer.directScanout = false;
         } else {
             layer.view->layer()->setEnabled(false);
@@ -613,7 +681,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         bool primaryFailure = false;
         auto &primary = layers.front();
         if (primary.directScanout) {
-            if (prepareRendering(primary.view, output)) {
+            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)) {
                 primary.directScanout = false;
                 result = output->testPresentation(frame);
             } else {
@@ -623,9 +691,9 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
         }
         if (!result && !primaryFailure) {
-            // fall back to disabling the remaining layers
-            const bool needsTest = std::ranges::any_of(layers | std::views::drop(1), [](const LayerData &layer) {
-                if (!layer.view->layer()->isEnabled()) {
+            // as the fallback, remove all low priority layers
+            const bool disabledLayers = std::ranges::any_of(layers | std::views::drop(1), [](const LayerData &layer) {
+                if (!layer.view->layer()->isEnabled() || layer.highPriority) {
                     return false;
                 }
                 layer.view->layer()->setEnabled(false);
@@ -633,8 +701,21 @@ void Compositor::composite(RenderLoop *renderLoop)
                 layer.view->layer()->scheduleRepaint(nullptr);
                 return true;
             });
-            if (needsTest) {
+            if (disabledLayers) {
                 result = output->testPresentation(frame);
+            }
+            if (!result) {
+                // if that failed too, do the same for non-primary high priority layers
+                const bool disabledLayers = std::ranges::any_of(layers | std::views::drop(1), [](const LayerData &layer) {
+                    if (!layer.view->layer()->isEnabled()) {
+                        return false;
+                    }
+                    layer.view->layer()->setEnabled(false);
+                    return true;
+                });
+                if (disabledLayers) {
+                    result = output->testPresentation(frame);
+                }
             }
         }
     }
@@ -689,7 +770,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         const auto &primary = layers.front();
         if (primary.directScanout || removedLayers) {
             // re-render without direct scanout
-            if (prepareRendering(primary.view, output)
+            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)
                 && renderLayer(primary.view, output, frame, primary.surfaceDamage)) {
                 result = output->present(toUpdate, frame);
             } else {
@@ -702,7 +783,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             // try again even without the cursor layer
             layers[1].view->layer()->setEnabled(false);
             layers[1].view->setExclusive(false);
-            if (prepareRendering(primary.view, output)
+            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)
                 && renderLayer(primary.view, output, frame, primary.surfaceDamage)) {
                 result = output->present(toUpdate, frame);
                 if (result) {
@@ -755,7 +836,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     const auto diff = std::chrono::steady_clock::now() - start;
-    if (diff > std::chrono::milliseconds(5)) {
+    if (diff > std::chrono::milliseconds(10)) {
         qWarning() << "composite took" << std::chrono::duration_cast<std::chrono::microseconds>(diff);
     }
 }
