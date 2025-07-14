@@ -129,7 +129,7 @@ QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (const auto &window : m_windows) {
-        Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {});
+        Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {}, {});
     }
     Compositor::self()->scene()->renderer()->endFrame();
     return QRegion{};

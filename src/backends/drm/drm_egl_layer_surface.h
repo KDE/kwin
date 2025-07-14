@@ -49,20 +49,16 @@ public:
         Linear,
         Dumb
     };
-    enum class FormatOption {
-        PreferAlpha,
-        RequireAlpha
-    };
-    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
+    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t minAlphaBits);
     bool endRendering(const QRegion &damagedRegion, OutputFrame *frame);
 
     std::shared_ptr<GLTexture> texture() const;
     void destroyResources();
     EglGbmBackend *eglBackend() const;
-    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff);
+    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
     void forgetDamage();
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
@@ -108,13 +104,14 @@ private:
         std::shared_ptr<IccProfile> iccProfile;
         DamageJournal shadowDamageJournal;
         Output::ColorPowerTradeoff tradeoff = Output::ColorPowerTradeoff::PreferEfficiency;
+        uint32_t requiredAlphaBits = 0;
 
         std::unique_ptr<GLRenderTimeQuery> compositingTimeQuery;
     };
-    bool checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff);
-    bool doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff) const;
-    std::unique_ptr<Surface> createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff) const;
-    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, Output::ColorPowerTradeoff tradeoff) const;
+    bool checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
+    bool doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
     std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
@@ -128,7 +125,6 @@ private:
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;
     const BufferTarget m_requestedBufferTarget;
-    const FormatOption m_formatOption;
 };
 
 }

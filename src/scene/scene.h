@@ -49,6 +49,7 @@ public:
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
     virtual void postPaint() = 0;
     virtual bool shouldRenderItem(Item *item) const;
+    virtual bool shouldRenderHole(Item *item) const;
 
     /**
      * add a repaint in layer-local logical coordinates
@@ -82,7 +83,7 @@ public:
     double scale() const override;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    QList<SurfaceItem *> overlayCandidates(ssize_t maxCount) const;
+    std::pair<QList<SurfaceItem *>, QList<SurfaceItem *>> overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const;
     void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
     QRegion updatePrePaint() override;
@@ -92,16 +93,20 @@ public:
 
     void addExclusiveView(RenderView *view);
     void removeExclusiveView(RenderView *view);
+    void addUnderlay(RenderView *view);
+    void removeUnderlay(RenderView *view);
     /**
      * @returns whether or not the Item should be rendered for this delegate specifically.
      */
     bool shouldRenderItem(Item *item) const override;
+    bool shouldRenderHole(Item *item) const override;
 
 private:
     Scene *m_scene;
     Output *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
     QList<RenderView *> m_exclusiveViews;
+    QList<RenderView *> m_underlayViews;
     std::optional<QRectF> m_viewportOverride;
     std::optional<double> m_scaleOverride;
 };
@@ -123,6 +128,7 @@ public:
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
+    void setUnderlay(bool underlay);
 
     Item *item() const;
 
@@ -133,6 +139,7 @@ private:
     SceneView *const m_parentView;
     const QPointer<Item> m_item;
     bool m_exclusive = false;
+    bool m_underlay = false;
 };
 
 class KWIN_EXPORT Scene : public QObject
@@ -178,7 +185,7 @@ public:
     void removeView(RenderView *view);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
-    virtual QList<SurfaceItem *> overlayCandidates(ssize_t maxCount) const = 0;
+    virtual std::pair<QList<SurfaceItem *>, QList<SurfaceItem *>> overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
     virtual QRegion prePaint(SceneView *delegate) = 0;
     /**
      * While prePaint returns damage, some layer-related actions may cause
