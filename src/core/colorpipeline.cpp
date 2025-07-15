@@ -24,9 +24,36 @@ ValueRange ValueRange::operator*(double mult) const
 
 static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
 
+static ValueRange getValueRange(std::initializer_list<QVector3D> &&vectors)
+{
+    auto it = vectors.begin();
+    ValueRange ret{
+        .min = std::min({it->x(), it->y(), it->z()}),
+        .max = std::max({it->x(), it->y(), it->z()}),
+    };
+    for (it = it + 1; it != vectors.end(); it++) {
+        ret.min = std::min<double>({ret.min, it->x(), it->y(), it->z()});
+        ret.max = std::max<double>({ret.max, it->x(), it->y(), it->z()});
+    }
+    return ret;
+}
+
 ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent)
 {
-    const auto range1 = ValueRange(from->minLuminance(), from->maxHdrLuminance().value_or(from->referenceLuminance()));
+    // to figure out the most extreme RGB values that could be used, we check the extreme values
+    // of the mastering display colorimetry - black, red, green, blue and white
+    // NOTE that the mastering display white point may differ from the container white point!
+    const double minLum = from->minLuminance();
+    const double maxLum = from->maxHdrLuminance().value_or(from->referenceLuminance());
+    const auto mdBlackPoint = from->masteringColorimetry().white() * minLum;
+    const auto &fromXYZ = from->containerColorimetry().fromXYZ();
+    const QVector3D mdBlack = fromXYZ * mdBlackPoint.asVector();
+    const QVector3D mdRed = fromXYZ * (from->masteringColorimetry().red() * (maxLum - minLum) + mdBlackPoint).asVector();
+    const QVector3D mdGreen = fromXYZ * (from->masteringColorimetry().green() * (maxLum - minLum) + mdBlackPoint).asVector();
+    const QVector3D mdBlue = fromXYZ * (from->masteringColorimetry().blue() * (maxLum - minLum) + mdBlackPoint).asVector();
+    const QVector3D mdWhite = fromXYZ * (from->masteringColorimetry().white() * maxLum).asVector();
+
+    const auto range1 = getValueRange({mdBlack, mdRed, mdGreen, mdBlue, mdWhite});
     const double maxOutputLuminance = to->maxHdrLuminance().value_or(to->referenceLuminance());
     const auto rgbInputSpace = from->transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB;
     ColorPipeline ret(ValueRange{
@@ -37,16 +64,13 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
     ret.addTransferFunction(from->transferFunction(), ColorspaceType::LinearRGB);
 
     const QMatrix4x4 toOther = from->toOther(*to, intent);
-    // this is an estimate. It assumes that "toOther" doesn't do anything too weird!
-    // FIXME it also assumes that the colorspace doesn't go into negative values
-    // (as does the input range) - that's not correct with scRGB!
-    const QVector3D black = toOther.map(QVector3D(range1.min, range1.min, range1.min));
-    const QVector3D white = toOther.map(QVector3D(range1.max, range1.max, range1.max));
+    const QVector3D black = toOther.map(mdBlack);
+    const QVector3D red = toOther.map(mdRed);
+    const QVector3D green = toOther.map(mdGreen);
+    const QVector3D blue = toOther.map(mdBlue);
+    const QVector3D white = toOther.map(mdWhite);
 
-    ret.addMatrix(toOther, ValueRange{
-                               .min = std::min({black.x(), black.y(), black.z()}),
-                               .max = std::max({white.x(), white.y(), white.z()}),
-                           }, ColorspaceType::LinearRGB);
+    ret.addMatrix(toOther, getValueRange({black, red, green, blue, white}), ColorspaceType::LinearRGB);
     if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
         ret.addTonemapper(to->containerColorimetry(), to->referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
     }
