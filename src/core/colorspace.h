@@ -226,7 +226,7 @@ public:
      * @param sdrColorimetry
      */
     explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity, EncodingRange range = EncodingRange::Full);
-    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity, EncodingRange range = EncodingRange::Full);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, const Colorimetry &masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity, EncodingRange range = EncodingRange::Full);
     explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity, EncodingRange range = EncodingRange::Full);
 
     /**
@@ -239,7 +239,7 @@ public:
      * In most cases this will be smaller than the container colorimetry; for example a screen with an HDR mode but only rec.709 colors would have a container colorimetry of rec.2020 and a mastering colorimetry of rec.709.
      * In some cases however it can be bigger than the container colorimetry, like with scRGB. It has the container colorimetry of sRGB, but a mastering colorimetry that can be bigger (like rec.2020 for example)
      */
-    const std::optional<Colorimetry> &masteringColorimetry() const;
+    const Colorimetry &masteringColorimetry() const;
     const Colorimetry &sdrColorimetry() const;
     TransferFunction transferFunction() const;
     double referenceLuminance() const;
@@ -281,7 +281,7 @@ public:
 
 private:
     Colorimetry m_containerColorimetry;
-    std::optional<Colorimetry> m_masteringColorimetry;
+    Colorimetry m_masteringColorimetry;
     TransferFunction m_transferFunction;
     Colorimetry m_sdrColorimetry;
     double m_referenceLuminance;
