@@ -141,8 +141,8 @@ wp_image_description_v1 *ColorManager::createImageDescription(const ColorDescrip
     if (supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_LUMINANCES)) {
         wp_image_description_creator_params_v1_set_luminances(creator, std::round(color.transferFunction().minLuminance / s_minLuminanceUnit), std::round(color.transferFunction().maxLuminance), std::round(color.referenceLuminance()));
     }
-    if (supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_MASTERING_DISPLAY_PRIMARIES) && color.masteringColorimetry().has_value()) {
-        const auto &c = *color.masteringColorimetry();
+    if (supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_MASTERING_DISPLAY_PRIMARIES)) {
+        const auto &c = color.masteringColorimetry();
         wp_image_description_creator_params_v1_set_mastering_display_primaries(creator,
                                                                                encode(c.red().toxy().x), encode(c.red().toxy().y),
                                                                                encode(c.green().toxy().x), encode(c.green().toxy().y),
