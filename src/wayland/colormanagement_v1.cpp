@@ -273,7 +273,7 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
                                                                                                         m_minMasteringLuminance.value_or(func.minLuminance),
                                                                                                         maxFrameAverageLuminance,
                                                                                                         maxHdrLuminance.value_or(func.maxLuminance),
-                                                                                                        m_masteringColorimetry,
+                                                                                                        m_masteringColorimetry.value_or(*m_colorimetry),
                                                                                                         Colorimetry::BT709,
                                                                                                     }));
     } else {
@@ -563,17 +563,15 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
     if (auto name = kwinPrimariesToProtoPrimaires(color->containerColorimetry())) {
         wp_image_description_info_v1_send_primaries_named(resource, *name);
     }
-    if (auto m = color->masteringColorimetry()) {
-        const xyY masterRed = m->red().toxyY();
-        const xyY masterGreen = m->green().toxyY();
-        const xyY masterBlue = m->blue().toxyY();
-        const xyY masterWhite = m->white().toxyY();
-        wp_image_description_info_v1_send_target_primaries(resource,
-                                                           round(masterRed.x), round(masterRed.y),
-                                                           round(masterGreen.x), round(masterGreen.y),
-                                                           round(masterBlue.x), round(masterBlue.y),
-                                                           round(masterWhite.x), round(masterWhite.y));
-    }
+    const xyY masterRed = color->masteringColorimetry().red().toxyY();
+    const xyY masterGreen = color->masteringColorimetry().green().toxyY();
+    const xyY masterBlue = color->masteringColorimetry().blue().toxyY();
+    const xyY masterWhite = color->masteringColorimetry().white().toxyY();
+    wp_image_description_info_v1_send_target_primaries(resource,
+                                                       round(masterRed.x), round(masterRed.y),
+                                                       round(masterGreen.x), round(masterGreen.y),
+                                                       round(masterBlue.x), round(masterBlue.y),
+                                                       round(masterWhite.x), round(masterWhite.y));
     if (auto maxfall = color->maxAverageLuminance()) {
         wp_image_description_info_v1_send_target_max_fall(resource, std::round(*maxfall));
     }

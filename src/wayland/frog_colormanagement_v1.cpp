@@ -73,7 +73,7 @@ uint16_t encodePrimary(float primary)
 
 void FrogColorManagementSurfaceV1::setPreferredColorDescription(const std::shared_ptr<ColorDescription> &colorDescription)
 {
-    const auto color = colorDescription->masteringColorimetry().value_or(colorDescription->containerColorimetry());
+    const auto &color = colorDescription->masteringColorimetry();
     const xyY red = color.red().toxyY();
     const xyY green = color.green().toxyY();
     const xyY blue = color.blue().toxyY();
@@ -197,7 +197,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
             m_minMasteringLuminance.value_or(m_transferFunction.minLuminance),
             m_maxAverageLuminance,
             m_maxPeakBrightness,
-            m_masteringColorimetry,
+            m_masteringColorimetry.value_or(m_containerColorimetry),
             Colorimetry::BT709,
         });
         priv->pending->committed |= SurfaceState::Field::ColorDescription;
