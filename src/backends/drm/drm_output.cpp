@@ -530,7 +530,7 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
         return std::make_shared<ColorDescription>(ColorDescription{
             next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, 0, maxBrightness * next.artificialHdrHeadroom),
+            TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness * next.artificialHdrHeadroom),
             effectiveReferenceLuminance,
             minBrightness * next.artificialHdrHeadroom,
             maxBrightness * maxPossibleArtificialHeadroom,
