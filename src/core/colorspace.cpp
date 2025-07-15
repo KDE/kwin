@@ -444,13 +444,13 @@ const ColorDescription ColorDescription::sRGB = ColorDescription(Colorimetry::BT
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf,
                                    double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance,
                                    YUVMatrixCoefficients yuvCoefficients, EncodingRange range)
-    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::BT709, yuvCoefficients, range)
+    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, containerColorimetry, Colorimetry::BT709, yuvCoefficients, range)
 {
 }
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf,
                                    double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance,
-                                   std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry,
+                                   const Colorimetry &masteringColorimetry, const Colorimetry &sdrColorimetry,
                                    YUVMatrixCoefficients yuvCoefficients, EncodingRange range)
     : m_containerColorimetry(containerColorimetry)
     , m_masteringColorimetry(masteringColorimetry)
@@ -475,7 +475,7 @@ const Colorimetry &ColorDescription::containerColorimetry() const
     return m_containerColorimetry;
 }
 
-const std::optional<Colorimetry> &ColorDescription::masteringColorimetry() const
+const Colorimetry &ColorDescription::masteringColorimetry() const
 {
     return m_masteringColorimetry;
 }
@@ -632,7 +632,7 @@ ColorDescription ColorDescription::withWhitepoint(xyY newWhitePoint) const
         m_minLuminance,
         m_maxAverageLuminance,
         m_maxHdrLuminance,
-        m_masteringColorimetry ? std::optional(m_masteringColorimetry->withWhitepoint(newWhitePoint)) : std::nullopt,
+        m_masteringColorimetry.withWhitepoint(newWhitePoint),
         m_sdrColorimetry,
     };
 }
