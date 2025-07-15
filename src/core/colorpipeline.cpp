@@ -34,9 +34,17 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
     });
     ret.addTransferFunction(from.transferFunction());
 
-    // FIXME this assumes that the range stays the same with matrix multiplication
-    // that's not necessarily true, and figuring out the actual range could be complicated..
-    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()));
+    const QMatrix4x4 toOther = from.toOther(to, intent);
+    // this is an estimate. It assumes that "toOther" doesn't do anything too weird!
+    // FIXME it also assumes that the colorspace doesn't go into negative values
+    // (as does the input range) - that's not correct with scRGB!
+    const QVector3D black = toOther.map(QVector3D(range1.min, range1.min, range1.min));
+    const QVector3D white = toOther.map(QVector3D(range1.max, range1.max, range1.max));
+
+    ret.addMatrix(toOther, ValueRange{
+                               .min = std::min({black.x(), black.y(), black.z()}),
+                               .max = std::max({white.x(), white.y(), white.z()}),
+                           });
     if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
         ret.addTonemapper(to.containerColorimetry(), to.referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
     }
