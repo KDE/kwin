@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testYCbCr_data();
     void testYCbCr();
     void testBlackPointCompensation();
+    void testSCRGB();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -615,6 +616,55 @@ void TestColorspaces::testBlackPointCompensation()
 
     QVERIFY(ColorPipeline::create(src, dst, RenderingIntent::RelativeColorimetricWithBPC).isIdentity());
     QVERIFY(ColorPipeline::create(dst, src, RenderingIntent::RelativeColorimetricWithBPC).isIdentity());
+}
+
+static QVector3D clamp(const QVector3D &value, float min, float max)
+{
+    return QVector3D(std::clamp(value.x(), min, max), std::clamp(value.y(), min, max), std::clamp(value.z(), min, max));
+}
+
+void TestColorspaces::testSCRGB()
+{
+    const auto scRGB = std::make_shared<ColorDescription>(ColorDescription{
+        Colorimetry::BT709,
+        TransferFunction(TransferFunction::linear, 0, 80),
+        203,
+        0,
+        500,
+        1000,
+        Colorimetry::BT2020,
+        Colorimetry::BT709,
+    });
+    const auto hdrOutput = std::make_shared<ColorDescription>(ColorDescription{
+        Colorimetry::BT2020,
+        TransferFunction(TransferFunction::PerceptualQuantizer),
+        203,
+        0.005,
+        500,
+        1000,
+    });
+    const ColorPipeline toOutput = ColorPipeline::create(scRGB, hdrOutput, RenderingIntent::RelativeColorimetricWithBPC);
+    QCOMPARE(toOutput.ops.size(), 2);
+    // this is roughly the range of values required to represent BT2020 primaries at 1000cd/m² in scRGB
+    QCOMPARE_LE(toOutput.inputRange.min, -7);
+    QCOMPARE_GE(toOutput.inputRange.max, 12.5);
+
+    for (const auto test : {QVector3D(1000, 0, 0), QVector3D(0, 1000, 0), QVector3D(0, 0, 1000), QVector3D(1000, 1000, 1000), QVector3D(0, 0, 0)}) {
+        QVector3D out = scRGB->transferFunction().nitsToEncoded(test);
+        for (const auto &op : toOutput.ops) {
+            out = clamp(out, op.input.min, op.input.max);
+            out = op.apply(out);
+            out = clamp(out, op.output.min, op.output.max);
+        }
+        out = hdrOutput->transferFunction().encodedToNits(out);
+        const QVector3D direct = scRGB->toOther(*hdrOutput, RenderingIntent::RelativeColorimetricWithBPC) * test;
+        QCOMPARE_LE(out.x(), direct.x() + 1);
+        QCOMPARE_GE(out.x(), direct.x() - 1);
+        QCOMPARE_LE(out.y(), direct.y() + 1);
+        QCOMPARE_GE(out.y(), direct.y() - 1);
+        QCOMPARE_LE(out.z(), direct.z() + 1);
+        QCOMPARE_GE(out.z(), direct.z() - 1);
+    }
 }
 
 QTEST_MAIN(TestColorspaces)
