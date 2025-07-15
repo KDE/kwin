@@ -265,7 +265,7 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
         m_minMasteringLuminance = func.minLuminance;
     }
     if (Colorimetry::isValid(m_colorimetry->red().toxy(), m_colorimetry->green().toxy(), m_colorimetry->blue().toxy(), m_colorimetry->white().toxy())) {
-        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance.value_or(func.maxLuminance), m_masteringColorimetry, Colorimetry::BT709));
+        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance.value_or(func.maxLuminance), m_masteringColorimetry.value_or(*m_colorimetry), Colorimetry::BT709));
     } else {
         ImageDescriptionV1::createFailed(resource->client(), image_description, resource->version(), WP_IMAGE_DESCRIPTION_V1_CAUSE_UNSUPPORTED, QStringLiteral("The provided image description failed to verify as usable"));
     }
@@ -545,17 +545,15 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
     if (auto name = kwinPrimariesToProtoPrimaires(m_description->containerColorimetry())) {
         wp_image_description_info_v1_send_primaries_named(resource, *name);
     }
-    if (auto m = m_description->masteringColorimetry()) {
-        const xyY masterRed = m->red().toxyY();
-        const xyY masterGreen = m->green().toxyY();
-        const xyY masterBlue = m->blue().toxyY();
-        const xyY masterWhite = m->white().toxyY();
-        wp_image_description_info_v1_send_target_primaries(resource,
-                                                           round(masterRed.x), round(masterRed.y),
-                                                           round(masterGreen.x), round(masterGreen.y),
-                                                           round(masterBlue.x), round(masterBlue.y),
-                                                           round(masterWhite.x), round(masterWhite.y));
-    }
+    const xyY masterRed = m_description->masteringColorimetry().red().toxyY();
+    const xyY masterGreen = m_description->masteringColorimetry().green().toxyY();
+    const xyY masterBlue = m_description->masteringColorimetry().blue().toxyY();
+    const xyY masterWhite = m_description->masteringColorimetry().white().toxyY();
+    wp_image_description_info_v1_send_target_primaries(resource,
+                                                       round(masterRed.x), round(masterRed.y),
+                                                       round(masterGreen.x), round(masterGreen.y),
+                                                       round(masterBlue.x), round(masterBlue.y),
+                                                       round(masterWhite.x), round(masterWhite.y));
     if (auto maxfall = m_description->maxAverageLuminance()) {
         wp_image_description_info_v1_send_target_max_fall(resource, std::round(*maxfall));
     }
