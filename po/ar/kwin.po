@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-12 00:44+0000\n"
-"PO-Revision-Date: 2025-05-31 10:58+0400\n"
+"PO-Revision-Date: 2025-07-14 20:18+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -746,16 +746,14 @@ msgid "Up"
 msgstr "أعلى"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "المسافة:"
+msgstr "المسافة"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "الموقع"
+msgstr "موقع موقع المنزلق"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -786,19 +784,17 @@ msgstr "زر اللوحي"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "المجموعة"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "الوضع:"
+msgstr "الوضع"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "هو مفتاح تبديل"
 
 #: debug_console.cpp:576
 #, kde-format
@@ -2904,7 +2900,7 @@ msgstr "وصف القاعدة (عتيق)"
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr "إحذف هذه القاعدة (لتستخدم في الإستيراد)"
+msgstr "احذف هذه القاعدة (لتستخدم في الاستيراد)"
 
 #. i18n: ectx: label, entry (enabled), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
