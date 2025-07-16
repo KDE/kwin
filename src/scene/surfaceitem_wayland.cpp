@@ -47,15 +47,16 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     connect(surface, &SurfaceInterface::bufferReleasePointChanged, this, &SurfaceItemWayland::handleReleasePointChanged);
     connect(surface, &SurfaceInterface::alphaMultiplierChanged, this, &SurfaceItemWayland::handleAlphaMultiplierChanged);
 
+    connect(surface, &SurfaceInterface::mapped,
+            this, &SurfaceItemWayland::handleSurfaceMappedChanged);
+    connect(surface, &SurfaceInterface::unmapped,
+            this, &SurfaceItemWayland::handleSurfaceMappedChanged);
+    setVisible(surface->isMapped());
+
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
-        connect(surface, &SurfaceInterface::mapped,
-                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
-        connect(surface, &SurfaceInterface::unmapped,
-                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
         connect(subsurface, &SubSurfaceInterface::positionChanged,
                 this, &SurfaceItemWayland::handleSubSurfacePositionChanged);
-        setVisible(surface->isMapped());
         setPosition(subsurface->position());
     }
 
@@ -158,7 +159,7 @@ void SurfaceItemWayland::handleSubSurfacePositionChanged()
     setPosition(m_surface->subSurface()->position());
 }
 
-void SurfaceItemWayland::handleSubSurfaceMappedChanged()
+void SurfaceItemWayland::handleSurfaceMappedChanged()
 {
     setVisible(m_surface->isMapped());
 }
