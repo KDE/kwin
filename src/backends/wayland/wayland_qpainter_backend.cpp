@@ -92,8 +92,7 @@ WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::doBeginFrame()
 {
-    const auto tmp = targetRect().size().expandedTo(QSize(64, 64));
-    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
+    const auto bufferSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), bufferSize, DRM_FORMAT_ARGB8888);
     }

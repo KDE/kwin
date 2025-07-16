@@ -110,8 +110,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::doBeginFrame
         return std::nullopt;
     }
 
-    const auto tmp = targetRect().size().expandedTo(QSize(64, 64));
-    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
+    const auto bufferSize = targetRect().size();
     if (!m_texture || m_texture->size() != bufferSize) {
         m_texture = GLTexture::allocate(GL_RGBA8, bufferSize);
         if (!m_texture) {
