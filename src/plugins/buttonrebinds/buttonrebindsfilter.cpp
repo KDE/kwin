@@ -413,7 +413,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
 
     // handle modifier-only keys
     for (const auto &[keySymQt, keySymLinux] : s_modifierKeyTable) {
-        if (key == keySymQt) {
+        if (key == QKeyCombination::fromCombined(keySymQt)) {
             RebindScope scope;
             sendKey(keySymLinux);
             return true;
@@ -425,7 +425,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     // Use keysyms from the keypad if and only if KeypadModifier is set
     syms.erase(std::remove_if(syms.begin(), syms.end(), [keys](int sym) {
         bool onKeyPad = sym >= XKB_KEY_KP_Space && sym <= XKB_KEY_KP_Equal;
-        if (keys[0] & Qt::KeypadModifier) {
+        if (keys[0].keyboardModifiers() & Qt::KeypadModifier) {
             return !onKeyPad;
         } else {
             return onKeyPad;
@@ -455,16 +455,16 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
 
     RebindScope scope;
 
-    if (key & Qt::ShiftModifier || level == 1) {
+    if (key.keyboardModifiers() & Qt::ShiftModifier || level == 1) {
         sendKey(KEY_LEFTSHIFT);
     }
-    if (key & Qt::ControlModifier) {
+    if (key.keyboardModifiers() & Qt::ControlModifier) {
         sendKey(KEY_LEFTCTRL);
     }
-    if (key & Qt::AltModifier) {
+    if (key.keyboardModifiers() & Qt::AltModifier) {
         sendKey(KEY_LEFTALT);
     }
-    if (key & Qt::MetaModifier) {
+    if (key.keyboardModifiers() & Qt::MetaModifier) {
         sendKey(KEY_LEFTMETA);
     }
 
