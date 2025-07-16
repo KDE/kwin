@@ -546,6 +546,17 @@ void Output::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
+bool Output::canResize() const
+{
+    return false;
+}
+
+void Output::resize(const QSize &size)
+{
+    Q_ASSERT(false);
+    return;
+}
+
 bool Output::isEnabled() const
 {
     return m_state.enabled;

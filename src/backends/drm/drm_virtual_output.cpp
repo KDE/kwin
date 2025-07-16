@@ -90,6 +90,20 @@ void DrmVirtualOutput::recreateSurface()
     m_layer = m_backend->renderBackend()->createLayer(this);
 }
 
+bool DrmVirtualOutput::canResize() const
+{
+    return true;
+}
+
+void DrmVirtualOutput::resize(const QSize &size)
+{
+    auto mode = std::make_shared<OutputMode>(size, 60000, OutputMode::Flag::Preferred);
+    auto next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    setState(next);
+    Q_EMIT m_backend->outputsQueried();
+}
 }
 
 #include "moc_drm_virtual_output.cpp"
