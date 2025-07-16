@@ -43,6 +43,8 @@ public:
 
     virtual QPointF mapFromGlobal(const QPointF &point) const = 0;
     virtual RectF mapFromGlobal(const RectF &rect) const = 0;
+    virtual bool followsStreamSize();
+    virtual void resize(const QSize &size);
 
 Q_SIGNALS:
     void frame();

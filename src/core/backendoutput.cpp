@@ -363,6 +363,16 @@ void BackendOutput::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
+bool BackendOutput::canResize() const
+{
+    return false;
+}
+
+void BackendOutput::resize(const QSize &)
+{
+    Q_ASSERT(false);
+}
+
 bool BackendOutput::isEnabled() const
 {
     return m_state.enabled;

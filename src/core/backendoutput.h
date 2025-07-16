@@ -213,6 +213,8 @@ public:
     QSize orientateSize(const QSize &size) const;
 
     virtual void applyChanges(const OutputConfiguration &config);
+    virtual bool canResize() const;
+    virtual void resize(const QSize &size);
 
     SubPixel subPixel() const;
     QString description() const;

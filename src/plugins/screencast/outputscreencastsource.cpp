@@ -167,6 +167,16 @@ RectF OutputScreenCastSource::mapFromGlobal(const RectF &rect) const
     return m_output->mapFromGlobal(rect);
 }
 
+bool OutputScreenCastSource::followsStreamSize()
+{
+    return m_output->canResize();
+}
+
+void OutputScreenCastSource::resize(const QSize &size)
+{
+    m_output->resize(size);
+}
+
 } // namespace KWin
 
 #include "moc_outputscreencastsource.cpp"

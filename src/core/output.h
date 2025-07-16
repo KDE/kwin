@@ -386,6 +386,9 @@ public:
      */
     QSize orientateSize(const QSize &size) const;
 
+    bool canResize() const;
+    void resize(const QSize &size);
+
     /*!
      * Returns \c true if this is a placeholder output; otherwise returns \c false.
      *

@@ -35,6 +35,9 @@ public:
     DrmOutputLayer *primaryLayer() const;
     void recreateSurface();
 
+    bool canResize() const override;
+    void resize(const QSize &size) override;
+
 private:
     void vblank(std::chrono::nanoseconds timestamp);
 

@@ -229,6 +229,15 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     }
 
     spa_format_video_raw_parse(format, &m_videoFormat);
+    const QSize negotiatedSize(m_videoFormat.size.width, m_videoFormat.size.height);
+
+    qCDebug(KWIN_SCREENCAST) << objectName() << "negotiated stream size to" << negotiatedSize;
+    m_resolution = negotiatedSize;
+
+    if (m_source && m_source->followsStreamSize()) {
+        m_source->resize(negotiatedSize);
+    }
+
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
     if (modifierProperty) {
         const uint32_t valueCount = SPA_POD_CHOICE_N_VALUES(&modifierProperty->value);
@@ -663,7 +672,9 @@ void ScreenCastStream::record(Contents contents)
     pw_stream_queue_buffer(m_pwStream, pwBuffer);
     m_lastSent = std::chrono::steady_clock::now();
 
-    resize(m_source->textureSize());
+    if (!m_source->followsStreamSize()) {
+        updateStreamSize(m_source->textureSize());
+    }
 }
 
 void ScreenCastStream::bumpBufferAge(ScreenCastBuffer *renderedBuffer)
@@ -677,7 +688,7 @@ void ScreenCastStream::bumpBufferAge(ScreenCastBuffer *renderedBuffer)
     }
 }
 
-void ScreenCastStream::resize(const QSize &resolution)
+void ScreenCastStream::updateStreamSize(const QSize &resolution)
 {
     if (m_resolution == resolution) {
         return;
@@ -750,20 +761,26 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
     spa_fraction minFramerate = SPA_FRACTION(0, 1);
     spa_fraction maxFramerate = SPA_FRACTION(m_source->refreshRate() / 1000, 1);
 
-    spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
+    constexpr spa_rectangle streamMinSize = SPA_RECTANGLE(200, 200);
+    constexpr spa_rectangle streamMaxSize = SPA_RECTANGLE(10000, 10000);
+
+    spa_rectangle defaultSize = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
+    spa_rectangle minSize = m_source->followsStreamSize() ? streamMinSize : defaultSize;
+    spa_rectangle maxSize = m_source->followsStreamSize() ? streamMaxSize : defaultSize;
 
     QList<const spa_pod *> params;
     if (m_hasDmaBuf) {
         if (fixate) {
-            params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
+            params.append(buildFormat(&podBuilder, dmabufFormat, defaultSize, minSize, maxSize, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
         }
-        params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+        params.append(buildFormat(&podBuilder, dmabufFormat, defaultSize, minSize, maxSize, &defFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     }
-    params.append(buildFormat(&podBuilder, shmFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {}, 0));
+    params.append(buildFormat(&podBuilder, shmFormat, defaultSize, minSize, maxSize, &defFramerate, &minFramerate, &maxFramerate, {}, 0));
     return params;
 }
 
-spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
+spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format,
+                                       struct spa_rectangle defaultSize, struct spa_rectangle minSize, struct spa_rectangle maxSize,
                                        struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                                        const ModifierList &modifiers, quint32 modifiersFlags)
 {
@@ -771,7 +788,9 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
     spa_pod_builder_push_object(b, &f[0], SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat);
     spa_pod_builder_add(b, SPA_FORMAT_mediaType, SPA_POD_Id(SPA_MEDIA_TYPE_video), 0);
     spa_pod_builder_add(b, SPA_FORMAT_mediaSubtype, SPA_POD_Id(SPA_MEDIA_SUBTYPE_raw), 0);
-    spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(resolution), 0);
+
+    spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_CHOICE_RANGE_Rectangle(SPA_POD_Rectangle(&defaultSize), SPA_POD_Rectangle(&minSize), SPA_POD_Rectangle(&maxSize)), 0);
+
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_framerate, SPA_POD_Fraction(defaultFramerate), 0);
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_maxFramerate,
                         SPA_POD_CHOICE_RANGE_Fraction(
