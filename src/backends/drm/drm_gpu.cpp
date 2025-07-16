@@ -545,8 +545,16 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
     std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(), CLOCK_MONOTONIC,
                                                           {static_cast<time_t>(sec), static_cast<long>(usec * 1000)});
     if (timestamp == std::chrono::nanoseconds::zero()) {
-        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on gpu %s",
-                sec, usec, qPrintable(gpu->drmDevice()->path()));
+        // in some cases this can happen a lot,
+        // see https://gitlab.freedesktop.org/drm/amd/-/issues/4359 for example
+        static uint64_t s_warningCounter = 0;
+        s_warningCounter++;
+        if (s_warningCounter == 10) {
+            qCDebug(KWIN_DRM, "Too many invalid timestamps received, suppressing future warnings");
+        } else if (s_warningCounter < 10) {
+            qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on gpu %s",
+                    sec, usec, qPrintable(gpu->drmDevice()->path()));
+        }
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
     commit->pageFlipped(timestamp);
