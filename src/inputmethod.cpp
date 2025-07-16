@@ -302,6 +302,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     connect(m_panel, &Window::closed, this, &InputMethod::updateInputPanelState);
     connect(m_panel, &Window::hiddenChanged, this, &InputMethod::visibleChanged);
     connect(m_panel, &Window::closed, this, &InputMethod::visibleChanged);
+    connect(m_panel, &Window::readyForPaintingChanged, this, &InputMethod::visibleChanged);
     Q_EMIT visibleChanged();
     updateInputPanelState();
     Q_EMIT panelChanged();
