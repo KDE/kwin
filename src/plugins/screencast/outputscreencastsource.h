@@ -43,6 +43,8 @@ public:
 
     QPointF mapFromGlobal(const QPointF &point) const override;
     RectF mapFromGlobal(const RectF &rect) const override;
+    bool followsStreamSize() override;
+    void resize(const QSize &size) override;
 
 private:
     QPointer<LogicalOutput> m_output;

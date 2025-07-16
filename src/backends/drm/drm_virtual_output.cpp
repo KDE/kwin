@@ -138,6 +138,21 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
+bool DrmVirtualOutput::canResize() const
+{
+    return true;
+}
+
+void DrmVirtualOutput::resize(const QSize &size)
+{
+    auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
+    auto next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    setState(next);
+    Q_EMIT m_backend->outputsQueried();
+}
+
 }
 
 #include "moc_drm_virtual_output.cpp"

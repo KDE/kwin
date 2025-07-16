@@ -555,6 +555,16 @@ QSize LogicalOutput::orientateSize(const QSize &size) const
     }
 }
 
+bool LogicalOutput::canResize() const
+{
+    return m_backendOutput->canResize();
+}
+
+void LogicalOutput::resize(const QSize &size)
+{
+    m_backendOutput->resize(size);
+}
+
 BackendOutput *LogicalOutput::backendOutput() const
 {
     return m_backendOutput;
