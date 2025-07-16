@@ -231,6 +231,43 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     }
 
     spa_format_video_raw_parse(format, &m_videoFormat);
+
+    qDebug() << "negotiated to " << QSize(m_videoFormat.size.width, m_videoFormat.size.height);
+
+    if (m_source && m_source->canResize()) {
+        m_source->resize(QSize(m_videoFormat.size.width, m_videoFormat.size.height));
+    }
+
+    // auto sizeProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_size);
+    // if (sizeProperty) {
+    //     qDebug() << "we had a size property" << SPA_POD_TYPE(&sizeProperty->value);
+    //     // Check if this is a choice type
+    //     if (SPA_POD_TYPE(&sizeProperty->value) == SPA_TYPE_Choice) {
+    //         const struct spa_pod_choice *choice = (const struct spa_pod_choice *)&sizeProperty->value;
+
+    //                // Check if it's a rectangle choice (e.g., range of sizes)
+
+    //             const struct spa_rectangle *rects = (const struct spa_rectangle *)SPA_POD_CHOICE_VALUES(choice);
+    //             const struct spa_rectangle &def = rects[0];
+    //             const struct spa_rectangle &min = rects[1];
+    //             const struct spa_rectangle &max = rects[2];
+
+    //             qDebug() << "SPA_FORMAT_VIDEO_size:";
+    //             qDebug() << "  Default:" << def.width << "x" << def.height;
+    //             qDebug() << "  Min:    " << min.width << "x" << min.height;
+    //             qDebug() << "  Max:    " << max.width << "x" << max.height;
+    //             return;
+
+    //     }
+
+    //     if (SPA_POD_TYPE(&sizeProperty->value) == SPA_TYPE_Rectangle) {
+    //         struct spa_rectangle rect;
+    //         spa_pod_get_rectangle(&sizeProperty->value, &rect);
+    //         qDebug() << "SPA_FORMAT_VIDEO_size:" << rect.width << "x" << rect.height << "(fixed)";
+    //         return;
+    //     }
+    // }
+
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
     if (modifierProperty) {
         const uint32_t valueCount = SPA_POD_CHOICE_N_VALUES(&modifierProperty->value);
@@ -763,7 +800,14 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
     spa_pod_builder_push_object(b, &f[0], SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat);
     spa_pod_builder_add(b, SPA_FORMAT_mediaType, SPA_POD_Id(SPA_MEDIA_TYPE_video), 0);
     spa_pod_builder_add(b, SPA_FORMAT_mediaSubtype, SPA_POD_Id(SPA_MEDIA_SUBTYPE_raw), 0);
-    spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(resolution), 0);
+    // spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(resolution), 0);
+
+    spa_rectangle defaultSize = *resolution; // Dave, this needs a guard and passing the size in
+    spa_rectangle minSize{1, 1};
+    spa_rectangle maxSize{10000, 10000};
+
+    spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_CHOICE_RANGE_Rectangle(SPA_POD_Rectangle(&defaultSize), SPA_POD_Rectangle(&minSize), SPA_POD_Rectangle(&maxSize)), 0);
+
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_framerate, SPA_POD_Fraction(defaultFramerate), 0);
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_maxFramerate,
                         SPA_POD_CHOICE_RANGE_Fraction(

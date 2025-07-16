@@ -41,6 +41,15 @@ public:
     virtual QPointF mapFromGlobal(const QPointF &point) const = 0;
     virtual QRectF mapFromGlobal(const QRectF &rect) const = 0;
 
+    virtual bool canResize()
+    {
+        return false;
+    }
+    virtual void resize(const QSize &size)
+    {
+        Q_ASSERT(false);
+    }
+
 Q_SIGNALS:
     void frame(const QRegion &damage);
     void closed();

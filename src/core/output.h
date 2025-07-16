@@ -345,6 +345,17 @@ public:
 
     virtual void applyChanges(const OutputConfiguration &config);
 
+    /**
+     * If an output can be resized.
+     * This only makes sense for virtual monitors.
+     */
+    virtual bool canResize() const;
+
+    /**
+     * Resize the virtual monitor to a given size.
+     */
+    virtual void resize(const QSize &size);
+
     SubPixel subPixel() const;
     QString description() const;
     Capabilities capabilities() const;

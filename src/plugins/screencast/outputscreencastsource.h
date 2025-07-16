@@ -39,6 +39,8 @@ public:
 
     QPointF mapFromGlobal(const QPointF &point) const override;
     QRectF mapFromGlobal(const QRectF &rect) const override;
+    bool canResize() override;
+    void resize(const QSize &size) override;
 
 private:
     void report(const QRegion &damage);
