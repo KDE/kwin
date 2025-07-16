@@ -382,14 +382,6 @@ void WindowThumbnailItem::updateImplicitSize()
     setImplicitSize(frameSize.width(), frameSize.height());
 }
 
-QImage WindowThumbnailItem::fallbackImage() const
-{
-    if (m_client) {
-        return m_client->icon().pixmap(window(), boundingRect().size().toSize()).toImage();
-    }
-    return QImage();
-}
-
 QRectF WindowThumbnailItem::paintedRect() const
 {
     if (!m_client) {

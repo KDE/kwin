@@ -82,7 +82,6 @@ Q_SIGNALS:
     void clientChanged();
 
 private:
-    QImage fallbackImage() const;
     QRectF paintedRect() const;
     void updateImplicitSize();
     void updateSource();
