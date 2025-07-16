@@ -34,6 +34,9 @@ public:
     DrmOutputLayer *cursorLayer() const override;
     void recreateSurface();
 
+    bool canResize() const override;
+    void resize(const QSize &size);
+
 private:
     void vblank(std::chrono::nanoseconds timestamp);
     void setDpmsMode(DpmsMode mode) override;
