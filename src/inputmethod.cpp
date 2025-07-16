@@ -292,16 +292,13 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     }
 
     m_panel = panel;
-    connect(panel, &Window::closed, this, [this]() {
-        if (m_trackedWindow) {
-            m_trackedWindow->setVirtualKeyboardGeometry({});
-        }
+    connect(m_panel, &Window::closed, this, [this]() {
+        updateInputPanelState();
+        Q_EMIT visibleChanged();
     });
     connect(m_panel, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     connect(m_panel, &Window::hiddenChanged, this, &InputMethod::updateInputPanelState);
-    connect(m_panel, &Window::closed, this, &InputMethod::updateInputPanelState);
     connect(m_panel, &Window::hiddenChanged, this, &InputMethod::visibleChanged);
-    connect(m_panel, &Window::closed, this, &InputMethod::visibleChanged);
     connect(m_panel, &Window::readyForPaintingChanged, this, &InputMethod::visibleChanged);
     Q_EMIT visibleChanged();
     updateInputPanelState();
@@ -908,12 +905,6 @@ void InputMethod::updateInputPanelState()
         return;
     }
 
-    auto t = waylandServer()->seat()->textInputV2();
-
-    if (!t) {
-        return;
-    }
-
     if (m_panel && shouldShowOnActive()) {
         m_panel->allow();
     }
@@ -927,6 +918,11 @@ void InputMethod::updateInputPanelState()
             overlap = m_trackedWindow->frameGeometry() & m_panel->frameGeometry();
             overlap.moveTo(m_trackedWindow->mapToLocal(overlap.topLeft()));
         }
+    }
+
+    auto t = waylandServer()->seat()->textInputV2();
+    if (!t) {
+        return;
     }
     t->setInputPanelState(m_panel && m_panel->isShown(), overlap.toRect());
 }
