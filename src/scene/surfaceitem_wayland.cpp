@@ -83,7 +83,8 @@ QList<QRectF> SurfaceItemWayland::shape() const
 QRegion SurfaceItemWayland::opaque() const
 {
     if (m_surface) {
-        return m_borderRadius.clip(m_surface->opaque(), rect());
+        const auto [rect, radius] = effectiveBorderRadius();
+        return radius.clip(m_surface->opaque(), rect);
     }
     return QRegion();
 }

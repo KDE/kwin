@@ -293,6 +293,19 @@ void SurfaceItem::setBorderRadius(const BorderRadius &radius)
     }
 }
 
+std::pair<QRectF, BorderRadius> SurfaceItem::effectiveBorderRadius() const
+{
+    if (m_borderRadius.isNull()) {
+        if (auto surfaceParent = qobject_cast<SurfaceItem *>(parentItem())) {
+            const auto [rect, radius] = surfaceParent->effectiveBorderRadius();
+            if (!radius.isNull()) {
+                return std::make_pair(rect.translated(-position()), radius);
+            }
+        }
+    }
+    return std::make_pair(rect(), m_borderRadius);
+}
+
 SurfaceTexture::~SurfaceTexture()
 {
 }

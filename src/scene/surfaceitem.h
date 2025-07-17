@@ -71,6 +71,11 @@ public:
     BorderRadius borderRadius() const;
     void setBorderRadius(const BorderRadius &radius);
 
+    /**
+     * calculates the effective border rect + radius for this item
+     */
+    std::pair<QRectF, BorderRadius> effectiveBorderRadius() const;
+
 Q_SIGNALS:
     void damaged();
 

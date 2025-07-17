@@ -213,8 +213,8 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     });
                     renderNode.geometry.postProcessTextureCoordinates(surfaceTexture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
 
-                    if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isNull()) {
-                        const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
+                    if (const auto [rect, radius] = surfaceItem->effectiveBorderRadius(); !radius.isNull()) {
+                        const QRectF nativeRect = snapToPixelGridF(scaledRect(rect, context->renderTargetScale));
 
                         renderNode.traits |= ShaderTrait::RoundedCorners;
                         renderNode.hasAlpha = true;
