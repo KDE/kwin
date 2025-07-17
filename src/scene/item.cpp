@@ -566,6 +566,19 @@ void Item::setVisible(bool visible)
     }
 }
 
+BorderRadius Item::borderRadius() const
+{
+    return m_borderRadius;
+}
+
+void Item::setBorderRadius(const BorderRadius &radius)
+{
+    if (m_borderRadius != radius) {
+        m_borderRadius = radius;
+        scheduleRepaint(rect());
+    }
+}
+
 void Item::scheduleRepaint(const QRectF &region)
 {
     scheduleRepaint(QRegion(region.toAlignedRect()));

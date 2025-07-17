@@ -39,11 +39,18 @@ public:
         QColor borderColor;
     };
 
+    struct RenderCorner
+    {
+        QRectF box;
+        BorderRadius radius;
+    };
+
     struct RenderContext
     {
         QList<RenderNode> renderNodes;
         QStack<QMatrix4x4> transformStack;
         QStack<qreal> opacityStack;
+        QStack<RenderCorner> cornerStack;
         const QMatrix4x4 projectionMatrix;
         const QMatrix4x4 rootTransform;
         const QRegion clip;

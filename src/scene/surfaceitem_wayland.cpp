@@ -84,7 +84,7 @@ QList<QRectF> SurfaceItemWayland::shape() const
 QRegion SurfaceItemWayland::opaque() const
 {
     if (m_surface) {
-        return m_borderRadius.clip(m_surface->opaque(), rect());
+        return m_surface->opaque();
     }
     return QRegion();
 }
@@ -284,9 +284,9 @@ QRegion SurfaceItemXwayland::opaque() const
         shapeRegion += shapePart.toRect();
     }
     if (!m_window->hasAlpha()) {
-        return m_borderRadius.clip(shapeRegion, rect());
+        return shapeRegion;
     } else {
-        return m_borderRadius.clip(m_window->opaqueRegion() & shapeRegion, rect());
+        return m_window->opaqueRegion() & shapeRegion;
     }
     return QRegion();
 }

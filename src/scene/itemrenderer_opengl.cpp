@@ -154,6 +154,21 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         }
     }
 
+    if (const BorderRadius radius = item->borderRadius(); !radius.isNull()) {
+        const QRectF nativeRect = snapToPixelGridF(scaledRect(item->rect(), context->renderTargetScale));
+        const BorderRadius nativeRadius = radius.scaled(context->renderTargetScale).rounded();
+        context->cornerStack.push({
+            .box = nativeRect,
+            .radius = nativeRadius,
+        });
+    } else if (!context->cornerStack.isEmpty()) {
+        const auto &top = std::as_const(context->cornerStack).top();
+        context->cornerStack.push({
+            .box = matrix.inverted().mapRect(top.box),
+            .radius = top.radius,
+        });
+    }
+
     item->preprocess();
 
     RenderGeometry geometry = clipQuads(item, context);
@@ -213,18 +228,16 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     });
                     renderNode.geometry.postProcessTextureCoordinates(surfaceTexture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
 
-                    if (const BorderRadius radius = surfaceItem->borderRadius(); !radius.isNull()) {
-                        const QRectF nativeRect = snapToPixelGridF(scaledRect(surfaceItem->rect(), context->renderTargetScale));
+                    if (!context->cornerStack.isEmpty()) {
+                        const auto &top = context->cornerStack.top();
 
                         renderNode.traits |= ShaderTrait::RoundedCorners;
                         renderNode.hasAlpha = true;
-                        renderNode.box = QVector4D(nativeRect.x() + nativeRect.width() * 0.5,
-                                                   nativeRect.y() + nativeRect.height() * 0.5,
-                                                   nativeRect.width() * 0.5,
-                                                   nativeRect.height() * 0.5),
-                        renderNode.borderRadius = radius.scaled(context->renderTargetScale)
-                                                      .rounded()
-                                                      .toVector();
+                        renderNode.box = QVector4D(top.box.x() + top.box.width() * 0.5,
+                                                   top.box.y() + top.box.height() * 0.5,
+                                                   top.box.width() * 0.5,
+                                                   top.box.height() * 0.5),
+                        renderNode.borderRadius = top.radius.toVector();
                     }
                 }
             }
@@ -282,6 +295,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
 
     context->transformStack.pop();
     context->opacityStack.pop();
+    if (!context->cornerStack.isEmpty()) {
+        context->cornerStack.pop();
+    }
 }
 
 void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
