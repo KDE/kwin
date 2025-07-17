@@ -802,7 +802,7 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
     spa_pod_builder_add(b, SPA_FORMAT_mediaSubtype, SPA_POD_Id(SPA_MEDIA_SUBTYPE_raw), 0);
     // spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(resolution), 0);
 
-    spa_rectangle defaultSize = *resolution;
+    spa_rectangle defaultSize = *resolution; // Dave, this needs a guard and passing the size in
     spa_rectangle minSize{1, 1};
     spa_rectangle maxSize{10000, 10000};
 

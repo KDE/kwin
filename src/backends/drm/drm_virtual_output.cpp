@@ -93,11 +93,10 @@ bool DrmVirtualOutput::canResize() const
 void DrmVirtualOutput::resize(const QSize &size)
 {
     auto mode = std::make_shared<OutputMode>(size, 60000, OutputMode::Flag::Preferred);
-    setState(State{
-        .scale = m_state.scale,
-        .modes = {mode},
-        .currentMode = mode,
-    });
+    auto next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    setState(next);
 }
 }
 
