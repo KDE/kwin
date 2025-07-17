@@ -13,6 +13,8 @@
 #include "core/session.h"
 #include "utils/udev.h"
 
+#include <QFileInfo>
+
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -103,11 +105,20 @@ void Context::closeRestrictedCallBack(int fd, void *user_data)
 
 int Context::openRestricted(const char *path, int flags)
 {
-    int fd = m_session->openRestricted(path);
+    QString filepath = path;
+    int fd;
+
+    // Ask for control over everything but sys devices, which do not need it and it wouldn't be accepted by backends like logind anyway.
+    if (!filepath.startsWith("/sys/")) {
+        fd = m_session->openRestricted(filepath);
+    } else {
+        fd = open(path, flags);
+    }
     if (fd < 0) {
         // failed
         return fd;
     }
+
     // adjust flags - based on Weston (logind-util.c)
     int fl = fcntl(fd, F_GETFL);
     auto errorHandling = [fd, this]() {
@@ -146,7 +157,13 @@ int Context::openRestricted(const char *path, int flags)
 
 void Context::closeRestricted(int fd)
 {
-    m_session->closeRestricted(fd);
+    // See openRestricted for reasoning, but we open sys devices normally and need to close them as such.
+    const QFileInfo fdInfo(QStringLiteral("/proc/self/fd/%1").arg(fd));
+    if (fdInfo.symLinkTarget().startsWith("/sys/")) {
+        close(fd);
+    } else {
+        m_session->closeRestricted(fd);
+    }
 }
 
 std::unique_ptr<Event> Context::event()
