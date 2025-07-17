@@ -213,10 +213,10 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
                 const auto entry = ringGroup.readEntry(buttonName, QStringList());
                 bool ok = false;
                 const uint button = buttonName.toUInt(&ok);
-                const uint group = modeGroupName.toUInt(&ok);
+                const uint mode = modeGroupName.toUInt(&ok);
                 if (ok) {
                     foundActions = true;
-                    insert(TabletRing, {tabletRingName, button, group}, entry);
+                    insert(TabletRing, {tabletRingName, button, mode}, entry);
                 }
             }
         }
@@ -306,7 +306,8 @@ bool ButtonRebindsFilter::tabletPadRingEvent(KWin::TabletPadRingEvent *event)
         }
 
         const int delta = m_initialRingPosition - event->position;
-        const bool sent = send(TabletRing, {event->device->name(), static_cast<uint>(event->number), event->group}, false, delta * 120, event->time);
+        // Rings seem to have a minimum delta of 5 degrees, so we can assume that's one "unit".
+        const bool sent = send(TabletRing, {event->device->name(), static_cast<uint>(event->number), event->mode}, false, delta * 120, event->time);
         // If accepted (that means the threshold is met) then we want to reset ourselves
         if (sent) {
             m_initialRingPosition = event->position;

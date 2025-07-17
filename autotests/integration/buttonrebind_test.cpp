@@ -49,7 +49,6 @@ private Q_SLOTS:
     void testBindingTabletTool();
     void testBindingTabletPadDialScroll();
     void testBindingTabletPadDialKey();
-    void testBindingTabletRingScroll();
     void testBindingTabletRingKey();
 
     void testMouseTabletCursorSync();
@@ -368,10 +367,6 @@ void TestButtonRebind::testBindingTabletPadDialKey()
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 2);
     QCOMPARE(keyChangedSpy.at(0).at(0), KEY_RIGHTBRACE);
-}
-
-void TestButtonRebind::testBindingTabletRingScroll()
-{
 }
 
 void TestButtonRebind::testBindingTabletRingKey()

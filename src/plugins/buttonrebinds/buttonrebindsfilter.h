@@ -39,10 +39,10 @@ struct Trigger
 {
     QString device;
     uint button;
-    quint32 group;
+    quint32 mode;
     bool operator==(const Trigger &o) const
     {
-        return button == o.button && device == o.device && group == o.group;
+        return button == o.button && device == o.device && mode == o.mode;
     }
 };
 
