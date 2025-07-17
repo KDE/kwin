@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-12 00:44+0000\n"
+"POT-Creation-Date: 2025-07-17 00:43+0000\n"
 "PO-Revision-Date: 2025-07-12 10:28+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -39,29 +39,29 @@ msgstr ""
 "xalba@ni.eus,etxaurre@teleline.es,marcos@euskalgnu.org,juanirigoien@yahoo.es,"
 "igaztanaga@gmail.com,hizpol@ej-gv.es"
 
-#: backends/wayland/wayland_output.cpp:470
+#: backends/wayland/wayland_output.cpp:493
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea heltzeko"
 
-#: backends/wayland/wayland_output.cpp:472
+#: backends/wayland/wayland_output.cpp:495
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea askatzeko"
 
-#: backends/wayland/wayland_output.cpp:476
+#: backends/wayland/wayland_output.cpp:499
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland konposatzailea %1"
 
-#: backends/wayland/wayland_output.cpp:479
+#: backends/wayland/wayland_output.cpp:502
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Irteera ezgaituta"
 
-#: backends/wayland/wayland_output.cpp:481
+#: backends/wayland/wayland_output.cpp:504
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Irteera motelduta"
@@ -81,7 +81,7 @@ msgstr "Sakatu eskuineko kontrol tekla sarrera heltzeko"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland konposatzailea"
 
-#: compositor.cpp:374
+#: compositor.cpp:371
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
