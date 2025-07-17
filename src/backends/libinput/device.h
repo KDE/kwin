@@ -176,6 +176,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool supportsInputArea READ supportsInputArea CONSTANT)
     Q_PROPERTY(QRectF defaultInputArea READ defaultInputArea CONSTANT)
     Q_PROPERTY(QRectF inputArea READ inputArea WRITE setInputArea NOTIFY inputAreaChanged)
+    Q_PROPERTY(QList<unsigned int> numModes READ numModes CONSTANT)
+    Q_PROPERTY(QList<unsigned int> currentModes READ currentModes NOTIFY currentModesChanged)
 
     Q_PROPERTY(bool supportsPressureRange READ supportsPressureRange NOTIFY supportsPressureRangeChanged)
     Q_PROPERTY(double pressureRangeMin READ pressureRangeMin WRITE setPressureRangeMin NOTIFY pressureRangeMinChanged)
@@ -753,6 +755,9 @@ public:
         return defaultValue("TabletToolRelativeMode", false);
     }
 
+    QList<unsigned int> numModes() const;
+    QList<unsigned int> currentModes() const;
+
     bool supportsRotation() const;
     uint32_t rotation() const;
     void setRotation(uint32_t degrees_cw);
@@ -792,6 +797,7 @@ Q_SIGNALS:
     void inputAreaChanged();
     void tabletToolRelativeChanged();
     void rotationChanged();
+    void currentModesChanged();
 
 private:
     template<typename T>
@@ -896,6 +902,7 @@ private:
 
     QRectF m_inputArea;
     bool m_tabletToolIsRelative = false;
+    QList<unsigned int> m_currentModes;
 };
 
 }
