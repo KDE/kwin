@@ -36,6 +36,8 @@ class KWIN_EXPORT OutputLayer : public QObject
 public:
     explicit OutputLayer(Output *output);
 
+    void setRenderLoop(RenderLoop *loop);
+
     QPointF hotspot() const;
     void setHotspot(const QPointF &hotspot);
 
@@ -133,6 +135,7 @@ protected:
     QPointer<SurfaceItem> m_scanoutCandidate;
     Output *const m_output;
     bool m_repaintScheduled = false;
+    RenderLoop *m_renderLoop = nullptr;
 };
 
 } // namespace KWin
