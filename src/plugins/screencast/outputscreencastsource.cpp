@@ -9,11 +9,15 @@
 
 #include "compositor.h"
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "cursor.h"
+#include "opengl/eglbackend.h"
+#include "opengl/egldisplay.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
+#include "screencastlayer.h"
 #include "workspace.h"
 
 #include <drm_fourcc.h>
@@ -24,7 +28,16 @@ namespace KWin
 OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     : ScreenCastSource(parent)
     , m_output(output)
+    , m_layer(std::make_unique<ScreencastLayer>(output, static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
+    , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), output, m_layer.get()))
+    , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), output, nullptr))
 {
+    updateView();
+    connect(output, &Output::changed, this, &OutputScreenCastSource::updateView);
+    // prevent the layer from scheduling frames on the actual output
+    m_layer->setRenderLoop(nullptr);
+    // always hide the cursor from the primary view
+    m_cursorView->setExclusive(true);
     connect(workspace(), &Workspace::outputRemoved, this, [this](Output *output) {
         if (m_output == output) {
             Q_EMIT closed();
@@ -52,39 +65,37 @@ qreal OutputScreenCastSource::devicePixelRatio() const
     return m_output->scale();
 }
 
-void OutputScreenCastSource::render(QImage *target)
+QRegion OutputScreenCastSource::render(QImage *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
-    if (outputTexture) {
-        grabTexture(outputTexture.get(), target);
+    auto texture = GLTexture::allocate(GL_RGBA8, target->size());
+    if (!texture) {
+        return QRegion{};
     }
+    GLFramebuffer buffer(texture.get());
+    const QRegion ret = render(&buffer);
+    grabTexture(texture.get(), target);
+    return ret;
 }
 
-void OutputScreenCastSource::render(GLFramebuffer *target)
+QRegion OutputScreenCastSource::render(GLFramebuffer *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
-    if (!outputTexture) {
-        return;
+    m_layer->setFramebuffer(target);
+    if (!m_layer->preparePresentationTest()) {
+        return QRegion{};
     }
-
-    const bool yuv = colorDescription.yuvCoefficients() != YUVMatrixCoefficients::Identity;
-    ShaderBinder shaderBinder((yuv ? ShaderTrait::MapYUVTexture : ShaderTrait::MapTexture) | ShaderTrait::TransformColorspace);
-    QMatrix4x4 projectionMatrix;
-    projectionMatrix.scale(1, -1);
-    projectionMatrix.ortho(QRect(QPoint(), textureSize()));
-    shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
-    if (yuv) {
-        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::YuvToRgb, colorDescription.yuvMatrix());
-        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler, 0);
-        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler1, 1);
-    } else {
-        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler, 0);
+    const auto beginInfo = m_layer->beginFrame();
+    if (!beginInfo) {
+        return QRegion{};
     }
-
-    GLFramebuffer::pushFramebuffer(target);
-    outputTexture->render(textureSize());
-    GLFramebuffer::popFramebuffer();
+    const auto damaged = m_layer->repaints() | m_sceneView->prePaint();
+    const auto repaints = beginInfo->repaint | damaged;
+    m_layer->resetRepaints();
+    m_sceneView->paint(beginInfo->renderTarget, repaints);
+    m_sceneView->postPaint();
+    if (!m_layer->endFrame(repaints, damaged, nullptr)) {
+        return QRegion{};
+    }
+    return damaged;
 }
 
 std::chrono::nanoseconds OutputScreenCastSource::clock() const
@@ -97,11 +108,10 @@ uint OutputScreenCastSource::refreshRate() const
     return m_output->refreshRate();
 }
 
-void OutputScreenCastSource::report(const QRegion &damage)
+void OutputScreenCastSource::report()
 {
-    if (!damage.isEmpty()) {
-        Q_EMIT frame(scaleRegion(damage, m_output->scale()));
-    }
+    // the actual damage is determined before rendering
+    Q_EMIT frame(QRegion{});
 }
 
 void OutputScreenCastSource::resume()
@@ -110,8 +120,8 @@ void OutputScreenCastSource::resume()
         return;
     }
 
-    connect(m_output, &Output::outputChange, this, &OutputScreenCastSource::report);
-    report(m_output->rect());
+    connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::report);
+    Q_EMIT frame(QRect(QPoint(), m_output->pixelSize()));
 
     m_active = true;
 }
@@ -122,20 +132,14 @@ void OutputScreenCastSource::pause()
         return;
     }
 
-    if (m_output) {
-        disconnect(m_output, &Output::outputChange, this, &OutputScreenCastSource::report);
-    }
+    disconnect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::report);
 
     m_active = false;
 }
 
 bool OutputScreenCastSource::includesCursor(Cursor *cursor) const
 {
-    if (Cursors::self()->isCursorHidden()) {
-        return false;
-    }
-
-    return cursor->isOnOutput(m_output);
+    return cursor->isOnOutput(m_output) && m_cursorView->isVisible();
 }
 
 QPointF OutputScreenCastSource::mapFromGlobal(const QPointF &point) const
@@ -146,6 +150,12 @@ QPointF OutputScreenCastSource::mapFromGlobal(const QPointF &point) const
 QRectF OutputScreenCastSource::mapFromGlobal(const QRectF &rect) const
 {
     return m_output->mapFromGlobal(rect);
+}
+
+void OutputScreenCastSource::updateView()
+{
+    m_sceneView->setViewport(m_output->geometryF());
+    m_sceneView->setScale(m_output->scale());
 }
 
 } // namespace KWin
