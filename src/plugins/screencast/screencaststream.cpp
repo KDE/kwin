@@ -597,9 +597,10 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
 
     spa_meta_sync_timeline *synctmeta = nullptr;
 
+    QRegion effectiveDamage = damage;
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
-            m_source->render(memfd->view.image());
+            effectiveDamage |= m_source->render(memfd->view.image());
         } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
             if (dmabuf->synctimeline) {
                 synctmeta = static_cast<spa_meta_sync_timeline *>(spa_buffer_find_meta_data(spa_buffer,
@@ -612,11 +613,10 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
                 }
             }
 
-            m_source->render(dmabuf->framebuffer.get());
+            effectiveDamage |= m_source->render(dmabuf->framebuffer.get());
         }
     }
 
-    QRegion effectiveDamage = damage;
     if (effectiveContents & Content::Cursor) {
         Cursor *cursor = Cursors::self()->currentCursor();
         switch (m_cursor.mode) {
