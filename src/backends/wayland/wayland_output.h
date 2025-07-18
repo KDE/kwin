@@ -117,6 +117,7 @@ private:
     QTimer m_turnOffTimer;
     bool m_hasPointerLock = false;
     bool m_ready = false;
+    bool m_mapped = false;
     std::shared_ptr<OutputFrame> m_frame;
     wl_buffer *m_presentationBuffer = nullptr;
     quint32 m_pendingConfigureSerial = 0;

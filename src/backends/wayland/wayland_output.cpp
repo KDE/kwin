@@ -294,6 +294,9 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
         // TODO also move the actual cursor image update here too...
     }
     if (!layersToUpdate.contains(Compositor::self()->backend()->primaryLayer(this))) {
+        if (!m_mapped) {
+            return false;
+        }
         // we still need to commit the surface anyways, to get presentation feedback
         if (auto presentationTime = m_backend->display()->presentationTime()) {
             m_presentationFeedback = wp_presentation_feedback(presentationTime, *m_surface);
@@ -330,6 +333,7 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     } else {
         m_surface->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
     }
+    m_mapped = true;
     m_frame = frame;
     Q_EMIT outputChange(frame->damage());
     return true;
