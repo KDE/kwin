@@ -9,8 +9,11 @@
 
 #include "compositor.h"
 #include "core/output.h"
+#include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "cursor.h"
+#include "opengl/eglbackend.h"
+#include "opengl/egldisplay.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
@@ -21,9 +24,47 @@
 namespace KWin
 {
 
+ScreencastLayer::ScreencastLayer(Output *output, EglContext *context)
+    : OutputLayer(output)
+    , m_context(context)
+{
+}
+
+void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer)
+{
+    // TODO is there a better way to deal with this?
+    m_buffer = buffer;
+}
+
+DrmDevice *ScreencastLayer::scanoutDevice() const
+{
+    return nullptr;
+}
+
+QHash<uint32_t, QList<uint64_t>> ScreencastLayer::supportedDrmFormats() const
+{
+    return m_context->displayObject()->nonExternalOnlySupportedDrmFormats();
+}
+
+std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::doBeginFrame()
+{
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_buffer),
+        // TODO make damage tracking work with the pipewire buffers?
+        .repaint = infiniteRegion(),
+    };
+}
+
+bool ScreencastLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+{
+    return true;
+}
+
 OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     : ScreenCastSource(parent)
     , m_output(output)
+    , m_layer(std::make_unique<ScreencastLayer>(m_output, static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()))
+    , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), output, m_layer.get()))
 {
     connect(workspace(), &Workspace::outputRemoved, this, [this](Output *output) {
         if (m_output == output) {
@@ -54,37 +95,34 @@ qreal OutputScreenCastSource::devicePixelRatio() const
 
 void OutputScreenCastSource::render(QImage *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
-    if (outputTexture) {
-        grabTexture(outputTexture.get(), target);
+    auto texture = GLTexture::allocate(GL_RGBA8, target->size());
+    if (!texture) {
+        return;
     }
+    GLFramebuffer buffer(texture.get());
+    render(&buffer);
+    grabTexture(texture.get(), target);
 }
 
 void OutputScreenCastSource::render(GLFramebuffer *target)
 {
-    const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(m_output);
-    if (!outputTexture) {
+    m_layer->setFramebuffer(target);
+    if (!m_layer->preparePresentationTest()) {
         return;
     }
-
-    const bool yuv = colorDescription.yuvCoefficients() != YUVMatrixCoefficients::Identity;
-    ShaderBinder shaderBinder((yuv ? ShaderTrait::MapYUVTexture : ShaderTrait::MapTexture) | ShaderTrait::TransformColorspace);
-    QMatrix4x4 projectionMatrix;
-    projectionMatrix.scale(1, -1);
-    projectionMatrix.ortho(QRect(QPoint(), textureSize()));
-    shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
-    if (yuv) {
-        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::YuvToRgb, colorDescription.yuvMatrix());
-        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler, 0);
-        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler1, 1);
-    } else {
-        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler, 0);
+    const auto beginInfo = m_layer->beginFrame();
+    if (!beginInfo) {
+        return;
     }
-
-    GLFramebuffer::pushFramebuffer(target);
-    outputTexture->render(textureSize());
-    GLFramebuffer::popFramebuffer();
+    const auto damaged = m_layer->repaints() | m_sceneView->prePaint();
+    const auto repaints = beginInfo->repaint | damaged;
+    m_layer->resetRepaints();
+    m_sceneView->paint(beginInfo->renderTarget, repaints);
+    m_sceneView->postPaint();
+    m_sceneView->frame(nullptr);
+    if (!m_layer->endFrame(repaints, damaged, nullptr)) {
+        return;
+    }
 }
 
 std::chrono::nanoseconds OutputScreenCastSource::clock() const
@@ -97,10 +135,10 @@ uint OutputScreenCastSource::refreshRate() const
     return m_output->refreshRate();
 }
 
-void OutputScreenCastSource::report(const QRegion &damage)
+void OutputScreenCastSource::report()
 {
-    if (!damage.isEmpty()) {
-        Q_EMIT frame(scaleRegion(damage, m_output->scale()));
+    if (!m_layer->repaints().isEmpty()) {
+        Q_EMIT frame(scaleRegion(m_layer->repaints(), m_output->scale()));
     }
 }
 
@@ -110,8 +148,8 @@ void OutputScreenCastSource::resume()
         return;
     }
 
-    connect(m_output, &Output::outputChange, this, &OutputScreenCastSource::report);
-    report(m_output->rect());
+    connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::report);
+    Q_EMIT frame(QRect(QPoint(), m_output->pixelSize()));
 
     m_active = true;
 }
@@ -131,11 +169,13 @@ void OutputScreenCastSource::pause()
 
 bool OutputScreenCastSource::includesCursor(Cursor *cursor) const
 {
-    if (Cursors::self()->isCursorHidden()) {
-        return false;
-    }
-
-    return cursor->isOnOutput(m_output);
+    // FIXME add an item tree view for the cursor and make it work!
+    return false;
+    // if (Cursors::self()->isCursorHidden()) {
+    //     return false;
+    // }
+    //
+    // return cursor->isOnOutput(m_output);
 }
 
 QPointF OutputScreenCastSource::mapFromGlobal(const QPointF &point) const
