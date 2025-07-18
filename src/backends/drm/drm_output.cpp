@@ -305,6 +305,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_state.brightnessDevice && isInternal()) {
         capabilities |= Capability::Edr;
     }
+    if (m_gpu->sharpnessSupported()) {
+        capabilities |= Capability::SharpnessControl;
+    }
     return capabilities;
 }
 
@@ -621,6 +624,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
+    next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
     tryKmsColorOffloading(next);
     maybeScheduleRepaints(next);
     setState(next);

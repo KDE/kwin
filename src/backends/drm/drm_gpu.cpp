@@ -110,6 +110,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     m_delayedModesetTimer.setInterval(0);
     m_delayedModesetTimer.setSingleShot(true);
     connect(&m_delayedModesetTimer, &QTimer::timeout, this, &DrmGpu::doModeset);
+    m_sharpnessSupported = std::ranges::all_of(m_crtcs, [](const std::unique_ptr<DrmCrtc> &crtc) {
+        return crtc->sharpnessStrength.isValid();
+    });
 }
 
 DrmGpu::~DrmGpu()
@@ -697,6 +700,11 @@ bool DrmGpu::forceLowBandwidthMode() const
 bool DrmGpu::asyncPageflipSupported() const
 {
     return m_asyncPageflipSupported;
+}
+
+bool DrmGpu::sharpnessSupported() const
+{
+    return m_sharpnessSupported;
 }
 
 bool DrmGpu::isI915() const

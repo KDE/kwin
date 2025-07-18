@@ -89,6 +89,7 @@ private:
         std::optional<bool> allowDdcCi;
         std::optional<uint32_t> maxBitsPerColor;
         std::optional<Output::EdrPolicy> edrPolicy;
+        std::optional<double> sharpness;
     };
     struct SetupState
     {

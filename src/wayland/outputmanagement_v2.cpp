@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 16;
+static const quint32 s_version = 17;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -76,6 +76,7 @@ protected:
     void kde_output_configuration_v2_set_ddc_ci_allowed(Resource *resource, ::wl_resource *outputdevice, uint32_t allow_ddc_ci) override;
     void kde_output_configuration_v2_set_max_bits_per_color(Resource *resource, struct ::wl_resource *outputdevice, uint32_t max_bpc) override;
     void kde_output_configuration_v2_set_edr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t edrPolicy) override;
+    void kde_output_configuration_v2_set_sharpness(Resource *resource, wl_resource *outputdevice, uint32_t sharpness) override;
 
     void sendFailure(Resource *resource, const QString &reason);
 };
@@ -466,6 +467,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_edr_policy(
     case edr_policy_always:
         config.changeSet(output->handle())->edrPolicy = Output::EdrPolicy::Always;
         break;
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_sharpness(Resource *resource, wl_resource *outputdevice, uint32_t sharpness)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->sharpness = sharpness / 10'000.0;
     }
 }
 

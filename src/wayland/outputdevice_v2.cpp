@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 16;
+static const quint32 s_version = 17;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -73,6 +73,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     }
     if (caps & Output::Capability::Edr) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_edr;
+    }
+    if (caps & Output::Capability::SharpnessControl) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_sharpness;
     }
     return ret;
 }
@@ -134,6 +137,7 @@ public:
     void sendDdcCiAllowed(Resource *resource);
     void sendMaxBpc(Resource *resource);
     void sendEdrPolicy(Resource *resource);
+    void sendSharpness(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -180,6 +184,7 @@ public:
     Output::BpcRange m_maxBpcRange;
     std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
     Output::EdrPolicy m_edrPolicy = Output::EdrPolicy::Always;
+    double m_sharpness = 0;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -273,6 +278,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateDdcCiAllowed();
     updateMaxBpc();
     updateEdrPolicy();
+    updateSharpness();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -311,6 +317,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
     connect(handle, &Output::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
     connect(handle, &Output::edrPolicyChanged, this, &OutputDeviceV2Interface::updateEdrPolicy);
+    connect(handle, &Output::sharpnessChanged, this, &OutputDeviceV2Interface::updateSharpness);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -398,6 +405,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendDdcCiAllowed(resource);
     sendMaxBpc(resource);
     sendEdrPolicy(resource);
+    sendSharpness(resource);
     sendDone(resource);
 }
 
@@ -606,6 +614,13 @@ void OutputDeviceV2InterfacePrivate::sendEdrPolicy(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_EDR_POLICY_SINCE_VERSION) {
         send_edr_policy(resource->handle, kwinEdrPolicyToOutputDevice(m_edrPolicy));
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendSharpness(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_SHARPNESS_SINCE_VERSION) {
+        send_sharpness(resource->handle, m_sharpness);
     }
 }
 
@@ -1046,6 +1061,19 @@ void OutputDeviceV2Interface::updateEdrPolicy()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendEdrPolicy(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateSharpness()
+{
+    const uint32_t newSharpness = std::round(d->m_handle->sharpnessSetting() * 10'000);
+    if (d->m_sharpness != newSharpness) {
+        d->m_sharpness = newSharpness;
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendSharpness(resource);
         }
         scheduleDone();
     }

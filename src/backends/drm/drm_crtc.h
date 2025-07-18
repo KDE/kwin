@@ -50,6 +50,7 @@ public:
     DrmProperty ctm;
     DrmProperty degammaLut;
     DrmProperty degammaLutSize;
+    DrmProperty sharpnessStrength;
 
     DrmAbstractColorOp *postBlendingPipeline = nullptr;
 

@@ -379,6 +379,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
                 .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
                 .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
+                .sharpness = changeSet->sharpness.value_or(output->sharpnessSetting()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -429,6 +430,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowDdcCi = output->allowDdcCi(),
                 .maxBitsPerColor = output->maxBitsPerColor(),
                 .edrPolicy = output->edrPolicy(),
+                .sharpness = output->sharpnessSetting(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -496,6 +498,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .allowDdcCi = state.allowDdcCi,
             .maxBitsPerColor = state.maxBitsPerColor,
             .edrPolicy = state.edrPolicy,
+            .sharpness = state.sharpness,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -628,6 +631,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .allowDdcCi = existingData.allowDdcCi.value_or(!output->isDdcCiKnownBroken()),
             .maxBitsPerColor = existingData.maxBitsPerColor,
             .edrPolicy = existingData.edrPolicy.value_or(Output::EdrPolicy::Always),
+            .sharpness = existingData.sharpness.value_or(0),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -1037,6 +1041,9 @@ void OutputConfigurationStore::load()
                 state.edrPolicy = Output::EdrPolicy::Always;
             }
         }
+        if (const auto it = data.find("sharpness"); it != data.end() && it->isDouble()) {
+            state.sharpness = std::clamp(it->toDouble(), 0.0, 1.0);
+        }
         outputDatas.push_back(state);
     }
 
@@ -1319,6 +1326,9 @@ void OutputConfigurationStore::save()
                 o["edrPolicy"] = "always";
                 break;
             }
+        }
+        if (output.sharpness) {
+            o["sharpness"] = *output.sharpness;
         }
         outputsData.append(o);
     }

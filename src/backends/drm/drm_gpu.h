@@ -91,6 +91,7 @@ public:
     bool isAmdgpu() const;
     bool isVmwgfx() const;
     bool isVirtualMachine() const;
+    bool sharpnessSupported() const;
     std::optional<Version> nvidiaDriverVersion() const;
     QString driverName() const;
     EglDisplay *eglDisplay() const;
@@ -163,6 +164,8 @@ private:
     bool m_isActive = true;
     bool m_forceModeset = false;
     bool m_forceLowBandwidthMode = false;
+    bool m_forceImplicitModifiers = false;
+    bool m_sharpnessSupported = false;
     clockid_t m_presentationClock;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;

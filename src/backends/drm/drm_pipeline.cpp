@@ -389,6 +389,12 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addProperty(m_pending.crtc->degammaLut, 0);
     }
 
+    if (m_pending.crtc->sharpnessStrength.isValid()) {
+        const int maxValue = m_pending.crtc->sharpnessStrength.maxValue();
+        const int sharpness = std::clamp<int>(std::round(m_output->sharpnessSetting() * maxValue), 0, maxValue);
+        commit->addProperty(m_pending.crtc->sharpnessStrength, sharpness);
+    }
+
     return true;
 }
 
