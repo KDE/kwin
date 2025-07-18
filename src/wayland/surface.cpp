@@ -691,6 +691,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (bufferRef && current->releasePoint) {
         bufferRef->addReleasePoint(current->releasePoint);
     }
+    if (!bufferRef) {
+        // we can't present an unmapped surface
+        current->presentationFeedback.reset();
+    }
     scaleOverride = pendingScaleOverride;
 
     if (current->buffer) {
