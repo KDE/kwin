@@ -150,6 +150,7 @@ integrationTest(NAME testKeyboardInput SRCS keyboard_input_test.cpp)
 integrationTest(NAME testFifo SRCS test_fifo.cpp)
 integrationTest(NAME testMouseKeys SRCS mouse_keys_test.cpp)
 integrationTest(NAME testXdgSession SRCS xdgsession_test.cpp)
+integrationTest(NAME testA11yKeyboardManager SRCS a11ykeyboardmanager_test.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration3::KDecoration)
