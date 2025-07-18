@@ -136,7 +136,7 @@ void RegionScreenCastSource::ensureTexture()
     }
 }
 
-void RegionScreenCastSource::render(GLFramebuffer *target)
+QRegion RegionScreenCastSource::render(GLFramebuffer *target)
 {
     ensureTexture();
 
@@ -152,12 +152,14 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
 
     ShaderManager::instance()->popShader();
     GLFramebuffer::popFramebuffer();
+    return QRegion{};
 }
 
-void RegionScreenCastSource::render(QImage *target)
+QRegion RegionScreenCastSource::render(QImage *target)
 {
     ensureTexture();
     grabTexture(m_renderedTexture.get(), target);
+    return QRegion{};
 }
 
 uint RegionScreenCastSource::refreshRate() const
