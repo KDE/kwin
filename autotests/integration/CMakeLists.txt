@@ -158,6 +158,7 @@ integrationTest(NAME testDrm SRCS drm_test.cpp)
 integrationTest(NAME testDrmLegacy SRCS drm_test.cpp)
 target_compile_definitions(testDrmLegacy PRIVATE FORCE_DRM_LEGACY=1)
 integrationTest(NAME testToplevelDrag SRCS topleveldrag_test.cpp)
+integrationTest(NAME testA11yKeyboardMonitor SRCS a11ykeyboardmonitor_test.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration3::KDecoration)
