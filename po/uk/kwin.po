@@ -3682,11 +3682,11 @@ msgstr "Немає відкритих вікон"
 
 #: tabbox/tabbox.cpp:333
 msgid "Walk Through Windows"
-msgstr "Пройтись по вікнах"
+msgstr "Прогулянка вікнами"
 
 #: tabbox/tabbox.cpp:334
 msgid "Walk Through Windows (Reverse)"
-msgstr "Пройтись по вікнах (назад)"
+msgstr "Прогулянка вікнами (назад)"
 
 #: tabbox/tabbox.cpp:335
 msgid "Walk Through Windows Alternative"
