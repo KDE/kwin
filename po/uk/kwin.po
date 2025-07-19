@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-17 00:43+0000\n"
+"POT-Creation-Date: 2025-07-19 05:22+0000\n"
 "PO-Revision-Date: 2025-07-08 12:31+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -3511,11 +3511,11 @@ msgstr "Немає відкритих вікон"
 
 #: tabbox/tabbox.cpp:310
 msgid "Walk Through Windows"
-msgstr "Пройтись по вікнах"
+msgstr "Прогулянка вікнами"
 
 #: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows (Reverse)"
-msgstr "Пройтись по вікнах (назад)"
+msgstr "Прогулянка вікнами (назад)"
 
 #: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows Alternative"
@@ -4139,7 +4139,7 @@ msgstr "Наданий порядок виведення є некоректни
 msgid "The driver rejected the output configuration"
 msgstr "Драйвером відмовлено у налаштовування виведення"
 
-#: window.cpp:3084
+#: window.cpp:3112
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
