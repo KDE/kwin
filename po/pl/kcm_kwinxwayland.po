@@ -1,33 +1,34 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 #
-# SPDX-FileCopyrightText: 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-20 02:37+0000\n"
-"PO-Revision-Date: 2024-03-17 11:27+0100\n"
+"PO-Revision-Date: 2025-07-19 08:45+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
-"Language-Team: Polish <kde-i18n-doc@kde.org>\n"
+"Language-Team: pl\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #: ui/main.qml:27
 #, kde-format
 msgctxt "@info"
 msgid "Changes will take effect the next time you log in."
-msgstr ""
+msgstr "Wprowadzone zmiany odniosą skutek przy następnym logowaniu."
 
 #: ui/main.qml:31
 #, kde-format
 msgctxt "@action:button"
 msgid "Log Out Now"
-msgstr ""
+msgstr "Wyloguj teraz"
 
 #: ui/main.qml:52
 #, kde-format
@@ -97,7 +98,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Sterowanie wskaźnikiem i klawiaturą:"
 
 #: ui/main.qml:156
 #, kde-format
@@ -105,7 +106,7 @@ msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "Zezwól bez pytania o uprawnienia"
 
 #~ msgid "Only non-character keys"
 #~ msgstr "Tylko klawisze nieznakowe"
