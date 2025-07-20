@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1713664 $
+# Version: $Revision: 1713672 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -16,15 +16,16 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-19 05:22+0000\n"
-"PO-Revision-Date: 2025-05-10 12:07+0200\n"
+"PO-Revision-Date: 2025-07-19 08:49+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
-"Language-Team: Polish <kde-i18n-doc@kde.org>\n"
+"Language-Team: pl\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -767,16 +768,14 @@ msgid "Up"
 msgstr "W górę"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Odległość:"
+msgstr "Odległość"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Położenie"
+msgstr "Położenie suwaka"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -807,19 +806,17 @@ msgstr "Przycisk deski tabletu"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Grupa"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Tryb:"
+msgstr "Tryb"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Jest przełącznikiem trybu"
 
 #: debug_console.cpp:576
 #, kde-format
@@ -842,15 +839,12 @@ msgid "Tablet Pad Ring"
 msgstr "Pierścień deski tabletu"
 
 #: debug_console.cpp:608
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Pierścień deski tabletu"
+msgstr "Wskazówka na tablecie"
 
 #: debug_console.cpp:610
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1311,11 +1305,7 @@ msgstr ""
 "To narzędzie pomocnicze nie jest przeznaczone do bezpośredniego uruchamiania."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1323,16 +1313,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Zakończenie tej aplikacji spowoduje zamknięcie "
-"wszystkich okien jej podległych oraz utratę niezapisanych danych.</"
-"emphasis></para>"
+"<para><application>%1</application> nie odpowiada. Czy zakończyć tę "
+"aplikację?</para><para><emphasis strong='true'>Zakończenie tej aplikacji "
+"spowoduje zamknięcie wszystkich okien jej podległych oraz utratę "
+"niezapisanych danych.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1340,9 +1327,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Zakończenie tej aplikacji spowoduje zamknięcie "
-"wszystkich okien jej podległych oraz utratę niezapisanych danych.</"
-"emphasis></para>"
+"<para>\"%1\" od <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para><para><emphasis "
+"strong='true'>Zakończenie tej aplikacji spowoduje zamknięcie wszystkich "
+"okien jej podległych oraz utratę niezapisanych danych.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -1506,7 +1494,7 @@ msgstr "Wysokość dla trybu okien. Domyślna wysokość to 768."
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Określa czy uczynić tryb okienkowy trybem pełnoekranowym"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -3018,17 +3006,15 @@ msgstr "Rodzaj dopasowywania ciągu znaków do maszyny"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Zarządzanie oknami"
+msgstr "Znacznik okna"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Rodzaj dopasowywania ciągu znaków do tytułu okna"
+msgstr "Rodzaj dopasowywania ciągu znaków do rodzaju okna"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3584,12 +3570,7 @@ msgid "Tablets switched outputs"
 msgstr "Tablet przełączył wyjście"
 
 #: useractions.cpp:161
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3598,16 +3579,10 @@ msgid ""
 msgstr ""
 "Zaznaczyłeś, aby wyświetlić okno bez jego obramowania.\n"
 "Nie będzie można przywrócić tego obramowania przy użyciu myszy. Aby je "
-"przywrócić, należy wywołać menu działań okna przy użyciu skrótu %1."
+"przywrócić, należy wywołać menu okna przy użyciu skrótu %1."
 
 #: useractions.cpp:168
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3616,8 +3591,8 @@ msgid ""
 msgstr ""
 "Zaznaczyłeś, aby wyświetlić okno w trybie pełnoekranowym. Nie będzie można "
 "powrócić z tego trybu przy użyciu myszy, jeśli sam program tego nie "
-"umożliwia. Aby z niego powrócić, należy wywołać menu działań okna przy "
-"użyciu skrótu %1."
+"umożliwia. Aby z niego powrócić, należy wywołać menu okna przy użyciu skrótu "
+"%1."
 
 #: useractions.cpp:215
 #, kde-format
@@ -3752,10 +3727,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> jest używane przez %2 w %3"
 
 #: useractions.cpp:813
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Rola okna"
+msgstr "Menu okna"
 
 #: useractions.cpp:815
 #, kde-format
