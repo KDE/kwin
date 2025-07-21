@@ -16,18 +16,9 @@ namespace KWin
 
 class Output;
 class RegionScreenCastSource;
-
-class RegionScreenCastScrapper : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit RegionScreenCastScrapper(RegionScreenCastSource *source, Output *output);
-
-private:
-    RegionScreenCastSource *m_source;
-    Output *m_output;
-};
+class ScreencastLayer;
+class SceneView;
+class ItemTreeView;
 
 class RegionScreenCastSource : public ScreenCastSource
 {
@@ -46,7 +37,6 @@ public:
     QRegion render(QImage *target) override;
     std::chrono::nanoseconds clock() const override;
 
-    void update(Output *output, const QRegion &damage);
     void close();
     void pause() override;
     void resume() override;
@@ -57,17 +47,17 @@ public:
     QRectF mapFromGlobal(const QRectF &rect) const override;
 
 private:
-    void blit(Output *output);
-    void ensureTexture();
+    void report();
 
     const QRect m_region;
     const qreal m_scale;
-    std::vector<std::unique_ptr<RegionScreenCastScrapper>> m_scrappers;
-    std::unique_ptr<GLFramebuffer> m_target;
-    std::unique_ptr<GLTexture> m_renderedTexture;
     std::chrono::nanoseconds m_last;
     bool m_closed = false;
     bool m_active = false;
+
+    std::unique_ptr<ScreencastLayer> m_layer;
+    std::unique_ptr<SceneView> m_sceneView;
+    std::unique_ptr<ItemTreeView> m_cursorView;
 };
 
 } // namespace KWin

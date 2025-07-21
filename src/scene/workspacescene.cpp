@@ -307,7 +307,7 @@ double WorkspaceScene::desiredHdrHeadroom() const
 {
     double maxHeadroom = 1;
     for (const auto &item : stacking_order) {
-        if (!item->window()->isOnOutput(painted_screen)) {
+        if (!item->window()->frameGeometry().intersects(painted_delegate->viewport())) {
             continue;
         }
         maxHeadroom = std::max(maxHeadroom, getDesiredHdrHeadroom(item));
@@ -472,7 +472,7 @@ void WorkspaceScene::postPaint()
 
 void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    RenderViewport viewport(painted_screen->geometryF(), painted_screen->scale(), renderTarget);
+    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget);
 
     m_renderer->beginFrame(renderTarget, viewport);
 

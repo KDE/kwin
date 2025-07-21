@@ -7,49 +7,41 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
+#include "compositor.h"
+#include "core/output.h"
 #include "core/pixelgrid.h"
 #include "cursor.h"
+#include "opengl/eglbackend.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
-#include <compositor.h>
-#include <core/output.h>
-#include <drm_fourcc.h>
-#include <scene/workspacescene.h>
-#include <workspace.h>
+#include "scene/workspacescene.h"
+#include "screencastlayer.h"
+#include "workspace.h"
 
 #include <QPainter>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
-
-RegionScreenCastScrapper::RegionScreenCastScrapper(RegionScreenCastSource *source, Output *output)
-    : m_source(source)
-    , m_output(output)
-{
-    connect(workspace(), &Workspace::outputRemoved, this, [this](Output *output) {
-        if (m_output == output) {
-            m_source->close();
-        }
-    });
-
-    connect(output, &Output::geometryChanged, this, [this]() {
-        m_source->close();
-    });
-
-    connect(output, &Output::outputChange, this, [this](const QRegion &damage) {
-        if (!damage.isEmpty()) {
-            m_source->update(m_output, damage);
-        }
-    });
-}
 
 RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent)
     : ScreenCastSource(parent)
     , m_region(region)
     , m_scale(scale)
+    , m_layer(std::make_unique<ScreencastLayer>(workspace()->outputs().front(), static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
+    , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), workspace()->outputs().front(), m_layer.get()))
+    , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr))
 {
+    m_sceneView->setViewport(m_region);
+    m_sceneView->setScale(m_scale);
+    // prevent the layer from scheduling frames on the actual output
+    m_layer->setRenderLoop(nullptr);
+    // always hide the cursor from the primary view
+    m_cursorView->setExclusive(true);
     Q_ASSERT(m_region.isValid());
     Q_ASSERT(m_scale > 0);
+    // TODO once the layer doesn't depend on the output anymore, remove this?
+    connect(workspace(), &Workspace::outputsChanged, this, &RegionScreenCastSource::close);
 }
 
 RegionScreenCastSource::~RegionScreenCastSource()
@@ -72,94 +64,42 @@ quint32 RegionScreenCastSource::drmFormat() const
     return DRM_FORMAT_ARGB8888;
 }
 
-void RegionScreenCastSource::update(Output *output, const QRegion &damage)
-{
-    blit(output);
-
-    const QRegion effectiveDamage = damage
-                                        .translated(-m_region.topLeft())
-                                        .intersected(m_region);
-    const QRegion nativeDamage = scaleRegion(effectiveDamage, m_scale);
-    Q_EMIT frame(nativeDamage);
-}
-
 std::chrono::nanoseconds RegionScreenCastSource::clock() const
 {
     return m_last;
 }
 
-void RegionScreenCastSource::blit(Output *output)
-{
-    m_last = output->renderLoop()->lastPresentationTimestamp();
-
-    if (m_renderedTexture) {
-        const auto [outputTexture, colorDescription] = Compositor::self()->textureForOutput(output);
-        const auto outputGeometry = snapToPixelGridF(scaledRect(output->geometryF(), m_scale));
-        if (!outputTexture) {
-            return;
-        }
-
-        GLFramebuffer::pushFramebuffer(m_target.get());
-
-        ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-        QMatrix4x4 projectionMatrix;
-        projectionMatrix.scale(1, -1);
-        projectionMatrix.ortho(snapToPixelGridF(scaledRect(m_region, m_scale)));
-        projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
-
-        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-        shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
-
-        outputTexture->render(outputGeometry.size());
-        GLFramebuffer::popFramebuffer();
-    }
-}
-
-void RegionScreenCastSource::ensureTexture()
-{
-    if (!m_renderedTexture) {
-        m_renderedTexture = GLTexture::allocate(GL_RGBA8, textureSize());
-        if (!m_renderedTexture) {
-            return;
-        }
-        m_renderedTexture->setContentTransform(OutputTransform::FlipY);
-        m_renderedTexture->setFilter(GL_LINEAR);
-        m_renderedTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-
-        m_target = std::make_unique<GLFramebuffer>(m_renderedTexture.get());
-        const auto allOutputs = workspace()->outputs();
-        for (auto output : allOutputs) {
-            if (output->geometry().intersects(m_region)) {
-                blit(output);
-            }
-        }
-    }
-}
-
 QRegion RegionScreenCastSource::render(GLFramebuffer *target)
 {
-    ensureTexture();
-
-    GLFramebuffer::pushFramebuffer(target);
-    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-
-    QMatrix4x4 projectionMatrix;
-    projectionMatrix.scale(1, -1);
-    projectionMatrix.ortho(QRect(QPoint(), target->size()));
-    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-
-    m_renderedTexture->render(target->size());
-
-    ShaderManager::instance()->popShader();
-    GLFramebuffer::popFramebuffer();
-    return QRegion{};
+    m_layer->setFramebuffer(target);
+    if (!m_layer->preparePresentationTest()) {
+        return QRegion{};
+    }
+    const auto beginInfo = m_layer->beginFrame();
+    if (!beginInfo) {
+        return QRegion{};
+    }
+    const auto damaged = m_layer->repaints() | m_sceneView->prePaint();
+    const auto repaints = beginInfo->repaint | damaged;
+    m_layer->resetRepaints();
+    m_sceneView->paint(beginInfo->renderTarget, repaints);
+    m_sceneView->postPaint();
+    if (!m_layer->endFrame(repaints, damaged, nullptr)) {
+        return QRegion{};
+    }
+    return damaged;
 }
 
 QRegion RegionScreenCastSource::render(QImage *target)
 {
-    ensureTexture();
-    grabTexture(m_renderedTexture.get(), target);
-    return QRegion{};
+    auto texture = GLTexture::allocate(GL_RGBA8, target->size());
+    if (!texture) {
+        return QRegion{};
+    }
+    GLFramebuffer buffer(texture.get());
+    const QRegion ret = render(&buffer);
+    grabTexture(texture.get(), target);
+    return ret;
 }
 
 uint RegionScreenCastSource::refreshRate() const
@@ -188,8 +128,8 @@ void RegionScreenCastSource::pause()
         return;
     }
 
-    m_scrappers.clear();
     m_active = false;
+    disconnect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::report);
 }
 
 void RegionScreenCastSource::resume()
@@ -198,21 +138,8 @@ void RegionScreenCastSource::resume()
         return;
     }
 
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        if (output->geometry().intersects(m_region)) {
-            m_scrappers.emplace_back(std::make_unique<RegionScreenCastScrapper>(this, output));
-        }
-    }
-
-    if (m_scrappers.empty()) {
-        close();
-        return;
-    }
-
-    Compositor::self()->scene()->addRepaint(m_region);
-
     m_active = true;
+    connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::report);
 }
 
 bool RegionScreenCastSource::includesCursor(Cursor *cursor) const
@@ -232,6 +159,11 @@ QPointF RegionScreenCastSource::mapFromGlobal(const QPointF &point) const
 QRectF RegionScreenCastSource::mapFromGlobal(const QRectF &rect) const
 {
     return rect.translated(-m_region.topLeft());
+}
+
+void RegionScreenCastSource::report()
+{
+    Q_EMIT frame(QRegion{});
 }
 
 } // namespace KWin
