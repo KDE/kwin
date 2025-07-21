@@ -446,7 +446,6 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         const QRegion surfaceDamage = primaryLayer->repaints() | primaryView->prePaint();
         primaryLayer->resetRepaints();
-        frame->setDamage(surfaceDamage);
 
         // slowly adjust the artificial HDR headroom for the next frame
         // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes

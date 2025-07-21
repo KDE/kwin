@@ -482,7 +482,6 @@ Q_SIGNALS:
 
     void currentModeChanged();
     void modesChanged();
-    void outputChange(const QRegion &damagedRegion);
     void transformChanged();
     void dpmsModeChanged();
     void capabilitiesChanged();

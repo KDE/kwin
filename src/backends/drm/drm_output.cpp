@@ -407,7 +407,6 @@ bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::s
     if (!success) {
         return false;
     }
-    Q_EMIT outputChange(frame->damage());
     if (frame->brightness() != m_state.currentBrightness || (frame->artificialHdrHeadroom() && frame->artificialHdrHeadroom() != m_state.artificialHdrHeadroom)) {
         updateBrightness(frame->brightness().value_or(m_state.currentBrightness.value_or(m_state.brightnessSetting)), frame->artificialHdrHeadroom().value_or(m_state.artificialHdrHeadroom));
     }

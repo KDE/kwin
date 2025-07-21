@@ -488,7 +488,6 @@ bool X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, cons
                        0,
                        nullptr);
     m_frame = frame;
-    Q_EMIT outputChange(frame->damage());
     return true;
 }
 
