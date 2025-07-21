@@ -170,15 +170,6 @@ OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
-std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> VirtualEglBackend::textureForOutput(Output *output) const
-{
-    auto it = m_outputs.find(output);
-    if (it == m_outputs.end()) {
-        return {nullptr, ColorDescription::sRGB};
-    }
-    return std::make_pair(it->second->texture(), ColorDescription::sRGB);
-}
-
 } // namespace
 
 #include "moc_virtual_egl_backend.cpp"
