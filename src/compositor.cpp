@@ -634,15 +634,6 @@ void Compositor::removeOutput(Output *output)
     m_primaryViews.erase(output->renderLoop());
 }
 
-std::pair<std::shared_ptr<GLTexture>, ColorDescription> Compositor::textureForOutput(Output *output) const
-{
-    if (auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
-        return eglBackend->textureForOutput(output);
-    }
-
-    return std::make_pair(nullptr, ColorDescription::sRGB);
-}
-
 } // namespace KWin
 
 #include "moc_compositor.cpp"

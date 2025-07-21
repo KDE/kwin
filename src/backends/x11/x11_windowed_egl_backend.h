@@ -77,7 +77,6 @@ public:
     X11WindowedBackend *backend() const;
     DrmDevice *drmDevice() const override;
 
-    std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const override;
     void init() override;
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
     OutputLayer *primaryLayer(Output *output) override;
