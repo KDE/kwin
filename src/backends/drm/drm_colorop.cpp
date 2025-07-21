@@ -36,6 +36,16 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         commit->merge(m_cache.get());
         return true;
     }
+    if (pipeline.isIdentity()) {
+        // Applying this config is very simple and cheap, so do it directly
+        // and avoid invalidating the cache
+        DrmAbstractColorOp *currentOp = this;
+        while (currentOp) {
+            currentOp->bypass(commit);
+            currentOp = currentOp->next();
+        }
+        return true;
+    }
 
     DrmAbstractColorOp *currentOp = this;
     const auto needsLimitedRange = [](const ColorOp &op) {
