@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-19 05:22+0000\n"
-"PO-Revision-Date: 2025-05-31 10:28+0200\n"
+"POT-Creation-Date: 2025-07-21 00:43+0000\n"
+"PO-Revision-Date: 2025-07-21 00:08+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -29,29 +29,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "radnev@yahoo.com, mkondarev@yahoo.de"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Натиснете десния бутон за управление, за да освободите показалеца"
 
-#: backends/wayland/wayland_output.cpp:495
+#: backends/wayland/wayland_output.cpp:499
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Натиснете десния клавиш за управление, за да прихванете показалеца"
 
-#: backends/wayland/wayland_output.cpp:499
+#: backends/wayland/wayland_output.cpp:503
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
-#: backends/wayland/wayland_output.cpp:502
+#: backends/wayland/wayland_output.cpp:506
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Изходът е изключен"
 
-#: backends/wayland/wayland_output.cpp:504
+#: backends/wayland/wayland_output.cpp:508
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Изходът е затъмнен"
@@ -759,16 +759,14 @@ msgid "Up"
 msgstr "Нагоре"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Разстояние:"
+msgstr "Разстояние"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Позиция"
+msgstr "Позиция на плъзгача"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -799,17 +797,17 @@ msgstr "Бутон за таблетна подложка"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Група"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "Режим"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Превключвател на режим"
 
 #: debug_console.cpp:576
 #, kde-format

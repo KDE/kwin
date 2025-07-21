@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1713672 $
+# Version: $Revision: 1713829 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-19 05:22+0000\n"
+"POT-Creation-Date: 2025-07-21 00:43+0000\n"
 "PO-Revision-Date: 2025-07-19 08:49+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -38,29 +38,29 @@ msgid "Your emails"
 msgstr ""
 "mrudolf@kdewebdev.org, norbert@kde.com.pl, lukasz.wojnilowicz@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Naciśnij prawy przycisk Ctrl, aby zwolnić wskaźnik"
 
-#: backends/wayland/wayland_output.cpp:495
+#: backends/wayland/wayland_output.cpp:499
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wskaźnik"
 
-#: backends/wayland/wayland_output.cpp:499
+#: backends/wayland/wayland_output.cpp:503
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Kompozytor KDE Wayland %1"
 
-#: backends/wayland/wayland_output.cpp:502
+#: backends/wayland/wayland_output.cpp:506
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Wyjście wyłączone"
 
-#: backends/wayland/wayland_output.cpp:504
+#: backends/wayland/wayland_output.cpp:508
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Wyjście przyciemnione"
