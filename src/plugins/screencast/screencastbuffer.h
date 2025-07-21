@@ -25,6 +25,8 @@ public:
     explicit ScreenCastBuffer(GraphicsBuffer *buffer);
     virtual ~ScreenCastBuffer();
 
+    int m_age = 0;
+
 private:
     GraphicsBuffer *m_buffer;
 };
