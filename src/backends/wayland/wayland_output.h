@@ -91,7 +91,7 @@ public:
 
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
-    void setPrimaryBuffer(wl_buffer *buffer);
+    void setPrimaryBuffer(wl_buffer *buffer, const QRegion &damage);
 
     void frameDiscarded();
     void framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate);
@@ -120,6 +120,7 @@ private:
     bool m_mapped = false;
     std::shared_ptr<OutputFrame> m_frame;
     wl_buffer *m_presentationBuffer = nullptr;
+    QRegion m_lastDamage;
     quint32 m_pendingConfigureSerial = 0;
     QSize m_pendingConfigureSize;
     QTimer m_configureThrottleTimer;

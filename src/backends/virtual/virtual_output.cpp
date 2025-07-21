@@ -57,7 +57,6 @@ bool VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
 {
     m_frame = frame;
     m_vsyncMonitor->arm();
-    Q_EMIT outputChange(frame->damage());
     return true;
 }
 
