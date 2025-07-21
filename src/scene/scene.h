@@ -33,8 +33,8 @@ public:
     explicit RenderView(Output *output, OutputLayer *layer);
 
     Output *output() const;
-    qreal scale() const;
     OutputLayer *layer() const;
+    virtual qreal scale() const;
 
     virtual QPointF hotspot() const;
     virtual QRectF viewport() const = 0;
@@ -70,8 +70,11 @@ public:
     explicit SceneView(Scene *scene, Output *output, OutputLayer *layer);
     ~SceneView() override;
 
+    void setViewportOverride(QRectF viewport, double scale);
+
     Scene *scene() const;
     QRectF viewport() const override;
+    double scale() const override;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
@@ -92,6 +95,8 @@ private:
     Output *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
     QList<RenderView *> m_exclusiveViews;
+    std::optional<QRectF> m_viewportOverride;
+    std::optional<double> m_scaleOverride;
 };
 
 class KWIN_EXPORT ItemTreeView : public RenderView

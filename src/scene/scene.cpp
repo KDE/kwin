@@ -117,9 +117,20 @@ void SceneView::frame(OutputFrame *frame)
     m_scene->frame(this, frame);
 }
 
+void SceneView::setViewportOverride(QRectF viewport, double scale)
+{
+    m_viewportOverride = viewport;
+    m_scaleOverride = scale;
+}
+
 QRectF SceneView::viewport() const
 {
-    return m_output ? m_output->geometryF() : m_scene->geometry();
+    return m_viewportOverride.value_or(m_output ? m_output->geometryF() : m_scene->geometry());
+}
+
+double SceneView::scale() const
+{
+    return m_scaleOverride.value_or(m_output ? m_output->scale() : 1.0);
 }
 
 void SceneView::addExclusiveView(RenderView *view)
