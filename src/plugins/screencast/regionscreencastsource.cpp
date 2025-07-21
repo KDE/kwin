@@ -68,9 +68,9 @@ std::chrono::nanoseconds RegionScreenCastSource::clock() const
     return m_last;
 }
 
-QRegion RegionScreenCastSource::render(GLFramebuffer *target)
+QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferDamage)
 {
-    m_layer->setFramebuffer(target);
+    m_layer->setFramebuffer(target, bufferDamage);
     if (!m_layer->preparePresentationTest()) {
         return QRegion{};
     }
@@ -89,14 +89,14 @@ QRegion RegionScreenCastSource::render(GLFramebuffer *target)
     return damaged;
 }
 
-QRegion RegionScreenCastSource::render(QImage *target)
+QRegion RegionScreenCastSource::render(QImage *target, const QRegion &bufferDamage)
 {
     auto texture = GLTexture::allocate(GL_RGBA8, target->size());
     if (!texture) {
         return QRegion{};
     }
     GLFramebuffer buffer(texture.get());
-    const QRegion ret = render(&buffer);
+    const QRegion ret = render(&buffer, infiniteRegion());
     grabTexture(texture.get(), target);
     return ret;
 }

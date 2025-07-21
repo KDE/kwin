@@ -63,21 +63,21 @@ qreal OutputScreenCastSource::devicePixelRatio() const
     return m_output->scale();
 }
 
-QRegion OutputScreenCastSource::render(QImage *target)
+QRegion OutputScreenCastSource::render(QImage *target, const QRegion &bufferDamage)
 {
     auto texture = GLTexture::allocate(GL_RGBA8, target->size());
     if (!texture) {
         return QRegion{};
     }
     GLFramebuffer buffer(texture.get());
-    const QRegion ret = render(&buffer);
+    const QRegion ret = render(&buffer, infiniteRegion());
     grabTexture(texture.get(), target);
     return ret;
 }
 
-QRegion OutputScreenCastSource::render(GLFramebuffer *target)
+QRegion OutputScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferDamage)
 {
-    m_layer->setFramebuffer(target);
+    m_layer->setFramebuffer(target, bufferDamage);
     if (!m_layer->preparePresentationTest()) {
         return QRegion{};
     }
