@@ -106,7 +106,7 @@ qreal WindowScreenCastSource::devicePixelRatio() const
     return m_windows[0]->targetScale();
 }
 
-QRegion WindowScreenCastSource::render(QImage *target)
+QRegion WindowScreenCastSource::render(QImage *target, const QRegion &bufferDamage)
 {
     const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, target->size());
     if (!offscreenTexture) {
@@ -115,12 +115,12 @@ QRegion WindowScreenCastSource::render(QImage *target)
     offscreenTexture->setContentTransform(OutputTransform::FlipY);
 
     GLFramebuffer offscreenTarget(offscreenTexture.get());
-    render(&offscreenTarget);
+    render(&offscreenTarget, infiniteRegion());
     grabTexture(offscreenTexture.get(), target);
     return QRegion{};
 }
 
-QRegion WindowScreenCastSource::render(GLFramebuffer *target)
+QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferDamage)
 {
     RenderTarget renderTarget(target);
     RenderViewport viewport(boundingRect(), 1, renderTarget);

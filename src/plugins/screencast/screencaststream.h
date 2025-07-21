@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "utils/damagejournal.h"
 #include "wayland/screencast_v1.h"
 
 #include <QHash>
@@ -100,6 +101,7 @@ private:
                          const QList<uint64_t> &modifiers, quint32 modifiersFlags);
     pw_buffer *dequeueBuffer();
     void record(const QRegion &damage, Contents contents);
+    void bumpBufferAge(ScreenCastBuffer *renderedBuffer);
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
 
@@ -140,6 +142,9 @@ private:
     QTimer m_pendingFrame;
     Contents m_pendingContents = Content::None;
     QList<pw_buffer *> m_dequeuedBuffers;
+
+    QList<ScreenCastBuffer *> m_allBuffers;
+    DamageJournal m_damageJournal;
 };
 
 } // namespace KWin

@@ -291,6 +291,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
                                                                        .modifiers = {m_videoFormat.modifier},
                                                                    })) {
             pwBuffer->user_data = dmabuf;
+            m_allBuffers.push_back(dmabuf);
             return;
         }
     }
@@ -302,6 +303,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
                                                                      .software = true,
                                                                  })) {
             pwBuffer->user_data = memfd;
+            m_allBuffers.push_back(memfd);
             return;
         }
     }
@@ -312,6 +314,7 @@ void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *pwBuffer)
     if (ScreenCastBuffer *buffer = static_cast<ScreenCastBuffer *>(pwBuffer->user_data)) {
         delete buffer;
         pwBuffer->user_data = nullptr;
+        m_allBuffers.removeOne(buffer);
     }
 
     m_dequeuedBuffers.removeOne(pwBuffer);
@@ -600,7 +603,8 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
     QRegion effectiveDamage = damage;
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
-            effectiveDamage |= m_source->render(memfd->view.image());
+            effectiveDamage |= m_source->render(memfd->view.image(), m_damageJournal.accumulate(memfd->m_age, infiniteRegion()));
+            bumpBufferAge(memfd);
         } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
             if (dmabuf->synctimeline) {
                 synctmeta = static_cast<spa_meta_sync_timeline *>(spa_buffer_find_meta_data(spa_buffer,
@@ -613,7 +617,8 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
                 }
             }
 
-            effectiveDamage |= m_source->render(dmabuf->framebuffer.get());
+            effectiveDamage |= m_source->render(dmabuf->framebuffer.get(), m_damageJournal.accumulate(dmabuf->m_age, infiniteRegion()));
+            bumpBufferAge(dmabuf);
         }
     }
 
@@ -629,6 +634,9 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
             addCursorMetadata(spa_buffer, cursor);
             break;
         }
+    }
+    if (effectiveContents & Content::Video) {
+        m_damageJournal.add(effectiveDamage);
     }
 
     if (spa_data[0].type == SPA_DATA_DmaBuf) {
@@ -664,6 +672,17 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
     m_lastSent = std::chrono::steady_clock::now();
 
     resize(m_source->textureSize());
+}
+
+void ScreenCastStream::bumpBufferAge(ScreenCastBuffer *renderedBuffer)
+{
+    for (ScreenCastBuffer *buffer : std::as_const(m_allBuffers)) {
+        if (buffer == renderedBuffer) {
+            buffer->m_age = 1;
+        } else if (buffer->m_age > 0) {
+            buffer->m_age++;
+        }
+    }
 }
 
 void ScreenCastStream::resize(const QSize &resolution)
