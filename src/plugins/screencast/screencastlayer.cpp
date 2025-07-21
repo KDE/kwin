@@ -14,10 +14,11 @@ ScreencastLayer::ScreencastLayer(Output *output, const QHash<uint32_t, QList<uin
 {
 }
 
-void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer)
+void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const QRegion &bufferDamage)
 {
     // TODO is there a better way to deal with this?
     m_buffer = buffer;
+    m_bufferDamage = bufferDamage;
 }
 
 DrmDevice *ScreencastLayer::scanoutDevice() const
@@ -34,8 +35,7 @@ std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::doBeginFrame()
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer),
-        // TODO make damage tracking work with the pipewire buffers?
-        .repaint = infiniteRegion(),
+        .repaint = m_bufferDamage,
     };
 }
 

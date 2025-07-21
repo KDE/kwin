@@ -28,8 +28,8 @@ public:
     qreal devicePixelRatio() const override;
     uint refreshRate() const override;
 
-    QRegion render(GLFramebuffer *target) override;
-    QRegion render(QImage *target) override;
+    QRegion render(GLFramebuffer *target, const QRegion &bufferDamage) override;
+    QRegion render(QImage *target, const QRegion &bufferDamage) override;
     std::chrono::nanoseconds clock() const override;
 
     void resume() override;

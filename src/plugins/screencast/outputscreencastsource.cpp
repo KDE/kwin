@@ -65,21 +65,21 @@ qreal OutputScreenCastSource::devicePixelRatio() const
     return m_output->scale();
 }
 
-QRegion OutputScreenCastSource::render(QImage *target)
+QRegion OutputScreenCastSource::render(QImage *target, const QRegion &bufferRepair)
 {
     auto texture = GLTexture::allocate(GL_RGBA8, target->size());
     if (!texture) {
         return QRegion{};
     }
     GLFramebuffer buffer(texture.get());
-    const QRegion ret = render(&buffer);
+    const QRegion ret = render(&buffer, infiniteRegion());
     grabTexture(texture.get(), target);
     return ret;
 }
 
-QRegion OutputScreenCastSource::render(GLFramebuffer *target)
+QRegion OutputScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferRepair)
 {
-    m_layer->setFramebuffer(target);
+    m_layer->setFramebuffer(target, scaleRegion(bufferRepair, 1.0 / devicePixelRatio(), QRect(QPoint(), m_sceneView->viewport().size().toSize())));
     if (!m_layer->preparePresentationTest()) {
         return QRegion{};
     }
@@ -87,15 +87,15 @@ QRegion OutputScreenCastSource::render(GLFramebuffer *target)
     if (!beginInfo) {
         return QRegion{};
     }
-    const auto damaged = m_layer->repaints() | m_sceneView->prePaint();
-    const auto repaints = beginInfo->repaint | damaged;
+    const auto logicalDamage = m_layer->repaints() | m_sceneView->prePaint();
+    const auto repaints = beginInfo->repaint | logicalDamage;
     m_layer->resetRepaints();
     m_sceneView->paint(beginInfo->renderTarget, repaints);
     m_sceneView->postPaint();
-    if (!m_layer->endFrame(repaints, damaged, nullptr)) {
+    if (!m_layer->endFrame(repaints, logicalDamage, nullptr)) {
         return QRegion{};
     }
-    return damaged;
+    return scaleRegion(logicalDamage, devicePixelRatio(), QRect(QPoint(), textureSize()));
 }
 
 std::chrono::nanoseconds OutputScreenCastSource::clock() const
