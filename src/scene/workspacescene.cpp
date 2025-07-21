@@ -268,7 +268,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
                 continue;
             }
             Window *window = windowItem->window();
-            if (window->isOnOutput(painted_screen) && window->opacity() > 0 && windowItem->isVisible()) {
+            if (window->frameGeometry().intersects(painted_delegate->viewport()) && window->opacity() > 0 && windowItem->isVisible()) {
                 if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen() || window->windowItem()->hasEffects()) {
                     return {};
                 }
@@ -281,7 +281,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
                 if (!addCandidates(painted_delegate, surfaceItem, ret, maxCount, occlusion, corners)) {
                     return {};
                 }
-                if (occlusion.contains(painted_screen->geometry())) {
+                if (occlusion.contains(painted_delegate->viewport().toAlignedRect())) {
                     return ret;
                 }
             }
@@ -312,7 +312,7 @@ double WorkspaceScene::desiredHdrHeadroom() const
 {
     double maxHeadroom = 1;
     for (const auto &item : stacking_order) {
-        if (!item->window()->isOnOutput(painted_screen)) {
+        if (!item->window()->frameGeometry().intersects(painted_delegate->viewport())) {
             continue;
         }
         maxHeadroom = std::max(maxHeadroom, getDesiredHdrHeadroom(item));
@@ -477,7 +477,7 @@ void WorkspaceScene::postPaint()
 
 void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    RenderViewport viewport(painted_screen->geometryF(), painted_screen->scale(), renderTarget);
+    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget);
 
     m_renderer->beginFrame(renderTarget, viewport);
 
