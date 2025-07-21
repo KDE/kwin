@@ -76,8 +76,6 @@ public:
 
     void createRenderer();
 
-    std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const;
-
 Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();

@@ -78,19 +78,6 @@ bool EglGbmLayer::preparePresentationTest()
     return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff()) != nullptr;
 }
 
-std::shared_ptr<GLTexture> EglGbmLayer::texture() const
-{
-    if (m_scanoutBuffer) {
-        const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
-        if (ret) {
-            ret->setContentTransform(offloadTransform().combine(OutputTransform::FlipY));
-        }
-        return ret;
-    } else {
-        return m_surface.texture();
-    }
-}
-
 bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     static const bool directScanoutDisabled = environmentVariableBoolValue("KWIN_DRM_NO_DIRECT_SCANOUT").value_or(false);

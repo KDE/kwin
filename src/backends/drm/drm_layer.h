@@ -29,7 +29,6 @@ public:
     explicit DrmOutputLayer(Output *output);
     virtual ~DrmOutputLayer();
 
-    virtual std::shared_ptr<GLTexture> texture() const;
     virtual void releaseBuffers() = 0;
 };
 

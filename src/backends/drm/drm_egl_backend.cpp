@@ -151,16 +151,6 @@ OutputLayer *EglGbmBackend::cursorLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
 }
 
-std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::textureForOutput(Output *output) const
-{
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    if (const auto virtualLayer = dynamic_cast<VirtualEglGbmLayer *>(drmOutput->primaryLayer())) {
-        return std::make_pair(virtualLayer->texture(), virtualLayer->colorDescription());
-    }
-    const auto layer = static_cast<EglGbmLayer *>(drmOutput->primaryLayer());
-    return std::make_pair(layer->texture(), layer->colorDescription());
-}
-
 std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type)
 {
     return std::make_shared<EglGbmLayer>(this, pipeline, type);

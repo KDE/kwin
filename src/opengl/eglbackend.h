@@ -72,8 +72,6 @@ public:
         return m_extensions.contains(extension);
     }
 
-    virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const;
-
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
 
