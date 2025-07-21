@@ -103,7 +103,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     glFlush();
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
-    static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()));
+    static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), damagedRegion);
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
 
     m_damageJournal.add(damagedRegion);
@@ -121,7 +121,7 @@ bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const
     }
     auto presentationBuffer = m_backend->backend()->importBuffer(buffer);
     if (presentationBuffer) {
-        static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(presentationBuffer);
+        static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(presentationBuffer, targetRect());
     }
     return presentationBuffer;
 }

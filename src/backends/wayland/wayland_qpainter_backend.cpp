@@ -65,7 +65,7 @@ bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, cons
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
     m_damageJournal.add(damagedRegion);
-    m_waylandOutput->setPrimaryBuffer(m_waylandOutput->backend()->importBuffer(m_back->buffer()));
+    m_waylandOutput->setPrimaryBuffer(m_waylandOutput->backend()->importBuffer(m_back->buffer()), damagedRegion);
     m_swapchain->release(m_back);
     return true;
 }

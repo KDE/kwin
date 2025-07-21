@@ -84,8 +84,6 @@ public:
     void setPresentationMode(PresentationMode mode);
     PresentationMode presentationMode() const;
 
-    void setDamage(const QRegion &region);
-    QRegion damage() const;
     void addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query);
 
     std::chrono::steady_clock::time_point targetPageflipTime() const;
@@ -108,7 +106,6 @@ private:
     std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
     std::optional<ContentType> m_contentType;
     PresentationMode m_presentationMode = PresentationMode::VSync;
-    QRegion m_damage;
     std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
     bool m_presented = false;
     std::optional<double> m_brightness;

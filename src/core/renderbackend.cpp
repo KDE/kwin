@@ -118,16 +118,6 @@ PresentationMode OutputFrame::presentationMode() const
     return m_presentationMode;
 }
 
-void OutputFrame::setDamage(const QRegion &region)
-{
-    m_damage = region;
-}
-
-QRegion OutputFrame::damage() const
-{
-    return m_damage;
-}
-
 void OutputFrame::addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query)
 {
     m_renderTimeQueries.push_back(std::move(query));
