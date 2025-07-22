@@ -4675,6 +4675,16 @@ void Window::setDescription(const QString &description)
     }
 }
 
+void Window::setActivationToken(const QString &token)
+{
+    m_activationToken = token;
+}
+
+QString Window::activationToken() const
+{
+    return m_activationToken;
+}
+
 } // namespace KWin
 
 #include "moc_window.cpp"

@@ -781,8 +781,8 @@ void Workspace::addWaylandWindow(Window *window)
         rearrange();
     }
     if (window->wantsInput() && !window->isMinimized()) {
-        // Never activate a window on its own in "Extreme" mode.
-        if (options->focusStealingPreventionLevel() < 4) {
+        // In "Extreme" mode, require an activation token to activate new windows
+        if (options->focusStealingPreventionLevel() < 4 || (!m_activationToken.isEmpty() && window->activationToken() == m_activationToken)) {
             if (!window->isDesktop()
                 // If there's no active window, make this desktop the active one.
                 || (activeWindow() == nullptr && should_get_focus.count() == 0)) {

@@ -1357,6 +1357,9 @@ public:
     QString tag() const;
     QString description() const;
 
+    void setActivationToken(const QString &token);
+    QString activationToken() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1880,6 +1883,8 @@ protected:
 
     QString m_tag;
     QString m_description;
+
+    QString m_activationToken;
 };
 
 inline QRectF Window::bufferGeometry() const
