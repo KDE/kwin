@@ -26,7 +26,6 @@ public:
     QPointF hotspot() const;
 
 private:
-    void updateVisibility();
     void refresh();
     void setSurface(SurfaceInterface *surface, const QPointF &hotspot);
     void setImage(const QImage &image, const QPointF &hotspot);

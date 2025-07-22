@@ -154,6 +154,10 @@ public:
     void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     bool isAncestorOf(const Item *item) const;
+    /**
+     * @returns if this Item or any of its children have contents to be rendered
+     */
+    bool hasVisibleContents() const;
 
 Q_SIGNALS:
     void childAdded(Item *item);
