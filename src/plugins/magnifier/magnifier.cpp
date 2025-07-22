@@ -83,10 +83,7 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     m_magnifierSize = QSize(width, height);
     // Load the saved zoom value.
     m_zoomFactor = MagnifierConfig::zoomFactor();
-    m_targetZoom = MagnifierConfig::initialZoom();
-    if (m_targetZoom != m_zoom) {
-        toggle();
-    }
+    setTargetZoom(MagnifierConfig::initialZoom());
 }
 
 void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
