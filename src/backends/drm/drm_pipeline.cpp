@@ -93,6 +93,13 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
             case DrmPlane::TypeIndex::Overlay:
                 Q_UNREACHABLE();
             }
+            if (!plane) {
+                if (layer->isEnabled()) {
+                    return Error::InvalidArguments;
+                } else {
+                    continue;
+                }
+            }
             if (Error err = prepareAtomicPlane(partialUpdate.get(), plane, pipelineLayer, frame); err != Error::None) {
                 return err;
             }
