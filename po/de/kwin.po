@@ -5,7 +5,7 @@
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
 # Frederik Schwarzer <schwarzer@kde.org>, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2021, 2022, 2023.
 # Burkhard Lück <lueck@hube-lueck.de>, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
-# SPDX-FileCopyrightText: 2012, 2024 Frank Steinmetzger <Warp_7@gmx.de>
+# SPDX-FileCopyrightText: 2012, 2024, 2025 Frank Steinmetzger <Warp_7@gmx.de>
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 msgid ""
@@ -13,15 +13,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-05 05:54+0000\n"
-"PO-Revision-Date: 2025-02-17 22:05+0100\n"
-"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
+"PO-Revision-Date: 2025-07-05 14:12+0200\n"
+"Last-Translator: Frank Steinmetzger <dev-kde@felsenfleischer.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -346,7 +346,7 @@ msgstr "Delta"
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
-msgstr "Tastendruck"
+msgstr "Taste gedrückt"
 
 # oder gelöst?
 #: debug_console.cpp:268
@@ -579,7 +579,7 @@ msgstr "Tablet-Modus"
 #, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "Wechseln"
+msgstr "Schalter"
 
 #: debug_console.cpp:485
 #, kde-format
@@ -679,12 +679,12 @@ msgstr "Zahl"
 #: debug_console.cpp:556 debug_console.cpp:570
 #, kde-format
 msgid "isFinger"
-msgstr ""
+msgstr "isFinger"
 
 #: debug_console.cpp:567
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "Tablet-Pad-Ring"
 
 #: debug_console.cpp:797
 #, kde-format
@@ -937,7 +937,7 @@ msgstr "Es wird kein OpenGL-Compositor ausgeführt"
 #: debug_console.ui:130
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr "Treiber-Informationen über OpenGL (ES)"
+msgstr "Informationen über OpenGL-(ES)-Treiber"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:136
@@ -1136,8 +1136,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3) but the application is not responding.</para>"
 msgstr ""
-"<para>Sie haben versucht, Fenster „%1“ der Anwendung „%2“ (Prozesskennung: "
-"%3) zu schließen. Die Anwendung reagiert jedoch nicht.</para>"
+"<para>Sie haben versucht, Fenster „%1“ der Anwendung „%2“ (Prozess-ID: %3) "
+"zu schließen. Die Anwendung reagiert jedoch nicht.</para>"
 
 #: helpers/killer/killer.cpp:88
 #, kde-kuit-format
@@ -1146,8 +1146,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
-"<para>Sie haben versucht, Fenster „%1“ der Anwendung „%2“ (Prozesskennung: "
-"%3) zu schließen, die auf Rechner „%4“ läuft. Die Anwendung reagiert jedoch "
+"<para>Sie haben versucht, Fenster „%1“ der Anwendung „%2“ (Prozess-ID: %3) "
+"zu schließen, die auf Rechner „%4“ läuft. Die Anwendung reagiert jedoch "
 "nicht.</para>"
 
 #: helpers/killer/killer.cpp:91
@@ -1175,14 +1175,12 @@ msgstr "Länger warten"
 #: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Tablet zur nächsten Ausgabe verschieben"
 
 #: input.cpp:2093
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Tablet-Modus"
+msgstr "Tablet nach %1 verschoben"
 
 #: input.cpp:2093
 #, kde-format
@@ -1291,14 +1289,13 @@ msgstr ""
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
-"Das X11-Display, das im Fenstermodus oder unter der X11-Plattform verwendet "
-"wird."
+"Das X11-Display, das im Fenstermodus unter der X11-Plattform verwendet wird."
 
 #: main_wayland.cpp:322
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
-"Das Wayland-Display, das im Fenstermodus oder unter der Wayland-Plattform "
+"Das Wayland-Display, das im Fenstermodus unter der Wayland-Plattform "
 "verwendet wird."
 
 #: main_wayland.cpp:324
@@ -1309,12 +1306,12 @@ msgstr "In virtuellen Framebuffer rendern."
 #: main_wayland.cpp:326
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr "Die Breite im Fenstermodus, Die Voreinstellung beträgt 1024 Pixel."
+msgstr "Die Breite im Fenstermodus. Die Voreinstellung beträgt 1024 Pixel."
 
 #: main_wayland.cpp:330
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr "Die Höhe im Fenstermodus, Die Voreinstellung beträgt 768 Pixel."
+msgstr "Die Höhe im Fenstermodus. Die Voreinstellung beträgt 768 Pixel."
 
 #: main_wayland.cpp:335
 #, kde-format
@@ -1326,29 +1323,31 @@ msgstr "Die Skalierung im Fenstermodus. Die Voreinstellung beträgt 1."
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
-"Die Anzahl der zu öffnenden Fenster im Fenstermodus, Die Voreinstellung "
-"beträgt 1 Fenster."
+"Die Anzahl der zu öffnenden Fenster im Fenstermodus. Die Voreinstellung "
+"beträgt 1 Fenster"
 
 #: main_wayland.cpp:345
-#, fuzzy, kde-format
-#| msgid "Wayland socket to use for incoming connections."
+#, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
-msgstr "Wayland-Socket, der für eingehende Verbindungen verwendet werden soll."
+msgstr ""
+"Wayland-Socket, der für eingehende Verbindungen verwendet werden soll. Dies "
+"kann mit --socket kombiniert werden, um den Socketnamen anzugeben"
 
 #: main_wayland.cpp:349
-#, fuzzy, kde-format
-#| msgid "Wayland socket to use for incoming connections."
+#, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
-msgstr "Wayland-Socket, der für eingehende Verbindungen verwendet werden soll."
+msgstr ""
+"XWayland-Socket, der für eingehende Verbindungen verwendet werden soll. Kann "
+"mehrfach angegeben werden"
 
 #: main_wayland.cpp:353
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "Name der vorkonfigurierten XWayland-Anzeige"
 
 #: main_wayland.cpp:357
 #, kde-format
@@ -1392,7 +1391,7 @@ msgstr "Startet die Sitzung ohne Unterstützung für Bildschirmsperre."
 #: main_wayland.cpp:401
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr "Startet die Sitzung mit Unterstützung für globale Kurzbefehle."
+msgstr "Startet die Sitzung ohne Unterstützung für globale Kurzbefehle."
 
 #: main_wayland.cpp:406 main_x11.cpp:418
 #, kde-format
@@ -1403,15 +1402,14 @@ msgstr "KActivities-Integration deaktivieren."
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
-"Beenden, nachdem die Sitzungsanwendung geschlossen wird, die von KWin "
-"gestartet wurde."
+"Beenden, nachdem die von KWin gestartete Sitzungsanwendung geschlossen wurde."
 
 #: main_wayland.cpp:416
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
-"Anwendungen, die nach dem Start von Wayland und Xwayland gestartet werden "
-"sollen"
+"Anwendungen, die nach dem Start von Wayland und Xwayland Server gestartet "
+"werden sollen"
 
 #: main_x11.cpp:67
 #, kde-format
