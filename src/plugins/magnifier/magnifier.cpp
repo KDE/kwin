@@ -34,8 +34,6 @@ MagnifierEffect::MagnifierEffect()
     : m_zoom(1)
     , m_targetZoom(1)
     , m_lastPresentTime(std::chrono::milliseconds::zero())
-    , m_texture(nullptr)
-    , m_fbo(nullptr)
 {
     MagnifierConfig::instance(effects->config());
     QAction *a;
@@ -95,12 +93,20 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
             m_zoom = std::min(m_zoom * std::max(1 + diff, 1.2), m_targetZoom);
         } else {
             m_zoom = std::max(m_zoom * std::min(1 - diff, 0.8), m_targetZoom);
-            if (m_zoom == 1.0) {
-                // zoom ended - delete FBO and texture
-                m_fbo.reset();
-                m_texture.reset();
-            }
         }
+    }
+    if (m_zoom == 1.0) {
+        // zoom ended - delete FBO and texture
+        m_fbo.reset();
+        m_texture.reset();
+    } else if (!m_fbo) {
+        m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
+        if (!m_texture) {
+            effects->prePaintScreen(data, presentTime);
+            return;
+        }
+        m_texture->setContentTransform(OutputTransform());
+        m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
     if (m_zoom != m_targetZoom) {
@@ -118,7 +124,7 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
 void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
-    if (m_zoom != 1.0) {
+    if (m_zoom != 1.0 && m_fbo) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
         const QPointF cursor = cursorPos();
@@ -263,22 +269,10 @@ void MagnifierEffect::setTargetZoom(double zoomFactor)
     }
 
     m_targetZoom = effectiveTargetZoom;
-    if (m_targetZoom > 1.0) {
-        if (!m_texture) {
-            effects->makeOpenGLContextCurrent();
-            m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
-            if (!m_texture) {
-                return;
-            }
-            m_texture->setContentTransform(OutputTransform());
-            m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
-        }
-    } else {
-        if (m_zoom == m_targetZoom) {
-            effects->makeOpenGLContextCurrent();
-            m_fbo.reset();
-            m_texture.reset();
-        }
+    if (m_targetZoom == 1.0 && m_zoom == 1.0 && m_fbo) {
+        effects->makeOpenGLContextCurrent();
+        m_fbo.reset();
+        m_texture.reset();
     }
 
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
