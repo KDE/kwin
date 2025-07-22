@@ -732,6 +732,16 @@ void Item::handleFramePainted(Output *output, OutputFrame *frame, std::chrono::m
 {
 }
 
+bool Item::hasVisibleContents() const
+{
+    if (!isVisible()) {
+        return false;
+    }
+    return !m_size.isEmpty() || std::ranges::any_of(m_childItems, [](Item *item) {
+        return item->hasVisibleContents();
+    });
+}
+
 } // namespace KWin
 
 #include "moc_item.cpp"

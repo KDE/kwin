@@ -476,7 +476,9 @@ bool ItemTreeView::needsRepaint()
 
 bool ItemTreeView::isVisible() const
 {
-    return m_item->isVisible();
+    // Item::isVisible isn't enough here, we only want to render the view
+    // if there's actual contents
+    return m_item->hasVisibleContents();
 }
 
 bool ItemTreeView::canSkipMoveRepaint(Item *item)
