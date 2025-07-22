@@ -630,4 +630,18 @@ void Workspace::windowAttentionChanged(Window *window, bool set)
     }
 }
 
+void Workspace::setActivationToken(const QString &token, uint32_t serial)
+{
+    m_activationToken = token;
+    m_activationTokenSerial = serial;
+}
+
+bool Workspace::mayActivate(const QString &token) const
+{
+    if (!m_activeWindow) {
+        return true;
+    }
+    return !m_activationToken.isEmpty() && token == m_activationToken && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial;
+}
+
 } // namespace

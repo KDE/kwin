@@ -436,6 +436,9 @@ public:
     OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt);
     void updateXwaylandScale();
 
+    void setActivationToken(const QString &token, uint32_t serial);
+    bool mayActivate(const QString &token) const;
+
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
     // Keybindings
@@ -728,6 +731,9 @@ private:
     std::unique_ptr<OrientationSensor> m_orientationSensor;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     KConfigWatcher::Ptr m_kdeglobalsWatcher;
+
+    QString m_activationToken;
+    uint32_t m_activationTokenSerial = 0;
 
 private:
     friend bool performTransiencyCheck();
