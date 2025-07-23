@@ -34,15 +34,8 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
     : QObject(parent)
 {
     activation->setActivationTokenCreator([this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
-        Workspace *ws = Workspace::self();
         Q_ASSERT(client); // Should always be available as it's coming straight from the wayland implementation
-        const bool isPrivileged = isPrivilegedInWindowManagement(client);
-        if (!isPrivileged && ws->activeWindow() && ws->activeWindow()->surface() != surface) {
-            qCDebug(KWIN_CORE) << "Cannot grant a token to" << client;
-            return QStringLiteral("not-granted-666");
-        }
-
-        return requestToken(isPrivileged, surface, serial, seat, appId);
+        return requestToken(isPrivilegedInWindowManagement(client), surface, serial, seat, appId);
     });
 
     connect(activation, &XdgActivationV1Interface::activateRequested, this, &XdgActivationV1Integration::activateSurface);
@@ -50,6 +43,11 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
 
 QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)
 {
+    auto window = waylandServer()->findWindow(surface);
+    if (!isPrivileged && workspace()->activeWindow() && workspace()->activeWindow()->surface() != surface) {
+        qCWarning(KWIN_CORE) << "Cannot grant a token to" << window;
+        return QStringLiteral("not-granted-666");
+    }
     static int i = 0;
     const auto newToken = QStringLiteral("kwin-%1").arg(++i);
 
