@@ -85,7 +85,10 @@ public:
     QList<QRectF> shape() const override;
 
 private:
+    void handleShapeChange();
+
     X11Window *m_window;
+    QRegion m_previousBufferShape;
 };
 #endif
 
