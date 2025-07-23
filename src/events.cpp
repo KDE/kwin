@@ -476,10 +476,10 @@ void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
         m_frameGeometry = newgeom;
         m_bufferGeometry = newgeom;
         checkOutput();
+        updateShapeRegion();
         Q_EMIT bufferGeometryChanged(old);
         Q_EMIT clientGeometryChanged(old);
         Q_EMIT frameGeometryChanged(old);
-        Q_EMIT shapeChanged();
     }
 }
 
@@ -646,8 +646,7 @@ void X11Window::shapeNotifyEvent(xcb_shape_notify_event_t *e)
     switch (e->shape_kind) {
     case XCB_SHAPE_SK_BOUNDING:
     case XCB_SHAPE_SK_CLIP:
-        detectShape();
-        Q_EMIT shapeChanged();
+        updateShapeRegion();
         break;
     case XCB_SHAPE_SK_INPUT:
         break;
