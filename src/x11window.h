@@ -241,6 +241,8 @@ public:
 
     quint64 surfaceSerial() const;
 
+    bool hitTest(const QPointF &point) const override;
+
 public Q_SLOTS:
     void closeWindow() override;
     void updateCaption() override;
