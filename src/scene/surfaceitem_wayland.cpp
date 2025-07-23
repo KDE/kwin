@@ -265,7 +265,19 @@ SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Item *parent)
     : SurfaceItemWayland(window->surface(), parent)
     , m_window(window)
 {
-    connect(window, &X11Window::shapeChanged, this, &SurfaceItemXwayland::discardQuads);
+    connect(window, &X11Window::shapeChanged, this, &SurfaceItemXwayland::handleShapeChange);
+}
+
+void SurfaceItemXwayland::handleShapeChange()
+{
+    const auto newShape = m_window->shapeRegion();
+    QRegion newBufferShape;
+    for (const auto &rect : newShape) {
+        newBufferShape |= rect.toAlignedRect();
+    }
+    scheduleRepaint(newBufferShape.xored(m_previousBufferShape));
+    m_previousBufferShape = newBufferShape;
+    discardQuads();
 }
 
 QList<QRectF> SurfaceItemXwayland::shape() const
