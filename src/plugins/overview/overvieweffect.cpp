@@ -141,6 +141,7 @@ OverviewEffect::OverviewEffect()
     auto overviewAction = m_overviewState->toggleAction();
     overviewAction->setObjectName(QStringLiteral("Overview"));
     overviewAction->setText(i18nc("@action Overview is the name of a Kwin effect", "Toggle Overview"));
+    overviewAction->setAutoRepeat(false);
     KGlobalAccel::self()->setDefaultShortcut(overviewAction, {defaultOverviewShortcut});
     KGlobalAccel::self()->setShortcut(overviewAction, {defaultOverviewShortcut});
     m_overviewShortcut = KGlobalAccel::self()->shortcut(overviewAction);
@@ -149,6 +150,7 @@ OverviewEffect::OverviewEffect()
     auto gridAction = m_gridState->toggleAction();
     gridAction->setObjectName(QStringLiteral("Grid View"));
     gridAction->setText(i18nc("@action Grid view is the name of a Kwin effect", "Toggle Grid View"));
+    gridAction->setAutoRepeat(false);
     KGlobalAccel::self()->setDefaultShortcut(gridAction, {defaultGridShortcut});
     KGlobalAccel::self()->setShortcut(gridAction, {defaultGridShortcut});
     m_gridShortcut = KGlobalAccel::self()->shortcut(gridAction);

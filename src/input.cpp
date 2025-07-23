@@ -1063,26 +1063,26 @@ public:
             const auto modifiers = event->modifiersRelevantForGlobalShortcuts;
             if (event->state == KeyboardKeyState::Pressed) {
                 auto passToShortcuts = [modifiers] {
-                    input()->shortcuts()->processKey(modifiers, Qt::Key_PowerDown);
+                    input()->shortcuts()->processKey(modifiers, Qt::Key_PowerDown, KeyboardKeyState::Pressed);
                 };
                 QObject::connect(&m_powerDown, &QTimer::timeout, input()->shortcuts(), passToShortcuts, Qt::SingleShotConnection);
                 m_powerDown.start();
                 return true;
             } else if (event->state == KeyboardKeyState::Released) {
-                const bool ret = !m_powerDown.isActive() || input()->shortcuts()->processKey(modifiers, event->key);
+                const bool ret = !m_powerDown.isActive() || input()->shortcuts()->processKey(modifiers, event->key, event->state);
                 m_powerDown.stop();
                 return ret;
             }
         } else if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                if (input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key)) {
+                if (input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key, event->state)) {
                     input()->keyboard()->addFilteredKey(event->nativeScanCode);
                     return true;
                 }
             }
         } else if (event->state == KeyboardKeyState::Released) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKeyRelease(event->modifiersRelevantForGlobalShortcuts, event->key);
+                return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts, event->key, event->state);
             }
         }
         return false;

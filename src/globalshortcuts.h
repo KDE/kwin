@@ -10,6 +10,8 @@
 // KWin
 #include "effect/globals.h"
 // Qt
+#include "core/inputdevice.h"
+
 #include <QKeySequence>
 
 #include <memory>
@@ -84,8 +86,7 @@ public:
      * @param keyQt The Qt::Key which got pressed
      * @return @c true if a shortcut triggered, @c false otherwise
      */
-    bool processKey(Qt::KeyboardModifiers modifiers, int keyQt);
-    bool processKeyRelease(Qt::KeyboardModifiers modifiers, int keyQt);
+    bool processKey(Qt::KeyboardModifiers modifiers, int keyQt, KeyboardKeyState state);
     bool processPointerPressed(Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
     /**
      * @brief Processes a pointer axis event to decide whether a shortcut needs to be triggered.
