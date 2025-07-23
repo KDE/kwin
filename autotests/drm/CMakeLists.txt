@@ -51,7 +51,7 @@ target_include_directories(LibDrmTest
 ########################################################
 # Tests
 ########################################################
-add_executable(testDrm drmTest.cpp)
-target_link_libraries(testDrm LibDrmTest Qt::Test)
-add_test(NAME kwin-testDrm COMMAND testDrm)
-ecm_mark_as_test(testDrm)
+add_executable(testMockDrm mockDrmTest.cpp)
+target_link_libraries(testMockDrm LibDrmTest Qt::Test)
+add_test(NAME kwin-testMockDrm COMMAND testMockDrm)
+ecm_mark_as_test(testMockDrm)
