@@ -4474,6 +4474,21 @@ void X11Window::setShortcutInternal()
 #endif
 }
 
+bool X11Window::hitTest(const QPointF &point) const
+{
+    if (isDecorated()) {
+        if (m_decoration.inputRegion.contains(flooredPoint(mapToFrame(point)))) {
+            return true;
+        }
+    }
+    if (!m_surface || (m_surface->isMapped() && !m_surface->inputSurfaceAt(mapToLocal(point)))) {
+        return false;
+    }
+    return std::ranges::any_of(m_shapeRegion, [local = mapToLocal(point)](const QRectF &rect) {
+        return exclusiveContains(rect, local);
+    });
+}
+
 } // namespace
 
 #include "moc_x11window.cpp"
