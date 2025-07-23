@@ -151,7 +151,6 @@ public:
 
     void invalidateDecoration() override;
 
-    void detectShape();
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) const override;
@@ -296,7 +295,7 @@ private:
     void getMotifHints();
     void getIcons();
     void getWmOpaqueRegion();
-    void discardShapeRegion();
+    void updateShapeRegion();
     void fetchName();
     void fetchIconicName();
     QString readName() const;
@@ -405,8 +404,7 @@ private:
     xcb_visualid_t m_visual = XCB_NONE;
     int bit_depth = 24;
     QRegion opaque_region;
-    mutable QList<QRectF> m_shapeRegion;
-    mutable bool m_shapeRegionIsValid = false;
+    QList<QRectF> m_shapeRegion;
     friend struct ResetupRulesProcedure;
 
     friend bool performTransiencyCheck();

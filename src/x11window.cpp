@@ -147,7 +147,6 @@ X11Window::X11Window()
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Window::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
-    connect(this, &X11Window::shapeChanged, this, &X11Window::discardShapeRegion);
 
     m_releaseTimer.setSingleShot(true);
     connect(&m_releaseTimer, &QTimer::timeout, this, [this]() {
@@ -348,7 +347,7 @@ bool X11Window::track(xcb_window_t w)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
     }
-    detectShape();
+    updateShapeRegion();
     getWmOpaqueRegion();
     getSkipCloseAnimation();
     updateShadow();
@@ -424,7 +423,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
     }
-    detectShape();
+    updateShapeRegion();
     detectNoBorder();
     fetchIconicName();
     setClientFrameExtents(info->gtkFrameExtents());
@@ -1124,11 +1123,6 @@ void X11Window::setNoBorder(bool set)
 void X11Window::checkNoBorder()
 {
     setNoBorder(app_noborder);
-}
-
-void X11Window::detectShape()
-{
-    is_shape = Xcb::Extensions::self()->hasShape(window());
 }
 
 /**
@@ -3625,7 +3619,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     if (oldOutput != m_output) {
         Q_EMIT outputChanged();
     }
-    Q_EMIT shapeChanged();
+    updateShapeRegion();
 }
 
 void X11Window::configure(const QRect &nativeGeometry)
@@ -4021,13 +4015,14 @@ void X11Window::getWmOpaqueRegion()
 
 QList<QRectF> X11Window::shapeRegion() const
 {
-    if (m_shapeRegionIsValid) {
-        return m_shapeRegion;
-    }
+    return m_shapeRegion;
+}
 
+void X11Window::updateShapeRegion()
+{
     const QRectF bufferGeometry = this->bufferGeometry();
-
-    if (is_shape) {
+    const auto previousRegion = m_shapeRegion;
+    if (Xcb::Extensions::self()->hasShape(window())) {
         auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), window(), XCB_SHAPE_SK_BOUNDING);
         UniqueCPtr<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (reply) {
@@ -4035,27 +4030,21 @@ QList<QRectF> X11Window::shapeRegion() const
             const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.get());
             const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.get());
             for (int i = 0; i < rectCount; ++i) {
-                QRectF region = Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height)).toAlignedRect();
+                QRectF region = Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height));
                 // make sure the shape is sane (X is async, maybe even XShape is broken)
                 region = region.intersected(QRectF(QPointF(0, 0), bufferGeometry.size()));
 
                 m_shapeRegion += region;
             }
         } else {
-            m_shapeRegion.clear();
+            m_shapeRegion = {QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
         }
     } else {
         m_shapeRegion = {QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
     }
-
-    m_shapeRegionIsValid = true;
-    return m_shapeRegion;
-}
-
-void X11Window::discardShapeRegion()
-{
-    m_shapeRegionIsValid = false;
-    m_shapeRegion.clear();
+    if (m_shapeRegion != previousRegion) {
+        Q_EMIT shapeChanged();
+    }
 }
 
 Xcb::Property X11Window::fetchWmClientLeader() const
