@@ -37,6 +37,7 @@ OutputConfigurationStore::~OutputConfigurationStore()
     save();
 }
 
+// Dave, if we go this route, don't make this optional
 std::optional<std::tuple<OutputConfiguration, QList<Output *>, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
 {
     QList<Output *> relevantOutputs;
@@ -44,7 +45,7 @@ std::optional<std::tuple<OutputConfiguration, QList<Output *>, OutputConfigurati
         return !output->isNonDesktop() && !output->isPlaceholder();
     });
     if (relevantOutputs.isEmpty()) {
-        return std::nullopt;
+        return std::make_tuple(OutputConfiguration(), QList<Output *>(), ConfigType::Generated);
     }
     // assigns uuids, if the outputs don't have one yet
     registerOutputs(outputs);

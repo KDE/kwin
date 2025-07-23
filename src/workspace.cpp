@@ -431,9 +431,11 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
         return error;
     }
     updateOutputs(outputOrder);
-    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder);
-    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 
+    if (!m_lockedForRemote) {
+        m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder);
+        m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+    }
     updateXwaylandScale();
 
     for (Output *output : std::as_const(m_outputs)) {
@@ -455,6 +457,22 @@ void Workspace::updateXwaylandScale()
         kwinApp()->setXwaylandScale(maxScale);
     } else {
         kwinApp()->setXwaylandScale(1);
+    }
+}
+
+void Workspace::lockForRemote(bool lock)
+{
+    if (lock == m_lockedForRemote) {
+        return;
+    }
+    m_lockedForRemote = lock;
+    updateOutputConfiguration();
+    // TODO switch VT to greeter if locked
+
+    // when exiting this mode, relock the local session
+    // is this our job or the caller's job?
+    if (!lock) {
+        ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
 }
 
@@ -485,10 +503,18 @@ void Workspace::updateOutputConfiguration()
     };
 
     QList<Output *> toEnable = outputs;
+    if (m_lockedForRemote) {
+        for (Output *output : outputs) {
+            if (!output->canResize()) {
+                toEnable.removeAll(output);
+            }
+        }
+    }
+
     OutputConfigurationError error = OutputConfigurationError::None;
     do {
         auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
-        if (!opt) {
+        if (!opt) { // Dave, deprecate?
             return;
         }
         auto &[cfg, order, type] = *opt;

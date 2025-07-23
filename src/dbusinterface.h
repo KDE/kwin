@@ -89,6 +89,9 @@ public Q_SLOTS: // METHODS
 
     Q_NOREPLY void showDesktop(bool show);
 
+    // obviously not this, I'll do something with a cookie or an FD or something
+    void lockForRemote(bool lock);
+
 Q_SIGNALS:
     void showingDesktopChanged(bool showing);
 

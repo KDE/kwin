@@ -241,6 +241,11 @@ void DBusInterface::showDesktop(bool show)
     }
 }
 
+void DBusInterface::lockForRemote(bool lock)
+{
+    workspace()->lockForRemote(lock);
+}
+
 void DBusInterface::onShowingDesktopChanged(bool show, bool /*animated*/)
 {
     Q_EMIT showingDesktopChanged(show);

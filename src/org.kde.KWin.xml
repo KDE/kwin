@@ -43,6 +43,9 @@
         <arg type="s" direction="in"/>
         <arg type="a{sv}" direction="out"/>
     </method>
+    <method name="lockForRemote">
+        <arg type="b" direction="in"/>
+    </method>
 
     <property name="showingDesktop" type="b" access="read"/>
     <method name="showDesktop">
