@@ -106,7 +106,7 @@ class WaylandTestApplication : public Application
 {
     Q_OBJECT
 public:
-    WaylandTestApplication(int &argc, char **argv);
+    WaylandTestApplication(int &argc, char **argv, bool runOnKMS);
     ~WaylandTestApplication() override;
 
     void setInputMethodServerToStart(const QString &inputMethodServer)
@@ -1367,7 +1367,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
 
-#define WAYLANDTEST_MAIN(TestObject)                                                                                                      \
+#define WAYLANDTEST_MAIN_OPT(TestObject, useDrm)                                                                                          \
     int main(int argc, char *argv[])                                                                                                      \
     {                                                                                                                                     \
         setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);                                                                      \
@@ -1377,10 +1377,13 @@ Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
         qunsetenv("KDE_SESSION_VERSION");                                                                                                 \
         qunsetenv("XDG_SESSION_DESKTOP");                                                                                                 \
         qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                 \
-        KWin::WaylandTestApplication app(argc, argv);                                                                                     \
+        KWin::WaylandTestApplication app(argc, argv, useDrm);                                                                             \
         app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
         TestObject tc;                                                                                                                    \
         return QTest::qExec(&tc, argc, argv);                                                                                             \
     }
+
+#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_OPT(TestObject, false)
+#define WAYLAND_DRM_TEST_MAIN(TestObject) WAYLANDTEST_MAIN_OPT(TestObject, true)
 
 #endif

@@ -8,6 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "backends/drm/drm_backend.h"
 #include "backends/virtual/virtual_backend.h"
 #include "compositor.h"
 #include "core/outputconfiguration.h"
@@ -53,7 +54,7 @@ Q_IMPORT_PLUGIN(KWinIdleTimePoller)
 namespace KWin
 {
 
-WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
+WaylandTestApplication::WaylandTestApplication(int &argc, char **argv, bool runOnKMS)
     : Application(argc, argv)
 {
     QStandardPaths::setTestModeEnabled(true);
@@ -76,7 +77,9 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
 #if KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
+    if (!runOnKMS) {
+        qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
+    }
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("KDE"));
     qunsetenv("XKB_DEFAULT_RULES");
     qunsetenv("XKB_DEFAULT_MODEL");
@@ -98,8 +101,20 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
-    setSession(Session::create(Session::Type::Noop));
-    setOutputBackend(std::make_unique<VirtualBackend>());
+    if (runOnKMS) {
+        // in order to allow running the test manually on a tty,
+        // we need the real session. This doesn't work in CI though,
+        // so manually check for that and use the noop session instead
+        if (qEnvironmentVariable("CI") == "true") {
+            setSession(Session::create(Session::Type::Noop));
+        } else {
+            setSession(Session::create());
+        }
+        setOutputBackend(std::make_unique<DrmBackend>(session()));
+    } else {
+        setSession(Session::create(Session::Type::Noop));
+        setOutputBackend(std::make_unique<VirtualBackend>());
+    }
     m_waylandServer.reset(WaylandServer::create());
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
 }
@@ -202,6 +217,7 @@ void WaylandTestApplication::performStartup()
     createTabletModeManager();
 
     auto compositor = Compositor::create();
+    compositor->createRenderer();
     createWorkspace();
     createColorManager();
     createPlugins();
@@ -292,6 +308,7 @@ void Test::setOutputConfig(const QList<QRect> &geometries)
 
 void Test::setOutputConfig(const QList<OutputInfo> &infos)
 {
+    Q_ASSERT(qobject_cast<VirtualBackend *>(kwinApp()->outputBackend()));
     QList<VirtualBackend::OutputInfo> converted;
     std::transform(infos.begin(), infos.end(), std::back_inserter(converted), [](const auto &info) {
         return VirtualBackend::OutputInfo{
