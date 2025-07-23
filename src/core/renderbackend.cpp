@@ -59,9 +59,9 @@ OutputFrame::~OutputFrame()
     }
 }
 
-void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)
+void OutputFrame::addFeedback(const std::shared_ptr<PresentationFeedback> &feedback)
 {
-    m_feedbacks.push_back(std::move(feedback));
+    m_feedbacks.push_back(feedback);
 }
 
 std::optional<RenderTimeSpan> OutputFrame::queryRenderTime() const

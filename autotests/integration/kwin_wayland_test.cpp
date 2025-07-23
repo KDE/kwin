@@ -19,6 +19,7 @@
 #include "pluginmanager.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "backends/drm/drm_backend.h"
 
 #if KWIN_BUILD_X11
 #include "utils/xcbutils.h"
@@ -50,7 +51,7 @@ Q_IMPORT_PLUGIN(KWinIdleTimePoller)
 namespace KWin
 {
 
-WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
+WaylandTestApplication::WaylandTestApplication(int &argc, char **argv, bool runOnKMS)
     : Application(argc, argv)
 {
     QStandardPaths::setTestModeEnabled(true);
@@ -73,7 +74,9 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
 #if KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
+    if (!runOnKMS) {
+        qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
+    }
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("KDE"));
     qunsetenv("XKB_DEFAULT_RULES");
     qunsetenv("XKB_DEFAULT_MODEL");
@@ -95,8 +98,13 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
-    setSession(Session::create(Session::Type::Noop));
-    setOutputBackend(std::make_unique<VirtualBackend>());
+    if (runOnKMS) {
+        setSession(Session::create());
+        setOutputBackend(std::make_unique<DrmBackend>(session()));
+    } else {
+        setSession(Session::create(Session::Type::Noop));
+        setOutputBackend(std::make_unique<VirtualBackend>());
+    }
     m_waylandServer.reset(WaylandServer::create());
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
 }
@@ -199,6 +207,7 @@ void WaylandTestApplication::performStartup()
     createTabletModeManager();
 
     auto compositor = Compositor::create();
+    compositor->createRenderer();
     createWorkspace();
     createColorManager();
     createPlugins();
@@ -289,6 +298,7 @@ void Test::setOutputConfig(const QList<QRect> &geometries)
 
 void Test::setOutputConfig(const QList<OutputInfo> &infos)
 {
+    Q_ASSERT(qobject_cast<VirtualBackend *>(kwinApp()->outputBackend()));
     QList<VirtualBackend::OutputInfo> converted;
     std::transform(infos.begin(), infos.end(), std::back_inserter(converted), [](const auto &info) {
         return VirtualBackend::OutputInfo{
