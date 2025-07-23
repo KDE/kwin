@@ -487,4 +487,4 @@ void DrmTest::testVrrChange()
 }
 
 QTEST_GUILESS_MAIN(DrmTest)
-#include "drmTest.moc"
+#include "mockDrmTest.moc"
