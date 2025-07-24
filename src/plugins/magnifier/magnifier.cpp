@@ -270,12 +270,6 @@ void MagnifierEffect::setTargetZoom(double zoomFactor)
     }
 
     m_targetZoom = effectiveTargetZoom;
-    if (m_targetZoom == 1.0 && m_zoom == 1.0 && m_fbo) {
-        effects->makeOpenGLContextCurrent();
-        m_fbo.reset();
-        m_texture.reset();
-    }
-
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
 
