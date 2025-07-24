@@ -48,6 +48,7 @@ private Q_SLOTS:
 
 private:
     QRect magnifierArea(QPointF pos = cursorPos()) const;
+    QRect visibleArea(QPointF pos = cursorPos()) const;
     void setTargetZoom(double zoomFactor);
 
     double m_zoom;
