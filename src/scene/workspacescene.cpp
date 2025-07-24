@@ -179,8 +179,11 @@ struct ClipCorner
     BorderRadius radius;
 };
 
-static bool addCandidates(SceneView *delegate, SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded, QStack<ClipCorner> &corners)
+static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded, QStack<ClipCorner> &corners)
 {
+    if (item->opacity() != 1.0 || item->hasEffects()) {
+        return false;
+    }
     const QList<Item *> children = item->sortedChildItems();
     auto it = children.rbegin();
     for (; it != children.rend(); it++) {
@@ -197,14 +200,18 @@ static bool addCandidates(SceneView *delegate, SurfaceItem *item, QList<SurfaceI
             }
         }
     }
-    if (candidates.size() >= maxCount || item->hasEffects()) {
+    if (candidates.size() >= maxCount) {
         return false;
     }
     if (regionActuallyContains(occluded, item->mapToScene(item->boundingRect()).toAlignedRect())) {
         return true;
     }
     if (delegate->shouldRenderItem(item)) {
-        candidates.push_back(item);
+        if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
+            candidates.push_back(surfaceItem);
+        } else {
+            return false;
+        }
     }
 
     if (!item->borderRadius().isNull()) {
@@ -262,28 +269,16 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     if (!effects->blocksDirectScanout()) {
         QRegion occlusion;
         QStack<ClipCorner> corners;
-        for (int i = stacking_order.count() - 1; i >= 0; i--) {
-            WindowItem *windowItem = stacking_order[i];
-            if (!painted_delegate->shouldRenderItem(windowItem)) {
+        const auto items = m_containerItem->sortedChildItems();
+        for (Item *item : items | std::views::reverse) {
+            if (!item->isVisible() || !painted_delegate->shouldRenderItem(item) || !painted_delegate->viewport().intersects(item->mapToScene(item->boundingRect()))) {
                 continue;
             }
-            Window *window = windowItem->window();
-            if (window->isOnOutput(painted_screen) && window->opacity() > 0 && windowItem->isVisible()) {
-                if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen() || window->windowItem()->hasEffects()) {
-                    return {};
-                }
-
-                SurfaceItem *surfaceItem = window->surfaceItem();
-                if (!surfaceItem || !surfaceItem->isVisible()) {
-                    continue;
-                }
-
-                if (!addCandidates(painted_delegate, surfaceItem, ret, maxCount, occlusion, corners)) {
-                    return {};
-                }
-                if (occlusion.contains(painted_screen->geometry())) {
-                    return ret;
-                }
+            if (!addCandidates(painted_delegate, item, ret, maxCount, occlusion, corners)) {
+                return {};
+            }
+            if (regionActuallyContains(occlusion, painted_screen->geometry())) {
+                return ret;
             }
         }
     }
