@@ -98,9 +98,19 @@ private:
         int colorMatrixLocation;
         int offsetLocation;
         int halfpixelLocation;
-        qreal contrast = 0.2;
-        qreal saturation = 10;
     } m_contrastPass;
+
+    struct
+    {
+        std::unique_ptr<GLShader> shader;
+        int mvpMatrixLocation;
+        int colorMatrixLocation;
+        int offsetLocation;
+        int halfpixelLocation;
+        int boxLocation;
+        int cornerRadiusLocation;
+        int opacityLocation;
+    } m_roundedContrastPass;
 
     struct
     {
@@ -162,6 +172,9 @@ private:
 
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
     std::unordered_map<EffectWindow *, BlurEffectData> m_windows;
+
+    const qreal m_contrast = 0.2;
+    const qreal m_saturation = 10;
 
     static BlurManagerInterface *s_blurManager;
     static QTimer *s_blurManagerRemoveTimer;
