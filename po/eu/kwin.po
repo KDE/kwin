@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-12 02:40+0000\n"
-"PO-Revision-Date: 2025-05-24 23:36+0200\n"
+"PO-Revision-Date: 2025-07-23 13:50+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.04.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -2357,7 +2357,7 @@ msgstr "Gehitu alegiazko mahaigaina"
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Konfiguratu alegiazko mahaigainak..."
+msgstr "Konfiguratu alegiazko mahaigainak…"
 
 #: plugins/overview/qml/main.qml:742
 #, kde-format
@@ -2605,7 +2605,7 @@ msgstr "Betegarria:"
 #: plugins/tileseditor/qml/main.qml:163
 #, kde-format
 msgid "Load Layout…"
-msgstr "Zamatu antolaera..."
+msgstr "Zamatu antolaera…"
 
 #: plugins/tileseditor/qml/main.qml:270
 #, kde-format
@@ -2826,7 +2826,7 @@ msgstr "Leihorik ez"
 #: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
-msgstr "Iragazi leihoak..."
+msgstr "Iragazi leihoak…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -3797,17 +3797,17 @@ msgstr "Titulu-barrarik eta markorik e&z"
 #: useractions.cpp:252
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Ezarri leihoaren laster&bidea..."
+msgstr "Ezarri leihoaren laster&bidea…"
 
 #: useractions.cpp:258
 #, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Konfiguratu &leihoaren ezarpen bereziak..."
+msgstr "Konfiguratu &leihoaren ezarpen bereziak…"
 
 #: useractions.cpp:263
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Konfiguratu aplikazioaren ezarpen &bereziak..."
+msgstr "Konfiguratu aplikazioaren ezarpen &bereziak…"
 
 #: useractions.cpp:269
 #, kde-format
