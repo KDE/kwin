@@ -329,7 +329,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
     }
 }
 
-QRegion WorkspaceScene::prePaint(SceneView *delegate)
+void WorkspaceScene::prePaint(SceneView *delegate)
 {
     createStackingOrder();
 
@@ -364,10 +364,6 @@ QRegion WorkspaceScene::prePaint(SceneView *delegate)
     } else {
         preparePaintSimpleScreen();
     }
-
-    // FIXME damage in logical coordinates may cause issues here
-    // if the viewport is on a non-integer position!
-    return m_paintContext.damage.translated(-delegate->viewport().topLeft().toPoint());
 }
 
 static void resetRepaintsHelper(Item *item, SceneView *delegate)
@@ -413,9 +409,6 @@ void WorkspaceScene::preparePaintGenericScreen()
             .mask = data.mask,
         });
     }
-
-    resetRepaintsHelper(m_overlayItem.get(), painted_delegate);
-    m_paintContext.damage = infiniteRegion();
 }
 
 void WorkspaceScene::preparePaintSimpleScreen()
@@ -447,63 +440,31 @@ void WorkspaceScene::preparePaintSimpleScreen()
             .mask = data.mask,
         });
     }
-
-    // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
-    QRegion opaque;
-    for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
-        const auto &paintData = m_paintContext.phase2Data.at(i);
-        m_paintContext.damage += paintData.region - opaque;
-        if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
-            opaque += paintData.opaque;
-        }
-    }
-
-    accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.damage);
 }
 
-QRegion WorkspaceScene::updatePrePaint()
+QRegion WorkspaceScene::collectDamage()
 {
-    if (m_paintContext.damage == infiniteRegion()) {
-        // == paintGenericScreen, no damage tracking
+    if (m_paintContext.mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
+        resetRepaintsHelper(m_overlayItem.get(), painted_delegate);
+        m_paintContext.damage = infiniteRegion();
         return infiniteRegion();
-    }
-
-    // this is mostly just duplicated from preparePaintSimpleScreen...
-    // TODO remove WindowPrePaintData::paint, then preparePaintSimpleScreen can drop the damage tracking bits
-    for (auto &phase2data : m_paintContext.phase2Data) {
-        WindowItem *windowItem = phase2data.item;
-        Window *window = windowItem->window();
-        accumulateRepaints(windowItem, painted_delegate, &phase2data.region);
-
-        // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
-        if (window->opacity() == 1.0) {
-            const SurfaceItem *surfaceItem = windowItem->surfaceItem();
-            if (Q_LIKELY(surfaceItem)) {
-                phase2data.opaque |= surfaceItem->mapToScene(surfaceItem->opaque());
-            }
-
-            const DecorationItem *decorationItem = windowItem->decorationItem();
-            if (decorationItem) {
-                phase2data.opaque |= decorationItem->mapToScene(decorationItem->opaque());
+    } else {
+        // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
+        QRegion opaque;
+        for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
+            const auto &paintData = m_paintContext.phase2Data.at(i);
+            m_paintContext.damage += paintData.region - opaque;
+            if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
+                opaque += paintData.opaque;
             }
         }
+
+        accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.damage);
+
+        // FIXME damage in logical coordinates may cause issues here
+        // if the viewport is on a non-integer position!
+        return m_paintContext.damage.translated(-painted_delegate->viewport().topLeft().toPoint());
     }
-
-    // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
-    QRegion opaque;
-    for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
-        const auto &paintData = m_paintContext.phase2Data.at(i);
-        m_paintContext.damage += paintData.region - opaque;
-        if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
-            opaque += paintData.opaque;
-        }
-    }
-
-    accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.damage);
-
-    // FIXME damage in logical coordinates may cause issues here
-    // if the viewport is on a non-integer position!
-    return m_paintContext.damage.translated(-painted_delegate->viewport().topLeft().toPoint());
 }
 
 void WorkspaceScene::postPaint()

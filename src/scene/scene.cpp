@@ -95,14 +95,14 @@ QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
     return m_scene->scanoutCandidates(maxCount);
 }
 
-QRegion SceneView::prePaint()
+void SceneView::prePaint()
 {
-    return m_scene->prePaint(this);
+    m_scene->prePaint(this);
 }
 
-QRegion SceneView::updatePrePaint()
+QRegion SceneView::collectDamage()
 {
-    return m_scene->updatePrePaint();
+    return m_scene->collectDamage();
 }
 
 void SceneView::postPaint()
@@ -234,20 +234,16 @@ static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints
     }
 }
 
-QRegion ItemTreeView::prePaint()
+void ItemTreeView::prePaint()
+{
+}
+
+QRegion ItemTreeView::collectDamage()
 {
     QRegion ret;
     accumulateRepaints(m_item, this, &ret);
     // FIXME damage tracking for this layer still has some bugs, this effectively disables it
     ret = viewport().toAlignedRect();
-    // FIXME this should really not be rounded!
-    return ret.translated(-viewport().topLeft().toPoint());
-}
-
-QRegion ItemTreeView::updatePrePaint()
-{
-    QRegion ret;
-    accumulateRepaints(m_item, this, &ret);
     // FIXME this offset should really not be rounded
     return ret.translated(-viewport().topLeft().toPoint());
 }

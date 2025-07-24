@@ -42,8 +42,8 @@ public:
     virtual QRectF viewport() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
     virtual void frame(OutputFrame *frame) = 0;
-    virtual QRegion prePaint() = 0;
-    virtual QRegion updatePrePaint() = 0;
+    virtual void prePaint() = 0;
+    virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
     virtual void postPaint() = 0;
     virtual bool shouldRenderItem(Item *item) const;
@@ -81,8 +81,8 @@ public:
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
-    QRegion prePaint() override;
-    QRegion updatePrePaint() override;
+    void prePaint() override;
+    QRegion collectDamage() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     void postPaint() override;
     double desiredHdrHeadroom() const;
@@ -114,8 +114,8 @@ public:
     bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
-    QRegion prePaint() override;
-    QRegion updatePrePaint() override;
+    void prePaint() override;
+    QRegion collectDamage() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     bool shouldRenderItem(Item *item) const override;
@@ -175,12 +175,8 @@ public:
     void removeView(RenderView *view);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
-    virtual QRegion prePaint(SceneView *delegate) = 0;
-    /**
-     * While prePaint returns damage, some layer-related actions may cause
-     * damage to be added after prePaint
-     */
-    virtual QRegion updatePrePaint() = 0;
+    virtual void prePaint(SceneView *delegate) = 0;
+    virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
     virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame);

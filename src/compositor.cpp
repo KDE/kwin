@@ -478,11 +478,12 @@ void Compositor::composite(RenderLoop *renderLoop)
     };
     QList<LayerData> layers;
 
+    primaryView->prePaint();
     layers.push_back(LayerData{
         .layer = m_backend->primaryLayer(output),
         .view = primaryView,
         .directScanout = false,
-        .surfaceDamage = primaryView->prePaint() | m_backend->primaryLayer(output)->repaints(),
+        .surfaceDamage = m_backend->primaryLayer(output)->repaints(),
     });
 
     // slowly adjust the artificial HDR headroom for the next frame. Note that
@@ -510,11 +511,12 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     const auto cursorViewIt = m_cursorViews.find(renderLoop);
     if (cursorViewIt != m_cursorViews.end()) {
+        cursorViewIt->second->prePaint();
         layers.push_back(LayerData{
             .layer = m_backend->cursorLayer(output),
             .view = cursorViewIt->second.get(),
             .directScanout = false,
-            .surfaceDamage = cursorViewIt->second->prePaint() | m_backend->cursorLayer(output)->repaints(),
+            .surfaceDamage = m_backend->cursorLayer(output)->repaints(),
         });
     }
 
@@ -576,7 +578,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             if (!layer.layer->isEnabled()) {
                 continue;
             }
-            layer.surfaceDamage |= layer.view->updatePrePaint() | layer.layer->repaints();
+            layer.surfaceDamage |= layer.view->collectDamage() | layer.layer->repaints();
             layer.layer->resetRepaints();
             if (!layer.directScanout) {
                 result &= renderLayer(layer.layer, layer.view, output, frame, layer.surfaceDamage);
