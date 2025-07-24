@@ -34,6 +34,7 @@
 #include "qwayland-security-context-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
+#include "qwayland-xdg-activation-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-dialog-v1.h"
 #include "qwayland-xdg-shell.h"
@@ -611,6 +612,7 @@ enum class AdditionalWaylandInterface {
     ColorManagement = 1 << 22,
     FifoV1 = 1 << 23,
     PresentationTime = 1 << 24,
+    XdgActivation = 1 << 25,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -717,6 +719,33 @@ private:
     void wp_presentation_feedback_discarded() override;
 };
 
+class XdgActivationToken : public QObject, public QtWayland::xdg_activation_token_v1
+{
+    Q_OBJECT
+public:
+    explicit XdgActivationToken(::xdg_activation_token_v1 *object);
+    ~XdgActivationToken() override;
+
+    QString commitAndWait();
+
+Q_SIGNALS:
+    void tokenReceived();
+
+private:
+    void xdg_activation_token_v1_done(const QString &token) override;
+
+    QString m_token;
+};
+
+class XdgActivation : public QtWayland::xdg_activation_v1
+{
+public:
+    explicit XdgActivation(::wl_registry *registry, uint32_t id, int version);
+    ~XdgActivation() override;
+
+    std::unique_ptr<XdgActivationToken> createToken();
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -757,6 +786,7 @@ struct Connection
     std::unique_ptr<ColorManagerV1> colorManager;
     std::unique_ptr<FifoManagerV1> fifoManager;
     std::unique_ptr<PresentationTime> presentationTime;
+    std::unique_ptr<XdgActivation> xdgActivation;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -821,6 +851,7 @@ SecurityContextManagerV1 *waylandSecurityContextManagerV1();
 ColorManagerV1 *colorManager();
 FifoManagerV1 *fifoManager();
 PresentationTime *presentationTime();
+XdgActivation *xdgActivation();
 
 bool waitForWaylandSurface(Window *window);
 

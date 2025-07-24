@@ -535,6 +535,11 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->presentationTime = std::make_unique<PresentationTime>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::XdgActivation) {
+            if (interface == xdg_activation_v1_interface.name) {
+                c->xdgActivation = std::make_unique<XdgActivation>(*c->registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -665,6 +670,7 @@ Connection::~Connection()
     colorManager.reset();
     fifoManager.reset();
     presentationTime.reset();
+    xdgActivation.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -794,6 +800,11 @@ FifoManagerV1 *fifoManager()
 PresentationTime *presentationTime()
 {
     return s_waylandConnection->presentationTime.get();
+}
+
+XdgActivation *xdgActivation()
+{
+    return s_waylandConnection->xdgActivation.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -1815,6 +1826,45 @@ void WpPresentationFeedback::wp_presentation_feedback_presented(uint32_t tv_sec_
 void WpPresentationFeedback::wp_presentation_feedback_discarded()
 {
     Q_EMIT discarded();
+}
+
+XdgActivationToken::XdgActivationToken(::xdg_activation_token_v1 *object)
+    : QtWayland::xdg_activation_token_v1(object)
+{
+}
+
+XdgActivationToken::~XdgActivationToken()
+{
+    destroy();
+}
+
+QString XdgActivationToken::commitAndWait()
+{
+    QSignalSpy received(this, &XdgActivationToken::tokenReceived);
+    commit();
+    received.wait();
+    return m_token;
+}
+
+void XdgActivationToken::xdg_activation_token_v1_done(const QString &token)
+{
+    m_token = token;
+    Q_EMIT tokenReceived();
+}
+
+XdgActivation::XdgActivation(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::xdg_activation_v1(registry, id, version)
+{
+}
+
+XdgActivation::~XdgActivation()
+{
+    destroy();
+}
+
+std::unique_ptr<XdgActivationToken> XdgActivation::createToken()
+{
+    return std::make_unique<XdgActivationToken>(get_activation_token());
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)
