@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "kristen@kde.org",
+                "Name": "Kristen McWilliam"
+            }
+        ],
+        "Description": "Switching virtual desktops only affects the primary screen",
+        "Icon": "preferences-system-windows-script-test",
+        "Id": "virtualdesktopsonlyonprimary",
+        "License": "LGPL-2.1-or-later",
+        "Name": "Virtual Desktops Only on Primary"
+    },
+    "X-Plasma-API": "javascript"
+}

@@ -15,6 +15,10 @@
       <label>Display in an OSD the virtual desktop name when switching between virtual desktops</label>
       <default>false</default>
     </entry>
+    <entry name="virtualDesktopsOnlyOnPrimary" key="virtualdesktopsonlyonprimaryEnabled" type="bool">
+      <label>Whether to restrict virtual desktops to the primary display</label>
+      <default>false</default>
+    </entry>
   </group>
   <group name="Script-desktopchangeosd">
     <entry name="popupHideDelay" key="PopupHideDelay" type="int">

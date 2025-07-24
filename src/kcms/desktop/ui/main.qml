@@ -200,11 +200,29 @@ KCM.ScrollViewKCM {
     extraFooterTopPadding: true // re-add separator line
     footer: ColumnLayout {
         Kirigami.FormLayout {
+            Item {
+                Kirigami.FormData.isSection: true
+                Kirigami.FormData.label: i18nc("@title:group", "Options")
+            }
+
+            QQC2.RadioButton {
+                checked: !kcm.virtualDesktopsSettings.virtualDesktopsOnlyOnPrimary
+                onClicked: kcm.virtualDesktopsSettings.virtualDesktopsOnlyOnPrimary = false
+                text: i18n("On all displays")
+            }
+
+            QQC2.RadioButton {
+                checked: kcm.virtualDesktopsSettings.virtualDesktopsOnlyOnPrimary
+                onClicked: kcm.virtualDesktopsSettings.virtualDesktopsOnlyOnPrimary = true
+                text: i18n("On primary display")
+            }
+
+            Kirigami.Separator {
+                Layout.fillWidth: true
+            }
 
             QQC2.CheckBox {
                 id: navWraps
-
-                Kirigami.FormData.label: i18n("Options:")
 
                 text: i18n("Navigation wraps around")
                 enabled: !kcm.virtualDesktopsSettings.isImmutable("rollOverDesktops")
