@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-22 00:44+0000\n"
+"POT-Creation-Date: 2025-07-24 00:44+0000\n"
 "PO-Revision-Date: 2025-07-08 14:44+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -1793,17 +1793,17 @@ msgstr "Cursor verbergen bij inactiviteit:"
 msgid "Hide cursor on typing"
 msgstr "Cursor verbergen bij typen"
 
-#: plugins/invert/invert.cpp:43
+#: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr "Omkeereffect aan/uit"
 
-#: plugins/invert/invert.cpp:50
+#: plugins/invert/invert.cpp:52
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Omkeereffect op venster aan/uit"
 
-#: plugins/invert/invert.cpp:57
+#: plugins/invert/invert.cpp:59
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Schermkleuren omkeren"
@@ -2324,7 +2324,7 @@ msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Overzicht omschakelen"
 
-#: plugins/overview/overvieweffect.cpp:151
+#: plugins/overview/overvieweffect.cpp:152
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -3727,347 +3727,347 @@ msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> is in gebruik door %2 in %3"
 
-#: useractions.cpp:813
+#: useractions.cpp:814
 #, kde-format
 msgid "Window Menu"
 msgstr "Venstermenu"
 
-#: useractions.cpp:815
+#: useractions.cpp:816
 #, kde-format
 msgid "Close Window"
 msgstr "Venster sluiten"
 
-#: useractions.cpp:817
+#: useractions.cpp:818
 #, kde-format
 msgid "Maximize Window"
 msgstr "Venster maximaliseren"
 
-#: useractions.cpp:819
+#: useractions.cpp:820
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Venster verticaal maximaliseren"
 
-#: useractions.cpp:821
+#: useractions.cpp:822
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Venster horizontaal maximaliseren"
 
-#: useractions.cpp:823
+#: useractions.cpp:824
 #, kde-format
 msgid "Minimize Window"
 msgstr "Venster minimaliseren"
 
-#: useractions.cpp:825
+#: useractions.cpp:826
 #, kde-format
 msgid "Move Window"
 msgstr "Venster verplaatsen"
 
-#: useractions.cpp:827
+#: useractions.cpp:828
 #, kde-format
 msgid "Resize Window"
 msgstr "Venster van grootte veranderen"
 
-#: useractions.cpp:829
+#: useractions.cpp:830
 #, kde-format
 msgid "Raise Window"
 msgstr "Venster naar voorgrond brengen"
 
-#: useractions.cpp:831
+#: useractions.cpp:832
 #, kde-format
 msgid "Lower Window"
 msgstr "Venster naar achtergrond brengen"
 
-#: useractions.cpp:833
+#: useractions.cpp:834
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Venster schakelen tussen omhoog/omlaag"
 
-#: useractions.cpp:835
+#: useractions.cpp:836
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Venster schermvullend maken"
 
-#: useractions.cpp:837
+#: useractions.cpp:838
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Titelbalk en rand van venster omschakelen"
 
-#: useractions.cpp:839
+#: useractions.cpp:840
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Venster op voorgrond houden"
 
-#: useractions.cpp:841
+#: useractions.cpp:842
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Venster op achtergrond houden"
 
-#: useractions.cpp:843
+#: useractions.cpp:844
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "\"Venster vraagt om aandacht\" activeren"
 
-#: useractions.cpp:845
+#: useractions.cpp:846
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Venstersneltoets instellen"
 
-#: useractions.cpp:847
+#: useractions.cpp:848
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Venster naar het midden verplaatsen"
 
-#: useractions.cpp:849
+#: useractions.cpp:850
 #, kde-format
 msgid "Move Window Right"
 msgstr "Venster naar rechts verplaatsen"
 
-#: useractions.cpp:851
+#: useractions.cpp:852
 #, kde-format
 msgid "Move Window Left"
 msgstr "Venster naar links verplaatsen"
 
-#: useractions.cpp:853
+#: useractions.cpp:854
 #, kde-format
 msgid "Move Window Up"
 msgstr "Venster omhoog verplaatsen"
 
-#: useractions.cpp:855
+#: useractions.cpp:856
 #, kde-format
 msgid "Move Window Down"
 msgstr "Venster omlaag verplaatsen"
 
-#: useractions.cpp:857
+#: useractions.cpp:858
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Venster horizontaal uitbreiden"
 
-#: useractions.cpp:859
+#: useractions.cpp:860
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Venster verticaal uitbreiden"
 
-#: useractions.cpp:861
+#: useractions.cpp:862
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Venster horizontaal verkleinen"
 
-#: useractions.cpp:863
+#: useractions.cpp:864
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Venster verticaal verkleinen"
 
-#: useractions.cpp:865
+#: useractions.cpp:866
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Venster naar links snel in tegels ordenen"
 
-#: useractions.cpp:867
+#: useractions.cpp:868
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Venster naar rechts snel in tegels ordenen"
 
-#: useractions.cpp:869
+#: useractions.cpp:870
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Venster naar bovenaan snel in tegels ordenen"
 
-#: useractions.cpp:871
+#: useractions.cpp:872
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Venster naar onderen snel in tegels ordenen"
 
-#: useractions.cpp:873
+#: useractions.cpp:874
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Venster naar linksboven snel in tegels ordenen"
 
-#: useractions.cpp:875
+#: useractions.cpp:876
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Venster naar onderen snel in tegels ordenen"
 
-#: useractions.cpp:877
+#: useractions.cpp:878
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Venster naar rechtsboven snel in tegels ordenen"
 
-#: useractions.cpp:879
+#: useractions.cpp:880
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Venster naar rechtsonder snel in tegels ordenen"
 
-#: useractions.cpp:881
+#: useractions.cpp:882
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Naar het venster erboven schakelen"
 
-#: useractions.cpp:883
+#: useractions.cpp:884
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Naar het venster eronder schakelen"
 
-#: useractions.cpp:885
+#: useractions.cpp:886
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Naar het venster rechts schakelen"
 
-#: useractions.cpp:887
+#: useractions.cpp:888
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Naar het venster links schakelen"
 
-#: useractions.cpp:889
+#: useractions.cpp:890
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Dekking van actieve venster met 5% verhogen"
 
-#: useractions.cpp:891
+#: useractions.cpp:892
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Dekking van actieve venster met 5% verlagen"
 
-#: useractions.cpp:894
+#: useractions.cpp:895
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Venster op alle bureaubladen"
 
-#: useractions.cpp:897
+#: useractions.cpp:898
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Venster naar links aangepast snel in tegels ordenen"
 
-#: useractions.cpp:899
+#: useractions.cpp:900
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Venster naar rechts aangepast snel in tegels ordenen"
 
-#: useractions.cpp:901
+#: useractions.cpp:902
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Venster naar bovenaan aangepast snel in tegels ordenen"
 
-#: useractions.cpp:903
+#: useractions.cpp:904
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Venster naar onderen aangepast snel in tegels ordenen"
 
-#: useractions.cpp:914
+#: useractions.cpp:915
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Venster naar bureaublad %1"
 
-#: useractions.cpp:916
+#: useractions.cpp:917
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Venster naar volgend bureaublad"
 
-#: useractions.cpp:917
+#: useractions.cpp:918
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Venster naar vorig bureaublad"
 
-#: useractions.cpp:918
+#: useractions.cpp:919
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Venster een bureaublad naar rechts"
 
-#: useractions.cpp:920
+#: useractions.cpp:921
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Venster een bureaublad naar links"
 
-#: useractions.cpp:922
+#: useractions.cpp:923
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Venster een bureaublad naar boven"
 
-#: useractions.cpp:924
+#: useractions.cpp:925
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Venster een bureaublad naar beneden"
 
-#: useractions.cpp:928
+#: useractions.cpp:929
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Venster naar scherm %1 verplaatsen"
 
-#: useractions.cpp:935
+#: useractions.cpp:936
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Venster naar volgend scherm verplaatsen"
 
-#: useractions.cpp:937
+#: useractions.cpp:938
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Venster naar vorig scherm verplaatsen"
 
-#: useractions.cpp:939
+#: useractions.cpp:940
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Venster één scherm naar rechts verplaatsen"
 
-#: useractions.cpp:941
+#: useractions.cpp:942
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Venster één scherm naar links verplaatsen"
 
-#: useractions.cpp:943
+#: useractions.cpp:944
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Venster één scherm omhoog verplaatsen"
 
-#: useractions.cpp:945
+#: useractions.cpp:946
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Venster één scherm omlaag verplaatsen"
 
-#: useractions.cpp:949
+#: useractions.cpp:950
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Schakelen naar scherm %1"
 
-#: useractions.cpp:956
+#: useractions.cpp:957
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Schakelen naar volgend scherm"
 
-#: useractions.cpp:957
+#: useractions.cpp:958
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Omschakelen naar vorig scherm"
 
-#: useractions.cpp:958
+#: useractions.cpp:959
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Naar het scherm rechts schakelen"
 
-#: useractions.cpp:960
+#: useractions.cpp:961
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Naar het scherm links schakelen"
 
-#: useractions.cpp:962
+#: useractions.cpp:963
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Naar het scherm erboven schakelen"
 
-#: useractions.cpp:964
+#: useractions.cpp:965
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Naar het scherm eronder schakelen"
 
-#: useractions.cpp:967
+#: useractions.cpp:968
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Naar het bureaublad gluren"
 
-#: useractions.cpp:970
+#: useractions.cpp:971
 #, kde-format
 msgid "Kill Window"
 msgstr "Venster geforceerd sluiten"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1039
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Venster (%1) activeren"

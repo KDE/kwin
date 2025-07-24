@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-22 00:44+0000\n"
+"POT-Creation-Date: 2025-07-24 00:44+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -1766,17 +1766,17 @@ msgstr ""
 msgid "Hide cursor on typing"
 msgstr ""
 
-#: plugins/invert/invert.cpp:43
+#: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
 msgstr ""
 
-#: plugins/invert/invert.cpp:50
+#: plugins/invert/invert.cpp:52
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr ""
 
-#: plugins/invert/invert.cpp:57
+#: plugins/invert/invert.cpp:59
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr ""
@@ -2311,7 +2311,7 @@ msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:151
+#: plugins/overview/overvieweffect.cpp:152
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -3765,390 +3765,390 @@ msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:813
+#: useractions.cpp:814
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Window Menu"
 msgstr "Prenester"
 
-#: useractions.cpp:815
+#: useractions.cpp:816
 #, kde-format
 msgid "Close Window"
 msgstr "Serriñ ar prenestr"
 
-#: useractions.cpp:817
+#: useractions.cpp:818
 #, kde-format
 msgid "Maximize Window"
 msgstr "Astenn ar prenestr"
 
-#: useractions.cpp:819
+#: useractions.cpp:820
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Uhelaat ar prenestr a-blomm"
 
-#: useractions.cpp:821
+#: useractions.cpp:822
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Uhelaat ar prenestr a-blaen"
 
-#: useractions.cpp:823
+#: useractions.cpp:824
 #, kde-format
 msgid "Minimize Window"
 msgstr "Kilbleget ar prenestr"
 
-#: useractions.cpp:825
+#: useractions.cpp:826
 #, kde-format
 msgid "Move Window"
 msgstr "Fiñval ar prenestr"
 
-#: useractions.cpp:827
+#: useractions.cpp:828
 #, kde-format
 msgid "Resize Window"
 msgstr "Adventañ ar prenestr"
 
-#: useractions.cpp:829
+#: useractions.cpp:830
 #, kde-format
 msgid "Raise Window"
 msgstr "Uhelaat ar prenestr"
 
-#: useractions.cpp:831
+#: useractions.cpp:832
 #, kde-format
 msgid "Lower Window"
 msgstr "Uhelaat ar prenestr"
 
-#: useractions.cpp:833
+#: useractions.cpp:834
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr ""
 
-#: useractions.cpp:835
+#: useractions.cpp:836
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Lakaat ar brenestr e mod skramm leun"
 
-#: useractions.cpp:837
+#: useractions.cpp:838
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Kuzhat kinkladur ar prenestr"
 
-#: useractions.cpp:839
+#: useractions.cpp:840
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr ""
 
-#: useractions.cpp:841
+#: useractions.cpp:842
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr ""
 
-#: useractions.cpp:843
+#: useractions.cpp:844
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr ""
 
-#: useractions.cpp:845
+#: useractions.cpp:846
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Kefluniañ berradennoù ar brenestr"
 
-#: useractions.cpp:847
+#: useractions.cpp:848
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window to the Center"
 msgstr "Fiñval ar prenestr"
 
-#: useractions.cpp:849
+#: useractions.cpp:850
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Fiñval ar prenestr"
 
-#: useractions.cpp:851
+#: useractions.cpp:852
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Fiñval ar prenestr"
 
-#: useractions.cpp:853
+#: useractions.cpp:854
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Fiñval ar prenestr"
 
-#: useractions.cpp:855
+#: useractions.cpp:856
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Fiñval ar prenestr"
 
-#: useractions.cpp:857
+#: useractions.cpp:858
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Uhelaat ar prenestr a-blaen"
 
-#: useractions.cpp:859
+#: useractions.cpp:860
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Uhelaat ar prenestr a-blomm"
 
-#: useractions.cpp:861
+#: useractions.cpp:862
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Uhelaat ar prenestr a-blaen"
 
-#: useractions.cpp:863
+#: useractions.cpp:864
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Uhelaat ar prenestr a-blomm"
 
-#: useractions.cpp:865
+#: useractions.cpp:866
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Quick Tile Window to the Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:867
+#: useractions.cpp:868
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Quick Tile Window to the Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:869
+#: useractions.cpp:870
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:871
+#: useractions.cpp:872
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:873
+#: useractions.cpp:874
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:875
+#: useractions.cpp:876
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:877
+#: useractions.cpp:878
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:879
+#: useractions.cpp:880
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:881
+#: useractions.cpp:882
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Window Above"
 msgstr "Gwintañ da Burev 10"
 
-#: useractions.cpp:883
+#: useractions.cpp:884
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Window Below"
 msgstr "Gwintañ da vurev diaraok"
 
-#: useractions.cpp:885
+#: useractions.cpp:886
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Switch to Window to the Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:887
+#: useractions.cpp:888
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Switch to Window to the Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:889
+#: useractions.cpp:890
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:891
+#: useractions.cpp:892
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:894
+#: useractions.cpp:895
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Mirout ar brenestr war pep burev"
 
-#: useractions.cpp:897
+#: useractions.cpp:898
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:899
+#: useractions.cpp:900
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:901
+#: useractions.cpp:902
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:903
+#: useractions.cpp:904
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:914
+#: useractions.cpp:915
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Prenestr ouzh ar burev 1"
 
-#: useractions.cpp:916
+#: useractions.cpp:917
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Prenestr da vurev a heul"
 
-#: useractions.cpp:917
+#: useractions.cpp:918
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Prenestr da vurev diaraok"
 
-#: useractions.cpp:918
+#: useractions.cpp:919
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:920
+#: useractions.cpp:921
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:922
+#: useractions.cpp:923
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Gwintañ d'ur burev uheloc'h"
 
-#: useractions.cpp:924
+#: useractions.cpp:925
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Gwintañ d'ur burev izeloc'h"
 
-#: useractions.cpp:928
+#: useractions.cpp:929
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Move Window to Screen %1"
 msgstr "Prenestr ouzh ar burev 1"
 
-#: useractions.cpp:935
+#: useractions.cpp:936
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
 msgid "Move Window to Next Screen"
 msgstr "Prenestr da vurev a heul"
 
-#: useractions.cpp:937
+#: useractions.cpp:938
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "Prenestr da vurev diaraok"
 
-#: useractions.cpp:939
+#: useractions.cpp:940
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:941
+#: useractions.cpp:942
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:943
+#: useractions.cpp:944
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 2"
 msgid "Move Window One Screen Up"
 msgstr "Prenestr ouzh ar burev 2"
 
-#: useractions.cpp:945
+#: useractions.cpp:946
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Gwintañ d'ur burev izeloc'h"
 
-#: useractions.cpp:949
+#: useractions.cpp:950
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Screen %1"
 msgstr "Gwintañ da Burev 1"
 
-#: useractions.cpp:956
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Switch to Next Desktop"
 msgid "Switch to Next Screen"
 msgstr "Gwintañ d'ur burev a heul"
 
-#: useractions.cpp:957
+#: useractions.cpp:958
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Gwintañ da vurev diaraok"
 
-#: useractions.cpp:958
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Gwintañ d'ur burev a zehou"
 
-#: useractions.cpp:960
+#: useractions.cpp:961
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Gwintañ d'ur burev a gleiz"
 
-#: useractions.cpp:962
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Screen Above"
 msgstr "Gwintañ da Burev 10"
 
-#: useractions.cpp:964
+#: useractions.cpp:965
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Screen Below"
 msgstr "Gwintañ da Burev 10"
 
-#: useractions.cpp:967
+#: useractions.cpp:968
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "D'ar &burev"
 
-#: useractions.cpp:970
+#: useractions.cpp:971
 #, kde-format
 msgid "Kill Window"
 msgstr "Lazhañ ar prenestr"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1039
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""
