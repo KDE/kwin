@@ -836,43 +836,43 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         }
 
         ShaderManager::instance()->popShader();
+    }
 
-        {
-            ShaderManager::instance()->pushShader(m_contrastPass.shader.get());
+    {
+        ShaderManager::instance()->pushShader(m_contrastPass.shader.get());
 
-            QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
-            projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
+        QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
+        projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-            QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrastPass.contrast, m_contrastPass.saturation);
+        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrastPass.contrast, m_contrastPass.saturation);
 
-            GLFramebuffer::popFramebuffer();
-            const auto &read = renderInfo.framebuffers[1];
+        GLFramebuffer::popFramebuffer();
+        const auto &read = renderInfo.framebuffers[1];
 
-            const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
-                                      0.5 / read->colorAttachment()->height());
+        const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
+                                  0.5 / read->colorAttachment()->height());
 
-            m_contrastPass.shader->setUniform(m_contrastPass.mvpMatrixLocation, projectionMatrix);
-            m_contrastPass.shader->setUniform(m_contrastPass.colorMatrixLocation, colorMatrix);
-            m_contrastPass.shader->setUniform(m_contrastPass.halfpixelLocation, halfpixel);
-            m_contrastPass.shader->setUniform(m_contrastPass.offsetLocation, float(m_offset));
+        m_contrastPass.shader->setUniform(m_contrastPass.mvpMatrixLocation, projectionMatrix);
+        m_contrastPass.shader->setUniform(m_contrastPass.colorMatrixLocation, colorMatrix);
+        m_contrastPass.shader->setUniform(m_contrastPass.halfpixelLocation, halfpixel);
+        m_contrastPass.shader->setUniform(m_contrastPass.offsetLocation, float(m_offset));
 
-            read->colorAttachment()->bind();
+        read->colorAttachment()->bind();
 
-            // Modulate the blurred texture with the window opacity if the window isn't opaque
-            if (opacity < 1.0) {
-                glEnable(GL_BLEND);
-                glBlendColor(0, 0, 0, opacity * opacity);
-                glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-            }
-
-            vbo->draw(GL_TRIANGLES, 6, vertexCount);
-
-            if (opacity < 1.0) {
-                glDisable(GL_BLEND);
-            }
-
-            ShaderManager::instance()->popShader();
+        // Modulate the blurred texture with the window opacity if the window isn't opaque
+        if (opacity < 1.0) {
+            glEnable(GL_BLEND);
+            glBlendColor(0, 0, 0, opacity * opacity);
+            glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
+
+        vbo->draw(GL_TRIANGLES, 6, vertexCount);
+
+        if (opacity < 1.0) {
+            glDisable(GL_BLEND);
+        }
+
+        ShaderManager::instance()->popShader();
     }
 
     if (m_noiseStrength > 0) {
