@@ -36,7 +36,7 @@ public:
         QVector4D box;
         QVector4D borderRadius;
         int borderThickness = 0;
-        QColor borderColor;
+        QColor color;
     };
 
     struct RenderCorner
@@ -81,6 +81,7 @@ private:
     struct
     {
         bool fractionalEnabled = false;
+        bool opaqueEnabled = false;
         std::unique_ptr<GLShader> fractionalShader;
     } m_debug;
 };

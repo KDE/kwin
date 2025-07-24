@@ -30,6 +30,7 @@ ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
     if (!visualizeOptionsString.isEmpty()) {
         const QStringList visualtizeOptions = visualizeOptionsString.split(';');
         m_debug.fractionalEnabled = visualtizeOptions.contains(QLatin1StringView("fractional"));
+        m_debug.opaqueEnabled = visualtizeOptions.contains(QLatin1String("opaque"));
     }
 }
 
@@ -115,6 +116,37 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
             }
         } else {
             geometry.appendWindowQuad(quad, scale);
+        }
+    }
+
+    return geometry;
+}
+
+static RenderGeometry clipQuads(const QRegion &region, const ItemRendererOpenGL::RenderContext *context)
+{
+    // Item to world translation.
+    const QPointF worldTranslation = context->transformStack.top().map(QPointF(0., 0.));
+    const qreal scale = context->renderTargetScale;
+
+    RenderGeometry geometry;
+    geometry.reserve(region.rectCount() * 6);
+
+    // split all quads in bounding rect with the actual rects in the region
+    for (const QRect &rect : region) {
+        if (context->clip != infiniteRegion() && !context->hardwareClipping) {
+            // Scale to device coordinates, rounding as needed.
+            QRectF deviceBounds = snapToPixelGridF(scaledRect(rect, scale));
+
+            for (const QRect &clipRect : std::as_const(context->clip)) {
+                QRectF deviceClipRect = snapToPixelGridF(scaledRect(clipRect, scale)).translated(-worldTranslation);
+
+                const QRectF &intersected = deviceClipRect.intersected(deviceBounds);
+                if (intersected.isValid()) {
+                    geometry.appendWindowQuad(WindowQuad::fromRect(intersected), scale);
+                }
+            }
+        } else {
+            geometry.appendWindowQuad(WindowQuad::fromRect(rect), scale);
         }
     }
 
@@ -279,7 +311,23 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                                  innerRect.height() * 0.5),
                 .borderRadius = outline.radius().scaled(context->renderTargetScale).rounded().toVector(),
                 .borderThickness = thickness,
-                .borderColor = outline.color(),
+                .color = outline.color(),
+            });
+        }
+    }
+
+    if (Q_UNLIKELY(m_debug.opaqueEnabled && !item->opaque().isEmpty())) {
+        const RenderGeometry overlay = clipQuads(item->opaque(), context);
+        if (!overlay.isEmpty()) {
+            context->renderNodes.append(RenderNode{
+                .traits = ShaderTrait::UniformColor,
+                .geometry = overlay,
+                .transformMatrix = context->transformStack.top(),
+                .opacity = context->opacityStack.top(),
+                .hasAlpha = true,
+                .colorDescription = item->colorDescription(),
+                .renderingIntent = item->renderingIntent(),
+                .color = QColor::fromRgb(128, 0, 0, 128),
             });
         }
     }
@@ -441,7 +489,10 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setUniform(GLShader::Vec4Uniform::Box, renderNode.box);
             shader->setUniform(GLShader::Vec4Uniform::CornerRadius, renderNode.borderRadius);
             shader->setUniform(GLShader::IntUniform::Thickness, renderNode.borderThickness);
-            shader->setUniform(GLShader::ColorUniform::Color, renderNode.borderColor);
+            shader->setUniform(GLShader::ColorUniform::Color, renderNode.color);
+        }
+        if (traits & ShaderTrait::UniformColor) {
+            shader->setUniform(GLShader::ColorUniform::Color, renderNode.color);
         }
 
         for (int i = 0; i < renderNode.textures.count(); ++i) {
