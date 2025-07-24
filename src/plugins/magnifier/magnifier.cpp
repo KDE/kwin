@@ -101,13 +101,12 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
         m_fbo.reset();
         m_texture.reset();
     } else if (!m_fbo) {
-        m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
-        if (!m_texture) {
-            effects->prePaintScreen(data, presentTime);
-            return;
+        if (auto texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize)) {
+            if (auto fbo = std::make_unique<GLFramebuffer>(texture.get()); fbo->valid()) {
+                m_texture = std::move(texture);
+                m_fbo = std::move(fbo);
+            }
         }
-        m_texture->setContentTransform(OutputTransform());
-        m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
     if (m_zoom != m_targetZoom) {
