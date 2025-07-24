@@ -112,6 +112,9 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
         m_texture.reset();
     } else if (!m_texture || m_texture->size() != m_magnifierSize) {
         if (auto texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize)) {
+            texture->setWrapMode(GL_CLAMP_TO_EDGE);
+            texture->setFilter(GL_LINEAR);
+
             if (auto fbo = std::make_unique<GLFramebuffer>(texture.get()); fbo->valid()) {
                 m_texture = std::move(texture);
                 m_fbo = std::move(fbo);
