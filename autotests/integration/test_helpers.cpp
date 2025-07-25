@@ -1796,6 +1796,27 @@ PresentationTime::~PresentationTime()
     wp_presentation_destroy(object());
 }
 
+WpPresentationFeedback::WpPresentationFeedback(struct ::wp_presentation_feedback *obj)
+    : QtWayland::wp_presentation_feedback(obj)
+{
+}
+
+WpPresentationFeedback::~WpPresentationFeedback()
+{
+    wp_presentation_feedback_destroy(object());
+}
+
+void WpPresentationFeedback::wp_presentation_feedback_presented(uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec, uint32_t refresh, uint32_t seq_hi, uint32_t seq_lo, uint32_t flags)
+{
+    const std::chrono::nanoseconds timestamp = std::chrono::seconds((uint64_t(tv_sec_hi) << 32) | tv_sec_lo) + std::chrono::nanoseconds(tv_nsec);
+    Q_EMIT presented(timestamp, std::chrono::nanoseconds(refresh));
+}
+
+void WpPresentationFeedback::wp_presentation_feedback_discarded()
+{
+    Q_EMIT discarded();
+}
+
 void keyboardKeyPressed(quint32 key, quint32 time)
 {
     auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();

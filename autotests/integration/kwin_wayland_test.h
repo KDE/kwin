@@ -701,6 +701,22 @@ public:
     ~PresentationTime() override;
 };
 
+class WpPresentationFeedback : public QObject, public QtWayland::wp_presentation_feedback
+{
+    Q_OBJECT
+public:
+    explicit WpPresentationFeedback(struct ::wp_presentation_feedback *obj);
+    ~WpPresentationFeedback() override;
+
+Q_SIGNALS:
+    void presented(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds refreshDuration);
+    void discarded();
+
+private:
+    void wp_presentation_feedback_presented(uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec, uint32_t refresh, uint32_t seq_hi, uint32_t seq_lo, uint32_t flags) override;
+    void wp_presentation_feedback_discarded() override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());

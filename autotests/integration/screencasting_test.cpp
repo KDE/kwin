@@ -91,7 +91,7 @@ void ScreencastingTest::init()
         QSKIP("CI has pipewire 1.2 that has known process callback issues"); // TODO: Remove it later when CI ships pipewire 1.2 with the fix
     }
 
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ScreencastingV1));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ScreencastingV1 | Test::AdditionalWaylandInterface::PresentationTime));
     QVERIFY(KWin::Test::screencasting());
     Cursors::self()->hideCursor();
 }
@@ -156,8 +156,9 @@ void ScreencastingTest::testOutputCasting()
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), [theOutput](Test::XdgToplevel *toplevel) {
+        toplevel->set_fullscreen(theOutput->output());
+    });
 
     QImage sourceImage(theOutput->pixelSize(), QImage::Format_RGBA8888_Premultiplied);
     sourceImage.fill(Qt::green);
@@ -168,7 +169,13 @@ void ScreencastingTest::testOutputCasting()
 
     Window *window = Test::renderAndWaitForShown(surface.get(), sourceImage);
     QVERIFY(window);
+    QVERIFY(window->isFullScreen());
     QCOMPARE(window->frameGeometry(), window->output()->geometry());
+
+    const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
+    QSignalSpy waitForPresented(feedback.get(), &Test::WpPresentationFeedback::presented);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(waitForPresented.wait());
 
     auto stream = KWin::Test::screencasting()->createOutputStream(theOutput->output(), QtWayland::zkde_screencast_unstable_v1::pointer_hidden);
 
