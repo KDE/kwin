@@ -10,7 +10,7 @@
 #include "renderjournal.h"
 #include "renderloop.h"
 
-#include <QTimer>
+#include <QBasicTimer>
 
 #include <fstream>
 #include <optional>
@@ -44,7 +44,7 @@ public:
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
     bool wasTripleBuffering = false;
     int doubleBufferingCounter = 0;
-    QTimer compositeTimer;
+    QBasicTimer compositeTimer;
     RenderJournal renderJournal;
     int refreshRate = 60000;
     int pendingFrameCount = 0;
@@ -56,7 +56,7 @@ public:
     PresentationMode presentationMode = PresentationMode::VSync;
     int maxPendingFrameCount = 1;
 
-    QTimer delayedVrrTimer;
+    QBasicTimer delayedVrrTimer;
 };
 
 } // namespace KWin

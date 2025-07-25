@@ -30,20 +30,6 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     : q(q)
     , output(output)
 {
-    compositeTimer.setSingleShot(true);
-    compositeTimer.setTimerType(Qt::PreciseTimer);
-
-    QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
-        dispatch();
-    });
-
-    delayedVrrTimer.setSingleShot(true);
-    delayedVrrTimer.setInterval(1'000 / 30);
-    delayedVrrTimer.setTimerType(Qt::PreciseTimer);
-
-    QObject::connect(&delayedVrrTimer, &QTimer::timeout, q, [q]() {
-        q->scheduleRepaint(nullptr, nullptr);
-    });
 }
 
 void RenderLoopPrivate::scheduleNextRepaint()
@@ -122,7 +108,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
     }
 
     const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
-    compositeTimer.start(std::max(0ms, std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime)));
+    compositeTimer.start(std::max(0ms, std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime)), Qt::PreciseTimer, q);
 }
 
 void RenderLoopPrivate::delayScheduleRepaint()
@@ -183,6 +169,19 @@ void RenderLoopPrivate::notifyVblank(std::chrono::nanoseconds timestamp)
                 static_cast<long long>(timestamp.count()),
                 static_cast<long long>(lastPresentationTimestamp.count()));
         lastPresentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
+    }
+}
+
+void RenderLoop::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == d->compositeTimer.timerId()) {
+        d->compositeTimer.stop();
+        d->dispatch();
+    } else if (event->timerId() == d->delayedVrrTimer.timerId()) {
+        d->delayedVrrTimer.stop();
+        scheduleRepaint(nullptr, nullptr);
+    } else {
+        QObject::timerEvent(event);
     }
 }
 
@@ -256,7 +255,8 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer)
     if ((vrr || tearing) && workspace() && workspace()->activeWindow() && d->output) {
         SurfaceItem *const surfaceItem = workspace()->activeWindow()->surfaceItem();
         if ((item || outputLayer) && activeWindowControlsVrrRefreshRate() && item != surfaceItem && !surfaceItem->isAncestorOf(item)) {
-            d->delayedVrrTimer.start();
+            constexpr std::chrono::milliseconds s_delayVrrTimer = 1'000ms / 30;
+            d->delayedVrrTimer.start(s_delayVrrTimer, Qt::PreciseTimer, this);
             return;
         }
     }

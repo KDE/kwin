@@ -104,6 +104,8 @@ public:
     // and then remove this again
     bool activeWindowControlsVrrRefreshRate() const;
 
+    void timerEvent(QTimerEvent *event) override;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the refresh rate of this RenderLoop has changed.
