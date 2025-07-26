@@ -164,7 +164,7 @@ void ScreenCastStream::newStreamParams()
 
     // Buffer parameters for explicit sync. It requires two extra blocks to hold acquire and
     // release syncobjs.
-    if (m_dmabufParams) {
+    if (m_dmabufParams && m_dmabufParams->supportsSyncObj) {
         spa_pod_builder_push_object(&pod_builder.b, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
         spa_pod_builder_add(&pod_builder.b,
                             SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(3, 2, 4),
@@ -208,7 +208,7 @@ void ScreenCastStream::newStreamParams()
                                               SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                               SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Header),
                                               SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))));
-    if (m_dmabufParams) {
+    if (m_dmabufParams && m_dmabufParams->supportsSyncObj) {
         params.append(
             (spa_pod *)spa_pod_builder_add_object(&pod_builder.b,
                                                   SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
@@ -947,6 +947,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         .height = attrs->height,
         .format = attrs->format,
         .modifier = attrs->modifier,
+        .supportsSyncObj = backend->drmDevice()->supportsSyncObjTimelines(),
     };
 }
 
