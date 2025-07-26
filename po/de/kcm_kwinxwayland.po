@@ -5,22 +5,22 @@
 # Frederik Schwarzer <schwarzer@kde.org>, 2023.
 # SPDX-FileCopyrightText: 2023 Johannes Obermayr <johannesobermayr@gmx.de>
 # SPDX-FileCopyrightText: 2024, 2025 Flori G <renner03@protonmail.com>
-#
+# SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 # Automatically generated, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-05-17 14:45+0200\n"
-"Last-Translator: Flori G <Renner03@protonmail.com>\n"
+"PO-Revision-Date: 2025-07-19 17:18+0200\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #: ui/main.qml:27
 #, kde-format
@@ -138,9 +138,7 @@ msgstr "Maustasten auch erfassen"
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
-"Die Steuerung des Zeigers und der Tastatur erlauben, ohne um Erlaubnis zu "
-"fragen"
+msgstr "Erlaubt"
 
 #: ui/main.qml:238
 #, kde-format
@@ -154,7 +152,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Steuerung des Zeigers und der Tastatur:"
 
 #: ui/main.qml:258
 #, kde-format
@@ -162,7 +160,7 @@ msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "Erlauben, ohne um Erlaubnis zu fragen"
 
 #: ui/main.qml:268
 #, kde-format
