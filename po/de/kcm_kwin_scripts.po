@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 # Frederik Schwarzer <schwarzer@kde.org>, 2012, 2020, 2023.
 # Burkhard Lück <lueck@hube-lueck.de>, 2012, 2013, 2017, 2018.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
@@ -14,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.07.70\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
