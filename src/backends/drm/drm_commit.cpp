@@ -93,6 +93,9 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
 
 void DrmAtomicCommit::setVrr(DrmCrtc *crtc, bool vrr)
 {
+    if (vrr == m_vrr) {
+        return;
+    }
     addProperty(crtc->vrrEnabled, vrr ? 1 : 0);
     m_vrr = vrr;
 }
