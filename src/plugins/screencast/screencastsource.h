@@ -42,7 +42,7 @@ public:
     virtual QRectF mapFromGlobal(const QRectF &rect) const = 0;
 
 Q_SIGNALS:
-    void frame(const QRegion &damage);
+    void frame();
     void closed();
 };
 

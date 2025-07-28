@@ -47,8 +47,6 @@ public:
 
 private:
     void updateView();
-    void report();
-
     QPointer<Output> m_output;
     std::unique_ptr<ScreencastLayer> m_layer;
     std::unique_ptr<SceneView> m_sceneView;

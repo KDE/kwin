@@ -108,20 +108,14 @@ uint OutputScreenCastSource::refreshRate() const
     return m_output->refreshRate();
 }
 
-void OutputScreenCastSource::report()
-{
-    // the actual damage is determined before rendering
-    Q_EMIT frame(QRegion{});
-}
-
 void OutputScreenCastSource::resume()
 {
     if (m_active) {
         return;
     }
 
-    connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::report);
-    Q_EMIT frame(QRect(QPoint(), m_output->pixelSize()));
+    connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::frame);
+    Q_EMIT frame();
 
     m_active = true;
 }
@@ -132,7 +126,7 @@ void OutputScreenCastSource::pause()
         return;
     }
 
-    disconnect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::report);
+    disconnect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::frame);
 
     m_active = false;
 }

@@ -47,8 +47,6 @@ public:
     QRectF mapFromGlobal(const QRectF &rect) const override;
 
 private:
-    void report();
-
     const QRect m_region;
     const qreal m_scale;
     std::chrono::nanoseconds m_last;

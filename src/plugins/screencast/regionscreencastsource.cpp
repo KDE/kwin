@@ -129,7 +129,7 @@ void RegionScreenCastSource::pause()
     }
 
     m_active = false;
-    disconnect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::report);
+    disconnect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::frame);
 }
 
 void RegionScreenCastSource::resume()
@@ -139,7 +139,8 @@ void RegionScreenCastSource::resume()
     }
 
     m_active = true;
-    connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::report);
+    connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::frame);
+    Q_EMIT frame();
 }
 
 bool RegionScreenCastSource::includesCursor(Cursor *cursor) const
@@ -159,11 +160,6 @@ QPointF RegionScreenCastSource::mapFromGlobal(const QPointF &point) const
 QRectF RegionScreenCastSource::mapFromGlobal(const QRectF &rect) const
 {
     return rect.translated(-m_region.topLeft());
-}
-
-void RegionScreenCastSource::report()
-{
-    Q_EMIT frame(QRegion{});
 }
 
 } // namespace KWin

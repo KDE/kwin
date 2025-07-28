@@ -35,16 +35,9 @@ WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
         if (window->isPopupWindow() && m_windows.contains(window->transientFor())) {
             add(window);
             if (m_active) {
-                report();
+                Q_EMIT frame();
             }
         }
-    });
-
-    m_timer.setInterval(0);
-    m_timer.setSingleShot(true);
-    connect(&m_timer, &QTimer::timeout, this, [this]() {
-        const auto r = boundingRect();
-        Q_EMIT frame(QRegion(0, 0, r.width(), r.height()));
     });
 }
 
@@ -61,7 +54,7 @@ void WindowScreenCastSource::add(Window *window)
         m_windows.removeOne(window);
         if (m_active) {
             unwatch(window);
-            report();
+            Q_EMIT frame();
         }
         if (m_windows.empty()) {
             Q_EMIT closed();
@@ -82,13 +75,13 @@ void WindowScreenCastSource::add(Window *window)
 void WindowScreenCastSource::watch(Window *window)
 {
     window->refOffscreenRendering();
-    connect(window, &Window::damaged, this, &WindowScreenCastSource::report);
+    connect(window, &Window::damaged, this, &WindowScreenCastSource::frame);
 }
 
 void WindowScreenCastSource::unwatch(Window *window)
 {
     window->unrefOffscreenRendering();
-    disconnect(window, &Window::damaged, this, &WindowScreenCastSource::report);
+    disconnect(window, &Window::damaged, this, &WindowScreenCastSource::frame);
 }
 
 quint32 WindowScreenCastSource::drmFormat() const
@@ -117,7 +110,7 @@ QRegion WindowScreenCastSource::render(QImage *target, const QRegion &bufferDama
     GLFramebuffer offscreenTarget(offscreenTexture.get());
     render(&offscreenTarget, infiniteRegion());
     grabTexture(offscreenTexture.get(), target);
-    return QRegion{};
+    return QRect(QPoint(), target->size());
 }
 
 QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferDamage)
@@ -132,7 +125,7 @@ QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
         Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {});
     }
     Compositor::self()->scene()->renderer()->endFrame();
-    return QRegion{};
+    return QRect(QPoint(), target->size());
 }
 
 std::chrono::nanoseconds WindowScreenCastSource::clock() const
@@ -145,11 +138,6 @@ uint WindowScreenCastSource::refreshRate() const
     return m_windows[0]->output()->refreshRate();
 }
 
-void WindowScreenCastSource::report()
-{
-    m_timer.start();
-}
-
 void WindowScreenCastSource::pause()
 {
     if (!m_active) {
@@ -159,7 +147,6 @@ void WindowScreenCastSource::pause()
     for (const auto &window : std::as_const(m_windows)) {
         unwatch(window);
     }
-    m_timer.stop();
     m_active = false;
 }
 
@@ -172,7 +159,7 @@ void WindowScreenCastSource::resume()
     for (const auto &window : std::as_const(m_windows)) {
         watch(window);
     }
-    m_timer.start();
+    Q_EMIT frame();
 
     m_active = true;
 }

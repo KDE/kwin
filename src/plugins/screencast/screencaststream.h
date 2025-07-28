@@ -68,7 +68,7 @@ public:
 
     void close();
 
-    void scheduleRecord(const QRegion &damage, Contents contents = Content::Video);
+    void scheduleRecord(Contents contents = Content::Video);
 
     void setCursorMode(ScreencastV1Interface::CursorMode mode);
 
@@ -100,7 +100,7 @@ private:
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QList<uint64_t> &modifiers, quint32 modifiersFlags);
     pw_buffer *dequeueBuffer();
-    void record(const QRegion &damage, Contents contents);
+    void record(Contents contents);
     void bumpBufferAge(ScreenCastBuffer *renderedBuffer);
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
@@ -138,7 +138,6 @@ private:
     quint32 m_drmFormat = 0;
 
     std::optional<std::chrono::steady_clock::time_point> m_lastSent;
-    QRegion m_pendingDamage;
     QTimer m_pendingFrame;
     Contents m_pendingContents = Content::None;
     QList<pw_buffer *> m_dequeuedBuffers;
