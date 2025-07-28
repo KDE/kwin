@@ -367,13 +367,13 @@ void EffectsHandler::prePaintScreen(ScreenPrePaintData &data, std::chrono::milli
     // no special final code
 }
 
-void EffectsHandler::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void EffectsHandler::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, region, screen);
+        (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, logicalRegion, screen);
         --m_currentPaintScreenIterator;
     } else {
-        m_scene->finalPaintScreen(renderTarget, viewport, mask, region, screen);
+        m_scene->finalPaintScreen(renderTarget, viewport, mask, logicalRegion, screen);
     }
 }
 
@@ -395,13 +395,13 @@ void EffectsHandler::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, s
     // no special final code
 }
 
-void EffectsHandler::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandler::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewport, w, mask, region, data);
+        (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
         --m_currentPaintWindowIterator;
     } else {
-        m_scene->finalPaintWindow(renderTarget, viewport, w, mask, region, data);
+        m_scene->finalPaintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
     }
 }
 
@@ -424,19 +424,19 @@ Effect *EffectsHandler::provides(Effect::Feature ef)
     return nullptr;
 }
 
-void EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, region, data);
+        (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
         --m_currentDrawWindowIterator;
     } else {
-        m_scene->finalDrawWindow(renderTarget, viewport, w, mask, region, data);
+        m_scene->finalDrawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
     }
 }
 
-void EffectsHandler::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandler::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
-    m_scene->finalDrawWindow(renderTarget, viewport, w, mask, region, data);
+    m_scene->finalDrawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
 }
 
 bool EffectsHandler::hasDecorationShadows() const
@@ -1062,24 +1062,24 @@ void EffectsHandler::addRepaintFull()
     m_compositor->scene()->addRepaintFull();
 }
 
-void EffectsHandler::addRepaint(const QRect &r)
+void EffectsHandler::addRepaint(const QRect &logicalRegion)
 {
-    m_compositor->scene()->addRepaint(r);
+    m_compositor->scene()->addLogicalRepaint(logicalRegion);
 }
 
-void EffectsHandler::addRepaint(const QRectF &r)
+void EffectsHandler::addRepaint(const QRectF &logicalRegion)
 {
-    m_compositor->scene()->addRepaint(r.toAlignedRect());
+    m_compositor->scene()->addLogicalRepaint(logicalRegion.toAlignedRect());
 }
 
-void EffectsHandler::addRepaint(const QRegion &r)
+void EffectsHandler::addRepaint(const QRegion &logicalRegion)
 {
-    m_compositor->scene()->addRepaint(r);
+    m_compositor->scene()->addLogicalRepaint(logicalRegion);
 }
 
 void EffectsHandler::addRepaint(int x, int y, int w, int h)
 {
-    m_compositor->scene()->addRepaint(x, y, w, h);
+    m_compositor->scene()->addLogicalRepaint(x, y, w, h);
 }
 
 Output *EffectsHandler::activeScreen() const

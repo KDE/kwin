@@ -151,7 +151,7 @@ void Item::setScene(Scene *scene)
             RenderView *view = it.key();
             const QRegion &dirty = it.value();
             if (!dirty.isEmpty()) {
-                m_scene->addRepaint(view, dirty);
+                m_scene->addLogicalRepaint(view, dirty);
             }
         }
         m_repaints.clear();
@@ -524,7 +524,7 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
         }
         const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();
         if (!dirtyRegion.isEmpty()) {
-            m_scene->addRepaint(view, dirtyRegion);
+            m_scene->addLogicalRepaint(view, dirtyRegion);
         }
     }
 }

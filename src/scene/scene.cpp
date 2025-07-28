@@ -43,12 +43,12 @@ void RenderView::setLayer(OutputLayer *layer)
     m_layer = layer;
 }
 
-void RenderView::addRepaint(const QRegion &region)
+void RenderView::addRepaint(const QRegion &logicalRegion)
 {
     if (!m_layer) {
         return;
     }
-    m_layer->addRepaint(region);
+    m_layer->addRepaint(logicalRegion);
 }
 
 void RenderView::scheduleRepaint(Item *item)
@@ -528,19 +528,19 @@ ItemRenderer *Scene::renderer() const
 
 void Scene::addRepaintFull()
 {
-    addRepaint(geometry());
+    addLogicalRepaint(geometry());
 }
 
-void Scene::addRepaint(int x, int y, int width, int height)
+void Scene::addLogicalRepaint(int x, int y, int width, int height)
 {
-    addRepaint(QRegion(x, y, width, height));
+    addLogicalRepaint(QRegion(x, y, width, height));
 }
 
-void Scene::addRepaint(const QRegion &region)
+void Scene::addLogicalRepaint(const QRegion &logicalRegion)
 {
     for (const auto &view : std::as_const(m_views)) {
         const QRectF viewport = view->viewport();
-        QRegion dirtyRegion = region & viewport.toAlignedRect();
+        QRegion dirtyRegion = logicalRegion & viewport.toAlignedRect();
         // FIXME damage in logical coordinates may cause issues here
         // if the viewport is on a non-integer position!
         dirtyRegion.translate(-viewport.topLeft().toPoint());
@@ -550,11 +550,11 @@ void Scene::addRepaint(const QRegion &region)
     }
 }
 
-void Scene::addRepaint(RenderView *view, const QRegion &region)
+void Scene::addLogicalRepaint(RenderView *view, const QRegion &logicalRegion)
 {
     // FIXME damage in logical coordinates may cause issues here
     // if the viewport is on a non-integer position!
-    view->addRepaint(region.translated(-view->viewport().topLeft().toPoint()));
+    view->addRepaint(logicalRegion.translated(-view->viewport().topLeft().toPoint()));
 }
 
 QRegion Scene::damage() const

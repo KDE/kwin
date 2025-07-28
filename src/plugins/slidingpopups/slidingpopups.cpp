@@ -124,11 +124,11 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt == m_animations.end()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
         return;
     }
 
@@ -138,6 +138,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
     const QRectF geo = w->expandedGeometry();
     const qreal t = animationIt->second.timeLine.value();
 
+    QRegion effectiveRegion = logicalRegion;
     switch (animData.location) {
     case Location::Left:
         if (slideLength < geo.width()) {
@@ -165,9 +166,9 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         data.translate(0.0, interpolate(std::min(geo.height(), slideLength), 0.0, t));
     }
 
-    region &= damagedArea(w, animData).toRect();
+    effectiveRegion &= damagedArea(w, animData).toRect();
 
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
 }
 
 void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)

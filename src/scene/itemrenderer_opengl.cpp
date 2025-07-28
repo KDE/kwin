@@ -306,17 +306,17 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     }
 }
 
-void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
+void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &logicalRegion)
 {
-    if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == viewport.renderRect())) {
+    if (logicalRegion == infiniteRegion() || (logicalRegion.rectCount() == 1 && (*logicalRegion.begin()) == viewport.renderRect())) {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
-    } else if (!region.isEmpty()) {
+    } else if (!logicalRegion.isEmpty()) {
         glClearColor(0, 0, 0, 0);
         glEnable(GL_SCISSOR_TEST);
 
         const auto targetSize = renderTarget.size();
-        for (const QRect &r : region) {
+        for (const QRect &r : logicalRegion) {
             const auto deviceRect = viewport.mapToRenderTarget(r);
             glScissor(deviceRect.x(), targetSize.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
             glClear(GL_COLOR_BUFFER_BIT);
@@ -326,17 +326,17 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &logicalRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
-    if (region.isEmpty()) {
+    if (logicalRegion.isEmpty()) {
         return;
     }
 
     RenderContext renderContext{
         .projectionMatrix = viewport.projectionMatrix(),
         .rootTransform = data.toMatrix(viewport.scale()), // TODO: unify transforms
-        .clip = region,
-        .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
+        .clip = logicalRegion,
+        .hardwareClipping = logicalRegion != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
         .renderTargetScale = viewport.scale(),
     };
 
@@ -383,7 +383,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = infiniteRegion();
     if (renderContext.hardwareClipping) {
-        scissorRegion = viewport.mapToRenderTarget(region);
+        scissorRegion = viewport.mapToRenderTarget(logicalRegion);
     }
 
     ShaderTraits lastTraits;
@@ -496,7 +496,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     }
 }
 
-void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, const QRegion &region, const RenderContext &renderContext)
+void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, const QRegion &logicalRegion, const RenderContext &renderContext)
 {
     if (!m_debug.fractionalShader) {
         m_debug.fractionalShader = ShaderManager::instance()->generateShaderFromFile(
@@ -530,7 +530,7 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
         m_debug.fractionalShader->setUniform("geometrySize", size);
         m_debug.fractionalShader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
 
-        vbo->draw(region, GL_TRIANGLES, renderNode.firstVertex,
+        vbo->draw(logicalRegion, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
     }
 }
