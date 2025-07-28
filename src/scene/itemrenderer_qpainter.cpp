@@ -50,30 +50,32 @@ void ItemRendererQPainter::endFrame()
     m_painter->end();
 }
 
-void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
+void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion)
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
-    for (const QRect &rect : region) {
-        m_painter->fillRect(rect, Qt::transparent);
+    for (const QRect &rect : (deviceRegion & QRect(QPoint(), renderTarget.size()))) {
+        m_painter->fillRect(scaledRect(rect, 1.0 / viewport.scale()), Qt::transparent);
     }
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
-void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_region, const WindowPaintData &data, const std::function<bool(Item *)> &filter)
+void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter)
 {
-    QRegion region = _region;
+    QRegion effectiveRegion = deviceRegion;
 
-    const QRect boundingRect = item->mapToScene(item->boundingRect()).toAlignedRect();
     if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
-        region &= boundingRect;
+        const QRect boundingRect = viewport.mapToRenderTarget(item->mapToScene(item->boundingRect())).toAlignedRect();
+        effectiveRegion &= boundingRect;
     }
 
-    if (region.isEmpty()) {
+    if (effectiveRegion.isEmpty()) {
         return;
     }
 
+    const QRegion logicalRegion = scaleRegionAligned(effectiveRegion, 1.0 / viewport.scale());
+
     m_painter->save();
-    m_painter->setClipRegion(region);
+    m_painter->setClipRegion(logicalRegion);
     m_painter->setClipping(true);
     m_painter->setOpacity(data.opacity());
 

@@ -341,6 +341,15 @@ QMatrix4x4 OutputTransform::toMatrix() const
     return matrix;
 }
 
+QRegion OutputTransform::map(const QRegion &region, const QSize &bounds) const
+{
+    QRegion ret;
+    for (const QRect &rect : region) {
+        ret |= map(rect, bounds);
+    }
+    return ret;
+}
+
 Output::Output(QObject *parent)
     : QObject(parent)
 {
