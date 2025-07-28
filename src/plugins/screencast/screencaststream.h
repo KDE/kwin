@@ -39,6 +39,7 @@ struct ScreenCastDmaBufTextureParams
     int height = 0;
     uint32_t format = 0;
     uint64_t modifier = 0;
+    bool supportsSyncObj = false;
 };
 
 class KWIN_EXPORT ScreenCastStream : public QObject
