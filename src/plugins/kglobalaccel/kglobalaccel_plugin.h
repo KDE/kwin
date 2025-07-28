@@ -31,8 +31,4 @@ public Q_SLOTS:
     bool checkKeyPressed(int keyQt, KWin::KeyboardKeyState state);
     bool checkPointerPressed(Qt::MouseButtons buttons);
     bool checkAxisTriggered(int axis);
-
-private:
-    bool m_shuttingDown = false;
-    QMetaObject::Connection m_inputDestroyedConnection;
 };
