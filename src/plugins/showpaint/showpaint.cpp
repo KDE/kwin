@@ -34,10 +34,10 @@ static const QList<QColor> s_colors{
 
 ShowPaintEffect::ShowPaintEffect() = default;
 
-void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
 {
     m_painted = QRegion();
-    effects->paintScreen(renderTarget, viewport, mask, region, screen);
+    effects->paintScreen(renderTarget, viewport, mask, logicalRegion, screen);
     if (effects->isOpenGLCompositing()) {
         paintGL(renderTarget, viewport.projectionMatrix(), viewport.scale());
     } else if (effects->compositingType() == QPainterCompositing) {
@@ -48,10 +48,10 @@ void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const Render
     }
 }
 
-void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
-    m_painted += region;
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+    m_painted += logicalRegion;
+    effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
 }
 
 void ShowPaintEffect::paintGL(const RenderTarget &renderTarget, const QMatrix4x4 &projection, qreal scale)

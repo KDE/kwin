@@ -157,8 +157,8 @@ public:
 
     ItemRenderer *renderer() const;
 
-    void addRepaint(const QRegion &region);
-    void addRepaint(RenderView *delegate, const QRegion &region);
+    void addRepaint(const QRegion &logicalRegion);
+    void addRepaint(RenderView *delegate, const QRegion &logicalRegion);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     virtual QRegion damage() const;
@@ -172,7 +172,7 @@ public:
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
     virtual QRegion prePaint(SceneView *delegate) = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
+    virtual void paint(const RenderTarget &renderTarget, const QRegion &logicalRegion) = 0;
     virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame);
     virtual double desiredHdrHeadroom() const;

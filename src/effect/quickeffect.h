@@ -151,7 +151,7 @@ public:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen) override;
     bool isActive() const override;
 
     void windowInputMouseEvent(QEvent *event) override;

@@ -337,11 +337,11 @@ void Scene::addRepaint(int x, int y, int width, int height)
     addRepaint(QRegion(x, y, width, height));
 }
 
-void Scene::addRepaint(const QRegion &region)
+void Scene::addRepaint(const QRegion &logicalRegion)
 {
     for (const auto &view : std::as_const(m_views)) {
         const QRectF viewport = view->viewport();
-        QRegion dirtyRegion = region & viewport.toAlignedRect();
+        QRegion dirtyRegion = logicalRegion & viewport.toAlignedRect();
         // FIXME damage in logical coordinates may cause issues here
         // if the viewport is on a non-integer position!
         dirtyRegion.translate(-viewport.topLeft().toPoint());

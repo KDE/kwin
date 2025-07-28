@@ -174,15 +174,16 @@ void SlideBackEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SlideBackEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SlideBackEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     if (motionManager.isManaging(w)) {
         motionManager.apply(w, data);
     }
+    QRegion effectiveRegion = logicalRegion;
     for (const QRegion &r : std::as_const(clippedRegions)) {
-        region = region.intersected(r);
+        effectiveRegion = effectiveRegion.intersected(r);
     }
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
     clippedRegions.clear();
 }
 

@@ -124,11 +124,11 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt == m_animations.end()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
         return;
     }
 
@@ -140,6 +140,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
     const QRectF geo = w->expandedGeometry();
     const qreal t = animationIt->second.timeLine.value();
 
+    QRegion effectiveRegion = logicalRegion;
     switch (animData.location) {
     case Location::Left:
         if (slideLength < geo.width()) {
@@ -147,7 +148,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(-interpolate(std::min(geo.width(), slideLength), 0.0, t));
         splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
-        region &= QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
+        effectiveRegion &= QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
         break;
     case Location::Top:
         if (slideLength < geo.height()) {
@@ -155,7 +156,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(0.0, -interpolate(std::min(geo.height(), slideLength), 0.0, t));
         splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
-        region &= QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
+        effectiveRegion &= QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
         break;
     case Location::Right:
         if (slideLength < geo.width()) {
@@ -163,7 +164,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(interpolate(std::min(geo.width(), slideLength), 0.0, t));
         splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
-        region &= QRegion(geo.x(), geo.y(), splitPoint, geo.height());
+        effectiveRegion &= QRegion(geo.x(), geo.y(), splitPoint, geo.height());
         break;
     case Location::Bottom:
     default:
@@ -172,10 +173,10 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(0.0, interpolate(std::min(geo.height(), slideLength), 0.0, t));
         splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
-        region &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
+        effectiveRegion &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
     }
 
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
 }
 
 void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
