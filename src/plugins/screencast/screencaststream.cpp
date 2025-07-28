@@ -498,25 +498,22 @@ void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
         }
     }
 
+    m_pendingDamage |= damage;
+    m_pendingContents |= contents;
+
     if (m_pendingFrame.isActive()) {
-        m_pendingDamage += damage;
-        m_pendingContents |= contents;
         return;
     }
-
+    std::chrono::milliseconds waitInterval{0};
     if (m_videoFormat.max_framerate.num != 0 && m_lastSent.has_value()) {
         const auto now = std::chrono::steady_clock::now();
         const auto frameInterval = std::chrono::milliseconds(1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
         const auto lastSentAgo = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_lastSent.value());
         if (lastSentAgo < frameInterval) {
-            m_pendingDamage += damage;
-            m_pendingContents |= contents;
-            m_pendingFrame.start(frameInterval - lastSentAgo);
-            return;
+            waitInterval = frameInterval - lastSentAgo;
         }
     }
-
-    record(damage, contents);
+    m_pendingFrame.start(waitInterval);
 }
 
 pw_buffer *ScreenCastStream::dequeueBuffer()
