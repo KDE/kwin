@@ -50,30 +50,30 @@ void ItemRendererQPainter::endFrame()
     m_painter->end();
 }
 
-void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
+void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &logicalRegion)
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
-    for (const QRect &rect : region) {
+    for (const QRect &rect : logicalRegion) {
         m_painter->fillRect(rect, Qt::transparent);
     }
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
-void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_region, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_logicalRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
-    QRegion region = _region;
+    QRegion logicalRegion = _logicalRegion;
 
     const QRect boundingRect = item->mapToScene(item->boundingRect()).toAlignedRect();
     if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
-        region &= boundingRect;
+        logicalRegion &= boundingRect;
     }
 
-    if (region.isEmpty()) {
+    if (logicalRegion.isEmpty()) {
         return;
     }
 
     m_painter->save();
-    m_painter->setClipRegion(region);
+    m_painter->setClipRegion(logicalRegion);
     m_painter->setClipping(true);
     m_painter->setOpacity(data.opacity());
 

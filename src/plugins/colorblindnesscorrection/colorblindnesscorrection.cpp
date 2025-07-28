@@ -112,12 +112,11 @@ void ColorBlindnessCorrectionEffect::loadData()
     connect(effects, &EffectsHandler::windowAdded, this, &ColorBlindnessCorrectionEffect::correctColor);
 }
 
-
 void ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget,
                                                 const RenderViewport &viewport,
                                                 EffectWindow *w,
                                                 int mask,
-                                                const QRegion &region,
+                                                const QRegion &logicalRegion,
                                                 WindowPaintData &data)
 {
     // The 'saturation' uniform is exported in the base function, so we have to modify its value beforehand.
@@ -125,7 +124,7 @@ void ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget
         data.setSaturation(1.0f - m_intensity);
     }
 
-    OffscreenEffect::drawWindow(renderTarget, viewport, w, mask, region, data);
+    OffscreenEffect::drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
 }
 
 void ColorBlindnessCorrectionEffect::correctColor(KWin::EffectWindow *w)
