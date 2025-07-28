@@ -353,7 +353,7 @@ QRegion WorkspaceScene::prePaint(SceneView *delegate)
     Q_EMIT preFrameRender();
 
     effects->prePaintScreen(prePaintData, m_expectedPresentTimestamp);
-    m_paintContext.damage = prePaintData.paint;
+    m_paintContext.deviceDamage = painted_delegate->mapToDeviceCoordinates(prePaintData.paint);
     m_paintContext.mask = prePaintData.mask;
     m_paintContext.phase2Data.clear();
 
@@ -365,7 +365,7 @@ QRegion WorkspaceScene::prePaint(SceneView *delegate)
 
     // FIXME damage in logical coordinates may cause issues here
     // if the viewport is on a non-integer position!
-    return m_paintContext.damage.translated(-delegate->viewport().topLeft().toPoint());
+    return painted_delegate->mapFromDeviceCoordinates(m_paintContext.deviceDamage).translated(-delegate->viewport().topLeft().toPoint());
 }
 
 static void resetRepaintsHelper(Item *item, SceneView *delegate)
@@ -386,7 +386,7 @@ static void accumulateRepaints(Item *item, SceneView *delegate, QRegion *repaint
     if (!delegate->shouldRenderItem(item)) {
         return;
     }
-    *repaints += item->takeRepaints(delegate);
+    *repaints += delegate->mapToDeviceCoordinates(item->takeRepaints(delegate));
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
@@ -401,19 +401,19 @@ void WorkspaceScene::preparePaintGenericScreen()
 
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        data.paint = infiniteRegion(); // no clipping, so doesn't really matter
+        data.devicePaint = infiniteRegion(); // no clipping, so doesn't really matter
 
-        effects->prePaintWindow(windowItem->effectWindow(), data, m_expectedPresentTimestamp);
+        effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
-            .logicalRegion = infiniteRegion(),
-            .opaque = data.opaque,
+            .deviceRegion = infiniteRegion(),
+            .deviceOpaque = data.deviceOpaque,
             .mask = data.mask,
         });
     }
 
     resetRepaintsHelper(m_overlayItem.get(), painted_delegate);
-    m_paintContext.damage = infiniteRegion();
+    m_paintContext.deviceDamage = infiniteRegion();
 }
 
 void WorkspaceScene::preparePaintSimpleScreen()
@@ -422,41 +422,41 @@ void WorkspaceScene::preparePaintSimpleScreen()
         Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        accumulateRepaints(windowItem, painted_delegate, &data.paint);
+        accumulateRepaints(windowItem, painted_delegate, &data.devicePaint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = windowItem->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
-                data.opaque = surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect()));
+                data.deviceOpaque = painted_delegate->mapToDeviceCoordinates(surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect())));
             }
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.opaque += decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect()));
+                data.deviceOpaque += painted_delegate->mapToDeviceCoordinates(decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect())));
             }
         }
 
-        effects->prePaintWindow(windowItem->effectWindow(), data, m_expectedPresentTimestamp);
+        effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
-            .logicalRegion = data.paint,
-            .opaque = data.opaque,
+            .deviceRegion = data.devicePaint,
+            .deviceOpaque = data.deviceOpaque,
             .mask = data.mask,
         });
     }
 
     // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
-    QRegion opaque;
+    QRegion deviceOpaque;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         const auto &paintData = m_paintContext.phase2Data.at(i);
-        m_paintContext.damage += paintData.logicalRegion - opaque;
+        m_paintContext.deviceDamage += paintData.deviceRegion - deviceOpaque;
         if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
-            opaque += paintData.opaque;
+            deviceOpaque += paintData.deviceOpaque;
         }
     }
 
-    accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.damage);
+    accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.deviceDamage);
 }
 
 void WorkspaceScene::postPaint()
@@ -480,8 +480,8 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &logi
     m_paintScreenCount = 0;
 
     if (m_overlayItem) {
-        const QRect bounds = scaledRect(m_overlayItem->mapToScene(m_overlayItem->boundingRect()), viewport.scale()).toRect();
-        const QRegion deviceRepaint = scaleRegionAligned(logicalRegion.translated(-viewport.renderRect().topLeft().toPoint()), viewport.scale()) & bounds;
+        const QRect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
+        const QRegion deviceRepaint = viewport.mapToDeviceCoordinates(logicalRegion) & bounds;
         if (!deviceRepaint.isEmpty()) {
             m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
                 return !painted_delegate->shouldRenderItem(item);
@@ -517,7 +517,7 @@ void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
     }
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
-        paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.logicalRegion);
+        paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion);
     }
 }
 
@@ -527,24 +527,24 @@ void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
 void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, const QRegion &logicalRegion)
 {
     // This is the occlusion culling pass
-    QRegion visible = logicalRegion;
+    QRegion visible = viewport.mapToDeviceCoordinates(logicalRegion);
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         Phase2Data *data = &m_paintContext.phase2Data[i];
-        data->logicalRegion = visible;
+        data->deviceRegion = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->logicalRegion &= data->item->mapToScene(data->item->boundingRect()).toAlignedRect();
+            data->deviceRegion &= viewport.mapToDeviceCoordinates(data->item->mapToScene(data->item->boundingRect())).toRect();
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
-                visible -= data->opaque;
+                visible -= data->deviceOpaque;
             }
         }
     }
 
-    m_renderer->renderBackground(renderTarget, viewport, scaleRegionAligned(visible.translated(-viewport.renderRect().topLeft().toPoint()), viewport.scale()));
+    m_renderer->renderBackground(renderTarget, viewport, visible);
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
-        paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.logicalRegion);
+        paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion);
     }
 }
 
@@ -564,26 +564,26 @@ void WorkspaceScene::clearStackingOrder()
     stacking_order.clear();
 }
 
-void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *item, int mask, const QRegion &logicalRegion)
+void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *item, int mask, const QRegion &deviceRegion)
 {
-    if (logicalRegion.isEmpty()) { // completely clipped
+    if (deviceRegion.isEmpty()) { // completely clipped
         return;
     }
 
     WindowPaintData data;
-    effects->paintWindow(renderTarget, viewport, item->effectWindow(), mask, logicalRegion, data);
+    effects->paintWindow(renderTarget, viewport, item->effectWindow(), mask, deviceRegion, data);
 }
 
 // the function that'll be eventually called by paintWindow() above
-void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    effects->drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 // will be eventually called from drawWindow()
-void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, scaleRegionAligned(logicalRegion.translated(-viewport.renderRect().topLeft().toPoint()), viewport.scale()), data, [this](Item *item) {
+    m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, deviceRegion, data, [this](Item *item) {
         return !painted_delegate->shouldRenderItem(item);
     });
 }

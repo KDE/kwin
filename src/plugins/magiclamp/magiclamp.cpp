@@ -60,7 +60,7 @@ void MagicLampEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     effects->prePaintScreen(data, presentTime);
 }
 
-void MagicLampEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void MagicLampEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     // Schedule window for transformation if the animation is still in
     //  progress
@@ -70,7 +70,7 @@ void MagicLampEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
         data.setTransformed();
     }
 
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 }
 
 void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)

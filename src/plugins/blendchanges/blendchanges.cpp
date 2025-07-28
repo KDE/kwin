@@ -82,10 +82,10 @@ void BlendChanges::postPaintScreen()
     effects->addRepaintFull();
 }
 
-void BlendChanges::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void BlendChanges::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
     data.setCrossFadeProgress(m_timeline.value());
-    effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 void BlendChanges::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)

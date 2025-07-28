@@ -128,7 +128,7 @@ public:
     /**
      * Render the frame.
      */
-    void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0);
+    void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0);
 
     void setPosition(const QPoint &point);
     /**

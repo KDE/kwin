@@ -47,7 +47,7 @@ void SheetEffect::reconfigure(ReconfigureFlags flags)
     m_duration = std::chrono::milliseconds(int(d));
 }
 
-void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void SheetEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
@@ -55,7 +55,7 @@ void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
         data.setTransformed();
     }
 
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 }
 
 void SheetEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)

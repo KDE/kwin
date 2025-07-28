@@ -16,6 +16,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/glplatform.h"
 #include "scene/decorationitem.h"
+#include "scene/scene.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 #include "wayland/blur.h"
@@ -485,56 +486,56 @@ QRegion BlurEffect::blurRegion(EffectWindow *w) const
 
 void BlurEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    m_paintedArea = QRegion();
-    m_currentBlur = QRegion();
+    m_paintedDeviceArea = QRegion();
+    m_currentDeviceBlur = QRegion();
     m_currentScreen = data.screen;
 
     effects->prePaintScreen(data, presentTime);
 }
 
-void BlurEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void BlurEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     // this effect relies on prePaintWindow being called in the bottom to top order
 
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 
-    const QRegion oldOpaque = data.opaque;
-    if (data.opaque.intersects(m_currentBlur)) {
+    const QRegion oldOpaque = data.deviceOpaque;
+    if (data.deviceOpaque.intersects(m_currentDeviceBlur)) {
         // to blur an area partially we have to shrink the opaque area of a window
         QRegion newOpaque;
-        for (const QRect &rect : data.opaque) {
+        for (const QRect &rect : data.deviceOpaque) {
             newOpaque += rect.adjusted(m_expandSize, m_expandSize, -m_expandSize, -m_expandSize);
         }
-        data.opaque = newOpaque;
+        data.deviceOpaque = newOpaque;
 
         // we don't have to blur a region we don't see
-        m_currentBlur -= newOpaque;
+        m_currentDeviceBlur -= newOpaque;
     }
 
     // if we have to paint a non-opaque part of this window that intersects with the
     // currently blurred region we have to redraw the whole region
-    if ((data.paint - oldOpaque).intersects(m_currentBlur)) {
-        data.paint += m_currentBlur;
+    if ((data.devicePaint - oldOpaque).intersects(m_currentDeviceBlur)) {
+        data.devicePaint += m_currentDeviceBlur;
     }
 
     // in case this window has regions to be blurred
-    const QRegion blurArea = blurRegion(w).boundingRect().translated(w->pos().toPoint());
+    const QRegion blurArea = view->mapToDeviceCoordinates(QRectF(blurRegion(w).boundingRect()).translated(w->pos())).toRect();
 
     // if this window or a window underneath the blurred area is painted again we have to
     // blur everything
-    if (m_paintedArea.intersects(blurArea) || data.paint.intersects(blurArea)) {
-        data.paint += blurArea;
+    if (m_paintedDeviceArea.intersects(blurArea) || data.devicePaint.intersects(blurArea)) {
+        data.devicePaint += blurArea;
         // we have to check again whether we do not damage a blurred area
         // of a window
-        if (blurArea.intersects(m_currentBlur)) {
-            data.paint += m_currentBlur;
+        if (blurArea.intersects(m_currentDeviceBlur)) {
+            data.devicePaint += m_currentDeviceBlur;
         }
     }
 
-    m_currentBlur += blurArea;
+    m_currentDeviceBlur += blurArea;
 
-    m_paintedArea -= data.opaque;
-    m_paintedArea += data.paint;
+    m_paintedDeviceArea -= data.deviceOpaque;
+    m_paintedDeviceArea += data.devicePaint;
 }
 
 bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
@@ -557,12 +558,13 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
     return true;
 }
 
-void BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    blur(renderTarget, viewport, w, mask, region, data);
+    // TODO port the blur method to use device pixels directly too
+    blur(renderTarget, viewport, w, mask, viewport.mapFromDeviceCoordinates(deviceRegion), data);
 
     // Draw the window over the blurred area
-    effects->drawWindow(renderTarget, viewport, w, mask, region, data);
+    effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 GLTexture *BlurEffect::ensureNoiseTexture()
@@ -601,7 +603,7 @@ GLTexture *BlurEffect::ensureNoiseTexture()
     return m_noisePass.noiseTexture.get();
 }
 
-void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     auto it = m_windows.find(w);
     if (it == m_windows.end()) {
@@ -638,8 +640,8 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     // Get the effective shape that will be actually blurred. It's possible that all of it will be clipped.
     QList<QRectF> effectiveShape;
     effectiveShape.reserve(blurShape.rectCount());
-    if (region != infiniteRegion()) {
-        for (const QRect &clipRect : region) {
+    if (logicalRegion != infiniteRegion()) {
+        for (const QRect &clipRect : logicalRegion) {
             const QRectF deviceClipRect = snapToPixelGridF(scaledRect(clipRect, viewport.scale()))
                                               .translated(-deviceBackgroundRect.topLeft());
             for (const QRect &shapeRect : blurShape) {
@@ -693,7 +695,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     // Fetch the pixels behind the shape that is going to be blurred.
-    const QRegion dirtyRegion = region & backgroundRect;
+    const QRegion dirtyRegion = logicalRegion & backgroundRect;
     for (const QRect &dirtyRect : dirtyRegion) {
         renderInfo.framebuffers[0]->blitFromRenderTarget(renderTarget, viewport, dirtyRect, dirtyRect.translated(-backgroundRect.topLeft()));
     }

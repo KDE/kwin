@@ -72,6 +72,44 @@ QPointF RenderView::hotspot() const
     return QPointF{};
 }
 
+QRectF RenderView::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
+{
+    return scaledRect(logicalGeometry.translated(-viewport().topLeft()), scale());
+}
+
+QRect RenderView::mapToDeviceCoordinates(const QRect &logicalGeometry) const
+{
+    return scaledRect(QRectF(logicalGeometry).translated(-viewport().topLeft()), scale()).toRect();
+}
+
+QRegion RenderView::mapToDeviceCoordinates(const QRegion &logicalGeometry) const
+{
+    QRegion ret;
+    for (const QRect &logicalRect : logicalGeometry) {
+        ret |= mapToDeviceCoordinates(logicalRect);
+    }
+    return ret;
+}
+
+QRectF RenderView::mapFromDeviceCoordinates(const QRectF &deviceGeometry) const
+{
+    return scaledRect(deviceGeometry, 1.0 / scale()).translated(viewport().topLeft());
+}
+
+QRect RenderView::mapFromDeviceCoordinates(const QRect &deviceGeometry) const
+{
+    return scaledRect(deviceGeometry, 1.0 / scale()).translated(viewport().topLeft()).toRect();
+}
+
+QRegion RenderView::mapFromDeviceCoordinates(const QRegion &deviceGeometry) const
+{
+    QRegion ret;
+    for (const QRect &deviceRect : deviceGeometry) {
+        ret |= mapFromDeviceCoordinates(deviceRect);
+    }
+    return ret;
+}
+
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)

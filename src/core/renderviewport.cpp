@@ -53,6 +53,44 @@ OutputTransform RenderViewport::transform() const
     return m_transform;
 }
 
+QRectF RenderViewport::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
+{
+    return scaledRect(logicalGeometry.translated(-m_renderRect.topLeft()), m_scale);
+}
+
+QRect RenderViewport::mapToDeviceCoordinates(const QRect &logicalGeometry) const
+{
+    return scaledRect(QRectF(logicalGeometry).translated(-m_renderRect.topLeft()), m_scale).toRect();
+}
+
+QRegion RenderViewport::mapToDeviceCoordinates(const QRegion &logicalGeometry) const
+{
+    QRegion ret;
+    for (const QRect &logicalRect : logicalGeometry) {
+        ret |= mapToDeviceCoordinates(logicalRect);
+    }
+    return ret;
+}
+
+QRectF RenderViewport::mapFromDeviceCoordinates(const QRectF &deviceGeometry) const
+{
+    return scaledRect(deviceGeometry, 1.0 / m_scale).translated(m_renderRect.topLeft());
+}
+
+QRect RenderViewport::mapFromDeviceCoordinates(const QRect &deviceGeometry) const
+{
+    return scaledRect(deviceGeometry, 1.0 / m_scale).translated(m_renderRect.topLeft()).toRect();
+}
+
+QRegion RenderViewport::mapFromDeviceCoordinates(const QRegion &deviceGeometry) const
+{
+    QRegion ret;
+    for (const QRect &deviceRect : deviceGeometry) {
+        ret |= mapFromDeviceCoordinates(deviceRect);
+    }
+    return ret;
+}
+
 QRectF RenderViewport::mapToRenderTarget(const QRectF &logicalGeometry) const
 {
     const QRectF deviceGeometry = scaledRect(logicalGeometry, m_scale)

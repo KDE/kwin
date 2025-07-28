@@ -58,6 +58,14 @@ public:
 
     virtual void setExclusive(bool enable);
 
+    QRectF mapToDeviceCoordinates(const QRectF &logicalGeometry) const;
+    QRect mapToDeviceCoordinates(const QRect &logicalGeometry) const;
+    QRegion mapToDeviceCoordinates(const QRegion &logicalGeometry) const;
+
+    QRectF mapFromDeviceCoordinates(const QRectF &deviceGeometry) const;
+    QRect mapFromDeviceCoordinates(const QRect &deviceGeometry) const;
+    QRegion mapFromDeviceCoordinates(const QRegion &deviceGeometry) const;
+
 protected:
     Output *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
