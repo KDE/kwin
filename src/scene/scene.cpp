@@ -75,7 +75,6 @@ QPointF RenderView::hotspot() const
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)
-    , m_output(output)
 {
     m_scene->addView(this);
 }
@@ -117,9 +116,32 @@ void SceneView::frame(OutputFrame *frame)
     m_scene->frame(this, frame);
 }
 
+void SceneView::setViewport(const QRectF &viewport)
+{
+    if (viewport == m_viewport) {
+        return;
+    }
+    m_viewport = viewport;
+    addRepaint(QRect(QPoint(), m_viewport.size().toSize()));
+}
+
+void SceneView::setScale(qreal scale)
+{
+    if (scale == m_scale) {
+        return;
+    }
+    m_scale = scale;
+    addRepaint(QRect(QPoint(), m_viewport.size().toSize()));
+}
+
 QRectF SceneView::viewport() const
 {
-    return m_output ? m_output->geometryF() : m_scene->geometry();
+    return m_viewport;
+}
+
+qreal SceneView::scale() const
+{
+    return m_scale;
 }
 
 void SceneView::addExclusiveView(RenderView *view)
