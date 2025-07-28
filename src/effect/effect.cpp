@@ -21,7 +21,7 @@ void WindowPrePaintData::setTranslucent()
 {
     mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
     mask &= ~Effect::PAINT_WINDOW_OPAQUE;
-    opaque = QRegion(); // cannot clip, will be transparent
+    deviceOpaque = QRegion(); // cannot clip, will be transparent
 }
 
 void WindowPrePaintData::setTransformed()
@@ -388,14 +388,14 @@ void Effect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void Effect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void Effect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 }
 
-void Effect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void Effect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 void Effect::postPaintWindow(EffectWindow *w)
@@ -418,12 +418,12 @@ QString Effect::debug(const QString &) const
     return QString();
 }
 
-void Effect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void Effect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    effects->drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
-void Effect::setPositionTransformations(WindowPaintData &data, QRect &region, EffectWindow *w,
+void Effect::setPositionTransformations(WindowPaintData &data, QRect &logicalRegion, EffectWindow *w,
                                         const QRect &r, Qt::AspectRatioMode aspect)
 {
     QSizeF size = w->size();
@@ -434,7 +434,7 @@ void Effect::setPositionTransformations(WindowPaintData &data, QRect &region, Ef
     int height = int(w->height() * data.yScale());
     int x = r.x() + (r.width() - width) / 2;
     int y = r.y() + (r.height() - height) / 2;
-    region = QRect(x, y, width, height);
+    logicalRegion = QRect(x, y, width, height);
     data.setXTranslation(x - w->x());
     data.setYTranslation(y - w->y());
 }

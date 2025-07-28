@@ -54,9 +54,8 @@ void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, co
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
     const QRegion clipped = deviceRegion & renderTarget.transformedRect();
-    const QPointF translation = viewport.renderRect().topLeft();
     for (const QRect &rect : clipped) {
-        m_painter->fillRect(scaledRect(rect, 1.0 / viewport.scale()).translated(translation), Qt::transparent);
+        m_painter->fillRect(viewport.mapFromDeviceCoordinates(rect), Qt::transparent);
     }
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
@@ -74,7 +73,7 @@ void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const Re
         return;
     }
 
-    const QRegion logicalRegion = scaleRegionAligned(effectiveRegion, 1.0 / viewport.scale()).translated(viewport.renderRect().topLeft().toPoint());
+    const QRegion logicalRegion = viewport.mapFromDeviceCoordinatesAligned(effectiveRegion);
 
     m_painter->save();
     m_painter->setClipRegion(logicalRegion);
