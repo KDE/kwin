@@ -75,24 +75,24 @@ protected:
     void preparePaintSimpleScreen();
     void paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion);
     // called after all effects had their paintWindow() called
-    void finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data);
+    void finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
     // shared implementation, starts painting the window
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *w, int mask, const QRegion &logicalRegion);
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *w, int mask, const QRegion &deviceRegion);
     // called after all effects had their drawWindow() called
-    void finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data);
+    void finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
 
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data
     {
         WindowItem *item = nullptr;
-        QRegion logicalRegion;
-        QRegion opaque;
+        QRegion deviceRegion;
+        QRegion deviceOpaque;
         int mask = 0;
     };
 
     struct PaintContext
     {
-        QRegion damage;
+        QRegion deviceDamage;
         int mask = 0;
         QList<Phase2Data> phase2Data;
     };

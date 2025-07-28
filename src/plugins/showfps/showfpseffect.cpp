@@ -97,14 +97,14 @@ void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderVi
     effects->renderOffscreenQuickView(renderTarget, viewport, m_scene.get());
 }
 
-void ShowFpsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void ShowFpsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 
     // Take intersection of region and actual window's rect, minus the fps area
     //  (since we keep repainting it) and count the pixels.
-    QRegion repaintRegion = logicalRegion & w->frameGeometry().toRect();
-    repaintRegion -= m_scene->geometry();
+    QRegion repaintRegion = deviceRegion & viewport.mapToDeviceCoordinatesAligned(w->frameGeometry());
+    repaintRegion -= viewport.mapToDeviceCoordinatesAligned(m_scene->geometry());
     for (const QRect &rect : repaintRegion) {
         m_paintAmount += rect.width() * rect.height();
     }
