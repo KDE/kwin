@@ -129,7 +129,6 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
             Q_EMIT ready(nodeId());
         }
         m_pendingFrame.stop();
-        m_pendingDamage = QRegion();
         m_pendingContents = Contents();
         m_source->pause();
         break;
@@ -326,8 +325,8 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_source(source)
     , m_resolution(source->textureSize())
 {
-    connect(source, &ScreenCastSource::frame, this, [this](const QRegion &damage) {
-        scheduleRecord(damage, Content::Video);
+    connect(source, &ScreenCastSource::frame, this, [this]() {
+        scheduleRecord(Content::Video);
     });
     connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::close);
 
@@ -351,8 +350,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
 
     m_pendingFrame.setSingleShot(true);
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
-        record(m_pendingDamage, m_pendingContents);
-        m_pendingDamage = QRegion();
+        record(m_pendingContents);
         m_pendingContents = Contents();
     });
 }
@@ -449,7 +447,7 @@ bool ScreenCastStream::createStream()
     case ScreencastV1Interface::Metadata:
         m_cursor.changedConnection = connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         m_cursor.positionChangedConnection = connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
-            scheduleRecord({}, Content::Cursor);
+            scheduleRecord(Content::Cursor);
         });
         break;
     }
@@ -482,7 +480,7 @@ void ScreenCastStream::close()
     Q_EMIT closed();
 }
 
-void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
+void ScreenCastStream::scheduleRecord(Contents contents)
 {
     Q_ASSERT(!m_closed);
 
@@ -501,7 +499,6 @@ void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
         }
     }
 
-    m_pendingDamage |= damage;
     m_pendingContents |= contents;
 
     if (m_pendingFrame.isActive()) {
@@ -570,7 +567,7 @@ pw_buffer *ScreenCastStream::dequeueBuffer()
     return pwBuffer;
 }
 
-void ScreenCastStream::record(const QRegion &damage, Contents contents)
+void ScreenCastStream::record(Contents contents)
 {
     EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
     if (!backend) {
@@ -600,7 +597,7 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
 
     spa_meta_sync_timeline *synctmeta = nullptr;
 
-    QRegion effectiveDamage = damage;
+    QRegion effectiveDamage;
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
             effectiveDamage |= m_source->render(memfd->view.image(), m_damageJournal.accumulate(memfd->m_age, infiniteRegion()));

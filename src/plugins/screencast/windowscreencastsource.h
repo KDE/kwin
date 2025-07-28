@@ -44,11 +44,9 @@ private:
     void add(Window *window);
     void watch(Window *window);
     void unwatch(Window *window);
-    void report();
     QRectF boundingRect() const;
 
     QList<Window *> m_windows;
-    QTimer m_timer;
     bool m_active = false;
 };
 
