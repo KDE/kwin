@@ -56,7 +56,7 @@ void FallApartEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     effects->prePaintScreen(data, presentTime);
 }
 
-void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void FallApartEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto animationIt = windows.find(w);
     if (animationIt != windows.end() && isRealWindow(w)) {
@@ -69,7 +69,7 @@ void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
         animationIt->progress += time / animationTime(1s);
         data.setTransformed();
     }
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 }
 
 void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)

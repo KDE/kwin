@@ -9,6 +9,7 @@
 */
 
 #include "effect/animationeffect.h"
+#include "core/renderviewport.h"
 #include "effect/anidata_p.h"
 #include "effect/effecthandler.h"
 #include "opengl/glshader.h"
@@ -464,7 +465,7 @@ QRect AnimationEffect::clipRect(const QRect &geo, const AniData &anim) const
     return clip;
 }
 
-void AnimationEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto entry = d->m_animations.find(w);
     if (entry != d->m_animations.end()) {
@@ -486,7 +487,7 @@ void AnimationEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
             }
         }
     }
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 }
 
 static inline float geometryCompensation(int flags, float v)
@@ -500,14 +501,14 @@ static inline float geometryCompensation(int flags, float v)
     return 0.5 * (1.0 - v); // half compensation
 }
 
-void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
     auto it = d->m_animations.find(w);
     if (it == d->m_animations.end()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
         return;
     }
-    QRegion effectiveLogicalRegion = logicalRegion;
+    QRegion effectiveDeviceRegion = deviceRegion;
     auto &[window, pair] = *it;
     auto &[list, rect] = pair;
     for (auto &anim : list) {
@@ -547,7 +548,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             break;
         }
         case Clip:
-            effectiveLogicalRegion = clipRect(w->expandedGeometry().toAlignedRect(), anim);
+            effectiveDeviceRegion &= viewport.mapToDeviceCoordinatesAligned(clipRect(w->expandedGeometry().toAlignedRect(), anim));
             break;
         case Translation:
             data += QPointF(interpolated(anim, 0), interpolated(anim, 1));
@@ -627,7 +628,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             break;
         }
     }
-    effects->paintWindow(renderTarget, viewport, w, mask, effectiveLogicalRegion, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, effectiveDeviceRegion, data);
 }
 
 void AnimationEffect::postPaintScreen()

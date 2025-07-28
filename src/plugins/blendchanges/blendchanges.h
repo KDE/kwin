@@ -27,7 +27,7 @@ public:
     // Effect interface
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data) override;
 
     bool isActive() const override;
 

@@ -29,7 +29,7 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
 
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintWindow(EffectWindow *w) override;
 
     bool isActive() const override;

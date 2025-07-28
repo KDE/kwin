@@ -235,7 +235,7 @@ void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::
 
 static const std::chrono::milliseconds integrationStep(10);
 
-void WobblyWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void WobblyWindowsEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
@@ -251,7 +251,7 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
         }
     }
 
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 }
 
 void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)

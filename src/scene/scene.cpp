@@ -88,6 +88,64 @@ bool RenderView::shouldRenderHole(Item *item) const
     return false;
 }
 
+QRectF RenderView::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
+{
+    return scaledRect(logicalGeometry.translated(-viewport().topLeft()), scale());
+}
+
+QRect RenderView::mapToDeviceCoordinatesAligned(const QRect &logicalGeometry) const
+{
+    return mapToDeviceCoordinates(QRectF(logicalGeometry)).toAlignedRect();
+}
+
+QRect RenderView::mapToDeviceCoordinatesAligned(const QRectF &logicalGeometry) const
+{
+    return mapToDeviceCoordinates(logicalGeometry).toAlignedRect();
+}
+
+QRect RenderView::mapToDeviceCoordinatesContained(const QRect &logicalGeometry) const
+{
+    const QRectF ret = scaledRect(QRectF(logicalGeometry).translated(-viewport().topLeft()), scale());
+    return QRect(std::ceil(ret.x()), std::ceil(ret.y()), std::floor(ret.width()), std::floor(ret.height()));
+}
+
+QRegion RenderView::mapToDeviceCoordinatesAligned(const QRegion &logicalGeometry) const
+{
+    QRegion ret;
+    for (const QRect &logicalRect : logicalGeometry) {
+        ret |= mapToDeviceCoordinatesAligned(logicalRect);
+    }
+    return ret;
+}
+
+QRegion RenderView::mapToDeviceCoordinatesContained(const QRegion &logicalGeometry) const
+{
+    QRegion ret;
+    for (const QRect &logicalRect : logicalGeometry) {
+        ret |= mapToDeviceCoordinatesContained(logicalRect);
+    }
+    return ret;
+}
+
+QRectF RenderView::mapFromDeviceCoordinates(const QRectF &deviceGeometry) const
+{
+    return scaledRect(deviceGeometry, 1.0 / scale()).translated(viewport().topLeft());
+}
+
+QRect RenderView::mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const
+{
+    return scaledRect(deviceGeometry, 1.0 / scale()).translated(viewport().topLeft()).toAlignedRect();
+}
+
+QRegion RenderView::mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const
+{
+    QRegion ret;
+    for (const QRect &deviceRect : deviceGeometry) {
+        ret |= mapFromDeviceCoordinatesAligned(deviceRect);
+    }
+    return ret;
+}
+
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)

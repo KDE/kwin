@@ -280,14 +280,14 @@ class KWIN_EXPORT WindowPrePaintData
 public:
     int mask;
     /**
-     * Region that will be painted, in screen coordinates.
+     * Region that will be painted, in device coordinates.
      */
-    QRegion paint;
+    QRegion devicePaint;
     /**
      * Region indicating the opaque content. It can be used to avoid painting
      * windows occluded by the opaque region.
      */
-    QRegion opaque;
+    QRegion deviceOpaque;
     /**
      * Simple helper that sets data to say the window will be painted as non-opaque.
      * Takes also care of changing the regions.
@@ -635,7 +635,7 @@ public:
      * @a presentTime specifies the expected monotonic time when the rendered frame
      * will be displayed on the screen.
      */
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data,
+    virtual void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data,
                                 std::chrono::milliseconds presentTime);
     /**
      * This is the main method for painting windows.
@@ -647,7 +647,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data);
+    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
     /**
      * Called for every window after all painting has been finished.
      * In this method you can:
@@ -686,7 +686,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data);
+    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
 
     virtual void windowInputMouseEvent(QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
@@ -908,7 +908,7 @@ public:
     /** Helper to set WindowPaintData and QRegion to necessary transformations so that
      * a following drawWindow() would put the window at the requested geometry (useful for thumbnails)
      */
-    static void setPositionTransformations(WindowPaintData &data, QRect &region, EffectWindow *w,
+    static void setPositionTransformations(WindowPaintData &data, QRect &logicalRegion, EffectWindow *w,
                                            const QRect &r, Qt::AspectRatioMode aspect);
 
     /**

@@ -12,6 +12,7 @@
 // own
 #include "slide.h"
 #include "core/output.h"
+#include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 
 // KConfigSkeleton
@@ -203,20 +204,20 @@ bool SlideEffect::willBePainted(const EffectWindow *w) const
     return false;
 }
 
-void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void SlideEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     data.setTransformed();
-    effects->prePaintWindow(w, data, presentTime);
+    effects->prePaintWindow(view, w, data, presentTime);
 }
 
-void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceGeometry, WindowPaintData &data)
 {
     if (!willBePainted(w)) {
         return;
     }
 
     if (!isTranslated(w)) {
-        effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
         return;
     }
 
@@ -250,12 +251,12 @@ void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
             data += drawTranslation;
 
             const QRect screenArea = screen->geometry();
-            const QRect damage = screenArea.translated(drawTranslation).intersected(screenArea);
+            const QRect logicalDamage = screenArea.translated(drawTranslation).intersected(screenArea);
 
             effects->paintWindow(
                 renderTarget, viewport, w, mask,
                 // Only paint the region that intersects the current screen and desktop.
-                logicalRegion.intersected(damage),
+                deviceGeometry.intersected(viewport.mapToDeviceCoordinatesAligned(logicalDamage)),
                 data);
 
             // Undo the translation for the next screen. I know, it hurts me too.

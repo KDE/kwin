@@ -27,6 +27,17 @@ public:
     double scale() const;
     OutputTransform transform() const;
 
+    QRectF mapToDeviceCoordinates(const QRectF &logicalGeometry) const;
+    QRect mapToDeviceCoordinatesAligned(const QRectF &logicalGeometry) const;
+    QRect mapToDeviceCoordinatesAligned(const QRect &logicalGeometry) const;
+    QRegion mapToDeviceCoordinatesAligned(const QRegion &logicalGeometry) const;
+
+    QRectF mapFromDeviceCoordinates(const QRectF &deviceGeometry) const;
+    QRect mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const;
+    QRect mapFromDeviceCoordinatesContained(const QRect &deviceGeometry) const;
+    QRegion mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const;
+    QRegion mapFromDeviceCoordinatesContained(const QRegion &deviceGeometry) const;
+
     QRectF mapToRenderTarget(const QRectF &logicalGeometry) const;
     QRect mapToRenderTarget(const QRect &logicalGeometry) const;
     QPoint mapToRenderTarget(const QPoint &logicalGeometry) const;

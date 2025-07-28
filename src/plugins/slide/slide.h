@@ -60,8 +60,8 @@ public:
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen) override;
     void postPaintScreen() override;
 
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data) override;
+    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceGeometry, WindowPaintData &data) override;
 
     bool isActive() const override;
     int requestedEffectChainPosition() const override;

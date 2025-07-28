@@ -22,11 +22,11 @@ public:
     ShowPaintEffect();
 
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceGeometry, WindowPaintData &data) override;
 
 private:
-    void paintGL(const RenderTarget &renderTarget, const QMatrix4x4 &projection, qreal scale);
-    void paintQPainter();
+    void paintGL(const RenderTarget &renderTarget, const RenderViewport &viewport);
+    void paintQPainter(const RenderViewport &viewport);
 
     QRegion m_painted; // what's painted in one pass
     int m_colorIndex = 0;

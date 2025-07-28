@@ -386,22 +386,22 @@ void EffectsHandler::postPaintScreen()
     // no special final code
 }
 
-void EffectsHandler::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void EffectsHandler::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintWindowIterator++)->prePaintWindow(w, data, presentTime);
+        (*m_currentPaintWindowIterator++)->prePaintWindow(view, w, data, presentTime);
         --m_currentPaintWindowIterator;
     }
     // no special final code
 }
 
-void EffectsHandler::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void EffectsHandler::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+        (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
         --m_currentPaintWindowIterator;
     } else {
-        m_scene->finalPaintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+        m_scene->finalPaintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
     }
 }
 
@@ -424,19 +424,19 @@ Effect *EffectsHandler::provides(Effect::Feature ef)
     return nullptr;
 }
 
-void EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+        (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
         --m_currentDrawWindowIterator;
     } else {
-        m_scene->finalDrawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+        m_scene->finalDrawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
     }
 }
 
-void EffectsHandler::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void EffectsHandler::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    m_scene->finalDrawWindow(renderTarget, viewport, w, mask, logicalRegion, data);
+    m_scene->finalDrawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
 bool EffectsHandler::hasDecorationShadows() const
