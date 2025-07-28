@@ -247,6 +247,21 @@ KWIN_EXPORT inline QRectF scaledRect(const QRectF &rect, qreal scale)
 }
 
 /**
+ * Scale a region by a scalar.
+ */
+KWIN_EXPORT inline QRegion scaleRegionAligned(const QRegion &region, qreal scale)
+{
+    if (region == infiniteRegion()) {
+        return region;
+    }
+    QRegion ret;
+    for (const QRect &rect : region) {
+        ret |= scaledRect(rect, scale).toAlignedRect();
+    }
+    return ret;
+}
+
+/**
  * Round a vector to nearest integer.
  */
 KWIN_EXPORT inline QVector2D roundVector(const QVector2D &input)
