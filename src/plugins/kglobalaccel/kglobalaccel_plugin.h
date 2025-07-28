@@ -25,7 +25,6 @@ public:
     ~KGlobalAccelImpl() override;
 
     bool grabKey(int key, bool grab) override;
-    void setEnabled(bool) override;
 
 public Q_SLOTS:
     bool checkKeyPressed(int keyQt, KWin::KeyboardKeyState state);

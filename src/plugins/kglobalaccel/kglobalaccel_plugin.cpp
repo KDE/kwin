@@ -24,10 +24,6 @@ bool KGlobalAccelImpl::grabKey(int key, bool grab)
     return true;
 }
 
-void KGlobalAccelImpl::setEnabled(bool enabled)
-{
-}
-
 bool KGlobalAccelImpl::checkKeyPressed(int keyQt, KWin::KeyboardKeyState state)
 {
     switch (state) {
