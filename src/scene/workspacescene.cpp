@@ -604,9 +604,10 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &logi
     m_paintScreenCount = 0;
 
     if (m_overlayItem) {
-        const QRegion repaint = logicalRegion & m_overlayItem->mapToScene(m_overlayItem->boundingRect()).toRect();
-        if (!repaint.isEmpty()) {
-            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, repaint, WindowPaintData{}, [this](Item *item) {
+        const QRect bounds = scaledRect(m_overlayItem->mapToScene(m_overlayItem->boundingRect()), viewport.scale()).toRect();
+        const QRegion deviceRepaint = scaleRegionAligned(logicalRegion.translated(-viewport.renderRect().topLeft().toPoint()), viewport.scale()) & bounds;
+        if (!deviceRepaint.isEmpty()) {
+            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
                 return !painted_delegate->shouldRenderItem(item);
             }, [this](Item *item) {
                 return painted_delegate->shouldRenderHole(item);
@@ -666,7 +667,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         }
     }
 
-    m_renderer->renderBackground(renderTarget, viewport, visible);
+    m_renderer->renderBackground(renderTarget, viewport, scaleRegionAligned(visible.translated(-viewport.renderRect().topLeft().toPoint()), viewport.scale()));
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.logicalRegion);
@@ -710,7 +711,8 @@ void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const Ren
 {
     // TODO: Reconsider how the CrossFadeEffect captures the initial window contents to remove
     // null pointer delegate checks in "should render item" and "should render hole" checks.
-    m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, logicalRegion, data, [this](Item *item) {
+    const QRegion deviceRegion = scaleRegionAligned(logicalRegion.translated(-viewport.renderRect().topLeft().toPoint()), viewport.scale());
+    m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, deviceRegion, data, [this](Item *item) {
         return painted_delegate && !painted_delegate->shouldRenderItem(item);
     }, [this](Item *item) {
         return painted_delegate && painted_delegate->shouldRenderHole(item);
