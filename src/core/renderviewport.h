@@ -25,6 +25,7 @@ public:
     QMatrix4x4 projectionMatrix() const;
     QRectF renderRect() const;
     double scale() const;
+    OutputTransform transform() const;
 
     QRectF mapToRenderTarget(const QRectF &logicalGeometry) const;
     QRect mapToRenderTarget(const QRect &logicalGeometry) const;

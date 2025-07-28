@@ -430,13 +430,13 @@ QRegion ItemTreeView::collectDamage()
 
 void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    const QRegion globalRegion = region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint());
     RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget);
+    const QRegion deviceRegion = region == infiniteRegion() ? infiniteRegion() : scaleRegionAligned(region, renderViewport.scale());
     auto renderer = m_item->scene()->renderer();
     renderer->beginFrame(renderTarget, renderViewport);
-    renderer->renderBackground(renderTarget, renderViewport, globalRegion);
+    renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, {}, {});
+    renderer->renderItem(renderTarget, renderViewport, m_item, 0, deviceRegion, data, {}, {});
     renderer->endFrame();
 }
 

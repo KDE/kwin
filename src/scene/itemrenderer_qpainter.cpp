@@ -50,27 +50,31 @@ void ItemRendererQPainter::endFrame()
     m_painter->end();
 }
 
-void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &logicalRegion)
+void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion)
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
-    for (const QRect &rect : logicalRegion) {
-        m_painter->fillRect(rect, Qt::transparent);
+    const QRegion clipped = deviceRegion & renderTarget.transformedRect();
+    const QPointF translation = viewport.renderRect().topLeft();
+    for (const QRect &rect : clipped) {
+        m_painter->fillRect(scaledRect(rect, 1.0 / viewport.scale()).translated(translation), Qt::transparent);
     }
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
-void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_logicalRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
-    QRegion logicalRegion = _logicalRegion;
+    QRegion effectiveRegion = deviceRegion;
 
-    const QRect boundingRect = item->mapToScene(item->boundingRect()).toAlignedRect();
     if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
-        logicalRegion &= boundingRect;
+        const QRect boundingRect = viewport.mapToRenderTarget(item->mapToScene(item->boundingRect())).toAlignedRect();
+        effectiveRegion &= boundingRect;
     }
 
-    if (logicalRegion.isEmpty()) {
+    if (effectiveRegion.isEmpty()) {
         return;
     }
+
+    const QRegion logicalRegion = scaleRegionAligned(effectiveRegion, 1.0 / viewport.scale()).translated(viewport.renderRect().topLeft().toPoint());
 
     m_painter->save();
     m_painter->setClipRegion(logicalRegion);

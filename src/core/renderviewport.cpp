@@ -48,6 +48,11 @@ double RenderViewport::scale() const
     return m_scale;
 }
 
+OutputTransform RenderViewport::transform() const
+{
+    return m_transform;
+}
+
 QRectF RenderViewport::mapToRenderTarget(const QRectF &logicalGeometry) const
 {
     const QRectF deviceGeometry = scaledRect(logicalGeometry, m_scale)

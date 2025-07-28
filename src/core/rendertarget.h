@@ -23,6 +23,9 @@ public:
     explicit RenderTarget(GLFramebuffer *fbo, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
     explicit RenderTarget(QImage *image, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
 
+    QSize transformedSize() const;
+    QRect transformedRect() const;
+
     QSize size() const;
     OutputTransform transform() const;
     const std::shared_ptr<ColorDescription> &colorDescription() const;

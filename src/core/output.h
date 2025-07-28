@@ -92,6 +92,11 @@ public:
     QPoint map(const QPoint &point, const QSize &bounds) const;
 
     /**
+     * Applies the output transform to the given @a region
+     */
+    QRegion map(const QRegion &region, const QSize &bounds) const;
+
+    /**
      * Returns an output transform that is equivalent to applying this transform and @a other
      * transform sequentially.
      */
