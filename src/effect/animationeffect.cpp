@@ -500,13 +500,14 @@ static inline float geometryCompensation(int flags, float v)
     return 0.5 * (1.0 - v); // half compensation
 }
 
-void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     auto it = d->m_animations.find(w);
     if (it == d->m_animations.end()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+        effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
         return;
     }
+    QRegion effectiveLogicalRegion = logicalRegion;
     auto &[window, pair] = *it;
     auto &[list, rect] = pair;
     for (auto &anim : list) {
@@ -546,7 +547,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             break;
         }
         case Clip:
-            region = clipRect(w->expandedGeometry().toAlignedRect(), anim);
+            effectiveLogicalRegion = clipRect(w->expandedGeometry().toAlignedRect(), anim);
             break;
         case Translation:
             data += QPointF(interpolated(anim, 0), interpolated(anim, 1));
@@ -626,7 +627,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             break;
         }
     }
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, effectiveLogicalRegion, data);
 }
 
 void AnimationEffect::postPaintScreen()

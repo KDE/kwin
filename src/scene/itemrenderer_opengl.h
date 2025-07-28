@@ -64,8 +64,8 @@ public:
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 
-    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
-    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
+    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &logicalRegion) override;
+    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &logicalRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
 
     std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) override;
 
@@ -73,7 +73,7 @@ private:
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
-    void visualizeFractional(const RenderViewport &viewport, const QRegion &region, const RenderContext &renderContext);
+    void visualizeFractional(const RenderViewport &viewport, const QRegion &logicalRegion, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;
     EglDisplay *const m_eglDisplay;

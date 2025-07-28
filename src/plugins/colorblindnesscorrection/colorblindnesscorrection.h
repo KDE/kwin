@@ -40,7 +40,7 @@ public:
                     const RenderViewport &viewport,
                     EffectWindow *w,
                     int mask,
-                    const QRegion &region,
+                    const QRegion &logicalRegion,
                     WindowPaintData &data) override;
 
     static bool supported();

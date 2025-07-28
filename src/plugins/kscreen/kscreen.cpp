@@ -97,7 +97,7 @@ void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, st
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void KscreenEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void KscreenEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     auto screen = w->screen();
     if (isScreenActive(screen)) {
@@ -121,7 +121,7 @@ void KscreenEffect::paintWindow(const RenderTarget &renderTarget, const RenderVi
             break;
         }
     }
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewport, w, mask, logicalRegion, data);
 }
 
 void KscreenEffect::setState(ScreenState &state, FadeOutState newState)

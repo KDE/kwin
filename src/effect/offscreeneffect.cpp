@@ -26,7 +26,7 @@ public:
     void setShader(GLShader *newShader);
     void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
-    void paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &region,
+    void paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &logicalRegion,
                const WindowPaintData &data, const WindowQuadList &quads);
 
     void maybeRender(EffectWindow *window);
@@ -166,7 +166,7 @@ void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mod
     m_vertexSnappingMode = mode;
 }
 
-void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &region,
+void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &logicalRegion,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
     if (!m_texture) {
@@ -212,8 +212,8 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::IntUniform::TextureHeight, m_texture->height());
     shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
-    const bool clipping = region != infiniteRegion();
-    const QRegion clipRegion = clipping ? viewport.mapToRenderTarget(region) : infiniteRegion();
+    const bool clipping = logicalRegion != infiniteRegion();
+    const QRegion clipRegion = clipping ? viewport.mapToRenderTarget(logicalRegion) : infiniteRegion();
 
     if (clipping) {
         glEnable(GL_SCISSOR_TEST);
@@ -233,11 +233,11 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     vbo->unbindArrays();
 }
 
-void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
+void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
     if (it == d->windows.end()) {
-        effects->drawWindow(renderTarget, viewport, window, mask, region, data);
+        effects->drawWindow(renderTarget, viewport, window, mask, logicalRegion, data);
         return;
     }
     OffscreenData *offscreenData = it->second.get();
@@ -258,7 +258,7 @@ void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
     apply(window, mask, data, quads);
 
     offscreenData->maybeRender(window);
-    offscreenData->paint(renderTarget, viewport, window, region, data, quads);
+    offscreenData->paint(renderTarget, viewport, window, logicalRegion, data, quads);
 }
 
 void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
@@ -320,13 +320,13 @@ CrossFadeEffect::CrossFadeEffect(QObject *parent)
 
 CrossFadeEffect::~CrossFadeEffect() = default;
 
-void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
+void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &logicalRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
 
     // paint the new window (if applicable) underneath
     if (data.crossFadeProgress() > 0 || it == d->windows.end()) {
-        Effect::drawWindow(renderTarget, viewport, window, mask, region, data);
+        Effect::drawWindow(renderTarget, viewport, window, mask, logicalRegion, data);
     }
 
     if (it == d->windows.end()) {
@@ -367,7 +367,7 @@ void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderV
 
     WindowQuadList quads;
     quads.append(quad);
-    offscreenData->paint(renderTarget, viewport, window, region, previousWindowData, quads);
+    offscreenData->paint(renderTarget, viewport, window, logicalRegion, previousWindowData, quads);
 }
 
 void CrossFadeEffect::redirect(EffectWindow *window)

@@ -205,9 +205,9 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, screen);
+    effects->paintScreen(renderTarget, viewport, mask, logicalRegion, screen);
     if (m_active) {
         GLTexture *texture;
         switch (m_type) {

@@ -134,9 +134,9 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     }
 }
 
-void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
+    effects->paintScreen(renderTarget, viewport, mask, logicalRegion, screen); // paint normal screen
     if (m_zoom != 1.0 && m_fbo) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
