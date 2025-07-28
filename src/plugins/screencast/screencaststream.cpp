@@ -516,7 +516,9 @@ void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
         }
     }
 
-    record(damage, contents);
+    m_pendingDamage |= damage;
+    m_pendingContents |= contents;
+    m_pendingFrame.start(0);
 }
 
 pw_buffer *ScreenCastStream::dequeueBuffer()
