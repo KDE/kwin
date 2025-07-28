@@ -61,6 +61,7 @@ static const char *const window_type_names[] = {
     "Override", "TopMenu", "Utility", "Splash"};
 // change also the two functions below when adding new entries
 
+#if KWIN_BUILD_X11
 static const char *windowTypeToTxt(WindowType type)
 {
     if (type >= WindowType::Unknown && type <= WindowType::Splash) {
@@ -72,6 +73,7 @@ static const char *windowTypeToTxt(WindowType type)
     qFatal("Unknown Window Type");
     return nullptr;
 }
+#endif
 
 static WindowType txtToWindowType(const char *txt)
 {
