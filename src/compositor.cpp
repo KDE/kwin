@@ -612,6 +612,14 @@ void Compositor::addOutput(Output *output)
         m_cursorViews[output->renderLoop()] = std::move(cursorView);
     }
 
+    sceneView->setViewport(output->geometryF());
+    sceneView->setScale(output->scale());
+    connect(output, &Output::geometryChanged, sceneView.get(), [output, view = sceneView.get()]() {
+        view->setViewport(output->geometryF());
+    });
+    connect(output, &Output::scaleChanged, sceneView.get(), [output, view = sceneView.get()]() {
+        view->setScale(output->scale());
+    });
     m_primaryViews[output->renderLoop()] = std::move(sceneView);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
