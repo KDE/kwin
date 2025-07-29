@@ -119,7 +119,7 @@ private:
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedDeviceRegion) const;
-    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedDeviceRegion) const;
+    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedDeviceRegion) const;
     std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, EglSwapchainSlot *source, OutputFrame *frame) const;
 
     std::unique_ptr<Surface> m_surface;

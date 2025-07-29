@@ -594,7 +594,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, slot, frame);
     } else if (surface->importMode == MultiGpuImportMode::Egl) {
-        return importWithEgl(surface, slot->buffer(), std::move(readFence), frame, damagedDeviceRegion);
+        return importWithEgl(surface, slot, std::move(readFence), frame, damagedDeviceRegion);
     } else {
         const auto ret = m_gpu->importBuffer(slot->buffer(), std::move(readFence));
         if (!ret) {
@@ -604,7 +604,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedDeviceRegion) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedDeviceRegion) const
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
@@ -641,9 +641,9 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
         destinationFence.waitSync();
     }
 
-    auto &sourceTexture = surface->importedTextureCache[sourceBuffer];
+    auto &sourceTexture = surface->importedTextureCache[source->buffer()];
     if (!sourceTexture) {
-        sourceTexture = surface->importContext->importDmaBufAsTexture(*sourceBuffer->dmabufAttributes());
+        sourceTexture = surface->importContext->importDmaBufAsTexture(*source->buffer()->dmabufAttributes());
     }
     if (!sourceTexture) {
         qCWarning(KWIN_DRM, "failed to import the source texture!");
@@ -655,11 +655,14 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
         return nullptr;
     }
 
-    const auto mapping = surface->currentSlot->framebuffer()->colorAttachment()->contentTransform().combine(OutputTransform::FlipY);
-    const QSize rotatedSize = mapping.map(surface->gbmSwapchain->size());
-    const QRegion bufferDamage = mapping.map(damagedDeviceRegion & QRect(QPoint(), rotatedSize), surface->gbmSwapchain->size());
-    const QRegion repaint = (bufferDamage | surface->importDamageJournal.accumulate(slot->age(), infiniteRegion())) & QRect(QPoint(), surface->gbmSwapchain->size());
-    surface->importDamageJournal.add(bufferDamage);
+    slot->texture()->setContentTransform(source->texture()->contentTransform());
+
+    const QRegion deviceRepaint = damagedDeviceRegion | surface->importDamageJournal.accumulate(slot->age(), infiniteRegion());
+    surface->importDamageJournal.add(damagedDeviceRegion);
+
+    const auto mapping = slot->texture()->contentTransform().combine(OutputTransform::FlipY);
+    const QSize rotatedSize = mapping.map(slot->texture()->size());
+    const QRegion repaint = mapping.map(deviceRepaint & QRect(QPoint(), rotatedSize), rotatedSize);
 
     GLFramebuffer *fbo = slot->framebuffer();
     surface->importContext->pushFramebuffer(fbo);
