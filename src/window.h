@@ -1339,6 +1339,7 @@ public:
      */
     void setLastUsageSerial(quint32 serial);
     quint32 lastUsageSerial() const;
+    std::optional<Qt::Key> lastUsageSerialKey() const;
 
     void refOffscreenRendering();
     void unrefOffscreenRendering();

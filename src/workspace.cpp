@@ -782,13 +782,12 @@ void Workspace::addWaylandWindow(Window *window)
         rearrange();
     }
     if (window->wantsInput() && !window->isMinimized()) {
-        // In "Extreme" mode, require an activation token to activate new windows
-        if (options->focusStealingPreventionLevel() < 4 || (!m_activationToken.isEmpty() && window->activationToken() == m_activationToken)) {
-            if (!window->isDesktop()
-                // If there's no active window, make this desktop the active one.
-                || (activeWindow() == nullptr && should_get_focus.count() == 0)) {
-                activateWindow(window);
-            }
+        if ((!window->isDesktop() && mayActivate(window, window->activationToken()))
+            // focus stealing prevention "low" should always activate new windows
+            || (!window->isDesktop() && options->focusStealingPreventionLevel() <= 1)
+            // If there's no active window, make this desktop the active one.
+            || (activeWindow() == nullptr && should_get_focus.count() == 0)) {
+            activateWindow(window);
         }
     }
     updateTabbox();

@@ -2956,6 +2956,7 @@ public:
         Qt::Key_CapsLock,
         Qt::Key_NumLock,
         Qt::Key_Shift,
+        Qt::Key_ScrollLock,
     };
 
     void keyboardKey(KeyboardKeyEvent *event) override

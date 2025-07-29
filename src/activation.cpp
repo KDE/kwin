@@ -630,18 +630,36 @@ void Workspace::windowAttentionChanged(Window *window, bool set)
     }
 }
 
-void Workspace::setActivationToken(const QString &token, uint32_t serial)
+void Workspace::setActivationToken(const QString &token, uint32_t serial, const QString &appId)
 {
     m_activationToken = token;
     m_activationTokenSerial = serial;
+    m_activationTokenAppId = appId;
 }
 
-bool Workspace::mayActivate(const QString &token) const
+bool Workspace::mayActivate(Window *window, const QString &token) const
 {
     if (!m_activeWindow) {
         return true;
     }
-    return !m_activationToken.isEmpty() && token == m_activationToken && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial;
+    const int focusStealingPreventionLevel = window->rules()->checkFSP(options->focusStealingPreventionLevel());
+    if (focusStealingPreventionLevel == 0) {
+        return true;
+    }
+    if (!m_activationToken.isEmpty() && token == m_activationToken && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial) {
+        return true;
+    } else if (focusStealingPreventionLevel == 4) {
+        // "Extreme" only accepts proper activation tokens
+        return false;
+    }
+    // with focus stealing prevention below "Extreme"
+    // also allow activation if the app id matches with the last activation token
+    if (!m_activationToken.isEmpty()
+        && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial
+        && m_activationTokenAppId == window->desktopFileName()) {
+        return true;
+    }
+    return false;
 }
 
 } // namespace
