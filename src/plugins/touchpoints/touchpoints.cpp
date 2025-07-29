@@ -120,9 +120,9 @@ void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
+void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, logicalRegion, screen);
+    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 
     if (effects->isOpenGLCompositing()) {
         paintScreenSetupGl(renderTarget, viewport.projectionMatrix());

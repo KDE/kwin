@@ -598,7 +598,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &logi
 
     m_renderer->beginFrame(renderTarget, viewport);
 
-    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, logicalRegion, painted_screen);
+    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, viewport.mapToDeviceCoordinatesAligned(logicalRegion), painted_screen);
     m_paintScreenCount = 0;
 
     if (m_overlayItem) {
@@ -618,13 +618,13 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &logi
 }
 
 // the function that'll be eventually called by paintScreen() above
-void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
+void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
 {
     m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
         paintGenericScreen(renderTarget, viewport, mask, screen);
     } else {
-        paintSimpleScreen(renderTarget, viewport, mask, logicalRegion);
+        paintSimpleScreen(renderTarget, viewport, mask, deviceRegion);
     }
 }
 
@@ -648,10 +648,10 @@ void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
 // The optimized case without any transformations at all.
 // It can paint only the requested region and can use clipping
 // to reduce painting and improve performance.
-void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, const QRegion &logicalRegion)
+void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, const QRegion &deviceRegion)
 {
     // This is the occlusion culling pass
-    QRegion visible = viewport.mapToDeviceCoordinatesAligned(logicalRegion);
+    QRegion visible = deviceRegion;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         Phase2Data *data = &m_paintContext.phase2Data[i];
         data->deviceRegion = visible;

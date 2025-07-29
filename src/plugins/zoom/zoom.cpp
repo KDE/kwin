@@ -408,7 +408,7 @@ GLShader *ZoomEffect::shaderForZoom(double zoom)
     }
 }
 
-void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
+void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
     if (!offscreenData) {
@@ -419,7 +419,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
     RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorDescription());
     RenderViewport offscreenViewport(viewport.renderRect(), viewport.scale(), offscreenRenderTarget);
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
-    effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, logicalRegion, screen);
+    effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, deviceRegion, screen);
     GLFramebuffer::popFramebuffer();
 
     const auto scale = viewport.scale();
