@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-24 00:44+0000\n"
+"POT-Creation-Date: 2025-07-29 00:43+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -3489,19 +3489,19 @@ msgstr "Дыялогавае акно"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:477
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Скасаваць выхад"
 
-#: sm.cpp:478
+#: sm.cpp:480
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Усё адно выйсці"
 
-#: sm.cpp:524
+#: sm.cpp:526
 #, fuzzy, kde-format
 #| msgid ""
 #| "The following applications did not close:\n"

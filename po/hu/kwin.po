@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-24 00:44+0000\n"
+"POT-Creation-Date: 2025-07-29 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -3451,19 +3451,19 @@ msgstr "Párbeszédablak"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:477
+#: sm.cpp:479
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Kijelentkezés megszakítása"
 
-#: sm.cpp:478
+#: sm.cpp:480
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Kijelentkezés mindenképp"
 
-#: sm.cpp:524
+#: sm.cpp:526
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
