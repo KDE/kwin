@@ -190,11 +190,11 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::Output *screen)
+void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, KWin::Output *screen)
 {
     auto it = m_states.find(screen);
     if (it == m_states.end()) {
-        effects->paintScreen(renderTarget, viewport, mask, region, screen);
+        effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
         return;
     }
 
@@ -213,7 +213,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
 
     GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
-    effects->paintScreen(fboRenderTarget, fboViewport, mask, region, screen);
+    effects->paintScreen(fboRenderTarget, fboViewport, mask, deviceRegion, screen);
     GLFramebuffer::popFramebuffer();
 
     const qreal blendFactor = it->m_timeLine.value();

@@ -71,7 +71,7 @@ public:
      */
     QFuture<QImage> scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags = {});
 
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen) override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
 

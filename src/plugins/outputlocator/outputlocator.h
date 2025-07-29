@@ -22,7 +22,7 @@ class OutputLocatorEffect : public KWin::Effect
 
 public:
     explicit OutputLocatorEffect(QObject *parent = nullptr);
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::Output *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, KWin::Output *screen) override;
     bool isActive() const override;
 
 public Q_SLOTS:
