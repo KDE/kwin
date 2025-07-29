@@ -637,12 +637,34 @@ void Workspace::setActivationToken(const QString &token, uint32_t serial, const 
     m_activationTokenAppId = appId;
 }
 
-bool Workspace::mayActivate(const QString &token) const
+bool Workspace::mayActivate(Window *window, const QString &token) const
 {
     if (!m_activeWindow) {
         return true;
     }
-    return !m_activationToken.isEmpty() && token == m_activationToken && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial;
+    if (options->focusStealingPreventionLevel() == 0) {
+        return true;
+    }
+    if (!m_activationToken.isEmpty() && token == m_activationToken && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial) {
+        return true;
+    } else if (options->focusStealingPreventionLevel() == 4) {
+        // "Extreme" only accepts proper activation tokens
+        return false;
+    }
+    // with focus stealing prevention below "Extreme"
+    // also allow activation if the app id matches with the last activation token
+    if (!m_activationToken.isEmpty()
+        && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial
+        && m_activationTokenAppId == window->desktopFileName()) {
+        return true;
+    } else if (options->focusStealingPreventionLevel() >= 2) {
+        return false;
+    }
+    // with focus stealing prevention "Low",
+    // also allow activation if the last usage serial was caused by the "enter" key
+    // (to cover launching apps from the terminal)
+    return m_activeWindow->lastUsageSerialKey() == Qt::Key_Enter
+        || m_activeWindow->lastUsageSerialKey() == Qt::Key_Return;
 }
 
 } // namespace

@@ -86,7 +86,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
         return;
     }
 
-    if (!ws->mayActivate(token)) {
+    if (!ws->mayActivate(window, token)) {
         window->demandAttention();
         return;
     }

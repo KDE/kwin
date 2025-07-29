@@ -437,7 +437,7 @@ public:
     void updateXwaylandScale();
 
     void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
-    bool mayActivate(const QString &token) const;
+    bool mayActivate(Window *window, const QString &token) const;
 
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
