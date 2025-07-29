@@ -23,6 +23,11 @@ RenderTarget::RenderTarget(QImage *image, const ColorDescription &colorDescripti
 {
 }
 
+QRect RenderTarget::deviceRect() const
+{
+    return QRect(QPoint(0, 0), m_transform.map(size()));
+}
+
 QSize RenderTarget::size() const
 {
     if (m_framebuffer) {
