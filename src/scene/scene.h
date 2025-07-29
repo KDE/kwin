@@ -226,7 +226,7 @@ public:
     virtual OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
     virtual void prePaint(SceneView *delegate) = 0;
     virtual QRegion collectDamage() = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QRegion &logicalRegion) = 0;
+    virtual void paint(const RenderTarget &renderTarget, const QRegion &deviceRegion) = 0;
     virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame);
     virtual double desiredHdrHeadroom() const;

@@ -179,11 +179,9 @@ void SceneView::postPaint()
     m_scene->postPaint();
 }
 
-void SceneView::paint(const RenderTarget &renderTarget, const QRegion &region)
+void SceneView::paint(const RenderTarget &renderTarget, const QRegion &deviceRegion)
 {
-    // FIXME damage in logical coordinates may cause issues here
-    // if the viewport is on a non-integer position!
-    m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint()));
+    m_scene->paint(renderTarget, deviceRegion);
 }
 
 double SceneView::desiredHdrHeadroom() const
@@ -346,8 +344,7 @@ void ItemView::prePaint()
 
 QRegion ItemView::collectDamage()
 {
-    // FIXME this offset should really not be rounded
-    return m_item->takeRepaints(this).translated(-viewport().topLeft().toPoint());
+    return mapToDeviceCoordinatesAligned(m_item->takeRepaints(this));
 }
 
 void ItemView::postPaint()
@@ -470,7 +467,7 @@ QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
 
 static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints)
 {
-    *repaints += item->takeRepaints(view);
+    *repaints += view->mapToDeviceCoordinatesAligned(item->takeRepaints(view));
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
@@ -487,10 +484,9 @@ QRegion ItemTreeView::collectDamage()
     return ret;
 }
 
-void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region)
+void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &deviceRegion)
 {
     RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget);
-    const QRegion deviceRegion = region == infiniteRegion() ? infiniteRegion() : scaleRegionAligned(region, renderViewport.scale());
     auto renderer = m_item->scene()->renderer();
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
