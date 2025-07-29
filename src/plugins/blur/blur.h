@@ -90,7 +90,7 @@ private:
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateBlurRegion(EffectWindow *w);
-    void blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data);
+    void blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
     GLTexture *ensureNoiseTexture();
 
 private:
