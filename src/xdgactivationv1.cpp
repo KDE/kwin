@@ -66,6 +66,10 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
         m_lastToken = newToken;
         m_activation = waylandServer()->plasmaActivationFeedback()->createActivation(appId);
     }
+    if (isPrivileged && workspace()->activeWindow()) {
+        // plasmashell and kglobalacceld don't have a valid serial
+        serial = workspace()->activeWindow()->lastUsageSerial();
+    }
     workspace()->setActivationToken(newToken, serial);
     if (showNotify) {
         Q_EMIT effects->startupAdded(newToken, icon);
