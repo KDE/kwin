@@ -80,9 +80,9 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millis
     }
 }
 
-void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
+void ShowFpsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, logicalRegion, screen);
+    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 
     auto now = std::chrono::steady_clock::now();
     if ((now - m_lastFpsTime) >= std::chrono::milliseconds(1000)) {
