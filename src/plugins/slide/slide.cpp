@@ -154,10 +154,10 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     effects->prePaintScreen(data, presentTime);
 }
 
-void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
+void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
 {
     m_paintCtx.wrap = effects->optionRollOverDesktops();
-    effects->paintScreen(renderTarget, viewport, mask, logicalRegion, screen);
+    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 }
 
 QPoint SlideEffect::getDrawCoords(QPointF pos, Output *screen)

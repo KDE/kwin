@@ -55,10 +55,10 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &logicalRegion, Output *screen)
+void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
 {
     painted = QRegion();
-    effects->paintScreen(renderTarget, viewport, mask, logicalRegion, screen);
+    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 
     for (const Data &d : std::as_const(windows)) {
         if (painted.intersects(viewport.mapToDeviceCoordinatesAligned(d.rect))) {
