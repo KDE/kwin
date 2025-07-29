@@ -52,14 +52,14 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::doBeginFrame()
     };
 }
 
-bool DrmQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool DrmQPainterLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     if (frame) {
         frame->addRenderTimeQuery(std::move(m_renderTime));
     }
     m_currentFramebuffer = gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
-    m_damageJournal.add(damagedRegion);
+    m_damageJournal.add(damagedDeviceRegion);
     m_swapchain->release(m_currentBuffer);
     if (!m_currentFramebuffer) {
         qCWarning(KWIN_DRM, "Failed to create dumb framebuffer: %s", strerror(errno));
@@ -117,7 +117,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::doBeginFrame()
     };
 }
 
-bool DrmVirtualQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool DrmVirtualQPainterLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));

@@ -80,12 +80,12 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::doBeginFrame()
     };
 }
 
-bool VirtualEglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool VirtualEglGbmLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));
     glFlush();
-    m_damageJournal.add(damagedRegion);
+    m_damageJournal.add(damagedDeviceRegion);
 
     EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
     m_gbmSwapchain->release(m_currentSlot, releaseFence.takeFileDescriptor());

@@ -125,7 +125,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Output *screen, ScreenSh
         cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr);
         cursorView->setExclusive(true);
     }
-    const QRect fullDamage = QRect(QPoint(), screen->geometry().size());
+    const QRect fullDamage = QRect(QPoint(), target->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
     sceneView.prePaint();
@@ -190,7 +190,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, Scree
         cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr);
         cursorView->setExclusive(true);
     }
-    const QRect fullDamage = QRect(QPoint(), area.size());
+    const QRect fullDamage = QRect(QPoint(), target->size());
     sceneView.setViewport(area);
     sceneView.setScale(scale);
     sceneView.prePaint();
