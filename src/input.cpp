@@ -2956,6 +2956,7 @@ public:
         Qt::Key_CapsLock,
         Qt::Key_NumLock,
         Qt::Key_Shift,
+        Qt::Key_ScrollLock,
     };
 
     void keyboardKey(KeyboardKeyEvent *event) override
@@ -2966,7 +2967,7 @@ public:
         if (std::ranges::contains(s_modifierKeys, event->key)) {
             return;
         }
-        update();
+        update(event->key);
     }
 
     void pointerButton(PointerButtonEvent *event) override
@@ -3006,13 +3007,13 @@ public:
         update();
     }
 
-    void update()
+    void update(std::optional<Qt::Key> key = std::nullopt)
     {
         auto window = workspace()->activeWindow();
         if (!window) {
             return;
         }
-        window->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        window->setLastUsageSerial(waylandServer()->seat()->display()->serial(), key);
         workspace()->setWasUserInteraction();
     }
 };
