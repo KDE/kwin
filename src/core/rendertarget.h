@@ -23,7 +23,8 @@ public:
     explicit RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription = ColorDescription::sRGB);
     explicit RenderTarget(QImage *image, const ColorDescription &colorDescription = ColorDescription::sRGB);
 
-    QRect deviceRect() const;
+    QSize transformedSize() const;
+    QRect transformedRect() const;
 
     QSize size() const;
     OutputTransform transform() const;
