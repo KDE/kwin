@@ -29,7 +29,7 @@ public:
     ~X11WindowedEglPrimaryLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
+    bool doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     void releaseBuffers() override;
@@ -51,7 +51,7 @@ public:
     ~X11WindowedEglCursorLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
+    bool doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     void releaseBuffers() override;
@@ -78,7 +78,7 @@ public:
     DrmDevice *drmDevice() const override;
 
     void init() override;
-    void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
+    void endFrame(Output *output, const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion);
     QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
 
 private:

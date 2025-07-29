@@ -592,18 +592,18 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &logicalRegion)
+void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &deviceRegion)
 {
     RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget);
 
     m_renderer->beginFrame(renderTarget, viewport);
 
-    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, viewport.mapToDeviceCoordinatesAligned(logicalRegion), painted_screen);
+    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen);
     m_paintScreenCount = 0;
 
     if (m_overlayItem) {
-        const QRect bounds = viewport.mapToDeviceCoordinatesAligned(m_overlayItem->mapToScene(m_overlayItem->boundingRect()));
-        const QRegion deviceRepaint = viewport.mapToDeviceCoordinatesAligned(logicalRegion) & bounds;
+        const QRect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
+        const QRegion deviceRepaint = deviceRegion & bounds;
         if (!deviceRepaint.isEmpty()) {
             m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
                 return !painted_delegate->shouldRenderItem(item);

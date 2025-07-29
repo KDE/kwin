@@ -84,7 +84,7 @@ QRegion OutputScreenCastSource::render(QImage *target, const QRegion &bufferRepa
 
 QRegion OutputScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferRepair)
 {
-    m_layer->setFramebuffer(target, scaleRegion(bufferRepair, 1.0 / devicePixelRatio(), QRect(QPoint(), m_sceneView->viewport().size().toSize())));
+    m_layer->setFramebuffer(target, bufferRepair & QRect(QPoint(), target->size()));
     if (!m_layer->preparePresentationTest()) {
         return QRegion{};
     }
@@ -93,15 +93,15 @@ QRegion OutputScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
         return QRegion{};
     }
     m_sceneView->prePaint();
-    const auto logicalDamage = m_layer->repaints() | m_sceneView->collectDamage();
-    const auto repaints = beginInfo->repaint | logicalDamage;
+    const auto bufferDamage = scaleRegion(m_layer->repaints(), m_sceneView->scale(), QRect(QPoint(), target->size())) | m_sceneView->collectDamage();
+    const auto repaints = beginInfo->repaint | bufferDamage;
     m_layer->resetRepaints();
     m_sceneView->paint(beginInfo->renderTarget, repaints);
     m_sceneView->postPaint();
-    if (!m_layer->endFrame(repaints, logicalDamage, nullptr)) {
+    if (!m_layer->endFrame(repaints, bufferDamage, nullptr)) {
         return QRegion{};
     }
-    return scaleRegion(logicalDamage, devicePixelRatio(), QRect(QPoint(), textureSize()));
+    return bufferDamage;
 }
 
 std::chrono::nanoseconds OutputScreenCastSource::clock() const
