@@ -300,8 +300,8 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
 
 void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion)
 {
-    const auto clipped = deviceRegion & QRect(QPoint(), renderTarget.size());
-    if (clipped == QRect(QPoint(), renderTarget.size())) {
+    const auto clipped = deviceRegion & QRect(QPoint(), viewport.transform().map(renderTarget.size()));
+    if (clipped == QRect(QPoint(), viewport.transform().map(renderTarget.size()))) {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     } else if (!clipped.isEmpty()) {
@@ -328,7 +328,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     RenderContext renderContext{
         .projectionMatrix = viewport.projectionMatrix(),
         .rootTransform = data.toMatrix(viewport.scale()), // TODO: unify transforms
-        .deviceClip = deviceRegion & QRect(QPoint(), renderTarget.size()),
+        .deviceClip = deviceRegion & QRect(QPoint(), viewport.transform().map(renderTarget.size())),
         .hardwareClipping = deviceRegion != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
         .renderTargetScale = viewport.scale(),
         .viewportOrigin = viewport.renderRect().topLeft(),
@@ -385,7 +385,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = QRect(QPoint(), renderTarget.size());
     if (renderContext.hardwareClipping) {
-        scissorRegion = viewport.transform().map(deviceRegion & scissorRegion, renderTarget.size());
+        scissorRegion = viewport.transform().map(deviceRegion & QRect(QPoint(), viewport.transform().map(renderTarget.size())), renderTarget.size());
     }
 
     ShaderTraits lastTraits;

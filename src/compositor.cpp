@@ -509,7 +509,8 @@ void Compositor::composite(RenderLoop *renderLoop)
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 
-                const QRegion bufferDamage = surfaceDeviceDamage.united(repaint).intersected(QRect(QPoint(), primaryLayer->sourceRect().size().toSize()));
+                const QRect surfaceRect = QRect(QPoint(), renderTarget.transform().map(primaryLayer->sourceRect().size().toSize()));
+                const QRegion bufferDamage = surfaceDeviceDamage.united(repaint).intersected(surfaceRect);
 
                 primaryView->paint(renderTarget, bufferDamage);
                 primaryLayer->endFrame(bufferDamage, surfaceDeviceDamage, frame.get());

@@ -53,7 +53,7 @@ void ItemRendererQPainter::endFrame()
 void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion)
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
-    for (const QRect &rect : (deviceRegion & QRect(QPoint(), renderTarget.size()))) {
+    for (const QRect &rect : (deviceRegion & QRect(QPoint(), viewport.transform().map(renderTarget.size())))) {
         m_painter->fillRect(scaledRect(rect, 1.0 / viewport.scale()), Qt::transparent);
     }
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
