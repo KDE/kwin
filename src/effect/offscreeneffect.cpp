@@ -213,7 +213,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
     const bool clipping = deviceRegion != infiniteRegion();
-    const QRegion clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.size()) : infiniteRegion();
+    const QRegion clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.transformedSize()) : infiniteRegion();
 
     if (clipping) {
         glEnable(GL_SCISSOR_TEST);

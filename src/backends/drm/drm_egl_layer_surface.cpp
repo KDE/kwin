@@ -256,7 +256,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedDeviceRegion, Output
         m_surface->shadowDamageJournal.add(damagedDeviceRegion);
         const auto mapping = m_surface->currentShadowSlot->framebuffer()->colorAttachment()->contentTransform().combine(OutputTransform::FlipY);
         const QSize rotatedSize = mapping.map(m_surface->gbmSwapchain->size());
-        const QRegion repaint = mapping.map(deviceRepaint & QRect(QPoint(), rotatedSize), m_surface->gbmSwapchain->size());
+        const QRegion repaint = mapping.map(deviceRepaint & QRect(QPoint(), rotatedSize), rotatedSize);
 
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
         GLFramebuffer::pushFramebuffer(fbo);
