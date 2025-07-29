@@ -137,11 +137,9 @@ void SceneView::postPaint()
     m_scene->postPaint();
 }
 
-void SceneView::paint(const RenderTarget &renderTarget, const QRegion &region)
+void SceneView::paint(const RenderTarget &renderTarget, const QRegion &deviceRegion)
 {
-    // FIXME damage in logical coordinates may cause issues here
-    // if the viewport is on a non-integer position!
-    m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint()));
+    m_scene->paint(renderTarget, deviceRegion);
 }
 
 double SceneView::desiredHdrHeadroom() const
@@ -283,10 +281,9 @@ QRegion ItemTreeView::prePaint()
     return ret.translated(-viewport().topLeft().toPoint());
 }
 
-void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region)
+void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &deviceRegion)
 {
     RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget);
-    const QRegion deviceRegion = region == infiniteRegion() ? infiniteRegion() : scaleRegionAligned(region, renderViewport.scale());
     auto renderer = m_item->scene()->renderer();
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, deviceRegion);

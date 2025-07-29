@@ -31,7 +31,7 @@ public:
     VirtualEglLayer(Output *output, VirtualEglBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
+    bool doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame) override;
 
     std::shared_ptr<GLTexture> texture() const;
     DrmDevice *scanoutDevice() const override;

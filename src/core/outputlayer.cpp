@@ -127,9 +127,9 @@ std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
     return doBeginFrame();
 }
 
-bool OutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool OutputLayer::endFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
-    return doEndFrame(renderedRegion, damagedRegion, frame);
+    return doEndFrame(renderedDeviceRegion, damagedDeviceRegion, frame);
 }
 
 void OutputLayer::notifyNoScanoutCandidate()

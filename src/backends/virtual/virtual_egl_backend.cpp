@@ -59,7 +59,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
     };
 }
 
-bool VirtualEglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool VirtualEglLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));

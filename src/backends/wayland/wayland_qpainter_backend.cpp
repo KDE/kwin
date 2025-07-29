@@ -60,12 +60,12 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFra
     };
 }
 
-bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
-    m_damageJournal.add(damagedRegion);
-    m_waylandOutput->setPrimaryBuffer(m_waylandOutput->backend()->importBuffer(m_back->buffer()), damagedRegion);
+    m_damageJournal.add(damagedDeviceRegion);
+    m_waylandOutput->setPrimaryBuffer(m_waylandOutput->backend()->importBuffer(m_back->buffer()), damagedDeviceRegion);
     m_swapchain->release(m_back);
     return true;
 }
@@ -109,7 +109,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::doBeginFram
     };
 }
 
-bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     if (frame) {
         frame->addRenderTimeQuery(std::move(m_renderTime));

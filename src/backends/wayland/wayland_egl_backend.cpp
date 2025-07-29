@@ -95,7 +95,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::doBeginFrame()
     };
 }
 
-bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));
@@ -103,10 +103,10 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     glFlush();
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
-    static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), damagedRegion);
+    static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), damagedDeviceRegion);
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
 
-    m_damageJournal.add(damagedRegion);
+    m_damageJournal.add(damagedDeviceRegion);
     return true;
 }
 
@@ -190,7 +190,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()
     };
 }
 
-bool WaylandEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool WaylandEglCursorLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     if (frame) {

@@ -234,10 +234,10 @@ void WaylandOutput::updateColor()
     }
 }
 
-void WaylandOutput::setPrimaryBuffer(wl_buffer *buffer, const QRegion &damage)
+void WaylandOutput::setPrimaryBuffer(wl_buffer *buffer, const QRegion &bufferDamage)
 {
     m_presentationBuffer = buffer;
-    m_lastDamage = damage;
+    m_lastBufferDamage = bufferDamage;
 }
 
 static void handleDiscarded(void *data,
@@ -324,7 +324,7 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
         wp_viewport_set_destination(m_viewport, geometry().width(), geometry().height());
     }
     m_surface->attachBuffer(m_presentationBuffer);
-    m_surface->damage(m_lastDamage);
+    m_surface->damageBuffer(m_lastBufferDamage);
     m_surface->setScale(1);
     m_presentationBuffer = nullptr;
     if (auto presentationTime = m_backend->display()->presentationTime()) {

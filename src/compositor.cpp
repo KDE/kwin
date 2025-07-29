@@ -444,7 +444,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         toUpdate.push_back(primaryLayer);
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
 
-        const QRegion surfaceDamage = primaryLayer->repaints() | primaryView->prePaint();
+        // TODO port OutputLayer::repaints to device pixels as well
+        const QRegion surfaceDeviceDamage = scaleRegionAligned(primaryLayer->repaints(), primaryView->scale()) | primaryView->prePaint();
         primaryLayer->resetRepaints();
 
         // slowly adjust the artificial HDR headroom for the next frame
@@ -508,10 +509,10 @@ void Compositor::composite(RenderLoop *renderLoop)
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 
-                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(output->rectF().toAlignedRect());
+                const QRegion bufferDamage = surfaceDeviceDamage.united(repaint).intersected(QRect(QPoint(), primaryLayer->sourceRect().size().toSize()));
 
                 primaryView->paint(renderTarget, bufferDamage);
-                primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
+                primaryLayer->endFrame(bufferDamage, surfaceDeviceDamage, frame.get());
             }
         }
 

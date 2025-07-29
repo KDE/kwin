@@ -69,7 +69,7 @@ public:
     virtual bool preparePresentationTest();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame();
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame);
+    bool endFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame);
 
     /**
      * Tries to import the newest buffer of the surface for direct scanout and does some early checks
@@ -119,7 +119,7 @@ Q_SIGNALS:
 protected:
     virtual bool doImportScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame);
     virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;
-    virtual bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) = 0;
+    virtual bool doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame) = 0;
 
     QRegion m_repaints;
     QPointF m_hotspot;

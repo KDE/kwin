@@ -363,9 +363,7 @@ QRegion WorkspaceScene::prePaint(SceneView *delegate)
         preparePaintSimpleScreen();
     }
 
-    // FIXME damage in logical coordinates may cause issues here
-    // if the viewport is on a non-integer position!
-    return painted_delegate->mapFromDeviceCoordinates(m_paintContext.deviceDamage).translated(-delegate->viewport().topLeft().toPoint());
+    return m_paintContext.deviceDamage;
 }
 
 static void resetRepaintsHelper(Item *item, SceneView *delegate)
@@ -470,18 +468,18 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &logicalRegion)
+void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &deviceRegion)
 {
     RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget);
 
     m_renderer->beginFrame(renderTarget, viewport);
 
-    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, viewport.mapToDeviceCoordinates(logicalRegion), painted_screen);
+    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen);
     m_paintScreenCount = 0;
 
     if (m_overlayItem) {
         const QRect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
-        const QRegion deviceRepaint = viewport.mapToDeviceCoordinates(logicalRegion) & bounds;
+        const QRegion deviceRepaint = deviceRegion & bounds;
         if (!deviceRepaint.isEmpty()) {
             m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
                 return !painted_delegate->shouldRenderItem(item);

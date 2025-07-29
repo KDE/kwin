@@ -41,7 +41,7 @@ public:
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     QRegion prePaint(SceneView *delegate) override;
     void postPaint() override;
-    void paint(const RenderTarget &renderTarget, const QRegion &logicalRegion) override;
+    void paint(const RenderTarget &renderTarget, const QRegion &deviceRegion) override;
     void frame(SceneView *delegate, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 

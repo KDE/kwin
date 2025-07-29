@@ -55,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::doBegi
     };
 }
 
-bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
@@ -93,7 +93,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::doBegin
     };
 }
 
-bool X11WindowedQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool X11WindowedQPainterCursorLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     if (frame) {
