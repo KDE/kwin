@@ -64,12 +64,14 @@ bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::
         // if the modifier was pressed twice within the key repeat delay process it normally
         const qint32 keyRepeatDelay = waylandServer()->seat()->keyboard()->keyRepeatDelay();
         if (state == KeyboardKeyState::Pressed && data.lastModifier == keysym && time < data.lastModifierTime + std::chrono::milliseconds(keyRepeatDelay)) {
+            emitKeyEvent(name, released, mods, keysym, unicode, keycode);
             data.modifierWasForwarded = true;
             return false;
         }
 
         // if the modifier press was forwarded also forward the release
         if (state == KeyboardKeyState::Released && data.modifierWasForwarded) {
+            emitKeyEvent(name, released, mods, keysym, unicode, keycode);
             data.modifierWasForwarded = false;
             return false;
         }
