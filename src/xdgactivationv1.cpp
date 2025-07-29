@@ -70,7 +70,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
         // plasmashell and kglobalacceld don't have a valid serial
         serial = workspace()->activeWindow()->lastUsageSerial();
     }
-    workspace()->setActivationToken(newToken, serial);
+    workspace()->setActivationToken(newToken, serial, appId);
     if (showNotify) {
         Q_EMIT effects->startupAdded(newToken, icon);
     }

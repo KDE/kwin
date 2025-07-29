@@ -630,10 +630,11 @@ void Workspace::windowAttentionChanged(Window *window, bool set)
     }
 }
 
-void Workspace::setActivationToken(const QString &token, uint32_t serial)
+void Workspace::setActivationToken(const QString &token, uint32_t serial, const QString &appId)
 {
     m_activationToken = token;
     m_activationTokenSerial = serial;
+    m_activationTokenAppId = appId;
 }
 
 bool Workspace::mayActivate(const QString &token) const

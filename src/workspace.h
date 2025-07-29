@@ -436,7 +436,7 @@ public:
     OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt);
     void updateXwaylandScale();
 
-    void setActivationToken(const QString &token, uint32_t serial);
+    void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
     bool mayActivate(const QString &token) const;
 
 public Q_SLOTS:
@@ -733,6 +733,7 @@ private:
     KConfigWatcher::Ptr m_kdeglobalsWatcher;
 
     QString m_activationToken;
+    QString m_activationTokenAppId;
     uint32_t m_activationTokenSerial = 0;
 
 private:

@@ -781,13 +781,29 @@ void Workspace::addWaylandWindow(Window *window)
         rearrange();
     }
     if (window->wantsInput() && !window->isMinimized()) {
-        // In "Extreme" mode, require an activation token to activate new windows
-        if (options->focusStealingPreventionLevel() < 4 || (!m_activationToken.isEmpty() && window->activationToken() == m_activationToken)) {
-            if (!window->isDesktop()
-                // If there's no active window, make this desktop the active one.
-                || (activeWindow() == nullptr && should_get_focus.count() == 0)) {
-                activateWindow(window);
-            }
+        // with focus stealing preventation "None", always activate new windows
+        bool initialActivationAllowed = options->focusStealingPreventionLevel() == 0;
+        if (!initialActivationAllowed) {
+            // check the activation token
+            initialActivationAllowed = mayActivate(window->activationToken());
+        }
+        if (!initialActivationAllowed && options->focusStealingPreventionLevel() < 4) {
+            // with focus stealing prevention less than "Extreme",
+            // also allow activation if the app id matches with the last activation token
+            initialActivationAllowed = m_activeWindow->lastUsageSerial() <= m_activationTokenSerial && m_activationTokenAppId == window->desktopFileName();
+        }
+        if (!initialActivationAllowed && options->focusStealingPreventionLevel() < 2) {
+            // with focus stealing prevention less than "Normal",
+            // also allow activation if the last usage serial was caused by the "enter" key
+            // to cover launching apps from the terminal
+            initialActivationAllowed = m_activeWindow->lastUsageSerialKey() == Qt::Key_Enter
+                || m_activeWindow->lastUsageSerialKey() == Qt::Key_Return;
+        }
+
+        if ((initialActivationAllowed && !window->isDesktop())
+            // If there's no active window, make this desktop the active one.
+            || (activeWindow() == nullptr && should_get_focus.count() == 0)) {
+            activateWindow(window);
         }
     }
     updateTabbox();

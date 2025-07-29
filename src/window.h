@@ -1337,8 +1337,9 @@ public:
     /**
      * Sets the last user usage serial of the surface as @p serial
      */
-    void setLastUsageSerial(quint32 serial);
+    void setLastUsageSerial(quint32 serial, std::optional<Qt::Key> pressedKey);
     quint32 lastUsageSerial() const;
+    std::optional<Qt::Key> lastUsageSerialKey() const;
 
     void refOffscreenRendering();
     void unrefOffscreenRendering();
@@ -1877,6 +1878,7 @@ protected:
 
     WindowRules m_rules;
     quint32 m_lastUsageSerial = 0;
+    std::optional<Qt::Key> m_lastUsageSerialKey;
     bool m_lockScreenOverlay = false;
     uint32_t m_offscreenRenderCount = 0;
     QTimer m_offscreenFramecallbackTimer;
