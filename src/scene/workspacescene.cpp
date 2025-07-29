@@ -353,7 +353,7 @@ QRegion WorkspaceScene::prePaint(SceneView *delegate)
     Q_EMIT preFrameRender();
 
     effects->prePaintScreen(prePaintData, m_expectedPresentTimestamp);
-    m_paintContext.deviceDamage = painted_delegate->mapToDeviceCoordinates(prePaintData.paint);
+    m_paintContext.deviceDamage = painted_delegate->mapToDeviceCoordinatesAligned(prePaintData.paint);
     m_paintContext.mask = prePaintData.mask;
     m_paintContext.phase2Data.clear();
 
@@ -384,7 +384,7 @@ static void accumulateRepaints(Item *item, SceneView *delegate, QRegion *repaint
     if (!delegate->shouldRenderItem(item)) {
         return;
     }
-    *repaints += delegate->mapToDeviceCoordinates(item->takeRepaints(delegate));
+    *repaints += delegate->mapToDeviceCoordinatesAligned(item->takeRepaints(delegate));
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
@@ -426,12 +426,12 @@ void WorkspaceScene::preparePaintSimpleScreen()
         if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = windowItem->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
-                data.deviceOpaque = painted_delegate->mapToDeviceCoordinates(surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect())));
+                data.deviceOpaque = painted_delegate->mapToDeviceCoordinatesContained(surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect())));
             }
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.deviceOpaque += painted_delegate->mapToDeviceCoordinates(decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect())));
+                data.deviceOpaque += painted_delegate->mapToDeviceCoordinatesContained(decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect())));
             }
         }
 
@@ -531,7 +531,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         data->deviceRegion = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->deviceRegion &= viewport.mapToDeviceCoordinates(data->item->mapToScene(data->item->boundingRect())).toRect();
+            data->deviceRegion &= viewport.mapToDeviceCoordinates(data->item->mapToScene(data->item->boundingRect())).toAlignedRect();
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
                 visible -= data->deviceOpaque;

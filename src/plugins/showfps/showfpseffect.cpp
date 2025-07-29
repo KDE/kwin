@@ -103,8 +103,8 @@ void ShowFpsEffect::paintWindow(const RenderTarget &renderTarget, const RenderVi
 
     // Take intersection of region and actual window's rect, minus the fps area
     //  (since we keep repainting it) and count the pixels.
-    QRegion repaintRegion = deviceRegion & viewport.mapToDeviceCoordinates(w->frameGeometry()).toRect();
-    repaintRegion -= viewport.mapToDeviceCoordinates(m_scene->geometry());
+    QRegion repaintRegion = deviceRegion & viewport.mapToDeviceCoordinates(w->frameGeometry()).toAlignedRect();
+    repaintRegion -= viewport.mapToDeviceCoordinatesAligned(m_scene->geometry());
     for (const QRect &rect : repaintRegion) {
         m_paintAmount += rect.width() * rect.height();
     }

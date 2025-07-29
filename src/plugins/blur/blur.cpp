@@ -519,7 +519,7 @@ void BlurEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePain
     }
 
     // in case this window has regions to be blurred
-    const QRegion blurArea = view->mapToDeviceCoordinates(QRectF(blurRegion(w).boundingRect()).translated(w->pos())).toRect();
+    const QRegion blurArea = view->mapToDeviceCoordinates(QRectF(blurRegion(w).boundingRect()).translated(w->pos())).toAlignedRect();
 
     // if this window or a window underneath the blurred area is painted again we have to
     // blur everything
@@ -561,7 +561,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 void BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
     // TODO port the blur method to use device pixels directly too
-    blur(renderTarget, viewport, w, mask, viewport.mapFromDeviceCoordinates(deviceRegion), data);
+    blur(renderTarget, viewport, w, mask, viewport.mapFromDeviceCoordinatesContained(deviceRegion), data);
 
     // Draw the window over the blurred area
     effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);

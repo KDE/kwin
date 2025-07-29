@@ -548,7 +548,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
             break;
         }
         case Clip:
-            effectiveDeviceRegion &= viewport.mapToDeviceCoordinates(clipRect(w->expandedGeometry().toAlignedRect(), anim));
+            effectiveDeviceRegion &= viewport.mapToDeviceCoordinatesAligned(clipRect(w->expandedGeometry().toAlignedRect(), anim));
             break;
         case Translation:
             data += QPointF(interpolated(anim, 0), interpolated(anim, 1));

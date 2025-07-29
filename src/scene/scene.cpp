@@ -77,16 +77,31 @@ QRectF RenderView::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
     return scaledRect(logicalGeometry.translated(-viewport().topLeft()), scale());
 }
 
-QRect RenderView::mapToDeviceCoordinates(const QRect &logicalGeometry) const
+QRect RenderView::mapToDeviceCoordinatesAligned(const QRect &logicalGeometry) const
 {
-    return scaledRect(QRectF(logicalGeometry).translated(-viewport().topLeft()), scale()).toRect();
+    return scaledRect(QRectF(logicalGeometry).translated(-viewport().topLeft()), scale()).toAlignedRect();
 }
 
-QRegion RenderView::mapToDeviceCoordinates(const QRegion &logicalGeometry) const
+QRect RenderView::mapToDeviceCoordinatesContained(const QRect &logicalGeometry) const
+{
+    const QRectF ret = scaledRect(QRectF(logicalGeometry).translated(-viewport().topLeft()), scale());
+    return QRect(std::ceil(ret.x()), std::ceil(ret.y()), std::floor(ret.width()), std::floor(ret.height()));
+}
+
+QRegion RenderView::mapToDeviceCoordinatesAligned(const QRegion &logicalGeometry) const
 {
     QRegion ret;
     for (const QRect &logicalRect : logicalGeometry) {
-        ret |= mapToDeviceCoordinates(logicalRect);
+        ret |= mapToDeviceCoordinatesAligned(logicalRect);
+    }
+    return ret;
+}
+
+QRegion RenderView::mapToDeviceCoordinatesContained(const QRegion &logicalGeometry) const
+{
+    QRegion ret;
+    for (const QRect &logicalRect : logicalGeometry) {
+        ret |= mapToDeviceCoordinatesContained(logicalRect);
     }
     return ret;
 }
@@ -96,16 +111,16 @@ QRectF RenderView::mapFromDeviceCoordinates(const QRectF &deviceGeometry) const
     return scaledRect(deviceGeometry, 1.0 / scale()).translated(viewport().topLeft());
 }
 
-QRect RenderView::mapFromDeviceCoordinates(const QRect &deviceGeometry) const
+QRect RenderView::mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const
 {
-    return scaledRect(deviceGeometry, 1.0 / scale()).translated(viewport().topLeft()).toRect();
+    return scaledRect(deviceGeometry, 1.0 / scale()).translated(viewport().topLeft()).toAlignedRect();
 }
 
-QRegion RenderView::mapFromDeviceCoordinates(const QRegion &deviceGeometry) const
+QRegion RenderView::mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const
 {
     QRegion ret;
     for (const QRect &deviceRect : deviceGeometry) {
-        ret |= mapFromDeviceCoordinates(deviceRect);
+        ret |= mapFromDeviceCoordinatesAligned(deviceRect);
     }
     return ret;
 }

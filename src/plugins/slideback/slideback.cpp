@@ -182,7 +182,7 @@ void SlideBackEffect::paintWindow(const RenderTarget &renderTarget, const Render
     }
     QRegion effectiveRegion = deviceGeometry;
     for (const QRegion &r : std::as_const(clippedRegions)) {
-        effectiveRegion = effectiveRegion.intersected(viewport.mapToDeviceCoordinates(r));
+        effectiveRegion = effectiveRegion.intersected(viewport.mapToDeviceCoordinatesAligned(r));
     }
     effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
     clippedRegions.clear();

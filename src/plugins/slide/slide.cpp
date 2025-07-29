@@ -256,7 +256,7 @@ void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
             effects->paintWindow(
                 renderTarget, viewport, w, mask,
                 // Only paint the region that intersects the current screen and desktop.
-                deviceGeometry.intersected(viewport.mapToDeviceCoordinates(logicalDamage)),
+                deviceGeometry.intersected(viewport.mapToDeviceCoordinatesAligned(logicalDamage)),
                 data);
 
             // Undo the translation for the next screen. I know, it hurts me too.

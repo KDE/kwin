@@ -61,12 +61,12 @@ void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const R
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 
     for (const Data &d : std::as_const(windows)) {
-        if (painted.intersects(viewport.mapToDeviceCoordinates(d.rect))) {
+        if (painted.intersects(viewport.mapToDeviceCoordinatesAligned(d.rect))) {
             WindowPaintData data;
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
-            effects->drawWindow(renderTarget, viewport, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED, viewport.mapToDeviceCoordinates(region), data);
+            effects->drawWindow(renderTarget, viewport, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED, viewport.mapToDeviceCoordinatesAligned(region), data);
         }
     }
 }

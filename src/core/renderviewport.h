@@ -28,12 +28,14 @@ public:
     OutputTransform transform() const;
 
     QRectF mapToDeviceCoordinates(const QRectF &logicalGeometry) const;
-    QRect mapToDeviceCoordinates(const QRect &logicalGeometry) const;
-    QRegion mapToDeviceCoordinates(const QRegion &logicalGeometry) const;
+    QRect mapToDeviceCoordinatesAligned(const QRect &logicalGeometry) const;
+    QRegion mapToDeviceCoordinatesAligned(const QRegion &logicalGeometry) const;
 
     QRectF mapFromDeviceCoordinates(const QRectF &deviceGeometry) const;
-    QRect mapFromDeviceCoordinates(const QRect &deviceGeometry) const;
-    QRegion mapFromDeviceCoordinates(const QRegion &deviceGeometry) const;
+    QRect mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const;
+    QRect mapFromDeviceCoordinatesContained(const QRect &deviceGeometry) const;
+    QRegion mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const;
+    QRegion mapFromDeviceCoordinatesContained(const QRegion &deviceGeometry) const;
 
     QRectF mapToRenderTarget(const QRectF &logicalGeometry) const;
     QRect mapToRenderTarget(const QRect &logicalGeometry) const;

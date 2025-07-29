@@ -149,7 +149,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(-interpolate(std::min(geo.width(), slideLength), 0.0, t));
         splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
-        effectiveRegion &= viewport.mapToDeviceCoordinates(QRect(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height()));
+        effectiveRegion &= viewport.mapToDeviceCoordinatesAligned(QRect(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height()));
         break;
     case Location::Top:
         if (slideLength < geo.height()) {
@@ -157,7 +157,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(0.0, -interpolate(std::min(geo.height(), slideLength), 0.0, t));
         splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
-        effectiveRegion &= viewport.mapToDeviceCoordinates(QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint));
+        effectiveRegion &= viewport.mapToDeviceCoordinatesAligned(QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint));
         break;
     case Location::Right:
         if (slideLength < geo.width()) {
@@ -165,7 +165,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(interpolate(std::min(geo.width(), slideLength), 0.0, t));
         splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
-        effectiveRegion &= viewport.mapToDeviceCoordinates(QRegion(geo.x(), geo.y(), splitPoint, geo.height()));
+        effectiveRegion &= viewport.mapToDeviceCoordinatesAligned(QRegion(geo.x(), geo.y(), splitPoint, geo.height()));
         break;
     case Location::Bottom:
     default:
@@ -174,7 +174,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
         }
         data.translate(0.0, interpolate(std::min(geo.height(), slideLength), 0.0, t));
         splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
-        effectiveRegion &= viewport.mapToDeviceCoordinates(QRegion(geo.x(), geo.y(), geo.width(), splitPoint));
+        effectiveRegion &= viewport.mapToDeviceCoordinatesAligned(QRegion(geo.x(), geo.y(), geo.width(), splitPoint));
     }
 
     effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
