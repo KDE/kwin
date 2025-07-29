@@ -15,4 +15,4 @@ ecm_qt_declare_logging_category(KWinXwaylandCommon
 )
 
 target_include_directories(KWinXwaylandCommon PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(KWinXwaylandCommon Qt::Core)
+target_link_libraries(KWinXwaylandCommon Qt::Core KF6::CoreAddons)

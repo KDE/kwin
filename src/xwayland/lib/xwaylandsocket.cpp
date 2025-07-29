@@ -11,6 +11,8 @@
 #include <QFile>
 #include <QScopeGuard>
 
+#include <KSandbox>
+
 #include <errno.h>
 #include <signal.h>
 #include <sys/socket.h>
@@ -165,7 +167,12 @@ static bool checkSocketsDirectory()
 
 XwaylandSocket::XwaylandSocket(OperationMode mode)
 {
-    if (!checkSocketsDirectory()) {
+    if (KSandbox::isFlatpak()) {
+        if (mkdir("/tmp/.X11-unix", S_IRWXU) < 0 && errno != EEXIST) {
+            qCWarning(KWIN_XWL) << "Failed to create /tmp/.X11-unix directory:" << strerror(errno);
+            return;
+        }
+    } else if (!checkSocketsDirectory()) {
         return;
     }
 
