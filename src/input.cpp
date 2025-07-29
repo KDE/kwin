@@ -2954,9 +2954,22 @@ void InputRedirection::setLastInputHandler(QObject *device)
 class WindowInteractedSpy : public InputEventSpy
 {
 public:
+    static constexpr std::array s_modifierKeys = {
+        Qt::Key_Control,
+        Qt::Key_Alt,
+        Qt::Key_AltGr,
+        Qt::Key_Meta,
+        Qt::Key_CapsLock,
+        Qt::Key_NumLock,
+        Qt::Key_Shift,
+    };
+
     void keyboardKey(KeyboardKeyEvent *event) override
     {
         if (event->state != KeyboardKeyState::Pressed) {
+            return;
+        }
+        if (std::ranges::contains(s_modifierKeys, event->key)) {
             return;
         }
         update();
