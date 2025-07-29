@@ -547,8 +547,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 
 void BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
-    // TODO port the blur method to use device pixels directly too
-    blur(renderTarget, viewport, w, mask, viewport.mapFromDeviceCoordinatesAligned(deviceRegion), data);
+    blur(renderTarget, viewport, w, mask, deviceRegion, data);
 
     // Draw the window over the blurred area
     effects->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
@@ -590,7 +589,7 @@ GLTexture *BlurEffect::ensureNoiseTexture()
     return m_noisePass.noiseTexture.get();
 }
 
-void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &logicalRegion, WindowPaintData &data)
+void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
 {
     auto it = m_windows.find(w);
     if (it == m_windows.end()) {
@@ -622,15 +621,15 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
     const QRect backgroundRect = blurShape.boundingRect();
     const QRect deviceBackgroundRect = snapToPixelGrid(scaledRect(backgroundRect, viewport.scale()));
+    const QRect deviceViewport = snapToPixelGrid(scaledRect(viewport.renderRect(), viewport.scale()));
     const auto opacity = w->opacity() * data.opacity();
 
     // Get the effective shape that will be actually blurred. It's possible that all of it will be clipped.
     QList<QRectF> effectiveShape;
     effectiveShape.reserve(blurShape.rectCount());
-    if (logicalRegion != infiniteRegion()) {
-        for (const QRect &clipRect : logicalRegion) {
-            const QRectF deviceClipRect = snapToPixelGridF(scaledRect(clipRect, viewport.scale()))
-                                              .translated(-deviceBackgroundRect.topLeft());
+    if (deviceRegion != infiniteRegion()) {
+        for (const QRect &clipRect : deviceRegion) {
+            const QRectF deviceClipRect = snapToPixelGridF(clipRect).translated(deviceViewport.topLeft() - deviceBackgroundRect.topLeft());
             for (const QRect &shapeRect : blurShape) {
                 const QRectF deviceShapeRect = snapToPixelGridF(scaledRect(shapeRect.translated(-backgroundRect.topLeft()), viewport.scale()));
                 if (const QRectF intersected = deviceClipRect.intersected(deviceShapeRect); !intersected.isEmpty()) {
@@ -682,7 +681,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     // Fetch the pixels behind the shape that is going to be blurred.
-    const QRegion dirtyRegion = logicalRegion & backgroundRect;
+    const QRegion dirtyRegion = viewport.mapFromDeviceCoordinatesContained(deviceRegion) & backgroundRect;
     for (const QRect &dirtyRect : dirtyRegion) {
         renderInfo.framebuffers[0]->blitFromRenderTarget(renderTarget, viewport, dirtyRect, dirtyRect.translated(-backgroundRect.topLeft()));
     }
