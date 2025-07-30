@@ -776,16 +776,22 @@ void Workspace::addWaylandWindow(Window *window)
     m_windows.append(window);
     addToStack(window);
 
+    const bool shouldActivate = window->wantsInput()
+        && ((mayActivate(window, window->activationToken()) && !window->isDesktop())
+            // If there's no active window, make this desktop the active one.
+            || (activeWindow() == nullptr && should_get_focus.count() == 0));
+    if (!window->isMinimized() && !shouldActivate) {
+        // This window won't be activated, so move it out of the way
+        // of the active window
+        restackWindowUnderActive(window);
+    }
+
     updateStackingOrder(true);
     if (window->hasStrut()) {
         rearrange();
     }
-    if (window->wantsInput() && !window->isMinimized()) {
-        if ((mayActivate(window, window->activationToken()) && !window->isDesktop())
-            // If there's no active window, make this desktop the active one.
-            || (activeWindow() == nullptr && should_get_focus.count() == 0)) {
-            activateWindow(window);
-        }
+    if (!window->isMinimized() && shouldActivate) {
+        activateWindow(window);
     }
     updateTabbox();
     Q_EMIT windowAdded(window);
