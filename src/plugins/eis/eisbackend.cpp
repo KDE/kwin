@@ -175,6 +175,7 @@ eis_device *EisBackend::createAbsoluteDevice(eis_seat *seat)
         eis_region_set_offset(region, outputGeometry.x(), outputGeometry.y());
         eis_region_set_size(region, outputGeometry.width(), outputGeometry.height());
         eis_region_set_physical_scale(region, output->scale());
+        eis_region_set_mapping_id(region, output->name().toUtf8());
         eis_region_add(region);
         eis_region_unref(region);
     };
