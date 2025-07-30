@@ -47,9 +47,8 @@ KWinFocusConfigForm::KWinFocusConfigForm(QWidget *parent)
     setupUi(parent);
 }
 
-KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
+KFocusConfig::KFocusConfig(KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent, KPluginMetaData())
-    , standAlone(_standAlone)
     , m_ui(new KWinFocusConfigForm(widget()))
 {
     if (settings) {
@@ -206,13 +205,6 @@ void KFocusConfig::save(void)
     m_settings->setNextFocusPrefersMouse(idxFocusPolicy == CLICK_TO_FOCUS_MOUSE_PRECEDENT || idxFocusPolicy == FOCUS_FOLLOWS_MOUSE_PRECEDENT);
 
     m_settings->save();
-
-    if (standAlone) {
-        // Send signal to all kwin instances
-        QDBusMessage message =
-            QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-        QDBusConnection::sessionBus().send(message);
-    }
 }
 
 void KFocusConfig::defaults()
@@ -227,9 +219,8 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget *parent)
     setupUi(parent);
 }
 
-KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
+KAdvancedConfig::KAdvancedConfig(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
     : KCModule(parent, KPluginMetaData())
-    , standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(widget()))
 {
     if (settings && globalSettings) {
@@ -261,27 +252,14 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
     m_ui->kcfg_ActivationDesktopPolicy->setItemData(KWinOptionsSettings::ActivationDesktopPolicyChoices::BringToCurrentDesktop, "BringToCurrentDesktop");
 }
 
-void KAdvancedConfig::save(void)
-{
-    KCModule::save();
-
-    if (standAlone) {
-        // Send signal to all kwin instances
-        QDBusMessage message =
-            QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-        QDBusConnection::sessionBus().send(message);
-    }
-}
-
 KWinMovingConfigForm::KWinMovingConfigForm(QWidget *parent)
     : QWidget(parent)
 {
     setupUi(parent);
 }
 
-KMovingConfig::KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
+KMovingConfig::KMovingConfig(KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent, KPluginMetaData())
-    , standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(widget()))
 {
     if (settings) {
@@ -293,18 +271,6 @@ void KMovingConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
     addConfig(m_settings, widget());
-}
-
-void KMovingConfig::save(void)
-{
-    KCModule::save();
-
-    if (standAlone) {
-        // Send signal to all kwin instances
-        QDBusMessage message =
-            QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-        QDBusConnection::sessionBus().send(message);
-    }
 }
 
 #include "moc_windows.cpp"
