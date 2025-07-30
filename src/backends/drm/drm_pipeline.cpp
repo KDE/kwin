@@ -321,8 +321,10 @@ void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
     if (m_pending.crtc) {
         m_pending.crtc->disable(commit);
         m_pending.crtc->primaryPlane()->disable(commit);
-        if (auto cursor = m_pending.crtc->cursorPlane()) {
-            cursor->disable(commit);
+        for (const auto layer : m_pending.layers) {
+            if (DrmPlane *plane = layer->plane()) {
+                plane->disable(commit);
+            }
         }
     }
 }
