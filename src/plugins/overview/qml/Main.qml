@@ -31,6 +31,8 @@ FocusScope {
     property bool animationEnabled: false
     property bool organized: false
 
+    property bool foobar: true
+
     property bool verticalDesktopBar: KWinComponents.Workspace.desktopGridHeight >= bar.desktopCount && KWinComponents.Workspace.desktopGridHeight != 1
 
     // The values of overviewVal and gridVal might not be 0 on startup,
