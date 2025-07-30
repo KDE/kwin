@@ -434,9 +434,6 @@ bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::na
     if (needsModeset() || !m_pending.crtc || !m_pending.active) {
         return false;
     }
-    if (amdgpuVrrWorkaroundActive() && layer->isEnabled()) {
-        return false;
-    }
     // We need to make sure that on vmwgfx software cursor is selected
     // until Broadcom fixes hw cursor issues with vmwgfx. Otherwise
     // the cursor is missing.
@@ -458,12 +455,6 @@ bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::na
     } else {
         return setCursorLegacy(drmLayer);
     }
-}
-
-bool DrmPipeline::amdgpuVrrWorkaroundActive() const
-{
-    static const bool s_env = environmentVariableBoolValue("KWIN_DRM_DONT_FORCE_AMD_SW_CURSOR").value_or(linuxKernelVersion() >= Version(6, 11));
-    return !s_env && gpu()->isAmdgpu() && (m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
 }
 
 void DrmPipeline::applyPendingChanges()
