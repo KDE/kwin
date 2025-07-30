@@ -67,6 +67,13 @@ KWinOptions::KWinOptions(QObject *parent, const KPluginMetaData &data)
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced->widget(), i18n("Adva&nced"));
     connectKCM(mAdvanced);
+
+    if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_PIP_V1")) {
+        mPip = new KPipConfig(mSettings, widget());
+        mPip->setObjectName(QLatin1String("KWin Picture-in-Picture"));
+        tab->addTab(mPip->widget(), i18n("&Picture-in-picture"));
+        connectKCM(mPip);
+    }
 }
 
 void KWinOptions::load()
@@ -80,6 +87,9 @@ void KWinOptions::load()
     // mFocus is last because it may send unmanagedWidgetStateChanged
     // that need to have the final word
     mFocus->load();
+    if (mPip) {
+        mPip->load();
+    }
 }
 
 void KWinOptions::save()
@@ -91,6 +101,9 @@ void KWinOptions::save()
     mWindowActions->save();
     mMoving->save();
     mAdvanced->save();
+    if (mPip) {
+        mPip->save();
+    }
 
     // Send signal to all kwin instances
     QDBusMessage message =
@@ -109,6 +122,9 @@ void KWinOptions::defaults()
     // mFocus is last because it may send unmanagedWidgetDefaulted
     // that need to have the final word
     mFocus->defaults();
+    if (mPip) {
+        mPip->defaults();
+    }
 }
 
 void KWinOptions::updateUnmanagedState()
@@ -119,6 +135,7 @@ void KWinOptions::updateUnmanagedState()
     changed |= mWindowActions->needsSave();
     changed |= mMoving->needsSave();
     changed |= mAdvanced->needsSave();
+    changed |= mPip ? mPip->needsSave() : false;
 
     unmanagedWidgetChangeState(changed);
 
@@ -128,6 +145,7 @@ void KWinOptions::updateUnmanagedState()
     isDefault &= mWindowActions->representsDefaults();
     isDefault &= mMoving->representsDefaults();
     isDefault &= mAdvanced->representsDefaults();
+    isDefault &= mPip ? mPip->representsDefaults() : true;
 
     unmanagedWidgetDefaultState(isDefault);
 }

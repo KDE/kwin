@@ -217,6 +217,18 @@
         <entry name="InteractiveWindowMoveEnabled" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="PictureInPictureHomeCorner" type="Enum">
+            <choices name="Qt::Corner">
+                <choice name="TopLeftCorner"/>
+                <choice name="TopRightCorner"/>
+                <choice name="BottomLeftCorner"/>
+                <choice name="BottomRightCorner"/>
+            </choices>
+            <default>Qt::BottomRightCorner</default>
+        </entry>
+        <entry name="PictureInPictureMargin" type="Int">
+            <default>20</default>
+        </entry>
     </group>
     <group name="EdgeBarrier">
         <entry name="CornerBarrier" type="Bool">

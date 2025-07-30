@@ -413,10 +413,23 @@ std::optional<PlacementCommand> Placement::placePictureInPicture(const Window *c
         return std::nullopt;
     }
 
-    const qreal x = area.x() + area.width() - size.width();
-    const qreal y = area.y() + area.height() - size.height();
+    const int margin = options->pictureInPictureMargin();
+    switch (options->pictureInPictureHomeCorner()) {
+    case Qt::TopLeftCorner:
+        return QPointF(area.x() + margin, area.y() + margin);
 
-    return QPointF(x, y);
+    case Qt::TopRightCorner:
+        return QPointF(area.x() + area.width() - size.width() - margin, area.y() + margin);
+
+    case Qt::BottomRightCorner:
+        return QPointF(area.x() + area.width() - size.width() - margin,
+                       area.y() + area.height() - size.height() - margin);
+
+    case Qt::BottomLeftCorner:
+        return QPointF(area.x() + margin, area.y() + area.height() - size.height() - margin);
+    }
+
+    Q_UNREACHABLE();
 }
 
 

@@ -219,6 +219,12 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget *parent)
     setupUi(parent);
 }
 
+KWinPipConfigForm::KWinPipConfigForm(QWidget *parent)
+    : QWidget(parent)
+{
+    setupUi(parent);
+}
+
 KAdvancedConfig::KAdvancedConfig(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
     : KCModule(parent, KPluginMetaData())
     , m_ui(new KWinAdvancedConfigForm(widget()))
@@ -268,6 +274,21 @@ KMovingConfig::KMovingConfig(KWinOptionsSettings *settings, QWidget *parent)
 }
 
 void KMovingConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
+    addConfig(m_settings, widget());
+}
+
+KPipConfig::KPipConfig(KWinOptionsSettings *settings, QWidget *parent)
+    : KCModule(parent, KPluginMetaData())
+    , m_ui(new KWinPipConfigForm(widget()))
+{
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KPipConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
     addConfig(m_settings, widget());
