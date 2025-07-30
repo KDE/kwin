@@ -134,6 +134,7 @@ private:
     std::unique_ptr<GLTexture> m_cursorTexture;
     bool m_cursorTextureDirty = false;
     bool m_isMouseHidden = false;
+    bool m_smoothEdges = true;
     QTimeLine m_timeline;
     int m_xMove = 0;
     int m_yMove = 0;
@@ -141,6 +142,7 @@ private:
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
     std::map<Output *, OffscreenData> m_offscreenData;
     std::unique_ptr<GLShader> m_pixelGridShader;
+    std::unique_ptr<GLShader> m_smoothEdgesShader;
     double m_pixelGridZoom;
     std::unique_ptr<QAction> m_zoomInAxisAction;
     std::unique_ptr<QAction> m_zoomOutAxisAction;

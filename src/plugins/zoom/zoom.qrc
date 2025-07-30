@@ -2,5 +2,6 @@
 <qresource prefix="/effects/zoom/">
   <file>shaders/pixelgrid.frag</file>
   <file>shaders/pixelgrid_core.frag</file>
+  <file>shaders/hq4x_core.frag</file>
 </qresource>
 </RCC>

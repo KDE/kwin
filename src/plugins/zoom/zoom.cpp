@@ -342,7 +342,14 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 GLShader *ZoomEffect::shaderForZoom(double zoom)
 {
     if (zoom < m_pixelGridZoom) {
-        return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        if (m_smoothEdges) {
+            if (!m_smoothEdgesShader) {
+                m_smoothEdgesShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/hq4x.frag"));
+            }
+            return m_smoothEdgesShader.get();
+        } else {
+            return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        }
     } else {
         if (!m_pixelGridShader) {
             m_pixelGridShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/pixelgrid.frag"));
