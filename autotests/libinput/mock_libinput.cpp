@@ -1035,6 +1035,11 @@ const char *udev_device_get_syspath(struct udev_device *device)
     return "";
 }
 
+const char *udev_device_get_devpath(struct udev_device *device)
+{
+    return "";
+}
+
 struct libinput_tablet_tool *
 libinput_tablet_tool_ref(struct libinput_tablet_tool *tool)
 {
@@ -1136,4 +1141,9 @@ unsigned int
 libinput_device_config_rotation_get_default_angle(struct libinput_device *device)
 {
     return 0u;
+}
+
+udev_device *udev_device_unref(struct udev_device *udev_device)
+{
+    return udev_device;
 }

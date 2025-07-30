@@ -190,6 +190,7 @@ class KWIN_EXPORT Device : public InputDevice
     /// rotation angle, as 0 to 360 degrees
     Q_PROPERTY(uint32_t rotation READ rotation WRITE setRotation NOTIFY rotationChanged)
     Q_PROPERTY(uint32_t defaultRotation READ defaultRotation CONSTANT)
+    Q_PROPERTY(bool isVirtual READ isVirtual CONSTANT)
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -762,6 +763,7 @@ public:
     uint32_t rotation() const;
     void setRotation(uint32_t degrees_cw);
     uint32_t defaultRotation() const;
+    bool isVirtual() const;
 
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
@@ -903,6 +905,7 @@ private:
     QRectF m_inputArea;
     bool m_tabletToolIsRelative = false;
     QList<unsigned int> m_currentModes;
+    bool m_isVirtual = false;
 };
 
 }

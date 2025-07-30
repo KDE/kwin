@@ -457,6 +457,15 @@ Device::Device(libinput_device *device, QObject *parent)
         Q_EMIT currentModesChanged();
     });
 
+    const auto udevDevice = libinput_device_get_udev_device(m_device);
+    if (udevDevice != nullptr) {
+        const auto devPath = udev_device_get_devpath(udevDevice);
+
+        // In UDev, all virtual uinput devices have a devpath start with /devices/virtual
+        m_isVirtual = strstr(devPath, "/devices/virtual/") != nullptr;
+        udev_device_unref(udevDevice);
+    }
+
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice/") + m_sysName,
                                                  QStringLiteral("org.kde.KWin.InputDevice"),
                                                  this,
@@ -1152,6 +1161,10 @@ uint32_t Device::defaultRotation() const
     return libinput_device_config_rotation_get_default_angle(m_device);
 }
 
+bool Device::isVirtual() const
+{
+    return m_isVirtual;
+}
 }
 }
 
