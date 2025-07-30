@@ -715,7 +715,8 @@ public:
 
     bool defaultMapToWorkspace() const
     {
-        return defaultValue("MapToWorkspace", false);
+        // Virtual devices (OpenTabletDriver and proprietary user-space drivers) have their own monitor settings, and thus should always be mapped to workspace by default.
+        return defaultValue("MapToWorkspace", isVirtual());
     }
 
     bool isMapToWorkspace() const
