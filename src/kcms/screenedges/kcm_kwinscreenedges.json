@@ -137,6 +137,6 @@
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],
-    "X-KDE-System-Settings-Parent-Category": "pointing-devices",
+    "X-KDE-System-Settings-Parent-Category": "display",
     "X-KDE-Weight": 100
 }
