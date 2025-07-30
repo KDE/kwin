@@ -7,8 +7,6 @@
 #include "mouse.h"
 #include "kwinoptions_settings.h"
 
-#include <KWindowSystem>
-
 KWinMouseConfigForm::KWinMouseConfigForm(QWidget *parent)
     : QWidget(parent)
 {
@@ -49,7 +47,6 @@ void KWindowActionsConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
     addConfig(m_settings, widget());
-    m_ui->info_1->setVisible(KWindowSystem::isPlatformX11());
 }
 
 #include "moc_mouse.cpp"

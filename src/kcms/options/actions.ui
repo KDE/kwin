@@ -37,47 +37,36 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout_0">
+       <widget class="QComboBox" name="kcfg_CommandWindow1">
+        <property name="whatsThis">
+         <string>In this row you can customize left click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
+        </property>
         <item>
-         <widget class="QComboBox" name="kcfg_CommandWindow1">
-          <property name="whatsThis">
-           <string>In this row you can customize left click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Activate, pass click and raise on release</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Activate, raise and pass click</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Activate and pass click</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Activate</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Activate and raise</string>
-           </property>
-          </item>
-         </widget>
+         <property name="text">
+          <string>Activate, pass click and raise on release</string>
+         </property>
         </item>
         <item>
-         <widget class="KContextualHelpButton" name="info_1">
-          <property name="contextualHelpText">
-           <string>Note that "Activate, pass click and raise on release" doesn't work on X11, and falls back to "Activate, raise and pass click" instead</string>
-          </property>
-         </widget>
+         <property name="text">
+          <string>Activate, raise and pass click</string>
+         </property>
         </item>
-       </layout>
+        <item>
+         <property name="text">
+          <string>Activate and pass click</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Activate and raise</string>
+         </property>
+        </item>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
