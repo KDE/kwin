@@ -187,47 +187,27 @@ void DrmGpu::initDrmResources()
         qCCritical(KWIN_DRM) << "drmModeGetResources for getting CRTCs failed on GPU" << this;
         return;
     }
-    QList<DrmPlane *> assignedPlanes;
     for (int i = 0; i < resources->count_crtcs; ++i) {
-        uint32_t crtcId = resources->crtcs[i];
-        QList<DrmPlane *> primaryCandidates;
-        QList<DrmPlane *> cursorCandidates;
-        QList<DrmPlane *> overlayCandidates;
-        for (const auto &plane : m_planes) {
-            if (plane->isCrtcSupported(i) && !assignedPlanes.contains(plane.get())) {
-                if (plane->type.enumValue() == DrmPlane::TypeIndex::Primary) {
-                    primaryCandidates.push_back(plane.get());
-                } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Cursor) {
-                    cursorCandidates.push_back(plane.get());
-                } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Overlay) {
-                    overlayCandidates.push_back(plane.get());
-                }
-            }
+        auto freePrimaryPlanes = m_planes | std::views::filter([this, i](const auto &plane) {
+            return plane->isCrtcSupported(i)
+                && plane->type.enumValue() == DrmPlane::TypeIndex::Primary
+                && std::ranges::none_of(m_crtcs, [&plane](const auto &crtc) {
+                return crtc->primaryPlane() == plane.get();
+            });
+        });
+        // prefer an already connected plane
+        const uint32_t crtcId = resources->crtcs[i];
+        auto it = std::ranges::find_if(freePrimaryPlanes, [crtcId](const auto &plane) {
+            return plane->crtcId.value() == crtcId;
+        });
+        if (it == freePrimaryPlanes.end()) {
+            it = freePrimaryPlanes.begin();
         }
-        if (m_atomicModeSetting && primaryCandidates.empty()) {
+        if (m_atomicModeSetting && it == freePrimaryPlanes.end()) {
             qCWarning(KWIN_DRM) << "Could not find a suitable primary plane for crtc" << resources->crtcs[i];
             continue;
         }
-        const auto findBestPlane = [crtcId](const QList<DrmPlane *> &list) {
-            // if the plane is already used with this crtc, prefer it
-            const auto connected = std::ranges::find_if(list, [crtcId](DrmPlane *plane) {
-                return plane->crtcId.value() == crtcId;
-            });
-            if (connected != list.end()) {
-                return *connected;
-            }
-            return list.empty() ? nullptr : list.front();
-        };
-        DrmPlane *primary = findBestPlane(primaryCandidates);
-        assignedPlanes.push_back(primary);
-        DrmPlane *cursor = findBestPlane(cursorCandidates);
-        if (!cursor) {
-            cursor = findBestPlane(overlayCandidates);
-        }
-        if (cursor) {
-            assignedPlanes.push_back(cursor);
-        }
-        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, primary, cursor);
+        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, it->get());
         if (!crtc->init()) {
             continue;
         }
@@ -498,14 +478,14 @@ DrmPipeline::Error DrmGpu::testPipelines()
     std::ranges::copy_if(m_pipelines, std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();
     });
-    DrmPipeline::Error test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedObjects());
+    DrmPipeline::Error test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
     if (!inactivePipelines.isEmpty() && test == DrmPipeline::Error::None) {
         // ensure that pipelines that are set as enabled but currently inactive
         // still work when they need to be set active again
         for (const auto pipeline : std::as_const(inactivePipelines)) {
             pipeline->setActive(true);
         }
-        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedObjects());
+        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
         for (const auto pipeline : std::as_const(inactivePipelines)) {
             pipeline->setActive(false);
         }
@@ -816,7 +796,7 @@ void DrmGpu::maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFra
         return;
     }
     m_inModeset = true;
-    const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
+    const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
     m_inModeset = false;
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
@@ -836,15 +816,15 @@ void DrmGpu::maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFra
     m_pendingModesetFrames.clear();
 }
 
-QList<DrmObject *> DrmGpu::unusedObjects() const
+QList<DrmObject *> DrmGpu::unusedModesetObjects() const
 {
     QList<DrmObject *> ret = m_allObjects;
     for (const DrmPipeline *pipeline : m_pipelines) {
         ret.removeOne(pipeline->connector());
         if (pipeline->crtc()) {
             ret.removeOne(pipeline->crtc());
+            // for modesets, only the primary plane should be enabled
             ret.removeOne(pipeline->crtc()->primaryPlane());
-            ret.removeOne(pipeline->crtc()->cursorPlane());
         }
     }
     return ret;
@@ -897,8 +877,12 @@ void DrmGpu::assignOutputLayers()
         const size_t enabledPipelinesCount = std::distance(enabledPipelines.begin(), enabledPipelines.end());
         for (DrmPipeline *pipeline : enabledPipelines) {
             QList<DrmPipelineLayer *> layers = {m_planeLayerMap[pipeline->crtc()->primaryPlane()].get()};
-            if (pipeline->crtc()->cursorPlane()) {
-                layers.push_back(m_planeLayerMap[pipeline->crtc()->cursorPlane()].get());
+            for (const auto &plane : m_planes) {
+                if (plane->isCrtcSupported(pipeline->crtc()->pipeIndex())
+                    && plane->type.enumValue() == DrmPlane::TypeIndex::Cursor) {
+                    layers.push_back(m_planeLayerMap[plane.get()].get());
+                    break;
+                }
             }
             if (enabledPipelinesCount == 1) {
                 // To avoid having to deal with GPU-wide bandwidth restrictions
