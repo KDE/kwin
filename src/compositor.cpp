@@ -479,6 +479,17 @@ static bool validateSpecialLayers(int underlays, int overlays, int mainZpos, con
     return true;
 }
 
+static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type, std::optional<int> minZPos)
+{
+    const auto it = std::ranges::find_if(layers, [type, minZPos](OutputLayer *layer) {
+        if (minZPos && layer->zpos() < *minZPos) {
+            return false;
+        }
+        return layer->type() == type;
+    });
+    return it == layers.end() ? nullptr : *it;
+}
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     const auto start = std::chrono::steady_clock::now();
@@ -579,93 +590,133 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setArtificialHdrHeadroom(1);
     }
 
-    const auto cursorViewIt = m_cursorViews.find(renderLoop);
-    if (cursorViewIt != m_cursorViews.end()) {
-        cursorViewIt->second->prePaint();
-        layers.push_back(LayerData{
-            .view = cursorViewIt->second.get(),
-            .directScanout = false,
-            .directScanoutOnly = false,
-            .surfaceDamage = cursorViewIt->second->layer()->repaints(),
-            .zpos = cursorViewIt->second->layer()->zpos(),
-            .requiredAlphaBits = 8,
-            .highPriority = true,
-        });
+    auto outputLayers = m_backend->compatibleOutputLayers(output);
+    OutputLayer *cursorLayer = nullptr;
+    if (m_scene->cursorItem()->isVisible() && !m_scene->cursorItem()->boundingRect().isEmpty() && !m_brokenCursors[renderLoop]) {
+        cursorLayer = findLayer(outputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
+        if (!cursorLayer) {
+            cursorLayer = findLayer(outputLayers, OutputLayerType::EfficientOverlay, primaryView->layer()->zpos() + 1);
+        }
+        if (!cursorLayer) {
+            cursorLayer = findLayer(outputLayers, OutputLayerType::GenericLayer, primaryView->layer()->zpos() + 1);
+        }
+        if (cursorLayer) {
+            m_underlayViews[renderLoop].erase(cursorLayer);
+            auto &view = m_overlayViews[renderLoop][cursorLayer];
+            if (!view || view->item() != m_scene->cursorItem()) {
+                view = std::make_unique<OverlayView>(primaryView, m_scene->cursorItem(), output, cursorLayer);
+                connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [output, cursorView = view.get()]() {
+                    // for improved latency, move the cursor plane asynchronously
+                    const auto outputLayer = cursorView->layer();
+                    if (!outputLayer->isEnabled()
+                        || !outputLayer->repaints().isEmpty()
+                        || !cursorView->isVisible()
+                        || cursorView->needsRepaint()) {
+                        // composite() handles this
+                        return;
+                    }
+                    std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
+                    if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
+                        const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
+                            // this is intentionally using a tiny bit higher refresh rate than the minimum
+                            // so that slight differences in timing don't drop us below the minimum
+                            return value + 2;
+                        }).value_or(30);
+                        maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
+                    }
+                    const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
+                    const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
+                    outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
+                    outputLayer->setEnabled(true);
+                    if (output->presentAsync(outputLayer, maxVrrCursorDelay)) {
+                        // prevent composite() from also pushing an update with the cursor layer
+                        // to avoid adding cursor updates that are synchronized with primary layer updates
+                        outputLayer->resetRepaints();
+                    }
+                });
+            }
+            view->prePaint();
+            layers.push_back(LayerData{
+                .view = view.get(),
+                .directScanout = false,
+                .directScanoutOnly = false,
+                .surfaceDamage = cursorLayer->repaints(),
+                .zpos = cursorLayer->maxZpos(),
+                .requiredAlphaBits = 8,
+                .highPriority = true,
+            });
+        }
     }
 
-    const auto outputLayers = m_backend->compatibleOutputLayers(output);
     auto specialLayers = outputLayers | std::views::filter([&](OutputLayer *layer) {
-        return layer->type() == OutputLayerType::GenericLayer
-            && (cursorViewIt == m_cursorViews.end() || layer->minZpos() < cursorViewIt->second->layer()->zpos())
-            && (cursorViewIt == m_cursorViews.end() || cursorViewIt->second->layer() != layer);
+        return (layer->type() == OutputLayerType::GenericLayer || layer->type() == OutputLayerType::EfficientOverlay)
+            && cursorLayer != layer && (!cursorLayer || layer->minZpos() < cursorLayer->zpos());
     }) | std::ranges::to<QList>();
-    if (!specialLayers.empty()) {
-        // TODO make this more generic - include the primary plane layer in the assignments?
-        const int overlays = std::ranges::count_if(specialLayers, [&](OutputLayer *layer) {
-            return layer->maxZpos() > primaryView->layer()->zpos();
-        });
-        const int underlays = std::ranges::count_if(specialLayers, [&](OutputLayer *layer) {
-            return layer->minZpos() < primaryView->layer()->zpos();
-        });
-        std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
-            return left->minZpos() < right->minZpos();
-        });
-        auto layerIt = specialLayers.begin();
-        const auto [overlayCandidates, underlayCandidates] = primaryView->overlayCandidates(specialLayers.size(), overlays, underlays);
-        if (validateSpecialLayers(underlayCandidates.size(), overlayCandidates.size(), primaryView->layer()->zpos(), specialLayers)) {
-            int zpos = -1;
-            for (const auto candidate : underlayCandidates) {
-                const auto underlay = *layerIt;
-                layerIt++;
-                zpos = std::max(zpos + 1, underlay->minZpos());
-                m_overlayViews[output->renderLoop()].erase(underlay);
-                auto &view = m_underlayViews[output->renderLoop()][underlay];
-                if (!view || view->item() != candidate) {
-                    view = std::make_unique<UnderlayView>(primaryView, candidate, output, underlay);
-                }
-                view->prePaint();
-                layers.push_back(LayerData{
-                    .view = view.get(),
-                    .directScanout = true,
-                    .directScanoutOnly = true,
-                    .surfaceDamage = underlay->repaints(),
-                    .zpos = zpos,
-                    .requiredAlphaBits = 0,
-                    .highPriority = false,
-                });
-                // the primary plane needs more alpha for underlays to work nicely
-                layers.front().requiredAlphaBits = 8;
+    // TODO make this more generic - include the primary plane layer in the assignments?
+    const int overlays = std::ranges::count_if(specialLayers, [&](OutputLayer *layer) {
+        return layer->maxZpos() > primaryView->layer()->zpos();
+    });
+    const int underlays = std::ranges::count_if(specialLayers, [&](OutputLayer *layer) {
+        return layer->minZpos() < primaryView->layer()->zpos();
+    });
+    std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
+        return left->minZpos() < right->minZpos();
+    });
+    auto layerIt = specialLayers.begin();
+    const auto [overlayCandidates, underlayCandidates] = primaryView->overlayCandidates(specialLayers.size(), overlays, underlays);
+    if (validateSpecialLayers(underlayCandidates.size(), overlayCandidates.size(), primaryView->layer()->zpos(), specialLayers)) {
+        int zpos = -1;
+        for (const auto candidate : underlayCandidates) {
+            const auto underlay = *layerIt;
+            layerIt++;
+            zpos = std::max(zpos + 1, underlay->minZpos());
+            m_overlayViews[output->renderLoop()].erase(underlay);
+            auto &view = m_underlayViews[output->renderLoop()][underlay];
+            if (!view || view->item() != candidate) {
+                view = std::make_unique<UnderlayView>(primaryView, candidate, output, underlay);
             }
-            zpos = primaryView->layer()->zpos();
-            for (const auto candidate : overlayCandidates) {
-                const auto overlay = *layerIt;
-                layerIt++;
-                zpos = std::max(zpos + 1, overlay->minZpos());
-                m_underlayViews[output->renderLoop()].erase(overlay);
-                auto &view = m_overlayViews[output->renderLoop()][overlay];
-                if (!view || view->item() != candidate) {
-                    view = std::make_unique<OverlayView>(primaryView, candidate, output, overlay);
-                }
-                view->prePaint();
-                layers.push_back(LayerData{
-                    .view = view.get(),
-                    .directScanout = true,
-                    .directScanoutOnly = true,
-                    .surfaceDamage = overlay->repaints(),
-                    .zpos = zpos,
-                    .requiredAlphaBits = 0,
-                    .highPriority = false,
-                });
-            }
+            view->prePaint();
+            layers.push_back(LayerData{
+                .view = view.get(),
+                .directScanout = true,
+                .directScanoutOnly = true,
+                .surfaceDamage = underlay->repaints(),
+                .zpos = zpos,
+                .requiredAlphaBits = 0,
+                .highPriority = false,
+            });
+            // the primary plane needs more alpha for underlays to work nicely
+            layers.front().requiredAlphaBits = 8;
         }
-        for (OutputLayer *unused : std::span(layerIt, specialLayers.end())) {
-            // disable layers that aren't used
-            m_overlayViews[output->renderLoop()].erase(unused);
-            m_underlayViews[output->renderLoop()].erase(unused);
-            if (unused->isEnabled()) {
-                unused->setEnabled(false);
-                toUpdate.push_back(unused);
+        zpos = primaryView->layer()->zpos();
+        for (const auto candidate : overlayCandidates) {
+            const auto overlay = *layerIt;
+            layerIt++;
+            zpos = std::max(zpos + 1, overlay->minZpos());
+            m_underlayViews[output->renderLoop()].erase(overlay);
+            auto &view = m_overlayViews[output->renderLoop()][overlay];
+            if (!view || view->item() != candidate) {
+                view = std::make_unique<OverlayView>(primaryView, candidate, output, overlay);
             }
+            view->prePaint();
+            layers.push_back(LayerData{
+                .view = view.get(),
+                .directScanout = true,
+                .directScanoutOnly = true,
+                .surfaceDamage = overlay->repaints(),
+                .zpos = zpos,
+                .requiredAlphaBits = 0,
+                .highPriority = false,
+            });
+        }
+    }
+    for (OutputLayer *unused : std::span(layerIt, specialLayers.end())) {
+        // disable layers that aren't used
+        m_overlayViews[output->renderLoop()].erase(unused);
+        m_underlayViews[output->renderLoop()].erase(unused);
+        if (unused->isEnabled()) {
+            unused->setEnabled(false);
+            toUpdate.push_back(unused);
         }
     }
 
@@ -752,7 +803,6 @@ void Compositor::composite(RenderLoop *renderLoop)
     // but the drm backend, where that's necessary, tracks that time itself
     totalTimeQuery->end();
     frame->addRenderTimeQuery(std::move(totalTimeQuery));
-    bool disableHardwareCursor = false;
     if (result && !output->present(toUpdate, frame)) {
         // legacy modesetting can't do (useful) presentation tests
         // and even with atomic modesetting, drivers are buggy and atomic tests
@@ -792,7 +842,8 @@ void Compositor::composite(RenderLoop *renderLoop)
                     // to prevent constantly attempting to render the hardware cursor again
                     // this should only ever happen with legacy modesetting, where
                     // presentation can't be tested
-                    disableHardwareCursor = true;
+                    qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
+                    m_brokenCursors[renderLoop] = true;
                 }
             } else {
                 qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
@@ -807,11 +858,6 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    // the layers have to stay valid until after postPaint, so these need to happen after it
-    if (disableHardwareCursor) {
-        qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
-        m_cursorViews.erase(renderLoop);
-    }
     if (!result) {
         qCWarning(KWIN_CORE, "Failed to find a working output layer configuration! Enabled layers:");
         for (const auto &layer : layers) {
@@ -849,6 +895,7 @@ void Compositor::addOutput(Output *output)
     if (output->isPlaceholder()) {
         return;
     }
+    m_brokenCursors[output->renderLoop()] = false;
     assignOutputLayers(output);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     connect(output, &Output::outputLayersChanged, this, [this, output]() {
@@ -864,19 +911,9 @@ void Compositor::removeOutput(Output *output)
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
     disconnect(output, &Output::outputLayersChanged, this, nullptr);
     m_overlayViews.erase(output->renderLoop());
-    m_cursorViews.erase(output->renderLoop());
+    m_underlayViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
-}
-
-static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type, std::optional<int> minZPos)
-{
-    const auto it = std::ranges::find_if(layers, [type, minZPos](OutputLayer *layer) {
-        if (minZPos && layer->zpos() < *minZPos) {
-            return false;
-        }
-        return layer->type() == type;
-    });
-    return it == layers.end() ? nullptr : *it;
+    m_brokenCursors.erase(output->renderLoop());
 }
 
 void Compositor::assignOutputLayers(Output *output)
@@ -899,56 +936,7 @@ void Compositor::assignOutputLayers(Output *output)
         });
     }
 
-    auto cursorLayer = findLayer(layers, OutputLayerType::CursorOnly, primaryLayer->zpos() + 1);
-    if (!cursorLayer) {
-        cursorLayer = findLayer(layers, OutputLayerType::EfficientOverlay, primaryLayer->zpos() + 1);
-    }
-    if (!cursorLayer) {
-        cursorLayer = findLayer(layers, OutputLayerType::GenericLayer, primaryLayer->zpos() + 1);
-    }
-    if (cursorLayer && !s_forceSoftwareCursor) {
-        auto &cursorView = m_cursorViews[output->renderLoop()];
-        if (cursorView) {
-            disconnect(cursorView->layer(), &OutputLayer::repaintScheduled, cursorView.get(), nullptr);
-            cursorView->setLayer(cursorLayer);
-        } else {
-            cursorView = std::make_unique<OverlayView>(sceneView.get(), m_scene->cursorItem(), output, cursorLayer);
-        }
-        connect(cursorLayer, &OutputLayer::repaintScheduled, cursorView.get(), [output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
-            // this just deals with moving the plane asynchronously, for improved latency.
-            // enabling, disabling and updating the cursor image happen in composite()
-            const auto outputLayer = cursorView->layer();
-            if (!outputLayer->isEnabled()
-                || !outputLayer->repaints().isEmpty()
-                || !cursorView->isVisible()
-                || cursorView->needsRepaint()) {
-                // composite() handles this
-                return;
-            }
-            std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
-            if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
-                const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
-                    // this is intentionally using a tiny bit higher refresh rate than the minimum
-                    // so that slight differences in timing don't drop us below the minimum
-                    return value + 2;
-                }).value_or(30);
-                maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
-            }
-            const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
-            const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
-            outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
-            outputLayer->setEnabled(true);
-            if (output->presentAsync(outputLayer, maxVrrCursorDelay)) {
-                // prevent composite() from also pushing an update with the cursor layer
-                // to avoid adding cursor updates that are synchronized with primary layer updates
-                outputLayer->resetRepaints();
-            }
-        });
-    } else {
-        m_cursorViews.erase(output->renderLoop());
-    }
     // will be re-assigned in the next composite() pass
-    // TODO ideally we'd assign the cursor dynamically too
     m_overlayViews.erase(output->renderLoop());
     m_underlayViews.erase(output->renderLoop());
 }
