@@ -141,7 +141,7 @@ private:
 
     DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs);
     DrmPipeline::Error testPipelines();
-    QList<DrmObject *> unusedObjects() const;
+    QList<DrmObject *> unusedModesetObjects() const;
     void assignOutputLayers();
 
     static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
