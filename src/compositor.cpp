@@ -618,9 +618,10 @@ void Compositor::composite(RenderLoop *renderLoop)
                 const auto underlay = *layerIt;
                 layerIt++;
                 zpos = std::max(zpos + 1, underlay->minZpos());
-                auto &view = m_overlayViews[output->renderLoop()][underlay];
+                m_overlayViews[output->renderLoop()].erase(underlay);
+                auto &view = m_underlayViews[output->renderLoop()][underlay];
                 if (!view || view->item() != candidate) {
-                    view = std::make_unique<ItemTreeView>(primaryView, candidate, output, underlay);
+                    view = std::make_unique<UnderlayView>(primaryView, candidate, output, underlay);
                 }
                 view->prePaint();
                 layers.push_back(LayerData{
@@ -632,7 +633,6 @@ void Compositor::composite(RenderLoop *renderLoop)
                     .requiredAlphaBits = 0,
                     .highPriority = false,
                 });
-                view->setUnderlay(true);
                 // the primary plane needs more alpha for underlays to work nicely
                 layers.front().requiredAlphaBits = 8;
             }
@@ -641,9 +641,10 @@ void Compositor::composite(RenderLoop *renderLoop)
                 const auto overlay = *layerIt;
                 layerIt++;
                 zpos = std::max(zpos + 1, overlay->minZpos());
+                m_underlayViews[output->renderLoop()].erase(overlay);
                 auto &view = m_overlayViews[output->renderLoop()][overlay];
                 if (!view || view->item() != candidate) {
-                    view = std::make_unique<ItemTreeView>(primaryView, candidate, output, overlay);
+                    view = std::make_unique<OverlayView>(primaryView, candidate, output, overlay);
                 }
                 view->prePaint();
                 layers.push_back(LayerData{
@@ -655,12 +656,12 @@ void Compositor::composite(RenderLoop *renderLoop)
                     .requiredAlphaBits = 0,
                     .highPriority = false,
                 });
-                view->setUnderlay(false);
             }
         }
         for (OutputLayer *unused : std::span(layerIt, specialLayers.end())) {
             // disable layers that aren't used
             m_overlayViews[output->renderLoop()].erase(unused);
+            m_underlayViews[output->renderLoop()].erase(unused);
             if (unused->isEnabled()) {
                 unused->setEnabled(false);
                 toUpdate.push_back(unused);
@@ -911,7 +912,7 @@ void Compositor::assignOutputLayers(Output *output)
             disconnect(cursorView->layer(), &OutputLayer::repaintScheduled, cursorView.get(), nullptr);
             cursorView->setLayer(cursorLayer);
         } else {
-            cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, cursorLayer);
+            cursorView = std::make_unique<OverlayView>(sceneView.get(), m_scene->cursorItem(), output, cursorLayer);
         }
         connect(cursorLayer, &OutputLayer::repaintScheduled, cursorView.get(), [output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
             // this just deals with moving the plane asynchronously, for improved latency.
@@ -949,6 +950,7 @@ void Compositor::assignOutputLayers(Output *output)
     // will be re-assigned in the next composite() pass
     // TODO ideally we'd assign the cursor dynamically too
     m_overlayViews.erase(output->renderLoop());
+    m_underlayViews.erase(output->renderLoop());
 }
 
 } // namespace KWin

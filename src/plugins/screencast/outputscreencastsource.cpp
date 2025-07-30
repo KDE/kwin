@@ -30,7 +30,7 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     , m_output(output)
     , m_layer(std::make_unique<ScreencastLayer>(output, static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
     , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), output, m_layer.get()))
-    , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), output, nullptr))
+    , m_cursorView(std::make_unique<OverlayView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), output, nullptr))
 {
     updateView();
     connect(output, &Output::changed, this, &OutputScreenCastSource::updateView);

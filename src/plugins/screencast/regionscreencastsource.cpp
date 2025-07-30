@@ -30,7 +30,7 @@ RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale,
     , m_scale(scale)
     , m_layer(std::make_unique<ScreencastLayer>(workspace()->outputs().front(), static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
     , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), workspace()->outputs().front(), m_layer.get()))
-    , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr))
+    , m_cursorView(std::make_unique<OverlayView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr))
 {
     m_sceneView->setViewport(m_region);
     m_sceneView->setScale(m_scale);

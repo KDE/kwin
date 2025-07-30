@@ -170,27 +170,27 @@ qreal SceneView::scale() const
     return m_scale;
 }
 
-void SceneView::addExclusiveView(RenderView *view)
+void SceneView::addOverlay(RenderView *view)
 {
     m_exclusiveViews.push_back(view);
 }
 
-void SceneView::removeExclusiveView(RenderView *view)
+void SceneView::removeOverlay(RenderView *view)
 {
     m_exclusiveViews.removeOne(view);
-    m_underlayViews.removeOne(view);
 }
 
 void SceneView::addUnderlay(RenderView *view)
 {
+    m_exclusiveViews.push_back(view);
     m_underlayViews.push_back(view);
 }
 
 void SceneView::removeUnderlay(RenderView *view)
 {
+    m_exclusiveViews.removeOne(view);
     m_underlayViews.removeOne(view);
 }
-
 bool SceneView::shouldRenderItem(Item *item) const
 {
     return std::ranges::none_of(m_exclusiveViews, [item](RenderView *view) {
@@ -210,7 +210,7 @@ Scene *SceneView::scene() const
     return m_scene;
 }
 
-ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
+OverlayView::OverlayView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_parentView(parentView)
     , m_item(item)
@@ -218,18 +218,18 @@ ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, Output *output, Ou
     parentView->scene()->addView(this);
 }
 
-ItemTreeView::~ItemTreeView()
+OverlayView::~OverlayView()
 {
     m_parentView->scene()->removeView(this);
     if (m_exclusive) {
-        m_parentView->removeExclusiveView(this);
+        m_parentView->removeOverlay(this);
         if (m_item) {
             m_item->scheduleRepaint(m_item->rect());
         }
     }
 }
 
-QPointF ItemTreeView::hotspot() const
+QPointF OverlayView::hotspot() const
 {
     if (auto cursor = qobject_cast<CursorItem *>(m_item)) {
         return cursor->hotspot();
@@ -238,12 +238,11 @@ QPointF ItemTreeView::hotspot() const
     }
 }
 
-QRectF ItemTreeView::viewport() const
+QRectF OverlayView::viewport() const
 {
     const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
-    const QRectF effectiveRect = m_underlay ? m_item->rect() : m_item->boundingRect();
     if (!recommendedSizes.empty()) {
-        const auto bufferSize = scaledRect(effectiveRect, scale()).size();
+        const auto bufferSize = scaledRect(m_item->boundingRect(), scale()).size();
         auto bigEnough = recommendedSizes | std::views::filter([bufferSize](const auto &size) {
             return size.width() >= bufferSize.width() && size.height() >= bufferSize.height();
         });
@@ -252,23 +251,14 @@ QRectF ItemTreeView::viewport() const
         });
         if (it != bigEnough.end()) {
             const auto logicalSize = QSizeF(*it) / scale();
-            // TODO split this into an `ItemView` and `ItemTreeView`...
-            // return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize));
-            return m_item->mapToScene(QRectF(effectiveRect.topLeft(), logicalSize));
+            return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize));
         }
     }
-    return m_item->mapToScene(effectiveRect);
+    return m_item->mapToScene(m_item->boundingRect());
 }
 
-QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
+QList<SurfaceItem *> OverlayView::scanoutCandidates(ssize_t maxCount) const
 {
-    if (m_underlay) {
-        if (auto ret = dynamic_cast<SurfaceItem *>(m_item.get())) {
-            return {ret};
-        } else {
-            return {};
-        }
-    }
     if (dynamic_cast<SurfaceItem *>(m_item.get())) {
         const bool visibleChildren = std::ranges::any_of(m_item->childItems(), [](Item *child) {
             return child->isVisible();
@@ -281,13 +271,13 @@ QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
     return {};
 }
 
-void ItemTreeView::frame(OutputFrame *frame)
+void OverlayView::frame(OutputFrame *frame)
 {
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_output->renderLoop()->lastPresentationTimestamp());
     m_item->framePainted(nullptr, frame, frameTime);
 }
 
-static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints)
+static void accumulateRepaints(Item *item, RenderView *view, QRegion *repaints)
 {
     *repaints += item->takeRepaints(view);
 
@@ -297,11 +287,11 @@ static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints
     }
 }
 
-void ItemTreeView::prePaint()
+void OverlayView::prePaint()
 {
 }
 
-QRegion ItemTreeView::collectDamage()
+QRegion OverlayView::collectDamage()
 {
     QRegion ret;
     accumulateRepaints(m_item, this, &ret);
@@ -311,7 +301,7 @@ QRegion ItemTreeView::collectDamage()
     return ret.translated(-viewport().topLeft().toPoint());
 }
 
-void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region)
+void OverlayView::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
     const QRegion globalRegion = region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint());
     RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget);
@@ -319,65 +309,38 @@ void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *item) {
-        return m_underlay && item != m_item;
-    }, {});
+    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, {}, {});
     renderer->endFrame();
 }
 
-void ItemTreeView::postPaint()
+void OverlayView::postPaint()
 {
 }
 
-bool ItemTreeView::shouldRenderItem(Item *item) const
+bool OverlayView::shouldRenderItem(Item *item) const
 {
     if (!m_item) {
         return false;
     }
-    if (m_underlay) {
-        return item == m_item;
-    } else {
-        return item == m_item || m_item->isAncestorOf(item);
-    }
+    return item == m_item || m_item->isAncestorOf(item);
 }
 
-void ItemTreeView::setExclusive(bool enable)
+void OverlayView::setExclusive(bool enable)
 {
     if (m_exclusive == enable) {
         return;
     }
     m_exclusive = enable;
     if (enable) {
-        m_parentView->addExclusiveView(this);
-        if (m_underlay) {
-            m_parentView->addUnderlay(this);
-        }
+        m_parentView->addOverlay(this);
         m_item->scheduleSceneRepaint(m_item->boundingRect());
     } else {
-        m_parentView->removeExclusiveView(this);
+        m_parentView->removeOverlay(this);
         m_item->scheduleRepaint(m_item->rect());
     }
 }
 
-void ItemTreeView::setUnderlay(bool underlay)
-{
-    if (m_underlay == underlay) {
-        return;
-    }
-    m_underlay = underlay;
-    if (!m_exclusive) {
-        return;
-    }
-    if (m_underlay) {
-        m_parentView->addUnderlay(this);
-        m_item->scheduleSceneRepaint(m_item->rect());
-    } else {
-        m_parentView->removeUnderlay(this);
-        m_item->scheduleRepaint(m_item->rect());
-    }
-}
-
-Item *ItemTreeView::item() const
+Item *OverlayView::item() const
 {
     return m_item;
 }
@@ -393,19 +356,149 @@ static bool recursiveNeedsRepaint(Item *item, RenderView *view)
     });
 }
 
-bool ItemTreeView::needsRepaint()
+bool OverlayView::needsRepaint()
 {
     return recursiveNeedsRepaint(m_item, this);
 }
 
-bool ItemTreeView::isVisible() const
+bool OverlayView::isVisible() const
 {
     return m_item->isVisible();
 }
 
-bool ItemTreeView::canSkipMoveRepaint(Item *item)
+bool OverlayView::canSkipMoveRepaint(Item *item)
 {
     // this could be more generic, but it's all we need for now
+    return m_layer && item == m_item;
+}
+
+UnderlayView::UnderlayView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
+    : RenderView(output, layer)
+    , m_parentView(parentView)
+    , m_item(item)
+{
+    parentView->scene()->addView(this);
+}
+
+UnderlayView::~UnderlayView()
+{
+    m_parentView->scene()->removeView(this);
+    if (m_exclusive) {
+        m_parentView->removeUnderlay(this);
+        if (m_item) {
+            m_item->scheduleRepaint(m_item->rect());
+        }
+    }
+}
+
+QPointF UnderlayView::hotspot() const
+{
+    if (auto cursor = qobject_cast<CursorItem *>(m_item)) {
+        return cursor->hotspot();
+    } else {
+        return QPointF{};
+    }
+}
+
+QRectF UnderlayView::viewport() const
+{
+    const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
+    if (!recommendedSizes.empty()) {
+        const auto bufferSize = scaledRect(m_item->rect(), scale()).size();
+        auto bigEnough = recommendedSizes | std::views::filter([bufferSize](const auto &size) {
+            return size.width() >= bufferSize.width() && size.height() >= bufferSize.height();
+        });
+        const auto it = std::ranges::min_element(bigEnough, [](const auto &left, const auto &right) {
+            return left.width() * left.height() < right.width() * right.height();
+        });
+        if (it != bigEnough.end()) {
+            const auto logicalSize = QSizeF(*it) / scale();
+            return m_item->mapToScene(QRectF(m_item->rect().topLeft(), logicalSize));
+        }
+    }
+    return m_item->mapToScene(m_item->rect());
+}
+
+QList<SurfaceItem *> UnderlayView::scanoutCandidates(ssize_t maxCount) const
+{
+    if (auto ret = dynamic_cast<SurfaceItem *>(m_item.get())) {
+        return {ret};
+    } else {
+        return {};
+    }
+}
+
+void UnderlayView::frame(OutputFrame *frame)
+{
+    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_output->renderLoop()->lastPresentationTimestamp());
+    m_item->framePainted(nullptr, frame, frameTime);
+}
+
+void UnderlayView::prePaint()
+{
+}
+
+QRegion UnderlayView::collectDamage()
+{
+    QRegion ret;
+    accumulateRepaints(m_item, this, &ret);
+    // FIXME this offset should really not be rounded
+    return ret.translated(-viewport().topLeft().toPoint());
+}
+
+void UnderlayView::paint(const RenderTarget &renderTarget, const QRegion &region)
+{
+    const QRegion globalRegion = region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint());
+    RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget);
+    auto renderer = m_item->scene()->renderer();
+    renderer->beginFrame(renderTarget, renderViewport);
+    renderer->renderBackground(renderTarget, renderViewport, globalRegion);
+    WindowPaintData data;
+    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, {}, {});
+    renderer->endFrame();
+}
+
+void UnderlayView::postPaint()
+{
+}
+
+bool UnderlayView::shouldRenderItem(Item *item) const
+{
+    return item == m_item;
+}
+
+void UnderlayView::setExclusive(bool enable)
+{
+    if (m_exclusive == enable) {
+        return;
+    }
+    m_exclusive = enable;
+    if (enable) {
+        m_parentView->addUnderlay(this);
+        m_item->scheduleSceneRepaint(m_item->boundingRect());
+    } else {
+        m_parentView->removeUnderlay(this);
+        m_item->scheduleRepaint(m_item->rect());
+    }
+}
+
+Item *UnderlayView::item() const
+{
+    return m_item;
+}
+
+bool UnderlayView::needsRepaint()
+{
+    return m_item->hasRepaints(this);
+}
+
+bool UnderlayView::isVisible() const
+{
+    return m_item->isVisible();
+}
+
+bool UnderlayView::canSkipMoveRepaint(Item *item)
+{
     return m_layer && item == m_item;
 }
 

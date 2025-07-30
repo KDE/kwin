@@ -18,7 +18,7 @@ class Output;
 class RegionScreenCastSource;
 class ScreencastLayer;
 class SceneView;
-class ItemTreeView;
+class OverlayView;
 
 class RegionScreenCastSource : public ScreenCastSource
 {
@@ -55,7 +55,7 @@ private:
 
     std::unique_ptr<ScreencastLayer> m_layer;
     std::unique_ptr<SceneView> m_sceneView;
-    std::unique_ptr<ItemTreeView> m_cursorView;
+    std::unique_ptr<OverlayView> m_cursorView;
 };
 
 } // namespace KWin

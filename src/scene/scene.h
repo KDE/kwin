@@ -92,8 +92,8 @@ public:
     void postPaint() override;
     double desiredHdrHeadroom() const;
 
-    void addExclusiveView(RenderView *view);
-    void removeExclusiveView(RenderView *view);
+    void addOverlay(RenderView *view);
+    void removeOverlay(RenderView *view);
     void addUnderlay(RenderView *view);
     void removeUnderlay(RenderView *view);
     /**
@@ -112,11 +112,11 @@ private:
     QList<RenderView *> m_underlayViews;
 };
 
-class KWIN_EXPORT ItemTreeView : public RenderView
+class KWIN_EXPORT OverlayView : public RenderView
 {
 public:
-    explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
-    ~ItemTreeView() override;
+    explicit OverlayView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    ~OverlayView() override;
 
     QPointF hotspot() const override;
     QRectF viewport() const override;
@@ -129,7 +129,6 @@ public:
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
-    void setUnderlay(bool underlay);
 
     Item *item() const;
 
@@ -140,7 +139,35 @@ private:
     SceneView *const m_parentView;
     const QPointer<Item> m_item;
     bool m_exclusive = false;
-    bool m_underlay = false;
+};
+
+class KWIN_EXPORT UnderlayView : public RenderView
+{
+public:
+    explicit UnderlayView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    ~UnderlayView() override;
+
+    QPointF hotspot() const override;
+    QRectF viewport() const override;
+    bool isVisible() const override;
+    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    void frame(OutputFrame *frame) override;
+    void prePaint() override;
+    QRegion collectDamage() override;
+    void postPaint() override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    bool shouldRenderItem(Item *item) const override;
+    void setExclusive(bool enable) override;
+
+    Item *item() const;
+
+    bool needsRepaint();
+    bool canSkipMoveRepaint(Item *item) override;
+
+private:
+    SceneView *const m_parentView;
+    const QPointer<Item> m_item;
+    bool m_exclusive = false;
 };
 
 class KWIN_EXPORT Scene : public QObject

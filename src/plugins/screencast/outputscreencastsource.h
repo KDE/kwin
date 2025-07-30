@@ -16,7 +16,7 @@ namespace KWin
 
 class Output;
 class SceneView;
-class ItemTreeView;
+class OverlayView;
 class EglContext;
 class ScreencastLayer;
 
@@ -50,7 +50,7 @@ private:
     QPointer<Output> m_output;
     std::unique_ptr<ScreencastLayer> m_layer;
     std::unique_ptr<SceneView> m_sceneView;
-    std::unique_ptr<ItemTreeView> m_cursorView;
+    std::unique_ptr<OverlayView> m_cursorView;
     bool m_active = false;
 };
 
