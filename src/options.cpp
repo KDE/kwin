@@ -581,6 +581,32 @@ void Options::setInteractiveWindowMoveEnabled(bool set)
     }
 }
 
+Qt::Corner Options::pictureInPictureHomeCorner() const
+{
+    return m_pictureInPictureHomeCorner;
+}
+
+void Options::setPictureInPictureHomeCorner(Qt::Corner corner)
+{
+    if (m_pictureInPictureHomeCorner != corner) {
+        m_pictureInPictureHomeCorner = corner;
+        Q_EMIT pictureInPictureHomeCornerChanged();
+    }
+}
+
+int Options::pictureInPictureMargin() const
+{
+    return m_pictureInPictureMargin;
+}
+
+void Options::setPictureInPictureMargin(int margin)
+{
+    if (m_pictureInPictureMargin != margin) {
+        m_pictureInPictureMargin = margin;
+        Q_EMIT pictureInPictureMarginChanged();
+    }
+}
+
 void Options::reparseConfiguration()
 {
     m_settings->config()->reparseConfiguration();
@@ -687,6 +713,8 @@ void Options::syncFromKcfgc()
     setAllowTearing(m_settings->allowTearing());
     setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
     setDoubleClickBorderToMaximize(m_settings->doubleClickBorderToMaximize());
+    setPictureInPictureHomeCorner(m_settings->pictureInPictureHomeCorner());
+    setPictureInPictureMargin(m_settings->pictureInPictureMargin());
 }
 
 // restricted should be true for operations that the user may not be able to repeat

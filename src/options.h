@@ -170,6 +170,8 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(bool allowTearing READ allowTearing WRITE setAllowTearing NOTIFY allowTearingChanged)
     Q_PROPERTY(bool interactiveWindowMoveEnabled READ interactiveWindowMoveEnabled WRITE setInteractiveWindowMoveEnabled NOTIFY interactiveWindowMoveEnabledChanged)
+    Q_PROPERTY(Qt::Corner pictureInPictureHomeCorner READ pictureInPictureHomeCorner WRITE setPictureInPictureHomeCorner NOTIFY pictureInPictureHomeCornerChanged)
+    Q_PROPERTY(int pictureInPictureMargin READ pictureInPictureMargin WRITE setPictureInPictureMargin NOTIFY pictureInPictureMarginChanged)
 public:
     explicit Options(QObject *parent = nullptr);
     ~Options() override;
@@ -605,6 +607,12 @@ public:
     bool allowTearing() const;
     bool interactiveWindowMoveEnabled() const;
 
+    Qt::Corner pictureInPictureHomeCorner() const;
+    void setPictureInPictureHomeCorner(Qt::Corner corner);
+
+    int pictureInPictureMargin() const;
+    void setPictureInPictureMargin(int margin);
+
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
     void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
@@ -828,6 +836,8 @@ Q_SIGNALS:
     void configChanged();
     void allowTearingChanged();
     void interactiveWindowMoveEnabledChanged();
+    void pictureInPictureHomeCornerChanged();
+    void pictureInPictureMarginChanged();
 
 private:
     void setElectricBorders(int borders);
@@ -892,6 +902,9 @@ private:
     bool m_allowTearing = true;
     bool m_interactiveWindowMoveEnabled = true;
     bool m_doubleClickBorderToMaximize = true;
+
+    Qt::Corner m_pictureInPictureHomeCorner = Qt::BottomRightCorner;
+    int m_pictureInPictureMargin = 20;
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, qreal delta) const;
 };

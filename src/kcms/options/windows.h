@@ -15,6 +15,7 @@
 #include "ui_advanced.h"
 #include "ui_focus.h"
 #include "ui_moving.h"
+#include "ui_pip.h"
 
 class QRadioButton;
 class QCheckBox;
@@ -52,6 +53,14 @@ class KWinAdvancedConfigForm : public QWidget, public Ui::KWinAdvancedConfigForm
 
 public:
     explicit KWinAdvancedConfigForm(QWidget *parent);
+};
+
+class KWinPipConfigForm : public QWidget, public Ui::KWinPipConfigForm
+{
+    Q_OBJECT
+
+public:
+    explicit KWinPipConfigForm(QWidget *parent);
 };
 
 class KFocusConfig : public KCModule
@@ -105,4 +114,19 @@ protected:
 private:
     KWinAdvancedConfigForm *m_ui;
     KWinOptionsSettings *m_settings;
+};
+
+class KPipConfig : public KCModule
+{
+    Q_OBJECT
+
+public:
+    KPipConfig(KWinOptionsSettings *settings, QWidget *parent);
+
+protected:
+    void initialize(KWinOptionsSettings *settings);
+
+private:
+    KWinOptionsSettings *m_settings;
+    KWinPipConfigForm *m_ui;
 };

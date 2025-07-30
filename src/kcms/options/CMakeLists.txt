@@ -14,6 +14,7 @@ ki18n_wrap_ui(kcm_kwinoptions_PART_SRCS
     focus.ui
     mouse.ui
     moving.ui
+    pip.ui
 )
 
 kcmutils_generate_module_data(
