@@ -123,8 +123,7 @@ bool DrmOutput::shouldDisableCursorPlane() const
 {
     // The kernel rejects async commits that change anything but the primary plane FB_ID
     // This disables the hardware cursor, so it doesn't interfere with that
-    return m_desiredPresentationMode == PresentationMode::Async || m_desiredPresentationMode == PresentationMode::AdaptiveAsync
-        || m_pipeline->amdgpuVrrWorkaroundActive();
+    return m_desiredPresentationMode == PresentationMode::Async || m_desiredPresentationMode == PresentationMode::AdaptiveAsync;
 }
 
 bool DrmOutput::updateCursorLayer(std::optional<std::chrono::nanoseconds> allowedVrrDelay)

@@ -113,11 +113,6 @@ public:
     void setWideColorGamut(bool wcg);
     void setMaxBpc(uint32_t max);
 
-    /**
-     * amdgpu drops cursor updates with adaptive sync: https://gitlab.freedesktop.org/drm/amd/-/issues/2186
-     */
-    bool amdgpuVrrWorkaroundActive() const;
-
     enum class CommitMode {
         Test,
         TestAllowModeset,
