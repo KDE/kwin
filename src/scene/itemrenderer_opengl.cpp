@@ -347,14 +347,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    ShaderTraits baseShaderTraits;
-    if (data.brightness() != 1.0) {
-        baseShaderTraits |= ShaderTrait::Modulate;
-    }
-    if (data.saturation() != 1.0) {
-        baseShaderTraits |= ShaderTrait::AdjustSaturation;
-    }
-
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
@@ -394,8 +386,11 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         const RenderNode &renderNode = renderContext.renderNodes[i];
 
         ShaderTraits traits = renderNode.traits;
-        if (renderNode.opacity != 1.0) {
+        if (renderNode.opacity != 1.0 || data.brightness() != 1.0) {
             traits |= ShaderTrait::Modulate;
+        }
+        if (data.saturation() != 1.0) {
+            traits |= ShaderTrait::AdjustSaturation;
         }
         const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
         if (!colorTransformation.isIdentity()) {
