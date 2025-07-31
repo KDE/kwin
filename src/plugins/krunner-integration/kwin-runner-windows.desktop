@@ -108,7 +108,6 @@ X-Plasma-API=DBus
 X-Plasma-DBusRunner-Service=org.kde.KWin
 X-Plasma-DBusRunner-Path=/WindowsRunner
 X-Plasma-Request-Actions-Once=true
-X-Plasma-Runner-Min-Letter-Count=3
 X-Plasma-Runner-Syntaxes=:q:,:q:,:q:,window,desktop
 X-Plasma-Runner-Syntax-Descriptions=Finds windows whose name or window application match :q:. It is possible to interact with the windows by using one of the following keywords: activate\\, close\\, min(imize)\\, max(imize)\\, fullscreen\\, shade\\, keep above and keep below.,Finds windows which are on desktop named :q:,Switch to desktop named :q:,Lists all windows and allows to activate them.,Lists all other desktops and allows to switch to them.
 X-Plasma-Runner-Syntax-Descriptions[ar]=يعثر على النوافذ أو تطبيق النافذة التي تطابق :q:. من الممكن أن تتفاعل مع النوافذ باستخدام الكلمات المفتاحية التالية: activate\\, close\\, min(imize)\\, max(imize)\\, fullscreen\\, shade\\, اجعلها في الأعلى واجعلها في الأسفل, يعثر على النوافذ في سطح المكتب المسمى :q:, بدل بين سطح المكتب المسمى :q:, يسرد كل النوافذ ويسمح بتنشيطها, يسرد كل أسطح المكتب ويسمح بالتبديل بينها.
