@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-29 00:43+0000\n"
+"POT-Creation-Date: 2025-07-31 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 18:47+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2411,12 +2411,12 @@ msgstr "Non poteva trovar sortita"
 msgid "Invalid region"
 msgstr "Region invalide"
 
-#: plugins/screencast/screencaststream.cpp:375
+#: plugins/screencast/screencaststream.cpp:376
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Compositor de OpenGL es requirite per screencasting"
 
-#: plugins/screencast/screencaststream.cpp:383
+#: plugins/screencast/screencaststream.cpp:384
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Falleva a crear fluxo (stream) de PipeWire"

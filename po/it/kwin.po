@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-29 00:43+0000\n"
+"POT-Creation-Date: 2025-07-31 00:43+0000\n"
 "PO-Revision-Date: 2025-07-08 16:49+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2420,12 +2420,12 @@ msgstr "Impossibile trovare l'uscita"
 msgid "Invalid region"
 msgstr "Regione non valida"
 
-#: plugins/screencast/screencaststream.cpp:375
+#: plugins/screencast/screencaststream.cpp:376
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Per la trasmissione dello schermo è necessaria la composizione OpenGL"
 
-#: plugins/screencast/screencaststream.cpp:383
+#: plugins/screencast/screencaststream.cpp:384
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossibile creare il flusso PipeWire"
