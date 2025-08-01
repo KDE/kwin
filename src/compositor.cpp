@@ -32,6 +32,7 @@
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -450,6 +451,9 @@ static bool renderLayer(RenderView *view, Output *output, const std::shared_ptr<
     return view->layer()->endFrame(bufferDamage, surfaceDamage, frame.get());
 }
 
+static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
+static const bool s_disableOverlays = environmentVariableBoolValue("KWIN_DISABLE_OVERLAYS").value_or(false);
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -564,7 +568,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         std::ranges::sort(overlays, [](OutputLayer *left, OutputLayer *right) {
             return left->zpos() > right->zpos();
         });
-        const auto candidates = primaryView->overlayCandidates(overlays.size());
+        const auto candidates = s_disableOverlays ? QList<SurfaceItem *>{} : primaryView->overlayCandidates(overlays.size());
         for (auto [candidate, overlay] : std::views::zip(candidates, overlays)) {
             // leave fullscreen direct scanout to the primary plane
             if (candidate->mapToScene(candidate->rect()).contains(output->geometryF())) {
@@ -751,8 +755,6 @@ void Compositor::composite(RenderLoop *renderLoop)
         renderLoop->scheduleRepaint();
     }
 }
-
-static const bool s_forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
 
 void Compositor::addOutput(Output *output)
 {
