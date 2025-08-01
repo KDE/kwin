@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-12 02:40+0000\n"
-"PO-Revision-Date: 2025-07-14 20:18+0400\n"
+"PO-Revision-Date: 2025-07-31 18:18+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1409,7 +1409,7 @@ msgstr "يشير إلى عدد انهيارات كوين"
 #: main_wayland.cpp:298
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr "ابدأ خادم اكس_ويلاند بدون صلاحية الجذر."
+msgstr "ابدأ خادم اكس_ويلاند دون صلاحية الجذر."
 
 #: main_wayland.cpp:301
 #, kde-format
@@ -2521,7 +2521,7 @@ msgstr "أُقفل المفتاح AltGr و هو الآن مفعّل لكلّ ض�
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "بدّل بين مصغّرات النافذة الحالية وبدونها"
+msgstr "شغل/أوقف المصغّرات للنافذة الحالية"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
@@ -2745,7 +2745,7 @@ msgstr "تجاهل"
 #: plugins/videowall/package/contents/ui/config.ui:73
 #, kde-format
 msgid "None"
-msgstr "بدون"
+msgstr "لا شيء"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:48
@@ -3393,13 +3393,13 @@ msgstr "نوع القاعدة لملء الشّاشة"
 #: rulesettings.kcfg:307
 #, kde-format
 msgid "No titlebar and frame"
-msgstr "بدون شريط العنوان والإطار"
+msgstr "بلا شريط العنوان والإطار"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:311
 #, kde-format
 msgid "No titlebar rule type"
-msgstr "نوع القاعدة لبدون شريط العنوان"
+msgstr "نوع القاعدة لبلا شريط العنوان"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:318
@@ -3705,7 +3705,7 @@ msgid ""
 "keyboard shortcut."
 msgstr ""
 "لقد اخترت إظهار نافذة بلا حدّ.\n"
-"بدون الحدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة: استخدم قائمة عمليّات "
+"بلا حدود لن تستطيع تمكين الحدّ مجدّدًا باستخدام الفأرة: استخدم قائمة عمليّات "
 "النّافذة بدل ذلك، لتنشيطها استخدم اختصار لوحة المفاتيح %1."
 
 #: useractions.cpp:169
@@ -3749,7 +3749,7 @@ msgstr "&ملء الشّاشة"
 #: useractions.cpp:244
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "بدون &شريط العنوان والإطار"
+msgstr "بلا &شريط العنوان والإطار"
 
 #: useractions.cpp:252
 #, kde-format

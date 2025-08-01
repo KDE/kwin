@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the kde-workspace package.
 # Ilpo Kantonen <ilpo@iki.fi>, 2004, 2005.
 # Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2008.
-# SPDX-FileCopyrightText: 2009, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Tommi Nieminen <translator@legisign.org>
+# SPDX-FileCopyrightText: 2009, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Tommi Nieminen <translator@legisign.org>
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
 # Lasse Liehu <lliehu@kolumbus.fi>, 2011, 2012, 2013, 2014, 2015, 2016.
 #
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 02:37+0000\n"
-"PO-Revision-Date: 2024-10-16 21:14+0300\n"
+"PO-Revision-Date: 2025-07-17 18:19+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -237,10 +237,9 @@ msgid "Machine (hostname)"
 msgstr "Kone (palvelinnimi)"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window &Extra"
+#, kde-format
 msgid "Window tag"
-msgstr "Ikkuna&lisä"
+msgstr "Ikkunaluokitus"
 
 #: rulesmodel.cpp:447
 #, kde-format
