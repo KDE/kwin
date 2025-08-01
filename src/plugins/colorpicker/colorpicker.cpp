@@ -6,39 +6,62 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "colorpicker.h"
+module;
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "effect/effect.h"
 #include "effect/effecthandler.h"
 #include "opengl/eglcontext.h"
-#include <KLocalizedString>
-#include <QDBusConnection>
-#include <QDBusMetaType>
 
+#include <KLocalizedString>
+#include <QColor>
+#include <QDBusConnection>
+#include <QDBusContext>
+#include <QDBusMessage>
+#include <QDBusMetaType>
+#include <QDBusUnixFileDescriptor>
+#include <QObject>
 #include <epoxy/gl.h>
 
-Q_DECLARE_METATYPE(QColor)
+#include <QtCore/qmetatype.h>
+#include <QtCore/qplugin.h>
+#include <QtCore/qtmochelpers.h>
+#include <QtCore/qxptype_traits.h>
 
-QDBusArgument &operator<<(QDBusArgument &argument, const QColor &color)
-{
-    argument.beginStructure();
-    argument << color.rgba();
-    argument.endStructure();
-    return argument;
-}
-
-const QDBusArgument &operator>>(const QDBusArgument &argument, QColor &color)
-{
-    argument.beginStructure();
-    QRgb rgba;
-    argument >> rgba;
-    argument.endStructure();
-    color = QColor::fromRgba(rgba);
-    return argument;
-}
+export module colorpicker:impl;
 
 namespace KWin
 {
+
+class ColorPickerEffect : public Effect, protected QDBusContext
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.ColorPicker")
+public:
+    ColorPickerEffect();
+    ~ColorPickerEffect() override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
+    bool isActive() const override;
+
+    int requestedEffectChainPosition() const override
+    {
+        return 0;
+    }
+
+    static bool supported();
+
+public Q_SLOTS:
+    Q_SCRIPTABLE QColor pick();
+
+private:
+    void showInfoMessage();
+    void hideInfoMessage();
+    void setPicking(bool picking);
+
+    QDBusMessage m_replyMessage;
+    QPointF m_scheduledPosition;
+    bool m_picking = false;
+};
 
 bool ColorPickerEffect::supported()
 {
@@ -129,4 +152,24 @@ bool ColorPickerEffect::isActive() const
 
 } // namespace
 
-#include "moc_colorpicker.cpp"
+Q_DECLARE_METATYPE(QColor)
+
+QDBusArgument &operator<<(QDBusArgument &argument, const QColor &color)
+{
+    argument.beginStructure();
+    argument << color.rgba();
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, QColor &color)
+{
+    argument.beginStructure();
+    QRgb rgba;
+    argument >> rgba;
+    argument.endStructure();
+    color = QColor::fromRgba(rgba);
+    return argument;
+}
+
+#include "colorpicker.moc"

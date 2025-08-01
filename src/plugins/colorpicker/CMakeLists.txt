@@ -1,12 +1,12 @@
 #######################################
 # Effect
 
-set(colorpicker_SOURCES
+kwin_add_builtin_effect(colorpicker)
+target_sources(colorpicker
+    PRIVATE FILE_SET CXX_MODULES FILES
     colorpicker.cpp
     main.cpp
 )
-
-kwin_add_builtin_effect(colorpicker ${colorpicker_SOURCES})
 target_link_libraries(colorpicker PRIVATE
     kwin
 

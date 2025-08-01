@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.28.2)
 
 set(PROJECT_VERSION "6.4.80") # Handled by release scripts
 project(KWin VERSION ${PROJECT_VERSION})

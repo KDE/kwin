@@ -3,8 +3,17 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+module;
 
-#include "colorpicker.h"
+#include "effect/effect.h"
+
+#include <QtCore/qmetatype.h>
+#include <QtCore/qplugin.h>
+#include <QtCore/qtmochelpers.h>
+#include <QtCore/qxptype_traits.h>
+
+export module colorpicker;
+import :impl;
 
 namespace KWin
 {
