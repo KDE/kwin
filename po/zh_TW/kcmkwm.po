@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-30 00:44+0000\n"
+"POT-Creation-Date: 2025-08-01 00:45+0000\n"
 "PO-Revision-Date: 2025-06-04 07:42+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -38,7 +38,7 @@ msgid "&Left click:"
 msgstr "左鍵(&L)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:44
+#: actions.ui:42
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into an "
@@ -51,7 +51,7 @@ msgstr ""
 # activate (passing clicks), then on release, raise. The "on release" isn't for "activate".
 # --Kisaragi
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:48
+#: actions.ui:46
 #, kde-format
 msgid "Activate, pass click and raise on release"
 msgstr "作用及點選，並在放開時移到上層"
@@ -59,7 +59,7 @@ msgstr "作用及點選，並在放開時移到上層"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:53 actions.ui:102 actions.ui:142
+#: actions.ui:51 actions.ui:91 actions.ui:131
 #, kde-format
 msgid "Activate, raise and pass click"
 msgstr "作用、移到上層及點選"
@@ -67,7 +67,7 @@ msgstr "作用、移到上層及點選"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:58 actions.ui:107 actions.ui:147
+#: actions.ui:56 actions.ui:96 actions.ui:136
 #, kde-format
 msgid "Activate and pass click"
 msgstr "作用及點選"
@@ -78,7 +78,7 @@ msgstr "作用及點選"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:63 actions.ui:112 actions.ui:152 mouse.ui:284 mouse.ui:389
+#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:284 mouse.ui:389
 #: mouse.ui:494
 #, kde-format
 msgid "Activate"
@@ -90,31 +90,21 @@ msgstr "作用"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:68 actions.ui:117 actions.ui:157 mouse.ui:274 mouse.ui:379
+#: actions.ui:66 actions.ui:106 actions.ui:146 mouse.ui:274 mouse.ui:379
 #: mouse.ui:484
 #, kde-format
 msgid "Activate and raise"
 msgstr "作用及移到上層"
 
-#. i18n: ectx: property (contextualHelpText), widget (KContextualHelpButton, info_1)
-#: actions.ui:76
-#, kde-format
-msgid ""
-"Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
-"and falls back to \"Activate, raise and pass click\" instead"
-msgstr ""
-"請注意，「作用及點選，並在放開時移到上層」選項不支援 X11，而會退回使用「作"
-"用、移到上層及點選」行為"
-
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:85 mouse.ui:196
+#: actions.ui:74 mouse.ui:196
 #, kde-format
 msgid "&Middle click:"
 msgstr "中鍵(&M)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:98
+#: actions.ui:87
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into an "
@@ -125,13 +115,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:125 mouse.ui:209
+#: actions.ui:114 mouse.ui:209
 #, kde-format
 msgid "&Right click:"
 msgstr "右鍵(&R)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:138
+#: actions.ui:127
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into an "
@@ -142,13 +132,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:165 mouse.ui:86
+#: actions.ui:154 mouse.ui:86
 #, kde-format
 msgid "Mouse &wheel:"
 msgstr "滑鼠滾輪(&W)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:178
+#: actions.ui:167
 #, kde-format
 msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
@@ -158,37 +148,37 @@ msgstr ""
 "框)。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:182
+#: actions.ui:171
 #, kde-format
 msgid "Scroll"
 msgstr "捲軸"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:187
+#: actions.ui:176
 #, kde-format
 msgid "Activate and scroll"
 msgstr "作用及滾動"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:192
+#: actions.ui:181
 #, kde-format
 msgid "Activate, raise and scroll"
 msgstr "作用、移到上層及滾動"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:206
+#: actions.ui:195
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
 msgstr "內部視窗、標題列及邊框動作"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:217
+#: actions.ui:206
 #, kde-format
 msgid "Mo&difier key:"
 msgstr "組合鍵(&D)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:227
+#: actions.ui:216
 #, kde-format
 msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
@@ -196,32 +186,32 @@ msgid ""
 msgstr "在這裡您可以選擇當按住 Meta 或是 ALT 讓您執行的行為。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:231
+#: actions.ui:220
 #, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:236
+#: actions.ui:225
 #, kde-format
 msgid "Alt"
 msgstr "ALT"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:258
+#: actions.ui:247
 #, kde-format
 msgid "  + "
 msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:270 mouse.ui:577
+#: actions.ui:259 mouse.ui:577
 #, kde-format
 msgid "L&eft click:"
 msgstr "左鍵(&E)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:283
+#: actions.ui:272
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into the "
@@ -231,7 +221,7 @@ msgstr "在這一列您可以自訂當左鍵按在標題列或邊框時的行為
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:287 actions.ui:362 actions.ui:437
+#: actions.ui:276 actions.ui:351 actions.ui:426
 #, kde-format
 msgid "Move"
 msgstr "移動"
@@ -239,7 +229,7 @@ msgstr "移動"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:292 actions.ui:367 actions.ui:442
+#: actions.ui:281 actions.ui:356 actions.ui:431
 #, kde-format
 msgid "Activate, raise and move"
 msgstr "作用、移到上層及移動"
@@ -253,7 +243,7 @@ msgstr "作用、移到上層及移動"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:297 actions.ui:372 actions.ui:447 mouse.ui:242 mouse.ui:299
+#: actions.ui:286 actions.ui:361 actions.ui:436 mouse.ui:242 mouse.ui:299
 #: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
 #, kde-format
 msgid "Toggle raise and lower"
@@ -262,7 +252,7 @@ msgstr "移至上下層"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:302 actions.ui:377 actions.ui:452
+#: actions.ui:291 actions.ui:366 actions.ui:441
 #, kde-format
 msgid "Resize"
 msgstr "改變視窗大小"
@@ -276,7 +266,7 @@ msgstr "改變視窗大小"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:307 actions.ui:382 actions.ui:457 mouse.ui:232 mouse.ui:289
+#: actions.ui:296 actions.ui:371 actions.ui:446 mouse.ui:232 mouse.ui:289
 #: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
 #, kde-format
 msgid "Raise"
@@ -293,7 +283,7 @@ msgstr "前景"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:312 actions.ui:387 actions.ui:462 mouse.ui:63 mouse.ui:237
+#: actions.ui:301 actions.ui:376 actions.ui:451 mouse.ui:63 mouse.ui:237
 #: mouse.ui:294 mouse.ui:342 mouse.ui:399 mouse.ui:447 mouse.ui:504
 #, kde-format
 msgid "Lower"
@@ -310,7 +300,7 @@ msgstr "背景"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:317 actions.ui:392 actions.ui:467 mouse.ui:58 mouse.ui:247
+#: actions.ui:306 actions.ui:381 actions.ui:456 mouse.ui:58 mouse.ui:247
 #: mouse.ui:304 mouse.ui:352 mouse.ui:409 mouse.ui:457 mouse.ui:514
 #, kde-format
 msgid "Minimize"
@@ -319,7 +309,7 @@ msgstr "最小化"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:322 actions.ui:397 actions.ui:472
+#: actions.ui:311 actions.ui:386 actions.ui:461
 #, kde-format
 msgid "Decrease opacity"
 msgstr "降低不透明度"
@@ -327,7 +317,7 @@ msgstr "降低不透明度"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:327 actions.ui:402 actions.ui:477
+#: actions.ui:316 actions.ui:391 actions.ui:466
 #, kde-format
 msgid "Increase opacity"
 msgstr "增加不透明度"
@@ -341,7 +331,7 @@ msgstr "增加不透明度"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
+#: actions.ui:321 actions.ui:396 actions.ui:471 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, kde-format
 msgid "Window menu"
@@ -361,7 +351,7 @@ msgstr "視窗選單"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:337 actions.ui:412 actions.ui:487 actions.ui:537 advanced.ui:108
+#: actions.ui:326 actions.ui:401 actions.ui:476 actions.ui:526 advanced.ui:108
 #: mouse.ui:78 mouse.ui:125 mouse.ui:262 mouse.ui:319 mouse.ui:367 mouse.ui:424
 #: mouse.ui:472 mouse.ui:529
 #, kde-format
@@ -369,13 +359,13 @@ msgid "Do nothing"
 msgstr "無動作"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:345
+#: actions.ui:334
 #, kde-format
 msgid "Middle &click:"
 msgstr "中鍵(&C)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:358
+#: actions.ui:347
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
@@ -384,13 +374,13 @@ msgstr "在這一列您可以自訂當中鍵按在標題列或邊框時的行為
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:420 mouse.ui:647
+#: actions.ui:409 mouse.ui:647
 #, kde-format
 msgid "Right clic&k:"
 msgstr "右鍵(&K)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:433
+#: actions.ui:422
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
@@ -398,13 +388,13 @@ msgid ""
 msgstr "在這一列您可以自訂當右鍵按在標題列或邊框時的行為。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:495
+#: actions.ui:484
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "滑鼠滾輪(&U)："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:508
+#: actions.ui:497
 #, kde-format
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
@@ -413,35 +403,35 @@ msgstr "在這裡您可以自訂 [同時按住輔助鍵並使用滑鼠滾輪] �
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:512 mouse.ui:100
+#: actions.ui:501 mouse.ui:100
 #, kde-format
 msgid "Raise/lower"
 msgstr "移至上/下層"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:517 mouse.ui:105
+#: actions.ui:506 mouse.ui:105
 #, kde-format
 msgid "Maximize/restore"
 msgstr "最大化/復原"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:522 mouse.ui:110
+#: actions.ui:511 mouse.ui:110
 #, kde-format
 msgid "Keep above/below"
 msgstr "保持在頂層/底層"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:527 mouse.ui:115
+#: actions.ui:516 mouse.ui:115
 #, kde-format
 msgid "Move to previous/next desktop"
 msgstr "移至上/下一個桌面"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:532 mouse.ui:120
+#: actions.ui:521 mouse.ui:120
 #, kde-format
 msgid "Change opacity"
 msgstr "變更不透明度"
@@ -842,37 +832,37 @@ msgstr "分離螢幕焦點(&S)："
 msgid "Window activation policy description"
 msgstr "視窗作用策略描述"
 
-#: main.cpp:81
+#: main.cpp:48
 #, kde-format
 msgid "&Focus"
 msgstr "焦點(&F)"
 
-#: main.cpp:86
+#: main.cpp:53
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "標題列動作(&C)"
 
-#: main.cpp:91
+#: main.cpp:58
 #, kde-format
 msgid "W&indow Actions"
 msgstr "視窗動作(&I)"
 
-#: main.cpp:96
+#: main.cpp:63
 #, kde-format
 msgid "Mo&vement"
 msgstr "移動(&V)"
 
-#: main.cpp:101
+#: main.cpp:68
 #, kde-format
 msgid "Adva&nced"
 msgstr "進階(&N)"
 
-#: main.cpp:180
+#: main.cpp:147
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "標題列動作(&T)"
 
-#: main.cpp:190
+#: main.cpp:157
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "視窗動作(&N)"
@@ -1118,7 +1108,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "僅在重疊時"
 
-#: windows.cpp:92
+#: windows.cpp:91
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1127,7 +1117,7 @@ msgstr ""
 "<em>按一下成為焦點：</em>視窗將會在按下時作用。這個行為就如同其他作業系統，且"
 "通常就是您所想要的。"
 
-#: windows.cpp:95
+#: windows.cpp:94
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1140,7 +1130,7 @@ msgstr ""
 "系統要選取某個視窗成使用中（例如：因為目前的使用中視窗已被關閉），則滑鼠下方"
 "的視窗會第一順位使用。算是 <em>按一下取得焦點</em> 的變化型。"
 
-#: windows.cpp:98
+#: windows.cpp:97
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1152,7 +1142,7 @@ msgstr ""
 "機出現在滑鼠底下的視窗不會取得焦點。<em>防止盜取焦點</em>仍然有效。可以想成 "
 "<em>按一下取得焦點</em>，但不用實際點選。"
 
-#: windows.cpp:101
+#: windows.cpp:100
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1164,7 +1154,7 @@ msgstr ""
 "（例如：因為目前的使用中視窗已被關閉），則滑鼠下方的視窗會第一順位使用。如果"
 "你想要由懸停控制的焦點，請選擇。"
 
-#: windows.cpp:104
+#: windows.cpp:103
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1178,7 +1168,7 @@ msgstr ""
 "略相衝突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在位置 (滑鼠優先)</"
 "em>代替！"
 
-#: windows.cpp:107
+#: windows.cpp:106
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1193,6 +1183,13 @@ msgstr ""
 "strong><em>防止盜取焦點</em> 及 <em>tabbox ('Alt+Tab')</em> 會與啟用策略相衝"
 "突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在位置 (滑鼠優先)</em>代"
 "替！"
+
+#~ msgid ""
+#~ "Note that \"Activate, pass click and raise on release\" doesn't work on "
+#~ "X11, and falls back to \"Activate, raise and pass click\" instead"
+#~ msgstr ""
+#~ "請注意，「作用及點選，並在放開時移到上層」選項不支援 X11，而會退回使用「作"
+#~ "用、移到上層及點選」行為"
 
 #~ msgid "Show actions menu"
 #~ msgstr "顯示動作選單"

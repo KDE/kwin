@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-31 00:43+0000\n"
-"PO-Revision-Date: 2025-07-11 17:19+0300\n"
+"PO-Revision-Date: 2025-07-17 18:19+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -771,16 +771,14 @@ msgid "Up"
 msgstr "Ylös"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Etäisyys:"
+msgstr "Etäisyys"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Sijainti"
+msgstr "Liukusäätimen sijainti"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -811,19 +809,17 @@ msgstr "Tabletin painike"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Ryhmä"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Tila:"
+msgstr "Tila"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "On tilavalitsin"
 
 # *** TARKISTA: Onko strip-sanalle mitään olemassa olevaa käännöstä tässä yhteydessä?
 #: debug_console.cpp:576

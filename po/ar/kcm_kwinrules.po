@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 00:43+0000\n"
-"PO-Revision-Date: 2025-05-04 06:22+0400\n"
+"PO-Revision-Date: 2025-07-31 18:24+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -415,7 +415,7 @@ msgstr "الاختصار"
 #: rulesmodel.cpp:606
 #, kde-format
 msgid "No titlebar and frame"
-msgstr "بدون شريط العنوان والإطار"
+msgstr "بلا شريط العنوان والإطار"
 
 #: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
 #: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
@@ -466,7 +466,7 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
-"حاول كوين منع النوافذ المفتوحة بدون تدخل مباشر من المستخدم من الارتفاع "
+"حاول كوين منع النوافذ المفتوحة دون تدخل مباشر من المستخدم من الارتفاع "
 "والتركيز بينما أنت تتفاعل مع نافذة أخرى في نفس الوقت. يمكن استخدام هذه "
 "الخاصية لتغيير مستوى مانع سرقة التركيز المطبق على النوافذ والتطبيقات الفردية."
 "<nl/><nl/>هنا ما سيحدث للنافذة التي فُتحت دون تدخل مباشر منك عند كل مستوى "

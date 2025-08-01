@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-05-30 00:44+0000\n"
+"POT-Creation-Date: 2025-08-01 00:45+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -33,7 +33,7 @@ msgid "&Left click:"
 msgstr "&वाम क्लिक् कुर्वन्तु:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:44
+#: actions.ui:42
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into an "
@@ -43,7 +43,7 @@ msgstr ""
 "शक्नोति ('अन्तः' इत्यस्य अर्थः: न शीर्षकपट्टिका, न तु फ्रेम) ।"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:48
+#: actions.ui:46
 #, kde-format
 msgid "Activate, pass click and raise on release"
 msgstr "सक्रियताम्, पास क्लिक् कृत्वा विमोचनसमये उत्थापयन्तु"
@@ -51,7 +51,7 @@ msgstr "सक्रियताम्, पास क्लिक् कृत�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:53 actions.ui:102 actions.ui:142
+#: actions.ui:51 actions.ui:91 actions.ui:131
 #, kde-format
 msgid "Activate, raise and pass click"
 msgstr "सक्रियं, उत्थापनं, पास क्लिक् च कुर्वन्तु"
@@ -59,7 +59,7 @@ msgstr "सक्रियं, उत्थापनं, पास क्लि�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:58 actions.ui:107 actions.ui:147
+#: actions.ui:56 actions.ui:96 actions.ui:136
 #, kde-format
 msgid "Activate and pass click"
 msgstr "सक्रियं कृत्वा पास क्लिक् कुर्वन्तु"
@@ -70,7 +70,7 @@ msgstr "सक्रियं कृत्वा पास क्लिक् �
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:63 actions.ui:112 actions.ui:152 mouse.ui:284 mouse.ui:389
+#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:284 mouse.ui:389
 #: mouse.ui:494
 #, kde-format
 msgid "Activate"
@@ -82,31 +82,21 @@ msgstr "सक्रियं कुर्वन्तु"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:68 actions.ui:117 actions.ui:157 mouse.ui:274 mouse.ui:379
+#: actions.ui:66 actions.ui:106 actions.ui:146 mouse.ui:274 mouse.ui:379
 #: mouse.ui:484
 #, kde-format
 msgid "Activate and raise"
 msgstr "सक्रियं कृत्वा उत्थापयतु"
 
-#. i18n: ectx: property (contextualHelpText), widget (KContextualHelpButton, info_1)
-#: actions.ui:76
-#, kde-format
-msgid ""
-"Note that \"Activate, pass click and raise on release\" doesn't work on X11, "
-"and falls back to \"Activate, raise and pass click\" instead"
-msgstr ""
-"ध्यानं कुर्वन्तु यत् \"Activate, pass click and raise on release\" X11 इत्यत्र कार्यं न "
-"करोति, तस्य स्थाने \"Activate, raise and pass click\" इत्यत्र पुनः पतति"
-
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:85 mouse.ui:196
+#: actions.ui:74 mouse.ui:196
 #, kde-format
 msgid "&Middle click:"
 msgstr "&मध्य क्लिक् :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:98
+#: actions.ui:87
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into an "
@@ -117,13 +107,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:125 mouse.ui:209
+#: actions.ui:114 mouse.ui:209
 #, kde-format
 msgid "&Right click:"
 msgstr "&राइट् क्लिक् कुर्वन्तु:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:138
+#: actions.ui:127
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into an "
@@ -134,13 +124,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:165 mouse.ui:86
+#: actions.ui:154 mouse.ui:86
 #, kde-format
 msgid "Mouse &wheel:"
 msgstr "मूषक &चक्र: ."
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:178
+#: actions.ui:167
 #, kde-format
 msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
@@ -150,37 +140,37 @@ msgstr ""
 "('अन्तः' इत्यस्य अर्थः: न शीर्षकपट्टिका, न तु फ्रेम) ।"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:182
+#: actions.ui:171
 #, kde-format
 msgid "Scroll"
 msgstr "स्क्रॉल करें"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:187
+#: actions.ui:176
 #, kde-format
 msgid "Activate and scroll"
 msgstr "सक्रियं कृत्वा स्क्रॉलं कुर्वन्तु"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:192
+#: actions.ui:181
 #, kde-format
 msgid "Activate, raise and scroll"
 msgstr "सक्रियं कुर्वन्तु, उत्थापयन्तु, स्क्रॉलं च कुर्वन्तु"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:206
+#: actions.ui:195
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
 msgstr "आन्तरिकविण्डो, शीर्षकपट्टिका तथा फ्रेम क्रियाः"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:217
+#: actions.ui:206
 #, kde-format
 msgid "Mo&difier key:"
 msgstr "Mod&difier कुंजी: 1.1."
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:227
+#: actions.ui:216
 #, kde-format
 msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
@@ -190,32 +180,32 @@ msgstr ""
 "शक्नुवन्ति वा ।"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:231
+#: actions.ui:220
 #, kde-format
 msgid "Meta"
 msgstr "मेटा"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:236
+#: actions.ui:225
 #, kde-format
 msgid "Alt"
 msgstr "सर्वे"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:258
+#: actions.ui:247
 #, kde-format
 msgid "  + "
 msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:270 mouse.ui:577
+#: actions.ui:259 mouse.ui:577
 #, kde-format
 msgid "L&eft click:"
 msgstr "L&eft क्लिक् कुर्वन्तु:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:283
+#: actions.ui:272
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into the "
@@ -227,7 +217,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:287 actions.ui:362 actions.ui:437
+#: actions.ui:276 actions.ui:351 actions.ui:426
 #, kde-format
 msgid "Move"
 msgstr "चलनम्"
@@ -235,7 +225,7 @@ msgstr "चलनम्"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:292 actions.ui:367 actions.ui:442
+#: actions.ui:281 actions.ui:356 actions.ui:431
 #, kde-format
 msgid "Activate, raise and move"
 msgstr "सक्रियं कुर्वन्तु, उत्थापयन्तु, चालयन्तु च"
@@ -249,7 +239,7 @@ msgstr "सक्रियं कुर्वन्तु, उत्थापय
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:297 actions.ui:372 actions.ui:447 mouse.ui:242 mouse.ui:299
+#: actions.ui:286 actions.ui:361 actions.ui:436 mouse.ui:242 mouse.ui:299
 #: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
 #, kde-format
 msgid "Toggle raise and lower"
@@ -258,7 +248,7 @@ msgstr "Toggle raise and lower इति कृत्वा स्थापय�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:302 actions.ui:377 actions.ui:452
+#: actions.ui:291 actions.ui:366 actions.ui:441
 #, kde-format
 msgid "Resize"
 msgstr "आकारं परिवर्तयतु"
@@ -272,7 +262,7 @@ msgstr "आकारं परिवर्तयतु"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:307 actions.ui:382 actions.ui:457 mouse.ui:232 mouse.ui:289
+#: actions.ui:296 actions.ui:371 actions.ui:446 mouse.ui:232 mouse.ui:289
 #: mouse.ui:337 mouse.ui:394 mouse.ui:442 mouse.ui:499
 #, kde-format
 msgid "Raise"
@@ -289,7 +279,7 @@ msgstr "उत्थापय"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:312 actions.ui:387 actions.ui:462 mouse.ui:63 mouse.ui:237
+#: actions.ui:301 actions.ui:376 actions.ui:451 mouse.ui:63 mouse.ui:237
 #: mouse.ui:294 mouse.ui:342 mouse.ui:399 mouse.ui:447 mouse.ui:504
 #, kde-format
 msgid "Lower"
@@ -306,7 +296,7 @@ msgstr "अवच"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:317 actions.ui:392 actions.ui:467 mouse.ui:58 mouse.ui:247
+#: actions.ui:306 actions.ui:381 actions.ui:456 mouse.ui:58 mouse.ui:247
 #: mouse.ui:304 mouse.ui:352 mouse.ui:409 mouse.ui:457 mouse.ui:514
 #, kde-format
 msgid "Minimize"
@@ -315,7 +305,7 @@ msgstr "न्यूनतमं कुरुत"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:322 actions.ui:397 actions.ui:472
+#: actions.ui:311 actions.ui:386 actions.ui:461
 #, kde-format
 msgid "Decrease opacity"
 msgstr "अस्पष्टतां न्यूनीकरोतु"
@@ -323,7 +313,7 @@ msgstr "अस्पष्टतां न्यूनीकरोतु"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:327 actions.ui:402 actions.ui:477
+#: actions.ui:316 actions.ui:391 actions.ui:466
 #, kde-format
 msgid "Increase opacity"
 msgstr "अपारदर्शिता वर्धयतु"
@@ -337,7 +327,7 @@ msgstr "अपारदर्शिता वर्धयतु"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:332 actions.ui:407 actions.ui:482 mouse.ui:257 mouse.ui:314
+#: actions.ui:321 actions.ui:396 actions.ui:471 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
 #, fuzzy, kde-format
 #| msgid "Window &placement:"
@@ -358,7 +348,7 @@ msgstr "खिडकी &स्थापनम् :"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:337 actions.ui:412 actions.ui:487 actions.ui:537 advanced.ui:108
+#: actions.ui:326 actions.ui:401 actions.ui:476 actions.ui:526 advanced.ui:108
 #: mouse.ui:78 mouse.ui:125 mouse.ui:262 mouse.ui:319 mouse.ui:367 mouse.ui:424
 #: mouse.ui:472 mouse.ui:529
 #, kde-format
@@ -366,13 +356,13 @@ msgid "Do nothing"
 msgstr "किमपि न कुरु"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:345
+#: actions.ui:334
 #, kde-format
 msgid "Middle &click:"
 msgstr "मध्यम् &क्लिक् कुर्वन्तु:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:358
+#: actions.ui:347
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
@@ -383,13 +373,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:420 mouse.ui:647
+#: actions.ui:409 mouse.ui:647
 #, kde-format
 msgid "Right clic&k:"
 msgstr "दक्षिण क्लिक&k:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:433
+#: actions.ui:422
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
@@ -399,13 +389,13 @@ msgstr ""
 "शक्नोति ।"
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:495
+#: actions.ui:484
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "मो&उपयोगचक्रः :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:508
+#: actions.ui:497
 #, kde-format
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
@@ -416,35 +406,35 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:512 mouse.ui:100
+#: actions.ui:501 mouse.ui:100
 #, kde-format
 msgid "Raise/lower"
 msgstr "उत्थापय/नीचयतु"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:517 mouse.ui:105
+#: actions.ui:506 mouse.ui:105
 #, kde-format
 msgid "Maximize/restore"
 msgstr "अधिकतमं/पुनर्स्थापनम्"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:522 mouse.ui:110
+#: actions.ui:511 mouse.ui:110
 #, kde-format
 msgid "Keep above/below"
 msgstr "उपरि/अधः एव स्थापयन्तु"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:527 mouse.ui:115
+#: actions.ui:516 mouse.ui:115
 #, kde-format
 msgid "Move to previous/next desktop"
 msgstr "पूर्व/अग्रे डेस्कटॉप् प्रति गच्छन्तु"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:532 mouse.ui:120
+#: actions.ui:521 mouse.ui:120
 #, kde-format
 msgid "Change opacity"
 msgstr "अस्पष्टतां परिवर्तयन्तु"
@@ -859,37 +849,37 @@ msgstr "&पृथक् स्क्रीन फोकस"
 msgid "Window activation policy description"
 msgstr "विण्डो सक्रियणनीतिविवरणम्"
 
-#: main.cpp:81
+#: main.cpp:48
 #, kde-format
 msgid "&Focus"
 msgstr "&केंद्रबिन्दुः"
 
-#: main.cpp:86
+#: main.cpp:53
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "शीर्षकपट्टिका क्रियाः"
 
-#: main.cpp:91
+#: main.cpp:58
 #, kde-format
 msgid "W&indow Actions"
 msgstr "W&indow क्रियाः"
 
-#: main.cpp:96
+#: main.cpp:63
 #, kde-format
 msgid "Mo&vement"
 msgstr "आन्दोलन"
 
-#: main.cpp:101
+#: main.cpp:68
 #, kde-format
 msgid "Adva&nced"
 msgstr "उन्नतं"
 
-#: main.cpp:180
+#: main.cpp:147
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "&शीर्षकपट्टिका क्रियाः"
 
-#: main.cpp:190
+#: main.cpp:157
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "खिडकी Actio&ns"
@@ -1140,7 +1130,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "केवलं यदा आच्छादनं भवति"
 
-#: windows.cpp:92
+#: windows.cpp:91
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1149,7 +1139,7 @@ msgstr ""
 "<em>फोकस कर्तुं क्लिक् कुर्वन्तु:</em> यदा भवन्तः तस्मिन् क्लिक् कुर्वन्ति तदा एकं विण्डो सक्रियं "
 "भवति । अन्येषु प्रचालनतन्त्रेषु एषः व्यवहारः सामान्यः अस्ति तथा च सम्भवतः भवान् यत् इच्छति ।"
 
-#: windows.cpp:95
+#: windows.cpp:94
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1163,7 +1153,7 @@ msgstr ""
 "वर्तमानसक्रियः बन्दः आसीत्) तर्हि मूषकस्य अधः विण्डो प्राधान्यं अभ्यर्थी भवति । असामान्यं, "
 "परन्तु सम्भाव्यं रूपं <em>Click to focus</em> ."
 
-#: windows.cpp:98
+#: windows.cpp:97
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1176,7 +1166,7 @@ msgstr ""
 "निवारणं</em> यथासाधारणं भवति। केवलं वास्तविकरूपेण क्लिक् कर्तुं विना एव <em>फोकस कर्तुं "
 "Click</em> इति चिन्तयन्तु।"
 
-#: windows.cpp:101
+#: windows.cpp:100
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1188,7 +1178,7 @@ msgstr ""
 "चयनं कर्तव्यं भवति (उदा. यतः वर्तमानसक्रियः बन्दः आसीत्) तर्हि मूषकस्य अधः विण्डो "
 "प्राधान्यं अभ्यर्थी भवति । एतत् चिनोतु, यदि भवान् hover controlled focus इच्छति ।"
 
-#: windows.cpp:104
+#: windows.cpp:103
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1203,7 +1193,7 @@ msgstr ""
 "सम्भाव्यते यत् तस्य स्थाने <em>Focus follows mouse (mouse precedence) इत्यस्य</em> "
 "उपयोगं कर्तुम् इच्छति!"
 
-#: windows.cpp:107
+#: windows.cpp:106
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1219,6 +1209,13 @@ msgstr ""
 "+Tab&#39;)</em> सक्रियणनीतेः विरोधं करोति तथा च कार्यं न करिष्यति। भवान् अत्यन्तं "
 "सम्भाव्यते यत् तस्य स्थाने <em>Focus follows mouse (mouse precedence) इत्यस्य</em> "
 "उपयोगं कर्तुम् इच्छति!"
+
+#~ msgid ""
+#~ "Note that \"Activate, pass click and raise on release\" doesn't work on "
+#~ "X11, and falls back to \"Activate, raise and pass click\" instead"
+#~ msgstr ""
+#~ "ध्यानं कुर्वन्तु यत् \"Activate, pass click and raise on release\" X11 इत्यत्र "
+#~ "कार्यं न करोति, तस्य स्थाने \"Activate, raise and pass click\" इत्यत्र पुनः पतति"
 
 #~ msgid "Show actions menu"
 #~ msgstr "क्रियाणां मेनू दर्शयतु"
