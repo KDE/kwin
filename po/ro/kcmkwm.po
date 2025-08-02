@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-01 00:45+0000\n"
+"POT-Creation-Date: 2025-08-02 00:44+0000\n"
 "PO-Revision-Date: 2022-04-01 10:28+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -897,12 +897,17 @@ msgstr "M&utare"
 msgid "Adva&nced"
 msgstr "Ava&nsate"
 
-#: main.cpp:147
+#: main.cpp:74
+#, kde-format
+msgid "&Picture-in-picture"
+msgstr ""
+
+#: main.cpp:165
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Acțiuni bară de &titlu:"
 
-#: main.cpp:157
+#: main.cpp:175
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Acțiu&ni fereastră"
@@ -1097,7 +1102,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
-#: moving.ui:36 moving.ui:68 moving.ui:100
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_PictureInPictureMargin)
+#: moving.ui:36 moving.ui:68 moving.ui:100 pip.ui:61
 #, kde-format
 msgid " px"
 msgstr " px"
@@ -1161,6 +1167,42 @@ msgstr ""
 #, kde-format
 msgid "Only when overlapping"
 msgstr "Doar când se suprapun"
+
+#. i18n: ectx: property (text), widget (QLabel, homeCornerLabel)
+#: pip.ui:20
+#, kde-format
+msgid "Open in screen corner:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:31
+#, kde-format
+msgid "Top-left"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:36
+#, kde-format
+msgid "Top-right"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:41
+#, kde-format
+msgid "Bottom-left"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:46
+#, kde-format
+msgid "Bottom-right"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, marginLabel)
+#: pip.ui:54
+#, kde-format
+msgid "Margin:"
+msgstr ""
 
 #: windows.cpp:91
 #, kde-format

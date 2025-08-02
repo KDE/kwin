@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-01 00:45+0000\n"
+"POT-Creation-Date: 2025-08-02 00:44+0000\n"
 "PO-Revision-Date: 2019-12-12 22:45+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
@@ -826,12 +826,17 @@ msgstr ""
 msgid "Adva&nced"
 msgstr "പു&രോഗമിച്ച"
 
-#: main.cpp:147
+#: main.cpp:74
+#, kde-format
+msgid "&Picture-in-picture"
+msgstr ""
+
+#: main.cpp:165
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "&തലപ്പട്ടയിലുള്ള പ്രവൃത്തികള്‍"
 
-#: main.cpp:157
+#: main.cpp:175
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "ജാലകത്തിലുള്ള പ്ര&വ‍ത്തികള്‍"
@@ -1022,7 +1027,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
-#: moving.ui:36 moving.ui:68 moving.ui:100
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_PictureInPictureMargin)
+#: moving.ui:36 moving.ui:68 moving.ui:100 pip.ui:61
 #, fuzzy, kde-format
 msgid " px"
 msgstr " പിക്സല്‍"
@@ -1078,6 +1084,42 @@ msgstr ""
 #| msgid "Only &when moving windows"
 msgid "Only when overlapping"
 msgstr "ജാലകങ്ങള്‍ നീക്കുമ്പോള്‍ &മാത്രം"
+
+#. i18n: ectx: property (text), widget (QLabel, homeCornerLabel)
+#: pip.ui:20
+#, kde-format
+msgid "Open in screen corner:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:31
+#, kde-format
+msgid "Top-left"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:36
+#, kde-format
+msgid "Top-right"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:41
+#, kde-format
+msgid "Bottom-left"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
+#: pip.ui:46
+#, kde-format
+msgid "Bottom-right"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, marginLabel)
+#: pip.ui:54
+#, kde-format
+msgid "Margin:"
+msgstr ""
 
 #: windows.cpp:91
 #, kde-format
