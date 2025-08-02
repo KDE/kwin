@@ -307,7 +307,7 @@ else()
 endif()
 
 find_package(Libeis-1.0)
-set_package_properties(Libeis PROPERTIES TYPE OPTIONAL PURPOSE "Required for emulated input handling.")
+set_package_properties(Libeis-1.0 PROPERTIES TYPE OPTIONAL PURPOSE "Required for emulated input handling.")
 
 find_package(UDev)
 set_package_properties(UDev PROPERTIES
