@@ -1137,3 +1137,8 @@ libinput_device_config_rotation_get_default_angle(struct libinput_device *device
 {
     return 0u;
 }
+
+int libinput_device_config_area_has_rectangle(struct libinput_device *device)
+{
+    return 0;
+}
