@@ -175,6 +175,7 @@ struct ConfigDataBase
 
     QByteArray key;
     virtual void read(Device * /*device*/, const KConfigGroup & /*values*/) const = 0;
+    virtual QVariant defaults(Device * /*device*/) const = 0;
 };
 
 template<typename T>
@@ -199,6 +200,11 @@ struct ConfigData : public ConfigDataBase
         setterFunction(device, values.readEntry(key.constData(), defaultValueFunction(device)));
     }
 
+    QVariant defaults(Device *device) const override
+    {
+        return defaultValueFunction(device);
+    }
+
     SetterFunction setterFunction;
     DefaultValueFunction defaultValueFunction;
 };
@@ -221,8 +227,12 @@ struct ConfigData<DeviceOrientation> : public ConfigDataBase
 
     void read(Device *device, const KConfigGroup &values) const override
     {
-        int defaultValue = device->defaultOrientation();
-        device->setOrientation(static_cast<Qt::ScreenOrientation>(values.readEntry(key.constData(), defaultValue)));
+        device->setOrientation(static_cast<Qt::ScreenOrientation>(values.readEntry(key.constData(), defaults(device).toInt())));
+    }
+
+    QVariant defaults(Device *device) const override
+    {
+        return device->defaultOrientation();
     }
 };
 
@@ -238,7 +248,12 @@ struct ConfigData<CalibrationMatrix> : public ConfigDataBase
 
     void read(Device *device, const KConfigGroup &values) const override
     {
-        device->setCalibrationMatrix(values.readEntry(key.constData(), device->defaultCalibrationMatrix()));
+        device->setCalibrationMatrix(values.readEntry(key.constData(), defaults(device).toString()));
+    }
+
+    QVariant defaults(Device *device) const override
+    {
+        return device->defaultCalibrationMatrix();
     }
 };
 
@@ -501,7 +516,11 @@ void Device::writeEntry(const ConfigKey &key, const T &value)
     }
     auto it = s_configData.find(key);
     Q_ASSERT(it != s_configData.end());
-    m_config.writeEntry(it.value()->key.constData(), value);
+    if ((*it)->defaults(this).value<T>() == value) {
+        m_config.revertToDefault(it.value()->key.constData());
+    } else {
+        m_config.writeEntry(it.value()->key.constData(), value);
+    }
     m_config.sync();
 }
 
