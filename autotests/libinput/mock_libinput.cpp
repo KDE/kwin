@@ -1147,3 +1147,8 @@ udev_device *udev_device_unref(struct udev_device *udev_device)
 {
     return udev_device;
 }
+
+int libinput_device_config_area_has_rectangle(struct libinput_device *device)
+{
+    return 0;
+}
