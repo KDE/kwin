@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-08-02 00:44+0000\n"
-"PO-Revision-Date: 2025-05-31 16:25+0100\n"
+"PO-Revision-Date: 2025-08-02 11:42+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.04.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -904,7 +904,7 @@ msgstr "Ava&nzado"
 #: main.cpp:74
 #, kde-format
 msgid "&Picture-in-picture"
-msgstr ""
+msgstr "&Imagen dentro de imagen"
 
 #: main.cpp:165
 #, kde-format
@@ -1172,37 +1172,37 @@ msgstr "Solo cuando se solapen"
 #: pip.ui:20
 #, kde-format
 msgid "Open in screen corner:"
-msgstr ""
+msgstr "Abrir en esquina de pantalla:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:31
 #, kde-format
 msgid "Top-left"
-msgstr ""
+msgstr "Superior izquierda"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:36
 #, kde-format
 msgid "Top-right"
-msgstr ""
+msgstr "Superior derecha"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:41
 #, kde-format
 msgid "Bottom-left"
-msgstr ""
+msgstr "Inferior izquierda"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:46
 #, kde-format
 msgid "Bottom-right"
-msgstr ""
+msgstr "Inferior derecha"
 
 #. i18n: ectx: property (text), widget (QLabel, marginLabel)
 #: pip.ui:54
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Margen:"
 
 #: windows.cpp:91
 #, kde-format
@@ -1290,11 +1290,3 @@ msgstr ""
 "robo del foco</em> y la <em>acción de alternar entre ventanas («Alt+Tab»)</"
 "em> contradicen esta política y no funcionarán. Es muy probable que prefiera "
 "usar <em>El foco sigue al ratón (el ratón tiene prioridad)</em> en su lugar."
-
-#~ msgid ""
-#~ "Note that \"Activate, pass click and raise on release\" doesn't work on "
-#~ "X11, and falls back to \"Activate, raise and pass click\" instead"
-#~ msgstr ""
-#~ "Tenga en cuenta que «Activar, pasar clic y poner al frente al soltar», no "
-#~ "funciona en X11, por lo que actuará como «Activar, poner al frente y "
-#~ "pasar clic»."
