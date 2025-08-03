@@ -50,6 +50,7 @@ qt_add_resources(kwin-tabbox-preview "thumbnails"
 target_link_libraries(kwin-tabbox-preview
     Qt::Quick
     KF6::I18n
+    KF6::I18nQml
 )
 install(TARGETS kwin-tabbox-preview DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 

@@ -10,6 +10,7 @@
 // own
 #include "layoutpreview.h"
 
+#include <KLocalizedQmlContext>
 #include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QDebug>
@@ -60,6 +61,7 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
     , m_item(nullptr)
 {
     QQmlEngine *engine = new QQmlEngine(this);
+    KLocalization::setupLocalizedContext(engine);
     QQmlComponent *component = new QQmlComponent(engine, this);
 
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
