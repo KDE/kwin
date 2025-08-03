@@ -186,6 +186,14 @@ void UserActionsMenu::helperDialog(const QString &message)
     KProcess::startDetached(QStringLiteral("kdialog"), args);
 }
 
+void UserActionsMenu::setShortcut(QAction *action, const QString &actionName)
+{
+    const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction *>(actionName));
+    if (!shortcuts.isEmpty()) {
+        action->setShortcut(shortcuts.first());
+    }
+}
+
 void UserActionsMenu::init()
 {
     if (m_menu) {
@@ -204,13 +212,6 @@ void UserActionsMenu::init()
             advancedMenu->setPalette(m_window->palette());
         }
     });
-
-    auto setShortcut = [](QAction *action, const QString &actionName) {
-        const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction *>(actionName));
-        if (!shortcuts.isEmpty()) {
-            action->setShortcut(shortcuts.first());
-        }
-    };
 
     m_moveOperation = advancedMenu->addAction(i18n("&Move"));
     m_moveOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-move")));
@@ -478,9 +479,11 @@ void UserActionsMenu::desktopPopupAboutToShow()
 
     m_desktopMenu->addSeparator();
 
-    for (VirtualDesktop *desktop : desktops) {
+    for (auto i = 0; i < desktops.size(); ++i) {
+        VirtualDesktop *desktop = desktops.at(i);
         QString name = i18n("Move to %1", desktop->name());
         QAction *action = m_desktopMenu->addAction(name);
+        setShortcut(action, QStringLiteral("Window to Desktop %1").arg(i + 1));
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
                 Workspace::self()->sendWindowToDesktops(m_window, {desktop}, false);
@@ -536,6 +539,7 @@ void UserActionsMenu::screenPopupAboutToShow()
         // assumption: there are not more than 9 screens attached.
         QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to. First argument is a number, second the output identifier. E.g. Screen 1 (HDMI1)",
                                                         "Screen &%1 (%2)", (i + 1), output->name()));
+        setShortcut(action, QStringLiteral("Window to Screen %1").arg(i));
         connect(action, &QAction::triggered, this, [this, output]() {
             m_window->sendToOutput(output);
         });

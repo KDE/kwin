@@ -163,6 +163,12 @@ private:
      */
     void helperDialog(const QString &message);
     /**
+     * Set the global action shortcut on the action for displaying it on the menu.
+     * @param action The action to add the shortcut to
+     * @param actionName The global action name to read the action from
+     */
+    void setShortcut(QAction *action, const QString &actionName);
+    /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */
     QMenu *m_menu;
