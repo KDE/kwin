@@ -99,6 +99,11 @@ qreal WindowScreenCastSource::devicePixelRatio() const
     return m_windows[0]->targetScale();
 }
 
+void WindowScreenCastSource::setRenderCursor(bool enable)
+{
+    m_renderCursor = enable;
+}
+
 QRegion WindowScreenCastSource::render(QImage *target, const QRegion &bufferDamage)
 {
     const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, target->size());
@@ -118,13 +123,18 @@ QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     RenderTarget renderTarget(target);
     RenderViewport viewport(boundingRect(), 1, renderTarget);
 
-    Compositor::self()->scene()->renderer()->beginFrame(renderTarget, viewport);
+    WorkspaceScene *scene = Compositor::self()->scene();
+
+    scene->renderer()->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (const auto &window : m_windows) {
-        Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {});
+        scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {});
     }
-    Compositor::self()->scene()->renderer()->endFrame();
+    if (m_renderCursor && scene->cursorItem()->isVisible()) {
+        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, infiniteRegion(), WindowPaintData{}, {});
+    }
+    scene->renderer()->endFrame();
     return QRect(QPoint(), target->size());
 }
 

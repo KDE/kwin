@@ -69,6 +69,11 @@ std::chrono::nanoseconds RegionScreenCastSource::clock() const
     return m_last;
 }
 
+void RegionScreenCastSource::setRenderCursor(bool enable)
+{
+    m_cursorView->setExclusive(!enable);
+}
+
 QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferRepair)
 {
     m_layer->setFramebuffer(target, scaleRegion(bufferRepair, 1.0 / devicePixelRatio(), QRect(QPoint(), m_sceneView->viewport().size().toSize())));

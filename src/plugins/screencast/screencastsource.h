@@ -29,6 +29,7 @@ public:
     virtual QSize textureSize() const = 0;
     virtual qreal devicePixelRatio() const = 0;
 
+    virtual void setRenderCursor(bool enable) = 0;
     virtual QRegion render(GLFramebuffer *target, const QRegion &bufferRepair) = 0;
     virtual QRegion render(QImage *target, const QRegion &bufferRepair) = 0;
     virtual std::chrono::nanoseconds clock() const = 0;

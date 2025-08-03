@@ -28,7 +28,6 @@ namespace KWin
 {
 
 class Cursor;
-class GLTexture;
 class PipeWireCore;
 class ScreenCastBuffer;
 class ScreenCastSource;
@@ -91,7 +90,6 @@ private:
     void resize(const QSize &resolution);
     void coreFailed(const QString &errorMessage);
     void addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor);
-    QRegion addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cursor);
     void addHeader(spa_buffer *spaBuffer);
     void corruptHeader(spa_buffer *spaBuffer);
     void addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion);
@@ -125,8 +123,6 @@ private:
     {
         ScreencastV1Interface::CursorMode mode = ScreencastV1Interface::Hidden;
         const QSize bitmapSize = QSize(256, 256);
-        QRectF lastRect;
-        std::unique_ptr<GLTexture> texture;
         bool visible = false;
         bool invalid = true;
         QMetaObject::Connection changedConnection = QMetaObject::Connection();

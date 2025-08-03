@@ -585,11 +585,21 @@ void ScreenCastStream::record(Contents contents)
     ScreenCastBuffer *buffer = static_cast<ScreenCastBuffer *>(pwBuffer->user_data);
 
     Contents effectiveContents = contents;
-    if (m_cursor.mode != ScreencastV1Interface::Hidden) {
-        effectiveContents.setFlag(Content::Cursor);
-        if (m_cursor.mode == ScreencastV1Interface::Embedded) {
-            effectiveContents.setFlag(Content::Video);
+    switch (m_cursor.mode) {
+    case ScreencastV1Interface::Hidden:
+        m_source->setRenderCursor(false);
+        break;
+    case ScreencastV1Interface::Metadata:
+        effectiveContents |= Content::Cursor;
+        m_source->setRenderCursor(false);
+        if (effectiveContents & Content::Cursor) {
+            addCursorMetadata(spa_buffer, Cursors::self()->currentCursor());
         }
+        break;
+    case ScreencastV1Interface::Embedded:
+        effectiveContents |= Content::Cursor | Content::Video;
+        m_source->setRenderCursor(m_source->includesCursor(Cursors::self()->currentCursor()));
+        break;
     }
 
     EglContext *context = backend->openglContext();
@@ -597,10 +607,10 @@ void ScreenCastStream::record(Contents contents)
 
     spa_meta_sync_timeline *synctmeta = nullptr;
 
-    QRegion effectiveDamage;
+    QRegion damage;
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
-            effectiveDamage |= m_source->render(memfd->view.image(), m_damageJournal.accumulate(memfd->m_age, infiniteRegion()));
+            damage = m_source->render(memfd->view.image(), m_damageJournal.accumulate(memfd->m_age, infiniteRegion()));
             bumpBufferAge(memfd);
         } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
             if (dmabuf->synctimeline) {
@@ -614,26 +624,10 @@ void ScreenCastStream::record(Contents contents)
                 }
             }
 
-            effectiveDamage |= m_source->render(dmabuf->framebuffer.get(), m_damageJournal.accumulate(dmabuf->m_age, infiniteRegion()));
+            damage = m_source->render(dmabuf->framebuffer.get(), m_damageJournal.accumulate(dmabuf->m_age, infiniteRegion()));
             bumpBufferAge(dmabuf);
         }
-    }
-
-    if (effectiveContents & Content::Cursor) {
-        Cursor *cursor = Cursors::self()->currentCursor();
-        switch (m_cursor.mode) {
-        case ScreencastV1Interface::Hidden:
-            break;
-        case ScreencastV1Interface::Embedded:
-            effectiveDamage += addCursorEmbedded(buffer, cursor);
-            break;
-        case ScreencastV1Interface::Metadata:
-            addCursorMetadata(spa_buffer, cursor);
-            break;
-        }
-    }
-    if (effectiveContents & Content::Video) {
-        m_damageJournal.add(effectiveDamage);
+        m_damageJournal.add(damage);
     }
 
     if (spa_data[0].type == SPA_DATA_DmaBuf) {
@@ -655,7 +649,7 @@ void ScreenCastStream::record(Contents contents)
         }
     }
 
-    addDamage(spa_buffer, effectiveDamage);
+    addDamage(spa_buffer, damage);
     addHeader(spa_buffer);
 
     if (effectiveContents & Content::Video) {
@@ -870,59 +864,6 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
         QPainter painter(&dest);
         painter.drawImage(QRect({0, 0}, targetSize), image);
     }
-}
-
-QRegion ScreenCastStream::addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cursor)
-{
-    if (!m_source->includesCursor(cursor)) {
-        const QRegion damage = m_cursor.lastRect.toAlignedRect();
-        m_cursor.visible = false;
-        m_cursor.lastRect = QRectF();
-        return damage;
-    }
-
-    const QRectF cursorRect = scaledRect(m_source->mapFromGlobal(cursor->geometry()), m_source->devicePixelRatio());
-    if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
-        QPainter painter(memfd->view.image());
-        const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
-        painter.drawImage(cursorRect, cursorImage.image());
-    } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
-        if (m_cursor.invalid) {
-            m_cursor.invalid = false;
-            const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
-            if (cursorImage.isNull()) {
-                m_cursor.texture = nullptr;
-            } else {
-                m_cursor.texture = GLTexture::upload(cursorImage.image());
-            }
-        }
-
-        if (m_cursor.texture) {
-            GLFramebuffer::pushFramebuffer(dmabuf->framebuffer.get());
-
-            auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-
-            QMatrix4x4 mvp;
-            mvp.scale(1, -1);
-            mvp.ortho(QRectF(QPointF(0, 0), dmabuf->texture->size()));
-            mvp.translate(cursorRect.x(), cursorRect.y());
-            shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            m_cursor.texture->render(cursorRect.size());
-            glDisable(GL_BLEND);
-
-            ShaderManager::instance()->popShader();
-            GLFramebuffer::popFramebuffer();
-        }
-    }
-
-    const QRegion damage = QRegion{m_cursor.lastRect.toAlignedRect()} | cursorRect.toAlignedRect();
-    m_cursor.visible = true;
-    m_cursor.lastRect = cursorRect;
-
-    return damage;
 }
 
 void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode)

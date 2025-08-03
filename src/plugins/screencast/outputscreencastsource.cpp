@@ -65,6 +65,11 @@ qreal OutputScreenCastSource::devicePixelRatio() const
     return m_output->scale();
 }
 
+void OutputScreenCastSource::setRenderCursor(bool enable)
+{
+    m_cursorView->setExclusive(!enable);
+}
+
 QRegion OutputScreenCastSource::render(QImage *target, const QRegion &bufferRepair)
 {
     auto texture = GLTexture::allocate(GL_RGBA8, target->size());
