@@ -923,7 +923,7 @@ msgstr "تحت الفأرة"
 #: rulesmodel.cpp:811
 #, kde-format
 msgid "On Main Window"
-msgstr "على النافذة الرئيسية"
+msgstr "على النافذة الرئيسة"
 
 #: rulesmodel.cpp:818
 #, kde-format
