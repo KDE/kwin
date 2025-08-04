@@ -869,7 +869,13 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         const QVector2D halfpixel(0.5 / read->colorAttachment()->width(),
                                   0.5 / read->colorAttachment()->height());
 
-        const QRectF nativeBox = snapToPixelGridF(scaledRect(w->frameGeometry(), viewport.scale()))
+        const QRectF transformedRect = QRectF{
+            w->frameGeometry().x() + data.xTranslation(),
+            w->frameGeometry().y() + data.yTranslation(),
+            w->frameGeometry().width() * data.xScale(),
+            w->frameGeometry().height() * data.yScale(),
+        };
+        const QRectF nativeBox = snapToPixelGridF(scaledRect(transformedRect, viewport.scale()))
                                      .translated(-deviceBackgroundRect.topLeft());
         const BorderRadius nativeCornerRadius = cornerRadius.scaled(viewport.scale()).rounded();
 
