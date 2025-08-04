@@ -36,7 +36,7 @@ namespace Wayland
 static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
 
 WaylandEglPrimaryLayer::WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend)
-    : OutputLayer(output)
+    : WaylandLayer(output)
     , m_backend(backend)
 {
 }
@@ -62,7 +62,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::doBeginFrame()
         return std::nullopt;
     }
 
-    const QSize nativeSize = m_output->modeSize();
+    const QSize nativeSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
         const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
         for (const uint32_t &candidateFormat : {DRM_FORMAT_XRGB2101010, DRM_FORMAT_XRGB8888}) {
@@ -90,7 +90,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::doBeginFrame()
     m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
     m_query->begin();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer(), m_output->colorDescription()),
+        .renderTarget = RenderTarget(m_buffer->framebuffer(), m_color),
         .repaint = repair,
     };
 }
@@ -103,7 +103,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     glFlush();
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
-    static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), damagedRegion);
+    setBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), damagedRegion);
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
 
     m_damageJournal.add(damagedRegion);
@@ -112,18 +112,15 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
 
 bool WaylandEglPrimaryLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
-    // TODO use viewporter to relax this check
-    if (sourceRect() != targetRect() || targetRect() != QRectF(QPointF(0, 0), m_output->modeSize())) {
-        return false;
-    }
-    if (offloadTransform() != OutputTransform::Kind::Normal || colorDescription() != m_output->layerBlendingColor()) {
+    if (!test()) {
         return false;
     }
     auto presentationBuffer = m_backend->backend()->importBuffer(buffer);
-    if (presentationBuffer) {
-        static_cast<WaylandOutput *>(m_output)->setPrimaryBuffer(presentationBuffer, targetRect());
+    if (!presentationBuffer) {
+        return false;
     }
-    return presentationBuffer;
+    setBuffer(presentationBuffer, infiniteRegion());
+    return true;
 }
 
 DrmDevice *WaylandEglPrimaryLayer::scanoutDevice() const

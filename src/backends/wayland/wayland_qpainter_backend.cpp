@@ -26,7 +26,7 @@ namespace Wayland
 {
 
 WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
-    : OutputLayer(output)
+    : WaylandLayer(output)
     , m_waylandOutput(output)
     , m_backend(backend)
 {
@@ -43,7 +43,7 @@ QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFrame()
 {
-    const QSize nativeSize(m_waylandOutput->modeSize());
+    const QSize nativeSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
         m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), nativeSize, DRM_FORMAT_XRGB8888);
     }
@@ -55,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFra
 
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_back->view()->image(), m_output->colorDescription()),
+        .renderTarget = RenderTarget(m_back->view()->image(), m_color),
         .repaint = accumulateDamage(m_back->age()),
     };
 }
@@ -65,7 +65,7 @@ bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, cons
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
     m_damageJournal.add(damagedRegion);
-    m_waylandOutput->setPrimaryBuffer(m_waylandOutput->backend()->importBuffer(m_back->buffer()), damagedRegion);
+    setBuffer(m_waylandOutput->backend()->importBuffer(m_back->buffer()), damagedRegion);
     m_swapchain->release(m_back);
     return true;
 }

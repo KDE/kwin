@@ -19,6 +19,7 @@ struct wp_presentation;
 struct wp_tearing_control_manager_v1;
 struct wp_fractional_scale_manager_v1;
 struct wp_viewporter;
+struct wp_single_pixel_buffer_manager_v1;
 
 namespace KWayland
 {
@@ -31,6 +32,7 @@ class RelativePointerManager;
 class Seat;
 class XdgDecorationManager;
 class XdgShell;
+class SubCompositor;
 }
 }
 
@@ -78,6 +80,7 @@ public:
     KWayland::Client::RelativePointerManager *relativePointerManager() const;
     KWayland::Client::Seat *seat() const;
     KWayland::Client::XdgDecorationManager *xdgDecorationManager() const;
+    KWayland::Client::SubCompositor *subCompositor() const;
     wl_shm *shm() const;
     KWayland::Client::XdgShell *xdgShell() const;
     WaylandLinuxDmabufV1 *linuxDmabuf() const;
@@ -86,6 +89,7 @@ public:
     ColorManager *colorManager() const;
     wp_fractional_scale_manager_v1 *fractionalScale() const;
     wp_viewporter *viewporter() const;
+    wp_single_pixel_buffer_manager_v1 *singlePixelManager() const;
 
 public Q_SLOTS:
     void flush();
@@ -101,10 +105,12 @@ private:
     wp_tearing_control_manager_v1 *m_tearingControl = nullptr;
     wp_fractional_scale_manager_v1 *m_fractionalScaleV1 = nullptr;
     wp_viewporter *m_viewporter = nullptr;
+    wp_single_pixel_buffer_manager_v1 *m_singlePixelManager = nullptr;
     std::unique_ptr<ColorManager> m_colorManager;
     std::unique_ptr<WaylandEventThread> m_eventThread;
     std::unique_ptr<WaylandLinuxDmabufV1> m_linuxDmabuf;
     std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::SubCompositor> m_subCompositor;
     std::unique_ptr<KWayland::Client::PointerConstraints> m_pointerConstraints;
     std::unique_ptr<KWayland::Client::PointerGestures> m_pointerGestures;
     std::unique_ptr<KWayland::Client::RelativePointerManager> m_relativePointerManager;

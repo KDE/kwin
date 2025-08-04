@@ -15,6 +15,7 @@
 #include "core/renderloop_p.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
+#include "wayland_layer.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
@@ -24,6 +25,7 @@
 
 #include "wayland-fractional-scale-v1-client-protocol.h"
 #include "wayland-presentation-time-client-protocol.h"
+#include "wayland-single-pixel-buffer-v1-client-protocol.h"
 #include "wayland-tearing-control-v1-client-protocol.h"
 #include "wayland-viewporter-client-protocol.h"
 #include "workspace.h"
@@ -131,11 +133,9 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         m_xdgDecoration.reset(manager->getToplevelDecoration(m_xdgShellSurface.get()));
         m_xdgDecoration->setMode(KWayland::Client::XdgDecoration::Mode::ServerSide);
     }
-
     Capabilities caps = Capability::Dpms;
-    if (auto manager = backend->display()->tearingControl()) {
+    if (backend->display()->tearingControl()) {
         caps |= Capability::Tearing;
-        m_tearingControl = wp_tearing_control_manager_v1_get_tearing_control(manager, *m_surface);
     }
     if (auto manager = backend->display()->colorManager()) {
         const bool supportsMinFeatures = manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_PARAMETRIC)
@@ -143,7 +143,6 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
             && manager->supportsFeature(WP_COLOR_MANAGER_V1_FEATURE_SET_LUMINANCES)
             && manager->supportsTransferFunction(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22);
         if (supportsMinFeatures) {
-            m_colorSurface = wp_color_manager_v1_get_surface(manager->object(), *m_surface);
             m_colorSurfaceFeedback = std::make_unique<ColorSurfaceFeedback>(wp_color_manager_v1_get_surface_feedback(manager->object(), *m_surface));
             connect(m_colorSurfaceFeedback.get(), &ColorSurfaceFeedback::preferredColorChanged, this, &WaylandOutput::updateColor);
         }
@@ -154,6 +153,8 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     }
     if (auto viewporter = backend->display()->viewporter()) {
         m_viewport = wp_viewporter_get_viewport(viewporter, *m_surface);
+    } else {
+        qFatal("support for viewporter is required");
     }
     setInformation(Information{
         .name = name,
@@ -192,18 +193,7 @@ WaylandOutput::~WaylandOutput()
         wp_presentation_feedback_destroy(m_presentationFeedback);
         m_presentationFeedback = nullptr;
     }
-    if (m_tearingControl) {
-        wp_tearing_control_v1_destroy(m_tearingControl);
-        m_tearingControl = nullptr;
-    }
-    if (m_colorSurface) {
-        wp_color_management_surface_v1_destroy(m_colorSurface);
-        m_colorSurface = nullptr;
-    }
-    if (m_viewport) {
-        wp_viewport_destroy(m_viewport);
-        m_viewport = nullptr;
-    }
+    wp_viewport_destroy(m_viewport);
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
     m_surface.reset();
@@ -227,17 +217,6 @@ void WaylandOutput::updateColor()
     // we don't actually know this, but we have to assume *something*
     next.layerBlendingColor = next.colorDescription;
     setState(next);
-    if (m_colorSurface) {
-        const auto imageDescription = m_backend->display()->colorManager()->createImageDescription(next.colorDescription);
-        wp_color_management_surface_v1_set_image_description(m_colorSurface, imageDescription, WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
-        wp_image_description_v1_destroy(imageDescription);
-    }
-}
-
-void WaylandOutput::setPrimaryBuffer(wl_buffer *buffer, const QRegion &damage)
-{
-    m_presentationBuffer = buffer;
-    m_lastDamage = damage;
 }
 
 static void handleDiscarded(void *data,
@@ -294,39 +273,28 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
         m_cursor->setEnabled(cursorLayer->isEnabled());
         // TODO also move the actual cursor image update here too...
     }
-    if (!layersToUpdate.contains(Compositor::self()->backend()->primaryLayer(this))) {
-        if (!m_mapped) {
-            return false;
-        }
-        // we still need to commit the surface anyways, to get presentation feedback
-        if (auto presentationTime = m_backend->display()->presentationTime()) {
-            m_presentationFeedback = wp_presentation_feedback(presentationTime, *m_surface);
-            wp_presentation_feedback_add_listener(m_presentationFeedback, &s_presentationListener, this);
-            m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    if (!m_mapped) {
+        // we only ever want a black background
+        if (auto singlePixel = m_backend->display()->singlePixelManager()) {
+            auto buffer = wp_single_pixel_buffer_manager_v1_create_u32_rgba_buffer(singlePixel, 0, 0, 0, 0xFFFFFFFF);
+            m_surface->attachBuffer(buffer);
         } else {
-            m_surface->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
+            qFatal("single pixel buffers are required");
         }
-        m_frame = frame;
-        return true;
+        m_mapped = true;
     }
-    if (!m_presentationBuffer) {
-        return false;
-    }
-    if (m_tearingControl) {
-        if (frame->presentationMode() == PresentationMode::Async) {
-            wp_tearing_control_v1_set_presentation_hint(m_tearingControl, WP_TEARING_CONTROL_V1_PRESENTATION_HINT_ASYNC);
-        } else {
-            wp_tearing_control_v1_set_presentation_hint(m_tearingControl, WP_TEARING_CONTROL_V1_PRESENTATION_HINT_VSYNC);
+    wp_viewport_set_destination(m_viewport, geometry().width(), geometry().height());
+    m_surface->setScale(1);
+    // commit the subsurfaces before the main surface
+    for (OutputLayer *layer : layersToUpdate) {
+        // TODO maybe also make the cursor a WaylandLayer?
+        if (layer != cursorLayer) {
+            static_cast<WaylandLayer *>(layer)->commit(frame->presentationMode());
         }
+    }
+    if (m_backend->display()->tearingControl()) {
         m_renderLoop->setPresentationMode(frame->presentationMode());
     }
-    if (m_viewport) {
-        wp_viewport_set_destination(m_viewport, geometry().width(), geometry().height());
-    }
-    m_surface->attachBuffer(m_presentationBuffer);
-    m_surface->damage(m_lastDamage);
-    m_surface->setScale(1);
-    m_presentationBuffer = nullptr;
     if (auto presentationTime = m_backend->display()->presentationTime()) {
         m_presentationFeedback = wp_presentation_feedback(presentationTime, *m_surface);
         wp_presentation_feedback_add_listener(m_presentationFeedback, &s_presentationListener, this);
@@ -334,7 +302,6 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     } else {
         m_surface->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
     }
-    m_mapped = true;
     m_frame = frame;
     return true;
 }

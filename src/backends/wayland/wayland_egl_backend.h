@@ -9,10 +9,10 @@
 */
 #pragma once
 
-#include "core/outputlayer.h"
 #include "opengl/eglbackend.h"
 #include "opengl/eglnativefence.h"
 #include "utils/damagejournal.h"
+#include "wayland_layer.h"
 
 #include <memory>
 
@@ -32,7 +32,7 @@ class WaylandBackend;
 class WaylandOutput;
 class WaylandEglBackend;
 
-class WaylandEglPrimaryLayer : public OutputLayer
+class WaylandEglPrimaryLayer : public WaylandLayer
 {
 public:
     WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend);

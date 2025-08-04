@@ -9,9 +9,9 @@
 */
 #pragma once
 
-#include "core/outputlayer.h"
 #include "qpainter/qpainterbackend.h"
 #include "utils/damagejournal.h"
+#include "wayland_layer.h"
 
 #include <QImage>
 #include <QObject>
@@ -31,7 +31,7 @@ class WaylandDisplay;
 class WaylandOutput;
 class WaylandQPainterBackend;
 
-class WaylandQPainterPrimaryLayer : public OutputLayer
+class WaylandQPainterPrimaryLayer : public WaylandLayer
 {
 public:
     WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend);

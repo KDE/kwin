@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_backend.h"
+#include "compositor.h"
 #include "core/drmdevice.h"
 #include "input.h"
 #include "wayland_display.h"
@@ -511,6 +512,10 @@ std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {
+        const auto primaryLayer = Compositor::self()->backend()->primaryLayer(output);
+        if (static_cast<WaylandLayer *>(primaryLayer)->surface() == nativeSurface) {
+            return output;
+        }
         if (output->surface() == nativeSurface) {
             return output;
         }
