@@ -70,7 +70,7 @@ private:
  * The XdgSessionManagerV1Interface compositor extension that allows clients to create sessions
  * for toplevel surfaces that persist across compositor and application restarts.
  *
- * The XdgSessionManagerV1Interface corresponds to the Wayland interface @c zxx_session_manager_v1.
+ * The XdgSessionManagerV1Interface corresponds to the Wayland interface @c xx_session_manager_v1.
  */
 class KWIN_EXPORT XdgSessionManagerV1Interface : public QObject
 {
@@ -93,7 +93,7 @@ private:
 /**
  * The XdgApplicationSessionV1Interface class represents a session for an application.
  *
- * The XdgApplicationSessionV1Interface corresponds to the Wayland interface @c zxx_session_v1.
+ * The XdgApplicationSessionV1Interface corresponds to the Wayland interface @c xx_session_v1.
  */
 class KWIN_EXPORT XdgApplicationSessionV1Interface : public QObject
 {
@@ -135,7 +135,7 @@ private:
 /**
  * The XdgToplevelSessionV1Interface class represents a session for an xdg_toplevel surface.
  *
- * The XdgToplevelSessionV1Interface corresponds to the Wayland interface @c zxx_toplevel_session_v1.
+ * The XdgToplevelSessionV1Interface corresponds to the Wayland interface @c xx_toplevel_session_v1.
  */
 class KWIN_EXPORT XdgToplevelSessionV1Interface : public QObject
 {
