@@ -572,6 +572,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         RenderView *view;
         bool directScanout = false;
         bool directScanoutOnly = false;
+        bool highPriority = false;
         QRegion surfaceDamage;
         uint32_t requiredAlphaBits;
     };
@@ -582,6 +583,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         .view = primaryView,
         .directScanout = false,
         .directScanoutOnly = false,
+        .highPriority = false,
         .surfaceDamage = QRegion{},
         .requiredAlphaBits = 0,
     });
@@ -663,6 +665,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                 .view = view.get(),
                 .directScanout = false,
                 .directScanoutOnly = false,
+                .highPriority = true,
                 .surfaceDamage = QRegion{},
                 .requiredAlphaBits = 8,
             });
@@ -691,6 +694,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             .view = view.get(),
             .directScanout = true,
             .directScanoutOnly = true,
+            .highPriority = false,
             .surfaceDamage = layer->repaints(),
             .requiredAlphaBits = 0,
         });
@@ -733,17 +737,24 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
         }
         if (!result && !primaryFailure) {
-            // fall back to disabling the remaining layers
-            auto toDisable = layers | std::views::filter([](const LayerData &layer) {
-                return layer.view->layer()->type() != OutputLayerType::Primary
-                    && layer.view->layer()->isEnabled();
-            });
-            if (!toDisable.empty()) {
-                for (const auto &layer : toDisable) {
-                    layer.view->layer()->setEnabled(false);
-                    layer.view->layer()->scheduleRepaint(nullptr);
+            // disable all low priority layers, and if that isn't enough
+            // the high priority layers as well
+            for (bool priority : {false, true}) {
+                auto toDisable = layers | std::views::filter([priority](const LayerData &layer) {
+                    return layer.view->layer()->isEnabled()
+                        && layer.highPriority == priority
+                        && layer.view->layer()->type() != OutputLayerType::Primary;
+                });
+                if (!toDisable.empty()) {
+                    for (const auto &layer : toDisable) {
+                        layer.view->layer()->setEnabled(false);
+                        layer.view->layer()->scheduleRepaint(nullptr);
+                    }
+                    result = output->testPresentation(frame);
+                    if (result) {
+                        break;
+                    }
                 }
-                result = output->testPresentation(frame);
             }
         }
     }
