@@ -451,6 +451,19 @@ static bool renderLayer(RenderView *view, Output *output, const std::shared_ptr<
     return view->layer()->endFrame(bufferDamage, surfaceDamage, frame.get());
 }
 
+static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type, std::optional<int> minZPos)
+{
+    const auto it = std::ranges::find_if(layers, [type, minZPos](OutputLayer *layer) {
+        if (minZPos.has_value() && layer->maxZpos() < *minZPos) {
+            return false;
+        }
+        return layer->type() == type;
+    });
+    return it == layers.end() ? nullptr : *it;
+}
+
+static const bool s_forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -543,15 +556,75 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setArtificialHdrHeadroom(1);
     }
 
-    const auto cursorViewIt = m_cursorViews.find(renderLoop);
-    if (cursorViewIt != m_cursorViews.end()) {
-        cursorViewIt->second->prePaint();
-        layers.push_back(LayerData{
-            .view = cursorViewIt->second.get(),
-            .directScanout = false,
-            .surfaceDamage = QRegion{},
-            .requiredAlphaBits = 8,
-        });
+    QList<OutputLayer *> unusedOutputLayers = m_backend->compatibleOutputLayers(output);
+    // the primary output layer is currently always used for the main content
+    unusedOutputLayers.removeOne(primaryView->layer());
+
+    Item *cursorItem = m_scene->cursorItem();
+    if (!m_brokenCursors[renderLoop] && cursorItem->isVisible() && cursorItem->mapToScene(cursorItem->boundingRect()).intersects(output->geometryF())) {
+        OutputLayer *cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
+        if (!cursorLayer) {
+            cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::EfficientOverlay, primaryView->layer()->zpos() + 1);
+        }
+        if (!cursorLayer) {
+            cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::GenericLayer, primaryView->layer()->zpos() + 1);
+        }
+        if (cursorLayer) {
+            auto &view = m_cursorViews[renderLoop];
+            if (!view || view->layer() != cursorLayer) {
+                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, output, cursorLayer);
+                connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [output, cursorView = view.get()]() {
+                    // this just deals with moving the plane asynchronously, for improved latency.
+                    // enabling, disabling and updating the cursor image still happen in composite()
+                    const auto outputLayer = cursorView->layer();
+                    if (!outputLayer->isEnabled()
+                        || !outputLayer->repaints().isEmpty()
+                        || !cursorView->isVisible()
+                        || cursorView->needsRepaint()) {
+                        // composite() handles this
+                        return;
+                    }
+                    std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
+                    if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
+                        const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
+                            // this is intentionally using a tiny bit higher refresh rate than the minimum
+                            // so that slight differences in timing don't drop us below the minimum
+                            return value + 2;
+                        }).value_or(30);
+                        maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
+                    }
+                    const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
+                    const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
+                    outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
+                    outputLayer->setEnabled(true);
+                    if (output->presentAsync(outputLayer, maxVrrCursorDelay)) {
+                        // prevent composite() from also pushing an update with the cursor layer
+                        // to avoid adding cursor updates that are synchronized with primary layer updates
+                        outputLayer->resetRepaints();
+                    }
+                });
+            }
+            view->prePaint();
+            layers.push_back(LayerData{
+                .view = view.get(),
+                .directScanout = false,
+                .surfaceDamage = QRegion{},
+                .requiredAlphaBits = 8,
+            });
+            cursorLayer->setZpos(cursorLayer->maxZpos());
+            unusedOutputLayers.removeOne(cursorLayer);
+        } else {
+            m_cursorViews.erase(renderLoop);
+        }
+    } else {
+        m_cursorViews.erase(renderLoop);
+    }
+
+    // disable entirely unused output layers
+    for (OutputLayer *layer : unusedOutputLayers) {
+        layer->setEnabled(false);
+        // TODO only add the layer to `toUpdate` when necessary
+        toUpdate.push_back(layer);
     }
 
     // update all of them for the ideal configuration
@@ -631,7 +704,6 @@ void Compositor::composite(RenderLoop *renderLoop)
     // but the drm backend, where that's necessary, tracks that time itself
     totalTimeQuery->end();
     frame->addRenderTimeQuery(std::move(totalTimeQuery));
-    bool disableHardwareCursor = false;
     if (result && !output->present(toUpdate, frame)) {
         // legacy modesetting can't do (useful) presentation tests
         // and even with atomic modesetting, drivers are buggy and atomic tests
@@ -671,7 +743,8 @@ void Compositor::composite(RenderLoop *renderLoop)
                     // to prevent constantly attempting to render the hardware cursor again
                     // this should only ever happen with legacy modesetting, where
                     // presentation can't be tested
-                    disableHardwareCursor = true;
+                    qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
+                    m_brokenCursors[renderLoop] = true;
                 }
             } else {
                 qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
@@ -686,11 +759,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    // the layers have to stay valid until after postPaint, so these need to happen after it
-    if (disableHardwareCursor) {
-        qCWarning(KWIN_CORE, "Disabling hardware cursor because of presentation failure");
-        m_cursorViews.erase(renderLoop);
-    }
+    // the layers have to stay valid until after postPaint, so this needs to happen after it
     if (!result) {
         qCWarning(KWIN_CORE, "Failed to find a working output layer configuration! Enabled layers:");
         for (const auto &layer : layers) {
@@ -709,8 +778,6 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 }
 
-static const bool s_forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
-
 void Compositor::addOutput(Output *output)
 {
     if (output->isPlaceholder()) {
@@ -721,6 +788,7 @@ void Compositor::addOutput(Output *output)
     connect(output, &Output::outputLayersChanged, this, [this, output]() {
         assignOutputLayers(output);
     });
+    m_brokenCursors[output->renderLoop()] = false;
 }
 
 void Compositor::removeOutput(Output *output)
@@ -732,17 +800,7 @@ void Compositor::removeOutput(Output *output)
     disconnect(output, &Output::outputLayersChanged, this, nullptr);
     m_cursorViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
-}
-
-static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerType type, std::optional<int> minZPos)
-{
-    const auto it = std::ranges::find_if(layers, [type, minZPos](OutputLayer *layer) {
-        if (minZPos && layer->zpos() < *minZPos) {
-            return false;
-        }
-        return layer->type() == type;
-    });
-    return it == layers.end() ? nullptr : *it;
+    m_brokenCursors.erase(output->renderLoop());
 }
 
 void Compositor::assignOutputLayers(Output *output)
@@ -764,55 +822,8 @@ void Compositor::assignOutputLayers(Output *output)
             view->setScale(output->scale());
         });
     }
-
-    auto cursorLayer = findLayer(layers, OutputLayerType::CursorOnly, primaryLayer->zpos() + 1);
-    if (!cursorLayer) {
-        cursorLayer = findLayer(layers, OutputLayerType::EfficientOverlay, primaryLayer->zpos() + 1);
-    }
-    if (!cursorLayer) {
-        cursorLayer = findLayer(layers, OutputLayerType::GenericLayer, primaryLayer->zpos() + 1);
-    }
-    if (cursorLayer && !s_forceSoftwareCursor) {
-        auto &cursorView = m_cursorViews[output->renderLoop()];
-        if (cursorView) {
-            disconnect(cursorView->layer(), &OutputLayer::repaintScheduled, cursorView.get(), nullptr);
-            cursorView->setLayer(cursorLayer);
-        } else {
-            cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, cursorLayer);
-        }
-        connect(cursorLayer, &OutputLayer::repaintScheduled, cursorView.get(), [output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
-            // this just deals with moving the plane asynchronously, for improved latency.
-            // enabling, disabling and updating the cursor image happen in composite()
-            const auto outputLayer = cursorView->layer();
-            if (!outputLayer->isEnabled()
-                || !outputLayer->repaints().isEmpty()
-                || !cursorView->isVisible()
-                || cursorView->needsRepaint()) {
-                // composite() handles this
-                return;
-            }
-            std::optional<std::chrono::nanoseconds> maxVrrCursorDelay;
-            if (output->renderLoop()->activeWindowControlsVrrRefreshRate()) {
-                const auto effectiveMinRate = output->minVrrRefreshRateHz().transform([](uint32_t value) {
-                    // this is intentionally using a tiny bit higher refresh rate than the minimum
-                    // so that slight differences in timing don't drop us below the minimum
-                    return value + 2;
-                }).value_or(30);
-                maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
-            }
-            const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
-            const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
-            outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
-            outputLayer->setEnabled(true);
-            if (output->presentAsync(outputLayer, maxVrrCursorDelay)) {
-                // prevent composite() from also pushing an update with the cursor layer
-                // to avoid adding cursor updates that are synchronized with primary layer updates
-                outputLayer->resetRepaints();
-            }
-        });
-    } else {
-        m_cursorViews.erase(output->renderLoop());
-    }
+    // will be re-assigned in the next composite() pass
+    m_cursorViews.erase(output->renderLoop());
 }
 
 } // namespace KWin
