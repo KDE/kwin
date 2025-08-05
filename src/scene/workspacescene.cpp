@@ -412,7 +412,6 @@ void WorkspaceScene::preparePaintSimpleScreen()
         Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        accumulateRepaints(windowItem, painted_delegate, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
@@ -447,7 +446,8 @@ QRegion WorkspaceScene::collectDamage()
         // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
         QRegion opaque;
         for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
-            const auto &paintData = m_paintContext.phase2Data.at(i);
+            auto &paintData = m_paintContext.phase2Data[i];
+            accumulateRepaints(paintData.item, painted_delegate, &paintData.region);
             m_paintContext.damage += paintData.region - opaque;
             if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
                 opaque += paintData.opaque;
