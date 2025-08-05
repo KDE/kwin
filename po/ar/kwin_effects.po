@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-26 02:49+0000\n"
-"PO-Revision-Date: 2025-08-03 12:36+0400\n"
+"PO-Revision-Date: 2025-08-04 20:12+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -151,7 +151,7 @@ msgstr "الأسطح"
 #: desktopgrid/desktopgrid_config.ui:35
 #, kde-format
 msgid "Automatic"
-msgstr "آلي"
+msgstr "آليّ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: desktopgrid/desktopgrid_config.ui:40
@@ -340,7 +340,7 @@ msgstr "مدّة الحركة:"
 #, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr "الافتراضية"
+msgstr "المبدئية"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: magiclamp/magiclamp_config.ui:39
@@ -558,7 +558,7 @@ msgstr "بدل النظرة العامة"
 #: windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Layout mode:"
-msgstr "وضع التصميم:"
+msgstr "وضع التخطيط:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
 #: overview/kcm/overvieweffectkcm.ui:56

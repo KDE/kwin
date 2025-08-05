@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2025-05-31 11:00+0400\n"
+"PO-Revision-Date: 2025-08-04 20:19+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -453,8 +453,7 @@ msgid ""
 "some time.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>إذا  مكن هذا الخيار ، فسيلغى تظليل النافذة المظللة "
-"تلقائيًا عندما يكون مؤشر الفأرة فوق شريط العنوان لبعض الوقت. </p></body></"
-"html>"
+"آليًّا عندما يكون مؤشر الفأرة فوق شريط العنوان لبعض الوقت. </p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -776,7 +775,7 @@ msgstr ""
 "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
 "italic;\">منخفض:</span> تمكن الوقاية ؛ عندما لا تحتوي بعض النوافذ على دعم "
-"للآلية الأساسية ولا يمكن لـ كوين أن يقرر بشكل موثوق ما إذا كان سيتم تنشيط "
+"للآليّة الأساسية ولا يمكن لـ كوين أن يقرر بشكل موثوق ما إذا كان سيتم تنشيط "
 "النافذة أم لا ، فسيتم تنشيطها. قد يكون لهذا الإعداد نتائج أسوأ وأفضل من "
 "المستوى المتوسط ​​، اعتمادًا على التطبيقات.</li><li style=\" margin-top:0px; "
 "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
@@ -790,7 +789,7 @@ msgstr ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
 "italic;\">متطرف:</span> يجب على المستخدم تنشيط جميع النوافذ بشكل صريح.</li></"
 "ul><p> تميز النوافذ الممنوعة من سرقة التركيز على أنها تتطلب الانتباه ، مما "
-"يعني افتراضيًا أنه سيتم تمييز إدخال شريط المهام الخاص بهم. يمكن تغيير هذا في "
+"يعني مبدئيًا أنه سيتم تمييز إدخال شريط المهام الخاص بهم. يمكن تغيير هذا في "
 "وحدة التحكم في الإخطارات. .</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
@@ -862,8 +861,8 @@ msgid ""
 "When this option is enabled, a window in the background will automatically "
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
-"إذا كان هذا الخيار ممكّن، فإن أية نافذة في الخلفية سوف تنقل تلقائياً إلى "
-"الأمام عندما تضع مؤشر الفأرة فوقها لفترة من الزمن."
+"إذا كان هذا الخيار ممكّن، فإن أية نافذة في الخلفية سوف تنقل آليّاً إلى الأمام "
+"عندما تضع مؤشر الفأرة فوقها لفترة من الزمن."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
@@ -878,8 +877,8 @@ msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
 "automatically come to the front."
 msgstr ""
-"هذا هو التأخير الذي يتم بعده نقل أي نافذة التي يوجد فوقها مؤشر الفأرة "
-"تلقائياً إلى الأمام."
+"هذا هو التأخير الذي يتم بعده نقل أي نافذة التي يوجد فوقها مؤشر الفأرة آليّاً "
+"إلى الأمام."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
