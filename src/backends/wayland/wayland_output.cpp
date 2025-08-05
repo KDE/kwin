@@ -151,11 +151,7 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         m_fractionalScale = wp_fractional_scale_manager_v1_get_fractional_scale(manager, *m_surface);
         wp_fractional_scale_v1_add_listener(m_fractionalScale, &s_fractionalScaleListener, this);
     }
-    if (auto viewporter = backend->display()->viewporter()) {
-        m_viewport = wp_viewporter_get_viewport(viewporter, *m_surface);
-    } else {
-        qFatal("support for viewporter is required");
-    }
+    m_viewport = wp_viewporter_get_viewport(backend->display()->viewporter(), *m_surface);
     setInformation(Information{
         .name = name,
         .model = name,
@@ -275,12 +271,8 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     }
     if (!m_mapped) {
         // we only ever want a black background
-        if (auto singlePixel = m_backend->display()->singlePixelManager()) {
-            auto buffer = wp_single_pixel_buffer_manager_v1_create_u32_rgba_buffer(singlePixel, 0, 0, 0, 0xFFFFFFFF);
-            m_surface->attachBuffer(buffer);
-        } else {
-            qFatal("single pixel buffers are required");
-        }
+        auto buffer = wp_single_pixel_buffer_manager_v1_create_u32_rgba_buffer(m_backend->display()->singlePixelManager(), 0, 0, 0, 0xFFFFFFFF);
+        m_surface->attachBuffer(buffer);
         m_mapped = true;
     }
     wp_viewport_set_destination(m_viewport, geometry().width(), geometry().height());

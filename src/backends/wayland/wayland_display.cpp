@@ -391,6 +391,34 @@ bool WaylandDisplay::initialize(const QString &socketName)
     wl_display_roundtrip(m_display);
     wl_display_roundtrip(m_display); // get dmabuf formats
 
+    if (!m_compositor) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "wl_compositor isn't supported by the host compositor");
+        return false;
+    }
+    if (!m_subCompositor) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "wl_subcompositor isn't supported by the host compositor");
+        return false;
+    }
+    if (!m_xdgShell) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "xdg_shell isn't supported by the host compositor");
+        return false;
+    }
+    if (!m_singlePixelManager) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "wp_single_pixel_buffer_manager_v1 isn't supported by the host compositor");
+        return false;
+    }
+    if (!m_viewporter) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "wp_viewporter isn't supported by the host compositor");
+        return false;
+    }
+    if (!m_seat) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "wl_seat isn't supported by the host compositor");
+        return false;
+    }
+    if (!m_pointerConstraints) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "zwp_pointer_constraints_v1 isn't supported by the host compositor");
+        return false;
+    }
     return true;
 }
 
