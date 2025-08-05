@@ -693,6 +693,44 @@ Connection::~Connection()
     outputDevicesV2.clear();
 }
 
+class WaylandSyncPoint : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit WaylandSyncPoint(KWayland::Client::ConnectionThread *connection, KWayland::Client::EventQueue *eventQueue)
+    {
+        static const wl_callback_listener listener = {
+            .done = [](void *data, wl_callback *callback, uint32_t callback_data) {
+            auto syncPoint = static_cast<WaylandSyncPoint *>(data);
+            Q_EMIT syncPoint->done();
+        },
+        };
+
+        m_callback = wl_display_sync(connection->display());
+        eventQueue->addProxy(m_callback);
+        wl_callback_add_listener(m_callback, &listener, this);
+    }
+
+    ~WaylandSyncPoint() override
+    {
+        wl_callback_destroy(m_callback);
+    }
+
+Q_SIGNALS:
+    void done();
+
+private:
+    wl_callback *m_callback;
+};
+
+bool Connection::sync()
+{
+    WaylandSyncPoint syncPoint(connection, queue);
+    QSignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
+    return doneSpy.wait();
+}
+
 KWayland::Client::ConnectionThread *waylandConnection()
 {
     return s_waylandConnection->connection;
@@ -938,42 +976,9 @@ void flushWaylandConnection()
     }
 }
 
-class WaylandSyncPoint : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit WaylandSyncPoint(KWayland::Client::ConnectionThread *connection, KWayland::Client::EventQueue *eventQueue)
-    {
-        static const wl_callback_listener listener = {
-            .done = [](void *data, wl_callback *callback, uint32_t callback_data) {
-            auto syncPoint = static_cast<WaylandSyncPoint *>(data);
-            Q_EMIT syncPoint->done();
-        },
-        };
-
-        m_callback = wl_display_sync(connection->display());
-        eventQueue->addProxy(m_callback);
-        wl_callback_add_listener(m_callback, &listener, this);
-    }
-
-    ~WaylandSyncPoint() override
-    {
-        wl_callback_destroy(m_callback);
-    }
-
-Q_SIGNALS:
-    void done();
-
-private:
-    wl_callback *m_callback;
-};
-
 bool waylandSync()
 {
-    WaylandSyncPoint syncPoint(s_waylandConnection->connection, s_waylandConnection->queue);
-    QSignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
-    return doneSpy.wait();
+    return s_waylandConnection->sync();
 }
 
 std::unique_ptr<KWayland::Client::Surface> createSurface()
@@ -1216,6 +1221,11 @@ std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1::reason rea
         qWarning() << "Could not create a xx_session_v1 because xx_session_manager_v1 global is not bound";
         return nullptr;
     }
+    return createXdgSessionV1(manager, reason, sessionId);
+}
+
+std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1 *manager, XdgSessionManagerV1::reason reason, const QString &sessionId)
+{
     return std::make_unique<XdgSessionV1>(manager->get_session(reason, sessionId));
 }
 

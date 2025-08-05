@@ -31,6 +31,7 @@ private Q_SLOTS:
     void addMappedToplevelSession();
     void restoreToplevelSession();
     void restoreMappedToplevelSession();
+    void replaceSession();
 };
 
 void TestXdgSession::initTestCase()
@@ -210,6 +211,50 @@ void TestXdgSession::restoreMappedToplevelSession()
 
     QSignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(connectionErrorSpy.wait());
+}
+
+void TestXdgSession::replaceSession()
+{
+    // A naughty client attempts to create a session twice -> a protocol error and lots of spanking.
+    {
+        auto connection = Test::Connection::setup(Test::AdditionalWaylandInterface::XdgSessionV1);
+
+        std::unique_ptr<Test::XdgSessionV1> firstSession = Test::createXdgSessionV1(connection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch);
+        QSignalSpy sessionCreatedSpy(firstSession.get(), &Test::XdgSessionV1::created);
+        QVERIFY(sessionCreatedSpy.wait());
+
+        const QString sessionId = sessionCreatedSpy.last().at(0).toString();
+        std::unique_ptr<Test::XdgSessionV1> secondSession = Test::createXdgSessionV1(connection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch, sessionId);
+        QSignalSpy connectionErrorSpy(connection->connection, &KWayland::Client::ConnectionThread::errorOccurred);
+        QVERIFY(connectionErrorSpy.wait());
+    }
+
+    // A client creates a session that's in use by another client -> send the replaced event to the other client.
+    {
+        auto firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::XdgSessionV1);
+        auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::XdgSessionV1);
+
+        std::unique_ptr<Test::XdgSessionV1> firstSession = Test::createXdgSessionV1(firstConnection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch);
+        QSignalSpy firstSessionCreatedSpy(firstSession.get(), &Test::XdgSessionV1::created);
+        QSignalSpy firstSessionReplacedSpy(firstSession.get(), &Test::XdgSessionV1::replaced);
+        QVERIFY(firstSessionCreatedSpy.wait());
+        QCOMPARE(firstSessionReplacedSpy.count(), 0);
+        QCOMPARE(firstSessionReplacedSpy.count(), 0);
+
+        const QString sessionId = firstSessionCreatedSpy.last().at(0).toString();
+        std::unique_ptr<Test::XdgSessionV1> secondSession = Test::createXdgSessionV1(secondConnection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch, sessionId);
+        QSignalSpy secondSessionCreatedSpy(secondSession.get(), &Test::XdgSessionV1::created);
+        QSignalSpy secondSessionReplacedSpy(secondSession.get(), &Test::XdgSessionV1::replaced);
+        QVERIFY(secondSessionCreatedSpy.wait());
+        QCOMPARE(secondSessionReplacedSpy.count(), 0);
+
+        // The first and the second connection can process events in different order, the sync is needed
+        // to guarantee that the first connection has processed all events before checking the signal spies.
+        // Without the sync, the test will be flaky.
+        QVERIFY(firstConnection->sync());
+        QCOMPARE(firstSessionCreatedSpy.count(), 1);
+        QCOMPARE(firstSessionReplacedSpy.count(), 1);
+    }
 }
 
 WAYLANDTEST_MAIN(TestXdgSession)

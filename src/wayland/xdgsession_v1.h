@@ -135,6 +135,11 @@ public:
     ~XdgApplicationSessionV1Interface() override;
 
     /**
+     * Returns the client that owns the session object.
+     */
+    wl_client *client() const;
+
+    /**
      * Returns the session storage for this application session.
      */
     XdgSessionStorageV1 *storage() const;
@@ -143,6 +148,15 @@ public:
      * Returns the handle that uniquely identifies this application session object.
      */
     QString sessionId() const;
+
+    /**
+     * Returns @c true if the session has been taken over by another client; otherwise returns @c false.
+     */
+    bool isReplaced() const;
+    void markReplaced();
+
+Q_SIGNALS:
+    void aboutToBeDestroyed();
 
 private:
     std::unique_ptr<XdgApplicationSessionV1InterfacePrivate> d;

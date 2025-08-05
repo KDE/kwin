@@ -797,6 +797,8 @@ struct Connection
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
     ~Connection();
 
+    bool sync();
+
     KWayland::Client::ConnectionThread *connection = nullptr;
     KWayland::Client::EventQueue *queue = nullptr;
     KWayland::Client::Compositor *compositor = nullptr;
@@ -959,6 +961,7 @@ std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Clien
 std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
 std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel);
 std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1::reason reason, const QString &sessionId = QString());
+std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1 *manager, XdgSessionManagerV1::reason reason, const QString &sessionId = QString());
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.

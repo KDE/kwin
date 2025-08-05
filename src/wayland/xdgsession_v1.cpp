@@ -54,16 +54,23 @@ void XdgSessionManagerV1InterfacePrivate::xx_session_manager_v1_get_session(Reso
         sessionHandle = QUuid::createUuid().toString(QUuid::WithoutBraces);
     }
 
-    if (sessions.contains(sessionHandle)) {
-        wl_resource_post_error(resource->handle, error_in_use,
-                               "%s session is already in use", qPrintable(sessionHandle));
-        return;
+    if (auto it = sessions.find(sessionHandle); it != sessions.end()) {
+        XdgApplicationSessionV1Interface *session = *it;
+        if (session->client() == resource->client()) {
+            wl_resource_post_error(resource->handle, error_in_use, "%s session is already in use", qPrintable(sessionHandle));
+            return;
+        }
+
+        // The session has been taken over by another client.
+        session->markReplaced();
     }
 
     auto applicationSession = new XdgApplicationSessionV1Interface(storage, sessionHandle, resource->client(), id, resource->version());
     sessions.insert(sessionHandle, applicationSession);
-    QObject::connect(applicationSession, &QObject::destroyed, q, [this, sessionHandle]() {
-        sessions.remove(sessionHandle);
+    QObject::connect(applicationSession, &XdgApplicationSessionV1Interface::aboutToBeDestroyed, q, [this, applicationSession]() {
+        if (!applicationSession->isReplaced()) {
+            sessions.remove(applicationSession->sessionId());
+        }
     });
 }
 
@@ -91,6 +98,7 @@ public:
     XdgSessionStorageV1 *storage;
     QHash<QString, XdgToplevelSessionV1Interface *> sessions;
     QString sessionId;
+    bool replaced = false;
 
 protected:
     void xx_session_v1_destroy_resource(Resource *resource) override;
@@ -128,7 +136,9 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_destroy(Resource *re
 
 void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_remove(Resource *resource)
 {
-    storage->remove(sessionId);
+    if (!replaced) {
+        storage->remove(sessionId);
+    }
     wl_resource_destroy(resource->handle);
 }
 
@@ -146,7 +156,9 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_add_toplevel(Resourc
     }
 
     // clear any storage, this ensures we won't restore anything
-    storage->remove(sessionId, toplevel_id);
+    if (!replaced) {
+        storage->remove(sessionId, toplevel_id);
+    }
 
     auto session = new XdgToplevelSessionV1Interface(q, toplevel, toplevel_id, resource->client(), id, resource->version());
     sessions.insert(toplevel_id, session);
@@ -187,6 +199,12 @@ XdgApplicationSessionV1Interface::XdgApplicationSessionV1Interface(XdgSessionSto
 
 XdgApplicationSessionV1Interface::~XdgApplicationSessionV1Interface()
 {
+    Q_EMIT aboutToBeDestroyed();
+}
+
+wl_client *XdgApplicationSessionV1Interface::client() const
+{
+    return d->resource()->client();
 }
 
 XdgSessionStorageV1 *XdgApplicationSessionV1Interface::storage() const
@@ -197,6 +215,17 @@ XdgSessionStorageV1 *XdgApplicationSessionV1Interface::storage() const
 QString XdgApplicationSessionV1Interface::sessionId() const
 {
     return d->sessionId;
+}
+
+bool XdgApplicationSessionV1Interface::isReplaced() const
+{
+    return d->replaced;
+}
+
+void XdgApplicationSessionV1Interface::markReplaced()
+{
+    d->replaced = true;
+    d->send_replaced();
 }
 
 class XdgToplevelSessionV1InterfacePrivate : public QtWaylandServer::xx_toplevel_session_v1
@@ -212,6 +241,8 @@ public:
     QPointer<XdgApplicationSessionV1Interface> session;
     QPointer<XdgToplevelInterface> toplevel;
     QString toplevelId;
+
+    bool isInert() const;
 
 protected:
     void xx_toplevel_session_v1_destroy_resource(Resource *resource) override;
@@ -232,6 +263,11 @@ XdgToplevelSessionV1InterfacePrivate::XdgToplevelSessionV1InterfacePrivate(XdgAp
 {
 }
 
+bool XdgToplevelSessionV1InterfacePrivate::isInert() const
+{
+    return !session || session->isReplaced();
+}
+
 void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_destroy_resource(Resource *resource)
 {
     delete q;
@@ -244,7 +280,9 @@ void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_destroy(Resour
 
 void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_remove(Resource *resource)
 {
-    session->storage()->remove(session->sessionId(), toplevelId);
+    if (!isInert()) {
+        session->storage()->remove(session->sessionId(), toplevelId);
+    }
     wl_resource_destroy(resource->handle);
 }
 
@@ -267,7 +305,11 @@ XdgToplevelSessionV1Interface::~XdgToplevelSessionV1Interface()
 
 bool XdgToplevelSessionV1Interface::exists() const
 {
-    return d->session->storage()->contains(d->session->sessionId(), d->toplevelId);
+    if (d->isInert()) {
+        return false;
+    } else {
+        return d->session->storage()->contains(d->session->sessionId(), d->toplevelId);
+    }
 }
 
 XdgToplevelInterface *XdgToplevelSessionV1Interface::toplevel() const
@@ -282,6 +324,10 @@ QString XdgToplevelSessionV1Interface::toplevelId() const
 
 void XdgToplevelSessionV1Interface::sendRestored()
 {
+    if (d->isInert()) {
+        return;
+    }
+
     if (!d->toplevel) {
         return;
     }
@@ -291,6 +337,10 @@ void XdgToplevelSessionV1Interface::sendRestored()
 
 QVariant XdgToplevelSessionV1Interface::read(const QString &key, const QVariant &defaultValue) const
 {
+    if (d->isInert()) {
+        return QVariant();
+    }
+
     const QVariant data = d->session->storage()->read(d->session->sessionId(), d->toplevelId, key);
     if (data.isValid()) {
         return data;
@@ -301,6 +351,10 @@ QVariant XdgToplevelSessionV1Interface::read(const QString &key, const QVariant 
 
 void XdgToplevelSessionV1Interface::write(const QString &key, const QVariant &value)
 {
+    if (d->isInert()) {
+        return;
+    }
+
     d->session->storage()->write(d->session->sessionId(), d->toplevelId, key, value);
 }
 
