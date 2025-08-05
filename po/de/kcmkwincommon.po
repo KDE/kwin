@@ -80,7 +80,7 @@ msgstr "Animation beim Öffnen/Schließen von Fenstern"
 #: effectsmodel.cpp:231
 #, kde-format
 msgid "KWin development team"
-msgstr "KWin-Entwicklerteam"
+msgstr "KWin-Entwicklungsteam"
 
 #: genericscriptedconfig.cpp:76
 #, kde-format

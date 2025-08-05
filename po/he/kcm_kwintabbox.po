@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-08-05 03:05+0000\n"
 "PO-Revision-Date: 2025-04-19 18:23+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -24,51 +24,51 @@ msgstr ""
 "n % 10 == 0) ? 2 : 3));\n"
 "X-Generator: Lokalize 24.12.3\n"
 
-#: layoutpreview.cpp:27
+#: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
 msgstr "הפעלת תצוגה מקדימה אינטראקטיבית לבורר תיבת לשוניות"
 
-#: layoutpreview.cpp:28
+#: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
 msgstr "נתיב לקובץ בורר חלונות ה־QML הראשי"
 
-#: layoutpreview.cpp:29
+#: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
 msgstr "להציג גם תמונה מוקטנת לשולחן העבודה"
 
-#: layoutpreview.cpp:156
+#: layoutpreview.cpp:158
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
 msgstr "Dolphin"
 
-#: layoutpreview.cpp:160
+#: layoutpreview.cpp:162
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
 msgstr "Konqueror"
 
-#: layoutpreview.cpp:164
+#: layoutpreview.cpp:166
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
 msgstr "KMail"
 
-#: layoutpreview.cpp:168
+#: layoutpreview.cpp:170
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
 msgstr "הגדרות מערכת"
 
-#: layoutpreview.cpp:174
+#: layoutpreview.cpp:176
 #, kde-format
 msgid "Show Desktop"
 msgstr "הצגת שולחן עבודה"
 
-#: layoutpreview.cpp:204
+#: layoutpreview.cpp:206
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"

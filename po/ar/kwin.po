@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-12 02:40+0000\n"
-"PO-Revision-Date: 2025-07-31 18:18+0400\n"
+"PO-Revision-Date: 2025-08-04 20:08+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1064,7 +1064,7 @@ msgstr "لا يوجد مركب أوبن‌جي‌إل يعمل"
 #: debug_console.ui:119
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr "معلومات معرف أوبن‌جي‌إل (ES)"
+msgstr "معلومات مُشغل أوبن‌جي‌إل (ES)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:125
@@ -1968,7 +1968,7 @@ msgstr "تلاشى إلى السواد (لشاشات البدء فقط)"
 #, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr "الافتراضية"
+msgstr "المبدئي"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: plugins/magnifier/magnifier_config.ui:17
@@ -3477,37 +3477,37 @@ msgstr "نوع القاعدة للقابلة للإغلاق"
 #: rulesettings.kcfg:375
 #, kde-format
 msgid "Autogroup with identical"
-msgstr "الجمع التلقائي للمتطابقات"
+msgstr "الجمع الآليّ للمتطابقات"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:379
 #, kde-format
 msgid "Autogroup with identical rule type"
-msgstr "نوع القاعدة للجمع التلقائي للمتطابقات"
+msgstr "نوع القاعدة للجمع الآليّ للمتطابقات"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:384
 #, kde-format
 msgid "Autogroup in foreground"
-msgstr "الجمع التلقائي في المقدمة"
+msgstr "الجمع الآليّ في المقدمة"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:388
 #, kde-format
 msgid "Autogroup in foreground rule type"
-msgstr "نوع القاعدة للجمع التلقائي في المقدمة"
+msgstr "نوع القاعدة للجمع الآليّ في المقدمة"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:393
 #, kde-format
 msgid "Autogroup by ID"
-msgstr "الجمع التلقائي بالمعرف"
+msgstr "الجمع الآليّ بالمعرف"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:396
 #, kde-format
 msgid "Autogroup by ID rule type"
-msgstr "نوع القاعدة للجمع التلقائي بالمعرف"
+msgstr "نوع القاعدة للجمع الآليّ بالمعرف"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:401
@@ -4308,7 +4308,7 @@ msgstr ""
 "يجب استخدام المعلومات التالية عند طلب الدعم ، على سبيل المثال في https://"
 "discuss.kde.org. \n"
 "إنها توفر معلومات حول النسخة المشغلة حاليًا ، والخيارات المستخدمة، \n"
-"وما هو معرف OpenGL والتأثيرات قيد التشغيل. \n"
+"وما هو مُشغل OpenGL والتأثيرات قيد التشغيل. \n"
 "الرجاء نشر المعلومات المتوفرة أسفل هذا الملحق التمهيدي إلى خدمة حاوية "
 "اللصق \n"
 "مثل https://paste.kde.org بدلاً من اللصق في موضوع الدعم. \n"
