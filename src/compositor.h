@@ -110,6 +110,7 @@ protected:
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;
     std::unordered_map<RenderLoop *, std::unique_ptr<ItemTreeView>> m_cursorViews;
+    std::unordered_map<RenderLoop *, bool> m_brokenCursors;
 };
 
 } // namespace KWin
