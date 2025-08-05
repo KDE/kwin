@@ -292,8 +292,8 @@ void ItemTreeView::setExclusive(bool enable)
     }
     m_exclusive = enable;
     if (enable) {
-        m_parentView->addExclusiveView(this);
         m_item->scheduleSceneRepaint(m_item->boundingRect());
+        m_parentView->addExclusiveView(this);
     } else {
         m_parentView->removeExclusiveView(this);
         m_item->scheduleRepaint(m_item->boundingRect());
