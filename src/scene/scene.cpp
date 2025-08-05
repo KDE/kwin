@@ -195,7 +195,7 @@ ItemTreeView::~ItemTreeView()
     if (m_exclusive) {
         m_parentView->removeExclusiveView(this);
         if (m_item) {
-            m_item->scheduleRepaint(m_item->rect());
+            m_item->scheduleRepaint(m_item->boundingRect());
         }
     }
 }
@@ -296,7 +296,7 @@ void ItemTreeView::setExclusive(bool enable)
         m_item->scheduleSceneRepaint(m_item->boundingRect());
     } else {
         m_parentView->removeExclusiveView(this);
-        m_item->scheduleRepaint(m_item->rect());
+        m_item->scheduleRepaint(m_item->boundingRect());
     }
 }
 
