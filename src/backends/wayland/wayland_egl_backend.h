@@ -32,11 +32,11 @@ class WaylandBackend;
 class WaylandOutput;
 class WaylandEglBackend;
 
-class WaylandEglPrimaryLayer : public WaylandLayer
+class WaylandEglLayer : public WaylandLayer
 {
 public:
-    WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend);
-    ~WaylandEglPrimaryLayer() override;
+    WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, OutputLayerType type, int zpos);
+    ~WaylandEglLayer() override;
 
     GLFramebuffer *fbo() const;
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
@@ -106,14 +106,8 @@ private:
     bool createEglWaylandOutput(Output *output);
     void cleanupSurfaces() override;
 
-    struct Layers
-    {
-        std::unique_ptr<WaylandEglPrimaryLayer> primaryLayer;
-        std::unique_ptr<WaylandEglCursorLayer> cursorLayer;
-    };
-
     WaylandBackend *m_backend;
-    std::map<Output *, Layers> m_outputs;
+    std::map<Output *, std::vector<std::unique_ptr<OutputLayer>>> m_outputs;
 };
 
 } // namespace Wayland
