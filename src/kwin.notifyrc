@@ -208,7 +208,7 @@ Action=Popup
 
 [Event/graphicsreset]
 Name=Graphics Reset
-Name[ar]=إعادة ضبط الرسوميات
+Name[ar]=تصفّير الرسوميات
 Name[az]=Qrafikanın sıfırlanması
 Name[be]=Скід графікі
 Name[bg]=Връщане на стандартни настройки на графиката
@@ -263,7 +263,7 @@ Name[x-test]=xxGraphics Resetxx
 Name[zh_CN]=图形功能重置
 Name[zh_TW]=圖形重置
 Comment=A graphics reset event occurred
-Comment[ar]=حدث عملية إعادة ضبط الرسوميات
+Comment[ar]=حدث عملية تصفير للرسوميات
 Comment[az]=Qrafik sistemdə qəza baş verdi
 Comment[be]=Адбылася падзея скіду графікі
 Comment[bg]=Извърши се връщане на стандартни настройки на графиката
