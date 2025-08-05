@@ -229,6 +229,9 @@
         <entry name="PictureInPictureMargin" type="Int">
             <default>20</default>
         </entry>
+        <entry name="OverlayVirtualKeyboardOnWindows" type="Bool">
+            <default>false</default>
+        </entry>
     </group>
     <group name="EdgeBarrier">
         <entry name="CornerBarrier" type="Bool">

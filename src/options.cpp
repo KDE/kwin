@@ -607,6 +607,19 @@ void Options::setPictureInPictureMargin(int margin)
     }
 }
 
+bool Options::overlayVirtualKeyboardOnWindows() const
+{
+    return m_overlayVirtualKeyboardOnWindows;
+}
+
+void Options::setOverlayVirtualKeyboardOnWindows(bool overlay)
+{
+    if (overlay != m_overlayVirtualKeyboardOnWindows) {
+        m_overlayVirtualKeyboardOnWindows = overlay;
+        Q_EMIT overlayVirtualKeyboardOnWindowsChanged();
+    }
+}
+
 void Options::reparseConfiguration()
 {
     m_settings->config()->reparseConfiguration();
@@ -712,6 +725,7 @@ void Options::syncFromKcfgc()
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
     setAllowTearing(m_settings->allowTearing());
     setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
+    setOverlayVirtualKeyboardOnWindows(m_settings->overlayVirtualKeyboardOnWindows());
     setDoubleClickBorderToMaximize(m_settings->doubleClickBorderToMaximize());
     setPictureInPictureHomeCorner(m_settings->pictureInPictureHomeCorner());
     setPictureInPictureMargin(m_settings->pictureInPictureMargin());

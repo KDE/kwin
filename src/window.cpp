@@ -2947,6 +2947,11 @@ void Window::setVirtualKeyboardGeometry(const QRectF &geo)
         return;
     }
 
+    // If we want to overlay the vkbd over windows, don't resize them
+    if (options->overlayVirtualKeyboardOnWindows()) {
+        return;
+    }
+
     if (!geo.intersects(m_keyboardGeometryRestore)) {
         return;
     }

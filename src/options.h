@@ -172,6 +172,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool interactiveWindowMoveEnabled READ interactiveWindowMoveEnabled WRITE setInteractiveWindowMoveEnabled NOTIFY interactiveWindowMoveEnabledChanged)
     Q_PROPERTY(Qt::Corner pictureInPictureHomeCorner READ pictureInPictureHomeCorner WRITE setPictureInPictureHomeCorner NOTIFY pictureInPictureHomeCornerChanged)
     Q_PROPERTY(int pictureInPictureMargin READ pictureInPictureMargin WRITE setPictureInPictureMargin NOTIFY pictureInPictureMarginChanged)
+    Q_PROPERTY(bool overlayVirtualKeyboardOnWindows READ overlayVirtualKeyboardOnWindows WRITE setOverlayVirtualKeyboardOnWindows NOTIFY overlayVirtualKeyboardOnWindowsChanged)
 public:
     explicit Options(QObject *parent = nullptr);
     ~Options() override;
@@ -606,6 +607,7 @@ public:
 
     bool allowTearing() const;
     bool interactiveWindowMoveEnabled() const;
+    bool overlayVirtualKeyboardOnWindows() const;
 
     Qt::Corner pictureInPictureHomeCorner() const;
     void setPictureInPictureHomeCorner(Qt::Corner corner);
@@ -664,6 +666,7 @@ public:
     void setCompositingMode(int compositingMode);
     void setAllowTearing(bool allow);
     void setInteractiveWindowMoveEnabled(bool set);
+    void setOverlayVirtualKeyboardOnWindows(bool overlay);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick()
@@ -838,6 +841,7 @@ Q_SIGNALS:
     void interactiveWindowMoveEnabledChanged();
     void pictureInPictureHomeCornerChanged();
     void pictureInPictureMarginChanged();
+    void overlayVirtualKeyboardOnWindowsChanged();
 
 private:
     void setElectricBorders(int borders);
@@ -901,6 +905,7 @@ private:
 
     bool m_allowTearing = true;
     bool m_interactiveWindowMoveEnabled = true;
+    bool m_overlayVirtualKeyboardOnWindows = false;
     bool m_doubleClickBorderToMaximize = true;
 
     Qt::Corner m_pictureInPictureHomeCorner = Qt::BottomRightCorner;
