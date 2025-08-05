@@ -852,7 +852,7 @@ msgstr "高级(&N)"
 #: main.cpp:74
 #, kde-format
 msgid "&Picture-in-picture"
-msgstr ""
+msgstr "画中画(&P)"
 
 #: main.cpp:165
 #, kde-format
@@ -1110,37 +1110,37 @@ msgstr "仅在重叠时吸附"
 #: pip.ui:20
 #, kde-format
 msgid "Open in screen corner:"
-msgstr ""
+msgstr "打开到屏幕边角："
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:31
 #, kde-format
 msgid "Top-left"
-msgstr ""
+msgstr "左上角"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:36
 #, kde-format
 msgid "Top-right"
-msgstr ""
+msgstr "右上角"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:41
 #, kde-format
 msgid "Bottom-left"
-msgstr ""
+msgstr "左下角"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:46
 #, kde-format
 msgid "Bottom-right"
-msgstr ""
+msgstr "右下角"
 
 #. i18n: ectx: property (text), widget (QLabel, marginLabel)
 #: pip.ui:54
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "边距："
 
 #: windows.cpp:91
 #, kde-format

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-08-05 00:45+0000\n"
 "PO-Revision-Date: 2025-07-23 14:09+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -21,51 +21,51 @@ msgstr ""
 "X-Generator: Lokalize 25.04.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: layoutpreview.cpp:27
+#: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
 msgstr "Abiarazi fitxa-kutxa aldatzaile baten aurreikuspegi elkarreragile bat"
 
-#: layoutpreview.cpp:28
+#: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
 msgstr "Leiho aldatzailearen QML fitxategi nagusirako bide-izena"
 
-#: layoutpreview.cpp:29
+#: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
 msgstr "Mahaigainaren koadro txiki bat ere erakutsi"
 
-#: layoutpreview.cpp:156
+#: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
 msgstr "Dolphin"
 
-#: layoutpreview.cpp:160
+#: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
 msgstr "Konqueror"
 
-#: layoutpreview.cpp:164
+#: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
 msgstr "KMail"
 
-#: layoutpreview.cpp:168
+#: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
 msgstr "Sistemaren ezarpenak"
 
-#: layoutpreview.cpp:174
+#: layoutpreview.cpp:177
 #, kde-format
 msgid "Show Desktop"
 msgstr "Erakutsi mahaigaina"
 
-#: layoutpreview.cpp:204
+#: layoutpreview.cpp:207
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"

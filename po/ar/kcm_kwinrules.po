@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 00:43+0000\n"
-"PO-Revision-Date: 2025-07-31 18:24+0400\n"
+"PO-Revision-Date: 2025-08-04 20:09+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -111,7 +111,7 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
-"لن تتأثر خاصية النافذة وبالتالي ستستعمل المعالجة الافتراضية لها. \n"
+"لن تتأثر خاصية النافذة وبالتالي ستستعمل المعالجة المبدئية لها. \n"
 "سيؤدي تحديد هذا إلى منع المزيد من إعدادات النافذة العامة من أن تصبح سارية "
 "المفعول."
 
@@ -690,7 +690,7 @@ msgstr "اجعل النافذة متوفرة على كلّ الأنشطة"
 #: rulesmodel.cpp:878
 #, kde-format
 msgid "Default"
-msgstr "افتراضي"
+msgstr "مبدئي"
 
 #: rulesmodel.cpp:879
 #, kde-format

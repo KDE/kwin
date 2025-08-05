@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
+"POT-Creation-Date: 2025-08-05 00:45+0000\n"
 "PO-Revision-Date: 2025-04-19 18:46+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -20,51 +20,51 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: layoutpreview.cpp:27
+#: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
 msgstr "Запускати інтерактивний попередній перегляд для перемикача вікон"
 
-#: layoutpreview.cpp:28
+#: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
 msgstr "Шлях до основного файла QML засобу перемикання вікон"
 
-#: layoutpreview.cpp:29
+#: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
 msgstr "Також показувати мініатюру стільниці"
 
-#: layoutpreview.cpp:156
+#: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
 msgstr "Dolphin"
 
-#: layoutpreview.cpp:160
+#: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
 msgstr "Konqueror"
 
-#: layoutpreview.cpp:164
+#: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
 msgstr "KMail"
 
-#: layoutpreview.cpp:168
+#: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
 msgstr "Системні параметри"
 
-#: layoutpreview.cpp:174
+#: layoutpreview.cpp:177
 #, kde-format
 msgid "Show Desktop"
 msgstr "Показати стільницю"
 
-#: layoutpreview.cpp:204
+#: layoutpreview.cpp:207
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-19 00:43+0000\n"
-"PO-Revision-Date: 2025-04-19 13:13+0400\n"
+"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"PO-Revision-Date: 2025-08-04 21:06+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -18,51 +18,51 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Lokalize 23.08.5\n"
 
-#: layoutpreview.cpp:27
+#: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
 msgstr "أطلق معاينة تفاعلية لمبدل الألسنة"
 
-#: layoutpreview.cpp:28
+#: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
 msgstr "المسار إلى الملف الرئيسي لـ Window Switcher QML"
 
-#: layoutpreview.cpp:29
+#: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
 msgstr "إظهار أيضًا صورة مصغرة لسطح المكتب"
 
-#: layoutpreview.cpp:156
+#: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
 msgstr "دولفين"
 
-#: layoutpreview.cpp:160
+#: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
 msgstr "كنكر"
 
-#: layoutpreview.cpp:164
+#: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
 msgstr "بريدك"
 
-#: layoutpreview.cpp:168
+#: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
 msgstr "إعدادات النّظام"
 
-#: layoutpreview.cpp:174
+#: layoutpreview.cpp:177
 #, kde-format
 msgid "Show Desktop"
 msgstr "أظهر سطح المكتب"
 
-#: layoutpreview.cpp:204
+#: layoutpreview.cpp:207
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
@@ -141,7 +141,7 @@ msgstr "رشّح النّوافذ حسب"
 #: main.ui:123
 #, kde-format
 msgid "Virtual desktops"
-msgstr "أسطح المكتب الوهميّة"
+msgstr "أسطح المكتب الافتراضية"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
 #: main.ui:167
