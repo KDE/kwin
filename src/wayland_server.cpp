@@ -381,7 +381,7 @@ bool WaylandServer::init()
     m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
 
     if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_SESSION_MANAGER") == 1) {
-        auto storage = new XdgSessionConfigStorageV1(KSharedConfig::openStateConfig(QStringLiteral("kwinsessionrc")), this);
+        auto storage = new XdgSessionStorageV1(KSharedConfig::openStateConfig(QStringLiteral("kwinsessionrc")), this);
         new XdgSessionManagerV1Interface(m_display, storage, m_display);
     }
 

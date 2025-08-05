@@ -21,7 +21,7 @@ namespace KWin
 
 class Display;
 class XdgApplicationSessionV1InterfacePrivate;
-class XdgSessionConfigStorageV1Private;
+class XdgSessionStorageV1Private;
 class XdgSessionManagerV1InterfacePrivate;
 class XdgToplevelInterface;
 class XdgToplevelSessionV1Interface;
@@ -42,40 +42,9 @@ class KWIN_EXPORT XdgSessionStorageV1 : public QObject
     Q_OBJECT
 
 public:
-    explicit XdgSessionStorageV1(QObject *parent = nullptr)
-        : QObject(parent)
-    {
-    }
-
-    virtual bool contains(const QString &sessionId, const QString &toplevelId = QString()) const = 0;
-    virtual QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const = 0;
-    virtual void write(const QString &sessionid, const QString &toplevelId, const QString &key, const QVariant &value) = 0;
-    virtual void remove(const QString &sessionId, const QString &toplevelId = QString()) = 0;
-    virtual void sync() = 0;
-};
-
-/**
- * The XdgSessionConfigStorageV1 class represents a session storage backed by a KConfig.
- */
-class KWIN_EXPORT XdgSessionConfigStorageV1 : public XdgSessionStorageV1
-{
-    Q_OBJECT
-
-public:
-    /**
-     * Constructs a XdgSessionConfigStorageV1 with the specified @a parent and no config.
-     */
-    explicit XdgSessionConfigStorageV1(QObject *parent = nullptr);
-
-    /**
-     * Constructs a XdgSessionConfigStorageV1 with the specified @a config and @a parent.
-     */
-    explicit XdgSessionConfigStorageV1(KSharedConfigPtr config, QObject *parent = nullptr);
-
-    /**
-     * Destructs the XdgSessionConfigStorageV1 object without synchronizing the config.
-     */
-    ~XdgSessionConfigStorageV1() override;
+    explicit XdgSessionStorageV1(QObject *parent = nullptr);
+    explicit XdgSessionStorageV1(KSharedConfigPtr config, QObject *parent = nullptr);
+    ~XdgSessionStorageV1() override;
 
     /**
      * Returns the config object attached to this session storage.
@@ -87,14 +56,14 @@ public:
      */
     void setConfig(KSharedConfigPtr config);
 
-    bool contains(const QString &sessionId, const QString &toplevelId = QString()) const override;
-    QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const override;
-    void write(const QString &sessionId, const QString &toplevelId, const QString &key, const QVariant &value) override;
-    void remove(const QString &sessionId, const QString &toplevelId = QString()) override;
-    void sync() override;
+    bool contains(const QString &sessionId, const QString &toplevelId = QString()) const;
+    QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const;
+    void write(const QString &sessionid, const QString &toplevelId, const QString &key, const QVariant &value);
+    void remove(const QString &sessionId, const QString &toplevelId = QString());
+    void sync();
 
 private:
-    std::unique_ptr<XdgSessionConfigStorageV1Private> d;
+    std::unique_ptr<XdgSessionStorageV1Private> d;
 };
 
 /**

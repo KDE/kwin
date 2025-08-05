@@ -358,40 +358,40 @@ void XdgToplevelSessionV1Interface::write(const QString &key, const QVariant &va
     d->session->storage()->write(d->session->sessionId(), d->toplevelId, key, value);
 }
 
-class XdgSessionConfigStorageV1Private
+class XdgSessionStorageV1Private
 {
 public:
     KSharedConfigPtr config;
 };
 
-XdgSessionConfigStorageV1::XdgSessionConfigStorageV1(QObject *parent)
-    : XdgSessionStorageV1(parent)
-    , d(new XdgSessionConfigStorageV1Private)
+XdgSessionStorageV1::XdgSessionStorageV1(QObject *parent)
+    : QObject(parent)
+    , d(new XdgSessionStorageV1Private)
 {
 }
 
-XdgSessionConfigStorageV1::XdgSessionConfigStorageV1(KSharedConfigPtr config, QObject *parent)
-    : XdgSessionStorageV1(parent)
-    , d(new XdgSessionConfigStorageV1Private)
+XdgSessionStorageV1::XdgSessionStorageV1(KSharedConfigPtr config, QObject *parent)
+    : QObject(parent)
+    , d(new XdgSessionStorageV1Private)
 {
     d->config = config;
 }
 
-XdgSessionConfigStorageV1::~XdgSessionConfigStorageV1()
+XdgSessionStorageV1::~XdgSessionStorageV1()
 {
 }
 
-KSharedConfigPtr XdgSessionConfigStorageV1::config() const
+KSharedConfigPtr XdgSessionStorageV1::config() const
 {
     return d->config;
 }
 
-void XdgSessionConfigStorageV1::setConfig(KSharedConfigPtr config)
+void XdgSessionStorageV1::setConfig(KSharedConfigPtr config)
 {
     d->config = config;
 }
 
-bool XdgSessionConfigStorageV1::contains(const QString &sessionId, const QString &toplevelId) const
+bool XdgSessionStorageV1::contains(const QString &sessionId, const QString &toplevelId) const
 {
     if (toplevelId.isEmpty()) {
         return d->config->hasGroup(sessionId);
@@ -400,7 +400,7 @@ bool XdgSessionConfigStorageV1::contains(const QString &sessionId, const QString
     }
 }
 
-QVariant XdgSessionConfigStorageV1::read(const QString &sessionId, const QString &surfaceId, const QString &key) const
+QVariant XdgSessionStorageV1::read(const QString &sessionId, const QString &surfaceId, const QString &key) const
 {
     const KConfigGroup sessionGroup(d->config, sessionId);
     const KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
@@ -417,8 +417,8 @@ QVariant XdgSessionConfigStorageV1::read(const QString &sessionId, const QString
     return result;
 }
 
-void XdgSessionConfigStorageV1::write(const QString &sessionId, const QString &surfaceId,
-                                      const QString &key, const QVariant &value)
+void XdgSessionStorageV1::write(const QString &sessionId, const QString &surfaceId,
+                                const QString &key, const QVariant &value)
 {
     KConfigGroup sessionGroup(d->config, sessionId);
     KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
@@ -430,7 +430,7 @@ void XdgSessionConfigStorageV1::write(const QString &sessionId, const QString &s
     surfaceGroup.writeEntry(key, data);
 }
 
-void XdgSessionConfigStorageV1::remove(const QString &sessionId, const QString &surfaceId)
+void XdgSessionStorageV1::remove(const QString &sessionId, const QString &surfaceId)
 {
     KConfigGroup sessionGroup(d->config, sessionId);
 
@@ -442,7 +442,7 @@ void XdgSessionConfigStorageV1::remove(const QString &sessionId, const QString &
     }
 }
 
-void XdgSessionConfigStorageV1::sync()
+void XdgSessionStorageV1::sync()
 {
     d->config->sync();
 }
