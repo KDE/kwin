@@ -61,6 +61,7 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
     , m_item(nullptr)
 {
     QQmlEngine *engine = new QQmlEngine(this);
+    engine->setProperty("_kirigamiTheme", QStringLiteral("KirigamiPlasmaStyle"));
     KLocalization::setupLocalizedContext(engine);
     QQmlComponent *component = new QQmlComponent(engine, this);
 
