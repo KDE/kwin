@@ -6,9 +6,6 @@
 
 #pragma once
 
-#include "config-kwin.h"
-#if HAVE_WL_FIXES
-
 #include "kwin_export.h"
 
 #include <QObject>
@@ -32,5 +29,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif // HAVE_WL_FIXES

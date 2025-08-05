@@ -525,9 +525,7 @@ bool WaylandServer::init()
 
     m_externalBrightness = new ExternalBrightnessV1(m_display, m_display);
     m_alphaModifierManager = new AlphaModifierManagerV1(m_display, m_display);
-#if HAVE_WL_FIXES
     new FixesInterface(m_display, m_display);
-#endif
     m_fifoManager = new FifoManagerV1(m_display, m_display);
     m_singlePixelBuffer = new SinglePixelBufferManagerV1(m_display, m_display);
     m_toplevelTag = new XdgToplevelTagManagerV1(m_display, m_display);
