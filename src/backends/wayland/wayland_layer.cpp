@@ -26,8 +26,8 @@ namespace KWin
 namespace Wayland
 {
 
-WaylandLayer::WaylandLayer(WaylandOutput *output, OutputLayerType type)
-    : OutputLayer(output, type)
+WaylandLayer::WaylandLayer(WaylandOutput *output, OutputLayerType type, int zpos)
+    : OutputLayer(output, type, zpos, zpos, zpos)
     , m_surface(output->backend()->display()->compositor()->createSurface())
     , m_subSurface(output->backend()->display()->subCompositor()->createSubSurface(m_surface.get(), output->surface()))
 {
@@ -64,11 +64,17 @@ WaylandLayer::~WaylandLayer()
 
 bool WaylandLayer::test() const
 {
+    if (!isEnabled()) {
+        return true;
+    }
     if (!m_colorSurface && m_color != ColorDescription::sRGB) {
         return false;
     }
     if (offloadTransform() != OutputTransform::Kind::Normal) {
         // TODO allow this?
+        return false;
+    }
+    if (sourceRect().isEmpty()) {
         return false;
     }
     return true;
@@ -82,6 +88,11 @@ void WaylandLayer::setBuffer(wl_buffer *buffer, const QRegion &logicalDamagedReg
 
 void WaylandLayer::commit(PresentationMode presentationMode)
 {
+    if (!isEnabled()) {
+        setBuffer(nullptr, QRegion{});
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+        return;
+    }
     // this is a bit annoying, we need a new Wayland protocol
     // to do this properly with fractional scaling. Until we
     // have that, it may cause blurriness in some cases!

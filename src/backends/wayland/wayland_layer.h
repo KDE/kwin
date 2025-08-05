@@ -37,7 +37,7 @@ class WaylandOutput;
 class WaylandLayer : public OutputLayer
 {
 public:
-    explicit WaylandLayer(WaylandOutput *output, OutputLayerType type);
+    explicit WaylandLayer(WaylandOutput *output, OutputLayerType type, int zpos);
     ~WaylandLayer() override;
 
     bool test() const;

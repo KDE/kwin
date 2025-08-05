@@ -26,7 +26,7 @@ namespace Wayland
 {
 
 WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
-    : WaylandLayer(output, OutputLayerType::Primary)
+    : WaylandLayer(output, OutputLayerType::Primary, 0)
     , m_waylandOutput(output)
     , m_backend(backend)
 {

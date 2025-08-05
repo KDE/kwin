@@ -35,22 +35,22 @@ namespace Wayland
 
 static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
 
-WaylandEglPrimaryLayer::WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend)
-    : WaylandLayer(output, OutputLayerType::Primary)
+WaylandEglLayer::WaylandEglLayer(WaylandOutput *output, WaylandEglBackend *backend, OutputLayerType type, int zpos)
+    : WaylandLayer(output, type, zpos)
     , m_backend(backend)
 {
 }
 
-WaylandEglPrimaryLayer::~WaylandEglPrimaryLayer()
+WaylandEglLayer::~WaylandEglLayer()
 {
 }
 
-GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
+GLFramebuffer *WaylandEglLayer::fbo() const
 {
     return m_buffer->framebuffer();
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::doBeginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
@@ -91,7 +91,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::doBeginFrame()
     };
 }
 
-bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool WaylandEglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));
@@ -106,7 +106,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     return true;
 }
 
-bool WaylandEglPrimaryLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     if (!test()) {
         return false;
@@ -119,18 +119,18 @@ bool WaylandEglPrimaryLayer::importScanoutBuffer(GraphicsBuffer *buffer, const s
     return true;
 }
 
-DrmDevice *WaylandEglPrimaryLayer::scanoutDevice() const
+DrmDevice *WaylandEglLayer::scanoutDevice() const
 {
     return m_backend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> WaylandEglPrimaryLayer::supportedDrmFormats() const
+QHash<uint32_t, QList<uint64_t>> WaylandEglLayer::supportedDrmFormats() const
 {
     return m_backend->backend()->display()->linuxDmabuf()->formats();
 }
 
 WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
-    : OutputLayer(output, OutputLayerType::CursorOnly)
+    : OutputLayer(output, OutputLayerType::CursorOnly, 255, 255, 255)
     , m_backend(backend)
 {
 }
@@ -241,10 +241,12 @@ void WaylandEglBackend::cleanupSurfaces()
 
 bool WaylandEglBackend::createEglWaylandOutput(Output *waylandOutput)
 {
-    m_outputs[waylandOutput] = Layers{
-        .primaryLayer = std::make_unique<WaylandEglPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
-        .cursorLayer = std::make_unique<WaylandEglCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
-    };
+    auto &layers = m_outputs[waylandOutput];
+    layers.push_back(std::make_unique<WaylandEglLayer>(static_cast<WaylandOutput *>(waylandOutput), this, OutputLayerType::Primary, 0));
+    layers.push_back(std::make_unique<WaylandEglCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this));
+    for (int z = 1; z < 5; z++) {
+        layers.push_back(std::make_unique<WaylandEglLayer>(static_cast<WaylandOutput *>(waylandOutput), this, OutputLayerType::GenericLayer, z));
+    }
     return true;
 }
 
@@ -314,7 +316,7 @@ bool WaylandEglBackend::initRenderingContext()
 
 QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(Output *output)
 {
-    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
+    return m_outputs[output] | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
 }
 
 }
