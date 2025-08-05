@@ -293,6 +293,9 @@ void ItemTreeView::setExclusive(bool enable)
     m_exclusive = enable;
     if (enable) {
         m_item->scheduleSceneRepaint(m_item->boundingRect());
+        // also need to add all the Item's pending repaint regions to the scene,
+        // otherwise some required repaints may be missing
+        m_parentView->addRepaint(m_item->takeRepaints(m_parentView));
         m_parentView->addExclusiveView(this);
     } else {
         m_parentView->removeExclusiveView(this);
