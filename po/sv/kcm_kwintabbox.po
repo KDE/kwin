@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 03:05+0000\n"
+"POT-Creation-Date: 2025-08-06 02:50+0000\n"
 "PO-Revision-Date: 2025-05-30 14:51+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -32,36 +32,36 @@ msgstr "Sökväg till fönsterbytarens QML-huvudfil"
 msgid "Show also a thumbnail for the desktop"
 msgstr "Visa också en miniatyrbild för skrivbordet"
 
-#: layoutpreview.cpp:158
+#: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
 msgstr "Dolphin"
 
-#: layoutpreview.cpp:162
+#: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
 msgstr "Konqueror"
 
-#: layoutpreview.cpp:166
+#: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
 msgstr "Kmail"
 
-#: layoutpreview.cpp:170
+#: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
 msgstr "Systeminställningar"
 
-#: layoutpreview.cpp:176
+#: layoutpreview.cpp:177
 #, kde-format
 msgid "Show Desktop"
 msgstr "Visa skrivbord"
 
-#: layoutpreview.cpp:206
+#: layoutpreview.cpp:207
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"

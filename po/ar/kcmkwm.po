@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 02:37+0000\n"
-"PO-Revision-Date: 2025-08-04 20:19+0400\n"
+"PO-Revision-Date: 2025-08-05 12:40+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -588,7 +588,7 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
-"<html><head/><body><p>هذا الإعداد يتحكم بما يحديث عند تنشيط نافذة مفتوحة على "
+"<html><head/><body><p>هذا الإعداد يتحكم بما يحدث عند تنشيط نافذة مفتوحة على "
 "سطح مكتب افتراضي أخر غير الحالي. </p><p><span style=\" font-style:italic;"
 "\">بدّل إلى ذلك المكتب</span> سيبدل إلى سطح المكتب الافتراضي حيث توجد تلك "
 "النافذة. </p><p><span style=\" font-style:italic;\">اجلب النافذة إلى سطح "
@@ -617,7 +617,7 @@ msgstr "&سياسة تنشيط النافذة:"
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
-msgstr "باستخدام هذا الخيار ، يمكنك تحديد كيف ومتى سيتم تركيز على النوافذ."
+msgstr "باستخدام هذا الخيار ، يمكنك تحديد كيف ومتى سيُركز على النوافذ."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
@@ -746,7 +746,7 @@ msgstr ""
 "italic;\">متطرف:</span> يجب على المستخدم تنشيط جميع النوافذ بشكل صريح.</li></"
 "ul><p> تميز النوافذ الممنوعة من سرقة التركيز على أنها تتطلب الانتباه ، مما "
 "يعني مبدئيًا أنه سيتم تمييز إدخال شريط المهام الخاص بهم. يمكن تغيير هذا في "
-"وحدة التحكم في الإخطارات. .</p></body></html>"
+"وحدة التحكم في الإشعارات .</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -833,8 +833,8 @@ msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
 "automatically come to the front."
 msgstr ""
-"هذا هو التأخير الذي يتم بعده نقل أي نافذة التي يوجد فوقها مؤشر الفأرة آليّاً "
-"إلى الأمام."
+"هذا هو التأخير الذي بعده ستنقل أي نافذة التي يوجد فوقها مؤشر الفأرة آليّاً إلى "
+"الأمام."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:199
@@ -848,8 +848,7 @@ msgstr "سلوك الشاشات المتعددة:"
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
-msgstr ""
-"إذا تم تمكين هذا الخيار ، عمليات التركيز ستكون محدودة فقط في الشاشة النشطة"
+msgstr "عند تمكين هذا الخيار، عمليات التركيز ستكون محدودة فقط في الشاشة النشطة"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:209
@@ -876,7 +875,7 @@ msgstr "إجراءات &شريط العنوان"
 #: main.cpp:91
 #, kde-format
 msgid "W&indow Actions"
-msgstr "اج&راءات النوافذ"
+msgstr "إجراءات ال&نوافذ"
 
 #: main.cpp:96
 #, kde-format
@@ -896,7 +895,7 @@ msgstr "إج&راءات شريط العنوان"
 #: main.cpp:190
 #, kde-format
 msgid "Window Actio&ns"
-msgstr "اج&راءات النوافذ"
+msgstr "إجراءات النوافذ"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: mouse.ui:17
@@ -1076,7 +1075,7 @@ msgid ""
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
 "هنا يمكنك إعداد مناطق الجذب لحافة الشاشة، أو بمعنى آخر، 'قوة' الحقل "
-"الميغناطيسي التي تجعل النوافذ تلتصق بالحدود عندما يتم تحريكها جوارها."
+"المغناطيسي التي تجعل النوافذ تلتصق بالحدود عندما تحريك بالقرب منها."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1101,7 +1100,7 @@ msgid ""
 "moved near another window."
 msgstr ""
 "هنا يمكنك إعداد مناطق الجذب للنوافذ، أو بمعنى آخر، 'قوة' الحقل المغناطيسي "
-"التي تجعل النوافذ تنجذب إلى بعضها البعض عندما يتم تحريكها بجوار نافذة أخرى."
+"التي تجعل النوافذ تنجذب إلى بعضها البعض عند تحريكها بجوار نافذة أخرى."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
@@ -1118,7 +1117,7 @@ msgid ""
 "when moved near it."
 msgstr ""
 "هنا يمكنك إعداد مناطق الجذب لوسط الشاشة، أو بمعنى آخر، 'قوة' الحقل "
-"المغناطيسي التي تجعل النوافذ تنجذب إلى وسط الشاشة عندما يتم تحريكها بجوارها."
+"المغناطيسي التي تجعل النوافذ تنجذب إلى وسط الشاشة عند تحريكها بجوارها."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
@@ -1174,7 +1173,7 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"ت<em> التركيز يتبع الفأرة: </em> سيؤدي تحريك الفأرة فوق النافذة إلى تنشيطها. "
+"<em> التركيز يتبع الفأرة: </em> سيؤدي تحريك الفأرة فوق النافذة إلى تنشيطها. "
 "على سبيل المثال. النوافذ التي تظهر بشكل عشوائي تحت الفأرة لن تحظى بالتركيز. "
 "يستمر <em> التركيز على منع السرقة </em> كالمعتاد. إنها تشبه <em> انقر "
 "للتركيز </em> دون الحاجة إلى النقر فعليًا."
@@ -1217,12 +1216,12 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"ن<em>التركيز تحت الفأرة بصرامة: </em> يكون التركيز دائمًا على النافذة "
-"الموجودة أسفل الفأرة (في شك في لا مكان) يشبه إلى حد كبير سلوك التركيز في "
-"بيئة X11 قديمة غير مُدارة. <br/> <strong> تحذير: </strong> <em>منع سرقة "
-"التركيز </em> و <em> صندوق التبويب ('Alt + Tab') </em> تتعارض مع سياسة "
-"التنشيط ولن تعمل. من المحتمل جدًا أنك تريد استخدام <em> التركيز يتبع الفأرة "
-"(أولوية الفأرة) </em> بدلاً من ذلك!"
+"<em>التركيز تحت الفأرة بصرامة: </em> يكون التركيز دائمًا على النافذة الموجودة "
+"أسفل الفأرة (في شك في لا مكان) يشبه إلى حد كبير سلوك التركيز في بيئة X11 "
+"قديمة غير مُدارة. <br/> <strong> تحذير: </strong> <em>منع سرقة التركيز </em> "
+"و <em> صندوق التبويب ('Alt + Tab') </em> تتعارض مع سياسة التنشيط ولن تعمل. "
+"من المحتمل جدًا أنك تريد استخدام <em> التركيز يتبع الفأرة (أولوية الفأرة) </"
+"em> بدلاً من ذلك!"
 
 #~ msgid "Shade/unshade"
 #~ msgstr "ظلّل/لا تظلّل"

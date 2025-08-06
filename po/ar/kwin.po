@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-12 02:40+0000\n"
-"PO-Revision-Date: 2025-08-04 20:08+0400\n"
+"PO-Revision-Date: 2025-08-05 20:38+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -92,8 +92,7 @@ msgstr "تشكيلة أي سي سي \"%1\" غير قابلة للاستخدام 
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
-"تشكيلة أي سي سي \"%1\" يحتوي على مساحة اتصال غير مدعومة، يتم دعم XYZ فقط"
+msgstr "تشكيلة أي سي سي \"%1\" يحتوي على مساحة اتصال غير مدعومة، يدعم XYZ فقط"
 
 #: core/iccprofile.cpp:264
 #, kde-format
@@ -1118,13 +1117,13 @@ msgstr "إصدارة GLSL:‏"
 #: debug_console.ui:240
 #, kde-format
 msgid "Platform Extensions"
-msgstr "إمتدادات المنصة"
+msgstr "امتدادات المنصة"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:256
 #, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr "إمتدادات  أوبن‌جي‌إل (ES)"
+msgstr "امتدادات  أوبن‌جي‌إل (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:277
@@ -1456,8 +1455,7 @@ msgstr "مقياس التكبير لوضع المؤطر. المبدئي 1."
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
-msgstr ""
-"عدد النوافذ التي سيتم فتحها كمخرجات في الوضع المؤطر. القيمة المبدئي هي 1 "
+msgstr "عدد النوافذ التي ستفتح كمخرجات في الوضع المؤطر. القيمة المبدئي هي 1"
 
 #: main_wayland.cpp:336
 #, kde-format
@@ -1479,7 +1477,7 @@ msgstr ""
 #: main_wayland.cpp:344
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr "اسم شاشة ويلاند_اكس التي تم إعدادها مسبقًا "
+msgstr "اسم شاشة ويلاند_اكس المعدة مسبقًا"
 
 #: main_wayland.cpp:348
 #, kde-format
@@ -2497,7 +2495,7 @@ msgstr "أُقفل المفتاح Shift و هو الآن مفعّل لكلّ ض�
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr "تم إقفال المفتاح Control و هو الآن نشط لكلّ ضغطات المفاتيح التالية."
+msgstr "أُقفل المفتاح Control و هو الآن نشط لكلّ ضغطات المفاتيح التالية."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
@@ -3459,7 +3457,7 @@ msgstr "اقبل التركيز"
 #: rulesettings.kcfg:361
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr "نوع القاعدة لاقبل التركز"
+msgstr "نوع القاعدة اقبل التركز"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:366
@@ -3555,7 +3553,7 @@ msgstr "اسم ملف سطح المكتب"
 #: rulesettings.kcfg:432
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr "نوع قاعدة لإسم ملف سطح المكتب"
+msgstr "نوع قاعدة لاسم ملف سطح المكتب"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:439
@@ -4304,7 +4302,7 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-"discussمعلومات دعم كوين: \n"
+"معلومات دعم كوين: \n"
 "يجب استخدام المعلومات التالية عند طلب الدعم ، على سبيل المثال في https://"
 "discuss.kde.org. \n"
 "إنها توفر معلومات حول النسخة المشغلة حاليًا ، والخيارات المستخدمة، \n"

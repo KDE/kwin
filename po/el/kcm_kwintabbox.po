@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 03:05+0000\n"
+"POT-Creation-Date: 2025-08-06 02:50+0000\n"
 "PO-Revision-Date: 2012-06-24 08:58+0200\n"
 "Last-Translator: Dimitrios Glentadakis <dglent@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -34,36 +34,36 @@ msgstr ""
 msgid "Show also a thumbnail for the desktop"
 msgstr ""
 
-#: layoutpreview.cpp:158
+#: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
 msgstr ""
 
-#: layoutpreview.cpp:162
+#: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
 msgstr ""
 
-#: layoutpreview.cpp:166
+#: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
 msgstr ""
 
-#: layoutpreview.cpp:170
+#: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
 msgstr ""
 
-#: layoutpreview.cpp:176
+#: layoutpreview.cpp:177
 #, kde-format
 msgid "Show Desktop"
 msgstr "Εμφάνιση επιφάνειας εργασίας"
 
-#: layoutpreview.cpp:206
+#: layoutpreview.cpp:207
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
