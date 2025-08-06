@@ -42,7 +42,7 @@ static EglGbmLayerSurface::BufferTarget targetFor(DrmPipeline *pipeline, DrmPlan
 
 EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPlane::TypeIndex type)
     : DrmPipelineLayer(pipeline, type)
-    , m_surface(pipeline->gpu(), eglBackend, targetFor(pipeline, type), type == DrmPlane::TypeIndex::Primary ? EglGbmLayerSurface::FormatOption::PreferAlpha : EglGbmLayerSurface::FormatOption::RequireAlpha)
+    , m_surface(pipeline->gpu(), eglBackend, targetFor(pipeline, type))
 {
 }
 
@@ -57,7 +57,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
                                     m_pipeline->output()->needsShadowBuffer() ? m_pipeline->iccProfile() : nullptr,
                                     m_pipeline->output()->scale(),
                                     m_pipeline->output()->colorPowerTradeoff(),
-                                    m_pipeline->output()->needsShadowBuffer());
+                                    m_pipeline->output()->needsShadowBuffer(),
+                                    m_requiredAlphaBits);
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
@@ -71,7 +72,7 @@ bool EglGbmLayer::preparePresentationTest()
         return false;
     }
     m_scanoutBuffer.reset();
-    return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff()) != nullptr;
+    return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type), m_pipeline->output()->colorPowerTradeoff(), m_requiredAlphaBits) != nullptr;
 }
 
 bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)

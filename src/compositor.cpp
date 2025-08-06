@@ -418,7 +418,7 @@ static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, Output *o
     return ret;
 }
 
-static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *output)
+static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *output, uint32_t requiredAlphaBits)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
@@ -432,6 +432,7 @@ static bool prepareRendering(OutputLayer *layer, RenderView *view, Output *outpu
     layer->setOffloadTransform(OutputTransform::Normal);
     layer->setBufferTransform(output->transform());
     layer->setColor(output->layerBlendingColor(), RenderingIntent::AbsoluteColorimetric, ColorPipeline{});
+    layer->setRequiredAlphaBits(requiredAlphaBits);
     return layer->preparePresentationTest();
 }
 
@@ -505,6 +506,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         RenderView *view;
         bool directScanout = false;
         QRegion surfaceDamage;
+        uint32_t requiredAlphaBits;
     };
     QList<LayerData> layers;
 
@@ -514,6 +516,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         .view = primaryView,
         .directScanout = false,
         .surfaceDamage = QRegion{},
+        .requiredAlphaBits = 0,
     });
 
     // slowly adjust the artificial HDR headroom for the next frame. Note that
@@ -547,6 +550,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             .view = cursorViewIt->second.get(),
             .directScanout = false,
             .surfaceDamage = QRegion{},
+            .requiredAlphaBits = 8,
         });
     }
 
@@ -554,7 +558,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     for (auto &layer : layers) {
         if (prepareDirectScanout(layer.layer, layer.view, output, frame)) {
             layer.directScanout = true;
-        } else if (prepareRendering(layer.layer, layer.view, output)) {
+        } else if (prepareRendering(layer.layer, layer.view, output, layer.requiredAlphaBits)) {
             layer.directScanout = false;
         } else {
             layer.layer->setEnabled(false);
@@ -568,7 +572,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         bool primaryFailure = false;
         auto &primary = layers.front();
         if (primary.directScanout) {
-            if (prepareRendering(primary.layer, primary.view, output)) {
+            if (prepareRendering(primary.layer, primary.view, output, primary.requiredAlphaBits)) {
                 primary.directScanout = false;
                 result = output->testPresentation(frame);
             } else {
@@ -644,7 +648,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                 layer.view->setExclusive(false);
             }
             // re-render without direct scanout
-            if (prepareRendering(primary.layer, primary.view, output)
+            if (prepareRendering(primary.layer, primary.view, output, primary.requiredAlphaBits)
                 && renderLayer(primary.layer, primary.view, output, frame, primary.surfaceDamage)) {
                 result = output->present(toUpdate, frame);
             } else {
@@ -657,7 +661,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             // try again even without the cursor layer
             layers[1].layer->setEnabled(false);
             layers[1].view->setExclusive(false);
-            if (prepareRendering(primary.layer, primary.view, output)
+            if (prepareRendering(primary.layer, primary.view, output, primary.requiredAlphaBits)
                 && renderLayer(primary.layer, primary.view, output, frame, infiniteRegion())) {
                 result = output->present(toUpdate, frame);
                 if (result) {

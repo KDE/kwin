@@ -9,6 +9,7 @@
 #include "core/colorpipeline.h"
 #include "core/rendertarget.h"
 #include "kwin_export.h"
+#include "utils/drm_format_helper.h"
 
 #include <QObject>
 #include <QPointer>
@@ -110,6 +111,13 @@ public:
     RenderingIntent renderIntent() const;
     void setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline);
 
+    /**
+     * Set the required bits for compositing on this plane. Direct scanout is not affected.
+     */
+    void setRequiredAlphaBits(uint32_t bits);
+
+    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff);
+
 Q_SIGNALS:
     void repaintScheduled();
 
@@ -130,6 +138,7 @@ protected:
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
     Output *const m_output;
+    uint32_t m_requiredAlphaBits = 0;
     bool m_repaintScheduled = false;
     RenderLoop *m_renderLoop = nullptr;
 };

@@ -180,6 +180,47 @@ bool OutputLayer::preparePresentationTest()
     return true;
 }
 
+void OutputLayer::setRequiredAlphaBits(uint32_t bits)
+{
+    m_requiredAlphaBits = bits;
+}
+
+QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff)
+{
+    QList<FormatInfo> ret;
+    for (auto it = formats.begin(); it != formats.end(); it++) {
+        const auto info = FormatInfo::get(it.key());
+        if (!info) {
+            continue;
+        }
+        if (info->alphaBits < requiredAlphaBits) {
+            continue;
+        }
+        if (info->bitsPerColor < 8) {
+            continue;
+        }
+        ret.push_back(*info);
+    }
+    std::ranges::sort(ret, [tradeoff](const FormatInfo &before, const FormatInfo &after) {
+        if (tradeoff == Output::ColorPowerTradeoff::PreferAccuracy && before.bitsPerColor != after.bitsPerColor) {
+            return before.bitsPerColor > after.bitsPerColor;
+        }
+        if (before.floatingPoint != after.floatingPoint) {
+            return !before.floatingPoint;
+        }
+        const bool beforeHasAlpha = before.alphaBits != 0;
+        const bool afterHasAlpha = after.alphaBits != 0;
+        if (beforeHasAlpha != afterHasAlpha) {
+            return beforeHasAlpha;
+        }
+        if (before.bitsPerPixel != after.bitsPerPixel) {
+            return before.bitsPerPixel < after.bitsPerPixel;
+        }
+        return before.bitsPerColor > after.bitsPerColor;
+    });
+    return ret;
+}
+
 } // namespace KWin
 
 #include "moc_outputlayer.cpp"
