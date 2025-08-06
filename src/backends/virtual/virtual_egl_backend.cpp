@@ -28,11 +28,6 @@ VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
 {
 }
 
-std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
-{
-    return m_current->texture();
-}
-
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 {
     m_backend->openglContext()->makeCurrent();

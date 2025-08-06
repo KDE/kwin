@@ -50,11 +50,6 @@ GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
     return m_buffer->framebuffer();
 }
 
-std::shared_ptr<GLTexture> WaylandEglPrimaryLayer::texture() const
-{
-    return m_buffer->texture();
-}
-
 std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::doBeginFrame()
 {
     if (!m_backend->openglContext()->makeCurrent()) {

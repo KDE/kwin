@@ -59,7 +59,6 @@ public:
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer);
     bool endRendering(const QRegion &damagedRegion, OutputFrame *frame);
 
-    std::shared_ptr<GLTexture> texture() const;
     void destroyResources();
     EglGbmBackend *eglBackend() const;
     std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff);

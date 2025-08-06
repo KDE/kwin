@@ -330,15 +330,6 @@ const ColorDescription &EglGbmLayerSurface::colorDescription() const
     }
 }
 
-std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
-{
-    if (m_surface) {
-        return m_surface->currentShadowSlot ? m_surface->currentShadowSlot->texture() : m_surface->currentSlot->texture();
-    } else {
-        return nullptr;
-    }
-}
-
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff)
 {
     EglContext *context = m_eglBackend->openglContext();

@@ -76,11 +76,6 @@ bool X11WindowedEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const
     return true;
 }
 
-std::shared_ptr<GLTexture> X11WindowedEglPrimaryLayer::texture() const
-{
-    return m_buffer->texture();
-}
-
 DrmDevice *X11WindowedEglPrimaryLayer::scanoutDevice() const
 {
     return m_backend->drmDevice();

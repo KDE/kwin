@@ -33,8 +33,6 @@ public:
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
-    std::shared_ptr<GLTexture> texture() const;
-
 private:
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
