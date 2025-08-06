@@ -195,7 +195,7 @@ private:
     void updateEffectiveVisibility();
     void removeRepaints(RenderView *delegate);
 
-    void scheduleMoveRepaint(const QRectF &region);
+    void scheduleMoveRepaint();
 
     Scene *m_scene = nullptr;
     QPointer<Item> m_parentItem;
