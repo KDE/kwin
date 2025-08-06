@@ -451,6 +451,9 @@ void Item::scheduleMoveRepaint(const QRectF &region)
             view->scheduleRepaint(this);
         }
     }
+    for (Item *child : std::as_const(m_childItems)) {
+        child->scheduleMoveRepaint(child->rect());
+    }
 }
 
 void Item::scheduleRepaintInternal(RenderView *view, const QRegion &region)
