@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:44+0000\n"
+"POT-Creation-Date: 2025-08-06 00:45+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -37,29 +37,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "sng@hellug.gr, manolis@koppermind.homelinux.org"
 
-#: backends/wayland/wayland_output.cpp:497
+#: backends/wayland/wayland_output.cpp:456
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Πιέστε το δεξί control για να απελευθέρωση δείκτη"
 
-#: backends/wayland/wayland_output.cpp:499
+#: backends/wayland/wayland_output.cpp:458
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Πατήστε το δεξί πλήκτρο control για να πιάσετε το δείκτη"
 
-#: backends/wayland/wayland_output.cpp:503
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Συνθέτης Wayland του KDE %1"
 
-#: backends/wayland/wayland_output.cpp:506
+#: backends/wayland/wayland_output.cpp:465
 #, kde-format
 msgid "- Output disabled"
 msgstr "- έξοδος ανενεργή"
 
-#: backends/wayland/wayland_output.cpp:508
+#: backends/wayland/wayland_output.cpp:467
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- έξοδος χαμηλωμένη"
@@ -79,7 +79,7 @@ msgstr "Πατήστε το δεξί πλήκτρο control για να αρπά
 msgid "KDE Wayland Compositor"
 msgstr "Συνθέτης Wayland του KDE"
 
-#: compositor.cpp:425
+#: compositor.cpp:455
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""

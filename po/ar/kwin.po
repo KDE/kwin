@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:44+0000\n"
-"PO-Revision-Date: 2025-08-04 20:08+0400\n"
+"POT-Creation-Date: 2025-08-06 00:45+0000\n"
+"PO-Revision-Date: 2025-08-05 20:38+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -26,29 +26,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "zayed.alsaidi@gmail.com,safa1996alfulaij@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:497
+#: backends/wayland/wayland_output.cpp:456
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "اضغط على مفتاح التحكم الأيمن لفك المؤشر"
 
-#: backends/wayland/wayland_output.cpp:499
+#: backends/wayland/wayland_output.cpp:458
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "اضغط على مفتاح التحكم الأيمن للحصول على المؤشر"
 
-#: backends/wayland/wayland_output.cpp:503
+#: backends/wayland/wayland_output.cpp:462
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "مراكب ويلاند كيدي %1"
 
-#: backends/wayland/wayland_output.cpp:506
+#: backends/wayland/wayland_output.cpp:465
 #, kde-format
 msgid "- Output disabled"
 msgstr "- الخرج معطّل"
 
-#: backends/wayland/wayland_output.cpp:508
+#: backends/wayland/wayland_output.cpp:467
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- الخرج معتم"
@@ -68,7 +68,7 @@ msgstr "اضغط على مفتاح التحكم الأيمن للحصول على
 msgid "KDE Wayland Compositor"
 msgstr "مراكب ويلاند كيدي"
 
-#: compositor.cpp:425
+#: compositor.cpp:455
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "أُعيد تشغيل تأثيرات سطح المكتب بسبب تصفير الرّسوميّات"
@@ -92,8 +92,7 @@ msgstr "تشكيلة أي سي سي \"%1\" غير قابلة للاستخدام 
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
-"تشكيلة أي سي سي \"%1\" يحتوي على مساحة اتصال غير مدعومة، يتم دعم XYZ فقط"
+msgstr "تشكيلة أي سي سي \"%1\" يحتوي على مساحة اتصال غير مدعومة، يدعم XYZ فقط"
 
 #: core/iccprofile.cpp:264
 #, kde-format
@@ -1143,13 +1142,13 @@ msgstr "إصدارة GLSL:‏"
 #: debug_console.ui:240
 #, kde-format
 msgid "Platform Extensions"
-msgstr "إمتدادات المنصة"
+msgstr "امتدادات المنصة"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:256
 #, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr "إمتدادات  أوبن‌جي‌إل (ES)"
+msgstr "امتدادات  أوبن‌جي‌إل (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:277
@@ -1477,8 +1476,7 @@ msgstr "مقياس التكبير لوضع المؤطر. المبدئي 1."
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
-msgstr ""
-"عدد النوافذ التي سيتم فتحها كمخرجات في الوضع المؤطر. القيمة المبدئي هي 1 "
+msgstr "عدد النوافذ التي ستفتح كمخرجات في الوضع المؤطر. القيمة المبدئي هي 1"
 
 #: main_wayland.cpp:336
 #, kde-format
@@ -1500,7 +1498,7 @@ msgstr ""
 #: main_wayland.cpp:344
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr "اسم شاشة ويلاند_اكس التي تم إعدادها مسبقًا "
+msgstr "اسم شاشة ويلاند_اكس المعدة مسبقًا"
 
 #: main_wayland.cpp:348
 #, kde-format
@@ -2487,7 +2485,7 @@ msgstr "أُقفل المفتاح Shift و هو الآن مفعّل لكلّ ض�
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr "تم إقفال المفتاح Control و هو الآن نشط لكلّ ضغطات المفاتيح التالية."
+msgstr "أُقفل المفتاح Control و هو الآن نشط لكلّ ضغطات المفاتيح التالية."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
@@ -3290,7 +3288,7 @@ msgstr "اقبل التركيز"
 #: rulesettings.kcfg:350
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr "نوع القاعدة لاقبل التركز"
+msgstr "نوع القاعدة اقبل التركز"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:355
@@ -3386,7 +3384,7 @@ msgstr "اسم ملف سطح المكتب"
 #: rulesettings.kcfg:421
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr "نوع قاعدة لإسم ملف سطح المكتب"
+msgstr "نوع قاعدة لاسم ملف سطح المكتب"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:428
@@ -4119,7 +4117,7 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-"discussمعلومات دعم كوين: \n"
+"معلومات دعم كوين: \n"
 "يجب استخدام المعلومات التالية عند طلب الدعم ، على سبيل المثال في https://"
 "discuss.kde.org. \n"
 "إنها توفر معلومات حول النسخة المشغلة حاليًا ، والخيارات المستخدمة، \n"
