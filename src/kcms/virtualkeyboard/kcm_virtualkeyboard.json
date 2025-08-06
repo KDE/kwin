@@ -3,7 +3,7 @@
     "KPlugin": {
         "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinvirtualkeyboard",
         "Description": "Select which virtual keyboard to use",
-        "Description[ar]": "اختر أيا من لوحات المفاتيح الافتراضية لإستعمالها",
+        "Description[ar]": "اختر أيا من لوحات المفاتيح الافتراضية لاستعمالها",
         "Description[az]": "İstifadə edəcəyiniz virtual klaviaturanı seçin",
         "Description[be]": "Віртуальная клавіятура для выкарыстання",
         "Description[bg]": "Избиране на виртуална клавиатура, която да се използва",
@@ -45,7 +45,7 @@
         "Description[zh_TW]": "選取要使用的虛擬鍵盤",
         "Icon": "input-keyboard-virtual",
         "Name": "Virtual Keyboard",
-        "Name[ar]": "لوحة المفاتيح الوهميّة",
+        "Name[ar]": "لوحة مفاتيح افتراضية",
         "Name[az]": "Virtual klaviatura",
         "Name[be]": "Віртуальная клавіятура",
         "Name[bg]": "Виртуална клавиатура",
