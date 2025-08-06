@@ -102,7 +102,7 @@
     },
     "X-DocPath": "kcontrol/windowbehaviour/index.html",
     "X-KDE-Keywords": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,activation,activate,pip,picture in picture,picture-in-picture",
-    "X-KDE-Keywords[ar]": "التركيز,الموضع,سلوك النافذة,إجراءات النافذة,الرسوم المتحركة,الرفع,الرفع التلقائي,النوافذ,الإطار,شريط العنوان,النقر المزدوج,سطح المكتب,الالتقاط,الحركة,نشط,التنشيط,صورة في صورة,pip",
+    "X-KDE-Keywords[ar]": "التركيز,الموضع,سلوك النافذة,إجراءات النافذة,الرسوم المتحركة,الرفع,الرفع الآليّ,النوافذ,الإطار,شريط العنوان,النقر المزدوج,سطح المكتب,الالتقاط,الحركة,نشط,التنشيط,صورة في صورة,pip",
     "X-KDE-Keywords[ca@valencia]": "focus,emplaçament,comportament de les finestres,accions de les finestres,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajusta,moviment,activació,activa,pip,imatge a la imatge",
     "X-KDE-Keywords[ca]": "focus,emplaçament,comportament de les finestres,accions de les finestres,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajusta,moviment,activació,activa,pip,imatge en la imatge",
     "X-KDE-Keywords[es]": "foco,colocación,ubicación,situación,comportamiento de la ventana,acciones de la ventana,animación,elevar,primer plano,elevar automáticamente,pasar a primer plano,ventanas,marco,borde,barra de título,doble clic,escritorio,ajuste,movimiento,imagen sobre imagen,imagen dentro de imagen",
@@ -117,6 +117,7 @@
     "X-KDE-Keywords[tr]": "odak,yerleşim,pencere davranışı,pencere eylemleri,canlandırma,animasyon,yükselt,çerçeve,başlık çubuğu,çift tık,masaüstü,tuttur,hareket,taşı,etkinleştir,pip,picture in picture,picture-in-picture,resim içinde resim,görüntü içinde görüntü,ekran içinde ekran",
     "X-KDE-Keywords[uk]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,activation,activate,pip,picture in picture,picture-in-picture,фокус,розташування,місце,вікно,поведінка,поведінка вікон,дії,реакція,дії з вікнами,реакція вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне,стільниця,прилипання,рух,активація,активувати,зображення у зображенні,зображення-у-зображенні",
     "X-KDE-Keywords[x-test]": "xxfocusxx,xxplacementxx,xxwindow behaviorxx,xxwindow actionsxx,xxanimationxx,xxraisexx,xxauto raisexx,xxwindowsxx,xxframexx,xxtitlebarxx,xxdoubleclickxx,xxdesktopxx,xxsnapxx,xxmovementxx,xxactivationxx,xxactivatexx,xxpipxx,xxpicture in picturexx,xxpicture-in-picturexx",
+    "X-KDE-Keywords[zh_CN]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,activation,activate,jiaodian,fangzhi,weizhi,chuangkouxingwei,chuangkoucaozuo,donghua,tisheng,zidongtisheng,chuangkou,kuangjia,biaotilan,shuangji,zhuomian,xifu,yidong,jihuo,pip,picture in picture,picture-in-picture,焦点,放置,位置,窗口行为,窗口操作,动画,提升,自动提升,窗口,框架,标题栏,双击,桌面,吸附,移动,激活,画中画",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],
