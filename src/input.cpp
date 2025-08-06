@@ -1069,9 +1069,14 @@ public:
                 m_powerDown.start();
                 return true;
             } else if (event->state == KeyboardKeyState::Released) {
-                const bool ret = !m_powerDown.isActive() || input()->shortcuts()->processKey(modifiers, event->key, event->state);
-                m_powerDown.stop();
-                return ret;
+                if (m_powerDown.isActive()) {
+                    bool ret = input()->shortcuts()->processKey(modifiers, event->key, KeyboardKeyState::Pressed);
+                    ret |= input()->shortcuts()->processKey(modifiers, event->key, KeyboardKeyState::Released);
+                    m_powerDown.stop();
+                    return ret;
+                } else {
+                    return input()->shortcuts()->processKey(modifiers, event->key, event->state);
+                }
             }
         } else if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
