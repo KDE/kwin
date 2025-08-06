@@ -6,6 +6,7 @@
 #include "kwin_wayland_test.h"
 
 #include "pointer_input.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -32,6 +33,24 @@ private Q_SLOTS:
     void restoreToplevelSession();
     void restoreMappedToplevelSession();
     void replaceSession();
+    void restorePosition();
+    void restoreSize();
+    void restoreKeepAbove();
+    void restoreKeepBelow();
+    void restoreSkipSwitcher();
+    void restoreSkipPager();
+    void restoreSkipTaskbar();
+    void restoreMaximized_data();
+    void restoreMaximized();
+    void restoreFullScreen();
+    void restoreMinimized();
+    void restoreNoBorder();
+    void restoreShortcut();
+    void restoreDesktops();
+
+private:
+    template<typename SetupFn, typename RestoreFn>
+    void restoreTemplate(SetupFn setupFunction, RestoreFn restoreFunction);
 };
 
 void TestXdgSession::initTestCase()
@@ -59,6 +78,8 @@ void TestXdgSession::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgSessionV1));
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
+
+    VirtualDesktopManager::self()->setCount(2);
 }
 
 void TestXdgSession::cleanup()
@@ -255,6 +276,192 @@ void TestXdgSession::replaceSession()
         QCOMPARE(firstSessionCreatedSpy.count(), 1);
         QCOMPARE(firstSessionReplacedSpy.count(), 1);
     }
+}
+
+template<typename SetupFn, typename RestoreFn>
+void TestXdgSession::restoreTemplate(SetupFn setupFunction, RestoreFn restoreFunction)
+{
+    std::unique_ptr<Test::XdgSessionV1> session(Test::createXdgSessionV1(Test::XdgSessionManagerV1::reason_launch));
+    QSignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
+    QVERIFY(sessionCreatedSpy.wait());
+
+    {
+        std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+        std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+        std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->add(shellSurface.get(), QStringLiteral("foo")));
+
+        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        surface->commit(KWayland::Client::Surface::CommitFlag::None);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        QCOMPARE(toplevelSessionRestoredSpy.count(), 0);
+
+        const QSize surfaceSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.first()[0].toUInt());
+        auto window = Test::renderAndWaitForShown(surface.get(), surfaceSize.isEmpty() ? QSize(100, 50) : surfaceSize, Qt::blue);
+
+        setupFunction(window);
+
+        shellSurface.reset();
+        QVERIFY(Test::waitForWindowClosed(window));
+    }
+
+    {
+        std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+        std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+        std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->restore(shellSurface.get(), QStringLiteral("foo")));
+
+        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        surface->commit(KWayland::Client::Surface::CommitFlag::None);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        QCOMPARE(toplevelSessionRestoredSpy.count(), 1);
+
+        const QSize surfaceSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.first()[0].toUInt());
+        auto window = Test::renderAndWaitForShown(surface.get(), surfaceSize.isEmpty() ? QSize(100, 50) : surfaceSize, Qt::blue);
+
+        restoreFunction(window);
+
+        shellSurface.reset();
+        QVERIFY(Test::waitForWindowClosed(window));
+    }
+}
+
+void TestXdgSession::restorePosition()
+{
+    restoreTemplate([](Window *window) {
+        window->move(QPointF(42, 84));
+    }, [](Window *window) {
+        QCOMPARE(window->pos(), QPointF(42, 84));
+    });
+}
+
+void TestXdgSession::restoreSize()
+{
+    restoreTemplate([](Window *window) {
+        window->resize(QSizeF(300, 250));
+    }, [](Window *window) {
+        QCOMPARE(window->size(), QSizeF(300, 250));
+    });
+}
+
+void TestXdgSession::restoreKeepAbove()
+{
+    restoreTemplate([](Window *window) {
+        window->setKeepAbove(true);
+    }, [](Window *window) {
+        QVERIFY(window->keepAbove());
+    });
+}
+
+void TestXdgSession::restoreKeepBelow()
+{
+    restoreTemplate([](Window *window) {
+        window->setKeepBelow(true);
+    }, [](Window *window) {
+        QVERIFY(window->keepBelow());
+    });
+}
+
+void TestXdgSession::restoreSkipSwitcher()
+{
+    restoreTemplate([](Window *window) {
+        window->setSkipSwitcher(true);
+    }, [](Window *window) {
+        QVERIFY(window->skipSwitcher());
+    });
+}
+
+void TestXdgSession::restoreSkipPager()
+{
+    restoreTemplate([](Window *window) {
+        window->setSkipPager(true);
+    }, [](Window *window) {
+        QVERIFY(window->skipPager());
+    });
+}
+
+void TestXdgSession::restoreSkipTaskbar()
+{
+    restoreTemplate([](Window *window) {
+        window->setSkipTaskbar(true);
+    }, [](Window *window) {
+        QVERIFY(window->skipTaskbar());
+    });
+}
+
+void TestXdgSession::restoreMaximized_data()
+{
+    QTest::addColumn<MaximizeMode>("maximizeMode");
+
+    QTest::addRow("none") << MaximizeMode::MaximizeRestore;
+    QTest::addRow("horizontal") << MaximizeMode::MaximizeHorizontal;
+    QTest::addRow("vertical") << MaximizeMode::MaximizeVertical;
+    QTest::addRow("full") << MaximizeMode::MaximizeFull;
+}
+
+void TestXdgSession::restoreMaximized()
+{
+    QFETCH(MaximizeMode, maximizeMode);
+    restoreTemplate([maximizeMode](Window *window) {
+        window->maximize(maximizeMode);
+    }, [maximizeMode](Window *window) {
+        QCOMPARE(window->maximizeMode(), maximizeMode);
+        QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
+    });
+}
+
+void TestXdgSession::restoreFullScreen()
+{
+    restoreTemplate([](Window *window) {
+        window->setFullScreen(true);
+    }, [](Window *window) {
+        QVERIFY(window->isFullScreen());
+        QVERIFY(window->isRequestedFullScreen());
+    });
+}
+
+void TestXdgSession::restoreMinimized()
+{
+    restoreTemplate([](Window *window) {
+        window->setMinimized(true);
+    }, [](Window *window) {
+        QVERIFY(window->isMinimized());
+    });
+}
+
+void TestXdgSession::restoreNoBorder()
+{
+    restoreTemplate([](Window *window) {
+        window->setNoBorder(true);
+    }, [](Window *window) {
+        QVERIFY(window->noBorder());
+    });
+}
+
+void TestXdgSession::restoreShortcut()
+{
+    restoreTemplate([](Window *window) {
+        window->setShortcut(QStringLiteral("Ctrl+Meta+T"));
+    }, [](Window *window) {
+        QCOMPARE(window->shortcut(), QKeySequence(Qt::ControlModifier | Qt::MetaModifier | Qt::Key_T));
+    });
+}
+
+void TestXdgSession::restoreDesktops()
+{
+    const auto desktops = VirtualDesktopManager::self()->desktops();
+    restoreTemplate([desktops](Window *window) {
+        QVERIFY(window->isOnDesktop(desktops[0]));
+        QVERIFY(!window->isOnDesktop(desktops[1]));
+        window->setDesktops({desktops[1]});
+    }, [desktops](Window *window) {
+        QVERIFY(!window->isOnDesktop(desktops[0]));
+        QVERIFY(window->isOnDesktop(desktops[1]));
+    });
 }
 
 WAYLANDTEST_MAIN(TestXdgSession)

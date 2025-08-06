@@ -514,15 +514,15 @@ XdgToplevelWindow::~XdgToplevelWindow()
 void XdgToplevelWindow::handleRoleDestroyed()
 {
     if (XdgToplevelSessionV1Interface *session = m_shellSurface->session()) {
-        session->write(QStringLiteral("position"), pos());
-        session->write(QStringLiteral("size"), size());
+        session->write(QStringLiteral("position"), moveResizeGeometry().topLeft());
+        session->write(QStringLiteral("size"), moveResizeGeometry().size());
         session->write(QStringLiteral("keepAbove"), keepAbove());
         session->write(QStringLiteral("keepBelow"), keepBelow());
         session->write(QStringLiteral("skipSwitcher"), skipSwitcher());
         session->write(QStringLiteral("skipPager"), skipPager());
         session->write(QStringLiteral("skipTaskbar"), skipTaskbar());
-        session->write(QStringLiteral("maximizeMode"), uint(maximizeMode()));
-        session->write(QStringLiteral("fullscreenMode"), isFullScreen());
+        session->write(QStringLiteral("maximizeMode"), uint(requestedMaximizeMode()));
+        session->write(QStringLiteral("fullscreenMode"), isRequestedFullScreen());
         session->write(QStringLiteral("minimizeMode"), isMinimized());
         session->write(QStringLiteral("desktops"), desktopIds());
         session->write(QStringLiteral("activities"), activities());
