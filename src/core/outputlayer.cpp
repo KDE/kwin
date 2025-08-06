@@ -73,7 +73,7 @@ bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::share
         return false;
     }
     const auto formats = supportedDrmFormats();
-    if (auto it = formats.find(attrs->format); it != formats.end() && !it->contains(attrs->modifier)) {
+    if (auto it = formats.find(attrs->format); it == formats.end() || !it->contains(attrs->modifier)) {
         if (m_scanoutCandidate && m_scanoutCandidate != surfaceItem) {
             m_scanoutCandidate->setScanoutHint(nullptr, {});
         }
