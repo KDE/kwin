@@ -10,6 +10,9 @@
 
 #include <libinput.h>
 #include <memory>
+#include <vector>
+
+#include "utils/filedescriptor.h"
 
 namespace KWin
 {
@@ -69,6 +72,7 @@ private:
     struct libinput *m_libinput;
     bool m_suspended;
     std::unique_ptr<Udev> m_udev;
+    std::vector<FileDescriptor> m_nonRestrictedFds;
 };
 
 }

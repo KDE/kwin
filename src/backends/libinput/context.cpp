@@ -103,50 +103,70 @@ void Context::closeRestrictedCallBack(int fd, void *user_data)
 
 int Context::openRestricted(const char *path, int flags)
 {
-    int fd = m_session->openRestricted(path);
-    if (fd < 0) {
-        // failed
-        return fd;
-    }
-    // adjust flags - based on Weston (logind-util.c)
-    int fl = fcntl(fd, F_GETFL);
-    auto errorHandling = [fd, this]() {
-        closeRestricted(fd);
-    };
-    if (fl < 0) {
-        errorHandling();
-        return -1;
+    const QString filepath = QString::fromLatin1(path);
+    int fd;
+
+    // Ask for control over everything but sys devices, which do not need it and it wouldn't be accepted by backends like logind anyway.
+    if (!filepath.startsWith(QLatin1String("/sys/"))) {
+        fd = m_session->openRestricted(filepath);
+        if (fd < 0) {
+            // failed
+            return fd;
+        }
+
+        // adjust flags - based on Weston (logind-util.c)
+        int fl = fcntl(fd, F_GETFL);
+        auto errorHandling = [fd, this]() {
+            closeRestricted(fd);
+        };
+        if (fl < 0) {
+            errorHandling();
+            return -1;
+        }
+
+        if (flags & O_NONBLOCK) {
+            fl |= O_NONBLOCK;
+        }
+
+        if (fcntl(fd, F_SETFL, fl) < 0) {
+            errorHandling();
+            return -1;
+        }
+
+        fl = fcntl(fd, F_GETFD);
+        if (fl < 0) {
+            errorHandling();
+            return -1;
+        }
+
+        if (!(flags & O_CLOEXEC)) {
+            fl &= ~FD_CLOEXEC;
+        }
+
+        if (fcntl(fd, F_SETFD, fl) < 0) {
+            errorHandling();
+            return -1;
+        }
+    } else {
+        fd = open(path, flags);
+        if (fd < 0) {
+            // failed
+            return fd;
+        }
+        m_nonRestrictedFds.push_back(FileDescriptor(fd));
     }
 
-    if (flags & O_NONBLOCK) {
-        fl |= O_NONBLOCK;
-    }
-
-    if (fcntl(fd, F_SETFL, fl) < 0) {
-        errorHandling();
-        return -1;
-    }
-
-    fl = fcntl(fd, F_GETFD);
-    if (fl < 0) {
-        errorHandling();
-        return -1;
-    }
-
-    if (!(flags & O_CLOEXEC)) {
-        fl &= ~FD_CLOEXEC;
-    }
-
-    if (fcntl(fd, F_SETFD, fl) < 0) {
-        errorHandling();
-        return -1;
-    }
     return fd;
 }
 
 void Context::closeRestricted(int fd)
 {
-    m_session->closeRestricted(fd);
+    // Close it if it's an unrestricted fd, otherwise we need to inform the session to close it.
+    if (std::erase_if(m_nonRestrictedFds, [fd](const auto &otherFd) {
+        return otherFd.get() == fd;
+    }) == 0) {
+        m_session->closeRestricted(fd);
+    }
 }
 
 std::unique_ptr<Event> Context::event()
