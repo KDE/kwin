@@ -397,7 +397,7 @@ static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, Output *o
     }
     const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
     const auto formats = tearing ? layer->supportedAsyncDrmFormats() : layer->supportedDrmFormats();
-    if (auto it = formats.find(attrs->format); it != formats.end() && !it->contains(attrs->modifier)) {
+    if (auto it = formats.find(attrs->format); it == formats.end() || !it->contains(attrs->modifier)) {
         layer->setScanoutCandidate(candidate);
         candidate->setScanoutHint(layer->scanoutDevice(), formats);
         return false;
