@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 02:37+0000\n"
-"PO-Revision-Date: 2025-08-05 12:40+0400\n"
+"PO-Revision-Date: 2025-08-06 17:32+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -554,7 +554,7 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
-"عند التشغيل ، يُسمح للتطبيقات التي يمكنها تذكر مواضع النوافذ الخاصة بها "
+"عند التشغيل، يُسمح للتطبيقات التي يمكنها تذكر مواضع النوافذ الخاصة بها "
 "بالقيام بذلك. سيؤدي هذا إلى تجاوز وضع وضع النافذة المحدد أعلاه."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
@@ -562,7 +562,7 @@ msgstr ""
 #, kde-format
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
-msgstr "اسمح للتطبيقات بتذكر مواضع النوافذ الخاصة بها ، إذا كانت تدعمها"
+msgstr "اسمح للتطبيقات بتذكر مواضع النوافذ الخاصة بها، إذا كانت تدعمها"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
 #: advanced.ui:77
@@ -617,7 +617,7 @@ msgstr "&سياسة تنشيط النافذة:"
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
-msgstr "باستخدام هذا الخيار ، يمكنك تحديد كيف ومتى سيُركز على النوافذ."
+msgstr "باستخدام هذا الخيار، يمكنك تحديد كيف ومتى سيُركز على النوافذ."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
@@ -731,22 +731,22 @@ msgstr ""
 "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
 "italic;\">منخفض:</span> تمكن الوقاية ؛ عندما لا تحتوي بعض النوافذ على دعم "
-"للآليّة الأساسية ولا يمكن لـ كوين أن يقرر بشكل موثوق ما إذا كان سيتم تنشيط "
-"النافذة أم لا ، فسيتم تنشيطها. قد يكون لهذا الإعداد نتائج أسوأ وأفضل من "
-"المستوى المتوسط ​​، اعتمادًا على التطبيقات.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">متوسط:</span> تمكن "
-"الوقاية.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">عالي:</span>  تنشيط النوافذ الجديدة فقط إذا لم "
-"تكن هناك نافذة نشطة حاليًا أو إذا كانت تنتمي إلى التطبيق النشط حاليًا. ربما لا "
-"يكون هذا الإعداد قابلاً للاستخدام حقًا عند عدم استخدام سياسة تركيز الفأرة.</"
-"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
+"للآليّة الأساسية ولا يمكن لـ كوين أن يقرر بشكل موثوق ما إذا كان سيُنشط النافذة "
+"أم لا، فستنُشط. قد يكون لهذا الإعداد نتائج أسوأ وأفضل من المستوى المتوسط ​​، "
+"اعتمادًا على التطبيقات.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">متوسط:</span> تمكن الوقاية.</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">متطرف:</span> يجب على المستخدم تنشيط جميع النوافذ بشكل صريح.</li></"
-"ul><p> تميز النوافذ الممنوعة من سرقة التركيز على أنها تتطلب الانتباه ، مما "
-"يعني مبدئيًا أنه سيتم تمييز إدخال شريط المهام الخاص بهم. يمكن تغيير هذا في "
-"وحدة التحكم في الإشعارات .</p></body></html>"
+"italic;\">عالي:</span>  تنشيط النوافذ الجديدة فقط إذا لم تكن هناك نافذة نشطة "
+"حاليًا أو إذا كانت تنتمي إلى التطبيق النشط حاليًا. ربما لا يكون هذا الإعداد "
+"قابلاً للاستخدام حقًا عند عدم استخدام سياسة تركيز الفأرة.</li><li style=\" "
+"margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">متطرف:"
+"</span> يجب على المستخدم تنشيط جميع النوافذ بشكل صريح.</li></ul><p> تميز "
+"النوافذ الممنوعة من سرقة التركيز على أنها تتطلب الانتباه، مما يعني مبدئيًا "
+"أنه ستُميز إدخال شريط المهام الخاص بهم. يمكن تغيير هذا في وحدة التحكم في "
+"الإشعارات .</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -1133,7 +1133,7 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
-"هنا يمكن تحديد أن نوافذ ستنجذب فقط إذا حاولت أن تطابق بينها ، بمعنى أنها لن "
+"هنا يمكن تحديد أن نوافذ ستنجذب فقط إذا حاولت أن تطابق بينها، بمعنى أنها لن "
 "تنجذب حتى تكون النوافذ قريبة من النوافذ الأخرى أو قريبة من حدودها."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
@@ -1161,9 +1161,9 @@ msgid ""
 "em>."
 msgstr ""
 "<em> النقر للتركيز (أولوية الفأرة): </em> في الغالب هو نفسه <em> انقر "
-"للتركيز</em>. إذا كان يتعين على النظام اختيار نافذة نشطة (على سبيل المثال ، "
-"بسبب إغلاق النافذة النشطة حاليًا) ، فإن النافذة الموجودة أسفل الفأرة هي "
-"المرشح المفضل. هذا غير معتاد ولكنه  تنويع ممكن لـ <em> انقر للتركيز </em>."
+"للتركيز</em>. إذا كان يتعين على النظام اختيار نافذة نشطة (على سبيل المثال، "
+"بسبب إغلاق النافذة النشطة حاليًا)، فإن النافذة الموجودة أسفل الفأرة هي المرشح "
+"المفضل. هذا غير معتاد ولكنه  تنويع ممكن لـ <em> انقر للتركيز </em>."
 
 #: windows.cpp:98
 #, kde-format
@@ -1187,9 +1187,9 @@ msgid ""
 "if you want a hover controlled focus."
 msgstr ""
 "هذا في الغالب مماثل لـ <em> التركيز يتبع الفأرة </em>. إذا كان يتعين على "
-"النظام اختيار نافذة نشطة (على سبيل المثال ، بسبب إغلاق النافذة النشطة "
-"حاليًا) ، فإن النافذة الموجودة أسفل الفأرة هي المرشح المفضل. اختر هذا ، إذا "
-"كنت تريد تركيزًا متحكمًا فيه بواسطة التحويم."
+"النظام اختيار نافذة نشطة (على سبيل المثال، بسبب إغلاق النافذة النشطة حاليًا)، "
+"فإن النافذة الموجودة أسفل الفأرة هي المرشح المفضل. اختر هذا، إذا كنت تريد "
+"تركيزًا متحكمًا فيه بواسطة التحويم."
 
 #: windows.cpp:104
 #, kde-format
