@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-07 00:44+0000\n"
-"PO-Revision-Date: 2025-06-15 18:18+0900\n"
+"POT-Creation-Date: 2025-08-07 18:31+0000\n"
+"PO-Revision-Date: 2025-08-08 01:58+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -81,7 +81,7 @@ msgstr "按下右側 Ctrl 鍵來抓取輸入"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 合成器"
 
-#: compositor.cpp:455
+#: compositor.cpp:456
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "桌面效果會重新啟動，因為圖形已重置"
@@ -758,16 +758,14 @@ msgid "Up"
 msgstr "上"
 
 #: debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "距離："
+msgstr "距離"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "位置"
+msgstr "滑動條位置"
 
 #: debug_console.cpp:546
 #, kde-format
@@ -798,19 +796,17 @@ msgstr "繪圖板按鈕"
 #: debug_console.cpp:563 debug_console.cpp:580 debug_console.cpp:596
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "群組"
 
 #: debug_console.cpp:564 debug_console.cpp:581 debug_console.cpp:597
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "模式："
+msgstr "模式"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "是模式切換"
 
 #: debug_console.cpp:576
 #, kde-format
