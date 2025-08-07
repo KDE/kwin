@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 00:43+0000\n"
-"PO-Revision-Date: 2025-08-05 12:45+0400\n"
+"PO-Revision-Date: 2025-08-06 17:35+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -96,8 +96,8 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
-"سيتم تذكر قيمة خاصية النافذة، وفي كل مرة يتم فيها إنشاء النافذة، سيطبق آخر "
-"قيمة محفوظة."
+"ستُحفظ قيمة خاصية النافذة، وفي كل مرة تُنشئ فيها النافذة، سيطبق آخر قيمة "
+"محفوظة."
 
 #: optionsmodel.cpp:217
 #, kde-format
@@ -160,7 +160,7 @@ msgid ""
 msgstr ""
 "لقد حددت أن صنف النافذة غير مهم.\n"
 "هذا يعني أنه من الممكن أن تطبق الإعدادات على نوافذ من جميع التطبيقات. إذا "
-"كنت تريد فعلا إنشاء إعداد عام ، فإنه من الموصى أن تحدد أنواع النوافذ لمنع "
+"كنت تريد فعلا إنشاء إعداد عام، فإنه من الموصى أن تحدد أنواع النوافذ لمنع "
 "أنواع النوافذ الخاصة."
 
 #: rulesmodel.cpp:253
@@ -170,8 +170,8 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
-"تقوم بعض التطبيقات بتعيين الشكل الهندسي الخاص بها بعد البدء ، مما يؤدي إلى "
-"تجاوز الإعدادات الأولية للحجم والموضع. لفرض هذه الإعدادات ، قم أيضًا بفرض "
+"تقوم بعض التطبيقات بتعيين الشكل الهندسي الخاص بها بعد البدء، مما يؤدي إلى "
+"تجاوز الإعدادات الأولية للحجم والموضع. لفرض هذه الإعدادات، قم أيضًا بفرض "
 "الخاصية \"‏%1\" على \"نعم\"."
 
 #: rulesmodel.cpp:260
@@ -180,7 +180,7 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
-"قد تكون قابلية القراءة ضعيفة مع قيم عتامة منخفضة للغاية. في 0٪، تصبح النافذة "
+"قد تكون قابلية القراءة ضعيفة مع قيم عتمة منخفضة للغاية. في 0٪، تصبح النافذة "
 "غير مرئية."
 
 #: rulesmodel.cpp:387
@@ -735,7 +735,7 @@ msgstr "على النافذة الرئيسة"
 #: rulesmodel.cpp:893
 #, kde-format
 msgid "None"
-msgstr "بلا"
+msgstr "لا شيء"
 
 #: rulesmodel.cpp:894
 #, kde-format
