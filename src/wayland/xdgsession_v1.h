@@ -11,6 +11,7 @@
 #include <QObject>
 
 #include <KSharedConfig>
+#include <kconfigconversioncheck_p.h>
 
 #include <memory>
 
@@ -57,7 +58,7 @@ public:
     void setConfig(KSharedConfigPtr config);
 
     bool contains(const QString &sessionId, const QString &toplevelId = QString()) const;
-    QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key) const;
+    QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key, const QMetaType &metaType) const;
     void write(const QString &sessionid, const QString &toplevelId, const QString &key, const QVariant &value);
     void remove(const QString &sessionId, const QString &toplevelId = QString());
     void sync();
@@ -170,19 +171,43 @@ public:
 
     /**
      * Returns the value for the property @a key. If the session storage doesn't contain any
-     * property with the specified key, this function returns @a defaultValue.
+     * property with the specified key, this function returns @c std::nullopt.
      */
-    QVariant read(const QString &key, const QVariant &defaultValue = QVariant()) const;
+    template<typename T>
+    std::optional<T> read(const QString &key) const;
 
     /**
      * Sets the value of property @a key to @a value. If the key already exists, the previous
      * value is overwritten.
      */
-    void write(const QString &key, const QVariant &value);
+    template<typename T>
+    void write(const QString &key, const T &value);
 
 private:
+    QVariant rawRead(const QString &key, const QMetaType &metaType) const;
+    void rawWrite(const QString &key, const QVariant &value);
+
     std::unique_ptr<XdgToplevelSessionV1InterfacePrivate> d;
     friend class XdgToplevelSessionV1InterfacePrivate;
 };
+
+template<typename T>
+std::optional<T> XdgToplevelSessionV1Interface::read(const QString &key) const
+{
+    KConfigConversionCheck::to_QVariant<T>();
+    const QVariant value = rawRead(key, QMetaType::fromType<T>());
+    if (value.isNull()) {
+        return std::nullopt;
+    } else {
+        return value.value<T>();
+    }
+}
+
+template<typename T>
+void XdgToplevelSessionV1Interface::write(const QString &key, const T &value)
+{
+    KConfigConversionCheck::to_QVariant<T>();
+    rawWrite(key, QVariant::fromValue(value));
+}
 
 } // namespace KWin

@@ -335,21 +335,16 @@ void XdgToplevelSessionV1Interface::sendRestored()
     d->send_restored(d->toplevel->resource());
 }
 
-QVariant XdgToplevelSessionV1Interface::read(const QString &key, const QVariant &defaultValue) const
+QVariant XdgToplevelSessionV1Interface::rawRead(const QString &key, const QMetaType &metaType) const
 {
     if (d->isInert()) {
         return QVariant();
     }
 
-    const QVariant data = d->session->storage()->read(d->session->sessionId(), d->toplevelId, key);
-    if (data.isValid()) {
-        return data;
-    } else {
-        return defaultValue;
-    }
+    return d->session->storage()->read(d->session->sessionId(), d->toplevelId, key, metaType);
 }
 
-void XdgToplevelSessionV1Interface::write(const QString &key, const QVariant &value)
+void XdgToplevelSessionV1Interface::rawWrite(const QString &key, const QVariant &value)
 {
     if (d->isInert()) {
         return;
@@ -400,21 +395,16 @@ bool XdgSessionStorageV1::contains(const QString &sessionId, const QString &topl
     }
 }
 
-QVariant XdgSessionStorageV1::read(const QString &sessionId, const QString &surfaceId, const QString &key) const
+QVariant XdgSessionStorageV1::read(const QString &sessionId, const QString &surfaceId, const QString &key, const QMetaType &metaType) const
 {
     const KConfigGroup sessionGroup(d->config, sessionId);
     const KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
 
-    QByteArray data = surfaceGroup.readEntry(key, QByteArray());
-    if (data.isNull()) {
+    if (!surfaceGroup.hasKey(key)) {
         return QVariant();
     }
 
-    QDataStream stream(&data, QIODevice::ReadOnly);
-    QVariant result;
-    stream >> result;
-
-    return result;
+    return surfaceGroup.readEntry(key, QVariant::fromMetaType(metaType));
 }
 
 void XdgSessionStorageV1::write(const QString &sessionId, const QString &surfaceId,
@@ -422,12 +412,7 @@ void XdgSessionStorageV1::write(const QString &sessionId, const QString &surface
 {
     KConfigGroup sessionGroup(d->config, sessionId);
     KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
-
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
-    stream << value;
-
-    surfaceGroup.writeEntry(key, data);
+    surfaceGroup.writeEntry(key, value);
 }
 
 void XdgSessionStorageV1::remove(const QString &sessionId, const QString &surfaceId)
