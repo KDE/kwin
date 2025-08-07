@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2025-08-05 12:40+0400\n"
+"PO-Revision-Date: 2025-08-06 17:32+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -452,8 +452,8 @@ msgid ""
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>إذا  مكن هذا الخيار ، فسيلغى تظليل النافذة المظللة "
-"آليًّا عندما يكون مؤشر الفأرة فوق شريط العنوان لبعض الوقت. </p></body></html>"
+"<html><head/><body><p>إذا  مكن هذا الخيار، فسيلغى تظليل النافذة المظللة آليًّا "
+"عندما يكون مؤشر الفأرة فوق شريط العنوان لبعض الوقت. </p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -580,7 +580,7 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
-"عند التشغيل ، يُسمح للتطبيقات التي يمكنها تذكر مواضع النوافذ الخاصة بها "
+"عند التشغيل، يُسمح للتطبيقات التي يمكنها تذكر مواضع النوافذ الخاصة بها "
 "بالقيام بذلك. سيؤدي هذا إلى تجاوز وضع وضع النافذة المحدد أعلاه."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
@@ -588,7 +588,7 @@ msgstr ""
 #, kde-format
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
-msgstr "اسمح للتطبيقات بتذكر مواضع النوافذ الخاصة بها ، إذا كانت تدعمها"
+msgstr "اسمح للتطبيقات بتذكر مواضع النوافذ الخاصة بها، إذا كانت تدعمها"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -605,7 +605,7 @@ msgid ""
 "application becomes active. Note that applications have to mark the windows "
 "with the proper window type for this feature to work."
 msgstr ""
-"عند تشغيلها ، ستخفى نوافذ الأدوات (نوافذ الأدوات ، القوائم الممزقة ، ...) "
+"عند تشغيلها، ستخفى نوافذ الأدوات (نوافذ الأدوات، القوائم الممزقة، ...) "
 "للتطبيقات غير النشطة ولن تظهر إلا عندما يصبح التطبيق نشطًا. لاحظ أن التطبيقات "
 "يجب أن تحدد النوافذ بنوع النافذة المناسب حتى تعمل هذه الميزة."
 
@@ -668,7 +668,7 @@ msgstr "&سياسة تنشيط النافذة:"
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
-msgstr "باستخدام هذا الخيار ، يمكنك تحديد كيف ومتى سيُركز على النوافذ."
+msgstr "باستخدام هذا الخيار، يمكنك تحديد كيف ومتى سيُركز على النوافذ."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
@@ -775,22 +775,22 @@ msgstr ""
 "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
 "italic;\">منخفض:</span> تمكن الوقاية ؛ عندما لا تحتوي بعض النوافذ على دعم "
-"للآليّة الأساسية ولا يمكن لـ كوين أن يقرر بشكل موثوق ما إذا كان سيتم تنشيط "
-"النافذة أم لا ، فسيتم تنشيطها. قد يكون لهذا الإعداد نتائج أسوأ وأفضل من "
-"المستوى المتوسط ​​، اعتمادًا على التطبيقات.</li><li style=\" margin-top:0px; "
-"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">متوسط:</span> تمكن "
-"الوقاية.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">عالي:</span>  تنشيط النوافذ الجديدة فقط إذا لم "
-"تكن هناك نافذة نشطة حاليًا أو إذا كانت تنتمي إلى التطبيق النشط حاليًا. ربما لا "
-"يكون هذا الإعداد قابلاً للاستخدام حقًا عند عدم استخدام سياسة تركيز الفأرة.</"
-"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
+"للآليّة الأساسية ولا يمكن لـ كوين أن يقرر بشكل موثوق ما إذا كان سيُنشط النافذة "
+"أم لا، فستنُشط. قد يكون لهذا الإعداد نتائج أسوأ وأفضل من المستوى المتوسط ​​، "
+"اعتمادًا على التطبيقات.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">متوسط:</span> تمكن الوقاية.</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">متطرف:</span> يجب على المستخدم تنشيط جميع النوافذ بشكل صريح.</li></"
-"ul><p> تميز النوافذ الممنوعة من سرقة التركيز على أنها تتطلب الانتباه ، مما "
-"يعني مبدئيًا أنه سيتم تمييز إدخال شريط المهام الخاص بهم. يمكن تغيير هذا في "
-"وحدة التحكم في الإشعارات .</p></body></html>"
+"italic;\">عالي:</span>  تنشيط النوافذ الجديدة فقط إذا لم تكن هناك نافذة نشطة "
+"حاليًا أو إذا كانت تنتمي إلى التطبيق النشط حاليًا. ربما لا يكون هذا الإعداد "
+"قابلاً للاستخدام حقًا عند عدم استخدام سياسة تركيز الفأرة.</li><li style=\" "
+"margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">متطرف:"
+"</span> يجب على المستخدم تنشيط جميع النوافذ بشكل صريح.</li></ul><p> تميز "
+"النوافذ الممنوعة من سرقة التركيز على أنها تتطلب الانتباه، مما يعني مبدئيًا "
+"أنه ستُميز إدخال شريط المهام الخاص بهم. يمكن تغيير هذا في وحدة التحكم في "
+"الإشعارات .</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -894,8 +894,8 @@ msgid ""
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
-"عند تمكين هذا الخيار ، تكون الشاشة النشطة (حيث تظهر النوافذ الجديدة، على "
-"سبيل المثال) هي الشاشة التي تحتوي على مؤشر الفأرة. عند التعطيل، تكون الشاشة "
+"عند تمكين هذا الخيار، تكون الشاشة النشطة (حيث تظهر النوافذ الجديدة، على سبيل "
+"المثال) هي الشاشة التي تحتوي على مؤشر الفأرة. عند التعطيل، تكون الشاشة "
 "النشطة هي الشاشة التي تحتوي على النافذة المركزة."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
@@ -1015,10 +1015,10 @@ msgid ""
 "documentation for how to customize window behavior.</p>"
 msgstr ""
 "<p><h1>سلوك النافذة</h1>هنا يمكنك تخصيص كيف تتصرف النافذة عندما تحرك أو تحجم "
-"أو ينقر عليها ، كذلك تستطيع أن تحدد سياسة التركيز و سياسة مكان النوافذ "
+"أو ينقر عليها، كذلك تستطيع أن تحدد سياسة التركيز و سياسة مكان النوافذ "
 "الجديدة.</p> <p>الرجاء ملاحظة أن هذه الإعدادات لن تدخل في حيز التنفيذ إذا لم "
-"تستعمل كوِن كمدير نوافذك ، إذا كنت تستخدم مدير نوافذ مختلف فراجع وثائقه "
-"لتعريف كيف يمكن تخصيصه.</p>"
+"تستعمل كوِن كمدير نوافذك، إذا كنت تستخدم مدير نوافذ مختلف فراجع وثائقه لتعريف "
+"كيف يمكن تخصيصه.</p>"
 
 #: main.cpp:202
 #, kde-format
@@ -1286,7 +1286,7 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
-"هنا يمكن تحديد أن نوافذ ستنجذب فقط إذا حاولت أن تطابق بينها ، بمعنى أنها لن "
+"هنا يمكن تحديد أن نوافذ ستنجذب فقط إذا حاولت أن تطابق بينها، بمعنى أنها لن "
 "تنجذب حتى تكون النوافذ قريبة من النوافذ الأخرى أو قريبة من حدودها."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
@@ -1314,9 +1314,9 @@ msgid ""
 "em>."
 msgstr ""
 "<em> النقر للتركيز (أولوية الفأرة): </em> في الغالب هو نفسه <em> انقر "
-"للتركيز</em>. إذا كان يتعين على النظام اختيار نافذة نشطة (على سبيل المثال ، "
-"بسبب إغلاق النافذة النشطة حاليًا) ، فإن النافذة الموجودة أسفل الفأرة هي "
-"المرشح المفضل. هذا غير معتاد ولكنه  تنويع ممكن لـ <em> انقر للتركيز </em>."
+"للتركيز</em>. إذا كان يتعين على النظام اختيار نافذة نشطة (على سبيل المثال، "
+"بسبب إغلاق النافذة النشطة حاليًا)، فإن النافذة الموجودة أسفل الفأرة هي المرشح "
+"المفضل. هذا غير معتاد ولكنه  تنويع ممكن لـ <em> انقر للتركيز </em>."
 
 #: windows.cpp:106
 #, kde-format
@@ -1340,9 +1340,9 @@ msgid ""
 "if you want a hover controlled focus."
 msgstr ""
 "هذا في الغالب مماثل لـ <em> التركيز يتبع الفأرة </em>. إذا كان يتعين على "
-"النظام اختيار نافذة نشطة (على سبيل المثال ، بسبب إغلاق النافذة النشطة "
-"حاليًا) ، فإن النافذة الموجودة أسفل الفأرة هي المرشح المفضل. اختر هذا ، إذا "
-"كنت تريد تركيزًا متحكمًا فيه بواسطة التحويم."
+"النظام اختيار نافذة نشطة (على سبيل المثال، بسبب إغلاق النافذة النشطة حاليًا)، "
+"فإن النافذة الموجودة أسفل الفأرة هي المرشح المفضل. اختر هذا، إذا كنت تريد "
+"تركيزًا متحكمًا فيه بواسطة التحويم."
 
 #: windows.cpp:115
 #, kde-format
