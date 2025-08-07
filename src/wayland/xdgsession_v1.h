@@ -185,4 +185,4 @@ private:
     friend class XdgToplevelSessionV1InterfacePrivate;
 };
 
-} // namespace KWaylandServer
+} // namespace KWin

@@ -447,4 +447,4 @@ void XdgSessionStorageV1::sync()
     d->config->sync();
 }
 
-} // namespace KWaylandServer
+} // namespace KWin
