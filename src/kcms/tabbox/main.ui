@@ -647,7 +647,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="effectConfigButton">
+            <widget class="QPushButton" name="effectPreviewButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -720,7 +720,7 @@
   <tabstop>kcfg_HighlightWindows</tabstop>
   <tabstop>kcfg_ShowTabBox</tabstop>
   <tabstop>effectCombo</tabstop>
-  <tabstop>effectConfigButton</tabstop>
+  <tabstop>effectPreviewButton</tabstop>
   <tabstop>switchingModeCombo</tabstop>
   <tabstop>showDesktop</tabstop>
   <tabstop>oneAppWindow</tabstop>

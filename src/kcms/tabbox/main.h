@@ -42,7 +42,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void updateUnmanagedState();
-    void configureEffectClicked();
+    void showPreview();
 
 private:
     void initLayoutLists();
