@@ -64,12 +64,18 @@ void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, 
     case KeyboardKeyState::Released:
         waylandState = WL_KEYBOARD_KEY_STATE_RELEASED;
         break;
-    case KeyboardKeyState::Repeated:
-        Q_UNREACHABLE();
+    case KeyboardKeyState::Repeated: {
+        waylandState = WL_KEYBOARD_KEY_STATE_REPEATED;
+        break;
+    }
     }
 
     const auto resources = d->resourceMap();
     for (auto r : resources) {
+        if (r->version() < WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION && state == KeyboardKeyState::Repeated) {
+            continue;
+        }
+
         d->send_key(r->handle, serial, timestamp, key, waylandState);
     }
 }
