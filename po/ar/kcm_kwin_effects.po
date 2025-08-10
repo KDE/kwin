@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2021, 2023, 2024 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2023, 2024, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-03-26 00:45+0000\n"
-"PO-Revision-Date: 2024-10-03 07:20+0400\n"
+"PO-Revision-Date: 2025-08-09 22:27+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -69,8 +69,7 @@ msgstr "تتيح لك هذه الوحدة ضبط تأثيرات سطح المك�
 msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
 "effect's settings."
-msgstr ""
-"تلميح: لمعرفة كيفية تنشيط التأثير أو تكوينه ، انظر إلى إعدادات التأثير."
+msgstr "تلميح: لمعرفة كيفية تنشيط التأثير أو ضبطه، انظر إلى إعدادات التأثير."
 
 #: package/contents/ui/main.qml:47
 #, kde-format
