@@ -302,20 +302,51 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
     }
     screenshot->screens.removeOne(m_paintedScreen);
 
-    const QRect sourceRect = screenshot->area & m_paintedScreen->geometry();
-    qreal sourceDevicePixelRatio = 1.0;
-    if (screenshot->flags & ScreenShotNativeResolution) {
-        sourceDevicePixelRatio = m_paintedScreen->scale();
+    const auto context = effects->openglContext();
+    if (!context) {
+        return false;
     }
 
-    const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio);
-    const QSize nativeAreaSize = snapToPixelGrid(scaledRect(screenshot->area, screenshot->result.devicePixelRatio())).size();
+    const QRect sourceRect = screenshot->area & m_paintedScreen->geometry();
+    qreal devicePixelRatio = 1.0;
+    if (screenshot->flags & ScreenShotNativeResolution) {
+        devicePixelRatio = m_paintedScreen->scale();
+    }
+    const QSize nativeAreaSize = snapToPixelGrid(scaledRect(screenshot->area, devicePixelRatio)).size();
+
+    std::unique_ptr<GLTexture> offscreenTexture;
+    std::unique_ptr<GLFramebuffer> target;
+    if (effects->isOpenGLCompositing()) {
+        offscreenTexture = GLTexture::allocate(GL_RGBA8, nativeAreaSize);
+        if (!offscreenTexture) {
+            return false;
+        }
+        offscreenTexture->setFilter(GL_LINEAR);
+        offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+        target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
+        if (!target->valid()) {
+            return false;
+        }
+    }
+
+    RenderTarget offscreenTarget(target.get());
+    RenderViewport offscreenViewport(sourceRect, devicePixelRatio, offscreenTarget);
+    GLFramebuffer::pushFramebuffer(target.get());
+    effects->paintScreen(offscreenTarget, offscreenViewport, PAINT_SCREEN_TRANSFORMED, infiniteRegion(), m_paintedScreen);
+
+    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
+    snapshot.setDevicePixelRatio(devicePixelRatio);
+    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+    convertFromGLImage(snapshot, snapshot.width(), snapshot.height(), OutputTransform::Normal);
+
+    GLFramebuffer::popFramebuffer();
+
     const QRect nativeArea(screenshot->area.topLeft(), nativeAreaSize);
 
     QPainter painter(&screenshot->result);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
     painter.setWindow(nativeArea);
-    painter.drawImage(roundedRect(sourceRect, sourceDevicePixelRatio), snapshot);
+    painter.drawImage(roundedRect(sourceRect, devicePixelRatio), snapshot);
     painter.end();
 
     if (screenshot->screens.isEmpty()) {
@@ -335,13 +366,42 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
     if (screenshot->screen != m_paintedScreen) {
         return false;
     }
+    const auto context = effects->openglContext();
+    if (!context) {
+        return false;
+    }
 
     qreal devicePixelRatio = 1.0;
     if (screenshot->flags & ScreenShotNativeResolution) {
         devicePixelRatio = screenshot->screen->scale();
     }
+    const QSize nativeSize = (m_paintedScreen->geometryF().size() * devicePixelRatio).toSize();
 
-    QImage snapshot = blitScreenshot(renderTarget, viewport, screenshot->screen->geometry(), devicePixelRatio);
+    std::unique_ptr<GLTexture> offscreenTexture;
+    std::unique_ptr<GLFramebuffer> target;
+    if (effects->isOpenGLCompositing()) {
+        offscreenTexture = GLTexture::allocate(GL_RGBA8, nativeSize);
+        if (!offscreenTexture) {
+            return false;
+        }
+        offscreenTexture->setFilter(GL_LINEAR);
+        offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+        target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
+        if (!target->valid()) {
+            return false;
+        }
+    }
+
+    RenderTarget offscreenTarget(target.get(), ColorDescription::sRGB);
+    RenderViewport offscreenViewport(m_paintedScreen->geometryF(), devicePixelRatio, offscreenTarget);
+    GLFramebuffer::pushFramebuffer(target.get());
+    effects->paintScreen(offscreenTarget, offscreenViewport, PAINT_SCREEN_TRANSFORMED, infiniteRegion(), m_paintedScreen);
+
+    QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_ARGB32_Premultiplied);
+    context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+    convertFromGLImage(snapshot, snapshot.width(), snapshot.height(), OutputTransform::Normal);
+    GLFramebuffer::popFramebuffer();
+
     if (screenshot->flags & ScreenShotIncludeCursor) {
         const int xOffset = screenshot->screen->geometry().x();
         const int yOffset = screenshot->screen->geometry().y();
