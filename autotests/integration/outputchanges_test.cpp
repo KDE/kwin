@@ -2163,8 +2163,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput_data()
     QTest::addRow("Quick Right") << QuickTileFlag::Right;
     QTest::addRow("Quick Top") << QuickTileFlag::Top;
     QTest::addRow("Quick Bottom") << QuickTileFlag::Bottom;
-    // FIXME this case currently fails!
-    // QTest::addRow("Custom") << QuickTileFlag::Custom;
+    QTest::addRow("Custom") << QuickTileFlag::Custom;
 }
 
 void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
