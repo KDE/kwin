@@ -144,60 +144,6 @@ static const QString s_errorInvalidScreenMessage = QStringLiteral("Invalid scree
 static const QString s_errorFileDescriptor = QStringLiteral("org.kde.KWin.ScreenShot2.Error.FileDescriptor");
 static const QString s_errorFileDescriptorMessage = QStringLiteral("No valid file descriptor");
 
-class ScreenShotSource2 : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit ScreenShotSource2(const QFuture<QImage> &future);
-
-    void marshal(ScreenShotSinkPipe2 *sink);
-
-    virtual QVariantMap attributes() const;
-
-Q_SIGNALS:
-    void cancelled();
-    void completed();
-
-private:
-    QFuture<QImage> m_future;
-    QFutureWatcher<QImage> *m_watcher;
-};
-
-class ScreenShotSourceScreen2 : public ScreenShotSource2
-{
-    Q_OBJECT
-
-public:
-    ScreenShotSourceScreen2(ScreenShotEffect *effect, Output *screen, ScreenShotFlags flags);
-
-    QVariantMap attributes() const override;
-
-private:
-    QString m_name;
-};
-
-class ScreenShotSourceArea2 : public ScreenShotSource2
-{
-    Q_OBJECT
-
-public:
-    ScreenShotSourceArea2(ScreenShotEffect *effect, const QRect &area, ScreenShotFlags flags);
-};
-
-class ScreenShotSourceWindow2 : public ScreenShotSource2
-{
-    Q_OBJECT
-
-public:
-    ScreenShotSourceWindow2(ScreenShotEffect *effect, EffectWindow *window, ScreenShotFlags flags);
-
-    QVariantMap attributes() const override;
-
-private:
-    QUuid m_internalId;
-};
-
 class ScreenShotSinkPipe2 : public QObject
 {
     Q_OBJECT
@@ -212,67 +158,6 @@ private:
     QDBusMessage m_replyMessage;
     FileDescriptor m_fileDescriptor;
 };
-
-ScreenShotSource2::ScreenShotSource2(const QFuture<QImage> &future)
-    : m_future(future)
-{
-    m_watcher = new QFutureWatcher<QImage>(this);
-    connect(m_watcher, &QFutureWatcher<QImage>::finished, this, [this]() {
-        if (!m_future.isValid()) {
-            Q_EMIT cancelled();
-        } else {
-            Q_EMIT completed();
-        }
-    });
-    m_watcher->setFuture(m_future);
-}
-
-QVariantMap ScreenShotSource2::attributes() const
-{
-    return QVariantMap();
-}
-
-void ScreenShotSource2::marshal(ScreenShotSinkPipe2 *sink)
-{
-    sink->flush(m_future.result(), attributes());
-}
-
-ScreenShotSourceScreen2::ScreenShotSourceScreen2(ScreenShotEffect *effect,
-                                                 Output *screen,
-                                                 ScreenShotFlags flags)
-    : ScreenShotSource2(effect->scheduleScreenShot(screen, flags))
-    , m_name(screen->name())
-{
-}
-
-QVariantMap ScreenShotSourceScreen2::attributes() const
-{
-    return QVariantMap{
-        {QStringLiteral("screen"), m_name},
-    };
-}
-
-ScreenShotSourceArea2::ScreenShotSourceArea2(ScreenShotEffect *effect,
-                                             const QRect &area,
-                                             ScreenShotFlags flags)
-    : ScreenShotSource2(effect->scheduleScreenShot(area, flags))
-{
-}
-
-ScreenShotSourceWindow2::ScreenShotSourceWindow2(ScreenShotEffect *effect,
-                                                 EffectWindow *window,
-                                                 ScreenShotFlags flags)
-    : ScreenShotSource2(effect->scheduleScreenShot(window, flags))
-    , m_internalId(window->internalId())
-{
-}
-
-QVariantMap ScreenShotSourceWindow2::attributes() const
-{
-    return QVariantMap{
-        {QStringLiteral("windowId"), m_internalId.toString()},
-    };
-}
 
 ScreenShotSinkPipe2::ScreenShotSinkPipe2(int fileDescriptor, QDBusMessage replyMessage)
     : m_replyMessage(replyMessage)
@@ -568,39 +453,41 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
     return QVariantMap();
 }
 
-void ScreenShotDBusInterface2::bind(ScreenShotSinkPipe2 *sink, ScreenShotSource2 *source)
-{
-    connect(source, &ScreenShotSource2::cancelled, sink, [sink, source]() {
-        sink->cancel();
-
-        sink->deleteLater();
-        source->deleteLater();
-    });
-
-    connect(source, &ScreenShotSource2::completed, sink, [sink, source]() {
-        source->marshal(sink);
-
-        sink->deleteLater();
-        source->deleteLater();
-    });
-}
-
 void ScreenShotDBusInterface2::takeScreenShot(Output *screen, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink)
 {
-    bind(sink, new ScreenShotSourceScreen2(m_effect, screen, flags));
+    if (const auto result = m_effect->takeScreenShot(screen, flags)) {
+        sink->flush(*result, QVariantMap{
+                                 {QStringLiteral("screen"), screen->name()},
+                             });
+    } else {
+        sink->cancel();
+    }
+    sink->deleteLater();
 }
 
 void ScreenShotDBusInterface2::takeScreenShot(const QRect &area, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink)
 {
-    bind(sink, new ScreenShotSourceArea2(m_effect, area, flags));
+    if (const auto result = m_effect->takeScreenShot(area, flags)) {
+        sink->flush(*result, {});
+    } else {
+        sink->cancel();
+    }
+    sink->deleteLater();
 }
 
 void ScreenShotDBusInterface2::takeScreenShot(EffectWindow *window, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink)
 {
-    bind(sink, new ScreenShotSourceWindow2(m_effect, window, flags));
+    if (const auto result = m_effect->takeScreenShot(window, flags)) {
+        sink->flush(*result, QVariantMap{
+                                 {QStringLiteral("windowId"), window->internalId().toString()},
+                             });
+    } else {
+        sink->cancel();
+    }
+    sink->deleteLater();
 }
 
 } // namespace KWin
