@@ -133,7 +133,6 @@ private:
         std::unique_ptr<GLShader> shader;
         int mvpMatrixLocation;
         int noiseTextureSizeLocation;
-        int texStartPosLocation;
 
         std::unique_ptr<GLTexture> noiseTexture;
         qreal noiseTextureScale = 1.0;
