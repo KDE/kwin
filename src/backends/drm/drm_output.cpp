@@ -744,7 +744,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         // losing a lot of performance and battery life over
         ColorPipeline simplerPipeline;
         simplerPipeline.addMatrix(next.blendingColor.toOther(encoding, RenderingIntent::AbsoluteColorimetric), colorPipeline.currentOutputRange());
-        m_pipeline->setCrtcColorPipeline(colorPipeline);
+        m_pipeline->setCrtcColorPipeline(simplerPipeline);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
             next.layerBlendingColor = next.blendingColor;
