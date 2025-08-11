@@ -1140,6 +1140,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldOutputs = m_outputs;
+    const QSet<Output *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
 
     // On X11, we receive spurious output change events when windows move around.
     if (waylandServer()) {
@@ -1148,22 +1149,22 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         }
     }
 
-    m_outputs.clear();
+    QList<Output *> newOutputs;
     for (Output *output : availableOutputs) {
         if (!output->isNonDesktop() && output->isEnabled()) {
-            m_outputs.append(output);
+            newOutputs.append(output);
         }
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
     }
 
     // The workspace requires at least one output connected.
-    if (m_outputs.isEmpty()) {
+    if (newOutputs.isEmpty()) {
         if (!m_placeholderOutput) {
             m_placeholderOutput = new PlaceholderOutput(QSize(1920, 1080), 1);
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
             input()->installInputEventFilter(m_placeholderFilter.get());
         }
-        m_outputs.append(m_placeholderOutput);
+        newOutputs.append(m_placeholderOutput);
     } else {
         if (m_placeholderOutput) {
             m_placeholderOutput->unref();
@@ -1171,6 +1172,27 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
             m_placeholderFilter.reset();
         }
     }
+
+    m_placementTracker->inhibit();
+
+    // Evacuate windows from custom tiles of to-be-removed outputs.
+    // This currently needs to happen before the outputs are removed,
+    // as Tile::unmanage sets the window's moveResizeOutput - which
+    // Window::checkWorkspacePosition relies on to be unchanged though
+    const QSet<Output *> newOutputsSet(newOutputs.constBegin(), newOutputs.constEnd());
+    const auto toBeRemoved = oldOutputsSet - newOutputsSet;
+    for (Output *output : toBeRemoved) {
+        const auto desktops = VirtualDesktopManager::self()->desktops();
+        for (VirtualDesktop *desktop : desktops) {
+            m_tileManagers[output]->rootTile(desktop)->visitDescendants([](Tile *child) {
+                const QList<Window *> windows = child->windows();
+                for (Window *window : windows) {
+                    child->unmanage(window);
+                }
+            });
+        }
+    }
+    m_outputs = newOutputs;
 
     if (!m_activeOutput || !m_outputs.contains(m_activeOutput)) {
         setActiveOutput(m_outputs[0]);
@@ -1191,10 +1213,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
                             m_outputOrder.end());
     }
 
-    const QSet<Output *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
-    const QSet<Output *> outputsSet(m_outputs.constBegin(), m_outputs.constEnd());
-
-    const auto added = outputsSet - oldOutputsSet;
+    const auto added = newOutputsSet - oldOutputsSet;
     for (Output *output : added) {
         output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
@@ -1207,10 +1226,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     }
     wakeUp();
 
-    m_placementTracker->inhibit();
-
-    const auto removed = oldOutputsSet - outputsSet;
-    for (Output *output : removed) {
+    for (Output *output : toBeRemoved) {
         Q_EMIT outputRemoved(output);
 
         auto tileManager = std::move(m_tileManagers[output]);
@@ -1218,13 +1234,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 
         const auto desktops = VirtualDesktopManager::self()->desktops();
         for (VirtualDesktop *desktop : desktops) {
-            // Evacuate windows from the defunct custom tile tree.
-            tileManager->rootTile(desktop)->visitDescendants([](Tile *child) {
-                const QList<Window *> windows = child->windows();
-                for (Window *window : windows) {
-                    child->unmanage(window);
-                }
-            });
+            // custom tiled windows are evacuated further above
 
             // Migrate windows from the defunct quick tile to a quick tile tree on another output.
             static constexpr QuickTileMode quickTileModes[] = {
@@ -1262,7 +1272,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     m_placementTracker->uninhibit();
     m_placementTracker->restore(getPlacementTrackerHash());
 
-    for (Output *output : removed) {
+    for (Output *output : toBeRemoved) {
         output->unref();
     }
 
