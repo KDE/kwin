@@ -254,7 +254,7 @@ static QString earlyIdentifier(Output *output)
 void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
     const bool allOff = std::ranges::all_of(m_outputs, [](Output *output) {
-        return output->dpmsMode() != Output::DpmsMode::On;
+        return !output->isEnabled() || output->dpmsMode() != Output::DpmsMode::On;
     });
     if (allOff && m_recentlyUnpluggedDpmsOffOutputs.contains(earlyIdentifier(o))) {
         if (DrmOutput *drmOutput = qobject_cast<DrmOutput *>(o)) {
