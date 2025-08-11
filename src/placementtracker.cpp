@@ -90,10 +90,19 @@ void PlacementTracker::restore(const QString &key)
         if (it != dataMap.end()) {
             const WindowData &newData = it.value();
 
+            const auto checkQuickTileMode = [window](QuickTileMode oldMode) {
+                if (window->requestedQuickTileMode() == oldMode) {
+                    return true;
+                }
+                // custom-tiled windows lose their quick tile mode when the output they're on is unplugged
+                // TODO find some nicer way of handling this?
+                return window->requestedQuickTileMode() == QuickTileFlag::None && oldMode == QuickTileFlag::Custom;
+            };
+
             // don't touch windows where the user intentionally changed their state
             bool restore = window->interactiveMoveResizeCount() == newData.interactiveMoveResizeCount
                 && window->requestedMaximizeMode() == newData.maximize
-                && window->requestedQuickTileMode() == newData.quickTile
+                && checkQuickTileMode(newData.quickTile)
                 && window->isFullScreen() == newData.fullscreen;
             if (!restore) {
                 // the logic above can have false negatives if PlacementTracker changed the window state
@@ -101,7 +110,7 @@ void PlacementTracker::restore(const QString &key)
                 if (const auto it = m_lastRestoreData.find(window); it != m_lastRestoreData.end()) {
                     restore = window->interactiveMoveResizeCount() == it->interactiveMoveResizeCount
                         && window->requestedMaximizeMode() == it->maximize
-                        && window->requestedQuickTileMode() == it->quickTile
+                        && checkQuickTileMode(it->quickTile)
                         && window->isFullScreen() == it->fullscreen
                         && window->moveResizeOutput()->uuid() == it->outputUuid;
                 }
