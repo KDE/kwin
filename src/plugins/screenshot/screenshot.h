@@ -51,55 +51,16 @@ public:
     ScreenShotEffect();
     ~ScreenShotEffect() override;
 
-    /**
-     * Schedules a screenshot of the given @a screen. The returned QFuture can be used to query
-     * the image data. If the screen is removed before the screenshot is taken, the future will
-     * be cancelled.
-     */
-    QFuture<QImage> scheduleScreenShot(Output *screen, ScreenShotFlags flags = {});
+    std::optional<QImage> takeScreenShot(Output *screen, ScreenShotFlags flags = {});
+    std::optional<QImage> takeScreenShot(const QRect &area, ScreenShotFlags flags = {});
+    std::optional<QImage> takeScreenShot(EffectWindow *window, ScreenShotFlags flags = {});
 
-    /**
-     * Schedules a screenshot of the given @a area. The returned QFuture can be used to query the
-     * image data.
-     */
-    QFuture<QImage> scheduleScreenShot(const QRect &area, ScreenShotFlags flags = {});
-
-    /**
-     * Schedules a screenshot of the given @a window. The returned QFuture can be used to query
-     * the image data. If the window is removed before the screenshot is taken, the future will
-     * be cancelled.
-     */
-    QFuture<QImage> scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags = {});
-
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     bool isActive() const override;
-    int requestedEffectChainPosition() const override;
 
     static bool supported();
 
-private Q_SLOTS:
-    void handleWindowClosed(EffectWindow *window);
-    void handleScreenAdded();
-    void handleScreenRemoved(Output *screen);
-
 private:
-    void takeScreenShot(ScreenShotWindowData *screenshot);
-    bool takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotAreaData *screenshot);
-    bool takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotScreenData *screenshot);
-
-    void cancelWindowScreenShots();
-    void cancelAreaScreenShots();
-    void cancelScreenScreenShots();
-
-    void grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const;
-    QImage blitScreenshot(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio = 1.0) const;
-
-    std::vector<ScreenShotWindowData> m_windowScreenShots;
-    std::vector<ScreenShotAreaData> m_areaScreenShots;
-    std::vector<ScreenShotScreenData> m_screenScreenShots;
-
     std::unique_ptr<ScreenShotDBusInterface2> m_dbusInterface2;
-    Output *m_paintedScreen = nullptr;
 };
 
 } // namespace KWin
