@@ -150,7 +150,7 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
     }
 }
 
-bool Cursor::isOnOutput(Output *output) const
+bool Cursor::isOnOutput(LogicalOutput *output) const
 {
     if (Cursors::self()->isCursorHidden()) {
         return false;

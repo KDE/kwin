@@ -914,12 +914,12 @@ void Device::setOutputName(const QString &name)
 #endif
 }
 
-Output *Device::output() const
+LogicalOutput *Device::output() const
 {
     return m_output;
 }
 
-void Device::setOutput(Output *output)
+void Device::setOutput(LogicalOutput *output)
 {
     m_output = output;
 }

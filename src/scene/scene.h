@@ -20,7 +20,7 @@ namespace KWin
 {
 
 class ItemRenderer;
-class Output;
+class LogicalOutput;
 class Scene;
 class OutputLayer;
 class OutputFrame;
@@ -31,9 +31,9 @@ class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
 public:
-    explicit RenderView(Output *output, OutputLayer *layer);
+    explicit RenderView(LogicalOutput *output, OutputLayer *layer);
 
-    Output *output() const;
+    LogicalOutput *output() const;
     OutputLayer *layer() const;
 
     virtual bool isVisible() const;
@@ -62,7 +62,7 @@ public:
     virtual void setExclusive(bool enable);
 
 protected:
-    Output *m_output = nullptr;
+    LogicalOutput *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
 };
 
@@ -70,7 +70,7 @@ class KWIN_EXPORT SceneView : public RenderView
 {
     Q_OBJECT
 public:
-    explicit SceneView(Scene *scene, Output *output, OutputLayer *layer);
+    explicit SceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer);
     ~SceneView() override;
 
     Scene *scene() const;
@@ -97,7 +97,7 @@ public:
 
 private:
     Scene *m_scene;
-    Output *m_output = nullptr;
+    LogicalOutput *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
     QRectF m_viewport;
     QList<RenderView *> m_exclusiveViews;
@@ -107,7 +107,7 @@ private:
 class KWIN_EXPORT ItemTreeView : public RenderView
 {
 public:
-    explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    explicit ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer);
     ~ItemTreeView() override;
 
     QPointF hotspot() const override;

@@ -12,7 +12,7 @@
 namespace KWin
 {
 
-OutputLayer::OutputLayer(Output *output)
+OutputLayer::OutputLayer(LogicalOutput *output)
     : m_output(output)
     , m_renderLoop(output->renderLoop())
 {
@@ -185,7 +185,7 @@ void OutputLayer::setRequiredAlphaBits(uint32_t bits)
     m_requiredAlphaBits = bits;
 }
 
-QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff)
+QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, LogicalOutput::ColorPowerTradeoff tradeoff)
 {
     QList<FormatInfo> ret;
     for (auto it = formats.begin(); it != formats.end(); it++) {
@@ -202,7 +202,7 @@ QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<
         ret.push_back(*info);
     }
     std::ranges::sort(ret, [tradeoff](const FormatInfo &before, const FormatInfo &after) {
-        if (tradeoff == Output::ColorPowerTradeoff::PreferAccuracy && before.bitsPerColor != after.bitsPerColor) {
+        if (tradeoff == LogicalOutput::ColorPowerTradeoff::PreferAccuracy && before.bitsPerColor != after.bitsPerColor) {
             return before.bitsPerColor > after.bitsPerColor;
         }
         if (before.floatingPoint != after.floatingPoint) {

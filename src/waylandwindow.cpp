@@ -222,7 +222,7 @@ void WaylandWindow::updateGeometry(const QRectF &rect)
     const QRectF oldClientGeometry = m_clientGeometry;
     const QRectF oldFrameGeometry = m_frameGeometry;
     const QRectF oldBufferGeometry = m_bufferGeometry;
-    const Output *oldOutput = m_output;
+    const LogicalOutput *oldOutput = m_output;
 
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;

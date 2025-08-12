@@ -19,7 +19,7 @@
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 class GraphicsBufferAllocator;
 class QPainterSwapchainSlot;
 class QPainterSwapchain;
@@ -85,11 +85,11 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    OutputLayer *primaryLayer(LogicalOutput *output) override;
+    OutputLayer *cursorLayer(LogicalOutput *output) override;
 
 private:
-    void createOutput(Output *waylandOutput);
+    void createOutput(LogicalOutput *waylandOutput);
 
     struct Layers
     {
@@ -99,7 +99,7 @@ private:
 
     WaylandBackend *m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    std::map<Output *, Layers> m_outputs;
+    std::map<LogicalOutput *, Layers> m_outputs;
 };
 
 } // namespace Wayland

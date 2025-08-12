@@ -24,24 +24,24 @@ KscreenEffect::KscreenEffect()
     KscreenConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
 
-    const QList<Output *> screens = effects->screens();
+    const QList<LogicalOutput *> screens = effects->screens();
     for (auto screen : screens) {
         addScreen(screen);
     }
     connect(effects, &EffectsHandler::screenAdded, this, &KscreenEffect::addScreen);
-    connect(effects, &EffectsHandler::screenRemoved, this, [this](KWin::Output *screen) {
+    connect(effects, &EffectsHandler::screenRemoved, this, [this](KWin::LogicalOutput *screen) {
         m_states.remove(screen);
     });
 }
 
-void KscreenEffect::addScreen(Output *screen)
+void KscreenEffect::addScreen(LogicalOutput *screen)
 {
-    connect(screen, &Output::wakeUp, this, [this, screen] {
+    connect(screen, &LogicalOutput::wakeUp, this, [this, screen] {
         auto &state = m_states[screen];
         state.m_timeLine.setDuration(std::chrono::milliseconds(animationTime<KscreenConfig>(250ms)));
         setState(state, StateFadingIn);
     });
-    connect(screen, &Output::aboutToTurnOff, this, [this, screen](std::chrono::milliseconds dimmingIn) {
+    connect(screen, &LogicalOutput::aboutToTurnOff, this, [this, screen](std::chrono::milliseconds dimmingIn) {
         auto &state = m_states[screen];
         state.m_timeLine.setDuration(dimmingIn);
         setState(state, StateFadingOut);
@@ -149,7 +149,7 @@ bool KscreenEffect::isActive() const
     return !m_states.isEmpty();
 }
 
-bool KscreenEffect::isScreenActive(Output *screen) const
+bool KscreenEffect::isScreenActive(LogicalOutput *screen) const
 {
     return m_states.contains(screen);
 }

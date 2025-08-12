@@ -19,7 +19,7 @@ namespace KWin
 class OutlinedBorderItem;
 class GLTexture;
 class Window;
-class Output;
+class LogicalOutput;
 
 namespace Decoration
 {
@@ -154,7 +154,7 @@ protected:
 
 private:
     Window *m_window;
-    QPointer<Output> m_output;
+    QPointer<LogicalOutput> m_output;
     QPointer<KDecoration3::Decoration> m_decoration;
     std::unique_ptr<DecorationRenderer> m_renderer;
     std::unique_ptr<OutlinedBorderItem> m_outlineItem;

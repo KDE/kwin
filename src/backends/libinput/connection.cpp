@@ -175,7 +175,7 @@ void Connection::handleEvent()
 }
 
 #ifndef KWIN_BUILD_TESTING
-QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *output)
+QPointF devicePointToGlobalPosition(const QPointF &devicePos, const LogicalOutput *output)
 {
     QPointF pos = devicePos;
     // TODO: Do we need to handle the flipped cases differently?
@@ -209,7 +209,7 @@ static QPointF tabletToolPosition(TabletToolEvent *event)
     if (event->device()->isMapToWorkspace()) {
         return workspace()->geometry().topLeft() + event->transformedPosition(workspace()->geometry().size());
     } else {
-        Output *output = event->device()->output();
+        LogicalOutput *output = event->device()->output();
         if (!output) {
             output = workspace()->activeOutput();
         }
@@ -608,13 +608,13 @@ void Connection::applyScreenToDevice(Device *device)
         return;
     }
 
-    Output *deviceOutput = nullptr;
-    const QList<Output *> outputs = kwinApp()->outputBackend()->outputs();
+    LogicalOutput *deviceOutput = nullptr;
+    const QList<LogicalOutput *> outputs = kwinApp()->outputBackend()->outputs();
 
     // let's try to find a screen for it
     if (!device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
-        for (Output *output : outputs) {
+        for (LogicalOutput *output : outputs) {
             if (!output->isEnabled()) {
                 continue;
             }
@@ -626,8 +626,8 @@ void Connection::applyScreenToDevice(Device *device)
     }
     if (!deviceOutput && device->isTouch()) {
         // do we have an internal screen?
-        Output *internalOutput = nullptr;
-        for (Output *output : outputs) {
+        LogicalOutput *internalOutput = nullptr;
+        for (LogicalOutput *output : outputs) {
             if (!output->isEnabled()) {
                 continue;
             }
@@ -636,7 +636,7 @@ void Connection::applyScreenToDevice(Device *device)
                 break;
             }
         }
-        auto testScreenMatches = [device](const Output *output) {
+        auto testScreenMatches = [device](const LogicalOutput *output) {
             const auto &size = device->size();
             const auto &screenSize = output->physicalSize();
             return std::round(size.width()) == std::round(screenSize.width())
@@ -646,7 +646,7 @@ void Connection::applyScreenToDevice(Device *device)
             deviceOutput = internalOutput;
         }
         // let's compare all screens for size
-        for (Output *output : outputs) {
+        for (LogicalOutput *output : outputs) {
             if (!output->isEnabled()) {
                 continue;
             }
@@ -661,7 +661,7 @@ void Connection::applyScreenToDevice(Device *device)
                 // we have an internal id, so let's use that
                 deviceOutput = internalOutput;
             } else {
-                for (Output *output : outputs) {
+                for (LogicalOutput *output : outputs) {
                     // just take first screen, we have no clue
                     if (output->isEnabled()) {
                         deviceOutput = output;

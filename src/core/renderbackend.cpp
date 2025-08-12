@@ -158,7 +158,7 @@ void OutputFrame::setArtificialHdrHeadroom(double edr)
     m_artificialHdrHeadroom = edr;
 }
 
-OutputLayer *RenderBackend::cursorLayer(Output *output)
+OutputLayer *RenderBackend::cursorLayer(LogicalOutput *output)
 {
     return nullptr;
 }

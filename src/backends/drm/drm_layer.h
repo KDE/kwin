@@ -26,7 +26,7 @@ class DrmPipeline;
 class DrmOutputLayer : public OutputLayer
 {
 public:
-    explicit DrmOutputLayer(Output *output);
+    explicit DrmOutputLayer(LogicalOutput *output);
     virtual ~DrmOutputLayer();
 
     virtual void releaseBuffers() = 0;

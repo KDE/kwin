@@ -370,7 +370,7 @@ void BlurEffect::slotWindowDeleted(EffectWindow *w)
     }
 }
 
-void BlurEffect::slotScreenRemoved(KWin::Output *screen)
+void BlurEffect::slotScreenRemoved(KWin::LogicalOutput *screen)
 {
     for (auto &[window, data] : m_windows) {
         if (auto it = data.render.find(screen); it != data.render.end()) {

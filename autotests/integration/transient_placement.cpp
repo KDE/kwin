@@ -463,7 +463,7 @@ void TransientPlacementTest::testXdgPopup()
 
 void TransientPlacementTest::testXdgPopupWithPanel()
 {
-    const Output *output = workspace()->activeOutput();
+    const LogicalOutput *output = workspace()->activeOutput();
 
     std::unique_ptr<KWayland::Client::Surface> dockSurface{Test::createSurface()};
     std::unique_ptr<Test::LayerSurfaceV1> dockShellSurface{Test::createLayerSurfaceV1(dockSurface.get(), QStringLiteral("dock"))};

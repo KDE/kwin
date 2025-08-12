@@ -535,7 +535,7 @@ void UserActionsMenu::screenPopupAboutToShow()
 
     const auto outputs = workspace()->outputs();
     for (int i = 0; i < outputs.count(); ++i) {
-        Output *output = outputs[i];
+        LogicalOutput *output = outputs[i];
         // assumption: there are not more than 9 screens attached.
         QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to. First argument is a number, second the output identifier. E.g. Screen 1 (HDMI1)",
                                                         "Screen &%1 (%2)", (i + 1), output->name()));
@@ -931,7 +931,7 @@ void Workspace::initShortcuts()
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Move Window to Screen %1", i), 0, [this, i]() {
-            Output *output = outputs().value(i);
+            LogicalOutput *output = outputs().value(i);
             if (output) {
                 slotWindowToScreen(output);
             }
@@ -952,7 +952,7 @@ void Workspace::initShortcuts()
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Switch to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, [this, i]() {
-            Output *output = outputs().value(i);
+            LogicalOutput *output = outputs().value(i);
             if (output) {
                 slotSwitchToScreen(output);
             }
@@ -1165,7 +1165,7 @@ void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
     }
 }
 
-void Workspace::slotSwitchToScreen(Output *output)
+void Workspace::slotSwitchToScreen(LogicalOutput *output)
 {
     switchToOutput(output);
 }
@@ -1200,7 +1200,7 @@ void Workspace::slotSwitchToNextScreen()
     switchToOutput(findOutput(activeOutput(), Direction::DirectionNext, true));
 }
 
-void Workspace::slotWindowToScreen(Output *output)
+void Workspace::slotWindowToScreen(LogicalOutput *output)
 {
     if (USABLE_ACTIVE_WINDOW) {
         m_activeWindow->sendToOutput(output);

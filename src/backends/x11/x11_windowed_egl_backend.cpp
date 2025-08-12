@@ -229,12 +229,12 @@ void X11WindowedEglBackend::init()
     }
 }
 
-OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)
+OutputLayer *X11WindowedEglBackend::primaryLayer(LogicalOutput *output)
 {
     return m_outputs[output].primaryLayer.get();
 }
 
-OutputLayer *X11WindowedEglBackend::cursorLayer(Output *output)
+OutputLayer *X11WindowedEglBackend::cursorLayer(LogicalOutput *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

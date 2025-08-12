@@ -122,7 +122,7 @@ const wp_fractional_scale_v1_listener WaylandOutput::s_fractionalScaleListener{
 };
 
 WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
-    : Output(backend)
+    : LogicalOutput(backend)
     , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_surface(backend->display()->compositor()->createSurface())
     , m_xdgShellSurface(backend->display()->xdgShell()->createSurface(m_surface.get()))
@@ -423,7 +423,7 @@ void WaylandOutput::handleConfigure(const QSize &size, XdgShellSurface::States s
 
         applyConfigure(size, serial);
     } else {
-        // Output resizing is a resource intensive task, so the configure events are throttled.
+        // LogicalOutput resizing is a resource intensive task, so the configure events are throttled.
         m_pendingConfigureSerial = serial;
         m_pendingConfigureSize = size;
 
@@ -462,9 +462,9 @@ void WaylandOutput::updateWindowTitle()
                           "KDE Wayland Compositor %1", name());
 
     if (!isEnabled()) {
-        title += i18n("- Output disabled");
+        title += i18n("- LogicalOutput disabled");
     } else if (dpmsMode() != DpmsMode::On) {
-        title += i18n("- Output dimmed");
+        title += i18n("- LogicalOutput dimmed");
     } else if (!grab.isEmpty()) {
         title += QStringLiteral(" — ") + grab;
     }

@@ -35,7 +35,7 @@ class KWIN_EXPORT OutputLayer : public QObject
 {
     Q_OBJECT
 public:
-    explicit OutputLayer(Output *output);
+    explicit OutputLayer(LogicalOutput *output);
 
     void setRenderLoop(RenderLoop *loop);
 
@@ -116,7 +116,7 @@ public:
      */
     void setRequiredAlphaBits(uint32_t bits);
 
-    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff);
+    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, LogicalOutput::ColorPowerTradeoff tradeoff);
 
 Q_SIGNALS:
     void repaintScheduled();
@@ -137,7 +137,7 @@ protected:
     ColorDescription m_color = ColorDescription::sRGB;
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
-    Output *const m_output;
+    LogicalOutput *const m_output;
     uint32_t m_requiredAlphaBits = 0;
     bool m_repaintScheduled = false;
     RenderLoop *m_renderLoop = nullptr;

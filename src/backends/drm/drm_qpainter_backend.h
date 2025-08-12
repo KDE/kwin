@@ -30,8 +30,8 @@ public:
 
     DrmDevice *drmDevice() const override;
 
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    OutputLayer *primaryLayer(LogicalOutput *output) override;
+    OutputLayer *cursorLayer(LogicalOutput *output) override;
 
     std::shared_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type) override;
     std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;

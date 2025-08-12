@@ -49,7 +49,7 @@ class AppMenuManager;
 class ConnectionThread;
 class Compositor;
 class EventQueue;
-class Output;
+class LogicalOutput;
 class PlasmaShell;
 class PlasmaWindowManagement;
 class Pointer;

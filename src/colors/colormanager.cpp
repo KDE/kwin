@@ -24,8 +24,8 @@ public:
 ColorManager::ColorManager()
     : d(std::make_unique<ColorManagerPrivate>())
 {
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    const QList<LogicalOutput *> outputs = workspace()->outputs();
+    for (LogicalOutput *output : outputs) {
         handleOutputAdded(output);
     }
 
@@ -41,7 +41,7 @@ QList<ColorDevice *> ColorManager::devices() const
     return d->devices;
 }
 
-ColorDevice *ColorManager::findDevice(Output *output) const
+ColorDevice *ColorManager::findDevice(LogicalOutput *output) const
 {
     auto it = std::find_if(d->devices.begin(), d->devices.end(), [&output](ColorDevice *device) {
         return device->output() == output;
@@ -52,14 +52,14 @@ ColorDevice *ColorManager::findDevice(Output *output) const
     return nullptr;
 }
 
-void ColorManager::handleOutputAdded(Output *output)
+void ColorManager::handleOutputAdded(LogicalOutput *output)
 {
     ColorDevice *device = new ColorDevice(output, this);
     d->devices.append(device);
     Q_EMIT deviceAdded(device);
 }
 
-void ColorManager::handleOutputRemoved(Output *output)
+void ColorManager::handleOutputRemoved(LogicalOutput *output)
 {
     auto it = std::find_if(d->devices.begin(), d->devices.end(), [&output](ColorDevice *device) {
         return device->output() == output;

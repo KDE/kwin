@@ -74,12 +74,12 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    OutputLayer *primaryLayer(LogicalOutput *output) override;
+    OutputLayer *cursorLayer(LogicalOutput *output) override;
 
 private:
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
+    void addOutput(LogicalOutput *output);
+    void removeOutput(LogicalOutput *output);
 
     struct Layers
     {
@@ -89,7 +89,7 @@ private:
 
     X11WindowedBackend *m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    std::map<Output *, Layers> m_outputs;
+    std::map<LogicalOutput *, Layers> m_outputs;
 };
 
 } // namespace KWin

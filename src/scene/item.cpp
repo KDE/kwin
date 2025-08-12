@@ -686,7 +686,7 @@ void Item::removeEffect()
     m_effectCount--;
 }
 
-void Item::framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::framePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     // The visibility of the item itself is not checked here to be able to paint hidden items for
     // things like screncasts or thumbnails
@@ -705,7 +705,7 @@ bool Item::isAncestorOf(const Item *item) const
     });
 }
 
-void Item::handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
 }
 

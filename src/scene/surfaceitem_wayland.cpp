@@ -228,7 +228,7 @@ void SurfaceItemWayland::handleAlphaMultiplierChanged()
     setOpacity(m_surface->alphaMultiplier());
 }
 
-void SurfaceItemWayland::handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     if (!m_surface) {
         return;

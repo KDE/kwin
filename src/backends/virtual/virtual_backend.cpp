@@ -109,7 +109,7 @@ VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
     return output;
 }
 
-Output *VirtualBackend::addOutput(const OutputInfo &info)
+LogicalOutput *VirtualBackend::addOutput(const OutputInfo &info)
 {
     VirtualOutput *output = createOutput(info);
     Q_EMIT outputsQueried();

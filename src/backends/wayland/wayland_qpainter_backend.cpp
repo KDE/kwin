@@ -143,7 +143,7 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
         createOutput(output);
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *waylandOutput) {
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](LogicalOutput *waylandOutput) {
         m_outputs.erase(waylandOutput);
     });
 }
@@ -152,7 +152,7 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 {
 }
 
-void WaylandQPainterBackend::createOutput(Output *waylandOutput)
+void WaylandQPainterBackend::createOutput(LogicalOutput *waylandOutput)
 {
     m_outputs[waylandOutput] = Layers{
         .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
@@ -165,12 +165,12 @@ GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
+OutputLayer *WaylandQPainterBackend::primaryLayer(LogicalOutput *output)
 {
     return m_outputs[output].primaryLayer.get();
 }
 
-OutputLayer *WaylandQPainterBackend::cursorLayer(Output *output)
+OutputLayer *WaylandQPainterBackend::cursorLayer(LogicalOutput *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

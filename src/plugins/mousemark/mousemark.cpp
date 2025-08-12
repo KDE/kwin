@@ -98,7 +98,7 @@ void MouseMarkEffect::reconfigure(ReconfigureFlags)
     }
 }
 
-void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
     if (marks.isEmpty() && drawing.isEmpty()) {

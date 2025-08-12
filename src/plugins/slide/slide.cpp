@@ -153,13 +153,13 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     effects->prePaintScreen(data, presentTime);
 }
 
-void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, LogicalOutput *screen)
 {
     m_paintCtx.wrap = effects->optionRollOverDesktops();
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 }
 
-QPoint SlideEffect::getDrawCoords(QPointF pos, Output *screen)
+QPoint SlideEffect::getDrawCoords(QPointF pos, LogicalOutput *screen)
 {
     QPoint c = QPoint();
     c.setX(pos.x() * (screen->geometry().width() + m_hGap));
@@ -245,7 +245,7 @@ void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
             desktopTranslation = QPointF(desktopTranslation.x(), desktopTranslation.y() + gridHeight);
         }
 
-        for (Output *screen : screens) {
+        for (LogicalOutput *screen : screens) {
             QPoint drawTranslation = getDrawCoords(desktopTranslation, screen);
             data += drawTranslation;
 

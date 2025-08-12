@@ -237,7 +237,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(window->quickTileMode(), mode);
 
     // send window to other screen
-    QList<Output *> outputs = workspace()->outputs();
+    QList<LogicalOutput *> outputs = workspace()->outputs();
     QCOMPARE(window->output(), outputs[0]);
 
     window->sendToOutput(outputs[1]);
@@ -1612,8 +1612,8 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktop()
 
     const QRectF originalGeometry = window->frameGeometry();
     const auto outputs = workspace()->outputs();
-    for (Output *first : outputs) {
-        for (Output *second : outputs) {
+    for (LogicalOutput *first : outputs) {
+        for (LogicalOutput *second : outputs) {
             const QPointF customPoint = first->geometry().center();
             const QPointF quickPoint = second->geometry().center();
             Tile *customTile = workspace()->rootTile(first)->pick(customPoint);
@@ -1684,8 +1684,8 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktopX11()
     const QRectF originalGeometry = window->frameGeometry();
 
     const auto outputs = workspace()->outputs();
-    for (Output *first : outputs) {
-        for (Output *second : outputs) {
+    for (LogicalOutput *first : outputs) {
+        for (LogicalOutput *second : outputs) {
             const QPointF customPoint = first->geometry().center();
             const QPointF quickPoint = second->geometry().center();
             Tile *customTile = workspace()->rootTile(first)->pick(customPoint);
@@ -1818,8 +1818,8 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
                 continue;
             }
 
-            for (Output *customTileOutput : outputs) {
-                for (Output *quickTileOutput : outputs) {
+            for (LogicalOutput *customTileOutput : outputs) {
+                for (LogicalOutput *quickTileOutput : outputs) {
                     Tile *quickTile = workspace()->tileManager(quickTileOutput)->quickRootTile(quickTileDesktop)->tileForMode(QuickTileFlag::Left);
                     Tile *customTile = workspace()->rootTile(customTileOutput, customTileDesktop)->childTile(1);
 
@@ -1944,8 +1944,8 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
                 continue;
             }
 
-            for (Output *customTileOutput : outputs) {
-                for (Output *quickTileOutput : outputs) {
+            for (LogicalOutput *customTileOutput : outputs) {
+                for (LogicalOutput *quickTileOutput : outputs) {
                     Tile *quickTile = workspace()->tileManager(quickTileOutput)->quickRootTile(quickTileDesktop)->tileForMode(QuickTileFlag::Left);
                     Tile *customTile = workspace()->rootTile(customTileOutput, customTileDesktop)->childTile(1);
 

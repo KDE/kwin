@@ -30,7 +30,7 @@ void ShowCompositingEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     }
 }
 
-void ShowCompositingEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void ShowCompositingEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     const auto rect = viewport.renderRect();

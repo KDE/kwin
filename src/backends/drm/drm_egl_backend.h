@@ -20,7 +20,7 @@ namespace KWin
 {
 
 struct DmaBufAttributes;
-class Output;
+class LogicalOutput;
 class DrmAbstractOutput;
 class DrmOutput;
 class DumbSwapchain;
@@ -44,8 +44,8 @@ public:
 
     DrmDevice *drmDevice() const override;
 
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    OutputLayer *primaryLayer(LogicalOutput *output) override;
+    OutputLayer *cursorLayer(LogicalOutput *output) override;
 
     void init() override;
     std::shared_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type) override;

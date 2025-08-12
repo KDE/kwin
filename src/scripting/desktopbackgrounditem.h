@@ -11,7 +11,7 @@
 namespace KWin
 {
 
-class Output;
+class LogicalOutput;
 class VirtualDesktop;
 
 /*!
@@ -34,12 +34,12 @@ class DesktopBackgroundItem : public WindowThumbnailItem
     Q_PROPERTY(QString outputName READ outputName WRITE setOutputName NOTIFY outputChanged)
 
     /*!
-     * \qmlproperty Output DesktopBackground::output
+     * \qmlproperty LogicalOutput DesktopBackground::output
      *
      * This property specifies the output of the desktop wallpaper. Either the output or the outputName
      * property must be set; otherwise no desktop background will be displayed.
      */
-    Q_PROPERTY(KWin::Output *output READ output WRITE setOutput NOTIFY outputChanged)
+    Q_PROPERTY(KWin::LogicalOutput *output READ output WRITE setOutput NOTIFY outputChanged)
 
     /*!
      * \qmlproperty string DesktopBackground::activity
@@ -65,8 +65,8 @@ public:
     QString outputName() const;
     void setOutputName(const QString &name);
 
-    Output *output() const;
-    void setOutput(Output *output);
+    LogicalOutput *output() const;
+    void setOutput(LogicalOutput *output);
 
     VirtualDesktop *desktop() const;
     void setDesktop(VirtualDesktop *desktop);
@@ -82,7 +82,7 @@ Q_SIGNALS:
 private:
     void updateWindow();
 
-    Output *m_output = nullptr;
+    LogicalOutput *m_output = nullptr;
     VirtualDesktop *m_desktop = nullptr;
     QString m_activity;
 };

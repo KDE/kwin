@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-VirtualQPainterLayer::VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend)
+VirtualQPainterLayer::VirtualQPainterLayer(LogicalOutput *output, VirtualQPainterBackend *backend)
     : OutputLayer(output)
     , m_backend(backend)
 {
@@ -78,19 +78,19 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     connect(backend, &VirtualBackend::outputRemoved, this, &VirtualQPainterBackend::removeOutput);
 
     const auto outputs = backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         addOutput(output);
     }
 }
 
 VirtualQPainterBackend::~VirtualQPainterBackend() = default;
 
-void VirtualQPainterBackend::addOutput(Output *output)
+void VirtualQPainterBackend::addOutput(LogicalOutput *output)
 {
     m_outputs[output] = std::make_unique<VirtualQPainterLayer>(output, this);
 }
 
-void VirtualQPainterBackend::removeOutput(Output *output)
+void VirtualQPainterBackend::removeOutput(LogicalOutput *output)
 {
     m_outputs.erase(output);
 }
@@ -100,7 +100,7 @@ GraphicsBufferAllocator *VirtualQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
+VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(LogicalOutput *output)
 {
     return m_outputs[output].get();
 }

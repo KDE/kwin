@@ -36,13 +36,13 @@ class DpmsManagerInterfacePrivate;
  * @code
  * // We have our OutputInterface called output.
  * output->setDpmsSupported(true);
- * output->setDpmsMode(Output::DpmsMode::On);
+ * output->setDpmsMode(LogicalOutput::DpmsMode::On);
  * @endcode
  *
  * To connect to Dpms change requests use:
  * @code
- * connect(output, &Output::DpmsModeRequested,
- *         [] (Output::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
+ * connect(output, &LogicalOutput::DpmsModeRequested,
+ *         [] (LogicalOutput::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
  * @endcode
  *
  * @see Display

@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 
-class FakeOutput : public KWin::Output
+class FakeOutput : public KWin::LogicalOutput
 {
     Q_OBJECT
 

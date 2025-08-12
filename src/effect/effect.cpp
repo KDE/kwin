@@ -378,7 +378,7 @@ void Effect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds 
     effects->prePaintScreen(data, presentTime);
 }
 
-void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
+void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
 }

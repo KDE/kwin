@@ -18,7 +18,7 @@ namespace KWin
 {
 
 class GraphicsBuffer;
-class Output;
+class LogicalOutput;
 class OutputLayer;
 class PresentationFeedback;
 class RenderLoop;
@@ -124,8 +124,8 @@ public:
 
     virtual bool checkGraphicsReset();
 
-    virtual OutputLayer *primaryLayer(Output *output) = 0;
-    virtual OutputLayer *cursorLayer(Output *output);
+    virtual OutputLayer *primaryLayer(LogicalOutput *output) = 0;
+    virtual OutputLayer *cursorLayer(LogicalOutput *output);
 
     virtual DrmDevice *drmDevice() const;
 

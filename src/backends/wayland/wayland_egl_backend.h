@@ -98,13 +98,13 @@ public:
     DrmDevice *drmDevice() const override;
 
     void init() override;
-    OutputLayer *primaryLayer(Output *output) override;
-    OutputLayer *cursorLayer(Output *output) override;
+    OutputLayer *primaryLayer(LogicalOutput *output) override;
+    OutputLayer *cursorLayer(LogicalOutput *output) override;
 
 private:
     bool initializeEgl();
     bool initRenderingContext();
-    bool createEglWaylandOutput(Output *output);
+    bool createEglWaylandOutput(LogicalOutput *output);
     void cleanupSurfaces() override;
 
     struct Layers
@@ -114,7 +114,7 @@ private:
     };
 
     WaylandBackend *m_backend;
-    std::map<Output *, Layers> m_outputs;
+    std::map<LogicalOutput *, Layers> m_outputs;
 };
 
 } // namespace Wayland

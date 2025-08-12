@@ -16,13 +16,13 @@
 namespace KWin
 {
 
-RenderView::RenderView(Output *output, OutputLayer *layer)
+RenderView::RenderView(LogicalOutput *output, OutputLayer *layer)
     : m_output(output)
     , m_layer(layer)
 {
 }
 
-Output *RenderView::output() const
+LogicalOutput *RenderView::output() const
 {
     return m_output;
 }
@@ -77,7 +77,7 @@ bool RenderView::isVisible() const
     return true;
 }
 
-SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
+SceneView::SceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)
 {
@@ -176,7 +176,7 @@ Scene *SceneView::scene() const
     return m_scene;
 }
 
-ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
+ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_parentView(parentView)
     , m_item(item)

@@ -73,7 +73,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, LogicalOutput::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits)
 {
     if (!checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return std::nullopt;
@@ -293,7 +293,7 @@ const ColorDescription &EglGbmLayerSurface::colorDescription() const
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
     EglContext *context = m_eglBackend->openglContext();
     if (!context->makeCurrent()) {
@@ -317,7 +317,7 @@ void EglGbmLayerSurface::forgetDamage()
     }
 }
 
-bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
+bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits)
 {
     if (doesSurfaceFit(m_surface.get(), size, formats, tradeoff, requiredAlphaBits)) {
         return true;
@@ -347,7 +347,7 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, Q
     return false;
 }
 
-bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
+bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     if (!surface || surface->needsRecreation || !surface->gbmSwapchain || surface->gbmSwapchain->size() != size) {
         return false;
@@ -377,7 +377,7 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
     Q_UNREACHABLE();
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     const QList<FormatInfo> sortedFormats = OutputLayer::filterAndSortFormats(formats, requiredAlphaBits, tradeoff);
 
@@ -450,7 +450,7 @@ static QList<uint64_t> filterModifiers(const QList<uint64_t> &one, const QList<u
     return ret;
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
     QList<uint64_t> renderModifiers;

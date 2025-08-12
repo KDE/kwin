@@ -425,7 +425,7 @@ bool Workspace::takeActivity(Window *window, ActivityFlags flags)
     return ret;
 }
 
-Window *Workspace::windowUnderMouse(Output *output) const
+Window *Workspace::windowUnderMouse(LogicalOutput *output) const
 {
     auto it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
@@ -478,7 +478,7 @@ bool Workspace::activateNextWindow(Window *window)
     Window *focusCandidate = nullptr;
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    Output *output = window ? window->output() : workspace()->activeOutput();
+    LogicalOutput *output = window ? window->output() : workspace()->activeOutput();
 
     if (!focusCandidate && showingDesktop()) {
         focusCandidate = findDesktop(desktop, output); // to not break the state
@@ -520,7 +520,7 @@ bool Workspace::activateNextWindow(Window *window)
     return true;
 }
 
-void Workspace::switchToOutput(Output *output)
+void Workspace::switchToOutput(LogicalOutput *output)
 {
     if (!options->focusPolicyIsReasonable()) {
         return;

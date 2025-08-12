@@ -22,7 +22,7 @@
 namespace KWin
 {
 
-class Output;
+class LogicalOutput;
 
 namespace QPA
 {
@@ -54,11 +54,11 @@ public:
     QPlatformClipboard *clipboard() const override;
     void initialize() override;
 
-    QHash<Output *, Screen *> screens() const;
+    QHash<LogicalOutput *, Screen *> screens() const;
 
 private Q_SLOTS:
-    void handleOutputEnabled(Output *output);
-    void handleOutputDisabled(Output *output);
+    void handleOutputEnabled(LogicalOutput *output);
+    void handleOutputDisabled(LogicalOutput *output);
     void handleWorkspaceCreated();
 
 private:
@@ -66,7 +66,7 @@ private:
     mutable std::unique_ptr<QPlatformAccessibility> m_accessibility;
     std::unique_ptr<QPlatformNativeInterface> m_nativeInterface;
     QPlatformPlaceholderScreen *m_dummyScreen = nullptr;
-    QHash<Output *, Screen *> m_screens;
+    QHash<LogicalOutput *, Screen *> m_screens;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
     std::unique_ptr<QDesktopUnixServices> m_services;
 #else

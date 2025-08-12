@@ -2821,7 +2821,7 @@ void TestXdgShellWindowRules::testNoBorderForceTemporarily()
 
 void TestXdgShellWindowRules::testScreenDontAffect()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const QList<KWin::LogicalOutput *> outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::DontAffect));
 
@@ -2839,7 +2839,7 @@ void TestXdgShellWindowRules::testScreenDontAffect()
 
 void TestXdgShellWindowRules::testScreenApply()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const QList<KWin::LogicalOutput *> outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::Apply));
 
@@ -2858,7 +2858,7 @@ void TestXdgShellWindowRules::testScreenApply()
 
 void TestXdgShellWindowRules::testScreenRemember()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const QList<KWin::LogicalOutput *> outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::Remember));
 
@@ -2884,7 +2884,7 @@ void TestXdgShellWindowRules::testScreenRemember()
 
 void TestXdgShellWindowRules::testScreenForce()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const QList<KWin::LogicalOutput *> outputs = workspace()->outputs();
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2926,7 +2926,7 @@ void TestXdgShellWindowRules::testScreenForce()
 
 void TestXdgShellWindowRules::testScreenApplyNow()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const QList<KWin::LogicalOutput *> outputs = workspace()->outputs();
 
     createTestWindow();
 
@@ -2949,7 +2949,7 @@ void TestXdgShellWindowRules::testScreenApplyNow()
 
 void TestXdgShellWindowRules::testScreenForceTemporarily()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const QList<KWin::LogicalOutput *> outputs = workspace()->outputs();
 
     createTestWindow();
 

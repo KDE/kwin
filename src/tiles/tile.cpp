@@ -400,7 +400,7 @@ bool Tile::manage(Window *window)
     };
 
     const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         if (TileManager *manager = workspace()->tileManager(output)) {
             if (Tile *rootTile = manager->rootTile(m_desktop)) {
                 rootTile->visitDescendants(evacuate);

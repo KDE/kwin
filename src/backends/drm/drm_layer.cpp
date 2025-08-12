@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-DrmOutputLayer::DrmOutputLayer(Output *output)
+DrmOutputLayer::DrmOutputLayer(LogicalOutput *output)
     : OutputLayer(output)
 {
 }

@@ -30,7 +30,7 @@ class VirtualQPainterBackend;
 class VirtualQPainterLayer : public OutputLayer
 {
 public:
-    VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend);
+    VirtualQPainterLayer(LogicalOutput *output, VirtualQPainterBackend *backend);
     ~VirtualQPainterLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
@@ -55,14 +55,14 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    VirtualQPainterLayer *primaryLayer(Output *output) override;
+    VirtualQPainterLayer *primaryLayer(LogicalOutput *output) override;
 
 private:
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
+    void addOutput(LogicalOutput *output);
+    void removeOutput(LogicalOutput *output);
 
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    std::map<Output *, std::unique_ptr<VirtualQPainterLayer>> m_outputs;
+    std::map<LogicalOutput *, std::unique_ptr<VirtualQPainterLayer>> m_outputs;
 };
 
 } // namespace KWin
