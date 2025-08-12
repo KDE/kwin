@@ -1319,13 +1319,16 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
             candidates.erase(it);
             const auto changeset = outputConfig.changeSet(output);
             changeset->brightnessDevice = device;
+            // with HDR we always use software brightness
+            if (!changeset->highDynamicRange.value_or(output->highDynamicRange())) {
+                changeset->currentBrightness = device->observedBrightness();
+            }
             if (device->usesDdcCi()) {
                 changeset->detectedDdcCi = true;
             }
             if (changeset->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness())) {
                 changeset->allowSdrSoftwareBrightness = false;
                 changeset->brightness = device->observedBrightness();
-                changeset->currentBrightness = device->observedBrightness();
             }
         }
     }
