@@ -145,7 +145,7 @@ bool DrmLutColorOp::canBeUsedFor(const ColorOp &op, bool scaling)
         || std::holds_alternative<ColorTonemapper>(op.operation) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op.operation)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
-        return m_maxSize >= 1024;
+        return m_maxSize >= 256;
     } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
         return true;
     }
