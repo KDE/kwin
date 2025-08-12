@@ -33,6 +33,13 @@ static bool isPrivilegedInWindowManagement(const ClientConnection *client)
 XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent)
     : QObject(parent)
 {
+    connect(Workspace::self(), &Workspace::windowActivated, this, [this](Window *window) {
+        if (!m_activation || !window || m_lastTokenAppId != window->desktopFileName()) {
+            return;
+        }
+        clearFeedback();
+    });
+
     activation->setActivationTokenCreator([this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
         Q_ASSERT(client); // Should always be available as it's coming straight from the wayland implementation
         return requestToken(isPrivilegedInWindowManagement(client), surface, serial, seat, appId);
@@ -64,6 +71,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
     }
     if (showNotify) {
         m_lastToken = newToken;
+        m_lastTokenAppId = appId;
         m_activation = waylandServer()->plasmaActivationFeedback()->createActivation(appId);
     }
     if (isPrivileged && workspace()->activeWindow()) {
@@ -95,10 +103,10 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
     } else {
         window->setActivationToken(token);
     }
-    clear();
+    clearFeedback();
 }
 
-void XdgActivationV1Integration::clear()
+void XdgActivationV1Integration::clearFeedback()
 {
     if (m_activation) {
         Q_EMIT effects->startupRemoved(m_lastToken);
