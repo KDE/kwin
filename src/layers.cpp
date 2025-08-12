@@ -190,7 +190,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
  * doesn't accept focus it's excluded.
  */
 // TODO misleading name for this method, too many slightly different ways to use it
-Window *Workspace::topWindowOnDesktop(VirtualDesktop *desktop, Output *output, bool unconstrained, bool only_normal) const
+Window *Workspace::topWindowOnDesktop(VirtualDesktop *desktop, LogicalOutput *output, bool unconstrained, bool only_normal) const
 {
     // TODO    Q_ASSERT( block_stacking_updates == 0 );
     QList<Window *> list;
@@ -219,7 +219,7 @@ Window *Workspace::topWindowOnDesktop(VirtualDesktop *desktop, Output *output, b
     return nullptr;
 }
 
-Window *Workspace::findDesktop(VirtualDesktop *desktop, Output *output) const
+Window *Workspace::findDesktop(VirtualDesktop *desktop, LogicalOutput *output) const
 {
     // TODO    Q_ASSERT( block_stacking_updates == 0 );
     for (int i = stacking_order.size() - 1; i >= 0; i--) {
@@ -298,7 +298,7 @@ void Workspace::raiseOrLowerWindow(Window *window)
     }
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    Output *output = options->isSeparateScreenFocus() ? window->output() : nullptr;
+    LogicalOutput *output = options->isSeparateScreenFocus() ? window->output() : nullptr;
     Layer layer = computeLayer(window);
 
     bool topmost = false;

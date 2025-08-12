@@ -17,7 +17,7 @@ class DrmBackend;
 class DrmOutputLayer;
 class OutputFrame;
 
-class DrmAbstractOutput : public Output
+class DrmAbstractOutput : public LogicalOutput
 {
     Q_OBJECT
 public:

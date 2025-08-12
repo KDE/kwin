@@ -74,7 +74,7 @@ public:
     QList<std::shared_ptr<DrmConnectorMode>> modes() const;
     std::shared_ptr<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
 
-    Output::SubPixel subpixel() const;
+    LogicalOutput::SubPixel subpixel() const;
 
     enum class UnderscanOptions : uint64_t {
         Off = 0,
@@ -138,8 +138,8 @@ public:
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);
-    static BroadcastRgbOptions rgbRangeToBroadcastRgb(Output::RgbRange rgbRange);
-    static Output::RgbRange broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange);
+    static BroadcastRgbOptions rgbRangeToBroadcastRgb(LogicalOutput::RgbRange rgbRange);
+    static LogicalOutput::RgbRange broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange);
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();

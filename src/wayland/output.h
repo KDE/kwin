@@ -18,7 +18,7 @@ struct wl_client;
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 }
 
 namespace KWin
@@ -36,13 +36,13 @@ class KWIN_EXPORT OutputInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputInterface(Display *display, Output *handle, QObject *parent = nullptr);
+    explicit OutputInterface(Display *display, LogicalOutput *handle, QObject *parent = nullptr);
     ~OutputInterface() override;
 
     bool isRemoved() const;
     void remove();
 
-    Output *handle() const;
+    LogicalOutput *handle() const;
 
     /**
      * @returns all wl_resources bound for the @p client

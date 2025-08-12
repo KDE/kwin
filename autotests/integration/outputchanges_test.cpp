@@ -1572,7 +1572,7 @@ void OutputChangesTest::testAutorotate()
     const auto [config, order, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
 
-    QCOMPARE(outputConfig->autoRotationPolicy, Output::AutoRotationPolicy::InTabletMode);
+    QCOMPARE(outputConfig->autoRotationPolicy, LogicalOutput::AutoRotationPolicy::InTabletMode);
 
     QFETCH(OutputTransform::Kind, expectedRotation);
     QVERIFY(outputConfig->transform.has_value());

@@ -255,7 +255,7 @@ QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) co
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
-QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
+QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, LogicalOutput *output, VirtualDesktop *desktop) const
 {
     if (!output || !desktop) {
         qCWarning(KWIN_SCRIPTING) << "clientArea needs valid output:" << output << "and desktop:" << desktop << "arguments";
@@ -405,22 +405,22 @@ int WorkspaceWrapper::workspaceWidth() const
     return desktopGridWidth() * workspace()->geometry().width();
 }
 
-Output *WorkspaceWrapper::activeScreen() const
+LogicalOutput *WorkspaceWrapper::activeScreen() const
 {
     return workspace()->activeOutput();
 }
 
-QList<Output *> WorkspaceWrapper::screens() const
+QList<LogicalOutput *> WorkspaceWrapper::screens() const
 {
     return workspace()->outputs();
 }
 
-QList<Output *> WorkspaceWrapper::screenOrder() const
+QList<LogicalOutput *> WorkspaceWrapper::screenOrder() const
 {
     return workspace()->outputOrder();
 }
 
-Output *WorkspaceWrapper::screenAt(const QPointF &pos) const
+LogicalOutput *WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
     auto output = workspace()->outputAt(pos);
     QJSEngine::setObjectOwnership(output, QJSEngine::CppOwnership);
@@ -437,7 +437,7 @@ QSize WorkspaceWrapper::virtualScreenSize() const
     return workspace()->geometry().size();
 }
 
-void WorkspaceWrapper::sendClientToScreen(Window *client, Output *output)
+void WorkspaceWrapper::sendClientToScreen(Window *client, LogicalOutput *output)
 {
     client->sendToOutput(output);
 }
@@ -446,7 +446,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
 {
     qCWarning(KWIN_CORE) << "workspace.tilingForScreen() is deprecated: use workspace.rootTile() instead";
 
-    Output *output = kwinApp()->outputBackend()->findOutput(screenName);
+    LogicalOutput *output = kwinApp()->outputBackend()->findOutput(screenName);
     if (output) {
         auto tileManager = workspace()->tileManager(output);
         QJSEngine::setObjectOwnership(tileManager, QJSEngine::CppOwnership);
@@ -455,7 +455,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
     return nullptr;
 }
 
-KWin::TileManager *WorkspaceWrapper::tilingForScreen(Output *output) const
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(LogicalOutput *output) const
 {
     qCWarning(KWIN_CORE) << "workspace.tilingForScreen() is deprecated: use workspace.rootTile() instead";
 
@@ -464,7 +464,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(Output *output) const
     return tileManager;
 }
 
-Tile *WorkspaceWrapper::rootTile(Output *output, VirtualDesktop *desktop) const
+Tile *WorkspaceWrapper::rootTile(LogicalOutput *output, VirtualDesktop *desktop) const
 {
     return workspace()->rootTile(output, desktop);
 }

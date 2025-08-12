@@ -57,7 +57,7 @@ public Q_SLOTS:
                                  QDBusUnixFileDescriptor pipe);
 
 private:
-    void takeScreenShot(Output *screen, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid);
+    void takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid);
     void takeScreenShot(const QRect &area, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid);
     void takeScreenShot(Window *window, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
     std::optional<pid_t> determineCallerPid() const;

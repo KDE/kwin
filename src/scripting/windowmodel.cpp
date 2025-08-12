@@ -186,7 +186,7 @@ QString WindowFilterModel::screenName() const
 
 void WindowFilterModel::setScreenName(const QString &screen)
 {
-    Output *output = kwinApp()->outputBackend()->findOutput(screen);
+    LogicalOutput *output = kwinApp()->outputBackend()->findOutput(screen);
     if (m_output != output) {
         m_output = output;
         Q_EMIT screenNameChanged();

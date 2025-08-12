@@ -35,7 +35,7 @@ namespace KWin
 {
 
 class Window;
-class Output;
+class LogicalOutput;
 class ScreenEdgeGestureRecognizer;
 class ScreenEdges;
 class ScreenEdgeGesture;
@@ -43,12 +43,12 @@ class ScreenEdgeGesture;
 class TouchCallback
 {
 public:
-    using CallbackFunction = std::function<void(ElectricBorder border, const QPointF &, Output *output)>;
+    using CallbackFunction = std::function<void(ElectricBorder border, const QPointF &, LogicalOutput *output)>;
     explicit TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback);
     ~TouchCallback();
 
     QAction *touchUpAction() const;
-    void progressCallback(ElectricBorder border, const QPointF &deltaProgress, Output *output) const;
+    void progressCallback(ElectricBorder border, const QPointF &deltaProgress, LogicalOutput *output) const;
     bool hasProgressCallback() const;
 
 private:
@@ -84,8 +84,8 @@ public:
     bool isApproaching() const;
     void setClient(Window *client);
     Window *client() const;
-    void setOutput(Output *output);
-    Output *output() const;
+    void setOutput(LogicalOutput *output);
+    LogicalOutput *output() const;
     const QRect &geometry() const;
     void setTouchAction(ElectricBorderAction action);
     void checkBlocking();
@@ -149,7 +149,7 @@ private:
     bool m_blocked;
     bool m_pushBackBlocked;
     Window *m_client;
-    Output *m_output;
+    LogicalOutput *m_output;
     std::unique_ptr<ScreenEdgeGesture> m_gesture;
     QList<TouchCallback> m_touchCallbacks;
     friend class ScreenEdges;
@@ -362,9 +362,9 @@ private:
     void setCursorPushBackDistance(const QSize &distance);
     void setTimeThreshold(std::chrono::milliseconds threshold);
     void setReActivationThreshold(std::chrono::milliseconds threshold);
-    void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
-    void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
-    std::unique_ptr<Edge> createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction = true);
+    void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output);
+    void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output);
+    std::unique_ptr<Edge> createEdge(ElectricBorder border, int x, int y, int width, int height, LogicalOutput *output, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
     void setRemainActiveOnFullscreen(bool remainActive);

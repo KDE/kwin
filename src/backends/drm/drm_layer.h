@@ -27,8 +27,8 @@ class DrmOutput;
 class DrmOutputLayer : public OutputLayer
 {
 public:
-    explicit DrmOutputLayer(Output *output, OutputLayerType type);
-    explicit DrmOutputLayer(Output *output, OutputLayerType type, int zpos, int minZpos, int maxZpos);
+    explicit DrmOutputLayer(LogicalOutput *output, OutputLayerType type);
+    explicit DrmOutputLayer(LogicalOutput *output, OutputLayerType type, int zpos, int minZpos, int maxZpos);
     virtual ~DrmOutputLayer();
 };
 

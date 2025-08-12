@@ -36,7 +36,7 @@ static WindowType scopeToType(const QString &scope)
 }
 
 LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
-                                       Output *output,
+                                       LogicalOutput *output,
                                        LayerShellV1Integration *integration)
     : WaylandWindow(shellSurface->surface())
     , m_desiredOutput(output)
@@ -90,7 +90,7 @@ LayerSurfaceV1Interface *LayerShellV1Window::shellSurface() const
     return m_shellSurface;
 }
 
-Output *LayerShellV1Window::desiredOutput() const
+LogicalOutput *LayerShellV1Window::desiredOutput() const
 {
     return m_desiredOutput;
 }
@@ -335,7 +335,7 @@ void LayerShellV1Window::handleAcceptsFocusChanged()
     }
 }
 
-void LayerShellV1Window::handleOutputRemoved(Output *output)
+void LayerShellV1Window::handleOutputRemoved(LogicalOutput *output)
 {
     if (output == m_desiredOutput) {
         closeWindow();

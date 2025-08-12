@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-class Output;
+class LogicalOutput;
 
 class BrightnessDevice
 {

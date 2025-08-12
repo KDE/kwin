@@ -50,11 +50,11 @@ private:
 
     void switchState(ScreenState &state);
     void setState(ScreenState &state, FadeOutState newState);
-    void addScreen(Output *screen);
-    bool isScreenActive(Output *screen) const;
+    void addScreen(LogicalOutput *screen);
+    bool isScreenActive(LogicalOutput *screen) const;
 
-    QHash<Output *, ScreenState> m_states;
-    Output *m_currentScreen = nullptr;
+    QHash<LogicalOutput *, ScreenState> m_states;
+    LogicalOutput *m_currentScreen = nullptr;
 };
 
 } // namespace KWin

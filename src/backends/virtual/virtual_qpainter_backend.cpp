@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-VirtualQPainterLayer::VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend)
+VirtualQPainterLayer::VirtualQPainterLayer(LogicalOutput *output, VirtualQPainterBackend *backend)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
 {
@@ -84,7 +84,7 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     connect(backend, &VirtualBackend::outputAdded, this, &VirtualQPainterBackend::addOutput);
 
     const auto outputs = backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         addOutput(output);
     }
 }
@@ -92,12 +92,12 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
 VirtualQPainterBackend::~VirtualQPainterBackend()
 {
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         static_cast<VirtualOutput *>(output)->setOutputLayer(nullptr);
     }
 }
 
-void VirtualQPainterBackend::addOutput(Output *output)
+void VirtualQPainterBackend::addOutput(LogicalOutput *output)
 {
     static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualQPainterLayer>(output, this));
 }
@@ -107,7 +107,7 @@ GraphicsBufferAllocator *VirtualQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-QList<OutputLayer *> VirtualQPainterBackend::compatibleOutputLayers(Output *output)
+QList<OutputLayer *> VirtualQPainterBackend::compatibleOutputLayers(LogicalOutput *output)
 {
     return {static_cast<VirtualOutput *>(output)->outputLayer()};
 }

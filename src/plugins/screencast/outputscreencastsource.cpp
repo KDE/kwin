@@ -26,7 +26,7 @@
 namespace KWin
 {
 
-OutputScreenCastSource::OutputScreenCastSource(Output *output, std::optional<pid_t> pidToHide)
+OutputScreenCastSource::OutputScreenCastSource(LogicalOutput *output, std::optional<pid_t> pidToHide)
     : ScreenCastSource()
     , m_output(output)
     , m_layer(std::make_unique<ScreencastLayer>(output, static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
@@ -43,12 +43,12 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, std::optional<pid
     });
 
     updateView();
-    connect(output, &Output::changed, this, &OutputScreenCastSource::updateView);
+    connect(output, &LogicalOutput::changed, this, &OutputScreenCastSource::updateView);
     // prevent the layer from scheduling frames on the actual output
     m_layer->setRenderLoop(nullptr);
     // always hide the cursor from the primary view
     m_cursorView->setExclusive(true);
-    connect(workspace(), &Workspace::outputRemoved, this, [this](Output *output) {
+    connect(workspace(), &Workspace::outputRemoved, this, [this](LogicalOutput *output) {
         if (m_output == output) {
             Q_EMIT closed();
         }

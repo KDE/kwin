@@ -19,12 +19,12 @@
 namespace KWin
 {
 
-DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type)
+DrmOutputLayer::DrmOutputLayer(LogicalOutput *output, OutputLayerType type)
     : OutputLayer(output, type)
 {
 }
 
-DrmOutputLayer::DrmOutputLayer(Output *output, OutputLayerType type, int zpos, int minZpos, int maxZpos)
+DrmOutputLayer::DrmOutputLayer(LogicalOutput *output, OutputLayerType type, int zpos, int minZpos, int maxZpos)
     : OutputLayer(output, type, zpos, minZpos, maxZpos)
 {
 }

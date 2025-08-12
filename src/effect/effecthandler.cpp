@@ -367,7 +367,7 @@ void EffectsHandler::prePaintScreen(ScreenPrePaintData &data, std::chrono::milli
     // no special final code
 }
 
-void EffectsHandler::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
+void EffectsHandler::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
@@ -811,7 +811,7 @@ void EffectsHandler::windowToDesktops(EffectWindow *w, const QList<VirtualDeskto
     window->setDesktops(desktops);
 }
 
-void EffectsHandler::windowToScreen(EffectWindow *w, Output *screen)
+void EffectsHandler::windowToScreen(EffectWindow *w, LogicalOutput *screen)
 {
     auto window = w->window();
     if (window->isClient() && !window->isDesktop() && !window->isDock()) {
@@ -1073,12 +1073,12 @@ void EffectsHandler::addRepaint(int x, int y, int w, int h)
     m_compositor->scene()->addLogicalRepaint(x, y, w, h);
 }
 
-Output *EffectsHandler::activeScreen() const
+LogicalOutput *EffectsHandler::activeScreen() const
 {
     return workspace()->activeOutput();
 }
 
-QRectF EffectsHandler::clientArea(clientAreaOption opt, const Output *screen, const VirtualDesktop *desktop) const
+QRectF EffectsHandler::clientArea(clientAreaOption opt, const LogicalOutput *screen, const VirtualDesktop *desktop) const
 {
     return Workspace::self()->clientArea(opt, screen, desktop);
 }
@@ -1091,7 +1091,7 @@ QRectF EffectsHandler::clientArea(clientAreaOption opt, const EffectWindow *effe
 
 QRectF EffectsHandler::clientArea(clientAreaOption opt, const QPoint &p, const VirtualDesktop *desktop) const
 {
-    const Output *output = Workspace::self()->outputAt(p);
+    const LogicalOutput *output = Workspace::self()->outputAt(p);
     return Workspace::self()->clientArea(opt, output, desktop);
 }
 
@@ -1585,20 +1585,20 @@ SessionState EffectsHandler::sessionState() const
     return Workspace::self()->sessionManager()->state();
 }
 
-QList<Output *> EffectsHandler::screens() const
+QList<LogicalOutput *> EffectsHandler::screens() const
 {
     return Workspace::self()->outputs();
 }
 
-Output *EffectsHandler::screenAt(const QPoint &point) const
+LogicalOutput *EffectsHandler::screenAt(const QPoint &point) const
 {
     return Workspace::self()->outputAt(point);
 }
 
-Output *EffectsHandler::findScreen(const QString &name) const
+LogicalOutput *EffectsHandler::findScreen(const QString &name) const
 {
     const auto outputs = Workspace::self()->outputs();
-    for (Output *screen : outputs) {
+    for (LogicalOutput *screen : outputs) {
         if (screen->name() == name) {
             return screen;
         }
@@ -1606,7 +1606,7 @@ Output *EffectsHandler::findScreen(const QString &name) const
     return nullptr;
 }
 
-Output *EffectsHandler::findScreen(int screenId) const
+LogicalOutput *EffectsHandler::findScreen(int screenId) const
 {
     return Workspace::self()->outputs().value(screenId);
 }

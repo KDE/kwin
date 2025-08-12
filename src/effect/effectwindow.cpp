@@ -239,7 +239,7 @@ void EffectWindow::unrefWindow()
     d->m_window->unref();
 }
 
-Output *EffectWindow::screen() const
+LogicalOutput *EffectWindow::screen() const
 {
     return d->m_window->output();
 }

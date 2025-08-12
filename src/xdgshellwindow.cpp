@@ -1732,7 +1732,7 @@ void XdgToplevelWindow::setFullScreen(bool set)
     configureDecoration();
 
     if (set) {
-        const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : moveResizeOutput();
+        const LogicalOutput *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : moveResizeOutput();
         setFullscreenGeometryRestore(moveResizeGeometry());
         moveResize(workspace()->clientArea(FullScreenArea, this, output));
     } else {

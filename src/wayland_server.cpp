@@ -301,21 +301,21 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
     qCDebug(KWIN_CORE) << "Received invalid xdg shell window:" << window->surface();
 }
 
-void WaylandServer::handleOutputAdded(Output *output)
+void WaylandServer::handleOutputAdded(LogicalOutput *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
         m_waylandOutputDevices.insert(output, new OutputDeviceV2Interface(m_display, output));
     }
 }
 
-void WaylandServer::handleOutputRemoved(Output *output)
+void WaylandServer::handleOutputRemoved(LogicalOutput *output)
 {
     if (auto outputDevice = m_waylandOutputDevices.take(output)) {
         outputDevice->remove();
     }
 }
 
-void WaylandServer::handleOutputEnabled(Output *output)
+void WaylandServer::handleOutputEnabled(LogicalOutput *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
         auto waylandOutput = new OutputInterface(waylandServer()->display(), output);
@@ -325,7 +325,7 @@ void WaylandServer::handleOutputEnabled(Output *output)
     }
 }
 
-void WaylandServer::handleOutputDisabled(Output *output)
+void WaylandServer::handleOutputDisabled(LogicalOutput *output)
 {
     if (auto waylandOutput = m_waylandOutputs.take(output)) {
         waylandOutput->remove();
@@ -619,14 +619,14 @@ void WaylandServer::initWorkspace()
     }
 
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
-    for (Output *output : availableOutputs) {
+    for (LogicalOutput *output : availableOutputs) {
         handleOutputAdded(output);
     }
     connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, &WaylandServer::handleOutputAdded);
     connect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &WaylandServer::handleOutputRemoved);
 
     const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         handleOutputEnabled(output);
     }
     connect(workspace(), &Workspace::outputAdded, this, &WaylandServer::handleOutputEnabled);

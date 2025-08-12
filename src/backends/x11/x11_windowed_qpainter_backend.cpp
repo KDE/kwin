@@ -129,7 +129,7 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
     , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         addOutput(output);
     }
 
@@ -139,12 +139,12 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
 X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
 {
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
     }
 }
 
-void X11WindowedQPainterBackend::addOutput(Output *output)
+void X11WindowedQPainterBackend::addOutput(LogicalOutput *output)
 {
     X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
     std::vector<std::unique_ptr<OutputLayer>> layers;
@@ -158,7 +158,7 @@ GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() c
     return m_allocator.get();
 }
 
-QList<OutputLayer *> X11WindowedQPainterBackend::compatibleOutputLayers(Output *output)
+QList<OutputLayer *> X11WindowedQPainterBackend::compatibleOutputLayers(LogicalOutput *output)
 {
     return static_cast<X11WindowedOutput *>(output)->outputLayers();
 }

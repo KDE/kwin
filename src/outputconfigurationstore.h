@@ -35,19 +35,19 @@ public:
         Preexisting,
         Generated,
     };
-    std::optional<std::tuple<OutputConfiguration, QList<Output *>, ConfigType>> queryConfig(const QList<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
-    void storeConfig(const QList<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<Output *> &outputOrder);
+    std::optional<std::tuple<OutputConfiguration, QList<LogicalOutput *>, ConfigType>> queryConfig(const QList<LogicalOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
+    void storeConfig(const QList<LogicalOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<LogicalOutput *> &outputOrder);
 
-    void applyMirroring(OutputConfiguration &config, const QList<Output *> &outputs);
-    bool isAutoRotateActive(const QList<Output *> &outputs, bool isTabletMode) const;
+    void applyMirroring(OutputConfiguration &config, const QList<LogicalOutput *> &outputs);
+    bool isAutoRotateActive(const QList<LogicalOutput *> &outputs, bool isTabletMode) const;
 
 private:
-    std::pair<OutputConfiguration, QList<Output *>> generateConfig(const QList<Output *> &outputs, bool isLidClosed);
-    void registerOutputs(const QList<Output *> &outputs);
-    void applyOrientationReading(OutputConfiguration &config, const QList<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode);
-    std::optional<std::pair<OutputConfiguration, QList<Output *>>> generateLidClosedConfig(const QList<Output *> &outputs);
-    std::shared_ptr<OutputMode> chooseMode(Output *output) const;
-    double chooseScale(Output *output, OutputMode *mode) const;
+    std::pair<OutputConfiguration, QList<LogicalOutput *>> generateConfig(const QList<LogicalOutput *> &outputs, bool isLidClosed);
+    void registerOutputs(const QList<LogicalOutput *> &outputs);
+    void applyOrientationReading(OutputConfiguration &config, const QList<LogicalOutput *> &outputs, QOrientationReading *orientation, bool isTabletMode);
+    std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> generateLidClosedConfig(const QList<LogicalOutput *> &outputs);
+    std::shared_ptr<OutputMode> chooseMode(LogicalOutput *output) const;
+    double chooseScale(LogicalOutput *output, OutputMode *mode) const;
     void load();
     void save();
 
@@ -69,26 +69,26 @@ private:
         std::optional<OutputTransform> transform;
         std::optional<OutputTransform> manualTransform;
         std::optional<uint32_t> overscan;
-        std::optional<Output::RgbRange> rgbRange;
+        std::optional<LogicalOutput::RgbRange> rgbRange;
         std::optional<VrrPolicy> vrrPolicy;
         std::optional<bool> highDynamicRange;
         std::optional<uint32_t> referenceLuminance;
         std::optional<bool> wideColorGamut;
-        std::optional<Output::AutoRotationPolicy> autoRotation;
+        std::optional<LogicalOutput::AutoRotationPolicy> autoRotation;
         std::optional<QString> iccProfilePath;
-        std::optional<Output::ColorProfileSource> colorProfileSource;
+        std::optional<LogicalOutput::ColorProfileSource> colorProfileSource;
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;
         std::optional<double> minBrightnessOverride;
         std::optional<double> sdrGamutWideness;
         std::optional<double> brightness;
         std::optional<bool> allowSdrSoftwareBrightness;
-        std::optional<Output::ColorPowerTradeoff> colorPowerTradeoff;
+        std::optional<LogicalOutput::ColorPowerTradeoff> colorPowerTradeoff;
         std::optional<QString> uuid;
         std::optional<bool> detectedDdcCi;
         std::optional<bool> allowDdcCi;
         std::optional<uint32_t> maxBitsPerColor;
-        std::optional<Output::EdrPolicy> edrPolicy;
+        std::optional<LogicalOutput::EdrPolicy> edrPolicy;
         std::optional<double> sharpness;
     };
     struct SetupState
@@ -105,9 +105,9 @@ private:
         QList<SetupState> outputs;
     };
 
-    std::pair<OutputConfiguration, QList<Output *>> setupToConfig(Setup *setup, const std::unordered_map<Output *, size_t> &outputMap) const;
-    std::optional<std::pair<Setup *, std::unordered_map<Output *, size_t>>> findSetup(const QList<Output *> &outputs, bool lidClosed);
-    std::optional<size_t> findOutput(Output *output, const QList<Output *> &allOutputs) const;
+    std::pair<OutputConfiguration, QList<LogicalOutput *>> setupToConfig(Setup *setup, const std::unordered_map<LogicalOutput *, size_t> &outputMap) const;
+    std::optional<std::pair<Setup *, std::unordered_map<LogicalOutput *, size_t>>> findSetup(const QList<LogicalOutput *> &outputs, bool lidClosed);
+    std::optional<size_t> findOutput(LogicalOutput *output, const QList<LogicalOutput *> &allOutputs) const;
 
     QList<OutputState> m_outputs;
     QList<Setup> m_setups;

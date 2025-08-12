@@ -433,7 +433,7 @@ void InternalWindow::commitGeometry(const QRectF &rect)
     // The client geometry and the buffer geometry are the same.
     const QRectF oldClientGeometry = m_clientGeometry;
     const QRectF oldFrameGeometry = m_frameGeometry;
-    const Output *oldOutput = m_output;
+    const LogicalOutput *oldOutput = m_output;
 
     Q_EMIT frameGeometryAboutToChange();
 

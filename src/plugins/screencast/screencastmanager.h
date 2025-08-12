@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 class ScreenCastStream;
 class PipeWireCore;
 
@@ -33,7 +33,7 @@ private:
                              OutputInterface *output,
                              ScreencastV1Interface::CursorMode mode);
     void
-    streamOutput(ScreencastStreamV1Interface *stream, Output *output, ScreencastV1Interface::CursorMode mode);
+    streamOutput(ScreencastStreamV1Interface *stream, LogicalOutput *output, ScreencastV1Interface::CursorMode mode);
     void streamVirtualOutput(ScreencastStreamV1Interface *stream,
                              const QString &name,
                              const QString &description,

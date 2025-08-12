@@ -83,7 +83,7 @@ ScreenShotManager::~ScreenShotManager()
 
 // TODO share code with the screencast plugin?
 
-std::optional<QImage> ScreenShotManager::takeScreenShot(Output *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
+std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
@@ -164,7 +164,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, Scree
     qreal scale = 1.0;
     if (flags & ScreenShotNativeResolution) {
         const auto outputs = workspace()->outputs();
-        for (Output *output : outputs) {
+        for (LogicalOutput *output : outputs) {
             scale = std::max(scale, output->scale());
         }
     }

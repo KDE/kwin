@@ -111,7 +111,7 @@ std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
     return std::make_unique<VirtualEglBackend>(this);
 }
 
-Output *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)
+LogicalOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)
 {
     return addOutput(OutputInfo{
         .geometry = QRect(QPoint(), size),
@@ -120,7 +120,7 @@ Output *VirtualBackend::createVirtualOutput(const QString &name, const QString &
     });
 }
 
-void VirtualBackend::removeVirtualOutput(Output *output)
+void VirtualBackend::removeVirtualOutput(LogicalOutput *output)
 {
     if (auto virtualOutput = qobject_cast<VirtualOutput *>(output)) {
         removeOutput(virtualOutput);
@@ -141,7 +141,7 @@ VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
     return output;
 }
 
-Output *VirtualBackend::addOutput(const OutputInfo &info)
+LogicalOutput *VirtualBackend::addOutput(const OutputInfo &info)
 {
     VirtualOutput *output = createOutput(info);
     Q_EMIT outputsQueried();

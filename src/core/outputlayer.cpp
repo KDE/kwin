@@ -12,7 +12,7 @@
 namespace KWin
 {
 
-OutputLayer::OutputLayer(Output *output, OutputLayerType type)
+OutputLayer::OutputLayer(LogicalOutput *output, OutputLayerType type)
     : m_type(type)
     , m_output(output)
     , m_renderLoop(output ? output->renderLoop() : nullptr)
@@ -22,7 +22,7 @@ OutputLayer::OutputLayer(Output *output, OutputLayerType type)
 {
 }
 
-OutputLayer::OutputLayer(Output *output, OutputLayerType type, int zpos, int minZpos, int maxZpos)
+OutputLayer::OutputLayer(LogicalOutput *output, OutputLayerType type, int zpos, int minZpos, int maxZpos)
     : m_type(type)
     , m_output(output)
     , m_renderLoop(output ? output->renderLoop() : nullptr)
@@ -42,7 +42,7 @@ void OutputLayer::setRenderLoop(RenderLoop *loop)
     m_renderLoop = loop;
 }
 
-void OutputLayer::setOutput(Output *output)
+void OutputLayer::setOutput(LogicalOutput *output)
 {
     m_output = output;
     if (output) {
@@ -243,7 +243,7 @@ int OutputLayer::maxZpos() const
     return m_maxZpos;
 }
 
-QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff)
+QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, LogicalOutput::ColorPowerTradeoff tradeoff)
 {
     QList<FormatInfo> ret;
     for (auto it = formats.begin(); it != formats.end(); it++) {
@@ -260,7 +260,7 @@ QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<
         ret.push_back(*info);
     }
     std::ranges::sort(ret, [tradeoff](const FormatInfo &before, const FormatInfo &after) {
-        if (tradeoff == Output::ColorPowerTradeoff::PreferAccuracy && before.bitsPerColor != after.bitsPerColor) {
+        if (tradeoff == LogicalOutput::ColorPowerTradeoff::PreferAccuracy && before.bitsPerColor != after.bitsPerColor) {
             return before.bitsPerColor > after.bitsPerColor;
         }
         if (before.floatingPoint != after.floatingPoint) {

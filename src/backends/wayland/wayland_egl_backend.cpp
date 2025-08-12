@@ -253,12 +253,12 @@ DrmDevice *WaylandEglBackend::drmDevice() const
 void WaylandEglBackend::cleanupSurfaces()
 {
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         static_cast<WaylandOutput *>(output)->setOutputLayers({});
     }
 }
 
-void WaylandEglBackend::createOutputLayers(Output *output)
+void WaylandEglBackend::createOutputLayers(LogicalOutput *output)
 {
     const auto waylandOutput = static_cast<WaylandOutput *>(output);
     std::vector<std::unique_ptr<OutputLayer>> layers;
@@ -331,7 +331,7 @@ bool WaylandEglBackend::initRenderingContext()
     return openglContext()->makeCurrent();
 }
 
-QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(Output *output)
+QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(LogicalOutput *output)
 {
     return static_cast<WaylandOutput *>(output)->outputLayers();
 }

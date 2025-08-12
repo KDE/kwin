@@ -45,7 +45,7 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
@@ -75,7 +75,7 @@ private Q_SLOTS:
     void slotMouseChanged(const QPointF &pos, const QPointF &old);
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDamaged();
-    void slotScreenRemoved(Output *screen);
+    void slotScreenRemoved(LogicalOutput *screen);
     void setTargetZoom(double value);
 
 private:
@@ -108,7 +108,7 @@ private:
     void showCursor();
     void hideCursor();
     GLTexture *ensureCursorTexture();
-    OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen);
+    OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen);
     void markCursorTextureDirty();
 
     GLShader *shaderForZoom(double zoom);
@@ -134,7 +134,7 @@ private:
     int m_yTranslation = 0;
     double m_moveFactor = 20.0;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
-    std::map<Output *, OffscreenData> m_offscreenData;
+    std::map<LogicalOutput *, OffscreenData> m_offscreenData;
     std::unique_ptr<GLShader> m_pixelGridShader;
     double m_pixelGridZoom;
     std::unique_ptr<QAction> m_zoomInAxisAction;

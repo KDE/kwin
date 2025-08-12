@@ -76,10 +76,10 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) override;
 
 private:
-    void addOutput(Output *output);
+    void addOutput(LogicalOutput *output);
 
     X11WindowedBackend *m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;

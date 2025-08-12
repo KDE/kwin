@@ -34,7 +34,7 @@ class ServerSideDecorationInterface;
 class ServerSideDecorationPaletteInterface;
 class XdgDialogV1Interface;
 class XdgToplevelDecorationV1Interface;
-class Output;
+class LogicalOutput;
 class Tile;
 
 class XdgSurfaceConfigure
@@ -279,7 +279,7 @@ private:
     bool m_isInitialized = false;
     bool m_userNoBorder = false;
     bool m_isTransient = false;
-    QPointer<Output> m_fullScreenRequestedOutput;
+    QPointer<LogicalOutput> m_fullScreenRequestedOutput;
     std::shared_ptr<KDecoration3::Decoration> m_nextDecoration;
     std::shared_ptr<KDecoration3::DecorationState> m_nextDecorationState;
     std::unique_ptr<KillPrompt> m_killPrompt;

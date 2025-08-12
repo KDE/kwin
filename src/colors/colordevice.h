@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-class Output;
+class LogicalOutput;
 class ColorDevicePrivate;
 
 /**
@@ -25,13 +25,13 @@ class KWIN_EXPORT ColorDevice : public QObject
     Q_OBJECT
 
 public:
-    explicit ColorDevice(Output *output, QObject *parent = nullptr);
+    explicit ColorDevice(LogicalOutput *output, QObject *parent = nullptr);
     ~ColorDevice() override;
 
     /**
      * Returns the underlying output for this color device.
      */
-    Output *output() const;
+    LogicalOutput *output() const;
 
     /**
      * Returns the current color temperature on this device, in Kelvins.

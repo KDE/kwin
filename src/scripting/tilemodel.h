@@ -23,7 +23,7 @@ class QTimer;
 namespace KWin
 {
 
-class Output;
+class LogicalOutput;
 class CustomTile;
 class TileManager;
 

@@ -33,8 +33,8 @@ public:
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<EglBackend> createOpenGLBackend() override;
 
-    Output *createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale) override;
-    void removeVirtualOutput(Output *output) override;
+    LogicalOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale) override;
+    void removeVirtualOutput(LogicalOutput *output) override;
 
     struct OutputInfo
     {
@@ -49,7 +49,7 @@ public:
         std::optional<QString> connectorName;
         std::optional<QByteArray> mstPath;
     };
-    Output *addOutput(const OutputInfo &info);
+    LogicalOutput *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);
 
     Outputs outputs() const override;

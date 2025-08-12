@@ -31,7 +31,7 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
 
 void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface)
 {
-    Output *output;
+    LogicalOutput *output;
     if (OutputInterface *preferredOutput = shellSurface->output()) {
         if (preferredOutput->isRemoved()) {
             shellSurface->sendClosed();
@@ -167,7 +167,7 @@ static int weightForWindow(const LayerShellV1Window *window)
     return (window->shellSurface()->anchor() & AnchorHorizontal) == AnchorHorizontal ? 1 : 0;
 }
 
-static QList<LayerShellV1Window *> windowsForOutput(Output *output)
+static QList<LayerShellV1Window *> windowsForOutput(LogicalOutput *output)
 {
     QList<LayerShellV1Window *> result;
     const QList<Window *> windows = waylandServer()->windows();
@@ -192,7 +192,7 @@ static QList<LayerShellV1Window *> windowsForOutput(Output *output)
     return result;
 }
 
-static void rearrangeOutput(Output *output)
+static void rearrangeOutput(LogicalOutput *output)
 {
     const QList<LayerShellV1Window *> windows = windowsForOutput(output);
     if (!windows.isEmpty()) {
@@ -212,8 +212,8 @@ static void rearrangeOutput(Output *output)
 
 void LayerShellV1Integration::rearrange()
 {
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    const QList<LogicalOutput *> outputs = workspace()->outputs();
+    for (LogicalOutput *output : outputs) {
         rearrangeOutput(output);
     }
 }

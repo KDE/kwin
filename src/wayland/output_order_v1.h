@@ -11,7 +11,7 @@
 namespace KWin
 {
 
-class Output;
+class LogicalOutput;
 class Display;
 class OutputOrderV1InterfacePrivate;
 
@@ -22,7 +22,7 @@ public:
     explicit OutputOrderV1Interface(Display *display, QObject *parent);
     ~OutputOrderV1Interface() override;
 
-    void setOutputOrder(const QList<Output *> &outputOrder);
+    void setOutputOrder(const QList<LogicalOutput *> &outputOrder);
 
 private:
     std::unique_ptr<OutputOrderV1InterfacePrivate> d;

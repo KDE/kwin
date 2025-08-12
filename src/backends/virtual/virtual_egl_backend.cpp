@@ -24,7 +24,7 @@ namespace KWin
 
 static const bool s_bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
 
-VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
+VirtualEglLayer::VirtualEglLayer(LogicalOutput *output, VirtualEglBackend *backend)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
 {
@@ -100,7 +100,7 @@ VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
 VirtualEglBackend::~VirtualEglBackend()
 {
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         static_cast<VirtualOutput *>(output)->setOutputLayer(nullptr);
     }
     cleanup();
@@ -158,7 +158,7 @@ void VirtualEglBackend::init()
     initWayland();
 
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         addOutput(output);
     }
 
@@ -170,13 +170,13 @@ bool VirtualEglBackend::initRenderingContext()
     return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
 }
 
-void VirtualEglBackend::addOutput(Output *output)
+void VirtualEglBackend::addOutput(LogicalOutput *output)
 {
     openglContext()->makeCurrent();
     static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualEglLayer>(output, this));
 }
 
-QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(Output *output)
+QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(LogicalOutput *output)
 {
     return {static_cast<VirtualOutput *>(output)->outputLayer()};
 }

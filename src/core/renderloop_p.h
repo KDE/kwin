@@ -25,7 +25,7 @@ class KWIN_EXPORT RenderLoopPrivate
 {
 public:
     static RenderLoopPrivate *get(RenderLoop *loop);
-    explicit RenderLoopPrivate(RenderLoop *q, Output *output);
+    explicit RenderLoopPrivate(RenderLoop *q, LogicalOutput *output);
 
     void dispatch();
 
@@ -38,7 +38,7 @@ public:
     void notifyVblank(std::chrono::nanoseconds timestamp);
 
     RenderLoop *const q;
-    Output *const output;
+    LogicalOutput *const output;
     std::optional<std::fstream> m_debugOutput;
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();

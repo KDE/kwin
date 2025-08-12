@@ -148,7 +148,7 @@ protected:
     findGoodPacking(const QRectF &area, const QList<QRectF> &windowSizes, const QList<QPointF> &centers, qreal idealWidthRatio, qreal tol);
 
     /**
-     * @brief Output the final window layouts from the packing.
+     * @brief LogicalOutput the final window layouts from the packing.
      *
      * Geven @param windowSizes, scale @param packing to fit @param area,
      * remove previously added @param margins, add padding and align,

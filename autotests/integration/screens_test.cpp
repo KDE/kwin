@@ -115,7 +115,7 @@ void ScreensTest::testActiveOutputFollowsMouse()
     KWin::input()->pointer()->warp(cursorPos);
 
     QFETCH(int, expectedId);
-    Output *expected = workspace()->outputs().at(expectedId);
+    LogicalOutput *expected = workspace()->outputs().at(expectedId);
     QCOMPARE(workspace()->activeOutput(), expected);
 }
 
@@ -146,7 +146,7 @@ void ScreensTest::testCurrentPoint()
     workspace()->setActiveOutput(cursorPos);
 
     QFETCH(int, expectedId);
-    Output *expected = workspace()->outputs().at(expectedId);
+    LogicalOutput *expected = workspace()->outputs().at(expectedId);
     QCOMPARE(workspace()->activeOutput(), expected);
 }
 

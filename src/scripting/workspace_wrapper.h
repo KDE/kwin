@@ -23,7 +23,7 @@ namespace KWin
 class Tile;
 class TileManager;
 class Window;
-class Output;
+class LogicalOutput;
 class VirtualDesktop;
 
 class WorkspaceWrapper : public QObject
@@ -39,9 +39,9 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
-    Q_PROPERTY(KWin::Output *activeScreen READ activeScreen)
-    Q_PROPERTY(QList<KWin::Output *> screens READ screens NOTIFY screensChanged)
-    Q_PROPERTY(QList<KWin::Output *> screenOrder READ screenOrder NOTIFY screenOrderChanged)
+    Q_PROPERTY(KWin::LogicalOutput *activeScreen READ activeScreen)
+    Q_PROPERTY(QList<KWin::LogicalOutput *> screens READ screens NOTIFY screensChanged)
+    Q_PROPERTY(QList<KWin::LogicalOutput *> screenOrder READ screenOrder NOTIFY screenOrderChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity WRITE setCurrentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(QStringList activities READ activityList NOTIFY activitiesChanged)
 
@@ -206,9 +206,9 @@ public:
     int workspaceWidth() const;
     int workspaceHeight() const;
     QSize workspaceSize() const;
-    KWin::Output *activeScreen() const;
-    QList<KWin::Output *> screens() const;
-    QList<KWin::Output *> screenOrder() const;
+    KWin::LogicalOutput *activeScreen() const;
+    QList<KWin::LogicalOutput *> screens() const;
+    QList<KWin::LogicalOutput *> screenOrder() const;
     QStringList activityList() const;
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
@@ -218,7 +218,7 @@ public:
     VirtualDesktop *currentDesktop() const;
     void setCurrentDesktop(VirtualDesktop *desktop);
 
-    Q_INVOKABLE KWin::Output *screenAt(const QPointF &pos) const;
+    Q_INVOKABLE KWin::LogicalOutput *screenAt(const QPointF &pos) const;
 
     /**
      * @deprecated since 6.3, use rootTile()
@@ -228,12 +228,12 @@ public:
     /**
      * @deprecated since 6.3, use rootTile()
      */
-    Q_INVOKABLE KWin::TileManager *tilingForScreen(KWin::Output *output) const;
+    Q_INVOKABLE KWin::TileManager *tilingForScreen(KWin::LogicalOutput *output) const;
 
     /**
      * Returns the root tile for the given @a output and @a desktop.
      */
-    Q_INVOKABLE KWin::Tile *rootTile(KWin::Output *output, KWin::VirtualDesktop *desktop) const;
+    Q_INVOKABLE KWin::Tile *rootTile(KWin::LogicalOutput *output, KWin::VirtualDesktop *desktop) const;
 
     /**
      * Returns the geometry a Client can use with the specified option.
@@ -245,7 +245,7 @@ public:
      * @param desktop The desktop for which the area should be considered, in general there should not be a difference
      * @returns The specified screen geometry
      */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::LogicalOutput *output, KWin::VirtualDesktop *desktop) const;
 
     /**
      * Overloaded method for convenience.
@@ -415,7 +415,7 @@ public Q_SLOTS:
     /**
      * Sends the Window to the given @p output.
      */
-    void sendClientToScreen(KWin::Window *client, KWin::Output *output);
+    void sendClientToScreen(KWin::Window *client, KWin::LogicalOutput *output);
 
     /**
      * Shows an outline at the specified @p geometry.

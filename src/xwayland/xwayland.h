@@ -26,7 +26,7 @@ class QSocketNotifier;
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 class Application;
 
 namespace Xwl

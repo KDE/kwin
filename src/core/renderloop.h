@@ -16,7 +16,7 @@ namespace KWin
 class RenderLoopPrivate;
 class SurfaceItem;
 class Item;
-class Output;
+class LogicalOutput;
 class OutputLayer;
 
 /**
@@ -32,7 +32,7 @@ class KWIN_EXPORT RenderLoop : public QObject
     Q_OBJECT
 
 public:
-    explicit RenderLoop(Output *output);
+    explicit RenderLoop(LogicalOutput *output);
     ~RenderLoop() override;
 
     /**

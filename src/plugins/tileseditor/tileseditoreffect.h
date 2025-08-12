@@ -39,7 +39,7 @@ Q_SIGNALS:
     void animationDurationChanged();
 
 protected:
-    QVariantMap initialProperties(Output *screen) override;
+    QVariantMap initialProperties(LogicalOutput *screen) override;
 
 private:
     void realDeactivate();

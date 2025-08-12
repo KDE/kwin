@@ -48,7 +48,7 @@ namespace KWin
 class PlasmaWindowInterface;
 class SurfaceInterface;
 class Group;
-class Output;
+class LogicalOutput;
 class ClientMachine;
 class EffectWindow;
 class Tile;
@@ -121,7 +121,7 @@ class KWIN_EXPORT Window : public QObject
     /**
      * The output where the window center is on
      */
-    Q_PROPERTY(KWin::Output *output READ output NOTIFY outputChanged)
+    Q_PROPERTY(KWin::LogicalOutput *output READ output NOTIFY outputChanged)
 
     Q_PROPERTY(QRectF rect READ rect)
     Q_PROPERTY(QString resourceName READ resourceName NOTIFY windowClassChanged)
@@ -597,8 +597,8 @@ public:
      * Returns the output where the last move or resize operation has occurred. The
      * window is expected to land on this output after the move/resize operation completes.
      */
-    Output *moveResizeOutput() const;
-    void setMoveResizeOutput(Output *output);
+    LogicalOutput *moveResizeOutput() const;
+    void setMoveResizeOutput(LogicalOutput *output);
 
     /**
      * Returns the geometry of the pixmap or buffer attached to this Window.
@@ -638,10 +638,10 @@ public:
     qreal y() const;
     qreal width() const;
     qreal height() const;
-    bool isOnOutput(Output *output) const;
+    bool isOnOutput(LogicalOutput *output) const;
     bool isOnActiveOutput() const;
-    Output *output() const;
-    void setOutput(Output *output);
+    LogicalOutput *output() const;
+    void setOutput(LogicalOutput *output);
     QSizeF clientSize() const;
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
@@ -1021,7 +1021,7 @@ public:
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
     bool isSpecialWindow() const;
-    void sendToOutput(Output *output);
+    void sendToOutput(LogicalOutput *output);
     const QKeySequence &shortcut() const
     {
         return _shortcut;
@@ -1678,7 +1678,7 @@ protected:
     {
         m_interactiveMoveResize.buttonDown = down;
     }
-    Output *interactiveMoveResizeStartOutput() const
+    LogicalOutput *interactiveMoveResizeStartOutput() const
     {
         return m_interactiveMoveResize.startOutput;
     }
@@ -1772,7 +1772,7 @@ protected:
 
     void setDescription(const QString &description);
 
-    Output *m_output = nullptr;
+    LogicalOutput *m_output = nullptr;
     QRectF m_frameGeometry;
     QRectF m_clientGeometry;
     QRectF m_bufferGeometry;
@@ -1844,7 +1844,7 @@ protected:
     QTimer *m_electricMaximizingDelay = nullptr;
 
     // geometry
-    Output *m_moveResizeOutput = nullptr;
+    LogicalOutput *m_moveResizeOutput = nullptr;
     QRectF m_moveResizeGeometry;
     QRectF m_keyboardGeometryRestore;
     QRectF m_maximizeGeometryRestore;
@@ -1863,7 +1863,7 @@ protected:
         Gravity gravity = Gravity::None;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
-        Output *startOutput = nullptr;
+        LogicalOutput *startOutput = nullptr;
         QTimer *delayedTimer = nullptr;
         uint32_t counter = 0;
         MaximizeMode initialMaximizeMode;

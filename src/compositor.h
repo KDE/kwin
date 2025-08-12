@@ -23,7 +23,7 @@ namespace KWin
 
 class ColorDescription;
 class GLTexture;
-class Output;
+class LogicalOutput;
 class RenderBackend;
 class OutputLayer;
 class RenderLoop;
@@ -95,14 +95,14 @@ private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
 protected:
-    Output *findOutput(RenderLoop *loop) const;
+    LogicalOutput *findOutput(RenderLoop *loop) const;
 
     void createScene();
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
-    void assignOutputLayers(Output *output);
+    void addOutput(LogicalOutput *output);
+    void removeOutput(LogicalOutput *output);
+    void assignOutputLayers(LogicalOutput *output);
 
     CompositingType m_selectedCompositor = NoCompositing;
 

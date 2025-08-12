@@ -19,7 +19,7 @@ namespace KWin
 {
 
 class CursorSource;
-class Output;
+class LogicalOutput;
 
 namespace ExtendedCursor
 {
@@ -123,7 +123,7 @@ public:
     /**
      * Returns @c true if the cursor is visible on the given output; otherwise returns @c false.
      */
-    bool isOnOutput(Output *output) const;
+    bool isOnOutput(LogicalOutput *output) const;
 
 Q_SIGNALS:
     void posChanged(const QPointF &pos);

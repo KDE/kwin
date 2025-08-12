@@ -17,7 +17,7 @@ namespace KWin
 {
 // forward declarations
 class Window;
-class Output;
+class LogicalOutput;
 class VirtualDesktop;
 
 /**
@@ -110,7 +110,7 @@ public:
      * @param output The screen to constrain the search on with separate screen focus
      * @return :X11Window *The Window which could be activated or @c null if there is none.
      */
-    Window *getForActivation(VirtualDesktop *desktop, Output *output) const;
+    Window *getForActivation(VirtualDesktop *desktop, LogicalOutput *output) const;
 
     /**
      * @brief Checks whether the most recently used focus chain contains the given @p window.

@@ -337,7 +337,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
         return QVariantMap();
     }
 
-    Output *screen = workspace()->findOutput(name);
+    LogicalOutput *screen = workspace()->findOutput(name);
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
         return QVariantMap();
@@ -364,7 +364,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
         return QVariantMap();
     }
 
-    Output *screen = workspace()->activeOutput();
+    LogicalOutput *screen = workspace()->activeOutput();
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
         return QVariantMap();
@@ -423,7 +423,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
-                Output *screen = effects->screenAt(point.toPoint());
+                LogicalOutput *screen = effects->screenAt(point.toPoint());
                 takeScreenShot(screen, screenShotFlagsFromOptions(options),
                                new ScreenShotSinkPipe2(fileDescriptor, replyMessage), pid);
             }
@@ -457,7 +457,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
     return QVariantMap();
 }
 
-void ScreenShotDBusInterface2::takeScreenShot(Output *screen, ScreenShotFlags flags,
+void ScreenShotDBusInterface2::takeScreenShot(LogicalOutput *screen, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid)
 {
     if (const auto result = m_effect->takeScreenShot(screen, flags, pid)) {

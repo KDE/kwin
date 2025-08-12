@@ -367,7 +367,7 @@ void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputRemoved()
     workspace()->activateWindow(firstWindow);
     QCOMPARE(workspace()->activeWindow(), firstWindow);
 
-    connect(workspace(), &Workspace::outputRemoved, firstWindow, [firstOutput, firstWindow](Output *output) {
+    connect(workspace(), &Workspace::outputRemoved, firstWindow, [firstOutput, firstWindow](LogicalOutput *output) {
         if (output == firstOutput) {
             workspace()->activateNextWindow(firstWindow);
         }

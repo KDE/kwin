@@ -24,12 +24,12 @@ static int forcedDpi()
     return qEnvironmentVariableIsSet("QT_WAYLAND_FORCE_DPI") ? qEnvironmentVariableIntValue("QT_WAYLAND_FORCE_DPI") : -1;
 }
 
-Screen::Screen(Output *output, Integration *integration)
+Screen::Screen(LogicalOutput *output, Integration *integration)
     : m_output(output)
     , m_cursor(new PlatformCursor)
     , m_integration(integration)
 {
-    connect(output, &Output::geometryChanged, this, &Screen::handleGeometryChanged);
+    connect(output, &LogicalOutput::geometryChanged, this, &Screen::handleGeometryChanged);
 }
 
 Screen::~Screen() = default;

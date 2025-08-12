@@ -54,7 +54,7 @@ class TabBox;
 
 class Gravity;
 class Window;
-class Output;
+class LogicalOutput;
 class Compositor;
 class Group;
 class InternalWindow;
@@ -123,9 +123,9 @@ public:
      */
     Window *findInternal(QWindow *w) const;
 
-    QRectF clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
+    QRectF clientArea(clientAreaOption, const LogicalOutput *output, const VirtualDesktop *desktop) const;
     QRectF clientArea(clientAreaOption, const Window *window) const;
-    QRectF clientArea(clientAreaOption, const Window *window, const Output *output) const;
+    QRectF clientArea(clientAreaOption, const Window *window, const LogicalOutput *output) const;
     QRectF clientArea(clientAreaOption, const Window *window, const QPointF &pos) const;
 
     /**
@@ -136,13 +136,13 @@ public:
 
     bool initializing() const;
 
-    Output *xineramaIndexToOutput(int index) const;
+    LogicalOutput *xineramaIndexToOutput(int index) const;
 
-    void setOutputOrder(const QList<Output *> &order);
-    QList<Output *> outputOrder() const;
+    void setOutputOrder(const QList<LogicalOutput *> &order);
+    QList<LogicalOutput *> outputOrder() const;
 
-    Output *activeOutput() const;
-    void setActiveOutput(Output *output);
+    LogicalOutput *activeOutput() const;
+    void setActiveOutput(LogicalOutput *output);
     void setActiveOutput(const QPointF &pos);
 
     /**
@@ -157,7 +157,7 @@ public:
      */
     Window *mostRecentlyActivatedWindow() const;
 
-    Window *windowUnderMouse(Output *output) const;
+    Window *windowUnderMouse(LogicalOutput *output) const;
 
     void activateWindow(Window *window, bool force = false);
     bool requestFocus(Window *window, bool force = false);
@@ -216,17 +216,17 @@ public:
     /**
      * @returns the TileManager associated to a given output
      */
-    TileManager *tileManager(Output *output) const;
+    TileManager *tileManager(LogicalOutput *output) const;
 
     /**
      * Returns the root tile for the given @a output on the current virtual desktop.
      */
-    RootTile *rootTile(Output *output) const;
+    RootTile *rootTile(LogicalOutput *output) const;
 
     /**
      * Returns the root tile for the given @a output and @a desktop.
      */
-    RootTile *rootTile(Output *output, VirtualDesktop *desktop) const;
+    RootTile *rootTile(LogicalOutput *output, VirtualDesktop *desktop) const;
 
 public:
     QPointF cascadeOffset(const QRectF &area) const;
@@ -236,7 +236,7 @@ public:
 
 public:
     StrutRects previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
-    QHash<const Output *, QRect> previousScreenSizes() const;
+    QHash<const LogicalOutput *, QRect> previousScreenSizes() const;
 
     /**
      * Returns @c true if the workspace is currently being rearranged; otherwise returns @c false.
@@ -267,9 +267,9 @@ public:
     QList<Window *> unconstrainedStackingOrder() const;
     QList<Window *> ensureStackingOrder(const QList<Window *> &windows) const;
 
-    Window *topWindowOnDesktop(VirtualDesktop *desktop, Output *output = nullptr, bool unconstrained = false,
+    Window *topWindowOnDesktop(VirtualDesktop *desktop, LogicalOutput *output = nullptr, bool unconstrained = false,
                                bool only_normal = true) const;
-    Window *findDesktop(VirtualDesktop *desktop, Output *output) const;
+    Window *findDesktop(VirtualDesktop *desktop, LogicalOutput *output) const;
     void addWindowToDesktop(Window *window, VirtualDesktop *desktop);
     void removeWindowFromDesktop(Window *window, VirtualDesktop *desktop);
     void sendWindowToDesktops(Window *window, const QList<VirtualDesktop *> &desktops, bool dont_activate);
@@ -319,13 +319,13 @@ public:
         DirectionPrev,
         DirectionNext
     };
-    Output *findOutput(Output *reference, Direction direction, bool wrapAround = false) const;
-    Output *findOutput(const QString &name) const;
-    void switchToOutput(Output *output);
+    LogicalOutput *findOutput(LogicalOutput *reference, Direction direction, bool wrapAround = false) const;
+    LogicalOutput *findOutput(const QString &name) const;
+    void switchToOutput(LogicalOutput *output);
 
     QString outputLayoutId() const;
-    QList<Output *> outputs() const;
-    Output *outputAt(const QPointF &pos) const;
+    QList<LogicalOutput *> outputs() const;
+    LogicalOutput *outputAt(const QPointF &pos) const;
 
     /**
      * Set "Show Desktop" status
@@ -434,7 +434,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt);
+    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<LogicalOutput *>> &outputOrder = std::nullopt);
     void updateXwaylandScale();
 
     void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
@@ -447,8 +447,8 @@ public Q_SLOTS:
     void slotWindowToDesktop(VirtualDesktop *desktop);
 
     // void slotWindowToListPosition( int );
-    void slotSwitchToScreen(Output *output);
-    void slotWindowToScreen(Output *output);
+    void slotSwitchToScreen(LogicalOutput *output);
+    void slotWindowToScreen(LogicalOutput *output);
     void slotSwitchToLeftScreen();
     void slotSwitchToRightScreen();
     void slotSwitchToAboveScreen();
@@ -555,8 +555,8 @@ Q_SIGNALS:
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
     void outputOrderChanged();
-    void outputAdded(KWin::Output *);
-    void outputRemoved(KWin::Output *);
+    void outputAdded(KWin::LogicalOutput *);
+    void outputRemoved(KWin::LogicalOutput *);
     void outputsChanged();
     /**
      * This signal is emitted when the stacking order changed, i.e. a window is risen
@@ -613,7 +613,7 @@ private:
     void removeWindow(Window *window);
 
     void updateOutputConfiguration();
-    void updateOutputs(const std::optional<QList<Output *>> &outputOrder = std::nullopt);
+    void updateOutputs(const std::optional<QList<LogicalOutput *>> &outputOrder = std::nullopt);
     void aboutToTurnOff();
     void wakeUp();
     void assignBrightnessDevices(OutputConfiguration &outputConfig);
@@ -638,9 +638,9 @@ private:
 
     void updateTabbox();
 
-    QList<Output *> m_outputs;
-    Output *m_activeOutput = nullptr;
-    QList<Output *> m_outputOrder;
+    QList<LogicalOutput *> m_outputs;
+    LogicalOutput *m_activeOutput = nullptr;
+    QList<LogicalOutput *> m_outputOrder;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;
@@ -693,10 +693,10 @@ private:
 #endif
     QHash<const VirtualDesktop *, QRectF> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const Output *, QRectF>> m_screenAreas;
+    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, QRectF>> m_screenAreas;
     QRect m_geometry;
 
-    QHash<const Output *, QRect> m_oldScreenGeometries;
+    QHash<const LogicalOutput *, QRect> m_oldScreenGeometries;
     QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
     QTimer m_rearrangeTimer;
     bool m_inRearrange = false;
@@ -726,7 +726,7 @@ private:
 
     PlaceholderOutput *m_placeholderOutput = nullptr;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
-    std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
+    std::map<LogicalOutput *, std::unique_ptr<TileManager>> m_tileManagers;
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
     std::unique_ptr<LidSwitchTracker> m_lidSwitchTracker;
     std::unique_ptr<OrientationSensor> m_orientationSensor;
@@ -765,7 +765,7 @@ private:
 //---------------------------------------------------------
 // Unsorted
 
-inline QList<Output *> Workspace::outputs() const
+inline QList<LogicalOutput *> Workspace::outputs() const
 {
     return m_outputs;
 }

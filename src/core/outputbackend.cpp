@@ -46,9 +46,9 @@ std::unique_ptr<QPainterBackend> OutputBackend::createQPainterBackend()
 OutputConfigurationError OutputBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     const auto availableOutputs = outputs();
-    QList<Output *> toBeEnabledOutputs;
-    QList<Output *> toBeDisabledOutputs;
-    for (Output *output : availableOutputs) {
+    QList<LogicalOutput *> toBeEnabledOutputs;
+    QList<LogicalOutput *> toBeDisabledOutputs;
+    for (LogicalOutput *output : availableOutputs) {
         if (const auto changeset = config.constChangeSet(output)) {
             if (changeset->enabled.value_or(output->isEnabled())) {
                 toBeEnabledOutputs << output;
@@ -57,19 +57,19 @@ OutputConfigurationError OutputBackend::applyOutputChanges(const OutputConfigura
             }
         }
     }
-    for (Output *output : toBeEnabledOutputs) {
+    for (LogicalOutput *output : toBeEnabledOutputs) {
         output->applyChanges(config);
     }
-    for (Output *output : toBeDisabledOutputs) {
+    for (LogicalOutput *output : toBeDisabledOutputs) {
         output->applyChanges(config);
     }
     return OutputConfigurationError::None;
 }
 
-Output *OutputBackend::findOutput(const QString &name) const
+LogicalOutput *OutputBackend::findOutput(const QString &name) const
 {
     const auto candidates = outputs();
-    for (Output *candidate : candidates) {
+    for (LogicalOutput *candidate : candidates) {
         if (candidate->name() == name) {
             return candidate;
         }
@@ -77,12 +77,12 @@ Output *OutputBackend::findOutput(const QString &name) const
     return nullptr;
 }
 
-Output *OutputBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
+LogicalOutput *OutputBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
     return nullptr;
 }
 
-void OutputBackend::removeVirtualOutput(Output *output)
+void OutputBackend::removeVirtualOutput(LogicalOutput *output)
 {
     Q_ASSERT(!output);
 }

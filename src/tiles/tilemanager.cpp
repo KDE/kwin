@@ -54,7 +54,7 @@ QDebug operator<<(QDebug debug, const TileManager *tileManager)
     return debug;
 }
 
-TileManager::TileManager(Output *parent)
+TileManager::TileManager(LogicalOutput *parent)
     : QObject(parent)
     , m_output(parent)
 {
@@ -102,7 +102,7 @@ bool TileManager::tearingDown() const
     return m_tearingDown;
 }
 
-Output *TileManager::output() const
+LogicalOutput *TileManager::output() const
 {
     return m_output;
 }
@@ -273,7 +273,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
 
 // this is the old output UUID format from Plasma 6.3
 // to not reset the config on updates, attempt to load the settings with this uuid too!
-static QString generateOutputId(Output *output)
+static QString generateOutputId(LogicalOutput *output)
 {
     static const QUuid urlNs = QUuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8"); // NameSpace_URL
     static const QUuid kwinNs = QUuid::createUuidV5(urlNs, QStringLiteral("https://kwin.kde.org/o/"));

@@ -112,7 +112,7 @@ void TabletInputRedirection::init()
     auto tabletNextOutput = new QAction(this);
     tabletNextOutput->setProperty("componentName", QStringLiteral("kwin"));
     tabletNextOutput->setText(i18n("Move the tablet to the next output"));
-    tabletNextOutput->setObjectName(QStringLiteral("Move Tablet to Next Output"));
+    tabletNextOutput->setObjectName(QStringLiteral("Move Tablet to Next LogicalOutput"));
     KGlobalAccel::setGlobalShortcut(tabletNextOutput, QList<QKeySequence>());
     connect(tabletNextOutput, &QAction::triggered, this, &TabletInputRedirection::trackNextOutput);
 }
@@ -255,7 +255,7 @@ void TabletInputRedirection::tabletToolAxisEventRelative(const QPointF &delta,
     m_lastPosition += delta;
 
     // Make sure pointer doesn't go outside of the screens range
-    Output *output = Workspace::self()->outputAt(m_lastPosition);
+    LogicalOutput *output = Workspace::self()->outputAt(m_lastPosition);
     m_lastPosition = confineToBoundingBox(m_lastPosition, output->geometryF());
 
     m_cursorByTool[tool]->setPos(m_lastPosition);

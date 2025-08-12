@@ -236,18 +236,18 @@ void TestWaylandOutput::testScaleChange()
 void TestWaylandOutput::testSubPixel_data()
 {
     QTest::addColumn<KWayland::Client::Output::SubPixel>("expected");
-    QTest::addColumn<KWin::Output::SubPixel>("actual");
+    QTest::addColumn<KWin::LogicalOutput::SubPixel>("actual");
 
-    QTest::newRow("none") << KWayland::Client::Output::SubPixel::None << KWin::Output::SubPixel::None;
-    QTest::newRow("horizontal/rgb") << KWayland::Client::Output::SubPixel::HorizontalRGB << KWin::Output::SubPixel::Horizontal_RGB;
-    QTest::newRow("horizontal/bgr") << KWayland::Client::Output::SubPixel::HorizontalBGR << KWin::Output::SubPixel::Horizontal_BGR;
-    QTest::newRow("vertical/rgb") << KWayland::Client::Output::SubPixel::VerticalRGB << KWin::Output::SubPixel::Vertical_RGB;
-    QTest::newRow("vertical/bgr") << KWayland::Client::Output::SubPixel::VerticalBGR << KWin::Output::SubPixel::Vertical_BGR;
+    QTest::newRow("none") << KWayland::Client::Output::SubPixel::None << KWin::LogicalOutput::SubPixel::None;
+    QTest::newRow("horizontal/rgb") << KWayland::Client::Output::SubPixel::HorizontalRGB << KWin::LogicalOutput::SubPixel::Horizontal_RGB;
+    QTest::newRow("horizontal/bgr") << KWayland::Client::Output::SubPixel::HorizontalBGR << KWin::LogicalOutput::SubPixel::Horizontal_BGR;
+    QTest::newRow("vertical/rgb") << KWayland::Client::Output::SubPixel::VerticalRGB << KWin::LogicalOutput::SubPixel::Vertical_RGB;
+    QTest::newRow("vertical/bgr") << KWayland::Client::Output::SubPixel::VerticalBGR << KWin::LogicalOutput::SubPixel::Vertical_BGR;
 }
 
 void TestWaylandOutput::testSubPixel()
 {
-    QFETCH(KWin::Output::SubPixel, actual);
+    QFETCH(KWin::LogicalOutput::SubPixel, actual);
 
     auto outputHandle = std::make_unique<FakeOutput>();
     outputHandle->setMode(QSize(1024, 768), 60000);

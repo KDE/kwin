@@ -866,7 +866,7 @@ MaximizeMode WindowRules::checkMaximize(MaximizeMode mode, bool init) const
     return static_cast<MaximizeMode>((vert ? MaximizeVertical : 0) | (horiz ? MaximizeHorizontal : 0));
 }
 
-Output *WindowRules::checkOutput(Output *output, bool init) const
+LogicalOutput *WindowRules::checkOutput(LogicalOutput *output, bool init) const
 {
     if (rules.isEmpty()) {
         return output;
@@ -877,7 +877,7 @@ Output *WindowRules::checkOutput(Output *output, bool init) const
             break;
         }
     }
-    Output *ruleOutput = workspace()->outputs().value(ret);
+    LogicalOutput *ruleOutput = workspace()->outputs().value(ret);
     return ruleOutput ? ruleOutput : output;
 }
 

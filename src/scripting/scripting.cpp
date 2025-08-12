@@ -640,7 +640,7 @@ KWin::Scripting::Scripting(QObject *parent)
 
 void KWin::Scripting::init()
 {
-    qRegisterMetaType<QList<KWin::Output *>>();
+    qRegisterMetaType<QList<KWin::LogicalOutput *>>();
     qRegisterMetaType<QList<KWin::Window *>>();
     qRegisterMetaType<QList<KWin::VirtualDesktop *>>();
 
@@ -663,7 +663,7 @@ void KWin::Scripting::init()
     qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
 
     qmlRegisterAnonymousType<KConfigPropertyMap>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<KWin::Output>("org.kde.kwin", 3);
+    qmlRegisterAnonymousType<KWin::LogicalOutput>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);

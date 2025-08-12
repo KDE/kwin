@@ -101,7 +101,7 @@ void ScreencastManager::streamWaylandOutput(ScreencastStreamV1Interface *wayland
 }
 
 void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
-                                     Output *streamOutput,
+                                     LogicalOutput *streamOutput,
                                      ScreencastV1Interface::CursorMode mode)
 {
     if (!streamOutput) {
@@ -126,7 +126,7 @@ static qreal devicePixelRatioForRegion(const QRect &region)
     qreal devicePixelRatio = 1.0;
 
     const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         if (output->geometry().intersects(region)) {
             devicePixelRatio = std::max(devicePixelRatio, output->scale());
         }

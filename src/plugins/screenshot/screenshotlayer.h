@@ -14,7 +14,7 @@ class GLFramebuffer;
 class ScreenshotLayer : public OutputLayer
 {
 public:
-    explicit ScreenshotLayer(Output *output, GLFramebuffer *buffer);
+    explicit ScreenshotLayer(LogicalOutput *output, GLFramebuffer *buffer);
 
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;

@@ -226,12 +226,12 @@ void Window::setReadyForPainting()
     }
 }
 
-Output *Window::output() const
+LogicalOutput *Window::output() const
 {
     return m_output;
 }
 
-void Window::setOutput(Output *output)
+void Window::setOutput(LogicalOutput *output)
 {
     if (m_output != output) {
         m_output = output;
@@ -244,7 +244,7 @@ bool Window::isOnActiveOutput() const
     return isOnOutput(workspace()->activeOutput());
 }
 
-bool Window::isOnOutput(Output *output) const
+bool Window::isOnOutput(LogicalOutput *output) const
 {
     return output->geometry().intersects(frameGeometry().toRect());
 }
@@ -1342,7 +1342,7 @@ static QRegion interactiveMoveResizeVisibleSubrectRegion(const QRectF &geometry,
     const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput(), VirtualDesktopManager::self()->currentDesktop());
 
     QRegion offscreenArea(availableArea.toAlignedRect());
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         offscreenArea -= output->geometry();
     }
 
@@ -2430,13 +2430,13 @@ void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
     bool innerBorder = false;
 
     const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         if (!output->geometry().contains(QPoint(xroot, yroot))) {
             continue;
         }
 
         auto isInScreen = [&output, &outputs](const QPoint &pt) {
-            for (const Output *other : outputs) {
+            for (const LogicalOutput *other : outputs) {
                 if (other == output) {
                     continue;
                 }
@@ -3386,28 +3386,28 @@ void Window::setMoveResizeGeometry(const QRectF &geo)
     setMoveResizeOutput(workspace()->outputAt(geo.center()));
 }
 
-Output *Window::moveResizeOutput() const
+LogicalOutput *Window::moveResizeOutput() const
 {
     return m_moveResizeOutput;
 }
 
-void Window::setMoveResizeOutput(Output *output)
+void Window::setMoveResizeOutput(LogicalOutput *output)
 {
     if (m_moveResizeOutput == output) {
         return;
     }
 
     if (m_moveResizeOutput) {
-        disconnect(m_moveResizeOutput, &Output::scaleChanged, this, &Window::updateNextTargetScale);
-        disconnect(m_moveResizeOutput, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
-        disconnect(m_moveResizeOutput, &Output::blendingColorChanged, this, &Window::updatePreferredColorDescription);
+        disconnect(m_moveResizeOutput, &LogicalOutput::scaleChanged, this, &Window::updateNextTargetScale);
+        disconnect(m_moveResizeOutput, &LogicalOutput::transformChanged, this, &Window::updatePreferredBufferTransform);
+        disconnect(m_moveResizeOutput, &LogicalOutput::blendingColorChanged, this, &Window::updatePreferredColorDescription);
     }
 
     m_moveResizeOutput = output;
     if (output) {
-        connect(output, &Output::scaleChanged, this, &Window::updateNextTargetScale);
-        connect(output, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
-        connect(output, &Output::blendingColorChanged, this, &Window::updatePreferredColorDescription);
+        connect(output, &LogicalOutput::scaleChanged, this, &Window::updateNextTargetScale);
+        connect(output, &LogicalOutput::transformChanged, this, &Window::updatePreferredBufferTransform);
+        connect(output, &LogicalOutput::blendingColorChanged, this, &Window::updatePreferredColorDescription);
     }
 
     updateNextTargetScale();
@@ -3492,7 +3492,7 @@ void Window::setElectricBorderMaximizing(bool maximizing)
 
 QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 {
-    Output *output = workspace()->outputAt(pos);
+    LogicalOutput *output = workspace()->outputAt(pos);
 
     if (mode & QuickTileFlag::Custom) {
         Tile *tile = workspace()->rootTile(output)->pick(pos);
@@ -3513,7 +3513,7 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 void Window::exitQuickTileMode()
 {
     const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         workspace()->tileManager(output)->forgetWindow(this, nullptr);
     }
 }
@@ -3623,9 +3623,9 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
             // If trying to tile to the side that the window is already tiled to move the window to the next
             // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
             if (combined == oldMode) {
-                Output *currentOutput = moveResizeOutput();
-                Output *nextOutput = currentOutput;
-                Output *candidateOutput = currentOutput;
+                LogicalOutput *currentOutput = moveResizeOutput();
+                LogicalOutput *nextOutput = currentOutput;
+                LogicalOutput *candidateOutput = currentOutput;
                 if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Left)) {
                     candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionWest);
                 } else if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Right)) {
@@ -3901,7 +3901,7 @@ QRectF Window::ensureSpecialStateGeometry(const QRectF &geometry)
     }
 }
 
-void Window::sendToOutput(Output *newOutput)
+void Window::sendToOutput(LogicalOutput *newOutput)
 {
     newOutput = rules()->checkOutput(newOutput);
     if (isActive()) {
@@ -3973,7 +3973,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     QRect screenArea;
     if (workspace()->inRearrange()) {
         // check if the window is on an about to be destroyed output
-        Output *newOutput = moveResizeOutput();
+        LogicalOutput *newOutput = moveResizeOutput();
         if (!workspace()->outputs().contains(newOutput)) {
             newOutput = workspace()->outputAt(newGeom.center());
         }

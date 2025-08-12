@@ -41,7 +41,7 @@ Window *FocusChain::getForActivation(VirtualDesktop *desktop) const
     return getForActivation(desktop, workspace()->activeOutput());
 }
 
-Window *FocusChain::getForActivation(VirtualDesktop *desktop, Output *output) const
+Window *FocusChain::getForActivation(VirtualDesktop *desktop, LogicalOutput *output) const
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {

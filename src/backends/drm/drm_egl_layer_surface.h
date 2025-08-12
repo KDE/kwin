@@ -51,12 +51,12 @@ public:
     explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const std::shared_ptr<ColorDescription> &blendingColor, const std::shared_ptr<ColorDescription> &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const std::shared_ptr<ColorDescription> &blendingColor, const std::shared_ptr<ColorDescription> &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, LogicalOutput::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits);
     bool endRendering(const QRegion &damagedDeviceRegion, OutputFrame *frame);
 
     void destroyResources();
     EglGbmBackend *eglBackend() const;
-    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
+    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
     void forgetDamage();
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
@@ -102,14 +102,14 @@ private:
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
         DamageJournal shadowDamageJournal;
-        Output::ColorPowerTradeoff tradeoff = Output::ColorPowerTradeoff::PreferEfficiency;
+        LogicalOutput::ColorPowerTradeoff tradeoff = LogicalOutput::ColorPowerTradeoff::PreferEfficiency;
 
         std::unique_ptr<GLRenderTimeQuery> compositingTimeQuery;
     };
-    bool checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
-    bool doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
-    std::unique_ptr<Surface> createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
-    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, Output::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
+    bool checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits);
+    bool doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
+    std::unique_ptr<Surface> createSurface(const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, LogicalOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const;
     std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;

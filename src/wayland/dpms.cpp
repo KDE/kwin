@@ -82,11 +82,11 @@ DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *resource)
     sendMode();
     sendDone();
 
-    connect(m_output->handle(), &Output::capabilitiesChanged, this, [this]() {
+    connect(m_output->handle(), &LogicalOutput::capabilitiesChanged, this, [this]() {
         sendSupported();
         sendDone();
     });
-    connect(m_output->handle(), &Output::dpmsModeChanged, this, [this]() {
+    connect(m_output->handle(), &LogicalOutput::dpmsModeChanged, this, [this]() {
         sendMode();
         sendDone();
     });
@@ -108,19 +108,19 @@ void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
         return;
     }
 
-    Output::DpmsMode dpmsMode;
+    LogicalOutput::DpmsMode dpmsMode;
     switch (mode) {
     case ORG_KDE_KWIN_DPMS_MODE_ON:
-        dpmsMode = Output::DpmsMode::On;
+        dpmsMode = LogicalOutput::DpmsMode::On;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_STANDBY:
-        dpmsMode = Output::DpmsMode::Standby;
+        dpmsMode = LogicalOutput::DpmsMode::Standby;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_SUSPEND:
-        dpmsMode = Output::DpmsMode::Suspend;
+        dpmsMode = LogicalOutput::DpmsMode::Suspend;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_OFF:
-        dpmsMode = Output::DpmsMode::Off;
+        dpmsMode = LogicalOutput::DpmsMode::Off;
         break;
     default:
         return;
@@ -135,7 +135,7 @@ void DpmsInterface::sendSupported()
         return;
     }
 
-    send_supported(m_output->handle()->capabilities() & Output::Capability::Dpms ? 1 : 0);
+    send_supported(m_output->handle()->capabilities() & LogicalOutput::Capability::Dpms ? 1 : 0);
 }
 
 void DpmsInterface::sendMode()
@@ -147,17 +147,17 @@ void DpmsInterface::sendMode()
     const auto mode = m_output->handle()->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
-    case Output::DpmsMode::On:
-    case Output::DpmsMode::AboutToTurnOff:
+    case LogicalOutput::DpmsMode::On:
+    case LogicalOutput::DpmsMode::AboutToTurnOff:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_ON;
         break;
-    case Output::DpmsMode::Standby:
+    case LogicalOutput::DpmsMode::Standby:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_STANDBY;
         break;
-    case Output::DpmsMode::Suspend:
+    case LogicalOutput::DpmsMode::Suspend:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_SUSPEND;
         break;
-    case Output::DpmsMode::Off:
+    case LogicalOutput::DpmsMode::Off:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_OFF;
         break;
     default:

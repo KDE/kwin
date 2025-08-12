@@ -426,7 +426,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         return err;
     }
     const bool hasPreferAccuracy = std::ranges::any_of(m_drmOutputs, [](const auto &output) {
-        return output->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy;
+        return output->colorPowerTradeoff() == LogicalOutput::ColorPowerTradeoff::PreferAccuracy;
     });
     if (m_addFB2ModifiersSupported || hasPreferAccuracy) {
         // We currently don't have any information about why the output config
@@ -815,7 +815,7 @@ void DrmGpu::maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFra
     }
     // Modesets need to be done asynchronously, to match how presentation
     // normally works. This is necessary because the Compositor adds presentation
-    // time feedbacks to the OutputFrame after calling Output::present
+    // time feedbacks to the OutputFrame after calling LogicalOutput::present
     m_delayedModesetTimer.start();
 }
 
@@ -1047,7 +1047,7 @@ QString DrmGpu::driverName() const
     return m_driverName;
 }
 
-QList<OutputLayer *> DrmGpu::compatibleOutputLayers(Output *output) const
+QList<OutputLayer *> DrmGpu::compatibleOutputLayers(LogicalOutput *output) const
 {
     if (auto virt = qobject_cast<DrmVirtualOutput *>(output)) {
         return {virt->primaryLayer()};

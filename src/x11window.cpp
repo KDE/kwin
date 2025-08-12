@@ -601,7 +601,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         area = workspace()->clientArea(FullArea, this, geom.center());
         checkOffscreenPosition(&geom, area);
     } else {
-        Output *output = nullptr;
+        LogicalOutput *output = nullptr;
         if (asn_data.xinerama() != -1) {
             output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
         }
@@ -3328,7 +3328,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         requestedFrameSize = rules()->checkSize(requestedFrameSize);
         new_pos = rules()->checkPosition(new_pos);
 
-        Output *newOutput = workspace()->outputAt(QRectF(new_pos, requestedFrameSize).center());
+        LogicalOutput *newOutput = workspace()->outputAt(QRectF(new_pos, requestedFrameSize).center());
         if (newOutput != rules()->checkOutput(newOutput)) {
             return; // not allowed by rule
         }
@@ -3584,7 +3584,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     const QRectF oldBufferGeometry = m_bufferGeometry;
     const QRectF oldFrameGeometry = m_frameGeometry;
     const QRectF oldClientGeometry = m_clientGeometry;
-    const Output *oldOutput = m_output;
+    const LogicalOutput *oldOutput = m_output;
 
     m_frameGeometry = frameGeometry;
     m_clientGeometry = clientGeometry;
@@ -4285,7 +4285,7 @@ void X11Window::startupIdChanged()
     }
 
     if (asn_data.xinerama() != -1) {
-        Output *output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
+        LogicalOutput *output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
         if (output) {
             sendToOutput(output);
         }

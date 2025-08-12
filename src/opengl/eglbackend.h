@@ -21,7 +21,7 @@
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 class GLTexture;
 class EglContext;
 class EglDisplay;

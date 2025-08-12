@@ -12,7 +12,7 @@ namespace KWin
 class ScreencastLayer : public OutputLayer
 {
 public:
-    explicit ScreencastLayer(Output *output, const QHash<uint32_t, QList<uint64_t>> &formats);
+    explicit ScreencastLayer(LogicalOutput *output, const QHash<uint32_t, QList<uint64_t>> &formats);
 
     void setFramebuffer(GLFramebuffer *buffer, const QRegion &bufferDamage);
 

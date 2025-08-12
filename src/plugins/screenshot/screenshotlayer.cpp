@@ -8,7 +8,7 @@
 namespace KWin
 {
 
-ScreenshotLayer::ScreenshotLayer(Output *output, GLFramebuffer *buffer)
+ScreenshotLayer::ScreenshotLayer(LogicalOutput *output, GLFramebuffer *buffer)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_buffer(buffer)
 {

@@ -408,7 +408,7 @@ Workspace::~Workspace()
     }
     m_tileManagers.clear();
 
-    for (Output *output : std::as_const(m_outputs)) {
+    for (LogicalOutput *output : std::as_const(m_outputs)) {
         Q_EMIT outputRemoved(output);
         output->unref();
     }
@@ -416,7 +416,7 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
+OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<LogicalOutput *>> &outputOrder)
 {
     assignBrightnessDevices(config);
 
@@ -431,7 +431,7 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
 
     updateXwaylandScale();
 
-    for (Output *output : std::as_const(m_outputs)) {
+    for (LogicalOutput *output : std::as_const(m_outputs)) {
         output->renderLoop()->scheduleRepaint();
     }
 
@@ -444,7 +444,7 @@ void Workspace::updateXwaylandScale()
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
     if (xwaylandClientsScale && !m_outputOrder.isEmpty()) {
         double maxScale = 0;
-        for (Output *output : m_outputOrder) {
+        for (LogicalOutput *output : m_outputOrder) {
             maxScale = std::max(maxScale, output->scale());
         }
         kwinApp()->setXwaylandScale(maxScale);
@@ -462,24 +462,24 @@ void Workspace::updateOutputConfiguration()
         return;
     }
 
-    const bool alreadyHaveEnabledOutputs = std::ranges::any_of(outputs, [](Output *o) {
+    const bool alreadyHaveEnabledOutputs = std::ranges::any_of(outputs, [](LogicalOutput *o) {
         return o->isEnabled();
     });
 
     // Update the output order to a fallback list, to avoid dangling pointers
     const auto setFallbackOutputOrder = [this, &outputs]() {
         auto newOrder = outputs;
-        newOrder.erase(std::remove_if(newOrder.begin(), newOrder.end(), [](Output *o) {
+        newOrder.erase(std::remove_if(newOrder.begin(), newOrder.end(), [](LogicalOutput *o) {
             return !o->isEnabled();
         }),
                        newOrder.end());
-        std::sort(newOrder.begin(), newOrder.end(), [](Output *left, Output *right) {
+        std::sort(newOrder.begin(), newOrder.end(), [](LogicalOutput *left, LogicalOutput *right) {
             return left->name() < right->name();
         });
         setOutputOrder(newOrder);
     };
 
-    QList<Output *> toEnable = outputs;
+    QList<LogicalOutput *> toEnable = outputs;
     OutputConfigurationError error = OutputConfigurationError::None;
     do {
         auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
@@ -499,7 +499,7 @@ void Workspace::updateOutputConfiguration()
         case OutputConfigurationError::None:
             setOutputOrder(order);
             if (type == OutputConfigurationStore::ConfigType::Generated) {
-                const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](Output *o) {
+                const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](LogicalOutput *o) {
                     return o->isInternal();
                 });
                 if (hasInternal && outputs.size() == 2) {
@@ -529,7 +529,7 @@ void Workspace::updateOutputConfiguration()
     // If applying the output configuration failed, brightness devices weren't assigned either.
     // To prevent dangling pointers, unset removed brightness brightness devices here
     const auto devices = waylandServer()->externalBrightness()->devices();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         if (output->brightnessDevice() && !devices.contains(output->brightnessDevice())) {
             output->unsetBrightnessDevice();
         }
@@ -1043,12 +1043,12 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 #endif
 }
 
-Output *Workspace::outputAt(const QPointF &pos) const
+LogicalOutput *Workspace::outputAt(const QPointF &pos) const
 {
-    Output *bestOutput = nullptr;
+    LogicalOutput *bestOutput = nullptr;
     qreal minDistance;
 
-    for (Output *output : std::as_const(m_outputs)) {
+    for (LogicalOutput *output : std::as_const(m_outputs)) {
         const QRectF geo = output->geometry();
 
         const QPointF closestPoint(std::clamp(pos.x(), geo.x(), geo.x() + geo.width() - 1),
@@ -1064,9 +1064,9 @@ Output *Workspace::outputAt(const QPointF &pos) const
     return bestOutput;
 }
 
-Output *Workspace::findOutput(const QString &name) const
+LogicalOutput *Workspace::findOutput(const QString &name) const
 {
-    for (Output *output : std::as_const(m_outputs)) {
+    for (LogicalOutput *output : std::as_const(m_outputs)) {
         if (output->name() == name) {
             return output;
         }
@@ -1074,10 +1074,10 @@ Output *Workspace::findOutput(const QString &name) const
     return nullptr;
 }
 
-Output *Workspace::findOutput(Output *reference, Direction direction, bool wrapAround) const
+LogicalOutput *Workspace::findOutput(LogicalOutput *reference, Direction direction, bool wrapAround) const
 {
-    QList<Output *> relevantOutputs;
-    std::copy_if(m_outputs.begin(), m_outputs.end(), std::back_inserter(relevantOutputs), [reference, direction](Output *output) {
+    QList<LogicalOutput *> relevantOutputs;
+    std::copy_if(m_outputs.begin(), m_outputs.end(), std::back_inserter(relevantOutputs), [reference, direction](LogicalOutput *output) {
         switch (direction) {
         case DirectionEast:
         case DirectionWest:
@@ -1093,7 +1093,7 @@ Output *Workspace::findOutput(Output *reference, Direction direction, bool wrapA
         }
     });
 
-    std::sort(relevantOutputs.begin(), relevantOutputs.end(), [direction](const Output *o1, const Output *o2) {
+    std::sort(relevantOutputs.begin(), relevantOutputs.end(), [direction](const LogicalOutput *o1, const LogicalOutput *o2) {
         switch (direction) {
         case DirectionEast:
         case DirectionWest:
@@ -1135,7 +1135,7 @@ void Workspace::slotOutputBackendOutputsQueried()
     updateOutputs();
 }
 
-void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
+void Workspace::updateOutputs(const std::optional<QList<LogicalOutput *>> &outputOrder)
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldOutputs = m_outputs;
@@ -1145,7 +1145,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     }
 
     m_outputs.clear();
-    for (Output *output : availableOutputs) {
+    for (LogicalOutput *output : availableOutputs) {
         if (!output->isNonDesktop() && output->isEnabled()) {
             m_outputs.append(output);
         }
@@ -1176,27 +1176,27 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         setOutputOrder(*outputOrder);
     } else {
         // ensure all enabled but no disabled outputs are in the output order
-        for (Output *output : std::as_const(m_outputs)) {
+        for (LogicalOutput *output : std::as_const(m_outputs)) {
             if (output->isEnabled() && !m_outputOrder.contains(output)) {
                 m_outputOrder.push_back(output);
             }
         }
-        m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [this](Output *output) {
+        m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [this](LogicalOutput *output) {
             return !m_outputs.contains(output);
         }),
                             m_outputOrder.end());
     }
 
-    const QSet<Output *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
-    const QSet<Output *> outputsSet(m_outputs.constBegin(), m_outputs.constEnd());
+    const QSet<LogicalOutput *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
+    const QSet<LogicalOutput *> outputsSet(m_outputs.constBegin(), m_outputs.constEnd());
 
     const auto added = outputsSet - oldOutputsSet;
-    for (Output *output : added) {
+    for (LogicalOutput *output : added) {
         output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
-        connect(output, &Output::aboutToTurnOff, this, &Workspace::aboutToTurnOff);
-        connect(output, &Output::wakeUp, this, &Workspace::wakeUp);
-        if (output->dpmsMode() != Output::DpmsMode::On) {
+        connect(output, &LogicalOutput::aboutToTurnOff, this, &Workspace::aboutToTurnOff);
+        connect(output, &LogicalOutput::wakeUp, this, &Workspace::wakeUp);
+        if (output->dpmsMode() != LogicalOutput::DpmsMode::On) {
             aboutToTurnOff();
         }
         Q_EMIT outputAdded(output);
@@ -1206,7 +1206,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     m_placementTracker->inhibit();
 
     const auto removed = oldOutputsSet - outputsSet;
-    for (Output *output : removed) {
+    for (LogicalOutput *output : removed) {
         Q_EMIT outputRemoved(output);
 
         auto tileManager = std::move(m_tileManagers[output]);
@@ -1241,7 +1241,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
                     continue;
                 }
 
-                Output *bestOutput = outputAt(output->geometry().center());
+                LogicalOutput *bestOutput = outputAt(output->geometry().center());
                 Tile *bestTile = m_tileManagers[bestOutput]->quickRootTile(desktop)->tileForMode(quickTileMode);
 
                 if (bestTile) {
@@ -1258,7 +1258,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     m_placementTracker->uninhibit();
     m_placementTracker->restore(outputLayoutId());
 
-    for (Output *output : removed) {
+    for (LogicalOutput *output : removed) {
         output->unref();
     }
 
@@ -1277,8 +1277,8 @@ void Workspace::aboutToTurnOff()
 
 void Workspace::wakeUp()
 {
-    const bool allOn = std::all_of(m_outputs.begin(), m_outputs.end(), [](Output *output) {
-        return output->dpmsMode() == Output::DpmsMode::On && !output->isPlaceholder();
+    const bool allOn = std::all_of(m_outputs.begin(), m_outputs.end(), [](LogicalOutput *output) {
+        return output->dpmsMode() == LogicalOutput::DpmsMode::On && !output->isPlaceholder();
     });
     if (allOn) {
         m_dpmsFilter.reset();
@@ -1289,11 +1289,11 @@ void Workspace::wakeUp()
 
 void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
 {
-    QList<Output *> candidates = kwinApp()->outputBackend()->outputs();
+    QList<LogicalOutput *> candidates = kwinApp()->outputBackend()->outputs();
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
-        const auto it = std::ranges::find_if(candidates, [device, &outputConfig](Output *output) {
+        const auto it = std::ranges::find_if(candidates, [device, &outputConfig](LogicalOutput *output) {
             if (output->isInternal() != device->isInternal()) {
                 return false;
             }
@@ -1311,7 +1311,7 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
             }
         });
         if (it != candidates.end()) {
-            Output *const output = *it;
+            LogicalOutput *const output = *it;
             candidates.erase(it);
             const auto changeset = outputConfig.changeSet(output);
             changeset->brightnessDevice = device;
@@ -1325,7 +1325,7 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
             }
         }
     }
-    for (Output *output : candidates) {
+    for (LogicalOutput *output : candidates) {
         outputConfig.changeSet(output)->brightnessDevice = nullptr;
     }
 }
@@ -1630,7 +1630,7 @@ QString Workspace::supportInformation() const
         support.append(m_decorationBridge->supportInformation());
         support.append(QStringLiteral("\n"));
     }
-    support.append(QStringLiteral("Output backend\n"));
+    support.append(QStringLiteral("LogicalOutput backend\n"));
     support.append(QStringLiteral("==============\n"));
     support.append(kwinApp()->outputBackend()->supportInformation());
     support.append(QStringLiteral("\n"));
@@ -1674,7 +1674,7 @@ QString Workspace::supportInformation() const
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral("=======\n"));
-    const QList<Output *> outputs = kwinApp()->outputBackend()->outputs();
+    const QList<LogicalOutput *> outputs = kwinApp()->outputBackend()->outputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
@@ -1695,7 +1695,7 @@ QString Workspace::supportInformation() const
             support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
             support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
             QString vrr = QStringLiteral("incapable");
-            if (output->capabilities() & Output::Capability::Vrr) {
+            if (output->capabilities() & LogicalOutput::Capability::Vrr) {
                 switch (output->vrrPolicy()) {
                 case VrrPolicy::Never:
                     vrr = QStringLiteral("never");
@@ -2063,7 +2063,7 @@ void Workspace::desktopResized()
 {
     const QRect oldGeometry = m_geometry;
     m_geometry = QRect();
-    for (const Output *output : std::as_const(m_outputs)) {
+    for (const LogicalOutput *output : std::as_const(m_outputs)) {
         m_geometry = m_geometry.united(output->geometry());
     }
 
@@ -2100,7 +2100,7 @@ void Workspace::desktopResized()
         return exclusiveContains(geometry, Cursors::self()->mouse()->pos());
     });
     if (oldCursorOutput != m_oldScreenGeometries.cend()) {
-        const Output *cursorOutput = oldCursorOutput.key();
+        const LogicalOutput *cursorOutput = oldCursorOutput.key();
         if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
             const QRect oldGeometry = oldCursorOutput.value();
             const QRect newGeometry = cursorOutput->geometry();
@@ -2123,7 +2123,7 @@ void Workspace::desktopResized()
 void Workspace::saveOldScreenSizes()
 {
     m_oldScreenGeometries.clear();
-    for (const Output *output : std::as_const(m_outputs)) {
+    for (const LogicalOutput *output : std::as_const(m_outputs)) {
         m_oldScreenGeometries.insert(output, output->geometry());
     }
 }
@@ -2176,12 +2176,12 @@ void Workspace::rearrange()
 
     QHash<const VirtualDesktop *, QRectF> workAreas;
     QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const Output *, QRectF>> screenAreas;
+    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, QRectF>> screenAreas;
 
     for (const VirtualDesktop *desktop : desktops) {
         workAreas[desktop] = m_geometry;
 
-        for (const Output *output : std::as_const(m_outputs)) {
+        for (const LogicalOutput *output : std::as_const(m_outputs)) {
             screenAreas[desktop][output] = output->geometryF();
         }
     }
@@ -2199,7 +2199,7 @@ void Workspace::rearrange()
         }
         // sanity check that a strut doesn't exclude a complete screen geometry
         // this is a violation to EWMH, as KWin just ignores the strut
-        for (const Output *output : std::as_const(m_outputs)) {
+        for (const LogicalOutput *output : std::as_const(m_outputs)) {
             if (!r.intersects(output->geometry())) {
                 qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
                 r = m_geometry;
@@ -2221,7 +2221,7 @@ void Workspace::rearrange()
         for (VirtualDesktop *vd : vds) {
             workAreas[vd] &= r;
             restrictedAreas[vd] += strutRegion;
-            for (Output *output : std::as_const(m_outputs)) {
+            for (LogicalOutput *output : std::as_const(m_outputs)) {
                 const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometryF()));
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
@@ -2265,7 +2265,7 @@ void Workspace::rearrange()
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
  */
-QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const VirtualDesktop *desktop) const
+QRectF Workspace::clientArea(clientAreaOption opt, const LogicalOutput *output, const VirtualDesktop *desktop) const
 {
     switch (opt) {
     case MaximizeArea:
@@ -2295,7 +2295,7 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Window *window) const
     return clientArea(opt, window, window->output());
 }
 
-QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const Output *output) const
+QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const LogicalOutput *output) const
 {
     const VirtualDesktop *desktop;
     if (window->isOnCurrentDesktop()) {
@@ -2355,13 +2355,13 @@ StrutRects Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, 
     return ret;
 }
 
-QHash<const Output *, QRect> Workspace::previousScreenSizes() const
+QHash<const LogicalOutput *, QRect> Workspace::previousScreenSizes() const
 {
     return m_oldScreenGeometries;
 }
 
 #if KWIN_BUILD_X11
-Output *Workspace::xineramaIndexToOutput(int index) const
+LogicalOutput *Workspace::xineramaIndexToOutput(int index) const
 {
     xcb_connection_t *connection = kwinApp()->x11Connection();
     if (!connection) {
@@ -2391,7 +2391,7 @@ Output *Workspace::xineramaIndexToOutput(int index) const
 }
 #endif
 
-void Workspace::setOutputOrder(const QList<Output *> &order)
+void Workspace::setOutputOrder(const QList<LogicalOutput *> &order)
 {
     if (m_outputOrder != order) {
         m_outputOrder = order;
@@ -2399,17 +2399,17 @@ void Workspace::setOutputOrder(const QList<Output *> &order)
     }
 }
 
-QList<Output *> Workspace::outputOrder() const
+QList<LogicalOutput *> Workspace::outputOrder() const
 {
     return m_outputOrder;
 }
 
-Output *Workspace::activeOutput() const
+LogicalOutput *Workspace::activeOutput() const
 {
     return m_activeOutput;
 }
 
-void Workspace::setActiveOutput(Output *output)
+void Workspace::setActiveOutput(LogicalOutput *output)
 {
     m_activeOutput = output;
 }
@@ -2466,7 +2466,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
     if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
 
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
-        const Output *output = outputAt(pos + window->rect().center());
+        const LogicalOutput *output = outputAt(pos + window->rect().center());
         if (maxRect.isNull()) {
             maxRect = clientArea(MaximizeArea, window, output);
         }
@@ -2900,7 +2900,7 @@ ScreenEdges *Workspace::screenEdges() const
     return m_screenEdges.get();
 }
 
-TileManager *Workspace::tileManager(Output *output) const
+TileManager *Workspace::tileManager(LogicalOutput *output) const
 {
     if (auto search = m_tileManagers.find(output); search != m_tileManagers.end()) {
         return search->second.get();
@@ -2909,12 +2909,12 @@ TileManager *Workspace::tileManager(Output *output) const
     }
 }
 
-RootTile *Workspace::rootTile(Output *output) const
+RootTile *Workspace::rootTile(LogicalOutput *output) const
 {
     return rootTile(output, VirtualDesktopManager::self()->currentDesktop());
 }
 
-RootTile *Workspace::rootTile(Output *output, VirtualDesktop *desktop) const
+RootTile *Workspace::rootTile(LogicalOutput *output, VirtualDesktop *desktop) const
 {
     if (auto manager = tileManager(output)) {
         return manager->rootTile(desktop);

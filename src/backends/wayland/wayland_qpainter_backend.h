@@ -19,7 +19,7 @@
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 class GraphicsBufferAllocator;
 class QPainterSwapchainSlot;
 class QPainterSwapchain;
@@ -86,10 +86,10 @@ public:
     ~WaylandQPainterBackend() override;
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
-    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) override;
 
 private:
-    void createOutput(Output *waylandOutput);
+    void createOutput(LogicalOutput *waylandOutput);
 
     WaylandBackend *m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;

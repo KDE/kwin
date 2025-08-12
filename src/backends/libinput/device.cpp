@@ -901,7 +901,7 @@ void Device::setOutputName(const QString &name)
     }
     m_outputName = name;
     const auto outputs = workspace()->outputs();
-    const auto it = std::ranges::find_if(outputs, [&name](Output *output) {
+    const auto it = std::ranges::find_if(outputs, [&name](LogicalOutput *output) {
         return output->name() == name;
     });
     if (it == outputs.end()) {
@@ -937,7 +937,7 @@ void Device::setOutputUuid(const QString &uuid)
     }
     m_outputUuid = uuid;
     const auto outputs = workspace()->outputs();
-    const auto it = std::ranges::find_if(outputs, [&uuid](Output *output) {
+    const auto it = std::ranges::find_if(outputs, [&uuid](LogicalOutput *output) {
         return output->uuid() == uuid;
     });
     if (it == outputs.end()) {
@@ -953,12 +953,12 @@ void Device::setOutputUuid(const QString &uuid)
 #endif
 }
 
-Output *Device::output() const
+LogicalOutput *Device::output() const
 {
     return m_output;
 }
 
-void Device::setOutput(Output *output)
+void Device::setOutput(LogicalOutput *output)
 {
     m_output = output;
 }

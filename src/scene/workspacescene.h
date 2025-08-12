@@ -66,11 +66,11 @@ protected:
     void clearStackingOrder();
     friend class EffectsHandler;
     // called after all effects had their paintScreen() called
-    void finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen);
+    void finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen);
     // shared implementation of painting the screen in the generic
     // (unoptimized) way
     void preparePaintGenericScreen();
-    void paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, Output *screen);
+    void paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, LogicalOutput *screen);
     // shared implementation of painting the screen in an optimized way
     void preparePaintSimpleScreen();
     void paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion);
@@ -98,7 +98,7 @@ protected:
     };
 
     // The screen that is being currently painted
-    Output *painted_screen = nullptr;
+    LogicalOutput *painted_screen = nullptr;
     SceneView *painted_delegate = nullptr;
 
     // windows in their stacking order

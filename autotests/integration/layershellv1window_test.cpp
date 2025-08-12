@@ -438,7 +438,7 @@ void LayerShellV1WindowTest::testPlacementAreaAfterOutputLayoutChange()
     // This test verifies that layer shell windows correctly react to output layout changes.
 
     // The output where the layer surface should be placed.
-    Output *output = workspace()->activeOutput();
+    LogicalOutput *output = workspace()->activeOutput();
 
     // Create a layer surface with an exclusive zone.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());

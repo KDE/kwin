@@ -61,7 +61,7 @@ class ConnectionThread;
 class Compositor;
 class DataSource;
 class EventQueue;
-class Output;
+class LogicalOutput;
 class PlasmaShell;
 class PlasmaWindowManagement;
 class Pointer;

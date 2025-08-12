@@ -93,7 +93,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     connect(pointer, &Pointer::left, this, [this]() {
         // wl_pointer.leave carries the wl_surface, but KWayland::Client::Pointer::left does not.
         const auto outputs = m_seat->backend()->outputs();
-        for (Output *output : outputs) {
+        for (LogicalOutput *output : outputs) {
             WaylandOutput *waylandOutput = static_cast<WaylandOutput *>(output);
             if (waylandOutput->cursor()->pointer()) {
                 waylandOutput->cursor()->setPointer(nullptr);
@@ -597,12 +597,12 @@ Outputs WaylandBackend::outputs() const
     return m_outputs;
 }
 
-Output *WaylandBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
+LogicalOutput *WaylandBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
     return createOutput(name, size * scale, scale, false);
 }
 
-void WaylandBackend::removeVirtualOutput(Output *output)
+void WaylandBackend::removeVirtualOutput(LogicalOutput *output)
 {
     WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {

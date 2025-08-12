@@ -607,7 +607,7 @@ ColorManagementOutputV1::ColorManagementOutputV1(wl_client *client, uint32_t id,
         return;
     }
 
-    connect(output->handle(), &Output::colorDescriptionChanged, this, &ColorManagementOutputV1::colorDescriptionChanged);
+    connect(output->handle(), &LogicalOutput::colorDescriptionChanged, this, &ColorManagementOutputV1::colorDescriptionChanged);
 }
 
 void ColorManagementOutputV1::wp_color_management_output_v1_destroy_resource(Resource *resource)

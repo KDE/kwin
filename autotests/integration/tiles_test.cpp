@@ -85,7 +85,7 @@ private:
     void createSimpleLayout();
     void createComplexLayout();
 
-    Output *m_output;
+    LogicalOutput *m_output;
     TileManager *m_tileManager;
     CustomTile *m_rootTile;
 };
@@ -133,7 +133,7 @@ void TilesTest::createSimpleLayout()
     std::vector<qreal> leftTileWidths = {0.5, 0.45, 0.4, 0.35, 0.3, 0.25};
     int i = 0;
     for (VirtualDesktop *desk : VirtualDesktopManager::self()->desktops()) {
-        for (Output *out : workspace()->outputs()) {
+        for (LogicalOutput *out : workspace()->outputs()) {
             qreal leftTileWidth = leftTileWidths[i++];
             CustomTile *rootTile = workspace()->rootTile(out, desk);
             while (rootTile->childCount() > 0) {
@@ -753,7 +753,7 @@ void TilesTest::tileAndMaximize()
 
     auto leftQuickTileD1 = m_tileManager->quickTile(QuickTileFlag::Left);
 
-    const QList<Output *> outputs = workspace()->outputs();
+    const QList<LogicalOutput *> outputs = workspace()->outputs();
     TileManager *out2TileMan = workspace()->tileManager(outputs[1]);
     auto rootTileD3O2 = out2TileMan->rootTile(VirtualDesktopManager::self()->desktops()[2]);
     auto leftTileD3O2 = qobject_cast<CustomTile *>(rootTileD3O2->childTiles()[0]);
@@ -893,7 +893,7 @@ void TilesTest::evacuateFromRemovedDesktop()
 
 void TilesTest::evacuateFromRemovedOutput()
 {
-    const QList<Output *> outputs = workspace()->outputs();
+    const QList<LogicalOutput *> outputs = workspace()->outputs();
     auto rightTileD1O2 = workspace()->rootTile(outputs[1])->childTiles()[1];
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());

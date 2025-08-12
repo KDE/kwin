@@ -477,15 +477,15 @@ void DrmTest::testVrrChange()
 
     QVERIFY(gpu->updateOutputs());
     const auto output = gpu->drmOutputs().front();
-    QVERIFY(!(output->capabilities() & Output::Capability::Vrr));
+    QVERIFY(!(output->capabilities() & LogicalOutput::Capability::Vrr));
 
-    QSignalSpy capsChanged(output, &Output::capabilitiesChanged);
+    QSignalSpy capsChanged(output, &LogicalOutput::capabilitiesChanged);
 
     conn->setVrrCapable(true);
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().front(), output);
     QCOMPARE(capsChanged.count(), 1);
-    QVERIFY(output->capabilities() & Output::Capability::Vrr);
+    QVERIFY(output->capabilities() & LogicalOutput::Capability::Vrr);
 }
 
 QTEST_GUILESS_MAIN(DrmTest)

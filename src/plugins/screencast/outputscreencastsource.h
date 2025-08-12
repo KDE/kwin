@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-class Output;
+class LogicalOutput;
 class SceneView;
 class ItemTreeView;
 class EglContext;
@@ -25,7 +25,7 @@ class OutputScreenCastSource : public ScreenCastSource
     Q_OBJECT
 
 public:
-    explicit OutputScreenCastSource(Output *output, std::optional<pid_t> pidToHide);
+    explicit OutputScreenCastSource(LogicalOutput *output, std::optional<pid_t> pidToHide);
     ~OutputScreenCastSource() override;
 
     uint refreshRate() const override;
@@ -48,7 +48,7 @@ public:
 
 private:
     void updateView();
-    QPointer<Output> m_output;
+    QPointer<LogicalOutput> m_output;
     std::unique_ptr<ScreencastLayer> m_layer;
     std::unique_ptr<SceneView> m_sceneView;
     std::unique_ptr<ItemTreeView> m_cursorView;

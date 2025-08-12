@@ -27,7 +27,7 @@ static const int s_version = 4;
 class OutputInterfacePrivate : public QtWaylandServer::wl_output
 {
 public:
-    explicit OutputInterfacePrivate(Display *display, OutputInterface *q, Output *handle);
+    explicit OutputInterfacePrivate(Display *display, OutputInterface *q, LogicalOutput *handle);
 
     void sendScale(Resource *resource);
     void sendGeometry(Resource *resource);
@@ -36,13 +36,13 @@ public:
 
     OutputInterface *q;
     QPointer<Display> display;
-    QPointer<Output> handle;
+    QPointer<LogicalOutput> handle;
     QSize physicalSize;
     QPoint globalPosition;
     QString manufacturer;
     QString model;
     int scale = 1;
-    Output::SubPixel subPixel = Output::SubPixel::Unknown;
+    LogicalOutput::SubPixel subPixel = LogicalOutput::SubPixel::Unknown;
     OutputTransform transform = OutputTransform::Normal;
     QSize modeSize;
     int refreshRate = 0;
@@ -56,7 +56,7 @@ private:
     void output_release(Resource *resource) override;
 };
 
-OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q, Output *handle)
+OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q, LogicalOutput *handle)
     : QtWaylandServer::wl_output(*display, s_version)
     , q(q)
     , display(display)
@@ -100,20 +100,20 @@ static quint32 kwaylandServerTransformToWaylandTransform(OutputTransform transfo
     }
 }
 
-static quint32 kwaylandServerSubPixelToWaylandSubPixel(Output::SubPixel subPixel)
+static quint32 kwaylandServerSubPixelToWaylandSubPixel(LogicalOutput::SubPixel subPixel)
 {
     switch (subPixel) {
-    case Output::SubPixel::Unknown:
+    case LogicalOutput::SubPixel::Unknown:
         return OutputInterfacePrivate::subpixel_unknown;
-    case Output::SubPixel::None:
+    case LogicalOutput::SubPixel::None:
         return OutputInterfacePrivate::subpixel_none;
-    case Output::SubPixel::Horizontal_RGB:
+    case LogicalOutput::SubPixel::Horizontal_RGB:
         return OutputInterfacePrivate::subpixel_horizontal_rgb;
-    case Output::SubPixel::Horizontal_BGR:
+    case LogicalOutput::SubPixel::Horizontal_BGR:
         return OutputInterfacePrivate::subpixel_horizontal_bgr;
-    case Output::SubPixel::Vertical_RGB:
+    case LogicalOutput::SubPixel::Vertical_RGB:
         return OutputInterfacePrivate::subpixel_vertical_rgb;
-    case Output::SubPixel::Vertical_BGR:
+    case LogicalOutput::SubPixel::Vertical_BGR:
         return OutputInterfacePrivate::subpixel_vertical_bgr;
     default:
         Q_UNREACHABLE();
@@ -171,7 +171,7 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     Q_EMIT q->bound(ClientConnection::get(resource->client()), resource->handle);
 }
 
-OutputInterface::OutputInterface(Display *display, Output *handle, QObject *parent)
+OutputInterface::OutputInterface(Display *display, LogicalOutput *handle, QObject *parent)
     : QObject(parent)
     , d(new OutputInterfacePrivate(display, this, handle))
 {
@@ -200,7 +200,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
     d->refreshRate = handle->refreshRate();
     d->subPixel = handle->subPixel();
 
-    connect(handle, &Output::geometryChanged, this, [this]() {
+    connect(handle, &LogicalOutput::geometryChanged, this, [this]() {
         const QPoint position = d->handle->geometry().topLeft();
         if (d->globalPosition != position) {
             d->globalPosition = position;
@@ -212,7 +212,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
         }
     });
 
-    connect(handle, &Output::scaleChanged, this, [this]() {
+    connect(handle, &LogicalOutput::scaleChanged, this, [this]() {
         const int scale = std::ceil(d->handle->scale());
         if (d->scale != scale) {
             d->scale = scale;
@@ -224,7 +224,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
         }
     });
 
-    connect(handle, &Output::transformChanged, this, [this]() {
+    connect(handle, &LogicalOutput::transformChanged, this, [this]() {
         const OutputTransform transform = d->handle->transform();
         if (d->transform != transform) {
             d->transform = transform;
@@ -236,7 +236,7 @@ OutputInterface::OutputInterface(Display *display, Output *handle, QObject *pare
         }
     });
 
-    connect(handle, &Output::currentModeChanged, this, [this]() {
+    connect(handle, &LogicalOutput::currentModeChanged, this, [this]() {
         const QSize size = d->handle->modeSize();
         const int refreshRate = d->handle->refreshRate();
         if (d->modeSize != size || d->refreshRate != refreshRate) {
@@ -261,7 +261,7 @@ Display *OutputInterface::display() const
     return d->display;
 }
 
-Output *OutputInterface::handle() const
+LogicalOutput *OutputInterface::handle() const
 {
     return d->handle;
 }

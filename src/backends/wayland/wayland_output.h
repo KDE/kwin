@@ -71,7 +71,7 @@ private:
     bool m_enabled = true;
 };
 
-class WaylandOutput : public Output
+class WaylandOutput : public LogicalOutput
 {
     Q_OBJECT
 public:

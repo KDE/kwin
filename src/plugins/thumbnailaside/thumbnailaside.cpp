@@ -55,7 +55,7 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
+void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     painted = QRegion();
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
@@ -167,7 +167,7 @@ void ThumbnailAsideEffect::arrange()
         mwidth = std::max(mwidth, d.window->width());
         pos[d.index] = d.window->height();
     }
-    Output *effectiveScreen = effects->findScreen(screen);
+    LogicalOutput *effectiveScreen = effects->findScreen(screen);
     if (!effectiveScreen) {
         effectiveScreen = effects->activeScreen();
     }

@@ -75,7 +75,7 @@ Integration::~Integration()
     }
 }
 
-QHash<Output *, Screen *> Integration::screens() const
+QHash<LogicalOutput *, Screen *> Integration::screens() const
 {
     return m_screens;
 }
@@ -190,15 +190,15 @@ void Integration::handleWorkspaceCreated()
     connect(workspace(), &Workspace::outputRemoved,
             this, &Integration::handleOutputDisabled);
 
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    const QList<LogicalOutput *> outputs = workspace()->outputs();
+    for (LogicalOutput *output : outputs) {
         handleOutputEnabled(output);
     }
 
     m_clipboard->initialize();
 }
 
-void Integration::handleOutputEnabled(Output *output)
+void Integration::handleOutputEnabled(LogicalOutput *output)
 {
     Screen *platformScreen = new Screen(output, this);
     QWindowSystemInterface::handleScreenAdded(platformScreen);
@@ -210,7 +210,7 @@ void Integration::handleOutputEnabled(Output *output)
     }
 }
 
-void Integration::handleOutputDisabled(Output *output)
+void Integration::handleOutputDisabled(LogicalOutput *output)
 {
     Screen *platformScreen = m_screens.take(output);
     if (!platformScreen) {

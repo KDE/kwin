@@ -19,13 +19,13 @@
 namespace KWin
 {
 
-static QString outputName(const Output *screen)
+static QString outputName(const LogicalOutput *screen)
 {
     const auto screens = effects->screens();
-    const bool shouldShowSerialNumber = std::any_of(screens.cbegin(), screens.cend(), [screen](const Output *other) {
+    const bool shouldShowSerialNumber = std::any_of(screens.cbegin(), screens.cend(), [screen](const LogicalOutput *other) {
         return other != screen && other->manufacturer() == screen->manufacturer() && other->model() == screen->model();
     });
-    const bool shouldShowConnector = shouldShowSerialNumber && std::any_of(screens.cbegin(), screens.cend(), [screen](const Output *other) {
+    const bool shouldShowConnector = shouldShowSerialNumber && std::any_of(screens.cbegin(), screens.cend(), [screen](const LogicalOutput *other) {
         return other != screen && other->serialNumber() == screen->serialNumber();
     });
 
@@ -104,7 +104,7 @@ void OutputLocatorEffect::hide()
     effects->addRepaint(repaintRegion);
 }
 
-void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, KWin::Output *screen)
+void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 

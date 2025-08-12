@@ -55,7 +55,7 @@ namespace KWin
 static bool screenContainsPos(const QPointF &pos)
 {
     const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         if (output->geometry().contains(flooredPoint(pos))) {
             return true;
         }
@@ -144,7 +144,7 @@ void PointerInputRedirection::init()
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
 
     // warp the cursor to center of screen containing the workspace center
-    if (const Output *output = workspace()->outputAt(workspace()->geometry().center())) {
+    if (const LogicalOutput *output = workspace()->outputAt(workspace()->geometry().center())) {
         warp(output->geometry().center());
     }
     updateAfterScreenChange();
@@ -871,14 +871,14 @@ qreal PointerInputRedirection::edgeBarrier(EdgeBarrierType type) const
     }
 }
 
-QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Output *currentOutput, std::chrono::microseconds time)
+QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const LogicalOutput *currentOutput, std::chrono::microseconds time)
 {
     // optimization to avoid looping over all outputs
     if (exclusiveContains(currentOutput->geometry(), m_pos)) {
         m_movementInEdgeBarrier = QPointF();
         return pos;
     }
-    const Output *lastOutput = workspace()->outputAt(m_pos);
+    const LogicalOutput *lastOutput = workspace()->outputAt(m_pos);
     QPointF newPos = confineToBoundingBox(pos, lastOutput->geometry());
     const auto type = edgeBarrierType(newPos, lastOutput->geometry());
     if (m_lastEdgeBarrierType != type) {
@@ -919,7 +919,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::mi
         return;
     }
     // verify that at least one screen contains the pointer position
-    const Output *currentOutput = workspace()->outputAt(pos);
+    const LogicalOutput *currentOutput = workspace()->outputAt(pos);
     QPointF p = confineToBoundingBox(pos, currentOutput->geometry());
     p = applyEdgeBarrier(p, currentOutput, time);
     p = applyPointerConfinement(p);
@@ -975,7 +975,7 @@ void PointerInputRedirection::updateAfterScreenChange()
         return;
     }
 
-    Output *output = nullptr;
+    LogicalOutput *output = nullptr;
     if (m_lastOutputWasPlaceholder) {
         // previously we've positioned our pointer on a placeholder screen, try
         // to get us onto the real "primary" screen instead.
@@ -1245,7 +1245,7 @@ void WaylandCursorImage::updateCursorTheme()
     qreal targetDevicePixelRatio = 1;
 
     const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         if (output->scale() > targetDevicePixelRatio) {
             targetDevicePixelRatio = output->scale();
         }

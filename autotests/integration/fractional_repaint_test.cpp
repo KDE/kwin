@@ -66,7 +66,7 @@ void FractionalRepaintTest::testBottomRow()
     // this test verifies that with odd resolution + scale factor combinations,
     // the row of pixels "rounded away" by the logical coordinate grid still gets
     // repainted properly and doesn't have any glitches in it
-    Output *output = workspace()->outputs().front();
+    LogicalOutput *output = workspace()->outputs().front();
     QCOMPARE(output->geometry().height(), 860);
     QCOMPARE(output->geometry().height() * output->scale(), 2279);
     QCOMPARE(output->geometryF().height() * output->scale(), 2280);
