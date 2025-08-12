@@ -21,7 +21,7 @@
 namespace KWin
 {
 
-QDebug operator<<(QDebug debug, const Output *output)
+QDebug operator<<(QDebug debug, const LogicalOutput *output)
 {
     QDebugStateSaver saver(debug);
     debug.nospace();
@@ -37,7 +37,7 @@ QDebug operator<<(QDebug debug, const Output *output)
         }
         debug << ')';
     } else {
-        debug << "Output(0x0)";
+        debug << "LogicalOutput(0x0)";
     }
     return debug;
 }
@@ -350,22 +350,22 @@ QRegion OutputTransform::map(const QRegion &region, const QSize &bounds) const
     return ret;
 }
 
-Output::Output(QObject *parent)
+LogicalOutput::LogicalOutput(QObject *parent)
     : QObject(parent)
 {
     QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
 }
 
-Output::~Output()
+LogicalOutput::~LogicalOutput()
 {
 }
 
-void Output::ref()
+void LogicalOutput::ref()
 {
     m_refCount++;
 }
 
-void Output::unref()
+void LogicalOutput::unref()
 {
     Q_ASSERT(m_refCount > 0);
     m_refCount--;
@@ -374,158 +374,158 @@ void Output::unref()
     }
 }
 
-QString Output::name() const
+QString LogicalOutput::name() const
 {
     return m_information.name;
 }
 
-QString Output::uuid() const
+QString LogicalOutput::uuid() const
 {
     return m_state.uuid;
 }
 
-OutputTransform Output::transform() const
+OutputTransform LogicalOutput::transform() const
 {
     return m_state.transform;
 }
 
-OutputTransform Output::manualTransform() const
+OutputTransform LogicalOutput::manualTransform() const
 {
     return m_state.manualTransform;
 }
 
-QString Output::eisaId() const
+QString LogicalOutput::eisaId() const
 {
     return m_information.eisaId;
 }
 
-QString Output::manufacturer() const
+QString LogicalOutput::manufacturer() const
 {
     return m_information.manufacturer;
 }
 
-QString Output::model() const
+QString LogicalOutput::model() const
 {
     return m_information.model;
 }
 
-QString Output::serialNumber() const
+QString LogicalOutput::serialNumber() const
 {
     return m_information.serialNumber;
 }
 
-bool Output::isInternal() const
+bool LogicalOutput::isInternal() const
 {
     return m_information.internal;
 }
 
-std::chrono::milliseconds Output::dimAnimationTime()
+std::chrono::milliseconds LogicalOutput::dimAnimationTime()
 {
     // See kscreen.kcfg
     return std::chrono::milliseconds(KSharedConfig::openConfig()->group(QStringLiteral("Effect-Kscreen")).readEntry("Duration", 250));
 }
 
-QRect Output::mapFromGlobal(const QRect &rect) const
+QRect LogicalOutput::mapFromGlobal(const QRect &rect) const
 {
     return rect.translated(-geometry().topLeft());
 }
 
-QRectF Output::mapFromGlobal(const QRectF &rect) const
+QRectF LogicalOutput::mapFromGlobal(const QRectF &rect) const
 {
     return rect.translated(-geometry().topLeft());
 }
 
-QRectF Output::mapToGlobal(const QRectF &rect) const
+QRectF LogicalOutput::mapToGlobal(const QRectF &rect) const
 {
     return rect.translated(geometry().topLeft());
 }
 
-QRegion Output::mapToGlobal(const QRegion &region) const
+QRegion LogicalOutput::mapToGlobal(const QRegion &region) const
 {
     return region.translated(geometry().topLeft());
 }
 
-QPointF Output::mapToGlobal(const QPointF &pos) const
+QPointF LogicalOutput::mapToGlobal(const QPointF &pos) const
 {
     return pos + geometry().topLeft();
 }
 
-QPointF Output::mapFromGlobal(const QPointF &pos) const
+QPointF LogicalOutput::mapFromGlobal(const QPointF &pos) const
 {
     return pos - geometry().topLeft();
 }
 
-Output::Capabilities Output::capabilities() const
+LogicalOutput::Capabilities LogicalOutput::capabilities() const
 {
     return m_information.capabilities;
 }
 
-qreal Output::scale() const
+qreal LogicalOutput::scale() const
 {
     return m_state.scale;
 }
 
-QRect Output::geometry() const
+QRect LogicalOutput::geometry() const
 {
     return QRect(m_state.position, pixelSize() / scale());
 }
 
-QRectF Output::geometryF() const
+QRectF LogicalOutput::geometryF() const
 {
     return QRectF(m_state.position, QSizeF(pixelSize()) / scale());
 }
 
-QSize Output::physicalSize() const
+QSize LogicalOutput::physicalSize() const
 {
     return m_information.physicalSize;
 }
 
-uint32_t Output::refreshRate() const
+uint32_t LogicalOutput::refreshRate() const
 {
     return m_state.currentMode ? m_state.currentMode->refreshRate() : 0;
 }
 
-QSize Output::modeSize() const
+QSize LogicalOutput::modeSize() const
 {
     return m_state.currentMode ? m_state.currentMode->size() : QSize();
 }
 
-QSize Output::pixelSize() const
+QSize LogicalOutput::pixelSize() const
 {
     return orientateSize(modeSize());
 }
 
-const Edid &Output::edid() const
+const Edid &LogicalOutput::edid() const
 {
     return m_information.edid;
 }
 
-QList<std::shared_ptr<OutputMode>> Output::modes() const
+QList<std::shared_ptr<OutputMode>> LogicalOutput::modes() const
 {
     return m_state.modes;
 }
 
-std::shared_ptr<OutputMode> Output::currentMode() const
+std::shared_ptr<OutputMode> LogicalOutput::currentMode() const
 {
     return m_state.currentMode;
 }
 
-QSize Output::desiredModeSize() const
+QSize LogicalOutput::desiredModeSize() const
 {
     return m_state.desiredModeSize;
 }
 
-uint32_t Output::desiredModeRefreshRate() const
+uint32_t LogicalOutput::desiredModeRefreshRate() const
 {
     return m_state.desiredModeRefreshRate;
 }
 
-Output::SubPixel Output::subPixel() const
+LogicalOutput::SubPixel LogicalOutput::subPixel() const
 {
     return m_information.subPixel;
 }
 
-void Output::applyChanges(const OutputConfiguration &config)
+void LogicalOutput::applyChanges(const OutputConfiguration &config)
 {
     auto props = config.constChangeSet(this);
     if (!props) {
@@ -555,17 +555,17 @@ void Output::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
-bool Output::isEnabled() const
+bool LogicalOutput::isEnabled() const
 {
     return m_state.enabled;
 }
 
-QString Output::description() const
+QString LogicalOutput::description() const
 {
     return manufacturer() + ' ' + model();
 }
 
-void Output::setInformation(const Information &information)
+void LogicalOutput::setInformation(const Information &information)
 {
     const auto oldInfo = m_information;
     m_information = information;
@@ -574,7 +574,7 @@ void Output::setInformation(const Information &information)
     }
 }
 
-void Output::setState(const State &state)
+void LogicalOutput::setState(const State &state)
 {
     const QRect oldGeometry = geometry();
     const State oldState = m_state;
@@ -677,7 +677,7 @@ void Output::setState(const State &state)
     }
 }
 
-QSize Output::orientateSize(const QSize &size) const
+QSize LogicalOutput::orientateSize(const QSize &size) const
 {
     switch (m_state.transform.kind()) {
     case OutputTransform::Rotate90:
@@ -690,236 +690,236 @@ QSize Output::orientateSize(const QSize &size) const
     }
 }
 
-void Output::setDpmsMode(DpmsMode mode)
+void LogicalOutput::setDpmsMode(DpmsMode mode)
 {
 }
 
-Output::DpmsMode Output::dpmsMode() const
+LogicalOutput::DpmsMode LogicalOutput::dpmsMode() const
 {
     return m_state.dpmsMode;
 }
 
-uint32_t Output::overscan() const
+uint32_t LogicalOutput::overscan() const
 {
     return m_state.overscan;
 }
 
-VrrPolicy Output::vrrPolicy() const
+VrrPolicy LogicalOutput::vrrPolicy() const
 {
     return m_state.vrrPolicy;
 }
 
-bool Output::isPlaceholder() const
+bool LogicalOutput::isPlaceholder() const
 {
     return m_information.placeholder;
 }
 
-bool Output::isNonDesktop() const
+bool LogicalOutput::isNonDesktop() const
 {
     return m_information.nonDesktop;
 }
 
-Output::RgbRange Output::rgbRange() const
+LogicalOutput::RgbRange LogicalOutput::rgbRange() const
 {
     return m_state.rgbRange;
 }
 
-bool Output::setChannelFactors(const QVector3D &rgb)
+bool LogicalOutput::setChannelFactors(const QVector3D &rgb)
 {
     return false;
 }
 
-OutputTransform Output::panelOrientation() const
+OutputTransform LogicalOutput::panelOrientation() const
 {
     return m_information.panelOrientation;
 }
 
-bool Output::wideColorGamut() const
+bool LogicalOutput::wideColorGamut() const
 {
     return m_state.wideColorGamut;
 }
 
-bool Output::highDynamicRange() const
+bool LogicalOutput::highDynamicRange() const
 {
     return m_state.highDynamicRange;
 }
 
-uint32_t Output::referenceLuminance() const
+uint32_t LogicalOutput::referenceLuminance() const
 {
     return m_state.referenceLuminance;
 }
 
-Output::AutoRotationPolicy Output::autoRotationPolicy() const
+LogicalOutput::AutoRotationPolicy LogicalOutput::autoRotationPolicy() const
 {
     return m_state.autoRotatePolicy;
 }
 
-std::shared_ptr<IccProfile> Output::iccProfile() const
+std::shared_ptr<IccProfile> LogicalOutput::iccProfile() const
 {
     return m_state.iccProfile;
 }
 
-QString Output::iccProfilePath() const
+QString LogicalOutput::iccProfilePath() const
 {
     return m_state.iccProfilePath;
 }
 
-QByteArray Output::mstPath() const
+QByteArray LogicalOutput::mstPath() const
 {
     return m_information.mstPath;
 }
 
-const std::shared_ptr<ColorDescription> &Output::colorDescription() const
+const std::shared_ptr<ColorDescription> &LogicalOutput::colorDescription() const
 {
     return m_state.colorDescription;
 }
 
-std::optional<double> Output::maxPeakBrightness() const
+std::optional<double> LogicalOutput::maxPeakBrightness() const
 {
     return m_state.maxPeakBrightnessOverride ? m_state.maxPeakBrightnessOverride : m_information.maxPeakBrightness;
 }
 
-std::optional<double> Output::maxAverageBrightness() const
+std::optional<double> LogicalOutput::maxAverageBrightness() const
 {
     return m_state.maxAverageBrightnessOverride ? *m_state.maxAverageBrightnessOverride : m_information.maxAverageBrightness;
 }
 
-double Output::minBrightness() const
+double LogicalOutput::minBrightness() const
 {
     return m_state.minBrightnessOverride.value_or(m_information.minBrightness);
 }
 
-std::optional<double> Output::maxPeakBrightnessOverride() const
+std::optional<double> LogicalOutput::maxPeakBrightnessOverride() const
 {
     return m_state.maxPeakBrightnessOverride;
 }
 
-std::optional<double> Output::maxAverageBrightnessOverride() const
+std::optional<double> LogicalOutput::maxAverageBrightnessOverride() const
 {
     return m_state.maxAverageBrightnessOverride;
 }
 
-std::optional<double> Output::minBrightnessOverride() const
+std::optional<double> LogicalOutput::minBrightnessOverride() const
 {
     return m_state.minBrightnessOverride;
 }
 
-double Output::sdrGamutWideness() const
+double LogicalOutput::sdrGamutWideness() const
 {
     return m_state.sdrGamutWideness;
 }
 
-Output::ColorProfileSource Output::colorProfileSource() const
+LogicalOutput::ColorProfileSource LogicalOutput::colorProfileSource() const
 {
     return m_state.colorProfileSource;
 }
 
-double Output::brightnessSetting() const
+double LogicalOutput::brightnessSetting() const
 {
     return m_state.brightnessSetting;
 }
 
-double Output::dimming() const
+double LogicalOutput::dimming() const
 {
     return m_state.dimming;
 }
 
-std::optional<double> Output::currentBrightness() const
+std::optional<double> LogicalOutput::currentBrightness() const
 {
     return m_state.currentBrightness;
 }
 
-double Output::artificialHdrHeadroom() const
+double LogicalOutput::artificialHdrHeadroom() const
 {
     return m_state.artificialHdrHeadroom;
 }
 
-BrightnessDevice *Output::brightnessDevice() const
+BrightnessDevice *LogicalOutput::brightnessDevice() const
 {
     return m_state.brightnessDevice;
 }
 
-void Output::unsetBrightnessDevice()
+void LogicalOutput::unsetBrightnessDevice()
 {
     State next;
     next.brightnessDevice = nullptr;
     setState(next);
 }
 
-bool Output::allowSdrSoftwareBrightness() const
+bool LogicalOutput::allowSdrSoftwareBrightness() const
 {
     return m_state.allowSdrSoftwareBrightness;
 }
 
-Output::ColorPowerTradeoff Output::colorPowerTradeoff() const
+LogicalOutput::ColorPowerTradeoff LogicalOutput::colorPowerTradeoff() const
 {
     return m_state.colorPowerTradeoff;
 }
 
-QString Output::replicationSource() const
+QString LogicalOutput::replicationSource() const
 {
     return m_state.replicationSource;
 }
 
-bool Output::detectedDdcCi() const
+bool LogicalOutput::detectedDdcCi() const
 {
     return m_state.detectedDdcCi;
 }
 
-bool Output::allowDdcCi() const
+bool LogicalOutput::allowDdcCi() const
 {
     return m_state.allowDdcCi;
 }
 
-uint32_t Output::maxBitsPerColor() const
+uint32_t LogicalOutput::maxBitsPerColor() const
 {
     return m_state.maxBitsPerColor;
 }
 
-Output::BpcRange Output::bitsPerColorRange() const
+LogicalOutput::BpcRange LogicalOutput::bitsPerColorRange() const
 {
     return m_information.bitsPerColorRange;
 }
 
-std::optional<uint32_t> Output::automaticMaxBitsPerColorLimit() const
+std::optional<uint32_t> LogicalOutput::automaticMaxBitsPerColorLimit() const
 {
     return m_state.automaticMaxBitsPerColorLimit;
 }
 
-Output::EdrPolicy Output::edrPolicy() const
+LogicalOutput::EdrPolicy LogicalOutput::edrPolicy() const
 {
     return m_state.edrPolicy;
 }
 
-double Output::sharpnessSetting() const
+double LogicalOutput::sharpnessSetting() const
 {
     return m_state.sharpnessSetting;
 }
 
-void Output::setAutoRotateAvailable(bool isAvailable)
+void LogicalOutput::setAutoRotateAvailable(bool isAvailable)
 {
 }
 
-std::optional<uint32_t> Output::minVrrRefreshRateHz() const
+std::optional<uint32_t> LogicalOutput::minVrrRefreshRateHz() const
 {
     return m_information.minVrrRefreshRateHz;
 }
 
-bool Output::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
+bool LogicalOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     return false;
 }
 
-void Output::repairPresentation()
+void LogicalOutput::repairPresentation()
 {
 }
 
-const std::shared_ptr<ColorDescription> &Output::blendingColor() const
+const std::shared_ptr<ColorDescription> &LogicalOutput::blendingColor() const
 {
     return m_state.blendingColor;
 }
 
-const std::shared_ptr<ColorDescription> &Output::layerBlendingColor() const
+const std::shared_ptr<ColorDescription> &LogicalOutput::layerBlendingColor() const
 {
     return m_state.layerBlendingColor;
 }
@@ -929,7 +929,7 @@ static const std::array s_brokenDdcCi = {
     std::make_pair(QByteArrayLiteral("SAM"), QByteArrayLiteral("Odyssey G5")),
 };
 
-bool Output::isDdcCiKnownBroken() const
+bool LogicalOutput::isDdcCiKnownBroken() const
 {
     return m_information.edid.isValid() && std::ranges::any_of(s_brokenDdcCi, [this](const auto &pair) {
         return m_information.edid.eisaId() == pair.first
@@ -937,7 +937,7 @@ bool Output::isDdcCiKnownBroken() const
     });
 }
 
-bool Output::overlayLayersLikelyBroken() const
+bool LogicalOutput::overlayLayersLikelyBroken() const
 {
     return false;
 }

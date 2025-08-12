@@ -86,12 +86,12 @@ XdgOutputManagerV1InterfacePrivate::XdgOutputManagerV1InterfacePrivate(Display *
 void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_get_xdg_output(Resource *resource, uint32_t id, wl_resource *outputResource)
 {
     auto output = OutputInterface::get(outputResource);
-    if (!output) { // output client is requesting XdgOutput for an Output that doesn't exist
+    if (!output) { // output client is requesting XdgOutput for an LogicalOutput that doesn't exist
         return;
     }
     auto xdgOutput = outputs.value(output);
     if (!xdgOutput) {
-        return; // client is requesting XdgOutput for an Output that doesn't exist
+        return; // client is requesting XdgOutput for an LogicalOutput that doesn't exist
     }
     xdgOutput->add(resource->client(), id, resource->version());
 }
@@ -104,14 +104,14 @@ void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_destroy(Resource
 XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output)
     : output(output)
 {
-    const Output *handle = output->handle();
+    const LogicalOutput *handle = output->handle();
 
     name = handle->name();
     description = handle->description();
     pos = handle->geometryF().topLeft();
     size = handle->geometryF().size();
 
-    connect(handle, &Output::geometryChanged, this, &XdgOutputV1Interface::update);
+    connect(handle, &LogicalOutput::geometryChanged, this, &XdgOutputV1Interface::update);
 }
 
 void XdgOutputV1Interface::update()

@@ -11,7 +11,7 @@
 namespace KWin
 {
 
-class PlaceholderOutput : public Output
+class PlaceholderOutput : public LogicalOutput
 {
     Q_OBJECT
 

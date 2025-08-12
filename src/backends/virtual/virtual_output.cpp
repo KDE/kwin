@@ -20,7 +20,7 @@ namespace KWin
 {
 
 VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath)
-    : Output(parent)
+    : LogicalOutput(parent)
     , m_backend(parent)
     , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())

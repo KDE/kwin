@@ -34,7 +34,7 @@ static const QList<QColor> s_colors{
 
 ShowPaintEffect::ShowPaintEffect() = default;
 
-void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
+void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     m_painted = QRegion();
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);

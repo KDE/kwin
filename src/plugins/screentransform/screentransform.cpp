@@ -45,7 +45,7 @@ ScreenTransformEffect::ScreenTransformEffect()
     m_previousTextureLocation = m_shader->uniformLocation("previousTexture");
     m_currentTextureLocation = m_shader->uniformLocation("currentTexture");
 
-    const QList<Output *> screens = effects->screens();
+    const QList<LogicalOutput *> screens = effects->screens();
     for (auto screen : screens) {
         addScreen(screen);
     }
@@ -70,9 +70,9 @@ qreal transformAngle(OutputTransform current, OutputTransform old)
     return ensureShort((int(current.kind()) % 4 - int(old.kind()) % 4) * 90);
 }
 
-void ScreenTransformEffect::addScreen(Output *screen)
+void ScreenTransformEffect::addScreen(LogicalOutput *screen)
 {
-    connect(screen, &Output::aboutToChange, this, [this, screen](OutputChangeSet *changeSet) {
+    connect(screen, &LogicalOutput::aboutToChange, this, [this, screen](OutputChangeSet *changeSet) {
         const OutputTransform transform = changeSet->transform.value_or(screen->transform());
         if (screen->transform() == transform) {
             return;
@@ -110,7 +110,7 @@ void ScreenTransformEffect::addScreen(Output *screen)
     });
 }
 
-void ScreenTransformEffect::removeScreen(Output *screen)
+void ScreenTransformEffect::removeScreen(LogicalOutput *screen)
 {
     screen->disconnect(this);
     if (auto it = m_states.find(screen); it != m_states.end()) {
@@ -192,7 +192,7 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, KWin::Output *screen)
+void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     auto it = m_states.find(screen);
     if (it == m_states.end()) {

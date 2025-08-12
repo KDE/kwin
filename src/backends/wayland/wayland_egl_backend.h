@@ -100,12 +100,12 @@ public:
     DrmDevice *drmDevice() const override;
 
     void init() override;
-    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) override;
 
 private:
     bool initializeEgl();
     bool initRenderingContext();
-    void createOutputLayers(Output *output);
+    void createOutputLayers(LogicalOutput *output);
     void cleanupSurfaces() override;
 
     WaylandBackend *m_backend;

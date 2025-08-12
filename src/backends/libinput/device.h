@@ -25,7 +25,7 @@ struct libinput_device;
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 
 namespace LibInput
 {
@@ -717,8 +717,8 @@ public:
     int tabletPadStripCount() const override;
     QList<InputDeviceTabletPadModeGroup> modeGroups() const override;
 
-    Output *output() const;
-    void setOutput(Output *output);
+    LogicalOutput *output() const;
+    void setOutput(LogicalOutput *output);
 
     LEDs leds() const override;
     void setLeds(LEDs leds) override;
@@ -898,7 +898,7 @@ private:
     KConfigGroup m_defaultConfig;
     bool m_loading = false;
 
-    QPointer<Output> m_output;
+    QPointer<LogicalOutput> m_output;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     QMatrix4x4 m_defaultCalibrationMatrix;
     QMatrix4x4 m_calibrationMatrix;

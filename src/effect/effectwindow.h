@@ -30,7 +30,7 @@ namespace KWin
 class EffectWindowGroup;
 class EffectWindowVisibleRef;
 class Group;
-class Output;
+class LogicalOutput;
 class SurfaceInterface;
 class VirtualDesktop;
 class Window;
@@ -50,7 +50,7 @@ class KWIN_EXPORT EffectWindow : public QObject
     Q_PROPERTY(qreal height READ height)
     Q_PROPERTY(qreal opacity READ opacity)
     Q_PROPERTY(QPointF pos READ pos)
-    Q_PROPERTY(KWin::Output *screen READ screen)
+    Q_PROPERTY(KWin::LogicalOutput *screen READ screen)
     Q_PROPERTY(QSizeF size READ size)
     Q_PROPERTY(qreal width READ width)
     Q_PROPERTY(qreal x READ x)
@@ -414,7 +414,7 @@ public:
      * @since 4.9
      */
     QRectF expandedGeometry() const;
-    Output *screen() const;
+    LogicalOutput *screen() const;
     QPointF pos() const;
     QSizeF size() const;
     QRectF rect() const;

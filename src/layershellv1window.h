@@ -19,7 +19,7 @@ struct LayerShellV1ConfigureEvent
 
 class AutoHideScreenEdgeV1Interface;
 class LayerSurfaceV1Interface;
-class Output;
+class LogicalOutput;
 class LayerShellV1Integration;
 
 class LayerShellV1Window : public WaylandWindow
@@ -28,11 +28,11 @@ class LayerShellV1Window : public WaylandWindow
 
 public:
     explicit LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
-                                Output *output,
+                                LogicalOutput *output,
                                 LayerShellV1Integration *integration);
 
     LayerSurfaceV1Interface *shellSurface() const;
-    Output *desiredOutput() const;
+    LogicalOutput *desiredOutput() const;
 
     WindowType windowType() const override;
     bool isPlaceable() const override;
@@ -65,7 +65,7 @@ private:
     void handleUnmapped();
     void handleCommitted();
     void handleAcceptsFocusChanged();
-    void handleOutputRemoved(Output *output);
+    void handleOutputRemoved(LogicalOutput *output);
     void scheduleRearrange();
     void activateScreenEdge();
     void deactivateScreenEdge();
@@ -73,7 +73,7 @@ private:
     void unreserveScreenEdge();
     void handleTargetScaleChange();
 
-    Output *m_desiredOutput;
+    LogicalOutput *m_desiredOutput;
     LayerShellV1Integration *m_integration;
     LayerSurfaceV1Interface *m_shellSurface;
     QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;

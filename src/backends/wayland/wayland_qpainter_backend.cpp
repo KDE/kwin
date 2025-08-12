@@ -165,7 +165,7 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
     }
 }
 
-void WaylandQPainterBackend::createOutput(Output *output)
+void WaylandQPainterBackend::createOutput(LogicalOutput *output)
 {
     const auto waylandOutput = static_cast<WaylandOutput *>(output);
     std::vector<std::unique_ptr<OutputLayer>> layers;
@@ -179,7 +179,7 @@ GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-QList<OutputLayer *> WaylandQPainterBackend::compatibleOutputLayers(Output *output)
+QList<OutputLayer *> WaylandQPainterBackend::compatibleOutputLayers(LogicalOutput *output)
 {
     return static_cast<WaylandOutput *>(output)->outputLayers();
 }

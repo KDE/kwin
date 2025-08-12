@@ -22,7 +22,7 @@ namespace KWin
 {
 
 class Window;
-class Output;
+class LogicalOutput;
 class Rules;
 class RuleSettings;
 class RuleBookSettings;
@@ -51,7 +51,7 @@ public:
     int checkOpacityInactive(int s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
     QList<VirtualDesktop *> checkDesktops(QList<VirtualDesktop *> desktops, bool init = false) const;
-    Output *checkOutput(Output *output, bool init = false) const;
+    LogicalOutput *checkOutput(LogicalOutput *output, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
     MaximizeMode checkMaximize(MaximizeMode mode, bool init = false) const;
     bool checkMinimize(bool minimized, bool init = false) const;

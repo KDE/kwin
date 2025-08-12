@@ -18,13 +18,13 @@
 namespace KWin
 {
 
-RenderView::RenderView(Output *output, OutputLayer *layer)
+RenderView::RenderView(LogicalOutput *output, OutputLayer *layer)
     : m_output(output)
     , m_layer(layer)
 {
 }
 
-Output *RenderView::output() const
+LogicalOutput *RenderView::output() const
 {
     return m_output;
 }
@@ -158,7 +158,7 @@ QRegion RenderView::mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometr
     return ret;
 }
 
-SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
+SceneView::SceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)
 {
@@ -273,7 +273,7 @@ Scene *SceneView::scene() const
     return m_scene;
 }
 
-ItemView::ItemView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
+ItemView::ItemView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_parentView(parentView)
     , m_item(item)
@@ -442,7 +442,7 @@ double ItemView::desiredHdrHeadroom() const
     return max / color->referenceLuminance();
 }
 
-ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
+ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer)
     : ItemView(parentView, item, output, layer)
 {
 }

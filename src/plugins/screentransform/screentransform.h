@@ -27,7 +27,7 @@ public:
     ~ScreenTransformEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, KWin::Output *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen) override;
 
     bool isActive() const override;
 
@@ -54,10 +54,10 @@ private:
         qreal m_angle = 0;
     };
 
-    void addScreen(Output *screen);
-    void removeScreen(Output *screen);
+    void addScreen(LogicalOutput *screen);
+    void removeScreen(LogicalOutput *screen);
 
-    QHash<Output *, ScreenState> m_states;
+    QHash<LogicalOutput *, ScreenState> m_states;
 
     std::unique_ptr<GLShader> m_shader;
     int m_previousTextureLocation = -1;

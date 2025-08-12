@@ -46,7 +46,7 @@ public:
         std::optional<QString> connectorName;
         std::optional<QByteArray> mstPath;
     };
-    Output *addOutput(const OutputInfo &info);
+    LogicalOutput *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);
 
     Outputs outputs() const override;

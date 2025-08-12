@@ -73,7 +73,7 @@ private:
 /**
  * Wayland outputs in a nested X11 setup
  */
-class KWIN_EXPORT X11WindowedOutput : public Output
+class KWIN_EXPORT X11WindowedOutput : public LogicalOutput
 {
     Q_OBJECT
 public:

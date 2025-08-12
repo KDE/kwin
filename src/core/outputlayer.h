@@ -59,13 +59,13 @@ class KWIN_EXPORT OutputLayer : public QObject
 {
     Q_OBJECT
 public:
-    explicit OutputLayer(Output *output, OutputLayerType type);
-    explicit OutputLayer(Output *output, OutputLayerType type, int zpos, int minZpos, int maxZpos);
+    explicit OutputLayer(LogicalOutput *output, OutputLayerType type);
+    explicit OutputLayer(LogicalOutput *output, OutputLayerType type, int zpos, int minZpos, int maxZpos);
 
     OutputLayerType type() const;
 
     void setRenderLoop(RenderLoop *loop);
-    void setOutput(Output *output);
+    void setOutput(LogicalOutput *output);
 
     QPointF hotspot() const;
     void setHotspot(const QPointF &hotspot);
@@ -146,7 +146,7 @@ public:
     int minZpos() const;
     int maxZpos() const;
 
-    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff);
+    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, LogicalOutput::ColorPowerTradeoff tradeoff);
 
     virtual void releaseBuffers() = 0;
 
@@ -170,7 +170,7 @@ protected:
     std::shared_ptr<ColorDescription> m_color = ColorDescription::sRGB;
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
-    QPointer<Output> m_output;
+    QPointer<LogicalOutput> m_output;
     uint32_t m_requiredAlphaBits = 0;
     bool m_repaintScheduled = false;
     RenderLoop *m_renderLoop = nullptr;

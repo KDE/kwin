@@ -373,7 +373,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     effects->prePaintScreen(data, presentTime);
 }
 
-ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen)
+ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen)
 {
     const QSize nativeSize = renderTarget.size();
 
@@ -408,7 +408,7 @@ GLShader *ZoomEffect::shaderForZoom(double zoom)
     }
 }
 
-void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
+void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
     if (!offscreenData) {
@@ -592,7 +592,7 @@ void ZoomEffect::slotWindowDamaged()
     }
 }
 
-void ZoomEffect::slotScreenRemoved(Output *screen)
+void ZoomEffect::slotScreenRemoved(LogicalOutput *screen)
 {
     if (auto it = m_offscreenData.find(screen); it != m_offscreenData.end()) {
         effects->makeOpenGLContextCurrent();
@@ -652,7 +652,7 @@ qreal ZoomEffect::targetZoom() const
 
 bool ZoomEffect::screenExistsAt(const QPoint &point) const
 {
-    const Output *output = effects->screenAt(point);
+    const LogicalOutput *output = effects->screenAt(point);
     return output && output->geometry().contains(point);
 }
 

@@ -15,7 +15,7 @@
 
 namespace KWin
 {
-class Output;
+class LogicalOutput;
 
 class InputPanelV1Window : public WaylandWindow
 {

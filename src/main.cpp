@@ -632,7 +632,7 @@ static PlatformCursorImage grabCursorOpenGL()
         return PlatformCursorImage{};
     }
     Cursor *cursor = Cursors::self()->currentCursor();
-    Output *output = workspace()->outputAt(cursor->pos());
+    LogicalOutput *output = workspace()->outputAt(cursor->pos());
 
     const auto texture = GLTexture::allocate(GL_RGBA8, (cursor->geometry().size() * output->scale()).toSize());
     if (!texture) {
@@ -661,7 +661,7 @@ static PlatformCursorImage grabCursorSoftware()
         return PlatformCursorImage{};
     }
     Cursor *cursor = Cursors::self()->currentCursor();
-    Output *output = workspace()->outputAt(cursor->pos());
+    LogicalOutput *output = workspace()->outputAt(cursor->pos());
 
     QImage image((cursor->geometry().size() * output->scale()).toSize(), QImage::Format_ARGB32_Premultiplied);
     RenderTarget renderTarget(&image);

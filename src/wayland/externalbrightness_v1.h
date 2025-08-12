@@ -17,7 +17,7 @@ namespace KWin
 
 class Display;
 class ExternalBrightnessDeviceV1;
-class Output;
+class LogicalOutput;
 
 class ExternalBrightnessV1 : public QObject, private QtWaylandServer::kde_external_brightness_v1
 {

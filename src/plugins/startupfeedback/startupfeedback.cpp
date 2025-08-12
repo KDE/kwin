@@ -205,7 +205,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
+void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
     if (m_active) {
@@ -325,7 +325,7 @@ void StartupFeedbackEffect::start(const Startup &startup)
         return;
     }
 
-    const Output *output = effects->screenAt(effects->cursorPos().toPoint());
+    const LogicalOutput *output = effects->screenAt(effects->cursorPos().toPoint());
     if (!output) {
         return;
     }

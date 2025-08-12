@@ -139,7 +139,7 @@ private:
 /**
  * Generic output representation.
  */
-class KWIN_EXPORT Output : public QObject
+class KWIN_EXPORT LogicalOutput : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
@@ -218,8 +218,8 @@ public:
     };
     Q_ENUM(EdrPolicy);
 
-    explicit Output(QObject *parent = nullptr);
-    ~Output() override;
+    explicit LogicalOutput(QObject *parent = nullptr);
+    ~LogicalOutput() override;
 
     void ref();
     void unref();
@@ -327,7 +327,7 @@ public:
     /**
      * Returns the RenderLoop for this output. If the platform does not support per screen
      * rendering, all outputs will share the same render loop.
-     * FIXME: remove this and decouple RenderLoop from Output
+     * FIXME: remove this and decouple RenderLoop from LogicalOutput
      */
     virtual RenderLoop *renderLoop() const = 0;
 
@@ -608,18 +608,18 @@ protected:
     int m_refCount = 1;
 };
 
-inline QRect Output::rect() const
+inline QRect LogicalOutput::rect() const
 {
     return QRect(QPoint(0, 0), geometry().size());
 }
 
-inline QRectF Output::rectF() const
+inline QRectF LogicalOutput::rectF() const
 {
     return QRectF(QPointF(0, 0), geometryF().size());
 }
 
-KWIN_EXPORT QDebug operator<<(QDebug debug, const Output *output);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const LogicalOutput *output);
 
 } // namespace KWin
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Output::Capabilities)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::LogicalOutput::Capabilities)

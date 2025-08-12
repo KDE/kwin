@@ -169,7 +169,7 @@ X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
 X11WindowedEglBackend::~X11WindowedEglBackend()
 {
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
     }
     cleanup();
@@ -242,7 +242,7 @@ void X11WindowedEglBackend::init()
     }
 }
 
-QList<OutputLayer *> X11WindowedEglBackend::compatibleOutputLayers(Output *output)
+QList<OutputLayer *> X11WindowedEglBackend::compatibleOutputLayers(LogicalOutput *output)
 {
     return static_cast<X11WindowedOutput *>(output)->outputLayers();
 }

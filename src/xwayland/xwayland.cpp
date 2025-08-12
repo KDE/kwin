@@ -535,7 +535,7 @@ void Xwayland::updatePrimary()
         return;
     }
 
-    Output *const primaryOutput = workspace()->outputOrder().front();
+    LogicalOutput *const primaryOutput = workspace()->outputOrder().front();
     const QString primaryOutputName = primaryOutput->name();
     for (int i = 0; i < resources->num_outputs; i++) {
         Xcb::RandR::OutputInfo outputInfo(outputs[i], resources->config_timestamp);

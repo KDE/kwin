@@ -23,7 +23,7 @@ public:
     ~ShowCompositingEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen) override;
     bool blocksDirectScanout() const override;
 
     static bool supported();

@@ -28,11 +28,11 @@ public:
 
     SurfaceInterface *surface() const;
 
-    void setOutput(Output *output);
+    void setOutput(LogicalOutput *output);
 
 private:
     std::unique_ptr<SurfaceItemWayland> m_surfaceItem;
-    Output *m_output = nullptr;
+    LogicalOutput *m_output = nullptr;
 };
 
 } // namespace KWin

@@ -71,7 +71,7 @@ QAction *TouchCallback::touchUpAction() const
     return m_touchUpAction;
 }
 
-void TouchCallback::progressCallback(ElectricBorder border, const QPointF &deltaProgress, Output *output) const
+void TouchCallback::progressCallback(ElectricBorder border, const QPointF &deltaProgress, LogicalOutput *output) const
 {
     if (m_progressCallback) {
         m_progressCallback(border, deltaProgress, output);
@@ -723,12 +723,12 @@ void Edge::setClient(Window *client)
     }
 }
 
-void Edge::setOutput(Output *output)
+void Edge::setOutput(LogicalOutput *output)
 {
     m_output = output;
 }
 
-Output *Edge::output() const
+LogicalOutput *Edge::output() const
 {
     return m_output;
 }
@@ -935,7 +935,7 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has a right edge against our left edge, then this screen is not a left screen
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -962,7 +962,7 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any left edge against any of our right edge, then this screen is not a right screen
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -989,7 +989,7 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any bottom edge against any of our top edge, then this screen is not a top screen
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1016,7 +1016,7 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any top edge against any of our bottom edge, then this screen is not a bottom screen
-    for (const Output *output : outputs) {
+    for (const LogicalOutput *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1046,7 +1046,7 @@ void ScreenEdges::recreateEdges()
     QRegion processedRegion;
 
     const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    for (LogicalOutput *output : outputs) {
         const QRegion screen = QRegion(output->geometry()).subtracted(processedRegion);
         processedRegion += screen;
         for (const QRect &screenPart : screen) {
@@ -1103,7 +1103,7 @@ void ScreenEdges::recreateEdges()
     }
 }
 
-void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output)
+void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output)
 {
     if (border != ElectricRight && border != KWin::ElectricLeft) {
         return;
@@ -1137,7 +1137,7 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
     m_edges.push_back(createEdge(border, x, y, TOUCH_TARGET, height, output));
 }
 
-void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output)
+void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output)
 {
     if (border != ElectricTop && border != ElectricBottom) {
         return;
@@ -1165,7 +1165,7 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
     m_edges.push_back(createEdge(border, x, y, width, TOUCH_TARGET, output));
 }
 
-std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction)
+std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, LogicalOutput *output, bool createAction)
 {
     std::unique_ptr<Edge> edge = std::make_unique<Edge>(this);
     // Edges can not have negative size.
@@ -1330,7 +1330,7 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     int width = 0;
     int height = 0;
 
-    Output *output = client->output();
+    LogicalOutput *output = client->output();
     const QRect geo = client->frameGeometry().toRect();
 
     const QRect screen = output->geometry();

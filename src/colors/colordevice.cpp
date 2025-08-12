@@ -22,7 +22,7 @@ class ColorDevicePrivate
 public:
     void recalculateFactors();
 
-    Output *output;
+    LogicalOutput *output;
     QTimer *updateTimer;
     uint temperature = 6500;
 
@@ -57,7 +57,7 @@ void ColorDevicePrivate::recalculateFactors()
     }
 }
 
-ColorDevice::ColorDevice(Output *output, QObject *parent)
+ColorDevice::ColorDevice(LogicalOutput *output, QObject *parent)
     : QObject(parent)
     , d(new ColorDevicePrivate)
 {
@@ -73,7 +73,7 @@ ColorDevice::~ColorDevice()
 {
 }
 
-Output *ColorDevice::output() const
+LogicalOutput *ColorDevice::output() const
 {
     return d->output;
 }

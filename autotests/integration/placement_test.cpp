@@ -366,7 +366,7 @@ void TestPlacement::testPlaceRandom()
 
 void TestPlacement::testFullscreen()
 {
-    const QList<Output *> outputs = workspace()->outputs();
+    const QList<LogicalOutput *> outputs = workspace()->outputs();
 
     setPlacementPolicy(PlacementSmart);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());

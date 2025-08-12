@@ -20,7 +20,7 @@ namespace KWin
 {
 
 class ItemRenderer;
-class Output;
+class LogicalOutput;
 class Scene;
 class OutputLayer;
 class OutputFrame;
@@ -31,9 +31,9 @@ class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
 public:
-    explicit RenderView(Output *output, OutputLayer *layer);
+    explicit RenderView(LogicalOutput *output, OutputLayer *layer);
 
-    Output *output() const;
+    LogicalOutput *output() const;
     OutputLayer *layer() const;
 
     void setLayer(OutputLayer *layer);
@@ -83,7 +83,7 @@ public:
     QSize deviceSize() const;
 
 protected:
-    Output *m_output = nullptr;
+    LogicalOutput *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
 };
 
@@ -91,7 +91,7 @@ class KWIN_EXPORT SceneView : public RenderView
 {
     Q_OBJECT
 public:
-    explicit SceneView(Scene *scene, Output *output, OutputLayer *layer);
+    explicit SceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer);
     ~SceneView() override;
 
     Scene *scene() const;
@@ -121,7 +121,7 @@ public:
 
 private:
     Scene *m_scene;
-    Output *m_output = nullptr;
+    LogicalOutput *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
     QRectF m_viewport;
     qreal m_scale = 1.0;
@@ -132,7 +132,7 @@ private:
 class KWIN_EXPORT ItemView : public RenderView
 {
 public:
-    explicit ItemView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    explicit ItemView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer);
     ~ItemView() override;
 
     QPointF hotspot() const override;
@@ -166,7 +166,7 @@ protected:
 class KWIN_EXPORT ItemTreeView : public ItemView
 {
 public:
-    explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    explicit ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer);
     ~ItemTreeView() override;
 
     QRectF viewport() const override;

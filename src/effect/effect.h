@@ -22,7 +22,7 @@ namespace KWin
 {
 
 class EffectWindow;
-class Output;
+class LogicalOutput;
 class PaintDataPrivate;
 class RenderTarget;
 class RenderViewport;
@@ -436,7 +436,7 @@ class KWIN_EXPORT ScreenPrePaintData
 public:
     int mask;
     QRegion paint;
-    Output *screen = nullptr;
+    LogicalOutput *screen = nullptr;
     RenderView *view = nullptr;
 };
 
@@ -609,7 +609,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen);
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen);
     /**
      * Called after all the painting has been finished.
      * In this method you can:

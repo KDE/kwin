@@ -30,7 +30,7 @@ class GLRenderTimeQuery;
 class KWIN_EXPORT VirtualEglLayer : public OutputLayer
 {
 public:
-    VirtualEglLayer(Output *output, VirtualEglBackend *backend);
+    VirtualEglLayer(LogicalOutput *output, VirtualEglBackend *backend);
     ~VirtualEglLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
@@ -60,7 +60,7 @@ class VirtualEglBackend : public EglBackend
 public:
     VirtualEglBackend(VirtualBackend *b);
     ~VirtualEglBackend() override;
-    QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) override;
     void init() override;
 
     VirtualBackend *backend() const;
@@ -70,7 +70,7 @@ private:
     bool initializeEgl();
     bool initRenderingContext();
 
-    void addOutput(Output *output);
+    void addOutput(LogicalOutput *output);
 
     VirtualBackend *m_backend;
 };

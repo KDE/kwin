@@ -20,7 +20,7 @@ public:
     OutputOrderV1InterfacePrivate(Display *display);
 
     void sendList(wl_resource *resource);
-    QList<Output *> outputOrder;
+    QList<LogicalOutput *> outputOrder;
 
 protected:
     void kde_output_order_v1_bind_resource(Resource *resource) override;
@@ -35,7 +35,7 @@ OutputOrderV1Interface::OutputOrderV1Interface(Display *display, QObject *parent
 
 OutputOrderV1Interface::~OutputOrderV1Interface() = default;
 
-void OutputOrderV1Interface::setOutputOrder(const QList<Output *> &outputOrder)
+void OutputOrderV1Interface::setOutputOrder(const QList<LogicalOutput *> &outputOrder)
 {
     d->outputOrder = outputOrder;
     const auto resources = d->resourceMap();
@@ -56,7 +56,7 @@ void OutputOrderV1InterfacePrivate::kde_output_order_v1_bind_resource(Resource *
 
 void OutputOrderV1InterfacePrivate::sendList(wl_resource *resource)
 {
-    for (Output *const output : std::as_const(outputOrder)) {
+    for (LogicalOutput *const output : std::as_const(outputOrder)) {
         kde_output_order_v1_send_output(resource, output->name().toUtf8().constData());
     }
     kde_output_order_v1_send_done(resource);

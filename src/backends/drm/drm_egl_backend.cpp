@@ -136,7 +136,7 @@ DrmDevice *EglGbmBackend::drmDevice() const
     return gpu()->drmDevice();
 }
 
-QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(Output *output)
+QList<OutputLayer *> EglGbmBackend::compatibleOutputLayers(LogicalOutput *output)
 {
     if (auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
         return {virtualOutput->primaryLayer()};

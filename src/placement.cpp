@@ -596,7 +596,7 @@ void Window::packTo(qreal left, qreal top)
 
     exitQuickTileMode();
 
-    const Output *oldOutput = moveResizeOutput();
+    const LogicalOutput *oldOutput = moveResizeOutput();
     move(QPoint(left, top));
     if (moveResizeOutput() != oldOutput) {
         sendToOutput(moveResizeOutput()); // checks rule validity

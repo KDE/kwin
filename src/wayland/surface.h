@@ -138,7 +138,7 @@ public:
     void frameRendered(quint32 msec);
     bool hasFrameCallbacks() const;
 
-    std::shared_ptr<PresentationFeedback> presentationFeedback(Output *output);
+    std::shared_ptr<PresentationFeedback> presentationFeedback(LogicalOutput *output);
     bool hasPresentationFeedback() const;
 
     QRegion opaque() const;
@@ -275,7 +275,7 @@ public:
     LockedPointerV1Interface *lockedPointer() const;
 
     /**
-     * @returns Whether this SurfaceInterface wants idle to be inhibited on the Output it is shown
+     * @returns Whether this SurfaceInterface wants idle to be inhibited on the LogicalOutput it is shown
      * @see inhibitsIdleChanged
      */
     bool inhibitsIdle() const;

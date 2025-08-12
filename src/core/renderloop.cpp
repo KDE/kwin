@@ -26,7 +26,7 @@ RenderLoopPrivate *RenderLoopPrivate::get(RenderLoop *loop)
 
 static const bool s_printDebugInfo = qEnvironmentVariableIntValue("KWIN_LOG_PERFORMANCE_DATA") != 0;
 
-RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
+RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, LogicalOutput *output)
     : q(q)
     , output(output)
 {
@@ -190,7 +190,7 @@ void RenderLoopPrivate::dispatch()
     Q_EMIT q->frameRequested(q);
 }
 
-RenderLoop::RenderLoop(Output *output)
+RenderLoop::RenderLoop(LogicalOutput *output)
     : d(std::make_unique<RenderLoopPrivate>(this, output))
 {
 }

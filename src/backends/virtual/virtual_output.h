@@ -20,7 +20,7 @@ class SoftwareVsyncMonitor;
 class VirtualBackend;
 class OutputFrame;
 
-class VirtualOutput : public Output
+class VirtualOutput : public LogicalOutput
 {
     Q_OBJECT
 
