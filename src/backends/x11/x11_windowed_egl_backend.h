@@ -78,8 +78,8 @@ public:
     DrmDevice *drmDevice() const override;
 
     void init() override;
-    void endFrame(LogicalOutput *output, const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion);
-    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) override;
+    void endFrame(BackendOutput *output, const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion);
+    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
 private:
     bool initializeEgl();

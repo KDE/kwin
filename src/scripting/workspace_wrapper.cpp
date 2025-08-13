@@ -446,7 +446,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
 {
     qCWarning(KWIN_CORE) << "workspace.tilingForScreen() is deprecated: use workspace.rootTile() instead";
 
-    LogicalOutput *output = kwinApp()->outputBackend()->findOutput(screenName);
+    LogicalOutput *output = workspace()->findOutput(screenName);
     if (output) {
         auto tileManager = workspace()->tileManager(output);
         QJSEngine::setObjectOwnership(tileManager, QJSEngine::CppOwnership);

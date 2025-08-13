@@ -24,8 +24,8 @@ namespace KWin
 {
 namespace KScreenIntegration
 {
-/// See KScreen::LogicalOutput::hashMd5
-static QString outputHash(LogicalOutput *output)
+/// See KScreen::Output::hashMd5
+static QString outputHash(BackendOutput *output)
 {
     if (!output->edid().hash().isEmpty()) {
         return output->edid().hash();
@@ -35,7 +35,7 @@ static QString outputHash(LogicalOutput *output)
 }
 
 /// See KScreen::Config::connectedOutputsHash in libkscreen
-QString connectedOutputsHash(const QList<LogicalOutput *> &outputs, bool isLidClosed)
+QString connectedOutputsHash(const QList<BackendOutput *> &outputs, bool isLidClosed)
 {
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
@@ -53,7 +53,7 @@ QString connectedOutputsHash(const QList<LogicalOutput *> &outputs, bool isLidCl
     return QString::fromLatin1(hash.toHex());
 }
 
-static QHash<LogicalOutput *, QJsonObject> outputsConfig(const QList<LogicalOutput *> &outputs, const QString &hash)
+static QHash<BackendOutput *, QJsonObject> outputsConfig(const QList<BackendOutput *> &outputs, const QString &hash)
 {
     const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % hash);
     if (kscreenJsonPath.isEmpty()) {
@@ -73,9 +73,9 @@ static QHash<LogicalOutput *, QJsonObject> outputsConfig(const QList<LogicalOutp
         return {};
     }
 
-    QHash<LogicalOutput *, bool> duplicate;
-    QHash<LogicalOutput *, QString> outputHashes;
-    for (LogicalOutput *output : outputs) {
+    QHash<BackendOutput *, bool> duplicate;
+    QHash<BackendOutput *, QString> outputHashes;
+    for (BackendOutput *output : outputs) {
         const QString hash = outputHash(output);
         const auto it = std::find_if(outputHashes.cbegin(), outputHashes.cend(), [hash](const auto &value) {
             return value == hash;
@@ -89,12 +89,12 @@ static QHash<LogicalOutput *, QJsonObject> outputsConfig(const QList<LogicalOutp
         outputHashes[output] = hash;
     }
 
-    QHash<LogicalOutput *, QJsonObject> ret;
+    QHash<BackendOutput *, QJsonObject> ret;
     const auto outputsJson = doc.array();
     for (const auto &outputJson : outputsJson) {
         const auto outputObject = outputJson.toObject();
         const auto id = outputObject[QLatin1String("id")];
-        const auto output = std::find_if(outputs.begin(), outputs.end(), [&duplicate, &id, &outputObject](LogicalOutput *output) {
+        const auto output = std::find_if(outputs.begin(), outputs.end(), [&duplicate, &id, &outputObject](BackendOutput *output) {
             if (outputHash(output) != id.toString()) {
                 return false;
             }
@@ -114,7 +114,7 @@ static QHash<LogicalOutput *, QJsonObject> outputsConfig(const QList<LogicalOutp
     return ret;
 }
 
-static std::optional<QJsonObject> globalOutputConfig(LogicalOutput *output)
+static std::optional<QJsonObject> globalOutputConfig(BackendOutput *output)
 {
     const QString kscreenPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/"));
     if (kscreenPath.isEmpty()) {
@@ -140,7 +140,7 @@ static std::optional<QJsonObject> globalOutputConfig(LogicalOutput *output)
     return doc.object();
 }
 
-/// See KScreen::LogicalOutput::Rotation
+/// See KScreen::BackendOutput::Rotation
 enum Rotation {
     None = 1,
     Left = 2,
@@ -164,7 +164,7 @@ OutputTransform toKWinTransform(int rotation)
     }
 }
 
-std::shared_ptr<OutputMode> parseMode(LogicalOutput *output, const QJsonObject &modeInfo)
+std::shared_ptr<OutputMode> parseMode(BackendOutput *output, const QJsonObject &modeInfo)
 {
     const QJsonObject size = modeInfo["size"].toObject();
     const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
@@ -177,13 +177,13 @@ std::shared_ptr<OutputMode> parseMode(LogicalOutput *output, const QJsonObject &
     return (it != modes.end()) ? *it : nullptr;
 }
 
-std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> readOutputConfig(const QList<LogicalOutput *> &outputs, const QString &hash)
+std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> readOutputConfig(const QList<BackendOutput *> &outputs, const QString &hash)
 {
     const auto outputsInfo = outputsConfig(outputs, hash);
     if (outputsInfo.isEmpty()) {
         return std::nullopt;
     }
-    std::vector<std::pair<uint32_t, LogicalOutput *>> outputOrder;
+    std::vector<std::pair<uint32_t, BackendOutput *>> outputOrder;
     OutputConfiguration cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
@@ -233,7 +233,7 @@ std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> readOutput
                 props->vrrPolicy = static_cast<VrrPolicy>(vrrpolicy.toInt());
             }
             if (const QJsonValue rgbrange = globalInfo["rgbrange"]; !rgbrange.isUndefined()) {
-                props->rgbRange = static_cast<LogicalOutput::RgbRange>(rgbrange.toInt());
+                props->rgbRange = static_cast<BackendOutput::RgbRange>(rgbrange.toInt());
             }
 
             if (const QJsonObject modeInfo = globalInfo["mode"].toObject(); !modeInfo.isEmpty()) {
@@ -276,7 +276,7 @@ std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> readOutput
         return left.second->name() < right.second->name();
     });
 
-    QList<LogicalOutput *> order;
+    QList<BackendOutput *> order;
     order.reserve(outputOrder.size());
     std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(order), [](const auto &pair) {
         return pair.second;

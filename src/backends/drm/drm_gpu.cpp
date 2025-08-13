@@ -426,7 +426,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         return err;
     }
     const bool hasPreferAccuracy = std::ranges::any_of(m_drmOutputs, [](const auto &output) {
-        return output->colorPowerTradeoff() == LogicalOutput::ColorPowerTradeoff::PreferAccuracy;
+        return output->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy;
     });
     if (m_addFB2ModifiersSupported || hasPreferAccuracy) {
         // We currently don't have any information about why the output config
@@ -1047,7 +1047,7 @@ QString DrmGpu::driverName() const
     return m_driverName;
 }
 
-QList<OutputLayer *> DrmGpu::compatibleOutputLayers(LogicalOutput *output) const
+QList<OutputLayer *> DrmGpu::compatibleOutputLayers(BackendOutput *output) const
 {
     if (auto virt = qobject_cast<DrmVirtualOutput *>(output)) {
         return {virt->primaryLayer()};

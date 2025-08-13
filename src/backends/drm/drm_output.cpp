@@ -257,7 +257,7 @@ void DrmOutput::updateConnectorProperties()
 static const bool s_allowColorspaceIntel = qEnvironmentVariableIntValue("KWIN_DRM_ALLOW_INTEL_COLORSPACE") == 1;
 static const bool s_allowColorspaceNVidia = qEnvironmentVariableIntValue("KWIN_DRM_ALLOW_NVIDIA_COLORSPACE") == 1;
 
-LogicalOutput::Capabilities DrmOutput::computeCapabilities() const
+BackendOutput::Capabilities DrmOutput::computeCapabilities() const
 {
     Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
@@ -745,7 +745,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
 
 void DrmOutput::maybeScheduleRepaints(const State &next)
 {
-    // TODO move the output layers to LogicalOutput, and have it take care of this when updating State
+    // TODO move the output layers to BackendOutput, and have it take care of this when updating State
     if (next.blendingColor != m_state.blendingColor || next.layerBlendingColor != m_state.layerBlendingColor) {
         const auto layers = m_pipeline->layers();
         for (const auto &layer : layers) {

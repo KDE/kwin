@@ -14,7 +14,7 @@ class GLFramebuffer;
 class ColorPickerLayer : public OutputLayer
 {
 public:
-    explicit ColorPickerLayer(LogicalOutput *output, GLFramebuffer *buffer);
+    explicit ColorPickerLayer(BackendOutput *output, GLFramebuffer *buffer);
 
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;

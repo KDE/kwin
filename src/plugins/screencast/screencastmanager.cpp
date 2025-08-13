@@ -82,7 +82,7 @@ void ScreencastManager::streamVirtualOutput(ScreencastStreamV1Interface *stream,
     }
 
     auto output = kwinApp()->outputBackend()->createVirtualOutput(name, description, size, scale);
-    streamOutput(stream, output, mode);
+    streamOutput(stream, workspace()->findOutput(output), mode);
     connect(stream, &ScreencastStreamV1Interface::finished, output, [output] {
         kwinApp()->outputBackend()->removeVirtualOutput(output);
     });
