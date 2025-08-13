@@ -18,7 +18,7 @@
 #include "xwaylandlauncher.h"
 #include "xwldrophandler.h"
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "keyboard_input.h"
 #include "main_wayland.h"
 #include "utils/common.h"

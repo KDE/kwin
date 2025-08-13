@@ -234,7 +234,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource 
     }
 
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->scale = doubleScale;
+        config.changeSet(output->handle())->scaleSetting = doubleScale;
     }
 }
 

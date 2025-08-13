@@ -480,6 +480,8 @@ GLTexture *OffscreenQuickView::bufferAsTexture()
         d->m_textureExport = GLTexture::upload(d->m_image);
         if (!d->m_textureExport) {
             qCWarning(LIBKWINEFFECTS, "Uploading texture for OffscreenQuickView failed!");
+        } else {
+            d->m_textureExport->setFilter(GL_LINEAR);
         }
     } else {
         if (!d->m_fbo) {
@@ -488,6 +490,9 @@ GLTexture *OffscreenQuickView::bufferAsTexture()
         }
         if (!d->m_textureExport) {
             d->m_textureExport = GLTexture::createNonOwningWrapper(d->m_fbo->texture(), d->m_fbo->format().internalTextureFormat(), d->m_fbo->size());
+            if (d->m_textureExport) {
+                d->m_textureExport->setFilter(GL_LINEAR);
+            }
         }
     }
     return d->m_textureExport.get();

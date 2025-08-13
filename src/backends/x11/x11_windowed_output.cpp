@@ -332,7 +332,7 @@ void X11WindowedOutput::setWindowTitle(const QString &title)
 
 QPoint X11WindowedOutput::internalPosition() const
 {
-    return geometry().topLeft();
+    return BackendOutput::position();
 }
 
 void X11WindowedOutput::setHostPosition(const QPoint &pos)

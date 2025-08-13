@@ -134,7 +134,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
     sceneView.prePaint();
-    sceneView.paint(beginInfo->renderTarget, fullDamage);
+    sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
     sceneView.postPaint();
     if (!layer.endFrame(fullDamage, fullDamage, nullptr)) {
         return std::nullopt;
@@ -204,7 +204,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, Scree
     sceneView.setViewport(area);
     sceneView.setScale(scale);
     sceneView.prePaint();
-    sceneView.paint(beginInfo->renderTarget, fullDamage);
+    sceneView.paint(beginInfo->renderTarget, QPoint(), fullDamage);
     sceneView.postPaint();
     if (!layer.endFrame(fullDamage, fullDamage, nullptr)) {
         return std::nullopt;
@@ -247,7 +247,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     GLFramebuffer offscreenTarget(offscreenTexture.get());
 
     RenderTarget renderTarget(&offscreenTarget);
-    RenderViewport viewport(geometry, scale, renderTarget);
+    RenderViewport viewport(geometry, scale, renderTarget, QPoint());
 
     WorkspaceScene *scene = Compositor::self()->scene();
 

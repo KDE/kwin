@@ -152,7 +152,7 @@ void DrmTest::initTestCase()
     // Create a simple setup that's useful for most tests.
     OutputConfiguration cfg;
     cfg.changeSet(allOutputs.front())->enabled = true;
-    cfg.changeSet(allOutputs.front())->scale = 1;
+    cfg.changeSet(allOutputs.front())->scaleSetting = 1;
     for (BackendOutput *output : allOutputs | std::views::drop(1)) {
         cfg.changeSet(output)->enabled = false;
     }
@@ -172,7 +172,7 @@ void DrmTest::testModesets()
     QVERIFY(window.show());
 
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
-    window.m_window->move(output->geometryF().center());
+    window.m_window->move(output->position());
 
     // verify that we can cycle through modes
     for (const auto &mode : output->modes()) {
@@ -190,7 +190,7 @@ void DrmTest::testPresentation()
     QVERIFY(window.show());
 
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
-    window.m_window->move(output->geometryF().center());
+    window.m_window->move(output->position());
 
     for (int i = 0; i < 5; i++) {
         QVERIFY(window.presentWait());
@@ -210,12 +210,12 @@ void DrmTest::testCursorLayer()
 
     Test::XdgToplevelWindow window;
     QVERIFY(window.show());
-    window.m_window->move(output->geometryF().center());
+    window.m_window->move(output->position());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
     QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    Test::pointerMotion(output->geometryF().center(), time++);
+    Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
@@ -243,12 +243,12 @@ void DrmTest::testDirectScanout()
         toplevel->set_fullscreen(nullptr);
     }};
     QVERIFY(window.renderAndWaitForShown(output->pixelSize()));
-    window.m_window->move(output->geometryF().center());
+    window.m_window->move(output->position());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
     QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    Test::pointerMotion(output->geometryF().center(), time++);
+    Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
@@ -275,12 +275,12 @@ void DrmTest::testOverlay()
 
     DmabufWindow window;
     QVERIFY(window.renderAndWaitForShown(QSize(100, 100)));
-    window.m_window->move(output->geometryF().center());
+    window.m_window->move(output->position());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
     QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    Test::pointerMotion(output->geometryF().center(), time++);
+    Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);

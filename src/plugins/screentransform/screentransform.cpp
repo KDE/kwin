@@ -105,7 +105,7 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
         delegate.setViewport(screen->geometryF());
         delegate.setScale(screen->scale());
         scene->prePaint(&delegate);
-        scene->paint(renderTarget, screen->geometry());
+        scene->paint(renderTarget, QPoint(), screen->geometry());
         scene->postPaint();
     });
 }
@@ -213,7 +213,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     }
 
     RenderTarget fboRenderTarget(it->m_current.framebuffer.get(), renderTarget.colorDescription());
-    RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
+    RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget, QPoint());
 
     GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
     effects->paintScreen(fboRenderTarget, fboViewport, mask, deviceRegion, screen);

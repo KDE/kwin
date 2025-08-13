@@ -424,7 +424,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         }
     }
     if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::Egl)) {
-        qCDebug(KWIN_DRM) << "chose egl import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
+        // qCDebug(KWIN_DRM) << "chose egl import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
         return surface;
     }
     if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::Dmabuf)) {

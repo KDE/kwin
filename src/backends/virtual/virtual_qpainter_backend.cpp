@@ -45,7 +45,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::doBeginFrame()
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->view()->image()),
-        .repaint = m_output->rect(),
+        .repaint = infiniteRegion(),
     };
 }
 

@@ -141,6 +141,9 @@ private Q_SLOTS:
 
     void testEvacuateTiledWindowFromRemovedOutput_data();
     void testEvacuateTiledWindowFromRemovedOutput();
+
+    void testMirroring_data();
+    void testMirroring();
 };
 
 void OutputChangesTest::initTestCase()
@@ -851,6 +854,7 @@ void OutputChangesTest::testWindowRestoredAfterChangingScale()
     // This test verifies that a window will be moved to its original position after changing the scale of an output
 
     const auto output = kwinApp()->outputBackend()->outputs().front();
+    const auto logicalOutput = workspace()->findOutput(output);
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -859,7 +863,7 @@ void OutputChangesTest::testWindowRestoredAfterChangingScale()
     QVERIFY(window);
 
     // Move the window to the bottom right
-    const QPointF originalPosition(output->geometry().width() - window->width(), output->geometry().height() - window->height());
+    const QPointF originalPosition(logicalOutput->geometry().width() - window->width(), logicalOutput->geometry().height() - window->height());
     window->move(originalPosition);
     QCOMPARE(window->pos(), originalPosition);
     QCOMPARE(window->output()->backendOutput(), output);
@@ -868,19 +872,19 @@ void OutputChangesTest::testWindowRestoredAfterChangingScale()
     OutputConfiguration config1;
     {
         auto changeSet = config1.changeSet(output);
-        changeSet->scale = 2;
+        changeSet->scaleSetting = 2;
     }
     workspace()->applyOutputConfiguration(config1);
 
     // The window will be moved to still be in the monitor
-    QCOMPARE(window->pos(), QPointF(output->geometry().width() - window->width(), output->geometry().height() - window->height()));
+    QCOMPARE(window->pos(), QPointF(logicalOutput->geometry().width() - window->width(), logicalOutput->geometry().height() - window->height()));
     QCOMPARE(window->output()->backendOutput(), output);
 
     // Change scale back
     OutputConfiguration config2;
     {
         auto changeSet = config2.changeSet(output);
-        changeSet->scale = 1;
+        changeSet->scaleSetting = 1;
     }
     workspace()->applyOutputConfiguration(config2);
 
@@ -1038,7 +1042,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
-    QVERIFY(outputs[1]->geometry().contains(window->geometryRestore().topLeft().toPoint()));
+    QVERIFY(workspace()->findOutput(outputs[1])->geometry().contains(window->geometryRestore().topLeft().toPoint()));
     QCOMPARE(window->geometryRestore().size(), QSizeF(0, 0));
 
     const QRectF rightGeometryRestore = window->geometryRestore();
@@ -1061,7 +1065,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
-    QVERIFY(outputs[0]->geometry().contains(window->geometryRestore().topLeft().toPoint()));
+    QVERIFY(workspace()->findOutput(outputs[0])->geometry().contains(window->geometryRestore().topLeft().toPoint()));
     QCOMPARE(window->geometryRestore(), originalGeometryRestore);
 
     // Enable the right output again
@@ -1074,9 +1078,9 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
 
     // The window will be moved back to the right monitor, maximized and the geometry restore will be updated
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), outputs[1]->geometry().size());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), workspace()->findOutput(outputs[1])->geometry().size());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.get(), outputs[1]->geometry().size(), Qt::blue);
+    Test::render(surface.get(), workspace()->findOutput(outputs[1])->geometry().size(), Qt::blue);
     QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
@@ -1126,9 +1130,9 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
-    window->move(outputs[1]->geometry().topLeft() + QPoint(3500, 500));
+    window->move(workspace()->findOutput(outputs[1])->geometry().topLeft() + QPoint(3500, 500));
     const QRectF originalGeometry = window->frameGeometry();
-    QVERIFY(outputs[1]->geometryF().contains(originalGeometry));
+    QVERIFY(workspace()->findOutput(outputs[1])->geometryF().contains(originalGeometry));
 
     // vertically maximize the window
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
@@ -1163,8 +1167,8 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
     QVERIFY(frameGeometryChangedSpy.wait());
 
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QVERIFY(outputs[0]->geometryF().contains(window->frameGeometry()));
-    QVERIFY(outputs[0]->geometryF().contains(window->moveResizeGeometry()));
+    QVERIFY(workspace()->findOutput(outputs[0])->geometryF().contains(window->frameGeometry()));
+    QVERIFY(workspace()->findOutput(outputs[0])->geometryF().contains(window->moveResizeGeometry()));
     QCOMPARE(window->maximizeMode(), maximizeMode);
     QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
 }
@@ -1250,8 +1254,8 @@ void OutputChangesTest::testXwaylandScaleChange()
 
     {
         OutputConfiguration config;
-        config.changeSet(outputs[0])->scale = 2;
-        config.changeSet(outputs[1])->scale = 1;
+        config.changeSet(outputs[0])->scaleSetting = 2;
+        config.changeSet(outputs[1])->scaleSetting = 1;
         workspace()->applyOutputConfiguration(config);
     }
     QCOMPARE(kwinApp()->xwaylandScale(), 2);
@@ -2057,7 +2061,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     QSignalSpy frameCallback(surface.get(), &KWayland::Client::Surface::frameRendered);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
-    QVERIFY(external->geometryF().contains(window->frameGeometry()));
+    QVERIFY(workspace()->findOutput(external)->geometryF().contains(window->frameGeometry()));
 
     surface->setupFrameCallback();
 
@@ -2072,7 +2076,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
         Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
 
         QVERIFY(frameGeometryChangedSpy.wait());
-        QVERIFY(external->geometryF().contains(window->frameGeometry()));
+        QVERIFY(workspace()->findOutput(external)->geometryF().contains(window->frameGeometry()));
     }
 
     const QRectF originalGeometry = window->frameGeometry();
@@ -2099,7 +2103,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     }
 
     // the window should be moved to be completely in the internal output
-    QVERIFY(internal->geometryF().contains(window->frameGeometry()));
+    QVERIFY(workspace()->findOutput(internal)->geometryF().contains(window->frameGeometry()));
 
     // when re-adding the output, the window should be back at its original spot
     {
@@ -2118,6 +2122,70 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     }
 
     QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void OutputChangesTest::testMirroring_data()
+{
+    QTest::addColumn<QSize>("resolution");
+    QTest::addColumn<QPoint>("deviceOffset");
+
+    QTest::addRow("1280x1200") << QSize(1280, 1200) << QPoint(0, 0);
+    QTest::addRow("2000x1200") << QSize(2000, 1200) << QPoint(360, 0);
+    QTest::addRow("800x1280") << QSize(800, 1280) << QPoint(0, 265);
+}
+
+void OutputChangesTest::testMirroring()
+{
+    QFETCH(QSize, resolution);
+    QFETCH(QPoint, deviceOffset);
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1200),
+            .scale = 1.0,
+            .internal = true,
+        },
+        Test::OutputInfo{
+            .geometry = QRect(QPoint(1280, 0), resolution),
+            .scale = 1.0,
+            .internal = false,
+        },
+    });
+
+    BackendOutput *internal = kwinApp()->outputBackend()->outputs().front();
+    BackendOutput *external = kwinApp()->outputBackend()->outputs().back();
+    QVERIFY(internal->isInternal());
+    QVERIFY(!external->isInternal());
+
+    QCOMPARE(workspace()->outputs().size(), 2);
+
+    {
+        OutputConfiguration cfg;
+        cfg.changeSet(external)->replicationSource = internal->uuid();
+        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    }
+
+    QCOMPARE(workspace()->outputs().size(), 1);
+    QCOMPARE(workspace()->outputs()[0]->backendOutput(), internal);
+    QCOMPARE(workspace()->outputs()[0]->modeSize(), QSize(1280, 1200));
+    QCOMPARE(internal->deviceOffset(), QPoint());
+    QCOMPARE(external->deviceOffset(), deviceOffset);
+
+    LidSwitch lidSwitch;
+    input()->addInputDevice(&lidSwitch);
+
+    auto timestamp = 1ms;
+    Q_EMIT lidSwitch.switchToggle(SwitchState::On, timestamp++, &lidSwitch);
+    QVERIFY(!internal->isEnabled());
+    QVERIFY(external->isEnabled());
+    QCOMPARE(external->deviceOffset(), QPoint());
+
+    Q_EMIT lidSwitch.switchToggle(SwitchState::Off, timestamp++, &lidSwitch);
+    QVERIFY(internal->isEnabled());
+    QVERIFY(external->isEnabled());
+    QCOMPARE(external->deviceOffset(), deviceOffset);
+
+    input()->removeInputDevice(&lidSwitch);
 }
 
 } // namespace KWin

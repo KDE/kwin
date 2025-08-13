@@ -319,7 +319,7 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
         m_surface->attachBuffer(buffer);
         m_mapped = true;
     }
-    wp_viewport_set_destination(m_viewport, geometry().width(), geometry().height());
+    wp_viewport_set_destination(m_viewport, std::round(modeSize().width() / scale()), std::round(modeSize().height() / scale()));
     m_surface->setScale(1);
     // commit the subsurfaces before the main surface
     for (OutputLayer *layer : layersToUpdate) {

@@ -97,13 +97,13 @@ private Q_SLOTS:
 
 protected:
     BackendOutput *findOutput(RenderLoop *loop) const;
-    LogicalOutput *findLogicalOutput(BackendOutput *output) const;
 
     void createScene();
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
-    void addOutput(LogicalOutput *output);
-    void removeOutput(LogicalOutput *output);
+    void handleOutputsChanged();
+    void addOutput(BackendOutput *output);
+    void removeOutput(BackendOutput *output);
     void assignOutputLayers(BackendOutput *output);
 
     CompositingType m_selectedCompositor = NoCompositing;

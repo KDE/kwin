@@ -477,7 +477,7 @@ void WorkspaceScene::prePaint(SceneView *delegate)
     Q_EMIT preFrameRender();
 
     effects->prePaintScreen(prePaintData, m_expectedPresentTimestamp);
-    m_paintContext.deviceDamage = painted_delegate->mapToDeviceCoordinatesAligned(prePaintData.paint);
+    m_paintContext.deviceDamage = painted_delegate->mapToDeviceCoordinatesAligned(prePaintData.paint) & painted_delegate->deviceRect();
     m_paintContext.mask = prePaintData.mask;
     m_paintContext.phase2Data.clear();
 
@@ -563,7 +563,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
         effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
-            .deviceRegion = data.devicePaint,
+            .deviceRegion = data.devicePaint & painted_delegate->deviceRect(),
             .deviceOpaque = data.deviceOpaque,
             .mask = data.mask,
         });
@@ -574,8 +574,8 @@ QRegion WorkspaceScene::collectDamage()
 {
     if (m_paintContext.mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
         resetRepaintsHelper(m_overlayItem.get(), painted_delegate);
-        m_paintContext.deviceDamage = infiniteRegion();
-        return infiniteRegion();
+        m_paintContext.deviceDamage = painted_delegate->deviceRect();
+        return m_paintContext.deviceDamage;
     } else {
         // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
         QRegion opaque;
@@ -590,7 +590,7 @@ QRegion WorkspaceScene::collectDamage()
 
         accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.deviceDamage);
 
-        return m_paintContext.deviceDamage;
+        return m_paintContext.deviceDamage & painted_delegate->deviceRect();
     }
 }
 
@@ -603,9 +603,9 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &deviceRegion)
+void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion)
 {
-    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget);
+    RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderTarget, deviceOffset);
 
     m_renderer->beginFrame(renderTarget, viewport);
 
@@ -665,7 +665,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
     QRegion visible = deviceRegion;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         Phase2Data *data = &m_paintContext.phase2Data[i];
-        data->deviceRegion = visible;
+        data->deviceRegion = visible & viewport.deviceRect();
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
             data->deviceRegion &= viewport.mapToDeviceCoordinatesAligned(data->item->mapToScene(data->item->boundingRect()));

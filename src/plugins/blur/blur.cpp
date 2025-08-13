@@ -674,8 +674,8 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     const QRect backgroundRect = blurShape.boundingRect();
-    const QRect deviceBackgroundRect = snapToPixelGrid(scaledRect(backgroundRect, viewport.scale()));
-    const QRect deviceViewport = snapToPixelGrid(scaledRect(viewport.renderRect(), viewport.scale()));
+    const QRect scaledBackgroundRect = snapToPixelGrid(scaledRect(backgroundRect, viewport.scale()));
+    const QRect deviceBackgroundRect = snapToPixelGrid(viewport.mapToDeviceCoordinates(backgroundRect));
     const auto opacity = w->opacity() * data.opacity();
 
     // Get the effective shape that will be actually blurred. It's possible that all of it will be clipped.
@@ -683,7 +683,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     effectiveShape.reserve(blurShape.rectCount());
     if (deviceRegion != infiniteRegion()) {
         for (const QRect &clipRect : deviceRegion) {
-            const QRectF deviceClipRect = snapToPixelGridF(clipRect).translated(deviceViewport.topLeft() - deviceBackgroundRect.topLeft());
+            const QRectF deviceClipRect = clipRect.translated(-deviceBackgroundRect.topLeft());
             for (const QRect &shapeRect : blurShape) {
                 const QRectF deviceShapeRect = snapToPixelGridF(scaledRect(shapeRect.translated(-backgroundRect.topLeft()), viewport.scale()));
                 if (const QRectF intersected = deviceClipRect.intersected(deviceShapeRect); !intersected.isEmpty()) {
@@ -802,10 +802,10 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             const float x1 = rect.right();
             const float y1 = rect.bottom();
 
-            const float u0 = x0 / deviceBackgroundRect.width();
-            const float v0 = 1.0f - y0 / deviceBackgroundRect.height();
-            const float u1 = x1 / deviceBackgroundRect.width();
-            const float v1 = 1.0f - y1 / deviceBackgroundRect.height();
+            const float u0 = x0 / scaledBackgroundRect.width();
+            const float v0 = 1.0f - y0 / scaledBackgroundRect.height();
+            const float u1 = x1 / scaledBackgroundRect.width();
+            const float v1 = 1.0f - y1 / scaledBackgroundRect.height();
 
             // first triangle
             map[vboIndex++] = GLVertex2D{
@@ -903,7 +903,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         ShaderManager::instance()->pushShader(m_roundedOnscreenPass.shader.get());
 
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
-        projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
+        projectionMatrix.translate(scaledBackgroundRect.x(), scaledBackgroundRect.y());
 
         const QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo);
 
@@ -920,7 +920,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             w->frameGeometry().height() * data.yScale(),
         };
         const QRectF nativeBox = snapToPixelGridF(scaledRect(transformedRect, viewport.scale()))
-                                     .translated(-deviceBackgroundRect.topLeft());
+                                     .translated(-scaledBackgroundRect.topLeft());
         const BorderRadius nativeCornerRadius = cornerRadius.scaled(viewport.scale()).rounded();
 
         m_roundedOnscreenPass.shader->setUniform(m_roundedOnscreenPass.mvpMatrixLocation, projectionMatrix);
@@ -945,7 +945,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         ShaderManager::instance()->pushShader(m_onscreenPass.shader.get());
 
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
-        projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
+        projectionMatrix.translate(scaledBackgroundRect.x(), scaledBackgroundRect.y());
 
         QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo);
 
@@ -992,7 +992,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             ShaderManager::instance()->pushShader(m_noisePass.shader.get());
 
             QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
-            projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
+            projectionMatrix.translate(scaledBackgroundRect.x(), scaledBackgroundRect.y());
 
             m_noisePass.shader->setUniform(m_noisePass.mvpMatrixLocation, projectionMatrix);
             m_noisePass.shader->setUniform(m_noisePass.noiseTextureSizeLocation, QVector2D(noiseTexture->width(), noiseTexture->height()));

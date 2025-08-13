@@ -334,6 +334,7 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .enabled = true,
             .pos = info.geometry.topLeft(),
             .scale = info.scale,
+            .scaleSetting = info.scale,
         };
     }
     workspace()->applyOutputConfiguration(config);

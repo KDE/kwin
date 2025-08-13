@@ -242,7 +242,13 @@ std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *>
             props->pos = pos;
             props->transform = output->panelOrientation();
         }
-        pos.setX(pos.x() + output->geometry().width());
+        const auto mode = props->mode.value_or(output->currentMode()).lock();
+        if (!mode) {
+            qCWarning(KWIN_CORE) << "Every enabled output should have a mode";
+            continue;
+        }
+        const double width = mode->size().width() / props->scale.value_or(output->scale());
+        pos.setX(pos.x() + std::round(width));
     }
 
     bool allDisabled = std::all_of(outputs.begin(), outputs.end(), [&cfg](const auto &output) {

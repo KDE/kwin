@@ -100,82 +100,61 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
     }
 }
 
+static QSize calculatePixelSize(OutputChangeSet *change, BackendOutput *output)
+{
+    const auto mode = change->mode.value_or(output->currentMode()).lock();
+    Q_ASSERT(mode);
+    const auto transform = change->transform.value_or(output->transform());
+    return transform.map(mode->size());
+}
+
+static double mirrorScale(QSize srcPixelSize, double srcScale, QSize dstPixelSize)
+{
+    const double wScale = dstPixelSize.width() / double(srcPixelSize.width());
+    const double hScale = dstPixelSize.height() / double(srcPixelSize.height());
+    return std::min(wScale, hScale) * srcScale;
+}
+
+static QPoint calculateRenderOffset(QSize srcPixelSize, double srcScale, QSize dstResolution, double dstScale)
+{
+    // the output is mirroring another screen -> center and scale the viewport
+    const QSize usedArea = (QSizeF(srcPixelSize) / srcScale * dstScale).toSize();
+    const QSize offset = (dstResolution - usedArea) / 2;
+    return QPoint(offset.width(), offset.height());
+}
+
 void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs)
 {
-    for (const auto output : outputs) {
-        const auto changeset = config.changeSet(output);
-        const QString mirrorSource = changeset->replicationSource.value_or(output->replicationSource());
-        if (mirrorSource.isEmpty()) {
-            continue;
-        }
-        const auto sourceIt = std::ranges::find_if(outputs, [&](BackendOutput *o) {
-            return config.changeSet(o)->uuid.value_or(o->uuid()) == mirrorSource;
+    const auto enabledOutputs = outputs | std::views::filter([&config](BackendOutput *output) {
+        return config.changeSet(output)->enabled.value_or(output->isEnabled());
+    }) | std::ranges::to<QList>();
+    for (BackendOutput *output : enabledOutputs) {
+        auto cfg = config.changeSet(output);
+        const auto srcIt = std::ranges::find_if(enabledOutputs, [&cfg, &config, output](BackendOutput *other) {
+            if (output == other) {
+                return false;
+            }
+            const QString source = cfg->replicationSource.value_or(output->replicationSource());
+            if (source.isEmpty()) {
+                return false;
+            }
+            const QString uuid = config.changeSet(other)->uuid.value_or(other->uuid());
+            return source == uuid;
         });
-        if (sourceIt == outputs.end()) {
+        if (srcIt == enabledOutputs.end()) {
+            // not mirroring anything
+            cfg->scale = cfg->scaleSetting.value_or(output->scaleSetting());
+            cfg->deviceOffset = QPoint();
             continue;
         }
-        BackendOutput *const source = *sourceIt;
-        if (source == output) {
-            qCWarning(KWIN_OUTPUT_CONFIG, "BackendOutput %s is trying to mirror itself, that shouldn't happen!", qPrintable(output->name()));
-            continue;
-        }
-        const auto sourceChange = config.changeSet(source);
-        auto sourceMode = sourceChange->mode.value_or(source->currentMode()).lock();
-        if (!sourceMode) {
-            continue;
-        }
-        const auto sourcePosition = sourceChange->pos.value_or(source->geometry().topLeft());
-        const auto sourceScale = sourceChange->scale.value_or(source->scale());
-        const auto sourceTransform = sourceChange->transform.value_or(source->transform());
-        const auto sourceModeSize = sourceTransform.map(sourceMode->size());
-        const auto logicalSourceSize = sourceModeSize / sourceScale;
-        const auto transform = changeset->transform.value_or(output->transform());
-        const auto modes = output->modes();
-        auto sameAspect = modes | std::views::filter([sourceModeSize, transform](const auto &mode) {
-            const double aspect1 = sourceModeSize.width() / double(sourceModeSize.height());
-            const auto size = transform.map(mode->size());
-            const double aspect2 = size.width() / double(size.height());
-            return std::abs(aspect1 - aspect2) < 0.01;
-        });
-        if (!sameAspect.empty()) {
-            changeset->mode = sameAspect.front();
-            changeset->scale = std::round(transform.map(sameAspect.front()->size()).width() / double(logicalSourceSize.width()) * 120) / 120.0;
-            changeset->pos = sourcePosition;
-            continue;
-        }
-        const auto mode = changeset->mode.value_or(output->currentMode()).lock();
-        if (!mode) {
-            continue;
-        }
-        // we can't do anything good here without additional infrastructure to handle mirroring explicitly
-        // next-best workaround for now: make the outputs equal height or width through scaling, and then center it on the other axis
-        const auto modeSize = transform.map(mode->size());
-        if (modeSize.width() > modeSize.height()) {
-            changeset->scale = std::round(modeSize.height() / double(logicalSourceSize.height()) * 120) / 120.0;
-            const QSize logicalSize = modeSize / *changeset->scale;
-            changeset->pos = QPoint(sourcePosition.x() + logicalSourceSize.width() / 2 - logicalSize.width() / 2, sourcePosition.y());
-        } else {
-            changeset->scale = std::round(modeSize.width() / double(logicalSourceSize.width()) * 120) / 120.0;
-            const QSize logicalSize = modeSize / *changeset->scale;
-            changeset->pos = QPoint(sourcePosition.x(), sourcePosition.y() + logicalSourceSize.height() / 2 - logicalSize.height() / 2);
-        }
-    }
-    // the fallback logic above may push some output into negative coordinates,
-    // which causes issues with Xwayland -> shift all of them to be positive
-    for (BackendOutput *output : outputs) {
-        const auto changeset = config.changeSet(output);
-        if (!changeset->pos.has_value()) {
-            continue;
-        }
-        const QPoint pos = *changeset->pos;
-        if (pos.x() >= 0 && pos.y() >= 0) {
-            continue;
-        }
-        for (BackendOutput *output : outputs) {
-            const auto changeset = config.changeSet(output);
-            const auto otherPos = changeset->pos.value_or(output->geometry().topLeft());
-            changeset->pos = otherPos - QPoint(std::min(pos.x(), 0), std::min(pos.y(), 0));
-        }
+        // mirroring -> adjust scale and offset
+        BackendOutput *source = *srcIt;
+        const auto srcConfig = config.changeSet(source);
+        const QSize srcPixelSize = calculatePixelSize(srcConfig.get(), source);
+        const double srcScale = config.changeSet(source)->scaleSetting.value_or(source->scaleSetting());
+        const QSize dstPixelSize = calculatePixelSize(cfg.get(), output);
+        cfg->scale = mirrorScale(srcPixelSize, srcScale, dstPixelSize);
+        cfg->deviceOffset = calculateRenderOffset(srcPixelSize, srcScale, dstPixelSize, *cfg->scale);
     }
 }
 
@@ -354,7 +333,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                     .size = modeSize,
                     .refreshRate = refreshRate,
                 },
-                .scale = changeSet->scale.value_or(output->scale()),
+                .scaleSetting = changeSet->scaleSetting.value_or(output->scaleSetting()),
                 .transform = changeSet->transform.value_or(output->transform()),
                 .manualTransform = changeSet->manualTransform.value_or(output->manualTransform()),
                 .overscan = changeSet->overscan.value_or(output->overscan()),
@@ -382,7 +361,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
-                .position = changeSet->pos.value_or(output->geometry().topLeft()),
+                .position = changeSet->pos.value_or(output->position()),
                 .enabled = changeSet->enabled.value_or(output->isEnabled()),
                 .priority = int(output->priority()),
                 .replicationSource = changeSet->replicationSource.value_or(output->replicationSource()),
@@ -405,7 +384,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                     .size = modeSize,
                     .refreshRate = refreshRate,
                 },
-                .scale = output->scale(),
+                .scaleSetting = output->scaleSetting(),
                 .transform = output->transform(),
                 .manualTransform = output->manualTransform(),
                 .overscan = output->overscan(),
@@ -433,7 +412,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
-                .position = output->geometry().topLeft(),
+                .position = output->position(),
                 .enabled = output->isEnabled(),
                 .priority = int(output->priority()),
                 .replicationSource = output->replicationSource(),
@@ -471,7 +450,8 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .desiredModeRefreshRate = state.mode.has_value() ? std::make_optional(state.mode->refreshRate) : std::nullopt,
             .enabled = setupState.enabled,
             .pos = setupState.position,
-            .scale = state.scale,
+            .scale = state.scaleSetting,
+            .scaleSetting = state.scaleSetting,
             .transform = state.transform,
             .manualTransform = state.manualTransform,
             .overscan = state.overscan,
@@ -540,11 +520,11 @@ std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedCo
         const auto scale = changeset->scale.value_or(output->scale());
         return QSize(std::ceil(mode->size().width() / scale), std::ceil(mode->size().height() / scale));
     };
-    const QPoint internalPos = internalChangeset->pos.value_or(internalOutput->geometry().topLeft());
+    const QPoint internalPos = internalChangeset->pos.value_or(internalOutput->position());
     const QSize internalSize = getSize(internalChangeset.get(), internalOutput);
     for (BackendOutput *otherOutput : outputs) {
         auto changeset = config.changeSet(otherOutput);
-        QPoint otherPos = changeset->pos.value_or(otherOutput->geometry().topLeft());
+        QPoint otherPos = changeset->pos.value_or(otherOutput->position());
         if (otherPos.x() >= internalPos.x() + internalSize.width()) {
             otherPos.rx() -= std::floor(internalSize.width());
         }
@@ -558,7 +538,7 @@ std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedCo
                 return false;
             }
             const auto changeset = config.changeSet(output);
-            const QPoint pos = changeset->pos.value_or(output->geometry().topLeft());
+            const QPoint pos = changeset->pos.value_or(output->position());
             return QRect(pos, otherSize).intersects(QRect(otherPos, getSize(changeset.get(), output)));
         });
         if (!overlap) {
@@ -605,7 +585,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .pos = pos,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
             // and we don't know if it's from Xorg or the 5.27 Wayland session... so just ignore it
-            .scale = existingData.scale.value_or(chooseScale(output, mode.get())),
+            .scaleSetting = existingData.scaleSetting.value_or(chooseScale(output, mode.get())),
             .transform = existingData.transform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .manualTransform = existingData.manualTransform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .overscan = existingData.overscan.value_or(kscreenChangeSet.overscan.value_or(0)),
@@ -630,7 +610,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         priority++;
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
-            pos.setX(std::ceil(pos.x() + modeSize.width() / *changeset->scale));
+            pos.setX(std::ceil(pos.x() + modeSize.width() / *changeset->scaleSetting));
         }
     }
     return ret;
@@ -895,7 +875,7 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("scale"); it != data.end()) {
             const double scale = it->toDouble(0);
             if (scale > 0 && scale <= 5) {
-                state.scale = scale;
+                state.scaleSetting = scale;
             }
         }
         if (const auto it = data.find("transform"); it != data.end()) {
@@ -1220,8 +1200,8 @@ void OutputConfigurationStore::save()
             mode["refreshRate"] = int(output.mode->refreshRate);
             o["mode"] = mode;
         }
-        if (output.scale) {
-            o["scale"] = *output.scale;
+        if (output.scaleSetting) {
+            o["scale"] = *output.scaleSetting;
         }
         if (output.manualTransform == OutputTransform::Kind::Normal) {
             o["transform"] = "Normal";

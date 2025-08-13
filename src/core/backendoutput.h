@@ -99,29 +99,6 @@ public:
     void unref();
 
     /**
-     * Maps the specified @a rect from the global coordinate system to the output-local coords.
-     */
-    QRect mapFromGlobal(const QRect &rect) const;
-
-    /**
-     * Maps the specified @a rect from the global coordinate system to the output-local coords.
-     */
-    QRectF mapFromGlobal(const QRectF &rect) const;
-
-    /**
-     * Maps a @a rect in this output coordinates to the global coordinate system.
-     */
-    QRectF mapToGlobal(const QRectF &rect) const;
-
-    /**
-     * Maps a @a region in this output coordinates to the global coordinate system.
-     */
-    QRegion mapToGlobal(const QRegion &region) const;
-
-    Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
-    Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;
-
-    /**
      * Returns a short identifiable name of this output.
      */
     QString name() const;
@@ -139,24 +116,9 @@ public:
     bool isEnabled() const;
 
     /**
-     * Returns geometry of this output in device independent pixels.
+     * Returns the position setting of this output
      */
-    QRect geometry() const;
-
-    /**
-     * Returns geometry of this output in device independent pixels, without rounding
-     */
-    QRectF geometryF() const;
-
-    /**
-     * Equivalent to `QRect(QPoint(0, 0), geometry().size())`
-     */
-    QRect rect() const;
-
-    /**
-     * Equivalent to `QRectF(QPointF(0, 0), geometryF().size())`
-     */
-    QRectF rectF() const;
+    QPoint position() const;
 
     /**
      * Returns the approximate vertical refresh rate of this output, in mHz.
@@ -314,11 +276,23 @@ public:
 
     uint32_t priority() const;
 
+    /**
+     * The setting for the scale factor, which may differ from scale
+     * if the screen is mirrored
+     */
+    double scaleSetting() const;
+
+    /**
+     * The offset at which the screen contents should be rendered,
+     * used for creating black bars while mirroring.
+     */
+    QPoint deviceOffset() const;
+
 Q_SIGNALS:
     /**
-     * This signal is emitted when the geometry of this output has changed.
+     * This signal is emitted when the position of this output has changed.
      */
-    void geometryChanged();
+    void positionChanged();
     /**
      * This signal is emitted when the output has been enabled or disabled.
      */
@@ -327,6 +301,11 @@ Q_SIGNALS:
      * This signal is emitted when the device pixel ratio of the output has changed.
      */
     void scaleChanged();
+    /**
+     * This signal is emitted when the scale setting of the output has changed
+     */
+    void scaleSettingChanged();
+    void deviceOffsetChanged();
 
     /**
      * Notifies that the output is about to change configuration based on a
@@ -455,6 +434,8 @@ protected:
         double sharpnessSetting = 0;
         uint32_t priority = 0;
         QList<CustomModeDefinition> customModes;
+        double scaleSetting = 1;
+        QPoint deviceOffset;
     };
 
     void setInformation(const Information &information);

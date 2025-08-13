@@ -277,6 +277,10 @@ Q_SIGNALS:
 
     void blendingColorChanged();
     void transformChanged();
+    /**
+     * This signal is emitted when either modeSize or refreshRate change
+     */
+    void currentModeChanged();
 
 protected:
     BackendOutput *const m_backendOutput;

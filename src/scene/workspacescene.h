@@ -43,7 +43,7 @@ public:
     void prePaint(SceneView *delegate) override;
     QRegion collectDamage() override;
     void postPaint() override;
-    void paint(const RenderTarget &renderTarget, const QRegion &deviceRegion) override;
+    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion) override;
     void frame(SceneView *delegate, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 

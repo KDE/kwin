@@ -20,13 +20,20 @@ class RenderTarget;
 class KWIN_EXPORT RenderViewport
 {
 public:
-    explicit RenderViewport(const QRectF &renderRect, double scale, const RenderTarget &renderTarget);
+    explicit RenderViewport(const QRectF &renderRect, double scale, const RenderTarget &renderTarget, const QPoint &renderOffset);
 
     QMatrix4x4 projectionMatrix() const;
     QRectF renderRect() const;
-    QRect deviceRenderRect() const;
+    QRect scaledRenderRect() const;
     double scale() const;
     OutputTransform transform() const;
+    QPoint renderOffset() const;
+
+    /**
+     * @returns QRect(renderOffset(), deviceSize())
+     */
+    QRect deviceRect() const;
+    QSize deviceSize() const;
 
     QRectF mapToDeviceCoordinates(const QRectF &logicalGeometry) const;
     QRect mapToDeviceCoordinatesAligned(const QRectF &logicalGeometry) const;
@@ -55,7 +62,8 @@ private:
     const OutputTransform m_transform;
     const QSize m_transformBounds;
     const QRectF m_renderRect;
-    const QRect m_deviceRenderRect;
+    const QRect m_scaledRenderRect;
+    const QPoint m_renderOffset;
     const QMatrix4x4 m_projectionMatrix;
     const double m_scale;
 };

@@ -489,6 +489,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
+    next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
     next.transform = props->transform.value_or(m_state.transform);
     next.manualTransform = props->manualTransform.value_or(m_state.manualTransform);
     next.currentMode = m_pipeline->mode();
@@ -534,6 +535,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
     next.priority = props->priority.value_or(m_state.priority);
+    next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
     tryKmsColorOffloading(next);
     maybeScheduleRepaints(next);
     if (next.dpmsMode != m_state.dpmsMode) {

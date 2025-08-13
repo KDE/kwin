@@ -55,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::doBeginFram
         return std::nullopt;
     }
 
-    QRegion repaint = m_output->exposedArea() + m_output->rect();
+    QRegion repaint = infiniteRegion();
     m_output->clearExposedArea();
 
     m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
