@@ -277,8 +277,12 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer)
 bool RenderLoop::activeWindowControlsVrrRefreshRate() const
 {
     Window *const activeWindow = workspace()->activeWindow();
+    LogicalOutput *logical = workspace()->findOutput(d->output);
+    if (!logical) {
+        return false;
+    }
     return activeWindow
-        && activeWindow->frameGeometry().intersects(d->output->geometryF())
+        && activeWindow->frameGeometry().intersects(logical->geometryF())
         && activeWindow->surfaceItem()
         && activeWindow->surfaceItem()->recursiveFrameTimeEstimation().transform([](const auto t) {
         return t <= std::chrono::nanoseconds(1'000'000'000) / 30;

@@ -58,6 +58,7 @@ public:
         const bool hardwareClipping;
         const qreal renderTargetScale;
         const QPointF viewportOrigin;
+        const QPoint renderOffset;
     };
 
     ItemRendererOpenGL(EglDisplay *eglDisplay);

@@ -87,7 +87,9 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
     const WindowQuadList quads = item->quads();
 
     const qreal scale = context->renderTargetScale;
-    const QPointF itemToDeviceTranslation = context->transformStack.top().map(QPointF(0., 0.)) - context->viewportOrigin;
+    const QPointF itemToDeviceTranslation = context->transformStack.top().map(QPointF(0., 0.))
+                                          - context->viewportOrigin
+                                          + context->renderOffset;
 
     RenderGeometry geometry;
     geometry.reserve(quads.count() * 6);
@@ -337,10 +339,11 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     RenderContext renderContext{
         .projectionMatrix = viewport.projectionMatrix(),
         .rootTransform = data.toMatrix(viewport.scale()), // TODO: unify transforms
-        .deviceClip = deviceRegion & renderTarget.transformedRect(),
-        .hardwareClipping = deviceRegion != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
+        .deviceClip = (deviceRegion & renderTarget.transformedRect()),
+        .hardwareClipping = (deviceRegion != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED))) || !viewport.renderOffset().isNull(),
         .renderTargetScale = viewport.scale(),
-        .viewportOrigin = viewport.deviceRenderRect().topLeft(),
+        .viewportOrigin = viewport.scaledRenderRect().topLeft(),
+        .renderOffset = viewport.renderOffset(),
     };
 
     renderContext.transformStack.push(QMatrix4x4());
@@ -384,9 +387,10 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     // The scissor region must be in the render target local coordinate system.
-    QRegion scissorRegion = QRect(QPoint(), renderTarget.size());
+    const QSize bufferOffset = renderTarget.transform().map(QSize(viewport.renderOffset().x(), viewport.renderOffset().y()));
+    QRegion scissorRegion = QRect(QPoint(bufferOffset.width(), bufferOffset.height()), renderTarget.size() - 2 * bufferOffset);
     if (renderContext.hardwareClipping) {
-        scissorRegion = viewport.transform().map(deviceRegion & renderTarget.transformedRect(), renderTarget.transformedSize());
+        scissorRegion &= viewport.transform().map(deviceRegion & renderTarget.transformedRect(), renderTarget.transformedSize());
     }
 
     ShaderTraits lastTraits;

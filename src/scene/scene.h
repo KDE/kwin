@@ -28,6 +28,11 @@ class Item;
 class SurfaceItem;
 class Window;
 
+// FIXME as a refactor on top of master, always set the scale of views explicitly
+// instead of having the output do anything
+// RenderView shouldn't even have an output to begin with, and SceneView should only have it for the scene / effects
+// -> this will fix the hardware cursor not working with mirroring, because it has the wrong size
+
 class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
@@ -42,12 +47,12 @@ public:
     virtual bool isVisible() const;
     virtual QPointF hotspot() const;
     virtual QRectF viewport() const = 0;
-    virtual qreal scale() const;
+    virtual qreal scale() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
     virtual void frame(OutputFrame *frame) = 0;
     virtual void prePaint() = 0;
     virtual QRegion collectDamage() = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QRegion &logicalRegion) = 0;
+    virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &logicalRegion) = 0;
     virtual void postPaint() = 0;
     virtual bool shouldRenderItem(Item *item) const;
     virtual bool shouldRenderHole(Item *item) const;
@@ -78,14 +83,18 @@ public:
     QRegion mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const;
 
     /**
-     * @returns QRect(QPoint(), deviceSize())
+     * @returns QRect(renderOffset(), deviceSize())
      */
     QRect deviceRect() const;
     QSize deviceSize() const;
 
+    QPoint renderOffset() const;
+    void setRenderOffset(const QPoint &offset);
+
 protected:
     LogicalOutput *m_output = nullptr;
     OutputLayer *m_layer = nullptr;
+    QPoint m_renderOffset;
 };
 
 class KWIN_EXPORT SceneView : public RenderView
@@ -106,7 +115,7 @@ public:
     void frame(OutputFrame *frame) override;
     void prePaint() override;
     QRegion collectDamage() override;
-    void paint(const RenderTarget &renderTarget, const QRegion &logicalRegion) override;
+    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion) override;
     void postPaint() override;
     double desiredHdrHeadroom() const override;
 
@@ -140,6 +149,7 @@ public:
     explicit ItemView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer);
     ~ItemView() override;
 
+    qreal scale() const override;
     QPointF hotspot() const override;
     QRectF viewport() const override;
     bool isVisible() const override;
@@ -148,7 +158,7 @@ public:
     void prePaint() override;
     QRegion collectDamage() override;
     void postPaint() override;
-    void paint(const RenderTarget &renderTarget, const QRegion &logicalRegion) override;
+    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &logicalRegion) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
     void setUnderlay(bool underlay);
@@ -178,7 +188,7 @@ public:
     bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     QRegion collectDamage() override;
-    void paint(const RenderTarget &renderTarget, const QRegion &logicalRegion) override;
+    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &logicalRegion) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
     bool needsRepaint() override;
@@ -238,7 +248,7 @@ public:
     virtual OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
     virtual void prePaint(SceneView *delegate) = 0;
     virtual QRegion collectDamage() = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QRegion &deviceRegion) = 0;
+    virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion) = 0;
     virtual void postPaint() = 0;
     virtual void frame(SceneView *delegate, OutputFrame *frame);
     virtual double desiredHdrHeadroom() const;
