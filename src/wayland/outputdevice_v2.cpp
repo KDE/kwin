@@ -283,9 +283,9 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput
     updateSharpness();
     updatePriority();
 
-    connect(handle, &BackendOutput::geometryChanged,
+    connect(handle, &BackendOutput::positionChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
-    connect(handle, &BackendOutput::scaleChanged,
+    connect(handle, &BackendOutput::scaleSettingChanged,
             this, &OutputDeviceV2Interface::updateScale);
     connect(handle, &BackendOutput::enabledChanged,
             this, &OutputDeviceV2Interface::updateEnabled);
@@ -652,7 +652,7 @@ void OutputDeviceV2Interface::updatePhysicalSize()
 
 void OutputDeviceV2Interface::updateGlobalPosition()
 {
-    const QPoint arg = d->m_handle->geometry().topLeft();
+    const QPoint arg = d->m_handle->position();
     if (d->m_globalPosition == arg) {
         return;
     }
@@ -705,7 +705,7 @@ void OutputDeviceV2Interface::updateTransform()
 
 void OutputDeviceV2Interface::updateScale()
 {
-    const qreal scale = d->m_handle->scale();
+    const qreal scale = d->m_handle->scaleSetting();
     if (qFuzzyCompare(d->m_scale, scale)) {
         return;
     }

@@ -45,7 +45,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::doBegi
         return std::nullopt;
     }
 
-    QRegion repaint = m_output->exposedArea() + m_output->rect();
+    QRegion repaint = infiniteRegion();
     m_output->clearExposedArea();
 
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();

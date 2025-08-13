@@ -94,6 +94,7 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     next.transform = props->transform.value_or(m_state.transform);
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
+    next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.currentMode = props->mode.value_or(m_state.currentMode).lock();
@@ -103,6 +104,7 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     next.priority = props->priority.value_or(m_state.priority);
+    next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
     setState(next);
     m_renderLoop->setRefreshRate(next.currentMode->refreshRate());
     m_vsyncMonitor->setRefreshRate(next.currentMode->refreshRate());

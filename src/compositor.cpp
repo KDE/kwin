@@ -106,15 +106,6 @@ BackendOutput *Compositor::findOutput(RenderLoop *loop) const
     return nullptr;
 }
 
-LogicalOutput *Compositor::findLogicalOutput(BackendOutput *output) const
-{
-    const auto outputs = workspace()->outputs();
-    const auto it = std::ranges::find_if(outputs, [output](LogicalOutput *logical) {
-        return logical->backendOutput() == output;
-    });
-    return it == outputs.end() ? nullptr : *it;
-}
-
 void Compositor::reinitialize()
 {
     // Restart compositing
@@ -299,12 +290,9 @@ void Compositor::start()
 
     createScene();
 
-    const QList<LogicalOutput *> outputs = workspace()->outputs();
-    for (LogicalOutput *output : outputs) {
-        addOutput(output);
-    }
-    connect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
-    connect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
+    handleOutputsChanged();
+    connect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
 
     m_state = State::On;
 
@@ -338,8 +326,8 @@ void Compositor::stop()
         for (Window *window : windows) {
             window->finishCompositing();
         }
-        disconnect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
-        disconnect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
+        disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
+        disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
     }
 
     if (m_backend->compositingType() == OpenGLCompositing) {
@@ -351,7 +339,7 @@ void Compositor::stop()
         return pair.first;
     }) | std::ranges::to<QList>();
     for (RenderLoop *loop : loops) {
-        removeOutput(findLogicalOutput(findOutput(loop)));
+        removeOutput(findOutput(loop));
     }
 
     m_scene.reset();
@@ -391,15 +379,23 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
-static bool prepareDirectScanout(RenderView *view, BackendOutput *output, const std::shared_ptr<OutputFrame> &frame)
+static QRect mapGlobalLogicalToOutputDeviceCoordinates(const QRectF &logicalGeometry, LogicalOutput *logicalOutput, BackendOutput *backendOutput)
 {
-    if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
+    const QRect localDevice = scaledRect(logicalGeometry.translated(-logicalOutput->geometryF().topLeft()), backendOutput->scale()).toRect();
+    return backendOutput->transform().map(localDevice.translated(backendOutput->deviceOffset()), backendOutput->pixelSize());
+}
+
+static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, const std::shared_ptr<OutputFrame> &frame)
+{
+    if (!view->isVisible()) {
         return false;
     }
     const auto layer = view->layer();
-    const auto outputLocalRect = view->viewport().translated(-output->geometryF().topLeft());
-    const auto nativeViewport = scaledRect(outputLocalRect, output->scale()).toRect();
-    const bool coversEntireOutput = nativeViewport == QRect(QPoint(), output->pixelSize());
+    const QRect nativeViewport = mapGlobalLogicalToOutputDeviceCoordinates(view->viewport(), logicalOutput, backendOutput);
+    const bool coversEntireOutput = nativeViewport == QRect(QPoint(), backendOutput->modeSize());
+    if ((nativeViewport & QRect(QPoint(), backendOutput->modeSize())).isEmpty()) {
+        return false;
+    }
     // the background of the output can be assumed to be black
     const auto scanoutCandidates = view->scanoutCandidates(coversEntireOutput ? 2 : 1);
     if (scanoutCandidates.isEmpty()) {
@@ -429,13 +425,13 @@ static bool prepareDirectScanout(RenderView *view, BackendOutput *output, const 
         candidate->setScanoutHint(layer->scanoutDevice(), formats);
         return false;
     }
-    const auto geometry = candidate->mapToView(QRectF(QPointF(0, 0), candidate->size()), view).translated(-output->geometryF().topLeft());
-    layer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->pixelSize()).toRect());
+    const auto geometry = candidate->mapToScene(QRectF(QPointF(0, 0), candidate->size()));
+    layer->setTargetRect(mapGlobalLogicalToOutputDeviceCoordinates(geometry, logicalOutput, backendOutput));
     layer->setEnabled(true);
     layer->setSourceRect(candidate->bufferSourceBox());
     layer->setBufferTransform(candidate->bufferTransform());
-    layer->setOffloadTransform(candidate->bufferTransform().combine(output->transform().inverted()));
-    layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), output->layerBlendingColor(), candidate->renderingIntent()));
+    layer->setOffloadTransform(candidate->bufferTransform().combine(backendOutput->transform().inverted()));
+    layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), backendOutput->layerBlendingColor(), candidate->renderingIntent()));
     const bool ret = layer->importScanoutBuffer(candidate->buffer(), frame);
     if (ret) {
         candidate->resetDamage();
@@ -445,38 +441,44 @@ static bool prepareDirectScanout(RenderView *view, BackendOutput *output, const 
     return ret;
 }
 
-static bool prepareRendering(RenderView *view, BackendOutput *output, uint32_t requiredAlphaBits)
+static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, uint32_t requiredAlphaBits)
 {
-    if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
+    if (!view->isVisible()) {
         return false;
     }
+    auto nativeRect = mapGlobalLogicalToOutputDeviceCoordinates(view->viewport(), logicalOutput, backendOutput);
+    // we need to render black bars for mirroring,
+    // so add the relevant area to the source and target rect
+    const QSize renderOffset = backendOutput->transform().map(QSize(view->renderOffset().x(), view->renderOffset().y()));
+    nativeRect.adjust(-renderOffset.width(), -renderOffset.height(), renderOffset.width(), renderOffset.height());
+    if ((nativeRect & QRect(QPoint(), backendOutput->modeSize())).isEmpty()) {
+        return false;
+    }
+
     const auto layer = view->layer();
-    const auto outputLocalRect = view->viewport().translated(-output->geometryF().topLeft());
-    const auto nativeRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize()).toRect();
-    const double reference = output->colorDescription()->referenceLuminance();
-    const double maxOutputLuminance = output->colorDescription()->maxHdrLuminance().value_or(reference);
+    const double reference = backendOutput->colorDescription()->referenceLuminance();
+    const double maxOutputLuminance = backendOutput->colorDescription()->maxHdrLuminance().value_or(reference);
     const double usedMaxLuminance = std::min(view->desiredHdrHeadroom() * reference, maxOutputLuminance);
     layer->setSourceRect(QRect(QPoint(0, 0), nativeRect.size()));
     layer->setTargetRect(nativeRect);
-    layer->setHotspot(output->transform().map(view->hotspot() * output->scale(), nativeRect.size()));
+    layer->setHotspot(backendOutput->transform().map(view->hotspot() * view->scale(), nativeRect.size()));
     layer->setEnabled(true);
     layer->setOffloadTransform(OutputTransform::Normal);
-    layer->setBufferTransform(output->transform());
-    layer->setColor(output->layerBlendingColor()->withHdrMetadata(reference, usedMaxLuminance), RenderingIntent::AbsoluteColorimetricNoAdaptation, ColorPipeline{});
+    layer->setBufferTransform(backendOutput->transform());
+    layer->setColor(backendOutput->layerBlendingColor()->withHdrMetadata(reference, usedMaxLuminance), RenderingIntent::AbsoluteColorimetricNoAdaptation, ColorPipeline{});
     layer->setRequiredAlphaBits(requiredAlphaBits);
     return layer->preparePresentationTest();
 }
 
-static bool renderLayer(RenderView *view, BackendOutput *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
+static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
 {
     auto beginInfo = view->layer()->beginFrame();
     if (!beginInfo) {
         return false;
     }
     auto &[renderTarget, repaint] = beginInfo.value();
-    const QRect surfaceRect = QRect(QPoint(), renderTarget.transform().map(view->layer()->sourceRect().size().toSize()));
-    const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(surfaceRect);
-    view->paint(renderTarget, bufferDamage);
+    const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(renderTarget.transformedRect());
+    view->paint(renderTarget, view->renderOffset(), bufferDamage);
     return view->layer()->endFrame(bufferDamage, surfaceDamage, frame.get());
 }
 
@@ -608,7 +610,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     BackendOutput *output = findOutput(renderLoop);
-    LogicalOutput *logical = findLogicalOutput(output);
+    LogicalOutput *logicalOutput = workspace()->findOutput(output);
     const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
 
@@ -636,10 +638,10 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     Window *const activeWindow = workspace()->activeWindow();
-    SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->frameGeometry().intersects(output->geometryF()) ? activeWindow->surfaceItem() : nullptr;
+    SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->frameGeometry().intersects(primaryView->viewport()) ? activeWindow->surfaceItem() : nullptr;
     frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
 
-    const bool wantsAdaptiveSync = activeWindow && activeWindow->frameGeometry().intersects(output->geometryF()) && activeWindow->wantsAdaptiveSync();
+    const bool wantsAdaptiveSync = activeWindow && activeWindow->frameGeometry().intersects(primaryView->viewport()) && activeWindow->wantsAdaptiveSync();
     const bool vrr = (output->capabilities() & BackendOutput::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
     const bool tearing = (output->capabilities() & BackendOutput::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
     if (vrr) {
@@ -702,7 +704,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     if (!s_forceSoftwareCursor
         && !m_brokenCursors.contains(renderLoop)
         && cursorItem->isVisible()
-        && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(output->geometryF())) {
+        && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(logicalOutput->geometryF())) {
         cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
         if (!cursorLayer) {
             cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::EfficientOverlay, primaryView->layer()->zpos() + 1);
@@ -713,8 +715,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         if (cursorLayer) {
             auto &view = m_overlayViews[renderLoop][cursorLayer];
             if (!view || view->item() != cursorItem) {
-                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, logical, cursorLayer);
-                connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [output, cursorView = view.get()]() {
+                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, logicalOutput, cursorLayer);
+                connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [logicalOutput, output, cursorView = view.get()]() {
                     // this just deals with moving the plane asynchronously, for improved latency.
                     // enabling, disabling and updating the cursor image still happen in composite()
                     const auto outputLayer = cursorView->layer();
@@ -734,9 +736,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                         }).value_or(30);
                         maxVrrCursorDelay = std::chrono::nanoseconds(1'000'000'000) / std::max(effectiveMinRate, 30u);
                     }
-                    const QRectF outputLocalRect = output->mapFromGlobal(cursorView->viewport());
-                    const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
-                    outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
+                    outputLayer->setTargetRect(mapGlobalLogicalToOutputDeviceCoordinates(cursorView->viewport(), logicalOutput, output));
                     outputLayer->setEnabled(true);
                     if (output->presentAsync(outputLayer, maxVrrCursorDelay)) {
                         // prevent composite() from also pushing an update with the cursor layer
@@ -780,7 +780,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     for (const auto &[item, layer] : overlayAssignments) {
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
-            view = std::make_unique<ItemView>(primaryView, item, logical, layer);
+            view = std::make_unique<ItemView>(primaryView, item, logicalOutput, layer);
         }
         view->prePaint();
         layers.push_back(LayerData{
@@ -814,9 +814,9 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     // update all of them for the ideal configuration
     for (auto &layer : layers) {
-        if (prepareDirectScanout(layer.view, output, frame)) {
+        if (prepareDirectScanout(layer.view, logicalOutput, output, frame)) {
             layer.directScanout = true;
-        } else if (!layer.directScanoutOnly && prepareRendering(layer.view, output, layer.requiredAlphaBits)) {
+        } else if (!layer.directScanoutOnly && prepareRendering(layer.view, logicalOutput, output, layer.requiredAlphaBits)) {
             layer.directScanout = false;
         } else {
             layer.view->layer()->setEnabled(false);
@@ -830,7 +830,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         bool primaryFailure = false;
         auto &primary = layers.front();
         if (primary.directScanout) {
-            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)) {
+            if (prepareRendering(primary.view, logicalOutput, output, primary.requiredAlphaBits)) {
                 primary.directScanout = false;
                 result = output->testPresentation(frame);
             } else {
@@ -882,7 +882,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             layer.surfaceDamage |= layer.view->layer()->deviceRepaints();
             layer.view->layer()->resetRepaints();
             if (layer.view->layer()->isEnabled() && !layer.directScanout) {
-                result &= renderLayer(layer.view, output, frame, layer.surfaceDamage);
+                result &= renderLayer(layer.view, logicalOutput, output, frame, layer.surfaceDamage);
                 if (!result) {
                     qCWarning(KWIN_CORE, "Rendering a layer failed!");
                     break;
@@ -915,8 +915,8 @@ void Compositor::composite(RenderLoop *renderLoop)
                 layer.view->setExclusive(false);
             }
             // re-render without direct scanout
-            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)
-                && renderLayer(primary.view, output, frame, primary.surfaceDamage)) {
+            if (prepareRendering(primary.view, logicalOutput, output, primary.requiredAlphaBits)
+                && renderLayer(primary.view, logicalOutput, output, frame, primary.surfaceDamage)) {
                 result = output->present(toUpdate, frame);
             } else {
                 qCWarning(KWIN_CORE, "Rendering the primary layer failed!");
@@ -928,8 +928,8 @@ void Compositor::composite(RenderLoop *renderLoop)
             // try again even without the cursor layer
             layers[1].view->layer()->setEnabled(false);
             layers[1].view->setExclusive(false);
-            if (prepareRendering(primary.view, output, primary.requiredAlphaBits)
-                && renderLayer(primary.view, output, frame, infiniteRegion())) {
+            if (prepareRendering(primary.view, logicalOutput, output, primary.requiredAlphaBits)
+                && renderLayer(primary.view, logicalOutput, output, frame, infiniteRegion())) {
                 result = output->present(toUpdate, frame);
                 if (result) {
                     // disabling the cursor layer helped... so disable it permanently,
@@ -975,9 +975,21 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 }
 
-void Compositor::addOutput(LogicalOutput *logical)
+void Compositor::handleOutputsChanged()
 {
-    BackendOutput *output = logical->backendOutput();
+    for (auto &[loop, layer] : m_primaryViews) {
+        disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    }
+    m_overlayViews.clear();
+    m_primaryViews.clear();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    for (BackendOutput *output : outputs | std::views::filter(&BackendOutput::isEnabled)) {
+        addOutput(output);
+    }
+}
+
+void Compositor::addOutput(BackendOutput *output)
+{
     if (output->isPlaceholder()) {
         return;
     }
@@ -988,9 +1000,8 @@ void Compositor::addOutput(LogicalOutput *logical)
     });
 }
 
-void Compositor::removeOutput(LogicalOutput *logical)
+void Compositor::removeOutput(BackendOutput *output)
 {
-    BackendOutput *output = logical->backendOutput();
     if (output->isPlaceholder()) {
         return;
     }
@@ -1003,7 +1014,7 @@ void Compositor::removeOutput(LogicalOutput *logical)
 
 void Compositor::assignOutputLayers(BackendOutput *output)
 {
-    LogicalOutput *logical = findLogicalOutput(output);
+    LogicalOutput *logical = workspace()->findOutput(output);
     Q_ASSERT(logical);
     const auto layers = m_backend->compatibleOutputLayers(output);
     const auto primaryLayer = findLayer(layers, OutputLayerType::Primary, std::nullopt);
@@ -1013,13 +1024,17 @@ void Compositor::assignOutputLayers(BackendOutput *output)
         sceneView->setLayer(primaryLayer);
     } else {
         sceneView = std::make_unique<SceneView>(m_scene.get(), logical, primaryLayer);
-        sceneView->setViewport(output->geometryF());
+        sceneView->setViewport(logical->geometryF());
         sceneView->setScale(output->scale());
-        connect(output, &BackendOutput::geometryChanged, sceneView.get(), [output, view = sceneView.get()]() {
-            view->setViewport(output->geometryF());
+        sceneView->setRenderOffset(output->deviceOffset());
+        connect(logical, &LogicalOutput::geometryChanged, sceneView.get(), [view = sceneView.get(), logical]() {
+            view->setViewport(logical->geometryF());
         });
-        connect(output, &BackendOutput::scaleChanged, sceneView.get(), [output, view = sceneView.get()]() {
+        connect(output, &BackendOutput::scaleChanged, sceneView.get(), [view = sceneView.get(), output]() {
             view->setScale(output->scale());
+        });
+        connect(output, &BackendOutput::deviceOffsetChanged, sceneView.get(), [view = sceneView.get(), output]() {
+            view->setRenderOffset(output->deviceOffset());
         });
     }
     // will be re-assigned in the next composite() pass

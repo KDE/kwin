@@ -438,11 +438,12 @@ void LayerShellV1WindowTest::testPlacementAreaAfterOutputLayoutChange()
     // This test verifies that layer shell windows correctly react to output layout changes.
 
     // The output where the layer surface should be placed.
-    BackendOutput *output = workspace()->activeOutput()->backendOutput();
+    LogicalOutput *logicalOutput = workspace()->activeOutput();
+    BackendOutput *backendOutput = logicalOutput->backendOutput();
 
     // Create a layer surface with an exclusive zone.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("dock"), Test::waylandOutput(output->name())));
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("dock"), Test::waylandOutput(backendOutput->name())));
     shellSurface->set_layer(Test::LayerShellV1::layer_top);
     shellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
     shellSurface->set_size(100, 50);
@@ -456,25 +457,25 @@ void LayerShellV1WindowTest::testPlacementAreaAfterOutputLayoutChange()
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
     Window *window = Test::renderAndWaitForShown(surface.get(), configureRequestedSpy.last().at(1).toSize(), Qt::red);
     QVERIFY(window);
-    QCOMPARE(workspace()->clientArea(PlacementArea, window), output->geometry().adjusted(0, 0, 0, -50));
+    QCOMPARE(workspace()->clientArea(PlacementArea, window), logicalOutput->geometry().adjusted(0, 0, 0, -50));
 
     // Move the output 100px down.
     OutputConfiguration config1;
     {
-        auto changeSet = config1.changeSet(output);
-        changeSet->pos = output->geometry().topLeft() + QPoint(0, 100);
+        auto changeSet = config1.changeSet(backendOutput);
+        changeSet->pos = logicalOutput->geometry().topLeft() + QPoint(0, 100);
     }
     workspace()->applyOutputConfiguration(config1);
-    QCOMPARE(workspace()->clientArea(PlacementArea, window), output->geometry().adjusted(0, 0, 0, -50));
+    QCOMPARE(workspace()->clientArea(PlacementArea, window), logicalOutput->geometry().adjusted(0, 0, 0, -50));
 
     // Move the output back to its original position.
     OutputConfiguration config2;
     {
-        auto changeSet = config2.changeSet(output);
-        changeSet->pos = output->geometry().topLeft() - QPoint(0, 100);
+        auto changeSet = config2.changeSet(backendOutput);
+        changeSet->pos = logicalOutput->geometry().topLeft() - QPoint(0, 100);
     }
     workspace()->applyOutputConfiguration(config2);
-    QCOMPARE(workspace()->clientArea(PlacementArea, window), output->geometry().adjusted(0, 0, 0, -50));
+    QCOMPARE(workspace()->clientArea(PlacementArea, window), logicalOutput->geometry().adjusted(0, 0, 0, -50));
 
     // Destroy the window.
     shellSurface.reset();

@@ -197,7 +197,7 @@ OutputInterface::OutputInterface(Display *display, LogicalOutput *handle, QObjec
     d->globalPosition = handle->geometry().topLeft();
     d->scale = std::ceil(handle->scale());
     d->modeSize = handle->modeSize();
-    d->refreshRate = handle->backendOutput()->refreshRate();
+    d->refreshRate = handle->refreshRate();
     d->subPixel = handle->backendOutput()->subPixel();
 
     connect(handle, &LogicalOutput::geometryChanged, this, [this]() {
@@ -236,9 +236,9 @@ OutputInterface::OutputInterface(Display *display, LogicalOutput *handle, QObjec
         }
     });
 
-    connect(handle->backendOutput(), &BackendOutput::currentModeChanged, this, [this]() {
+    connect(handle, &LogicalOutput::currentModeChanged, this, [this]() {
         const QSize size = d->handle->modeSize();
-        const int refreshRate = d->handle->backendOutput()->refreshRate();
+        const int refreshRate = d->handle->refreshRate();
         if (d->modeSize != size || d->refreshRate != refreshRate) {
             d->modeSize = size;
             d->refreshRate = refreshRate;

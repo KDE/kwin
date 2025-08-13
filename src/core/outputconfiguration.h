@@ -30,6 +30,7 @@ public:
     std::optional<bool> enabled;
     std::optional<QPoint> pos;
     std::optional<double> scale;
+    std::optional<double> scaleSetting;
     std::optional<OutputTransform> transform;
     std::optional<OutputTransform> manualTransform;
     std::optional<uint32_t> overscan;
@@ -63,6 +64,7 @@ public:
     std::optional<double> sharpness;
     std::optional<BackendOutput::DpmsMode> dpmsMode;
     std::optional<uint32_t> priority;
+    std::optional<QPoint> deviceOffset;
 };
 
 class KWIN_EXPORT OutputConfiguration

@@ -85,36 +85,6 @@ bool BackendOutput::isInternal() const
     return m_information.internal;
 }
 
-QRect BackendOutput::mapFromGlobal(const QRect &rect) const
-{
-    return rect.translated(-geometry().topLeft());
-}
-
-QRectF BackendOutput::mapFromGlobal(const QRectF &rect) const
-{
-    return rect.translated(-geometry().topLeft());
-}
-
-QRectF BackendOutput::mapToGlobal(const QRectF &rect) const
-{
-    return rect.translated(geometry().topLeft());
-}
-
-QRegion BackendOutput::mapToGlobal(const QRegion &region) const
-{
-    return region.translated(geometry().topLeft());
-}
-
-QPointF BackendOutput::mapToGlobal(const QPointF &pos) const
-{
-    return pos + geometry().topLeft();
-}
-
-QPointF BackendOutput::mapFromGlobal(const QPointF &pos) const
-{
-    return pos - geometry().topLeft();
-}
-
 BackendOutput::Capabilities BackendOutput::capabilities() const
 {
     return m_information.capabilities;
@@ -125,14 +95,9 @@ qreal BackendOutput::scale() const
     return m_state.scale;
 }
 
-QRect BackendOutput::geometry() const
+QPoint BackendOutput::position() const
 {
-    return QRect(m_state.position, pixelSize() / scale());
-}
-
-QRectF BackendOutput::geometryF() const
-{
-    return QRectF(m_state.position, QSizeF(pixelSize()) / scale());
+    return m_state.position;
 }
 
 QSize BackendOutput::physicalSize() const
@@ -198,6 +163,7 @@ void BackendOutput::applyChanges(const OutputConfiguration &config)
     next.transform = props->transform.value_or(m_state.transform);
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
+    next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
     next.rgbRange = props->rgbRange.value_or(m_state.rgbRange);
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
@@ -210,6 +176,7 @@ void BackendOutput::applyChanges(const OutputConfiguration &config)
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     next.priority = props->priority.value_or(m_state.priority);
+    next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
 
     setState(next);
 
@@ -237,16 +204,20 @@ void BackendOutput::setInformation(const Information &information)
 
 void BackendOutput::setState(const State &state)
 {
-    const QRect oldGeometry = geometry();
     const State oldState = m_state;
-
     m_state = state;
 
-    if (oldGeometry != geometry()) {
-        Q_EMIT geometryChanged();
+    if (oldState.position != state.position) {
+        Q_EMIT positionChanged();
+    }
+    if (oldState.scaleSetting != state.scaleSetting) {
+        Q_EMIT scaleSettingChanged();
     }
     if (oldState.scale != state.scale) {
         Q_EMIT scaleChanged();
+    }
+    if (oldState.scaleSetting != state.scaleSetting) {
+        Q_EMIT scaleSettingChanged();
     }
     if (oldState.modes != state.modes) {
         Q_EMIT modesChanged();
@@ -335,6 +306,9 @@ void BackendOutput::setState(const State &state)
     }
     if (oldState.priority != state.priority) {
         Q_EMIT priorityChanged();
+    }
+    if (oldState.deviceOffset != state.deviceOffset) {
+        Q_EMIT deviceOffsetChanged();
     }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
@@ -589,6 +563,16 @@ uint32_t BackendOutput::priority() const
     return m_state.priority;
 }
 
+double BackendOutput::scaleSetting() const
+{
+    return m_state.scaleSetting;
+}
+
+QPoint BackendOutput::deviceOffset() const
+{
+    return m_state.deviceOffset;
+}
+
 // TODO move these quirks to libdisplay-info?
 static const std::array s_brokenDdcCi = {
     std::make_pair(QByteArrayLiteral("SAM"), QByteArrayLiteral("Odyssey G5")),
@@ -605,16 +589,6 @@ bool BackendOutput::isDdcCiKnownBroken() const
 bool BackendOutput::overlayLayersLikelyBroken() const
 {
     return false;
-}
-
-QRect BackendOutput::rect() const
-{
-    return QRect(QPoint(0, 0), geometry().size());
-}
-
-QRectF BackendOutput::rectF() const
-{
-    return QRectF(QPointF(0, 0), geometryF().size());
 }
 
 } // namespace KWin
