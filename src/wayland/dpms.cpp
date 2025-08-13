@@ -4,6 +4,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "dpms.h"
+#include "core/backendoutput.h"
 #include "display.h"
 #include "output.h"
 
@@ -82,11 +83,11 @@ DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *resource)
     sendMode();
     sendDone();
 
-    connect(m_output->handle(), &LogicalOutput::capabilitiesChanged, this, [this]() {
+    connect(m_output->handle()->backendOutput(), &BackendOutput::capabilitiesChanged, this, [this]() {
         sendSupported();
         sendDone();
     });
-    connect(m_output->handle(), &LogicalOutput::dpmsModeChanged, this, [this]() {
+    connect(m_output->handle()->backendOutput(), &BackendOutput::dpmsModeChanged, this, [this]() {
         sendMode();
         sendDone();
     });
@@ -108,25 +109,25 @@ void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
         return;
     }
 
-    LogicalOutput::DpmsMode dpmsMode;
+    BackendOutput::DpmsMode dpmsMode;
     switch (mode) {
     case ORG_KDE_KWIN_DPMS_MODE_ON:
-        dpmsMode = LogicalOutput::DpmsMode::On;
+        dpmsMode = BackendOutput::DpmsMode::On;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_STANDBY:
-        dpmsMode = LogicalOutput::DpmsMode::Standby;
+        dpmsMode = BackendOutput::DpmsMode::Standby;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_SUSPEND:
-        dpmsMode = LogicalOutput::DpmsMode::Suspend;
+        dpmsMode = BackendOutput::DpmsMode::Suspend;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_OFF:
-        dpmsMode = LogicalOutput::DpmsMode::Off;
+        dpmsMode = BackendOutput::DpmsMode::Off;
         break;
     default:
         return;
     }
 
-    m_output->handle()->setDpmsMode(dpmsMode);
+    m_output->handle()->backendOutput()->setDpmsMode(dpmsMode);
 }
 
 void DpmsInterface::sendSupported()
@@ -135,7 +136,7 @@ void DpmsInterface::sendSupported()
         return;
     }
 
-    send_supported(m_output->handle()->capabilities() & LogicalOutput::Capability::Dpms ? 1 : 0);
+    send_supported(m_output->handle()->backendOutput()->capabilities() & BackendOutput::Capability::Dpms ? 1 : 0);
 }
 
 void DpmsInterface::sendMode()
@@ -144,20 +145,20 @@ void DpmsInterface::sendMode()
         return;
     }
 
-    const auto mode = m_output->handle()->dpmsMode();
+    const auto mode = m_output->handle()->backendOutput()->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
-    case LogicalOutput::DpmsMode::On:
-    case LogicalOutput::DpmsMode::AboutToTurnOff:
+    case BackendOutput::DpmsMode::On:
+    case BackendOutput::DpmsMode::AboutToTurnOff:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_ON;
         break;
-    case LogicalOutput::DpmsMode::Standby:
+    case BackendOutput::DpmsMode::Standby:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_STANDBY;
         break;
-    case LogicalOutput::DpmsMode::Suspend:
+    case BackendOutput::DpmsMode::Suspend:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_SUSPEND;
         break;
-    case LogicalOutput::DpmsMode::Off:
+    case BackendOutput::DpmsMode::Off:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_OFF;
         break;
     default:

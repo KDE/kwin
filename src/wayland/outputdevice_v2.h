@@ -20,7 +20,7 @@ struct wl_resource;
 namespace KWin
 {
 
-class LogicalOutput;
+class BackendOutput;
 class OutputMode;
 class Display;
 class OutputDeviceV2InterfacePrivate;
@@ -29,7 +29,7 @@ class OutputDeviceModeV2InterfacePrivate;
 
 /** @class OutputDeviceV2Interface
  *
- * Represents an output device, the difference to LogicalOutput is that this output can be disabled,
+ * Represents an output device, the difference to BackendOutput is that this output can be disabled,
  * so not currently used to display content.
  *
  * @see OutputManagementV2Interface
@@ -39,12 +39,12 @@ class KWIN_EXPORT OutputDeviceV2Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputDeviceV2Interface(Display *display, LogicalOutput *handle, QObject *parent = nullptr);
+    explicit OutputDeviceV2Interface(Display *display, BackendOutput *handle, QObject *parent = nullptr);
     ~OutputDeviceV2Interface() override;
 
     void remove();
 
-    LogicalOutput *handle() const;
+    BackendOutput *handle() const;
 
     static OutputDeviceV2Interface *get(wl_resource *native);
 

@@ -8,7 +8,7 @@
 */
 
 #include "tilemanager.h"
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "quicktile.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -278,7 +278,7 @@ static QString generateOutputId(LogicalOutput *output)
     static const QUuid urlNs = QUuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8"); // NameSpace_URL
     static const QUuid kwinNs = QUuid::createUuidV5(urlNs, QStringLiteral("https://kwin.kde.org/o/"));
 
-    const QString payload = QStringList{output->name(), output->eisaId(), output->model(), output->serialNumber()}.join(':');
+    const QString payload = QStringList{output->name(), output->backendOutput()->eisaId(), output->model(), output->serialNumber()}.join(':');
     return QUuid::createUuidV5(kwinNs, payload).toString(QUuid::StringFormat::WithoutBraces);
 }
 

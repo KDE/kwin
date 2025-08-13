@@ -12,6 +12,7 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "cursor.h"
 #include "rules.h"
@@ -2884,7 +2885,7 @@ void TestXdgShellWindowRules::testScreenRemember()
 
 void TestXdgShellWindowRules::testScreenForce()
 {
-    const QList<KWin::LogicalOutput *> outputs = workspace()->outputs();
+    const QList<KWin::BackendOutput *> outputs = kwinApp()->outputBackend()->outputs();
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2895,7 +2896,7 @@ void TestXdgShellWindowRules::testScreenForce()
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // User should not be able to move the window to another screen.
-    m_window->sendToOutput(outputs.at(0));
+    m_window->sendToOutput(workspace()->findOutput(outputs.at(0)));
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // Disable the output where the window is on, so the window is moved the other screen

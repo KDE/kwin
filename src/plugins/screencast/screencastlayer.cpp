@@ -9,7 +9,7 @@ namespace KWin
 {
 
 ScreencastLayer::ScreencastLayer(LogicalOutput *output, const QHash<uint32_t, QList<uint64_t>> &formats)
-    : OutputLayer(output, OutputLayerType::Primary)
+    : OutputLayer(output->backendOutput(), OutputLayerType::Primary)
     , m_formats(formats)
 {
     // prevent the layer from scheduling frames on the actual output

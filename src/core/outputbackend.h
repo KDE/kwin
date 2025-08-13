@@ -28,18 +28,7 @@ class QPainterBackend;
 class OutputConfiguration;
 class EglDisplay;
 class Session;
-
-class KWIN_EXPORT Outputs : public QList<LogicalOutput *>
-{
-public:
-    Outputs(){};
-    template<typename T>
-    Outputs(const QList<T> &other)
-    {
-        resize(other.size());
-        std::copy(other.constBegin(), other.constEnd(), begin());
-    }
-};
+class BackendOutput;
 
 class KWIN_EXPORT OutputBackend : public QObject
 {
@@ -74,8 +63,8 @@ public:
      */
     virtual QList<CompositingType> supportedCompositors() const = 0;
 
-    virtual Outputs outputs() const = 0;
-    LogicalOutput *findOutput(const QString &name) const;
+    virtual QList<BackendOutput *> outputs() const = 0;
+    BackendOutput *findOutput(const QString &name) const;
 
     /**
      * A string of information to include in kwin debug output
@@ -86,8 +75,8 @@ public:
      */
     virtual QString supportInformation() const;
 
-    virtual LogicalOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale);
-    virtual void removeVirtualOutput(LogicalOutput *output);
+    virtual BackendOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale);
+    virtual void removeVirtualOutput(BackendOutput *output);
 
     /**
      * Applies the output changes. Default implementation only sets values common between platforms
@@ -102,11 +91,11 @@ Q_SIGNALS:
      * This signal is emitted when an output has been connected. The @a output is not ready
      * for compositing yet.
      */
-    void outputAdded(LogicalOutput *output);
+    void outputAdded(BackendOutput *output);
     /**
      * This signal is emitted when an output has been disconnected.
      */
-    void outputRemoved(LogicalOutput *output);
+    void outputRemoved(BackendOutput *output);
 
 protected:
     explicit OutputBackend(QObject *parent = nullptr);

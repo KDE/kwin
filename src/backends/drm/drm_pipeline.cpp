@@ -562,7 +562,7 @@ uint32_t DrmPipeline::overscan() const
     return m_pending.overscan;
 }
 
-LogicalOutput::RgbRange DrmPipeline::rgbRange() const
+BackendOutput::RgbRange DrmPipeline::rgbRange() const
 {
     return m_pending.rgbRange;
 }
@@ -615,7 +615,7 @@ void DrmPipeline::setOverscan(uint32_t overscan)
     m_pending.overscan = overscan;
 }
 
-void DrmPipeline::setRgbRange(LogicalOutput::RgbRange range)
+void DrmPipeline::setRgbRange(BackendOutput::RgbRange range)
 {
     m_pending.rgbRange = range;
 }

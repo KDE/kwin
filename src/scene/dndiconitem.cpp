@@ -40,7 +40,7 @@ void DragAndDropIconItem::setOutput(LogicalOutput *output)
     if (m_surfaceItem && output) {
         m_output = output;
         m_surfaceItem->surface()->setPreferredBufferScale(output->scale());
-        m_surfaceItem->surface()->setPreferredColorDescription(output->colorDescription());
+        m_surfaceItem->surface()->setPreferredColorDescription(output->blendingColor());
     }
 }
 

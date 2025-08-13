@@ -11,8 +11,8 @@
 #include "config-kwin.h"
 
 #include "backends/drm/drm_backend.h"
+#include "core/backendoutput.h"
 #include "core/drmdevice.h"
-#include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "idle_inhibition.h"
@@ -301,14 +301,14 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
     qCDebug(KWIN_CORE) << "Received invalid xdg shell window:" << window->surface();
 }
 
-void WaylandServer::handleOutputAdded(LogicalOutput *output)
+void WaylandServer::handleOutputAdded(BackendOutput *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
         m_waylandOutputDevices.insert(output, new OutputDeviceV2Interface(m_display, output));
     }
 }
 
-void WaylandServer::handleOutputRemoved(LogicalOutput *output)
+void WaylandServer::handleOutputRemoved(BackendOutput *output)
 {
     if (auto outputDevice = m_waylandOutputDevices.take(output)) {
         outputDevice->remove();
@@ -317,7 +317,7 @@ void WaylandServer::handleOutputRemoved(LogicalOutput *output)
 
 void WaylandServer::handleOutputEnabled(LogicalOutput *output)
 {
-    if (!output->isPlaceholder() && !output->isNonDesktop()) {
+    if (!output->isPlaceholder()) {
         auto waylandOutput = new OutputInterface(waylandServer()->display(), output);
         m_xdgOutputManagerV1->offer(waylandOutput);
 
@@ -619,7 +619,7 @@ void WaylandServer::initWorkspace()
     }
 
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
-    for (LogicalOutput *output : availableOutputs) {
+    for (BackendOutput *output : availableOutputs) {
         handleOutputAdded(output);
     }
     connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, &WaylandServer::handleOutputAdded);
@@ -885,7 +885,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
     connect(server, &WaylandServer::windowAdded, this, [this](Window *window) {
         if (window->isLockScreen()) {
             // only signal lockScreenShown once all outputs have been presented at least once
-            connect(window->output()->renderLoop(), &RenderLoop::framePresented, this, [this, windowGuard = QPointer(window)]() {
+            connect(window->output()->backendOutput()->renderLoop(), &RenderLoop::framePresented, this, [this, windowGuard = QPointer(window)]() {
                 // window might be destroyed before a frame is presented, so it's wrapped in QPointer
                 if (windowGuard) {
                     m_signaledOutputs << windowGuard->output();

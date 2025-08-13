@@ -250,9 +250,10 @@ int main(int argc, char **argv)
 
     const QSize windowSize(1024, 768);
 
-    auto outputHandle = std::make_unique<FakeOutput>();
-    outputHandle->setPhysicalSize(QSize(269, 202));
-    outputHandle->setMode(windowSize, 60000);
+    auto fakeOutput = std::make_unique<FakeBackendOutput>();
+    fakeOutput->setPhysicalSize(QSize(269, 202));
+    fakeOutput->setMode(windowSize, 60000);
+    auto outputHandle = std::make_unique<LogicalOutput>(fakeOutput.get());
 
     auto outputInterface = std::make_unique<OutputInterface>(&display, outputHandle.get());
 

@@ -773,9 +773,9 @@ QList<CompositingType> X11WindowedBackend::supportedCompositors() const
     return ret;
 }
 
-Outputs X11WindowedBackend::outputs() const
+QList<BackendOutput *> X11WindowedBackend::outputs() const
 {
-    return m_outputs;
+    return m_outputs | std::ranges::to<QList<BackendOutput *>>();
 }
 
 void X11WindowedBackend::destroyOutputs()

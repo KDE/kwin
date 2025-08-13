@@ -178,7 +178,8 @@ private:
     KWin::Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
-    std::unique_ptr<FakeOutput> m_outputHandle;
+    std::unique_ptr<FakeBackendOutput> m_fakeOutput;
+    std::unique_ptr<KWin::LogicalOutput> m_outputHandle;
     std::unique_ptr<OutputInterface> m_outputInterface;
 
     KWin::InputMethodV1Interface *m_inputMethodIface;
@@ -200,7 +201,8 @@ void TestInputMethodInterface::initTestCase()
     m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
     m_inputPanelIface = new InputPanelV1Interface(&m_display, this);
 
-    m_outputHandle = std::make_unique<FakeOutput>();
+    m_fakeOutput = std::make_unique<FakeBackendOutput>();
+    m_outputHandle = std::make_unique<KWin::LogicalOutput>(m_fakeOutput.get());
     m_outputInterface = std::make_unique<OutputInterface>(&m_display, m_outputHandle.get());
 
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
