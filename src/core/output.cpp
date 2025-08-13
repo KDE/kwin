@@ -354,7 +354,9 @@ LogicalOutput::LogicalOutput(BackendOutput *backendOutput)
     : m_backendOutput(backendOutput)
 {
     QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
-    connect(backendOutput, &BackendOutput::geometryChanged, this, &LogicalOutput::geometryChanged);
+    connect(backendOutput, &BackendOutput::positionChanged, this, &LogicalOutput::geometryChanged);
+    connect(backendOutput, &BackendOutput::scaleChanged, this, &LogicalOutput::geometryChanged);
+    connect(backendOutput, &BackendOutput::transformChanged, this, &LogicalOutput::geometryChanged);
     connect(backendOutput, &BackendOutput::scaleChanged, this, &LogicalOutput::scaleChanged);
     // TODO dpms being kind of on the backend output and kind of here isn't great
     connect(backendOutput, &BackendOutput::aboutToTurnOff, this, &LogicalOutput::aboutToTurnOff);
@@ -420,12 +422,12 @@ qreal LogicalOutput::scale() const
 
 QRect LogicalOutput::geometry() const
 {
-    return m_backendOutput->geometry();
+    return QRect(m_backendOutput->position(), m_backendOutput->pixelSize() / scale());
 }
 
 QRectF LogicalOutput::geometryF() const
 {
-    return m_backendOutput->geometryF();
+    return QRectF(m_backendOutput->position(), QSizeF(m_backendOutput->pixelSize()) / scale());
 }
 
 QSize LogicalOutput::modeSize() const

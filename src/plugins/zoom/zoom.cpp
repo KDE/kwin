@@ -357,8 +357,9 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
 ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen)
 {
-    const QSize nativeSize = renderTarget.size();
+    const QSize nativeSize = viewport.deviceSize();
 
+    // TODO this should be per view, rather than per logical screen.
     OffscreenData &data = m_offscreenData[screen];
     data.viewport = viewport.renderRect();
     data.color = renderTarget.colorDescription();
@@ -399,7 +400,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
     // Render the scene in an offscreen texture and then upscale it.
     RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorDescription());
-    RenderViewport offscreenViewport(viewport.renderRect(), viewport.scale(), offscreenRenderTarget);
+    RenderViewport offscreenViewport(viewport.renderRect(), viewport.scale(), offscreenRenderTarget, QPoint());
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
     effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, deviceRegion, screen);
     GLFramebuffer::popFramebuffer();

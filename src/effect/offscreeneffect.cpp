@@ -130,7 +130,7 @@ void OffscreenData::maybeRender(EffectWindow *window)
 
     if (m_isDirty) {
         RenderTarget renderTarget(m_fbo.get());
-        RenderViewport viewport(logicalGeometry, scale, renderTarget);
+        RenderViewport viewport(logicalGeometry, scale, renderTarget, QPoint());
         GLFramebuffer::pushFramebuffer(m_fbo.get());
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);

@@ -65,7 +65,7 @@ private:
         QString mstPath;
         // actual state
         std::optional<ModeData> mode;
-        std::optional<double> scale;
+        std::optional<double> scaleSetting;
         std::optional<OutputTransform> transform;
         std::optional<OutputTransform> manualTransform;
         std::optional<uint32_t> overscan;

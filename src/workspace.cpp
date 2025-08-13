@@ -441,9 +441,9 @@ void Workspace::updateXwaylandScale()
 {
     KConfigGroup kscreenGroup = kwinApp()->kdeglobals()->group(QStringLiteral("KScreen"));
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
-    if (xwaylandClientsScale && !m_outputOrder.isEmpty()) {
+    if (xwaylandClientsScale && !m_outputs.isEmpty()) {
         double maxScale = 0;
-        for (LogicalOutput *output : m_outputOrder) {
+        for (LogicalOutput *output : m_outputs) {
             maxScale = std::max(maxScale, output->scale());
         }
         kwinApp()->setXwaylandScale(maxScale);
@@ -1118,7 +1118,8 @@ LogicalOutput *Workspace::findOutput(LogicalOutput *reference, Direction directi
 LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
 {
     const auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
-        return logical->backendOutput() == backendOutput;
+        return logical->backendOutput() == backendOutput
+            || logical->uuid() == backendOutput->replicationSource();
     });
     return it == m_outputs.end() ? nullptr : *it;
 }
@@ -1140,10 +1141,17 @@ void Workspace::updateOutputs()
     }
 
     for (BackendOutput *output : availableOutputs) {
-        if (!output->isNonDesktop() && output->isEnabled()) {
-            newBackendOutputs.append(output);
-        }
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
+        if (output->isNonDesktop() || !output->isEnabled()) {
+            continue;
+        }
+        const auto replicationSource = std::ranges::find_if(availableOutputs, [output](BackendOutput *other) {
+            return other->uuid() == output->replicationSource();
+        });
+        if (replicationSource != availableOutputs.end() && (*replicationSource)->isEnabled()) {
+            continue;
+        }
+        newBackendOutputs.append(output);
     }
 
     // The workspace requires at least one output connected.
@@ -1253,11 +1261,12 @@ void Workspace::updateOutputs()
     m_placementTracker->uninhibit();
     m_placementTracker->restore(outputLayoutId());
 
+    Q_EMIT outputsChanged();
+
     for (LogicalOutput *output : removed) {
         output->backendOutput()->unref();
+        output->unref();
     }
-
-    Q_EMIT outputsChanged();
 }
 
 void Workspace::aboutToTurnOff()
@@ -1673,7 +1682,8 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
-        const QRect geo = outputs[i]->geometry();
+        const auto logicalOutput = workspace()->findOutput(output);
+        const QRect geo = logicalOutput ? logicalOutput->geometry() : QRect();
         support.append(QStringLiteral("Screen %1:\n").arg(i));
         support.append(QStringLiteral("---------\n"));
         support.append(QStringLiteral("Name: %1\n").arg(output->name()));
