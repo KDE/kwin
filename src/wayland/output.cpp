@@ -10,7 +10,7 @@
 #include "display_p.h"
 #include "utils/resource.h"
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 
 #include "qwayland-server-wayland.h"
 
@@ -42,7 +42,7 @@ public:
     QString manufacturer;
     QString model;
     int scale = 1;
-    LogicalOutput::SubPixel subPixel = LogicalOutput::SubPixel::Unknown;
+    BackendOutput::SubPixel subPixel = BackendOutput::SubPixel::Unknown;
     OutputTransform transform = OutputTransform::Normal;
     QSize modeSize;
     int refreshRate = 0;
@@ -100,20 +100,20 @@ static quint32 kwaylandServerTransformToWaylandTransform(OutputTransform transfo
     }
 }
 
-static quint32 kwaylandServerSubPixelToWaylandSubPixel(LogicalOutput::SubPixel subPixel)
+static quint32 kwaylandServerSubPixelToWaylandSubPixel(BackendOutput::SubPixel subPixel)
 {
     switch (subPixel) {
-    case LogicalOutput::SubPixel::Unknown:
+    case BackendOutput::SubPixel::Unknown:
         return OutputInterfacePrivate::subpixel_unknown;
-    case LogicalOutput::SubPixel::None:
+    case BackendOutput::SubPixel::None:
         return OutputInterfacePrivate::subpixel_none;
-    case LogicalOutput::SubPixel::Horizontal_RGB:
+    case BackendOutput::SubPixel::Horizontal_RGB:
         return OutputInterfacePrivate::subpixel_horizontal_rgb;
-    case LogicalOutput::SubPixel::Horizontal_BGR:
+    case BackendOutput::SubPixel::Horizontal_BGR:
         return OutputInterfacePrivate::subpixel_horizontal_bgr;
-    case LogicalOutput::SubPixel::Vertical_RGB:
+    case BackendOutput::SubPixel::Vertical_RGB:
         return OutputInterfacePrivate::subpixel_vertical_rgb;
-    case LogicalOutput::SubPixel::Vertical_BGR:
+    case BackendOutput::SubPixel::Vertical_BGR:
         return OutputInterfacePrivate::subpixel_vertical_bgr;
     default:
         Q_UNREACHABLE();
@@ -197,8 +197,8 @@ OutputInterface::OutputInterface(Display *display, LogicalOutput *handle, QObjec
     d->globalPosition = handle->geometry().topLeft();
     d->scale = std::ceil(handle->scale());
     d->modeSize = handle->modeSize();
-    d->refreshRate = handle->refreshRate();
-    d->subPixel = handle->subPixel();
+    d->refreshRate = handle->backendOutput()->refreshRate();
+    d->subPixel = handle->backendOutput()->subPixel();
 
     connect(handle, &LogicalOutput::geometryChanged, this, [this]() {
         const QPoint position = d->handle->geometry().topLeft();
@@ -236,9 +236,9 @@ OutputInterface::OutputInterface(Display *display, LogicalOutput *handle, QObjec
         }
     });
 
-    connect(handle, &LogicalOutput::currentModeChanged, this, [this]() {
+    connect(handle->backendOutput(), &BackendOutput::currentModeChanged, this, [this]() {
         const QSize size = d->handle->modeSize();
-        const int refreshRate = d->handle->refreshRate();
+        const int refreshRate = d->handle->backendOutput()->refreshRate();
         if (d->modeSize != size || d->refreshRate != refreshRate) {
             d->modeSize = size;
             d->refreshRate = refreshRate;

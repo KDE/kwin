@@ -5,9 +5,9 @@
 */
 
 #include "colordevice.h"
+#include "core/backendoutput.h"
 #include "core/colorpipelinestage.h"
 #include "core/colortransformation.h"
-#include "core/output.h"
 #include "utils/common.h"
 
 #include "3rdparty/colortemperature.h"
@@ -22,7 +22,7 @@ class ColorDevicePrivate
 public:
     void recalculateFactors();
 
-    LogicalOutput *output;
+    BackendOutput *output;
     QTimer *updateTimer;
     uint temperature = 6500;
 
@@ -57,7 +57,7 @@ void ColorDevicePrivate::recalculateFactors()
     }
 }
 
-ColorDevice::ColorDevice(LogicalOutput *output, QObject *parent)
+ColorDevice::ColorDevice(BackendOutput *output, QObject *parent)
     : QObject(parent)
     , d(new ColorDevicePrivate)
 {
@@ -73,7 +73,7 @@ ColorDevice::~ColorDevice()
 {
 }
 
-LogicalOutput *ColorDevice::output() const
+BackendOutput *ColorDevice::output() const
 {
     return d->output;
 }

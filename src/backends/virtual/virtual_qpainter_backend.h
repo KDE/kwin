@@ -30,7 +30,7 @@ class VirtualQPainterBackend;
 class VirtualQPainterLayer : public OutputLayer
 {
 public:
-    VirtualQPainterLayer(LogicalOutput *output, VirtualQPainterBackend *backend);
+    VirtualQPainterLayer(BackendOutput *output, VirtualQPainterBackend *backend);
     ~VirtualQPainterLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
@@ -56,10 +56,10 @@ public:
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
-    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
 private:
-    void addOutput(LogicalOutput *output);
+    void addOutput(BackendOutput *output);
 
     VirtualBackend *const m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;

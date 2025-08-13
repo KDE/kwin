@@ -607,7 +607,7 @@ ColorManagementOutputV1::ColorManagementOutputV1(wl_client *client, uint32_t id,
         return;
     }
 
-    connect(output->handle(), &LogicalOutput::colorDescriptionChanged, this, &ColorManagementOutputV1::colorDescriptionChanged);
+    connect(output->handle(), &LogicalOutput::blendingColorChanged, this, &ColorManagementOutputV1::colorDescriptionChanged);
 }
 
 void ColorManagementOutputV1::wp_color_management_output_v1_destroy_resource(Resource *resource)
@@ -625,7 +625,7 @@ void ColorManagementOutputV1::wp_color_management_output_v1_get_image_descriptio
     if (!m_output || m_output->isRemoved()) {
         ImageDescriptionV1::createFailed(resource->client(), image_description, resource->version(), WP_IMAGE_DESCRIPTION_V1_CAUSE_NO_OUTPUT, QStringLiteral("wl_output has been removed"));
     } else {
-        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_output->handle()->colorDescription());
+        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_output->handle()->blendingColor());
     }
 }
 

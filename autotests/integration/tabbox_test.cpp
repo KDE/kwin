@@ -306,7 +306,7 @@ void TabBoxTest::testActiveClientOutsideModel()
     // 2) the selection should not be advanced initially if the active window
     //    is not part of the client list.
 
-    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const auto outputs = workspace()->outputs();
 
     // Initially, set up MultiScreenMode such that alt+tab will only switch
     // within windows on the same screen.

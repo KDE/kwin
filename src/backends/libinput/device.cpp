@@ -11,11 +11,13 @@
 #include "config-kwin.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "libinput_logging.h"
 #include "main.h"
 #include "mousebuttons.h"
 #include "pointer_input.h"
+#ifndef KWIN_BUILD_TESTING
+#include "workspace.h"
+#endif
 
 #include <QCryptographicHash>
 #include <QDBusArgument>

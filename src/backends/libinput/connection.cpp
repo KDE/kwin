@@ -625,9 +625,6 @@ void Connection::applyScreenToDevice(Device *device)
     if (!deviceOutput && !device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
         for (LogicalOutput *output : outputs) {
-            if (!output->isEnabled()) {
-                continue;
-            }
             if (output->name() == device->outputName()) {
                 deviceOutput = output;
                 break;
@@ -665,11 +662,8 @@ void Connection::applyScreenToDevice(Device *device)
                 // we have an internal id, so let's use that
                 deviceOutput = internalOutput;
             } else {
-                for (LogicalOutput *output : outputs) {
-                    // just take first screen, we have no clue
-                    deviceOutput = output;
-                    break;
-                }
+                // just take first screen, we have no clue
+                deviceOutput = outputs.front();
             }
         }
     }

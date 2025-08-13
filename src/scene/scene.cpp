@@ -5,7 +5,7 @@
 */
 
 #include "scene/scene.h"
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "core/outputlayer.h"
 #include "core/pixelgrid.h"
 #include "core/renderviewport.h"
@@ -358,7 +358,7 @@ QList<SurfaceItem *> ItemView::scanoutCandidates(ssize_t maxCount) const
 
 void ItemView::frame(OutputFrame *frame)
 {
-    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_output->renderLoop()->lastPresentationTimestamp());
+    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_output->backendOutput()->renderLoop()->lastPresentationTimestamp());
     m_item->framePainted(this, m_output, frame, frameTime);
 }
 

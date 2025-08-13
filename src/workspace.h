@@ -84,6 +84,7 @@ class LidSwitchTracker;
 class DpmsInputEventFilter;
 class OrientationSensor;
 class BrightnessDevice;
+class BackendOutput;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -321,6 +322,7 @@ public:
     };
     LogicalOutput *findOutput(LogicalOutput *reference, Direction direction, bool wrapAround = false) const;
     LogicalOutput *findOutput(const QString &name) const;
+    LogicalOutput *findOutput(BackendOutput *backendOutput) const;
     void switchToOutput(LogicalOutput *output);
 
     QString outputLayoutId() const;
@@ -434,7 +436,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<LogicalOutput *>> &outputOrder = std::nullopt);
+    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<BackendOutput *>> &outputOrder = std::nullopt);
     void updateXwaylandScale();
 
     void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
@@ -613,7 +615,7 @@ private:
     void removeWindow(Window *window);
 
     void updateOutputConfiguration();
-    void updateOutputs(const std::optional<QList<LogicalOutput *>> &outputOrder = std::nullopt);
+    void updateOutputs(const std::optional<QList<BackendOutput *>> &outputOrder = std::nullopt);
     void aboutToTurnOff();
     void wakeUp();
     void assignBrightnessDevices(OutputConfiguration &outputConfig);

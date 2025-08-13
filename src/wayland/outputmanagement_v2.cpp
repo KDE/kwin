@@ -107,11 +107,11 @@ OutputManagementV2Interface::~OutputManagementV2Interface() = default;
 OutputConfigurationV2Interface::OutputConfigurationV2Interface(wl_resource *resource)
     : QtWaylandServer::kde_output_configuration_v2(resource)
 {
-    const auto reject = [this](LogicalOutput *output) {
+    const auto reject = [this]() {
         invalid = true;
     };
-    connect(workspace(), &Workspace::outputAdded, this, reject);
-    connect(workspace(), &Workspace::outputRemoved, this, reject);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, reject);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, reject);
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
@@ -244,12 +244,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_rgb_range(R
     if (invalid) {
         return;
     }
-    if (rgbRange > static_cast<uint32_t>(LogicalOutput::RgbRange::Limited)) {
+    if (rgbRange > static_cast<uint32_t>(BackendOutput::RgbRange::Limited)) {
         qCWarning(KWIN_CORE) << "Invalid Rgb Range requested:" << rgbRange;
         return;
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->rgbRange = static_cast<LogicalOutput::RgbRange>(rgbRange);
+        config.changeSet(output->handle())->rgbRange = static_cast<BackendOutput::RgbRange>(rgbRange);
     }
 }
 
@@ -304,7 +304,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_auto_rotate
         return;
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->autoRotationPolicy = static_cast<LogicalOutput::AutoRotationPolicy>(auto_rotation_policy);
+        config.changeSet(output->handle())->autoRotationPolicy = static_cast<BackendOutput::AutoRotationPolicy>(auto_rotation_policy);
     }
 }
 
@@ -363,11 +363,11 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_color_profi
         config.changeSet(output->handle())->colorProfileSource = [source]() {
             switch (source) {
             case color_profile_source_sRGB:
-                return LogicalOutput::ColorProfileSource::sRGB;
+                return BackendOutput::ColorProfileSource::sRGB;
             case color_profile_source_ICC:
-                return LogicalOutput::ColorProfileSource::ICC;
+                return BackendOutput::ColorProfileSource::ICC;
             case color_profile_source_EDID:
-                return LogicalOutput::ColorProfileSource::EDID;
+                return BackendOutput::ColorProfileSource::EDID;
             };
             Q_UNREACHABLE();
         }();
@@ -389,12 +389,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_color_power
     if (invalid) {
         return;
     }
-    const auto tradeoff = [preference]() -> std::optional<LogicalOutput::ColorPowerTradeoff> {
+    const auto tradeoff = [preference]() -> std::optional<BackendOutput::ColorPowerTradeoff> {
         switch (preference) {
         case color_power_tradeoff_efficiency:
-            return LogicalOutput::ColorPowerTradeoff::PreferEfficiency;
+            return BackendOutput::ColorPowerTradeoff::PreferEfficiency;
         case color_power_tradeoff_accuracy:
-            return LogicalOutput::ColorPowerTradeoff::PreferAccuracy;
+            return BackendOutput::ColorPowerTradeoff::PreferAccuracy;
         }
         return std::nullopt;
     }();
@@ -462,10 +462,10 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_edr_policy(
     }
     switch (edrPolicy) {
     case edr_policy_never:
-        config.changeSet(output->handle())->edrPolicy = LogicalOutput::EdrPolicy::Never;
+        config.changeSet(output->handle())->edrPolicy = BackendOutput::EdrPolicy::Never;
         break;
     case edr_policy_always:
-        config.changeSet(output->handle())->edrPolicy = LogicalOutput::EdrPolicy::Always;
+        config.changeSet(output->handle())->edrPolicy = BackendOutput::EdrPolicy::Always;
         break;
     }
 }
@@ -516,7 +516,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
     }
 
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
-    const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](LogicalOutput *output) {
+    const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](BackendOutput *output) {
         const auto changeset = config.constChangeSet(output);
         if (changeset && changeset->enabled.has_value()) {
             return *changeset->enabled;
@@ -529,9 +529,9 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         return;
     }
 
-    std::optional<QList<LogicalOutput *>> sortedOrder;
+    std::optional<QList<BackendOutput *>> sortedOrder;
     if (!outputOrder.empty()) {
-        const int desktopOutputs = std::count_if(allOutputs.begin(), allOutputs.end(), [](LogicalOutput *output) {
+        const int desktopOutputs = std::count_if(allOutputs.begin(), allOutputs.end(), [](BackendOutput *output) {
             return !output->isNonDesktop();
         });
         if (outputOrder.size() != desktopOutputs) {
@@ -558,7 +558,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
             }
             i++;
         }
-        sortedOrder = QList<LogicalOutput *>();
+        sortedOrder = QList<BackendOutput *>();
         sortedOrder->reserve(outputOrder.size());
         std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(*sortedOrder), [](const auto &pair) {
             return pair.second->handle();

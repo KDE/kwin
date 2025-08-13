@@ -153,7 +153,7 @@ void DrmTest::initTestCase()
     OutputConfiguration cfg;
     cfg.changeSet(allOutputs.front())->enabled = true;
     cfg.changeSet(allOutputs.front())->scale = 1;
-    for (LogicalOutput *output : allOutputs | std::views::drop(1)) {
+    for (BackendOutput *output : allOutputs | std::views::drop(1)) {
         cfg.changeSet(output)->enabled = false;
     }
     QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
@@ -171,7 +171,7 @@ void DrmTest::testModesets()
     Test::XdgToplevelWindow window;
     QVERIFY(window.show());
 
-    LogicalOutput *output = kwinApp()->outputBackend()->outputs().front();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
     window.m_window->move(output->geometryF().center());
 
     // verify that we can cycle through modes
@@ -189,7 +189,7 @@ void DrmTest::testPresentation()
     Test::XdgToplevelWindow window;
     QVERIFY(window.show());
 
-    LogicalOutput *output = kwinApp()->outputBackend()->outputs().front();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
     window.m_window->move(output->geometryF().center());
 
     for (int i = 0; i < 5; i++) {
@@ -201,7 +201,7 @@ void DrmTest::testCursorLayer()
 {
     // verify that the cursor layer is used, if it is available
     uint32_t time = 0;
-    LogicalOutput *output = kwinApp()->outputBackend()->outputs().front();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
 
     const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
     if (layers.size() == 1) {
@@ -232,7 +232,7 @@ void DrmTest::testDirectScanout()
 {
     QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
     uint32_t time = 0;
-    LogicalOutput *output = kwinApp()->outputBackend()->outputs().front();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
 
     const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
     if (layers.size() == 1) {
@@ -266,7 +266,7 @@ void DrmTest::testOverlay()
 {
     QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
     uint32_t time = 0;
-    LogicalOutput *output = kwinApp()->outputBackend()->outputs().front();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
 
     const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
     if (layers.size() < 3) {

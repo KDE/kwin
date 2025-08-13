@@ -75,15 +75,14 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
-// KDE
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
-// Qt
 #include <QCryptographicHash>
 #include <QDBusConnection>
 #include <QDBusPendingCall>
 #include <QMetaProperty>
+#include <ranges>
 
 namespace KWin
 {
@@ -291,8 +290,8 @@ QString Workspace::outputLayoutId() const
     QStringList hashes;
     for (const auto &output : std::as_const(m_outputs)) {
         QCryptographicHash hash(QCryptographicHash::Md5);
-        if (output->edid().isValid()) {
-            hash.addData(output->edid().raw());
+        if (output->backendOutput()->edid().isValid()) {
+            hash.addData(output->backendOutput()->edid().raw());
         } else {
             hash.addData(output->name().toLatin1());
         }
@@ -409,13 +408,14 @@ Workspace::~Workspace()
 
     for (LogicalOutput *output : std::as_const(m_outputs)) {
         Q_EMIT outputRemoved(output);
+        output->backendOutput()->unref();
         output->unref();
     }
 
     _self = nullptr;
 }
 
-OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<LogicalOutput *>> &outputOrder)
+OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<BackendOutput *>> &outputOrder)
 {
     assignBrightnessDevices(config);
 
@@ -425,13 +425,13 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
         return error;
     }
     updateOutputs(outputOrder);
-    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder);
+    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder | std::views::transform(&LogicalOutput::backendOutput) | std::ranges::to<QList>());
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 
     updateXwaylandScale();
 
     for (LogicalOutput *output : std::as_const(m_outputs)) {
-        output->renderLoop()->scheduleRepaint();
+        output->backendOutput()->renderLoop()->scheduleRepaint();
     }
 
     return OutputConfigurationError::None;
@@ -461,24 +461,11 @@ void Workspace::updateOutputConfiguration()
         return;
     }
 
-    const bool alreadyHaveEnabledOutputs = std::ranges::any_of(outputs, [](LogicalOutput *o) {
+    const bool alreadyHaveEnabledOutputs = std::ranges::any_of(outputs, [](BackendOutput *o) {
         return o->isEnabled();
     });
 
-    // Update the output order to a fallback list, to avoid dangling pointers
-    const auto setFallbackOutputOrder = [this, &outputs]() {
-        auto newOrder = outputs;
-        newOrder.erase(std::remove_if(newOrder.begin(), newOrder.end(), [](LogicalOutput *o) {
-            return !o->isEnabled();
-        }),
-                       newOrder.end());
-        std::sort(newOrder.begin(), newOrder.end(), [](LogicalOutput *left, LogicalOutput *right) {
-            return left->name() < right->name();
-        });
-        setOutputOrder(newOrder);
-    };
-
-    QList<LogicalOutput *> toEnable = outputs;
+    QList<BackendOutput *> toEnable = outputs;
     OutputConfigurationError error = OutputConfigurationError::None;
     do {
         auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
@@ -496,9 +483,8 @@ void Workspace::updateOutputConfiguration()
         error = applyOutputConfiguration(cfg, order);
         switch (error) {
         case OutputConfigurationError::None:
-            setOutputOrder(order);
             if (type == OutputConfigurationStore::ConfigType::Generated) {
-                const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](LogicalOutput *o) {
+                const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](BackendOutput *o) {
                     return o->isInternal();
                 });
                 if (hasInternal && outputs.size() == 2) {
@@ -524,11 +510,12 @@ void Workspace::updateOutputConfiguration()
     } while (error == OutputConfigurationError::TooManyEnabledOutputs && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
-    setFallbackOutputOrder();
+    // Update the output order to a fallback list, to avoid dangling pointers
+    setOutputOrder(m_outputs);
     // If applying the output configuration failed, brightness devices weren't assigned either.
     // To prevent dangling pointers, unset removed brightness brightness devices here
     const auto devices = waylandServer()->externalBrightness()->devices();
-    for (LogicalOutput *output : outputs) {
+    for (BackendOutput *output : outputs) {
         if (output->brightnessDevice() && !devices.contains(output->brightnessDevice())) {
             output->unsetBrightnessDevice();
         }
@@ -1125,37 +1112,45 @@ LogicalOutput *Workspace::findOutput(LogicalOutput *reference, Direction directi
     }
 }
 
+LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
+{
+    const auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
+        return logical->backendOutput() == backendOutput;
+    });
+    return it == m_outputs.end() ? nullptr : *it;
+}
+
 void Workspace::slotOutputBackendOutputsQueried()
 {
     updateOutputConfiguration();
     updateOutputs();
 }
 
-void Workspace::updateOutputs(const std::optional<QList<LogicalOutput *>> &outputOrder)
+void Workspace::updateOutputs(const std::optional<QList<BackendOutput *>> &outputOrder)
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
-    const auto oldOutputs = m_outputs;
+    const auto oldLogicalOutputs = m_outputs;
+    QList<BackendOutput *> newBackendOutputs;
 
     if (m_moveResizeWindow) {
         m_moveResizeWindow->cancelInteractiveMoveResize();
     }
 
-    m_outputs.clear();
-    for (LogicalOutput *output : availableOutputs) {
+    for (BackendOutput *output : availableOutputs) {
         if (!output->isNonDesktop() && output->isEnabled()) {
-            m_outputs.append(output);
+            newBackendOutputs.append(output);
         }
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
     }
 
     // The workspace requires at least one output connected.
-    if (m_outputs.isEmpty()) {
+    if (newBackendOutputs.isEmpty()) {
         if (!m_placeholderOutput) {
             m_placeholderOutput = new PlaceholderOutput(QSize(1920, 1080), 1);
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
             input()->installInputEventFilter(m_placeholderFilter.get());
         }
-        m_outputs.append(m_placeholderOutput);
+        newBackendOutputs.append(m_placeholderOutput);
     } else {
         if (m_placeholderOutput) {
             m_placeholderOutput->unref();
@@ -1164,16 +1159,36 @@ void Workspace::updateOutputs(const std::optional<QList<LogicalOutput *>> &outpu
         }
     }
 
+    // Re-create m_outputs list, creating new outputs as necessary
+    // Removed outputs will be unreferenced later
+    m_outputs.clear();
+    for (BackendOutput *output : newBackendOutputs) {
+        const auto existing = std::ranges::find_if(oldLogicalOutputs, [output](LogicalOutput *logical) {
+            return output == logical->backendOutput();
+        });
+        if (existing == oldLogicalOutputs.end()) {
+            m_outputs.push_back(new LogicalOutput(output));
+        } else {
+            m_outputs.push_back(*existing);
+        }
+    }
+
     if (!m_activeOutput) {
         setActiveOutput(m_outputs[0]);
     }
 
     if (outputOrder) {
-        setOutputOrder(*outputOrder);
+        QList<LogicalOutput *> logicalOrder;
+        for (BackendOutput *output : *outputOrder) {
+            if (auto logical = findOutput(output)) {
+                logicalOrder.push_back(logical);
+            }
+        }
+        setOutputOrder(logicalOrder);
     } else {
         // ensure all enabled but no disabled outputs are in the output order
         for (LogicalOutput *output : std::as_const(m_outputs)) {
-            if (output->isEnabled() && !m_outputOrder.contains(output)) {
+            if (!m_outputOrder.contains(output)) {
                 m_outputOrder.push_back(output);
             }
         }
@@ -1183,16 +1198,16 @@ void Workspace::updateOutputs(const std::optional<QList<LogicalOutput *>> &outpu
                             m_outputOrder.end());
     }
 
-    const QSet<LogicalOutput *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
+    const QSet<LogicalOutput *> oldOutputsSet(oldLogicalOutputs.constBegin(), oldLogicalOutputs.constEnd());
     const QSet<LogicalOutput *> outputsSet(m_outputs.constBegin(), m_outputs.constEnd());
 
     const auto added = outputsSet - oldOutputsSet;
     for (LogicalOutput *output : added) {
-        output->ref();
+        output->backendOutput()->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         connect(output, &LogicalOutput::aboutToTurnOff, this, &Workspace::aboutToTurnOff);
         connect(output, &LogicalOutput::wakeUp, this, &Workspace::wakeUp);
-        if (output->dpmsMode() != LogicalOutput::DpmsMode::On) {
+        if (output->backendOutput()->dpmsMode() != BackendOutput::DpmsMode::On) {
             aboutToTurnOff();
         }
         Q_EMIT outputAdded(output);
@@ -1255,6 +1270,7 @@ void Workspace::updateOutputs(const std::optional<QList<LogicalOutput *>> &outpu
     m_placementTracker->restore(outputLayoutId());
 
     for (LogicalOutput *output : removed) {
+        output->backendOutput()->unref();
         output->unref();
     }
 
@@ -1274,7 +1290,7 @@ void Workspace::aboutToTurnOff()
 void Workspace::wakeUp()
 {
     const bool allOn = std::all_of(m_outputs.begin(), m_outputs.end(), [](LogicalOutput *output) {
-        return output->dpmsMode() == LogicalOutput::DpmsMode::On && !output->isPlaceholder();
+        return output->backendOutput()->dpmsMode() == BackendOutput::DpmsMode::On && !output->isPlaceholder();
     });
     if (allOn) {
         m_dpmsFilter.reset();
@@ -1285,11 +1301,11 @@ void Workspace::wakeUp()
 
 void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
 {
-    QList<LogicalOutput *> candidates = kwinApp()->outputBackend()->outputs();
+    QList<BackendOutput *> candidates = kwinApp()->outputBackend()->outputs();
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
-        const auto it = std::ranges::find_if(candidates, [device, &outputConfig](LogicalOutput *output) {
+        const auto it = std::ranges::find_if(candidates, [device, &outputConfig](BackendOutput *output) {
             if (output->isInternal() != device->isInternal()) {
                 return false;
             }
@@ -1307,7 +1323,7 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
             }
         });
         if (it != candidates.end()) {
-            LogicalOutput *const output = *it;
+            BackendOutput *const output = *it;
             candidates.erase(it);
             const auto changeset = outputConfig.changeSet(output);
             changeset->brightnessDevice = device;
@@ -1321,7 +1337,7 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
             }
         }
     }
-    for (LogicalOutput *output : candidates) {
+    for (BackendOutput *output : candidates) {
         outputConfig.changeSet(output)->brightnessDevice = nullptr;
     }
 }
@@ -1670,7 +1686,7 @@ QString Workspace::supportInformation() const
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral("=======\n"));
-    const QList<LogicalOutput *> outputs = kwinApp()->outputBackend()->outputs();
+    const QList<BackendOutput *> outputs = kwinApp()->outputBackend()->outputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
@@ -1691,7 +1707,7 @@ QString Workspace::supportInformation() const
             support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
             support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
             QString vrr = QStringLiteral("incapable");
-            if (output->capabilities() & LogicalOutput::Capability::Vrr) {
+            if (output->capabilities() & BackendOutput::Capability::Vrr) {
                 switch (output->vrrPolicy()) {
                 case VrrPolicy::Never:
                     vrr = QStringLiteral("never");

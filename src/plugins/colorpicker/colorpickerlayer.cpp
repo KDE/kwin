@@ -8,7 +8,7 @@
 namespace KWin
 {
 
-ColorPickerLayer::ColorPickerLayer(LogicalOutput *output, GLFramebuffer *buffer)
+ColorPickerLayer::ColorPickerLayer(BackendOutput *output, GLFramebuffer *buffer)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_buffer(buffer)
 {

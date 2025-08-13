@@ -114,7 +114,7 @@ public:
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<InputBackend> createInputBackend() override;
     QList<CompositingType> supportedCompositors() const override;
-    Outputs outputs() const override;
+    QList<BackendOutput *> outputs() const override;
 
     X11WindowedInputDevice *pointerDevice() const;
     X11WindowedInputDevice *keyboardDevice() const;

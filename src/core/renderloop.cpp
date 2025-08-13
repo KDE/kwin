@@ -5,6 +5,7 @@
 */
 
 #include "renderloop.h"
+#include "backendoutput.h"
 #include "options.h"
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
@@ -26,7 +27,7 @@ RenderLoopPrivate *RenderLoopPrivate::get(RenderLoop *loop)
 
 static const bool s_printDebugInfo = qEnvironmentVariableIntValue("KWIN_LOG_PERFORMANCE_DATA") != 0;
 
-RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, LogicalOutput *output)
+RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, BackendOutput *output)
     : q(q)
     , output(output)
 {
@@ -190,7 +191,7 @@ void RenderLoopPrivate::dispatch()
     Q_EMIT q->frameRequested(q);
 }
 
-RenderLoop::RenderLoop(LogicalOutput *output)
+RenderLoop::RenderLoop(BackendOutput *output)
     : d(std::make_unique<RenderLoopPrivate>(this, output))
 {
 }
@@ -277,7 +278,7 @@ bool RenderLoop::activeWindowControlsVrrRefreshRate() const
 {
     Window *const activeWindow = workspace()->activeWindow();
     return activeWindow
-        && activeWindow->isOnOutput(d->output)
+        && activeWindow->frameGeometry().intersects(d->output->geometryF())
         && activeWindow->surfaceItem()
         && activeWindow->surfaceItem()->recursiveFrameTimeEstimation().transform([](const auto t) {
         return t <= std::chrono::nanoseconds(1'000'000'000) / 30;

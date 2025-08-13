@@ -56,6 +56,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
+#include "core/backendoutput.h"
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
@@ -441,11 +442,11 @@ double WorkspaceScene::desiredHdrHeadroom() const
 
 void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 {
-    LogicalOutput *output = delegate->output();
-    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
-    m_containerItem->framePainted(delegate, output, frame, frameTime);
+    LogicalOutput *logicalOutput = delegate->output();
+    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(logicalOutput->backendOutput()->renderLoop()->lastPresentationTimestamp());
+    m_containerItem->framePainted(delegate, logicalOutput, frame, frameTime);
     if (m_overlayItem) {
-        m_overlayItem->framePainted(delegate, output, frame, frameTime);
+        m_overlayItem->framePainted(delegate, logicalOutput, frame, frameTime);
     }
 }
 
@@ -456,7 +457,7 @@ void WorkspaceScene::prePaint(SceneView *delegate)
 
     createStackingOrder();
 
-    const RenderLoop *renderLoop = painted_screen->renderLoop();
+    const RenderLoop *renderLoop = painted_screen->backendOutput()->renderLoop();
     const std::chrono::milliseconds presentTime =
         std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 

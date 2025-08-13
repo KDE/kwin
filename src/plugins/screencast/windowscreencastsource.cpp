@@ -9,7 +9,7 @@
 #include "screencastutils.h"
 
 #include "compositor.h"
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "core/renderloop.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
@@ -141,7 +141,7 @@ QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
 
 std::chrono::nanoseconds WindowScreenCastSource::clock() const
 {
-    return m_windows[0]->output()->renderLoop()->lastPresentationTimestamp();
+    return m_windows[0]->output()->backendOutput()->renderLoop()->lastPresentationTimestamp();
 }
 
 uint WindowScreenCastSource::refreshRate() const

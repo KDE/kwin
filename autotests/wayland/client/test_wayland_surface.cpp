@@ -847,7 +847,8 @@ void TestWaylandSurface::testOutput()
     QVERIFY(allAnnounced.wait());
     QSignalSpy outputAnnouncedSpy(&registry, &KWayland::Client::Registry::outputAnnounced);
 
-    auto outputHandle = std::make_unique<FakeOutput>();
+    auto fakeOutput = std::make_unique<FakeBackendOutput>();
+    auto outputHandle = std::make_unique<LogicalOutput>(fakeOutput.get());
     auto serverOutput = std::make_unique<OutputInterface>(m_display, outputHandle.get());
     QVERIFY(outputAnnouncedSpy.wait());
     std::unique_ptr<KWayland::Client::Output> clientOutput(

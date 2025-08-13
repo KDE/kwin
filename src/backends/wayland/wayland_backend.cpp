@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <gbm.h>
 #include <linux/input.h>
+#include <ranges>
 #include <unistd.h>
 #include <wayland-client-core.h>
 
@@ -93,7 +94,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     connect(pointer, &Pointer::left, this, [this]() {
         // wl_pointer.leave carries the wl_surface, but KWayland::Client::Pointer::left does not.
         const auto outputs = m_seat->backend()->outputs();
-        for (LogicalOutput *output : outputs) {
+        for (BackendOutput *output : outputs) {
             WaylandOutput *waylandOutput = static_cast<WaylandOutput *>(output);
             if (waylandOutput->cursor()->pointer()) {
                 waylandOutput->cursor()->setPointer(nullptr);
@@ -592,17 +593,17 @@ QList<CompositingType> WaylandBackend::supportedCompositors() const
     return ret;
 }
 
-Outputs WaylandBackend::outputs() const
+QList<BackendOutput *> WaylandBackend::outputs() const
 {
-    return m_outputs;
+    return m_outputs | std::ranges::to<QList<BackendOutput *>>();
 }
 
-LogicalOutput *WaylandBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
+BackendOutput *WaylandBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale)
 {
     return createOutput(name, size * scale, scale, false);
 }
 
-void WaylandBackend::removeVirtualOutput(LogicalOutput *output)
+void WaylandBackend::removeVirtualOutput(BackendOutput *output)
 {
     WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {

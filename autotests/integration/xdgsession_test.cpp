@@ -371,7 +371,7 @@ void TestXdgSession::restoreOffscreenPosition()
         .between = [outputs]() {
             OutputConfiguration configuration;
             {
-                auto changeSet = configuration.changeSet(outputs[1]);
+                auto changeSet = configuration.changeSet(outputs[1]->backendOutput());
                 changeSet->enabled = false;
             }
             workspace()->applyOutputConfiguration(configuration);

@@ -29,7 +29,7 @@ public:
     ~DrmQPainterBackend();
 
     DrmDevice *drmDevice() const override;
-    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) override;
+    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
     std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPlane *plane) override;
     std::unique_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmGpu *gpu, DrmPlane::TypeIndex type) override;
     std::unique_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;

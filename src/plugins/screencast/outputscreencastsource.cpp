@@ -102,7 +102,7 @@ QRegion OutputScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
 
 std::chrono::nanoseconds OutputScreenCastSource::clock() const
 {
-    return m_output->renderLoop()->lastPresentationTimestamp();
+    return m_output->backendOutput()->renderLoop()->lastPresentationTimestamp();
 }
 
 uint OutputScreenCastSource::refreshRate() const

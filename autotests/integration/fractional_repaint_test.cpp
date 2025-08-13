@@ -83,7 +83,7 @@ void FractionalRepaintTest::testBottomRow()
         QVERIFY(window.presentWait());
     }
 
-    const auto layer = static_cast<VirtualEglLayer *>(Compositor::self()->backend()->compatibleOutputLayers(output).front());
+    const auto layer = static_cast<VirtualEglLayer *>(Compositor::self()->backend()->compatibleOutputLayers(output->backendOutput()).front());
 
     QImage img(QSize(1080, 2280), QImage::Format::Format_RGBA8888_Premultiplied);
     img.fill(Qt::red);

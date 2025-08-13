@@ -31,7 +31,8 @@ private Q_SLOTS:
 
 private:
     KWin::Display *m_display;
-    std::unique_ptr<FakeOutput> m_outputHandle;
+    std::unique_ptr<FakeBackendOutput> m_fakeOutput;
+    std::unique_ptr<KWin::LogicalOutput> m_outputHandle;
     KWin::OutputInterface *m_serverOutput;
     KWin::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
     KWayland::Client::ConnectionThread *m_connection;
@@ -59,13 +60,14 @@ void TestXdgOutput::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_outputHandle = std::make_unique<FakeOutput>();
-    m_outputHandle->setMode(QSize(1920, 1080), 60000);
-    m_outputHandle->moveTo(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
-    m_outputHandle->setScale(1.5);
-    m_outputHandle->setName("testName");
-    m_outputHandle->setManufacturer("foo");
-    m_outputHandle->setModel("bar");
+    m_fakeOutput = std::make_unique<FakeBackendOutput>();
+    m_fakeOutput->setMode(QSize(1920, 1080), 60000);
+    m_fakeOutput->moveTo(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
+    m_fakeOutput->setScale(1.5);
+    m_fakeOutput->setName("testName");
+    m_fakeOutput->setManufacturer("foo");
+    m_fakeOutput->setModel("bar");
+    m_outputHandle = std::make_unique<LogicalOutput>(m_fakeOutput.get());
 
     m_serverOutput = new OutputInterface(m_display, m_outputHandle.get(), this);
 
@@ -151,7 +153,7 @@ void TestXdgOutput::testChanges()
     QCOMPARE(xdgOutput->description(), "foo bar");
 
     // change the logical position
-    m_outputHandle->moveTo(QPoint(1000, 2000));
+    m_fakeOutput->moveTo(QPoint(1000, 2000));
     QVERIFY(xdgOutputChanged.wait());
     QCOMPARE(xdgOutputChanged.count(), 1);
     QCOMPARE(xdgOutput->logicalPosition(), QPoint(1000, 2000));
@@ -159,7 +161,7 @@ void TestXdgOutput::testChanges()
     QCOMPARE(xdgOutput->logicalSize(), QSize(1280, 720));
 
     // change the logical size
-    m_outputHandle->setScale(2);
+    m_fakeOutput->setScale(2);
     QVERIFY(xdgOutputChanged.wait());
     QCOMPARE(xdgOutputChanged.count(), 2);
     QEXPECT_FAIL("", "KWayland::Client::XdgOutput incorrectly handles partial updates", Continue);

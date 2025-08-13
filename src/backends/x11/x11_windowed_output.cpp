@@ -137,7 +137,7 @@ void X11WindowedCursor::update(const QImage &image, const QPointF &hotspot)
 }
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
-    : LogicalOutput(backend)
+    : BackendOutput()
     , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_backend(backend)
 {

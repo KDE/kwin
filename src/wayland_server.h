@@ -70,6 +70,7 @@ class AlphaModifierManagerV1;
 class FifoManagerV1;
 class SinglePixelBufferManagerV1;
 class ColorRepresentationManagerV1;
+class BackendOutput;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -241,8 +242,8 @@ private:
     void registerXdgToplevelWindow(XdgToplevelWindow *window);
     void registerXdgPopupWindow(XdgPopupWindow *window);
     void registerWindow(Window *window);
-    void handleOutputAdded(LogicalOutput *output);
-    void handleOutputRemoved(LogicalOutput *output);
+    void handleOutputAdded(BackendOutput *output);
+    void handleOutputRemoved(BackendOutput *output);
     void handleOutputEnabled(LogicalOutput *output);
     void handleOutputDisabled(LogicalOutput *output);
 
@@ -290,7 +291,7 @@ private:
     LinuxDrmSyncObjV1Interface *m_linuxDrmSyncObj = nullptr;
     QList<Window *> m_windows;
     QHash<LogicalOutput *, OutputInterface *> m_waylandOutputs;
-    QHash<LogicalOutput *, OutputDeviceV2Interface *> m_waylandOutputDevices;
+    QHash<BackendOutput *, OutputDeviceV2Interface *> m_waylandOutputDevices;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
     ColorManagerV1 *m_colorManager = nullptr;

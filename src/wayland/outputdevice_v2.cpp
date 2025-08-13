@@ -11,7 +11,7 @@
 #include "utils/common.h"
 #include "utils/resource.h"
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 
 #include <QDebug>
 #include <QPointer>
@@ -30,51 +30,51 @@ static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDev
     return static_cast<QtWaylandServer::kde_output_device_v2::transform>(transform.kind());
 }
 
-static QtWaylandServer::kde_output_device_v2::subpixel kwinSubPixelToOutputDeviceSubPixel(LogicalOutput::SubPixel subPixel)
+static QtWaylandServer::kde_output_device_v2::subpixel kwinSubPixelToOutputDeviceSubPixel(BackendOutput::SubPixel subPixel)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::subpixel>(subPixel);
 }
 
-static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(LogicalOutput::Capabilities caps)
+static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(BackendOutput::Capabilities caps)
 {
     uint32_t ret = 0;
-    if (caps & LogicalOutput::Capability::Overscan) {
+    if (caps & BackendOutput::Capability::Overscan) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_overscan;
     }
-    if (caps & LogicalOutput::Capability::Vrr) {
+    if (caps & BackendOutput::Capability::Vrr) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_vrr;
     }
-    if (caps & LogicalOutput::Capability::RgbRange) {
+    if (caps & BackendOutput::Capability::RgbRange) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_rgb_range;
     }
-    if (caps & LogicalOutput::Capability::HighDynamicRange) {
+    if (caps & BackendOutput::Capability::HighDynamicRange) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_high_dynamic_range;
     }
-    if (caps & LogicalOutput::Capability::WideColorGamut) {
+    if (caps & BackendOutput::Capability::WideColorGamut) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_wide_color_gamut;
     }
-    if (caps & LogicalOutput::Capability::AutoRotation) {
+    if (caps & BackendOutput::Capability::AutoRotation) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_auto_rotate;
     }
-    if (caps & LogicalOutput::Capability::IccProfile) {
+    if (caps & BackendOutput::Capability::IccProfile) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_icc_profile;
     }
-    if (caps & LogicalOutput::Capability::BrightnessControl) {
+    if (caps & BackendOutput::Capability::BrightnessControl) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_brightness;
     }
-    if (caps & LogicalOutput::Capability::BuiltInColorProfile) {
+    if (caps & BackendOutput::Capability::BuiltInColorProfile) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_built_in_color;
     }
-    if (caps & LogicalOutput::Capability::DdcCi) {
+    if (caps & BackendOutput::Capability::DdcCi) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_ddc_ci;
     }
-    if (caps & LogicalOutput::Capability::MaxBitsPerColor) {
+    if (caps & BackendOutput::Capability::MaxBitsPerColor) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_max_bits_per_color;
     }
-    if (caps & LogicalOutput::Capability::Edr) {
+    if (caps & BackendOutput::Capability::Edr) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_edr;
     }
-    if (caps & LogicalOutput::Capability::SharpnessControl) {
+    if (caps & BackendOutput::Capability::SharpnessControl) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_sharpness;
     }
     return ret;
@@ -85,17 +85,17 @@ static QtWaylandServer::kde_output_device_v2::vrr_policy kwinVrrPolicyToOutputDe
     return static_cast<QtWaylandServer::kde_output_device_v2::vrr_policy>(policy);
 }
 
-static QtWaylandServer::kde_output_device_v2::rgb_range kwinRgbRangeToOutputDeviceRgbRange(LogicalOutput::RgbRange range)
+static QtWaylandServer::kde_output_device_v2::rgb_range kwinRgbRangeToOutputDeviceRgbRange(BackendOutput::RgbRange range)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::rgb_range>(range);
 }
 
-static QtWaylandServer::kde_output_device_v2::auto_rotate_policy kwinAutoRotationToOutputDeviceAutoRotation(LogicalOutput::AutoRotationPolicy policy)
+static QtWaylandServer::kde_output_device_v2::auto_rotate_policy kwinAutoRotationToOutputDeviceAutoRotation(BackendOutput::AutoRotationPolicy policy)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::auto_rotate_policy>(policy);
 }
 
-static QtWaylandServer::kde_output_device_v2::edr_policy kwinEdrPolicyToOutputDevice(LogicalOutput::EdrPolicy policy)
+static QtWaylandServer::kde_output_device_v2::edr_policy kwinEdrPolicyToOutputDevice(BackendOutput::EdrPolicy policy)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::edr_policy>(policy);
 }
@@ -103,7 +103,7 @@ static QtWaylandServer::kde_output_device_v2::edr_policy kwinEdrPolicyToOutputDe
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
 {
 public:
-    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, LogicalOutput *handle);
+    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, BackendOutput *handle);
     ~OutputDeviceV2InterfacePrivate() override;
 
     void sendGeometry(Resource *resource);
@@ -141,7 +141,7 @@ public:
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
-    LogicalOutput *m_handle;
+    BackendOutput *m_handle;
     QSize m_physicalSize;
     QPoint m_globalPosition;
     QString m_manufacturer = QStringLiteral("org.kde.kwin");
@@ -181,9 +181,9 @@ public:
     QString m_replicationSource;
     bool m_ddcCiAllowed = true;
     uint32_t m_maxBpc = 0;
-    LogicalOutput::BpcRange m_maxBpcRange;
+    BackendOutput::BpcRange m_maxBpcRange;
     std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
-    LogicalOutput::EdrPolicy m_edrPolicy = LogicalOutput::EdrPolicy::Always;
+    BackendOutput::EdrPolicy m_edrPolicy = BackendOutput::EdrPolicy::Always;
     double m_sharpness = 0;
 
 protected:
@@ -222,7 +222,7 @@ protected:
     Resource *kde_output_device_mode_v2_allocate() override;
 };
 
-OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, LogicalOutput *handle)
+OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, BackendOutput *handle)
     : QtWaylandServer::kde_output_device_v2(*display, s_version)
     , q(q)
     , m_display(display)
@@ -240,7 +240,7 @@ OutputDeviceV2InterfacePrivate::~OutputDeviceV2InterfacePrivate()
     }
 }
 
-OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, LogicalOutput *handle, QObject *parent)
+OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput *handle, QObject *parent)
     : QObject(parent)
     , d(new OutputDeviceV2InterfacePrivate(this, display, handle))
 {
@@ -280,44 +280,44 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, LogicalOutput
     updateEdrPolicy();
     updateSharpness();
 
-    connect(handle, &LogicalOutput::geometryChanged,
+    connect(handle, &BackendOutput::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
-    connect(handle, &LogicalOutput::scaleChanged,
+    connect(handle, &BackendOutput::scaleChanged,
             this, &OutputDeviceV2Interface::updateScale);
-    connect(handle, &LogicalOutput::enabledChanged,
+    connect(handle, &BackendOutput::enabledChanged,
             this, &OutputDeviceV2Interface::updateEnabled);
-    connect(handle, &LogicalOutput::transformChanged,
+    connect(handle, &BackendOutput::transformChanged,
             this, &OutputDeviceV2Interface::updateTransform);
-    connect(handle, &LogicalOutput::currentModeChanged,
+    connect(handle, &BackendOutput::currentModeChanged,
             this, &OutputDeviceV2Interface::updateCurrentMode);
-    connect(handle, &LogicalOutput::capabilitiesChanged,
+    connect(handle, &BackendOutput::capabilitiesChanged,
             this, &OutputDeviceV2Interface::updateCapabilities);
-    connect(handle, &LogicalOutput::overscanChanged,
+    connect(handle, &BackendOutput::overscanChanged,
             this, &OutputDeviceV2Interface::updateOverscan);
-    connect(handle, &LogicalOutput::vrrPolicyChanged,
+    connect(handle, &BackendOutput::vrrPolicyChanged,
             this, &OutputDeviceV2Interface::updateVrrPolicy);
-    connect(handle, &LogicalOutput::modesChanged,
+    connect(handle, &BackendOutput::modesChanged,
             this, &OutputDeviceV2Interface::updateModes);
-    connect(handle, &LogicalOutput::rgbRangeChanged,
+    connect(handle, &BackendOutput::rgbRangeChanged,
             this, &OutputDeviceV2Interface::updateRgbRange);
-    connect(handle, &LogicalOutput::highDynamicRangeChanged, this, &OutputDeviceV2Interface::updateHighDynamicRange);
-    connect(handle, &LogicalOutput::referenceLuminanceChanged, this, &OutputDeviceV2Interface::updateSdrBrightness);
-    connect(handle, &LogicalOutput::wideColorGamutChanged, this, &OutputDeviceV2Interface::updateWideColorGamut);
-    connect(handle, &LogicalOutput::autoRotationPolicyChanged, this, &OutputDeviceV2Interface::updateAutoRotate);
-    connect(handle, &LogicalOutput::iccProfileChanged, this, &OutputDeviceV2Interface::updateIccProfilePath);
-    connect(handle, &LogicalOutput::brightnessMetadataChanged, this, &OutputDeviceV2Interface::updateBrightnessMetadata);
-    connect(handle, &LogicalOutput::brightnessMetadataChanged, this, &OutputDeviceV2Interface::updateBrightnessOverrides);
-    connect(handle, &LogicalOutput::sdrGamutWidenessChanged, this, &OutputDeviceV2Interface::updateSdrGamutWideness);
-    connect(handle, &LogicalOutput::colorProfileSourceChanged, this, &OutputDeviceV2Interface::updateColorProfileSource);
-    connect(handle, &LogicalOutput::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
-    connect(handle, &LogicalOutput::colorPowerTradeoffChanged, this, &OutputDeviceV2Interface::updateColorPowerTradeoff);
-    connect(handle, &LogicalOutput::dimmingChanged, this, &OutputDeviceV2Interface::updateDimming);
-    connect(handle, &LogicalOutput::uuidChanged, this, &OutputDeviceV2Interface::updateUuid);
-    connect(handle, &LogicalOutput::replicationSourceChanged, this, &OutputDeviceV2Interface::updateReplicationSource);
-    connect(handle, &LogicalOutput::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
-    connect(handle, &LogicalOutput::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
-    connect(handle, &LogicalOutput::edrPolicyChanged, this, &OutputDeviceV2Interface::updateEdrPolicy);
-    connect(handle, &LogicalOutput::sharpnessChanged, this, &OutputDeviceV2Interface::updateSharpness);
+    connect(handle, &BackendOutput::highDynamicRangeChanged, this, &OutputDeviceV2Interface::updateHighDynamicRange);
+    connect(handle, &BackendOutput::referenceLuminanceChanged, this, &OutputDeviceV2Interface::updateSdrBrightness);
+    connect(handle, &BackendOutput::wideColorGamutChanged, this, &OutputDeviceV2Interface::updateWideColorGamut);
+    connect(handle, &BackendOutput::autoRotationPolicyChanged, this, &OutputDeviceV2Interface::updateAutoRotate);
+    connect(handle, &BackendOutput::iccProfileChanged, this, &OutputDeviceV2Interface::updateIccProfilePath);
+    connect(handle, &BackendOutput::brightnessMetadataChanged, this, &OutputDeviceV2Interface::updateBrightnessMetadata);
+    connect(handle, &BackendOutput::brightnessMetadataChanged, this, &OutputDeviceV2Interface::updateBrightnessOverrides);
+    connect(handle, &BackendOutput::sdrGamutWidenessChanged, this, &OutputDeviceV2Interface::updateSdrGamutWideness);
+    connect(handle, &BackendOutput::colorProfileSourceChanged, this, &OutputDeviceV2Interface::updateColorProfileSource);
+    connect(handle, &BackendOutput::brightnessChanged, this, &OutputDeviceV2Interface::updateBrightness);
+    connect(handle, &BackendOutput::colorPowerTradeoffChanged, this, &OutputDeviceV2Interface::updateColorPowerTradeoff);
+    connect(handle, &BackendOutput::dimmingChanged, this, &OutputDeviceV2Interface::updateDimming);
+    connect(handle, &BackendOutput::uuidChanged, this, &OutputDeviceV2Interface::updateUuid);
+    connect(handle, &BackendOutput::replicationSourceChanged, this, &OutputDeviceV2Interface::updateReplicationSource);
+    connect(handle, &BackendOutput::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
+    connect(handle, &BackendOutput::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
+    connect(handle, &BackendOutput::edrPolicyChanged, this, &OutputDeviceV2Interface::updateEdrPolicy);
+    connect(handle, &BackendOutput::sharpnessChanged, this, &OutputDeviceV2Interface::updateSharpness);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -356,7 +356,7 @@ void OutputDeviceV2Interface::scheduleDone()
     d->m_doneTimer.start();
 }
 
-LogicalOutput *OutputDeviceV2Interface::handle() const
+BackendOutput *OutputDeviceV2Interface::handle() const
 {
     return d->m_handle;
 }
@@ -946,11 +946,11 @@ void OutputDeviceV2Interface::updateColorProfileSource()
 {
     const auto waylandColorProfileSource = [this]() {
         switch (d->m_handle->colorProfileSource()) {
-        case LogicalOutput::ColorProfileSource::sRGB:
+        case BackendOutput::ColorProfileSource::sRGB:
             return QtWaylandServer::kde_output_device_v2::color_profile_source_sRGB;
-        case LogicalOutput::ColorProfileSource::ICC:
+        case BackendOutput::ColorProfileSource::ICC:
             return QtWaylandServer::kde_output_device_v2::color_profile_source_ICC;
-        case LogicalOutput::ColorProfileSource::EDID:
+        case BackendOutput::ColorProfileSource::EDID:
             return QtWaylandServer::kde_output_device_v2::color_profile_source_EDID;
         };
         Q_UNREACHABLE();
@@ -982,9 +982,9 @@ void OutputDeviceV2Interface::updateColorPowerTradeoff()
 {
     const auto colorPowerTradeoff = [this]() {
         switch (d->m_handle->colorPowerTradeoff()) {
-        case LogicalOutput::ColorPowerTradeoff::PreferEfficiency:
+        case BackendOutput::ColorPowerTradeoff::PreferEfficiency:
             return QtWaylandServer::kde_output_device_v2::color_power_tradeoff_efficiency;
-        case LogicalOutput::ColorPowerTradeoff::PreferAccuracy:
+        case BackendOutput::ColorPowerTradeoff::PreferAccuracy:
             return QtWaylandServer::kde_output_device_v2::color_power_tradeoff_accuracy;
         }
         Q_UNREACHABLE();

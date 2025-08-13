@@ -103,10 +103,11 @@ void TestWaylandOutput::cleanup()
 
 void TestWaylandOutput::testRegistry()
 {
-    auto outputHandle = std::make_unique<FakeOutput>();
-    outputHandle->setMode(QSize(1024, 768), 60000);
-    outputHandle->moveTo(QPoint(100, 50));
-    outputHandle->setPhysicalSize(QSize(200, 100));
+    auto fakeOutput = std::make_unique<FakeBackendOutput>();
+    fakeOutput->setMode(QSize(1024, 768), 60000);
+    fakeOutput->moveTo(QPoint(100, 50));
+    fakeOutput->setPhysicalSize(QSize(200, 100));
+    auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -155,8 +156,9 @@ void TestWaylandOutput::testRegistry()
 
 void TestWaylandOutput::testModeChange()
 {
-    auto outputHandle = std::make_unique<FakeOutput>();
-    outputHandle->setMode(QSize(1024, 768), 60000);
+    auto fakeOutput = std::make_unique<FakeBackendOutput>();
+    fakeOutput->setMode(QSize(1024, 768), 60000);
+    auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -184,7 +186,7 @@ void TestWaylandOutput::testModeChange()
     QCOMPARE(output.refreshRate(), 60000);
 
     // change once more
-    outputHandle->setMode(QSize(1280, 1024), 90000);
+    fakeOutput->setMode(QSize(1280, 1024), 90000);
     QVERIFY(outputChanged.wait());
     QCOMPARE(modeAddedSpy.count(), 2);
     QCOMPARE(modeAddedSpy.at(1).first().value<KWayland::Client::Output::Mode>().size, QSize(1280, 1024));
@@ -197,8 +199,9 @@ void TestWaylandOutput::testModeChange()
 
 void TestWaylandOutput::testScaleChange()
 {
-    auto outputHandle = std::make_unique<FakeOutput>();
-    outputHandle->setMode(QSize(1024, 768), 60000);
+    auto fakeOutput = std::make_unique<FakeBackendOutput>();
+    fakeOutput->setMode(QSize(1024, 768), 60000);
+    auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -219,16 +222,16 @@ void TestWaylandOutput::testScaleChange()
 
     // change the scale
     outputChanged.clear();
-    outputHandle->setScale(2);
+    fakeOutput->setScale(2);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
     // changing to same value should not trigger
-    outputHandle->setScale(2);
+    fakeOutput->setScale(2);
     QVERIFY(!outputChanged.wait(100));
 
     // change once more
     outputChanged.clear();
-    outputHandle->setScale(4);
+    fakeOutput->setScale(4);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 4);
 }
@@ -236,22 +239,23 @@ void TestWaylandOutput::testScaleChange()
 void TestWaylandOutput::testSubPixel_data()
 {
     QTest::addColumn<KWayland::Client::Output::SubPixel>("expected");
-    QTest::addColumn<KWin::LogicalOutput::SubPixel>("actual");
+    QTest::addColumn<KWin::BackendOutput::SubPixel>("actual");
 
-    QTest::newRow("none") << KWayland::Client::Output::SubPixel::None << KWin::LogicalOutput::SubPixel::None;
-    QTest::newRow("horizontal/rgb") << KWayland::Client::Output::SubPixel::HorizontalRGB << KWin::LogicalOutput::SubPixel::Horizontal_RGB;
-    QTest::newRow("horizontal/bgr") << KWayland::Client::Output::SubPixel::HorizontalBGR << KWin::LogicalOutput::SubPixel::Horizontal_BGR;
-    QTest::newRow("vertical/rgb") << KWayland::Client::Output::SubPixel::VerticalRGB << KWin::LogicalOutput::SubPixel::Vertical_RGB;
-    QTest::newRow("vertical/bgr") << KWayland::Client::Output::SubPixel::VerticalBGR << KWin::LogicalOutput::SubPixel::Vertical_BGR;
+    QTest::newRow("none") << KWayland::Client::Output::SubPixel::None << KWin::BackendOutput::SubPixel::None;
+    QTest::newRow("horizontal/rgb") << KWayland::Client::Output::SubPixel::HorizontalRGB << KWin::BackendOutput::SubPixel::Horizontal_RGB;
+    QTest::newRow("horizontal/bgr") << KWayland::Client::Output::SubPixel::HorizontalBGR << KWin::BackendOutput::SubPixel::Horizontal_BGR;
+    QTest::newRow("vertical/rgb") << KWayland::Client::Output::SubPixel::VerticalRGB << KWin::BackendOutput::SubPixel::Vertical_RGB;
+    QTest::newRow("vertical/bgr") << KWayland::Client::Output::SubPixel::VerticalBGR << KWin::BackendOutput::SubPixel::Vertical_BGR;
 }
 
 void TestWaylandOutput::testSubPixel()
 {
-    QFETCH(KWin::LogicalOutput::SubPixel, actual);
+    QFETCH(KWin::BackendOutput::SubPixel, actual);
 
-    auto outputHandle = std::make_unique<FakeOutput>();
-    outputHandle->setMode(QSize(1024, 768), 60000);
-    outputHandle->setSubPixel(actual);
+    auto fakeOutput = std::make_unique<FakeBackendOutput>();
+    fakeOutput->setMode(QSize(1024, 768), 60000);
+    fakeOutput->setSubPixel(actual);
+    auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -292,9 +296,10 @@ void TestWaylandOutput::testTransform()
 {
     QFETCH(KWin::OutputTransform::Kind, actual);
 
-    auto outputHandle = std::make_unique<FakeOutput>();
-    outputHandle->setMode(QSize(1024, 768), 60000);
-    outputHandle->setTransform(actual);
+    auto fakeOutput = std::make_unique<FakeBackendOutput>();
+    fakeOutput->setMode(QSize(1024, 768), 60000);
+    fakeOutput->setTransform(actual);
+    auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -319,7 +324,7 @@ void TestWaylandOutput::testTransform()
 
     // change back to normal
     outputChanged.clear();
-    outputHandle->setTransform(KWin::OutputTransform::Normal);
+    fakeOutput->setTransform(KWin::OutputTransform::Normal);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }

@@ -117,7 +117,7 @@ QColor ColorPickerEffect::pick()
                     return;
                 }
 
-                ColorPickerLayer layer(screen, target.get());
+                ColorPickerLayer layer(screen->backendOutput(), target.get());
                 if (!layer.preparePresentationTest()) {
                     return;
                 }

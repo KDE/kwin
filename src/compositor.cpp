@@ -10,10 +10,10 @@
 
 #include "config-kwin.h"
 
+#include "core/backendoutput.h"
 #include "core/brightnessdevice.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbufferview.h"
-#include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
@@ -95,15 +95,24 @@ Compositor::~Compositor()
     s_compositor = nullptr;
 }
 
-LogicalOutput *Compositor::findOutput(RenderLoop *loop) const
+BackendOutput *Compositor::findOutput(RenderLoop *loop) const
 {
-    const auto outputs = workspace()->outputs();
-    for (LogicalOutput *output : outputs) {
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    for (BackendOutput *output : outputs) {
         if (output->renderLoop() == loop) {
             return output;
         }
     }
     return nullptr;
+}
+
+LogicalOutput *Compositor::findLogicalOutput(BackendOutput *output) const
+{
+    const auto outputs = workspace()->outputs();
+    const auto it = std::ranges::find_if(outputs, [output](LogicalOutput *logical) {
+        return logical->backendOutput() == output;
+    });
+    return it == outputs.end() ? nullptr : *it;
 }
 
 void Compositor::reinitialize()
@@ -342,7 +351,7 @@ void Compositor::stop()
         return pair.first;
     }) | std::ranges::to<QList>();
     for (RenderLoop *loop : loops) {
-        removeOutput(findOutput(loop));
+        removeOutput(findLogicalOutput(findOutput(loop)));
     }
 
     m_scene.reset();
@@ -382,7 +391,7 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
-static bool prepareDirectScanout(RenderView *view, LogicalOutput *output, const std::shared_ptr<OutputFrame> &frame)
+static bool prepareDirectScanout(RenderView *view, BackendOutput *output, const std::shared_ptr<OutputFrame> &frame)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
@@ -436,7 +445,7 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *output, const 
     return ret;
 }
 
-static bool prepareRendering(RenderView *view, LogicalOutput *output, uint32_t requiredAlphaBits)
+static bool prepareRendering(RenderView *view, BackendOutput *output, uint32_t requiredAlphaBits)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
@@ -458,7 +467,7 @@ static bool prepareRendering(RenderView *view, LogicalOutput *output, uint32_t r
     return layer->preparePresentationTest();
 }
 
-static bool renderLayer(RenderView *view, LogicalOutput *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
+static bool renderLayer(RenderView *view, BackendOutput *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
 {
     auto beginInfo = view->layer()->beginFrame();
     if (!beginInfo) {
@@ -597,7 +606,9 @@ void Compositor::composite(RenderLoop *renderLoop)
     if (m_renderLoopDrivenAnimationDriver->isRunning()) {
         m_renderLoopDrivenAnimationDriver->advanceToNextFrame(renderLoop->nextPresentationTimestamp());
     }
-    LogicalOutput *output = findOutput(renderLoop);
+
+    BackendOutput *output = findOutput(renderLoop);
+    LogicalOutput *logical = findLogicalOutput(output);
     const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
 
@@ -625,12 +636,12 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     Window *const activeWindow = workspace()->activeWindow();
-    SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
+    SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->frameGeometry().intersects(output->geometryF()) ? activeWindow->surfaceItem() : nullptr;
     frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
 
-    const bool wantsAdaptiveSync = activeWindow && activeWindow->isOnOutput(output) && activeWindow->wantsAdaptiveSync();
-    const bool vrr = (output->capabilities() & LogicalOutput::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
-    const bool tearing = (output->capabilities() & LogicalOutput::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
+    const bool wantsAdaptiveSync = activeWindow && activeWindow->frameGeometry().intersects(output->geometryF()) && activeWindow->wantsAdaptiveSync();
+    const bool vrr = (output->capabilities() & BackendOutput::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
+    const bool tearing = (output->capabilities() & BackendOutput::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
     if (vrr) {
         frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
     } else {
@@ -663,7 +674,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     // - this has to happen (right) after prePaint, so that the scene's stacking order is valid
     // - this is only done for internal displays, because external displays usually apply slow animations to brightness changes
     if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->isInternal()) {
-        const auto desiredHdrHeadroom = output->edrPolicy() == LogicalOutput::EdrPolicy::Always ? primaryView->desiredHdrHeadroom() : 1.0;
+        const auto desiredHdrHeadroom = output->edrPolicy() == BackendOutput::EdrPolicy::Always ? primaryView->desiredHdrHeadroom() : 1.0;
         // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
         constexpr double relativeLuminanceAtZeroBrightness = 0.04;
         // the higher this is, the more likely the user is to notice the change in backlight brightness
@@ -702,7 +713,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         if (cursorLayer) {
             auto &view = m_overlayViews[renderLoop][cursorLayer];
             if (!view || view->item() != cursorItem) {
-                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, output, cursorLayer);
+                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, logical, cursorLayer);
                 connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [output, cursorView = view.get()]() {
                     // this just deals with moving the plane asynchronously, for improved latency.
                     // enabling, disabling and updating the cursor image still happen in composite()
@@ -769,7 +780,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     for (const auto &[item, layer] : overlayAssignments) {
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
-            view = std::make_unique<ItemView>(primaryView, item, output, layer);
+            view = std::make_unique<ItemView>(primaryView, item, logical, layer);
         }
         view->prePaint();
         layers.push_back(LayerData{
@@ -882,7 +893,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         renderLoop->newFramePrepared();
     }
 
-    // NOTE that this does not count the time spent in LogicalOutput::present,
+    // NOTE that this does not count the time spent in BackendOutput::present,
     // but the drm backend, where that's necessary, tracks that time itself
     totalTimeQuery->end();
     frame->addRenderTimeQuery(std::move(totalTimeQuery));
@@ -964,32 +975,36 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 }
 
-void Compositor::addOutput(LogicalOutput *output)
+void Compositor::addOutput(LogicalOutput *logical)
 {
+    BackendOutput *output = logical->backendOutput();
     if (output->isPlaceholder()) {
         return;
     }
     assignOutputLayers(output);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    connect(output, &LogicalOutput::outputLayersChanged, this, [this, output]() {
+    connect(output, &BackendOutput::outputLayersChanged, this, [this, output]() {
         assignOutputLayers(output);
     });
 }
 
-void Compositor::removeOutput(LogicalOutput *output)
+void Compositor::removeOutput(LogicalOutput *logical)
 {
+    BackendOutput *output = logical->backendOutput();
     if (output->isPlaceholder()) {
         return;
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    disconnect(output, &LogicalOutput::outputLayersChanged, this, nullptr);
+    disconnect(output, &BackendOutput::outputLayersChanged, this, nullptr);
     m_overlayViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
     m_brokenCursors.erase(output->renderLoop());
 }
 
-void Compositor::assignOutputLayers(LogicalOutput *output)
+void Compositor::assignOutputLayers(BackendOutput *output)
 {
+    LogicalOutput *logical = findLogicalOutput(output);
+    Q_ASSERT(logical);
     const auto layers = m_backend->compatibleOutputLayers(output);
     const auto primaryLayer = findLayer(layers, OutputLayerType::Primary, std::nullopt);
     Q_ASSERT(primaryLayer);
@@ -997,13 +1012,13 @@ void Compositor::assignOutputLayers(LogicalOutput *output)
     if (sceneView) {
         sceneView->setLayer(primaryLayer);
     } else {
-        sceneView = std::make_unique<SceneView>(m_scene.get(), output, primaryLayer);
+        sceneView = std::make_unique<SceneView>(m_scene.get(), logical, primaryLayer);
         sceneView->setViewport(output->geometryF());
         sceneView->setScale(output->scale());
-        connect(output, &LogicalOutput::geometryChanged, sceneView.get(), [output, view = sceneView.get()]() {
+        connect(output, &BackendOutput::geometryChanged, sceneView.get(), [output, view = sceneView.get()]() {
             view->setViewport(output->geometryF());
         });
-        connect(output, &LogicalOutput::scaleChanged, sceneView.get(), [output, view = sceneView.get()]() {
+        connect(output, &BackendOutput::scaleChanged, sceneView.get(), [output, view = sceneView.get()]() {
             view->setScale(output->scale());
         });
     }

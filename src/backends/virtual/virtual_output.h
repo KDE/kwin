@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 
 #include <QObject>
 #include <QRect>
@@ -20,7 +20,7 @@ class SoftwareVsyncMonitor;
 class VirtualBackend;
 class OutputFrame;
 
-class VirtualOutput : public LogicalOutput
+class VirtualOutput : public BackendOutput
 {
     Q_OBJECT
 
