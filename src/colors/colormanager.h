@@ -15,6 +15,7 @@ namespace KWin
 {
 
 class LogicalOutput;
+class BackendOutput;
 class ColorDevice;
 class ColorManagerPrivate;
 
@@ -33,7 +34,7 @@ public:
      * Returns the color device for the specified @a output, or @c null if there is no
      * any device.
      */
-    ColorDevice *findDevice(LogicalOutput *output) const;
+    ColorDevice *findDevice(BackendOutput *output) const;
 
     /**
      * Returns the list of all available color devices.

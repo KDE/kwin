@@ -54,7 +54,7 @@
 
 #include "scene/workspacescene.h"
 #include "compositor.h"
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
@@ -316,7 +316,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 {
     if (waylandServer()) {
         LogicalOutput *output = delegate->output();
-        const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+        const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->backendOutput()->renderLoop()->lastPresentationTimestamp());
         m_containerItem->framePainted(output, frame, frameTime);
         if (m_overlayItem) {
             m_overlayItem->framePainted(output, frame, frameTime);
@@ -331,7 +331,7 @@ void WorkspaceScene::prePaint(SceneView *delegate)
     painted_delegate = delegate;
     painted_screen = painted_delegate->output();
 
-    const RenderLoop *renderLoop = painted_screen->renderLoop();
+    const RenderLoop *renderLoop = painted_screen->backendOutput()->renderLoop();
     const std::chrono::milliseconds presentTime =
         std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 

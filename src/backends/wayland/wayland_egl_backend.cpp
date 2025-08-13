@@ -212,7 +212,7 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     : m_backend(b)
 {
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](LogicalOutput *output) {
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](BackendOutput *output) {
         m_outputs.erase(output);
     });
 
@@ -239,7 +239,7 @@ void WaylandEglBackend::cleanupSurfaces()
     m_outputs.clear();
 }
 
-bool WaylandEglBackend::createEglWaylandOutput(LogicalOutput *waylandOutput)
+bool WaylandEglBackend::createEglWaylandOutput(BackendOutput *waylandOutput)
 {
     m_outputs[waylandOutput] = Layers{
         .primaryLayer = std::make_unique<WaylandEglPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
@@ -312,12 +312,12 @@ bool WaylandEglBackend::initRenderingContext()
     return openglContext()->makeCurrent();
 }
 
-OutputLayer *WaylandEglBackend::primaryLayer(LogicalOutput *output)
+OutputLayer *WaylandEglBackend::primaryLayer(BackendOutput *output)
 {
     return m_outputs[output].primaryLayer.get();
 }
 
-OutputLayer *WaylandEglBackend::cursorLayer(LogicalOutput *output)
+OutputLayer *WaylandEglBackend::cursorLayer(BackendOutput *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

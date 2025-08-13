@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/backendoutput.h"
 #include "core/colorpipeline.h"
 #include "core/rendertarget.h"
 #include "kwin_export.h"
@@ -35,7 +36,7 @@ class KWIN_EXPORT OutputLayer : public QObject
 {
     Q_OBJECT
 public:
-    explicit OutputLayer(LogicalOutput *output);
+    explicit OutputLayer(BackendOutput *output);
 
     void setRenderLoop(RenderLoop *loop);
 
@@ -116,7 +117,7 @@ public:
      */
     void setRequiredAlphaBits(uint32_t bits);
 
-    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, LogicalOutput::ColorPowerTradeoff tradeoff);
+    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, BackendOutput::ColorPowerTradeoff tradeoff);
 
 Q_SIGNALS:
     void repaintScheduled();
@@ -137,7 +138,7 @@ protected:
     ColorDescription m_color = ColorDescription::sRGB;
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
-    LogicalOutput *const m_output;
+    BackendOutput *const m_output;
     uint32_t m_requiredAlphaBits = 0;
     bool m_repaintScheduled = false;
     RenderLoop *m_renderLoop = nullptr;

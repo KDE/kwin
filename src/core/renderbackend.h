@@ -124,8 +124,8 @@ public:
 
     virtual bool checkGraphicsReset();
 
-    virtual OutputLayer *primaryLayer(LogicalOutput *output) = 0;
-    virtual OutputLayer *cursorLayer(LogicalOutput *output);
+    virtual OutputLayer *primaryLayer(BackendOutput *output) = 0;
+    virtual OutputLayer *cursorLayer(BackendOutput *output);
 
     virtual DrmDevice *drmDevice() const;
 

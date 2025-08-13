@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 
 namespace KWin
 {
@@ -17,7 +17,7 @@ class DrmBackend;
 class DrmOutputLayer;
 class OutputFrame;
 
-class DrmAbstractOutput : public LogicalOutput
+class DrmAbstractOutput : public BackendOutput
 {
     Q_OBJECT
 public:

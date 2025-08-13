@@ -609,15 +609,12 @@ void Connection::applyScreenToDevice(Device *device)
     }
 
     LogicalOutput *deviceOutput = nullptr;
-    const QList<LogicalOutput *> outputs = kwinApp()->outputBackend()->outputs();
+    const QList<LogicalOutput *> outputs = workspace()->outputs();
 
     // let's try to find a screen for it
     if (!device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
         for (LogicalOutput *output : outputs) {
-            if (!output->isEnabled()) {
-                continue;
-            }
             if (output->name() == device->outputName()) {
                 deviceOutput = output;
                 break;
@@ -628,9 +625,6 @@ void Connection::applyScreenToDevice(Device *device)
         // do we have an internal screen?
         LogicalOutput *internalOutput = nullptr;
         for (LogicalOutput *output : outputs) {
-            if (!output->isEnabled()) {
-                continue;
-            }
             if (output->isInternal()) {
                 internalOutput = output;
                 break;
@@ -647,9 +641,6 @@ void Connection::applyScreenToDevice(Device *device)
         }
         // let's compare all screens for size
         for (LogicalOutput *output : outputs) {
-            if (!output->isEnabled()) {
-                continue;
-            }
             if (testScreenMatches(output)) {
                 deviceOutput = output;
                 break;
@@ -661,13 +652,8 @@ void Connection::applyScreenToDevice(Device *device)
                 // we have an internal id, so let's use that
                 deviceOutput = internalOutput;
             } else {
-                for (LogicalOutput *output : outputs) {
-                    // just take first screen, we have no clue
-                    if (output->isEnabled()) {
-                        deviceOutput = output;
-                        break;
-                    }
-                }
+                // just take first screen, we have no clue
+                deviceOutput = outputs.front();
             }
         }
     }

@@ -119,7 +119,7 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
     , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
     const auto outputs = m_backend->outputs();
-    for (LogicalOutput *output : outputs) {
+    for (BackendOutput *output : outputs) {
         addOutput(output);
     }
 
@@ -132,7 +132,7 @@ X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
     m_outputs.clear();
 }
 
-void X11WindowedQPainterBackend::addOutput(LogicalOutput *output)
+void X11WindowedQPainterBackend::addOutput(BackendOutput *output)
 {
     X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
     m_outputs[output] = Layers{
@@ -141,7 +141,7 @@ void X11WindowedQPainterBackend::addOutput(LogicalOutput *output)
     };
 }
 
-void X11WindowedQPainterBackend::removeOutput(LogicalOutput *output)
+void X11WindowedQPainterBackend::removeOutput(BackendOutput *output)
 {
     m_outputs.erase(output);
 }
@@ -151,12 +151,12 @@ GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() c
     return m_allocator.get();
 }
 
-OutputLayer *X11WindowedQPainterBackend::primaryLayer(LogicalOutput *output)
+OutputLayer *X11WindowedQPainterBackend::primaryLayer(BackendOutput *output)
 {
     return m_outputs[output].primaryLayer.get();
 }
 
-OutputLayer *X11WindowedQPainterBackend::cursorLayer(LogicalOutput *output)
+OutputLayer *X11WindowedQPainterBackend::cursorLayer(BackendOutput *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

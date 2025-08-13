@@ -10,10 +10,10 @@
 
 #include "config-kwin.h"
 
+#include "core/backendoutput.h"
 #include "core/brightnessdevice.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbufferview.h"
-#include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
@@ -83,7 +83,7 @@ LogicalOutput *Compositor::findOutput(RenderLoop *loop) const
 {
     const auto outputs = workspace()->outputs();
     for (LogicalOutput *output : outputs) {
-        if (output->renderLoop() == loop) {
+        if (output->backendOutput()->renderLoop() == loop) {
             return output;
         }
     }
@@ -365,7 +365,7 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
-static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, LogicalOutput *output, const std::shared_ptr<OutputFrame> &frame)
+static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, BackendOutput *output, const std::shared_ptr<OutputFrame> &frame)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
@@ -418,7 +418,7 @@ static bool prepareDirectScanout(OutputLayer *layer, RenderView *view, LogicalOu
     return ret;
 }
 
-static bool prepareRendering(OutputLayer *layer, RenderView *view, LogicalOutput *output, uint32_t requiredAlphaBits)
+static bool prepareRendering(OutputLayer *layer, RenderView *view, BackendOutput *output, uint32_t requiredAlphaBits)
 {
     if (!view->isVisible() || !view->viewport().intersects(output->geometryF())) {
         return false;
@@ -436,7 +436,7 @@ static bool prepareRendering(OutputLayer *layer, RenderView *view, LogicalOutput
     return layer->preparePresentationTest();
 }
 
-static bool renderLayer(OutputLayer *layer, RenderView *view, LogicalOutput *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
+static bool renderLayer(OutputLayer *layer, RenderView *view, BackendOutput *output, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
 {
     auto beginInfo = layer->beginFrame();
     if (!beginInfo) {
@@ -459,7 +459,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    LogicalOutput *output = findOutput(renderLoop);
+    BackendOutput *output = findOutput(renderLoop)->backendOutput();
     const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
 
@@ -487,12 +487,12 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     Window *const activeWindow = workspace()->activeWindow();
-    SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
+    SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->frameGeometry().intersects(output->geometryF()) ? activeWindow->surfaceItem() : nullptr;
     frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
 
-    const bool wantsAdaptiveSync = activeWindow && activeWindow->isOnOutput(output) && activeWindow->wantsAdaptiveSync();
-    const bool vrr = (output->capabilities() & LogicalOutput::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
-    const bool tearing = (output->capabilities() & LogicalOutput::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
+    const bool wantsAdaptiveSync = activeWindow && activeWindow->frameGeometry().intersects(output->geometryF()) && activeWindow->wantsAdaptiveSync();
+    const bool vrr = (output->capabilities() & BackendOutput::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
+    const bool tearing = (output->capabilities() & BackendOutput::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeWindow->wantsTearing(isTearingRequested(activeFullscreenItem));
     if (vrr) {
         frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
     } else {
@@ -523,7 +523,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     // - this has to happen (right) after prePaint, so that the scene's stacking order is valid
     // - this is only done for internal displays, because external displays usually apply slow animations to brightness changes
     if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->isInternal()) {
-        const auto desiredHdrHeadroom = output->edrPolicy() == LogicalOutput::EdrPolicy::Always ? primaryView->desiredHdrHeadroom() : 1.0;
+        const auto desiredHdrHeadroom = output->edrPolicy() == BackendOutput::EdrPolicy::Always ? primaryView->desiredHdrHeadroom() : 1.0;
         // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
         constexpr double relativeLuminanceAtZeroBrightness = 0.04;
         // the higher this is, the more likely the user is to notice the change in backlight brightness
@@ -626,7 +626,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         renderLoop->newFramePrepared();
     }
 
-    // NOTE that this does not count the time spent in LogicalOutput::present,
+    // NOTE that this does not count the time spent in BackendOutput::present,
     // but the drm backend, where that's necessary, tracks that time itself
     totalTimeQuery->end();
     frame->addRenderTimeQuery(std::move(totalTimeQuery));
@@ -709,15 +709,16 @@ void Compositor::composite(RenderLoop *renderLoop)
 
 static const bool s_forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR") == 1;
 
-void Compositor::addOutput(LogicalOutput *output)
+void Compositor::addOutput(LogicalOutput *logical)
 {
+    BackendOutput *output = logical->backendOutput();
     if (output->isPlaceholder()) {
         return;
     }
 
-    auto sceneView = std::make_unique<SceneView>(m_scene.get(), output, m_backend->primaryLayer(output));
+    auto sceneView = std::make_unique<SceneView>(m_scene.get(), logical, m_backend->primaryLayer(output));
     if (auto layer = m_backend->cursorLayer(output); layer && !s_forceSoftwareCursor) {
-        auto cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), output, layer);
+        auto cursorView = std::make_unique<ItemTreeView>(sceneView.get(), m_scene->cursorItem(), logical, layer);
 
         connect(layer, &OutputLayer::repaintScheduled, cursorView.get(), [this, output, sceneView = sceneView.get(), cursorView = cursorView.get()]() {
             // this just deals with moving the plane asynchronously, for improved latency.
@@ -752,20 +753,21 @@ void Compositor::addOutput(LogicalOutput *output)
         m_cursorViews[output->renderLoop()] = std::move(cursorView);
     }
 
-    sceneView->setViewport(output->geometryF());
-    sceneView->setScale(output->scale());
-    connect(output, &LogicalOutput::geometryChanged, sceneView.get(), [output, view = sceneView.get()]() {
-        view->setViewport(output->geometryF());
+    sceneView->setViewport(logical->geometryF());
+    sceneView->setScale(logical->scale());
+    connect(logical, &LogicalOutput::geometryChanged, sceneView.get(), [logical, view = sceneView.get()]() {
+        view->setViewport(logical->geometryF());
     });
-    connect(output, &LogicalOutput::scaleChanged, sceneView.get(), [output, view = sceneView.get()]() {
-        view->setScale(output->scale());
+    connect(logical, &LogicalOutput::scaleChanged, sceneView.get(), [logical, view = sceneView.get()]() {
+        view->setScale(logical->scale());
     });
     m_primaryViews[output->renderLoop()] = std::move(sceneView);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
 
-void Compositor::removeOutput(LogicalOutput *output)
+void Compositor::removeOutput(LogicalOutput *logical)
 {
+    BackendOutput *output = logical->backendOutput();
     if (output->isPlaceholder()) {
         return;
     }

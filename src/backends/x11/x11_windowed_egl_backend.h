@@ -76,9 +76,9 @@ public:
     DrmDevice *drmDevice() const override;
 
     void init() override;
-    void endFrame(LogicalOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
-    OutputLayer *primaryLayer(LogicalOutput *output) override;
-    OutputLayer *cursorLayer(LogicalOutput *output) override;
+    void endFrame(BackendOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
+    OutputLayer *primaryLayer(BackendOutput *output) override;
+    OutputLayer *cursorLayer(BackendOutput *output) override;
 
 private:
     bool initializeEgl();
@@ -90,7 +90,7 @@ private:
         std::unique_ptr<X11WindowedEglCursorLayer> cursorLayer;
     };
 
-    std::map<LogicalOutput *, Layers> m_outputs;
+    std::map<BackendOutput *, Layers> m_outputs;
     X11WindowedBackend *m_backend;
 };
 

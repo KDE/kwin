@@ -28,7 +28,7 @@ class GLRenderTimeQuery;
 class VirtualEglLayer : public OutputLayer
 {
 public:
-    VirtualEglLayer(LogicalOutput *output, VirtualEglBackend *backend);
+    VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
@@ -53,7 +53,7 @@ class VirtualEglBackend : public EglBackend
 public:
     VirtualEglBackend(VirtualBackend *b);
     ~VirtualEglBackend() override;
-    OutputLayer *primaryLayer(LogicalOutput *output) override;
+    OutputLayer *primaryLayer(BackendOutput *output) override;
     void init() override;
 
     VirtualBackend *backend() const;
@@ -63,11 +63,11 @@ private:
     bool initializeEgl();
     bool initRenderingContext();
 
-    void addOutput(LogicalOutput *output);
-    void removeOutput(LogicalOutput *output);
+    void addOutput(BackendOutput *output);
+    void removeOutput(BackendOutput *output);
 
     VirtualBackend *m_backend;
-    std::map<LogicalOutput *, std::unique_ptr<VirtualEglLayer>> m_outputs;
+    std::map<BackendOutput *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 
 } // namespace KWin

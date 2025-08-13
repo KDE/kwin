@@ -11,11 +11,13 @@
 #include "config-kwin.h"
 
 #include "core/output.h"
-#include "core/outputbackend.h"
 #include "libinput_logging.h"
 #include "main.h"
 #include "mousebuttons.h"
 #include "pointer_input.h"
+#ifndef KWIN_BUILD_TESTING
+#include "workspace.h"
+#endif
 
 #include <QCryptographicHash>
 #include <QDBusArgument>
@@ -896,18 +898,7 @@ void Device::setOutputName(const QString &name)
         return;
     }
 
-    setOutput(nullptr);
-    auto outputs = kwinApp()->outputBackend()->outputs();
-    for (int i = 0; i < outputs.count(); ++i) {
-        if (!outputs[i]->isEnabled()) {
-            continue;
-        }
-        if (outputs[i]->name() == name) {
-            setOutput(outputs[i]);
-            break;
-        }
-    }
-
+    setOutput(workspace()->findOutput(name));
     m_outputName = name;
     writeEntry(ConfigKey::OutputName, name);
     Q_EMIT outputNameChanged();

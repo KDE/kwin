@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 
 #include <KWayland/Client/xdgshell.h>
 
@@ -68,7 +68,7 @@ private:
     bool m_enabled = true;
 };
 
-class WaylandOutput : public LogicalOutput
+class WaylandOutput : public BackendOutput
 {
     Q_OBJECT
 public:

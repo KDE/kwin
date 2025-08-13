@@ -71,7 +71,7 @@ void WorkspaceTest::evacuateMappedWindowFromRemovedOutput()
     QSignalSpy outputChangedSpy(window, &Window::outputChanged);
     {
         OutputConfiguration config;
-        config.changeSet(firstOutput)->enabled = false;
+        config.changeSet(firstOutput->backendOutput())->enabled = false;
         workspace()->applyOutputConfiguration(config);
     }
     QCOMPARE(outputChangedSpy.count(), 1);
@@ -101,7 +101,7 @@ void WorkspaceTest::evacuateUnmappedWindowFromRemovedOutput()
     QSignalSpy outputChangedSpy(window, &Window::outputChanged);
     {
         OutputConfiguration config;
-        config.changeSet(firstOutput)->enabled = false;
+        config.changeSet(firstOutput->backendOutput())->enabled = false;
         workspace()->applyOutputConfiguration(config);
     }
     QCOMPARE(outputChangedSpy.count(), 1);

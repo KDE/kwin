@@ -8,14 +8,14 @@
 */
 #pragma once
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 
-class FakeOutput : public KWin::LogicalOutput
+class FakeBackendOutput : public KWin::BackendOutput
 {
     Q_OBJECT
 
 public:
-    FakeOutput();
+    FakeBackendOutput();
 
     bool testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame) override;
     bool present(const QList<KWin::OutputLayer *> &layersToUpdate, const std::shared_ptr<KWin::OutputFrame> &frame) override;

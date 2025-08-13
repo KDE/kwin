@@ -141,12 +141,12 @@ DrmDevice *EglGbmBackend::drmDevice() const
     return gpu()->drmDevice();
 }
 
-OutputLayer *EglGbmBackend::primaryLayer(LogicalOutput *output)
+OutputLayer *EglGbmBackend::primaryLayer(BackendOutput *output)
 {
     return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
 }
 
-OutputLayer *EglGbmBackend::cursorLayer(LogicalOutput *output)
+OutputLayer *EglGbmBackend::cursorLayer(BackendOutput *output)
 {
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
 }

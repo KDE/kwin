@@ -38,12 +38,12 @@ DrmDevice *DrmQPainterBackend::drmDevice() const
     return m_backend->primaryGpu()->drmDevice();
 }
 
-OutputLayer *DrmQPainterBackend::primaryLayer(LogicalOutput *output)
+OutputLayer *DrmQPainterBackend::primaryLayer(BackendOutput *output)
 {
     return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
 }
 
-OutputLayer *DrmQPainterBackend::cursorLayer(LogicalOutput *output)
+OutputLayer *DrmQPainterBackend::cursorLayer(BackendOutput *output)
 {
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
 }

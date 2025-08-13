@@ -227,14 +227,14 @@ public:
     QList<CompositingType> supportedCompositors() const override;
 
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
-    Outputs outputs() const override;
+    QList<BackendOutput *> outputs() const override;
     QList<WaylandOutput *> waylandOutputs() const
     {
         return m_outputs;
     }
 
-    LogicalOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale) override;
-    void removeVirtualOutput(LogicalOutput *output) override;
+    BackendOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale) override;
+    void removeVirtualOutput(BackendOutput *output) override;
 
     wl_buffer *importBuffer(GraphicsBuffer *graphicsBuffer);
 

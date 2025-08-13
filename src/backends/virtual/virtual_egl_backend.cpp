@@ -22,7 +22,7 @@
 namespace KWin
 {
 
-VirtualEglLayer::VirtualEglLayer(LogicalOutput *output, VirtualEglBackend *backend)
+VirtualEglLayer::VirtualEglLayer(BackendOutput *output, VirtualEglBackend *backend)
     : OutputLayer(output)
     , m_backend(backend)
 {
@@ -135,7 +135,7 @@ void VirtualEglBackend::init()
     initWayland();
 
     const auto outputs = m_backend->outputs();
-    for (LogicalOutput *output : outputs) {
+    for (BackendOutput *output : outputs) {
         addOutput(output);
     }
 
@@ -148,19 +148,19 @@ bool VirtualEglBackend::initRenderingContext()
     return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
 }
 
-void VirtualEglBackend::addOutput(LogicalOutput *output)
+void VirtualEglBackend::addOutput(BackendOutput *output)
 {
     openglContext()->makeCurrent();
     m_outputs[output] = std::make_unique<VirtualEglLayer>(output, this);
 }
 
-void VirtualEglBackend::removeOutput(LogicalOutput *output)
+void VirtualEglBackend::removeOutput(BackendOutput *output)
 {
     openglContext()->makeCurrent();
     m_outputs.erase(output);
 }
 
-OutputLayer *VirtualEglBackend::primaryLayer(LogicalOutput *output)
+OutputLayer *VirtualEglBackend::primaryLayer(BackendOutput *output)
 {
     return m_outputs[output].get();
 }

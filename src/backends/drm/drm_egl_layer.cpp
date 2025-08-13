@@ -104,7 +104,7 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
         // Right now this just assumes all buffers are on the primary GPU
         return false;
     }
-    if (!m_colorPipeline.isIdentity() && m_pipeline->output()->colorPowerTradeoff() == LogicalOutput::ColorPowerTradeoff::PreferAccuracy) {
+    if (!m_colorPipeline.isIdentity() && m_pipeline->output()->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy) {
         return false;
     }
     // kernel documentation says that

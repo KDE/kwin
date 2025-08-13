@@ -46,14 +46,14 @@ public:
 
     bool initialize() override;
 
-    Outputs outputs() const override;
+    QList<BackendOutput *> outputs() const override;
     Session *session() const override;
 
     QList<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
-    LogicalOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale) override;
-    void removeVirtualOutput(LogicalOutput *output) override;
+    BackendOutput *createVirtualOutput(const QString &name, const QString &description, const QSize &size, double scale) override;
+    void removeVirtualOutput(BackendOutput *output) override;
 
     DrmGpu *primaryGpu() const;
     DrmGpu *findGpu(dev_t deviceId) const;
