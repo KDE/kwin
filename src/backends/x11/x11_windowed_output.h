@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include <kwin_export.h>
 
 #include <QObject>
@@ -73,7 +73,7 @@ private:
 /**
  * Wayland outputs in a nested X11 setup
  */
-class KWIN_EXPORT X11WindowedOutput : public LogicalOutput
+class KWIN_EXPORT X11WindowedOutput : public BackendOutput
 {
     Q_OBJECT
 public:

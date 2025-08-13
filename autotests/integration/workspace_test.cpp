@@ -80,7 +80,7 @@ void WorkspaceTest::evacuateMappedWindowFromRemovedOutput()
     QSignalSpy outputChangedSpy(window, &Window::outputChanged);
     {
         OutputConfiguration config;
-        config.changeSet(firstOutput)->enabled = false;
+        config.changeSet(firstOutput->backendOutput())->enabled = false;
         workspace()->applyOutputConfiguration(config);
     }
     QCOMPARE(outputChangedSpy.count(), 1);
@@ -110,7 +110,7 @@ void WorkspaceTest::evacuateUnmappedWindowFromRemovedOutput()
     QSignalSpy outputChangedSpy(window, &Window::outputChanged);
     {
         OutputConfiguration config;
-        config.changeSet(firstOutput)->enabled = false;
+        config.changeSet(firstOutput->backendOutput())->enabled = false;
         workspace()->applyOutputConfiguration(config);
     }
     QCOMPARE(outputChangedSpy.count(), 1);
@@ -274,7 +274,7 @@ void WorkspaceTest::disableActiveOutput()
 
     OutputConfiguration config;
     {
-        auto changeSet = config.changeSet(workspace()->activeOutput());
+        auto changeSet = config.changeSet(workspace()->activeOutput()->backendOutput());
         changeSet->enabled = false;
     }
     workspace()->applyOutputConfiguration(config);
@@ -292,11 +292,11 @@ void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputAdded()
     {
         OutputConfiguration config;
         {
-            auto changeSet = config.changeSet(firstOutput);
+            auto changeSet = config.changeSet(firstOutput->backendOutput());
             changeSet->enabled = false;
         }
         {
-            auto changeSet = config.changeSet(secondOutput);
+            auto changeSet = config.changeSet(secondOutput->backendOutput());
             changeSet->enabled = false;
         }
         workspace()->applyOutputConfiguration(config);
@@ -318,7 +318,7 @@ void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputAdded()
     {
         OutputConfiguration config;
         {
-            auto changeSet = config.changeSet(firstOutput);
+            auto changeSet = config.changeSet(firstOutput->backendOutput());
             changeSet->enabled = true;
         }
         workspace()->applyOutputConfiguration(config);
@@ -376,15 +376,15 @@ void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputRemoved()
     {
         OutputConfiguration config;
         {
-            auto changeSet = config.changeSet(firstOutput);
+            auto changeSet = config.changeSet(firstOutput->backendOutput());
             changeSet->enabled = false;
         }
         {
-            auto changeSet = config.changeSet(secondOutput);
+            auto changeSet = config.changeSet(secondOutput->backendOutput());
             changeSet->enabled = false;
         }
         {
-            auto changeSet = config.changeSet(thirdOutput);
+            auto changeSet = config.changeSet(thirdOutput->backendOutput());
             changeSet->pos = QPoint(0, 0);
         }
         workspace()->applyOutputConfiguration(config);

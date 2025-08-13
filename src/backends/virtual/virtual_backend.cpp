@@ -15,6 +15,7 @@
 
 #include <fcntl.h>
 #include <gbm.h>
+#include <ranges>
 #include <xf86drm.h>
 
 namespace KWin
@@ -111,9 +112,9 @@ std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
     return std::make_unique<VirtualEglBackend>(this);
 }
 
-Outputs VirtualBackend::outputs() const
+QList<BackendOutput *> VirtualBackend::outputs() const
 {
-    return m_outputs;
+    return m_outputs | std::ranges::to<QList<BackendOutput *>>();
 }
 
 VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
@@ -125,7 +126,7 @@ VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
     return output;
 }
 
-LogicalOutput *VirtualBackend::addOutput(const OutputInfo &info)
+BackendOutput *VirtualBackend::addOutput(const OutputInfo &info)
 {
     VirtualOutput *output = createOutput(info);
     Q_EMIT outputsQueried();

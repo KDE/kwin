@@ -46,10 +46,10 @@ public:
         std::optional<QString> connectorName;
         std::optional<QByteArray> mstPath;
     };
-    LogicalOutput *addOutput(const OutputInfo &info);
+    BackendOutput *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);
 
-    Outputs outputs() const override;
+    QList<BackendOutput *> outputs() const override;
 
     QList<CompositingType> supportedCompositors() const override;
 

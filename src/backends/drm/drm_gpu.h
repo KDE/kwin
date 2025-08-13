@@ -120,7 +120,7 @@ public:
     void forgetBuffer(GraphicsBuffer *buf);
     void releaseBuffers();
     void createLayers();
-    QList<OutputLayer *> compatibleOutputLayers(LogicalOutput *output) const;
+    QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) const;
 
     FileDescriptor createNonMasterFd() const;
     std::unique_ptr<DrmLease> leaseOutputs(const QList<DrmOutput *> &outputs);

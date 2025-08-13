@@ -227,23 +227,23 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::findMode(const drmModeModeInfo &
     return it == m_modes.constEnd() ? nullptr : *it;
 }
 
-LogicalOutput::SubPixel DrmConnector::subpixel() const
+BackendOutput::SubPixel DrmConnector::subpixel() const
 {
     switch (m_conn->subpixel) {
     case DRM_MODE_SUBPIXEL_UNKNOWN:
-        return LogicalOutput::SubPixel::Unknown;
+        return BackendOutput::SubPixel::Unknown;
     case DRM_MODE_SUBPIXEL_HORIZONTAL_RGB:
-        return LogicalOutput::SubPixel::Horizontal_RGB;
+        return BackendOutput::SubPixel::Horizontal_RGB;
     case DRM_MODE_SUBPIXEL_HORIZONTAL_BGR:
-        return LogicalOutput::SubPixel::Horizontal_BGR;
+        return BackendOutput::SubPixel::Horizontal_BGR;
     case DRM_MODE_SUBPIXEL_VERTICAL_RGB:
-        return LogicalOutput::SubPixel::Vertical_RGB;
+        return BackendOutput::SubPixel::Vertical_RGB;
     case DRM_MODE_SUBPIXEL_VERTICAL_BGR:
-        return LogicalOutput::SubPixel::Vertical_BGR;
+        return BackendOutput::SubPixel::Vertical_BGR;
     case DRM_MODE_SUBPIXEL_NONE:
-        return LogicalOutput::SubPixel::None;
+        return BackendOutput::SubPixel::None;
     default:
-        return LogicalOutput::SubPixel::Unknown;
+        return BackendOutput::SubPixel::Unknown;
     }
 }
 
@@ -496,29 +496,29 @@ OutputTransform DrmConnector::toKWinTransform(PanelOrientation orientation)
     }
 }
 
-DrmConnector::BroadcastRgbOptions DrmConnector::rgbRangeToBroadcastRgb(LogicalOutput::RgbRange rgbRange)
+DrmConnector::BroadcastRgbOptions DrmConnector::rgbRangeToBroadcastRgb(BackendOutput::RgbRange rgbRange)
 {
     switch (rgbRange) {
-    case LogicalOutput::RgbRange::Automatic:
+    case BackendOutput::RgbRange::Automatic:
         return BroadcastRgbOptions::Automatic;
-    case LogicalOutput::RgbRange::Full:
+    case BackendOutput::RgbRange::Full:
         return BroadcastRgbOptions::Full;
-    case LogicalOutput::RgbRange::Limited:
+    case BackendOutput::RgbRange::Limited:
         return BroadcastRgbOptions::Limited;
     default:
         Q_UNREACHABLE();
     }
 }
 
-LogicalOutput::RgbRange DrmConnector::broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange)
+BackendOutput::RgbRange DrmConnector::broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange)
 {
     switch (rgbRange) {
     case BroadcastRgbOptions::Automatic:
-        return LogicalOutput::RgbRange::Automatic;
+        return BackendOutput::RgbRange::Automatic;
     case BroadcastRgbOptions::Full:
-        return LogicalOutput::RgbRange::Full;
+        return BackendOutput::RgbRange::Full;
     case BroadcastRgbOptions::Limited:
-        return LogicalOutput::RgbRange::Limited;
+        return BackendOutput::RgbRange::Limited;
     default:
         Q_UNREACHABLE();
     }

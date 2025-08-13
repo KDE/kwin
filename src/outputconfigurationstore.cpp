@@ -9,7 +9,6 @@
 #include "outputconfigurationstore.h"
 #include "core/iccprofile.h"
 #include "core/inputdevice.h"
-#include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "input.h"
@@ -38,10 +37,10 @@ OutputConfigurationStore::~OutputConfigurationStore()
     save();
 }
 
-std::optional<std::tuple<OutputConfiguration, QList<LogicalOutput *>, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<LogicalOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
+std::optional<std::tuple<OutputConfiguration, QList<BackendOutput *>, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
 {
-    QList<LogicalOutput *> relevantOutputs;
-    std::copy_if(outputs.begin(), outputs.end(), std::back_inserter(relevantOutputs), [](LogicalOutput *output) {
+    QList<BackendOutput *> relevantOutputs;
+    std::copy_if(outputs.begin(), outputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
         return !output->isNonDesktop() && !output->isPlaceholder();
     });
     if (relevantOutputs.isEmpty()) {
@@ -64,9 +63,9 @@ std::optional<std::tuple<OutputConfiguration, QList<LogicalOutput *>, OutputConf
     return std::make_tuple(config, order, ConfigType::Generated);
 }
 
-void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QList<LogicalOutput *> &outputs, QOrientationReading *orientation, bool isTabletMode)
+void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, QOrientationReading *orientation, bool isTabletMode)
 {
-    const auto output = std::find_if(outputs.begin(), outputs.end(), [&config](LogicalOutput *output) {
+    const auto output = std::find_if(outputs.begin(), outputs.end(), [&config](BackendOutput *output) {
         return output->isInternal() && config.changeSet(output)->enabled.value_or(output->isEnabled());
     });
     if (output == outputs.end()) {
@@ -101,7 +100,7 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
     }
 }
 
-void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const QList<LogicalOutput *> &outputs)
+void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs)
 {
     for (const auto output : outputs) {
         const auto changeset = config.changeSet(output);
@@ -109,15 +108,15 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
         if (mirrorSource.isEmpty()) {
             continue;
         }
-        const auto sourceIt = std::ranges::find_if(outputs, [&](LogicalOutput *o) {
+        const auto sourceIt = std::ranges::find_if(outputs, [&](BackendOutput *o) {
             return config.changeSet(o)->uuid.value_or(o->uuid()) == mirrorSource;
         });
         if (sourceIt == outputs.end()) {
             continue;
         }
-        LogicalOutput *const source = *sourceIt;
+        BackendOutput *const source = *sourceIt;
         if (source == output) {
-            qCWarning(KWIN_OUTPUT_CONFIG, "LogicalOutput %s is trying to mirror itself, that shouldn't happen!", qPrintable(output->name()));
+            qCWarning(KWIN_OUTPUT_CONFIG, "BackendOutput %s is trying to mirror itself, that shouldn't happen!", qPrintable(output->name()));
             continue;
         }
         const auto sourceChange = config.changeSet(source);
@@ -163,7 +162,7 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
     }
     // the fallback logic above may push some output into negative coordinates,
     // which causes issues with Xwayland -> shift all of them to be positive
-    for (LogicalOutput *output : outputs) {
+    for (BackendOutput *output : outputs) {
         const auto changeset = config.changeSet(output);
         if (!changeset->pos.has_value()) {
             continue;
@@ -172,7 +171,7 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
         if (pos.x() >= 0 && pos.y() >= 0) {
             continue;
         }
-        for (LogicalOutput *output : outputs) {
+        for (BackendOutput *output : outputs) {
             const auto changeset = config.changeSet(output);
             const auto otherPos = changeset->pos.value_or(output->geometry().topLeft());
             changeset->pos = otherPos - QPoint(std::min(pos.x(), 0), std::min(pos.y(), 0));
@@ -180,10 +179,10 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
     }
 }
 
-std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<LogicalOutput *, size_t>>> OutputConfigurationStore::findSetup(const QList<LogicalOutput *> &outputs, bool lidClosed)
+std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<BackendOutput *, size_t>>> OutputConfigurationStore::findSetup(const QList<BackendOutput *> &outputs, bool lidClosed)
 {
-    std::unordered_map<LogicalOutput *, size_t> outputStates;
-    for (LogicalOutput *output : outputs) {
+    std::unordered_map<BackendOutput *, size_t> outputStates;
+    for (BackendOutput *output : outputs) {
         if (auto opt = findOutput(output, outputs)) {
             outputStates[output] = *opt;
         } else {
@@ -207,7 +206,7 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Lo
     }
 }
 
-std::optional<size_t> OutputConfigurationStore::findOutput(LogicalOutput *output, const QList<LogicalOutput *> &allOutputs) const
+std::optional<size_t> OutputConfigurationStore::findOutput(BackendOutput *output, const QList<BackendOutput *> &allOutputs) const
 {
     struct Properties
     {
@@ -237,13 +236,13 @@ std::optional<size_t> OutputConfigurationStore::findOutput(LogicalOutput *output
         return ret;
     };
 
-    const bool edidIdUniqueAmongOutputs = !output->edid().identifier().isEmpty() && std::ranges::count_if(allOutputs, [output](LogicalOutput *otherOutput) {
+    const bool edidIdUniqueAmongOutputs = !output->edid().identifier().isEmpty() && std::ranges::count_if(allOutputs, [output](BackendOutput *otherOutput) {
         return output->edid().identifier() == otherOutput->edid().identifier();
     }) == 1;
-    const bool edidHashUniqueAmongOutputs = std::ranges::count_if(allOutputs, [output](LogicalOutput *otherOutput) {
+    const bool edidHashUniqueAmongOutputs = std::ranges::count_if(allOutputs, [output](BackendOutput *otherOutput) {
         return output->edid().hash() == otherOutput->edid().hash();
     }) == 1;
-    const bool mstPathUniqueAmongOutputs = !output->mstPath().isEmpty() && std::ranges::count_if(allOutputs, [output](LogicalOutput *other) {
+    const bool mstPathUniqueAmongOutputs = !output->mstPath().isEmpty() && std::ranges::count_if(allOutputs, [output](BackendOutput *other) {
         return output->edid().hash() == other->edid().hash()
             && output->mstPath() == other->mstPath();
     }) == 1;
@@ -307,10 +306,10 @@ std::optional<size_t> OutputConfigurationStore::findOutput(LogicalOutput *output
     }
 }
 
-void OutputConfigurationStore::storeConfig(const QList<LogicalOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<LogicalOutput *> &outputOrder)
+void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<BackendOutput *> &outputOrder)
 {
-    QList<LogicalOutput *> relevantOutputs;
-    std::copy_if(allOutputs.begin(), allOutputs.end(), std::back_inserter(relevantOutputs), [](LogicalOutput *output) {
+    QList<BackendOutput *> relevantOutputs;
+    std::copy_if(allOutputs.begin(), allOutputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
         return !output->isNonDesktop() && !output->isPlaceholder();
     });
     if (relevantOutputs.isEmpty()) {
@@ -326,7 +325,7 @@ void OutputConfigurationStore::storeConfig(const QList<LogicalOutput *> &allOutp
         setup = &m_setups.back();
         setup->lidClosed = isLidClosed;
     }
-    for (LogicalOutput *output : relevantOutputs) {
+    for (BackendOutput *output : relevantOutputs) {
         auto outputIndex = findOutput(output, outputOrder);
         Q_ASSERT(outputIndex.has_value());
         auto outputIt = std::find_if(setup->outputs.begin(), setup->outputs.end(), [outputIndex](const auto &output) {
@@ -444,10 +443,10 @@ void OutputConfigurationStore::storeConfig(const QList<LogicalOutput *> &allOutp
     save();
 }
 
-std::pair<OutputConfiguration, QList<LogicalOutput *>> OutputConfigurationStore::setupToConfig(Setup *setup, const std::unordered_map<LogicalOutput *, size_t> &outputMap) const
+std::pair<OutputConfiguration, QList<BackendOutput *>> OutputConfigurationStore::setupToConfig(Setup *setup, const std::unordered_map<BackendOutput *, size_t> &outputMap) const
 {
     OutputConfiguration ret;
-    QList<std::pair<LogicalOutput *, size_t>> priorities;
+    QList<std::pair<BackendOutput *, size_t>> priorities;
     for (const auto &[output, outputIndex] : outputMap) {
         const OutputState &state = m_outputs[outputIndex];
         const auto &setupState = *std::find_if(setup->outputs.begin(), setup->outputs.end(), [outputIndex = outputIndex](const auto &state) {
@@ -507,16 +506,16 @@ std::pair<OutputConfiguration, QList<LogicalOutput *>> OutputConfigurationStore:
     std::sort(priorities.begin(), priorities.end(), [](const auto &left, const auto &right) {
         return left.second < right.second;
     });
-    QList<LogicalOutput *> order;
+    QList<BackendOutput *> order;
     std::transform(priorities.begin(), priorities.end(), std::back_inserter(order), [](const auto &pair) {
         return pair.first;
     });
     return std::make_pair(ret, order);
 }
 
-std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> OutputConfigurationStore::generateLidClosedConfig(const QList<LogicalOutput *> &outputs)
+std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> OutputConfigurationStore::generateLidClosedConfig(const QList<BackendOutput *> &outputs)
 {
-    const auto internalIt = std::find_if(outputs.begin(), outputs.end(), [](LogicalOutput *output) {
+    const auto internalIt = std::find_if(outputs.begin(), outputs.end(), [](BackendOutput *output) {
         return output->isInternal();
     });
     if (internalIt == outputs.end()) {
@@ -526,7 +525,7 @@ std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> OutputConf
     if (!setup) {
         return std::nullopt;
     }
-    LogicalOutput *const internalOutput = *internalIt;
+    BackendOutput *const internalOutput = *internalIt;
     auto [config, order] = setupToConfig(setup->first, setup->second);
     auto internalChangeset = config.changeSet(internalOutput);
     if (!internalChangeset->enabled.value_or(internalOutput->isEnabled())) {
@@ -536,14 +535,14 @@ std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> OutputConf
     internalChangeset->enabled = false;
     order.removeOne(internalOutput);
 
-    const bool anyEnabled = std::any_of(outputs.begin(), outputs.end(), [&config = config](LogicalOutput *output) {
+    const bool anyEnabled = std::any_of(outputs.begin(), outputs.end(), [&config = config](BackendOutput *output) {
         return config.changeSet(output)->enabled.value_or(output->isEnabled());
     });
     if (!anyEnabled) {
         return std::nullopt;
     }
 
-    const auto getSize = [](OutputChangeSet *changeset, LogicalOutput *output) {
+    const auto getSize = [](OutputChangeSet *changeset, BackendOutput *output) {
         auto mode = changeset->mode ? changeset->mode->lock() : nullptr;
         if (!mode) {
             mode = output->currentMode();
@@ -553,7 +552,7 @@ std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> OutputConf
     };
     const QPoint internalPos = internalChangeset->pos.value_or(internalOutput->geometry().topLeft());
     const QSize internalSize = getSize(internalChangeset.get(), internalOutput);
-    for (LogicalOutput *otherOutput : outputs) {
+    for (BackendOutput *otherOutput : outputs) {
         auto changeset = config.changeSet(otherOutput);
         QPoint otherPos = changeset->pos.value_or(otherOutput->geometry().topLeft());
         if (otherPos.x() >= internalPos.x() + internalSize.width()) {
@@ -564,7 +563,7 @@ std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> OutputConf
         }
         // make sure this doesn't make outputs overlap, which is neither supported nor expected by users
         const QSize otherSize = getSize(changeset.get(), otherOutput);
-        const bool overlap = std::any_of(outputs.begin(), outputs.end(), [&, &config = config](LogicalOutput *output) {
+        const bool overlap = std::any_of(outputs.begin(), outputs.end(), [&, &config = config](BackendOutput *output) {
             if (otherOutput == output) {
                 return false;
             }
@@ -579,7 +578,7 @@ std::optional<std::pair<OutputConfiguration, QList<LogicalOutput *>>> OutputConf
     return std::make_pair(config, order);
 }
 
-std::pair<OutputConfiguration, QList<LogicalOutput *>> OutputConfigurationStore::generateConfig(const QList<LogicalOutput *> &outputs, bool isLidClosed)
+std::pair<OutputConfiguration, QList<BackendOutput *>> OutputConfigurationStore::generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
 {
     qCDebug(KWIN_OUTPUT_CONFIG, "Generating new config for %lld outputs", outputs.size());
     if (isLidClosed) {
@@ -589,7 +588,7 @@ std::pair<OutputConfiguration, QList<LogicalOutput *>> OutputConfigurationStore:
     }
     const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs, isLidClosed));
     OutputConfiguration ret;
-    QList<LogicalOutput *> outputOrder;
+    QList<BackendOutput *> outputOrder;
     QPoint pos(0, 0);
     for (const auto output : outputs) {
         const auto kscreenChangeSetPtr = kscreenConfig ? kscreenConfig->first.constChangeSet(output) : nullptr;
@@ -620,21 +619,21 @@ std::pair<OutputConfiguration, QList<LogicalOutput *>> OutputConfigurationStore:
             .transform = existingData.transform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .manualTransform = existingData.manualTransform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .overscan = existingData.overscan.value_or(kscreenChangeSet.overscan.value_or(0)),
-            .rgbRange = existingData.rgbRange.value_or(kscreenChangeSet.rgbRange.value_or(LogicalOutput::RgbRange::Automatic)),
+            .rgbRange = existingData.rgbRange.value_or(kscreenChangeSet.rgbRange.value_or(BackendOutput::RgbRange::Automatic)),
             .vrrPolicy = existingData.vrrPolicy.value_or(kscreenChangeSet.vrrPolicy.value_or(VrrPolicy::Never)),
             .highDynamicRange = existingData.highDynamicRange.value_or(false),
             .referenceLuminance = existingData.referenceLuminance.value_or(std::clamp(output->maxAverageBrightness().value_or(200), 200.0, 500.0)),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
-            .autoRotationPolicy = existingData.autoRotation.value_or(LogicalOutput::AutoRotationPolicy::InTabletMode),
-            .colorProfileSource = existingData.colorProfileSource.value_or(LogicalOutput::ColorProfileSource::sRGB),
+            .autoRotationPolicy = existingData.autoRotation.value_or(BackendOutput::AutoRotationPolicy::InTabletMode),
+            .colorProfileSource = existingData.colorProfileSource.value_or(BackendOutput::ColorProfileSource::sRGB),
             .brightness = existingData.brightness.value_or(1.0),
             .allowSdrSoftwareBrightness = existingData.allowSdrSoftwareBrightness.value_or(output->brightnessDevice() == nullptr),
-            .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(LogicalOutput::ColorPowerTradeoff::PreferEfficiency),
+            .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(BackendOutput::ColorPowerTradeoff::PreferEfficiency),
             .uuid = existingData.uuid,
             .detectedDdcCi = existingData.detectedDdcCi.value_or(false),
             .allowDdcCi = existingData.allowDdcCi.value_or(!output->isDdcCiKnownBroken()),
             .maxBitsPerColor = existingData.maxBitsPerColor,
-            .edrPolicy = existingData.edrPolicy.value_or(LogicalOutput::EdrPolicy::Always),
+            .edrPolicy = existingData.edrPolicy.value_or(BackendOutput::EdrPolicy::Always),
             .sharpness = existingData.sharpness.value_or(0),
         };
         if (enable) {
@@ -655,7 +654,7 @@ std::pair<OutputConfiguration, QList<LogicalOutput *>> OutputConfigurationStore:
     return std::make_pair(ret, outputOrder);
 }
 
-std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(LogicalOutput *output) const
+std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *output) const
 {
     const auto findBiggestFastest = [](const auto &left, const auto &right) {
         const uint64_t leftPixels = left->size().width() * left->size().height();
@@ -722,7 +721,7 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(LogicalOutput *
     }
 }
 
-double OutputConfigurationStore::chooseScale(LogicalOutput *output, OutputMode *mode) const
+double OutputConfigurationStore::chooseScale(BackendOutput *output, OutputMode *mode) const
 {
     if (output->physicalSize().height() < 3 || output->physicalSize().width() < 3) {
         // A screen less than 3mm wide or tall doesn't make any sense; these are
@@ -780,9 +779,9 @@ double OutputConfigurationStore::chooseScale(LogicalOutput *output, OutputMode *
     return scale;
 }
 
-void OutputConfigurationStore::registerOutputs(const QList<LogicalOutput *> &outputs)
+void OutputConfigurationStore::registerOutputs(const QList<BackendOutput *> &outputs)
 {
-    for (LogicalOutput *output : outputs) {
+    for (BackendOutput *output : outputs) {
         if (output->isNonDesktop() || output->isPlaceholder()) {
             continue;
         }
@@ -869,7 +868,7 @@ void OutputConfigurationStore::load()
             // without an identifier the settings are useless
             // we still have to push something into the list so that the indices stay correct
             outputDatas.push_back(std::nullopt);
-            qCWarning(KWIN_OUTPUT_CONFIG, "LogicalOutput in config is missing identifiers");
+            qCWarning(KWIN_OUTPUT_CONFIG, "BackendOutput in config is missing identifiers");
             continue;
         }
         const bool hasDuplicate = std::any_of(outputDatas.begin(), outputDatas.end(), [&state](const auto &data) {
@@ -932,11 +931,11 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("rgbRange"); it != data.end()) {
             const auto str = it->toString();
             if (str == "Automatic") {
-                state.rgbRange = LogicalOutput::RgbRange::Automatic;
+                state.rgbRange = BackendOutput::RgbRange::Automatic;
             } else if (str == "Limited") {
-                state.rgbRange = LogicalOutput::RgbRange::Limited;
+                state.rgbRange = BackendOutput::RgbRange::Limited;
             } else if (str == "Full") {
-                state.rgbRange = LogicalOutput::RgbRange::Full;
+                state.rgbRange = BackendOutput::RgbRange::Full;
             }
         }
         if (const auto it = data.find("vrrPolicy"); it != data.end()) {
@@ -961,11 +960,11 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("autoRotation"); it != data.end()) {
             const auto str = it->toString();
             if (str == "Never") {
-                state.autoRotation = LogicalOutput::AutoRotationPolicy::Never;
+                state.autoRotation = BackendOutput::AutoRotationPolicy::Never;
             } else if (str == "InTabletMode") {
-                state.autoRotation = LogicalOutput::AutoRotationPolicy::InTabletMode;
+                state.autoRotation = BackendOutput::AutoRotationPolicy::InTabletMode;
             } else if (str == "Always") {
-                state.autoRotation = LogicalOutput::AutoRotationPolicy::Always;
+                state.autoRotation = BackendOutput::AutoRotationPolicy::Always;
             }
         }
         if (const auto it = data.find("iccProfilePath"); it != data.end()) {
@@ -994,18 +993,18 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("colorProfileSource"); it != data.end()) {
             const auto str = it->toString();
             if (str == "sRGB") {
-                state.colorProfileSource = LogicalOutput::ColorProfileSource::sRGB;
+                state.colorProfileSource = BackendOutput::ColorProfileSource::sRGB;
             } else if (str == "ICC") {
-                state.colorProfileSource = LogicalOutput::ColorProfileSource::ICC;
+                state.colorProfileSource = BackendOutput::ColorProfileSource::ICC;
             } else if (str == "EDID") {
-                state.colorProfileSource = LogicalOutput::ColorProfileSource::EDID;
+                state.colorProfileSource = BackendOutput::ColorProfileSource::EDID;
             }
         } else {
             const bool icc = state.iccProfilePath && !state.iccProfilePath->isEmpty() && !state.highDynamicRange.value_or(false) && !state.wideColorGamut.value_or(false);
             if (icc) {
-                state.colorProfileSource = LogicalOutput::ColorProfileSource::ICC;
+                state.colorProfileSource = BackendOutput::ColorProfileSource::ICC;
             } else {
-                state.colorProfileSource = LogicalOutput::ColorProfileSource::sRGB;
+                state.colorProfileSource = BackendOutput::ColorProfileSource::sRGB;
             }
         }
         if (const auto it = data.find("brightness"); it != data.end() && it->isDouble()) {
@@ -1017,9 +1016,9 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("colorPowerTradeoff"); it != data.end()) {
             const auto str = it->toString();
             if (str == "PreferEfficiency") {
-                state.colorPowerTradeoff = LogicalOutput::ColorPowerTradeoff::PreferEfficiency;
+                state.colorPowerTradeoff = BackendOutput::ColorPowerTradeoff::PreferEfficiency;
             } else if (str == "PreferAccuracy") {
-                state.colorPowerTradeoff = LogicalOutput::ColorPowerTradeoff::PreferAccuracy;
+                state.colorPowerTradeoff = BackendOutput::ColorPowerTradeoff::PreferAccuracy;
             }
         }
         if (const auto it = data.find("uuid"); it != data.end() && !it->toString().isEmpty()) {
@@ -1040,9 +1039,9 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("edrPolicy"); it != data.end()) {
             const auto str = it->toString();
             if (str == "never") {
-                state.edrPolicy = LogicalOutput::EdrPolicy::Never;
+                state.edrPolicy = BackendOutput::EdrPolicy::Never;
             } else if (str == "always") {
-                state.edrPolicy = LogicalOutput::EdrPolicy::Always;
+                state.edrPolicy = BackendOutput::EdrPolicy::Always;
             }
         }
         if (const auto it = data.find("sharpness"); it != data.end() && it->isDouble()) {
@@ -1229,11 +1228,11 @@ void OutputConfigurationStore::save()
         if (output.overscan) {
             o["overscan"] = int(*output.overscan);
         }
-        if (output.rgbRange == LogicalOutput::RgbRange::Automatic) {
+        if (output.rgbRange == BackendOutput::RgbRange::Automatic) {
             o["rgbRange"] = "Automatic";
-        } else if (output.rgbRange == LogicalOutput::RgbRange::Limited) {
+        } else if (output.rgbRange == BackendOutput::RgbRange::Limited) {
             o["rgbRange"] = "Limited";
-        } else if (output.rgbRange == LogicalOutput::RgbRange::Full) {
+        } else if (output.rgbRange == BackendOutput::RgbRange::Full) {
             o["rgbRange"] = "Full";
         }
         if (output.vrrPolicy == VrrPolicy::Never) {
@@ -1254,13 +1253,13 @@ void OutputConfigurationStore::save()
         }
         if (output.autoRotation) {
             switch (*output.autoRotation) {
-            case LogicalOutput::AutoRotationPolicy::Never:
+            case BackendOutput::AutoRotationPolicy::Never:
                 o["autoRotation"] = "Never";
                 break;
-            case LogicalOutput::AutoRotationPolicy::InTabletMode:
+            case BackendOutput::AutoRotationPolicy::InTabletMode:
                 o["autoRotation"] = "InTabletMode";
                 break;
-            case LogicalOutput::AutoRotationPolicy::Always:
+            case BackendOutput::AutoRotationPolicy::Always:
                 o["autoRotation"] = "Always";
                 break;
             }
@@ -1282,13 +1281,13 @@ void OutputConfigurationStore::save()
         }
         if (output.colorProfileSource) {
             switch (*output.colorProfileSource) {
-            case LogicalOutput::ColorProfileSource::sRGB:
+            case BackendOutput::ColorProfileSource::sRGB:
                 o["colorProfileSource"] = "sRGB";
                 break;
-            case LogicalOutput::ColorProfileSource::ICC:
+            case BackendOutput::ColorProfileSource::ICC:
                 o["colorProfileSource"] = "ICC";
                 break;
-            case LogicalOutput::ColorProfileSource::EDID:
+            case BackendOutput::ColorProfileSource::EDID:
                 o["colorProfileSource"] = "EDID";
                 break;
             }
@@ -1301,10 +1300,10 @@ void OutputConfigurationStore::save()
         }
         if (output.colorPowerTradeoff) {
             switch (*output.colorPowerTradeoff) {
-            case LogicalOutput::ColorPowerTradeoff::PreferEfficiency:
+            case BackendOutput::ColorPowerTradeoff::PreferEfficiency:
                 o["colorPowerTradeoff"] = "PreferEfficiency";
                 break;
-            case LogicalOutput::ColorPowerTradeoff::PreferAccuracy:
+            case BackendOutput::ColorPowerTradeoff::PreferAccuracy:
                 o["colorPowerTradeoff"] = "PreferAccuracy";
                 break;
             }
@@ -1323,10 +1322,10 @@ void OutputConfigurationStore::save()
         }
         if (output.edrPolicy.has_value()) {
             switch (*output.edrPolicy) {
-            case LogicalOutput::EdrPolicy::Never:
+            case BackendOutput::EdrPolicy::Never:
                 o["edrPolicy"] = "never";
                 break;
-            case LogicalOutput::EdrPolicy::Always:
+            case BackendOutput::EdrPolicy::Always:
                 o["edrPolicy"] = "always";
                 break;
             }
@@ -1378,25 +1377,25 @@ void OutputConfigurationStore::save()
     f.flush();
 }
 
-bool OutputConfigurationStore::isAutoRotateActive(const QList<LogicalOutput *> &outputs, bool isTabletMode) const
+bool OutputConfigurationStore::isAutoRotateActive(const QList<BackendOutput *> &outputs, bool isTabletMode) const
 {
-    const auto internalIt = std::find_if(outputs.begin(), outputs.end(), [](LogicalOutput *output) {
+    const auto internalIt = std::find_if(outputs.begin(), outputs.end(), [](BackendOutput *output) {
         return output->isInternal() && output->isEnabled();
     });
     if (internalIt == outputs.end()) {
         return false;
     }
-    LogicalOutput *internal = *internalIt;
+    BackendOutput *internal = *internalIt;
     // if output is not on, disable auto-rotate
-    if (internal->dpmsMode() != LogicalOutput::DpmsMode::On) {
+    if (internal->dpmsMode() != BackendOutput::DpmsMode::On) {
         return false;
     }
     switch (internal->autoRotationPolicy()) {
-    case LogicalOutput::AutoRotationPolicy::Never:
+    case BackendOutput::AutoRotationPolicy::Never:
         return false;
-    case LogicalOutput::AutoRotationPolicy::InTabletMode:
+    case BackendOutput::AutoRotationPolicy::InTabletMode:
         return isTabletMode;
-    case LogicalOutput::AutoRotationPolicy::Always:
+    case BackendOutput::AutoRotationPolicy::Always:
         return true;
     }
     Q_UNREACHABLE();

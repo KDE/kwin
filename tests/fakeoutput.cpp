@@ -8,27 +8,27 @@
 */
 #include "fakeoutput.h"
 
-FakeOutput::FakeOutput()
+FakeBackendOutput::FakeBackendOutput()
 {
     setMode(QSize(1024, 720), 60000);
 }
 
-bool FakeOutput::testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame)
+bool FakeBackendOutput::testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame)
 {
     return false;
 }
 
-bool FakeOutput::present(const QList<KWin::OutputLayer *> &layersToUpdate, const std::shared_ptr<KWin::OutputFrame> &frame)
+bool FakeBackendOutput::present(const QList<KWin::OutputLayer *> &layersToUpdate, const std::shared_ptr<KWin::OutputFrame> &frame)
 {
     return false;
 }
 
-KWin::RenderLoop *FakeOutput::renderLoop() const
+KWin::RenderLoop *FakeBackendOutput::renderLoop() const
 {
     return nullptr;
 }
 
-void FakeOutput::setMode(QSize size, uint32_t refreshRate)
+void FakeBackendOutput::setMode(QSize size, uint32_t refreshRate)
 {
     auto mode = std::make_shared<KWin::OutputMode>(size, refreshRate);
 
@@ -38,63 +38,63 @@ void FakeOutput::setMode(QSize size, uint32_t refreshRate)
     setState(state);
 }
 
-void FakeOutput::setTransform(KWin::OutputTransform transform)
+void FakeBackendOutput::setTransform(KWin::OutputTransform transform)
 {
     State state = m_state;
     state.transform = transform;
     setState(state);
 }
 
-void FakeOutput::moveTo(const QPoint &pos)
+void FakeBackendOutput::moveTo(const QPoint &pos)
 {
     State state = m_state;
     state.position = pos;
     setState(state);
 }
 
-void FakeOutput::setScale(qreal scale)
+void FakeBackendOutput::setScale(qreal scale)
 {
     State state = m_state;
     state.scale = scale;
     setState(state);
 }
 
-void FakeOutput::setSubPixel(SubPixel subPixel)
+void FakeBackendOutput::setSubPixel(SubPixel subPixel)
 {
     setInformation({
         .subPixel = subPixel,
     });
 }
 
-void FakeOutput::setDpmsSupported(bool supported)
+void FakeBackendOutput::setDpmsSupported(bool supported)
 {
     setInformation({
         .capabilities = supported ? Capability::Dpms : Capabilities(),
     });
 }
 
-void FakeOutput::setPhysicalSize(QSize size)
+void FakeBackendOutput::setPhysicalSize(QSize size)
 {
     setInformation({
         .physicalSize = size,
     });
 }
 
-void FakeOutput::setName(const QString &name)
+void FakeBackendOutput::setName(const QString &name)
 {
     Information info = m_information;
     info.name = name;
     setInformation(info);
 }
 
-void FakeOutput::setManufacturer(const QString &manufacturer)
+void FakeBackendOutput::setManufacturer(const QString &manufacturer)
 {
     Information info = m_information;
     info.manufacturer = manufacturer;
     setInformation(info);
 }
 
-void FakeOutput::setModel(const QString &model)
+void FakeBackendOutput::setModel(const QString &model)
 {
     Information info = m_information;
     info.model = model;

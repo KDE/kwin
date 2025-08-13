@@ -5,6 +5,7 @@
 */
 
 #include "scene/surfaceitem_wayland.h"
+#include "core/backendoutput.h"
 #include "core/drmdevice.h"
 #include "core/renderbackend.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
@@ -244,7 +245,7 @@ void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *
     m_surface->clearFifoBarrier();
     if (m_fifoFallbackTimer.isActive() && output) {
         // TODO once we can rely on frame being not-nullptr, use its refresh duration instead
-        const auto refreshDuration = std::chrono::nanoseconds(1'000'000'000'000) / output->refreshRate();
+        const auto refreshDuration = std::chrono::nanoseconds(1'000'000'000'000) / output->backendOutput()->refreshRate();
         // some games don't work properly if the refresh rate goes too low with FIFO. 30Hz is assumed to be fine here.
         // this must still be slower than the actual screen though, or fifo behavior would be broken!
         const auto fallbackRefreshDuration = std::max(refreshDuration * 5 / 4, std::chrono::nanoseconds(1'000'000'000) / 30);

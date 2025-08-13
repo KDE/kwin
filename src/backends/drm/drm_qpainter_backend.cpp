@@ -38,7 +38,7 @@ DrmDevice *DrmQPainterBackend::drmDevice() const
     return m_backend->primaryGpu()->drmDevice();
 }
 
-QList<OutputLayer *> DrmQPainterBackend::compatibleOutputLayers(LogicalOutput *output)
+QList<OutputLayer *> DrmQPainterBackend::compatibleOutputLayers(BackendOutput *output)
 {
     if (auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
         return {virtualOutput->primaryLayer()};

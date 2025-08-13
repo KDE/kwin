@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "dpmsinputeventfilter.h"
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "core/outputbackend.h"
 #include "input_event.h"
 #include "main.h"
@@ -204,7 +204,7 @@ void DpmsInputEventFilter::notify()
 {
     const QList<LogicalOutput *> outputs = workspace()->outputs();
     for (LogicalOutput *output : outputs) {
-        output->setDpmsMode(LogicalOutput::DpmsMode::On);
+        output->backendOutput()->setDpmsMode(BackendOutput::DpmsMode::On);
     }
 }
 
