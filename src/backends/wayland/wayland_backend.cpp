@@ -102,7 +102,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     connect(pointer, &Pointer::motion, this, [this](const QPointF &relativeToSurface, quint32 time) {
         WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
         Q_ASSERT(output);
-        const QPointF absolutePos = output->geometry().topLeft() + relativeToSurface;
+        const QPointF absolutePos = output->position() + relativeToSurface;
         Q_EMIT pointerMotionAbsolute(absolutePos, std::chrono::milliseconds(time), this);
     });
     connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
@@ -193,13 +193,13 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Touch *touch, WaylandSe
     connect(touch, &Touch::sequenceStarted, this, [this](TouchPoint *tp) {
         auto o = m_seat->backend()->findOutput(tp->surface());
         Q_ASSERT(o);
-        const QPointF position = o->geometry().topLeft() + tp->position();
+        const QPointF position = o->position() + tp->position();
         Q_EMIT touchDown(tp->id(), position, std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointAdded, this, [this](TouchPoint *tp) {
         auto o = m_seat->backend()->findOutput(tp->surface());
         Q_ASSERT(o);
-        const QPointF position = o->geometry().topLeft() + tp->position();
+        const QPointF position = o->position() + tp->position();
         Q_EMIT touchDown(tp->id(), position, std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointRemoved, this, [this](TouchPoint *tp) {
@@ -208,7 +208,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Touch *touch, WaylandSe
     connect(touch, &Touch::pointMoved, this, [this](TouchPoint *tp) {
         auto o = m_seat->backend()->findOutput(tp->surface());
         Q_ASSERT(o);
-        const QPointF position = o->geometry().topLeft() + tp->position();
+        const QPointF position = o->position() + tp->position();
         Q_EMIT touchMotion(tp->id(), position, std::chrono::milliseconds(tp->time()), this);
     });
 }

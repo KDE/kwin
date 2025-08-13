@@ -269,7 +269,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         QImage img;
         if (const auto context = effects->openglContext()) {
             RenderTarget renderTarget(target.get());
-            RenderViewport viewport(geometry, devicePixelRatio, renderTarget);
+            RenderViewport viewport(geometry, devicePixelRatio, renderTarget, QPoint());
             GLFramebuffer::pushFramebuffer(target.get());
             glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear(GL_COLOR_BUFFER_BIT);

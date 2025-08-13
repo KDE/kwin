@@ -416,7 +416,15 @@ QList<LogicalOutput *> WorkspaceWrapper::screens() const
 
 QList<LogicalOutput *> WorkspaceWrapper::screenOrder() const
 {
-    return workspace()->outputOrder();
+    QList<LogicalOutput *> ret;
+    const auto outputOrder = workspace()->outputOrder();
+    for (BackendOutput *output : outputOrder) {
+        const auto logical = workspace()->findOutput(output);
+        if (!ret.contains(logical)) {
+            ret.push_back(logical);
+        }
+    }
+    return ret;
 }
 
 LogicalOutput *WorkspaceWrapper::screenAt(const QPointF &pos) const

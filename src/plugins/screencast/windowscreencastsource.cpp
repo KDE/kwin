@@ -121,7 +121,7 @@ QRegion WindowScreenCastSource::render(QImage *target, const QRegion &bufferDama
 QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferDamage)
 {
     RenderTarget renderTarget(target);
-    RenderViewport viewport(boundingRect(), 1, renderTarget);
+    RenderViewport viewport(boundingRect(), 1, renderTarget, QPoint());
 
     WorkspaceScene *scene = Compositor::self()->scene();
 

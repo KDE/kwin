@@ -85,36 +85,6 @@ bool BackendOutput::isInternal() const
     return m_information.internal;
 }
 
-QRect BackendOutput::mapFromGlobal(const QRect &rect) const
-{
-    return rect.translated(-geometry().topLeft());
-}
-
-QRectF BackendOutput::mapFromGlobal(const QRectF &rect) const
-{
-    return rect.translated(-geometry().topLeft());
-}
-
-QRectF BackendOutput::mapToGlobal(const QRectF &rect) const
-{
-    return rect.translated(geometry().topLeft());
-}
-
-QRegion BackendOutput::mapToGlobal(const QRegion &region) const
-{
-    return region.translated(geometry().topLeft());
-}
-
-QPointF BackendOutput::mapToGlobal(const QPointF &pos) const
-{
-    return pos + geometry().topLeft();
-}
-
-QPointF BackendOutput::mapFromGlobal(const QPointF &pos) const
-{
-    return pos - geometry().topLeft();
-}
-
 BackendOutput::Capabilities BackendOutput::capabilities() const
 {
     return m_information.capabilities;
@@ -125,14 +95,9 @@ qreal BackendOutput::scale() const
     return m_state.scale;
 }
 
-QRect BackendOutput::geometry() const
+QPoint BackendOutput::position() const
 {
-    return QRect(m_state.position, pixelSize() / scale());
-}
-
-QRectF BackendOutput::geometryF() const
-{
-    return QRectF(m_state.position, QSizeF(pixelSize()) / scale());
+    return m_state.position;
 }
 
 QSize BackendOutput::physicalSize() const
@@ -236,13 +201,11 @@ void BackendOutput::setInformation(const Information &information)
 
 void BackendOutput::setState(const State &state)
 {
-    const QRect oldGeometry = geometry();
     const State oldState = m_state;
-
     m_state = state;
 
-    if (oldGeometry != geometry()) {
-        Q_EMIT geometryChanged();
+    if (oldState.position != state.position) {
+        Q_EMIT positionChanged();
     }
     if (oldState.scale != state.scale) {
         Q_EMIT scaleChanged();
@@ -587,16 +550,6 @@ bool BackendOutput::isDdcCiKnownBroken() const
         return m_information.edid.eisaId() == pair.first
             && m_information.edid.monitorName() == pair.second;
     });
-}
-
-QRect BackendOutput::rect() const
-{
-    return QRect(QPoint(0, 0), geometry().size());
-}
-
-QRectF BackendOutput::rectF() const
-{
-    return QRectF(QPointF(0, 0), geometryF().size());
 }
 
 std::chrono::milliseconds BackendOutput::dimAnimationTime()

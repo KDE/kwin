@@ -96,7 +96,7 @@ QRegion OutputScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     const auto logicalDamage = m_layer->repaints() | m_sceneView->collectDamage();
     const auto repaints = beginInfo->repaint | logicalDamage;
     m_layer->resetRepaints();
-    m_sceneView->paint(beginInfo->renderTarget, repaints);
+    m_sceneView->paint(beginInfo->renderTarget, QPoint(), repaints);
     m_sceneView->postPaint();
     if (!m_layer->endFrame(repaints, logicalDamage, nullptr)) {
         return QRegion{};

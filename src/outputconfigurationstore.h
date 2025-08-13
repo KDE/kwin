@@ -38,7 +38,6 @@ public:
     std::optional<std::tuple<OutputConfiguration, QList<BackendOutput *>, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
     void storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<BackendOutput *> &outputOrder);
 
-    void applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
     bool isAutoRotateActive(const QList<BackendOutput *> &outputs, bool isTabletMode) const;
 
 private:

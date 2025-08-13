@@ -139,8 +139,8 @@ public:
 
     LogicalOutput *xineramaIndexToOutput(int index) const;
 
-    void setOutputOrder(const QList<LogicalOutput *> &order);
-    QList<LogicalOutput *> outputOrder() const;
+    void setOutputOrder(const QList<BackendOutput *> &order);
+    QList<BackendOutput *> outputOrder() const;
 
     LogicalOutput *activeOutput() const;
     void setActiveOutput(LogicalOutput *output);
@@ -641,7 +641,7 @@ private:
 
     QList<LogicalOutput *> m_outputs;
     LogicalOutput *m_activeOutput = nullptr;
-    QList<LogicalOutput *> m_outputOrder;
+    QList<BackendOutput *> m_outputOrder;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;

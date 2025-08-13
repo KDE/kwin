@@ -18,7 +18,7 @@
 #include "xwaylandlauncher.h"
 #include "xwldrophandler.h"
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "keyboard_input.h"
 #include "main_wayland.h"
 #include "utils/common.h"
@@ -533,7 +533,7 @@ void Xwayland::updatePrimary()
         return;
     }
 
-    LogicalOutput *const primaryOutput = workspace()->outputOrder().front();
+    BackendOutput *const primaryOutput = workspace()->outputOrder().front();
     const QString primaryOutputName = primaryOutput->name();
     for (int i = 0; i < resources->num_outputs; i++) {
         Xcb::RandR::OutputInfo outputInfo(outputs[i], resources->config_timestamp);

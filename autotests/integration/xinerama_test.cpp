@@ -52,7 +52,7 @@ void XineramaTest::indexToOutput()
     QCOMPARE(workspace()->xineramaIndexToOutput(0), outputs.at(0));
     QCOMPARE(workspace()->xineramaIndexToOutput(1), outputs.at(1));
 
-    workspace()->setOutputOrder({outputs[1], outputs[0]});
+    workspace()->setOutputOrder({outputs[1]->backendOutput(), outputs[0]->backendOutput()});
     QCOMPARE(workspace()->xineramaIndexToOutput(0), outputs.at(1));
     QCOMPARE(workspace()->xineramaIndexToOutput(1), outputs.at(0));
 }

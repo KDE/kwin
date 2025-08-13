@@ -424,13 +424,12 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
 {
     assignBrightnessDevices(config);
 
-    m_outputConfigStore->applyMirroring(config, kwinApp()->outputBackend()->outputs());
     auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
     if (error != OutputConfigurationError::None) {
         return error;
     }
     updateOutputs(outputOrder);
-    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder | std::views::transform(&LogicalOutput::backendOutput) | std::ranges::to<QList>());
+    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder);
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 
     updateXwaylandScale();
@@ -446,9 +445,9 @@ void Workspace::updateXwaylandScale()
 {
     KConfigGroup kscreenGroup = kwinApp()->kdeglobals()->group(QStringLiteral("KScreen"));
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
-    if (xwaylandClientsScale && !m_outputOrder.isEmpty()) {
+    if (xwaylandClientsScale && !m_outputs.isEmpty()) {
         double maxScale = 0;
-        for (LogicalOutput *output : m_outputOrder) {
+        for (LogicalOutput *output : m_outputs) {
             maxScale = std::max(maxScale, output->scale());
         }
         kwinApp()->setXwaylandScale(maxScale);
@@ -515,7 +514,9 @@ void Workspace::updateOutputConfiguration()
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
     // Update the output order to a fallback list, to avoid dangling pointers
-    setOutputOrder(m_outputs);
+    setOutputOrder(outputs | std::views::filter([](BackendOutput *output) {
+        return output->isEnabled() && !output->isPlaceholder();
+    }) | std::ranges::to<QList>());
     // If applying the output configuration failed, brightness devices weren't assigned either.
     // To prevent dangling pointers, unset removed brightness brightness devices here
     const auto devices = waylandServer()->externalBrightness()->devices();
@@ -1116,8 +1117,14 @@ LogicalOutput *Workspace::findOutput(LogicalOutput *reference, Direction directi
 
 LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
 {
-    const auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
+    auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
         return logical->backendOutput() == backendOutput;
+    });
+    if (it != m_outputs.end()) {
+        return *it;
+    }
+    it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
+        return logical->uuid() == backendOutput->replicationSource();
     });
     return it == m_outputs.end() ? nullptr : *it;
 }
@@ -1144,10 +1151,17 @@ void Workspace::updateOutputs(const std::optional<QList<BackendOutput *>> &outpu
     }
 
     for (BackendOutput *output : availableOutputs) {
-        if (!output->isNonDesktop() && output->isEnabled()) {
-            newBackendOutputs.append(output);
-        }
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
+        if (output->isNonDesktop() || !output->isEnabled()) {
+            continue;
+        }
+        const auto replicationSource = std::ranges::find_if(availableOutputs, [output](BackendOutput *other) {
+            return other->uuid() == output->replicationSource();
+        });
+        if (replicationSource != availableOutputs.end() && (*replicationSource)->isEnabled()) {
+            continue;
+        }
+        newBackendOutputs.append(output);
     }
 
     // The workspace requires at least one output connected.
@@ -1185,22 +1199,16 @@ void Workspace::updateOutputs(const std::optional<QList<BackendOutput *>> &outpu
     }
 
     if (outputOrder) {
-        QList<LogicalOutput *> logicalOrder;
-        for (BackendOutput *output : *outputOrder) {
-            if (auto logical = findOutput(output)) {
-                logicalOrder.push_back(logical);
-            }
-        }
-        setOutputOrder(logicalOrder);
+        setOutputOrder(*outputOrder);
     } else {
         // ensure all enabled but no disabled outputs are in the output order
-        for (LogicalOutput *output : std::as_const(m_outputs)) {
+        for (BackendOutput *output : availableOutputs | std::views::filter(&BackendOutput::isEnabled) | std::views::filter(&BackendOutput::isPlaceholder)) {
             if (!m_outputOrder.contains(output)) {
                 m_outputOrder.push_back(output);
             }
         }
-        m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [this](LogicalOutput *output) {
-            return !m_outputs.contains(output);
+        m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [this](BackendOutput *output) {
+            return !findOutput(output);
         }),
                             m_outputOrder.end());
     }
@@ -1276,11 +1284,12 @@ void Workspace::updateOutputs(const std::optional<QList<BackendOutput *>> &outpu
     m_placementTracker->uninhibit();
     m_placementTracker->restore(getPlacementTrackerHash());
 
+    Q_EMIT outputsChanged();
+
     for (LogicalOutput *output : removed) {
         output->backendOutput()->unref();
+        output->unref();
     }
-
-    Q_EMIT outputsChanged();
 }
 
 void Workspace::aboutToTurnOff()
@@ -1702,7 +1711,8 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
-        const QRect geo = outputs[i]->geometry();
+        const auto logicalOutput = workspace()->findOutput(output);
+        const QRect geo = logicalOutput ? logicalOutput->geometry() : QRect();
         support.append(QStringLiteral("Screen %1:\n").arg(i));
         support.append(QStringLiteral("---------\n"));
         support.append(QStringLiteral("Name: %1\n").arg(output->name()));
@@ -2413,7 +2423,7 @@ LogicalOutput *Workspace::xineramaIndexToOutput(int index) const
 }
 #endif
 
-void Workspace::setOutputOrder(const QList<LogicalOutput *> &order)
+void Workspace::setOutputOrder(const QList<BackendOutput *> &order)
 {
     if (m_outputOrder != order) {
         m_outputOrder = order;
@@ -2421,7 +2431,7 @@ void Workspace::setOutputOrder(const QList<LogicalOutput *> &order)
     }
 }
 
-QList<LogicalOutput *> Workspace::outputOrder() const
+QList<BackendOutput *> Workspace::outputOrder() const
 {
     return m_outputOrder;
 }

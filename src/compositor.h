@@ -33,6 +33,7 @@ class Window;
 class OutputFrame;
 class SceneView;
 class ItemTreeView;
+class BackendOutput;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -94,13 +95,14 @@ private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
 protected:
-    LogicalOutput *findOutput(RenderLoop *loop) const;
+    BackendOutput *findOutput(RenderLoop *loop) const;
 
     void createScene();
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
-    void addOutput(LogicalOutput *output);
-    void removeOutput(LogicalOutput *output);
+    void handleOutputsChanged();
+    void addOutput(BackendOutput *output);
+    void removeOutput(BackendOutput *output);
 
     CompositingType m_selectedCompositor = NoCompositing;
 

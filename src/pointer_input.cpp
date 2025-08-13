@@ -921,7 +921,7 @@ void PointerInputRedirection::updateAfterScreenChange()
     if (m_lastOutputWasPlaceholder) {
         // previously we've positioned our pointer on a placeholder screen, try
         // to get us onto the real "primary" screen instead.
-        output = workspace()->outputOrder().at(0);
+        output = workspace()->findOutput(workspace()->outputOrder().at(0));
     } else {
         if (screenContainsPos(m_pos)) {
             // pointer still on a screen
