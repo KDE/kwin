@@ -131,7 +131,7 @@ QColor ColorPickerEffect::pick()
                 const QRect pixelDamage = QRect(QPoint(), QSize(1, 1));
                 sceneView.setViewport(QRectF(p, QSizeF(1, 1)));
                 sceneView.prePaint();
-                sceneView.paint(beginInfo->renderTarget, pixelDamage);
+                sceneView.paint(beginInfo->renderTarget, QPoint(), pixelDamage);
                 sceneView.postPaint();
                 if (!layer.endFrame(pixelDamage, pixelDamage, nullptr)) {
                     return;

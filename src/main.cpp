@@ -645,7 +645,7 @@ static PlatformCursorImage grabCursorOpenGL()
     SceneView sceneView(scene, output, nullptr);
     ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
     cursorView.prePaint();
-    cursorView.paint(renderTarget, infiniteRegion());
+    cursorView.paint(renderTarget, QPoint(), infiniteRegion());
     cursorView.postPaint();
 
     QImage image = texture->toImage();
@@ -669,7 +669,7 @@ static PlatformCursorImage grabCursorSoftware()
     SceneView sceneView(scene, output, nullptr);
     ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
     cursorView.prePaint();
-    cursorView.paint(renderTarget, infiniteRegion());
+    cursorView.paint(renderTarget, QPoint(), infiniteRegion());
     cursorView.postPaint();
 
     image.setDevicePixelRatio(output->scale());

@@ -69,7 +69,7 @@ void ShowPaintEffect::paintGL(const RenderTarget &renderTarget, const RenderView
     QList<QVector2D> verts;
     verts.reserve(m_painted.rectCount() * 12);
     for (const QRect &deviceRect : m_painted) {
-        const auto r = deviceRect.translated(viewport.deviceRenderRect().topLeft());
+        const auto r = deviceRect.translated(viewport.scaledRenderRect().topLeft());
         verts.push_back(QVector2D(r.x() + r.width(), r.y()));
         verts.push_back(QVector2D(r.x(), r.y()));
         verts.push_back(QVector2D(r.x(), r.y() + r.height()));

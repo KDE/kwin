@@ -283,7 +283,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput
     updateSharpness();
     updatePriority();
 
-    connect(handle, &BackendOutput::geometryChanged,
+    connect(handle, &BackendOutput::positionChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
     connect(handle, &BackendOutput::scaleChanged,
             this, &OutputDeviceV2Interface::updateScale);
@@ -652,7 +652,7 @@ void OutputDeviceV2Interface::updatePhysicalSize()
 
 void OutputDeviceV2Interface::updateGlobalPosition()
 {
-    const QPoint arg = d->m_handle->geometry().topLeft();
+    const QPoint arg = d->m_handle->position();
     if (d->m_globalPosition == arg) {
         return;
     }

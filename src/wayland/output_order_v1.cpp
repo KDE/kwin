@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "output_order_v1.h"
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "display.h"
 
 #include "qwayland-server-kde-output-order-v1.h"
@@ -56,7 +56,7 @@ void OutputOrderV1InterfacePrivate::kde_output_order_v1_bind_resource(Resource *
 
 void OutputOrderV1InterfacePrivate::sendList(wl_resource *resource)
 {
-    for (LogicalOutput *const output : std::as_const(outputOrder)) {
+    for (LogicalOutput *output : std::as_const(outputOrder)) {
         kde_output_order_v1_send_output(resource, output->name().toUtf8().constData());
     }
     kde_output_order_v1_send_done(resource);
