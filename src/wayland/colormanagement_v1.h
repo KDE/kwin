@@ -14,8 +14,8 @@ namespace KWin
 {
 
 class Display;
+class OutputInterface;
 class SurfaceInterface;
-class Output;
 
 class ColorManagerV1 : public QObject, private QtWaylandServer::wp_color_manager_v1
 {
@@ -125,7 +125,7 @@ class ColorManagementOutputV1 : public QObject, private QtWaylandServer::wp_colo
 {
     Q_OBJECT
 public:
-    explicit ColorManagementOutputV1(wl_client *client, uint32_t id, uint32_t version, Output *output);
+    explicit ColorManagementOutputV1(wl_client *client, uint32_t id, uint32_t version, OutputInterface *output);
 
 private:
     void colorDescriptionChanged();
@@ -133,8 +133,7 @@ private:
     void wp_color_management_output_v1_destroy(Resource *resource) override;
     void wp_color_management_output_v1_get_image_description(Resource *resource, uint32_t image_description) override;
 
-    Output *const m_output;
-    ColorDescription m_colorDescription;
+    QPointer<OutputInterface> m_output;
 };
 
 }
