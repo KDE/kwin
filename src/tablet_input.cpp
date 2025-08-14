@@ -236,7 +236,7 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
-    input()->processFilters(std::bind(&InputEventFilter::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->processFilters(&InputEventFilter::tabletToolAxisEvent, &ev);
     input()->setLastInputHandler(this);
 }
 
@@ -276,7 +276,7 @@ void TabletInputRedirection::tabletToolAxisEventRelative(const QPointF &delta,
     };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
-    input()->processFilters(std::bind(&InputEventFilter::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->processFilters(&InputEventFilter::tabletToolAxisEvent, &ev);
     input()->setLastInputHandler(this);
 }
 
@@ -313,7 +313,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
     };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolProximityEvent, std::placeholders::_1, &ev));
-    input()->processFilters(std::bind(&InputEventFilter::tabletToolProximityEvent, std::placeholders::_1, &ev));
+    input()->processFilters(&InputEventFilter::tabletToolProximityEvent, &ev);
     input()->setLastInputHandler(this);
 }
 
@@ -361,7 +361,7 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
     };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolTipEvent, std::placeholders::_1, &ev));
-    input()->processFilters(std::bind(&InputEventFilter::tabletToolTipEvent, std::placeholders::_1, &ev));
+    input()->processFilters(&InputEventFilter::tabletToolTipEvent, &ev);
     input()->setLastInputHandler(this);
 }
 
@@ -380,7 +380,7 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
     m_buttonDown = isPressed;
 
     input()->processSpies(std::bind(&InputEventSpy::tabletToolButtonEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::tabletToolButtonEvent, std::placeholders::_1, &event));
+    input()->processFilters(&InputEventFilter::tabletToolButtonEvent, &event);
     input()->setLastInputHandler(this);
 }
 
@@ -396,7 +396,7 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
         .time = time,
     };
     input()->processSpies(std::bind(&InputEventSpy::tabletPadButtonEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::tabletPadButtonEvent, std::placeholders::_1, &event));
+    input()->processFilters(&InputEventFilter::tabletPadButtonEvent, &event);
     input()->setLastInputHandler(this);
 }
 
@@ -413,7 +413,7 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position,
     };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletPadStripEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::tabletPadStripEvent, std::placeholders::_1, &event));
+    input()->processFilters(&InputEventFilter::tabletPadStripEvent, &event);
     input()->setLastInputHandler(this);
 }
 
@@ -430,7 +430,7 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
     };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletPadRingEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::tabletPadRingEvent, std::placeholders::_1, &event));
+    input()->processFilters(&InputEventFilter::tabletPadRingEvent, &event);
     input()->setLastInputHandler(this);
 }
 
@@ -446,7 +446,7 @@ void KWin::TabletInputRedirection::tabletPadDialEvent(int number, double delta, 
     };
 
     input()->processSpies(std::bind(&InputEventSpy::tabletPadDialEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::tabletPadDialEvent, std::placeholders::_1, &event));
+    input()->processFilters(&InputEventFilter::tabletPadDialEvent, &event);
     input()->setLastInputHandler(this);
 }
 

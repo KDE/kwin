@@ -1194,7 +1194,7 @@ public:
             if (m_touchPoints.count() >= 3 && !m_gestureCancelled) {
                 m_gestureTaken = true;
                 m_syntheticCancel = true;
-                input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));
+                input()->processFilters(&InputEventFilter::touchCancel);
                 m_syntheticCancel = false;
                 input()->shortcuts()->processSwipeStart(DeviceType::Touchscreen, m_touchPoints.count());
                 return true;
@@ -3276,7 +3276,7 @@ void InputRedirection::addInputDevice(InputDevice *device)
             .timestamp = time,
         };
         processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
-        processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
+        processFilters(&InputEventFilter::switchEvent, &event);
     });
 
     connect(device, &InputDevice::tabletToolAxisEvent,

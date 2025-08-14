@@ -130,22 +130,13 @@ public:
 
     /**
      * Sends an event through all InputFilters.
-     * The method @p function is invoked on each input filter. Processing is stopped if
-     * a filter returns @c true for @p function.
-     *
-     * The signature of the function should be equivalent to the following:
-     * @code
-     * bool function(const InputEventFilter *spy);
-     * @endcode
-     *
-     * The intended usage is to std::bind the method to invoke on the filter with all arguments
-     * bind.
+     * The method is invoked on each input filter. Processing is stopped if
+     * a filter returns @c true for it
      */
-    template<class UnaryPredicate>
-    void processFilters(UnaryPredicate function)
+    void processFilters(auto method, const auto &...args)
     {
         for (const auto filter : std::as_const(m_filters)) {
-            if (function(filter)) {
+            if ((filter->*method)(args...)) {
                 return;
             }
         }

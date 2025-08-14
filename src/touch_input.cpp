@@ -118,7 +118,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
     }
     input()->setLastInputHandler(this);
     input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time));
+    input()->processFilters(&InputEventFilter::touchDown, id, pos, time);
     m_windowUpdatedInCycle = false;
 }
 
@@ -133,7 +133,7 @@ void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time,
     input()->setLastInputHandler(this);
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchUp, std::placeholders::_1, id, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchUp, std::placeholders::_1, id, time));
+    input()->processFilters(&InputEventFilter::touchUp, id, time);
     m_windowUpdatedInCycle = false;
     if (m_activeTouchPoints.count() == 0) {
         update();
@@ -152,7 +152,7 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, std::ch
     m_lastPosition = pos;
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchMotion, std::placeholders::_1, id, pos, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchMotion, std::placeholders::_1, id, pos, time));
+    input()->processFilters(&InputEventFilter::touchMotion, id, pos, time);
     m_windowUpdatedInCycle = false;
 }
 
@@ -167,7 +167,7 @@ void TouchInputRedirection::cancel()
     // the compositor will not receive any TOUCH_MOTION or TOUCH_UP events for that slot.
     if (!m_activeTouchPoints.isEmpty()) {
         m_activeTouchPoints.clear();
-        input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));
+        input()->processFilters(&InputEventFilter::touchCancel);
     }
 }
 
@@ -176,7 +176,7 @@ void TouchInputRedirection::frame()
     if (!inited() || !waylandServer()->seat()->hasTouch()) {
         return;
     }
-    input()->processFilters(std::bind(&InputEventFilter::touchFrame, std::placeholders::_1));
+    input()->processFilters(&InputEventFilter::touchFrame);
 }
 
 }
