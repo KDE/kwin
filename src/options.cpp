@@ -48,7 +48,7 @@ Options::Options(QObject *parent)
     , m_edgeBarrier(0)
     , m_cornerBarrier(0)
     , m_rollOverDesktops(false)
-    , m_focusStealingPreventionLevel(0)
+    , m_focusStealingPreventionLevel(FocusStealingPreventionLevel::None)
     , m_killPingTimeout(0)
     , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
@@ -309,15 +309,15 @@ void Options::setRollOverDesktops(bool rollOverDesktops)
     Q_EMIT rollOverDesktopsChanged(m_rollOverDesktops);
 }
 
-void Options::setFocusStealingPreventionLevel(int focusStealingPreventionLevel)
+void Options::setFocusStealingPreventionLevel(FocusStealingPreventionLevel focusStealingPreventionLevel)
 {
     if (!focusPolicyIsReasonable()) {
-        focusStealingPreventionLevel = 0;
+        focusStealingPreventionLevel = FocusStealingPreventionLevel::None;
     }
-    if (m_focusStealingPreventionLevel == focusStealingPreventionLevel) {
+    if (m_focusStealingPreventionLevel == FocusStealingPreventionLevel(focusStealingPreventionLevel)) {
         return;
     }
-    m_focusStealingPreventionLevel = std::max(0, std::min(4, focusStealingPreventionLevel));
+    m_focusStealingPreventionLevel = std::max(FocusStealingPreventionLevel::None, std::min(FocusStealingPreventionLevel::Extreme, focusStealingPreventionLevel));
     Q_EMIT focusStealingPreventionLevelChanged();
 }
 
@@ -700,7 +700,7 @@ void Options::syncFromKcfgc()
     setNextFocusPrefersMouse(m_settings->nextFocusPrefersMouse());
     setSeparateScreenFocus(m_settings->separateScreenFocus());
     setRollOverDesktops(m_settings->rollOverDesktops());
-    setFocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel());
+    setFocusStealingPreventionLevel(FocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel()));
     setActivationDesktopPolicy(m_settings->activationDesktopPolicy());
     setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
     setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());

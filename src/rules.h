@@ -64,7 +64,7 @@ public:
     bool checkNoBorder(bool noborder, bool init = false) const;
     QString checkDecoColor(QString schemeFile) const;
     bool checkBlockCompositing(bool block) const;
-    int checkFSP(int fsp) const;
+    FocusStealingPreventionLevel checkFSP(FocusStealingPreventionLevel fsp) const;
     int checkFPP(int fpp) const;
     bool checkAcceptFocus(bool focus) const;
     bool checkCloseable(bool closeable) const;
@@ -174,7 +174,7 @@ public:
     bool applyNoBorder(bool &noborder, bool init) const;
     bool applyDecoColor(QString &schemeFile) const;
     bool applyBlockCompositing(bool &block) const;
-    bool applyFSP(int &fsp) const;
+    bool applyFSP(FocusStealingPreventionLevel &fsp) const;
     bool applyFPP(int &fpp) const;
     bool applyAcceptFocus(bool &focus) const;
     bool applyCloseable(bool &closeable) const;
@@ -272,7 +272,7 @@ private:
     ForceRule decocolorrule;
     bool blockcompositing;
     ForceRule blockcompositingrule;
-    int fsplevel;
+    FocusStealingPreventionLevel fsplevel;
     int fpplevel;
     ForceRule fsplevelrule;
     ForceRule fpplevelrule;

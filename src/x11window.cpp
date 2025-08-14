@@ -4216,7 +4216,7 @@ xcb_timestamp_t X11Window::readUserTimeMapTimestamp(const KStartupInfoId *asn_id
 #endif
             }
             // don't refuse if focus stealing prevention is turned off
-            if (!first_window && rules()->checkFSP(options->focusStealingPreventionLevel()) > 0) {
+            if (!first_window && rules()->checkFSP(options->focusStealingPreventionLevel()) > FocusStealingPreventionLevel::None) {
                 qCDebug(KWIN_CORE) << "User timestamp, already exists:" << 0;
                 return 0; // refuse activation
             }
