@@ -17,6 +17,7 @@
 
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
+#include <linux/input.h>
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
 
@@ -694,7 +695,6 @@ void ActivationTest::testXdgActivation()
     }));
     windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
     QCOMPARE(workspace()->activeWindow(), windows.back());
-    windows.back()->move(QPoint(150 * 3, 0));
 
     // activation should fail if the user clicks on another window in between
     // creating the activation token and using it
@@ -714,7 +714,84 @@ void ActivationTest::testXdgActivation()
     }));
     windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
     QCOMPARE(workspace()->activeWindow(), windows[1]);
-    windows.back()->move(QPoint(150 * 3, 0));
+    // if activation of a new window is not granted, it should be stacked behind the active window
+    QCOMPARE_LT(windows[3]->stackingOrder(), workspace()->activeWindow()->stackingOrder());
+
+    // focus stealing prevention level 3 is more lax and should activate windows
+    // even with an invalid token if the app id matches the last granted activation token
+    options->setFocusStealingPreventionLevel(3);
+    setupWindows();
+    shellSurfaces[1]->set_app_id("test_app_id");
+    token = Test::xdgActivation()->createToken();
+    token->set_surface(*surfaces[2]);
+    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_app_id("test_app_id");
+    result = token->commitAndWait();
+    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1]);
+
+    // new windows should also be activated if the app id matches,
+    // even if they don't actually request activation
+    setupWindows();
+    surfaces.push_back(Test::createSurface());
+    token = Test::xdgActivation()->createToken();
+    token->set_surface(*surfaces[2]);
+    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_app_id("test_app_id_2");
+    result = token->commitAndWait();
+    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get(), [&](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id("test_app_id_2");
+    }));
+    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
+    QCOMPARE(workspace()->activeWindow(), windows[3]);
+
+    // focus stealing prevention level 2 is even more lax and should activate windows
+    // even with an invalid token if the last pressed key was "enter" (same for numpad enter)
+    options->setFocusStealingPreventionLevel(2);
+    setupWindows();
+    Test::keyboardKeyPressed(KEY_ENTER, time++);
+    Test::keyboardKeyReleased(KEY_ENTER, time++);
+    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1]);
+
+    setupWindows();
+    Test::keyboardKeyPressed(KEY_KPENTER, time++);
+    Test::keyboardKeyReleased(KEY_KPENTER, time++);
+    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1]);
+
+    // the active window changed away from the one that we pressed enter in,
+    // so the next invalid activation token should not work
+    Test::xdgActivation()->activate(QString(), *surfaces[2]);
+    QVERIFY(!activationSpy.wait(10));
+
+    // new windows should also be activated after the enter key was pressed,
+    // even if they don't actually request activation
+    Test::keyboardKeyPressed(KEY_KPENTER, time++);
+    Test::keyboardKeyReleased(KEY_KPENTER, time++);
+    surfaces.push_back(Test::createSurface());
+    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get()));
+    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
+    QCOMPARE(workspace()->activeWindow(), windows[3]);
+
+    // with focus stealing prevention level 1, every new window should unconditionally be activated,
+    // even if it doesn't request an activation token at all
+    options->setFocusStealingPreventionLevel(1);
+    setupWindows();
+    surfaces.push_back(Test::createSurface());
+    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get()));
+    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
+    QCOMPARE(workspace()->activeWindow(), windows[3]);
+
+    // with focus stealing prevention at level 0, every activation token is considered "valid"
+    options->setFocusStealingPreventionLevel(0);
+    setupWindows();
+    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1]);
 }
 }
 
