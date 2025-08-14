@@ -22,7 +22,7 @@ namespace KWin
 
 class Display;
 class XdgApplicationSessionV1InterfacePrivate;
-class XdgSessionStorageV1Private;
+class XdgSessionDataV1;
 class XdgSessionManagerV1InterfacePrivate;
 class XdgToplevelInterface;
 class XdgToplevelSessionV1Interface;
@@ -44,27 +44,29 @@ class KWIN_EXPORT XdgSessionStorageV1 : public QObject
 
 public:
     explicit XdgSessionStorageV1(QObject *parent = nullptr);
-    explicit XdgSessionStorageV1(KSharedConfigPtr config, QObject *parent = nullptr);
     ~XdgSessionStorageV1() override;
 
-    /**
-     * Returns the config object attached to this session storage.
-     */
-    KSharedConfigPtr config() const;
+    std::unique_ptr<XdgSessionDataV1> session(const QString &sessionId);
+};
 
-    /**
-     * Sets the config object for this session storage to @a config.
-     */
-    void setConfig(KSharedConfigPtr config);
+class KWIN_EXPORT XdgSessionDataV1 : public QObject
+{
+    Q_OBJECT
 
-    bool contains(const QString &sessionId, const QString &toplevelId = QString()) const;
-    QVariant read(const QString &sessionId, const QString &toplevelId, const QString &key, const QMetaType &metaType) const;
-    void write(const QString &sessionid, const QString &toplevelId, const QString &key, const QVariant &value);
-    void remove(const QString &sessionId, const QString &toplevelId = QString());
-    void sync();
+public:
+    explicit XdgSessionDataV1(const QString &filePath);
+    ~XdgSessionDataV1() override;
+
+    bool isRestored() const;
+    bool contains(const QString &toplevelId) const;
+    QVariant read(const QString &toplevelId, const QString &key, const QMetaType &metaType) const;
+    void write(const QString &toplevelId, const QString &key, const QVariant &value);
+    void remove();
+    void remove(const QString &toplevelId);
 
 private:
-    std::unique_ptr<XdgSessionStorageV1Private> d;
+    KSharedConfigPtr m_config;
+    QString m_filePath;
 };
 
 /**
@@ -101,7 +103,7 @@ class KWIN_EXPORT XdgApplicationSessionV1Interface : public QObject
     Q_OBJECT
 
 public:
-    XdgApplicationSessionV1Interface(XdgSessionStorageV1 *storage, const QString &handle, wl_client *client, int id, int version);
+    XdgApplicationSessionV1Interface(std::unique_ptr<XdgSessionDataV1> &&storage, const QString &handle, wl_client *client, int id, int version);
     ~XdgApplicationSessionV1Interface() override;
 
     /**
@@ -112,7 +114,7 @@ public:
     /**
      * Returns the session storage for this application session.
      */
-    XdgSessionStorageV1 *storage() const;
+    XdgSessionDataV1 *storage() const;
 
     /**
      * Returns the handle that uniquely identifies this application session object.
