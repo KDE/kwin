@@ -144,21 +144,13 @@ public:
 
     /**
      * Sends an event through all input event spies.
-     * The @p function is invoked on each InputEventSpy.
-     *
-     * The UnaryFunction is defined like the UnaryFunction of std::for_each.
-     * The signature of the function should be equivalent to the following:
-     * @code
-     * void function(const InputEventSpy *spy);
-     * @endcode
-     *
-     * The intended usage is to std::bind the method to invoke on the spies with all arguments
-     * bind.
+     * The method is invoked on each InputEventSpy.
      */
-    template<class UnaryFunction>
-    void processSpies(UnaryFunction function)
+    void processSpies(auto method, const auto &...args)
     {
-        std::for_each(m_spies.constBegin(), m_spies.constEnd(), function);
+        for (const auto spy : std::as_const(m_spies)) {
+            (spy->*method)(args...);
+        }
     }
 
     KeyboardInputRedirection *keyboard() const

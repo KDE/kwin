@@ -306,7 +306,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         .timestamp = time,
     };
 
-    m_input->processSpies(std::bind(&InputEventSpy::keyboardKey, std::placeholders::_1, &event));
+    m_input->processSpies(&InputEventSpy::keyboardKey, &event);
     m_input->processFilters(&InputEventFilter::keyboardKey, &event);
 
     if (state == KeyboardKeyState::Released) {

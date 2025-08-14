@@ -235,7 +235,7 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
         .tool = tool,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->processSpies(&InputEventSpy::tabletToolAxisEvent, &ev);
     input()->processFilters(&InputEventFilter::tabletToolAxisEvent, &ev);
     input()->setLastInputHandler(this);
 }
@@ -275,7 +275,7 @@ void TabletInputRedirection::tabletToolAxisEventRelative(const QPointF &delta,
         .tool = tool,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->processSpies(&InputEventSpy::tabletToolAxisEvent, &ev);
     input()->processFilters(&InputEventFilter::tabletToolAxisEvent, &ev);
     input()->setLastInputHandler(this);
 }
@@ -312,7 +312,7 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
         .tool = tool,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolProximityEvent, std::placeholders::_1, &ev));
+    input()->processSpies(&InputEventSpy::tabletToolProximityEvent, &ev);
     input()->processFilters(&InputEventFilter::tabletToolProximityEvent, &ev);
     input()->setLastInputHandler(this);
 }
@@ -360,7 +360,7 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
         .tool = tool,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolTipEvent, std::placeholders::_1, &ev));
+    input()->processSpies(&InputEventSpy::tabletToolTipEvent, &ev);
     input()->processFilters(&InputEventFilter::tabletToolTipEvent, &ev);
     input()->setLastInputHandler(this);
 }
@@ -379,7 +379,7 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
 
     m_buttonDown = isPressed;
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletToolButtonEvent, std::placeholders::_1, &event));
+    input()->processSpies(&InputEventSpy::tabletToolButtonEvent, &event);
     input()->processFilters(&InputEventFilter::tabletToolButtonEvent, &event);
     input()->setLastInputHandler(this);
 }
@@ -395,7 +395,7 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
         .isModeSwitch = isModeSwitch,
         .time = time,
     };
-    input()->processSpies(std::bind(&InputEventSpy::tabletPadButtonEvent, std::placeholders::_1, &event));
+    input()->processSpies(&InputEventSpy::tabletPadButtonEvent, &event);
     input()->processFilters(&InputEventFilter::tabletPadButtonEvent, &event);
     input()->setLastInputHandler(this);
 }
@@ -412,7 +412,7 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position,
         .time = time,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletPadStripEvent, std::placeholders::_1, &event));
+    input()->processSpies(&InputEventSpy::tabletPadStripEvent, &event);
     input()->processFilters(&InputEventFilter::tabletPadStripEvent, &event);
     input()->setLastInputHandler(this);
 }
@@ -429,7 +429,7 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, 
         .time = time,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletPadRingEvent, std::placeholders::_1, &event));
+    input()->processSpies(&InputEventSpy::tabletPadRingEvent, &event);
     input()->processFilters(&InputEventFilter::tabletPadRingEvent, &event);
     input()->setLastInputHandler(this);
 }
@@ -445,7 +445,7 @@ void KWin::TabletInputRedirection::tabletPadDialEvent(int number, double delta, 
         .time = time,
     };
 
-    input()->processSpies(std::bind(&InputEventSpy::tabletPadDialEvent, std::placeholders::_1, &event));
+    input()->processSpies(&InputEventSpy::tabletPadDialEvent, &event);
     input()->processFilters(&InputEventFilter::tabletPadDialEvent, &event);
     input()->setLastInputHandler(this);
 }

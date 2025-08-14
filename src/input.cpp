@@ -3275,7 +3275,7 @@ void InputRedirection::addInputDevice(InputDevice *device)
             .state = state,
             .timestamp = time,
         };
-        processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
+        processSpies(&InputEventSpy::switchEvent, &event);
         processFilters(&InputEventFilter::switchEvent, &event);
     });
 
