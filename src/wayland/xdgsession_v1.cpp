@@ -12,6 +12,7 @@
 #include "qwayland-server-xx-session-management-v1.h"
 
 #include <KConfigGroup>
+#include <QDir>
 #include <QIODevice>
 
 namespace KWin
@@ -65,7 +66,7 @@ void XdgSessionManagerV1InterfacePrivate::xx_session_manager_v1_get_session(Reso
         session->markReplaced();
     }
 
-    auto applicationSession = new XdgApplicationSessionV1Interface(storage, sessionHandle, resource->client(), id, resource->version());
+    auto applicationSession = new XdgApplicationSessionV1Interface(storage->session(sessionHandle), sessionHandle, resource->client(), id, resource->version());
     sessions.insert(sessionHandle, applicationSession);
     QObject::connect(applicationSession, &XdgApplicationSessionV1Interface::aboutToBeDestroyed, q, [this, applicationSession]() {
         if (!applicationSession->isReplaced()) {
@@ -92,10 +93,10 @@ XdgSessionStorageV1 *XdgSessionManagerV1Interface::storage() const
 class XdgApplicationSessionV1InterfacePrivate : public QtWaylandServer::xx_session_v1
 {
 public:
-    XdgApplicationSessionV1InterfacePrivate(XdgSessionStorageV1 *storage, const QString &sessionId, wl_client *client, int id, int version, XdgApplicationSessionV1Interface *q);
+    XdgApplicationSessionV1InterfacePrivate(std::unique_ptr<XdgSessionDataV1> &&storage, const QString &sessionId, wl_client *client, int id, int version, XdgApplicationSessionV1Interface *q);
 
     XdgApplicationSessionV1Interface *q;
-    XdgSessionStorageV1 *storage;
+    std::unique_ptr<XdgSessionDataV1> storage;
     QHash<QString, XdgToplevelSessionV1Interface *> sessions;
     QString sessionId;
     bool replaced = false;
@@ -108,16 +109,16 @@ protected:
     void xx_session_v1_restore_toplevel(Resource *resource, uint32_t id, wl_resource *toplevel, const QString &toplevel_id) override;
 };
 
-XdgApplicationSessionV1InterfacePrivate::XdgApplicationSessionV1InterfacePrivate(XdgSessionStorageV1 *storage,
+XdgApplicationSessionV1InterfacePrivate::XdgApplicationSessionV1InterfacePrivate(std::unique_ptr<XdgSessionDataV1> &&storage,
                                                                                  const QString &sessionId,
                                                                                  wl_client *client, int id, int version,
                                                                                  XdgApplicationSessionV1Interface *q)
     : QtWaylandServer::xx_session_v1(client, id, version)
     , q(q)
-    , storage(storage)
+    , storage(std::move(storage))
     , sessionId(sessionId)
 {
-    if (storage->contains(sessionId)) {
+    if (this->storage->isRestored()) {
         send_restored();
     } else {
         send_created(sessionId);
@@ -137,7 +138,7 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_destroy(Resource *re
 void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_remove(Resource *resource)
 {
     if (!replaced) {
-        storage->remove(sessionId);
+        storage->remove();
     }
     wl_resource_destroy(resource->handle);
 }
@@ -157,7 +158,7 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_add_toplevel(Resourc
 
     // clear any storage, this ensures we won't restore anything
     if (!replaced) {
-        storage->remove(sessionId, toplevel_id);
+        storage->remove(toplevel_id);
     }
 
     auto session = new XdgToplevelSessionV1Interface(q, toplevel, toplevel_id, resource->client(), id, resource->version());
@@ -192,8 +193,8 @@ void XdgApplicationSessionV1InterfacePrivate::xx_session_v1_restore_toplevel(Res
     });
 }
 
-XdgApplicationSessionV1Interface::XdgApplicationSessionV1Interface(XdgSessionStorageV1 *storage, const QString &handle, wl_client *client, int id, int version)
-    : d(new XdgApplicationSessionV1InterfacePrivate(storage, handle, client, id, version, this))
+XdgApplicationSessionV1Interface::XdgApplicationSessionV1Interface(std::unique_ptr<XdgSessionDataV1> &&storage, const QString &handle, wl_client *client, int id, int version)
+    : d(new XdgApplicationSessionV1InterfacePrivate(std::move(storage), handle, client, id, version, this))
 {
 }
 
@@ -207,9 +208,9 @@ wl_client *XdgApplicationSessionV1Interface::client() const
     return d->resource()->client();
 }
 
-XdgSessionStorageV1 *XdgApplicationSessionV1Interface::storage() const
+XdgSessionDataV1 *XdgApplicationSessionV1Interface::storage() const
 {
-    return d->storage;
+    return d->storage.get();
 }
 
 QString XdgApplicationSessionV1Interface::sessionId() const
@@ -281,7 +282,7 @@ void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_destroy(Resour
 void XdgToplevelSessionV1InterfacePrivate::xx_toplevel_session_v1_remove(Resource *resource)
 {
     if (!isInert()) {
-        session->storage()->remove(session->sessionId(), toplevelId);
+        session->storage()->remove(toplevelId);
     }
     wl_resource_destroy(resource->handle);
 }
@@ -308,7 +309,7 @@ bool XdgToplevelSessionV1Interface::exists() const
     if (d->isInert()) {
         return false;
     } else {
-        return d->session->storage()->contains(d->session->sessionId(), d->toplevelId);
+        return d->session->storage()->contains(d->toplevelId);
     }
 }
 
@@ -341,7 +342,7 @@ QVariant XdgToplevelSessionV1Interface::rawRead(const QString &key, const QMetaT
         return QVariant();
     }
 
-    return d->session->storage()->read(d->session->sessionId(), d->toplevelId, key, metaType);
+    return d->session->storage()->read(d->toplevelId, key, metaType);
 }
 
 void XdgToplevelSessionV1Interface::rawWrite(const QString &key, const QVariant &value)
@@ -350,86 +351,74 @@ void XdgToplevelSessionV1Interface::rawWrite(const QString &key, const QVariant 
         return;
     }
 
-    d->session->storage()->write(d->session->sessionId(), d->toplevelId, key, value);
+    d->session->storage()->write(d->toplevelId, key, value);
 }
-
-class XdgSessionStorageV1Private
-{
-public:
-    KSharedConfigPtr config;
-};
 
 XdgSessionStorageV1::XdgSessionStorageV1(QObject *parent)
     : QObject(parent)
-    , d(new XdgSessionStorageV1Private)
 {
-}
-
-XdgSessionStorageV1::XdgSessionStorageV1(KSharedConfigPtr config, QObject *parent)
-    : QObject(parent)
-    , d(new XdgSessionStorageV1Private)
-{
-    d->config = config;
 }
 
 XdgSessionStorageV1::~XdgSessionStorageV1()
 {
 }
 
-KSharedConfigPtr XdgSessionStorageV1::config() const
+std::unique_ptr<XdgSessionDataV1> XdgSessionStorageV1::session(const QString &sessionId)
 {
-    return d->config;
-}
-
-void XdgSessionStorageV1::setConfig(KSharedConfigPtr config)
-{
-    d->config = config;
-}
-
-bool XdgSessionStorageV1::contains(const QString &sessionId, const QString &toplevelId) const
-{
-    if (toplevelId.isEmpty()) {
-        return d->config->hasGroup(sessionId);
-    } else {
-        return d->config->group(sessionId).hasGroup(toplevelId);
+    const QString storageDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericStateLocation) + QLatin1String("/kwin/session");
+    if (!QDir().exists(storageDirectory)) {
+        QDir().mkpath(storageDirectory);
     }
+
+    return std::make_unique<XdgSessionDataV1>(storageDirectory + QLatin1Char('/') + sessionId);
 }
 
-QVariant XdgSessionStorageV1::read(const QString &sessionId, const QString &surfaceId, const QString &key, const QMetaType &metaType) const
+XdgSessionDataV1::XdgSessionDataV1(const QString &filePath)
+    : m_config(KSharedConfig::openStateConfig(filePath))
+    , m_filePath(filePath)
 {
-    const KConfigGroup sessionGroup(d->config, sessionId);
-    const KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
+}
 
-    if (!surfaceGroup.hasKey(key)) {
+XdgSessionDataV1::~XdgSessionDataV1()
+{
+}
+
+bool XdgSessionDataV1::isRestored() const
+{
+    return QFile::exists(m_filePath);
+}
+
+bool XdgSessionDataV1::contains(const QString &toplevelId) const
+{
+    return m_config->hasGroup(toplevelId);
+}
+
+QVariant XdgSessionDataV1::read(const QString &surfaceId, const QString &key, const QMetaType &metaType) const
+{
+    const KConfigGroup group(m_config, surfaceId);
+    if (!group.hasKey(key)) {
         return QVariant();
     }
 
-    return surfaceGroup.readEntry(key, QVariant::fromMetaType(metaType));
+    return group.readEntry(key, QVariant::fromMetaType(metaType));
 }
 
-void XdgSessionStorageV1::write(const QString &sessionId, const QString &surfaceId,
-                                const QString &key, const QVariant &value)
+void XdgSessionDataV1::write(const QString &surfaceId, const QString &key, const QVariant &value)
 {
-    KConfigGroup sessionGroup(d->config, sessionId);
-    KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
-    surfaceGroup.writeEntry(key, value);
+    KConfigGroup group(m_config, surfaceId);
+    group.writeEntry(key, value);
 }
 
-void XdgSessionStorageV1::remove(const QString &sessionId, const QString &surfaceId)
+void XdgSessionDataV1::remove()
 {
-    KConfigGroup sessionGroup(d->config, sessionId);
-
-    if (surfaceId.isEmpty()) {
-        sessionGroup.deleteGroup();
-    } else {
-        KConfigGroup surfaceGroup(&sessionGroup, surfaceId);
-        surfaceGroup.deleteGroup();
-    }
+    m_config->markAsClean();
+    QFile::remove(m_filePath);
 }
 
-void XdgSessionStorageV1::sync()
+void XdgSessionDataV1::remove(const QString &surfaceId)
 {
-    d->config->sync();
+    KConfigGroup group(m_config, surfaceId);
+    group.deleteGroup();
 }
 
 } // namespace KWin
