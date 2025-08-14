@@ -1065,7 +1065,7 @@ msgstr "انقل لأسفل"
 #: zoom/zoom_config.ui:25 zoom/zoom_config.ui:41
 #, kde-format
 msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-msgstr "عند التكبير والتصغير ، قم بتغيير التكبير بواسطة عامل التكبير المحدد."
+msgstr "عند التكبير والتصغير، قم بتغيير التكبير بواسطة عامل التكبير المحدد."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: zoom/zoom_config.ui:28
