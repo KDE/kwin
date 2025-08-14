@@ -975,8 +975,8 @@ void OutputDeviceV2Interface::updateColorPowerTradeoff()
         const auto clientResources = d->resourceMap();
         for (auto resource : clientResources) {
             d->sendColorPowerTradeoff(resource);
-            d->sendDone(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -1002,6 +1002,7 @@ void OutputDeviceV2Interface::updateReplicationSource()
         for (auto resource : clientResources) {
             d->sendReplicationSource(resource);
         }
+        scheduleDone();
     }
 }
 
@@ -1030,6 +1031,7 @@ void OutputDeviceV2Interface::updateDdcCiAllowed()
         for (const auto &resource : clientResources) {
             d->sendDdcCiAllowed(resource);
         }
+        scheduleDone();
     }
 }
 
