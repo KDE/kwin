@@ -4309,17 +4309,6 @@ void X11Window::updateUrgency()
     }
 }
 
-namespace FSP
-{
-enum Level {
-    None = 0,
-    Low,
-    Medium,
-    High,
-    Extreme,
-};
-}
-
 // focus_in -> the window got FocusIn event
 bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
 {
@@ -4335,8 +4324,8 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
     if (time == -1U) {
         time = window->userTime();
     }
-    const FSP::Level level = (FSP::Level)window->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (workspace()->sessionManager()->state() == SessionState::Saving && level <= FSP::Medium) { // <= normal
+    const FocusStealingPreventionLevel level = window->rules()->checkFSP(options->focusStealingPreventionLevel());
+    if (workspace()->sessionManager()->state() == SessionState::Saving && level <= FocusStealingPreventionLevel::Medium) { // <= normal
         return true;
     }
     Window *ac = workspace()->mostRecentlyActivatedWindow();
@@ -4353,15 +4342,15 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
             return false;
         }
     }
-    const FSP::Level protection = (FSP::Level)(ac ? ac->rules()->checkFPP(2) : FSP::None);
+    const FocusStealingPreventionLevel protection = ac ? ac->rules()->checkFPP(FocusStealingPreventionLevel::Medium) : FocusStealingPreventionLevel::None;
 
     // stealing is unconditionally allowed (NETWM behavior)
-    if (level == FSP::None || protection == FSP::None) {
+    if (level == FocusStealingPreventionLevel::None || protection == FocusStealingPreventionLevel::None) {
         return true;
     }
 
     // The active window "grabs" the focus or stealing is generally forbidden
-    if (level == FSP::Extreme || protection == FSP::Extreme) {
+    if (level == FocusStealingPreventionLevel::Extreme || protection == FocusStealingPreventionLevel::Extreme) {
         return false;
     }
 
@@ -4376,20 +4365,20 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
 
     // Unconditionally allow intra-window passing around for lower stealing protections
     // unless the active window has High interest
-    if (Window::belongToSameApplication(window, ac, Window::SameApplicationCheck::RelaxedForActive) && protection < FSP::High) {
+    if (Window::belongToSameApplication(window, ac, Window::SameApplicationCheck::RelaxedForActive) && protection < FocusStealingPreventionLevel::High) {
         qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
         return true;
     }
 
     // High FPS, not intr-window change. Only allow if the active window has only minor interest
-    if (level > FSP::Medium && protection > FSP::Low) {
+    if (level > FocusStealingPreventionLevel::Medium && protection > FocusStealingPreventionLevel::Low) {
         return false;
     }
 
     if (time == -1U) { // no time known
         qCDebug(KWIN_CORE) << "Activation: No timestamp at all";
         // Only allow for Low protection unless active window has High interest in focus
-        if (level < FSP::Medium && protection < FSP::High) {
+        if (level < FocusStealingPreventionLevel::Medium && protection < FocusStealingPreventionLevel::High) {
             return true;
         }
         // no timestamp at all, don't activate - because there's also creation timestamp
