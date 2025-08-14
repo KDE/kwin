@@ -381,8 +381,11 @@ bool WaylandServer::init()
     m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
 
     if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_SESSION_MANAGER") == 1) {
-        auto storage = new XdgSessionStorageV1(this);
-        new XdgSessionManagerV1Interface(m_display, storage, m_display);
+        const int defaultStoreSizeInBytes = 5 * 1024 * 1024;
+        const int expectedSessionSizeInBytes = 512;
+        auto storage = std::make_unique<XdgSessionStorageV1>(QStringLiteral("kwinsession"), defaultStoreSizeInBytes, expectedSessionSizeInBytes);
+
+        new XdgSessionManagerV1Interface(m_display, std::move(storage), m_display);
     }
 
     m_xdgDecorationManagerV1 = new XdgDecorationManagerV1Interface(m_display, m_display);

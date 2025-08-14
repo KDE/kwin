@@ -8,10 +8,10 @@
 
 #include <kwin_export.h>
 
-#include <QObject>
+#include <KSharedDataCache>
 
-#include <KSharedConfig>
-#include <kconfigconversioncheck_p.h>
+#include <QObject>
+#include <QVariant>
 
 #include <memory>
 
@@ -27,6 +27,7 @@ class XdgSessionManagerV1InterfacePrivate;
 class XdgToplevelInterface;
 class XdgToplevelSessionV1Interface;
 class XdgToplevelSessionV1InterfacePrivate;
+class XdgSessionDataV1Private;
 
 /**
  * The XdgSessionStorageV1 class represents the storage for the compositor's session data.
@@ -34,39 +35,37 @@ class XdgToplevelSessionV1InterfacePrivate;
  * XdgSessionStorageV1 stores toplevel surface session data such as the frame geometry, the
  * maximize mode, etc. No restrictions are imposed on the data type, the compositor can store
  * data of any kind in the storage, for example QRect, QSize, QString, etc.
- *
- * Note that it is the responsibility of the compositor to decide when the storage must be
- * sync'ed.
  */
-class KWIN_EXPORT XdgSessionStorageV1 : public QObject
+class KWIN_EXPORT XdgSessionStorageV1
 {
-    Q_OBJECT
-
 public:
-    explicit XdgSessionStorageV1(QObject *parent = nullptr);
-    ~XdgSessionStorageV1() override;
+    XdgSessionStorageV1(const QString &cacheName, unsigned defaultCacheSize, unsigned expectedItemSize = 0);
+    ~XdgSessionStorageV1();
 
-    std::unique_ptr<XdgSessionDataV1> session(const QString &sessionId);
+    KSharedDataCache *store() const;
+
+private:
+    std::unique_ptr<KSharedDataCache> m_store;
 };
 
-class KWIN_EXPORT XdgSessionDataV1 : public QObject
+/**
+ * The XdgSessionDataV1 type represents data associated with an xdg session.
+ */
+class KWIN_EXPORT XdgSessionDataV1
 {
-    Q_OBJECT
-
 public:
-    explicit XdgSessionDataV1(const QString &filePath);
-    ~XdgSessionDataV1() override;
+    explicit XdgSessionDataV1(XdgSessionStorageV1 *store, const QString &sessionId);
+    ~XdgSessionDataV1();
 
-    bool isRestored() const;
+    bool isEmpty() const;
     bool contains(const QString &toplevelId) const;
-    QVariant read(const QString &toplevelId, const QString &key, const QMetaType &metaType) const;
-    void write(const QString &toplevelId, const QString &key, const QVariant &value);
+    QVariant read(const QString &toplevelId) const;
+    void write(const QString &toplevelId, const QVariant &value);
     void remove();
     void remove(const QString &toplevelId);
 
 private:
-    KSharedConfigPtr m_config;
-    QString m_filePath;
+    std::unique_ptr<XdgSessionDataV1Private> d;
 };
 
 /**
@@ -80,13 +79,8 @@ class KWIN_EXPORT XdgSessionManagerV1Interface : public QObject
     Q_OBJECT
 
 public:
-    XdgSessionManagerV1Interface(Display *display, XdgSessionStorageV1 *storage, QObject *parent = nullptr);
+    XdgSessionManagerV1Interface(Display *display, std::unique_ptr<XdgSessionStorageV1> &&storage, QObject *parent = nullptr);
     ~XdgSessionManagerV1Interface() override;
-
-    /**
-     * Returns the backing storage for the compositor's session data.
-     */
-    XdgSessionStorageV1 *storage() const;
 
 private:
     std::unique_ptr<XdgSessionManagerV1InterfacePrivate> d;
@@ -172,44 +166,18 @@ public:
     void sendRestored();
 
     /**
-     * Returns the value for the property @a key. If the session storage doesn't contain any
-     * property with the specified key, this function returns @c std::nullopt.
+     * Returns the data stored for this session.
      */
-    template<typename T>
-    std::optional<T> read(const QString &key) const;
+    QVariant read() const;
 
     /**
-     * Sets the value of property @a key to @a value. If the key already exists, the previous
-     * value is overwritten.
+     * Stores the specified @a value for this session.
      */
-    template<typename T>
-    void write(const QString &key, const T &value);
+    void write(const QVariant &value);
 
 private:
-    QVariant rawRead(const QString &key, const QMetaType &metaType) const;
-    void rawWrite(const QString &key, const QVariant &value);
-
     std::unique_ptr<XdgToplevelSessionV1InterfacePrivate> d;
     friend class XdgToplevelSessionV1InterfacePrivate;
 };
-
-template<typename T>
-std::optional<T> XdgToplevelSessionV1Interface::read(const QString &key) const
-{
-    KConfigConversionCheck::to_QVariant<T>();
-    const QVariant value = rawRead(key, QMetaType::fromType<T>());
-    if (value.isNull()) {
-        return std::nullopt;
-    } else {
-        return value.value<T>();
-    }
-}
-
-template<typename T>
-void XdgToplevelSessionV1Interface::write(const QString &key, const T &value)
-{
-    KConfigConversionCheck::to_QVariant<T>();
-    rawWrite(key, QVariant::fromValue(value));
-}
 
 } // namespace KWin

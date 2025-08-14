@@ -115,6 +115,29 @@ public:
     QPointer<Tile> tile = nullptr;
 };
 
+class XdgToplevelSessionData
+{
+public:
+    static std::optional<XdgToplevelSessionData> parse(const QVariant &variant);
+    static QVariant save(const Window *window);
+
+    std::optional<QString> outputLayoutId;
+    std::optional<QPointF> position;
+    std::optional<QSizeF> size;
+    std::optional<bool> keepAbove;
+    std::optional<bool> keepBelow;
+    std::optional<bool> skipSwitcher;
+    std::optional<bool> skipPager;
+    std::optional<bool> skipTaskbar;
+    std::optional<MaximizeMode> maximizeMode;
+    std::optional<bool> fullscreen;
+    std::optional<bool> minimized;
+    std::optional<bool> noBorder;
+    std::optional<QStringList> desktops;
+    std::optional<QStringList> activities;
+    std::optional<QString> shortcut;
+};
+
 class XdgToplevelWindow final : public XdgSurfaceWindow
 {
     Q_OBJECT
@@ -213,20 +236,20 @@ private:
     void updateMaximizeMode(MaximizeMode maximizeMode);
     void updateFullScreenMode(bool set);
     void sendPing(PingReason reason);
-    QPointF initialPosition() const;
-    QSizeF initialSize() const;
-    bool initialKeepAbove() const;
-    bool initialKeepBelow() const;
-    bool initialSkipSwitcher() const;
-    bool initialSkipPager() const;
-    bool initialSkipTaskbar() const;
-    bool initialMinimizeMode() const;
-    bool initialNoBorder() const;
-    MaximizeMode initialMaximizeMode() const;
-    bool initialFullScreenMode() const;
-    QVector<VirtualDesktop *> initialDesktops() const;
-    QString initialShortcut() const;
-    QStringList initialActivities() const;
+    QPointF initialPosition(const std::optional<XdgToplevelSessionData> &session) const;
+    QSizeF initialSize(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialKeepAbove(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialKeepBelow(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialSkipSwitcher(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialSkipPager(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialSkipTaskbar(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialMinimizeMode(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialNoBorder(const std::optional<XdgToplevelSessionData> &session) const;
+    MaximizeMode initialMaximizeMode(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialFullScreenMode(const std::optional<XdgToplevelSessionData> &session) const;
+    QVector<VirtualDesktop *> initialDesktops(const std::optional<XdgToplevelSessionData> &session) const;
+    QString initialShortcut(const std::optional<XdgToplevelSessionData> &session) const;
+    QStringList initialActivities(const std::optional<XdgToplevelSessionData> &session) const;
     DecorationMode preferredDecorationMode() const;
     void configureDecoration();
     void configureXdgDecoration(DecorationMode decorationMode);
