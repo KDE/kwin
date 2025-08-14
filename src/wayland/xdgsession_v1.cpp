@@ -11,9 +11,8 @@
 
 #include "qwayland-server-xx-session-management-v1.h"
 
-#include <KConfigGroup>
-#include <QDir>
-#include <QIODevice>
+#include <QCborArray>
+#include <QCborMap>
 
 namespace KWin
 {
@@ -23,11 +22,11 @@ static const quint32 s_version = 1;
 class XdgSessionManagerV1InterfacePrivate : public QtWaylandServer::xx_session_manager_v1
 {
 public:
-    XdgSessionManagerV1InterfacePrivate(Display *display, XdgSessionStorageV1 *storage, XdgSessionManagerV1Interface *q);
+    XdgSessionManagerV1InterfacePrivate(Display *display, std::unique_ptr<XdgSessionStorageV1> &&storage, XdgSessionManagerV1Interface *q);
 
     XdgSessionManagerV1Interface *q;
     QHash<QString, XdgApplicationSessionV1Interface *> sessions;
-    XdgSessionStorageV1 *storage;
+    std::unique_ptr<XdgSessionStorageV1> storage;
 
 protected:
     void xx_session_manager_v1_destroy(Resource *resource) override;
@@ -35,11 +34,11 @@ protected:
 };
 
 XdgSessionManagerV1InterfacePrivate::XdgSessionManagerV1InterfacePrivate(Display *display,
-                                                                         XdgSessionStorageV1 *storage,
+                                                                         std::unique_ptr<XdgSessionStorageV1> &&storage,
                                                                          XdgSessionManagerV1Interface *q)
     : QtWaylandServer::xx_session_manager_v1(*display, s_version)
     , q(q)
-    , storage(storage)
+    , storage(std::move(storage))
 {
 }
 
@@ -66,7 +65,7 @@ void XdgSessionManagerV1InterfacePrivate::xx_session_manager_v1_get_session(Reso
         session->markReplaced();
     }
 
-    auto applicationSession = new XdgApplicationSessionV1Interface(storage->session(sessionHandle), sessionHandle, resource->client(), id, resource->version());
+    auto applicationSession = new XdgApplicationSessionV1Interface(std::make_unique<XdgSessionDataV1>(storage.get(), sessionHandle), sessionHandle, resource->client(), id, resource->version());
     sessions.insert(sessionHandle, applicationSession);
     QObject::connect(applicationSession, &XdgApplicationSessionV1Interface::aboutToBeDestroyed, q, [this, applicationSession]() {
         if (!applicationSession->isReplaced()) {
@@ -75,19 +74,14 @@ void XdgSessionManagerV1InterfacePrivate::xx_session_manager_v1_get_session(Reso
     });
 }
 
-XdgSessionManagerV1Interface::XdgSessionManagerV1Interface(Display *display, XdgSessionStorageV1 *storage, QObject *parent)
+XdgSessionManagerV1Interface::XdgSessionManagerV1Interface(Display *display, std::unique_ptr<XdgSessionStorageV1> &&storage, QObject *parent)
     : QObject(parent)
-    , d(new XdgSessionManagerV1InterfacePrivate(display, storage, this))
+    , d(new XdgSessionManagerV1InterfacePrivate(display, std::move(storage), this))
 {
 }
 
 XdgSessionManagerV1Interface::~XdgSessionManagerV1Interface()
 {
-}
-
-XdgSessionStorageV1 *XdgSessionManagerV1Interface::storage() const
-{
-    return d->storage;
 }
 
 class XdgApplicationSessionV1InterfacePrivate : public QtWaylandServer::xx_session_v1
@@ -118,7 +112,7 @@ XdgApplicationSessionV1InterfacePrivate::XdgApplicationSessionV1InterfacePrivate
     , storage(std::move(storage))
     , sessionId(sessionId)
 {
-    if (this->storage->isRestored()) {
+    if (!this->storage->isEmpty()) {
         send_restored();
     } else {
         send_created(sessionId);
@@ -226,6 +220,7 @@ bool XdgApplicationSessionV1Interface::isReplaced() const
 void XdgApplicationSessionV1Interface::markReplaced()
 {
     d->replaced = true;
+    d->storage.reset();
     d->send_replaced();
 }
 
@@ -354,8 +349,8 @@ void XdgToplevelSessionV1Interface::rawWrite(const QString &key, const QVariant 
     d->session->storage()->write(d->toplevelId, key, value);
 }
 
-XdgSessionStorageV1::XdgSessionStorageV1(QObject *parent)
-    : QObject(parent)
+XdgSessionStorageV1::XdgSessionStorageV1(const QString &cacheName, unsigned defaultCacheSize, unsigned expectedItemSize)
+    : m_store(std::make_unique<KSharedDataCache>(cacheName, defaultCacheSize, expectedItemSize))
 {
 }
 
@@ -363,62 +358,278 @@ XdgSessionStorageV1::~XdgSessionStorageV1()
 {
 }
 
-std::unique_ptr<XdgSessionDataV1> XdgSessionStorageV1::session(const QString &sessionId)
+KSharedDataCache *XdgSessionStorageV1::store() const
 {
-    const QString storageDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericStateLocation) + QLatin1String("/kwin/session");
-    if (!QDir().exists(storageDirectory)) {
-        QDir().mkpath(storageDirectory);
-    }
-
-    return std::make_unique<XdgSessionDataV1>(storageDirectory + QLatin1Char('/') + sessionId);
+    return m_store.get();
 }
 
-XdgSessionDataV1::XdgSessionDataV1(const QString &filePath)
-    : m_config(KSharedConfig::openStateConfig(filePath))
-    , m_filePath(filePath)
+class XdgSessionDataV1Private
 {
+public:
+    XdgSessionDataV1Private(XdgSessionStorageV1 *storage, const QString &sessionId);
+
+    void load();
+    void sync();
+
+    XdgSessionStorageV1 *m_storage;
+    QString m_sessionId;
+    QCborMap m_sessionMap;
+    bool m_dirty = false;
+};
+
+XdgSessionDataV1Private::XdgSessionDataV1Private(XdgSessionStorageV1 *storage, const QString &sessionId)
+    : m_storage(storage)
+    , m_sessionId(sessionId)
+{
+}
+
+void XdgSessionDataV1Private::load()
+{
+    QByteArray rawData;
+    if (!m_storage->store()->find(m_sessionId, &rawData)) {
+        return;
+    }
+
+    m_sessionMap = QCborValue::fromCbor(rawData).toMap();
+}
+
+void XdgSessionDataV1Private::sync()
+{
+    if (!m_dirty) {
+        return;
+    }
+
+    m_dirty = false;
+
+    if (m_sessionMap.isEmpty()) {
+        m_storage->store()->remove(m_sessionId);
+    } else {
+        m_storage->store()->insert(m_sessionId, m_sessionMap.toCborValue().toCbor());
+    }
+}
+
+XdgSessionDataV1::XdgSessionDataV1(XdgSessionStorageV1 *storage, const QString &sessionId)
+    : d(std::make_unique<XdgSessionDataV1Private>(storage, sessionId))
+{
+    d->load();
 }
 
 XdgSessionDataV1::~XdgSessionDataV1()
 {
+    d->sync();
 }
 
-bool XdgSessionDataV1::isRestored() const
+bool XdgSessionDataV1::isEmpty() const
 {
-    return QFile::exists(m_filePath);
+    return d->m_sessionMap.isEmpty();
 }
 
 bool XdgSessionDataV1::contains(const QString &toplevelId) const
 {
-    return m_config->hasGroup(toplevelId);
+    return d->m_sessionMap.contains(toplevelId);
+}
+
+static QVariant sizeFromCborValue(const QCborValue &value)
+{
+    if (!value.isMap()) {
+        return QVariant();
+    }
+
+    const QCborMap map = value.toMap();
+    const QCborValue width = map.value("width");
+    const QCborValue height = map.value("height");
+    return QSize(width.toInteger(), height.toInteger());
+}
+
+static QCborValue sizeToCborValue(const QSize &size)
+{
+    return QCborMap{
+        {QStringLiteral("width"), size.width()},
+        {QStringLiteral("height"), size.height()},
+    };
+}
+
+static QVariant sizeFFromCborValue(const QCborValue &value)
+{
+    if (!value.isMap()) {
+        return QVariant();
+    }
+
+    const QCborMap map = value.toMap();
+    const QCborValue width = map.value("width");
+    const QCborValue height = map.value("height");
+    return QSizeF(width.toDouble(), height.toDouble());
+}
+
+static QCborValue sizeFToCborValue(const QSizeF &size)
+{
+    return QCborMap{
+        {QStringLiteral("width"), size.width()},
+        {QStringLiteral("height"), size.height()},
+    };
+}
+
+static QVariant pointFromCborValue(const QCborValue &value)
+{
+    if (!value.isMap()) {
+        return QVariant();
+    }
+
+    const QCborMap map = value.toMap();
+    const QCborValue x = map.value("x");
+    const QCborValue y = map.value("y");
+    return QPoint(x.toInteger(), y.toInteger());
+}
+
+static QCborValue pointToCborValue(const QPoint &point)
+{
+    return QCborMap{
+        {QStringLiteral("x"), point.x()},
+        {QStringLiteral("y"), point.y()},
+    };
+}
+
+static QVariant pointFFromCborValue(const QCborValue &value)
+{
+    if (!value.isMap()) {
+        return QVariant();
+    }
+
+    const QCborMap map = value.toMap();
+    const QCborValue x = map.value("x");
+    const QCborValue y = map.value("y");
+    return QPointF(x.toDouble(), y.toDouble());
+}
+
+static QCborValue pointFToCborValue(const QPointF &point)
+{
+    return QCborMap{
+        {QStringLiteral("x"), point.x()},
+        {QStringLiteral("y"), point.y()},
+    };
+}
+
+static QStringList stringListFromCborValue(const QCborValue &value)
+{
+    QStringList ret;
+    const QCborArray array = value.toArray();
+    for (int i = 0; i < array.size(); ++i) {
+        ret.append(array[i].toString());
+    }
+    return ret;
 }
 
 QVariant XdgSessionDataV1::read(const QString &surfaceId, const QString &key, const QMetaType &metaType) const
 {
-    const KConfigGroup group(m_config, surfaceId);
-    if (!group.hasKey(key)) {
+    const QCborMap surface = d->m_sessionMap.value(surfaceId).toMap();
+    if (surface.isEmpty()) {
         return QVariant();
     }
 
-    return group.readEntry(key, QVariant::fromMetaType(metaType));
+    const QCborValue value = surface.value(key);
+    if (value.isUndefined()) {
+        return QVariant();
+    }
+
+    switch (metaType.id()) {
+    case QMetaType::QString:
+        return value.toString();
+    case QMetaType::Long:
+    case QMetaType::LongLong:
+    case QMetaType::ULong:
+    case QMetaType::ULongLong:
+    case QMetaType::Int:
+    case QMetaType::UInt:
+        return value.toInteger();
+    case QMetaType::Bool:
+        return value.toBool();
+    case QMetaType::Float:
+    case QMetaType::Double:
+        return value.toDouble();
+    case QMetaType::QPoint:
+        return pointFromCborValue(value);
+    case QMetaType::QPointF:
+        return pointFFromCborValue(value);
+    case QMetaType::QSize:
+        return sizeFromCborValue(value);
+    case QMetaType::QSizeF:
+        return sizeFFromCborValue(value);
+    case QMetaType::QStringList:
+        return stringListFromCborValue(value);
+    case QMetaType::QVariantList:
+        return value.toArray().toVariantList();
+    case QMetaType::QVariantHash:
+        return value.toMap().toVariantHash();
+    case QMetaType::QVariantMap:
+        return value.toMap().toVariantMap();
+    }
+
+    return QVariant();
 }
 
 void XdgSessionDataV1::write(const QString &surfaceId, const QString &key, const QVariant &value)
 {
-    KConfigGroup group(m_config, surfaceId);
-    group.writeEntry(key, value);
+    QCborValue cborValue;
+    switch (value.metaType().id()) {
+    case QMetaType::QString:
+    case QMetaType::Long:
+    case QMetaType::LongLong:
+    case QMetaType::ULong:
+    case QMetaType::ULongLong:
+    case QMetaType::Int:
+    case QMetaType::UInt:
+    case QMetaType::Bool:
+    case QMetaType::Float:
+    case QMetaType::Double:
+        cborValue = QCborValue::fromVariant(value);
+        break;
+    case QMetaType::QPoint:
+        cborValue = pointToCborValue(value.toPoint());
+        break;
+    case QMetaType::QPointF:
+        cborValue = pointFToCborValue(value.toPointF());
+        break;
+    case QMetaType::QSize:
+        cborValue = sizeToCborValue(value.toSize());
+        break;
+    case QMetaType::QSizeF:
+        cborValue = sizeFToCborValue(value.toSizeF());
+        break;
+    case QMetaType::QStringList:
+        cborValue = QCborArray::fromStringList(value.toStringList());
+        break;
+    case QMetaType::QVariantList:
+        cborValue = QCborArray::fromVariantList(value.toList());
+        break;
+    case QMetaType::QVariantHash:
+        cborValue = QCborMap::fromVariantHash(value.toHash());
+        break;
+    case QMetaType::QVariantMap:
+        cborValue = QCborMap::fromVariantMap(value.toMap());
+        break;
+    }
+
+    QCborValueRef ref = d->m_sessionMap[surfaceId][key];
+    if (ref != cborValue) {
+        d->m_dirty = true;
+        ref = cborValue;
+    }
 }
 
 void XdgSessionDataV1::remove()
 {
-    m_config->markAsClean();
-    QFile::remove(m_filePath);
+    if (!d->m_sessionMap.isEmpty()) {
+        d->m_dirty = true;
+        d->m_sessionMap.clear();
+    }
 }
 
 void XdgSessionDataV1::remove(const QString &surfaceId)
 {
-    KConfigGroup group(m_config, surfaceId);
-    group.deleteGroup();
+    if (d->m_sessionMap.contains(surfaceId)) {
+        d->m_dirty = true;
+        d->m_sessionMap.remove(surfaceId);
+    }
 }
 
 } // namespace KWin
