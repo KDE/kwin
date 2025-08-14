@@ -561,15 +561,15 @@ void Workspace::setShouldGetFocus(Window *window)
 // to the same application
 bool Workspace::allowFullClientRaising(const KWin::Window *window, uint32_t time)
 {
-    int level = window->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (sessionManager()->state() == SessionState::Saving && level <= 2) { // <= normal
+    FocusStealingPreventionLevel level = window->rules()->checkFSP(options->focusStealingPreventionLevel());
+    if (sessionManager()->state() == SessionState::Saving && level <= FocusStealingPreventionLevel::Medium) {
         return true;
     }
     Window *ac = mostRecentlyActivatedWindow();
-    if (level == 0) { // none
+    if (level == FocusStealingPreventionLevel::None) {
         return true;
     }
-    if (level == 4) { // extreme
+    if (level == FocusStealingPreventionLevel::Extreme) {
         return false;
     }
     if (ac == nullptr || ac->isDesktop()) {
@@ -581,7 +581,7 @@ bool Workspace::allowFullClientRaising(const KWin::Window *window, uint32_t time
         qCDebug(KWIN_CORE) << "Raising: Belongs to active application";
         return true;
     }
-    if (level == 3) { // high
+    if (level == FocusStealingPreventionLevel::High) {
         return false;
     }
 #if KWIN_BUILD_X11
@@ -642,13 +642,13 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     if (!m_activeWindow) {
         return true;
     }
-    const int focusStealingPreventionLevel = window->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (focusStealingPreventionLevel == 0) {
+    const FocusStealingPreventionLevel focusStealingPreventionLevel = window->rules()->checkFSP(options->focusStealingPreventionLevel());
+    if (focusStealingPreventionLevel == FocusStealingPreventionLevel::None) {
         return true;
     }
     if (!m_activationToken.isEmpty() && token == m_activationToken && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial) {
         return true;
-    } else if (focusStealingPreventionLevel == 4) {
+    } else if (focusStealingPreventionLevel == FocusStealingPreventionLevel::Extreme) {
         // "Extreme" only accepts proper activation tokens
         return false;
     }

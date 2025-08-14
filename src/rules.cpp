@@ -149,7 +149,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     }
 
     READ_FORCE_RULE(blockcompositing, );
-    READ_FORCE_RULE(fsplevel, );
+    READ_FORCE_RULE(fsplevel, FocusStealingPreventionLevel);
     READ_FORCE_RULE(fpplevel, );
     READ_FORCE_RULE(acceptfocus, );
     READ_FORCE_RULE(closeable, );
@@ -237,7 +237,10 @@ void Rules::write(RuleSettings *settings) const
     };
     WRITE_FORCE_RULE(decocolor, Decocolor, colorToString);
     WRITE_FORCE_RULE(blockcompositing, Blockcompositing, );
-    WRITE_FORCE_RULE(fsplevel, Fsplevel, );
+    const auto focusStealingLevelToInt = [](FocusStealingPreventionLevel fsp) {
+        return int(fsp);
+    };
+    WRITE_FORCE_RULE(fsplevel, Fsplevel, focusStealingLevelToInt);
     WRITE_FORCE_RULE(fpplevel, Fpplevel, );
     WRITE_FORCE_RULE(acceptfocus, Acceptfocus, );
     WRITE_FORCE_RULE(closeable, Closeable, );
@@ -682,7 +685,7 @@ APPLY_RULE(fullscreen, FullScreen, bool)
 APPLY_RULE(noborder, NoBorder, bool)
 APPLY_FORCE_RULE(decocolor, DecoColor, QString)
 APPLY_FORCE_RULE(blockcompositing, BlockCompositing, bool)
-APPLY_FORCE_RULE(fsplevel, FSP, int)
+APPLY_FORCE_RULE(fsplevel, FSP, FocusStealingPreventionLevel)
 APPLY_FORCE_RULE(fpplevel, FPP, int)
 APPLY_FORCE_RULE(acceptfocus, AcceptFocus, bool)
 APPLY_FORCE_RULE(closeable, Closeable, bool)
@@ -888,7 +891,7 @@ CHECK_RULE(FullScreen, bool)
 CHECK_RULE(NoBorder, bool)
 CHECK_FORCE_RULE(DecoColor, QString)
 CHECK_FORCE_RULE(BlockCompositing, bool)
-CHECK_FORCE_RULE(FSP, int)
+CHECK_FORCE_RULE(FSP, FocusStealingPreventionLevel)
 CHECK_FORCE_RULE(FPP, int)
 CHECK_FORCE_RULE(AcceptFocus, bool)
 CHECK_FORCE_RULE(Closeable, bool)

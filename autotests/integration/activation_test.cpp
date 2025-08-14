@@ -681,7 +681,7 @@ void ActivationTest::testXdgActivation()
     QCOMPARE(workspace()->activeWindow(), windows[1]);
 
     // ensure that windows are only activated on show with a valid activation token
-    options->setFocusStealingPreventionLevel(4);
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Extreme);
 
     // creating a new window and immediately activating it should work
     setupWindows();
@@ -717,9 +717,9 @@ void ActivationTest::testXdgActivation()
     // if activation of a new window is not granted, it should be stacked behind the active window
     QCOMPARE_LT(windows[3]->stackingOrder(), workspace()->activeWindow()->stackingOrder());
 
-    // focus stealing prevention level 3 is more lax and should activate windows
+    // focus stealing prevention level High is more lax and should activate windows
     // even with an invalid token if the app id matches the last granted activation token
-    options->setFocusStealingPreventionLevel(3);
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
     setupWindows();
     shellSurfaces[1]->set_app_id("test_app_id");
     token = Test::xdgActivation()->createToken();
@@ -746,17 +746,17 @@ void ActivationTest::testXdgActivation()
     windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
     QCOMPARE(workspace()->activeWindow(), windows[3]);
 
-    // with focus stealing prevention level 1, every new window should unconditionally be activated,
+    // with focus stealing prevention level Low, every new window should unconditionally be activated,
     // even if it doesn't request an activation token at all
-    options->setFocusStealingPreventionLevel(1);
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Low);
     setupWindows();
     surfaces.push_back(Test::createSurface());
     shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get()));
     windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
     QCOMPARE(workspace()->activeWindow(), windows[3]);
 
-    // with focus stealing prevention at level 0, every activation token is considered "valid"
-    options->setFocusStealingPreventionLevel(0);
+    // with focus stealing prevention disabled, every activation token is considered "valid"
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::None);
     setupWindows();
     Test::xdgActivation()->activate(QString(), *surfaces[1]);
     QVERIFY(activationSpy.wait());

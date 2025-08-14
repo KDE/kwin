@@ -55,6 +55,14 @@ enum PlacementPolicy {
     PlacementMaximizing,
 };
 
+enum class FocusStealingPreventionLevel {
+    None = 0,
+    Low = 1,
+    Medium = 2,
+    High = 3,
+    Extreme = 4,
+};
+
 class Settings;
 
 class KWIN_EXPORT Options : public QObject
@@ -121,7 +129,7 @@ class KWIN_EXPORT Options : public QObject
     /**
      * 0 - 4 , see Workspace::allowWindowActivation()
      */
-    Q_PROPERTY(int focusStealingPreventionLevel READ focusStealingPreventionLevel WRITE setFocusStealingPreventionLevel NOTIFY focusStealingPreventionLevelChanged)
+    Q_PROPERTY(KWin::FocusStealingPreventionLevel focusStealingPreventionLevel READ focusStealingPreventionLevel WRITE setFocusStealingPreventionLevel NOTIFY focusStealingPreventionLevelChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationTitlebarDblClick READ operationTitlebarDblClick WRITE setOperationTitlebarDblClick NOTIFY operationTitlebarDblClickChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationMaxButtonLeftClick READ operationMaxButtonLeftClick WRITE setOperationMaxButtonLeftClick NOTIFY operationMaxButtonLeftClickChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationMaxButtonMiddleClick READ operationMaxButtonMiddleClick WRITE setOperationMaxButtonMiddleClick NOTIFY operationMaxButtonMiddleClickChanged)
@@ -370,7 +378,7 @@ public:
      *
      * @see allowWindowActivation
      */
-    int focusStealingPreventionLevel() const
+    FocusStealingPreventionLevel focusStealingPreventionLevel() const
     {
         return m_focusStealingPreventionLevel;
     }
@@ -637,7 +645,7 @@ public:
     void setEdgeBarrier(int edgeBarrier);
     void setCornerBarrier(bool cornerBarrier);
     void setRollOverDesktops(bool rollOverDesktops);
-    void setFocusStealingPreventionLevel(int focusStealingPreventionLevel);
+    void setFocusStealingPreventionLevel(FocusStealingPreventionLevel focusStealingPreventionLevel);
     void setOperationTitlebarDblClick(WindowOperation operationTitlebarDblClick);
     void setOperationMaxButtonLeftClick(WindowOperation op);
     void setOperationMaxButtonRightClick(WindowOperation op);
@@ -865,7 +873,7 @@ private:
     int m_edgeBarrier;
     bool m_cornerBarrier;
     bool m_rollOverDesktops;
-    int m_focusStealingPreventionLevel;
+    FocusStealingPreventionLevel m_focusStealingPreventionLevel;
     int m_killPingTimeout;
     XwaylandCrashPolicy m_xwaylandCrashPolicy;
     int m_xwaylandMaxCrashCount;
