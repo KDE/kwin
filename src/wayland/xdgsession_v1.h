@@ -8,10 +8,10 @@
 
 #include <kwin_export.h>
 
+#include <QCborMap>
 #include <QObject>
 
-#include <KSharedConfig>
-#include <kconfigconversioncheck_p.h>
+#include <KSharedDataCache>
 
 #include <memory>
 
@@ -46,7 +46,10 @@ public:
     explicit XdgSessionStorageV1(QObject *parent = nullptr);
     ~XdgSessionStorageV1() override;
 
-    std::unique_ptr<XdgSessionDataV1> session(const QString &sessionId);
+    KSharedDataCache *store() const;
+
+private:
+    std::unique_ptr<KSharedDataCache> m_store;
 };
 
 class KWIN_EXPORT XdgSessionDataV1 : public QObject
@@ -54,7 +57,7 @@ class KWIN_EXPORT XdgSessionDataV1 : public QObject
     Q_OBJECT
 
 public:
-    explicit XdgSessionDataV1(const QString &filePath);
+    explicit XdgSessionDataV1(XdgSessionStorageV1 *store, const QString &sessionId);
     ~XdgSessionDataV1() override;
 
     bool isRestored() const;
@@ -65,8 +68,13 @@ public:
     void remove(const QString &toplevelId);
 
 private:
-    KSharedConfigPtr m_config;
-    QString m_filePath;
+    void load();
+    void sync();
+
+    XdgSessionStorageV1 *m_storage;
+    QString m_sessionId;
+    QCborMap m_sessionMap;
+    bool m_dirty = false;
 };
 
 /**
@@ -196,7 +204,6 @@ private:
 template<typename T>
 std::optional<T> XdgToplevelSessionV1Interface::read(const QString &key) const
 {
-    KConfigConversionCheck::to_QVariant<T>();
     const QVariant value = rawRead(key, QMetaType::fromType<T>());
     if (value.isNull()) {
         return std::nullopt;
@@ -208,7 +215,6 @@ std::optional<T> XdgToplevelSessionV1Interface::read(const QString &key) const
 template<typename T>
 void XdgToplevelSessionV1Interface::write(const QString &key, const T &value)
 {
-    KConfigConversionCheck::to_QVariant<T>();
     rawWrite(key, QVariant::fromValue(value));
 }
 
