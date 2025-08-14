@@ -150,7 +150,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
 
     READ_FORCE_RULE(blockcompositing, );
     READ_FORCE_RULE(fsplevel, FocusStealingPreventionLevel);
-    READ_FORCE_RULE(fpplevel, );
+    READ_FORCE_RULE(fpplevel, FocusStealingPreventionLevel);
     READ_FORCE_RULE(acceptfocus, );
     READ_FORCE_RULE(closeable, );
     READ_FORCE_RULE(autogroup, );
@@ -241,7 +241,7 @@ void Rules::write(RuleSettings *settings) const
         return int(fsp);
     };
     WRITE_FORCE_RULE(fsplevel, Fsplevel, focusStealingLevelToInt);
-    WRITE_FORCE_RULE(fpplevel, Fpplevel, );
+    WRITE_FORCE_RULE(fpplevel, Fpplevel, focusStealingLevelToInt);
     WRITE_FORCE_RULE(acceptfocus, Acceptfocus, );
     WRITE_FORCE_RULE(closeable, Closeable, );
     WRITE_FORCE_RULE(autogroup, Autogroup, );
@@ -686,7 +686,7 @@ APPLY_RULE(noborder, NoBorder, bool)
 APPLY_FORCE_RULE(decocolor, DecoColor, QString)
 APPLY_FORCE_RULE(blockcompositing, BlockCompositing, bool)
 APPLY_FORCE_RULE(fsplevel, FSP, FocusStealingPreventionLevel)
-APPLY_FORCE_RULE(fpplevel, FPP, int)
+APPLY_FORCE_RULE(fpplevel, FPP, FocusStealingPreventionLevel)
 APPLY_FORCE_RULE(acceptfocus, AcceptFocus, bool)
 APPLY_FORCE_RULE(closeable, Closeable, bool)
 APPLY_FORCE_RULE(autogroup, Autogrouping, bool)
@@ -892,7 +892,7 @@ CHECK_RULE(NoBorder, bool)
 CHECK_FORCE_RULE(DecoColor, QString)
 CHECK_FORCE_RULE(BlockCompositing, bool)
 CHECK_FORCE_RULE(FSP, FocusStealingPreventionLevel)
-CHECK_FORCE_RULE(FPP, int)
+CHECK_FORCE_RULE(FPP, FocusStealingPreventionLevel)
 CHECK_FORCE_RULE(AcceptFocus, bool)
 CHECK_FORCE_RULE(Closeable, bool)
 CHECK_FORCE_RULE(Autogrouping, bool)

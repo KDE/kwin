@@ -65,7 +65,7 @@ public:
     QString checkDecoColor(QString schemeFile) const;
     bool checkBlockCompositing(bool block) const;
     FocusStealingPreventionLevel checkFSP(FocusStealingPreventionLevel fsp) const;
-    int checkFPP(int fpp) const;
+    FocusStealingPreventionLevel checkFPP(FocusStealingPreventionLevel fpp) const;
     bool checkAcceptFocus(bool focus) const;
     bool checkCloseable(bool closeable) const;
     bool checkAutogrouping(bool autogroup) const;
@@ -175,7 +175,7 @@ public:
     bool applyDecoColor(QString &schemeFile) const;
     bool applyBlockCompositing(bool &block) const;
     bool applyFSP(FocusStealingPreventionLevel &fsp) const;
-    bool applyFPP(int &fpp) const;
+    bool applyFPP(FocusStealingPreventionLevel &fpp) const;
     bool applyAcceptFocus(bool &focus) const;
     bool applyCloseable(bool &closeable) const;
     bool applyAutogrouping(bool &autogroup) const;
@@ -273,7 +273,7 @@ private:
     bool blockcompositing;
     ForceRule blockcompositingrule;
     FocusStealingPreventionLevel fsplevel;
-    int fpplevel;
+    FocusStealingPreventionLevel fpplevel;
     ForceRule fsplevelrule;
     ForceRule fpplevelrule;
     bool acceptfocus;
