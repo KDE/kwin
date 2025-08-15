@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-05 05:54+0000\n"
-"PO-Revision-Date: 2025-08-05 20:38+0400\n"
+"PO-Revision-Date: 2025-08-14 12:01+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -49,9 +49,9 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 "<b>أدى التركيب في أوبن جي إل (المبدئي) إلى تعطل كوين في الماضي.</b><br>كان "
-"هذا على الأرجح بسبب خطأ في المُشغل.<p>إذا كنت تعتقد أنك قمت في هذه الأثناء "
-"بالترقية إلى تعريف ثابت مستقر، <br>فيمكنك تصفير هذه الحماية ولكن يجب أن تدرك "
-"أن هذا قد يؤدي إلى انهيار فوري!</b></p>"
+"هذا على الأرجح بسبب خطأ في المُشغل.<p>إذا كنت تعتقد أنك رقيت في هذه الأثناء "
+"إلى مُشغل ثابت مستقر، <br>فيمكنك تصفير هذه الحماية ولكن يجب أن تدرك أن هذا قد "
+"يؤدي إلى انهيار فوري!</b></p>"
 
 #: composite.cpp:1071
 #, kde-format
@@ -1405,7 +1405,7 @@ msgstr "نوافذك: مدير نوافذ آخر يعمل (جرّب استخدا
 #: main_x11.cpp:411
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
-msgstr "استبدل مدير النّوافذ المتوافق مع ICCCM2.0 المشغّل بالفعل"
+msgstr "استبدل مدير النّوافذ المتوافق مع ICCCM2.0 المشغّل فعلًا"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
@@ -2370,7 +2370,7 @@ msgstr "انقل إلى %1"
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
-msgstr "<b>%1</b> مستخدم بالفعل"
+msgstr "<b>%1</b> مستخدم فعلًا"
 
 #: useractions.cpp:903
 #, kde-format
