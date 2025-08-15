@@ -90,7 +90,7 @@ msgid ""
 "available, or which is already set."
 msgstr ""
 "تتيح لك هذه الأداة ضبط سمة زخارف النوافذ لجلسة البلازما الحالية، دون تعينها "
-"عن طريق الخطأ لسمة إما غير متوفرة، أو عينت بالفعل."
+"عن طريق الخطأ لسمة إما غير متوفرة، أو عينت فعلًا."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -128,7 +128,7 @@ msgstr ""
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
-msgstr "عينت السمة المطلوبة \"%1\" بالفعل كسمة لجلسة البلازما الحالية."
+msgstr "عينت السمة المطلوبة \"%1\" فعلًا كسمة لجلسة البلازما الحالية."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
