@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-08-07 18:31+0000\n"
-"PO-Revision-Date: 2025-08-05 20:38+0400\n"
+"PO-Revision-Date: 2025-08-14 12:01+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -3674,7 +3674,7 @@ msgstr "&كلّ الأنشطة"
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
-msgstr "<b>%1</b> مستخدم بالفعل"
+msgstr "<b>%1</b> مستخدم فعلًا"
 
 #: useractions.cpp:737
 #, kde-format
