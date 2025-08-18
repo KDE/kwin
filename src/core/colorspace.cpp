@@ -181,7 +181,7 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(XYZ sourceWhitepoint, XYZ dest
     if (sourceWhitepoint == destinationWhitepoint) {
         return QMatrix4x4{};
     }
-    const QVector3D factors = (bradford * destinationWhitepoint.asVector()) / (bradford * sourceWhitepoint.asVector());
+    const QVector3D factors = (bradford.map(destinationWhitepoint.asVector())) / (bradford.map(sourceWhitepoint.asVector()));
     QMatrix4x4 adaptation{};
     adaptation(0, 0) = factors.x();
     adaptation(1, 1) = factors.y();
@@ -194,7 +194,7 @@ QMatrix4x4 Colorimetry::calculateToXYZMatrix(XYZ red, XYZ green, XYZ blue, XYZ w
     const QVector3D r = red.asVector();
     const QVector3D g = green.asVector();
     const QVector3D b = blue.asVector();
-    const auto component_scale = (matrixFromColumns(r, g, b)).inverted() * white.asVector();
+    const auto component_scale = (matrixFromColumns(r, g, b)).inverted().map(white.asVector());
     return matrixFromColumns(r * component_scale.x(), g * component_scale.y(), b * component_scale.z());
 }
 
@@ -277,7 +277,8 @@ Colorimetry::Colorimetry(xy red, xy green, xy blue, xy white)
                                  xyY(green.x, green.y, 1.0).toXYZ().asVector(),
                                  xyY(blue.x, blue.y, 1.0).toXYZ().asVector()))
                                 .inverted()
-        * xyY(white.x, white.y, 1.0).toXYZ().asVector();
+                                .map(
+        xyY(white.x, white.y, 1.0).toXYZ().asVector());
     m_red = xyY(red.x, red.y, brightness.x()).toXYZ();
     m_green = xyY(green.x, green.y, brightness.y()).toXYZ();
     m_blue = xyY(blue.x, blue.y, brightness.z()).toXYZ();
@@ -325,9 +326,9 @@ Colorimetry Colorimetry::adaptedTo(xyY newWhitepoint) const
 {
     const auto mat = chromaticAdaptationMatrix(this->white(), newWhitepoint.toXYZ());
     return Colorimetry{
-        XYZ::fromVector(mat * red().asVector()),
-        XYZ::fromVector(mat * green().asVector()),
-        XYZ::fromVector(mat * blue().asVector()),
+        XYZ::fromVector(mat.map(red().asVector())),
+        XYZ::fromVector(mat.map(green().asVector())),
+        XYZ::fromVector(mat.map(blue().asVector())),
         newWhitepoint.toXYZ(),
     };
 }
