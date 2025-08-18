@@ -392,29 +392,29 @@ ColorMultiplier::ColorMultiplier(double factor)
 }
 
 ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
-    : m_inputReferenceLuminance(referenceLuminance)
-    , m_maxInputLuminance(maxInputLuminance)
-    , m_maxOutputLuminance(maxOutputLuminance)
+    : m_referenceLuminance(referenceLuminance)
+    , m_inputRange(maxInputLuminance / referenceLuminance)
+    , m_outputRange(maxOutputLuminance / referenceLuminance)
+    // derived from
+    // outputRange = inputRange * (1 + inputRange * v) / (1 + inputRange)
+    // => outputRange * (1 + inputRange) = inputRange + inputRange ^ 2 * v
+    // => v = (outputRange * (1 + inputRange) - inputRange) / inputRange ^ 2
+    , m_v((m_outputRange * (1 + m_inputRange) - m_inputRange) / std::pow(m_inputRange, 2))
 {
-    m_inputRange = maxInputLuminance / referenceLuminance;
-    const double outputRange = maxOutputLuminance / referenceLuminance;
-    // how much range we need to at least decently present the content
-    // 100% HDR headroom should be enough for the tone mapper to do a good enough job, without dimming the image too much
-    const double minDecentRange = std::clamp(m_inputRange, 1.0, 2.0);
-    // if the output doesn't provide enough HDR headroom for the tone mapper to do a good job, dim the image to create some
-    m_referenceDimming = 1.0 / std::clamp(minDecentRange / outputRange, 1.0, minDecentRange);
-    m_outputReferenceLuminance = referenceLuminance * m_referenceDimming;
 }
 
 double ColorTonemapper::map(double pqEncodedLuminance) const
 {
     const double luminance = TransferFunction(TransferFunction::PerceptualQuantizer).encodedToNits(pqEncodedLuminance);
-    // keep things linear up to the reference luminance
-    const double low = std::min(luminance * m_referenceDimming, m_outputReferenceLuminance);
-    // and apply a nonlinear curve above, to reduce the luminance without completely removing differences
-    const double relativeHighlight = std::clamp((luminance / m_inputReferenceLuminance - 1.0) / (m_inputRange - 1.0), 0.0, 1.0);
-    const double high = std::log(relativeHighlight * (std::numbers::e - 1) + 1) * (m_maxOutputLuminance - m_outputReferenceLuminance);
-    return TransferFunction(TransferFunction::PerceptualQuantizer).nitsToEncoded(low + high);
+
+    double relativeLuminance = std::max(luminance / m_referenceLuminance, 0.0);
+    // This is a modified Reinhart curve. It ensures that
+    // f(0) = 0
+    // f(x) <= x
+    // f(inputRange) = outputRange
+    // with inputRange -> infinity, f(1) = 0.5 (=at most reduces reference luminance by half)
+    relativeLuminance = relativeLuminance * (1 + relativeLuminance * m_v) / (1.0 + relativeLuminance);
+    return TransferFunction(TransferFunction::PerceptualQuantizer).nitsToEncoded(relativeLuminance * m_referenceLuminance);
 }
 }
 
@@ -431,7 +431,7 @@ QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
         } else if (auto mult = std::get_if<KWin::ColorMultiplier>(&op.operation)) {
             debug << mult->factors;
         } else if (auto tonemap = std::get_if<KWin::ColorTonemapper>(&op.operation)) {
-            debug << "tonemapper(" << tonemap->m_inputReferenceLuminance << tonemap->m_maxInputLuminance << tonemap->m_maxOutputLuminance << ")";
+            debug << "tonemapper(" << tonemap->m_inputRange << tonemap->m_outputRange << ")";
         } else if (std::holds_alternative<std::shared_ptr<KWin::ColorTransformation>>(op.operation)) {
             debug << "lut1d";
         } else if (std::holds_alternative<std::shared_ptr<KWin::ColorLUT3D>>(op.operation)) {

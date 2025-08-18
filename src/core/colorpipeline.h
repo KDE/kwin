@@ -76,12 +76,10 @@ public:
     double map(double pqEncodedLuminance) const;
     bool operator==(const ColorTonemapper &) const = default;
 
-    double m_inputReferenceLuminance;
-    double m_maxInputLuminance;
-    double m_maxOutputLuminance;
+    double m_referenceLuminance;
     double m_inputRange;
-    double m_referenceDimming;
-    double m_outputReferenceLuminance;
+    double m_outputRange;
+    double m_v;
 };
 
 class KWIN_EXPORT ColorOp
