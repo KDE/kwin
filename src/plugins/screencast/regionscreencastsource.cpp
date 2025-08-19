@@ -76,6 +76,7 @@ void RegionScreenCastSource::setRenderCursor(bool enable)
 
 QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferRepair)
 {
+    m_last = std::chrono::steady_clock::now().time_since_epoch();
     m_layer->setFramebuffer(target, scaleRegion(bufferRepair, 1.0 / devicePixelRatio(), QRect(QPoint(), m_sceneView->viewport().size().toSize())));
     if (!m_layer->preparePresentationTest()) {
         return QRegion{};

@@ -50,7 +50,7 @@ public:
 private:
     const QRect m_region;
     const qreal m_scale;
-    std::chrono::nanoseconds m_last;
+    std::chrono::nanoseconds m_last{0};
     bool m_closed = false;
     bool m_active = false;
 
