@@ -196,7 +196,7 @@ static void maybePushCorners(Item *item, QStack<ClipCorner> &corners)
     }
 }
 
-static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded, QStack<ClipCorner> &corners)
+static bool addCandidates(SceneView *view, Item *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded, QStack<ClipCorner> &corners)
 {
     if (item->opacity() != 1.0 || item->hasEffects()) {
         return false;
@@ -208,11 +208,11 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         if (child->z() < 0) {
             break;
         }
-        if (!delegate->shouldRenderItem(child)) {
+        if (!view->shouldRenderItem(child)) {
             continue;
         }
-        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
-            if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
+        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect(), view->scale()).toAlignedRect())) {
+            if (!addCandidates(view, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
                 return false;
             }
         }
@@ -220,10 +220,10 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
     if (candidates.size() >= maxCount) {
         return false;
     }
-    if (regionActuallyContains(occluded, item->mapToScene(item->boundingRect()).toAlignedRect())) {
+    if (regionActuallyContains(occluded, item->mapToScene(item->boundingRect(), view->scale()).toAlignedRect())) {
         return true;
     }
-    if (delegate->shouldRenderItem(item)) {
+    if (view->shouldRenderItem(item)) {
         if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
             candidates.push_back(surfaceItem);
         } else {
@@ -244,14 +244,14 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         opaque = top.radius.clip(opaque, top.box);
     }
 
-    occluded += item->mapToScene(opaque);
+    occluded += item->mapToScene(opaque, view->scale());
     for (; it != children.rend(); it++) {
         Item *const child = *it;
-        if (!delegate->shouldRenderItem(child)) {
+        if (!view->shouldRenderItem(child)) {
             continue;
         }
-        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
-            if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
+        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect(), view->scale()).toAlignedRect())) {
+            if (!addCandidates(view, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
                 return false;
             }
         }
@@ -274,7 +274,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
         QStack<ClipCorner> corners;
         const auto items = m_containerItem->sortedChildItems();
         for (Item *item : items | std::views::reverse) {
-            if (!item->isVisible() || !painted_delegate->shouldRenderItem(item) || !painted_delegate->viewport().intersects(item->mapToScene(item->boundingRect()))) {
+            if (!item->isVisible() || !painted_delegate->shouldRenderItem(item) || !painted_delegate->viewport().intersects(item->mapToScene(item->boundingRect(), painted_delegate->scale()))) {
                 continue;
             }
             if (!addCandidates(painted_delegate, item, ret, maxCount, occlusion, corners)) {
@@ -290,7 +290,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
 
 static QRect mapToView(SceneView *view, Item *item, const QRectF &itemLocal)
 {
-    const QRectF localLogical = item->mapToScene(itemLocal).translated(-view->viewport().topLeft());
+    const QRectF localLogical = item->mapToScene(itemLocal, view->scale()).translated(-view->viewport().topLeft());
     return snapToPixelGridF(scaledRect(localLogical, view->scale())).toRect();
 }
 
@@ -537,12 +537,12 @@ void WorkspaceScene::preparePaintSimpleScreen()
         if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = windowItem->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
-                data.opaque = surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect()));
+                data.opaque = surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect()), painted_delegate->scale());
             }
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.opaque += decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect()));
+                data.opaque += decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect()), painted_delegate->scale());
             }
         }
 
@@ -603,7 +603,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
     m_paintScreenCount = 0;
 
     if (m_overlayItem) {
-        const QRegion repaint = region & m_overlayItem->mapToScene(m_overlayItem->boundingRect()).toRect();
+        const QRegion repaint = region & m_overlayItem->mapToScene(m_overlayItem->boundingRect(), painted_delegate->scale()).toRect();
         if (!repaint.isEmpty()) {
             m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, repaint, WindowPaintData{}, [this](Item *item) {
                 return !painted_delegate->shouldRenderItem(item);
@@ -655,7 +655,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         data->region = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->region &= data->item->mapToScene(data->item->boundingRect()).toAlignedRect();
+            data->region &= data->item->mapToScene(data->item->boundingRect(), painted_delegate->scale()).toAlignedRect();
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
                 visible -= data->opaque;

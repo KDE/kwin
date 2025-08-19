@@ -100,17 +100,17 @@ public:
      * Maps the given @a region from the item's coordinate system to the scene's coordinate
      * system.
      */
-    QRegion mapToScene(const QRegion &region) const;
+    QRegion mapToScene(const QRegion &region, qreal scale) const;
     /**
      * Maps the given @a rect from the item's coordinate system to the scene's coordinate
      * system.
      */
-    QRectF mapToScene(const QRectF &rect) const;
+    QRectF mapToScene(const QRectF &rect, qreal scale) const;
     /**
      * Maps the given @a rect from the scene's coordinate system to the item's coordinate
      * system.
      */
-    QRectF mapFromScene(const QRectF &rect) const;
+    QRectF mapFromScene(const QRectF &rect, qreal scale) const;
 
     /**
      * Moves this item right before the specified @a sibling in the parent's children list.
@@ -185,7 +185,6 @@ private:
     void addChild(Item *item);
     void removeChild(Item *item);
     void updateBoundingRect();
-    void updateItemToSceneTransform();
     void scheduleRepaintInternal(const QRegion &region);
     void scheduleRepaintInternal(RenderView *delegate, const QRegion &region);
     void scheduleSceneRepaintInternal(const QRegion &region);
@@ -201,8 +200,6 @@ private:
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
     QTransform m_transform;
-    QTransform m_itemToSceneTransform;
-    QTransform m_sceneToItemTransform;
     QRectF m_boundingRect;
     QPointF m_position;
     QSizeF m_size = QSize(0, 0);

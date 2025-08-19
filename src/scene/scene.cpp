@@ -228,10 +228,10 @@ QRectF ItemTreeView::viewport() const
         });
         if (it != bigEnough.end()) {
             const auto logicalSize = QSizeF(*it) / scale();
-            return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize));
+            return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize), scale());
         }
     }
-    return m_item->mapToScene(m_item->boundingRect());
+    return m_item->mapToScene(m_item->boundingRect(), scale());
 }
 
 QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
@@ -251,7 +251,7 @@ QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
 void ItemTreeView::frame(OutputFrame *frame)
 {
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_output->renderLoop()->lastPresentationTimestamp());
-    m_item->framePainted(nullptr, frame, frameTime);
+    m_item->framePainted(m_output, frame, frameTime);
 }
 
 static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints)

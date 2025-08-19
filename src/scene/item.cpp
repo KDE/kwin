@@ -106,7 +106,6 @@ void Item::setParentItem(Item *item)
     if (m_parentItem) {
         m_parentItem->addChild(this);
     }
-    updateItemToSceneTransform();
     updateEffectiveVisibility();
 }
 
@@ -176,7 +175,6 @@ void Item::setPosition(const QPointF &point)
     if (m_position != point) {
         scheduleMoveRepaint();
         m_position = point;
-        updateItemToSceneTransform();
         if (m_parentItem) {
             m_parentItem->updateBoundingRect();
         }
@@ -255,51 +253,40 @@ void Item::setTransform(const QTransform &transform)
     }
     scheduleRepaint(boundingRect());
     m_transform = transform;
-    updateItemToSceneTransform();
     if (m_parentItem) {
         m_parentItem->updateBoundingRect();
     }
     scheduleRepaint(boundingRect());
 }
 
-void Item::updateItemToSceneTransform()
+QRegion Item::mapToScene(const QRegion &region, qreal scale) const
 {
-    m_itemToSceneTransform = m_transform;
-    if (!m_position.isNull()) {
-        m_itemToSceneTransform *= QTransform::fromTranslate(m_position.x(), m_position.y());
+    QRegion ret;
+    for (QRectF rect : region) {
+        ret |= mapToScene(rect, scale).toAlignedRect();
     }
+    return ret;
+}
+
+QRectF Item::mapToScene(const QRectF &rect, qreal scale) const
+{
+    const auto snappedPosition = QPointF((m_position * scale).toPoint()) / scale;
+    const QRectF ret = rect.translated(snappedPosition);
     if (m_parentItem) {
-        m_itemToSceneTransform *= m_parentItem->m_itemToSceneTransform;
-    }
-    m_sceneToItemTransform = m_itemToSceneTransform.inverted();
-
-    for (Item *childItem : std::as_const(m_childItems)) {
-        childItem->updateItemToSceneTransform();
+        return m_parentItem->mapToScene(ret, scale);
+    } else {
+        return ret;
     }
 }
 
-QRegion Item::mapToScene(const QRegion &region) const
+QRectF Item::mapFromScene(const QRectF &rect, qreal scale) const
 {
-    if (region.isEmpty()) {
-        return QRegion();
+    QRectF ret = rect;
+    if (m_parentItem) {
+        ret = m_parentItem->mapFromScene(ret, scale);
     }
-    return m_itemToSceneTransform.map(region);
-}
-
-QRectF Item::mapToScene(const QRectF &rect) const
-{
-    if (rect.isEmpty()) {
-        return QRect();
-    }
-    return m_itemToSceneTransform.mapRect(rect);
-}
-
-QRectF Item::mapFromScene(const QRectF &rect) const
-{
-    if (rect.isEmpty()) {
-        return QRect();
-    }
-    return m_sceneToItemTransform.mapRect(rect);
+    const auto snappedPosition = QPointF((m_position * scale).toPoint()) / scale;
+    return ret.translated(-snappedPosition);
 }
 
 QRect Item::paintedArea(RenderView *view, const QRectF &rect) const
@@ -695,7 +682,7 @@ void Item::framePainted(Output *output, OutputFrame *frame, std::chrono::millise
     // things like screncasts or thumbnails
     handleFramePainted(output, frame, timestamp);
     for (const auto child : std::as_const(m_childItems)) {
-        if (child->explicitVisible() && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == output) {
+        if (child->explicitVisible() && workspace()->outputAt(child->mapToScene(child->boundingRect(), output->scale()).center()) == output) {
             child->framePainted(output, frame, timestamp);
         }
     }

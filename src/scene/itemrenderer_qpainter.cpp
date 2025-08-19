@@ -63,7 +63,7 @@ void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const Re
 {
     QRegion region = _region;
 
-    const QRect boundingRect = item->mapToScene(item->boundingRect()).toAlignedRect();
+    const QRect boundingRect = item->mapToScene(item->boundingRect(), viewport.scale()).toAlignedRect();
     if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
         region &= boundingRect;
     }
