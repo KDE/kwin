@@ -676,7 +676,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool slideChanged = (next->committed & SurfaceState::Field::Slide);
     const bool subsurfaceOrderChanged = (next->committed & SurfaceState::Field::SubsurfaceOrder);
     const bool visibilityChanged = (next->committed & SurfaceState::Field::Buffer) && bool(current->buffer) != bool(next->buffer);
-    const bool colorDescriptionChanged = (next->committed & SurfaceState::Field::ColorDescription) && (current->colorDescription != next->colorDescription);
+    const bool colorDescriptionChanged = (next->committed & SurfaceState::Field::ColorDescription)
+        && (current->colorDescription != next->colorDescription || current->renderingIntent != next->renderingIntent);
     const bool presentationModeHintChanged = (next->committed & SurfaceState::Field::PresentationModeHint);
     const bool bufferReleasePointChanged = (next->committed & SurfaceState::Field::Buffer) && current->releasePoint != next->releasePoint;
     const bool alphaMultiplierChanged = (next->committed & SurfaceState::Field::AlphaMultiplier);

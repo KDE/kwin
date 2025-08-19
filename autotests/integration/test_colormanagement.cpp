@@ -89,6 +89,7 @@ private Q_SLOTS:
     void testUnsupportedPrimaries();
     void testNoPrimaries();
     void testNoTf();
+    void testRenderIntentOnly();
 };
 
 void ColorManagementTest::initTestCase()
@@ -191,29 +192,19 @@ void ColorManagementTest::testSetImageDescription_data()
         << std::optional<ColorDescription>();
 }
 
-void ColorManagementTest::testSetImageDescription()
+static ImageDescription createImageDescription(ColorManagementSurface *surface, const ColorDescription &color)
 {
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
-
-    auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*surface));
-
     QtWayland::wp_image_description_creator_params_v1 creator(Test::colorManager()->create_parametric_creator());
 
-    QFETCH(ColorDescription, input);
-    QFETCH(RenderingIntent, renderingIntent);
-
-    creator.set_primaries(std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().x),
-                          std::round(1'000'000.0 * input.containerColorimetry().red().toxyY().y),
-                          std::round(1'000'000.0 * input.containerColorimetry().green().toxyY().x),
-                          std::round(1'000'000.0 * input.containerColorimetry().green().toxyY().y),
-                          std::round(1'000'000.0 * input.containerColorimetry().blue().toxyY().x),
-                          std::round(1'000'000.0 * input.containerColorimetry().blue().toxyY().y),
-                          std::round(1'000'000.0 * input.containerColorimetry().white().toxyY().x),
-                          std::round(1'000'000.0 * input.containerColorimetry().white().toxyY().y));
-    switch (input.transferFunction().type) {
+    creator.set_primaries(std::round(1'000'000.0 * color.containerColorimetry().red().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().red().toxyY().y),
+                          std::round(1'000'000.0 * color.containerColorimetry().green().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().green().toxyY().y),
+                          std::round(1'000'000.0 * color.containerColorimetry().blue().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().blue().toxyY().y),
+                          std::round(1'000'000.0 * color.containerColorimetry().white().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().white().toxyY().y));
+    switch (color.transferFunction().type) {
     case TransferFunction::sRGB:
         creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB);
         break;
@@ -227,12 +218,27 @@ void ColorManagementTest::testSetImageDescription()
         creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ);
         break;
     }
-    creator.set_luminances(std::round(input.transferFunction().minLuminance * 10'000), std::round(input.transferFunction().maxLuminance), std::round(input.referenceLuminance()));
-    creator.set_max_fall(std::round(input.maxAverageLuminance().value_or(0)));
-    creator.set_max_cll(std::round(input.maxHdrLuminance().value_or(0)));
-    creator.set_mastering_luminance(std::round(input.minLuminance() * 10'000), std::round(input.maxHdrLuminance().value_or(0)));
+    creator.set_luminances(std::round(color.transferFunction().minLuminance * 10'000), std::round(color.transferFunction().maxLuminance), std::round(color.referenceLuminance()));
+    creator.set_max_fall(std::round(color.maxAverageLuminance().value_or(0)));
+    creator.set_max_cll(std::round(color.maxHdrLuminance().value_or(0)));
+    creator.set_mastering_luminance(std::round(color.minLuminance() * 10'000), std::round(color.maxHdrLuminance().value_or(0)));
 
-    ImageDescription imageDescr(wp_image_description_creator_params_v1_create(creator.object()));
+    return ImageDescription(wp_image_description_creator_params_v1_create(creator.object()));
+}
+
+void ColorManagementTest::testSetImageDescription()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*surface));
+
+    QFETCH(ColorDescription, input);
+    QFETCH(RenderingIntent, renderingIntent);
+
+    ImageDescription imageDescr = createImageDescription(cmSurf.get(), input);
 
     QFETCH(bool, protocolError);
     if (protocolError) {
@@ -309,6 +315,39 @@ void ColorManagementTest::testNoTf()
     wp_image_description_creator_params_v1_create(creator.object());
     QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
+}
+
+void ColorManagementTest::testRenderIntentOnly()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    const ColorDescription color{Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer)};
+
+    auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*surface));
+    ImageDescription imageDescr = createImageDescription(cmSurf.get(), color);
+
+    QSignalSpy ready(&imageDescr, &ImageDescription::ready);
+    QVERIFY(ready.wait(50ms));
+
+    cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
+    QVERIFY(colorChange.wait());
+
+    QCOMPARE(window->surface()->colorDescription(), color);
+    QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::Perceptual);
+
+    // only changing the rendering intent should also trigger the colorDescriptionChanged signal to be emitted
+    cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QVERIFY(colorChange.wait());
+    QCOMPARE(window->surface()->colorDescription(), color);
+    QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::AbsoluteColorimetric);
 }
 
 } // namespace KWin
