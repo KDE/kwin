@@ -1288,7 +1288,7 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 s
     Q_EMIT primarySelectionChanged(selection);
 }
 
-bool SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QMatrix4x4 &inputTransformation, int dragSerial, DragAndDropIcon *dragIcon)
+bool SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
 {
     if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
         return false;
