@@ -622,7 +622,7 @@ public:
      *
      * Returns @c true if the drag has been started successfully; otherwise returns @c false.
      */
-    bool startDrag(AbstractDataSource *source, SurfaceInterface *sourceSurface, const QMatrix4x4 &inputTransformation, int dragSerial = -1, DragAndDropIcon *dragIcon = nullptr);
+    bool startDrag(AbstractDataSource *source, SurfaceInterface *sourceSurface, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon = nullptr);
 
     /**
      * Returns the additional icon attached to the cursor during a drag-and-drop operation.
