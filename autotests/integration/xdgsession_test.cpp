@@ -47,6 +47,7 @@ private Q_SLOTS:
     void restoreNoBorder();
     void restoreShortcut();
     void restoreDesktops();
+    void restoreUnknownDesktops();
 
 private:
     struct RestoreFuncs
@@ -507,6 +508,40 @@ void TestXdgSession::restoreDesktops()
         .restore = [desktops](Window *window) {
             QVERIFY(!window->isOnDesktop(desktops[0]));
             QVERIFY(window->isOnDesktop(desktops[1]));
+        },
+    });
+}
+
+void TestXdgSession::restoreUnknownDesktops()
+{
+    auto vds = VirtualDesktopManager::self();
+    vds->setCount(3);
+
+    // The window is on desktops 2 and 3. If desktop 3 is removed, the window should be restored only on desktop 2.
+    const auto desktops = VirtualDesktopManager::self()->desktops();
+    restoreTemplate({
+        .setup = [desktops](Window *window) {
+            window->setDesktops({desktops[1], desktops[2]});
+        },
+        .between = [vds, desktops]() {
+            vds->removeVirtualDesktop(desktops[2]);
+        },
+        .restore = [desktops](Window *window) {
+            QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{desktops[1]}));
+        },
+    });
+
+    // The window is on desktop 2. If desktop 2 is removed, the window should be restored only on desktop 1,
+    // it should not be displayed on all desktops.
+    restoreTemplate({
+        .setup = [desktops](Window *window) {
+            window->setDesktops({desktops[1]});
+        },
+        .between = [vds, desktops]() {
+            vds->removeVirtualDesktop(desktops[1]);
+        },
+        .restore = [desktops](Window *window) {
+            QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{desktops[0]}));
         },
     });
 }

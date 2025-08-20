@@ -1342,7 +1342,9 @@ QVector<VirtualDesktop *> XdgToplevelWindow::initialDesktops() const
                     desktops.append(desktop);
                 }
             }
-            return desktops;
+            if (desktopIds->isEmpty() == desktops.isEmpty()) {
+                return desktops;
+            }
         }
     }
     return desktops();
