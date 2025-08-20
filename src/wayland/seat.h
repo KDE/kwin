@@ -613,7 +613,16 @@ public:
     AbstractDataSource *primarySelection() const;
     void setPrimarySelection(AbstractDataSource *selection, quint32 serial);
 
-    void startDrag(AbstractDataSource *source, SurfaceInterface *sourceSurface, int dragSerial = -1, DragAndDropIcon *dragIcon = nullptr);
+    /**
+     * Attempts to start a drag-and-drop operation. The @a source specifies the source data source,
+     * it may be @c null. The @a sourceSurface specifies the surface where the dnd operation origantes.
+     * The @a inputTransformation is a matrix that transforms global coordinates to the surface
+     * local coordinates. @a dragSerial specifies the implicit grab serial. @a dragIcon is an
+     * optional icon that can be attached to the cursor while the dnd operation is active.
+     *
+     * Returns @c true if the drag has been started successfully; otherwise returns @c false.
+     */
+    bool startDrag(AbstractDataSource *source, SurfaceInterface *sourceSurface, const QMatrix4x4 &inputTransformation, int dragSerial = -1, DragAndDropIcon *dragIcon = nullptr);
 
     /**
      * Returns the additional icon attached to the cursor during a drag-and-drop operation.
@@ -643,6 +652,10 @@ Q_SIGNALS:
      */
     void primarySelectionChanged(KWin::AbstractDataSource *);
 
+    /**
+     * Emitted when a drag'n'drop operation is requested by a client.
+     */
+    void dragRequested(AbstractDataSource *source, SurfaceInterface *origin, quint32 serial, DragAndDropIcon *dragIcon);
     /**
      * Emitted when a drag'n'drop operation is started
      * @see dragEnded

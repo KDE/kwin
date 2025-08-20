@@ -108,7 +108,7 @@ public:
 
 Q_SIGNALS:
     void aboutToBeDestroyed();
-    void dragStarted(AbstractDataSource *source, SurfaceInterface *originSurface, quint32 serial, DragAndDropIcon *dragIcon);
+    void dragRequested(AbstractDataSource *source, SurfaceInterface *originSurface, quint32 serial, DragAndDropIcon *dragIcon);
     void selectionChanged(KWin::DataSourceInterface *, quint32 serial);
 
 private:

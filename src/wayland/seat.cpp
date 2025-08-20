@@ -153,12 +153,8 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q, [this](DataSourceInterface *source, quint32 serial) {
         updateSelection(source, serial);
     });
-    QObject::connect(dataDevice,
-                     &DataDeviceInterface::dragStarted,
-                     q,
-                     [this](AbstractDataSource *source, SurfaceInterface *origin, quint32 serial, DragAndDropIcon *dragIcon) {
-                         q->startDrag(source, origin, serial, dragIcon);
-                     });
+    QObject::connect(dataDevice, &DataDeviceInterface::dragRequested, q, &SeatInterface::dragRequested);
+
     // is the new DataDevice for the current keyoard focus?
     if (globalKeyboard.focus.surface) {
         // same client?
@@ -1292,27 +1288,26 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 s
     Q_EMIT primarySelectionChanged(selection);
 }
 
-void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, int dragSerial, DragAndDropIcon *dragIcon)
+bool SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QMatrix4x4 &inputTransformation, int dragSerial, DragAndDropIcon *dragIcon)
 {
     if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
-        return;
+        return false;
     }
 
     if (hasImplicitPointerGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
-        d->drag.transformation = d->globalPointer.focus.transformation;
-    } else if (TouchPoint *touchPoint = touchPointByImplicitGrabSerial(dragSerial)) {
+    } else if (hasImplicitTouchGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Touch;
-        d->drag.transformation = touchPoint->transformation;
     } else {
         // no implicit grab, abort drag
-        return;
+        return false;
     }
 
     d->drag.dragImplicitGrabSerial = dragSerial;
 
     // set initial drag target to ourself
     d->drag.surface = originSurface;
+    d->drag.transformation = inputTransformation;
 
     d->drag.source = dragSource;
     if (dragSource) {
@@ -1332,6 +1327,7 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         d->drag.target->updateDragTarget(originSurface, display()->nextSerial());
     }
     Q_EMIT dragStarted();
+    return true;
 }
 
 DragAndDropIcon *SeatInterface::dragIcon() const
