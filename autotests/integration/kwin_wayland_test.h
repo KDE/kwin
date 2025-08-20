@@ -62,6 +62,7 @@ class SubCompositor;
 class SubSurface;
 class Surface;
 class TextInputManager;
+class DataDeviceManager;
 }
 }
 
@@ -590,6 +591,7 @@ public:
 
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
+    DataDeviceManager = 1 << 1,
     PlasmaShell = 1 << 2,
     WindowManagement = 1 << 3,
     PointerConstraints = 1 << 4,
@@ -804,6 +806,7 @@ struct Connection
     KWayland::Client::Compositor *compositor = nullptr;
     KWayland::Client::SubCompositor *subCompositor = nullptr;
     KWayland::Client::ShadowManager *shadowManager = nullptr;
+    KWayland::Client::DataDeviceManager *dataDeviceManager = nullptr;
     XdgShell *xdgShell = nullptr;
     KWayland::Client::ShmPool *shm = nullptr;
     KWayland::Client::Seat *seat = nullptr;
@@ -885,6 +888,7 @@ KWayland::Client::SubCompositor *waylandSubCompositor();
 KWayland::Client::ShadowManager *waylandShadowManager();
 KWayland::Client::ShmPool *waylandShmPool();
 KWayland::Client::Seat *waylandSeat();
+KWayland::Client::DataDeviceManager *waylandDataDeviceManager();
 KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();

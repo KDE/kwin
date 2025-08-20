@@ -84,23 +84,10 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
                                                         wl_resource *iconResource,
                                                         uint32_t serial)
 {
-    SurfaceInterface *focusSurface = SurfaceInterface::get(originResource)->mainSurface();
+    SurfaceInterface *originSurface = SurfaceInterface::get(originResource);
     DataSourceInterface *dataSource = nullptr;
     if (sourceResource) {
         dataSource = DataSourceInterface::get(sourceResource);
-    }
-
-    const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == focusSurface;
-    if (!pointerGrab) {
-        // Client doesn't have pointer grab.
-        const bool touchGrab = seat->hasImplicitTouchGrab(serial) && seat->isSurfaceTouched(focusSurface);
-        if (!touchGrab) {
-            // Client neither has pointer nor touch grab. No drag start allowed.
-            if (dataSource) {
-                dataSource->dndCancelled();
-            }
-            return;
-        }
     }
 
     DragAndDropIcon *dragIcon = nullptr;
@@ -119,7 +106,7 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
         dragIcon = new DragAndDropIcon(iconSurface);
     }
     drag.serial = serial;
-    Q_EMIT q->dragStarted(dataSource, focusSurface, serial, dragIcon);
+    Q_EMIT q->dragRequested(dataSource, originSurface, serial, dragIcon);
 }
 
 void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, wl_resource *source, uint32_t serial)

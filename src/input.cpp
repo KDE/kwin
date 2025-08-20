@@ -2570,6 +2570,21 @@ public:
     DragAndDropInputFilter()
         : InputEventFilter(InputFilterOrder::DragAndDrop)
     {
+        connect(waylandServer()->seat(), &SeatInterface::dragRequested, this, [](AbstractDataSource *source, SurfaceInterface *origin, quint32 serial, DragAndDropIcon *dragIcon) {
+            if (auto window = waylandServer()->findWindow(origin->mainSurface())) {
+                QMatrix4x4 transformation = window->inputTransformation();
+                transformation.translate(-QVector3D(origin->mapToMainSurface(QPointF(0, 0))));
+
+                if (waylandServer()->seat()->startDrag(source, origin, transformation, serial, dragIcon)) {
+                    return;
+                }
+            }
+
+            if (source) {
+                source->dndCancelled();
+            }
+        });
+
         connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, []() {
             AbstractDataSource *dragSource = waylandServer()->seat()->dragSource();
             if (!dragSource) {
@@ -2638,9 +2653,11 @@ public:
         }
 
         if (dragTarget) {
-            // TODO: consider decorations
-            if (dragTarget->surface() != seat->dragSurface()) {
-                seat->setDragTarget(dropHandler(dragTarget), dragTarget->surface(), dragTarget->inputTransformation());
+            const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(pos));
+            if (seat->dragSurface() != effectiveSurface) {
+                QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
+                inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation);
             }
         } else {
             // no window at that place, if we have a surface we need to reset
@@ -2730,20 +2747,26 @@ public:
         seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
 
-        if (Window *t = pickDragTarget(pos)) {
-            // TODO: consider decorations
-            if (t->surface() != seat->dragSurface()) {
-                if ((m_dragTarget = static_cast<Window *>(t->isClient() ? t : nullptr))) {
-                    workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
-                    m_raiseTimer.start();
-                }
-                seat->setDragTarget(dropHandler(t), t->surface(), pos, t->inputTransformation());
+        if (Window *dragTarget = pickDragTarget(pos)) {
+            if (m_dragTarget != dragTarget) {
+                workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                m_raiseTimer.start();
             }
+
             if ((pos - m_lastPos).manhattanLength() > 10) {
                 m_lastPos = pos;
                 // reset timer to delay raising the window
                 m_raiseTimer.start();
             }
+
+            const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(pos));
+            if (seat->dragSurface() != effectiveSurface) {
+                QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
+                inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation);
+            }
+
+            m_dragTarget = dragTarget;
         } else {
             // no window at that place, if we have a surface we need to reset
             seat->setDragTarget(nullptr, nullptr);

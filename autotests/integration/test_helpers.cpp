@@ -28,6 +28,7 @@
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/plasmashell.h>
@@ -578,6 +579,12 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
             return nullptr;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::DataDeviceManager)) {
+        connection->dataDeviceManager = registry->createDataDeviceManager(registry->interface(KWayland::Client::Registry::Interface::DataDeviceManager).name, registry->interface(KWayland::Client::Registry::Interface::DataDeviceManager).version);
+        if (!connection->dataDeviceManager->isValid()) {
+            return nullptr;
+        }
+    }
     if (flags.testFlag(AdditionalWaylandInterface::ShadowManager)) {
         connection->shadowManager = registry->createShadowManager(registry->interface(KWayland::Client::Registry::Interface::Shadow).name,
                                                                   registry->interface(KWayland::Client::Registry::Interface::Shadow).version);
@@ -634,6 +641,8 @@ Connection::~Connection()
     plasmaShell = nullptr;
     delete seat;
     seat = nullptr;
+    delete dataDeviceManager;
+    dataDeviceManager = nullptr;
     delete pointerConstraints;
     pointerConstraints = nullptr;
     delete xdgShell;
@@ -759,6 +768,11 @@ KWayland::Client::ShmPool *waylandShmPool()
 KWayland::Client::Seat *waylandSeat()
 {
     return s_waylandConnection->seat;
+}
+
+KWayland::Client::DataDeviceManager *waylandDataDeviceManager()
+{
+    return s_waylandConnection->dataDeviceManager;
 }
 
 KWayland::Client::PlasmaShell *waylandPlasmaShell()
