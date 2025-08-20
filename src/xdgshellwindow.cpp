@@ -1350,13 +1350,30 @@ QVector<VirtualDesktop *> XdgToplevelWindow::initialDesktops() const
 
 QStringList XdgToplevelWindow::initialActivities() const
 {
+#if KWIN_BUILD_ACTIVITIES
+    if (!workspace()->activities()) {
+        return QStringList();
+    }
+
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
     if (session) {
         if (const auto activities = session->read<QStringList>(QStringLiteral("activities"))) {
-            return activities.value();
+            QStringList effectiveActivities;
+            const QStringList availableActivities = workspace()->activities()->all();
+            for (const QString &activityId : *activities) {
+                if (availableActivities.contains(activityId)) {
+                    effectiveActivities.append(activityId);
+                }
+            }
+            if (activities->isEmpty() == effectiveActivities.isEmpty()) {
+                return effectiveActivities;
+            }
         }
     }
     return activities();
+#else
+    return QStringList();
+#endif
 }
 
 bool XdgToplevelWindow::initialNoBorder() const
