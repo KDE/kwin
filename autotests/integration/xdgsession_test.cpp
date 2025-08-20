@@ -5,6 +5,7 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/outputconfiguration.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -34,6 +35,7 @@ private Q_SLOTS:
     void restoreMappedToplevelSession();
     void replaceSession();
     void restorePosition();
+    void restoreOffscreenPosition();
     void restoreSize();
     void restoreKeepAbove();
     void restoreKeepBelow();
@@ -81,6 +83,11 @@ void TestXdgSession::initTestCase()
 
 void TestXdgSession::init()
 {
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
+
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgSessionV1));
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -347,6 +354,31 @@ void TestXdgSession::restorePosition()
         },
         .restore = [](Window *window) {
             QCOMPARE(window->pos(), QPointF(42, 84));
+        },
+    });
+}
+
+void TestXdgSession::restoreOffscreenPosition()
+{
+    const auto outputs = workspace()->outputs();
+
+    restoreTemplate({
+        .setup = [outputs](Window *window) {
+            QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
+            window->move(QPointF(1280 + 42, 42));
+            QCOMPARE(window->output(), outputs[1]);
+        },
+        .between = [outputs]() {
+            OutputConfiguration configuration;
+            {
+                auto changeSet = configuration.changeSet(outputs[1]);
+                changeSet->enabled = false;
+            }
+            workspace()->applyOutputConfiguration(configuration);
+        },
+        .restore = [outputs](Window *window) {
+            QCOMPARE(window->pos(), QPointF(0, 0));
+            QCOMPARE(window->output(), outputs[0]);
         },
     });
 }

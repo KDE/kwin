@@ -323,6 +323,7 @@ public:
     Output *findOutput(const QString &name) const;
     void switchToOutput(Output *output);
 
+    QString outputLayoutId() const;
     QList<Output *> outputs() const;
     Output *outputAt(const QPointF &pos) const;
 
@@ -609,7 +610,6 @@ private:
     void activateWindowOnDesktop(VirtualDesktop *desktop);
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeWindow(Window *window);
-    QString getPlacementTrackerHash();
 
     void updateOutputConfiguration();
     void updateOutputs(const std::optional<QList<Output *>> &outputOrder = std::nullopt);

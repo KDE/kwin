@@ -272,7 +272,7 @@ void Workspace::init()
 
     connect(this, &Workspace::windowAdded, m_placementTracker.get(), &PlacementTracker::add);
     connect(this, &Workspace::windowRemoved, m_placementTracker.get(), &PlacementTracker::remove);
-    m_placementTracker->init(getPlacementTrackerHash());
+    m_placementTracker->init(outputLayoutId());
 
     if (waylandServer()) {
         connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::updateOutputConfiguration);
@@ -290,7 +290,7 @@ void Workspace::init()
 #endif
 }
 
-QString Workspace::getPlacementTrackerHash()
+QString Workspace::outputLayoutId() const
 {
     QStringList hashes;
     for (const auto &output : std::as_const(m_outputs)) {
@@ -1260,7 +1260,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     desktopResized();
 
     m_placementTracker->uninhibit();
-    m_placementTracker->restore(getPlacementTrackerHash());
+    m_placementTracker->restore(outputLayoutId());
 
     for (Output *output : removed) {
         output->unref();

@@ -515,6 +515,7 @@ void XdgToplevelWindow::handleRoleDestroyed()
 {
     if (XdgToplevelSessionV1Interface *session = m_shellSurface->session()) {
         session->write(QStringLiteral("position"), moveResizeGeometry().topLeft());
+        session->write(QStringLiteral("outputLayoutId"), workspace()->outputLayoutId());
         session->write(QStringLiteral("size"), moveResizeGeometry().size());
         session->write(QStringLiteral("keepAbove"), keepAbove());
         session->write(QStringLiteral("keepBelow"), keepBelow());
@@ -1198,7 +1199,9 @@ QPointF XdgToplevelWindow::initialPosition() const
 {
     const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
     if (session) {
-        if (const auto position = session->read<QPointF>(QStringLiteral("position"))) {
+        const auto outputLayoutId = session->read<QString>(QStringLiteral("outputLayoutId"));
+        const auto position = session->read<QPointF>(QStringLiteral("position"));
+        if (position && workspace()->outputLayoutId() == outputLayoutId) {
             return position.value();
         }
     }
