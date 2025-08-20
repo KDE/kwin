@@ -52,6 +52,7 @@ private:
     struct RestoreFuncs
     {
         std::function<void(Window *window)> setup;
+        std::function<void()> between;
         std::function<void(Window *window)> restore;
     };
     void restoreTemplate(RestoreFuncs funcs);
@@ -308,6 +309,10 @@ void TestXdgSession::restoreTemplate(RestoreFuncs funcs)
 
         shellSurface.reset();
         QVERIFY(Test::waitForWindowClosed(window));
+    }
+
+    if (funcs.between) {
+        funcs.between();
     }
 
     {
