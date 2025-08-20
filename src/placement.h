@@ -26,7 +26,7 @@ class KWIN_EXPORT Placement
 public:
     explicit Placement();
 
-    std::optional<PlacementCommand> place(const Window *c, const QRectF &area);
+    std::optional<PlacementCommand> place(const Window *c, const QRectF &area,  const QRectF &suggestedArea = QRectF());
     std::optional<PlacementCommand> placeSmart(const Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeCentered(const Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 

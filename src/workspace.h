@@ -85,6 +85,8 @@ class DpmsInputEventFilter;
 class OrientationSensor;
 class BrightnessDevice;
 
+using PlacementCallback = std::function<QRectF(Window*, QRectF)>;
+
 class KWIN_EXPORT Workspace : public QObject
 {
     Q_OBJECT
@@ -440,6 +442,8 @@ public:
     void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
     bool mayActivate(Window *window, const QString &token) const;
 
+    void setPlacementCallback(PlacementCallback callback);
+
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
     // Keybindings
@@ -735,6 +739,8 @@ private:
     QString m_activationToken;
     QString m_activationTokenAppId;
     uint32_t m_activationTokenSerial = 0;
+
+    PlacementCallback m_placementCallback;
 
 private:
     friend bool performTransiencyCheck();

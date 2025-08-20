@@ -15,6 +15,7 @@
 #include "effect/effecthandler.h"
 #include "outline.h"
 #include "scripting_logging.h"
+#include "scripting/scripting.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -229,6 +230,53 @@ SLOTWRAPPER(slotSwitchDesktopUp, Up)
 SLOTWRAPPER(slotSwitchDesktopDown, Down)
 
 #undef SLOTWRAPPER
+
+
+void WorkspaceWrapper::setPlacementCallback(QJSValue callback)
+{
+    qCDebug(KWIN_SCRIPTING) <<  "KWIN_SCRIPTING setting callback from .js";
+    m_scriptedPlacementCallback = callback;
+
+    workspace()->setPlacementCallback([this](Window* window, QRectF area) -> QRectF {
+        qCDebug(KWIN_SCRIPTING) << "KWIN_SCRIPTING fake setting callback for " << window->caption() << "in clientArea" << area;
+
+        if (m_scriptedPlacementCallback.isCallable()) {
+
+            QJSValueList jsargs;
+            jsargs << m_engine->newQObject(window);
+
+            QJSValue clientArea = m_engine->newObject();
+            clientArea.setProperty("x", area.x());
+            clientArea.setProperty("y", area.y());
+            clientArea.setProperty("width", area.width());
+            clientArea.setProperty("height", area.height());
+            jsargs << clientArea;
+
+            qCDebug(KWIN_SCRIPTING) <<  "=============== calling .js ====================";
+            QJSValue scripted_placement = m_scriptedPlacementCallback.call(jsargs);
+            qCDebug(KWIN_SCRIPTING) <<  "=============== called +++++====================";
+
+            if (scripted_placement.isError()) {
+                qCWarning(KWIN_SCRIPTING) << "placementCallback error!"
+                    << "Uncaught exception at line"
+                    << scripted_placement.property("lineNumber").toInt()
+                    << ":" << scripted_placement.toString();
+            }
+            if (scripted_placement.isObject()) {
+                const int x = scripted_placement.property(QLatin1String("x")).toInt();
+                const int y = scripted_placement.property(QLatin1String("y")).toInt();
+                const int w = scripted_placement.property(QLatin1String("width")).toInt();
+                const int h = scripted_placement.property(QLatin1String("height")).toInt();
+                qCDebug(KWIN_SCRIPTING) << "object x, y, width, height:" << x << y << w << h;
+                return QRectF(x, y, w, h);
+            }
+        } else {
+            qCWarning(KWIN_SCRIPTING) << "scripted placementCallback is not callable. Probably kwin js script broken.";
+        }
+        return QRectF();
+    });
+
+}
 
 void WorkspaceWrapper::setActiveWindow(KWin::Window *window)
 {

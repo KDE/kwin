@@ -84,6 +84,7 @@
 #include <QDBusConnection>
 #include <QDBusPendingCall>
 #include <QMetaProperty>
+#include <QQmlEngine>
 
 namespace KWin
 {
@@ -769,7 +770,12 @@ void Workspace::addWaylandWindow(Window *window)
 
     if (window->isPlaceable() && !window->isPlaced()) {
         const QRectF area = clientArea(PlacementArea, window, activeOutput());
-        if (const auto placement = m_placement->place(window, area)) {
+
+        QRectF requestedArea;
+        if (m_placementCallback) {
+            requestedArea = m_placementCallback(window, area);
+        }
+        if (const auto placement = m_placement->place(window, area, requestedArea)) {
             window->place(*placement);
         }
     }
@@ -2934,6 +2940,13 @@ RootTile *Workspace::rootTile(Output *output, VirtualDesktop *desktop) const
         return manager->rootTile(desktop);
     }
     return nullptr;
+}
+
+void Workspace::setPlacementCallback(PlacementCallback callback)
+{
+    qCDebug(KWIN_CORE) << "KWIN_SCRIPTING setPlacementCallback(...)";
+
+    m_placementCallback = callback;
 }
 
 #if KWIN_BUILD_TABBOX

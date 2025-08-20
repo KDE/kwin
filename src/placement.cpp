@@ -14,6 +14,7 @@
 #include "cursor.h"
 #include "options.h"
 #include "rules.h"
+#include "scripting/scripting_logging.h"
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"
@@ -31,11 +32,17 @@ Placement::Placement()
 /**
  * Places the client \a c according to the workspace's layout policy
  */
-std::optional<PlacementCommand> Placement::place(const Window *c, const QRectF &area)
+std::optional<PlacementCommand> Placement::place(const Window *c, const QRectF &area, const QRectF &suggestedArea)
 {
     PlacementPolicy policy = c->rules()->checkPlacement(PlacementDefault);
     if (policy != PlacementDefault) {
         return place(c, area, policy);
+    }
+
+    if (!suggestedArea.isNull() && !suggestedArea.isEmpty()) {
+        // a kwin script wants to place the window
+        qCDebug(KWIN_SCRIPTING) << "a script suggests placement at" << suggestedArea;
+        return place(c, suggestedArea.toRect(), options->placement());
     }
 
     if (c->isUtility()) {
