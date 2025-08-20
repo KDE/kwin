@@ -49,8 +49,12 @@ private Q_SLOTS:
     void restoreDesktops();
 
 private:
-    template<typename SetupFn, typename RestoreFn>
-    void restoreTemplate(SetupFn setupFunction, RestoreFn restoreFunction);
+    struct RestoreFuncs
+    {
+        std::function<void(Window *window)> setup;
+        std::function<void(Window *window)> restore;
+    };
+    void restoreTemplate(RestoreFuncs funcs);
 };
 
 void TestXdgSession::initTestCase()
@@ -278,8 +282,7 @@ void TestXdgSession::replaceSession()
     }
 }
 
-template<typename SetupFn, typename RestoreFn>
-void TestXdgSession::restoreTemplate(SetupFn setupFunction, RestoreFn restoreFunction)
+void TestXdgSession::restoreTemplate(RestoreFuncs funcs)
 {
     std::unique_ptr<Test::XdgSessionV1> session(Test::createXdgSessionV1(Test::XdgSessionManagerV1::reason_launch));
     QSignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
@@ -301,7 +304,7 @@ void TestXdgSession::restoreTemplate(SetupFn setupFunction, RestoreFn restoreFun
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.first()[0].toUInt());
         auto window = Test::renderAndWaitForShown(surface.get(), surfaceSize.isEmpty() ? QSize(100, 50) : surfaceSize, Qt::blue);
 
-        setupFunction(window);
+        funcs.setup(window);
 
         shellSurface.reset();
         QVERIFY(Test::waitForWindowClosed(window));
@@ -323,7 +326,7 @@ void TestXdgSession::restoreTemplate(SetupFn setupFunction, RestoreFn restoreFun
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.first()[0].toUInt());
         auto window = Test::renderAndWaitForShown(surface.get(), surfaceSize.isEmpty() ? QSize(100, 50) : surfaceSize, Qt::blue);
 
-        restoreFunction(window);
+        funcs.restore(window);
 
         shellSurface.reset();
         QVERIFY(Test::waitForWindowClosed(window));
@@ -332,64 +335,85 @@ void TestXdgSession::restoreTemplate(SetupFn setupFunction, RestoreFn restoreFun
 
 void TestXdgSession::restorePosition()
 {
-    restoreTemplate([](Window *window) {
-        window->move(QPointF(42, 84));
-    }, [](Window *window) {
-        QCOMPARE(window->pos(), QPointF(42, 84));
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->move(QPointF(42, 84));
+        },
+        .restore = [](Window *window) {
+            QCOMPARE(window->pos(), QPointF(42, 84));
+        },
     });
 }
 
 void TestXdgSession::restoreSize()
 {
-    restoreTemplate([](Window *window) {
-        window->resize(QSizeF(300, 250));
-    }, [](Window *window) {
-        QCOMPARE(window->size(), QSizeF(300, 250));
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->resize(QSizeF(300, 250));
+        },
+        .restore = [](Window *window) {
+            QCOMPARE(window->size(), QSizeF(300, 250));
+        },
     });
 }
 
 void TestXdgSession::restoreKeepAbove()
 {
-    restoreTemplate([](Window *window) {
-        window->setKeepAbove(true);
-    }, [](Window *window) {
-        QVERIFY(window->keepAbove());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setKeepAbove(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->keepAbove());
+        },
     });
 }
 
 void TestXdgSession::restoreKeepBelow()
 {
-    restoreTemplate([](Window *window) {
-        window->setKeepBelow(true);
-    }, [](Window *window) {
-        QVERIFY(window->keepBelow());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setKeepBelow(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->keepBelow());
+        },
     });
 }
 
 void TestXdgSession::restoreSkipSwitcher()
 {
-    restoreTemplate([](Window *window) {
-        window->setSkipSwitcher(true);
-    }, [](Window *window) {
-        QVERIFY(window->skipSwitcher());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setSkipSwitcher(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->skipSwitcher());
+        },
     });
 }
 
 void TestXdgSession::restoreSkipPager()
 {
-    restoreTemplate([](Window *window) {
-        window->setSkipPager(true);
-    }, [](Window *window) {
-        QVERIFY(window->skipPager());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setSkipPager(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->skipPager());
+        },
     });
 }
 
 void TestXdgSession::restoreSkipTaskbar()
 {
-    restoreTemplate([](Window *window) {
-        window->setSkipTaskbar(true);
-    }, [](Window *window) {
-        QVERIFY(window->skipTaskbar());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setSkipTaskbar(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->skipTaskbar());
+        },
     });
 }
 
@@ -406,61 +430,79 @@ void TestXdgSession::restoreMaximized_data()
 void TestXdgSession::restoreMaximized()
 {
     QFETCH(MaximizeMode, maximizeMode);
-    restoreTemplate([maximizeMode](Window *window) {
-        window->maximize(maximizeMode);
-    }, [maximizeMode](Window *window) {
-        QCOMPARE(window->maximizeMode(), maximizeMode);
-        QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
+    restoreTemplate({
+        .setup = [maximizeMode](Window *window) {
+            window->maximize(maximizeMode);
+        },
+        .restore = [maximizeMode](Window *window) {
+            QCOMPARE(window->maximizeMode(), maximizeMode);
+            QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
+        },
     });
 }
 
 void TestXdgSession::restoreFullScreen()
 {
-    restoreTemplate([](Window *window) {
-        window->setFullScreen(true);
-    }, [](Window *window) {
-        QVERIFY(window->isFullScreen());
-        QVERIFY(window->isRequestedFullScreen());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setFullScreen(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->isFullScreen());
+            QVERIFY(window->isRequestedFullScreen());
+        },
     });
 }
 
 void TestXdgSession::restoreMinimized()
 {
-    restoreTemplate([](Window *window) {
-        window->setMinimized(true);
-    }, [](Window *window) {
-        QVERIFY(window->isMinimized());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setMinimized(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->isMinimized());
+        },
     });
 }
 
 void TestXdgSession::restoreNoBorder()
 {
-    restoreTemplate([](Window *window) {
-        window->setNoBorder(true);
-    }, [](Window *window) {
-        QVERIFY(window->noBorder());
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setNoBorder(true);
+        },
+        .restore = [](Window *window) {
+            QVERIFY(window->noBorder());
+        },
     });
 }
 
 void TestXdgSession::restoreShortcut()
 {
-    restoreTemplate([](Window *window) {
-        window->setShortcut(QStringLiteral("Ctrl+Meta+T"));
-    }, [](Window *window) {
-        QCOMPARE(window->shortcut(), QKeySequence(Qt::ControlModifier | Qt::MetaModifier | Qt::Key_T));
+    restoreTemplate({
+        .setup = [](Window *window) {
+            window->setShortcut(QStringLiteral("Ctrl+Meta+T"));
+        },
+        .restore = [](Window *window) {
+            QCOMPARE(window->shortcut(), QKeySequence(Qt::ControlModifier | Qt::MetaModifier | Qt::Key_T));
+        },
     });
 }
 
 void TestXdgSession::restoreDesktops()
 {
     const auto desktops = VirtualDesktopManager::self()->desktops();
-    restoreTemplate([desktops](Window *window) {
-        QVERIFY(window->isOnDesktop(desktops[0]));
-        QVERIFY(!window->isOnDesktop(desktops[1]));
-        window->setDesktops({desktops[1]});
-    }, [desktops](Window *window) {
-        QVERIFY(!window->isOnDesktop(desktops[0]));
-        QVERIFY(window->isOnDesktop(desktops[1]));
+    restoreTemplate({
+        .setup = [desktops](Window *window) {
+            QVERIFY(window->isOnDesktop(desktops[0]));
+            QVERIFY(!window->isOnDesktop(desktops[1]));
+            window->setDesktops({desktops[1]});
+        },
+        .restore = [desktops](Window *window) {
+            QVERIFY(!window->isOnDesktop(desktops[0]));
+            QVERIFY(window->isOnDesktop(desktops[1]));
+        },
     });
 }
 
