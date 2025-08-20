@@ -9,7 +9,9 @@
 #include "drm_colorop.h"
 #include "drm_blob.h"
 #include "drm_commit.h"
+#include "drm_gpu.h"
 #include "drm_object.h"
+#include "utils/envvar.h"
 
 #include <ranges>
 
@@ -30,13 +32,15 @@ DrmAbstractColorOp *DrmAbstractColorOp::next() const
     return m_next;
 }
 
+static const auto s_disableAmdgpuWorkaround = environmentVariableBoolValue("KWIN_DRM_DISABLE_AMD_GAMMA_WORKAROUND");
+
 bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline)
 {
     if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
         commit->merge(m_cache.get());
         return true;
     }
-    if (pipeline.isIdentity()) {
+    if (pipeline.isIdentity() && s_disableAmdgpuWorkaround.value_or(!commit->gpu()->isAmdgpu())) {
         // Applying this config is very simple and cheap, so do it directly
         // and avoid invalidating the cache
         DrmAbstractColorOp *currentOp = this;
