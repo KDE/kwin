@@ -653,6 +653,7 @@ X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
     X11Window *window = new X11Window();
+    Q_EMIT windowAboutToBeAdded(window);
     setupWindowConnections(window);
     if (!window->manage(windowId, is_mapped)) {
         X11Window::deleteClient(window);
@@ -762,6 +763,8 @@ void Workspace::addWaylandWindow(Window *window)
     if (showingDesktop() && breaksShowingDesktop(window)) {
         setShowingDesktop(false);
     }
+
+    Q_EMIT windowAboutToBeAdded(window);
 
     setupWindowConnections(window);
     window->updateLayer();
@@ -1934,6 +1937,8 @@ void Workspace::addInternalWindow(InternalWindow *window)
     Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
+
+    Q_EMIT windowAboutToBeAdded(window);
 
     setupWindowConnections(window);
     window->updateLayer();

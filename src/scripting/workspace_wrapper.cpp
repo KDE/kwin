@@ -36,6 +36,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
 {
     KWin::Workspace *ws = KWin::Workspace::self();
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
+    connect(ws, &Workspace::windowAboutToBeAdded, this, &WorkspaceWrapper::windowAboutToBeAdded);
     connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::windowAdded);
     connect(ws, &Workspace::windowRemoved, this, &WorkspaceWrapper::windowRemoved);
     connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::windowActivated);

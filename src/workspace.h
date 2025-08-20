@@ -542,6 +542,7 @@ Q_SIGNALS:
     void currentDesktopChanged(KWin::VirtualDesktop *previousDesktop, KWin::Window *);
     void currentDesktopChanging(KWin::VirtualDesktop *currentDesktop, QPointF delta, KWin::Window *); // for realtime animations
     void currentDesktopChangingCancelled();
+    void windowAboutToBeAdded(KWin::Window *);
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);
     void windowActivated(KWin::Window *);

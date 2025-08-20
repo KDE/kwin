@@ -74,6 +74,7 @@ private:
     Q_DISABLE_COPY(WorkspaceWrapper)
 
 Q_SIGNALS:
+    void windowAboutToBeAdded(KWin::Window *window);
     void windowAdded(KWin::Window *window);
     void windowRemoved(KWin::Window *window);
     void windowActivated(KWin::Window *window);
