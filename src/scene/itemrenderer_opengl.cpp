@@ -457,6 +457,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         }
     }
     if (shader) {
+        // some other code assumes texture 0 is active
+        glActiveTexture(GL_TEXTURE0);
         ShaderManager::instance()->popShader();
     }
 
