@@ -526,7 +526,6 @@ public:
      */
     ///@{
     TouchInterface *touch() const;
-    bool isSurfaceTouched(SurfaceInterface *surface) const;
     TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition);
     void notifyTouchUp(qint32 id);
     void notifyTouchMotion(qint32 id, const QPointF &globalPosition);

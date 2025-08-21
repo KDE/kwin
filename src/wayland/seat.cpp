@@ -959,11 +959,6 @@ void SeatInterface::notifyTouchCancel()
     d->globalTouch.ids.clear();
 }
 
-bool SeatInterface::isSurfaceTouched(SurfaceInterface *surface) const
-{
-    return d->globalTouch.focus.contains(surface->mainSurface());
-}
-
 bool SeatInterface::isTouchSequence() const
 {
     return !d->globalTouch.ids.empty();

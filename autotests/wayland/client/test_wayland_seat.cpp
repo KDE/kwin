@@ -1714,9 +1714,6 @@ void TestWaylandSeat::testTouch()
     SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWin::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
-    // no keyboard yet
-    QCOMPARE(m_seatInterface->isSurfaceTouched(serverSurface), false);
-
     KWayland::Client::Touch *touch = m_seat->createTouch(m_seat);
     QVERIFY(touch->isValid());
 
