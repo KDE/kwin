@@ -44,4 +44,7 @@ bool ScreencastLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &d
     return true;
 }
 
+void ScreencastLayer::releaseBuffers()
+{
+}
 }

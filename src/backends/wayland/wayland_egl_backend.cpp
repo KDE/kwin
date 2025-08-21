@@ -129,6 +129,12 @@ QHash<uint32_t, QList<uint64_t>> WaylandEglLayer::supportedDrmFormats() const
     return m_backend->backend()->display()->linuxDmabuf()->formats();
 }
 
+void WaylandEglLayer::releaseBuffers()
+{
+    m_buffer.reset();
+    m_swapchain.reset();
+}
+
 WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
     : OutputLayer(output, OutputLayerType::CursorOnly, 255, 255, 255)
     , m_backend(backend)
@@ -206,6 +212,12 @@ DrmDevice *WaylandEglCursorLayer::scanoutDevice() const
 QHash<uint32_t, QList<uint64_t>> WaylandEglCursorLayer::supportedDrmFormats() const
 {
     return m_backend->supportedFormats();
+}
+
+void WaylandEglCursorLayer::releaseBuffers()
+{
+    m_buffer.reset();
+    m_swapchain.reset();
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)

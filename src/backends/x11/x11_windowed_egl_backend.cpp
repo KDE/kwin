@@ -86,6 +86,12 @@ QHash<uint32_t, QList<uint64_t>> X11WindowedEglPrimaryLayer::supportedDrmFormats
     return m_backend->backend()->driFormats();
 }
 
+void X11WindowedEglPrimaryLayer::releaseBuffers()
+{
+    m_buffer.reset();
+    m_swapchain.reset();
+}
+
 X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
     : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_backend(backend)
@@ -149,6 +155,10 @@ DrmDevice *X11WindowedEglCursorLayer::scanoutDevice() const
 QHash<uint32_t, QList<uint64_t>> X11WindowedEglCursorLayer::supportedDrmFormats() const
 {
     return m_backend->supportedFormats();
+}
+
+void X11WindowedEglCursorLayer::releaseBuffers()
+{
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)

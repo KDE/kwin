@@ -72,6 +72,12 @@ QHash<uint32_t, QList<uint64_t>> VirtualEglLayer::supportedDrmFormats() const
     return m_backend->supportedFormats();
 }
 
+void VirtualEglLayer::releaseBuffers()
+{
+    m_current.reset();
+    m_swapchain.reset();
+}
+
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
     : m_backend(b)
 {

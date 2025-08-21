@@ -80,6 +80,12 @@ QHash<uint32_t, QList<uint64_t>> WaylandQPainterPrimaryLayer::supportedDrmFormat
     return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
 }
 
+void WaylandQPainterPrimaryLayer::releaseBuffers()
+{
+    m_back.reset();
+    m_swapchain.reset();
+}
+
 WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
     : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_backend(backend)
@@ -130,6 +136,12 @@ DrmDevice *WaylandQPainterCursorLayer::scanoutDevice() const
 QHash<uint32_t, QList<uint64_t>> WaylandQPainterCursorLayer::supportedDrmFormats() const
 {
     return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
+}
+
+void WaylandQPainterCursorLayer::releaseBuffers()
+{
+    m_back.reset();
+    m_swapchain.reset();
 }
 
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)

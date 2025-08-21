@@ -38,6 +38,7 @@ public:
     QImage *image();
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     VirtualQPainterBackend *const m_backend;
