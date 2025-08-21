@@ -52,3 +52,4 @@ Options:
  cppcheck-ignore-files:
   - autotests
  require-passing-tests-on: ['Linux/Qt6']
+ run-qmllint: True
