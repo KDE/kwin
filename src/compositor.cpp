@@ -464,7 +464,7 @@ static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerT
 }
 
 static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
-static const bool s_disableOverlays = environmentVariableBoolValue("KWIN_DISABLE_OVERLAYS").value_or(false);
+static const bool s_disableOverlays = environmentVariableBoolValue("KWIN_DISABLE_OVERLAYS").value_or(PROJECT_VERSION_PATCH < 80);
 
 /**
  * items and layers need to be sorted top to bottom
