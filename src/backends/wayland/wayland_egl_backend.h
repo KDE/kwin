@@ -44,6 +44,7 @@ public:
     bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     DamageJournal m_damageJournal;
@@ -67,6 +68,7 @@ public:
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     WaylandEglBackend *m_backend;

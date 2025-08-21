@@ -32,6 +32,7 @@ public:
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     std::shared_ptr<EglSwapchain> m_swapchain;
@@ -53,6 +54,7 @@ public:
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     X11WindowedEglBackend *const m_backend;

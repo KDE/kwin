@@ -35,6 +35,7 @@ public:
 
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     VirtualEglBackend *const m_backend;

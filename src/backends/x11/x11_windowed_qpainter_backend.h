@@ -38,6 +38,7 @@ public:
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     X11WindowedOutput *const m_output;
@@ -58,6 +59,7 @@ public:
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    void releaseBuffers() override;
 
 private:
     QImage m_buffer;

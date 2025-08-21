@@ -132,6 +132,9 @@ void OutputLayer::setScanoutCandidate(SurfaceItem *item)
 void OutputLayer::setEnabled(bool enable)
 {
     m_enabled = enable;
+    if (!enable) {
+        releaseBuffers();
+    }
 }
 
 bool OutputLayer::isEnabled() const

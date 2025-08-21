@@ -71,6 +71,12 @@ QHash<uint32_t, QList<uint64_t>> VirtualQPainterLayer::supportedDrmFormats() con
     return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
 }
 
+void VirtualQPainterLayer::releaseBuffers()
+{
+    m_current.reset();
+    m_swapchain.reset();
+}
+
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {

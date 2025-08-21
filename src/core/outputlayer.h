@@ -151,6 +151,8 @@ public:
 
     static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, Output::ColorPowerTradeoff tradeoff);
 
+    virtual void releaseBuffers() = 0;
+
 Q_SIGNALS:
     void repaintScheduled();
 

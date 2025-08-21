@@ -73,6 +73,12 @@ QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterPrimaryLayer::supportedDrmFo
     return m_backend->supportedFormats();
 }
 
+void X11WindowedQPainterPrimaryLayer::releaseBuffers()
+{
+    m_current.reset();
+    m_swapchain.reset();
+}
+
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
     : OutputLayer(output, OutputLayerType::CursorOnly)
     , m_output(output)
@@ -111,6 +117,10 @@ DrmDevice *X11WindowedQPainterCursorLayer::scanoutDevice() const
 QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterCursorLayer::supportedDrmFormats() const
 {
     return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
+}
+
+void X11WindowedQPainterCursorLayer::releaseBuffers()
+{
 }
 
 X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backend)

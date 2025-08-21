@@ -30,8 +30,6 @@ public:
     explicit DrmOutputLayer(Output *output, OutputLayerType type);
     explicit DrmOutputLayer(Output *output, OutputLayerType type, int zpos, int minZpos, int maxZpos);
     virtual ~DrmOutputLayer();
-
-    virtual void releaseBuffers() = 0;
 };
 
 class DrmPipelineLayer : public DrmOutputLayer
