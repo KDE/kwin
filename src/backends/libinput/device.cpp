@@ -24,6 +24,10 @@
 
 #include <linux/input.h>
 
+#ifndef KWIN_BUILD_TESTING
+#include "workspace.h"
+#endif
+
 namespace KWin
 {
 namespace LibInput
@@ -156,6 +160,7 @@ enum class ConfigKey {
     InputArea,
     TabletToolRelativeMode,
     Rotation,
+    OutputUuid,
 };
 
 struct ConfigDataBase
@@ -255,7 +260,8 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::Orientation, std::make_shared<ConfigData<DeviceOrientation>>()},
     {ConfigKey::Calibration, std::make_shared<ConfigData<CalibrationMatrix>>()},
     {ConfigKey::TabletToolPressureCurve, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("TabletToolPressureCurve"), &Device::setPressureCurve, &Device::defaultPressureCurve)},
-    {ConfigKey::OutputName, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)},
+    {ConfigKey::OutputUuid, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("OutputUuid"), &Device::setOutputUuid, &Device::defaultOutputUuid)},
+    {ConfigKey::OutputName, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("OutputName"), &Device::setConfigOutputName, &Device::defaultOutputName)},
     {ConfigKey::OutputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("OutputArea"), &Device::setOutputArea, &Device::defaultOutputArea)},
     {ConfigKey::MapToWorkspace, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MapToWorkspace"), &Device::setMapToWorkspace, &Device::defaultMapToWorkspace)},
     {ConfigKey::TabletToolPressureRangeMin, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMin"), &Device::setPressureRangeMin, &Device::defaultPressureRangeMin)},
@@ -895,22 +901,45 @@ void Device::setOutputName(const QString &name)
     if (name == m_outputName) {
         return;
     }
-
-    setOutput(nullptr);
-    auto outputs = kwinApp()->outputBackend()->outputs();
-    for (int i = 0; i < outputs.count(); ++i) {
-        if (!outputs[i]->isEnabled()) {
-            continue;
-        }
-        if (outputs[i]->name() == name) {
-            setOutput(outputs[i]);
-            break;
-        }
-    }
-
-    m_outputName = name;
+    setConfigOutputName(name);
     writeEntry(ConfigKey::OutputName, name);
+    if (m_output) {
+        setOutputUuid(m_output->uuid());
+    }
+#endif
+}
+
+void Device::setConfigOutputName(const QString &name)
+{
+#ifndef KWIN_BUILD_TESTING
+    if (name == m_outputName) {
+        return;
+    }
+    if (m_outputUuid.isEmpty()) {
+        const auto outputs = workspace()->outputs();
+        const auto it = std::ranges::find_if(outputs, [&name](Output *output) {
+            return output->name() == name;
+        });
+        setOutput(it == outputs.end() ? nullptr : *it);
+    }
+    m_outputName = name;
     Q_EMIT outputNameChanged();
+#endif
+}
+
+void Device::setOutputUuid(const QString &uuid)
+{
+#ifndef KWIN_BUILD_TESTING
+    if (uuid == m_outputUuid) {
+        return;
+    }
+    m_outputUuid = uuid;
+    const auto outputs = workspace()->outputs();
+    const auto it = std::ranges::find_if(outputs, [&uuid](Output *output) {
+        return output->uuid() == uuid;
+    });
+    setOutput(it == outputs.end() ? nullptr : *it);
+    writeEntry(ConfigKey::OutputUuid, uuid);
 #endif
 }
 
