@@ -612,7 +612,14 @@ void Connection::applyScreenToDevice(Device *device)
     const QList<Output *> outputs = kwinApp()->outputBackend()->outputs();
 
     // let's try to find a screen for it
-    if (!device->outputName().isEmpty()) {
+    if (!device->outputUuid().isEmpty()) {
+        // use the UUID if possible, which is more stable than the output name
+        const auto it = std::ranges::find_if(outputs, [device](Output *output) {
+            return output->uuid() == device->outputUuid();
+        });
+        deviceOutput = it == outputs.end() ? nullptr : *it;
+    }
+    if (!deviceOutput && !device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
         for (Output *output : outputs) {
             if (!output->isEnabled()) {

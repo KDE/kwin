@@ -250,6 +250,10 @@ public:
     {
         return m_outputName;
     }
+    QString outputUuid() const
+    {
+        return m_outputUuid;
+    }
     QSizeF size() const
     {
         return m_size;
@@ -668,12 +672,23 @@ public:
     }
 
     /**
-     * Used to deserialize monitor data from KConfig when initializing a device
+     * Sets the output name, and if a matching output is found,
+     * also the UUID of that output
      */
-    void setOutputName(const QString &uuid) override;
+    void setOutputName(const QString &name) override;
+    /**
+     * Only sets the output name, for config loading purposes
+     */
+    void setConfigOutputName(const QString &name);
     QString defaultOutputName() const
     {
         return {};
+    }
+
+    void setOutputUuid(const QString &uuid);
+    QString defaultOutputUuid() const
+    {
+        return QString();
     }
 
     /**
@@ -831,6 +846,7 @@ private:
     QString m_sysName;
     QString m_sysPath;
     QString m_outputName;
+    QString m_outputUuid;
     QSizeF m_size;
     quint32 m_product;
     quint32 m_vendor;
