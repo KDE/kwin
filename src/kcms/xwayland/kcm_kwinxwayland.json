@@ -42,7 +42,7 @@
         "Description[zh_TW]": "選擇舊式 X11 應用程式可以全域使用的按鍵",
         "Icon": "xorg",
         "Name": "Legacy X11 App Support",
-        "Name[ar]": "دعم تطبيقات اكس11 القديمة",
+        "Name[ar]": "إتاحة تطبيقات اكس11 القديمة",
         "Name[be]": "Падтрымка састарэлых праграм X11",
         "Name[bg]": "Поддръжка на минали версии  X11 приложения",
         "Name[ca@valencia]": "Implementació de les aplicacions X11 antigues",
