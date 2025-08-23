@@ -43,7 +43,6 @@ public:
         QMetaObject::Connection sourceActionConnection;
         QMetaObject::Connection targetActionConnection;
         QMetaObject::Connection keyboardModifiersConnection;
-        quint32 serial = 0;
     };
     Drag drag;
 
