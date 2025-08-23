@@ -1146,6 +1146,11 @@ QMatrix4x4 SeatInterface::dragSurfaceTransformation() const
     return d->drag.transformation;
 }
 
+std::optional<quint32> SeatInterface::dragSerial() const
+{
+    return d->drag.dragImplicitGrabSerial;
+}
+
 SurfaceInterface *SeatInterface::dragSurface() const
 {
     return d->drag.surface;

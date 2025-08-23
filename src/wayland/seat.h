@@ -147,6 +147,10 @@ public:
      */
     QMatrix4x4 dragSurfaceTransformation() const;
     /**
+     * Returns the drag implicit grab serial.
+     */
+    std::optional<quint32> dragSerial() const;
+    /**
      * @returns The currently focused Surface for drag motion events.
      * @see dragSurfaceTransformation
      */
