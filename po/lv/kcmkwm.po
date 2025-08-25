@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-08-02 00:44+0000\n"
-"PO-Revision-Date: 2025-06-21 13:41+0300\n"
-"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"PO-Revision-Date: 2025-08-19 11:20+0300\n"
+"Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.08.0\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -887,7 +887,7 @@ msgstr "&Paplašināti"
 #: main.cpp:74
 #, kde-format
 msgid "&Picture-in-picture"
-msgstr ""
+msgstr "&Attēls attēlā"
 
 #: main.cpp:165
 #, kde-format
@@ -1152,37 +1152,37 @@ msgstr "Tikai pārklājoties"
 #: pip.ui:20
 #, kde-format
 msgid "Open in screen corner:"
-msgstr ""
+msgstr "Atvērt ekrāna stūrī:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:31
 #, kde-format
 msgid "Top-left"
-msgstr ""
+msgstr "Augšā pa kreisi"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:36
 #, kde-format
 msgid "Top-right"
-msgstr ""
+msgstr "Augšā pa labi"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:41
 #, kde-format
 msgid "Bottom-left"
-msgstr ""
+msgstr "Apakšā pe kreisi"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:46
 #, kde-format
 msgid "Bottom-right"
-msgstr ""
+msgstr "Apakšā pa labi"
 
 #. i18n: ectx: property (text), widget (QLabel, marginLabel)
 #: pip.ui:54
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Attālums līdz malai:"
 
 #: windows.cpp:91
 #, kde-format
