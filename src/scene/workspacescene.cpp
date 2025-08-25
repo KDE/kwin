@@ -200,15 +200,15 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
             }
         }
     }
-    if (candidates.size() >= maxCount) {
-        return false;
-    }
     if (regionActuallyContains(occluded, item->mapToScene(item->boundingRect()).toAlignedRect())) {
         return true;
     }
     if (delegate->shouldRenderItem(item)) {
         if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
             candidates.push_back(surfaceItem);
+            if (candidates.size() > maxCount) {
+                return false;
+            }
         } else {
             return false;
         }
