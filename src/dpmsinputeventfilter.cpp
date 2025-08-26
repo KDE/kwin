@@ -81,6 +81,15 @@ bool DpmsInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
         // don't wake up the screens for media or volume keys
         return false;
     }
+
+    // Wakeup key is sent by either ACPI driver or other drivers when
+    // system is resumed from sleep but that is not necessarily wakeup intended
+    // to do full-scale dpms on event. Let system wake-up without display, only
+    // wake system up if we get actual keyboard key.
+    if (event->key == Qt::Key::Key_WakeUp) {
+        return false;
+    }
+
     if (event->state == KeyboardKeyState::Pressed) {
         notify();
     } else if (event->state == KeyboardKeyState::Released) {
