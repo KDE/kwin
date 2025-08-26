@@ -76,6 +76,8 @@ private Q_SLOTS:
 
     void pointerDrag();
     void pointerSubSurfaceDrag();
+    void pointerDragAction_data();
+    void pointerDragAction();
     void inertPointerDragOffer();
     void invalidSerialForPointerDrag();
     void cancelPointerDrag();
@@ -84,6 +86,8 @@ private Q_SLOTS:
     void secondPointerDrag();
     void touchDrag();
     void touchSubSurfaceDrag();
+    void touchDragAction_data();
+    void touchDragAction();
     void inertTouchDragOffer();
     void invalidSerialForTouchDrag();
     void noAcceptedMimeTypeTouchDrag();
@@ -359,6 +363,87 @@ void DndTest::pointerSubSurfaceDrag()
     QCOMPARE(pointer->enteredSurface(), childSurface.get());
     QCOMPARE(pointerEnteredSpy.last().at(1).value<QPointF>(), QPointF(25, 50));
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
+
+    // Finish drag-and-drop.
+    QSignalSpy dragAndDropFinishedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropFinished);
+    offer->dragAndDropFinished();
+    QVERIFY(dragAndDropFinishedSpy.wait());
+}
+
+void DndTest::pointerDragAction_data()
+{
+    QTest::addColumn<KWayland::Client::DataDeviceManager::DnDAction>("action");
+
+    QTest::addRow("ask") << KWayland::Client::DataDeviceManager::DnDAction::Ask;
+    QTest::addRow("copy") << KWayland::Client::DataDeviceManager::DnDAction::Copy;
+    QTest::addRow("move") << KWayland::Client::DataDeviceManager::DnDAction::Move;
+}
+
+void DndTest::pointerDragAction()
+{
+    // This test verifies that the dnd actions are handled as expected. "Ask" action is a bit
+    // special; if it has been selected, then the final action can be set after the drop.
+
+    QVERIFY(Test::waitForWaylandPointer());
+    QFETCH(KWayland::Client::DataDeviceManager::DnDAction, action);
+
+    // Setup the data source.
+    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
+    auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
+    dataSource->offer(QStringLiteral("text/plain"));
+    dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move | KWayland::Client::DataDeviceManager::DnDAction::Ask);
+    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
+    QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
+    QSignalSpy dataSourceSelectedDragAndDropActionChangedSpy(dataSource, &KWayland::Client::DataSource::selectedDragAndDropActionChanged);
+
+    // Setup the source window.
+    auto surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(window);
+    window->move(QPointF(0, 0));
+
+    // Move the pointer to the center of the surface and press the left mouse button.
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(50, 50), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(pointerButtonSpy.wait());
+
+    // Start a drag-and-drop operation.
+    dataDevice->startDrag(pointerButtonSpy.last().at(0).value<quint32>(), dataSource, surface.get());
+    QVERIFY(dataDeviceDragEnteredSpy.wait());
+
+    const auto offer = dataDevice->takeDragOffer();
+    offer->accept(QStringLiteral("text/plain"), dataDeviceDragEnteredSpy.last().at(0).value<quint32>());
+    offer->setDragAndDropActions(action, action);
+    QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+    QCOMPARE(dataSource->selectedDragAndDropAction(), action);
+
+    // Drop.
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(dataDeviceDroppedSpy.wait());
+
+    // Change action after drop.
+    switch (action) {
+    case KWayland::Client::DataDeviceManager::DnDAction::Ask:
+        offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
+        QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+        QCOMPARE(dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
+        break;
+    case KWayland::Client::DataDeviceManager::DnDAction::Copy:
+    case KWayland::Client::DataDeviceManager::DnDAction::Move: {
+        const auto oppositeAction = action == KWayland::Client::DataDeviceManager::DnDAction::Copy
+            ? KWayland::Client::DataDeviceManager::DnDAction::Move
+            : KWayland::Client::DataDeviceManager::DnDAction::Copy;
+        offer->setDragAndDropActions(oppositeAction, oppositeAction);
+        QVERIFY(!dataSourceSelectedDragAndDropActionChangedSpy.wait(10));
+        break;
+    }
+    case KWayland::Client::DataDeviceManager::DnDAction::None:
+        Q_UNREACHABLE();
+    }
 
     // Finish drag-and-drop.
     QSignalSpy dragAndDropFinishedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropFinished);
@@ -930,6 +1015,86 @@ void DndTest::touchSubSurfaceDrag()
     Test::touchUp(0, timestamp++);
     QVERIFY(touchSequenceEndedSpy.wait());
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
+
+    // Finish drag-and-drop.
+    QSignalSpy dragAndDropFinishedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropFinished);
+    offer->dragAndDropFinished();
+    QVERIFY(dragAndDropFinishedSpy.wait());
+}
+
+void DndTest::touchDragAction_data()
+{
+    QTest::addColumn<KWayland::Client::DataDeviceManager::DnDAction>("action");
+
+    QTest::addRow("ask") << KWayland::Client::DataDeviceManager::DnDAction::Ask;
+    QTest::addRow("copy") << KWayland::Client::DataDeviceManager::DnDAction::Copy;
+    QTest::addRow("move") << KWayland::Client::DataDeviceManager::DnDAction::Move;
+}
+
+void DndTest::touchDragAction()
+{
+    // This test verifies that the dnd actions are handled as expected. "Ask" action is a bit
+    // special; if it has been selected, then the final action can be set after the drop.
+
+    QVERIFY(Test::waitForWaylandTouch());
+    QFETCH(KWayland::Client::DataDeviceManager::DnDAction, action);
+
+    // Setup the data source.
+    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
+    auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
+    dataSource->offer(QStringLiteral("text/plain"));
+    dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move | KWayland::Client::DataDeviceManager::DnDAction::Ask);
+    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
+    QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
+    QSignalSpy dataSourceSelectedDragAndDropActionChangedSpy(dataSource, &KWayland::Client::DataSource::selectedDragAndDropActionChanged);
+
+    // Setup the source window.
+    auto surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(window);
+    window->move(QPointF(0, 0));
+
+    // Touch the surface in the center.
+    quint32 timestamp = 0;
+    Test::touchDown(0, QPointF(50, 50), timestamp++);
+    QVERIFY(touchSequenceStartedSpy.wait());
+
+    // Start a drag-and-drop operation.
+    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    QVERIFY(dataDeviceDragEnteredSpy.wait());
+
+    const auto offer = dataDevice->takeDragOffer();
+    offer->accept(QStringLiteral("text/plain"), dataDeviceDragEnteredSpy.last().at(0).value<quint32>());
+    offer->setDragAndDropActions(action, action);
+    QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+    QCOMPARE(dataSource->selectedDragAndDropAction(), action);
+
+    // Drop.
+    Test::touchUp(0, timestamp++);
+    QVERIFY(dataDeviceDroppedSpy.wait());
+
+    // Change action after drop.
+    switch (action) {
+    case KWayland::Client::DataDeviceManager::DnDAction::Ask:
+        offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
+        QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+        QCOMPARE(dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
+        break;
+    case KWayland::Client::DataDeviceManager::DnDAction::Copy:
+    case KWayland::Client::DataDeviceManager::DnDAction::Move: {
+        const auto oppositeAction = action == KWayland::Client::DataDeviceManager::DnDAction::Copy
+            ? KWayland::Client::DataDeviceManager::DnDAction::Move
+            : KWayland::Client::DataDeviceManager::DnDAction::Copy;
+        offer->setDragAndDropActions(oppositeAction, oppositeAction);
+        QVERIFY(!dataSourceSelectedDragAndDropActionChangedSpy.wait(10));
+        break;
+    }
+    case KWayland::Client::DataDeviceManager::DnDAction::None:
+        Q_UNREACHABLE();
+    }
 
     // Finish drag-and-drop.
     QSignalSpy dragAndDropFinishedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropFinished);
