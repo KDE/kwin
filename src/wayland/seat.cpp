@@ -281,8 +281,7 @@ void SeatInterfacePrivate::endDrag()
     AbstractDataSource *dragSource = drag.source;
 
     if (dragSource) {
-        // TODO: Also check the current drag-and-drop action.
-        if (dragTargetDevice && dragSource->isAccepted()) {
+        if (dragTargetDevice && dragSource->isAccepted() && dragSource->selectedDndAction() != DataDeviceManagerInterface::DnDAction::None) {
             Q_EMIT q->dragDropped();
             dragTargetDevice->drop();
             dragSource->dropPerformed();
