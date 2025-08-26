@@ -55,6 +55,7 @@ public:
     std::unique_ptr<KeyboardInterface> keyboard;
     std::unique_ptr<PointerInterface> pointer;
     std::unique_ptr<TouchInterface> touch;
+    std::map<qint32, std::unique_ptr<TouchPoint>> touchPoints;
     QList<DataDeviceInterface *> dataDevices;
     QList<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
     QList<DataControlDeviceV1Interface *> dataControlDevices;
@@ -111,31 +112,6 @@ public:
         Focus focus;
     };
     Keyboard globalKeyboard;
-
-    // Touch related members
-    struct Touch
-    {
-        struct Interaction
-        {
-            Interaction()
-            {
-            }
-            Q_DISABLE_COPY(Interaction)
-
-            ~Interaction()
-            {
-                QObject::disconnect(destroyConnection);
-            }
-
-            SurfaceInterface *surface = nullptr;
-            QMetaObject::Connection destroyConnection;
-            uint refs = 0;
-        };
-        std::unordered_map<SurfaceInterface *, std::unique_ptr<Interaction>> focus;
-
-        std::map<qint32, std::unique_ptr<TouchPoint>> ids;
-    };
-    Touch globalTouch;
 
     struct Drag
     {
