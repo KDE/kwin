@@ -435,7 +435,7 @@ static bool prepareRendering(RenderView *view, Output *output, uint32_t required
     layer->setEnabled(true);
     layer->setOffloadTransform(OutputTransform::Normal);
     layer->setBufferTransform(output->transform());
-    layer->setColor(output->layerBlendingColor(), RenderingIntent::AbsoluteColorimetric, ColorPipeline{});
+    layer->setColor(output->layerBlendingColor(), RenderingIntent::AbsoluteColorimetricNoAdaptation, ColorPipeline{});
     layer->setRequiredAlphaBits(requiredAlphaBits);
     return layer->preparePresentationTest();
 }

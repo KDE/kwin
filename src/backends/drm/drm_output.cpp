@@ -699,7 +699,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     const ColorDescription encoding = next.originalColorDescription.withReference(next.colorDescription.referenceLuminance());
 
     // absolute colorimetric to preserve the whitepoint adjustments made during compositing
-    ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetric);
+    ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation);
 
     const bool hdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool wcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
@@ -736,7 +736,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         // This isn't technically correct, but the difference is quite small and not worth
         // losing a lot of performance and battery life over
         ColorPipeline simplerPipeline;
-        simplerPipeline.addMatrix(next.blendingColor.toOther(encoding, RenderingIntent::AbsoluteColorimetric), colorPipeline.currentOutputRange());
+        simplerPipeline.addMatrix(next.blendingColor.toOther(encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation), colorPipeline.currentOutputRange());
         m_pipeline->setCrtcColorPipeline(simplerPipeline);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();

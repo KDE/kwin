@@ -25,7 +25,7 @@ enum class RenderingIntent {
     /* colorimetric mapping between color spaces, with whitepoint adaptation */
     RelativeColorimetric,
     /* colorimetric mapping between color spaces, without whitepoint adaptation */
-    AbsoluteColorimetric,
+    AbsoluteColorimetricNoAdaptation,
     /* colorimetric mapping between color spaces, with whitepoint adaptation and black point compensation */
     RelativeColorimetricWithBPC,
 };

@@ -185,11 +185,12 @@ void ColorManagementTest::testSetImageDescription_data()
         << RenderingIntent::RelativeColorimetricWithBPC
         << false << true
         << std::optional<ColorDescription>();
-    QTest::addRow("rec.2020 PQ absolute colorimetric")
-        << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
-        << RenderingIntent::AbsoluteColorimetric
-        << false << true
-        << std::optional<ColorDescription>();
+    // TODO uncomment this once a matching rendering intent is added to the Wayland protocol
+    // QTest::addRow("rec.2020 PQ absolute colorimetric")
+    //     << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
+    //     << RenderingIntent::AbsoluteColorimetricNoAdaptation
+    //     << false << true
+    //     << std::optional<ColorDescription>();
 }
 
 static ImageDescription createImageDescription(ColorManagementSurface *surface, const ColorDescription &color)
@@ -258,8 +259,8 @@ void ColorManagementTest::testSetImageDescription()
     case RenderingIntent::RelativeColorimetricWithBPC:
         waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE_BPC;
         break;
-    case RenderingIntent::AbsoluteColorimetric:
-        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE;
+    case RenderingIntent::AbsoluteColorimetricNoAdaptation:
+        Q_UNREACHABLE();
         break;
     default:
         Q_UNREACHABLE();
@@ -342,12 +343,12 @@ void ColorManagementTest::testRenderIntentOnly()
     QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::Perceptual);
 
     // only changing the rendering intent should also trigger the colorDescriptionChanged signal to be emitted
-    cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE);
+    cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(colorChange.wait());
     QCOMPARE(window->surface()->colorDescription(), color);
-    QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::AbsoluteColorimetric);
+    QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::RelativeColorimetric);
 }
 
 } // namespace KWin
