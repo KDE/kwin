@@ -93,7 +93,7 @@ void TestColorspaces::roundtripConversion()
     const QVector3D white(1, 1, 1);
     constexpr std::array renderingIntents = {
         RenderingIntent::RelativeColorimetric,
-        RenderingIntent::AbsoluteColorimetric,
+        RenderingIntent::AbsoluteColorimetricNoAdaptation,
     };
     for (const RenderingIntent intent : renderingIntents) {
         QVERIFY(compareVectors(dst.mapTo(src.mapTo(red, dst, intent), src, intent), red, requiredAccuracy));
@@ -140,7 +140,7 @@ void TestColorspaces::testIdentityTransformation()
     constexpr std::array renderingIntents = {
         RenderingIntent::Perceptual,
         RenderingIntent::RelativeColorimetric,
-        RenderingIntent::AbsoluteColorimetric,
+        RenderingIntent::AbsoluteColorimetricNoAdaptation,
         RenderingIntent::RelativeColorimetricWithBPC,
     };
     for (const RenderingIntent intent : renderingIntents) {
@@ -226,7 +226,7 @@ void TestColorspaces::testOpenglShader_data()
     // the allowed error here needs to be this high because of llvmpipe. With real GPU drivers it's lower
     QTest::addRow("Perceptual") << RenderingIntent::Perceptual << 7.0;
     QTest::addRow("RelativeColorimetric") << RenderingIntent::RelativeColorimetric << 1.5;
-    QTest::addRow("AbsoluteColorimetric") << RenderingIntent::AbsoluteColorimetric << 1.5;
+    QTest::addRow("AbsoluteColorimetricNoAdaptation") << RenderingIntent::AbsoluteColorimetricNoAdaptation << 1.5;
     QTest::addRow("RelativeColorimetricWithBPC") << RenderingIntent::RelativeColorimetricWithBPC << 1.5;
 }
 
@@ -301,9 +301,9 @@ void TestColorspaces::testIccShader_data()
     const auto F13 = QFINDTESTDATA("data/Framework 13.icc");
     const auto Samsung = QFINDTESTDATA("data/Samsung CRG49 Shaper Matrix.icc");
     QTest::addRow("relative colorimetric Framework 13") << F13 << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC) << 5;
-    QTest::addRow("absolute colorimetric Framework 13") << F13 << RenderingIntent::AbsoluteColorimetric << uint32_t(INTENT_ABSOLUTE_COLORIMETRIC) << 4;
+    QTest::addRow("absolute colorimetric Framework 13") << F13 << RenderingIntent::AbsoluteColorimetricNoAdaptation << uint32_t(INTENT_ABSOLUTE_COLORIMETRIC) << 4;
     QTest::addRow("relative colorimetric CRG49") << Samsung << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC) << 2;
-    QTest::addRow("absolute colorimetric CRG49") << Samsung << RenderingIntent::AbsoluteColorimetric << uint32_t(INTENT_ABSOLUTE_COLORIMETRIC) << 2;
+    QTest::addRow("absolute colorimetric CRG49") << Samsung << RenderingIntent::AbsoluteColorimetricNoAdaptation << uint32_t(INTENT_ABSOLUTE_COLORIMETRIC) << 2;
 }
 
 void TestColorspaces::testIccShader()

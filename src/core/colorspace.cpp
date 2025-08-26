@@ -605,7 +605,7 @@ QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingInt
     case RenderingIntent::RelativeColorimetricWithBPC: {
         return luminanceAfter * other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(containerColorimetry().white(), other.containerColorimetry().white()) * containerColorimetry().toXYZ() * luminanceBefore;
     }
-    case RenderingIntent::AbsoluteColorimetric: {
+    case RenderingIntent::AbsoluteColorimetricNoAdaptation: {
         return luminanceAfter * other.containerColorimetry().fromXYZ() * containerColorimetry().toXYZ() * luminanceBefore;
     }
     }

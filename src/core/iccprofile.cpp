@@ -78,7 +78,7 @@ const ColorPipeline *IccProfile::BToATag(RenderingIntent intent) const
         // these two are different from relative colorimetric
         // but that has to be handled before the tag is applied
     case RenderingIntent::RelativeColorimetricWithBPC:
-    case RenderingIntent::AbsoluteColorimetric:
+    case RenderingIntent::AbsoluteColorimetricNoAdaptation:
         return m_bToA1Tag ? &*m_bToA1Tag : nullptr;
     }
     Q_UNREACHABLE();

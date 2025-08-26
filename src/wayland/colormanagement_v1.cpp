@@ -181,9 +181,8 @@ static std::optional<RenderingIntent> waylandToKwinIntent(uint32_t intent)
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_perceptual:
         return RenderingIntent::Perceptual;
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_relative:
-        return RenderingIntent::RelativeColorimetric;
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_absolute:
-        return RenderingIntent::AbsoluteColorimetric;
+        return RenderingIntent::RelativeColorimetric;
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_relative_bpc:
         return RenderingIntent::RelativeColorimetricWithBPC;
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_saturation:

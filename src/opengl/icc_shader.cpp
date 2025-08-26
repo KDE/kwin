@@ -62,13 +62,13 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
         const ColorDescription linearizedInput(inputColor.containerColorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
         const ColorDescription linearizedProfile(profile->colorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
         if (const auto tag = profile->BToATag(intent)) {
-            if (intent == RenderingIntent::AbsoluteColorimetric) {
+            if (intent == RenderingIntent::AbsoluteColorimetricNoAdaptation) {
                 // There's no BToA tag for absolute colorimetric, we have to piece it together ourselves with
                 // input white point -(absolute colorimetric)-> display white point
                 // -(relative colorimetric)-> XYZ D50 -(BToA1, also relative colorimetric)-> display white point
 
                 // First, transform from the input color to the display color space in absolute colorimetric mode
-                const QMatrix4x4 toLinearDisplay = linearizedInput.toOther(linearizedProfile, RenderingIntent::AbsoluteColorimetric);
+                const QMatrix4x4 toLinearDisplay = linearizedInput.toOther(linearizedProfile, RenderingIntent::AbsoluteColorimetricNoAdaptation);
 
                 // Now transform that display color space to XYZ D50 in relative colorimetric mode.
                 // the BToA1 tag goes from XYZ D50 to the native white point of the display,

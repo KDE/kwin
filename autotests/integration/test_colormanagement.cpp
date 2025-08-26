@@ -187,7 +187,7 @@ void ColorManagementTest::testSetImageDescription_data()
         << std::optional<ColorDescription>();
     QTest::addRow("rec.2020 PQ absolute colorimetric")
         << ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 203, 0, 400, 400)
-        << RenderingIntent::AbsoluteColorimetric
+        << RenderingIntent::AbsoluteColorimetricNoAdaptation
         << false << true
         << std::optional<ColorDescription>();
 }
@@ -258,7 +258,7 @@ void ColorManagementTest::testSetImageDescription()
     case RenderingIntent::RelativeColorimetricWithBPC:
         waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE_BPC;
         break;
-    case RenderingIntent::AbsoluteColorimetric:
+    case RenderingIntent::AbsoluteColorimetricNoAdaptation:
         waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE;
         break;
     default:
@@ -347,7 +347,7 @@ void ColorManagementTest::testRenderIntentOnly()
 
     QVERIFY(colorChange.wait());
     QCOMPARE(window->surface()->colorDescription(), color);
-    QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::AbsoluteColorimetric);
+    QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::AbsoluteColorimetricNoAdaptation);
 }
 
 } // namespace KWin
