@@ -52,7 +52,7 @@ public:
         wp_image_description_v1_destroy(object());
     }
 
-    void wp_image_description_v1_ready(uint32_t identity) override
+    void wp_image_description_v1_ready2(uint32_t identity_hi, uint32_t identity_lo) override
     {
         Q_EMIT ready();
     }
@@ -271,19 +271,18 @@ void ColorManagementTest::testSetImageDescription_data()
         << RenderingIntent::RelativeColorimetricWithBPC
         << false << true
         << std::optional<std::shared_ptr<ColorDescription>>();
-    // TODO uncomment this once a matching rendering intent is added to the Wayland protocol
-    // QTest::addRow("rec.2020 PQ absolute colorimetric")
-    //     << std::make_shared<ColorDescription>(ColorDescription{
-    //            Colorimetry::BT2020,
-    //            TransferFunction(TransferFunction::PerceptualQuantizer),
-    //            203,
-    //            0,
-    //            400,
-    //            400,
-    //        })
-    //     << RenderingIntent::AbsoluteColorimetricNoAdaptation
-    //     << false << true
-    //     << std::optional<std::shared_ptr<ColorDescription>>();
+    QTest::addRow("rec.2020 PQ absolute colorimetric")
+        << std::make_shared<ColorDescription>(ColorDescription{
+               Colorimetry::BT2020,
+               TransferFunction(TransferFunction::PerceptualQuantizer),
+               203,
+               0,
+               400,
+               400,
+           })
+        << RenderingIntent::AbsoluteColorimetricNoAdaptation
+        << false << true
+        << std::optional<std::shared_ptr<ColorDescription>>();
     QTest::addRow("rec.709 + BT1886")
         << std::make_shared<ColorDescription>(ColorDescription{
                Colorimetry::BT709,
@@ -343,7 +342,7 @@ static ImageDescription createImageDescription(ColorManagementSurface *surface, 
                           std::round(1'000'000.0 * color.containerColorimetry().white().toxyY().y));
     switch (color.transferFunction().type) {
     case TransferFunction::sRGB:
-        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB);
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_COMPOUND_POWER_2_4);
         break;
     case TransferFunction::gamma22:
         creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22);
@@ -450,7 +449,7 @@ void ColorManagementTest::testSetImageDescription()
         waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE_BPC;
         break;
     case RenderingIntent::AbsoluteColorimetricNoAdaptation:
-        Q_UNREACHABLE();
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE_NO_ADAPTATION;
         break;
     default:
         Q_UNREACHABLE();
