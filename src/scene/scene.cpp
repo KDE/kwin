@@ -83,6 +83,11 @@ bool RenderView::isVisible() const
     return true;
 }
 
+bool RenderView::shouldRenderHole(Item *item) const
+{
+    return false;
+}
+
 SceneView::SceneView(Scene *scene, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_scene(scene)
@@ -98,11 +103,6 @@ SceneView::~SceneView()
 QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
 {
     return m_scene->scanoutCandidates(maxCount);
-}
-
-QList<SurfaceItem *> SceneView::overlayCandidates(ssize_t maxCount) const
-{
-    return m_scene->overlayCandidates(maxCount);
 }
 
 void SceneView::prePaint()
@@ -173,11 +173,29 @@ void SceneView::addExclusiveView(RenderView *view)
 void SceneView::removeExclusiveView(RenderView *view)
 {
     m_exclusiveViews.removeOne(view);
+    m_underlayViews.removeOne(view);
+}
+
+void SceneView::addUnderlay(RenderView *view)
+{
+    m_underlayViews.push_back(view);
+}
+
+void SceneView::removeUnderlay(RenderView *view)
+{
+    m_underlayViews.removeOne(view);
 }
 
 bool SceneView::shouldRenderItem(Item *item) const
 {
     return std::ranges::none_of(m_exclusiveViews, [item](RenderView *view) {
+        return view->shouldRenderItem(item);
+    });
+}
+
+bool SceneView::shouldRenderHole(Item *item) const
+{
+    return std::ranges::any_of(m_underlayViews, [item](RenderView *view) {
         return view->shouldRenderItem(item);
     });
 }
@@ -201,7 +219,7 @@ ItemView::~ItemView()
     if (m_exclusive) {
         m_parentView->removeExclusiveView(this);
         if (m_item) {
-            m_item->scheduleRepaint(m_item->rect());
+            m_item->scheduleSceneRepaint(m_item->rect());
         }
     }
 }
@@ -287,7 +305,7 @@ void ItemView::paint(const RenderTarget &renderTarget, const QRegion &region)
     WindowPaintData data;
     renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *toRender) {
         return toRender != m_item;
-    });
+    }, {});
     renderer->endFrame();
 }
 
@@ -308,10 +326,30 @@ void ItemView::setExclusive(bool enable)
         // otherwise some required repaints may be missing
         m_parentView->addRepaint(m_item->takeRepaints(m_parentView));
         m_parentView->addExclusiveView(this);
+        if (m_underlay) {
+            m_parentView->addUnderlay(this);
+        }
     } else {
         m_parentView->removeExclusiveView(this);
         m_item->scheduleRepaint(m_item->rect());
     }
+}
+
+void ItemView::setUnderlay(bool underlay)
+{
+    if (m_underlay == underlay) {
+        return;
+    }
+    m_underlay = underlay;
+    if (!m_exclusive) {
+        return;
+    }
+    if (m_underlay) {
+        m_parentView->addUnderlay(this);
+    } else {
+        m_parentView->removeUnderlay(this);
+    }
+    m_item->scheduleSceneRepaint(m_item->rect());
 }
 
 bool ItemView::needsRepaint()
@@ -388,13 +426,15 @@ void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, {});
+    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *item) {
+        return m_underlay && item != m_item;
+    }, {});
     renderer->endFrame();
 }
 
 bool ItemTreeView::shouldRenderItem(Item *item) const
 {
-    return m_item && (item == m_item || m_item->isAncestorOf(item));
+    return item == m_item || m_item->isAncestorOf(item);
 }
 
 void ItemTreeView::setExclusive(bool enable)
@@ -409,6 +449,9 @@ void ItemTreeView::setExclusive(bool enable)
         // otherwise some required repaints may be missing
         m_parentView->addRepaint(m_item->takeRepaints(m_parentView));
         m_parentView->addExclusiveView(this);
+        if (m_underlay) {
+            m_parentView->addUnderlay(this);
+        }
     } else {
         m_parentView->removeExclusiveView(this);
         m_item->scheduleRepaint(m_item->boundingRect());

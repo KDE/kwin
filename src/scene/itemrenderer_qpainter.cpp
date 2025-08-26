@@ -59,7 +59,7 @@ void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, co
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
-void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_region, const WindowPaintData &data, const std::function<bool(Item *)> &filter)
+void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_region, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     QRegion region = _region;
 
