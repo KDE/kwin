@@ -129,10 +129,10 @@ QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (const auto &window : m_windows) {
-        scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {});
+        scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {}, {});
     }
     if (m_renderCursor && scene->cursorItem()->isVisible()) {
-        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, infiniteRegion(), WindowPaintData{}, {});
+        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, infiniteRegion(), WindowPaintData{}, {}, {});
     }
     scene->renderer()->endFrame();
     return QRect(QPoint(), target->size());

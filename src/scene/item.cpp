@@ -515,7 +515,7 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
     }
     const QList<RenderView *> views = m_scene->views();
     for (RenderView *view : views) {
-        if (!view->shouldRenderItem(this)) {
+        if (!view->shouldRenderItem(this) && !view->shouldRenderHole(this)) {
             continue;
         }
         const QRegion dirtyRegion = paintedArea(view, region) & view->viewport().toAlignedRect();

@@ -469,28 +469,79 @@ static const bool s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVER
 /**
  * items and layers need to be sorted top to bottom
  */
-static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> items, std::span<OutputLayer *const> layers)
+static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> underlays, std::span<SurfaceItem *const> overlays, std::span<OutputLayer *const> layers)
 {
-    if (layers.empty() || items.empty() || !s_enableOverlays) {
+    if (layers.empty() || (underlays.empty() && overlays.empty()) || !s_enableOverlays) {
         return {};
     }
-    std::unordered_map<SurfaceItem *, OutputLayer *> ret;
+    // TODO also allow assigning the primary view to a different plane
+    const int primaryZpos = sceneView->layer()->zpos();
     auto layerIt = layers.begin();
-    auto itemIt = items.begin();
     int zpos = (*layerIt)->maxZpos();
-    for (; itemIt != items.end();) {
-        SurfaceItem *item = *itemIt;
+    std::unordered_map<SurfaceItem *, OutputLayer *> ret;
+    auto overlaysIt = overlays.begin();
+    for (; overlaysIt != overlays.end();) {
+        SurfaceItem *item = *overlaysIt;
         const QRectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
-            itemIt++;
+            overlaysIt++;
             continue;
         }
         if (layerIt == layers.end()) {
             return {};
         }
         OutputLayer *layer = *layerIt;
-        if (layer->minZpos() > zpos) {
+        const int nextZpos = std::min(zpos, layer->maxZpos());
+        if (layer->minZpos() > nextZpos) {
+            layerIt++;
+            continue;
+        }
+        if (nextZpos <= primaryZpos) {
+            // can't use this
+            return {};
+        }
+        if (!layer->recommendedSizes().isEmpty()) {
+            // it's likely that sizes other than the recommended ones won't work
+            const QRect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
+            if (!layer->recommendedSizes().contains(deviceRect.size())) {
+                layerIt++;
+                continue;
+            }
+        }
+        layer->setZpos(nextZpos);
+        ret[item] = layer;
+        overlaysIt++;
+        layerIt++;
+        zpos = nextZpos - 1;
+    }
+    if (overlaysIt != overlays.end()) {
+        // not all items were assigned, we need to composite
+        return {};
+    }
+    if (layerIt == layers.end()) {
+        if (underlays.empty()) {
+            return ret;
+        } else {
+            return {};
+        }
+    }
+    zpos = std::min(primaryZpos - 1, (*layerIt)->maxZpos());
+    auto underlaysIt = underlays.begin();
+    for (; underlaysIt != underlays.end();) {
+        SurfaceItem *item = *underlaysIt;
+        const QRectF sceneRect = item->mapToView(item->rect(), sceneView);
+        if (sceneRect.contains(sceneView->viewport())) {
+            // leave fullscreen direct scanout to the primary plane
+            underlaysIt++;
+            continue;
+        }
+        if (layerIt == layers.end()) {
+            return {};
+        }
+        OutputLayer *layer = *layerIt;
+        const int nextZpos = std::min(zpos, layer->maxZpos());
+        if (layer->minZpos() > nextZpos) {
             layerIt++;
             continue;
         }
@@ -502,13 +553,13 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
                 continue;
             }
         }
-        zpos = std::min(zpos - 1, layer->maxZpos());
-        layer->setZpos(zpos);
+        layer->setZpos(nextZpos);
         ret[item] = layer;
-        itemIt++;
+        underlaysIt++;
         layerIt++;
+        zpos = nextZpos - 1;
     }
-    if (itemIt != items.end()) {
+    if (underlaysIt != underlays.end()) {
         // not all items were assigned, we need to composite
         return {};
     }
@@ -674,16 +725,21 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    QList<OutputLayer *> overlayLayers = unusedOutputLayers | std::views::filter([primaryView, cursorLayer](OutputLayer *layer) {
+    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([cursorLayer](OutputLayer *layer) {
         return layer->type() != OutputLayerType::Primary
-            && layer->maxZpos() > primaryView->layer()->zpos()
             && (!cursorLayer || layer->minZpos() < cursorLayer->zpos());
     }) | std::ranges::to<QList>();
-    std::ranges::sort(overlayLayers, [](OutputLayer *left, OutputLayer *right) {
+    std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
         return left->maxZpos() > right->maxZpos();
     });
-    const auto overlayCandidates = primaryView->overlayCandidates(overlayLayers.size());
-    const auto overlayAssignments = assignOverlays(primaryView, overlayCandidates, overlayLayers);
+    const size_t maxOverlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
+        return layer->maxZpos() > primaryView->layer()->zpos();
+    });
+    const size_t maxUnderlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
+        return layer->minZpos() < primaryView->layer()->zpos();
+    });
+    const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
+    const auto overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
     for (const auto &[item, layer] : overlayAssignments) {
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
@@ -699,6 +755,16 @@ void Compositor::composite(RenderLoop *renderLoop)
             .requiredAlphaBits = 0,
         });
         unusedOutputLayers.removeOne(layer);
+        if (layer->zpos() < primaryView->layer()->zpos()) {
+            view->setUnderlay(true);
+            // require more alpha bits on the primary plane,
+            // otherwise shadows from windows on top of the
+            // underlay will look terrible
+            // TODO also make sure we still use more than 8 color bits when possible?
+            layers.front().requiredAlphaBits = 8;
+        } else {
+            view->setUnderlay(false);
+        }
     }
 
     // disable entirely unused output layers
