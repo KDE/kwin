@@ -228,10 +228,10 @@ QRectF ItemTreeView::viewport() const
         });
         if (it != bigEnough.end()) {
             const auto logicalSize = QSizeF(*it) / scale();
-            return m_item->mapToScene(QRectF(m_item->boundingRect().topLeft(), logicalSize));
+            return m_item->mapToView(QRectF(m_item->boundingRect().topLeft(), logicalSize), this);
         }
     }
-    return m_item->mapToScene(m_item->boundingRect());
+    return m_item->mapToView(m_item->boundingRect(), this);
 }
 
 QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const

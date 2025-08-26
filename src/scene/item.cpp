@@ -278,6 +278,26 @@ void Item::updateItemToSceneTransform()
     }
 }
 
+QRegion Item::mapToView(const QRegion &region, const RenderView *view) const
+{
+    QRegion ret;
+    for (QRectF rect : region) {
+        ret |= mapToView(rect, view).toAlignedRect();
+    }
+    return ret;
+}
+
+QRectF Item::mapToView(const QRectF &rect, const RenderView *view) const
+{
+    const auto snappedPosition = snapToPixels(m_position, view->scale());
+    const QRectF ret = rect.translated(snappedPosition);
+    if (m_parentItem) {
+        return m_parentItem->mapToView(ret, view);
+    } else {
+        return ret;
+    }
+}
+
 QRegion Item::mapToScene(const QRegion &region) const
 {
     if (region.isEmpty()) {

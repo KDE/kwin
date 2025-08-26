@@ -211,13 +211,13 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         if (!delegate->shouldRenderItem(child)) {
             continue;
         }
-        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
+        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToView(child->boundingRect(), delegate).toAlignedRect())) {
             if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
                 return false;
             }
         }
     }
-    if (regionActuallyContains(occluded, item->mapToScene(item->boundingRect()).toAlignedRect())) {
+    if (regionActuallyContains(occluded, item->mapToView(item->boundingRect(), delegate).toAlignedRect())) {
         return true;
     }
     if (delegate->shouldRenderItem(item)) {
@@ -244,13 +244,13 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         opaque = top.radius.clip(opaque, top.box);
     }
 
-    occluded += item->mapToScene(opaque);
+    occluded += item->mapToView(opaque, delegate);
     for (; it != children.rend(); it++) {
         Item *const child = *it;
         if (!delegate->shouldRenderItem(child)) {
             continue;
         }
-        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToScene(child->boundingRect()).toAlignedRect())) {
+        if (child->isVisible() && !regionActuallyContains(occluded, child->mapToView(child->boundingRect(), delegate).toAlignedRect())) {
             if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
                 return false;
             }
@@ -274,7 +274,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
         QStack<ClipCorner> corners;
         const auto items = m_containerItem->sortedChildItems();
         for (Item *item : items | std::views::reverse) {
-            if (!item->isVisible() || !painted_delegate->shouldRenderItem(item) || !painted_delegate->viewport().intersects(item->mapToScene(item->boundingRect()))) {
+            if (!item->isVisible() || !painted_delegate->shouldRenderItem(item) || !painted_delegate->viewport().intersects(item->mapToView(item->boundingRect(), painted_delegate))) {
                 continue;
             }
             if (!addCandidates(painted_delegate, item, ret, maxCount, occlusion, corners)) {
@@ -288,17 +288,17 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     return ret;
 }
 
-static QRect mapToView(SceneView *view, Item *item, const QRectF &itemLocal)
+static QRect mapToDevice(SceneView *view, Item *item, const QRectF &itemLocal)
 {
-    const QRectF localLogical = item->mapToScene(itemLocal).translated(-view->viewport().topLeft());
+    const QRectF localLogical = item->mapToView(itemLocal, view).translated(-view->viewport().topLeft());
     return snapToPixelGridF(scaledRect(localLogical, view->scale())).toRect();
 }
 
-static QRegion mapToView(SceneView *view, Item *item, const QRegion &itemLocal)
+static QRegion mapToDevice(SceneView *view, Item *item, const QRegion &itemLocal)
 {
     QRegion ret;
     for (const QRectF local : itemLocal) {
-        ret |= mapToView(view, item, local);
+        ret |= mapToDevice(view, item, local);
     }
     return ret;
 }
@@ -312,7 +312,7 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxCount,
         // can't put this item or any children on an overlay
         // if an effect transforms the window geometry, it should
         // inhibit direct scanout anyways, so this *should* be safe
-        occupied += mapToView(view, item, item->boundingRect());
+        occupied += mapToDevice(view, item, item->boundingRect());
         return true;
     }
     maybePushCorners(item, corners);
@@ -343,7 +343,7 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxCount,
     // - not have any surface-wide opacity (for now)
     // - not be entirely covered by other opaque windows
     SurfaceItem *surfaceItem = dynamic_cast<SurfaceItem *>(item);
-    const QRect deviceRect = mapToView(view, item, item->rect());
+    const QRect deviceRect = mapToDevice(view, item, item->rect());
     if (surfaceItem
         && !surfaceItem->rect().isEmpty()
         && (corners.isEmpty() || !corners.top().radius.clips(item->rect(), corners.top().box))
@@ -363,7 +363,7 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxCount,
     } else {
         occupied += deviceRect;
     }
-    opaque += mapToView(view, item, item->opaque());
+    opaque += mapToDevice(view, item, item->opaque());
 
     for (; it != children.rend(); it++) {
         Item *const child = *it;

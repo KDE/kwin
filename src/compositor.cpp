@@ -405,7 +405,7 @@ static bool prepareDirectScanout(RenderView *view, Output *output, const std::sh
         candidate->setScanoutHint(layer->scanoutDevice(), formats);
         return false;
     }
-    const auto geometry = candidate->mapToScene(QRectF(QPointF(0, 0), candidate->size())).translated(-output->geometryF().topLeft());
+    const auto geometry = candidate->mapToView(QRectF(QPointF(0, 0), candidate->size()), view).translated(-output->geometryF().topLeft());
     layer->setTargetRect(output->transform().map(scaledRect(geometry, output->scale()), output->pixelSize()).toRect());
     layer->setEnabled(true);
     layer->setSourceRect(candidate->bufferSourceBox());
@@ -480,7 +480,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     int zpos = (*layerIt)->maxZpos();
     for (; itemIt != items.end();) {
         SurfaceItem *item = *itemIt;
-        const QRectF sceneRect = item->mapToScene(item->rect());
+        const QRectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
             itemIt++;
@@ -617,7 +617,7 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     OutputLayer *cursorLayer = nullptr;
     Item *cursorItem = m_scene->cursorItem();
-    if (!m_brokenCursors.contains(renderLoop) && cursorItem->isVisible() && cursorItem->mapToScene(cursorItem->boundingRect()).intersects(output->geometryF())) {
+    if (!m_brokenCursors.contains(renderLoop) && cursorItem->isVisible() && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(output->geometryF())) {
         cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
         if (!cursorLayer) {
             cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::EfficientOverlay, primaryView->layer()->zpos() + 1);
