@@ -438,9 +438,9 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
     if (waylandServer()) {
         Output *output = delegate->output();
         const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
-        m_containerItem->framePainted(output, frame, frameTime);
+        m_containerItem->framePainted(delegate, output, frame, frameTime);
         if (m_overlayItem) {
-            m_overlayItem->framePainted(output, frame, frameTime);
+            m_overlayItem->framePainted(delegate, output, frame, frameTime);
         }
     }
 }
@@ -484,10 +484,9 @@ void WorkspaceScene::prePaint(SceneView *delegate)
 
 static void resetRepaintsHelper(Item *item, SceneView *delegate)
 {
-    if (!delegate->shouldRenderItem(item)) {
-        return;
+    if (delegate->shouldRenderItem(item)) {
+        item->resetRepaints(delegate);
     }
-    item->resetRepaints(delegate);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
@@ -497,10 +496,9 @@ static void resetRepaintsHelper(Item *item, SceneView *delegate)
 
 static void accumulateRepaints(Item *item, SceneView *delegate, QRegion *repaints)
 {
-    if (!delegate->shouldRenderItem(item)) {
-        return;
+    if (delegate->shouldRenderItem(item)) {
+        *repaints += item->takeRepaints(delegate);
     }
-    *repaints += item->takeRepaints(delegate);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
