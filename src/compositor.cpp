@@ -688,7 +688,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     for (const auto &[item, layer] : overlayAssignments) {
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
-            view = std::make_unique<ItemTreeView>(primaryView, item, output, layer);
+            view = std::make_unique<ItemView>(primaryView, item, output, layer);
         }
         view->prePaint();
         layers.push_back(LayerData{

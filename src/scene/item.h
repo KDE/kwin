@@ -162,7 +162,7 @@ public:
     void addEffect();
     void removeEffect();
 
-    void framePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+    void framePainted(RenderView *view, Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     bool isAncestorOf(const Item *item) const;
 

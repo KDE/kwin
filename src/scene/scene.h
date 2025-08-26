@@ -107,11 +107,11 @@ private:
     qreal m_scale = 1.0;
 };
 
-class KWIN_EXPORT ItemTreeView : public RenderView
+class KWIN_EXPORT ItemView : public RenderView
 {
 public:
-    explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
-    ~ItemTreeView() override;
+    explicit ItemView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    ~ItemView() override;
 
     QPointF hotspot() const override;
     QRectF viewport() const override;
@@ -127,13 +127,32 @@ public:
 
     Item *item() const;
 
-    bool needsRepaint();
+    virtual bool needsRepaint();
     bool canSkipMoveRepaint(Item *item) override;
 
-private:
+protected:
+    QRectF calculateViewport(const QRectF &itemRect) const;
+
     SceneView *const m_parentView;
     const QPointer<Item> m_item;
     bool m_exclusive = false;
+};
+
+class KWIN_EXPORT ItemTreeView : public ItemView
+{
+public:
+    explicit ItemTreeView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer);
+    ~ItemTreeView() override;
+
+    QRectF viewport() const override;
+    bool isVisible() const override;
+    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
+    QRegion collectDamage() override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    bool shouldRenderItem(Item *item) const override;
+    void setExclusive(bool enable) override;
+    bool needsRepaint() override;
+    bool canSkipMoveRepaint(Item *item) override;
 };
 
 class KWIN_EXPORT Scene : public QObject
