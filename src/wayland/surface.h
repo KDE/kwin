@@ -35,6 +35,11 @@ class SyncReleasePoint;
 class RawSurfaceAttachedState;
 class RawSurfaceExtension;
 
+enum class ColorDescriptionType {
+    Normal,
+    Windows,
+};
+
 /**
  * The SurfaceRole class represents a role assigned to a wayland surface.
  */
@@ -332,6 +337,7 @@ public:
     Transaction *lastTransaction() const;
     void setLastTransaction(Transaction *transaction);
 
+    ColorDescriptionType colorDescriptionType() const;
     const std::shared_ptr<ColorDescription> &colorDescription() const;
     RenderingIntent renderingIntent() const;
 

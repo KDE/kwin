@@ -631,6 +631,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->contentType = contentType;
     target->presentationHint = presentationHint;
     target->colorDescription = colorDescription;
+    target->colorDescriptionType = colorDescriptionType;
     target->renderingIntent = renderingIntent;
     target->alphaMultiplier = alphaMultiplier;
     target->yuvCoefficients = yuvCoefficients;
@@ -1178,6 +1179,11 @@ QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
 PresentationModeHint SurfaceInterface::presentationModeHint() const
 {
     return d->current->presentationHint;
+}
+
+ColorDescriptionType SurfaceInterface::colorDescriptionType() const
+{
+    return d->current->colorDescriptionType;
 }
 
 const std::shared_ptr<ColorDescription> &SurfaceInterface::colorDescription() const

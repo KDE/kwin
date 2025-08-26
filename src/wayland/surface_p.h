@@ -84,6 +84,7 @@ struct SurfaceState
     ContentType contentType = ContentType::None;
     PresentationModeHint presentationHint = PresentationModeHint::VSync;
     std::shared_ptr<ColorDescription> colorDescription = ColorDescription::sRGB;
+    ColorDescriptionType colorDescriptionType = ColorDescriptionType::Normal;
     RenderingIntent renderingIntent = RenderingIntent::Perceptual;
     std::shared_ptr<PresentationTimeFeedback> presentationFeedback;
     struct

@@ -210,7 +210,14 @@ void SurfaceItemWayland::freeze()
 
 void SurfaceItemWayland::handleColorDescriptionChanged()
 {
-    setColorDescription(m_surface->colorDescription());
+    auto description = m_surface->colorDescription();
+    if (m_surface->colorDescriptionType() == ColorDescriptionType::Windows) {
+        // TODO also react to config changes after the image description is set?
+        const auto group = kwinApp()->config()->group("Windows_HDR");
+        description = description->withReference(group.readEntry("Reference", 203.0));
+        description = description->withHdrMetadata(group.readEntry("MaxFrameAverage", 600), group.readEntry("MaxLuminance", 1'000));
+    }
+    setColorDescription(description);
     setRenderingIntent(m_surface->renderingIntent());
 }
 
