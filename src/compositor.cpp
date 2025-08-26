@@ -469,13 +469,11 @@ static const bool s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVER
 /**
  * items and layers need to be sorted top to bottom
  */
-static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> underlays, std::span<SurfaceItem *const> overlays, std::span<OutputLayer *const> layers)
+static std::optional<std::unordered_map<SurfaceItem *, OutputLayer *>> assignLayers(RenderView *sceneView, std::span<SurfaceItem *const> underlays, std::span<SurfaceItem *const> overlays, std::span<OutputLayer *const> layers)
 {
     if (layers.empty() || (underlays.empty() && overlays.empty()) || !s_enableOverlays) {
-        return {};
+        return std::nullopt;
     }
-    // TODO also allow assigning the primary view to a different plane
-    const int primaryZpos = sceneView->layer()->zpos();
     auto layerIt = layers.begin();
     int zpos = (*layerIt)->maxZpos();
     std::unordered_map<SurfaceItem *, OutputLayer *> ret;
@@ -489,17 +487,13 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
             continue;
         }
         if (layerIt == layers.end()) {
-            return {};
+            return std::nullopt;
         }
         OutputLayer *layer = *layerIt;
         const int nextZpos = std::min(zpos, layer->maxZpos());
         if (layer->minZpos() > nextZpos) {
             layerIt++;
             continue;
-        }
-        if (nextZpos <= primaryZpos) {
-            // can't use this
-            return {};
         }
         if (!layer->recommendedSizes().isEmpty()) {
             // it's likely that sizes other than the recommended ones won't work
@@ -517,16 +511,20 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     }
     if (overlaysIt != overlays.end()) {
         // not all items were assigned, we need to composite
-        return {};
+        return std::nullopt;
     }
     if (layerIt == layers.end()) {
-        if (underlays.empty()) {
-            return ret;
-        } else {
-            return {};
-        }
+        return std::nullopt;
     }
-    zpos = std::min(primaryZpos - 1, (*layerIt)->maxZpos());
+    // the primary layer has a nullptr item as a special key
+    // TODO once that's possible, switch this out for the root
+    // item of the scene?
+    OutputLayer *primary = *layerIt;
+    zpos = std::min(zpos, primary->maxZpos());
+    primary->setZpos(zpos);
+    ret[nullptr] = primary;
+    layerIt++;
+
     auto underlaysIt = underlays.begin();
     for (; underlaysIt != underlays.end();) {
         SurfaceItem *item = *underlaysIt;
@@ -537,7 +535,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
             continue;
         }
         if (layerIt == layers.end()) {
-            return {};
+            return std::nullopt;
         }
         OutputLayer *layer = *layerIt;
         const int nextZpos = std::min(zpos, layer->maxZpos());
@@ -561,7 +559,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     }
     if (underlaysIt != underlays.end()) {
         // not all items were assigned, we need to composite
-        return {};
+        return std::nullopt;
     }
     return ret;
 }
@@ -663,8 +661,8 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     QList<OutputLayer *> unusedOutputLayers = m_backend->compatibleOutputLayers(output);
-    // the primary output layer is currently always used for the main content
-    unusedOutputLayers.removeOne(primaryView->layer());
+    OutputLayer *primaryLayer = findLayer(unusedOutputLayers, OutputLayerType::Primary, std::nullopt);
+    Q_ASSERT(primaryLayer);
 
     OutputLayer *cursorLayer = nullptr;
     Item *cursorItem = m_scene->cursorItem();
@@ -726,21 +724,20 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([cursorLayer](OutputLayer *layer) {
-        return layer->type() != OutputLayerType::Primary
-            && (!cursorLayer || layer->minZpos() < cursorLayer->zpos());
+        return !cursorLayer || layer->minZpos() < cursorLayer->zpos();
     }) | std::ranges::to<QList>();
     std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
         return left->maxZpos() > right->maxZpos();
     });
-    const size_t maxOverlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
-        return layer->maxZpos() > primaryView->layer()->zpos();
-    });
-    const size_t maxUnderlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
-        return layer->minZpos() < primaryView->layer()->zpos();
-    });
-    const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
-    const auto overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
-    for (const auto &[item, layer] : overlayAssignments) {
+    const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), specialLayers.size() - 1, specialLayers.size() - 1);
+    const auto layerAssignments = assignLayers(primaryView, underlayCandidates, overlayCandidates, specialLayers).value_or({{nullptr, primaryLayer}});
+    for (const auto &[item, layer] : layerAssignments) {
+        if (!item) {
+            // primary layer
+            primaryView->setLayer(layer);
+            continue;
+        }
+        // overlay or underlay
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
             view = std::make_unique<ItemView>(primaryView, item, output, layer);
