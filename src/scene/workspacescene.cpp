@@ -127,9 +127,10 @@ void WorkspaceScene::createDndIconItem()
     } else if (waylandServer()->seat()->isDragTouch()) {
         auto updatePosition = [this]() {
             auto seat = waylandServer()->seat();
-            const auto touchPos = seat->firstTouchPointPosition(seat->dragSurface());
-            m_dndIcon->setPosition(touchPos);
-            m_dndIcon->setOutput(workspace()->outputAt(touchPos));
+            if (const auto touchPoint = seat->touchPointByImplicitGrabSerial(*seat->dragSerial())) {
+                m_dndIcon->setPosition(touchPoint->position);
+                m_dndIcon->setOutput(workspace()->outputAt(touchPoint->position));
+            }
         };
 
         updatePosition();

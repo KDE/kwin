@@ -787,7 +787,6 @@ void DndTest::touchDrag()
     // Move the finger to the target surface.
     Test::touchMotion(0, QPointF(140, 50), timestamp++);
     QVERIFY(dataDeviceDragEnteredSpy.wait());
-    QEXPECT_FAIL("", "wl_seat incorrectly tracks touch point positions", Continue);
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(40, 50));
     QCOMPARE(dataDeviceDragLeftSpy.count(), 1);
     QCOMPARE(dataDevice->dragSurface(), targetSurface.get());
@@ -873,7 +872,6 @@ void DndTest::touchSubSurfaceDrag()
     // Start a drag-and-drop operation.
     dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, childSurface.get());
     QVERIFY(dataDeviceDragEnteredSpy.wait());
-    QEXPECT_FAIL("", "wl_seat incorrectly tracks touch point positions", Continue);
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(25, 50));
     QCOMPARE(dataDevice->dragSurface(), childSurface.get());
 
@@ -897,7 +895,6 @@ void DndTest::touchSubSurfaceDrag()
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.count(), 3);
     QCOMPARE(dataDeviceDragLeftSpy.count(), 2);
-    QEXPECT_FAIL("", "wl_seat incorrectly tracks touch point positions", Continue);
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(30, 50));
     QCOMPARE(dataDevice->dragSurface(), childSurface.get());
 

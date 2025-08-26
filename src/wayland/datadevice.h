@@ -102,7 +102,7 @@ public:
      * @param surface The SurfaceInterface which gets motion events
      * @param serial The serial to be used for enter/leave
      */
-    void updateDragTarget(SurfaceInterface *surface, quint32 serial) override;
+    void updateDragTarget(SurfaceInterface *surface, const QPointF &position, quint32 serial) override;
 
     wl_client *client();
 

@@ -242,7 +242,7 @@ static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource 
     return DataDeviceManagerInterface::DnDAction::None;
 }
 
-void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 serial)
+void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPointF &position, quint32 serial)
 {
     if (d->drag.surface == surface) {
         return;
@@ -324,12 +324,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         d->drag = DataDeviceInterfacePrivate::Drag();
     });
 
-    QPointF pos;
-    if (d->seat->isDragPointer()) {
-        pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
-    } else if (d->seat->isDragTouch()) {
-        pos = d->seat->dragSurfaceTransformation().map(d->seat->firstTouchPointPosition(surface));
-    }
+    const QPointF pos = d->seat->dragSurfaceTransformation().map(position);
     d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), d->drag.offer ? d->drag.offer->resource() : nullptr);
     if (d->drag.offer) {
         auto matchOffers = [this, dragSource] {

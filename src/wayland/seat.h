@@ -47,6 +47,7 @@ public:
     QPointer<ClientConnection> client;
     QPointer<SurfaceInterface> surface;
     SeatInterface *seat = nullptr;
+    QPointF position;
     QPointF offset;
     QMatrix4x4 transformation;
 };
@@ -536,7 +537,6 @@ public:
     void notifyTouchFrame();
     void notifyTouchCancel();
     bool isTouchSequence() const;
-    QPointF firstTouchPointPosition(SurfaceInterface *surface) const;
     TouchPoint *touchPointByImplicitGrabSerial(quint32 serial) const;
     /**
      * @returns true if there is a touch sequence going on associated with a touch

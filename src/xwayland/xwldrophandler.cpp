@@ -44,7 +44,7 @@ bool XwlDropHandler::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-void XwlDropHandler::updateDragTarget(SurfaceInterface *surface, quint32 serial)
+void XwlDropHandler::updateDragTarget(SurfaceInterface *surface, const QPointF &position, quint32 serial)
 {
     auto window = workspace()->findClient([surface](const X11Window *c) {
         return c->surface() == surface;

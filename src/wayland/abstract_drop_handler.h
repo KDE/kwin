@@ -20,7 +20,7 @@ class KWIN_EXPORT AbstractDropHandler : public QObject
     Q_OBJECT
 public:
     AbstractDropHandler(QObject *parent = nullptr);
-    virtual void updateDragTarget(SurfaceInterface *surface, quint32 serial) = 0;
+    virtual void updateDragTarget(SurfaceInterface *surface, const QPointF &position, quint32 serial) = 0;
     virtual void drop() = 0;
 };
 }
