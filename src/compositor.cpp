@@ -490,7 +490,8 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
             return {};
         }
         OutputLayer *layer = *layerIt;
-        if (layer->minZpos() > zpos) {
+        const int nextZpos = std::min(zpos, layer->maxZpos());
+        if (layer->minZpos() > nextZpos) {
             layerIt++;
             continue;
         }
@@ -502,11 +503,11 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
                 continue;
             }
         }
-        zpos = std::min(zpos - 1, layer->maxZpos());
-        layer->setZpos(zpos);
+        layer->setZpos(nextZpos);
         ret[item] = layer;
         itemIt++;
         layerIt++;
+        zpos = nextZpos - 1;
     }
     if (itemIt != items.end()) {
         // not all items were assigned, we need to composite
