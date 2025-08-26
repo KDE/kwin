@@ -578,7 +578,7 @@ ColorManagementOutputV1::ColorManagementOutputV1(wl_client *client, uint32_t id,
     : QtWaylandServer::wp_color_management_output_v1(client, id, version)
     , m_output(output)
 {
-    if (m_output->isRemoved()) {
+    if (!m_output || m_output->isRemoved()) {
         return;
     }
 
