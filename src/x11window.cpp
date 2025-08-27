@@ -153,6 +153,9 @@ X11Window::X11Window()
         releaseWindow();
     });
 
+    m_unmapTimer.setSingleShot(true);
+    connect(&m_unmapTimer, &QTimer::timeout, this, &X11Window::updateVisibility);
+
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -1193,25 +1196,25 @@ void X11Window::updateVisibility()
         internalHide();
         return;
     }
-    if (isHiddenByShowDesktop()) {
-        return;
-    }
-    setSkipTaskbar(originalSkipTaskbar()); // Reset from 'hidden'
-    if (isMinimized()) {
+    if (isSuspended()) {
         info->setState(NET::Hidden, NET::Hidden);
         internalHide();
-        return;
+    } else {
+        info->setState(NET::States(), NET::Hidden);
+        internalShow();
     }
-    info->setState(NET::States(), NET::Hidden);
-    if (!isOnCurrentDesktop()) {
-        internalHide();
-        return;
+}
+
+void X11Window::doSetSuspended()
+{
+    if (isSuspended()) {
+        // unmapping+immediately mapping again can cause flicker,
+        // for example when minimizing -> unmap -> effect updates visibility -> map
+        // Avoid that by simply delaying unmapping a bit
+        m_unmapTimer.start(0);
+    } else {
+        updateVisibility();
     }
-    if (!isOnCurrentActivity()) {
-        internalHide();
-        return;
-    }
-    internalShow();
 }
 
 /**
