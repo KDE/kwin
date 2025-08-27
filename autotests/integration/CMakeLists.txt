@@ -154,6 +154,7 @@ integrationTest(NAME testDnd SRCS dnd_test.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration3::KDecoration)
+    integrationTest(NAME testXwaylandDnd SRCS xwayland_dnd_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testXwaylandSelections SRCS xwayland_selections_test.cpp)
     integrationTest(NAME testXinerama SRCS xinerama_test.cpp)
     integrationTest(NAME testX11KeyRead SRCS x11keyread.cpp LIBS XCB::XINPUT)
