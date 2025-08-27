@@ -19,6 +19,7 @@
 #include "pluginmanager.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "wayland/display.h"
 
 #if KWIN_BUILD_X11
 #include "utils/xcbutils.h"
@@ -99,6 +100,8 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
     setOutputBackend(std::make_unique<VirtualBackend>());
     m_waylandServer.reset(WaylandServer::create());
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
+
+    connect(eventDispatcher(), &QAbstractEventDispatcher::awake, m_waylandServer->display(), &Display::flush);
 }
 
 WaylandTestApplication::~WaylandTestApplication()
