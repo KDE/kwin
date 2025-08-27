@@ -14,6 +14,7 @@
 #include "effect/effecthandler.h"
 #include "pointer_input.h"
 #include "screenedge.h"
+#include "wayland/display.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -191,6 +192,9 @@ LockScreenTest::WindowHandle LockScreenTest::showWindow()
 
 void LockScreenTest::initTestCase()
 {
+    // This test is written slightly wrong, and makes assumptions about events not being dispatched whilst waiting for the lock screen to change
+    disconnect(qGuiApp->eventDispatcher(), &QAbstractEventDispatcher::awake, waylandServer()->display(), &Display::flush);
+
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
 
