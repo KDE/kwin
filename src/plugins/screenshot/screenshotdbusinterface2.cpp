@@ -13,6 +13,8 @@
 #include "screenshotlogging.h"
 #include "utils/filedescriptor.h"
 #include "utils/serviceutils.h"
+#include "window.h"
+#include "workspace.h"
 
 #include <KLocalizedString>
 
@@ -192,9 +194,9 @@ void ScreenShotSinkPipe2::flush(const QImage &image, const QVariantMap &attribut
     QThreadPool::globalInstance()->start(writer);
 }
 
-ScreenShotDBusInterface2::ScreenShotDBusInterface2(ScreenShotEffect *effect)
-    : QObject(effect)
-    , m_effect(effect)
+ScreenShotDBusInterface2::ScreenShotDBusInterface2(ScreenShotManager *manager)
+    : QObject(manager)
+    , m_effect(manager)
 {
     new ScreenShot2Adaptor(this);
 
@@ -246,7 +248,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &opt
         return QVariantMap();
     }
 
-    EffectWindow *window = effects->activeWindow();
+    Window *window = workspace()->activeWindow();
     if (!window) {
         sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
         return QVariantMap();
@@ -273,7 +275,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
         return QVariantMap();
     }
 
-    EffectWindow *window = effects->findWindow(QUuid(handle));
+    Window *window = workspace()->findWindow(QUuid(handle));
     if (!window) {
         sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
         return QVariantMap();
@@ -327,7 +329,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
         return QVariantMap();
     }
 
-    Output *screen = effects->findScreen(name);
+    Output *screen = workspace()->findOutput(name);
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
         return QVariantMap();
@@ -353,7 +355,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
         return QVariantMap();
     }
 
-    Output *screen = effects->activeScreen();
+    Output *screen = workspace()->activeOutput();
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
         return QVariantMap();
@@ -385,7 +387,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
     const QDBusMessage replyMessage = message();
 
     if (kind == 0) {
-        effects->startInteractiveWindowSelection([=, this](EffectWindow *window) {
+        kwinApp()->startInteractiveWindowSelection([=, this](Window *window) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 
             if (!window) {
@@ -402,7 +404,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                                           "Escape or right click to cancel."),
                                      QStringLiteral("spectacle"));
     } else {
-        effects->startInteractivePositionSelection([=, this](const QPointF &point) {
+        kwinApp()->startInteractivePositionSelection([=, this](const QPointF &point) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 
             if (point == QPoint(-1, -1)) {
@@ -468,7 +470,7 @@ void ScreenShotDBusInterface2::takeScreenShot(const QRect &area, ScreenShotFlags
     sink->deleteLater();
 }
 
-void ScreenShotDBusInterface2::takeScreenShot(EffectWindow *window, ScreenShotFlags flags,
+void ScreenShotDBusInterface2::takeScreenShot(Window *window, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink)
 {
     if (const auto result = m_effect->takeScreenShot(window, flags)) {
