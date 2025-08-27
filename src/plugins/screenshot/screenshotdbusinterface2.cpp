@@ -275,15 +275,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
 
     EffectWindow *window = effects->findWindow(QUuid(handle));
     if (!window) {
-        bool ok;
-        const int winId = handle.toInt(&ok);
-        if (ok) {
-            window = effects->findWindow(winId);
-        } else {
-            qCWarning(KWIN_SCREENSHOT) << "Invalid handle:" << handle;
-        }
-    }
-    if (!window) {
         sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
         return QVariantMap();
     }
