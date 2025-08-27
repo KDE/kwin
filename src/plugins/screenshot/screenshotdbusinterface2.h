@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-class ScreenShotEffect;
+class ScreenShotManager;
 class ScreenShotSinkPipe2;
 class ScreenShotSource2;
 
@@ -34,7 +34,7 @@ class ScreenShotDBusInterface2 : public QObject, public QDBusContext
     Q_PROPERTY(int Version READ version CONSTANT)
 
 public:
-    explicit ScreenShotDBusInterface2(ScreenShotEffect *effect);
+    explicit ScreenShotDBusInterface2(ScreenShotManager *effect);
     ~ScreenShotDBusInterface2() override;
 
     int version() const;
@@ -59,10 +59,10 @@ public Q_SLOTS:
 private:
     void takeScreenShot(Output *screen, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
     void takeScreenShot(const QRect &area, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
-    void takeScreenShot(EffectWindow *window, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
+    void takeScreenShot(Window *window, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
     bool checkPermissions() const;
 
-    ScreenShotEffect *m_effect;
+    ScreenShotManager *m_effect;
 };
 
 } // namespace KWin

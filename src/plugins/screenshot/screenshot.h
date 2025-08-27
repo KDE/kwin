@@ -10,11 +10,7 @@
 
 #pragma once
 
-#include "effect/effect.h"
-
-#include <QFuture>
-#include <QImage>
-#include <QObject>
+#include "plugin.h"
 
 namespace KWin
 {
@@ -31,33 +27,22 @@ enum ScreenShotFlag {
 Q_DECLARE_FLAGS(ScreenShotFlags, ScreenShotFlag)
 
 class ScreenShotDBusInterface2;
-struct ScreenShotWindowData;
-struct ScreenShotAreaData;
-struct ScreenShotScreenData;
+class Output;
+class Window;
 
 /**
- * The ScreenShotEffect provides a convenient way to capture the contents of a given window,
+ * The ScreenShotManager provides a convenient way to capture the contents of a given window,
  * screen or an area in the global coordinates.
- *
- * Use the QFutureWatcher class to get notified when the requested screenshot is ready. Note
- * that the screenshot QFuture object can get cancelled if the captured window or the screen is
- * removed.
  */
-class ScreenShotEffect : public Effect
+class ScreenShotManager : public Plugin
 {
-    Q_OBJECT
-
 public:
-    ScreenShotEffect();
-    ~ScreenShotEffect() override;
+    ScreenShotManager();
+    ~ScreenShotManager() override;
 
     std::optional<QImage> takeScreenShot(Output *screen, ScreenShotFlags flags = {});
     std::optional<QImage> takeScreenShot(const QRect &area, ScreenShotFlags flags = {});
-    std::optional<QImage> takeScreenShot(EffectWindow *window, ScreenShotFlags flags = {});
-
-    bool isActive() const override;
-
-    static bool supported();
+    std::optional<QImage> takeScreenShot(Window *window, ScreenShotFlags flags = {});
 
 private:
     std::unique_ptr<ScreenShotDBusInterface2> m_dbusInterface2;

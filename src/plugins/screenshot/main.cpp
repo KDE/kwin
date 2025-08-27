@@ -6,12 +6,26 @@
 
 #include "screenshot.h"
 
+#include <KPluginFactory>
+
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY_SUPPORTED(ScreenShotEffect,
-                              "metadata.json.stripped",
-                              return ScreenShotEffect::supported();)
+class KWIN_EXPORT ScreenshotManagerFactory : public PluginFactory
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID PluginFactory_iid FILE "metadata.json")
+    Q_INTERFACES(KWin::PluginFactory)
+public:
+    explicit ScreenshotManagerFactory() = default;
+
+    std::unique_ptr<Plugin> create() const override;
+};
+
+std::unique_ptr<Plugin> ScreenshotManagerFactory::create() const
+{
+    return std::make_unique<ScreenShotManager>();
+}
 
 } // namespace KWin
 

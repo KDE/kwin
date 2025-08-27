@@ -16,7 +16,7 @@
 #include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
-#include "effect/effecthandler.h"
+#include "effect/effect.h"
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
@@ -69,29 +69,18 @@ static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform 
     img = img.transformed(matrix.toTransform());
 }
 
-static QRectF roundedRect(const QRect &rect, qreal scale)
-{
-    const QRect scaled = snapToPixelGrid(scaledRect(rect, scale));
-    return scaledRect(scaled, 1.0 / scale);
-}
-
-bool ScreenShotEffect::supported()
-{
-    return effects->isOpenGLCompositing();
-}
-
-ScreenShotEffect::ScreenShotEffect()
+ScreenShotManager::ScreenShotManager()
     : m_dbusInterface2(new ScreenShotDBusInterface2(this))
 {
 }
 
-ScreenShotEffect::~ScreenShotEffect()
+ScreenShotManager::~ScreenShotManager()
 {
 }
 
 // TODO share code with the screencast plugin?
 
-std::optional<QImage> ScreenShotEffect::takeScreenShot(Output *screen, ScreenShotFlags flags)
+std::optional<QImage> ScreenShotManager::takeScreenShot(Output *screen, ScreenShotFlags flags)
 {
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
@@ -153,7 +142,7 @@ std::optional<QImage> ScreenShotEffect::takeScreenShot(Output *screen, ScreenSho
     return snapshot;
 }
 
-std::optional<QImage> ScreenShotEffect::takeScreenShot(const QRect &area, ScreenShotFlags flags)
+std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, ScreenShotFlags flags)
 {
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
@@ -218,7 +207,7 @@ std::optional<QImage> ScreenShotEffect::takeScreenShot(const QRect &area, Screen
     return snapshot;
 }
 
-std::optional<QImage> ScreenShotEffect::takeScreenShot(EffectWindow *window, ScreenShotFlags flags)
+std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenShotFlags flags)
 {
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
@@ -229,8 +218,8 @@ std::optional<QImage> ScreenShotEffect::takeScreenShot(EffectWindow *window, Scr
         return std::nullopt;
     }
 
-    const qreal scale = window->window()->targetScale();
-    const QSize nativeSize = (window->expandedGeometry().size() * scale).toSize();
+    const qreal scale = window->targetScale();
+    const QSize nativeSize = (window->visibleGeometry().size() * scale).toSize();
     const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, nativeSize);
     if (!offscreenTexture) {
         return std::nullopt;
@@ -239,7 +228,7 @@ std::optional<QImage> ScreenShotEffect::takeScreenShot(EffectWindow *window, Scr
     GLFramebuffer offscreenTarget(offscreenTexture.get());
 
     RenderTarget renderTarget(&offscreenTarget);
-    RenderViewport viewport(window->expandedGeometry(), 1, renderTarget);
+    RenderViewport viewport(window->visibleGeometry(), 1, renderTarget);
 
     WorkspaceScene *scene = Compositor::self()->scene();
 
@@ -260,12 +249,6 @@ std::optional<QImage> ScreenShotEffect::takeScreenShot(EffectWindow *window, Scr
 
     snapshot.setDevicePixelRatio(scale);
     return snapshot;
-}
-
-bool ScreenShotEffect::isActive() const
-{
-    // TODO make this a normal plugin and not an effect
-    return false;
 }
 
 } // namespace KWin
