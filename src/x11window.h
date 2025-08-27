@@ -282,6 +282,7 @@ protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
     void doSetNextTargetScale() override;
+    void doSetSuspended() override;
 
 Q_SIGNALS:
     void shapeChanged();
@@ -419,6 +420,7 @@ private:
 
     QTimer *m_focusOutTimer;
     QTimer m_releaseTimer;
+    QTimer m_unmapTimer;
     QPointer<VirtualDesktop> m_netWmDesktop;
 
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
