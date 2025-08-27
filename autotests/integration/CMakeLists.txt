@@ -157,6 +157,7 @@ if(KWIN_BUILD_X11)
     integrationTest(NAME testXwaylandSelections SRCS xwayland_selections_test.cpp)
     integrationTest(NAME testXinerama SRCS xinerama_test.cpp)
     integrationTest(NAME testX11KeyRead SRCS x11keyread.cpp LIBS XCB::XINPUT)
+    integrationTest(NAME testXwaylandDnd SRCS xwayland_dnd_test.cpp LIBS XCB::ICCCM)
 endif()
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
