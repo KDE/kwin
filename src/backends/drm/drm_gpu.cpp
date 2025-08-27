@@ -203,11 +203,12 @@ void DrmGpu::initDrmResources()
         if (it == freePrimaryPlanes.end()) {
             it = freePrimaryPlanes.begin();
         }
-        if (m_atomicModeSetting && it == freePrimaryPlanes.end()) {
+        DrmPlane *primary = it == freePrimaryPlanes.end() ? nullptr : it->get();
+        if (m_atomicModeSetting && !primary) {
             qCWarning(KWIN_DRM) << "Could not find a suitable primary plane for crtc" << resources->crtcs[i];
             continue;
         }
-        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, it->get());
+        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, primary);
         if (!crtc->init()) {
             continue;
         }

@@ -64,6 +64,7 @@ class DrmTest : public QObject
     Q_OBJECT
 private Q_SLOTS:
     void testAmsDetection();
+    void testOutputDetection_data();
     void testOutputDetection();
     void testZeroModesHandling();
     void testModeGeneration_data();
@@ -119,9 +120,19 @@ void DrmTest::testAmsDetection()
     }
 }
 
+void DrmTest::testOutputDetection_data()
+{
+    QTest::addColumn<bool>("atomicModeSetting");
+
+    QTest::addRow("AMS") << true;
+    QTest::addRow("legacy") << false;
+}
+
 void DrmTest::testOutputDetection()
 {
     const auto mockGpu = findPrimaryDevice(5);
+    QFETCH(bool, atomicModeSetting);
+    mockGpu->deviceCaps[MOCKDRM_DEVICE_CAP_ATOMIC] = atomicModeSetting;
 
     const auto one = std::make_shared<MockConnector>(mockGpu.get());
     const auto two = std::make_shared<MockConnector>(mockGpu.get());
