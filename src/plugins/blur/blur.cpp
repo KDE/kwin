@@ -150,7 +150,7 @@ BlurEffect::BlurEffect()
 
     connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::screenRemoved, this, &BlurEffect::slotScreenRemoved);
+    connect(effects, &EffectsHandler::viewRemoved, this, &BlurEffect::slotViewRemoved);
 #if KWIN_BUILD_X11
     connect(effects, &EffectsHandler::propertyNotify, this, &BlurEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
@@ -370,10 +370,10 @@ void BlurEffect::slotWindowDeleted(EffectWindow *w)
     }
 }
 
-void BlurEffect::slotScreenRemoved(KWin::Output *screen)
+void BlurEffect::slotViewRemoved(KWin::RenderView *view)
 {
     for (auto &[window, data] : m_windows) {
-        if (auto it = data.render.find(screen); it != data.render.end()) {
+        if (auto it = data.render.find(view); it != data.render.end()) {
             effects->makeOpenGLContextCurrent();
             data.render.erase(it);
         }
@@ -486,7 +486,7 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 {
     m_paintedArea = QRegion();
     m_currentBlur = QRegion();
-    m_currentScreen = data.screen;
+    m_currentView = data.view;
 
     effects->prePaintScreen(data, presentTime);
 }
@@ -608,7 +608,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     BlurEffectData &blurInfo = it->second;
-    BlurRenderData &renderInfo = blurInfo.render[m_currentScreen];
+    BlurRenderData &renderInfo = blurInfo.render[m_currentView];
     if (!shouldBlur(w, mask, data)) {
         return;
     }

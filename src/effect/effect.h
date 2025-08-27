@@ -30,6 +30,7 @@ struct TabletToolProximityEvent;
 struct TabletToolTipEvent;
 struct TabletToolAxisEvent;
 class WindowPaintDataPrivate;
+class RenderView;
 
 /** @defgroup kwineffects KWin effects library
  * KWin effects library contains necessary classes for creating new KWin
@@ -436,6 +437,7 @@ public:
     int mask;
     QRegion paint;
     Output *screen = nullptr;
+    RenderView *view = nullptr;
 };
 
 /**

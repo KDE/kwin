@@ -283,6 +283,8 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
 
     connect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
 
+    connect(scene, &WorkspaceScene::viewRemoved, this, &EffectsHandler::viewRemoved);
+
     reconfigure();
 }
 

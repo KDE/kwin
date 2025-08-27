@@ -1058,6 +1058,8 @@ Q_SIGNALS:
 
     void inputPanelChanged();
 
+    void viewRemoved(RenderView *view);
+
 public Q_SLOTS:
     // slots for D-Bus interface
     Q_SCRIPTABLE void reconfigureEffect(const QString &name);
