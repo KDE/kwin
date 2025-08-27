@@ -1003,13 +1003,14 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     const quint32 serial = display()->nextSerial();
     d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
 
-    auto tp = std::make_unique<TouchPoint>(serial, surface, this);
-    tp->position = globalPosition;
-    tp->offset = surfacePosition;
-    tp->transformation = QMatrix4x4();
-    tp->transformation.translate(-surfacePosition.x(), -surfacePosition.y());
-    auto r = tp.get();
-    d->touchPoints[id] = std::move(tp);
+    auto touchPoint = std::make_unique<TouchPoint>(serial, surface, this);
+    touchPoint->position = globalPosition;
+    touchPoint->offset = surfacePosition;
+    touchPoint->transformation = QMatrix4x4();
+    touchPoint->transformation.translate(-surfacePosition.x(), -surfacePosition.y());
+
+    auto r = touchPoint.get();
+    d->touchPoints[id] = std::move(touchPoint);
     return r;
 }
 
