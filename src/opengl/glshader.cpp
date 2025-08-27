@@ -482,30 +482,30 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
 
 static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
 
-void GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
+void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &src, const std::shared_ptr<ColorDescription> &dst, RenderingIntent intent)
 {
-    setUniform(Mat4Uniform::ColorimetryTransformation, src.toOther(dst, intent));
-    setUniform(IntUniform::SourceNamedTransferFunction, src.transferFunction().type);
-    if (src.transferFunction().type == TransferFunction::BT1886) {
-        setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().bt1886B(), src.transferFunction().bt1886A()));
+    setUniform(Mat4Uniform::ColorimetryTransformation, src->toOther(*dst, intent));
+    setUniform(IntUniform::SourceNamedTransferFunction, src->transferFunction().type);
+    if (src->transferFunction().type == TransferFunction::BT1886) {
+        setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src->transferFunction().bt1886B(), src->transferFunction().bt1886A()));
     } else {
-        setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance));
+        setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src->transferFunction().minLuminance, src->transferFunction().maxLuminance - src->transferFunction().minLuminance));
     }
-    setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance());
-    setUniform(IntUniform::DestinationNamedTransferFunction, dst.transferFunction().type);
-    if (dst.transferFunction().type == TransferFunction::BT1886) {
-        setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().bt1886B(), dst.transferFunction().bt1886A()));
+    setUniform(FloatUniform::SourceReferenceLuminance, src->referenceLuminance());
+    setUniform(IntUniform::DestinationNamedTransferFunction, dst->transferFunction().type);
+    if (dst->transferFunction().type == TransferFunction::BT1886) {
+        setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst->transferFunction().bt1886B(), dst->transferFunction().bt1886A()));
     } else {
-        setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().minLuminance, dst.transferFunction().maxLuminance - dst.transferFunction().minLuminance));
+        setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst->transferFunction().minLuminance, dst->transferFunction().maxLuminance - dst->transferFunction().minLuminance));
     }
-    setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance());
-    setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
+    setUniform(FloatUniform::DestinationReferenceLuminance, dst->referenceLuminance());
+    setUniform(FloatUniform::MaxDestinationLuminance, dst->maxHdrLuminance().value_or(10'000));
     if (!s_disableTonemapping && intent == RenderingIntent::Perceptual) {
-        setUniform(FloatUniform::MaxTonemappingLuminance, src.maxHdrLuminance().value_or(src.referenceLuminance()) * dst.referenceLuminance() / src.referenceLuminance());
+        setUniform(FloatUniform::MaxTonemappingLuminance, src->maxHdrLuminance().value_or(src->referenceLuminance()) * dst->referenceLuminance() / src->referenceLuminance());
     } else {
-        setUniform(FloatUniform::MaxTonemappingLuminance, dst.maxHdrLuminance().value_or(10'000));
+        setUniform(FloatUniform::MaxTonemappingLuminance, dst->maxHdrLuminance().value_or(10'000));
     }
-    setUniform(Mat4Uniform::DestinationToLMS, dst.containerColorimetry().toLMS());
-    setUniform(Mat4Uniform::LMSToDestination, dst.containerColorimetry().fromLMS());
+    setUniform(Mat4Uniform::DestinationToLMS, dst->containerColorimetry().toLMS());
+    setUniform(Mat4Uniform::LMSToDestination, dst->containerColorimetry().fromLMS());
 }
 }

@@ -154,7 +154,7 @@ public:
 
     WindowQuadList quads() const;
     virtual void preprocess();
-    const ColorDescription &colorDescription() const;
+    const std::shared_ptr<ColorDescription> &colorDescription() const;
     RenderingIntent renderingIntent() const;
     PresentationModeHint presentationHint() const;
 
@@ -187,7 +187,7 @@ protected:
     virtual WindowQuadList buildQuads() const;
     virtual void handleFramePainted(Output *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
     void discardQuads();
-    void setColorDescription(const ColorDescription &description);
+    void setColorDescription(const std::shared_ptr<ColorDescription> &description);
     void setRenderingIntent(RenderingIntent intent);
     void setPresentationHint(PresentationModeHint hint);
     void setScene(Scene *scene);
@@ -225,7 +225,7 @@ private:
     QMap<RenderView *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
-    ColorDescription m_colorDescription = ColorDescription::sRGB;
+    std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
     int m_effectCount = 0;

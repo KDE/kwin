@@ -4640,12 +4640,12 @@ void Window::updatePreferredBufferTransform()
     setPreferredBufferTransform(m_moveResizeOutput->transform());
 }
 
-const ColorDescription &Window::preferredColorDescription() const
+const std::shared_ptr<ColorDescription> &Window::preferredColorDescription() const
 {
     return m_preferredColorDescription;
 }
 
-void Window::setPreferredColorDescription(const ColorDescription &description)
+void Window::setPreferredColorDescription(const std::shared_ptr<ColorDescription> &description)
 {
     if (m_preferredColorDescription != description) {
         m_preferredColorDescription = description;

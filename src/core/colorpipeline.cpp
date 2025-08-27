@@ -24,24 +24,24 @@ ValueRange ValueRange::operator*(double mult) const
 
 static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
 
-ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
+ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent)
 {
-    const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
-    const double maxOutputLuminance = to.maxHdrLuminance().value_or(to.referenceLuminance());
+    const auto range1 = ValueRange(from->minLuminance(), from->maxHdrLuminance().value_or(from->referenceLuminance()));
+    const double maxOutputLuminance = to->maxHdrLuminance().value_or(to->referenceLuminance());
     ColorPipeline ret(ValueRange{
-        .min = from.transferFunction().nitsToEncoded(range1.min),
-        .max = from.transferFunction().nitsToEncoded(range1.max),
+        .min = from->transferFunction().nitsToEncoded(range1.min),
+        .max = from->transferFunction().nitsToEncoded(range1.max),
     });
-    ret.addTransferFunction(from.transferFunction());
+    ret.addTransferFunction(from->transferFunction());
 
     // FIXME this assumes that the range stays the same with matrix multiplication
     // that's not necessarily true, and figuring out the actual range could be complicated..
-    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()));
+    ret.addMatrix(from->toOther(*to, intent), ret.currentOutputRange() * (to->referenceLuminance() / from->referenceLuminance()));
     if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
-        ret.addTonemapper(to.containerColorimetry(), to.referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
+        ret.addTonemapper(to->containerColorimetry(), to->referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
     }
 
-    ret.addInverseTransferFunction(to.transferFunction());
+    ret.addInverseTransferFunction(to->transferFunction());
     return ret;
 }
 

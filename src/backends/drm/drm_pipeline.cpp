@@ -273,7 +273,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         commit->addProperty(plane->zpos, layer->zpos());
     }
 
-    switch (layer->colorDescription().yuvCoefficients()) {
+    switch (layer->colorDescription()->yuvCoefficients()) {
     case YUVMatrixCoefficients::Identity:
         break;
     case YUVMatrixCoefficients::BT601:

@@ -406,7 +406,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             }
             shader = ShaderManager::instance()->pushShader(traits);
             if (traits & ShaderTrait::AdjustSaturation) {
-                const auto toXYZ = renderTarget.colorDescription().containerColorimetry().toXYZ();
+                const auto toXYZ = renderTarget.colorDescription()->containerColorimetry().toXYZ();
                 shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
                 shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
             }
@@ -426,7 +426,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
         }
         if (traits & ShaderTrait::MapYUVTexture) {
-            shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription.yuvMatrix());
+            shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription->yuvMatrix());
         }
         if (traits & ShaderTrait::RoundedCorners) {
             shader->setUniform(GLShader::Vec4Uniform::Box, renderNode.box);

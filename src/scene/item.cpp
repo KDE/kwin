@@ -663,7 +663,7 @@ void Item::markSortedChildItemsDirty()
     m_sortedChildItems.reset();
 }
 
-const ColorDescription &Item::colorDescription() const
+const std::shared_ptr<ColorDescription> &Item::colorDescription() const
 {
     return m_colorDescription;
 }
@@ -673,7 +673,7 @@ RenderingIntent Item::renderingIntent() const
     return m_renderingIntent;
 }
 
-void Item::setColorDescription(const ColorDescription &description)
+void Item::setColorDescription(const std::shared_ptr<ColorDescription> &description)
 {
     m_colorDescription = description;
 }

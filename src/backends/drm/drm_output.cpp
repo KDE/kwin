@@ -487,9 +487,9 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     return true;
 }
 
-static QVector3D adaptChannelFactors(const ColorDescription &originalColor, const QVector3D &sRGBchannelFactors)
+static QVector3D adaptChannelFactors(const std::shared_ptr<ColorDescription> &originalColor, const QVector3D &sRGBchannelFactors)
 {
-    QVector3D adaptedChannelFactors = ColorDescription::sRGB.containerColorimetry().relativeColorimetricTo(originalColor.containerColorimetry()) * sRGBchannelFactors;
+    QVector3D adaptedChannelFactors = ColorDescription::sRGB->containerColorimetry().relativeColorimetricTo(originalColor->containerColorimetry()) * sRGBchannelFactors;
     // ensure none of the values reach zero, otherwise the white point might end up on or outside
     // the edges of the gamut, which leads to terrible glitches
     adaptedChannelFactors.setX(std::max(adaptedChannelFactors.x(), 0.0001f));
@@ -498,16 +498,16 @@ static QVector3D adaptChannelFactors(const ColorDescription &originalColor, cons
     return adaptedChannelFactors;
 }
 
-static ColorDescription applyNightLight(const ColorDescription &originalColor, const QVector3D &sRGBchannelFactors)
+static std::shared_ptr<ColorDescription> applyNightLight(const std::shared_ptr<ColorDescription> &originalColor, const QVector3D &sRGBchannelFactors)
 {
     const QVector3D adapted = adaptChannelFactors(originalColor, sRGBchannelFactors);
     // calculate the white point
     // this includes the maximum brightness we can do without clipping any color channel as well
-    const xyY newWhite = XYZ::fromVector(originalColor.containerColorimetry().toXYZ() * adapted).toxyY();
-    return originalColor.withWhitepoint(newWhite).dimmed(newWhite.Y);
+    const xyY newWhite = XYZ::fromVector(originalColor->containerColorimetry().toXYZ() * adapted).toxyY();
+    return originalColor->withWhitepoint(newWhite)->dimmed(newWhite.Y);
 }
 
-ColorDescription DrmOutput::createColorDescription(const State &next) const
+std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State &next) const
 {
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool effectiveWcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
@@ -523,7 +523,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
         const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
         const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
         const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
-        return ColorDescription{
+        return std::make_shared<ColorDescription>(ColorDescription{
             next.iccProfile->colorimetry(),
             TransferFunction(TransferFunction::gamma22, 0, maxBrightness * next.artificialHdrHeadroom),
             effectiveReferenceLuminance,
@@ -532,7 +532,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
             maxBrightness * maxPossibleArtificialHeadroom,
             next.iccProfile->colorimetry(),
             sdrColor,
-        };
+        });
     }
 
     const Colorimetry nativeColorimetry = m_information.edid.nativeColorimetry().value_or(Colorimetry::BT709);
@@ -554,7 +554,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
 
     const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) || effectiveHdr ? brightness : 1.0;
     const double effectiveReferenceLuminance = 5 + (referenceLuminance - 5) * brightnessFactor;
-    return ColorDescription{
+    return std::make_shared<ColorDescription>(ColorDescription{
         containerColorimetry,
         transferFunction,
         effectiveReferenceLuminance,
@@ -563,7 +563,7 @@ ColorDescription DrmOutput::createColorDescription(const State &next) const
         maxPeakBrightness,
         masteringColorimetry,
         sdrColorimetry,
-    };
+    });
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
@@ -686,17 +686,17 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 void DrmOutput::tryKmsColorOffloading(State &next)
 {
     constexpr TransferFunction::Type blendingSpace = TransferFunction::gamma22;
-    const double maxLuminance = next.colorDescription.maxHdrLuminance().value_or(next.colorDescription.referenceLuminance());
-    if (next.colorDescription.transferFunction().type == blendingSpace) {
+    const double maxLuminance = next.colorDescription->maxHdrLuminance().value_or(next.colorDescription->referenceLuminance());
+    if (next.colorDescription->transferFunction().type == blendingSpace) {
         next.blendingColor = next.colorDescription;
     } else {
-        next.blendingColor = next.colorDescription.withTransferFunction(TransferFunction(blendingSpace, 0, maxLuminance));
+        next.blendingColor = next.colorDescription->withTransferFunction(TransferFunction(blendingSpace, 0, maxLuminance));
     }
 
     // we can't use the original color description without modifications
     // as that would un-do any brightness adjustments we did for night light
     // note that we also can't use ColorDescription::dimmed, as we must avoid clipping to this luminance!
-    const ColorDescription encoding = next.originalColorDescription.withReference(next.colorDescription.referenceLuminance());
+    const auto encoding = next.originalColorDescription->withReference(next.colorDescription->referenceLuminance());
 
     // absolute colorimetric to preserve the whitepoint adjustments made during compositing
     ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation);
@@ -709,7 +709,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
         m_needsShadowBuffer = usesICC
-            || next.colorDescription.transferFunction().type != blendingSpace
+            || next.colorDescription->transferFunction().type != blendingSpace
             || !colorPipeline.isIdentity();
         return;
     }
@@ -717,8 +717,8 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         return;
     }
     if (usesICC) {
-        colorPipeline.addTransferFunction(encoding.transferFunction());
-        colorPipeline.addMultiplier(1.0 / encoding.transferFunction().maxLuminance);
+        colorPipeline.addTransferFunction(encoding->transferFunction());
+        colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
         colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction());
         if (next.iccProfile->vcgt()) {
             colorPipeline.add1DLUT(next.iccProfile->vcgt());
@@ -731,12 +731,12 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         m_needsShadowBuffer = false;
         return;
     }
-    if (next.colorDescription.transferFunction().type == blendingSpace && !usesICC) {
+    if (next.colorDescription->transferFunction().type == blendingSpace && !usesICC) {
         // Allow falling back to applying night light in non-linear space.
         // This isn't technically correct, but the difference is quite small and not worth
         // losing a lot of performance and battery life over
         ColorPipeline simplerPipeline;
-        simplerPipeline.addMatrix(next.blendingColor.toOther(encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation), colorPipeline.currentOutputRange());
+        simplerPipeline.addMatrix(next.blendingColor->toOther(*encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation), colorPipeline.currentOutputRange());
         m_pipeline->setCrtcColorPipeline(simplerPipeline);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
@@ -750,7 +750,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     m_pipeline->applyPendingChanges();
     next.layerBlendingColor = encoding;
     m_needsShadowBuffer = usesICC
-        || next.colorDescription.transferFunction().type != blendingSpace
+        || next.colorDescription->transferFunction().type != blendingSpace
         || !colorPipeline.isIdentity();
 }
 

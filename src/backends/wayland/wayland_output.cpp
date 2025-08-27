@@ -199,16 +199,16 @@ WaylandOutput::~WaylandOutput()
 void WaylandOutput::updateColor()
 {
     const auto &preferred = m_colorSurfaceFeedback->preferredColor();
-    const auto tf = TransferFunction(TransferFunction::gamma22, preferred.transferFunction().minLuminance, preferred.transferFunction().maxLuminance);
+    const auto tf = TransferFunction(TransferFunction::gamma22, preferred->transferFunction().minLuminance, preferred->transferFunction().maxLuminance);
     State next = m_state;
-    next.colorDescription = ColorDescription{
-        preferred.containerColorimetry(),
+    next.colorDescription = std::make_shared<ColorDescription>(ColorDescription{
+        preferred->containerColorimetry(),
         tf,
-        preferred.referenceLuminance(),
-        preferred.minLuminance(),
-        preferred.maxAverageLuminance(),
-        preferred.maxHdrLuminance(),
-    };
+        preferred->referenceLuminance(),
+        preferred->minLuminance(),
+        preferred->maxAverageLuminance(),
+        preferred->maxHdrLuminance(),
+    });
     next.originalColorDescription = next.colorDescription;
     next.blendingColor = next.colorDescription;
     // we don't actually know this, but we have to assume *something*

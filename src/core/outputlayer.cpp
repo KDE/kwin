@@ -192,7 +192,7 @@ const ColorPipeline &OutputLayer::colorPipeline() const
     return m_colorPipeline;
 }
 
-const ColorDescription &OutputLayer::colorDescription() const
+const std::shared_ptr<ColorDescription> &OutputLayer::colorDescription() const
 {
     return m_color;
 }
@@ -202,7 +202,7 @@ RenderingIntent OutputLayer::renderIntent() const
     return m_renderingIntent;
 }
 
-void OutputLayer::setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline)
+void OutputLayer::setColor(const std::shared_ptr<ColorDescription> &color, RenderingIntent intent, const ColorPipeline &pipeline)
 {
     m_color = color;
     m_renderingIntent = intent;

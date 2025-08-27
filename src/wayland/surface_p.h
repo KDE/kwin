@@ -82,7 +82,7 @@ struct SurfaceState
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;
     PresentationModeHint presentationHint = PresentationModeHint::VSync;
-    ColorDescription colorDescription = ColorDescription::sRGB;
+    std::shared_ptr<ColorDescription> colorDescription = ColorDescription::sRGB;
     RenderingIntent renderingIntent = RenderingIntent::Perceptual;
     std::unique_ptr<PresentationTimeFeedback> presentationFeedback;
     struct
@@ -178,7 +178,7 @@ public:
     QPointer<OutputInterface> primaryOutput;
     std::optional<qreal> preferredBufferScale;
     std::optional<OutputTransform> preferredBufferTransform;
-    std::optional<ColorDescription> preferredColorDescription;
+    std::optional<std::shared_ptr<ColorDescription>> preferredColorDescription;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;

@@ -54,7 +54,7 @@ private:
     wp_color_management_surface_v1 *m_colorSurface = nullptr;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
     wp_viewport *m_viewport = nullptr;
-    std::optional<ColorDescription> m_previousColor;
+    std::shared_ptr<ColorDescription> m_previousColor;
 };
 
 }

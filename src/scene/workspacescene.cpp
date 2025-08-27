@@ -413,8 +413,8 @@ static double getDesiredHdrHeadroom(Item *item)
         ret = std::max(ret, getDesiredHdrHeadroom(child));
     }
     const auto &color = item->colorDescription();
-    if (color.maxHdrLuminance() && *color.maxHdrLuminance() > color.referenceLuminance()) {
-        return std::max(ret, *color.maxHdrLuminance() / color.referenceLuminance());
+    if (color->maxHdrLuminance() && *color->maxHdrLuminance() > color->referenceLuminance()) {
+        return std::max(ret, *color->maxHdrLuminance() / color->referenceLuminance());
     } else {
         return ret;
     }

@@ -36,7 +36,7 @@ public:
     explicit FrogColorManagementSurfaceV1(SurfaceInterface *surface, wl_client *client, uint32_t id);
     ~FrogColorManagementSurfaceV1() override;
 
-    void setPreferredColorDescription(const ColorDescription &colorDescription);
+    void setPreferredColorDescription(const std::shared_ptr<ColorDescription> &colorDescription);
 
 private:
     void frog_color_managed_surface_set_known_transfer_function(Resource *resource, uint32_t transfer_function) override;

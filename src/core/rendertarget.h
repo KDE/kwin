@@ -20,12 +20,12 @@ class GLTexture;
 class KWIN_EXPORT RenderTarget
 {
 public:
-    explicit RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription = ColorDescription::sRGB);
-    explicit RenderTarget(QImage *image, const ColorDescription &colorDescription = ColorDescription::sRGB);
+    explicit RenderTarget(GLFramebuffer *fbo, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
+    explicit RenderTarget(QImage *image, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
 
     QSize size() const;
     OutputTransform transform() const;
-    const ColorDescription &colorDescription() const;
+    const std::shared_ptr<ColorDescription> &colorDescription() const;
 
     QImage *image() const;
     GLFramebuffer *framebuffer() const;
@@ -35,7 +35,7 @@ private:
     QImage *m_image = nullptr;
     GLFramebuffer *m_framebuffer = nullptr;
     const OutputTransform m_transform;
-    const ColorDescription m_colorDescription;
+    const std::shared_ptr<ColorDescription> m_colorDescription;
 };
 
 } // namespace KWin

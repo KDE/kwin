@@ -341,10 +341,10 @@ public:
     Transaction *lastTransaction() const;
     void setLastTransaction(Transaction *transaction);
 
-    const ColorDescription &colorDescription() const;
+    const std::shared_ptr<ColorDescription> &colorDescription() const;
     RenderingIntent renderingIntent() const;
 
-    void setPreferredColorDescription(const ColorDescription &descr);
+    void setPreferredColorDescription(const std::shared_ptr<ColorDescription> &descr);
 
     double alphaMultiplier() const;
 

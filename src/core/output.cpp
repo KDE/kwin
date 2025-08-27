@@ -625,7 +625,7 @@ void Output::setState(const State &state)
     if (oldState.vrrPolicy != state.vrrPolicy) {
         Q_EMIT vrrPolicyChanged();
     }
-    if (oldState.colorDescription != state.colorDescription) {
+    if (*oldState.colorDescription != *state.colorDescription) {
         Q_EMIT colorDescriptionChanged();
     }
     if (oldState.colorProfileSource != state.colorProfileSource) {
@@ -757,7 +757,7 @@ QByteArray Output::mstPath() const
     return m_information.mstPath;
 }
 
-const ColorDescription &Output::colorDescription() const
+const std::shared_ptr<ColorDescription> &Output::colorDescription() const
 {
     return m_state.colorDescription;
 }
@@ -897,12 +897,12 @@ void Output::repairPresentation()
 {
 }
 
-const ColorDescription &Output::blendingColor() const
+const std::shared_ptr<ColorDescription> &Output::blendingColor() const
 {
     return m_state.blendingColor;
 }
 
-const ColorDescription &Output::layerBlendingColor() const
+const std::shared_ptr<ColorDescription> &Output::layerBlendingColor() const
 {
     return m_state.layerBlendingColor;
 }

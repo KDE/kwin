@@ -424,17 +424,17 @@ public:
     /**
      * The color space in which the scene is blended
      */
-    const ColorDescription &blendingColor() const;
+    const std::shared_ptr<ColorDescription> &blendingColor() const;
     /**
      * The color space in which output layers are blended.
      * Note that this may be different from blendingColor.
      */
-    const ColorDescription &layerBlendingColor() const;
+    const std::shared_ptr<ColorDescription> &layerBlendingColor() const;
     /**
      * The color space that is sent to the output, after blending
      * has happened. May be different from layerBlendingColor.
      */
-    const ColorDescription &colorDescription() const;
+    const std::shared_ptr<ColorDescription> &colorDescription() const;
 
 Q_SIGNALS:
     /**
@@ -557,10 +557,10 @@ protected:
         std::shared_ptr<IccProfile> iccProfile;
         ColorProfileSource colorProfileSource = ColorProfileSource::sRGB;
         // color description without night light applied
-        ColorDescription originalColorDescription = ColorDescription::sRGB;
-        ColorDescription colorDescription = ColorDescription::sRGB;
-        ColorDescription blendingColor = ColorDescription::sRGB;
-        ColorDescription layerBlendingColor = ColorDescription::sRGB;
+        std::shared_ptr<ColorDescription> originalColorDescription = ColorDescription::sRGB;
+        std::shared_ptr<ColorDescription> colorDescription = ColorDescription::sRGB;
+        std::shared_ptr<ColorDescription> blendingColor = ColorDescription::sRGB;
+        std::shared_ptr<ColorDescription> layerBlendingColor = ColorDescription::sRGB;
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;
         std::optional<double> minBrightnessOverride;

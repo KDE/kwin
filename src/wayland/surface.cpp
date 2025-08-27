@@ -87,7 +87,7 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     if (preferredBufferTransform.has_value()) {
         child->surface()->setPreferredBufferTransform(preferredBufferTransform.value());
     }
-    if (preferredColorDescription) {
+    if (preferredColorDescription.has_value()) {
         child->surface()->setPreferredColorDescription(preferredColorDescription.value());
     }
 
@@ -379,7 +379,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
                 pending->committed |= SurfaceState::Field::YuvCoefficients;
             }
             if (!hasColorManagementProtocol) {
-                pending->colorDescription = ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer));
+                pending->colorDescription = ColorDescription::BT2020PQ;
                 pending->committed |= SurfaceState::Field::ColorDescription;
             }
             break;
@@ -779,7 +779,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         Q_EMIT q->childSubSurfacesChanged();
     }
     if (colorDescriptionChanged || yuvCoefficientsChanged) {
-        current->colorDescription = current->colorDescription.withYuvCoefficients(current->yuvCoefficients, current->range);
+        current->colorDescription = current->colorDescription->withYuvCoefficients(current->yuvCoefficients, current->range);
         Q_EMIT q->colorDescriptionChanged();
     }
     if (presentationModeHintChanged) {
@@ -1189,7 +1189,7 @@ PresentationModeHint SurfaceInterface::presentationModeHint() const
     return d->current->presentationHint;
 }
 
-const ColorDescription &SurfaceInterface::colorDescription() const
+const std::shared_ptr<ColorDescription> &SurfaceInterface::colorDescription() const
 {
     return d->current->colorDescription;
 }
@@ -1199,7 +1199,7 @@ RenderingIntent SurfaceInterface::renderingIntent() const
     return d->current->renderingIntent;
 }
 
-void SurfaceInterface::setPreferredColorDescription(const ColorDescription &descr)
+void SurfaceInterface::setPreferredColorDescription(const std::shared_ptr<ColorDescription> &descr)
 {
     if (d->preferredColorDescription == descr) {
         return;

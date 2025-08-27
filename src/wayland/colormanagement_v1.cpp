@@ -94,7 +94,7 @@ void ColorManagerV1::wp_color_manager_v1_create_parametric_creator(Resource *res
 
 void ColorManagerV1::wp_color_manager_v1_create_windows_scrgb(Resource *resource, uint32_t image_description)
 {
-    const auto scrgb = ColorDescription{
+    const auto scrgb = std::make_shared<ColorDescription>(ColorDescription{
         Colorimetry::BT709,
         TransferFunction(TransferFunction::linear, 0, 80),
         203,
@@ -103,7 +103,7 @@ void ColorManagerV1::wp_color_manager_v1_create_windows_scrgb(Resource *resource
         std::nullopt,
         Colorimetry::BT2020,
         Colorimetry::BT709,
-    };
+    });
     ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), scrgb);
 }
 
@@ -121,7 +121,7 @@ ColorFeedbackSurfaceV1::~ColorFeedbackSurfaceV1()
     }
 }
 
-void ColorFeedbackSurfaceV1::setPreferredColorDescription(const ColorDescription &descr)
+void ColorFeedbackSurfaceV1::setPreferredColorDescription(const std::shared_ptr<ColorDescription> &descr)
 {
     if (m_preferred != descr) {
         m_preferred = descr;
@@ -265,7 +265,16 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
         m_minMasteringLuminance = func.minLuminance;
     }
     if (Colorimetry::isValid(m_colorimetry->red().toxy(), m_colorimetry->green().toxy(), m_colorimetry->blue().toxy(), m_colorimetry->white().toxy())) {
-        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance.value_or(func.maxLuminance), m_masteringColorimetry, Colorimetry::BT709));
+        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), std::make_shared<ColorDescription>(ColorDescription{
+                                                                                                        *m_colorimetry,
+                                                                                                        func,
+                                                                                                        referenceLuminance,
+                                                                                                        m_minMasteringLuminance.value_or(func.minLuminance),
+                                                                                                        maxFrameAverageLuminance,
+                                                                                                        maxHdrLuminance.value_or(func.maxLuminance),
+                                                                                                        m_masteringColorimetry,
+                                                                                                        Colorimetry::BT709,
+                                                                                                    }));
     } else {
         ImageDescriptionV1::createFailed(resource->client(), image_description, resource->version(), WP_IMAGE_DESCRIPTION_V1_CAUSE_UNSUPPORTED, QStringLiteral("The provided image description failed to verify as usable"));
     }
@@ -434,7 +443,7 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_max_fa
 
 uint64_t ImageDescriptionV1::s_idCounter = 1;
 
-ImageDescriptionV1 *ImageDescriptionV1::createReady(wl_client *client, uint32_t id, uint32_t version, const ColorDescription &colorDescription)
+ImageDescriptionV1 *ImageDescriptionV1::createReady(wl_client *client, uint32_t id, uint32_t version, const std::shared_ptr<ColorDescription> &colorDescription)
 {
     auto description = new ImageDescriptionV1(client, id, version, colorDescription);
     description->send_ready(s_idCounter++);
@@ -448,7 +457,7 @@ ImageDescriptionV1 *ImageDescriptionV1::createFailed(wl_client *client, uint32_t
     return description;
 }
 
-ImageDescriptionV1::ImageDescriptionV1(wl_client *client, uint32_t id, uint32_t version, const std::optional<ColorDescription> &color)
+ImageDescriptionV1::ImageDescriptionV1(wl_client *client, uint32_t id, uint32_t version, const std::optional<std::shared_ptr<ColorDescription>> &color)
     : QtWaylandServer::wp_image_description_v1(client, id, version)
     , m_description(color)
 {
@@ -534,23 +543,24 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
         wl_resource_post_error(qtResource->handle, error_no_information, "Can't request information from a failed image description");
         return;
     }
+    const auto &color = *m_description;
     auto resource = wl_resource_create(qtResource->client(), &wp_image_description_info_v1_interface, qtResource->version(), information);
     const auto round = [](float f) {
         return std::clamp(std::round(f / s_primaryUnit), 0.0, 1.0 / s_primaryUnit);
     };
-    const xyY containerRed = m_description->containerColorimetry().red().toxyY();
-    const xyY containerGreen = m_description->containerColorimetry().green().toxyY();
-    const xyY containerBlue = m_description->containerColorimetry().blue().toxyY();
-    const xyY containerWhite = m_description->containerColorimetry().white().toxyY();
+    const xyY containerRed = color->containerColorimetry().red().toxyY();
+    const xyY containerGreen = color->containerColorimetry().green().toxyY();
+    const xyY containerBlue = color->containerColorimetry().blue().toxyY();
+    const xyY containerWhite = color->containerColorimetry().white().toxyY();
     wp_image_description_info_v1_send_primaries(resource,
                                                 round(containerRed.x), round(containerRed.y),
                                                 round(containerGreen.x), round(containerGreen.y),
                                                 round(containerBlue.x), round(containerBlue.y),
                                                 round(containerWhite.x), round(containerWhite.y));
-    if (auto name = kwinPrimariesToProtoPrimaires(m_description->containerColorimetry())) {
+    if (auto name = kwinPrimariesToProtoPrimaires(color->containerColorimetry())) {
         wp_image_description_info_v1_send_primaries_named(resource, *name);
     }
-    if (auto m = m_description->masteringColorimetry()) {
+    if (auto m = color->masteringColorimetry()) {
         const xyY masterRed = m->red().toxyY();
         const xyY masterGreen = m->green().toxyY();
         const xyY masterBlue = m->blue().toxyY();
@@ -561,20 +571,20 @@ void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtRes
                                                            round(masterBlue.x), round(masterBlue.y),
                                                            round(masterWhite.x), round(masterWhite.y));
     }
-    if (auto maxfall = m_description->maxAverageLuminance()) {
+    if (auto maxfall = color->maxAverageLuminance()) {
         wp_image_description_info_v1_send_target_max_fall(resource, std::round(*maxfall));
     }
-    if (auto maxcll = m_description->maxHdrLuminance()) {
+    if (auto maxcll = color->maxHdrLuminance()) {
         wp_image_description_info_v1_send_target_max_cll(resource, std::round(*maxcll));
     }
-    wp_image_description_info_v1_send_luminances(resource, std::round(m_description->transferFunction().minLuminance / s_minLuminanceUnit), std::round(m_description->transferFunction().maxLuminance), std::round(m_description->referenceLuminance()));
-    wp_image_description_info_v1_send_target_luminance(resource, std::round(m_description->minLuminance() / s_minLuminanceUnit), std::round(m_description->maxHdrLuminance().value_or(800)));
-    wp_image_description_info_v1_send_tf_named(resource, kwinTFtoProtoTF(m_description->transferFunction()));
+    wp_image_description_info_v1_send_luminances(resource, std::round(color->transferFunction().minLuminance / s_minLuminanceUnit), std::round(color->transferFunction().maxLuminance), std::round(color->referenceLuminance()));
+    wp_image_description_info_v1_send_target_luminance(resource, std::round(color->minLuminance() / s_minLuminanceUnit), std::round(color->maxHdrLuminance().value_or(800)));
+    wp_image_description_info_v1_send_tf_named(resource, kwinTFtoProtoTF(color->transferFunction()));
     wp_image_description_info_v1_send_done(resource);
     wl_resource_destroy(resource);
 }
 
-const std::optional<ColorDescription> &ImageDescriptionV1::description() const
+const std::optional<std::shared_ptr<ColorDescription>> &ImageDescriptionV1::description() const
 {
     return m_description;
 }

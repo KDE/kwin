@@ -46,7 +46,6 @@ private:
     bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
 
     GraphicsBufferRef m_scanoutBuffer;
-    ColorDescription m_scanoutColor = ColorDescription::sRGB;
     DamageJournal m_damageJournal;
     DamageJournal m_oldDamageJournal;
     std::shared_ptr<EglSwapchain> m_gbmSwapchain;

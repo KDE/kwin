@@ -168,14 +168,14 @@ constexpr wp_image_description_info_v1_listener ImageDescriptionListener::s_list
             .max = TransferFunction::defaultMaxLuminanceFor(tfType),
             .reference = TransferFunction::defaultReferenceLuminanceFor(tfType),
         });
-        Q_EMIT listener->done(ColorDescription{
+        Q_EMIT listener->done(std::make_shared<ColorDescription>(ColorDescription{
             listener->m_colorimetry,
             TransferFunction(tfType, luminances.min, luminances.max),
             luminances.reference,
             listener->m_minMasteringLuminance.value_or(luminances.min),
             listener->m_maxFall.value_or(luminances.max),
             listener->m_maxCll.value_or(listener->m_maxMasteringLuminance.value_or(luminances.max)),
-        });
+        }));
         delete listener;
     },
     .icc_file = [](void *data, wp_image_description_info_v1 *wp_image_description_info_v1, int32_t icc, uint32_t icc_size) {
@@ -313,7 +313,7 @@ ColorSurfaceFeedback::~ColorSurfaceFeedback()
     wp_color_management_surface_feedback_v1_destroy(m_feedback);
 }
 
-void ColorSurfaceFeedback::setPreferredColor(const ColorDescription &color)
+void ColorSurfaceFeedback::setPreferredColor(const std::shared_ptr<ColorDescription> &color)
 {
     if (color != m_preferred) {
         m_preferred = color;
@@ -321,7 +321,7 @@ void ColorSurfaceFeedback::setPreferredColor(const ColorDescription &color)
     }
 }
 
-const ColorDescription &ColorSurfaceFeedback::preferredColor() const
+const std::shared_ptr<ColorDescription> &ColorSurfaceFeedback::preferredColor() const
 {
     return m_preferred;
 }

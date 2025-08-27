@@ -101,7 +101,7 @@ private:
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
         QRectF viewport;
-        ColorDescription color = ColorDescription::sRGB;
+        std::shared_ptr<ColorDescription> color = ColorDescription::sRGB;
     };
 
     void moveZoom(int x, int y);

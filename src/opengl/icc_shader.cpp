@@ -40,7 +40,7 @@ IccShader::~IccShader()
 {
 }
 
-bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, RenderingIntent intent)
+bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, RenderingIntent intent)
 {
     if (!profile) {
         m_toXYZD50.setToIdentity();
@@ -51,7 +51,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
         m_A.reset();
         return false;
     }
-    if (m_profile != profile || m_inputColor != inputColor || m_intent != intent) {
+    if (m_profile != profile || *m_inputColor != *inputColor || m_intent != intent) {
         const auto vcgt = profile->vcgt();
         QMatrix4x4 toXYZD50;
         std::unique_ptr<GlLookUpTable> B;
@@ -59,7 +59,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
         std::unique_ptr<GlLookUpTable> M;
         std::unique_ptr<GlLookUpTable3D> C;
         std::unique_ptr<GlLookUpTable> A;
-        const ColorDescription linearizedInput(inputColor.containerColorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
+        const ColorDescription linearizedInput(inputColor->containerColorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
         const ColorDescription linearizedProfile(profile->colorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
         if (const auto tag = profile->BToATag(intent)) {
             if (intent == RenderingIntent::AbsoluteColorimetricNoAdaptation) {
@@ -180,21 +180,21 @@ GLShader *IccShader::shader() const
     return m_shader.get();
 }
 
-void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, RenderingIntent intent)
+void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, RenderingIntent intent)
 {
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
     setProfile(profile, inputColor, intent);
 
     m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50);
-    m_shader->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, inputColor.transferFunction().type);
-    if (inputColor.transferFunction().type == TransferFunction::BT1886) {
-        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor.transferFunction().bt1886B(), inputColor.transferFunction().bt1886A()));
+    m_shader->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, inputColor->transferFunction().type);
+    if (inputColor->transferFunction().type == TransferFunction::BT1886) {
+        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor->transferFunction().bt1886B(), inputColor->transferFunction().bt1886A()));
     } else {
-        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor.transferFunction().minLuminance, inputColor.transferFunction().maxLuminance - inputColor.transferFunction().minLuminance));
+        m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor->transferFunction().minLuminance, inputColor->transferFunction().maxLuminance - inputColor->transferFunction().minLuminance));
     }
-    m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor.referenceLuminance());
-    m_shader->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, inputColor.referenceLuminance());
-    m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, inputColor.transferFunction().maxLuminance);
+    m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor->referenceLuminance());
+    m_shader->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, inputColor->referenceLuminance());
+    m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, inputColor->transferFunction().maxLuminance);
 
     glActiveTexture(GL_TEXTURE1);
     if (m_B) {

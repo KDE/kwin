@@ -71,21 +71,21 @@ uint16_t encodePrimary(float primary)
     return uint16_t(std::clamp<float>(std::round(primary / 0.00002), 0, 0xC350));
 }
 
-void FrogColorManagementSurfaceV1::setPreferredColorDescription(const ColorDescription &colorDescription)
+void FrogColorManagementSurfaceV1::setPreferredColorDescription(const std::shared_ptr<ColorDescription> &colorDescription)
 {
-    const auto color = colorDescription.masteringColorimetry().value_or(colorDescription.containerColorimetry());
+    const auto color = colorDescription->masteringColorimetry().value_or(colorDescription->containerColorimetry());
     const xyY red = color.red().toxyY();
     const xyY green = color.green().toxyY();
     const xyY blue = color.blue().toxyY();
     const xyY white = color.white().toxyY();
-    send_preferred_metadata(kwinToFrogTransferFunction(colorDescription.transferFunction()),
+    send_preferred_metadata(kwinToFrogTransferFunction(colorDescription->transferFunction()),
                             encodePrimary(red.x), encodePrimary(red.y),
                             encodePrimary(green.x), encodePrimary(green.y),
                             encodePrimary(blue.x), encodePrimary(blue.y),
                             encodePrimary(white.x), encodePrimary(white.y),
-                            std::round(colorDescription.maxHdrLuminance().value_or(0)),
-                            std::round(colorDescription.minLuminance() / 0.0001),
-                            std::round(colorDescription.maxAverageLuminance().value_or(0)));
+                            std::round(colorDescription->maxHdrLuminance().value_or(0)),
+                            std::round(colorDescription->minLuminance() / 0.0001),
+                            std::round(colorDescription->maxAverageLuminance().value_or(0)));
 }
 
 void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_transfer_function(Resource *resource, uint32_t transfer_function)
@@ -190,7 +190,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
             // quite badly when the more correct reference of 80 nits is used
             referenceLuminance = 203;
         }
-        priv->pending->colorDescription = ColorDescription{
+        priv->pending->colorDescription = std::make_shared<ColorDescription>(ColorDescription{
             m_containerColorimetry,
             m_transferFunction,
             referenceLuminance,
@@ -199,7 +199,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
             m_maxPeakBrightness,
             m_masteringColorimetry,
             Colorimetry::BT709,
-        };
+        });
         priv->pending->committed |= SurfaceState::Field::ColorDescription;
     }
 }

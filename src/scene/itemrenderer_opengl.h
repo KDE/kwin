@@ -30,7 +30,7 @@ public:
         int vertexCount = 0;
         qreal opacity = 1;
         bool hasAlpha = false;
-        ColorDescription colorDescription;
+        std::shared_ptr<ColorDescription> colorDescription;
         RenderingIntent renderingIntent;
         std::shared_ptr<SyncReleasePoint> bufferReleasePoint;
         QVector4D box;

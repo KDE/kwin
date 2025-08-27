@@ -52,7 +52,7 @@ public:
     explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const std::shared_ptr<ColorDescription> &blendingColor, const std::shared_ptr<ColorDescription> &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits);
     bool endRendering(const QRegion &damagedRegion, OutputFrame *frame);
 
     void destroyResources();
@@ -61,7 +61,7 @@ public:
     void forgetDamage();
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
-    const ColorDescription &colorDescription() const;
+    const std::shared_ptr<ColorDescription> &colorDescription() const;
 
 private:
     enum class MultiGpuImportMode {
@@ -97,8 +97,8 @@ private:
         bool needsShadowBuffer = false;
         std::shared_ptr<EglSwapchain> shadowSwapchain;
         std::shared_ptr<EglSwapchainSlot> currentShadowSlot;
-        ColorDescription layerBlendingColor = ColorDescription::sRGB;
-        ColorDescription blendingColor = ColorDescription::sRGB;
+        std::shared_ptr<ColorDescription> layerBlendingColor = ColorDescription::sRGB;
+        std::shared_ptr<ColorDescription> blendingColor = ColorDescription::sRGB;
         double brightness = 1.0;
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;

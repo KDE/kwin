@@ -50,7 +50,7 @@ public:
     explicit ImageDescriptionListener(wp_image_description_info_v1 *info);
 
 Q_SIGNALS:
-    void done(const ColorDescription &descr);
+    void done(const std::shared_ptr<ColorDescription> &descr);
 
 private:
     static const wp_image_description_info_v1_listener s_listener;
@@ -80,17 +80,17 @@ public:
     explicit ColorSurfaceFeedback(wp_color_management_surface_feedback_v1 *);
     ~ColorSurfaceFeedback();
 
-    const ColorDescription &preferredColor() const;
+    const std::shared_ptr<ColorDescription> &preferredColor() const;
 
 Q_SIGNALS:
     void preferredColorChanged();
 
 private:
     static const wp_color_management_surface_feedback_v1_listener s_listener;
-    void setPreferredColor(const ColorDescription &color);
+    void setPreferredColor(const std::shared_ptr<ColorDescription> &color);
 
     wp_color_management_surface_feedback_v1 *const m_feedback;
-    ColorDescription m_preferred = ColorDescription::sRGB;
+    std::shared_ptr<ColorDescription> m_preferred = ColorDescription::sRGB;
 };
 }
 }

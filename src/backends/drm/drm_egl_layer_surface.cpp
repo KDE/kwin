@@ -73,7 +73,13 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &blendingColor, const ColorDescription &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation,
+                                                                            const QHash<uint32_t, QList<uint64_t>> &formats,
+                                                                            const std::shared_ptr<ColorDescription> &blendingColor,
+                                                                            const std::shared_ptr<ColorDescription> &layerBlendingColor,
+                                                                            const std::shared_ptr<IccProfile> &iccProfile, double scale,
+                                                                            Output::ColorPowerTradeoff tradeoff, bool useShadowBuffer,
+                                                                            uint32_t requiredAlphaBits)
 {
     if (!checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return std::nullopt;
@@ -284,7 +290,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
     return m_surface ? m_surface->currentFramebuffer : nullptr;
 }
 
-const ColorDescription &EglGbmLayerSurface::colorDescription() const
+const std::shared_ptr<ColorDescription> &EglGbmLayerSurface::colorDescription() const
 {
     if (m_surface) {
         return m_surface->blendingColor;

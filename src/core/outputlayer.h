@@ -135,9 +135,9 @@ public:
     void setBufferTransform(const OutputTransform &transform);
 
     const ColorPipeline &colorPipeline() const;
-    const ColorDescription &colorDescription() const;
+    const std::shared_ptr<ColorDescription> &colorDescription() const;
     RenderingIntent renderIntent() const;
-    void setColor(const ColorDescription &color, RenderingIntent intent, const ColorPipeline &pipeline);
+    void setColor(const std::shared_ptr<ColorDescription> &color, RenderingIntent intent, const ColorPipeline &pipeline);
 
     /**
      * Set the required bits for compositing on this plane. Direct scanout is not affected.
@@ -170,7 +170,7 @@ protected:
     OutputTransform m_offloadTransform = OutputTransform::Kind::Normal;
     OutputTransform m_bufferTransform = OutputTransform::Kind::Normal;
     ColorPipeline m_colorPipeline;
-    ColorDescription m_color = ColorDescription::sRGB;
+    std::shared_ptr<ColorDescription> m_color = ColorDescription::sRGB;
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     QPointer<SurfaceItem> m_scanoutCandidate;
     QPointer<Output> m_output;

@@ -257,15 +257,15 @@ public:
 
     bool operator==(const ColorDescription &other) const = default;
 
-    ColorDescription withTransferFunction(const TransferFunction &func) const;
+    std::shared_ptr<ColorDescription> withTransferFunction(const TransferFunction &func) const;
     /**
      * replaces the current whitepoint with the new one
      * this does not do whitepoint adaptation!
      */
-    ColorDescription withWhitepoint(xyY newWhitePoint) const;
-    ColorDescription dimmed(double brightnessFactor) const;
-    ColorDescription withReference(double referenceLuminance) const;
-    ColorDescription withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const;
+    std::shared_ptr<ColorDescription> withWhitepoint(xyY newWhitePoint) const;
+    std::shared_ptr<ColorDescription> dimmed(double brightnessFactor) const;
+    std::shared_ptr<ColorDescription> withReference(double referenceLuminance) const;
+    std::shared_ptr<ColorDescription> withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const;
 
     /**
      * @returns a matrix that transforms from linear RGB in this color description to linear RGB in the other one
@@ -276,7 +276,8 @@ public:
     /**
      * This color description describes display-referred sRGB, with a gamma22 transfer function
      */
-    static const ColorDescription sRGB;
+    static const std::shared_ptr<ColorDescription> sRGB;
+    static const std::shared_ptr<ColorDescription> BT2020PQ;
 
 private:
     Colorimetry m_containerColorimetry;
@@ -290,6 +291,14 @@ private:
     YUVMatrixCoefficients m_yuvCoefficients = YUVMatrixCoefficients::Identity;
     EncodingRange m_range = EncodingRange::Full;
 };
+}
+
+inline bool operator==(const std::shared_ptr<KWin::ColorDescription> &left, const std::shared_ptr<KWin::ColorDescription> &right)
+{
+    if (!left || !right) {
+        return left.get() == right.get();
+    }
+    return left.get() == right.get() || *left == *right;
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);

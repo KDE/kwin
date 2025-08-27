@@ -73,7 +73,7 @@ private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     void tryKmsColorOffloading(State &next);
-    ColorDescription createColorDescription(const State &next) const;
+    std::shared_ptr<ColorDescription> createColorDescription(const State &next) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
     void unsetBrightnessDevice() override;

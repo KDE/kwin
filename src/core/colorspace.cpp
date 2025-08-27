@@ -440,7 +440,8 @@ const Colorimetry Colorimetry::AdobeRGB = Colorimetry{
     xy{0.3127, 0.3290},
 };
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::gamma22));
+const std::shared_ptr<ColorDescription> ColorDescription::sRGB = std::make_shared<ColorDescription>(Colorimetry::BT709, TransferFunction(TransferFunction::gamma22));
+const std::shared_ptr<ColorDescription> ColorDescription::BT2020PQ = std::make_shared<ColorDescription>(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer));
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf,
                                    double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance,
@@ -619,14 +620,14 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst, Re
     return dst.transferFunction().nitsToEncoded(rgb);
 }
 
-ColorDescription ColorDescription::withTransferFunction(const TransferFunction &func) const
+std::shared_ptr<ColorDescription> ColorDescription::withTransferFunction(const TransferFunction &func) const
 {
-    return ColorDescription(m_containerColorimetry, func, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry, m_sdrColorimetry);
+    return std::make_shared<ColorDescription>(m_containerColorimetry, func, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry, m_sdrColorimetry);
 }
 
-ColorDescription ColorDescription::withWhitepoint(xyY newWhitePoint) const
+std::shared_ptr<ColorDescription> ColorDescription::withWhitepoint(xyY newWhitePoint) const
 {
-    return ColorDescription{
+    return std::make_shared<ColorDescription>(ColorDescription{
         m_containerColorimetry.withWhitepoint(newWhitePoint),
         m_transferFunction,
         m_referenceLuminance,
@@ -635,12 +636,12 @@ ColorDescription ColorDescription::withWhitepoint(xyY newWhitePoint) const
         m_maxHdrLuminance,
         m_masteringColorimetry ? std::optional(m_masteringColorimetry->withWhitepoint(newWhitePoint)) : std::nullopt,
         m_sdrColorimetry,
-    };
+    });
 }
 
-ColorDescription ColorDescription::dimmed(double brightnessFactor) const
+std::shared_ptr<ColorDescription> ColorDescription::dimmed(double brightnessFactor) const
 {
-    return ColorDescription{
+    return std::make_shared<ColorDescription>(ColorDescription{
         m_containerColorimetry,
         m_transferFunction,
         m_referenceLuminance * brightnessFactor,
@@ -653,12 +654,12 @@ ColorDescription ColorDescription::dimmed(double brightnessFactor) const
     }),
         m_masteringColorimetry,
         m_sdrColorimetry,
-    };
+    });
 }
 
-ColorDescription ColorDescription::withReference(double referenceLuminance) const
+std::shared_ptr<ColorDescription> ColorDescription::withReference(double referenceLuminance) const
 {
-    return ColorDescription{
+    return std::make_shared<ColorDescription>(ColorDescription{
         m_containerColorimetry,
         m_transferFunction,
         referenceLuminance,
@@ -667,12 +668,12 @@ ColorDescription ColorDescription::withReference(double referenceLuminance) cons
         m_maxHdrLuminance,
         m_masteringColorimetry,
         m_sdrColorimetry,
-    };
+    });
 }
 
-ColorDescription ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const
+std::shared_ptr<ColorDescription> ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const
 {
-    return ColorDescription{
+    return std::make_shared<ColorDescription>(ColorDescription{
         m_containerColorimetry,
         m_transferFunction,
         m_referenceLuminance,
@@ -683,7 +684,7 @@ ColorDescription ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coe
         m_sdrColorimetry,
         coefficient,
         range,
-    };
+    });
 }
 
 double TransferFunction::defaultMinLuminanceFor(Type type)

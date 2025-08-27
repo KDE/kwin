@@ -1351,8 +1351,8 @@ public:
     OutputTransform preferredBufferTransform() const;
     void setPreferredBufferTransform(OutputTransform transform);
 
-    const ColorDescription &preferredColorDescription() const;
-    void setPreferredColorDescription(const ColorDescription &description);
+    const std::shared_ptr<ColorDescription> &preferredColorDescription() const;
+    void setPreferredColorDescription(const std::shared_ptr<ColorDescription> &description);
 
     QString tag() const;
     QString description() const;
@@ -1774,7 +1774,7 @@ protected:
     qreal m_nextTargetScale = 1;
     qreal m_targetScale = 1;
     OutputTransform m_preferredBufferTransform = OutputTransform::Normal;
-    ColorDescription m_preferredColorDescription = ColorDescription::sRGB;
+    std::shared_ptr<ColorDescription> m_preferredColorDescription = ColorDescription::sRGB;
 
     int m_refCount = 1;
     QUuid m_internalId;
