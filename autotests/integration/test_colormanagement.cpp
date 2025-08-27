@@ -191,6 +191,11 @@ void ColorManagementTest::testSetImageDescription_data()
     //     << RenderingIntent::AbsoluteColorimetricNoAdaptation
     //     << false << true
     //     << std::optional<ColorDescription>();
+    QTest::addRow("rec.709 + BT1886")
+        << ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::BT1886), 100, 0.1, 100, 100)
+        << RenderingIntent::Perceptual
+        << false << true
+        << std::optional<ColorDescription>();
 }
 
 static ImageDescription createImageDescription(ColorManagementSurface *surface, const ColorDescription &color)
@@ -217,6 +222,9 @@ static ImageDescription createImageDescription(ColorManagementSurface *surface, 
         break;
     case TransferFunction::PerceptualQuantizer:
         creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ);
+        break;
+    case TransferFunction::BT1886:
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886);
         break;
     }
     creator.set_luminances(std::round(color.transferFunction().minLuminance * 10'000), std::round(color.transferFunction().maxLuminance), std::round(color.referenceLuminance()));
