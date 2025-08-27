@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-07 18:31+0000\n"
+"POT-Creation-Date: 2025-08-27 00:44+0000\n"
 "PO-Revision-Date: 2025-08-08 01:58+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -39,29 +39,29 @@ msgstr ""
 "kenduest@i18n.linux.org.tw,iitze@hotmail.com, s8321414@gmail.com, "
 "pan93412@gmail.com, mail@kisaragi-hiu.com"
 
-#: backends/wayland/wayland_output.cpp:456
+#: backends/wayland/wayland_output.cpp:461
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "按下右側 Ctrl 來取消抓取游標"
 
-#: backends/wayland/wayland_output.cpp:458
+#: backends/wayland/wayland_output.cpp:463
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "按下右側 Ctrl 鍵來抓取游標"
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:467
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland 合成器 %1"
 
-#: backends/wayland/wayland_output.cpp:465
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "- Output disabled"
 msgstr "- 輸出已停用"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- 輸出已暗化"
@@ -81,7 +81,7 @@ msgstr "按下右側 Ctrl 鍵來抓取輸入"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 合成器"
 
-#: compositor.cpp:456
+#: compositor.cpp:524
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "桌面效果會重新啟動，因為圖形已重置"
@@ -4106,7 +4106,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1583
+#: workspace.cpp:1584
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-07 18:31+0000\n"
+"POT-Creation-Date: 2025-08-27 00:44+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -38,29 +38,29 @@ msgstr ""
 "knut.yrvin@gmail.com,gluras@c2i.net,khollund@responze.net,"
 "zerodogg@skolelinux.no,mh306602@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:456
+#: backends/wayland/wayland_output.cpp:461
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Trykk høyre «Ctrl» for å slippe pekeren"
 
-#: backends/wayland/wayland_output.cpp:458
+#: backends/wayland/wayland_output.cpp:463
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Trykk høyre «Ctrl» for å fange pekeren"
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:467
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland-sammensetter %1"
 
-#: backends/wayland/wayland_output.cpp:465
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "- Output disabled"
 msgstr "– Utdata slått av"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "- Output dimmed"
 msgstr "– Utdata dempet"
@@ -80,7 +80,7 @@ msgstr "Trykk høyre «Ctrl» for å fange inndata"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland-sammensetter"
 
-#: compositor.cpp:456
+#: compositor.cpp:524
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4152,7 +4152,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Svarer ikke)"
 
-#: workspace.cpp:1583
+#: workspace.cpp:1584
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

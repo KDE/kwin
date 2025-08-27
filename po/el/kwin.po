@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-07 18:31+0000\n"
+"POT-Creation-Date: 2025-08-27 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -37,29 +37,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "sng@hellug.gr, manolis@koppermind.homelinux.org"
 
-#: backends/wayland/wayland_output.cpp:456
+#: backends/wayland/wayland_output.cpp:461
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Πιέστε το δεξί control για να απελευθέρωση δείκτη"
 
-#: backends/wayland/wayland_output.cpp:458
+#: backends/wayland/wayland_output.cpp:463
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Πατήστε το δεξί πλήκτρο control για να πιάσετε το δείκτη"
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:467
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Συνθέτης Wayland του KDE %1"
 
-#: backends/wayland/wayland_output.cpp:465
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "- Output disabled"
 msgstr "- έξοδος ανενεργή"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- έξοδος χαμηλωμένη"
@@ -79,7 +79,7 @@ msgstr "Πατήστε το δεξί πλήκτρο control για να αρπά
 msgid "KDE Wayland Compositor"
 msgstr "Συνθέτης Wayland του KDE"
 
-#: compositor.cpp:456
+#: compositor.cpp:524
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4236,7 +4236,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Δεν ανταποκρίνεται)"
 
-#: workspace.cpp:1583
+#: workspace.cpp:1584
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

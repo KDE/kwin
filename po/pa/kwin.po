@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-07 18:31+0000\n"
+"POT-Creation-Date: 2025-08-27 00:44+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -30,29 +30,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "alam.yellow@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:456
+#: backends/wayland/wayland_output.cpp:461
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:458
+#: backends/wayland/wayland_output.cpp:463
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:462
+#: backends/wayland/wayland_output.cpp:467
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:465
+#: backends/wayland/wayland_output.cpp:470
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -72,7 +72,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:456
+#: compositor.cpp:524
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "ਗਰਾਫਿਕਸ ਬਦਲਣ ਦੇ ਕਰਕੇ ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਮੁੜ-ਚਾਲੂ ਕੀਤੇ ਗਏ ਸਨ"
@@ -4273,7 +4273,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(ਜਵਾਬ ਨਹੀਂ ਦੇ ਰਹੇ)"
 
-#: workspace.cpp:1583
+#: workspace.cpp:1584
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
