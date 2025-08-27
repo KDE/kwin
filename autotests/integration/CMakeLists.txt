@@ -49,6 +49,7 @@ target_link_libraries(KWinIntegrationTestFramework
         Wayland::Client
         Libdrm::Libdrm
         kwin
+        XKB::XKB
 
     PRIVATE
         # Static plugins

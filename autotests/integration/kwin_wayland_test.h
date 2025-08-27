@@ -13,12 +13,17 @@
 #include "main.h"
 #include "window.h"
 
+// KWayland
+#include <KWayland/Client/keyboard.h>
+#include <KWayland/Client/surface.h>
+
 // Qt
 #include <QSignalSpy>
 #include <QTest>
 
-#include <KWayland/Client/surface.h>
 #include <optional>
+
+#include <xkbcommon/xkbcommon.h>
 
 #include "qwayland-color-management-v1.h"
 #include "qwayland-cursor-shape-v1.h"
@@ -1223,6 +1228,29 @@ public:
         stream->init(stream_window(uuid, mode));
         return stream;
     }
+};
+
+using XkbContextPtr = std::unique_ptr<xkb_context, decltype(&xkb_context_unref)>;
+using XkbKeymapPtr = std::unique_ptr<xkb_keymap, decltype(&xkb_keymap_unref)>;
+using XkbStatePtr = std::unique_ptr<xkb_state, decltype(&xkb_state_unref)>;
+
+class SimpleKeyboard : public QObject
+{
+    Q_OBJECT
+public:
+    explicit SimpleKeyboard(QObject *parent = nullptr);
+    KWayland::Client::Keyboard *keyboard();
+    QString receviedText();
+Q_SIGNALS:
+    void receviedTextChanged();
+    void keySymRecevied(xkb_keysym_t keysym);
+
+private:
+    KWayland::Client::Keyboard *m_keyboard;
+    QString m_receviedText;
+    XkbContextPtr m_ctx = XkbContextPtr(xkb_context_new(XKB_CONTEXT_NO_FLAGS), &xkb_context_unref);
+    XkbKeymapPtr m_keymap{nullptr, &xkb_keymap_unref};
+    XkbStatePtr m_state{nullptr, &xkb_state_unref};
 };
 
 struct OutputInfo

@@ -54,39 +54,30 @@
 namespace KWin
 {
 
-static std::vector<quint32> textToKey(const QString &text)
+static QList<xkb_keysym_t> textToKey(const QString &inputString)
 {
-    if (text.isEmpty()) {
-        return {};
-    }
+    QList<xkb_keysym_t> result;
 
-    auto sequence = QKeySequence::fromString(text);
-    if (sequence.isEmpty()) {
-        return {};
-    }
+    for (int i = 0; i < inputString.size(); ++i) {
+        char32_t cp = inputString[i].unicode();
 
-    const QList<xkb_keysym_t> syms = KWin::Xkb::keysymsFromQtKey(sequence[0]);
-    if (syms.empty()) {
-        return {};
-    }
+        // Handle surrogate pair (two QChars → one codepoint)
+        if (inputString[i].isHighSurrogate() && i + 1 < inputString.size()
+            && inputString[i+1].isLowSurrogate())
+        {
+            cp = QChar::surrogateToUcs4(inputString[i].unicode(),
+                                        inputString[i+1].unicode());
+            i++; // skip the low surrogate
+        }
 
-    std::optional<xkb_keycode_t> keyCode;
-    for (xkb_keysym_t sym : syms) {
-        auto code = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
-        if (code) {
-            keyCode = code->first;
-            break;
+        xkb_keysym_t ks = xkb_utf32_to_keysym(cp);
+        if (ks != XKB_KEY_NoSymbol) {
+            result.append(ks);
+        } else {
+            qCWarning(KWIN_VIRTUALKEYBOARD) << "No keysym for U+" << &std::hex << (int)cp << "\n";
         }
     }
-    if (!keyCode) {
-        return {};
-    }
-
-    if (text.isUpper()) {
-        return {KEY_LEFTSHIFT, quint32(keyCode.value())};
-    }
-
-    return {quint32(keyCode.value())};
+    return result;
 }
 
 InputMethod::InputMethod()
@@ -670,27 +661,32 @@ void InputMethod::commitString(qint32 serial, const QString &text)
         // The application has no way of communicating with the input method.
         // So instead, try to convert what we get from the input method into
         // keycodes and send those as fake input to the client.
-        auto keys = textToKey(text);
-        if (keys.empty()) {
-            return;
-        }
+
+        const QList<xkb_keysym_t> keySyms = textToKey(text);
 
         // First, send all the extracted keys as pressed keys to the client.
-        for (const auto &key : keys) {
-            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed);
+        for (const xkb_keysym_t &keySym : keySyms) {
+            std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+            if (!keyCode) {
+                qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
+                static const uint unmappedKeyCode = 247;
+                auto temporaryKeymap = input()->keyboard()->xkb()->createKeymapForKeysym(unmappedKeyCode, keySym);
+                if (temporaryKeymap.isEmpty()) {
+                    continue;
+                }
+                waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
+                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed);
+                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released);
+                waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
+            } else {
+                waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers , 0, 0, input()->keyboard()->xkb()->currentLayout());
+                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed);
+                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released);
+            }
         }
 
-        // Then, send key release for those keys in reverse.
-        for (auto itr = keys.rbegin(); itr != keys.rend(); ++itr) {
-            // Since we are faking key events, we do not have distinct press/release
-            // events. So instead, just queue the button release so it gets sent
-            // a few moments after the press.
-            auto key = *itr;
-            QMetaObject::invokeMethod(
-                this, [key]() {
-                waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released);
-            }, Qt::QueuedConnection);
-        }
+        // reset any modifiers to the actual state
+        input()->keyboard()->xkb()->forwardModifiers();
     }
 }
 

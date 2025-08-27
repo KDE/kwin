@@ -20,6 +20,8 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWayland/Client/seat.h>
+
 #if KWIN_BUILD_X11
 #include "utils/xcbutils.h"
 #include "xwayland/xwayland.h"
@@ -37,6 +39,7 @@
 // system
 #include <iostream>
 #include <ranges>
+#include <sys/mman.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -318,6 +321,80 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
         };
     }
     workspace()->applyOutputConfiguration(config, outputs);
+}
+
+Test::SimpleKeyboard::SimpleKeyboard(QObject *parent)
+    : QObject(parent)
+    , m_keyboard(Test::waylandSeat()->createKeyboard(parent))
+{
+    static const int EVDEV_OFFSET = 8;
+
+    connect(m_keyboard, &KWayland::Client::Keyboard::keymapChanged, this, [this](int fd, uint32_t size) {
+        char *map_shm = static_cast<char *>(
+            mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
+        close(fd);
+
+        Q_ASSERT(map_shm != MAP_FAILED);
+
+        m_keymap = XkbKeymapPtr(
+            xkb_keymap_new_from_string(
+                m_ctx.get(),
+                map_shm,
+                XKB_KEYMAP_FORMAT_TEXT_V1,
+                XKB_KEYMAP_COMPILE_NO_FLAGS),
+            &xkb_keymap_unref);
+
+        munmap(map_shm, size);
+        Q_ASSERT(m_keymap);
+
+        m_state = XkbStatePtr(xkb_state_new(m_keymap.get()), &xkb_state_unref);
+        Q_ASSERT(m_state);
+    });
+
+    connect(m_keyboard, &KWayland::Client::Keyboard::modifiersChanged, this, [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
+        if (!m_state) {
+            return;
+        }
+        xkb_state_update_mask(
+            m_state.get(),
+            depressed,
+            latched,
+            locked,
+            0, 0,
+            group);
+    });
+
+    connect(m_keyboard, &KWayland::Client::Keyboard::keyChanged, this, [this](quint32 key, KWayland::Client::Keyboard::KeyState state, quint32 time) {
+        if (!m_state) {
+            return;
+        }
+
+        xkb_keycode_t kc = key + EVDEV_OFFSET;
+
+        if (state == KWayland::Client::Keyboard::KeyState::Pressed) {
+            const xkb_keysym_t *syms;
+            int nsyms = xkb_state_key_get_syms(m_state.get(), kc, &syms);
+            for (int i = 0; i < nsyms; i++) {
+                char buf[64];
+                int len = xkb_keysym_to_utf8(syms[i], buf, sizeof(buf));
+                if (len > 1) {
+                    m_receviedText.append(QString::fromUtf8(buf, len - 1)); // xkb_keysym_to_utf8 contains terminating byte
+                    Q_EMIT receviedTextChanged();
+                }
+                Q_EMIT keySymRecevied(syms[i]);
+            }
+        }
+    });
+}
+
+KWayland::Client::Keyboard *Test::SimpleKeyboard::keyboard()
+{
+    return m_keyboard;
+}
+
+QString Test::SimpleKeyboard::receviedText()
+{
+    return m_receviedText;
 }
 }
 

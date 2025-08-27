@@ -39,6 +39,7 @@
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
 #include <linux/input-event-codes.h>
+#include <sys/mman.h>
 
 using namespace KWin;
 using KWin::VirtualKeyboardDBus;
@@ -727,59 +728,22 @@ void InputMethodTest::testFakeEventFallback()
     kwinApp()->inputMethod()->setActive(true);
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
 
-    // Without a way to communicate to the client, we send fake key events. This
-    // means the client needs to be able to receive them, so create a keyboard for
-    // the client and listen whether it gets the right events.
-    auto keyboard = Test::waylandSeat()->createKeyboard(window);
-    QSignalSpy keySpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
-
+    auto keyboard = new Test::SimpleKeyboard(window);
     auto context = Test::inputMethod()->context();
     QVERIFY(context);
 
-    // First, send a simple one-character string and check to see if that
-    // generates a key press followed by a key release on the client side.
-    zwp_input_method_context_v1_commit_string(context, 0, "a");
+    zwp_input_method_context_v1_commit_string(context, 0, "aB äÄ 안 😊");
 
-    keySpy.wait();
-    QVERIFY(keySpy.count() == 2);
-
-    auto compare = [](const QList<QVariant> &input, quint32 key, KWayland::Client::Keyboard::KeyState state) {
-        auto inputKey = input.at(0).toInt();
-        auto inputState = input.at(1).value<KWayland::Client::Keyboard::KeyState>();
-        QCOMPARE(inputKey, key);
-        QCOMPARE(inputState, state);
-    };
-
-    compare(keySpy.at(0), KEY_A, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_A, KWayland::Client::Keyboard::KeyState::Released);
-
-    keySpy.clear();
-
-    // Capital letters are recognised and sent as a combination of Shift + the
-    // letter.
-
-    zwp_input_method_context_v1_commit_string(context, 0, "A");
-
-    keySpy.wait();
-    QVERIFY(keySpy.count() == 4);
-
-    compare(keySpy.at(0), KEY_LEFTSHIFT, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_A, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(2), KEY_A, KWayland::Client::Keyboard::KeyState::Released);
-    compare(keySpy.at(3), KEY_LEFTSHIFT, KWayland::Client::Keyboard::KeyState::Released);
-
-    keySpy.clear();
-
-    // Special keys are not sent through commit_string but instead use keysym.
-    auto enter = input()->keyboard()->xkb()->toKeysym(KEY_ENTER);
-    zwp_input_method_context_v1_keysym(context, 0, 0, enter, uint32_t(WL_KEYBOARD_KEY_STATE_PRESSED), 0);
-    zwp_input_method_context_v1_keysym(context, 0, 1, enter, uint32_t(WL_KEYBOARD_KEY_STATE_RELEASED), 0);
-
-    keySpy.wait();
-    QVERIFY(keySpy.count() == 2);
-
-    compare(keySpy.at(0), KEY_ENTER, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_ENTER, KWayland::Client::Keyboard::KeyState::Released);
+    QSignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
+    bool matched = false;
+    for (int i = 0; i < 100; ++i) {
+        if (keyboard->receviedText() == "aB äÄ 안 😊") {
+            matched = true;
+            break;
+        }
+        receivedTextChangedSpy.wait();
+    }
+    QVERIFY(matched);
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));

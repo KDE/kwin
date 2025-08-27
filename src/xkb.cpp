@@ -30,6 +30,9 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include <format>
+#include <string>
+
 // TODO: drop these ifdefs when xkbcommon >= 1.8.0 is required
 #ifndef XKB_LED_NAME_COMPOSE
 #define XKB_LED_NAME_COMPOSE "Compose"
@@ -1223,6 +1226,8 @@ void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
     }
 }
 
+
+
 quint32 Xkb::numberOfLayouts() const
 {
     if (!m_keymap) {
@@ -1236,7 +1241,7 @@ void Xkb::setSeat(SeatInterface *seat)
     m_seat = QPointer<SeatInterface>(seat);
 }
 
-std::optional<std::pair<int, int>> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
+std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
 {
     if (!m_keymap || !m_state) {
         return {};
@@ -1250,7 +1255,16 @@ std::optional<std::pair<int, int>> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
             uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap, keycode, layout, currentLevel, &syms);
             for (uint sym = 0; sym < num_syms; sym++) {
                 if (syms[sym] == keysym) {
-                    return {{keycode - EVDEV_OFFSET, currentLevel}};
+
+                    xkb_mod_mask_t masks[1]; // this function returns every way to shift to this level, we just need 1
+                    int nMasks = xkb_keymap_key_get_mods_for_level(
+                        m_keymap, keycode, layout, currentLevel,
+                        masks, 1);
+                    xkb_mod_mask_t modifiers = 0;
+                    if (nMasks > 0) {
+                        modifiers = masks[0];
+                    }
+                    return Xkb::KeyCode({keycode - EVDEV_OFFSET, currentLevel, modifiers});
                 }
             }
         }
@@ -1306,6 +1320,50 @@ QList<xkb_keysym_t> Xkb::keysymsFromQtKey(QKeyCombination keyQt)
         syms.append(utf32 | 0x01000000);
     }
     return syms;
+}
+
+QByteArray Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
+                                      xkb_keysym_t customSym)
+{
+    char symName[64];
+    if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {
+        qWarning() << "Could not find name for keysym" << customSym;
+        return {};
+    }
+
+    const int keycode = newKeycode + EVDEV_OFFSET;
+
+    const QString keyMapString = QString::asprintf(
+        R"eof(xkb_keymap {
+  xkb_keycodes "custom" {
+    <CSTM> = %d;
+  };
+  xkb_types "(custom)" { include "complete" };
+  xkb_compatibility "custom" { include "complete" };
+  xkb_symbols "custom" {
+    include "pc+us"
+    key <CSTM> { [ %s ] };
+  };
+};
+)eof",
+        keycode, symName);
+
+    struct xkb_keymap *newMap =
+        xkb_keymap_new_from_string(m_context,
+                                   keyMapString.toLatin1().constData(),
+                                   XKB_KEYMAP_FORMAT_TEXT_V1,
+                                   XKB_KEYMAP_COMPILE_NO_FLAGS);
+
+    if (!newMap) {
+        qWarning() << "Could not create new keymap for keysym" << customSym;
+        return {};
+    }
+
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(newMap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    if (!keymapString) {
+        return {};
+    }
+    return keymapString.get();
 }
 }
 
