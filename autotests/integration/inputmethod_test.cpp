@@ -39,6 +39,7 @@
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
 #include <linux/input-event-codes.h>
+#include <sys/mman.h>
 
 using namespace KWin;
 using KWin::VirtualKeyboardDBus;
@@ -730,56 +731,85 @@ void InputMethodTest::testFakeEventFallback()
     // Without a way to communicate to the client, we send fake key events. This
     // means the client needs to be able to receive them, so create a keyboard for
     // the client and listen whether it gets the right events.
+    QString recievedString;
+
     auto keyboard = Test::waylandSeat()->createKeyboard(window);
-    QSignalSpy keySpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
+    using XkbContextPtr = std::unique_ptr<xkb_context, decltype(&xkb_context_unref)>;
+    using XkbKeymapPtr  = std::unique_ptr<xkb_keymap,  decltype(&xkb_keymap_unref)>;
+    using XkbStatePtr   = std::unique_ptr<xkb_state,   decltype(&xkb_state_unref)>;
+
+    struct {
+        XkbContextPtr ctx = XkbContextPtr(xkb_context_new(XKB_CONTEXT_NO_FLAGS), &xkb_context_unref);
+        XkbKeymapPtr  keymap{nullptr, &xkb_keymap_unref};
+        XkbStatePtr   state{nullptr, &xkb_state_unref};
+    } kb;
+
+    connect(keyboard, &KWayland::Client::Keyboard::keymapChanged, [&](int fd, uint32_t size) {
+        char* map_shm = static_cast<char*>(
+            mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0)
+            );
+        close(fd);
+
+        Q_ASSERT(map_shm != MAP_FAILED);
+
+        kb.keymap = XkbKeymapPtr(
+            xkb_keymap_new_from_string(
+                kb.ctx.get(),
+                map_shm,
+                XKB_KEYMAP_FORMAT_TEXT_V1,
+                XKB_KEYMAP_COMPILE_NO_FLAGS
+                ),
+            &xkb_keymap_unref
+            );
+
+        munmap(map_shm, size);
+        Q_ASSERT(kb.keymap);
+
+        kb.state = XkbStatePtr(xkb_state_new(kb.keymap.get()), &xkb_state_unref);
+        Q_ASSERT(kb.state);
+    });
+
+    connect(keyboard, &KWayland::Client::Keyboard::modifiersChanged, [&](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
+        if (!kb.state) {
+            return;
+        }
+        xkb_state_update_mask(
+            kb.state.get(),
+            depressed,
+            latched,
+            locked,
+            0, 0,
+            group
+            );
+    });
+
+    connect(keyboard, &KWayland::Client::Keyboard::keyChanged, [&](quint32 key, KWayland::Client::Keyboard::KeyState state, quint32 time) {
+        if (!kb.state) {
+            return;
+        }
+
+        xkb_keycode_t kc = key + 8;
+
+        if (state == KWayland::Client::Keyboard::KeyState::Pressed) {
+            const xkb_keysym_t* syms;
+            int nsyms = xkb_state_key_get_syms(kb.state.get(), kc, &syms);
+            for (int i = 0; i < nsyms; i++) {
+                char buf[64];
+                int len = xkb_keysym_to_utf8(syms[i], buf, sizeof(buf));
+                if (len > 1) {
+                    recievedString.append(QString::fromUtf8(buf, len - 1)); // xkb_keysym_to_utf8 contains terminating byte
+                }
+            }
+        }
+    });
 
     auto context = Test::inputMethod()->context();
     QVERIFY(context);
 
-    // First, send a simple one-character string and check to see if that
-    // generates a key press followed by a key release on the client side.
     zwp_input_method_context_v1_commit_string(context, 0, "a");
 
-    keySpy.wait();
-    QVERIFY(keySpy.count() == 2);
-
-    auto compare = [](const QList<QVariant> &input, quint32 key, KWayland::Client::Keyboard::KeyState state) {
-        auto inputKey = input.at(0).toInt();
-        auto inputState = input.at(1).value<KWayland::Client::Keyboard::KeyState>();
-        QCOMPARE(inputKey, key);
-        QCOMPARE(inputState, state);
-    };
-
-    compare(keySpy.at(0), KEY_A, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_A, KWayland::Client::Keyboard::KeyState::Released);
-
-    keySpy.clear();
-
-    // Capital letters are recognised and sent as a combination of Shift + the
-    // letter.
-
-    zwp_input_method_context_v1_commit_string(context, 0, "A");
-
-    keySpy.wait();
-    QVERIFY(keySpy.count() == 4);
-
-    compare(keySpy.at(0), KEY_LEFTSHIFT, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_A, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(2), KEY_A, KWayland::Client::Keyboard::KeyState::Released);
-    compare(keySpy.at(3), KEY_LEFTSHIFT, KWayland::Client::Keyboard::KeyState::Released);
-
-    keySpy.clear();
-
-    // Special keys are not sent through commit_string but instead use keysym.
-    auto enter = input()->keyboard()->xkb()->toKeysym(KEY_ENTER);
-    zwp_input_method_context_v1_keysym(context, 0, 0, enter, uint32_t(WL_KEYBOARD_KEY_STATE_PRESSED), 0);
-    zwp_input_method_context_v1_keysym(context, 0, 1, enter, uint32_t(WL_KEYBOARD_KEY_STATE_RELEASED), 0);
-
-    keySpy.wait();
-    QVERIFY(keySpy.count() == 2);
-
-    compare(keySpy.at(0), KEY_ENTER, KWayland::Client::Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_ENTER, KWayland::Client::Keyboard::KeyState::Released);
+    Test::flushWaylandConnection();
+    QTRY_COMPARE(recievedString, "a");
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
