@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testFifoBarriersOnly();
     void testFifoWaitOnly();
     void testFifoOnSubsurfaces();
+    void testBarrierNotClearedByEmptyCommit();
 };
 
 class FifoV1Surface : public QObject, public QtWayland::wp_fifo_v1
@@ -377,6 +378,42 @@ void FifoTest::testFifoOnSubsurfaces()
             QVERIFY(spy.count() || spy.wait(100));
         }
     }
+}
+
+void FifoTest::testBarrierNotClearedByEmptyCommit()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+
+    std::array<std::unique_ptr<Test::WpPresentationFeedback>, 2> frames;
+
+    fifo->set_barrier();
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // this additional commit must not clear the barrier
+    auto firstFrame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    auto secondFrame = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
+    fifo->wait_barrier();
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy firstSpy(firstFrame.get(), &Test::WpPresentationFeedback::presented);
+    QVERIFY(firstSpy.wait(100));
+
+    QSignalSpy secondSpy(secondFrame.get(), &Test::WpPresentationFeedback::presented);
+    QVERIFY(secondSpy.wait(100));
+
+    // the second frame should be presented in the refresh cycle after the first one
+    const auto thisTimestamp = secondSpy.last().at(0).value<std::chrono::nanoseconds>();
+    const auto lastTimestamp = firstSpy.last().at(0).value<std::chrono::nanoseconds>();
+    const auto refreshDuration = secondSpy.last().at(1).value<std::chrono::nanoseconds>();
+    const auto diff = thisTimestamp - lastTimestamp;
+    QCOMPARE_GT(diff, refreshDuration / 2);
 }
 }
 
