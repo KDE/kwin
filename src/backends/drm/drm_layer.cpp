@@ -39,7 +39,7 @@ static OutputLayerType planeToLayerType(DrmPlane *plane, DrmPlane::TypeIndex typ
     case DrmPlane::TypeIndex::Primary:
         return OutputLayerType::Primary;
     case DrmPlane::TypeIndex::Cursor:
-        if (plane && plane->gpu()->isVirtualMachine()) {
+        if (!plane || plane->gpu()->isVirtualMachine()) {
             return OutputLayerType::CursorOnly;
         } else {
             return OutputLayerType::EfficientOverlay;
