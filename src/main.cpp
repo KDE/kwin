@@ -67,8 +67,6 @@
 #include <unistd.h>
 
 #if KWIN_BUILD_X11
-// xcb
-#include <xcb/damage.h>
 #ifndef XCB_GE_GENERIC
 #define XCB_GE_GENERIC 35
 #endif

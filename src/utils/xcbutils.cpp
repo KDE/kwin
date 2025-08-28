@@ -17,7 +17,6 @@
 // xcb
 #include <cmath>
 #include <xcb/composite.h>
-#include <xcb/damage.h>
 #include <xcb/glx.h>
 #include <xcb/randr.h>
 #include <xcb/render.h>
@@ -127,24 +126,6 @@ QList<QByteArray> randrErrorCodes()
                               QByteArrayLiteral("BadCrtc"),
                               QByteArrayLiteral("BadMode"),
                               QByteArrayLiteral("BadProvider")});
-}
-
-QList<QByteArray> damageOpCodes()
-{
-    // see https://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
-    // extracted from <xcb/damage.h>
-    return QList<QByteArray>({QByteArrayLiteral("QueryVersion"),
-                              QByteArrayLiteral("Create"),
-                              QByteArrayLiteral("Destroy"),
-                              QByteArrayLiteral("Subtract"),
-                              QByteArrayLiteral("Add")});
-}
-
-QList<QByteArray> damageErrorCodes()
-{
-    // see https://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
-    // extracted from <xcb/damage.h>
-    return QList<QByteArray>({QByteArrayLiteral("BadDamage")});
 }
 
 QList<QByteArray> compositeOpCodes()
