@@ -806,10 +806,11 @@ void InputMethodTest::testFakeEventFallback()
     auto context = Test::inputMethod()->context();
     QVERIFY(context);
 
-    zwp_input_method_context_v1_commit_string(context, 0, "a");
+    zwp_input_method_context_v1_commit_string(context, 0, "aB");
+    // todo B, composed a with umlauts, something korean, smiley face
 
     Test::flushWaylandConnection();
-    QTRY_COMPARE(recievedString, "a");
+    QTRY_COMPARE(recievedString, "aB");
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));

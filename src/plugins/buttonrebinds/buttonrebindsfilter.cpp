@@ -437,25 +437,22 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "to keysym";
         return false;
     }
+    std::optional<KWin::Xkb::KeyCode> code;
     // KKeyServer returns upper case syms, lower it to not confuse modifiers handling
-    std::optional<int> keyCode;
-    std::optional<int> level;
     for (int sym : syms) {
-        auto code = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+        code = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
         if (code) {
-            keyCode = code->first;
-            level = code->second;
             break;
         }
     }
-    if (!keyCode) {
+    if (!code) {
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "syms: " << syms << "to keycode";
         return false;
     }
 
     RebindScope scope;
 
-    if (key.keyboardModifiers() & Qt::ShiftModifier || level == 1) {
+    if (key.keyboardModifiers() & Qt::ShiftModifier || code->level == 1) {
         sendKey(KEY_LEFTSHIFT);
     }
     if (key.keyboardModifiers() & Qt::ControlModifier) {
@@ -468,7 +465,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
         sendKey(KEY_LEFTMETA);
     }
 
-    sendKey(keyCode.value());
+    sendKey(code->keyCode);
     return true;
 }
 
