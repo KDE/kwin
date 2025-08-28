@@ -199,15 +199,14 @@ void Xvisit::receiveOffer()
     retrieveSupportedActions();
     connect(m_dataSource, &AbstractDataSource::supportedDragAndDropActionsChanged,
             this, &Xvisit::retrieveSupportedActions);
-    enter();
 }
 
-void Xvisit::enter()
+void Xvisit::enter(const QPointF &globalPos)
 {
     m_state.entered = true;
     // send enter event and current position to X client
     sendEnter();
-    sendPosition(waylandServer()->seat()->pointerPos());
+    sendPosition(globalPos);
 
     // proxy future pointer position changes
     m_motionConnection = connect(waylandServer()->seat(),

@@ -61,6 +61,7 @@ public:
     bool handleFinished(xcb_client_message_event_t *event);
 
     void sendPosition(const QPointF &globalPos);
+    void enter(const QPointF &globalPos);
     void leave();
 
     bool isFinished() const
@@ -82,7 +83,6 @@ private:
     void sendLeave();
 
     void receiveOffer();
-    void enter();
 
     void retrieveSupportedActions();
     void determineProposedAction();
