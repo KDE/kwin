@@ -65,6 +65,7 @@ void XwlDropHandler::updateDragTarget(SurfaceInterface *surface, const QPointF &
             return;
         }
 
+        visit->enter(position);
         connect(visit, &Xvisit::finished, this, [this, visit]() {
             m_visits.removeOne(visit);
             if (m_currentVisit == visit) {
