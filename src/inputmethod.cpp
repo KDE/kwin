@@ -636,15 +636,21 @@ void InputMethod::commitString(qint32 serial, const QString &text)
         for (const xkb_keysym_t &keySym : keySyms) {
             std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
             if (!keyCode) {
-                qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode";
-                continue;
+                qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
+                static const uint unmappedKeyCode = 247;
+                auto temporaryKeymap = input()->keyboard()->xkb()->createKeymapForKeysym(unmappedKeyCode, keySym);
+                if (temporaryKeymap.isEmpty()) {
+                    continue;
+                }
+                waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
+                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed);
+                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released);
+                waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
+            } else {
+                waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers , 0, 0, input()->keyboard()->xkb()->currentLayout());
+                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed);
+                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released);
             }
-
-            waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers , 0, 0, input()->keyboard()->xkb()->currentLayout());
-            waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed);
-            waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released);
-
-            input()->keyboard()->xkb()->modifierState();
         }
 
         // reset any modifiers to the actual state

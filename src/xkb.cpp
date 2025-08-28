@@ -30,6 +30,9 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include <format>
+#include <string>
+
 // TODO: drop these ifdefs when xkbcommon >= 1.8.0 is required
 #ifndef XKB_LED_NAME_COMPOSE
 #define XKB_LED_NAME_COMPOSE "Compose"
@@ -1317,6 +1320,50 @@ QList<xkb_keysym_t> Xkb::keysymsFromQtKey(QKeyCombination keyQt)
         syms.append(utf32 | 0x01000000);
     }
     return syms;
+}
+
+QByteArray Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
+                                      xkb_keysym_t customSym)
+{
+    char symName[64];
+    if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {
+        qWarning() << "Could not find name for keysym" << customSym;
+        return {};
+    }
+
+    const int keycode = newKeycode + EVDEV_OFFSET;
+
+    const QString keyMapString = QString::asprintf(
+        R"eof(xkb_keymap {
+  xkb_keycodes "custom" {
+    <CSTM> = %d;
+  };
+  xkb_types "(custom)" { include "complete" };
+  xkb_compatibility "custom" { include "complete" };
+  xkb_symbols "custom" {
+    include "pc+us"
+    key <CSTM> { [ %s ] };
+  };
+};
+)eof",
+        keycode, symName);
+
+    struct xkb_keymap *newMap =
+        xkb_keymap_new_from_string(m_context,
+                                   keyMapString.toLatin1().constData(),
+                                   XKB_KEYMAP_FORMAT_TEXT_V1,
+                                   XKB_KEYMAP_COMPILE_NO_FLAGS);
+
+    if (!newMap) {
+        qWarning() << "Could not create new keymap for keysym" << customSym;
+        return {};
+    }
+
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(newMap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    if (!keymapString) {
+        return {};
+    }
+    return keymapString.get();
 }
 }
 

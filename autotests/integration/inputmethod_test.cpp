@@ -728,89 +728,14 @@ void InputMethodTest::testFakeEventFallback()
     kwinApp()->inputMethod()->setActive(true);
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
 
-    // Without a way to communicate to the client, we send fake key events. This
-    // means the client needs to be able to receive them, so create a keyboard for
-    // the client and listen whether it gets the right events.
-    QString recievedString;
-
-    auto keyboard = Test::waylandSeat()->createKeyboard(window);
-    using XkbContextPtr = std::unique_ptr<xkb_context, decltype(&xkb_context_unref)>;
-    using XkbKeymapPtr  = std::unique_ptr<xkb_keymap,  decltype(&xkb_keymap_unref)>;
-    using XkbStatePtr   = std::unique_ptr<xkb_state,   decltype(&xkb_state_unref)>;
-
-    struct {
-        XkbContextPtr ctx = XkbContextPtr(xkb_context_new(XKB_CONTEXT_NO_FLAGS), &xkb_context_unref);
-        XkbKeymapPtr  keymap{nullptr, &xkb_keymap_unref};
-        XkbStatePtr   state{nullptr, &xkb_state_unref};
-    } kb;
-
-    connect(keyboard, &KWayland::Client::Keyboard::keymapChanged, [&](int fd, uint32_t size) {
-        char* map_shm = static_cast<char*>(
-            mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0)
-            );
-        close(fd);
-
-        Q_ASSERT(map_shm != MAP_FAILED);
-
-        kb.keymap = XkbKeymapPtr(
-            xkb_keymap_new_from_string(
-                kb.ctx.get(),
-                map_shm,
-                XKB_KEYMAP_FORMAT_TEXT_V1,
-                XKB_KEYMAP_COMPILE_NO_FLAGS
-                ),
-            &xkb_keymap_unref
-            );
-
-        munmap(map_shm, size);
-        Q_ASSERT(kb.keymap);
-
-        kb.state = XkbStatePtr(xkb_state_new(kb.keymap.get()), &xkb_state_unref);
-        Q_ASSERT(kb.state);
-    });
-
-    connect(keyboard, &KWayland::Client::Keyboard::modifiersChanged, [&](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
-        if (!kb.state) {
-            return;
-        }
-        xkb_state_update_mask(
-            kb.state.get(),
-            depressed,
-            latched,
-            locked,
-            0, 0,
-            group
-            );
-    });
-
-    connect(keyboard, &KWayland::Client::Keyboard::keyChanged, [&](quint32 key, KWayland::Client::Keyboard::KeyState state, quint32 time) {
-        if (!kb.state) {
-            return;
-        }
-
-        xkb_keycode_t kc = key + 8;
-
-        if (state == KWayland::Client::Keyboard::KeyState::Pressed) {
-            const xkb_keysym_t* syms;
-            int nsyms = xkb_state_key_get_syms(kb.state.get(), kc, &syms);
-            for (int i = 0; i < nsyms; i++) {
-                char buf[64];
-                int len = xkb_keysym_to_utf8(syms[i], buf, sizeof(buf));
-                if (len > 1) {
-                    recievedString.append(QString::fromUtf8(buf, len - 1)); // xkb_keysym_to_utf8 contains terminating byte
-                }
-            }
-        }
-    });
-
+    auto keyboard = new Test::SimpleKeyboard(window);
     auto context = Test::inputMethod()->context();
     QVERIFY(context);
 
-    zwp_input_method_context_v1_commit_string(context, 0, "aB");
-    // todo B, composed a with umlauts, something korean, smiley face
+    zwp_input_method_context_v1_commit_string(context, 0, "aB äÄ 안 😊");
 
     Test::flushWaylandConnection();
-    QTRY_COMPARE(recievedString, "aB");
+    QTRY_COMPARE(keyboard->receviedText(), "aB äÄ 안 😊");
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
