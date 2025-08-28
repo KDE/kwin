@@ -138,6 +138,10 @@ public:
      */
     static QList<xkb_keysym_t> keysymsFromQtKey(QKeyCombination keyQt);
 
+    // Create a new keymap with one custom keysym bound to a given keycode.
+    QByteArray createKeymapForKeysym(xkb_keycode_t newKeycode,
+                                     xkb_keysym_t customSym);
+
 public Q_SLOTS:
     void reconfigure();
 
