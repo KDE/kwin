@@ -2638,7 +2638,7 @@ public:
             }
         } else {
             // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr);
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
             m_dragTarget = nullptr;
         }
         // TODO: should we pass through effects?
@@ -2746,7 +2746,7 @@ public:
             m_dragTarget = dragTarget;
         } else {
             // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr);
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
             m_dragTarget = nullptr;
         }
         return true;

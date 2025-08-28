@@ -490,20 +490,6 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
     }
 }
 
-void SeatInterface::setDragTarget(AbstractDropHandler *target, SurfaceInterface *surface, const QMatrix4x4 &inputTransformation)
-{
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-        setDragTarget(target, surface, pointerPos(), inputTransformation);
-    } else {
-        Q_ASSERT(d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch);
-        QPointF pos;
-        if (const auto touchPoint = touchPointByImplicitGrabSerial(*dragSerial())) {
-            pos = touchPoint->position;
-        }
-        setDragTarget(target, surface, pos, inputTransformation);
-    }
-}
-
 SurfaceInterface *SeatInterface::focusedPointerSurface() const
 {
     return d->globalPointer.focus.surface;

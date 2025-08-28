@@ -141,7 +141,7 @@ DragEventReply XToWlDrag::moveFilter(Window *target)
         if (hasCurrent) {
             // last received enter event is now void,
             // wait for the next one
-            seat->setDragTarget(nullptr, nullptr);
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
         }
         return DragEventReply::Ignore;
     }
@@ -217,7 +217,7 @@ void XToWlDrag::setDragTarget()
     if (!dropTarget || !ac->surface()) {
         return;
     }
-    seat->setDragTarget(dropTarget, ac->surface(), ac->inputTransformation());
+    seat->setDragTarget(dropTarget, ac->surface(), seat->pointerPos(), ac->inputTransformation());
 }
 
 bool XToWlDrag::checkForFinished()
