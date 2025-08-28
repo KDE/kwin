@@ -17,7 +17,6 @@
 // xcb
 #include <cmath>
 #include <xcb/composite.h>
-#include <xcb/glx.h>
 #include <xcb/randr.h>
 #include <xcb/render.h>
 #include <xcb/res.h>
