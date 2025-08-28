@@ -86,11 +86,10 @@ msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Vždy"
+msgstr ""
 
 #: ui/main.qml:186
 #, kde-format
@@ -157,6 +156,3 @@ msgid ""
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-
-#~ msgid "Never"
-#~ msgstr "Nikdy"

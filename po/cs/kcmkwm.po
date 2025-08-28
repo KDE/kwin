@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-08-02 00:44+0000\n"
 "PO-Revision-Date: 2024-06-20 16:26+0200\n"
-"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
+"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -332,10 +332,9 @@ msgstr "Zvýšit krytí"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:321 actions.ui:396 actions.ui:471 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, fuzzy, kde-format
-#| msgid "Window &placement:"
+#, kde-format
 msgid "Window menu"
-msgstr "U&místění okna:"
+msgstr ""
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -1096,31 +1095,31 @@ msgstr ""
 #: pip.ui:31
 #, kde-format
 msgid "Top-left"
-msgstr ""
+msgstr "Vlevo nahoře"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:36
 #, kde-format
 msgid "Top-right"
-msgstr ""
+msgstr "Vpravo nahoře"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:41
 #, kde-format
 msgid "Bottom-left"
-msgstr ""
+msgstr "Vlevo dole"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:46
 #, kde-format
 msgid "Bottom-right"
-msgstr ""
+msgstr "Vpravo dole"
 
 #. i18n: ectx: property (text), widget (QLabel, marginLabel)
 #: pip.ui:54
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Okraj:"
 
 #: windows.cpp:91
 #, kde-format
@@ -1177,22 +1176,3 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-
-#~ msgid "Show actions menu"
-#~ msgstr "Zobrazit nabídku činností"
-
-#~ msgid "Shade/unshade"
-#~ msgstr "Sbalit/rozbalit"
-
-#~ msgid "On titlebar hover after:"
-#~ msgstr "Při kurzoru nad titulkem po:"
-
-#~ msgid ""
-#~ "Sets the time in milliseconds before the window unshades when the mouse "
-#~ "pointer goes over the shaded window."
-#~ msgstr ""
-#~ "Nastaví čas v milisekundách, za který se sbalené okno automaticky "
-#~ "rozbalí, pokud ukazatel myši nad titulkem tohoto okna stráví určitou dobu."
-
-#~ msgid "Shade"
-#~ msgstr "Sbalit"

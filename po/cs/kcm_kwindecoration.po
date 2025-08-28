@@ -167,12 +167,10 @@ msgid "Titlebar Buttons"
 msgstr "Tlačítka titulkového pruhu"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Zavřít okno dvojklikem na tlačítko nabídky"
+msgstr ""
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
@@ -253,9 +251,3 @@ msgstr "Více než obrovské okraje oken"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Nadměrné okraje oken"
-
-#~ msgid "More actions for this window"
-#~ msgstr "Více činností pro toto okno"
-
-#~ msgid "Shade"
-#~ msgstr "Sbalit"

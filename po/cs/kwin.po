@@ -756,10 +756,9 @@ msgid "Distance"
 msgstr "Vzdálenost"
 
 #: debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Pozice"
+msgstr ""
 
 #: debug_console.cpp:546
 #, kde-format
@@ -3513,40 +3512,22 @@ msgid "Tablets switched outputs"
 msgstr "Tablety si prohodily výstupy"
 
 #: useractions.cpp:161
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"Zvolili jste zobrazení okna bez okrajů.\n"
-"Okraj okna není možné znovu povolit jen pomocí myši. Použijte nabídku "
-"činností okna, kterou aktivujete klávesovou zkratkou '%1'."
 
 #: useractions.cpp:168
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"Zvolili jste zobrazení okna na celou obrazovku.\n"
-"Pokud samotná aplikace nemá možnost tento režim opustit, nebudete schopni "
-"jej ukončit pomocí myši. Použijte nabídku činností okna, kterou aktivujete "
-"pomocí zkratky '%1'."
 
 #: useractions.cpp:216
 #, kde-format
@@ -4120,80 +4101,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
-
-#~ msgid "Shaded"
-#~ msgstr "Sbalené"
-
-#~ msgid "Shade Window"
-#~ msgstr "Sbalit okno"
-
-#~ msgid "Move &To Current Desktop"
-#~ msgstr "Přesunou&t na současnou plochu"
-
-#~ msgctxt "Create a new desktop and move the window there"
-#~ msgid "&New Desktop"
-#~ msgstr "&Nová pracovní plocha"
-
-#~ msgid "Size"
-#~ msgstr "Velikost"
-
-#~ msgid "&Width:"
-#~ msgstr "Šíř&ka:"
-
-#~ msgid " px"
-#~ msgstr " px"
-
-#~ msgid "&Height:"
-#~ msgstr "&Výška:"
-
-#~ msgid "Move Left"
-#~ msgstr "Přesunout doleva"
-
-#~ msgid "Move Right"
-#~ msgstr "Přesunout doprava"
-
-#~ msgid "Move Up"
-#~ msgstr "Přesunout nahoru"
-
-#~ msgid "Move Down"
-#~ msgstr "Přesunout dolů"
-
-#~ msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
-#~ msgstr ""
-#~ "Při přiblížení a oddálení změní měřítko podle zadaného faktoru zvětšení."
-
-#~ msgid "Zoom factor:"
-#~ msgstr "Faktor zvětšení:"
-
-#~ msgid "Visibility of the mouse-pointer."
-#~ msgstr "Viditelnost ukazatele myši."
-
-#~ msgid "Scale"
-#~ msgstr "Měřítko"
-
-#~ msgid "Keep"
-#~ msgstr "Ponechat"
-
-#~ msgid "Hide"
-#~ msgstr "Skrýt"
-
-#~ msgid "Track moving of the mouse."
-#~ msgstr "Sledovat pohyb myši."
-
-#~ msgid "Proportional"
-#~ msgstr "Proporcionální"
-
-#~ msgid "Centered"
-#~ msgstr "Na střed"
-
-#~ msgid "Push"
-#~ msgstr "Odeslat"
-
-#~ msgid "Disabled"
-#~ msgstr "Zakázáno"
-
-#~ msgid "Window Operations Menu"
-#~ msgstr "Nabídka činností okna"
-
-#~ msgid "&Shade"
-#~ msgstr "Z&asunout"
