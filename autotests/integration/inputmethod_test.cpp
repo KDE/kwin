@@ -745,6 +745,7 @@ void InputMethodTest::testFakeEventFallback()
     } kb;
 
     connect(keyboard, &KWayland::Client::Keyboard::keymapChanged, [&](int fd, uint32_t size) {
+        qDebug() << "new keymap";
         char* map_shm = static_cast<char*>(
             mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0)
             );
@@ -799,6 +800,8 @@ void InputMethodTest::testFakeEventFallback()
                 if (len > 1) {
                     recievedString.append(QString::fromUtf8(buf, len - 1)); // xkb_keysym_to_utf8 contains terminating byte
                 }
+                qDebug() << recievedString;
+
             }
         }
     });
@@ -806,11 +809,10 @@ void InputMethodTest::testFakeEventFallback()
     auto context = Test::inputMethod()->context();
     QVERIFY(context);
 
-    zwp_input_method_context_v1_commit_string(context, 0, "aB");
-    // todo B, composed a with umlauts, something korean, smiley face
+    zwp_input_method_context_v1_commit_string(context, 0, "aB äÄ 안 😊");
 
     Test::flushWaylandConnection();
-    QTRY_COMPARE(recievedString, "aB");
+    QTRY_COMPARE(recievedString, "aB äÄ 안 😊");
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));

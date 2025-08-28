@@ -1318,6 +1318,48 @@ QList<xkb_keysym_t> Xkb::keysymsFromQtKey(QKeyCombination keyQt)
     }
     return syms;
 }
+
+QByteArray Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
+                                      xkb_keysym_t customSym)
+{
+    char symName[64];
+    if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {
+        qWarning() << "Could not find name for keysym" << customSym;
+        return {};
+    }
+
+           // Use a 4-letter key name (<CSTM>) and chosen keycode.
+    QByteArray overlay;
+    overlay.append("xkb_keymap {\n");
+    overlay.append("  xkb_keycodes \"custom\" {\n");
+    overlay.append("    include \"evdev+aliases(qwerty)\"\n");
+    overlay.append("    <CSTM> = ").append(QString::number(newKeycode + EVDEV_OFFSET).toLatin1()).append(";\n");
+    overlay.append("  };\n");
+    overlay.append("  xkb_types \"(custom)\" { include \"complete\" };\n");
+    overlay.append("  xkb_compatibility \"custom\" { include \"complete\" };\n");
+    overlay.append("  xkb_symbols \"custom\" {\n");
+    overlay.append("    include \"pc+us\"\n");
+    overlay.append("    key <CSTM> { [ ").append(symName).append(" ] };\n");
+    overlay.append("  };\n");
+    overlay.append("};\n");
+
+    struct xkb_keymap* newMap =
+        xkb_keymap_new_from_string(m_context,
+                                   overlay.constData(),
+                                   XKB_KEYMAP_FORMAT_TEXT_V1,
+                                   XKB_KEYMAP_COMPILE_NO_FLAGS);
+
+    if (!newMap) {
+        qWarning() << "Could not create new keymap for keysym" << customSym;
+        return {};
+    }
+
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(newMap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    if (!keymapString) {
+        return {};
+    }
+    return keymapString.get();
+}
 }
 
 #include "moc_xkb.cpp"
