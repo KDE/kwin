@@ -242,6 +242,7 @@ if (KWIN_BUILD_X11)
     find_package(XCB 1.10 REQUIRED COMPONENTS
         COMPOSITE
         CURSOR
+        DAMAGE
         DRI3
         ICCCM
         KEYSYMS
