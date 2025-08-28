@@ -526,18 +526,18 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     }
 
     if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
-        const double maxBrightness = next.iccProfile->maxBrightness().value_or(200);
-        const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxBrightness;
+        const double maxFALL = next.iccProfile->maxFALL().value_or(200);
+        const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxFALL;
         const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
         const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
-        const double effectiveReferenceLuminance = 5 + (maxBrightness - 5) * brightnessFactor;
+        const double effectiveReferenceLuminance = 5 + (maxFALL - 5) * brightnessFactor;
         return std::make_shared<ColorDescription>(ColorDescription{
             next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness * next.artificialHdrHeadroom),
+            TransferFunction(TransferFunction::gamma22, minBrightness, maxFALL * next.artificialHdrHeadroom),
             effectiveReferenceLuminance,
             minBrightness * next.artificialHdrHeadroom,
-            maxBrightness * maxPossibleArtificialHeadroom,
-            maxBrightness * maxPossibleArtificialHeadroom,
+            maxFALL * maxPossibleArtificialHeadroom,
+            maxFALL * maxPossibleArtificialHeadroom,
             next.iccProfile->colorimetry(),
             sdrColor,
         });
@@ -728,6 +728,8 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     if (usesICC) {
         colorPipeline.addTransferFunction(encoding->transferFunction(), ColorspaceType::LinearRGB);
         colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
+        const auto calibration = encoding->containerColorimetry().fromXYZ() * next.iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
+        colorPipeline.addMatrix(calibration, colorPipeline.currentOutputRange(), ColorspaceType::LinearRGB);
         colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
         if (next.iccProfile->vcgt()) {
             colorPipeline.add1DLUT(next.iccProfile->vcgt(), ColorspaceType::NonLinearRGB);

@@ -162,7 +162,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std
                 return false;
             }
         }
-        m_toXYZD50 = toXYZD50;
+        m_toXYZD50 = profile->mhc2Matrix() * toXYZD50;
         m_B = std::move(B);
         m_matrix2 = matrix2;
         m_M = std::move(M);
