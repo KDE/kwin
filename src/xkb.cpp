@@ -1223,6 +1223,8 @@ void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
     }
 }
 
+
+
 quint32 Xkb::numberOfLayouts() const
 {
     if (!m_keymap) {
@@ -1236,7 +1238,7 @@ void Xkb::setSeat(SeatInterface *seat)
     m_seat = QPointer<SeatInterface>(seat);
 }
 
-std::optional<std::pair<int, int>> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
+std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
 {
     if (!m_keymap || !m_state) {
         return {};
@@ -1250,7 +1252,16 @@ std::optional<std::pair<int, int>> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
             uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap, keycode, layout, currentLevel, &syms);
             for (uint sym = 0; sym < num_syms; sym++) {
                 if (syms[sym] == keysym) {
-                    return {{keycode - EVDEV_OFFSET, currentLevel}};
+
+                    xkb_mod_mask_t masks[1]; // this function returns every way to shift to this level, we just need 1
+                    int nMasks = xkb_keymap_key_get_mods_for_level(
+                        m_keymap, keycode, layout, currentLevel,
+                        masks, 1);
+                    xkb_mod_mask_t modifiers = 0;
+                    if (nMasks > 0) {
+                        modifiers = masks[0];
+                    }
+                    return Xkb::KeyCode({keycode - EVDEV_OFFSET, currentLevel, modifiers});
                 }
             }
         }
