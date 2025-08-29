@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_format_helper.h"
+#include "vulkan/vulkan_include.h"
 
 namespace KWin
 {

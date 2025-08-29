@@ -8,7 +8,6 @@
 */
 #pragma once
 #include "kwin_export.h"
-#include "vulkan/vulkan_include.h"
 
 #include <QHash>
 #include <QList>
@@ -19,6 +18,11 @@
 #include <libdrm/drm_fourcc.h>
 #include <optional>
 #include <stdint.h>
+
+namespace vk
+{
+enum class Format;
+}
 
 namespace KWin
 {
