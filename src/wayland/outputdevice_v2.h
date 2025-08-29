@@ -85,6 +85,7 @@ private:
     void updateDdcCiAllowed();
     void updateMaxBpc();
     void updateEdrPolicy();
+    void updateAbmLevel();
 
     void scheduleDone();
 

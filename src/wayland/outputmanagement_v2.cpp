@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 16;
+static const quint32 s_version = 18;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -76,6 +76,7 @@ protected:
     void kde_output_configuration_v2_set_ddc_ci_allowed(Resource *resource, ::wl_resource *outputdevice, uint32_t allow_ddc_ci) override;
     void kde_output_configuration_v2_set_max_bits_per_color(Resource *resource, struct ::wl_resource *outputdevice, uint32_t max_bpc) override;
     void kde_output_configuration_v2_set_edr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t edrPolicy) override;
+    void kde_output_configuration_v2_set_abm_level(Resource *resource, struct ::wl_resource *outputdevice, uint32_t level) override;
 
     void sendFailure(Resource *resource, const QString &reason);
 };
@@ -466,6 +467,29 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_edr_policy(
     case edr_policy_always:
         config.changeSet(output->handle())->edrPolicy = Output::EdrPolicy::Always;
         break;
+    }
+}
+
+static const std::unordered_map<int, Output::AbmLevel> s_protocolToKWinAbmLevel = {
+    std::make_pair(KDE_OUTPUT_CONFIGURATION_V2_ABM_LEVEL_OFF, Output::AbmLevel::Off),
+    std::make_pair(KDE_OUTPUT_CONFIGURATION_V2_ABM_LEVEL_MIN, Output::AbmLevel::Min),
+    std::make_pair(KDE_OUTPUT_CONFIGURATION_V2_ABM_LEVEL_MIN_BIAS, Output::AbmLevel::MinBias),
+    std::make_pair(KDE_OUTPUT_CONFIGURATION_V2_ABM_LEVEL_MAX_BIAS, Output::AbmLevel::MaxBias),
+    std::make_pair(KDE_OUTPUT_CONFIGURATION_V2_ABM_LEVEL_MAX, Output::AbmLevel::Max),
+};
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_abm_level(Resource *resource, struct ::wl_resource *outputdevice, uint32_t level)
+{
+    if (invalid) {
+        return;
+    }
+    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
+    if (!output) {
+        return;
+    }
+    auto it = s_protocolToKWinAbmLevel.find(level);
+    if (it != s_protocolToKWinAbmLevel.end()) {
+        config.changeSet(output->handle())->abmLevel = it->second;
     }
 }
 

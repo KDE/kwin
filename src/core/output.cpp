@@ -660,6 +660,9 @@ void Output::setState(const State &state)
     if (oldState.blendingColor != state.blendingColor) {
         Q_EMIT blendingColorChanged();
     }
+    if (oldState.abmLevel != state.abmLevel) {
+        Q_EMIT abmLevelChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -923,6 +926,11 @@ bool Output::isDdcCiKnownBroken() const
 bool Output::overlayLayersLikelyBroken() const
 {
     return false;
+}
+
+Output::AbmLevel Output::abmLevel() const
+{
+    return m_state.abmLevel;
 }
 
 } // namespace KWin

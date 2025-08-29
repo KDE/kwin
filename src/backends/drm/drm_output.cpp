@@ -305,6 +305,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_state.brightnessDevice && isInternal()) {
         capabilities |= Capability::Edr;
     }
+    if (m_connector->abmLevel.isValid()) {
+        capabilities |= Capability::AbmLevel;
+    }
     return capabilities;
 }
 
@@ -619,6 +622,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
     next.automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
     next.edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
+    next.abmLevel = props->abmLevel.value_or(m_state.abmLevel);
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     tryKmsColorOffloading(next);
