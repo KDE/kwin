@@ -43,6 +43,7 @@ public:
     eis_device *createKeyboard(eis_seat *seat);
     eis_device *createPointer(eis_seat *seat);
     eis_device *createAbsoluteDevice(eis_seat *seat);
+    eis_device *createText(eis_seat *seat);
 
 private:
     QDBusServiceWatcher *m_serviceWatcher;

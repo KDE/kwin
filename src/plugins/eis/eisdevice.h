@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/inputdevice.h"
+#include "xkb.h"
 
 struct eis_device;
 
@@ -43,6 +44,8 @@ public:
     bool isTabletPad() const override;
     bool isTabletModeSwitch() const override;
     bool isLidSwitch() const override;
+
+    void sendKeySym(xkb_keysym_t keySym, KeyboardKeyState state);
 
 private:
     eis_device *m_device;
