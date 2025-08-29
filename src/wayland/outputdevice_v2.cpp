@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 22;
+static const quint32 s_version = 23;
 
 class OutputDeviceRegistryV2Private : public QtWaylandServer::kde_output_device_registry_v2
 {
@@ -148,6 +148,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(BackendOutput::Capabi
     if (caps & BackendOutput::Capability::HdrIccProfile) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_hdr_icc_profile;
     }
+    if (caps & BackendOutput::Capability::AbmLevel) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_abm_level;
+    }
     return ret;
 }
 
@@ -213,6 +216,7 @@ public:
     void sendAutoBrightness(Resource *resource);
     void sendHdrIccProfilePath(Resource *resource);
     void sendHdrColorProfileSource(Resource *resource);
+    void sendAbmLevel(Resource *resource);
 
     OutputDeviceV2Interface *q;
     BackendOutput *m_handle;
@@ -263,6 +267,7 @@ public:
     bool m_autoBrightness = false;
     QString m_hdrIccProfilePath;
     color_profile_source m_hdrColorProfile = color_profile_source::color_profile_source_EDID;
+    uint32_t m_abmLevel = 0;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -352,6 +357,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(BackendOutput *handle)
     updateAutoBrightness();
     updateHdrIccProfilePath();
     updateHdrColorProfileSource();
+    updateAbmLevel();
 
     connect(handle, &BackendOutput::positionChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -395,6 +401,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(BackendOutput *handle)
     connect(handle, &BackendOutput::automaticBrightnessChanged, this, &OutputDeviceV2Interface::updateAutoBrightness);
     connect(handle, &BackendOutput::hdrIccProfilePathChanged, this, &OutputDeviceV2Interface::updateHdrIccProfilePath);
     connect(handle, &BackendOutput::hdrColorProfileSourceChanged, this, &OutputDeviceV2Interface::updateHdrColorProfileSource);
+    connect(handle, &BackendOutput::abmLevelChanged, this, &OutputDeviceV2Interface::updateAbmLevel);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -486,6 +493,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendAutoBrightness(resource);
     sendHdrIccProfilePath(resource);
     sendHdrColorProfileSource(resource);
+    sendAbmLevel(resource);
     sendDone(resource);
 }
 
@@ -729,6 +737,13 @@ void OutputDeviceV2InterfacePrivate::sendHdrColorProfileSource(Resource *resourc
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_HDR_COLOR_PROFILE_SOURCE_SINCE_VERSION) {
         send_hdr_color_profile_source(resource->handle, m_hdrColorProfile);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendAbmLevel(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_ABM_LEVEL_SINCE_VERSION) {
+        send_abm_level(resource->handle, m_abmLevel);
     }
 }
 
@@ -1234,6 +1249,18 @@ void OutputDeviceV2Interface::updateHdrColorProfileSource()
         const auto clientResources = d->resourceMap();
         for (auto resource : clientResources) {
             d->sendHdrColorProfileSource(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateAbmLevel()
+{
+    if (d->m_abmLevel != d->m_handle->abmLevel()) {
+        d->m_abmLevel = d->m_handle->abmLevel();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendAbmLevel(resource);
         }
         scheduleDone();
     }

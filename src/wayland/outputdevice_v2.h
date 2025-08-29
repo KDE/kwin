@@ -107,6 +107,7 @@ private:
     void updateAutoBrightness();
     void updateHdrIccProfilePath();
     void updateHdrColorProfileSource();
+    void updateAbmLevel();
 
     void scheduleDone();
 

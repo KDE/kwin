@@ -501,6 +501,9 @@ void BackendOutput::setState(const State &state)
     if (oldState.hdrColorProfileSource != state.hdrColorProfileSource) {
         Q_EMIT hdrColorProfileSourceChanged();
     }
+    if (oldState.abmLevel != state.abmLevel) {
+        Q_EMIT abmLevelChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -824,6 +827,11 @@ BackendOutput::BrightnessReason BackendOutput::lastBrightnessAdjustmentReason() 
 QList<CustomModeDefinition> BackendOutput::customModes() const
 {
     return m_state.customModes;
+}
+
+uint32_t BackendOutput::abmLevel() const
+{
+    return m_state.abmLevel;
 }
 
 } // namespace KWin

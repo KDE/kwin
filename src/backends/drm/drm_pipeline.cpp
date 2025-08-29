@@ -358,6 +358,14 @@ static const auto s_forceScalingMode = []() -> std::optional<DrmConnector::Scali
     }
 }();
 
+static const std::unordered_map s_kwinAbmToDrm = {
+    std::make_pair(0, DrmConnector::AbmLevel::Off),
+    std::make_pair(1, DrmConnector::AbmLevel::Min),
+    std::make_pair(2, DrmConnector::AbmLevel::Min_Bias),
+    std::make_pair(3, DrmConnector::AbmLevel::Max_Bias),
+    std::make_pair(4, DrmConnector::AbmLevel::Max),
+};
+
 bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 {
     commit->addProperty(m_connector->crtcId, m_pending.crtc->id());
@@ -382,6 +390,17 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22));
     } else if (m_pending.hdr) {
         return false;
+    }
+    if (m_connector->abmLevel.isValid()) {
+        uint32_t effectiveLevel = m_output->abmLevel();
+        if (m_output->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy) {
+            // this feature makes colors less accurate, so always force it off
+            effectiveLevel = 0;
+        }
+        const auto drmValue = s_kwinAbmToDrm.find(effectiveLevel)->second;
+        if (m_connector->abmLevel.hasEnum(drmValue)) {
+            commit->addEnum(m_connector->abmLevel, drmValue);
+        }
     }
     if (m_pending.wcg) {
         if (!m_connector->colorspace.isValid() || !m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {

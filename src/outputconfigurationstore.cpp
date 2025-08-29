@@ -367,6 +367,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
             .customModes = output->customModes(),
             .automaticBrightness = output->automaticBrightness(),
             .autoBrightnessCurve = output->autoBrightnessCurve(),
+            .abmLevel = output->abmLevel(),
         };
         *outputIt = SetupState{
             .outputIndex = *outputIndex,
@@ -465,6 +466,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .customModes = state.customModes,
             .automaticBrightness = state.automaticBrightness,
             .autoBrightnessCurve = state.autoBrightnessCurve,
+            .abmLevel = state.abmLevel,
         };
     }
     return ret;
@@ -693,6 +695,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .automaticBrightness = existingData.automaticBrightness.value_or(false),
             // TODO generate a more fitting brightness map per screen?
             .autoBrightnessCurve = existingData.autoBrightnessCurve,
+            .abmLevel = existingData.abmLevel.value_or(0),
         };
         if (setupState) {
             priority = std::max(setupState->priority + 1, priority);
@@ -1179,6 +1182,12 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("autoBrightnessCurve"); it != data.end() && it->isArray()) {
             state.autoBrightnessCurve = AutoBrightnessCurve::fromArray(it->toArray());
         }
+        if (const auto it = data.find("abmLevel"); it != data.end()) {
+            const int level = it->toInt(-1);
+            if (level >= 0 && level <= 4) {
+                state.abmLevel = level;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1483,6 +1492,9 @@ void OutputConfigurationStore::save()
         }
         if (output.autoBrightnessCurve) {
             o["autoBrightnessCurve"] = output.autoBrightnessCurve->toArray();
+        }
+        if (output.abmLevel.has_value()) {
+            o["abmLevel"] = int(*output.abmLevel);
         }
         outputsData.append(o);
     }

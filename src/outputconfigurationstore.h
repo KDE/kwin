@@ -92,6 +92,7 @@ private:
         std::optional<QList<CustomModeDefinition>> customModes;
         std::optional<bool> automaticBrightness;
         std::optional<AutoBrightnessCurve> autoBrightnessCurve;
+        std::optional<uint32_t> abmLevel;
     };
     struct SetupState
     {

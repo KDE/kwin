@@ -117,6 +117,14 @@ public:
         BT2020_RGB,
         BT2020_YCC,
     };
+    enum class AbmLevel : uint64_t {
+        Sysfs,
+        Off,
+        Min,
+        Min_Bias,
+        Max_Bias,
+        Max,
+    };
 
     DrmProperty crtcId;
     DrmProperty nonDesktop;
@@ -136,6 +144,7 @@ public:
     DrmEnumProperty<ScalingMode> scalingMode;
     DrmEnumProperty<Colorspace> colorspace;
     DrmProperty path;
+    DrmEnumProperty<AbmLevel> abmLevel;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);

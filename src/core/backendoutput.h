@@ -79,6 +79,7 @@ public:
         CustomModes = 1 << 15,
         AutomaticBrightness = 1 << 16,
         HdrIccProfile = 1 << 17,
+        AbmLevel = 1 << 18,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -335,6 +336,8 @@ public:
      */
     QPoint deviceOffset() const;
 
+    uint32_t abmLevel() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the position of this output has changed.
@@ -405,6 +408,7 @@ Q_SIGNALS:
     void automaticBrightnessChanged();
     void hdrIccProfilePathChanged();
     void hdrColorProfileSourceChanged();
+    void abmLevelChanged();
 
 protected:
     struct Information
@@ -491,6 +495,7 @@ protected:
         bool automaticBrightness = false;
         AutoBrightnessCurve autoBrightnessCurve;
         BrightnessReason lastBrightnessAdjustmentReason = BrightnessReason::ManualAdjustment;
+        uint32_t abmLevel = 0;
     };
 
     void setInformation(const Information &information);

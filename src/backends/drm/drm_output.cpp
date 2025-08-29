@@ -254,6 +254,9 @@ BackendOutput::Capabilities DrmOutput::computeCapabilities() const
     if (m_gpu->sharpnessSupported()) {
         capabilities |= Capability::SharpnessControl;
     }
+    if (m_connector->abmLevel.isValid()) {
+        capabilities |= Capability::AbmLevel;
+    }
     return capabilities;
 }
 
@@ -591,6 +594,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->automaticBrightness = props->automaticBrightness.value_or(m_state.automaticBrightness);
     m_nextState->lastBrightnessAdjustmentReason = props->brightnessReason.value_or(m_state.lastBrightnessAdjustmentReason);
     m_nextState->autoBrightnessCurve = props->autoBrightnessCurve.value_or(m_state.autoBrightnessCurve);
+    m_nextState->abmLevel = props->abmLevel.value_or(m_state.abmLevel);
 
     const bool bt2020 = m_nextState->wideColorGamut && (capabilities() & Capability::WideColorGamut);
     const bool hdr = m_nextState->highDynamicRange && (capabilities() & Capability::HighDynamicRange);
