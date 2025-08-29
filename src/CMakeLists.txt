@@ -257,7 +257,7 @@ target_link_libraries(kwin
         XKB::XKB
         EGL::EGL
         epoxy::epoxy
-        Vulkan::Vulkan
+        VulkanHppModule
 
         Threads::Threads
         lcms2::lcms2

@@ -7,6 +7,8 @@
 #include "kwin_export.h"
 #include "vulkan_include.h"
 
+import vulkan_hpp;
+
 namespace KWin
 {
 

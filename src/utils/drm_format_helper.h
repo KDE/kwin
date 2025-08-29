@@ -19,6 +19,8 @@
 #include <optional>
 #include <stdint.h>
 
+// TODO find out how to (transparently) link plugins
+// to vulkan_hpp and then import the module instead
 namespace vk
 {
 enum class Format;

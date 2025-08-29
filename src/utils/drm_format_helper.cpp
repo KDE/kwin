@@ -9,6 +9,8 @@
 #include "drm_format_helper.h"
 #include "vulkan/vulkan_include.h"
 
+import vulkan_hpp;
+
 namespace KWin
 {
 

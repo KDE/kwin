@@ -11,6 +11,10 @@
 #include "utils/drm_format_helper.h"
 #include "vulkan_texture.h"
 
+// vulkan-hpp module isn't exporting vkGetInstanceProcAddr yet (fixed upstream already)
+// so we need to include vulkan-core explicitly here
+#include <vulkan/vulkan_core.h>
+
 #include <QDebug>
 #include <sys/stat.h>
 
@@ -444,3 +448,5 @@ vk::Queue VulkanDevice::renderQueue() const
     return m_queue;
 }
 }
+
+#include "moc_vulkan_device.cpp"

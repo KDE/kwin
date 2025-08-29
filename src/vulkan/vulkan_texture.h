@@ -12,6 +12,8 @@
 
 #include <QImage>
 
+import vulkan_hpp;
+
 namespace KWin
 {
 

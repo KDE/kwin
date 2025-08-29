@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.28)
 
 set(PROJECT_VERSION "6.4.80") # Handled by release scripts
 project(KWin VERSION ${PROJECT_VERSION})
@@ -201,7 +201,25 @@ set_package_properties(epoxy PROPERTIES
     PURPOSE "OpenGL dispatch library"
 )
 
-find_package(Vulkan REQUIRED)
+find_package(Vulkan 1.3.256)
+set_package_properties(Vulkan PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Required for the Vulkan renderer"
+)
+
+# set up Vulkan C++ module as a library
+add_library(VulkanHppModule STATIC)
+target_sources(VulkanHppModule PUBLIC
+  FILE_SET CXX_MODULES
+  BASE_DIRS ${Vulkan_INCLUDE_DIR}
+  FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+)
+target_link_libraries(VulkanHppModule PRIVATE Vulkan::Vulkan)
+target_link_libraries(VulkanHppModule PUBLIC Vulkan::Headers)
+target_compile_definitions(VulkanHppModule PRIVATE
+    VULKAN_HPP_NO_EXCEPTIONS=1
+    VULKAN_HPP_ASSERT_ON_RESULT=void
+)
 
 find_package(Wayland 1.24)
 set_package_properties(Wayland PROPERTIES

@@ -16,6 +16,8 @@
 #include <memory>
 #include <optional>
 
+import vulkan_hpp;
+
 namespace KWin
 {
 
