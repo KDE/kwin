@@ -217,6 +217,10 @@ QPointF ItemTreeView::hotspot() const
 
 QRectF ItemTreeView::viewport() const
 {
+    if (!m_item) {
+        // TODO make the viewport explicit instead?
+        return QRectF{};
+    }
     const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
     if (!recommendedSizes.empty()) {
         const auto bufferSize = scaledRect(m_item->boundingRect(), scale()).size();
