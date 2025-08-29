@@ -422,6 +422,12 @@ public:
     virtual void repairPresentation();
 
     /**
+     * Can be used by the backend to suggest the compositor not to
+     * use overlay planes, to avoid driver issues
+     */
+    virtual bool overlayLayersLikelyBroken() const;
+
+    /**
      * The color space in which the scene is blended
      */
     const std::shared_ptr<ColorDescription> &blendingColor() const;

@@ -464,14 +464,14 @@ static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerT
 }
 
 static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
-static const bool s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVERLAYS").value_or(PROJECT_VERSION_PATCH >= 80);
+static const auto s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVERLAYS");
 
 /**
  * items and layers need to be sorted top to bottom
  */
 static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> items, std::span<OutputLayer *const> layers)
 {
-    if (layers.empty() || items.empty() || !s_enableOverlays) {
+    if (layers.empty() || items.empty() || !s_enableOverlays.value_or(!sceneView->output()->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80)) {
         return {};
     }
     std::unordered_map<SurfaceItem *, OutputLayer *> ret;

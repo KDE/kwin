@@ -427,6 +427,11 @@ void DrmOutput::repairPresentation()
     QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
 }
 
+bool DrmOutput::overlayLayersLikelyBroken() const
+{
+    return m_gpu->isNVidia();
+}
+
 DrmConnector *DrmOutput::connector() const
 {
     return m_connector.get();

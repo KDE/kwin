@@ -920,6 +920,11 @@ bool Output::isDdcCiKnownBroken() const
     });
 }
 
+bool Output::overlayLayersLikelyBroken() const
+{
+    return false;
+}
+
 } // namespace KWin
 
 #include "moc_output.cpp"
