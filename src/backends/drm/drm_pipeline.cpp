@@ -336,6 +336,14 @@ static const auto s_forceScalingMode = []() -> std::optional<DrmConnector::Scali
     }
 }();
 
+static const std::unordered_map s_kwinAbmToDrm = {
+    std::make_pair(Output::AbmLevel::Off, DrmConnector::AbmLevel::Off),
+    std::make_pair(Output::AbmLevel::Min, DrmConnector::AbmLevel::Min),
+    std::make_pair(Output::AbmLevel::MinBias, DrmConnector::AbmLevel::Min_Bias),
+    std::make_pair(Output::AbmLevel::MaxBias, DrmConnector::AbmLevel::Max_Bias),
+    std::make_pair(Output::AbmLevel::Max, DrmConnector::AbmLevel::Max),
+};
+
 bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 {
     commit->addProperty(m_connector->crtcId, m_pending.crtc->id());
@@ -360,6 +368,12 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22));
     } else if (m_pending.hdr) {
         return false;
+    }
+    if (m_connector->abmLevel.isValid()) {
+        const auto drmValue = s_kwinAbmToDrm.find(m_output->abmLevel())->second;
+        if (m_connector->abmLevel.hasEnum(drmValue)) {
+            commit->addEnum(m_connector->abmLevel, drmValue);
+        }
     }
     if (m_pending.wcg) {
         if (!m_connector->colorspace.isValid() || !m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {

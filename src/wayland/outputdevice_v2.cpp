@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 16;
+static const quint32 s_version = 18;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -74,6 +74,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     if (caps & Output::Capability::Edr) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_edr;
     }
+    if (caps & Output::Capability::AbmLevel) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_abm_level;
+    }
     return ret;
 }
 
@@ -95,6 +98,11 @@ static QtWaylandServer::kde_output_device_v2::auto_rotate_policy kwinAutoRotatio
 static QtWaylandServer::kde_output_device_v2::edr_policy kwinEdrPolicyToOutputDevice(Output::EdrPolicy policy)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::edr_policy>(policy);
+}
+
+static QtWaylandServer::kde_output_device_v2::abm_level kwinAbmLevelToOutputDevice(Output::AbmLevel level)
+{
+    return static_cast<QtWaylandServer::kde_output_device_v2::abm_level>(level);
 }
 
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
@@ -134,6 +142,7 @@ public:
     void sendDdcCiAllowed(Resource *resource);
     void sendMaxBpc(Resource *resource);
     void sendEdrPolicy(Resource *resource);
+    void sendAbmLevel(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -180,6 +189,7 @@ public:
     Output::BpcRange m_maxBpcRange;
     std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
     Output::EdrPolicy m_edrPolicy = Output::EdrPolicy::Always;
+    Output::AbmLevel m_abmLevel = Output::AbmLevel::Off;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -273,6 +283,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     updateDdcCiAllowed();
     updateMaxBpc();
     updateEdrPolicy();
+    updateAbmLevel();
 
     connect(handle, &Output::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -311,6 +322,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::allowDdcCiChanged, this, &OutputDeviceV2Interface::updateDdcCiAllowed);
     connect(handle, &Output::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
     connect(handle, &Output::edrPolicyChanged, this, &OutputDeviceV2Interface::updateEdrPolicy);
+    connect(handle, &Output::abmLevelChanged, this, &OutputDeviceV2Interface::updateAbmLevel);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -398,6 +410,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendDdcCiAllowed(resource);
     sendMaxBpc(resource);
     sendEdrPolicy(resource);
+    sendAbmLevel(resource);
     sendDone(resource);
 }
 
@@ -606,6 +619,13 @@ void OutputDeviceV2InterfacePrivate::sendEdrPolicy(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_EDR_POLICY_SINCE_VERSION) {
         send_edr_policy(resource->handle, kwinEdrPolicyToOutputDevice(m_edrPolicy));
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendAbmLevel(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_ABM_LEVEL_SINCE_VERSION) {
+        send_abm_level(resource->handle, kwinAbmLevelToOutputDevice(m_abmLevel));
     }
 }
 
@@ -1046,6 +1066,18 @@ void OutputDeviceV2Interface::updateEdrPolicy()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendEdrPolicy(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateAbmLevel()
+{
+    if (d->m_abmLevel != d->m_handle->abmLevel()) {
+        d->m_abmLevel = d->m_handle->abmLevel();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendAbmLevel(resource);
         }
         scheduleDone();
     }

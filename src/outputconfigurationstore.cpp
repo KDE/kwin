@@ -379,6 +379,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
                 .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
                 .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
+                .abmLevel = changeSet->abmLevel.value_or(output->abmLevel()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -429,6 +430,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .allowDdcCi = output->allowDdcCi(),
                 .maxBitsPerColor = output->maxBitsPerColor(),
                 .edrPolicy = output->edrPolicy(),
+                .abmLevel = output->abmLevel(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -496,6 +498,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .allowDdcCi = state.allowDdcCi,
             .maxBitsPerColor = state.maxBitsPerColor,
             .edrPolicy = state.edrPolicy,
+            .abmLevel = state.abmLevel,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -628,6 +631,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .allowDdcCi = existingData.allowDdcCi.value_or(!output->isDdcCiKnownBroken()),
             .maxBitsPerColor = existingData.maxBitsPerColor,
             .edrPolicy = existingData.edrPolicy.value_or(Output::EdrPolicy::Always),
+            .abmLevel = existingData.abmLevel.value_or(Output::AbmLevel::Off),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -1037,6 +1041,20 @@ void OutputConfigurationStore::load()
                 state.edrPolicy = Output::EdrPolicy::Always;
             }
         }
+        if (const auto it = data.find("abmLevel"); it != data.end()) {
+            const auto str = it->toString();
+            if (str == "off") {
+                state.abmLevel = Output::AbmLevel::Off;
+            } else if (str == "min") {
+                state.abmLevel = Output::AbmLevel::Min;
+            } else if (str == "min_bias") {
+                state.abmLevel = Output::AbmLevel::MinBias;
+            } else if (str == "max_bias") {
+                state.abmLevel = Output::AbmLevel::MaxBias;
+            } else if (str == "max") {
+                state.abmLevel = Output::AbmLevel::Max;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1317,6 +1335,25 @@ void OutputConfigurationStore::save()
                 break;
             case Output::EdrPolicy::Always:
                 o["edrPolicy"] = "always";
+                break;
+            }
+        }
+        if (output.abmLevel.has_value()) {
+            switch (*output.abmLevel) {
+            case Output::AbmLevel::Off:
+                o["abmLevel"] = "off";
+                break;
+            case Output::AbmLevel::Min:
+                o["abmLevel"] = "min";
+                break;
+            case Output::AbmLevel::MinBias:
+                o["abmLevel"] = "min_bias";
+                break;
+            case Output::AbmLevel::MaxBias:
+                o["abmLevel"] = "max_bias";
+                break;
+            case Output::AbmLevel::Max:
+                o["abmLevel"] = "max";
                 break;
             }
         }

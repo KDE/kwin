@@ -169,6 +169,7 @@ public:
         DdcCi = 1 << 11,
         MaxBitsPerColor = 1 << 12,
         Edr = 1 << 13,
+        AbmLevel = 1 << 14,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -211,6 +212,15 @@ public:
         Always,
     };
     Q_ENUM(EdrPolicy);
+
+    enum class AbmLevel {
+        Off,
+        Min,
+        MinBias,
+        MaxBias,
+        Max,
+    };
+    Q_ENUM(AbmLevel);
 
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
@@ -442,6 +452,8 @@ public:
      */
     const std::shared_ptr<ColorDescription> &colorDescription() const;
 
+    AbmLevel abmLevel() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -515,6 +527,7 @@ Q_SIGNALS:
     void allowDdcCiChanged();
     void maxBitsPerColorChanged();
     void edrPolicyChanged();
+    void abmLevelChanged();
 
 protected:
     struct Information
@@ -589,6 +602,7 @@ protected:
         uint32_t maxBitsPerColor = 0;
         std::optional<uint32_t> automaticMaxBitsPerColorLimit;
         EdrPolicy edrPolicy = EdrPolicy::Always;
+        AbmLevel abmLevel = AbmLevel::Off;
     };
 
     void setInformation(const Information &information);
