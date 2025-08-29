@@ -195,4 +195,10 @@ eis_device *EisBackend::createKeyboard(eis_seat *seat)
 
     return device;
 }
+eis_device *EisBackend::createText(eis_seat *seat)
+{
+    auto device = createDevice(seat, "eis text");
+    eis_device_configure_capability(device, EIS_DEVICE_CAP_TEXT);
+    return device;
+}
 }

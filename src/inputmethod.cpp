@@ -54,32 +54,6 @@
 namespace KWin
 {
 
-static QList<xkb_keysym_t> textToKey(const QString &inputString)
-{
-    QList<xkb_keysym_t> result;
-
-    for (int i = 0; i < inputString.size(); ++i) {
-        char32_t cp = inputString[i].unicode();
-
-        // Handle surrogate pair (two QChars → one codepoint)
-        if (inputString[i].isHighSurrogate() && i + 1 < inputString.size()
-            && inputString[i+1].isLowSurrogate())
-        {
-            cp = QChar::surrogateToUcs4(inputString[i].unicode(),
-                                        inputString[i+1].unicode());
-            i++; // skip the low surrogate
-        }
-
-        xkb_keysym_t ks = xkb_utf32_to_keysym(cp);
-        if (ks != XKB_KEY_NoSymbol) {
-            result.append(ks);
-        } else {
-            qCWarning(KWIN_VIRTUALKEYBOARD) << "No keysym for U+" << &std::hex << (int)cp << "\n";
-        }
-    }
-    return result;
-}
-
 InputMethod::InputMethod()
 {
     m_internalContext = new InternalInputMethodContext(this);
@@ -662,7 +636,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
         // So instead, try to convert what we get from the input method into
         // keycodes and send those as fake input to the client.
 
-        const QList<xkb_keysym_t> keySyms = textToKey(text);
+        const QList<xkb_keysym_t> keySyms = Xkb::textToKeySyms(text);
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const xkb_keysym_t &keySym : keySyms) {
@@ -670,7 +644,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
             if (!keyCode) {
                 qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
                 static const uint unmappedKeyCode = 247;
-                auto temporaryKeymap = input()->keyboard()->xkb()->createKeymapForKeysym(unmappedKeyCode, keySym);
+                auto temporaryKeymap = input()->keyboard()->xkb()->keymapContentsForKeysym(unmappedKeyCode, keySym);
                 if (temporaryKeymap.isEmpty()) {
                     continue;
                 }

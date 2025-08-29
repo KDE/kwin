@@ -1322,8 +1322,31 @@ QList<xkb_keysym_t> Xkb::keysymsFromQtKey(QKeyCombination keyQt)
     return syms;
 }
 
-QByteArray Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
-                                      xkb_keysym_t customSym)
+QByteArray Xkb::keymapContentsForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
+{
+    auto keymap = createKeymapForKeysym(newKeycode, customSym);
+    if (!keymap) {
+        return {};
+    }
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    if (!keymapString) {
+        return {};
+    }
+    return keymapString.get();
+}
+
+bool Xkb::updateToKeymapForKeySym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
+{
+    auto keymap = createKeymapForKeysym(newKeycode, customSym);
+    if (!keymap) {
+        return false;
+    }
+    updateKeymap(keymap);
+    return true;
+}
+
+xkb_keymap *Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
+                                       xkb_keysym_t customSym)
 {
     char symName[64];
     if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {
@@ -1358,12 +1381,32 @@ QByteArray Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
         qWarning() << "Could not create new keymap for keysym" << customSym;
         return {};
     }
+    return newMap;
+}
 
-    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(newMap, XKB_KEYMAP_FORMAT_TEXT_V1));
-    if (!keymapString) {
-        return {};
+QList<xkb_keysym_t> Xkb::textToKeySyms(const QString &inputString)
+{
+    QList<xkb_keysym_t> result;
+
+    for (int i = 0; i < inputString.size(); ++i) {
+        char32_t cp = inputString[i].unicode();
+
+        // Handle surrogate pair (two QChars → one codepoint)
+        if (inputString[i].isHighSurrogate() && i + 1 < inputString.size()
+            && inputString[i + 1].isLowSurrogate()) {
+            cp = QChar::surrogateToUcs4(inputString[i].unicode(),
+                                        inputString[i + 1].unicode());
+            i++; // skip the low surrogate
+        }
+
+        xkb_keysym_t ks = xkb_utf32_to_keysym(cp);
+        if (ks != XKB_KEY_NoSymbol) {
+            result.append(ks);
+        } else {
+            qCWarning(KWIN_VIRTUALKEYBOARD) << "No keysym for U+" << &std::hex << (int)cp << "\n";
+        }
     }
-    return keymapString.get();
+    return result;
 }
 }
 

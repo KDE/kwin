@@ -5,6 +5,7 @@
 */
 
 #include "eisdevice.h"
+#include "keyboard_input.h"
 
 #include <libeis.h>
 
@@ -108,4 +109,46 @@ bool EisDevice::isLidSwitch() const
     return false;
 }
 
+void EisDevice::sendKeySym(xkb_keysym_t keySym, KeyboardKeyState state)
+{
+    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    bool isPress = state == KeyboardKeyState::Pressed;
+    if (keyCode) {
+        // TODO modifiers
+        // if set, translate it into a shift key as we go through the xkb state
+        // or we can force the other path
+        if (isPress) {
+            pressedKeys.insert(keyCode->keyCode);
+            Q_EMIT keyChanged(keyCode->keyCode, KeyboardKeyState::Pressed, currentTime(), this);
+        } else {
+            bool keyWasHeld = pressedKeys.remove(keyCode->keyCode);
+            if (keyWasHeld) {
+                Q_EMIT keyChanged(keyCode->keyCode, KeyboardKeyState::Released, currentTime(), this);
+            }
+        }
+        return;
+    }
+    static const uint unmappedKeyCode = 247; // DAVE
+    bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+    if (!keymapUpdated) {
+        return;
+    }
+
+    if (isPress) {
+        pressedKeys.insert(unmappedKeyCode);
+        Q_EMIT keyChanged(unmappedKeyCode, KeyboardKeyState::Pressed, currentTime(), this);
+    } else {
+        bool keyWasHeld = pressedKeys.remove(unmappedKeyCode);
+        if (keyWasHeld) {
+            Q_EMIT keyChanged(unmappedKeyCode, KeyboardKeyState::Released, currentTime(), this);
+        }
+    }
+
+    // reset keymap back, potentially this should be done a bit more lazily next time we get another event
+    for (auto key : std::as_const(pressedKeys)) {
+        Q_EMIT keyChanged(key, KeyboardKeyState::Released, currentTime(), this);
+        pressedKeys.remove(key);
+    }
+    input()->keyboard()->xkb()->reconfigure();
+}
 }
