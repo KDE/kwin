@@ -9,6 +9,10 @@
 #include "eisdevice.h"
 #include "libeis_logging.h"
 
+#include "input.h"
+#include "keyboard_input.h"
+#include "xkb.h"
+
 #include <unistd.h>
 
 namespace KWin
@@ -343,6 +347,30 @@ void EisContext::handleEvents()
             Q_EMIT device->touchMotion(id, {x, y}, currentTime(), device);
             break;
         }
+            // case EIS_MAGIC_THING_HERE: {
+            auto device = eventDevice(event);
+            const auto keySym = eis_event_touch_get_the_thing(event);
+            // TODO try mapping to an existing keycode
+
+            std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+            if (keyCode) {
+                // TODO modifiers
+                // if set, translate it into a shift key as we go through the xkb state
+                // or we can force the other path
+                Q_EMIT device->keyChanged(keyCode->keyCode, KeyboardKeyState::Pressed, currentTime(), device);
+                Q_EMIT device->keyChanged(keyCode->keyCode, KeyboardKeyState::Released, currentTime(), device);
+            }
+
+            static const uint unmappedKeyCode = 247;
+            bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+            if (!keymapUpdated) {
+                Q_EMIT device->keyChanged(unmappedKeyCode, KeyboardKeyState::Pressed, currentTime(), device);
+                Q_EMIT device->keyChanged(unmappedKeyCode, KeyboardKeyState::Released, currentTime(), device);
+                return;
+            }
+
+            input()->keyboard()->xkb()->reconfigure();
+            // }
         }
         eis_event_unref(event);
     }
