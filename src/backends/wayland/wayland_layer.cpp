@@ -106,7 +106,7 @@ void WaylandLayer::commit(PresentationMode presentationMode)
         wp_viewport_set_destination(m_viewport, logicalTarget.width(), logicalTarget.height());
     }
     m_subSurface->setPosition(logicalTarget.topLeft());
-    if (m_colorSurface && *m_color != *m_previousColor) {
+    if (m_colorSurface && m_color != m_previousColor) {
         const auto imageDescription = static_cast<WaylandOutput *>(m_output.get())->backend()->display()->colorManager()->createImageDescription(*m_color);
         wp_color_management_surface_v1_set_image_description(m_colorSurface, imageDescription, WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
         wp_image_description_v1_destroy(imageDescription);
