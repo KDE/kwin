@@ -80,7 +80,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <chapter id="examples-and-application-workaround"><title>Examples and Application Workaround</title> 
 <para>To see what's possible, detailed <link linkend="examples">examples</link> are provided which can also be used to model your own rules.
 </para>
-<para>A special page is to dedicated to address <link linkend="application-workarounds">Application Workaround</link>.
+<para>A special page is dedicated to address <link linkend="application-workarounds">Application Workaround</link>.
 </para>
 </chapter>
 <chapter id="kwin-rule-editor"><title>KWin Rule Editor</title> 
