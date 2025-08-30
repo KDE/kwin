@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-27 00:44+0000\n"
+"POT-Creation-Date: 2025-08-30 00:43+0000\n"
 "PO-Revision-Date: 2025-08-02 21:25+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1364,7 +1364,7 @@ msgstr ""
 "בחירת חלון לכפיית סגירה בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
 
-#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:173 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
@@ -1375,67 +1375,67 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:177 main.cpp:201
+#: main.cpp:175 main.cpp:199
 #, kde-format
 msgid "KDE window manager"
 msgstr "מנהל החלונות של KDE"
 
-#: main.cpp:179
+#: main.cpp:177
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999‏-2019, מפתחי KDE"
 
-#: main.cpp:181
+#: main.cpp:179
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "מתיאס אטריק"
 
-#: main.cpp:182
+#: main.cpp:180
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "כריסטיאן טיבירנה"
 
-#: main.cpp:183
+#: main.cpp:181
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "דניאל מ. דיולי"
 
-#: main.cpp:184
+#: main.cpp:182
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "לובוש לוניאק"
 
-#: main.cpp:185
+#: main.cpp:183
 #, kde-format
 msgid "Martin Flöser"
 msgstr "מרטין פלויסר"
 
-#: main.cpp:186
+#: main.cpp:184
 #, kde-format
 msgid "David Edmundson"
 msgstr "דיויד אדמונדסון"
 
-#: main.cpp:187
+#: main.cpp:185
 #, kde-format
 msgid "Roman Gilg"
 msgstr "רומן גילג"
 
-#: main.cpp:188
+#: main.cpp:186
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "ולאד זהורודני"
 
-#: main.cpp:189
+#: main.cpp:187
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "קסאבר הוגל"
 
-#: main.cpp:198
+#: main.cpp:196
 #, kde-format
 msgid "Disable configuration options"
 msgstr "השבתת אפשרויות הגדרה"
 
-#: main.cpp:199
+#: main.cpp:197
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "מציין כי KWin קרס לאחרונה n פעמים"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-27 00:44+0000\n"
+"POT-Creation-Date: 2025-08-30 00:43+0000\n"
 "PO-Revision-Date: 2024-09-26 14:15+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1383,7 +1383,7 @@ msgstr ""
 "Veldu glugga til að þvinga lokun með vinstrismelli eða færsluhnappi.\n"
 "Ýttu á Esc eða hægrismelltu til að hætta við."
 
-#: main.cpp:175 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:173 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
@@ -1394,67 +1394,67 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:177 main.cpp:201
+#: main.cpp:175 main.cpp:199
 #, kde-format
 msgid "KDE window manager"
 msgstr "Gluggastjóri KDE"
 
-#: main.cpp:179
+#: main.cpp:177
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(C) -1999-2019, KDE-þróunarteymið"
 
-#: main.cpp:181
+#: main.cpp:179
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:182
+#: main.cpp:180
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:183
+#: main.cpp:181
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:184
+#: main.cpp:182
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:185
+#: main.cpp:183
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:186
+#: main.cpp:184
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:187
+#: main.cpp:185
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:188
+#: main.cpp:186
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:189
+#: main.cpp:187
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:198
+#: main.cpp:196
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Gera grunnstillingarvalkosti óvirka"
 
-#: main.cpp:199
+#: main.cpp:197
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Gefa til kynna að KWin hafi nýlega hrunið n sinnum"
