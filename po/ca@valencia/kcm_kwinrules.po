@@ -190,7 +190,7 @@ msgid ""
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
 "La propietat de la finestra no es veurà afectada i per tant s'utilitzarà la "
-"gestió predeterminada per a ella.\n"
+"gestió predeterminada per ella.\n"
 "En especificar açò, es blocaran que tinguen efecte les opcions més "
 "genèriques de finestra."
 
@@ -221,7 +221,7 @@ msgstr ""
 #: package/contents/ui/FileDialogLoader.qml:14
 #, kde-format
 msgid "Select File"
-msgstr "Seleccioneu un fitxer"
+msgstr "Trieu un fitxer"
 
 #: package/contents/ui/FileDialogLoader.qml:26
 #, kde-format
@@ -244,7 +244,7 @@ msgstr ""
 #: package/contents/ui/main.qml:68
 #, kde-format
 msgid "Select the rules to export"
-msgstr "Seleccioneu les regles que s'han d'exportar"
+msgstr "Trieu les regles que s'han d'exportar"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
@@ -254,7 +254,7 @@ msgstr "Desselecciona-ho tot"
 #: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Select All"
-msgstr "Selecciona-ho tot"
+msgstr "Tria-ho tot"
 
 #: package/contents/ui/main.qml:86
 #, kde-format

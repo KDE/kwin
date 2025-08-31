@@ -1376,7 +1376,7 @@ msgstr ""
 "En general és similar a <em>El focus seguix el ratolí</em>. Si el sistema ha "
 "de seleccionar una finestra activa (p. ex., perquè l'actualment activa s'ha "
 "tancat) la candidata preferida serà la finestra que hi ha davall el ratolí. "
-"Seleccioneu esta si voleu un focus controlat en passar-hi per damunt."
+"Trieu esta si voleu un focus controlat en passar-hi per damunt."
 
 #: windows.cpp:115
 #, kde-format

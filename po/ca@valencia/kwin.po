@@ -1198,8 +1198,7 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccioneu la finestra a forçar el tancament amb el clic esquerre o "
-"retorn.\n"
+"Trieu la finestra a forçar el tancament amb el clic esquerre o retorn.\n"
 "La tecla «Esc» o un clic dret per a cancel·lar."
 
 #: main.cpp:179
