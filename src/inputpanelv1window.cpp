@@ -44,6 +44,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     connect(panelSurface, &InputPanelSurfaceV1Interface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
 
     connect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
+    connect(kwinApp()->inputMethod(), &InputMethod::cursorRectangleChanged, this, &InputPanelV1Window::reposition);
 
     m_rescalingTimer.setSingleShot(true);
     m_rescalingTimer.setInterval(0);
@@ -121,57 +122,41 @@ void InputPanelV1Window::resetPosition()
         moveResize(snapToPixels(geo, targetScale()));
     } break;
     case Mode::Overlay: {
-        auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
-        auto textWindow = waylandServer()->findWindow(textInputSurface);
-        QRect cursorRectangle;
-        auto textInputV1 = waylandServer()->seat()->textInputV1();
-        if (textInputV1 && textInputV1->isEnabled() && textInputV1->surface() == textInputSurface) {
-            cursorRectangle = textInputV1->cursorRectangle();
-        }
-        auto textInputV2 = waylandServer()->seat()->textInputV2();
-        if (textInputV2 && textInputV2->isEnabled() && textInputV2->surface() == textInputSurface) {
-            cursorRectangle = textInputV2->cursorRectangle();
-        }
-        auto textInputV3 = waylandServer()->seat()->textInputV3();
-        if (textInputV3 && textInputV3->isEnabled() && textInputV3->surface() == textInputSurface) {
-            cursorRectangle = textInputV3->cursorRectangle();
-        }
-        if (textWindow) {
-            cursorRectangle.translate(textWindow->bufferGeometry().topLeft().toPoint());
-            const QRectF screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
+        QRect cursorRectangle = kwinApp()->inputMethod()->cursorRectangle();
+        const QRectF screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
 
-            m_windowGeometry = QRectF(QPointF(0, 0), surface()->size());
+        m_windowGeometry = QRectF(QPointF(0, 0), surface()->size());
 
-            QRectF popupRect(cursorRectangle.left(),
-                             cursorRectangle.top() + cursorRectangle.height(),
-                             m_windowGeometry.width(),
-                             m_windowGeometry.height());
-            if (popupRect.left() < screen.left()) {
-                popupRect.moveLeft(screen.left());
-            }
-            if (popupRect.right() > screen.right()) {
-                popupRect.moveRight(screen.right());
-            }
-            if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
-                const QRectF flippedPopupRect(cursorRectangle.left(),
-                                              cursorRectangle.top() - m_windowGeometry.height(),
-                                              m_windowGeometry.width(),
-                                              m_windowGeometry.height());
-
-                // if it still doesn't fit we should continue with the unflipped version
-                if (flippedPopupRect.top() >= screen.top() && flippedPopupRect.bottom() <= screen.bottom()) {
-                    popupRect.moveTop(flippedPopupRect.top());
-                }
-            }
-            if (popupRect.top() < screen.top()) {
-                popupRect.moveTop(screen.top());
-            }
-            if (popupRect.bottom() > screen.bottom()) {
-                popupRect.moveBottom(screen.bottom());
-            }
-
-            moveResize(snapToPixels(popupRect, targetScale()));
+        QRectF popupRect(cursorRectangle.left(),
+                         cursorRectangle.top() + cursorRectangle.height(),
+                         m_windowGeometry.width(),
+                         m_windowGeometry.height());
+        if (popupRect.left() < screen.left()) {
+            popupRect.moveLeft(screen.left());
         }
+        if (popupRect.right() > screen.right()) {
+            popupRect.moveRight(screen.right());
+        }
+        if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
+            const QRectF flippedPopupRect(cursorRectangle.left(),
+                                          cursorRectangle.top() - m_windowGeometry.height(),
+                                          m_windowGeometry.width(),
+                                          m_windowGeometry.height());
+
+            // if it still doesn't fit we should continue with the unflipped version
+            if (flippedPopupRect.top() >= screen.top() && flippedPopupRect.bottom() <= screen.bottom()) {
+                popupRect.moveTop(flippedPopupRect.top());
+            }
+        }
+        if (popupRect.top() < screen.top()) {
+            popupRect.moveTop(screen.top());
+        }
+        if (popupRect.bottom() > screen.bottom()) {
+            popupRect.moveBottom(screen.bottom());
+        }
+
+        moveResize(snapToPixels(popupRect, targetScale()));
+
     } break;
     }
 }

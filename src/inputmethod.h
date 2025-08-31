@@ -14,6 +14,7 @@
 #include <vector>
 
 #include <QObject>
+#include <QRect>
 
 #include "input_event_spy.h"
 #include <kwin_export.h>
@@ -80,6 +81,8 @@ public:
         return m_internalContext;
     }
 
+    QRect cursorRectangle() const;
+
 Q_SIGNALS:
     void panelChanged();
     void activeChanged(bool active);
@@ -87,6 +90,7 @@ Q_SIGNALS:
     void visibleChanged();
     void availableChanged();
     void activeClientSupportsTextInputChanged();
+    void cursorRectangleChanged();
 
 private Q_SLOTS:
     // textinput interface slots
