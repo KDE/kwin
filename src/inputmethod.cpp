@@ -141,6 +141,7 @@ void InputMethod::init()
         connect(textInputV1, &TextInputV1Interface::reset, this, &InputMethod::textInputInterfaceV1Reset);
         connect(textInputV1, &TextInputV1Interface::invokeAction, this, &InputMethod::invokeAction);
         connect(textInputV1, &TextInputV1Interface::enabledChanged, this, &InputMethod::textInputInterfaceV1EnabledChanged);
+        connect(textInputV1, &TextInputV1Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
 
         TextInputV2Interface *textInputV2 = waylandServer()->seat()->textInputV2();
         connect(textInputV2, &TextInputV2Interface::requestShowInputPanel, this, &InputMethod::show);
@@ -149,6 +150,7 @@ void InputMethod::init()
         connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
         connect(textInputV2, &TextInputV2Interface::stateUpdated, this, &InputMethod::textInputInterfaceV2StateUpdated);
         connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
+        connect(textInputV2, &TextInputV2Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
 
         TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
         connect(textInputV3, &TextInputV3Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
@@ -156,6 +158,7 @@ void InputMethod::init()
         connect(textInputV3, &TextInputV3Interface::stateCommitted, this, &InputMethod::stateCommitted);
         connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
         connect(textInputV3, &TextInputV3Interface::enableRequested, this, &InputMethod::textInputInterfaceV3EnableRequested);
+        connect(textInputV3, &TextInputV3Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
 
         connect(m_internalContext, &InternalInputMethodContext::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
         connect(m_internalContext, &InternalInputMethodContext::contentTypeChanged, this, &InputMethod::contentTypeChanged);
@@ -259,6 +262,32 @@ void InputMethod::commitPendingText()
     }
 }
 
+QRect InputMethod::cursorRectangle() const
+{
+    QRect localCursorRect;
+    auto t1 = waylandServer()->seat()->textInputV1();
+    auto t2 = waylandServer()->seat()->textInputV2();
+    auto t3 = waylandServer()->seat()->textInputV3();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return {};
+    }
+    if (t1 && t1->isEnabled()) {
+        localCursorRect = t1->cursorRectangle();
+    }
+    if (t2 && t2->isEnabled()) {
+        localCursorRect = t2->cursorRectangle();
+    }
+    if (t3 && t3->isEnabled()) {
+        localCursorRect = t3->cursorRectangle();
+    }
+
+    if (auto textWindow = waylandServer()->findWindow(waylandServer()->seat()->focusedTextInputSurface())) {
+        return localCursorRect.translated(textWindow->bufferGeometry().topLeft().toPoint());
+    }
+    return {};
+}
+
 void InputMethod::setActive(bool active)
 {
     const bool wasActive = waylandServer()->inputMethod()->context();
@@ -325,11 +354,13 @@ void InputMethod::setTrackedWindow(Window *trackedWindow)
     if (m_trackedWindow) {
         m_trackedWindow->setVirtualKeyboardGeometry(QRect());
         disconnect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
+        disconnect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::cursorRectangleChanged);
     }
     m_trackedWindow = trackedWindow;
     m_shouldShowPanel = false;
     if (m_trackedWindow) {
         connect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
+        connect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::cursorRectangleChanged);
     }
     updateInputPanelState();
 }
