@@ -183,7 +183,7 @@ void DndTest::pointerDrag()
     QCOMPARE(dataDevice->dragSurface(), sourceSurface.get());
 
     // Accept our own offer.
-    auto sourceOffer = dataDevice->dragOffer();
+    auto sourceOffer = dataDevice->takeDragOffer();
     QCOMPARE(sourceOffer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
     QCOMPARE(sourceOffer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     QCOMPARE(sourceOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::None);
@@ -197,7 +197,7 @@ void DndTest::pointerDrag()
     QVERIFY(sourceTargetsAcceptsSpy.wait());
     QCOMPARE(sourceTargetsAcceptsSpy.last().at(0).value<QString>(), QStringLiteral("text/plain"));
 
-    QSignalSpy sourceOfferSelectedDragAndDropActionSpy(sourceOffer, &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
+    QSignalSpy sourceOfferSelectedDragAndDropActionSpy(sourceOffer.get(), &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
     sourceOffer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
     QVERIFY(sourceOfferSelectedDragAndDropActionSpy.wait());
     QCOMPARE(sourceOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
@@ -216,7 +216,7 @@ void DndTest::pointerDrag()
     QCOMPARE(dataDevice->dragSurface(), targetSurface.get());
 
     // Accept the offer.
-    auto targetOffer = dataDevice->dragOffer();
+    auto targetOffer = dataDevice->takeDragOffer();
     QCOMPARE(targetOffer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
     QCOMPARE(targetOffer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     QCOMPARE(targetOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::None);
@@ -229,7 +229,7 @@ void DndTest::pointerDrag()
     QVERIFY(sourceTargetsAcceptsSpy.wait());
     QCOMPARE(sourceTargetsAcceptsSpy.last().at(0).value<QString>(), QStringLiteral("text/plain"));
 
-    QSignalSpy targetOfferSelectedDragAndDropActionSpy(targetOffer, &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
+    QSignalSpy targetOfferSelectedDragAndDropActionSpy(targetOffer.get(), &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
     targetOffer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Move, KWayland::Client::DataDeviceManager::DnDAction::Move);
     QVERIFY(targetOfferSelectedDragAndDropActionSpy.wait());
     QCOMPARE(targetOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
@@ -246,9 +246,10 @@ void DndTest::pointerDrag()
     QCOMPARE(pointer->enteredSurface(), targetSurface.get());
     QCOMPARE(pointerEnteredSpy.last().at(1).value<QPointF>(), QPointF(60, 50));
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 2);
 
     // Ask for data.
-    const QFuture<QByteArray> data = readMimeTypeData(targetOffer, QStringLiteral("text/plain"));
+    const QFuture<QByteArray> data = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
     QVERIFY(waitFuture(data));
     QCOMPARE(data.result(), QByteArrayLiteral("foo"));
 
@@ -337,7 +338,7 @@ void DndTest::pointerSubSurfaceDrag()
     QCOMPARE(dataDevice->dragSurface(), childSurface.get());
 
     // Accept the data offer.
-    auto offer = dataDevice->dragOffer();
+    auto offer = dataDevice->takeDragOffer();
     QCOMPARE(offer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
     QCOMPARE(offer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     QCOMPARE(offer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::None);
@@ -351,7 +352,7 @@ void DndTest::pointerSubSurfaceDrag()
     QVERIFY(sourceTargetsAcceptsSpy.wait());
     QCOMPARE(sourceTargetsAcceptsSpy.last().at(0).value<QString>(), QStringLiteral("text/plain"));
 
-    QSignalSpy targetOfferSelectedDragAndDropActionSpy(offer, &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
+    QSignalSpy targetOfferSelectedDragAndDropActionSpy(offer.get(), &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
     offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Move, KWayland::Client::DataDeviceManager::DnDAction::Move);
     QVERIFY(targetOfferSelectedDragAndDropActionSpy.wait());
     QCOMPARE(offer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
@@ -719,7 +720,7 @@ void DndTest::noAcceptedMimeTypePointerDrag()
     QCOMPARE(dataDevice->dragSurface(), surface.get());
 
     // Without accepted mime type, the drag should be canceled when the LMB is released.
-    auto offer = dataDevice->dragOffer();
+    auto offer = dataDevice->takeDragOffer();
     offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
 
     // Finish the drag-and-drop operation.
@@ -838,7 +839,7 @@ void DndTest::touchDrag()
     QCOMPARE(dataDevice->dragSurface(), sourceSurface.get());
 
     // Accept our own offer.
-    auto sourceOffer = dataDevice->dragOffer();
+    auto sourceOffer = dataDevice->takeDragOffer();
     QCOMPARE(sourceOffer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
     QCOMPARE(sourceOffer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     QCOMPARE(sourceOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::None);
@@ -852,7 +853,7 @@ void DndTest::touchDrag()
     QVERIFY(sourceTargetsAcceptsSpy.wait());
     QCOMPARE(sourceTargetsAcceptsSpy.last().at(0).value<QString>(), QStringLiteral("text/plain"));
 
-    QSignalSpy sourceOfferSelectedDragAndDropActionSpy(sourceOffer, &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
+    QSignalSpy sourceOfferSelectedDragAndDropActionSpy(sourceOffer.get(), &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
     sourceOffer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
     QVERIFY(sourceOfferSelectedDragAndDropActionSpy.wait());
     QCOMPARE(sourceOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
@@ -877,7 +878,7 @@ void DndTest::touchDrag()
     QCOMPARE(dataDevice->dragSurface(), targetSurface.get());
 
     // Accept the offer.
-    auto targetOffer = dataDevice->dragOffer();
+    auto targetOffer = dataDevice->takeDragOffer();
     QCOMPARE(targetOffer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
     QCOMPARE(targetOffer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     QCOMPARE(targetOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::None);
@@ -890,7 +891,7 @@ void DndTest::touchDrag()
     QVERIFY(sourceTargetsAcceptsSpy.wait());
     QCOMPARE(sourceTargetsAcceptsSpy.last().at(0).value<QString>(), QStringLiteral("text/plain"));
 
-    QSignalSpy targetOfferSelectedDragAndDropActionSpy(targetOffer, &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
+    QSignalSpy targetOfferSelectedDragAndDropActionSpy(targetOffer.get(), &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
     targetOffer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Move, KWayland::Client::DataDeviceManager::DnDAction::Move);
     QVERIFY(targetOfferSelectedDragAndDropActionSpy.wait());
     QCOMPARE(targetOffer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
@@ -905,9 +906,10 @@ void DndTest::touchDrag()
     Test::touchUp(0, timestamp++);
     QVERIFY(touchSequenceEndedSpy.wait());
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 2);
 
     // Ask for data.
-    const QFuture<QByteArray> data = readMimeTypeData(targetOffer, QStringLiteral("text/plain"));
+    const QFuture<QByteArray> data = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
     QVERIFY(waitFuture(data));
     QCOMPARE(data.result(), QByteArrayLiteral("foo"));
 
@@ -991,7 +993,7 @@ void DndTest::touchSubSurfaceDrag()
     QCOMPARE(dataDevice->dragSurface(), childSurface.get());
 
     // Accept the data offer.
-    auto offer = dataDevice->dragOffer();
+    auto offer = dataDevice->takeDragOffer();
     QCOMPARE(offer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
     QCOMPARE(offer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     QCOMPARE(offer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::None);
@@ -1005,7 +1007,7 @@ void DndTest::touchSubSurfaceDrag()
     QVERIFY(sourceTargetsAcceptsSpy.wait());
     QCOMPARE(sourceTargetsAcceptsSpy.last().at(0).value<QString>(), QStringLiteral("text/plain"));
 
-    QSignalSpy targetOfferSelectedDragAndDropActionSpy(offer, &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
+    QSignalSpy targetOfferSelectedDragAndDropActionSpy(offer.get(), &KWayland::Client::DataOffer::selectedDragAndDropActionChanged);
     offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Move, KWayland::Client::DataDeviceManager::DnDAction::Move);
     QVERIFY(targetOfferSelectedDragAndDropActionSpy.wait());
     QCOMPARE(offer->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
@@ -1277,7 +1279,7 @@ void DndTest::noAcceptedMimeTypeTouchDrag()
     QCOMPARE(dataDevice->dragSurface(), surface.get());
 
     // Without accepted mime type, the drag should be canceled when the finger is lifted.
-    auto offer = dataDevice->dragOffer();
+    auto offer = dataDevice->takeDragOffer();
     offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
 
     // Drop.

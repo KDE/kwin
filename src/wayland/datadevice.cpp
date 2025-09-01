@@ -192,21 +192,6 @@ void DataDeviceInterface::sendSelection(AbstractDataSource *other)
 void DataDeviceInterface::drop()
 {
     d->send_drop();
-    d->drag.surface = nullptr; // prevent sending wl_data_device.leave event
-
-    disconnect(d->drag.posConnection);
-    d->drag.posConnection = QMetaObject::Connection();
-    disconnect(d->drag.destroyConnection);
-    d->drag.destroyConnection = QMetaObject::Connection();
-
-    if (d->seat->dragSource()->selectedDndAction() != DataDeviceManagerInterface::DnDAction::Ask) {
-        disconnect(d->drag.sourceActionConnection);
-        d->drag.sourceActionConnection = QMetaObject::Connection();
-        disconnect(d->drag.targetActionConnection);
-        d->drag.targetActionConnection = QMetaObject::Connection();
-        disconnect(d->drag.keyboardModifiersConnection);
-        d->drag.keyboardModifiersConnection = QMetaObject::Connection();
-    }
 }
 
 static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource *source, DataOfferInterface *offer, Qt::KeyboardModifiers keyboardModifiers)
@@ -264,20 +249,23 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
     }
 
     if (d->drag.offer) {
-        disconnect(d->drag.sourceActionConnection);
-        d->drag.sourceActionConnection = QMetaObject::Connection();
-        disconnect(d->drag.targetActionConnection);
-        d->drag.targetActionConnection = QMetaObject::Connection();
-        disconnect(d->drag.keyboardModifiersConnection);
-        d->drag.keyboardModifiersConnection = QMetaObject::Connection();
-
         // Keep the data offer alive so the target client can retrieve data after a drop. The
         // data offer will be destroyed after the target client has finished using it.
-        if (!dragSource || !dragSource->isDropPerformed()) {
+        if (dragSource && dragSource->isDropPerformed()) {
+            if (dragSource->selectedDndAction() != DataDeviceManagerInterface::DnDAction::Ask) {
+                disconnect(d->drag.sourceActionConnection);
+                disconnect(d->drag.targetActionConnection);
+                disconnect(d->drag.keyboardModifiersConnection);
+            }
+        } else {
             delete d->drag.offer;
         }
 
         d->drag.offer = nullptr;
+
+        d->drag.sourceActionConnection = QMetaObject::Connection();
+        d->drag.targetActionConnection = QMetaObject::Connection();
+        d->drag.keyboardModifiersConnection = QMetaObject::Connection();
     }
 
     if (!surface || !dragSource) {
@@ -327,14 +315,14 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
     const QPointF pos = d->seat->dragSurfaceTransformation().map(position);
     d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), d->drag.offer ? d->drag.offer->resource() : nullptr);
     if (d->drag.offer) {
-        auto matchOffers = [this, dragSource] {
+        auto matchOffers = [this, dragSource, offer = d->drag.offer] {
             Qt::KeyboardModifiers keyboardModifiers;
             if (d->seat->isDrag()) { // ignore keyboard modifiers when in "ask" negotiation
                 keyboardModifiers = dragSource->keyboardModifiers();
             }
 
-            const DataDeviceManagerInterface::DnDAction action = chooseDndAction(dragSource, d->drag.offer, keyboardModifiers);
-            d->drag.offer->dndAction(action);
+            const DataDeviceManagerInterface::DnDAction action = chooseDndAction(dragSource, offer, keyboardModifiers);
+            offer->dndAction(action);
             dragSource->dndAction(action);
         };
         matchOffers();
