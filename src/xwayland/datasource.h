@@ -40,6 +40,7 @@ public:
 
     void dropPerformed() override
     {
+        AbstractDataSource::dropPerformed();
         Q_EMIT dropped();
     }
     void dndFinished() override
