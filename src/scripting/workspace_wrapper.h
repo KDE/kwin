@@ -17,6 +17,8 @@
 #include <QSize>
 #include <QStringList>
 
+class QJSEngine;
+
 namespace KWin
 {
 // forward declarations
@@ -188,7 +190,7 @@ public:
     Q_ENUM(ElectricBorder)
 
 protected:
-    explicit WorkspaceWrapper(QObject *parent = nullptr);
+    explicit WorkspaceWrapper(QJSEngine *engine, QObject *parent = nullptr);
 
 public:
     Window *activeWindow() const;
@@ -433,6 +435,9 @@ public Q_SLOTS:
      * Hides the outline previously shown by showOutline.
      */
     void hideOutline();
+
+private:
+    QJSEngine *m_engine;
 };
 
 class QtScriptWorkspaceWrapper : public WorkspaceWrapper
@@ -444,7 +449,7 @@ public:
      */
     Q_INVOKABLE QList<KWin::Window *> windowList() const;
 
-    explicit QtScriptWorkspaceWrapper(QObject *parent = nullptr);
+    explicit QtScriptWorkspaceWrapper(QJSEngine *engine, QObject *parent = nullptr);
 };
 
 class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
@@ -457,7 +462,7 @@ public:
     static qsizetype countWindowList(QQmlListProperty<KWin::Window> *window);
     static KWin::Window *atWindowList(QQmlListProperty<KWin::Window> *windows, qsizetype index);
 
-    explicit DeclarativeScriptWorkspaceWrapper(QObject *parent = nullptr);
+    explicit DeclarativeScriptWorkspaceWrapper(QQmlEngine *engine, QObject *parent = nullptr);
 };
 
 }
