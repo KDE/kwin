@@ -2940,83 +2940,21 @@ QObject *InputRedirection::lastInputHandler() const
     return m_lastInputDevice;
 }
 
+void InputRedirection::setLastInputSerial(uint32_t serial)
+{
+    m_lastSerial = serial;
+    workspace()->setWasUserInteraction();
+}
+
+uint32_t InputRedirection::lastInputSerial() const
+{
+    return m_lastSerial;
+}
+
 void InputRedirection::setLastInputHandler(QObject *device)
 {
     m_lastInputDevice = device;
 }
-
-class WindowInteractedSpy : public InputEventSpy
-{
-public:
-    static constexpr std::array s_modifierKeys = {
-        Qt::Key_Control,
-        Qt::Key_Alt,
-        Qt::Key_AltGr,
-        Qt::Key_Meta,
-        Qt::Key_CapsLock,
-        Qt::Key_NumLock,
-        Qt::Key_Shift,
-        Qt::Key_ScrollLock,
-    };
-
-    void keyboardKey(KeyboardKeyEvent *event) override
-    {
-        if (event->state != KeyboardKeyState::Pressed) {
-            return;
-        }
-        if (std::ranges::contains(s_modifierKeys, event->key)) {
-            return;
-        }
-        update();
-    }
-
-    void pointerButton(PointerButtonEvent *event) override
-    {
-        if (event->state != PointerButtonState::Pressed) {
-            return;
-        }
-        update();
-    }
-
-    void tabletPadButtonEvent(TabletPadButtonEvent *event) override
-    {
-        if (!event->pressed) {
-            return;
-        }
-        update();
-    }
-
-    void tabletToolButtonEvent(TabletToolButtonEvent *event) override
-    {
-        if (!event->pressed) {
-            return;
-        }
-        update();
-    }
-
-    void tabletToolTipEvent(TabletToolTipEvent *event) override
-    {
-        if (event->type != TabletToolTipEvent::Type::Press) {
-            return;
-        }
-        update();
-    }
-
-    void touchDown(qint32, const QPointF &, std::chrono::microseconds time) override
-    {
-        update();
-    }
-
-    void update()
-    {
-        auto window = workspace()->activeWindow();
-        if (!window) {
-            return;
-        }
-        window->setLastUsageSerial(waylandServer()->seat()->display()->serial());
-        workspace()->setWasUserInteraction();
-    }
-};
 
 class UserActivitySpy : public InputEventSpy
 {
@@ -3153,9 +3091,6 @@ void InputRedirection::setupInputFilters()
 
     m_userActivitySpy = std::make_unique<UserActivitySpy>();
     installInputEventSpy(m_userActivitySpy.get());
-
-    m_windowInteractedSpy = std::make_unique<WindowInteractedSpy>();
-    installInputEventSpy(m_windowInteractedSpy.get());
 
 #if KWIN_BUILD_SCREENLOCKER
     m_lockscreenFilter = std::make_unique<LockScreenFilter>();

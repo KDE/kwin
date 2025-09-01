@@ -630,15 +630,17 @@ void ActivationTest::testXdgActivation()
     Test::xdgActivation()->activate(QString(), *surfaces[1]);
     QVERIFY(!activationSpy.wait(10));
 
-    // activating it without a surface should fail as well, even if a serial is present
+    // using the surface and a correct serial should make it work
     auto token = Test::xdgActivation()->createToken();
+    token->set_surface(*surfaces.back());
     token->set_serial(windows.back()->lastUsageSerial(), *Test::waylandSeat());
     Test::xdgActivation()->activate(token->commitAndWait(), *surfaces[1]);
-    QVERIFY(!activationSpy.wait(10));
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1]);
 
-    // adding the surface should make it work
+    // it should even work without the surface, if the serial is correct
+    setupWindows();
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces.back());
     token->set_serial(windows.back()->lastUsageSerial(), *Test::waylandSeat());
     Test::xdgActivation()->activate(token->commitAndWait(), *surfaces[1]);
     QVERIFY(activationSpy.wait(10));

@@ -16,6 +16,7 @@
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
 #include "wayland/datadevice.h"
+#include "wayland/display.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -266,6 +267,17 @@ void KeyboardInputRedirection::update()
     }
 }
 
+static constexpr std::array s_modifierKeys = {
+    Qt::Key_Control,
+    Qt::Key_Alt,
+    Qt::Key_AltGr,
+    Qt::Key_Meta,
+    Qt::Key_CapsLock,
+    Qt::Key_NumLock,
+    Qt::Key_Shift,
+    Qt::Key_ScrollLock,
+};
+
 void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
@@ -320,6 +332,12 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
+    }
+    if (state == KeyboardKeyState::Pressed && !std::ranges::contains(s_modifierKeys, key)) {
+        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        if (auto f = pickFocus()) {
+            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        }
     }
 }
 

@@ -15,6 +15,8 @@
 #include "input_event_spy.h"
 #include "osd.h"
 #include "pointer_input.h"
+#include "wayland/display.h"
+#include "wayland/seat.h"
 #include "wayland/tablet_v2.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -363,6 +365,12 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
     input()->processSpies(&InputEventSpy::tabletToolTipEvent, &ev);
     input()->processFilters(&InputEventFilter::tabletToolTipEvent, &ev);
     input()->setLastInputHandler(this);
+    if (tipDown) {
+        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        if (auto f = focus()) {
+            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        }
+    }
 }
 
 void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
@@ -382,6 +390,12 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
     input()->processSpies(&InputEventSpy::tabletToolButtonEvent, &event);
     input()->processFilters(&InputEventFilter::tabletToolButtonEvent, &event);
     input()->setLastInputHandler(this);
+    if (isPressed) {
+        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        if (auto f = focus()) {
+            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        }
+    }
 }
 
 void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed, quint32 group, quint32 mode, bool isModeSwitch, std::chrono::microseconds time, InputDevice *device)
@@ -398,6 +412,12 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
     input()->processSpies(&InputEventSpy::tabletPadButtonEvent, &event);
     input()->processFilters(&InputEventFilter::tabletPadButtonEvent, &event);
     input()->setLastInputHandler(this);
+    if (isPressed) {
+        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        if (auto f = focus()) {
+            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        }
+    }
 }
 
 void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)

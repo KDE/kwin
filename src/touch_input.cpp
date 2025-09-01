@@ -14,6 +14,7 @@
 #include "decorations/decoratedwindow.h"
 #include "input_event_spy.h"
 #include "pointer_input.h"
+#include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -120,6 +121,10 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
     input()->processSpies(&InputEventSpy::touchDown, id, pos, time);
     input()->processFilters(&InputEventFilter::touchDown, id, pos, time);
     m_windowUpdatedInCycle = false;
+    input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+    if (auto f = focus()) {
+        f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+    }
 }
 
 void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time, InputDevice *device)

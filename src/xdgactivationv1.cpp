@@ -9,6 +9,7 @@
 
 #include "xdgactivationv1.h"
 #include "effect/effecthandler.h"
+#include "input.h"
 #include "utils/common.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
@@ -18,6 +19,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+
 #include <KDesktopFile>
 
 namespace KWin
@@ -51,9 +53,14 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
 QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)
 {
     auto window = waylandServer()->findWindow(surface);
-    if (!isPrivileged && workspace()->activeWindow() && workspace()->activeWindow()->surface() != surface) {
-        qCWarning(KWIN_CORE) << "Cannot grant a token to" << window;
-        return QStringLiteral("not-granted-666");
+    if (!isPrivileged) {
+        const bool allowed = !workspace()->activeWindow()
+            || workspace()->activeWindow()->surface() == surface
+            || (input()->lastInputSerial() <= serial && waylandServer()->display()->serial() >= serial);
+        if (!allowed) {
+            qCDebug(KWIN_CORE) << "Cannot grant a token to" << window;
+            return QStringLiteral("not-granted-666");
+        }
     }
     static int i = 0;
     const auto newToken = QStringLiteral("kwin-%1").arg(++i);

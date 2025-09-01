@@ -176,6 +176,9 @@ public:
     void setLastInputHandler(QObject *device);
     QObject *lastInputHandler() const;
 
+    void setLastInputSerial(uint32_t serial);
+    uint32_t lastInputSerial() const;
+
     QList<InputDevice *> devices() const;
 
     bool hasAlphaNumericKeyboard();
@@ -253,6 +256,7 @@ private:
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
     QObject *m_lastInputDevice = nullptr;
+    uint32_t m_lastSerial = 0;
 
     GlobalShortcutsManager *m_shortcuts;
 
@@ -286,7 +290,6 @@ private:
 
     std::unique_ptr<InputEventSpy> m_hideCursorSpy;
     std::unique_ptr<InputEventSpy> m_userActivitySpy;
-    std::unique_ptr<InputEventSpy> m_windowInteractedSpy;
 
     LEDs m_leds;
     bool m_hasKeyboard = false;
