@@ -236,7 +236,7 @@ void X11Window::releaseWindow(bool on_shutdown)
         workspace()->removeX11Window(this);
         if (!on_shutdown) {
             // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
-            info->setDesktop(0);
+            info->setDesktop(0, true);
             info->setState(NET::States(), info->state()); // Reset all state flags
         }
         if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
@@ -535,8 +535,8 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             }
         } else { // a transient shall appear on its leader and not drag that around
             int desktopId = 0;
-            if (info->desktop()) {
-                desktopId = info->desktop(); // Window had the initial desktop property, force it
+            if (info->desktop(true)) {
+                desktopId = info->desktop(true); // Window had the initial desktop property, force it
             }
             if (desktopId == 0 && asn_valid && asn_data.desktop() != 0) {
                 desktopId = asn_data.desktop();
@@ -576,7 +576,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         }
     }
     setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
-    info->setDesktop(desktopId());
+    info->setDesktop(desktopId(), true);
     workspace()->updateOnAllDesktopsOfTransients(this); // SELI TODO
     // onAllDesktopsChange(); // Decoration doesn't exist here yet
 
@@ -1495,7 +1495,7 @@ void X11Window::updateNetWmDesktopId()
     if (isDeleted()) {
         return;
     }
-    info->setDesktop(m_netWmDesktop ? m_netWmDesktop->x11DesktopNumber() : -1);
+    info->setDesktop(m_netWmDesktop ? m_netWmDesktop->x11DesktopNumber() : -1, true);
 }
 
 void X11Window::doSetDemandsAttention()

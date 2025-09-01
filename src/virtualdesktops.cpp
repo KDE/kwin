@@ -229,7 +229,7 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
     // Nothing will be connected to rootInfo
     if (m_rootInfo) {
         updateRootInfo();
-        m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
+        m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber(), true);
         for (auto *vd : std::as_const(m_desktops)) {
             m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
         }
