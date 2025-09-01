@@ -9,29 +9,26 @@
 
 var registeredBorders = [];
 
-function isRelevant(client) {
-    return client.minimizable &&
-           (!client.desktops.length || client.desktops.indexOf(workspace.currentDesktop) != -1) &&
-           (!client.activities.length || client.activities.indexOf(workspace.currentActivity) != -1);
+function isRelevant(window) {
+    return window.minimizable &&
+        (!window.desktops.length || window.desktops.includes(workspace.currentDesktop)) &&
+        (!window.activities.length || window.activities.includes(workspace.currentActivity));
 }
 
-function minimizeAllWindows() {
-    var allClients = workspace.windowList();
-    var relevantClients = [];
-    var minimize = false;
-
-    for (var i = 0; i < allClients.length; ++i) {
-        if (!isRelevant(allClients[i])) {
+function minimizeWindows(windows) {
+    let minimize = false;
+    var relevantWindows = [];
+    for (const window of windows) {
+        if (!isRelevant(window)) {
             continue;
         }
-        if (!allClients[i].minimized) {
+        if (!window.minimized) {
             minimize = true;
         }
-        relevantClients.push(allClients[i]);
+        relevantWindows.push(window);
     }
-
-    // Try to preserve last active window by sorting windows.
-    relevantClients.sort((a, b) => {
+    // Try to preserve topmost window by sorting windows.
+    relevantWindows.sort((a, b) => {
         if (a.active) {
             return 1;
         } else if (b.active) {
@@ -40,23 +37,39 @@ function minimizeAllWindows() {
         return a.stackingOrder - b.stackingOrder;
     });
 
-    for (var i = 0; i < relevantClients.length; ++i) {
-        var wasMinimizedByScript = relevantClients[i].minimizedByScript;
-        delete relevantClients[i].minimizedByScript;
+    for (const window of relevantWindows) {
+        var wasMinimizedByScript = window.minimizedByScript;
+        delete window.minimizedByScript;
 
         if (minimize) {
-            if (relevantClients[i].minimized) {
+            if (window.minimized) {
                 continue;
             }
-            relevantClients[i].minimized = true;
-            relevantClients[i].minimizedByScript = true;
+            window.minimized = true;
+            window.minimizedByScript = true;
         } else {
             if (!wasMinimizedByScript) {
                 continue;
             }
-            relevantClients[i].minimized = false;
+            window.minimized = false;
         }
     }
+}
+
+function minimizeAllWindows() {
+    minimizeWindows(workspace.windowList());
+}
+
+function minimizeAllWindowsActiveScreen() {
+    minimizeWindows(workspace.windowList().filter(window => window.output === workspace.activeScreen));
+}
+
+function minimizeAllOthers() {
+    minimizeWindows(workspace.windowList().filter(window => !window.active));
+}
+
+function minimizeAllOthersActiveScreen() {
+    minimizeWindows(workspace.windowList().filter(window => !window.active && window.output === workspace.activeScreen));
 }
 
 function init() {
@@ -78,5 +91,8 @@ function init() {
 
 options.configChanged.connect(init);
 
-registerShortcut("MinimizeAll", "MinimizeAll", "Meta+Shift+D", minimizeAllWindows);
+registerShortcut("MinimizeAll", "Minimize all windows", "Meta+Shift+D", minimizeAllWindows);
+registerShortcut("MinimizeAllActiveScreen", "Minimize all windows in active screen", "", minimizeAllWindowsActiveScreen);
+registerShortcut("minimizeAllOthers", "Minimize all other windows", "Meta+Shift+O", minimizeAllOthers);
+registerShortcut("minimizeAllOthersActiveScreen", "Minimize all other windows in active screen", "", minimizeAllOthersActiveScreen);
 init();
