@@ -40,7 +40,6 @@ void ColorManagerV1::wp_color_manager_v1_bind_resource(Resource *resource)
     send_supported_primaries_named(resource->handle, primaries::primaries_adobe_rgb);
 
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_gamma22);
-    send_supported_tf_named(resource->handle, transfer_function::transfer_function_srgb);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_st2084_pq);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_ext_linear);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_bt1886);
@@ -288,7 +287,6 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_tf_nam
         return;
     }
     switch (tf) {
-    case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB:
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22:
         m_transferFunctionType = TransferFunction::gamma22;
         return;
@@ -301,6 +299,9 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_tf_nam
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886:
         m_transferFunctionType = TransferFunction::BT1886;
         return;
+        // intentionally not supported - it's confusing and
+        // deprecated in version 2 of the protocol
+    case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB:
     default:
         // TODO add more transfer functions
         wl_resource_post_error(resource->handle, error::error_invalid_tf, "unsupported named transfer function");
@@ -476,12 +477,12 @@ void ImageDescriptionV1::wp_image_description_v1_destroy(Resource *resource)
 static uint32_t kwinTFtoProtoTF(TransferFunction tf)
 {
     switch (tf.type) {
-    case TransferFunction::sRGB:
-        return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB;
     case TransferFunction::linear:
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR;
     case TransferFunction::PerceptualQuantizer:
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ;
+        // not "correct", but the piece-wise TF shouldn't be used anyways
+    case TransferFunction::sRGB:
     case TransferFunction::gamma22:
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22;
     case TransferFunction::BT1886:
