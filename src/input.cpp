@@ -2604,8 +2604,6 @@ public:
             dragToplevel(pos, seat->xdgTopleveldrag());
         }
 
-        seat->notifyPointerMotion(pos);
-
         Window *dragTarget = pickDragTarget(pos);
         if (dragTarget) {
             if (dragTarget != m_dragTarget) {
@@ -2621,10 +2619,7 @@ public:
         m_dragTarget = dragTarget;
 
         if (auto *xwl = kwinApp()->xwayland()) {
-            const auto ret = xwl->dragMoveFilter(dragTarget);
-            if (ret == Xwl::DragEventReply::Ignore) {
-                return false;
-            } else if (ret == Xwl::DragEventReply::Take) {
+            if (xwl->dragMoveFilter(dragTarget, pos)) {
                 return true;
             }
         }
@@ -2641,7 +2636,9 @@ public:
             seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
             m_dragTarget = nullptr;
         }
-        // TODO: should we pass through effects?
+
+        seat->notifyPointerMotion(pos);
+
         return true;
     }
 

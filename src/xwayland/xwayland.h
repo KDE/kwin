@@ -83,7 +83,7 @@ private:
 
     void runXWaylandStartupScripts();
 
-    DragEventReply dragMoveFilter(Window *target) override;
+    bool dragMoveFilter(Window *target, const QPointF &position) override;
     AbstractDropHandler *xwlDropHandler() override;
     QSocketNotifier *m_socketNotifier = nullptr;
 

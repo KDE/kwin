@@ -40,9 +40,9 @@ WlToXDrag::WlToXDrag(Dnd *dnd)
 {
 }
 
-DragEventReply WlToXDrag::moveFilter(Window *target)
+bool WlToXDrag::moveFilter(Window *target, const QPointF &position)
 {
-    return DragEventReply::Wayland;
+    return false;
 }
 
 bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)

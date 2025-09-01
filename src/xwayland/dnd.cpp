@@ -133,10 +133,10 @@ bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-DragEventReply Dnd::dragMoveFilter(Window *target)
+bool Dnd::dragMoveFilter(Window *target, const QPointF &position)
 {
     Q_ASSERT(m_currentDrag);
-    return m_currentDrag->moveFilter(target);
+    return m_currentDrag->moveFilter(target, position);
 }
 
 void Dnd::startDrag()

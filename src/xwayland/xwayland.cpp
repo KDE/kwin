@@ -611,12 +611,12 @@ void Xwayland::runXWaylandStartupScripts()
     }
 }
 
-DragEventReply Xwayland::dragMoveFilter(Window *target)
+bool Xwayland::dragMoveFilter(Window *target, const QPointF &position)
 {
     if (m_dataBridge) {
-        return m_dataBridge->dragMoveFilter(target);
+        return m_dataBridge->dragMoveFilter(target, position);
     } else {
-        return DragEventReply::Wayland;
+        return false;
     }
 }
 

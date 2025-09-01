@@ -22,8 +22,6 @@ class Window;
 namespace Xwl
 {
 class Drag;
-enum class DragEventReply;
-
 class XwlDropHandler;
 
 /**
@@ -45,7 +43,7 @@ public:
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    DragEventReply dragMoveFilter(Window *target);
+    bool dragMoveFilter(Window *target, const QPointF &position);
 
     using DnDAction = DataDeviceManagerInterface::DnDAction;
     using DnDActions = DataDeviceManagerInterface::DnDActions;

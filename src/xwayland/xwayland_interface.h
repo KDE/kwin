@@ -19,22 +19,10 @@ namespace KWin
 class AbstractDropHandler;
 class Window;
 
-namespace Xwl
-{
-enum class DragEventReply {
-    // event should be ignored by the filter
-    Ignore,
-    // event is filtered out
-    Take,
-    // event should be handled as a Wayland native one
-    Wayland,
-};
-} // namespace Xwl
-
 class KWIN_EXPORT XwaylandInterface
 {
 public:
-    virtual Xwl::DragEventReply dragMoveFilter(Window *target) = 0;
+    virtual bool dragMoveFilter(Window *target, const QPointF &position) = 0;
     virtual AbstractDropHandler *xwlDropHandler() = 0;
 
 protected:

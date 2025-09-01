@@ -24,7 +24,6 @@ class Window;
 namespace Xwl
 {
 class X11Source;
-enum class DragEventReply;
 class WlVisit;
 class Dnd;
 
@@ -38,7 +37,7 @@ public:
     explicit XToWlDrag(X11Source *source, Dnd *dnd);
     ~XToWlDrag() override;
 
-    DragEventReply moveFilter(Window *target) override;
+    bool moveFilter(Window *target, const QPointF &position) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     void setDragAndDropAction(DataDeviceManagerInterface::DnDAction action);

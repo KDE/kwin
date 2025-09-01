@@ -113,13 +113,14 @@ XToWlDrag::~XToWlDrag()
 {
 }
 
-DragEventReply XToWlDrag::moveFilter(Window *target)
+bool XToWlDrag::moveFilter(Window *target, const QPointF &position)
 {
     auto *seat = waylandServer()->seat();
+    seat->notifyPointerMotion(position);
 
     if (m_visit && m_visit->target() == target) {
         // still same Wl target, wait for X events
-        return DragEventReply::Ignore;
+        return true;
     }
     if (m_visit) {
         if (m_visit->leave()) {
@@ -143,13 +144,13 @@ DragEventReply XToWlDrag::moveFilter(Window *target)
             // wait for the next one
             seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
         }
-        return DragEventReply::Ignore;
+        return true;
     }
     // new Wl native target
     auto *ac = static_cast<Window *>(target);
     m_visit = new WlVisit(ac, this, m_dnd);
     connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
-    return DragEventReply::Ignore;
+    return true;
 }
 
 bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)

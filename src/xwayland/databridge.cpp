@@ -49,9 +49,9 @@ bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, q
     return false;
 }
 
-DragEventReply DataBridge::dragMoveFilter(Window *target)
+bool DataBridge::dragMoveFilter(Window *target, const QPointF &position)
 {
-    return m_dnd->dragMoveFilter(target);
+    return m_dnd->dragMoveFilter(target, position);
 }
 
 } // namespace Xwl

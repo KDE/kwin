@@ -25,7 +25,6 @@ namespace Xwl
 class Clipboard;
 class Dnd;
 class Primary;
-enum class DragEventReply;
 
 /**
  * Interface class for all data sharing in the context of X selections
@@ -40,7 +39,7 @@ class DataBridge : public QObject, public QAbstractNativeEventFilter
 public:
     explicit DataBridge();
 
-    DragEventReply dragMoveFilter(Window *target);
+    bool dragMoveFilter(Window *target, const QPointF &position);
 
     Dnd *dnd() const
     {
