@@ -247,6 +247,7 @@ private:
     QHash<int, QJSValueList> m_screenEdgeCallbacks;
     QHash<int, QAction *> m_touchScreenEdgeCallbacks;
     QJSValueList m_userActionsMenuCallbacks;
+    QtScriptWorkspaceWrapper *m_workspaceWrapper = nullptr;
 };
 
 class DeclarativeScript : public AbstractScript
@@ -342,7 +343,6 @@ public:
     QQmlEngine *qmlEngine();
     QQmlContext *declarativeScriptSharedContext() const;
     QQmlContext *declarativeScriptSharedContext();
-    QtScriptWorkspaceWrapper *workspaceWrapper() const;
 
     AbstractScript *findScript(const QString &pluginName) const;
 
@@ -362,7 +362,6 @@ private:
     static Scripting *s_self;
     QQmlEngine *m_qmlEngine;
     QQmlContext *m_declarativeScriptSharedContext;
-    QtScriptWorkspaceWrapper *m_workspaceWrapper;
 };
 
 inline QQmlEngine *Scripting::qmlEngine() const
@@ -383,11 +382,6 @@ inline QQmlContext *Scripting::declarativeScriptSharedContext() const
 inline QQmlContext *Scripting::declarativeScriptSharedContext()
 {
     return m_declarativeScriptSharedContext;
-}
-
-inline QtScriptWorkspaceWrapper *Scripting::workspaceWrapper() const
-{
-    return m_workspaceWrapper;
 }
 
 inline Scripting *Scripting::self()

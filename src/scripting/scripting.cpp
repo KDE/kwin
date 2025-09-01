@@ -134,6 +134,7 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
     : AbstractScript(id, scriptName, pluginName, parent)
     , m_engine(new QJSEngine(this))
     , m_starting(false)
+    , m_workspaceWrapper(new QtScriptWorkspaceWrapper(m_engine, this))
 {
     // TODO: Remove in kwin 6. We have these converters only for compatibility reasons.
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QRect>()) {
@@ -226,8 +227,8 @@ void KWin::Script::slotScriptLoadedFromFile()
     m_engine->globalObject().setProperty(QStringLiteral("options"), optionsObject);
 
     // Make the workspace visible to QJSEngine.
-    QJSValue workspaceObject = m_engine->newQObject(Scripting::self()->workspaceWrapper());
-    QJSEngine::setObjectOwnership(Scripting::self()->workspaceWrapper(), QJSEngine::CppOwnership);
+    QJSValue workspaceObject = m_engine->newQObject(m_workspaceWrapper);
+    QJSEngine::setObjectOwnership(m_workspaceWrapper, QJSEngine::CppOwnership);
     m_engine->globalObject().setProperty(QStringLiteral("workspace"), workspaceObject);
 
     QJSValue self = m_engine->newQObject(this);
@@ -628,7 +629,6 @@ KWin::Scripting::Scripting(QObject *parent)
     , m_scriptsLock(new QRecursiveMutex)
     , m_qmlEngine(new QQmlEngine(this))
     , m_declarativeScriptSharedContext(new QQmlContext(m_qmlEngine, this))
-    , m_workspaceWrapper(new QtScriptWorkspaceWrapper(this))
 {
     m_qmlEngine->setProperty("_kirigamiTheme", QStringLiteral("KirigamiPlasmaStyle"));
     m_qmlEngine->rootContext()->setContextObject(new KLocalizedQmlContext(m_qmlEngine));
@@ -658,7 +658,7 @@ void KWin::Scripting::init()
     qmlRegisterType<ScriptedQuickSceneEffect>("org.kde.kwin", 3, 0, "SceneEffect");
 
     qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
-        return new DeclarativeScriptWorkspaceWrapper();
+        return new DeclarativeScriptWorkspaceWrapper(qmlEngine);
     });
     qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
 

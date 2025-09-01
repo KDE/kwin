@@ -27,12 +27,14 @@
 #endif
 
 #include <QJSEngine>
+#include <QQmlEngine>
 
 namespace KWin
 {
 
-WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
+WorkspaceWrapper::WorkspaceWrapper(QJSEngine *engine, QObject *parent)
     : QObject(parent)
+    , m_engine(engine)
 {
     KWin::Workspace *ws = KWin::Workspace::self();
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
@@ -468,8 +470,8 @@ Tile *WorkspaceWrapper::rootTile(Output *output, VirtualDesktop *desktop) const
     return workspace()->rootTile(output, desktop);
 }
 
-QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
-    : WorkspaceWrapper(parent)
+QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QJSEngine *engine, QObject *parent)
+    : WorkspaceWrapper(engine, parent)
 {
 }
 
@@ -493,8 +495,8 @@ KWin::Window *DeclarativeScriptWorkspaceWrapper::atWindowList(QQmlListProperty<K
     return workspace()->windows().at(index);
 }
 
-DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject *parent)
-    : WorkspaceWrapper(parent)
+DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QQmlEngine *engine, QObject *parent)
+    : WorkspaceWrapper(engine, parent)
 {
 }
 
