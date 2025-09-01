@@ -659,8 +659,14 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
         && input()->lastInputSerial() <= m_activationTokenSerial
         && m_activationTokenAppId == window->desktopFileName()) {
         return true;
+    } else if (focusStealingPreventionLevel >= FocusStealingPreventionLevel::High) {
+        return false;
     }
-    return false;
+    // with focus stealing prevention "Medium" and less,
+    // also allow activation if the last usage serial was caused by the "enter" key
+    // (to cover launching apps from the terminal)
+    return m_activeWindow->lastUsageSerialKey() == Qt::Key_Enter
+        || m_activeWindow->lastUsageSerialKey() == Qt::Key_Return;
 }
 
 } // namespace

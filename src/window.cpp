@@ -4456,16 +4456,22 @@ void Window::applyWindowRules()
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()));
 }
 
-void Window::setLastUsageSerial(quint32 serial)
+void Window::setLastUsageSerial(quint32 serial, std::optional<Qt::Key> pressedKey)
 {
     if (m_lastUsageSerial < serial) {
         m_lastUsageSerial = serial;
     }
+    m_lastUsageSerialKey = pressedKey;
 }
 
 quint32 Window::lastUsageSerial() const
 {
     return m_lastUsageSerial;
+}
+
+std::optional<Qt::Key> Window::lastUsageSerialKey() const
+{
+    return m_lastUsageSerialKey;
 }
 
 uint32_t Window::interactiveMoveResizeCount() const

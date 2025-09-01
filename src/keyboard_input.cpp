@@ -336,7 +336,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     if (state == KeyboardKeyState::Pressed && !std::ranges::contains(s_modifierKeys, key)) {
         input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
         if (auto f = pickFocus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(waylandServer()->seat()->display()->serial(), event.key);
         }
     }
 }

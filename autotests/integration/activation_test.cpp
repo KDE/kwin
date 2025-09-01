@@ -748,6 +748,37 @@ void ActivationTest::testXdgActivation()
     windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
     QCOMPARE(workspace()->activeWindow(), windows[3]);
 
+    // focus stealing prevention level Medium is even more lax and should activate windows
+    // even with an invalid token if the last pressed key was "enter" (same for numpad enter)
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Medium);
+    setupWindows();
+    Test::keyboardKeyPressed(KEY_ENTER, time++);
+    Test::keyboardKeyReleased(KEY_ENTER, time++);
+    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1]);
+
+    setupWindows();
+    Test::keyboardKeyPressed(KEY_KPENTER, time++);
+    Test::keyboardKeyReleased(KEY_KPENTER, time++);
+    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1]);
+
+    // the active window changed away from the one that we pressed enter in,
+    // so the next invalid activation token should not work
+    Test::xdgActivation()->activate(QString(), *surfaces[2]);
+    QVERIFY(!activationSpy.wait(10));
+
+    // new windows should also be activated after the enter key was pressed,
+    // even if they don't actually request activation
+    Test::keyboardKeyPressed(KEY_KPENTER, time++);
+    Test::keyboardKeyReleased(KEY_KPENTER, time++);
+    surfaces.push_back(Test::createSurface());
+    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get()));
+    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
+    QCOMPARE(workspace()->activeWindow(), windows[3]);
+
     // with focus stealing prevention level Low, every new window should unconditionally be activated,
     // even if it doesn't request an activation token at all
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Low);

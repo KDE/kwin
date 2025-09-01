@@ -1339,8 +1339,9 @@ public:
      * TODO make the QPA responsible for this, it's only needed
      * for KWindowSystem / for internal windows
      */
-    void setLastUsageSerial(quint32 serial);
+    void setLastUsageSerial(quint32 serial, std::optional<Qt::Key> pressedKey = std::nullopt);
     quint32 lastUsageSerial() const;
+    std::optional<Qt::Key> lastUsageSerialKey() const;
 
     void refOffscreenRendering();
     void unrefOffscreenRendering();
@@ -1879,6 +1880,7 @@ protected:
 
     WindowRules m_rules;
     quint32 m_lastUsageSerial = 0;
+    std::optional<Qt::Key> m_lastUsageSerialKey;
     bool m_lockScreenOverlay = false;
     uint32_t m_offscreenRenderCount = 0;
     QTimer m_offscreenFramecallbackTimer;
