@@ -82,7 +82,10 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
         m_activation = waylandServer()->plasmaActivationFeedback()->createActivation(appId);
     }
     if (isPrivileged) {
-        // plasmashell and kglobalacceld don't have a valid serial
+        // plasmashell doesn't have a valid serial unless it has keyboard focus,
+        // this makes it so that shortcuts like Meta+1 work
+        // TODO pass seat + serial to plasmashell through kglobalaccel to fix this
+        // more properly
         serial = input()->lastInputSerial();
     }
     workspace()->setActivationToken(newToken, serial, appId);
