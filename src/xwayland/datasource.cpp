@@ -64,6 +64,11 @@ bool XwlDataSource::isAccepted() const
 {
     return m_accepted;
 }
+
+bool XwlDataSource::isDndFinished() const
+{
+    return m_dndFinished;
+}
 }
 }
 

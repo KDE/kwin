@@ -229,9 +229,17 @@ bool XToWlDrag::checkForFinished()
         Q_EMIT finish(this);
         return true;
     }
+
+    // Avoid sending XdndFinish if neither XdndDrop nor XdndLeave event has been received yet.
     if (!m_visit->finished()) {
         return false;
     }
+
+    // Avoid sending XdndFinish if wl_data_offer.finish has not been called yet.
+    if (!m_source->dataSource()->isDndCancelled() && !m_source->dataSource()->isDndFinished()) {
+        return false;
+    }
+
     if (m_dataRequests.size() == 0 && m_source->dataSource()->isAccepted()) {
         // need to wait for first data request
         return false;

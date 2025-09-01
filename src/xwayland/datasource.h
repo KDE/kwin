@@ -45,14 +45,17 @@ public:
     }
     void dndFinished() override
     {
+        m_dndFinished = true;
         Q_EMIT finished();
     }
     void dndCancelled() override
     {
+        AbstractDataSource::dndCancelled();
         Q_EMIT cancelled();
     }
 
     bool isAccepted() const override;
+    bool isDndFinished() const;
 
 Q_SIGNALS:
     void dataRequested(const QString &mimeType, qint32 fd);
@@ -65,6 +68,7 @@ private:
     DataDeviceManagerInterface::DnDActions m_supportedDndActions;
     DataDeviceManagerInterface::DnDAction m_dndAction = DataDeviceManagerInterface::DnDAction::None;
     bool m_accepted = false;
+    bool m_dndFinished = false;
 };
 }
 }

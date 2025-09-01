@@ -1260,10 +1260,7 @@ void XwaylandDndTest::x11ToWayland()
     // Finish drag and drop.
     QSignalSpy x11DragFinishedSpy(x11Drag.get(), &X11Drag::finished);
     offer->dragAndDropFinished();
-#if 0
-    // XdndFinished event is not synchronized to wl_data_offer.finish
     QVERIFY(x11DragFinishedSpy.wait());
-#endif
 }
 
 void XwaylandDndTest::noAcceptedMimeTypeX11ToWayland()
