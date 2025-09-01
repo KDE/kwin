@@ -254,7 +254,7 @@ msgstr "Desselecciona-ho tot"
 #: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Select All"
-msgstr "Tria-ho tot"
+msgstr "Selecciona-ho tot"
 
 #: package/contents/ui/main.qml:86
 #, kde-format
