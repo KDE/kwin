@@ -1336,10 +1336,11 @@ public:
 
     /**
      * Sets the last user usage serial of the surface as @p serial
+     * TODO make the QPA responsible for this, it's only needed
+     * for KWindowSystem / for internal windows
      */
     void setLastUsageSerial(quint32 serial);
     quint32 lastUsageSerial() const;
-    std::optional<Qt::Key> lastUsageSerialKey() const;
 
     void refOffscreenRendering();
     void unrefOffscreenRendering();

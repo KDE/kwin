@@ -21,6 +21,7 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "input.h"
 #include "rules.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -646,7 +647,7 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     if (focusStealingPreventionLevel == FocusStealingPreventionLevel::None) {
         return true;
     }
-    if (!m_activationToken.isEmpty() && token == m_activationToken && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial) {
+    if (!m_activationToken.isEmpty() && token == m_activationToken && input()->lastInputSerial() <= m_activationTokenSerial) {
         return true;
     } else if (focusStealingPreventionLevel == FocusStealingPreventionLevel::Extreme) {
         // "Extreme" only accepts proper activation tokens
@@ -655,7 +656,7 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     // with focus stealing prevention below "Extreme"
     // also allow activation if the app id matches with the last activation token
     if (!m_activationToken.isEmpty()
-        && m_activeWindow->lastUsageSerial() <= m_activationTokenSerial
+        && input()->lastInputSerial() <= m_activationTokenSerial
         && m_activationTokenAppId == window->desktopFileName()) {
         return true;
     }
