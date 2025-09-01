@@ -54,14 +54,32 @@ function minimizeWindows(windows) {
             window.minimized = false;
         }
     }
+    return [relevantWindows, minimize];
+}
+
+function minimizeWindowsRestoreFocus(windows) {
+    const [relevantWindows, minimize] = minimizeWindows(windows);
+    if (!minimize) {
+        for (let i = relevantWindows.length - 1; i >= 0; i--) {
+            const window = relevantWindows[i];
+            if (window === workspace.activeWindow) {
+                break;
+            }
+            if (!workspace.windowList().includes(window)) {
+                continue;
+            }
+            workspace.activeWindow = window;
+            break;
+        }
+    }
 }
 
 function minimizeAllWindows() {
-    minimizeWindows(workspace.windowList());
+    minimizeWindowsRestoreFocus(workspace.windowList());
 }
 
 function minimizeAllWindowsActiveScreen() {
-    minimizeWindows(workspace.windowList().filter(window => window.output === workspace.activeScreen));
+    minimizeWindowsRestoreFocus(workspace.windowList().filter(window => window.output === workspace.activeScreen));
 }
 
 function minimizeAllOthers() {
