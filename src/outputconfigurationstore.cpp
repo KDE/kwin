@@ -455,10 +455,11 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
         const auto modeIt = std::find_if(modes.begin(), modes.end(), [&state](const auto &mode) {
             return state.mode
                 && mode->size() == state.mode->size
-                && mode->refreshRate() == state.mode->refreshRate;
+                && mode->refreshRate() == state.mode->refreshRate
+                && !(mode->flags() & OutputMode::Flag::Removed);
         });
         std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
-        if (!mode.has_value() || !*mode || ((*mode)->flags() & OutputMode::Flag::Removed)) {
+        if (!mode.has_value() || !*mode) {
             mode = chooseMode(output);
             qCDebug(KWIN_OUTPUT_CONFIG, "Chose new mode for output %s: %dx%d@%u",
                     qPrintable(state.edidIdentifier), (*mode)->size().width(), (*mode)->size().height(), (*mode)->refreshRate());
