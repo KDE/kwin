@@ -238,10 +238,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
     if (d->drag.surface) {
         d->send_leave();
 
-        if (d->drag.posConnection) {
-            disconnect(d->drag.posConnection);
-            d->drag.posConnection = QMetaObject::Connection();
-        }
         disconnect(d->drag.destroyConnection);
         d->drag.destroyConnection = QMetaObject::Connection();
         d->drag.surface = nullptr;
@@ -282,26 +278,8 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
     d->drag.offer->sendSourceActions();
 
     d->drag.surface = surface;
-    if (d->seat->isDragPointer()) {
-        d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this, [this] {
-            const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
-            d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-        });
-    } else if (d->seat->isDragTouch()) {
-        d->drag.posConnection = connect(d->seat, &SeatInterface::touchMoved, this, [this](qint32 id, quint32 serial, const QPointF &globalPosition) {
-            if (d->seat->dragSerial() != serial) {
-                // different touch down has been moved
-                return;
-            }
-            const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
-            d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-        });
-    }
     d->drag.destroyConnection = connect(d->drag.surface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
         d->send_leave();
-        if (d->drag.posConnection) {
-            disconnect(d->drag.posConnection);
-        }
         if (d->drag.offer) {
             disconnect(d->drag.sourceActionConnection);
             disconnect(d->drag.targetActionConnection);
@@ -331,6 +309,16 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
 
     const QPointF pos = d->seat->dragSurfaceTransformation().map(position);
     d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), d->drag.offer ? d->drag.offer->resource() : nullptr);
+}
+
+void DataDeviceInterface::motion(const QPointF &position)
+{
+    if (!d->drag.surface) {
+        return;
+    }
+
+    const QPointF pos = d->seat->dragSurfaceTransformation().map(position);
+    d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
 }
 
 wl_client *DataDeviceInterface::client()

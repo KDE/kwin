@@ -184,6 +184,11 @@ void DndTest::pointerDrag()
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
     QCOMPARE(dataDevice->dragSurface(), sourceSurface.get());
 
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 1);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 0);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 0);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
+
     // Accept our own offer.
     auto sourceOffer = dataDevice->takeDragOffer();
     QCOMPARE(sourceOffer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
@@ -210,12 +215,22 @@ void DndTest::pointerDrag()
     QVERIFY(dataDeviceDragMotionSpy.wait());
     QCOMPARE(dataDeviceDragMotionSpy.last().at(0).value<QPointF>(), QPointF(60, 50));
 
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 1);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 1);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 0);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
+
     // Move the pointer to the second client.
     Test::pointerMotion(QPointF(140, 50), timestamp++);
     QVERIFY(dataDeviceDragEnteredSpy.wait());
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(40, 50));
     QCOMPARE(dataDeviceDragLeftSpy.count(), 1);
     QCOMPARE(dataDevice->dragSurface(), targetSurface.get());
+
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 2);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 1);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 1);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
 
     // Accept the offer.
     auto targetOffer = dataDevice->takeDragOffer();
@@ -242,13 +257,21 @@ void DndTest::pointerDrag()
     QVERIFY(dataDeviceDragMotionSpy.wait());
     QCOMPARE(dataDeviceDragMotionSpy.last().at(0).value<QPointF>(), QPointF(60, 50));
 
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 2);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 2);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 1);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
+
     // Drop.
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(pointerEnteredSpy.wait());
     QCOMPARE(pointer->enteredSurface(), targetSurface.get());
     QCOMPARE(pointerEnteredSpy.last().at(1).value<QPointF>(), QPointF(60, 50));
-    QCOMPARE(dataDeviceDroppedSpy.count(), 1);
+
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 2);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 2);
     QCOMPARE(dataDeviceDragLeftSpy.count(), 2);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 1);
 
     // Ask for data.
     const QFuture<QByteArray> data = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
@@ -894,6 +917,11 @@ void DndTest::touchDrag()
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
     QCOMPARE(dataDevice->dragSurface(), sourceSurface.get());
 
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 1);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 0);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 0);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
+
     // Accept our own offer.
     auto sourceOffer = dataDevice->takeDragOffer();
     QCOMPARE(sourceOffer->offeredMimeTypes(), (QList<QMimeType>{m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"))}));
@@ -920,6 +948,11 @@ void DndTest::touchDrag()
     QVERIFY(dataDeviceDragMotionSpy.wait());
     QCOMPARE(dataDeviceDragMotionSpy.last().at(0).value<QPointF>(), QPointF(60, 50));
 
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 1);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 1);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 0);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
+
     // No drag motion event will be sent if an unrelated finger moves.
     Test::touchDown(1, QPointF(40, 40), timestamp++);
     Test::touchMotion(1, QPointF(45, 45), timestamp++);
@@ -932,6 +965,11 @@ void DndTest::touchDrag()
     QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(40, 50));
     QCOMPARE(dataDeviceDragLeftSpy.count(), 1);
     QCOMPARE(dataDevice->dragSurface(), targetSurface.get());
+
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 2);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 1);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 1);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
 
     // Accept the offer.
     auto targetOffer = dataDevice->takeDragOffer();
@@ -958,11 +996,19 @@ void DndTest::touchDrag()
     QVERIFY(dataDeviceDragMotionSpy.wait());
     QCOMPARE(dataDeviceDragMotionSpy.last().at(0).value<QPointF>(), QPointF(60, 50));
 
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 2);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 2);
+    QCOMPARE(dataDeviceDragLeftSpy.count(), 1);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
+
     // Drop.
     Test::touchUp(0, timestamp++);
     QVERIFY(touchSequenceEndedSpy.wait());
-    QCOMPARE(dataDeviceDroppedSpy.count(), 1);
+
+    QCOMPARE(dataDeviceDragEnteredSpy.count(), 2);
+    QCOMPARE(dataDeviceDragMotionSpy.count(), 2);
     QCOMPARE(dataDeviceDragLeftSpy.count(), 2);
+    QCOMPARE(dataDeviceDroppedSpy.count(), 1);
 
     // Ask for data.
     const QFuture<QByteArray> data = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));

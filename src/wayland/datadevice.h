@@ -103,6 +103,7 @@ public:
      * @param serial The serial to be used for enter/leave
      */
     void updateDragTarget(SurfaceInterface *surface, const QPointF &position, quint32 serial) override;
+    void motion(const QPointF &position) override;
 
     wl_client *client();
 

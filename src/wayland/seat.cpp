@@ -489,6 +489,13 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
     }
 }
 
+void SeatInterface::notifyDragMotion(const QPointF &position)
+{
+    if (d->drag.target) {
+        d->drag.target->motion(position);
+    }
+}
+
 SurfaceInterface *SeatInterface::focusedPointerSurface() const
 {
     return d->globalPointer.focus.surface;

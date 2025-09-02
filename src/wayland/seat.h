@@ -175,6 +175,8 @@ public:
     void setDragTarget(AbstractDropHandler *dropTarget, SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation);
     ///@}
 
+    void notifyDragMotion(const QPointF &position);
+
     AbstractDropHandler *dropHandlerForSurface(SurfaceInterface *surface) const;
 
     /**
