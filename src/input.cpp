@@ -2630,14 +2630,14 @@ public:
                 QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
                 inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
                 seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation);
+            } else {
+                seat->notifyDragMotion(pos);
             }
         } else {
             // no window at that place, if we have a surface we need to reset
             seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
             m_dragTarget = nullptr;
         }
-
-        seat->notifyPointerMotion(pos);
 
         return true;
     }
@@ -2719,7 +2719,6 @@ public:
         }
 
         seat->setTimestamp(time);
-        seat->notifyTouchMotion(id, pos);
 
         if (Window *dragTarget = pickDragTarget(pos)) {
             if (m_dragTarget != dragTarget) {
@@ -2738,6 +2737,8 @@ public:
                 QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
                 inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
                 seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation);
+            } else {
+                seat->notifyDragMotion(pos);
             }
 
             m_dragTarget = dragTarget;
@@ -2746,6 +2747,7 @@ public:
             seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
             m_dragTarget = nullptr;
         }
+
         return true;
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override

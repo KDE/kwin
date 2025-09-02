@@ -29,6 +29,7 @@ public:
     XwlDropHandler(Dnd *dnd);
 
     void updateDragTarget(SurfaceInterface *surface, const QPointF &position, quint32 serial) override;
+    void motion(const QPointF &position) override;
     bool handleClientMessage(xcb_client_message_event_t *event);
 
 private:

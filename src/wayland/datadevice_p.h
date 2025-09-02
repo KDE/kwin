@@ -39,7 +39,6 @@ public:
         SurfaceInterface *surface = nullptr;
         QPointer<DataOfferInterface> offer;
         QMetaObject::Connection destroyConnection;
-        QMetaObject::Connection posConnection;
         QMetaObject::Connection sourceActionConnection;
         QMetaObject::Connection targetActionConnection;
         QMetaObject::Connection keyboardModifiersConnection;

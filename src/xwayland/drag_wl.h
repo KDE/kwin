@@ -89,14 +89,11 @@ private:
     void setProposedAction();
 
     void doFinish();
-    void stopConnections();
 
     Dnd *const m_dnd;
     X11Window *m_target;
     QPointer<AbstractDataSource> m_dataSource;
     uint32_t m_version = 0;
-
-    QMetaObject::Connection m_motionConnection;
 
     struct
     {

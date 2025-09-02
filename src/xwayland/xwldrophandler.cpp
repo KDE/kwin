@@ -79,6 +79,13 @@ void XwlDropHandler::updateDragTarget(SurfaceInterface *surface, const QPointF &
         m_visits.append(visit);
     }
 }
+
+void XwlDropHandler::motion(const QPointF &position)
+{
+    if (m_currentVisit) {
+        m_currentVisit->sendPosition(position);
+    }
+}
 }
 
 #include "moc_xwldrophandler.cpp"
