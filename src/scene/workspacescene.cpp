@@ -54,9 +54,9 @@
 
 #include "scene/workspacescene.h"
 #include "compositor.h"
+#include "core/backendoutput.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
-#include "core/backendoutput.h"
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
@@ -70,6 +70,7 @@
 #include "scene/rootitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
+#include "utils/envvar.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -374,8 +375,22 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
     return true;
 }
 
+static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
+
 Scene::OverlayCandidates WorkspaceScene::overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const
 {
+    const auto fallback = [&]() {
+        if (s_forceSoftwareCursor
+            || maxOverlayCount == 0
+            || !cursorItem()->isVisible()
+            || !painted_delegate->viewport().intersects(cursorItem()->mapToView(cursorItem()->boundingRect(), painted_delegate))) {
+            return OverlayCandidates{};
+        }
+        return OverlayCandidates{
+            .overlays = {cursorItem()},
+            .underlays = {},
+        };
+    };
     Region occupied;
     Region opaque;
     Region effected;
@@ -384,21 +399,32 @@ Scene::OverlayCandidates WorkspaceScene::overlayCandidates(ssize_t maxTotalCount
     QStack<ClipCorner> cornerStack;
     const auto overlayItems = m_overlayItem->sortedChildItems();
     for (Item *item : overlayItems | std::views::reverse) {
-        // the cursor is currently handled separately by the compositor
-        if (item == cursorItem() && !painted_delegate->shouldRenderItem(item)) {
+        if (!item->isVisible() || !painted_delegate->viewport().intersects(item->mapToView(item->boundingRect(), painted_delegate))) {
+            continue;
+        }
+        if (item == cursorItem()) {
+            if (s_forceSoftwareCursor) {
+                continue;
+            }
+            // for the time being, prioritize the cursor above all else,
+            // even while it's not moving
+            overlays.push_back(item);
+            if (overlays.size() > maxOverlayCount || underlays.size() + overlays.size() > maxTotalCount) {
+                return fallback();
+            }
             continue;
         }
         if (!findOverlayCandidates(painted_delegate, item, maxTotalCount, maxOverlayCount, maxUnderlayCount, occupied, opaque, effected, overlays, underlays, cornerStack)) {
-            return {};
+            return fallback();
         }
     }
     if (effects->blocksDirectScanout()) {
-        return {};
+        return fallback();
     }
     const auto items = m_containerItem->sortedChildItems();
     for (Item *item : items | std::views::reverse) {
         if (!findOverlayCandidates(painted_delegate, item, maxTotalCount, maxOverlayCount, maxUnderlayCount, occupied, opaque, effected, overlays, underlays, cornerStack)) {
-            return {};
+            return fallback();
         }
     }
     return OverlayCandidates{

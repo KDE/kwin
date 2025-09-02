@@ -494,8 +494,6 @@ static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerT
     return it == layers.end() ? nullptr : *it;
 }
 
-static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
-
 /**
  * items and layers need to be sorted top to bottom
  */
@@ -738,40 +736,32 @@ void Compositor::composite(RenderLoop *renderLoop)
     // the primary output layer is currently always used for the main content
     unusedOutputLayers.removeOne(primaryView->layer());
 
-    Item *cursorItem = m_scene->cursorItem();
-    const bool hwCursor = !s_forceSoftwareCursor
-        && !m_brokenCursors.contains(renderLoop)
-        && cursorItem->isVisible()
-        && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(primaryView->viewport());
-
     const bool overlaysAllowed = m_allowOverlaysEnv.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
-    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([overlaysAllowed](OutputLayer *layer) {
+    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([this, renderLoop, overlaysAllowed](OutputLayer *layer) {
         return layer->type() != OutputLayerType::Primary
+            && (!m_brokenCursors.contains(renderLoop) || layer->type() != OutputLayerType::CursorOnly)
             && (overlaysAllowed || layer->type() != OutputLayerType::GenericLayer);
     }) | std::ranges::to<QList>();
     std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
         return left->maxZpos() > right->maxZpos();
     });
-    size_t maxOverlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
+    const size_t maxOverlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
         return layer->maxZpos() > primaryView->layer()->zpos();
     });
-    if (hwCursor && maxOverlayCount > 0) {
-        maxOverlayCount--;
-    }
     const size_t maxUnderlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
         return layer->minZpos() < primaryView->layer()->zpos();
     });
-    auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
-    if (hwCursor) {
-        overlayCandidates.push_back(cursorItem);
-    }
+    const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
     auto overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
     if (overlayAssignments.empty()) {
         // the cursor is important, so try again without other over/underlays
-        overlayAssignments = assignOverlays(primaryView, {}, std::array{cursorItem}, specialLayers);
+        const auto cursorOnly = overlayCandidates | std::views::filter([](Item *item) {
+            return qobject_cast<CursorItem *>(item) != nullptr;
+        }) | std::ranges::to<QList>();
+        overlayAssignments = assignOverlays(primaryView, {}, cursorOnly, specialLayers);
     }
     for (const auto &[item, layer] : overlayAssignments) {
-        const bool isCursor = item == cursorItem;
+        const bool isCursor = qobject_cast<CursorItem *>(item) != nullptr;
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
             if (isCursor) {
