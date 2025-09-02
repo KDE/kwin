@@ -26,6 +26,7 @@
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
 #include "qpainter/qpainterbackend.h"
+#include "scene/cursoritem.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
 #include "scene/surfaceitem.h"
@@ -501,10 +502,24 @@ static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *scen
             // can't use this
             return {};
         }
-        if (!layer->recommendedSizes().isEmpty()) {
+        if (layer->type() == OutputLayerType::CursorOnly && qobject_cast<CursorItem *>(item) == nullptr) {
+            layerIt++;
+            continue;
+        }
+        const auto recommendedSizes = layer->recommendedSizes();
+        if (!recommendedSizes.isEmpty()) {
             // it's likely that sizes other than the recommended ones won't work
+            const bool compositingAllowed = qobject_cast<CursorItem *>(item) != nullptr;
             const QRect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
-            if (!layer->recommendedSizes().contains(deviceRect.size())) {
+            const bool hasFittingSize = std::ranges::any_of(recommendedSizes, [compositingAllowed, deviceRect](const QSize &size) {
+                if (compositingAllowed) {
+                    return deviceRect.size().width() <= size.width()
+                        && deviceRect.size().height() <= size.height();
+                } else {
+                    return deviceRect.size() == size;
+                }
+            });
+            if (!hasFittingSize) {
                 layerIt++;
                 continue;
             }
@@ -545,10 +560,24 @@ static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *scen
             layerIt++;
             continue;
         }
-        if (!layer->recommendedSizes().isEmpty()) {
+        if (layer->type() == OutputLayerType::CursorOnly && qobject_cast<CursorItem *>(item) == nullptr) {
+            layerIt++;
+            continue;
+        }
+        const auto recommendedSizes = layer->recommendedSizes();
+        if (!recommendedSizes.isEmpty()) {
             // it's likely that sizes other than the recommended ones won't work
+            const bool compositingAllowed = qobject_cast<CursorItem *>(item) != nullptr;
             const QRect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
-            if (!layer->recommendedSizes().contains(deviceRect.size())) {
+            const bool hasFittingSize = std::ranges::any_of(recommendedSizes, [compositingAllowed, deviceRect](const QSize &size) {
+                if (compositingAllowed) {
+                    return deviceRect.size().width() <= size.width()
+                        && deviceRect.size().height() <= size.height();
+                } else {
+                    return deviceRect.size() == size;
+                }
+            });
+            if (!hasFittingSize) {
                 layerIt++;
                 continue;
             }
@@ -666,21 +695,43 @@ void Compositor::composite(RenderLoop *renderLoop)
     // the primary output layer is currently always used for the main content
     unusedOutputLayers.removeOne(primaryView->layer());
 
-    OutputLayer *cursorLayer = nullptr;
     Item *cursorItem = m_scene->cursorItem();
-    if (!m_brokenCursors.contains(renderLoop) && cursorItem->isVisible() && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(output->geometryF())) {
-        cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
-        if (!cursorLayer) {
-            cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::EfficientOverlay, primaryView->layer()->zpos() + 1);
-        }
-        if (!cursorLayer) {
-            cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::GenericLayer, primaryView->layer()->zpos() + 1);
-        }
-        if (cursorLayer) {
-            auto &view = m_overlayViews[renderLoop][cursorLayer];
-            if (!view || view->item() != cursorItem) {
-                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, output, cursorLayer);
-                connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [output, cursorView = view.get()]() {
+    const bool hwCursor = !m_brokenCursors.contains(renderLoop) && cursorItem->isVisible() && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(output->geometryF());
+
+    const bool overlaysAllowed = s_enableOverlays.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
+    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([overlaysAllowed](OutputLayer *layer) {
+        return layer->type() != OutputLayerType::Primary
+            && (overlaysAllowed || layer->type() != OutputLayerType::GenericLayer);
+    }) | std::ranges::to<QList>();
+    std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
+        return left->maxZpos() > right->maxZpos();
+    });
+    size_t maxOverlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
+        return layer->maxZpos() > primaryView->layer()->zpos();
+    });
+    if (hwCursor && maxOverlayCount > 0) {
+        maxOverlayCount--;
+    }
+    const size_t maxUnderlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
+        return layer->minZpos() < primaryView->layer()->zpos();
+    });
+    auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
+    if (hwCursor) {
+        overlayCandidates.push_back(cursorItem);
+    }
+    auto overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
+    if (overlayAssignments.empty()) {
+        // the cursor is important, so try again without other over/underlays
+        overlayAssignments = assignOverlays(primaryView, {}, std::array{cursorItem}, specialLayers);
+    }
+    for (const auto &[item, layer] : overlayAssignments) {
+        const bool isCursor = item == cursorItem;
+        auto &view = m_overlayViews[output->renderLoop()][layer];
+        if (!view || view->item() != item) {
+            if (isCursor) {
+                // special handling for the cursor
+                view = std::make_unique<ItemTreeView>(primaryView, item, output, layer);
+                connect(layer, &OutputLayer::repaintScheduled, view.get(), [output, cursorView = view.get()]() {
                     // this just deals with moving the plane asynchronously, for improved latency.
                     // enabling, disabling and updating the cursor image still happen in composite()
                     const auto outputLayer = cursorView->layer();
@@ -710,51 +761,18 @@ void Compositor::composite(RenderLoop *renderLoop)
                         outputLayer->resetRepaints();
                     }
                 });
+            } else {
+                view = std::make_unique<ItemView>(primaryView, item, output, layer);
             }
-            view->prePaint();
-            layers.push_back(LayerData{
-                .view = view.get(),
-                .directScanout = false,
-                .directScanoutOnly = false,
-                .highPriority = true,
-                .surfaceDamage = QRegion{},
-                .requiredAlphaBits = 8,
-            });
-            cursorLayer->setZpos(cursorLayer->maxZpos());
-            unusedOutputLayers.removeOne(cursorLayer);
-        }
-    }
-
-    const bool overlaysAllowed = s_enableOverlays.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
-    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([cursorLayer, overlaysAllowed](OutputLayer *layer) {
-        return layer->type() != OutputLayerType::Primary
-            && (overlaysAllowed || layer->type() != OutputLayerType::GenericLayer)
-            && (!cursorLayer || layer->minZpos() < cursorLayer->zpos());
-    }) | std::ranges::to<QList>();
-    std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
-        return left->maxZpos() > right->maxZpos();
-    });
-    const size_t maxOverlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
-        return layer->maxZpos() > primaryView->layer()->zpos();
-    });
-    const size_t maxUnderlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
-        return layer->minZpos() < primaryView->layer()->zpos();
-    });
-    const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
-    const auto overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
-    for (const auto &[item, layer] : overlayAssignments) {
-        auto &view = m_overlayViews[output->renderLoop()][layer];
-        if (!view || view->item() != item) {
-            view = std::make_unique<ItemView>(primaryView, item, output, layer);
         }
         view->prePaint();
         layers.push_back(LayerData{
             .view = view.get(),
-            .directScanout = true,
-            .directScanoutOnly = true,
-            .highPriority = false,
+            .directScanout = !isCursor,
+            .directScanoutOnly = !isCursor,
+            .highPriority = isCursor,
             .surfaceDamage = layer->repaints(),
-            .requiredAlphaBits = 0,
+            .requiredAlphaBits = isCursor ? 8u : 0u,
         });
         unusedOutputLayers.removeOne(layer);
         if (layer->zpos() < primaryView->layer()->zpos()) {
