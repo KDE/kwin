@@ -367,6 +367,12 @@ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 install(TARGETS kwin EXPORT KWinTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
+ecm_qt_declare_logging_category(kwin
+    HEADER outputconfiglogging.h
+    IDENTIFIER KWIN_OUTPUT_CONFIG
+    CATEGORY_NAME kwin_output_config
+)
+
 add_executable(kwin_wayland main_wayland.cpp)
 
 if(TARGET PkgConfig::libsystemd)

@@ -15,6 +15,7 @@
 #include "input.h"
 #include "input_event.h"
 #include "kscreenintegration.h"
+#include "outputconfiglogging.h"
 #include "workspace.h"
 
 #include <QFile>
@@ -116,7 +117,7 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
         }
         Output *const source = *sourceIt;
         if (source == output) {
-            qCWarning(KWIN_CORE, "Output %s is trying to mirror itself, that shouldn't happen!", qPrintable(output->name()));
+            qCWarning(KWIN_OUTPUT_CONFIG, "Output %s is trying to mirror itself, that shouldn't happen!", qPrintable(output->name()));
             continue;
         }
         const auto sourceChange = config.changeSet(source);
@@ -798,13 +799,13 @@ void OutputConfigurationStore::load()
 
     QFile f(jsonPath);
     if (!f.open(QIODevice::ReadOnly)) {
-        qCWarning(KWIN_CORE) << "Could not open file" << jsonPath;
+        qCWarning(KWIN_OUTPUT_CONFIG) << "Could not open file" << jsonPath;
         return;
     }
     QJsonParseError error;
     const auto doc = QJsonDocument::fromJson(f.readAll(), &error);
     if (error.error != QJsonParseError::NoError) {
-        qCWarning(KWIN_CORE) << "Failed to parse" << jsonPath << error.errorString();
+        qCWarning(KWIN_OUTPUT_CONFIG) << "Failed to parse" << jsonPath << error.errorString();
         return;
     }
     const auto array = doc.array();
@@ -856,7 +857,7 @@ void OutputConfigurationStore::load()
             // without an identifier the settings are useless
             // we still have to push something into the list so that the indices stay correct
             outputDatas.push_back(std::nullopt);
-            qCWarning(KWIN_CORE, "Output in config is missing identifiers");
+            qCWarning(KWIN_OUTPUT_CONFIG, "Output in config is missing identifiers");
             continue;
         }
         const bool hasDuplicate = std::any_of(outputDatas.begin(), outputDatas.end(), [&state](const auto &data) {
@@ -867,7 +868,7 @@ void OutputConfigurationStore::load()
                 && data->connectorName == state.connectorName;
         });
         if (hasDuplicate) {
-            qCWarning(KWIN_CORE) << "Duplicate output found in config for edidIdentifier:" << state.edidIdentifier << "; connectorName:" << state.connectorName << "; mstPath:" << state.mstPath;
+            qCWarning(KWIN_OUTPUT_CONFIG) << "Duplicate output found in config for edidIdentifier:" << state.edidIdentifier << "; connectorName:" << state.connectorName << "; mstPath:" << state.mstPath;
             outputDatas.push_back(std::nullopt);
             continue;
         }
@@ -1350,7 +1351,7 @@ void OutputConfigurationStore::save()
     const QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/kwinoutputconfig.json";
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly)) {
-        qCWarning(KWIN_CORE, "Couldn't open output config file %s", qPrintable(path));
+        qCWarning(KWIN_OUTPUT_CONFIG, "Couldn't open output config file %s", qPrintable(path));
         return;
     }
     document.setArray(array);
