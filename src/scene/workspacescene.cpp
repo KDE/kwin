@@ -381,9 +381,6 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
 
 Scene::OverlayCandidates WorkspaceScene::overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const
 {
-    if (effects->blocksDirectScanout()) {
-        return {};
-    }
     QRegion occupied;
     QRegion opaque;
     QRegion effected;
@@ -399,6 +396,9 @@ Scene::OverlayCandidates WorkspaceScene::overlayCandidates(ssize_t maxTotalCount
         if (!findOverlayCandidates(painted_delegate, item, maxTotalCount, maxOverlayCount, maxUnderlayCount, occupied, opaque, effected, overlays, underlays, cornerStack)) {
             return {};
         }
+    }
+    if (effects->blocksDirectScanout()) {
+        return {};
     }
     const auto items = m_containerItem->sortedChildItems();
     for (Item *item : items | std::views::reverse) {
