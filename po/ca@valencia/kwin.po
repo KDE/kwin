@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 00:43+0000\n"
+"POT-Creation-Date: 2025-09-02 00:44+0000\n"
 "PO-Revision-Date: 2025-07-08 11:37+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1369,8 +1369,7 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccioneu la finestra a forçar el tancament amb el clic esquerre o "
-"retorn.\n"
+"Trieu la finestra a forçar el tancament amb el clic esquerre o retorn.\n"
 "La tecla «Esc» o un clic dret per a cancel·lar."
 
 #: main.cpp:173 plugins/mouseclick/mouseclick_config.cpp:40
@@ -1626,8 +1625,8 @@ msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccioneu una posició per a la selecció del color amb el clic esquerre o "
-"la tecla de retorn.\n"
+"Trieu una posició per a la selecció del color amb el clic esquerre o la "
+"tecla de retorn.\n"
 "La tecla d'escapada o clic dret per a cancel·lar."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
@@ -2436,7 +2435,7 @@ msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccioneu la finestra que es capturarà amb el clic esquerre o la tecla de "
+"Trieu la finestra que es capturarà amb el clic esquerre o la tecla de "
 "retorn.\n"
 "La tecla d'escapada o clic dret per a cancel·lar."
 
@@ -3583,7 +3582,7 @@ msgid ""
 msgstr ""
 "Heu triat mostrar una finestra sense la vora.\n"
 "Sense la vora no podreu tornar-la a activar utilitzant el ratolí: per a fer-"
-"ho utilitzeu el menú de finestra, activat utilitzant la drecera de teclat "
+"ho utilitzeu el menú de la finestra, activat utilitzant la drecera de teclat "
 "«%1»."
 
 #: useractions.cpp:168
@@ -3597,7 +3596,7 @@ msgstr ""
 "Heu triat mostrar una finestra en mode pantalla completa.\n"
 "Si la mateixa aplicació no té una opció per a apagar el mode pantalla "
 "completa, no podreu tornar-lo a desactivar utilitzant el ratolí: per a fer-"
-"ho utilitzeu el menú de finestra, activat utilitzant la drecera de teclat "
+"ho utilitzeu el menú de la finestra, activat utilitzant la drecera de teclat "
 "«%1»."
 
 #: useractions.cpp:216
@@ -3735,7 +3734,7 @@ msgstr "<b>%1</b> està utilitzat per %2 a %3"
 #: useractions.cpp:818
 #, kde-format
 msgid "Window Menu"
-msgstr "Menú de finestra"
+msgstr "Menú de la finestra"
 
 #: useractions.cpp:820
 #, kde-format
@@ -4154,7 +4153,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1584
+#: workspace.cpp:1589
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
