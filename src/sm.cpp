@@ -183,49 +183,6 @@ void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
 }
 #endif
 
-#if KWIN_BUILD_X11
-void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessionIds)
-{
-    // TODO clear it first
-    KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + name);
-    int count = 0;
-    int active_client = -1;
-    const QList<Window *> windows = workspace()->windows();
-
-    for (auto it = windows.begin(); it != windows.end(); ++it) {
-        X11Window *c = qobject_cast<X11Window *>(*it);
-        if (!c || c->isUnmanaged()) {
-            continue;
-        }
-        if (c->windowType() > WindowType::Splash) {
-            continue;
-        }
-        QByteArray sessionId = c->sessionId();
-        QString wmCommand = c->wmCommand();
-        if (sessionId.isEmpty()) {
-            // remember also applications that are not XSMP capable
-            // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
-            if (wmCommand.isEmpty()) {
-                continue;
-            }
-        }
-        if (!sessionIds.contains(sessionId)) {
-            continue;
-        }
-
-        qCDebug(KWIN_CORE) << "storing" << sessionId;
-        count++;
-        if (c->isActive()) {
-            active_client = count;
-        }
-        storeClient(cg, count, c);
-    }
-    cg.writeEntry("count", count);
-    cg.writeEntry("active", active_client);
-    // cg.writeEntry( "desktop", currentDesktop());
-}
-#endif
-
 /**
  * Loads the session information from the config file.
  *
@@ -273,12 +230,6 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         info->stackingOrder = cg.readEntry(QLatin1String("stackingOrder") + n, -1);
         info->activities = cg.readEntry(QLatin1String("activities") + n, QStringList());
     }
-}
-
-void SessionManager::loadSubSessionInfo(const QString &name)
-{
-    KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + name);
-    addSessionInfo(cg);
 }
 
 #if KWIN_BUILD_X11

@@ -45,10 +45,7 @@ public:
 
     SessionState state() const;
 
-    void loadSubSessionInfo(const QString &name);
-
 #if KWIN_BUILD_X11
-    void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
     SessionInfo *takeSessionInfo(X11Window *);
 #endif
 

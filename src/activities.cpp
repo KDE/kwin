@@ -42,6 +42,15 @@ Activities::Activities(const KSharedConfig::Ptr &config)
             m_lastVirtualDesktop[activity] = desktop;
         }
     }
+
+    // Clean up no longer used subsession data
+    const auto sessionsConfig = KSharedConfig::openConfig();
+    const auto groups = sessionsConfig->groupList();
+    for (const QString &groupName : groups) {
+        if (groupName.startsWith(QLatin1String("SubSession: "))) {
+            sessionsConfig->deleteGroup(groupName);
+        }
+    }
 }
 
 KActivities::Consumer::ServiceStatus Activities::serviceStatus() const
@@ -115,9 +124,6 @@ void Activities::slotRemoved(const QString &activity)
         }
         window->setOnActivity(activity, false);
     }
-    // toss out any session data for it
-    KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + activity);
-    cg.deleteGroup();
 
     m_lastVirtualDesktop.erase(activity);
     m_config->group("Activities").group("LastVirtualDesktop").deleteEntry(activity);
@@ -159,116 +165,6 @@ void Activities::toggleWindowOnActivity(Window *window, const QString &activity,
     }
     ws->rearrange();
 }
-
-bool Activities::start(const QString &id)
-{
-    Workspace *ws = Workspace::self();
-    if (ws->sessionManager()->state() == SessionState::Saving) {
-        return false; // ksmserver doesn't queue requests (yet)
-    }
-
-    if (!all().contains(id)) {
-        return false; // bogus id
-    }
-
-    ws->sessionManager()->loadSubSessionInfo(id);
-
-    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
-    if (ksmserver.isValid()) {
-        ksmserver.asyncCall("restoreSubSession", id);
-    } else {
-        qCDebug(KWIN_CORE) << "couldn't get ksmserver interface";
-        return false;
-    }
-    return true;
-}
-
-bool Activities::stop(const QString &id)
-{
-    if (Workspace::self()->sessionManager()->state() == SessionState::Saving) {
-        return false; // ksmserver doesn't queue requests (yet)
-        // FIXME what about session *loading*?
-    }
-
-    // ugly hack to avoid dbus deadlocks
-    QMetaObject::invokeMethod(
-        this, [this, id] {
-            reallyStop(id);
-        },
-        Qt::QueuedConnection);
-    // then lie and assume it worked.
-    return true;
-}
-
-void Activities::reallyStop(const QString &id)
-{
-    Workspace *ws = Workspace::self();
-    if (ws->sessionManager()->state() == SessionState::Saving) {
-        return; // ksmserver doesn't queue requests (yet)
-    }
-
-    qCDebug(KWIN_CORE) << id;
-
-    QSet<QByteArray> saveSessionIds;
-    QSet<QByteArray> dontCloseSessionIds;
-#if KWIN_BUILD_X11
-    const auto windows = ws->windows();
-    for (auto *const window : windows) {
-        auto x11Window = qobject_cast<X11Window *>(window);
-        if (!x11Window || window->isUnmanaged()) {
-            continue;
-        }
-        if (window->isDesktop()) {
-            continue;
-        }
-        const QByteArray sessionId = x11Window->sessionId();
-        if (sessionId.isEmpty()) {
-            continue; // TODO support old wm_command apps too?
-        }
-
-        // qDebug() << sessionId;
-
-        // if it's on the activity that's closing, it needs saving
-        // but if a process is on some other open activity, I don't wanna close it yet
-        // this is, of course, complicated by a process having many windows.
-        if (window->isOnAllActivities()) {
-            dontCloseSessionIds << sessionId;
-            continue;
-        }
-
-        const QStringList activities = window->activities();
-        for (const QString &activityId : activities) {
-            if (activityId == id) {
-                saveSessionIds << sessionId;
-            } else if (running().contains(activityId)) {
-                dontCloseSessionIds << sessionId;
-            }
-        }
-    }
-    ws->sessionManager()->storeSubSession(id, saveSessionIds);
-#endif
-
-    QStringList saveAndClose;
-    QStringList saveOnly;
-    for (const QByteArray &sessionId : std::as_const(saveSessionIds)) {
-        if (dontCloseSessionIds.contains(sessionId)) {
-            saveOnly << sessionId;
-        } else {
-            saveAndClose << sessionId;
-        }
-    }
-
-    qCDebug(KWIN_CORE) << "saveActivity" << id << saveAndClose << saveOnly;
-
-    // pass off to ksmserver
-    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
-    if (ksmserver.isValid()) {
-        ksmserver.asyncCall("saveSubSession", id, saveAndClose, saveOnly);
-    } else {
-        qCDebug(KWIN_CORE) << "couldn't get ksmserver interface";
-    }
-}
-
 } // namespace
 
 #include "moc_activities.cpp"

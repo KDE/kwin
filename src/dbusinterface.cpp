@@ -83,26 +83,12 @@ QString DBusInterface::activeOutputName()
 
 bool DBusInterface::startActivity(const QString &in0)
 {
-#if KWIN_BUILD_ACTIVITIES
-    if (!Workspace::self()->activities()) {
-        return false;
-    }
-    return Workspace::self()->activities()->start(in0);
-#else
     return false;
-#endif
 }
 
 bool DBusInterface::stopActivity(const QString &in0)
 {
-#if KWIN_BUILD_ACTIVITIES
-    if (!Workspace::self()->activities()) {
-        return false;
-    }
-    return Workspace::self()->activities()->stop(in0);
-#else
     return false;
-#endif
 }
 
 int DBusInterface::currentDesktop()

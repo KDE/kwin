@@ -33,8 +33,6 @@ class KWIN_EXPORT Activities : public QObject
 public:
     explicit Activities(const KSharedConfig::Ptr &config);
 
-    bool stop(const QString &id);
-    bool start(const QString &id);
     /**
      * Sets the current activity to @param activity, and if desktop isn't nullptr,
      * ensures that this doesn't interfere with virtual desktop switching
@@ -86,7 +84,6 @@ private Q_SLOTS:
     void slotServiceStatusChanged();
     void slotRemoved(const QString &activity);
     void slotCurrentChanged(const QString &newActivity);
-    void reallyStop(const QString &id); // dbus deadlocks suck
 
 private:
     QString m_previous;
