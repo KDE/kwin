@@ -133,6 +133,7 @@ private Q_SLOTS:
     void testSettingRestoration_data();
     void testSettingRestoration();
     void testSettingRestoration_initialParsingFailure();
+    void testSettingRestoration_replacedMode();
 
     void testEvacuateTiledWindowFromRemovedOutput_data();
     void testEvacuateTiledWindowFromRemovedOutput();
@@ -1938,6 +1939,58 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         const auto [config, order, type] = *cfg;
         QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
     }
+}
+
+void OutputChangesTest::testSettingRestoration_replacedMode()
+{
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1024),
+            .internal = false,
+            .physicalSizeInMM = QSize(598, 336),
+            .modes = {
+                ModeInfo(QSize(1280, 1024), 120'000, OutputMode::Flag::Preferred),
+                ModeInfo(QSize(1280, 1024), 60'000, OutputMode::Flags{}),
+                ModeInfo(QSize(1280, 1024), 60'000, OutputMode::Flags{}),
+            },
+            .edid = QByteArray(),
+            .edidIdentifierOverride = QByteArrayLiteral("ID"),
+            .connectorName = std::nullopt,
+            .mstPath = std::nullopt,
+        },
+    });
+
+    // delete the previous config to avoid loading the config from workspace
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const auto output = outputs.front();
+    OutputConfigurationStore configs;
+
+    {
+        // first, select the second mode
+        OutputConfiguration config;
+        const auto changeSet = config.changeSet(output);
+        changeSet->mode = output->modes()[1];
+        changeSet->desiredModeSize = QSize(1280, 1024);
+        changeSet->desiredModeRefreshRate = 60000;
+        output->applyChanges(config);
+        configs.storeConfig(outputs, false, config, outputs);
+    }
+
+    // now, mark the mode as "removed". Its replacement is already in the mode list
+    outputs[0]->modes()[1]->setRemoved();
+
+    const auto opt = configs.queryConfig(outputs, false, nullptr, false);
+    QVERIFY(opt.has_value());
+    const auto [config, outputOrder, type] = *opt;
+    output->applyChanges(config);
+
+    // the preferred mode size and refresh rate should be the same,
+    // and the third mode should be selected
+    QCOMPARE(output->desiredModeSize(), QSize(1280, 1024));
+    QCOMPARE(output->desiredModeRefreshRate(), 60000);
+    QCOMPARE(output->currentMode(), output->modes()[2]);
 }
 
 void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput_data()
