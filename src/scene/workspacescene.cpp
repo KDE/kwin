@@ -306,7 +306,7 @@ static QRegion mapToDevice(SceneView *view, Item *item, const QRegion &itemLocal
 
 static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount, QRegion &occupied, QRegion &opaque, QRegion &effected, QList<SurfaceItem *> &overlays, QList<SurfaceItem *> &underlays, QStack<ClipCorner> &corners)
 {
-    if (!item || !item->isVisible()) {
+    if (!item || !item->isVisible() || !view->viewport().intersects(item->mapToView(item->boundingRect(), view))) {
         return true;
     }
     if (item->hasEffects()) {
