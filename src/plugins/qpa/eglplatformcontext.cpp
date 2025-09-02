@@ -130,7 +130,7 @@ void EGLPlatformContext::doneCurrent()
 
 bool EGLPlatformContext::isValid() const
 {
-    return m_eglContext != nullptr;
+    return m_eglContext != nullptr && !m_markedInvalid;
 }
 
 bool EGLPlatformContext::isSharing() const
@@ -248,6 +248,26 @@ void EGLPlatformContext::updateFormatFromContext()
     }
 
     eglMakeCurrent(m_eglDisplay->handle(), oldDrawSurface, oldReadSurface, oldContext);
+}
+
+EGLContext EGLPlatformContext::nativeContext() const
+{
+    return m_eglContext->handle();
+};
+
+EGLConfig EGLPlatformContext::config() const
+{
+    return m_eglContext->config();
+}
+
+EGLDisplay EGLPlatformContext::display() const
+{
+    return m_eglContext->displayObject()->handle();
+}
+
+void EGLPlatformContext::invalidateContext()
+{
+    m_markedInvalid = true;
 }
 
 } // namespace QPA
