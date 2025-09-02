@@ -460,6 +460,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
         std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
         if (!mode.has_value() || !*mode || ((*mode)->flags() & OutputMode::Flag::Removed)) {
             mode = chooseMode(output);
+            qCDebug(KWIN_OUTPUT_CONFIG, "Chose new mode for output %s: %dx%d@%u",
+                    qPrintable(state.edidIdentifier), (*mode)->size().width(), (*mode)->size().height(), (*mode)->refreshRate());
         }
         *ret.changeSet(output) = OutputChangeSet{
             .mode = mode,
@@ -571,6 +573,7 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> OutputConfigurati
 
 std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::generateConfig(const QList<Output *> &outputs, bool isLidClosed)
 {
+    qCDebug(KWIN_OUTPUT_CONFIG, "Generating new config for %lld outputs", outputs.size());
     if (isLidClosed) {
         if (const auto closedConfig = generateLidClosedConfig(outputs)) {
             return *closedConfig;
@@ -882,6 +885,7 @@ void OutputConfigurationStore::load()
                     .size = QSize(width, height),
                     .refreshRate = uint32_t(refreshRate),
                 };
+                qCDebug(KWIN_OUTPUT_CONFIG, "Read mode %dx%d@%u for output %s", width, height, refreshRate, qPrintable(state.edidIdentifier));
             }
         }
         if (const auto it = data.find("scale"); it != data.end()) {
