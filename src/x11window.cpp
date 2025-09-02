@@ -473,7 +473,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // Make sure that the input window is created before we update the stacking order
     updateLayer();
 
-    SessionInfo *session = workspace()->sessionManager()->takeSessionInfo(this);
+    std::optional<SessionInfo> session = workspace()->sessionManager()->takeSessionInfo(this);
     if (session) {
         init_minimize = session->minimized;
         noborder = session->noBorder;
@@ -850,7 +850,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     updateAllowedActions(true);
 
     // Set initial user time directly
-    m_userTime = readUserTimeMapTimestamp(asn_valid ? &asn_id : nullptr, asn_valid ? &asn_data : nullptr, session);
+    m_userTime = readUserTimeMapTimestamp(asn_valid ? &asn_id : nullptr, asn_valid ? &asn_data : nullptr, session.has_value());
     group()->updateUserTime(m_userTime); // And do what X11Window::updateUserTime() does
 
     // This should avoid flicker, because real restacking is done
@@ -921,8 +921,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     }
 
     // sendSyntheticConfigureNotify(); // Done when setting mapping state
-
-    delete session;
 
     applyWindowRules(); // Just in case
     workspace()->rulebook()->discardUsed(this, false); // Remove ApplyNow rules
