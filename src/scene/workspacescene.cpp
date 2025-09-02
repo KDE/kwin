@@ -387,8 +387,16 @@ Scene::OverlayCandidates WorkspaceScene::overlayCandidates(ssize_t maxTotalCount
     QStack<ClipCorner> cornerStack;
     const auto overlayItems = m_overlayItem->sortedChildItems();
     for (Item *item : overlayItems | std::views::reverse) {
-        // the cursor is currently handled separately by the compositor
-        if (item == cursorItem() && !painted_delegate->shouldRenderItem(item)) {
+        if (!item->isVisible() || !painted_delegate->viewport().intersects(item->mapToView(item->boundingRect(), painted_delegate))) {
+            continue;
+        }
+        if (item == cursorItem()) {
+            // for the time being, prioritize the cursor above all else,
+            // even while it's not moving
+            overlays.push_back(item);
+            if (overlays.size() > maxOverlayCount || underlays.size() + overlays.size() > maxTotalCount) {
+                return {};
+            }
             continue;
         }
         if (!findOverlayCandidates(painted_delegate, item, maxTotalCount, maxOverlayCount, maxUnderlayCount, occupied, opaque, effected, overlays, underlays, cornerStack)) {
