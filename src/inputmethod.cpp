@@ -21,7 +21,7 @@
 #include "window.h"
 #include "workspace.h"
 #if KWIN_BUILD_SCREENLOCKER
-#include "screenlockerwatcher.h"
+#include <KScreenLocker/KsldApp>
 #endif
 
 #include "internalinputmethodcontext.h"
@@ -118,7 +118,7 @@ void InputMethod::init()
         m_inputMethodCrashes = 0;
     });
 #if KWIN_BUILD_SCREENLOCKER
-    connect(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
+    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::aboutToLock, this, &InputMethod::hide);
 #endif
 
     new VirtualKeyboardDBus(this);

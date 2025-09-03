@@ -321,7 +321,6 @@ qt_add_dbus_interface(kwin_dbus_SRCS org.freedesktop.DBus.Properties.xml dbuspro
 
 if (KWIN_BUILD_SCREENLOCKER)
     qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf6_org.freedesktop.ScreenSaver.xml screenlocker_interface)
-    qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
 endif()
 
 qt_add_dbus_interface(kwin_dbus_SRCS org.kde.kappmenu.xml appmenu_interface)
@@ -345,7 +344,6 @@ if (KWIN_BUILD_ACTIVITIES)
 endif()
 
 if (KWIN_BUILD_SCREENLOCKER)
-    target_sources(kwin PRIVATE screenlockerwatcher.cpp)
     target_link_libraries(kwin PRIVATE PW::KScreenLocker)
 endif()
 
@@ -495,7 +493,6 @@ install(FILES
     rules.h
     screenedge.h
     screenedgegestures.h
-    screenlockerwatcher.h
     shadow.h
     sm.h
     tablet_input.h

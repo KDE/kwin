@@ -37,7 +37,6 @@ class X11EventFilter;
 class PluginManager;
 class InputMethod;
 class ColorManager;
-class ScreenLockerWatcher;
 class TabletModeManager;
 class XwaylandInterface;
 class Edge;
@@ -268,9 +267,6 @@ public:
     InputMethod *inputMethod() const;
     ColorManager *colorManager() const;
     virtual XwaylandInterface *xwayland() const;
-#if KWIN_BUILD_SCREENLOCKER
-    ScreenLockerWatcher *screenLockerWatcher() const;
-#endif
     TabletModeManager *tabletModeManager() const;
 
     /**
@@ -386,9 +382,6 @@ private:
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<ColorManager> m_colorManager;
     std::unique_ptr<TabletModeManager> m_tabletModeManager;
-#if KWIN_BUILD_SCREENLOCKER
-    std::unique_ptr<ScreenLockerWatcher> m_screenLockerWatcher;
-#endif
 };
 
 inline bool Application::initiallyLocked() const

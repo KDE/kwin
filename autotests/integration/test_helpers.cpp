@@ -15,9 +15,6 @@
 #if KWIN_BUILD_X11
 #include "atoms.h"
 #endif
-#if KWIN_BUILD_SCREENLOCKER
-#include "screenlockerwatcher.h"
-#endif
 #include "input_event.h"
 #include "inputmethod.h"
 #include "wayland/display.h"
@@ -1269,15 +1266,12 @@ bool lockScreen()
     if (!waylandServer()->isScreenLocked()) {
         return false;
     }
-    if (!kwinApp()->screenLockerWatcher()->isLocked()) {
-        QSignalSpy lockedSpy(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::locked);
+    if (ScreenLocker::KSldApp::self()->lockState() != ScreenLocker::KSldApp::Locked) {
+        QSignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked);
         if (!lockedSpy.isValid()) {
             return false;
         }
         if (!lockedSpy.wait()) {
-            return false;
-        }
-        if (!kwinApp()->screenLockerWatcher()->isLocked()) {
             return false;
         }
     }
@@ -1305,15 +1299,12 @@ bool unlockScreen()
     if (waylandServer()->isScreenLocked()) {
         return true;
     }
-    if (kwinApp()->screenLockerWatcher()->isLocked()) {
-        QSignalSpy lockedSpy(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::locked);
+    if (ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked) {
+        QSignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked);
         if (!lockedSpy.isValid()) {
             return false;
         }
         if (!lockedSpy.wait()) {
-            return false;
-        }
-        if (kwinApp()->screenLockerWatcher()->isLocked()) {
             return false;
         }
     }

@@ -42,10 +42,6 @@
 #include "x11eventfilter.h"
 #endif
 
-#if KWIN_BUILD_SCREENLOCKER
-#include "screenlockerwatcher.h"
-#endif
-
 #include "effect/effecthandler.h"
 
 // KDE
@@ -245,9 +241,6 @@ void Application::createWorkspace()
 
 void Application::createInput()
 {
-#if KWIN_BUILD_SCREENLOCKER
-    m_screenLockerWatcher = std::make_unique<ScreenLockerWatcher>();
-#endif
     auto input = InputRedirection::create(this);
     input->init();
 }
@@ -631,13 +624,6 @@ XwaylandInterface *Application::xwayland() const
 {
     return nullptr;
 }
-
-#if KWIN_BUILD_SCREENLOCKER
-ScreenLockerWatcher *Application::screenLockerWatcher() const
-{
-    return m_screenLockerWatcher.get();
-}
-#endif
 
 static PlatformCursorImage grabCursorOpenGL()
 {
