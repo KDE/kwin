@@ -498,7 +498,7 @@ static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FOR
 /**
  * items and layers need to be sorted top to bottom
  */
-static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> underlays, std::span<SurfaceItem *const> overlays, std::span<OutputLayer *const> layers)
+static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<Item *const> underlays, std::span<Item *const> overlays, std::span<OutputLayer *const> layers)
 {
     if (layers.empty() || (underlays.empty() && overlays.empty())) {
         return {};
@@ -507,10 +507,10 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     const int primaryZpos = sceneView->layer()->zpos();
     auto layerIt = layers.begin();
     int zpos = (*layerIt)->maxZpos();
-    std::unordered_map<SurfaceItem *, OutputLayer *> ret;
+    std::unordered_map<Item *, OutputLayer *> ret;
     auto overlaysIt = overlays.begin();
     for (; overlaysIt != overlays.end();) {
-        SurfaceItem *item = *overlaysIt;
+        Item *item = *overlaysIt;
         const RectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
@@ -558,7 +558,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     zpos = std::min(primaryZpos - 1, (*layerIt)->maxZpos());
     auto underlaysIt = underlays.begin();
     for (; underlaysIt != underlays.end();) {
-        SurfaceItem *item = *underlaysIt;
+        Item *item = *underlaysIt;
         const RectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
@@ -783,7 +783,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         return layer->minZpos() < primaryView->layer()->zpos();
     });
     const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
-    std::unordered_map<SurfaceItem *, OutputLayer *> overlayAssignments;
+    std::unordered_map<Item *, OutputLayer *> overlayAssignments;
     if (m_allowOverlaysEnv.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80)) {
         overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
     }
