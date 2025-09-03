@@ -2767,7 +2767,7 @@ msgstr "忽略最小化窗口(&M)"
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr "无匹配项"
+msgstr "没有匹配的内容"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
