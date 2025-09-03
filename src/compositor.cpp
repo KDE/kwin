@@ -471,8 +471,7 @@ static const auto s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVER
  */
 static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<Item *const> underlays, std::span<Item *const> overlays, std::span<OutputLayer *const> layers)
 {
-    const bool allowed = s_enableOverlays.value_or(!sceneView->output()->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
-    if (layers.empty() || (underlays.empty() && overlays.empty()) || !allowed) {
+    if (layers.empty() || (underlays.empty() && overlays.empty())) {
         return {};
     }
     // TODO also allow assigning the primary view to a different plane
@@ -726,8 +725,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([cursorLayer](OutputLayer *layer) {
+    const bool overlaysAllowed = s_enableOverlays.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
+    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([cursorLayer, overlaysAllowed](OutputLayer *layer) {
         return layer->type() != OutputLayerType::Primary
+            && (overlaysAllowed || layer->type() != OutputLayerType::GenericLayer)
             && (!cursorLayer || layer->minZpos() < cursorLayer->zpos());
     }) | std::ranges::to<QList>();
     std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
