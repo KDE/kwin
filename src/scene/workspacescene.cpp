@@ -181,62 +181,6 @@ static void maybePushCorners(Item *item, QStack<ClipCorner> &corners)
     }
 }
 
-static bool addCandidates(SceneView *delegate, Item *item, QList<Item *> &candidates, ssize_t maxCount, Region &occluded, QStack<ClipCorner> &corners)
-{
-    if (item->opacity() == 0.0) {
-        return true;
-    }
-    if (item->opacity() != 1.0 || item->hasEffects()) {
-        return false;
-    }
-    const QList<Item *> children = item->sortedChildItems();
-    auto it = children.rbegin();
-    for (; it != children.rend(); it++) {
-        Item *const child = *it;
-        if (child->z() < 0) {
-            break;
-        }
-        if (child->isVisible() && !occluded.contains(child->mapToView(child->boundingRect(), delegate).toAlignedRect())) {
-            if (!addCandidates(delegate, child, candidates, maxCount, occluded, corners)) {
-                return false;
-            }
-        }
-    }
-    if (occluded.contains(item->mapToView(item->boundingRect(), delegate).roundedOut())) {
-        return true;
-    }
-    if (!item->rect().isEmpty()) {
-        candidates.push_back(item);
-        if (candidates.size() > maxCount) {
-            return false;
-        }
-    }
-
-    maybePushCorners(item, corners);
-    auto cleanupCorners = qScopeGuard([&corners]() {
-        if (!corners.isEmpty()) {
-            corners.pop();
-        }
-    });
-
-    Region opaque = item->opaque();
-    if (!corners.isEmpty()) {
-        const auto &top = corners.top();
-        opaque = top.radius.clip(opaque, top.box);
-    }
-
-    occluded += item->mapToView(opaque, delegate);
-    for (; it != children.rend(); it++) {
-        Item *const child = *it;
-        if (child->isVisible() && !occluded.contains(child->mapToView(child->boundingRect(), delegate).toAlignedRect())) {
-            if (!addCandidates(delegate, child, candidates, maxCount, occluded, corners)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 static bool checkForBlackBackground(Item *background)
 {
     SurfaceItem *surface = qobject_cast<SurfaceItem *>(background);
