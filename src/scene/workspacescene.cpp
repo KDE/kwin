@@ -304,7 +304,7 @@ static QRegion mapToDevice(SceneView *view, Item *item, const QRegion &itemLocal
     return ret;
 }
 
-static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount, QRegion &occupied, QRegion &opaque, QRegion &effected, QList<SurfaceItem *> &overlays, QList<SurfaceItem *> &underlays, QStack<ClipCorner> &corners)
+static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount, QRegion &occupied, QRegion &opaque, QRegion &effected, QList<Item *> &overlays, QList<Item *> &underlays, QStack<ClipCorner> &corners)
 {
     if (!item || !item->isVisible() || !view->viewport().intersects(item->mapToView(item->boundingRect(), view))) {
         return true;
@@ -387,8 +387,8 @@ Scene::OverlayCandidates WorkspaceScene::overlayCandidates(ssize_t maxTotalCount
     QRegion occupied;
     QRegion opaque;
     QRegion effected;
-    QList<SurfaceItem *> overlays;
-    QList<SurfaceItem *> underlays;
+    QList<Item *> overlays;
+    QList<Item *> underlays;
     QStack<ClipCorner> cornerStack;
     const auto overlayItems = m_overlayItem->sortedChildItems();
     for (Item *item : overlayItems | std::views::reverse) {

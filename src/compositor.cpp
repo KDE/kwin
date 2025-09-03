@@ -469,7 +469,7 @@ static const auto s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVER
 /**
  * items and layers need to be sorted top to bottom
  */
-static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> underlays, std::span<SurfaceItem *const> overlays, std::span<OutputLayer *const> layers)
+static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<Item *const> underlays, std::span<Item *const> overlays, std::span<OutputLayer *const> layers)
 {
     const bool allowed = s_enableOverlays.value_or(!sceneView->output()->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
     if (layers.empty() || (underlays.empty() && overlays.empty()) || !allowed) {
@@ -479,10 +479,10 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     const int primaryZpos = sceneView->layer()->zpos();
     auto layerIt = layers.begin();
     int zpos = (*layerIt)->maxZpos();
-    std::unordered_map<SurfaceItem *, OutputLayer *> ret;
+    std::unordered_map<Item *, OutputLayer *> ret;
     auto overlaysIt = overlays.begin();
     for (; overlaysIt != overlays.end();) {
-        SurfaceItem *item = *overlaysIt;
+        Item *item = *overlaysIt;
         const QRectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
@@ -530,7 +530,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     zpos = std::min(primaryZpos - 1, (*layerIt)->maxZpos());
     auto underlaysIt = underlays.begin();
     for (; underlaysIt != underlays.end();) {
-        SurfaceItem *item = *underlaysIt;
+        Item *item = *underlaysIt;
         const QRectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane

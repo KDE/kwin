@@ -206,8 +206,8 @@ public:
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
     struct OverlayCandidates
     {
-        QList<SurfaceItem *> overlays;
-        QList<SurfaceItem *> underlays;
+        QList<Item *> overlays;
+        QList<Item *> underlays;
     };
     virtual OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
     virtual void prePaint(SceneView *delegate) = 0;
