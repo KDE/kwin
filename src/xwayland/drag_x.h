@@ -58,7 +58,6 @@ private:
     Mimes m_offers;
 
     X11Source *m_source;
-    QList<QPair<xcb_timestamp_t, bool>> m_dataRequests;
 
     WlVisit *m_visit = nullptr;
     QList<WlVisit *> m_oldVisits;

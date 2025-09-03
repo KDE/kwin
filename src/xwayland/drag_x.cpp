@@ -60,22 +60,6 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     : m_dnd(dnd)
     , m_source(source)
 {
-    connect(m_dnd, &Dnd::transferFinished, this, [this](xcb_timestamp_t eventTime) {
-        // we use this mechanism, because the finished call is not
-        // reliable done by Wayland clients
-        auto it = std::find_if(m_dataRequests.begin(), m_dataRequests.end(), [eventTime](const QPair<xcb_timestamp_t, bool> &req) {
-            return req.first == eventTime && req.second == false;
-        });
-        if (it == m_dataRequests.end()) {
-            // transfer finished for a different drag
-            return;
-        }
-        (*it).second = true;
-        checkForFinished();
-    });
-    connect(source, &X11Source::transferReady, this, [this](xcb_atom_t target, qint32 fd) {
-        m_dataRequests << QPair<xcb_timestamp_t, bool>(m_source->timestamp(), false);
-    });
     connect(source->dataSource(), &XwlDataSource::dropped, this, [this] {
         m_performed = true;
         if (m_visit) {
@@ -84,14 +68,10 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
             });
 
             QTimer::singleShot(2000, this, [this] {
-                if (!m_visit->entered() || !m_visit->dropHandled()) {
-                    // X client timed out
-                    Q_EMIT finish(this);
-                } else if (m_dataRequests.size() == 0) {
-                    // Wl client timed out
+                if (m_visit->entered() && m_visit->dropHandled()) {
                     m_visit->sendFinished();
-                    Q_EMIT finish(this);
                 }
+                Q_EMIT finish(this);
             });
         }
         // Dave do we need this async finish check anymore?
@@ -240,19 +220,10 @@ bool XToWlDrag::checkForFinished()
         return false;
     }
 
-    if (m_dataRequests.size() == 0 && m_source->dataSource()->isAccepted()) {
-        // need to wait for first data request
-        return false;
-    }
-    const bool transfersFinished = std::all_of(m_dataRequests.begin(), m_dataRequests.end(),
-                                               [](QPair<xcb_timestamp_t, bool> req) {
-                                                   return req.second;
-                                               });
-    if (transfersFinished) {
-        m_visit->sendFinished();
-        Q_EMIT finish(this);
-    }
-    return transfersFinished;
+    m_visit->sendFinished();
+    Q_EMIT finish(this);
+
+    return true;
 }
 
 WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)
