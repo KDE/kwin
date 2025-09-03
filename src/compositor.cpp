@@ -356,12 +356,11 @@ static bool prepareDirectScanout(RenderView *view, Output *output, const std::sh
         return false;
     }
     const auto layer = view->layer();
-    const auto scanoutCandidates = view->scanoutCandidates(1);
-    if (scanoutCandidates.isEmpty()) {
+    const auto candidate = view->scanoutCandidate();
+    if (!candidate) {
         layer->setScanoutCandidate(nullptr);
         return false;
     }
-    SurfaceItem *candidate = scanoutCandidates.front();
     SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(candidate);
     if (!wayland || !wayland->surface()) {
         return false;
