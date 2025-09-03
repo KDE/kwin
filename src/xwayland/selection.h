@@ -65,9 +65,6 @@ public:
     }
     void overwriteRequestorWindow(xcb_window_t window);
 
-Q_SIGNALS:
-    void transferFinished(xcb_timestamp_t eventTime);
-
 protected:
     Selection(xcb_atom_t atom, QObject *parent);
     void registerXfixes();
