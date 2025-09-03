@@ -769,8 +769,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([cursorLayer](OutputLayer *layer) {
+    const bool overlaysAllowed = m_allowOverlaysEnv.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
+    QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([cursorLayer, overlaysAllowed](OutputLayer *layer) {
         return layer->type() != OutputLayerType::Primary
+            && (overlaysAllowed || layer->type() != OutputLayerType::GenericLayer)
             && (!cursorLayer || layer->minZpos() < cursorLayer->zpos());
     }) | std::ranges::to<QList>();
     std::ranges::sort(specialLayers, [](OutputLayer *left, OutputLayer *right) {
