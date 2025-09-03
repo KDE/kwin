@@ -235,15 +235,15 @@ QPointF ItemView::hotspot() const
 
 QRectF ItemView::viewport() const
 {
+    // TODO make the viewport explicit instead?
+    if (!m_item) {
+        return QRectF();
+    }
     return calculateViewport(m_item->rect());
 }
 
 QRectF ItemView::calculateViewport(const QRectF &itemRect) const
 {
-    if (!m_item) {
-        // TODO make the viewport explicit instead?
-        return QRectF{};
-    }
     const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
     if (!recommendedSizes.empty()) {
         const auto bufferSize = scaledRect(itemRect, scale()).size();
@@ -381,6 +381,10 @@ ItemTreeView::~ItemTreeView()
 
 QRectF ItemTreeView::viewport() const
 {
+    // TODO make the viewport explicit instead?
+    if (!m_item) {
+        return QRectF();
+    }
     return calculateViewport(m_item->boundingRect());
 }
 
