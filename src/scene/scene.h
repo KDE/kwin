@@ -47,10 +47,8 @@ public:
     virtual RectF viewport() const = 0;
     virtual qreal scale() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
-    virtual void prePaint() = 0;
     virtual Region collectDamage() = 0;
-    virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &logicalRegion) = 0;
-    virtual void postPaint() = 0;
+    virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) = 0;
     virtual bool shouldRenderItem(Item *item) const;
     virtual bool shouldRenderHole(Item *item) const;
     virtual double desiredHdrHeadroom() const = 0;
@@ -115,10 +113,10 @@ public:
     void setScale(qreal scale);
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    void prePaint() override;
+    virtual void prePaint();
     Region collectDamage() override;
     void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) override;
-    void postPaint() override;
+    void postPaint();
     double desiredHdrHeadroom() const override;
 
     void addExclusiveView(RenderView *view);
@@ -158,10 +156,8 @@ public:
     uint refreshRate() const override;
     bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    void prePaint() override;
     Region collectDamage() override;
-    void postPaint() override;
-    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &logicalRegion) override;
+    void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
     void setUnderlay(bool underlay);
@@ -244,13 +240,7 @@ public:
     void addView(RenderView *view);
     void removeView(RenderView *view);
 
-    virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
-    struct OverlayCandidates
-    {
-        QList<Item *> overlays;
-        QList<Item *> underlays;
-    };
-    virtual OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
+    virtual QList<Item *> layerCandidates(ssize_t maxTotalCount) const = 0;
     virtual void prePaint(SceneView *view) = 0;
     virtual Region collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) = 0;

@@ -19,7 +19,6 @@ class DragAndDropIconItem;
 class EffectWindow;
 class EglContext;
 class Item;
-class SurfaceItem;
 class WindowItem;
 class WindowPaintData;
 class CursorItem;
@@ -41,8 +40,7 @@ public:
     void attachRenderer(std::unique_ptr<ItemRenderer> &&renderer) override;
     void detachRenderer() override;
 
-    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const override;
+    QList<Item *> layerCandidates(ssize_t maxTotalCount) const override;
     void prePaint(SceneView *delegate) override;
     Region collectDamage() override;
     void postPaint() override;
