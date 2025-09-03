@@ -187,9 +187,9 @@ SceneView::~SceneView()
     m_scene->removeView(this);
 }
 
-QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
+SurfaceItem *SceneView::scanoutCandidate() const
 {
-    return {};
+    return nullptr;
 }
 
 void SceneView::prePaint()
@@ -386,13 +386,9 @@ bool ItemView::isVisible() const
     return m_item->isVisible();
 }
 
-QList<SurfaceItem *> ItemView::scanoutCandidates(ssize_t maxCount) const
+SurfaceItem *ItemView::scanoutCandidate() const
 {
-    if (auto item = dynamic_cast<SurfaceItem *>(m_item.get())) {
-        return {item};
-    } else {
-        return {};
-    }
+    return dynamic_cast<SurfaceItem *>(m_item.get());
 }
 
 Region ItemView::collectDamage()
@@ -498,7 +494,7 @@ RectF ItemTreeView::viewport() const
     return calculateViewport(m_item->boundingRect());
 }
 
-QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
+SurfaceItem *ItemTreeView::scanoutCandidate() const
 {
     if (dynamic_cast<SurfaceItem *>(m_item.get())) {
         const bool visibleChildren = std::ranges::any_of(m_item->childItems(), [](Item *child) {
@@ -507,7 +503,7 @@ QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
         if (visibleChildren) {
             return {};
         }
-        return {static_cast<SurfaceItem *>(m_item.get())};
+        return static_cast<SurfaceItem *>(m_item.get());
     }
     return {};
 }
