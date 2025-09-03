@@ -73,8 +73,6 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
                 Q_EMIT finish(this);
             });
         }
-        // Dave do we need this async finish check anymore?
-        tryFinish();
     });
     connect(source->dataSource(), &XwlDataSource::finished, this, [this] {
         tryFinish();
