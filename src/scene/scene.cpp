@@ -189,7 +189,7 @@ SceneView::~SceneView()
 
 QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
 {
-    return m_scene->scanoutCandidates(maxCount);
+    return {};
 }
 
 void SceneView::prePaint()
@@ -375,17 +375,9 @@ QList<SurfaceItem *> ItemView::scanoutCandidates(ssize_t maxCount) const
     }
 }
 
-void ItemView::prePaint()
-{
-}
-
 Region ItemView::collectDamage()
 {
     return m_item->takeDeviceRepaints(this);
-}
-
-void ItemView::postPaint()
-{
 }
 
 void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &region)
@@ -689,11 +681,6 @@ void Scene::removeView(RenderView *view)
 {
     m_views.removeOne(view);
     Q_EMIT viewRemoved(view);
-}
-
-QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
-{
-    return {};
 }
 
 } // namespace KWin

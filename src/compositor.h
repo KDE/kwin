@@ -11,6 +11,7 @@
 
 #include "effect/globals.h"
 #include "kwin_export.h"
+#include "core/region.h"
 
 #include <QHash>
 #include <QObject>
@@ -34,6 +35,8 @@ class OutputFrame;
 class SceneView;
 class ItemView;
 class RenderLoopDrivenQAnimationDriver;
+class RenderView;
+class Item;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -104,6 +107,27 @@ protected:
     void addOutput(BackendOutput *output);
     void removeOutput(BackendOutput *output);
     void assignOutputLayers(BackendOutput *output);
+
+    struct LayerData
+    {
+        RenderView *view;
+        bool directScanout = false;
+        bool directScanoutOnly = false;
+        bool highPriority = false;
+        Region surfaceDamage;
+        uint32_t requiredAlphaBits;
+    };
+    enum class SetupType {
+        Ideal,
+        Fallback,
+    };
+    std::pair<QList<LayerData>, bool> setupLayers(SceneView *primaryView, LogicalOutput *logicalOutput,
+                                                  BackendOutput *backendOutput,
+                                                  const QList<OutputLayer *> &outputLayers,
+                                                  const std::unordered_map<OutputLayer *, Item *> &assignments,
+                                                  const std::shared_ptr<OutputFrame> &frame,
+                                                  SetupType type,
+                                                  std::unordered_set<OutputLayer *> &toUpdate);
 
     CompositingType m_selectedCompositor = NoCompositing;
 

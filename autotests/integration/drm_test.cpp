@@ -475,9 +475,6 @@ bool findBufferOnPlane(BackendOutput *output, GraphicsBuffer *buffer)
 
 void DrmTest::testDirectScanout()
 {
-#ifdef FORCE_DRM_LEGACY
-    QSKIP("This test is known to be broken with legacy modesetting");
-#endif
     QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
     uint32_t time = 0;
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
