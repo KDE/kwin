@@ -64,7 +64,7 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
         m_performed = true;
         if (m_visit) {
             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
-                checkForFinished();
+                tryFinish();
             });
 
             QTimer::singleShot(2000, this, [this] {
@@ -75,16 +75,16 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
             });
         }
         // Dave do we need this async finish check anymore?
-        checkForFinished();
+        tryFinish();
     });
     connect(source->dataSource(), &XwlDataSource::finished, this, [this] {
-        checkForFinished();
+        tryFinish();
     });
     connect(source->dataSource(), &XwlDataSource::cancelled, this, [this] {
         if (m_visit && !m_visit->leave()) {
-            connect(m_visit, &WlVisit::finish, this, &XToWlDrag::checkForFinished);
+            connect(m_visit, &WlVisit::finish, this, &XToWlDrag::tryFinish);
         }
-        checkForFinished();
+        tryFinish();
     });
     connect(source->dataSource(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
 }
@@ -202,28 +202,26 @@ void XToWlDrag::setDragTarget()
     seat->setDragTarget(dropTarget, ac->surface(), seat->pointerPos(), ac->inputTransformation());
 }
 
-bool XToWlDrag::checkForFinished()
+void XToWlDrag::tryFinish()
 {
     if (!m_visit) {
         // not dropped above Wl native target
         Q_EMIT finish(this);
-        return true;
+        return;
     }
 
     // Avoid sending XdndFinish if neither XdndDrop nor XdndLeave event has been received yet.
     if (!m_visit->finished()) {
-        return false;
+        return;
     }
 
     // Avoid sending XdndFinish if wl_data_offer.finish has not been called yet.
     if (!m_source->dataSource()->isDndCancelled() && !m_source->dataSource()->isDndFinished()) {
-        return false;
+        return;
     }
 
     m_visit->sendFinished();
     Q_EMIT finish(this);
-
-    return true;
 }
 
 WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)

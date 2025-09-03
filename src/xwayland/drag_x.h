@@ -51,8 +51,7 @@ public:
 private:
     void setOffers(const Mimes &offers);
     void setDragTarget();
-
-    bool checkForFinished();
+    void tryFinish();
 
     Dnd *const m_dnd;
     Mimes m_offers;
