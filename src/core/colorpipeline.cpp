@@ -374,6 +374,14 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
     return ret;
 }
 
+bool ColorPipeline::operator==(const ColorPipeline &other) const
+{
+    // NOTE that this can't just use the default compiler-generated
+    // comparison, as identity transformations may have different
+    // input ranges, which we want to ignore here!
+    return ops == other.ops;
+}
+
 QVector3D ColorOp::apply(const QVector3D input) const
 {
     return applyOperation(operation, input);

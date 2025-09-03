@@ -122,7 +122,7 @@ public:
     ColorPipeline merged(const ColorPipeline &onTop) const;
 
     bool isIdentity() const;
-    bool operator==(const ColorPipeline &other) const = default;
+    bool operator==(const ColorPipeline &other) const;
     const ValueRange &currentOutputRange() const;
     ColorspaceType currentOutputSpace() const;
     QVector3D evaluate(const QVector3D &input) const;
