@@ -61,7 +61,6 @@ private:
     WlVisit *m_visit = nullptr;
     QList<WlVisit *> m_oldVisits;
 
-    bool m_performed = false;
     DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = DataDeviceManagerInterface::DnDAction::None;
 
     Q_DISABLE_COPY(XToWlDrag)
