@@ -102,7 +102,7 @@ SceneView::~SceneView()
 
 QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
 {
-    return m_scene->scanoutCandidates(maxCount);
+    return {};
 }
 
 void SceneView::prePaint()
@@ -281,18 +281,10 @@ void ItemView::frame(OutputFrame *frame)
     m_item->framePainted(this, m_output, frame, frameTime);
 }
 
-void ItemView::prePaint()
-{
-}
-
 QRegion ItemView::collectDamage()
 {
     // FIXME this offset should really not be rounded
     return m_item->takeRepaints(this).translated(-viewport().topLeft().toPoint());
-}
-
-void ItemView::postPaint()
-{
 }
 
 void ItemView::paint(const RenderTarget &renderTarget, const QRegion &region)
@@ -566,11 +558,6 @@ void Scene::removeView(RenderView *view)
 {
     m_views.removeOne(view);
     Q_EMIT viewRemoved(view);
-}
-
-QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
-{
-    return {};
 }
 
 void Scene::frame(SceneView *view, OutputFrame *frame)

@@ -19,7 +19,6 @@ class DragAndDropIconItem;
 class EffectWindow;
 class EglContext;
 class Item;
-class SurfaceItem;
 class WindowItem;
 class WindowPaintData;
 class CursorItem;
@@ -38,8 +37,7 @@ public:
     Item *overlayItem() const;
     Item *cursorItem() const;
 
-    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const override;
+    QList<Item *> overlayCandidates(ssize_t maxTotalCount) const override;
     void prePaint(SceneView *delegate) override;
     QRegion collectDamage() override;
     void postPaint() override;
@@ -108,6 +106,7 @@ private:
     void createDndIconItem();
     void destroyDndIconItem();
     void updateCursor();
+    QList<Item *> scanoutCandidates(ssize_t maxCount) const;
 
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     // how many times finalPaintScreen() has been called

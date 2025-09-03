@@ -44,10 +44,8 @@ public:
     virtual qreal scale() const;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
     virtual void frame(OutputFrame *frame) = 0;
-    virtual void prePaint() = 0;
     virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
-    virtual void postPaint() = 0;
     virtual bool shouldRenderItem(Item *item) const;
     virtual bool shouldRenderHole(Item *item) const;
 
@@ -85,10 +83,10 @@ public:
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
-    void prePaint() override;
+    void prePaint();
     QRegion collectDamage() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
-    void postPaint() override;
+    void postPaint();
     double desiredHdrHeadroom() const;
 
     void addExclusiveView(RenderView *view);
@@ -122,9 +120,7 @@ public:
     bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
-    void prePaint() override;
     QRegion collectDamage() override;
-    void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     bool shouldRenderItem(Item *item) const override;
     void setExclusive(bool enable) override;
@@ -203,13 +199,7 @@ public:
     void addView(RenderView *view);
     void removeView(RenderView *view);
 
-    virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
-    struct OverlayCandidates
-    {
-        QList<Item *> overlays;
-        QList<Item *> underlays;
-    };
-    virtual OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
+    virtual QList<Item *> overlayCandidates(ssize_t maxTotalCount) const = 0;
     virtual void prePaint(SceneView *delegate) = 0;
     virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
