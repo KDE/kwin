@@ -61,7 +61,6 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     , m_source(source)
 {
     connect(source->dataSource(), &XwlDataSource::dropped, this, [this] {
-        m_performed = true;
         if (m_visit) {
             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
                 tryFinish();
