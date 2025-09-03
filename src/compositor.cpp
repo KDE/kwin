@@ -471,7 +471,7 @@ static const auto s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVER
  */
 static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> underlays, std::span<SurfaceItem *const> overlays, std::span<OutputLayer *const> layers)
 {
-    const bool allowed = !s_enableOverlays.value_or(!sceneView->output()->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
+    const bool allowed = s_enableOverlays.value_or(!sceneView->output()->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
     if (layers.empty() || (underlays.empty() && overlays.empty()) || !allowed) {
         return {};
     }
