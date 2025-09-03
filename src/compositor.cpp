@@ -362,24 +362,6 @@ static bool isTearingRequested(const Item *item)
     });
 }
 
-static bool checkForBlackBackground(SurfaceItem *background)
-{
-    if (!background->buffer()
-        || (!background->buffer()->singlePixelAttributes() && !background->buffer()->shmAttributes())
-        || background->buffer()->size() != QSize(1, 1)) {
-        return false;
-    }
-    const GraphicsBufferView view(background->buffer());
-    if (!view.image()) {
-        return false;
-    }
-    const QRgb rgb = view.image()->pixel(0, 0);
-    const QVector3D encoded(qRed(rgb) / 255.0, qGreen(rgb) / 255.0, qBlue(rgb) / 255.0);
-    const QVector3D nits = background->colorDescription()->mapTo(encoded, ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::linear), 100, 0, std::nullopt, std::nullopt), background->renderingIntent());
-    // below 0.1 nits, it shouldn't be noticeable that we replace it with black
-    return nits.lengthSquared() <= (0.1 * 0.1);
-}
-
 static Rect mapGlobalLogicalToOutputDeviceCoordinates(const RectF &logicalGeometry, LogicalOutput *logicalOutput, BackendOutput *backendOutput)
 {
     const Rect localDevice = logicalGeometry.translated(-logicalOutput->geometryF().topLeft()).scaled(backendOutput->scale()).rounded();
@@ -392,18 +374,9 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
         return false;
     }
     const auto layer = view->layer();
-    const Rect nativeViewport = mapGlobalLogicalToOutputDeviceCoordinates(view->viewport(), logicalOutput, backendOutput);
-    const bool coversEntireOutput = nativeViewport == Rect(QPoint(), backendOutput->modeSize());
-    if ((nativeViewport & Rect(QPoint(), backendOutput->modeSize())).isEmpty()) {
-        return false;
-    }
-    // the background of the output can be assumed to be black
-    const auto scanoutCandidates = view->scanoutCandidates(coversEntireOutput ? 2 : 1);
+    const auto scanoutCandidates = view->scanoutCandidates(1);
     if (scanoutCandidates.isEmpty()) {
         layer->setScanoutCandidate(nullptr);
-        return false;
-    }
-    if (coversEntireOutput && scanoutCandidates.size() == 2 && !checkForBlackBackground(scanoutCandidates.back())) {
         return false;
     }
     SurfaceItem *candidate = scanoutCandidates.front();

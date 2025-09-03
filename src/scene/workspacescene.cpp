@@ -55,6 +55,7 @@
 #include "scene/workspacescene.h"
 #include "compositor.h"
 #include "core/backendoutput.h"
+#include "core/graphicsbufferview.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
 #include "core/renderbackend.h"
@@ -246,6 +247,24 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
     return true;
 }
 
+static bool checkForBlackBackground(SurfaceItem *background)
+{
+    if (!background->buffer()
+        || (!background->buffer()->singlePixelAttributes() && !background->buffer()->shmAttributes())
+        || background->buffer()->size() != QSize(1, 1)) {
+        return false;
+    }
+    const GraphicsBufferView view(background->buffer());
+    if (!view.image()) {
+        return false;
+    }
+    const QRgb rgb = view.image()->pixel(0, 0);
+    const QVector3D encoded(qRed(rgb) / 255.0, qGreen(rgb) / 255.0, qBlue(rgb) / 255.0);
+    const QVector3D nits = background->colorDescription()->mapTo(encoded, ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::linear), 100, 0, std::nullopt, std::nullopt), background->renderingIntent());
+    // below 0.1 nits, it shouldn't be noticeable that we replace it with black
+    return nits.lengthSquared() <= (0.1 * 0.1);
+}
+
 QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
 {
     const auto overlayItems = m_overlayItem->childItems();
@@ -267,13 +286,19 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
             if (!item->isVisible() || !painted_delegate->shouldRenderItem(item) || !painted_delegate->viewport().intersects(item->mapToView(item->boundingRect(), painted_delegate))) {
                 continue;
             }
-            if (!addCandidates(painted_delegate, item, ret, maxCount, occlusion, corners)) {
+            if (!addCandidates(painted_delegate, item, ret, maxCount + 1, occlusion, corners)) {
+                return {};
+            }
+            if (ret.size() == maxCount + 1 && !checkForBlackBackground(ret.back())) {
                 return {};
             }
             if (occlusion.contains(painted_screen->geometry())) {
-                return ret;
+                break;
             }
         }
+    }
+    if (!ret.empty() && checkForBlackBackground(ret.back())) {
+        ret.pop_back();
     }
     return ret;
 }
