@@ -56,7 +56,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
     if (!isPrivileged) {
         const bool allowed = !workspace()->activeWindow()
             || workspace()->activeWindow()->surface() == surface
-            || (input()->lastInputSerial() <= serial && waylandServer()->display()->serial() >= serial);
+            || (input()->lastFocusInputSerial() <= serial && waylandServer()->display()->serial() >= serial);
         if (!allowed) {
             qCDebug(KWIN_CORE) << "Cannot grant a token to" << window;
             return QStringLiteral("not-granted-666");
@@ -86,7 +86,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
         // this makes it so that shortcuts like Meta+1 work
         // TODO pass seat + serial to plasmashell through kglobalaccel to fix this
         // more properly
-        serial = input()->lastInputSerial();
+        serial = input()->lastFocusInputSerial();
     }
     workspace()->setActivationToken(newToken, serial, appId);
     if (showNotify) {
