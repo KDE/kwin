@@ -9,11 +9,14 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "input_event.h"
+#include "input_event_spy.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
 #include "x11window.h"
+#include "xdgactivationv1.h"
 
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
@@ -596,228 +599,249 @@ void ActivationTest::testActiveFullscreen()
     QCOMPARE(x11Window->layer(), Layer::NormalLayer);
 }
 
+struct TestWindow
+{
+    std::unique_ptr<KWayland::Client::Surface> surface;
+    std::unique_ptr<Test::XdgToplevel> toplevel;
+    Window *window;
+};
+
+static std::vector<TestWindow> setupWindows(uint32_t &time)
+{
+    // re-create the same setup every time for reduced confusion
+    std::vector<TestWindow> ret;
+    for (int i = 0; i < 3; i++) {
+        TestWindow w;
+        w.surface = Test::createSurface();
+        w.toplevel = Test::createXdgToplevelSurface(w.surface.get());
+        w.window = Test::renderAndWaitForShown(w.surface.get(), QSize(100, 50), Qt::blue);
+        w.window->move(QPoint(150 * i, 0));
+        workspace()->activateWindow(w.window);
+
+        Test::pointerMotion(w.window->frameGeometry().center(), time++);
+        Test::pointerButtonPressed(1, time++);
+        Test::pointerButtonReleased(1, time++);
+        ret.push_back(std::move(w));
+    }
+    return ret;
+}
+
 void ActivationTest::testXdgActivation()
 {
     Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     uint32_t time = 0;
 
-    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
-    std::vector<std::unique_ptr<Test::XdgToplevel>> shellSurfaces;
-    std::vector<Window *> windows;
-    const auto setupWindows = [&]() {
-        windows.clear();
-        shellSurfaces.clear();
-        surfaces.clear();
-
-        // re-create the same setup every time for reduced confusion
-        for (int i = 0; i < 3; i++) {
-            surfaces.push_back(Test::createSurface());
-            shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get()));
-            windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-            windows.back()->move(QPoint(150 * i, 0));
-
-            Test::pointerMotion(windows.back()->frameGeometry().center(), time++);
-            Test::pointerButtonPressed(1, time++);
-            Test::pointerButtonReleased(1, time++);
-        }
-    };
-    setupWindows();
+    auto windows = setupWindows(time);
 
     QSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
 
     // activating a window without a valid token should fail
-    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    Test::xdgActivation()->activate(QString(), *windows[1].surface);
     QVERIFY(!activationSpy.wait(10));
 
     // using the surface and a correct serial should make it work
     auto token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces.back());
-    token->set_serial(windows.back()->lastUsageSerial(), *Test::waylandSeat());
-    Test::xdgActivation()->activate(token->commitAndWait(), *surfaces[1]);
+    token->set_surface(*windows.back().surface);
+    token->set_serial(windows.back().window->lastUsageSerial(), *Test::waylandSeat());
+    Test::xdgActivation()->activate(token->commitAndWait(), *windows[1].surface);
     QVERIFY(activationSpy.wait());
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
 
     // it should even work without the surface, if the serial is correct
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_serial(windows.back()->lastUsageSerial(), *Test::waylandSeat());
-    Test::xdgActivation()->activate(token->commitAndWait(), *surfaces[1]);
+    token->set_serial(windows.back().window->lastUsageSerial(), *Test::waylandSeat());
+    Test::xdgActivation()->activate(token->commitAndWait(), *windows[1].surface);
     QVERIFY(activationSpy.wait(10));
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
 
     // activation should still work if the window is closed after creating the token
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     QString result = token->commitAndWait();
 
-    surfaces[2]->attachBuffer((wl_buffer *)nullptr);
-    surfaces[2]->commit(KWayland::Client::Surface::CommitFlag::None);
+    windows[2].surface->attachBuffer((wl_buffer *)nullptr);
+    windows[2].surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(activationSpy.wait(10));
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
 
-    Test::xdgActivation()->activate(result, *surfaces[0]);
+    Test::xdgActivation()->activate(result, *windows[0].surface);
     QVERIFY(activationSpy.wait(10));
-    QCOMPARE(workspace()->activeWindow(), windows[0]);
+    QCOMPARE(workspace()->activeWindow(), windows[0].window);
 
     // ...unless the user interacted with another window in between
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     result = token->commitAndWait();
 
-    surfaces[2]->attachBuffer((wl_buffer *)nullptr);
-    surfaces[2]->commit(KWayland::Client::Surface::CommitFlag::None);
+    windows[2].surface->attachBuffer((wl_buffer *)nullptr);
+    windows[2].surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(activationSpy.wait(10));
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
 
-    Test::pointerMotion(windows[1]->frameGeometry().center(), time++);
+    Test::pointerMotion(windows[1].window->frameGeometry().center(), time++);
     Test::pointerButtonPressed(1, time++);
     Test::pointerButtonReleased(1, time++);
 
-    Test::xdgActivation()->activate(result, *surfaces[0]);
+    Test::xdgActivation()->activate(result, *windows[0].surface);
     QVERIFY(!activationSpy.wait(10));
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
 
     // ensure that windows are only activated on show with a valid activation token
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Extreme);
 
     // creating a new window and immediately activating it should work
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     result = token->commitAndWait();
-    surfaces.push_back(Test::createSurface());
-    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get(), [&](Test::XdgToplevel *toplevel) {
-        Test::xdgActivation()->activate(result, *surfaces.back());
-    }));
-    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-    QCOMPARE(workspace()->activeWindow(), windows.back());
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&](Test::XdgToplevel *toplevel) {
+            Test::xdgActivation()->activate(result, *surface);
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), window);
+    }
 
     // activation should fail if the user clicks on another window in between
     // creating the activation token and using it
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     result = token->commitAndWait();
 
-    Test::pointerMotion(windows[1]->frameGeometry().center(), time++);
+    Test::pointerMotion(windows[1].window->frameGeometry().center(), time++);
     Test::pointerButtonPressed(1, time++);
     Test::pointerButtonReleased(1, time++);
 
-    surfaces.push_back(Test::createSurface());
-    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get(), [&](Test::XdgToplevel *toplevel) {
-        Test::xdgActivation()->activate(result, *surfaces.back());
-    }));
-    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
-    // if activation of a new window is not granted, it should be stacked behind the active window
-    QCOMPARE_LT(windows[3]->stackingOrder(), workspace()->activeWindow()->stackingOrder());
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&](Test::XdgToplevel *toplevel) {
+            Test::xdgActivation()->activate(result, *surface);
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), windows[1].window);
+        // if activation of a new window is not granted, it should be stacked behind the active window
+        QCOMPARE_LT(window->stackingOrder(), workspace()->activeWindow()->stackingOrder());
+    }
 
     // same for pointer input on the currently focused window
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     result = token->commitAndWait();
 
-    Test::pointerMotion(windows[2]->frameGeometry().center(), time++);
+    Test::pointerMotion(windows[2].window->frameGeometry().center(), time++);
     Test::pointerButtonPressed(1, time++);
     Test::pointerButtonReleased(1, time++);
 
-    surfaces.push_back(Test::createSurface());
-    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get(), [&](Test::XdgToplevel *toplevel) {
-        Test::xdgActivation()->activate(result, *surfaces.back());
-    }));
-    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-    QCOMPARE(workspace()->activeWindow(), windows[2]);
-    QCOMPARE_LT(windows[3]->stackingOrder(), workspace()->activeWindow()->stackingOrder());
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&](Test::XdgToplevel *toplevel) {
+            Test::xdgActivation()->activate(result, *surface);
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), windows[2].window);
+        QCOMPARE_LT(window->stackingOrder(), workspace()->activeWindow()->stackingOrder());
+    }
 
     // same for keyboard input on the currently focused window
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     result = token->commitAndWait();
 
     Test::keyboardKeyPressed(KEY_A, time++);
     Test::keyboardKeyReleased(KEY_A, time++);
 
-    surfaces.push_back(Test::createSurface());
-    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get(), [&](Test::XdgToplevel *toplevel) {
-        Test::xdgActivation()->activate(result, *surfaces.back());
-    }));
-    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-    QCOMPARE(workspace()->activeWindow(), windows[2]);
-    // if activation of a new window is not granted, it should be stacked behind the active window
-    QCOMPARE_LT(windows[3]->stackingOrder(), workspace()->activeWindow()->stackingOrder());
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&](Test::XdgToplevel *toplevel) {
+            Test::xdgActivation()->activate(result, *surface);
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), windows[2].window);
+        // if activation of a new window is not granted, it should be stacked behind the active window
+        QCOMPARE_LT(window->stackingOrder(), workspace()->activeWindow()->stackingOrder());
+    }
 
     // but modifier keys must not interfere in activation
-    setupWindows();
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     result = token->commitAndWait();
 
     Test::keyboardKeyPressed(KEY_LEFTSHIFT, time++);
     Test::keyboardKeyReleased(KEY_LEFTSHIFT, time++);
 
-    surfaces.push_back(Test::createSurface());
-    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get(), [&](Test::XdgToplevel *toplevel) {
-        Test::xdgActivation()->activate(result, *surfaces.back());
-    }));
-    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-    QCOMPARE(workspace()->activeWindow(), windows[3]);
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&](Test::XdgToplevel *toplevel) {
+            Test::xdgActivation()->activate(result, *surface);
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), window);
+    }
 
     // focus stealing prevention level High is more lax and should activate windows
     // even with an invalid token if the app id matches the last granted activation token
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
-    setupWindows();
-    shellSurfaces[1]->set_app_id("test_app_id");
+    windows = setupWindows(time);
+    windows[1].toplevel->set_app_id("test_app_id");
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     token->set_app_id("test_app_id");
     result = token->commitAndWait();
-    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    Test::xdgActivation()->activate(QString(), *windows[1].surface);
     QVERIFY(activationSpy.wait());
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
 
     // new windows should also be activated if the app id matches,
     // even if they don't actually request activation
-    setupWindows();
-    surfaces.push_back(Test::createSurface());
+    windows = setupWindows(time);
     token = Test::xdgActivation()->createToken();
-    token->set_surface(*surfaces[2]);
-    token->set_serial(windows[2]->lastUsageSerial(), *Test::waylandSeat());
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
     token->set_app_id("test_app_id_2");
     result = token->commitAndWait();
-    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get(), [&](Test::XdgToplevel *toplevel) {
-        toplevel->set_app_id("test_app_id_2");
-    }));
-    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-    QCOMPARE(workspace()->activeWindow(), windows[3]);
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&](Test::XdgToplevel *toplevel) {
+            toplevel->set_app_id("test_app_id_2");
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), window);
+    }
 
     // with focus stealing prevention level Low, every new window should unconditionally be activated,
     // even if it doesn't request an activation token at all
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Low);
-    setupWindows();
-    surfaces.push_back(Test::createSurface());
-    shellSurfaces.push_back(Test::createXdgToplevelSurface(surfaces.back().get()));
-    windows.push_back(Test::renderAndWaitForShown(surfaces.back().get(), QSize(100, 50), Qt::blue));
-    QCOMPARE(workspace()->activeWindow(), windows[3]);
+    windows = setupWindows(time);
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get());
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), window);
+    }
 
     // with focus stealing prevention disabled, every activation token is considered "valid"
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::None);
-    setupWindows();
-    Test::xdgActivation()->activate(QString(), *surfaces[1]);
+    windows = setupWindows(time);
+    Test::xdgActivation()->activate(QString(), *windows[1].surface);
     QVERIFY(activationSpy.wait());
-    QCOMPARE(workspace()->activeWindow(), windows[1]);
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
 }
 }
 
