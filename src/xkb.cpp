@@ -1226,8 +1226,6 @@ void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
     }
 }
 
-
-
 quint32 Xkb::numberOfLayouts() const
 {
     if (!m_keymap) {

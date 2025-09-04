@@ -1157,9 +1157,9 @@ class SimpleKeyboard : public QObject
 public:
     explicit SimpleKeyboard(QObject *parent = nullptr);
     KWayland::Client::Keyboard *keyboard();
-    QString receviedText();
+    QString receivedText() const;
 Q_SIGNALS:
-    void receviedTextChanged();
+    void receivedTextChanged();
     void keySymRecevied(xkb_keysym_t keysym);
 
 private:
