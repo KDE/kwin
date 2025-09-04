@@ -426,9 +426,7 @@ void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *item) {
-        return m_underlay && item != m_item;
-    }, {});
+    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, {}, {});
     renderer->endFrame();
 }
 
