@@ -94,7 +94,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-screenca
 void TestScreencastV1Interface::initTestCase()
 {
     delete m_display;
-    m_display = new KWin::Display(this);
+    m_display = new KWin::Display(nullptr, this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

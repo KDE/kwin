@@ -9,6 +9,7 @@
 #include "pointer.h"
 #include "clientconnection.h"
 #include "display.h"
+#include "input.h"
 #include "pointer_p.h"
 #include "pointergestures_v1_p.h"
 #include "relativepointer_v1_p.h"
@@ -235,11 +236,10 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, quin
     }
 }
 
-void PointerInterface::sendButton(quint32 button, PointerButtonState state, ClientConnection *client)
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, ClientConnection *client, uint32_t serial)
 {
     const auto pointerResources = d->pointersForClient(client);
     const quint32 waylandState = pointerButtonStateToWaylandState(state);
-    const quint32 serial = d->seat->display()->nextSerial();
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
         d->send_button(resource->handle, serial, d->seat->timestamp().count(), button, waylandState);
     }

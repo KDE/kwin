@@ -105,7 +105,7 @@ bool EisInputCaptureFilter::keyboardKey(KeyboardKeyEvent *event)
     return true;
 }
 
-bool EisInputCaptureFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool EisInputCaptureFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial)
 {
     if (!m_manager->activeCapture()) {
         return false;
@@ -129,7 +129,7 @@ bool EisInputCaptureFilter::touchMotion(qint32 id, const QPointF &pos, std::chro
     return true;
 }
 
-bool EisInputCaptureFilter::touchUp(qint32 id, std::chrono::microseconds time)
+bool EisInputCaptureFilter::touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial)
 {
     if (!m_manager->activeCapture()) {
         return false;

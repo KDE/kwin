@@ -89,7 +89,7 @@ bool DpmsInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial)
 {
     if (m_enableDoubleTap) {
         if (m_touchPoints.isEmpty()) {
@@ -114,7 +114,7 @@ bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono:
     return true;
 }
 
-bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
+bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial)
 {
     if (m_enableDoubleTap) {
         m_touchPoints.removeAll(id);

@@ -23,6 +23,7 @@ class OutputInterface;
 class OutputDeviceV2Interface;
 class SeatInterface;
 class GraphicsBuffer;
+class Application;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -34,7 +35,7 @@ class KWIN_EXPORT Display : public QObject
     Q_OBJECT
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
 public:
-    explicit Display(QObject *parent = nullptr);
+    explicit Display(Application *app, QObject *parent);
     virtual ~Display();
 
     /**

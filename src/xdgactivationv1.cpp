@@ -56,7 +56,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
     if (!isPrivileged) {
         const bool allowed = !workspace()->activeWindow()
             || workspace()->activeWindow()->surface() == surface
-            || (input()->lastFocusInputSerial() <= serial && waylandServer()->display()->serial() >= serial);
+            || (input()->lastFocusInputSerial() <= serial && kwinApp()->serial() >= serial);
         if (!allowed) {
             qCDebug(KWIN_CORE) << "Cannot grant a token to" << window;
             return QStringLiteral("not-granted-666");

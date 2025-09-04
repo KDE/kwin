@@ -610,7 +610,7 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
     } else {
         state = KeyboardKeyState::Released;
     }
-    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
+    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state, kwinApp()->nextSerial());
 }
 
 void InputMethod::commitString(qint32 serial, const QString &text)
@@ -645,7 +645,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const auto &key : keys) {
-            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed);
+            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed, kwinApp()->nextSerial());
         }
 
         // Then, send key release for those keys in reverse.
@@ -656,7 +656,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
             auto key = *itr;
             QMetaObject::invokeMethod(
                 this, [key]() {
-                waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released);
+                waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released, kwinApp()->nextSerial());
             }, Qt::QueuedConnection);
         }
     }
@@ -830,8 +830,10 @@ void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pr
         return;
     }
 
+    // TODO should this use the passed-in serial?
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
+                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released,
+                                               kwinApp()->nextSerial());
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)
@@ -849,7 +851,7 @@ void InputMethod::forwardModifiers(ForwardModifiersForce force)
     }
     auto xkb = input()->keyboard()->xkb();
     if (m_keyboardGrab) {
-        m_keyboardGrab->sendModifiers(waylandServer()->display()->nextSerial(),
+        m_keyboardGrab->sendModifiers(kwinApp()->nextSerial(),
                                       xkb->modifierState().depressed,
                                       xkb->modifierState().latched,
                                       xkb->modifierState().locked,

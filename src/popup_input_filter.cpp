@@ -101,14 +101,14 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
             waylandServer()->seat()->setTimestamp(event->timestamp);
-            waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state);
+            waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state, event->serial);
         }
     }
 
     return true;
 }
 
-bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

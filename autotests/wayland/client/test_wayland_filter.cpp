@@ -55,7 +55,7 @@ public:
 };
 
 TestDisplay::TestDisplay(QObject *parent)
-    : KWin::FilteredDisplay(parent)
+    : KWin::FilteredDisplay(nullptr, parent)
 {
 }
 

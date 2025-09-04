@@ -29,6 +29,7 @@ struct PointerMotionEvent
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForShortcuts;
     std::chrono::microseconds timestamp;
+    uint32_t serial;
 };
 
 struct PointerButtonEvent
@@ -42,6 +43,7 @@ struct PointerButtonEvent
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForShortcuts;
     std::chrono::microseconds timestamp;
+    uint32_t serial;
 };
 
 struct PointerAxisEvent
@@ -70,6 +72,7 @@ struct KeyboardKeyEvent
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts;
     std::chrono::microseconds timestamp;
+    uint32_t serial;
 };
 
 struct SwitchEvent
@@ -119,6 +122,7 @@ public:
     qreal distance;
     std::chrono::microseconds timestamp;
     InputDeviceTabletTool *tool;
+    uint32_t serial;
 };
 
 struct TabletToolAxisEvent
@@ -144,6 +148,7 @@ struct TabletToolButtonEvent
     bool pressed;
     InputDeviceTabletTool *tool;
     std::chrono::microseconds time;
+    uint32_t serial;
 };
 
 struct TabletPadButtonEvent
@@ -155,6 +160,7 @@ struct TabletPadButtonEvent
     quint32 mode;
     bool isModeSwitch;
     std::chrono::microseconds time;
+    uint32_t serial;
 };
 
 struct TabletPadStripEvent

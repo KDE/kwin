@@ -191,7 +191,7 @@ public:
      *
      * Sends a pointer motion event to the focused pointer surface.
      */
-    void notifyPointerMotion(const QPointF &pos);
+    void notifyPointerMotion(const QPointF &pos, uint32_t serial);
     /**
      * @returns the global pointer position
      */
@@ -515,8 +515,8 @@ public:
     void setFocusedKeyboardSurface(SurfaceInterface *surface, const QList<quint32> &keys = {});
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *keyboard() const;
-    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state);
-    void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
+    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, uint32_t serial);
+    void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, uint32_t serial);
     ///@}
 
     /**
@@ -524,8 +524,8 @@ public:
      */
     ///@{
     TouchInterface *touch() const;
-    TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition);
-    void notifyTouchUp(qint32 id);
+    TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition, uint32_t serial);
+    void notifyTouchUp(qint32 id, uint32_t serial);
     void notifyTouchMotion(qint32 id, const QPointF &globalPosition);
     void notifyTouchFrame();
     void notifyTouchCancel();

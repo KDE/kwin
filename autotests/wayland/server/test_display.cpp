@@ -31,7 +31,7 @@ private Q_SLOTS:
 
 void TestWaylandServerDisplay::testSocketName()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     QSignalSpy changedSpy(&display, &KWin::Display::socketNamesChanged);
     QCOMPARE(display.socketNames(), QStringList());
     const QString testSName = QStringLiteral("fooBar");
@@ -51,7 +51,7 @@ void TestWaylandServerDisplay::testStartStop()
     QVERIFY(runtimeDir.exists());
     QVERIFY(!runtimeDir.exists(testSocketName));
 
-    std::unique_ptr<KWin::Display> display(new KWin::Display);
+    std::unique_ptr<KWin::Display> display(new KWin::Display(nullptr, nullptr));
     QSignalSpy runningSpy(display.get(), &KWin::Display::runningChanged);
     display->addSocketName(testSocketName);
     QVERIFY(!display->isRunning());
@@ -68,7 +68,7 @@ void TestWaylandServerDisplay::testStartStop()
 
 void TestWaylandServerDisplay::testClientConnection()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
     QSignalSpy connectedSpy(&display, &KWin::Display::clientConnected);
@@ -130,7 +130,7 @@ void TestWaylandServerDisplay::testClientConnection()
 
 void TestWaylandServerDisplay::testConnectNoSocket()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     display.start();
     QVERIFY(display.isRunning());
 
@@ -151,7 +151,7 @@ void TestWaylandServerDisplay::testAutoSocketName()
     QVERIFY(runtimeDir.isValid());
     QVERIFY(qputenv("XDG_RUNTIME_DIR", runtimeDir.path().toUtf8()));
 
-    KWin::Display display0;
+    KWin::Display display0(nullptr, nullptr);
     QSignalSpy socketNameChangedSpy0(&display0, &KWin::Display::socketNamesChanged);
     QVERIFY(socketNameChangedSpy0.isValid());
     QVERIFY(display0.addSocketName());
@@ -159,7 +159,7 @@ void TestWaylandServerDisplay::testAutoSocketName()
     QVERIFY(display0.isRunning());
     QCOMPARE(socketNameChangedSpy0.count(), 1);
 
-    KWin::Display display1;
+    KWin::Display display1(nullptr, nullptr);
     QSignalSpy socketNameChangedSpy1(&display1, &KWin::Display::socketNamesChanged);
     QVERIFY(socketNameChangedSpy1.isValid());
     QVERIFY(display1.addSocketName());

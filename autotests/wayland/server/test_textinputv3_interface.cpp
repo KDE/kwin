@@ -116,7 +116,7 @@ private:
 
     SeatInterface *m_seat;
     QThread *m_thread;
-    KWin::Display m_display;
+    KWin::Display m_display{nullptr, nullptr};
     TextInputV3 *m_clientTextInputV3;
     CompositorInterface *m_serverCompositor;
     TextInputV3Interface *m_serverTextInputV3;

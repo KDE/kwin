@@ -52,14 +52,14 @@ public:
      */
     void setRepeatInfo(qint32 charactersPerSecond, qint32 delay);
 
-    void sendKey(quint32 key, KeyboardKeyState state);
-    void sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client);
-    void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
-    void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client);
+    void sendKey(quint32 key, KeyboardKeyState state, uint32_t serial);
+    void sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client, uint32_t serial);
+    void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, uint32_t serial);
+    void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client, uint32_t serial);
 
 private:
     void setFocusedSurface(SurfaceInterface *surface, const QList<quint32> &keys, quint32 serial);
-    void setModifierFocusSurface(SurfaceInterface *surface);
+    void setModifierFocusSurface(SurfaceInterface *surface, uint32_t serial);
     friend class SeatInterface;
     friend class SeatInterfacePrivate;
     friend class KeyboardInterfacePrivate;

@@ -64,7 +64,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-pointer_constr
 void TestPointerConstraints::init()
 {
     delete m_display;
-    m_display = new KWin::Display(this);
+    m_display = new KWin::Display(nullptr, this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -227,13 +227,13 @@ void TestPointerConstraints::testLockPointer()
     QSignalSpy lockedChangedSpy(serverLockedPointer, &LockedPointerV1Interface::lockedChanged);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     QSignalSpy pointerMotionSpy(m_pointer, &KWayland::Client::Pointer::motion);
-    m_seatInterface->notifyPointerMotion(QPoint(0, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(0, 1), m_seatInterface->display()->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(pointerMotionSpy.wait());
 
     serverLockedPointer->setLocked(true);
     QCOMPARE(serverLockedPointer->isLocked(), true);
-    m_seatInterface->notifyPointerMotion(QPoint(1, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(1, 1), m_seatInterface->display()->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(lockedChangedSpy.count(), 1);
     QCOMPARE(pointerMotionSpy.count(), 1);
@@ -262,7 +262,7 @@ void TestPointerConstraints::testLockPointer()
     QCOMPARE(lockedSpy.count(), 1);
 
     // now motion should work again
-    m_seatInterface->notifyPointerMotion(QPoint(0, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(0, 1), m_seatInterface->display()->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.count(), 2);

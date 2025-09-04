@@ -51,7 +51,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-shadow-0");
 void ShadowTest::init()
 {
     delete m_display;
-    m_display = new KWin::Display(this);
+    m_display = new KWin::Display(nullptr, this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

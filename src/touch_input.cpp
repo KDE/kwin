@@ -118,13 +118,14 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
         workspace()->setActiveOutput(pos);
     }
     input()->setLastInputHandler(this);
-    input()->processSpies(&InputEventSpy::touchDown, id, pos, time);
-    input()->processFilters(&InputEventFilter::touchDown, id, pos, time);
-    m_windowUpdatedInCycle = false;
-    input()->setLastFocusInputSerial(waylandServer()->seat()->display()->serial());
+    const uint32_t serial = kwinApp()->nextSerial();
+    input()->setLastFocusInputSerial(serial);
     if (auto f = focus()) {
-        f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        f->setLastUsageSerial(serial);
     }
+    input()->processSpies(&InputEventSpy::touchDown, id, pos, time);
+    input()->processFilters(&InputEventFilter::touchDown, id, pos, time, serial);
+    m_windowUpdatedInCycle = false;
 }
 
 void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time, InputDevice *device)
@@ -138,7 +139,7 @@ void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time,
     input()->setLastInputHandler(this);
     m_windowUpdatedInCycle = false;
     input()->processSpies(&InputEventSpy::touchUp, id, time);
-    input()->processFilters(&InputEventFilter::touchUp, id, time);
+    input()->processFilters(&InputEventFilter::touchUp, id, time, kwinApp()->nextSerial());
     m_windowUpdatedInCycle = false;
     if (m_activeTouchPoints.count() == 0) {
         update();

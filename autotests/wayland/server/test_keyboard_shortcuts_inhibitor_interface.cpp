@@ -80,7 +80,7 @@ private:
     KWayland::Client::Seat *m_clientSeat = nullptr;
 
     QThread *m_thread;
-    KWin::Display m_display;
+    KWin::Display m_display{nullptr, nullptr};
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 

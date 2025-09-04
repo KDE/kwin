@@ -116,7 +116,7 @@ XToWlDrag::~XToWlDrag()
 bool XToWlDrag::moveFilter(Window *target, const QPointF &position)
 {
     auto *seat = waylandServer()->seat();
-    seat->notifyPointerMotion(position);
+    seat->notifyPointerMotion(position, kwinApp()->nextSerial());
 
     if (m_visit && m_visit->target() == target) {
         // still same Wl target, wait for X events

@@ -122,7 +122,7 @@ class KWinDisplay : public FilteredDisplay
 {
 public:
     KWinDisplay(QObject *parent)
-        : FilteredDisplay(parent)
+        : FilteredDisplay(kwinApp(), parent)
     {
     }
 

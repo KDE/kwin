@@ -256,6 +256,7 @@ private:
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
     QObject *m_lastInputDevice = nullptr;
+    uint32_t m_currentSerial = 0;
     uint32_t m_lastFocusSerial = 0;
 
     GlobalShortcutsManager *m_shortcuts;
@@ -390,9 +391,9 @@ public:
      * @return @c true to stop further event processing, @c false to pass to next filter.
      */
     virtual bool keyboardKey(KeyboardKeyEvent *event);
-    virtual bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
+    virtual bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial);
     virtual bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
-    virtual bool touchUp(qint32 id, std::chrono::microseconds time);
+    virtual bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial);
     virtual bool touchCancel();
     virtual bool touchFrame();
 

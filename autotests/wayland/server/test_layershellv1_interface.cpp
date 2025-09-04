@@ -109,7 +109,7 @@ private:
     KWayland::Client::Compositor *m_clientCompositor;
 
     QThread *m_thread;
-    KWin::Display m_display;
+    KWin::Display m_display{nullptr, nullptr};
     CompositorInterface *m_serverCompositor;
     LayerShellV1 *m_clientLayerShell = nullptr;
     LayerShellV1Interface *m_serverLayerShell = nullptr;

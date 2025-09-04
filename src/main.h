@@ -314,6 +314,9 @@ public:
      */
     virtual PlatformCursorImage cursorImage() const;
 
+    uint32_t serial() const;
+    uint32_t nextSerial();
+
 Q_SIGNALS:
     void x11ConnectionChanged();
     void x11ConnectionAboutToBeDestroyed();
@@ -382,6 +385,7 @@ private:
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<ColorManager> m_colorManager;
     std::unique_ptr<TabletModeManager> m_tabletModeManager;
+    uint32_t m_currentSerial = 0;
 };
 
 inline bool Application::initiallyLocked() const

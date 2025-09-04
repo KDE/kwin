@@ -716,6 +716,17 @@ void Application::startInteractivePositionSelection(std::function<void(const QPo
     input()->startInteractivePositionSelection(callback);
 }
 
+uint32_t Application::serial() const
+{
+    return m_currentSerial;
+}
+
+uint32_t Application::nextSerial()
+{
+    m_currentSerial++;
+    return m_currentSerial;
+}
+
 } // namespace
 
 #include "moc_main.cpp"

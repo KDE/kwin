@@ -34,8 +34,8 @@ FilteredDisplayPrivate::FilteredDisplayPrivate(FilteredDisplay *_q)
 {
 }
 
-FilteredDisplay::FilteredDisplay(QObject *parent)
-    : Display(parent)
+FilteredDisplay::FilteredDisplay(Application *app, QObject *parent)
+    : Display(app, parent)
     , d(new FilteredDisplayPrivate(this))
 {
     connect(this, &Display::runningChanged, [this](bool running) {

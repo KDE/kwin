@@ -157,7 +157,7 @@ void TestWaylandSeat::init()
 {
     using namespace KWin;
     delete m_display;
-    m_display = new KWin::Display(this);
+    m_display = new KWin::Display(nullptr, this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -409,7 +409,7 @@ void TestWaylandSeat::testPointer()
     auto timestamp = 1ms;
     // test motion
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPoint(10, 16));
+    m_seatInterface->notifyPointerMotion(QPoint(10, 16), m_display->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(motionSpy.wait());
     QCOMPARE(frameSpy.count(), 4);
@@ -590,7 +590,7 @@ void TestWaylandSeat::testPointerTransformation()
 
     // test motion
     m_seatInterface->setTimestamp(std::chrono::milliseconds(1));
-    m_seatInterface->notifyPointerMotion(QPoint(10, 16));
+    m_seatInterface->notifyPointerMotion(QPoint(10, 16), m_display->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(motionSpy.wait());
     QTEST(motionSpy.first().first().toPointF(), "expectedMovePoint");
@@ -768,7 +768,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(pointer->enteredSurface(), grandChild2Surface.get());
     // a motion on grandchild2
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(25, 60));
+    m_seatInterface->notifyPointerMotion(QPointF(25, 60), m_display->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(motionSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
@@ -777,7 +777,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(motionSpy.last().first().toPointF(), QPointF(25, 35));
     // motion which changes to childSurface
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(25, 80));
+    m_seatInterface->notifyPointerMotion(QPointF(25, 80), m_display->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
@@ -1351,7 +1351,7 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(keyboardSpy.wait());
 
     // update modifiers before any surface focused
-    m_seatInterface->notifyKeyboardModifiers(4, 3, 2, 1);
+    m_seatInterface->notifyKeyboardModifiers(4, 3, 2, 1, m_display->nextSerial());
 
     // create the surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
@@ -1407,19 +1407,19 @@ void TestWaylandSeat::testKeyboard()
 
     std::chrono::milliseconds time(1);
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_E, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_E, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_D, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_D, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_K, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_K, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
 
     QCOMPARE(keyChangedSpy.count(), 5);
@@ -1440,23 +1440,23 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyChangedSpy.at(4).at(2).value<quint32>(), quint32(5));
 
     // releasing a key which is already released should not set a key changed
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(sync());
     QCOMPARE(keyChangedSpy.count(), 5);
     // let's press it again
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 6);
     // press again should be ignored
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, m_display->nextSerial());
     QVERIFY(sync());
     QCOMPARE(keyChangedSpy.count(), 6);
     // and release
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 7);
 
-    m_seatInterface->notifyKeyboardModifiers(1, 2, 3, 4);
+    m_seatInterface->notifyKeyboardModifiers(1, 2, 3, 4, m_display->nextSerial());
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.count(), 2);
     QCOMPARE(modifierSpy.last().at(0).value<quint32>(), quint32(1));
@@ -1734,7 +1734,7 @@ void TestWaylandSeat::testTouch()
     // try a few things
     const QPointF surfacePosition(10, 20);
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, QPointF(10, 20), 0, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, QPointF(10, 20), 0, QPointF(15, 26), m_display->nextSerial());
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(sequenceEndedSpy.count(), 0);
@@ -1787,7 +1787,7 @@ void TestWaylandSeat::testTouch()
 
     // add onther point
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26), m_display->nextSerial());
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1813,7 +1813,7 @@ void TestWaylandSeat::testTouch()
 
     // send it an up
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchUp(1);
+    m_seatInterface->notifyTouchUp(1, m_display->nextSerial());
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1835,12 +1835,12 @@ void TestWaylandSeat::testTouch()
 
     // send another down and up
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26), m_display->nextSerial());
     m_seatInterface->notifyTouchFrame();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchUp(1);
+    m_seatInterface->notifyTouchUp(1, m_display->nextSerial());
     // and send an up for the first point
-    m_seatInterface->notifyTouchUp(0);
+    m_seatInterface->notifyTouchUp(0, m_display->nextSerial());
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1858,7 +1858,7 @@ void TestWaylandSeat::testTouch()
 
     // try cancel
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, QPointF(15, 26), 0, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, QPointF(15, 26), 0, QPointF(15, 26), m_display->nextSerial());
     m_seatInterface->notifyTouchFrame();
     m_seatInterface->notifyTouchCancel();
     QVERIFY(sequenceCanceledSpy.wait());
@@ -1874,7 +1874,7 @@ void TestWaylandSeat::testTouch()
     // destroy touched surface
     QSignalSpy serverSurfaceDestroyedSpy(serverSurface, &QObject::destroyed);
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 2, QPointF(10, 15));
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 2, QPointF(10, 15), m_display->nextSerial());
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 3);
@@ -1894,7 +1894,7 @@ void TestWaylandSeat::testTouch()
     QVERIFY(!frameEndedSpy.wait(10));
 
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchUp(2);
+    m_seatInterface->notifyTouchUp(2, m_display->nextSerial());
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 3);

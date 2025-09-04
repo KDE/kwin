@@ -276,6 +276,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
         .modifiers = input()->keyboardModifiers(),
         .modifiersRelevantForShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
         .timestamp = time,
+        .serial = kwinApp()->nextSerial(),
     };
 
     update();
@@ -306,16 +307,17 @@ void PointerInputRedirection::processButton(uint32_t button, PointerButtonState 
         .modifiers = input()->keyboardModifiers(),
         .modifiersRelevantForShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
         .timestamp = time,
+        .serial = kwinApp()->nextSerial(),
     };
+    if (state == PointerButtonState::Pressed) {
+        input()->setLastFocusInputSerial(event.serial);
+        if (auto f = focus()) {
+            f->setLastUsageSerial(event.serial);
+        }
+    }
 
     input()->processSpies(&InputEventSpy::pointerButton, &event);
     input()->processFilters(&InputEventFilter::pointerButton, &event);
-    if (state == PointerButtonState::Pressed) {
-        input()->setLastFocusInputSerial(waylandServer()->seat()->display()->serial());
-        if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
-        }
-    }
 
     if (state == PointerButtonState::Released) {
         update();

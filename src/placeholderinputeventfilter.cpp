@@ -39,7 +39,7 @@ bool PlaceholderInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
     return !isMediaKey(event->key);
 }
 
-bool PlaceholderInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool PlaceholderInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial)
 {
     return true;
 }
@@ -49,7 +49,7 @@ bool PlaceholderInputEventFilter::touchMotion(qint32 id, const QPointF &pos, std
     return true;
 }
 
-bool PlaceholderInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
+bool PlaceholderInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial)
 {
     return true;
 }

@@ -50,7 +50,7 @@ private:
     KWayland::Client::ShmPool *m_shm;
 
     QThread *m_thread;
-    KWin::Display m_display;
+    KWin::Display m_display{nullptr, nullptr};
     CompositorInterface *m_serverCompositor;
     Viewporter *m_viewporter;
 };

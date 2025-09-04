@@ -96,7 +96,7 @@ void TestWindowManagement::init()
     using namespace KWin;
     qRegisterMetaType<KWin::PlasmaWindowManagementInterface::ShowingDesktopState>("ShowingDesktopState");
     delete m_display;
-    m_display = new KWin::Display(this);
+    m_display = new KWin::Display(nullptr, this);
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());

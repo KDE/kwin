@@ -23,18 +23,20 @@ class Display;
 class OutputInterface;
 class OutputDeviceV2Interface;
 class SeatInterface;
+class Application;
 
 class DisplayPrivate
 {
 public:
     static DisplayPrivate *get(Display *display);
-    DisplayPrivate(Display *q);
+    DisplayPrivate(Display *q, Application *app);
 
     void registerSocketName(const QString &socketName);
 
     static void clientCreatedCallback(wl_listener *listener, void *data);
 
     Display *q;
+    Application *const app;
     QSocketNotifier *socketNotifier = nullptr;
     wl_display *display = nullptr;
     wl_event_loop *loop = nullptr;

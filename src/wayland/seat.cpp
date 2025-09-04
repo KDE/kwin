@@ -412,7 +412,7 @@ QPointF SeatInterface::pointerPos() const
     return d->globalPointer.pos;
 }
 
-void SeatInterface::notifyPointerMotion(const QPointF &pos)
+void SeatInterface::notifyPointerMotion(const QPointF &pos, uint32_t serial)
 {
     if (!d->pointer) {
         return;
@@ -437,9 +437,9 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
     const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
 
     if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
-        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
+        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
         if (d->keyboard) {
-            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface, serial);
         }
     }
 
@@ -532,7 +532,7 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
     const auto [effectiveFocusedSurface, localPosition] = surface->mapToInputSurface(focusedPointerSurfaceTransformation().map(position));
     d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
     if (d->keyboard) {
-        d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+        d->keyboard->setModifierFocusSurface(effectiveFocusedSurface, serial);
     }
 }
 
@@ -550,7 +550,7 @@ void SeatInterface::notifyPointerLeave()
     const quint32 serial = d->display->nextSerial();
     d->pointer->sendLeave(serial);
     if (d->keyboard) {
-        d->keyboard->setModifierFocusSurface(nullptr);
+        d->keyboard->setModifierFocusSurface(nullptr, serial);
     }
 }
 
@@ -908,20 +908,20 @@ KeyboardInterface *SeatInterface::keyboard() const
     return d->keyboard.get();
 }
 
-void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state)
+void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, uint32_t serial)
 {
     if (!d->keyboard) {
         return;
     }
-    d->keyboard->sendKey(keyCode, state);
+    d->keyboard->sendKey(keyCode, state, serial);
 }
 
-void SeatInterface::notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
+void SeatInterface::notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, uint32_t serial)
 {
     if (!d->keyboard) {
         return;
     }
-    d->keyboard->sendModifiers(depressed, latched, locked, group);
+    d->keyboard->sendModifiers(depressed, latched, locked, group, serial);
 }
 
 void SeatInterface::notifyTouchCancel()
@@ -977,7 +977,7 @@ void TouchPoint::setSurfacePosition(const QPointF &surfacePosition)
     transformation.translate(-surfacePosition.x(), -surfacePosition.y());
 }
 
-TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition)
+TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition, uint32_t serial)
 {
     Q_ASSERT(!d->touchPoints.contains(id));
     if (!d->touch || !surface) {
@@ -985,7 +985,6 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     }
 
     const auto [effectiveTouchedSurface, pos] = surface->mapToInputSurface(globalPosition - surfacePosition);
-    const quint32 serial = display()->nextSerial();
     d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
 
     auto touchPoint = std::make_unique<TouchPoint>(serial, surface, this);
@@ -1024,7 +1023,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
     Q_EMIT touchMoved(id, touchPoint->serial, globalPosition);
 }
 
-void SeatInterface::notifyTouchUp(qint32 id)
+void SeatInterface::notifyTouchUp(qint32 id, uint32_t serial)
 {
     if (!d->touch) {
         return;
@@ -1044,7 +1043,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     }
 
     if (touchPoint->client) {
-        d->touch->sendUp(touchPoint->client, id, d->display->nextSerial());
+        d->touch->sendUp(touchPoint->client, id, serial);
     }
 
     d->touchPoints.erase(it);

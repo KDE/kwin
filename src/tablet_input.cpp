@@ -360,17 +360,18 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
         .distance = distance,
         .timestamp = time,
         .tool = tool,
+        .serial = kwinApp()->nextSerial(),
     };
+    if (tipDown) {
+        input()->setLastFocusInputSerial(ev.serial);
+        if (auto f = focus()) {
+            f->setLastUsageSerial(ev.serial);
+        }
+    }
 
     input()->processSpies(&InputEventSpy::tabletToolTipEvent, &ev);
     input()->processFilters(&InputEventFilter::tabletToolTipEvent, &ev);
     input()->setLastInputHandler(this);
-    if (tipDown) {
-        input()->setLastFocusInputSerial(waylandServer()->seat()->display()->serial());
-        if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
-        }
-    }
 }
 
 void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
@@ -381,21 +382,22 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
         .pressed = isPressed,
         .tool = tool,
         .time = time,
+        .serial = kwinApp()->nextSerial(),
     };
 
     ensureTabletTool(tool);
 
     m_buttonDown = isPressed;
+    if (isPressed) {
+        input()->setLastFocusInputSerial(event.serial);
+        if (auto f = focus()) {
+            f->setLastUsageSerial(event.serial);
+        }
+    }
 
     input()->processSpies(&InputEventSpy::tabletToolButtonEvent, &event);
     input()->processFilters(&InputEventFilter::tabletToolButtonEvent, &event);
     input()->setLastInputHandler(this);
-    if (isPressed) {
-        input()->setLastFocusInputSerial(waylandServer()->seat()->display()->serial());
-        if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
-        }
-    }
 }
 
 void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed, quint32 group, quint32 mode, bool isModeSwitch, std::chrono::microseconds time, InputDevice *device)
@@ -408,16 +410,17 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
         .mode = mode,
         .isModeSwitch = isModeSwitch,
         .time = time,
+        .serial = kwinApp()->nextSerial(),
     };
+    if (isPressed) {
+        input()->setLastFocusInputSerial(event.serial);
+        if (auto f = focus()) {
+            f->setLastUsageSerial(event.serial);
+        }
+    }
     input()->processSpies(&InputEventSpy::tabletPadButtonEvent, &event);
     input()->processFilters(&InputEventFilter::tabletPadButtonEvent, &event);
     input()->setLastInputHandler(this);
-    if (isPressed) {
-        input()->setLastFocusInputSerial(waylandServer()->seat()->display()->serial());
-        if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
-        }
-    }
 }
 
 void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)

@@ -123,7 +123,7 @@ bool InputEventFilter::keyboardKey(KeyboardKeyEvent *event)
     return false;
 }
 
-bool InputEventFilter::touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time)
+bool InputEventFilter::touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time, uint32_t serial)
 {
     return false;
 }
@@ -133,7 +133,7 @@ bool InputEventFilter::touchMotion(qint32 id, const QPointF &point, std::chrono:
     return false;
 }
 
-bool InputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
+bool InputEventFilter::touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial)
 {
     return false;
 }
@@ -255,7 +255,7 @@ bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
     }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
-        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
+        keyboardGrab->sendKey(event->serial, std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
         return true;
     } else {
         kwinApp()->inputMethod()->commitPendingText();
@@ -309,7 +309,7 @@ public:
         if (pointerSurfaceAllowed()) {
             // TODO: should the pointer position always stay in sync, i.e. not do the check?
             seat->setTimestamp(event->timestamp);
-            seat->notifyPointerMotion(event->position);
+            seat->notifyPointerMotion(event->position, event->serial);
         }
         return true;
     }
@@ -400,10 +400,10 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state, event->serial);
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -415,7 +415,7 @@ public:
         if (window && surfaceAllowed(window->surface())) {
             auto seat = waylandServer()->seat();
             seat->setTimestamp(time);
-            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos);
+            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos, serial);
         }
         return true;
     }
@@ -432,7 +432,7 @@ public:
         seat->notifyTouchMotion(id, pos);
         return true;
     }
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -442,7 +442,7 @@ public:
 
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        seat->notifyTouchUp(id);
+        seat->notifyTouchUp(id, serial);
         return true;
     }
     bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
@@ -592,7 +592,7 @@ public:
         }
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         if (!effects) {
             return false;
@@ -606,7 +606,7 @@ public:
         }
         return effects->touchMotion(id, pos, time);
     }
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         if (!effects) {
             return false;
@@ -726,7 +726,7 @@ public:
         return true;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
@@ -751,7 +751,7 @@ public:
         return true;
     }
 
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
@@ -877,7 +877,7 @@ public:
         return true;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         if (!isActive()) {
             return false;
@@ -898,7 +898,7 @@ public:
         return true;
     }
 
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         if (!isActive()) {
             return false;
@@ -1160,7 +1160,7 @@ public:
             return false;
         }
     }
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         if (m_gestureTaken) {
             input()->shortcuts()->processSwipeCancel(DeviceType::Touchscreen);
@@ -1225,7 +1225,7 @@ public:
         return false;
     }
 
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         m_touchPoints.remove(id);
         if (m_gestureTaken) {
@@ -1424,7 +1424,7 @@ public:
         return true;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
@@ -1470,7 +1470,7 @@ public:
         it->state = QEventPoint::State::Stationary;
         return true;
     }
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         auto it = std::ranges::find_if(m_touchPoints, [id](const auto &touchPoint) {
             return touchPoint.id == id;
@@ -1633,7 +1633,7 @@ public:
         }
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
@@ -1684,7 +1684,7 @@ public:
         decoration->window()->processDecorationMove(m_lastLocalTouchPos, pos);
         return true;
     }
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
@@ -1872,7 +1872,7 @@ public:
         // always forward
         return false;
     }
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         return workspace()->screenEdges()->gestureRecognizer()->touchDown(id, pos);
     }
@@ -1880,7 +1880,7 @@ public:
     {
         return workspace()->screenEdges()->gestureRecognizer()->touchMotion(id, pos);
     }
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         return workspace()->screenEdges()->gestureRecognizer()->touchUp(id);
     }
@@ -1942,7 +1942,7 @@ public:
         }
         return window->performMousePressCommand(*command, event->position);
     }
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
@@ -1958,7 +1958,7 @@ public:
         }
         return false;
     }
-    bool touchUp(int32_t id, std::chrono::microseconds time) override
+    bool touchUp(int32_t id, std::chrono::microseconds time, uint32_t serial) override
     {
         Window *window = input()->touch()->focus();
         if (!window || !window->isClient()) {
@@ -2044,7 +2044,7 @@ public:
         return false;
     }
 
-    bool touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time, uint32_t serial) override
     {
         auto inputMethod = kwinApp()->inputMethod();
         if (!inputMethod) {
@@ -2078,7 +2078,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyPointerMotion(event->position);
+        seat->notifyPointerMotion(event->position, event->serial);
         // absolute motion events confuse games and Wayland doesn't have a warp event yet
         // -> send a relative motion event with a zero delta to signal the warp instead
         if (event->warp) {
@@ -2113,10 +2113,10 @@ public:
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state, event->serial);
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         auto seat = waylandServer()->seat();
         auto w = input()->findToplevel(pos);
@@ -2125,7 +2125,7 @@ public:
             return false;
         }
         seat->setTimestamp(time);
-        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), id, pos);
+        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), id, pos, serial);
         if (!tp) {
             qCCritical(KWIN_CORE) << "Could not touch down" << pos;
             return false;
@@ -2142,11 +2142,11 @@ public:
         seat->notifyTouchMotion(id, pos);
         return true;
     }
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        seat->notifyTouchUp(id);
+        seat->notifyTouchUp(id, serial);
         return true;
     }
     bool touchCancel() override
@@ -2637,7 +2637,7 @@ public:
             m_dragTarget = nullptr;
         }
 
-        seat->notifyPointerMotion(pos);
+        seat->notifyPointerMotion(pos, event->serial);
 
         return true;
     }
@@ -2677,7 +2677,7 @@ public:
         return true;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, uint32_t serial) override
     {
         auto seat = waylandServer()->seat();
         if (seat->isDragPointer()) {
@@ -2691,7 +2691,7 @@ public:
         }
         Window *window = input()->findToplevel(pos);
         seat->setTimestamp(time);
-        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos);
+        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos, serial);
         m_lastPos = pos;
         return true;
     }
@@ -2748,14 +2748,14 @@ public:
         }
         return true;
     }
-    bool touchUp(qint32 id, std::chrono::microseconds time) override
+    bool touchUp(qint32 id, std::chrono::microseconds time, uint32_t serial) override
     {
         auto seat = waylandServer()->seat();
         if (!seat->isDragTouch()) {
             return false;
         }
         seat->setTimestamp(time);
-        seat->notifyTouchUp(id);
+        seat->notifyTouchUp(id, serial);
         if (m_touchId == id) {
             m_touchId = -1;
             raiseDragTarget();

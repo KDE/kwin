@@ -11,6 +11,7 @@
 #include "clientconnection.h"
 #include "display_p.h"
 #include "linuxdmabufv1clientbuffer_p.h"
+#include "main.h"
 #include "output.h"
 #include "shmclientbuffer_p.h"
 #include "singlepixelbuffer.h"
@@ -33,8 +34,9 @@ DisplayPrivate *DisplayPrivate::get(Display *display)
     return display->d.get();
 }
 
-DisplayPrivate::DisplayPrivate(Display *q)
+DisplayPrivate::DisplayPrivate(Display *q, Application *app)
     : q(q)
+    , app(app)
 {
 }
 
@@ -54,9 +56,9 @@ void DisplayPrivate::clientCreatedCallback(wl_listener *listener, void *data)
     Q_EMIT display->clientConnected(connection);
 }
 
-Display::Display(QObject *parent)
+Display::Display(Application *app, QObject *parent)
     : QObject(parent)
-    , d(new DisplayPrivate(this))
+    , d(new DisplayPrivate(this, app))
 {
     d->display = wl_display_create();
     d->loop = wl_display_get_event_loop(d->display);
@@ -153,12 +155,22 @@ void Display::createShm()
 
 quint32 Display::nextSerial()
 {
-    return wl_display_next_serial(d->display);
+    if (d->app) {
+        return d->app->nextSerial();
+    } else {
+        // for some autotests
+        return wl_display_next_serial(d->display);
+    }
 }
 
 quint32 Display::serial()
 {
-    return wl_display_get_serial(d->display);
+    if (d->app) {
+        return d->app->serial();
+    } else {
+        // for autotests
+        return wl_display_get_serial(d->display);
+    }
 }
 
 bool Display::isRunning() const

@@ -29,7 +29,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-seat-tes
 
 void TestWaylandServerSeat::testCapabilities()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, QStringLiteral("seat0"), &display);
@@ -76,7 +76,7 @@ void TestWaylandServerSeat::testCapabilities()
 
 void TestWaylandServerSeat::testPointerButton()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, QStringLiteral("seat0"), &display);
@@ -107,7 +107,7 @@ void TestWaylandServerSeat::testPointerButton()
 
 void TestWaylandServerSeat::testPointerPos()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, QStringLiteral("seat0"), &display);
@@ -116,17 +116,17 @@ void TestWaylandServerSeat::testPointerPos()
 
     QCOMPARE(seat->pointerPos(), QPointF());
 
-    seat->notifyPointerMotion(QPointF(10, 15));
+    seat->notifyPointerMotion(QPointF(10, 15), display.nextSerial());
     seat->notifyPointerFrame();
     QCOMPARE(seat->pointerPos(), QPointF(10, 15));
     QCOMPARE(seatPosSpy.count(), 1);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
 
-    seat->notifyPointerMotion(QPointF(10, 15));
+    seat->notifyPointerMotion(QPointF(10, 15), display.nextSerial());
     seat->notifyPointerFrame();
     QCOMPARE(seatPosSpy.count(), 1);
 
-    seat->notifyPointerMotion(QPointF(5, 7));
+    seat->notifyPointerMotion(QPointF(5, 7), display.nextSerial());
     seat->notifyPointerFrame();
     QCOMPARE(seat->pointerPos(), QPointF(5, 7));
     QCOMPARE(seatPosSpy.count(), 2);
@@ -136,7 +136,7 @@ void TestWaylandServerSeat::testPointerPos()
 
 void TestWaylandServerSeat::testRepeatInfo()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display, QStringLiteral("seat0"), &display);
@@ -154,7 +154,7 @@ void TestWaylandServerSeat::testRepeatInfo()
 
 void TestWaylandServerSeat::testMultiple()
 {
-    KWin::Display display;
+    KWin::Display display(nullptr, nullptr);
     display.addSocketName(s_socketName);
     display.start();
     QVERIFY(display.seats().isEmpty());

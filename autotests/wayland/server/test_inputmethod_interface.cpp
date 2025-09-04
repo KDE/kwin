@@ -175,7 +175,7 @@ private:
     InputMethodV1 *m_inputMethod;
     InputPanel *m_inputPanel;
     QThread *m_thread;
-    KWin::Display m_display;
+    KWin::Display m_display{nullptr, nullptr};
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
     std::unique_ptr<FakeOutput> m_outputHandle;
