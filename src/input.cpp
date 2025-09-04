@@ -3030,15 +3030,15 @@ QObject *InputRedirection::lastInputHandler() const
     return m_lastInputDevice;
 }
 
-void InputRedirection::setLastInputSerial(uint32_t serial)
+void InputRedirection::setLastInteractionSerial(uint32_t serial)
 {
-    m_lastSerial = serial;
+    m_lastInteractionSerial = serial;
     workspace()->setWasUserInteraction();
 }
 
-uint32_t InputRedirection::lastInputSerial() const
+uint32_t InputRedirection::lastInteractionSerial() const
 {
-    return m_lastSerial;
+    return m_lastInteractionSerial;
 }
 
 void InputRedirection::setLastInputHandler(QObject *device)

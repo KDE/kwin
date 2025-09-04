@@ -334,7 +334,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         m_keyboardLayout->checkLayoutChange(previousLayout);
     }
     if (state == KeyboardKeyState::Pressed && !std::ranges::contains(s_modifierKeys, event.key)) {
-        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        input()->setLastInteractionSerial(waylandServer()->seat()->display()->serial());
         if (auto f = pickFocus()) {
             f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
         }

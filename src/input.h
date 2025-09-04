@@ -190,8 +190,8 @@ public:
     void setLastInputHandler(QObject *device);
     QObject *lastInputHandler() const;
 
-    void setLastInputSerial(uint32_t serial);
-    uint32_t lastInputSerial() const;
+    void setLastInteractionSerial(uint32_t serial);
+    uint32_t lastInteractionSerial() const;
 
     QList<InputDevice *> devices() const;
 
@@ -270,7 +270,7 @@ private:
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
     QObject *m_lastInputDevice = nullptr;
-    uint32_t m_lastSerial = 0;
+    uint32_t m_lastInteractionSerial = 0;
 
     GlobalShortcutsManager *m_shortcuts;
 
