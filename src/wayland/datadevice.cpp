@@ -313,9 +313,9 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
     });
 
     if (d->drag.offer) {
-        auto matchOffers = [this, dragSource, offer = d->drag.offer] {
+        auto matchOffers = [dragSource, offer = d->drag.offer] {
             Qt::KeyboardModifiers keyboardModifiers;
-            if (d->seat->isDrag()) { // ignore keyboard modifiers when in "ask" negotiation
+            if (!dragSource->isDropPerformed()) { // ignore keyboard modifiers when in "ask" negotiation
                 keyboardModifiers = dragSource->keyboardModifiers();
             }
 
