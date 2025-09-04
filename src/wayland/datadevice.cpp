@@ -312,8 +312,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
         d->drag = DataDeviceInterfacePrivate::Drag();
     });
 
-    const QPointF pos = d->seat->dragSurfaceTransformation().map(position);
-    d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), d->drag.offer ? d->drag.offer->resource() : nullptr);
     if (d->drag.offer) {
         auto matchOffers = [this, dragSource, offer = d->drag.offer] {
             Qt::KeyboardModifiers keyboardModifiers;
@@ -330,6 +328,9 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
         d->drag.sourceActionConnection = connect(dragSource, &AbstractDataSource::supportedDragAndDropActionsChanged, d->drag.offer, matchOffers);
         d->drag.keyboardModifiersConnection = connect(dragSource, &AbstractDataSource::keyboardModifiersChanged, d->drag.offer, matchOffers);
     }
+
+    const QPointF pos = d->seat->dragSurfaceTransformation().map(position);
+    d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), d->drag.offer ? d->drag.offer->resource() : nullptr);
 }
 
 wl_client *DataDeviceInterface::client()
