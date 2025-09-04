@@ -174,13 +174,13 @@ QPointF Item::position() const
 void Item::setPosition(const QPointF &point)
 {
     if (m_position != point) {
-        scheduleMoveRepaint();
+        scheduleMoveRepaint(this);
         m_position = point;
         updateItemToSceneTransform();
         if (m_parentItem) {
             m_parentItem->updateBoundingRect();
         }
-        scheduleMoveRepaint();
+        scheduleMoveRepaint(this);
         Q_EMIT positionChanged();
     }
 }
@@ -453,7 +453,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
     }
 }
 
-void Item::scheduleMoveRepaint()
+void Item::scheduleMoveRepaint(Item *originallyMovedItem)
 {
     if (Q_UNLIKELY(!m_scene) || !isVisible()) {
         return;
@@ -465,14 +465,16 @@ void Item::scheduleMoveRepaint()
         }
         const QRegion dirtyRegion = paintedArea(view, rect()) & view->viewport().toAlignedRect();
         if (!dirtyRegion.isEmpty()) {
-            if (!view->canSkipMoveRepaint(this)) {
+            // we can skip the move repaint if the parent item was moved
+            // and this item was just implicitly moved as a consequence
+            if (!view->canSkipMoveRepaint(originallyMovedItem)) {
                 m_repaints[view] += dirtyRegion;
             }
             view->scheduleRepaint(this);
         }
     }
     for (Item *child : std::as_const(m_childItems)) {
-        child->scheduleMoveRepaint();
+        child->scheduleMoveRepaint(originallyMovedItem);
     }
 }
 

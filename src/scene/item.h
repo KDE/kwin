@@ -210,7 +210,7 @@ private:
     void updateEffectiveVisibility();
     void removeRepaints(RenderView *delegate);
 
-    void scheduleMoveRepaint();
+    void scheduleMoveRepaint(Item *originallyMovedItem);
 
     Scene *m_scene = nullptr;
     QPointer<Item> m_parentItem;
