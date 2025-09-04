@@ -90,6 +90,7 @@ private Q_SLOTS:
     void testNoPrimaries();
     void testNoTf();
     void testRenderIntentOnly();
+    void testInertError();
 };
 
 void ColorManagementTest::initTestCase()
@@ -348,6 +349,23 @@ void ColorManagementTest::testRenderIntentOnly()
     QVERIFY(colorChange.wait());
     QCOMPARE(window->surface()->colorDescription(), color);
     QCOMPARE(window->surface()->renderingIntent(), RenderingIntent::AbsoluteColorimetric);
+}
+
+void ColorManagementTest::testInertError()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+
+    auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*surface));
+    ImageDescription imageDescr = createImageDescription(cmSurf.get(), ColorDescription::sRGB);
+
+    QSignalSpy ready(&imageDescr, &ImageDescription::ready);
+    QVERIFY(ready.wait(50ms));
+
+    surface.reset();
+    cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
+
+    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    QVERIFY(error.wait(50ms));
 }
 
 } // namespace KWin

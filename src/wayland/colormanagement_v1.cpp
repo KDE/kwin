@@ -194,6 +194,7 @@ static std::optional<RenderingIntent> waylandToKwinIntent(uint32_t intent)
 void ColorSurfaceV1::wp_color_management_surface_v1_set_image_description(Resource *resource, struct ::wl_resource *image_description, uint32_t render_intent)
 {
     if (!m_surface) {
+        wl_resource_post_error(resource->handle, WP_COLOR_MANAGEMENT_SURFACE_V1_ERROR_INERT, "the associated surface was already destroyed");
         return;
     }
     const std::optional<RenderingIntent> intent = waylandToKwinIntent(render_intent);
@@ -215,6 +216,7 @@ void ColorSurfaceV1::wp_color_management_surface_v1_set_image_description(Resour
 void ColorSurfaceV1::wp_color_management_surface_v1_unset_image_description(Resource *resource)
 {
     if (!m_surface) {
+        wl_resource_post_error(resource->handle, WP_COLOR_MANAGEMENT_SURFACE_V1_ERROR_INERT, "the associated surface was already destroyed");
         return;
     }
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
